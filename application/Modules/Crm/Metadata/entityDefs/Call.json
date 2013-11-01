@@ -1,0 +1,122 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Planned", "Held", "Not Held"]
+        },
+        "dateStart": {
+            "type": "datetime",
+            "required": true,
+            "default": "javascript: return this.dateTime.getNow(15);"
+        },
+        "dateEnd": {
+            "type": "datetime",
+            "required": true,
+            "after": "dateStart"
+        },
+        "duration": {
+            "type": "duration",
+            "start": "dateStart",
+            "end": "dateEnd",
+            "options": [300, 600, 900, 1800, 2700, 3600, 7200],
+            "default": 300
+        },
+        "direction": {
+            "type": "enum",
+            "options": ["Outbound", "Inbound"],
+            "default": "Outbound"
+        },
+        "description": {
+            "type": "text"
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "users": {
+            "type": "linkMultiple",
+            "disabled": true,
+            "readOnly": true
+        },
+        "contacts": {
+            "type": "linkMultiple",
+            "disabled": true,
+            "readOnly": true
+        },
+        "leads": {
+            "type": "linkMultiple",
+            "disabled": true,
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "calls"
+        },
+        "contacts": {
+            "type": "hasMany",
+            "entity": "Contact",
+            "foreign": "calls"
+        },
+        "leads": {
+            "type": "hasMany",
+            "entity": "Lead",
+            "foreign": "calls"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entities": ["Account", "Opportunity", "Case"],
+            "foreign": "calls"
+        }
+    },
+    "collection": {
+    	"sortBy": "dateStart",
+    	"asc": false,
+    	"boolFilters": ["onlyMy", "planned"]
+    }
+}

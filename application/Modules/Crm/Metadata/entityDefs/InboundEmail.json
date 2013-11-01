@@ -1,0 +1,97 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Active", "Inactive"]
+        },
+        "serverAddress": {
+            "type": "varchar",
+            "required": true
+        },
+        "serverPort": {
+            "type": "varchar",
+            "default": "143",
+            "required": true
+        },
+        "username": {
+            "type": "varchar",
+            "required": true
+        },
+        "password": {
+            "type": "password"
+        },
+        "monitoredFolders": {
+            "type": "varchar",
+            "required": true,
+            "default": "INBOX"
+        },
+        "trashFolder": {
+            "type": "varchar"
+        },
+        "removeMessagesFromServer": {
+            "type": "bool"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "createCase": {
+            "type": "bool"
+        },
+        "caseDistribution": {
+            "type": "enum",
+            "options": ["Round-Robin", "Least-Busy"]
+        },
+        "caseEmailTemplate": {
+            "type": "link"
+        },
+        "replyFromAddress": {
+            "type": "varchar",
+            "required": true
+        },
+        "replyFromName": {
+            "type": "varchar"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "caseEmailTemplate": {
+            "type": "belongsTo",
+            "entity": "EmailTemplate"
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

@@ -1,0 +1,17 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"maxLength",
+         "type":"int"
+      }
+   ],
+   "search":{
+      "basic":true,
+      "advanced":true
+   }
+}

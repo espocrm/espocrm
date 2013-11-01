@@ -1,0 +1,19 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      }
+   ],
+   "actualFields":[
+      "ids"
+   ],
+   "notActualFields":[
+      "names"
+   ],
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

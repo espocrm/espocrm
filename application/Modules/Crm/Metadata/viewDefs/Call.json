@@ -1,0 +1,46 @@
+{
+   "sidePanels":{
+      "detail":[
+         {
+            "name":"attendees",
+            "label":"Attendees",
+            "view":"Record.Panels.Side",
+            "options":{
+               "fields":[
+                  "users",
+                  "contacts",
+                  "leads"
+               ],
+               "mode":"detail"
+            }
+         }
+      ],
+      "edit":[
+         {
+            "name":"attendees",
+            "label":"Attendees",
+            "view":"Record.Panels.Side",
+            "options":{
+               "fields":[
+                  "users",
+                  "contacts",
+                  "leads"
+               ],
+               "mode":"edit"
+            }
+         }
+      ]
+   },
+   "menu":{
+      "list":{
+         "buttons":[
+            {
+               "label":"Create Call",
+               "link":"#call/create",
+               "style":"primary",
+               "acl":"edit"
+            }
+         ]
+      }
+   }
+}

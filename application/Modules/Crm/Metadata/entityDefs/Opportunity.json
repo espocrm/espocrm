@@ -1,0 +1,116 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "amount": {
+            "type": "currency",
+            "required": true
+        },
+        "account": {
+            "type": "link",
+            "required": true
+        },
+        "stage": {
+            "type": "enum",
+            "options": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis", "Proposal/Price Quote", "Negotiation/Review", "Closed Won", "Closed Lost"],
+            "view": "Crm:Opportunity.Fields.Stage",
+            "default": "Prospecting"
+        },
+        "probability": {
+            "type": "int",
+            "required": true,
+            "min": 0,
+            "max": 100
+        },
+        "leadSource": {
+            "type": "enum",
+            "options": ["Other", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign"]
+        },
+        "closeDate": {
+            "type": "date",
+            "required": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "account": {
+            "type": "belongsTo",
+            "entity": "Account",
+            "foreign": "opportunities"
+        },
+        "contacts": {
+            "type": "hasMany",
+            "entity": "Contact",
+            "foreign": "opportunities"
+        },
+        "meetings": {
+            "type": "hasChildren",
+            "entity": "Meeting",
+            "foreign": "parent"
+        },
+        "calls": {
+            "type": "hasChildren",
+            "entity": "Call",
+            "foreign": "parent"
+        },
+        "tasks": {
+            "type": "hasChildren",
+            "entity": "Task",
+            "foreign": "parent"
+        },
+        "emails": {
+            "type": "hasChildren",
+            "entity": "Email",
+            "foreign": "parent"
+        }
+    },
+    "collection": {
+    	"sortBy": "createdAt",
+    	"asc": false,
+    	"boolFilters": ["onlyMy", "open"]
+    }
+}

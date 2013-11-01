@@ -1,0 +1,72 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "subject": {
+            "type": "varchar",
+            "required": true
+        },
+        "body": {
+            "type": "text"
+        },
+        "isHtml": {
+            "type": "bool",
+            "default": true
+        },
+        "attachments": {
+            "type": "linkMultiple"
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "attachments": {
+            "type": "hasMany",
+            "entity": "Attachment"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

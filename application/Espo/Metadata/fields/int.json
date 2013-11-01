@@ -1,0 +1,25 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"default",
+         "type":"int"
+      },
+      {
+         "name":"min",
+         "type":"int"
+      },
+      {
+         "name":"max",
+         "type":"int"
+      }
+   ],
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

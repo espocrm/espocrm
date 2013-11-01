@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "name": {
+            "maxLength": 150,
+            "required": true
+        }
+    },
+    "links": {
+        "users": {
+            "type": "hasMany",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

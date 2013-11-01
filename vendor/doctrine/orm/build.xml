@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<project name="DoctrineORM" default="build" basedir=".">
+    <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
+    <import file="${project.basedir}/lib/vendor/doctrine-build-common/packaging.xml" />
+
+    <property file="build.properties" />
+
+    <!--
+        Fileset for artifacts shared across all distributed packages.
+    -->
+    <fileset id="shared-artifacts" dir=".">
+        <include name="LICENSE"/>
+        <include name="UPGRADE*" />
+        <include name="doctrine-mapping.xsd" />
+    </fileset>
+
+    <!--
+        Fileset for command line scripts
+    -->
+    <fileset id="bin-scripts" dir="./bin">
+        <include name="doctrine"/>
+        <include name="doctrine-pear.php"/>
+        <include name="doctrine.bat"/>
+    </fileset>
+
+    <!--
+        Fileset for the sources of the Doctrine Common dependency.
+    -->
+    <fileset id="common-sources" dir="./lib/vendor/doctrine-common/lib">
+        <include name="Doctrine/Common/**"/>
+    </fileset>
+
+    <!--
+        Fileset for the sources of the Doctrine DBAL dependency.
+    -->
+    <fileset id="dbal-sources" dir="./lib/vendor/doctrine-dbal/lib">
+        <include name="Doctrine/DBAL/**"/>
+    </fileset>
+
+    <!--
+        Fileset for the sources of the Doctrine ORM.
+    -->
+    <fileset id="orm-sources" dir="./lib">
+        <include name="Doctrine/ORM/**"/>
+    </fileset>
+
+    <!--
+      Fileset for source of the Symfony YAML and Console components.
+    -->
+    <fileset id="symfony-sources" dir="./lib/vendor">
+        <include name="Symfony/Component/**"/>
+        <exclude name="**/.git/**" />
+    </fileset>
+
+    <!--
+        Builds ORM package, preparing it for distribution.
+    -->
+    <target name="copy-files" depends="prepare">
+        <copy todir="${build.dir}/${project.name}-${version}">
+            <fileset refid="shared-artifacts"/>
+        </copy>
+        <copy todir="${build.dir}/${project.name}-${version}">
+            <fileset refid="common-sources"/>
+            <fileset refid="dbal-sources"/>
+            <fileset refid="orm-sources"/>
+        </copy>
+        <copy todir="${build.dir}/${project.name}-${version}/Doctrine">
+            <fileset refid="symfony-sources"/>
+        </copy>
+        <copy todir="${build.dir}/${project.name}-${version}/bin">
+            <fileset refid="bin-scripts"/>
+        </copy>
+    </target>
+
+    <!--
+        Builds distributable PEAR packages.
+    -->
+    <target name="define-pear-package" depends="copy-files">
+        <d51pearpkg2 baseinstalldir="/" dir="${build.dir}/${project.name}-${version}">
+           <name>DoctrineORM</name>
+           <summary>Doctrine Object Relational Mapper</summary>
+           <channel>pear.doctrine-project.org</channel>
+           <description>The Doctrine ORM package is the primary package containing the object relational mapper.</description>
+           <lead user="jwage" name="Jonathan H. Wage" email="jonwage@gmail.com" />
+           <lead user="guilhermeblanco" name="Guilherme Blanco" email="guilhermeblanco@gmail.com" />
+           <lead user="romanb" name="Roman Borschel" email="roman@code-factory.org" />
+           <lead user="beberlei" name="Benjamin Eberlei" email="kontakt@beberlei.de" />
+           <license>LGPL</license>
+           <version release="${pear.version}" api="${pear.version}" />
+           <stability release="${pear.stability}" api="${pear.stability}" />
+           <notes>-</notes>
+           <dependencies>
+               <php minimum_version="5.3.0" />
+               <pear minimum_version="1.6.0" recommended_version="1.6.1" />
+               <package name="DoctrineCommon" channel="pear.doctrine-project.org" minimum_version="${dependencies.common}" />
+               <package name="DoctrineDBAL" channel="pear.doctrine-project.org" minimum_version="${dependencies.dbal}" />
+               <package name="Console" channel="pear.symfony.com" minimum_version="2.0.0" />
+               <package name="Yaml" channel="pear.symfony.com" minimum_version="2.0.0" />
+           </dependencies>
+           <dirroles key="bin">script</dirroles>
+           <ignore>Doctrine/Common/</ignore>
+           <ignore>Doctrine/DBAL/</ignore>
+           <ignore>Symfony/Component/Yaml/</ignore>
+           <ignore>Symfony/Component/Console/</ignore>
+           <release>
+                <install as="doctrine" name="bin/doctrine" />
+                <install as="doctrine.php" name="bin/doctrine-pear.php" />
+                <install as="doctrine.bat" name="bin/doctrine.bat" />
+           </release>
+           <replacement path="bin/doctrine" type="pear-config" from="@php_bin@" to="php_bin" />
+           <replacement path="bin/doctrine.bat" type="pear-config" from="@bin_dir@" to="bin_dir" />
+        </d51pearpkg2>
+    </target>
+</project>

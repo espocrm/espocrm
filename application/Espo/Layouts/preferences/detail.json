@@ -1,0 +1,9 @@
+[{
+	"label": "Locale",
+	"rows": [
+		[{"name": "dateFormat"}, {"name": "timeFormat"}],
+		[{"name": "timeZone"}, {"name": "weekStart"}],
+		[{"name": "defaultCurrency"}],
+		[{"name": "thousandSeparator"}, {"name": "decimalMark"}]
+	]
+}]

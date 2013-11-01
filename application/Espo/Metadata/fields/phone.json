@@ -1,0 +1,22 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"default",
+         "type":"varchar"
+      },
+      {
+         "name":"maxLength",
+         "type":"int",
+         "defalut":50
+      }
+   ],
+   "search":{
+      "basic":true,
+      "advanced":true
+   }
+}

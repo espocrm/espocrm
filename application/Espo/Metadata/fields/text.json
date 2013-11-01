@@ -1,0 +1,17 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"default",
+         "type":"text"
+      }
+   ],
+   "search":{
+      "basic":true,
+      "advanced":true
+   }
+}

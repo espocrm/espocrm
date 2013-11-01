@@ -1,0 +1,12 @@
+{
+   "params":[
+      {
+         "name":"default",
+         "type":"bool"
+      }
+   ],
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

@@ -1,0 +1,21 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"default",
+         "type":"varchar"
+      },
+      {
+         "name":"after",
+         "type":"varchar"
+      }
+   ],
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

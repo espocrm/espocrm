@@ -1,0 +1,43 @@
+{
+   "viewMaps":{
+      "detail":"Crm:Lead.Detail"
+   },
+   "recordViewMaps":{
+      "detail":"Crm:Lead.Record.Detail"
+   },
+   "bottomPanels":{
+      "detail":[
+         {
+            "name":"stream",
+            "label":"Stream",
+            "view":"Record.Panels.Stream"
+         }
+      ]
+   },
+   "sidePanels":{
+      "detail":[
+         {
+            "name":"activities",
+            "label":"Activities",
+            "view":"Crm:Record.Panels.Activities"
+         },
+         {
+            "name":"history",
+            "label":"History",
+            "view":"Crm:Record.Panels.History"
+         }
+      ]
+   },
+   "menu":{
+      "list":{
+         "buttons":[
+            {
+               "label":"Create Lead",
+               "link":"#lead/create",
+               "style":"primary",
+               "acl":"edit"
+            }
+         ]
+      }
+   }
+}

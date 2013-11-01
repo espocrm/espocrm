@@ -1,0 +1,17 @@
+{
+   "table":"products",
+   "type":"entity",
+   "id":{
+      "id":{
+         "type":"string",
+         "generator":{
+            "strategy":"UUID"
+         }
+      }
+   },
+   "fields":{
+      "name":{
+         "type":"string"
+      }
+   }
+}

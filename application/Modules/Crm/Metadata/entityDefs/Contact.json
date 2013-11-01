@@ -1,0 +1,152 @@
+{
+    "fields": {
+        "name": {
+            "type": "personName"
+        },
+        "salutationName": {
+            "type": "enum",
+            "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]
+        },
+        "firstName": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "lastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "title": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "description": {
+            "type": "text"
+        },
+        "email": {
+            "type": "email"
+        },
+        "phone": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "fax": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "doNotCall": {
+            "type": "bool"
+        },
+        "phoneOffice": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "address": {
+            "type": "address"
+        },
+        "addressStreet": {
+            "type": "varchar"
+        },
+        "addressCity": {
+            "type": "varchar"
+        },
+        "addressState": {
+            "type": "varchar"
+        },
+        "addressCountry": {
+            "type": "varchar"
+        },
+        "addressPostalCode": {
+            "type": "varchar"
+        },
+        "account": {
+            "type": "link"
+        },
+        "accountType": {
+            "type": "foreign",
+            "link": "account",
+            "field": "type"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "account": {
+            "type": "belongsTo",
+            "jointTable": true,
+            "entity": "Account"
+        },
+        "opportunities": {
+            "type": "hasMany",
+            "entity": "Opportunity",
+            "foreign": "contacts"
+        },
+        "cases": {
+            "type": "hasMany",
+            "entity": "Case",
+            "foreign": "contact"
+        },
+        "meetings": {
+            "type": "hasMany",
+            "entity": "Meeting",
+            "foreign": "contacts"
+        },
+        "calls": {
+            "type": "hasMany",
+            "entity": "Call",
+            "foreign": "contacts"
+        },
+        "tasks": {
+            "type": "hasChildren",
+            "entity": "Task",
+            "foreign": "parent"
+        },
+        "activities": {
+            "type": "joint",
+            "links": ["meetings", "calls", "tasks"]
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true,
+    	"boolFilters": ["onlyMy"]
+    }
+}

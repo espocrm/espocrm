@@ -1,0 +1,119 @@
+{
+    "fields": {
+        "name": {
+            "type": "personName"
+        },
+        "salutationName": {
+            "type": "enum",
+            "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]
+        },
+        "firstName": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "lastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "title": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "account": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "website": {
+            "type": "url"
+        },
+        "address": {
+            "type": "address"
+        },
+        "addressStreet": {
+            "type": "varchar"
+        },
+        "addressCity": {
+            "type": "varchar"
+        },
+        "addressState": {
+            "type": "varchar"
+        },
+        "addressCountry": {
+            "type": "varchar"
+        },
+        "addressPostalCode": {
+            "type": "varchar"
+        },
+        "email": {
+            "type": "email",
+            "required": true
+        },
+        "phone": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "fax": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "phoneOffice": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "doNotCall": {
+            "type": "bool"
+        },
+        "description": {
+            "type": "text",
+            "required": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        }
+    },
+    "collection": {
+    	"sortBy": "createdAt",
+    	"asc": false,
+    	"boolFilters": ["onlyMy"]
+    }
+}

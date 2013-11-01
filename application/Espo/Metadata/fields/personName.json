@@ -1,0 +1,24 @@
+{
+   "actualFields":[
+      "salutation",
+      "first",
+      "last"
+   ],
+   "fields":{
+      "salutation":{
+         "type":"varchar"
+      },
+      "first":{
+         "type":"enum"
+      },
+      "last":{
+         "type":"varchar"
+      }
+   },
+   "naming":"prefix",
+   "mergable":false,
+   "search":{
+      "basic":true,
+      "advanced":true
+   }
+}

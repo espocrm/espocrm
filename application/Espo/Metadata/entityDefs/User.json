@@ -1,0 +1,71 @@
+{
+    "fields": {
+        "isAdmin": {
+            "type": "bool"
+        },
+        "userName": {
+            "type": "varchar",
+            "maxLength": 50,
+            "required": true
+        },
+        "name": {
+            "type": "personName"
+        },
+        "salutationName": {
+            "type": "enum",
+            "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]
+        },
+        "firstName": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "lastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "title": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "email": {
+            "type": "email",
+            "required": true
+        },
+        "phone": {
+            "type": "phone",
+            "maxLength": 50
+        },
+        "defaultTeam": {
+            "type": "link"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "roles": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "defaultTeam": {
+            "type": "belongsTo",
+            "entity": "Team"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "roles": {
+            "type": "hasMany",
+            "entity": "Role"
+        },
+        "preferences": {
+            "type": "hasOne",
+            "entity": "Preferences"
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

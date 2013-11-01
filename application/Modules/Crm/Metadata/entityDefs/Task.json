@@ -1,0 +1,86 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Not Started", "Started", "Completed", "Canceled"]
+        },
+        "priority": {
+            "type": "enum",
+            "options": ["Low", "Normal", "High", "Urgent"],
+            "default": "Normal"
+        },
+        "dateStart": {
+            "type": "datetime"
+        },
+        "dateEnd": {
+            "type": "datetime"
+        },
+        "isOverdue": {
+        	"type": "base",
+        	"db": false,
+        	"view": "Crm:Task.Fields.IsOverdue"
+        },
+        "description": {
+            "type": "text"
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entities": ["Account", "Contact", "Lead", "Opportunity", "Case"],
+            "foreign": "tasks"
+        }
+    },
+    "collection": {
+    	"sortBy": "createdAt",
+    	"asc": false,
+    	"boolFilters": ["onlyMy"]
+    }
+}

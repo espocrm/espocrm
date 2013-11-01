@@ -1,0 +1,26 @@
+{
+   "viewMaps":{
+      "detail":"Crm:Prospect.Detail"
+   },
+   "menu":{
+      "list":{
+         "buttons":[
+            {
+               "label":"Create Prospect",
+               "link":"#prospect/create",
+               "style":"primary",
+               "acl":"edit"
+            }
+         ]
+      },
+      "detail":{
+         "buttons":[
+            {
+               "label":"Convert to Lead",
+               "action":"convertToLead",
+               "acl":"edit"
+            }
+         ]
+      }
+   }
+}

@@ -1,0 +1,14 @@
+{
+    "require": {
+        "doctrine/orm": "2.*",
+		"slim/slim": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "application/"
+        }
+    },
+	"require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    }
+}

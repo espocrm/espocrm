@@ -1,0 +1,52 @@
+{
+    "fields": {
+        "message": {
+            "type": "text"
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "attachments": {
+            "type": "linkMultiple"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "attachments": {
+            "type": "hasChildren",
+            "entity": "Attachment",
+            "foreign": "parent"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "foreign": "attachments"
+        }
+    },
+    "collection": {
+    	"sortBy": "createdAt",
+    	"asc": false
+    }
+}

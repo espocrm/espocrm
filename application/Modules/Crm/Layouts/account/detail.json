@@ -1,0 +1,1 @@
+[{"label":"Overview","rows":[[{"name":"name"},false],[{"name":"website"},{"name":"phone"}],[{"name":"email"},{"name":"fax"}],[{"name":"billingAddress"},{"name":"shippingAddress"}],[{"name":"description"},false]]},{"label":"Details","rows":[[{"name":"type"},{"name":"sicCode"}],[{"name":"industry"},false]]}]

@@ -1,0 +1,17 @@
+Doctrine\Tests\ORM\Mapping\Animal:
+  type: entity
+  inheritanceType: SINGLE_TABLE
+  discriminatorMap:
+    cat: Cat
+    dog: Dog
+  discriminatorColumn:
+    type: string
+    name: discr
+    length: 32
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: CUSTOM
+      customIdGenerator:
+        class: stdClass

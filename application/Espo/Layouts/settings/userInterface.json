@@ -1,0 +1,9 @@
+[
+	{
+		"label": "Configuration",
+		"rows": [
+			[{"name": "recordsPerPage"},{"name": "recordsPerPageSmall"}],
+			[{"name": "tabList"},{"name": "quickCreateList"}]
+		]
+	}
+]

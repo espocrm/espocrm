@@ -1,0 +1,41 @@
+{
+    "fields": {
+        "timeZone": {
+            "type": "enum"
+        },
+        "dateFormat": {
+            "type": "enum",
+            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY"],
+            "default": "MM/DD/YYYY"
+        },
+        "timeFormat": {
+            "type": "enum",
+            "options": ["HH:mm", "hh:mm A", "hh:mm a"],
+            "default": "HH:mm"
+        },
+        "weekStart": {
+            "type": "enum",
+            "options": ["0", "1"],
+            "default": 0
+        },
+        "thousandSeparator": {
+            "type": "varchar",
+            "default": ","
+        },
+        "decimalMark": {
+            "type": "varchar",
+            "default": ".",
+            "required": true
+        },
+        "defaultCurrency": {
+            "type": "enum",
+            "default": "USD"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}

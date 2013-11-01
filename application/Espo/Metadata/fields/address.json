@@ -1,0 +1,31 @@
+{
+   "actualFields":[
+      "street",
+      "city",
+      "state",
+      "country",
+      "postalCode"
+   ],
+   "fields":{
+      "street":{
+         "type":"varchar"
+      },
+      "city":{
+         "type":"varchar"
+      },
+      "state":{
+         "type":"varchar"
+      },
+      "country":{
+         "type":"varchar"
+      },
+      "postalCode":{
+         "type":"varchar"
+      }
+   },
+   "mergable":false,
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

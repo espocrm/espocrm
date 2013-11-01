@@ -1,0 +1,7 @@
+{
+   "relationshipPanels":{
+      "users":{
+         "create":false
+      }
+   }
+}

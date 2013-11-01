@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "roles": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "users": {
+            "type": "hasMany",
+            "entity": "User"
+        },
+        "roles": {
+            "type": "hasMany",
+            "entity": "Role"
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

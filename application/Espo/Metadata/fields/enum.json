@@ -1,0 +1,25 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },      
+      {
+         "name":"options",
+         "type":"array"
+      },
+      {
+         "name":"default",
+         "type":"varchar"
+      },
+      {
+         "name":"translation",
+         "type":"varchar"
+      }
+   ],
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

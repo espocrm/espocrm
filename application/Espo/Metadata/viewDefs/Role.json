@@ -1,0 +1,27 @@
+{
+   "recordViewMaps":{
+      "detail":"Role.Record.Detail",
+      "edit":"Role.Record.Edit",
+      "editQuick":"Role.Record.Edit"
+   },
+   "relationshipPanels":{
+      "users":{
+         "create":false
+      },
+      "teams":{
+         "create":false
+      }
+   },
+   "menu":{
+      "list":{
+         "buttons":[
+            {
+               "label":"Create Role",
+               "link":"#role/create",
+               "style":"primary",
+               "acl":"edit"
+            }
+         ]
+      }
+   }
+}

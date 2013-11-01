@@ -1,0 +1,87 @@
+{
+   "system":{
+      "label":"System",
+      "items":[
+         {
+            "url":"#admin/settings",
+            "label":"Settings",
+            "description":"System settings of application."
+         },
+         {
+            "url":"#admin/clear-cache",
+            "label":"Clear Cache",
+            "description":"Clear all server side cache."
+         }
+      ]
+   },
+   "users":{
+      "label":"Users",
+      "items":[
+         {
+            "url":"#user",
+            "label":"Users",
+            "description":"Users management."
+         },
+         {
+            "url":"#team",
+            "label":"Teams",
+            "description":"Teams management."
+         },
+         {
+            "url":"#role",
+            "label":"Roles",
+            "description":"Roles management."
+         }
+      ]
+   },
+   "email":{
+      "label":"Email",
+      "items":[
+         {
+            "url":"#admin/outbound-email",
+            "label":"Outbound Emails",
+            "description":"SMTP settings for outgoing emails."
+         },
+         {
+            "url":"#inbound-email",
+            "label":"Inbound Emails",
+            "description":"Group IMAP email accouts. Email import and Email-to-Case."
+         },
+         {
+            "url":"#email-template",
+            "label":"Email Templates",
+            "description":"Templates for outbound emails."
+         }
+      ]
+   },
+   "data":{
+      "label":"Data",
+      "items":[
+         {
+            "url":"#admin/import",
+            "label":"Import",
+            "description":"Import data from CSV file."
+         }
+      ]
+   },
+   "customization":{
+      "label":"Customization",
+      "items":[
+         {
+            "url":"#admin/layouts",
+            "label":"Layout Manager",
+            "description":"Customize layouts (list, detail, edit, search, mass update)."
+         },
+         {
+            "url":"#admin/fields",
+            "label":"Field Manager",
+            "description":"Create new fields or customize existing ones."
+         },
+         {
+            "url":"#admin/user-interface",
+            "label":"User Interface",
+            "description":"Configure UI."
+         }
+      ]
+   }
+}

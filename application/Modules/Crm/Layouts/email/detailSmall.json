@@ -1,0 +1,11 @@
+[
+	{
+		"label":"",
+		"rows":[
+			[{"name":"from"}],
+			[{"name":"to"}],
+			[{"name":"subject"}],
+			[{"name":"body"}]
+		]
+	}
+]

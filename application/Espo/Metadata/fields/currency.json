@@ -1,0 +1,25 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"min",
+         "type":"float"
+      },
+      {
+         "name":"max",
+         "type":"float"
+      }
+   ],
+   "actualFields":[
+      "currency",
+      ""
+   ],
+   "search":{
+      "basic":false,
+      "advanced":true
+   }
+}

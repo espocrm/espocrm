@@ -1,0 +1,107 @@
+{
+    "fields": {
+        "useCache": {
+            "type": "bool",
+            "default": true
+        },
+        "recordsPerPage": {
+            "type": "int",
+            "minValue": 1,
+            "maxValue": 1000,
+            "default": 20,
+            "required": true
+        },
+        "recordsPerPageSmall": {
+            "type": "int",
+            "minValue": 1,
+            "maxValue": 100,
+            "default": 10,
+            "required": true
+        },
+        "timeZone": {
+            "type": "enum"
+        },
+        "dateFormat": {
+            "type": "enum",
+            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY"],
+            "default": "MM/DD/YYYY"
+        },
+        "timeFormat": {
+            "type": "enum",
+            "options": ["HH:mm", "hh:mm A", "hh:mm a"],
+            "default": "HH:mm"
+        },
+        "weekStart": {
+            "type": "enum",
+            "options": ["0", "1"],
+            "default": "1"
+        },
+        "thousandSeparator": {
+            "type": "varchar",
+            "default": ","
+        },
+        "decimalMark": {
+            "type": "varchar",
+            "default": ".",
+            "required": true
+        },
+        "currencyList": {
+            "type": "array",
+            "default": ["USD", "EUR"],
+            "required": true
+        },
+        "defaultCurrency": {
+            "type": "enum",
+            "default": "USD",
+            "required": true
+        },
+        "outboundEmailIsShared": {
+            "type": "bool",
+            "default": false
+        },
+        "outboundEmailFromName": {
+            "type": "varchar",
+            "default": "EspoCRM",
+            "required": true
+        },
+        "outboundEmailFromAddress": {
+            "type": "varchar",
+            "default": "crm@example.com",
+            "required": true
+        },
+        "smtpServer": {
+            "type": "varchar",
+            "required": true
+        },
+        "smtpPort": {
+            "type": "int",
+            "required": true,
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "smtpAuth": {
+            "type": "bool",
+            "default": true
+        },
+        "smtpSecurity": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "smtpUsername": {
+            "type": "varchar",
+            "required": true
+        },
+        "smtpPassword": {
+            "type": "password"
+        },
+        "tabList": {
+            "type": "array",
+            "default": ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect"]
+        },
+        "quickCreateList": {
+            "type": "array",
+            "default": ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"]
+        }
+    }
+}
