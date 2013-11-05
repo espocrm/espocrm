@@ -32,9 +32,9 @@
             "default": "HH:mm"
         },
         "weekStart": {
-            "type": "enum",
-            "options": ["0", "1"],
-            "default": "1"
+            "type": "enumInt",
+            "options": [0, 1],
+            "default": 1
         },
         "thousandSeparator": {
             "type": "varchar",
