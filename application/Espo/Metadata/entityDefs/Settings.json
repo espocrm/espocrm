@@ -34,7 +34,7 @@
         "weekStart": {
             "type": "enumInt",
             "options": [0, 1],
-            "default": 1
+            "default": 0
         },
         "thousandSeparator": {
             "type": "varchar",
@@ -97,11 +97,13 @@
         },
         "tabList": {
             "type": "array",
-            "default": ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect"]
+            "default": ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect"],
+            "translation": "App.scopeNamesPlural"
         },
         "quickCreateList": {
             "type": "array",
-            "default": ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"]
+            "default": ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"],
+            "translation": "App.scopeNames"
         }
     }
 }
