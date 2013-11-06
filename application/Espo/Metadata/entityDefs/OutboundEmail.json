@@ -1,0 +1,51 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "server": {
+            "type": "varchar",
+            "required": true
+        },
+        "port": {
+            "type": "int",
+            "required": true,
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "auth": {
+            "type": "bool",
+            "default": true
+        },
+        "security": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "username": {
+            "type": "varchar",
+            "required": true
+        },
+        "password": {
+            "type": "password"
+        },
+        "fromName": {
+            "type": "varchar",
+            "required": true
+        },
+        "fromAddress": {
+            "type": "varchar",
+            "required": true
+        },
+        "user": {
+        	"type": "link"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}
