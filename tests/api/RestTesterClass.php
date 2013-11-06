@@ -4,7 +4,7 @@ namespace Espo\Tests\Api;
 
 class RestTesterClass
 {
-	public $mainUrl= 'http://172.20.0.1/espocrm/api';
+	public $mainUrl= 'http://172.20.0.1/espocrm-test/api';
 	public $username= 'admin';
 	public $pass= '1';
 	public $type= 'PATCH';

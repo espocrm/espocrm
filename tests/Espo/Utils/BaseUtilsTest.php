@@ -126,6 +126,24 @@ class BaseUtilsTest extends \PHPUnit_Framework_TestCase
 	}
 
 
+	function testGetScopePath()
+	{
+       $this->assertEquals('Modules/Crm', $this->fixture->getScopePath('Account', '/'));
+       $this->assertEquals('Modules\Crm', $this->fixture->getScopePath('Account', '\\'));
+       $this->assertEquals('Modules\Crm', $this->fixture->getScopePath('account', '\\'));
+
+       $this->assertEquals('Espo', $this->fixture->getScopePath('User', '/'));
+       $this->assertEquals('Espo', $this->fixture->getScopePath('User', '\\'));
+       $this->assertEquals('Espo', $this->fixture->getScopePath('user', '\\'));
+	}
+
+
+	function testGetScopes()
+	{
+       $this->assertArrayHasKey('User', $this->fixture->getScopes() );    
+	}
+
+
 
 
 }

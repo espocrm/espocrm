@@ -38,7 +38,7 @@ class SettingsTest extends \PHPUnit_Framework_TestCase
 			"customTest"=> array("test"=> "success"),
 		);
 		$json= json_encode($array);
-       	$this->assertTrue( $this->fixture->isSuccess($json, true) );
+       	$this->assertTrue( $this->fixture->isSuccess($json) );
 
 		/*
         $config= new Utils\Configurator();

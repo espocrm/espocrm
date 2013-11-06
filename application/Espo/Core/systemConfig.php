@@ -2,10 +2,17 @@
 
 return array (
   'configPath' => 'application/config.php',
-  'customPath' => 'application/Custom',
+
+  'customDir' => 'application/Custom',
   'cachePath' => 'data/cache',
   'defaultsPath' => 'application/Espo/Core/defaults',
   'unsetFileName' => 'unset.json',
+
+  'espoPath' => 'Espo',
+  'espoModulePath' => 'Modules/{*}',
+  'espoCustomPath' => 'Custom',
+
+  'controllerPath' => 'Controllers', //path for controllers in module
 
   'metadataConfig' =>
   array (
@@ -40,6 +47,14 @@ return array (
   ),
   'dateFormat' => 'MM/DD/YYYY',
   'timeFormat' => 'HH:mm',
+
+  'crud' => array(
+  	'get' => 'read',
+  	'post' => 'create',
+  	'put' => 'update',
+  	'patch' => 'patch',
+  	'delete' => 'delete',
+  ),
   'systemItems' =>
   array (
     'systemItems',
@@ -55,6 +70,13 @@ return array (
     'unsetFileName',
     'configPathFull',
     'configCustomPathFull',
+    'crud',
+    'customDir',
+    'espoPath',
+    'espoModulePath',
+    'espoCustomPath',
+    'controllerPath',
+    'scopeModuleMap',
   ),
   'adminItems' =>
   array (

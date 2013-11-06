@@ -70,6 +70,7 @@ class Metadata extends FileManager
 	{
 		$fullPath= $this->getConfig()->corePath;
 		$moduleName= $this->getScopeModuleName($scope);
+
 		if (!empty($moduleName)) {
         	$fullPath= str_replace('{*}', $moduleName, $this->getConfig()->customPath);
 		}

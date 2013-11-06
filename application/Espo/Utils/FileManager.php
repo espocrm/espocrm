@@ -7,11 +7,6 @@ use Espo\Utils as Utils;
 class FileManager extends BaseUtils
 {
     /**
-	* @var string - default directory separator
-	*/
-	protected $separator= DIRECTORY_SEPARATOR;
-
-	/**
 	* @var object - default permission settings
 	*/
 	protected $defaultPermissions;
@@ -21,16 +16,6 @@ class FileManager extends BaseUtils
 	*/
 	protected $appCache= 'application';
 
-
-    /**
-    * Get a folder separator
-	*
-	* @return string
-	*/
-    public function getSeparator()
-	{
-		return $this->separator;
-	}
 
 	/**
     * Get a list of files in specified directory
@@ -274,7 +259,7 @@ class FileManager extends BaseUtils
 			return false;
 		}
         $unsetFileName = $this->getObject('Configurator')->get('unsetFileName');
-		$scopeModuleMap = $this->getObject('Configurator')->get('scopeModuleMap');
+		//$scopeModuleMap = $this->getObject('Configurator')->get('scopeModuleMap');
 
 		//get matadata files
 		$fileList = $this->getFileList($dirPath, $recursively, '\.json$');
@@ -335,7 +320,7 @@ class FileManager extends BaseUtils
 	public function uniteFilesGetContent($folderPath, $fileName, $defaults)
 	{
 		$fileContent= $this->getContent($folderPath, $fileName);
-		$decoded= $this->getArrayData($fileContent);     
+		$decoded= $this->getArrayData($fileContent);
 
 		if (empty($decoded)) {
         	$this->getObject('Log')->add('FATAL EXCEPTION', 'Syntax error or empty file - '.$this->concatPath($folderPath, $fileName));
@@ -525,29 +510,7 @@ class FileManager extends BaseUtils
 		}
 
 		return false;
-	}
-
-	/**
-    * Get a full path of the file
-	*
-	* @param string $folderPath - Folder path, Ex. myfolder
-	* @param string $filePath - File path, Ex. file.json
-	*
-	* @return string
-	*/
-	public function concatPath($folderPath, $filePath='')
-	{
-		if (empty($filePath)) {
-        	return $folderPath;
-    	}
-		else {
-            if (substr($folderPath, -1)==$this->getSeparator()) {
-            	return $folderPath . $filePath;
-            }
-        	return $folderPath . $this->getSeparator() . $filePath;
-		}
-	}
-
+	}  
 
     /**
     * Get an array data (if JSON convert to array)

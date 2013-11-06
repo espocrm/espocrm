@@ -495,11 +495,11 @@ return array (
         ),
         'weekStart' => 
         array (
-          'type' => 'enum',
+          'type' => 'enumInt',
           'options' => 
           array (
-            0 => '0',
-            1 => '1',
+            0 => 0,
+            1 => 1,
           ),
           'default' => 0,
         ),
@@ -611,13 +611,13 @@ return array (
         ),
         'weekStart' => 
         array (
-          'type' => 'enum',
+          'type' => 'enumInt',
           'options' => 
           array (
-            0 => '0',
-            1 => '1',
+            0 => 0,
+            1 => 1,
           ),
-          'default' => '1',
+          'default' => 0,
         ),
         'thousandSeparator' => 
         array (
@@ -716,6 +716,7 @@ return array (
             8 => 'Case',
             9 => 'Prospect',
           ),
+          'translation' => 'App.scopeNamesPlural',
         ),
         'quickCreateList' => 
         array (
@@ -732,6 +733,7 @@ return array (
             7 => 'Case',
             8 => 'Prospect',
           ),
+          'translation' => 'App.scopeNames',
         ),
       ),
     ),
@@ -3053,6 +3055,32 @@ return array (
           'type' => 'varchar',
         ),
         3 => 
+        array (
+          'name' => 'translation',
+          'type' => 'varchar',
+        ),
+      ),
+      'search' => 
+      array (
+        'basic' => false,
+        'advanced' => true,
+      ),
+    ),
+    'enumInt' => 
+    array (
+      'params' => 
+      array (
+        0 => 
+        array (
+          'name' => 'options',
+          'type' => 'array',
+        ),
+        1 => 
+        array (
+          'name' => 'default',
+          'type' => 'varchar',
+        ),
+        2 => 
         array (
           'name' => 'translation',
           'type' => 'varchar',

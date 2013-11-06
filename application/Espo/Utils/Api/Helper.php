@@ -13,22 +13,21 @@ class Helper
     * Output the result
 	*
 	* @param mixed $data - JSON
-	* @param string $error - error message
-	* @param int $errorCode - error status code
+	* @param string $errMessage - error message
+	* @param int $errCode - error status code
 	*
 	* @return void - Only echo the result
 	*/
-    function output($data=null, $error='Error', $errorCode=500)
+    function output($data=null, $errMessage='Error', $errCode=500)
 	{
 		$app= Slim::getInstance();
 
 		//check if result is false
 		if ($data === false) {
 			global $base;
-			$logMess= empty($error) ? 'result is not expected' : $error;
-			$base->log->add('ERROR', 'API:'.$app->router()->getCurrentRoute()->getPattern().', Method: '.$app->router()->getCurrentRoute()->getCallable().', InputData: '.$app->request()->getBody().' - '.$logMess);
-
-			Utils\Api\Helper::displayError($error, $errorCode);
+			$logMess= empty($errMessage) ? 'result is not expected' : $errMessage;
+			$base->log->add('ERROR', 'API ['.$app->request()->getMethod().']:'.$app->router()->getCurrentRoute()->getPattern().', Params:'.print_r($app->router()->getCurrentRoute()->getParams(), true).', InputData: '.$app->request()->getBody().' - '.$logMess);
+			Utils\Api\Helper::displayError($errMessage, $errCode);
     	}
 		//END: check if result is false
 
