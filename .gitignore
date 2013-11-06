@@ -1,4 +1,5 @@
 data/logs/*
 data/cache/*
+application/config.php
 /test.php
 /test2.php
