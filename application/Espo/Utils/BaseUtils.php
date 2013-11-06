@@ -90,6 +90,7 @@ class BaseUtils
 			'Role' => '',
 			'Team' => '',
 			'User' => '',
+			'OutboundEmail' => '',
 			'Product' => 'Crm',
 			'Account' => 'Crm',
 			'Contact' => 'Crm',
