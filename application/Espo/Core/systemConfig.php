@@ -71,6 +71,12 @@ return array (
     'configPathFull',
     'configCustomPathFull',
     'crud',
+    'customDir',
+    'espoPath',
+    'espoModulePath',
+    'espoCustomPath',
+    'controllerPath',
+    'scopeModuleMap',
   ),
   'adminItems' =>
   array (
