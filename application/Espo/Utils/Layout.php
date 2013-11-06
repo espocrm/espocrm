@@ -77,6 +77,10 @@ class Layout extends FileManager
 	*/
 	function setLayout($data, $controller, $name)
 	{
+		if (empty($controller) || empty($name)) {
+			return false;
+		}
+		
 		$layoutPath = $this->getLayoutPath($controller);
 
         return $this->setContent($data, $layoutPath, $name.'.json');

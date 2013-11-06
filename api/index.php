@@ -3,10 +3,13 @@
 require_once('../bootstrap.php');
 
 use \Espo\Utils\Api as Api,
+	\Espo\Utils as Utils,
 	\Slim;
 
+/* START: remove for composer */
 require 'vendor/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
+/* END: remove for composer */
 
 //$app = new \Slim\Slim();
 
@@ -15,10 +18,68 @@ $app = new \Slim\Slim(array(
 ));
 $app->add(new Api\Auth());
 
+//convert all url params to camel case format
+$app->hook('slim.before.dispatch', function () use ($app) {
+	$routeParams= $app->router()->getCurrentRoute()->getParams();
+
+	if (!empty($routeParams)) {
+		$baseUtils= new Utils\BaseUtils();
+		foreach($routeParams as &$param) {
+	       $param= $baseUtils->toCamelCase($param);
+		}
+
+	    $app->router()->getCurrentRoute()->setParams($routeParams);
+	}
+});
+//END: convert all url params to camel case format
+
+
+$app->hook('slim.before.dispatch', function () use ($app) {
+
+	$currentRoute = $app->router()->getCurrentRoute();
+    $conditions = $currentRoute->getConditions();
+
+	if (isset($conditions['useController']) && !$conditions['useController']) {
+		return;
+	}
+
+	$espoController = call_user_func( $app->router()->getCurrentRoute()->getCallable() );
+	$espoKeys = array_keys($espoController);
+
+	if (!in_array('controller', $espoKeys) || !in_array('action', $espoKeys) || !in_array('scope', $espoKeys)) {
+		return;
+	}
+
+	$ControllerManager = new Utils\Controllers\Manager();
+
+	$params = $currentRoute->getParams();
+	$data = $app->request()->getBody();
+
+	//prepare controller Params
+	$controllerParams = array();
+    $controllerParams['HttpMethod'] = strtolower($app->request()->getMethod());
+
+	foreach($espoController as $key => $val) {
+    	if (strstr($val, ':')) {
+    		$paramName = str_replace(':', '', $val);
+        	$val = $params[$paramName];
+    	}
+		$controllerParams[$key] = $val;
+	}
+	//END: prepare controller Params
+
+	$result = $ControllerManager->call($controllerParams, $params, $data);
+
+	return Api\Helper::output($result->data, $result->errMessage, $result->errCode);
+});
+
+
+//return json response
 $app->hook('slim.after.router', function () use (&$app) {
     $app->contentType('application/json');
     //$app->contentType('text/javascript');
 });
+//END: return json response
 
 
 //Setup routes
@@ -31,99 +92,81 @@ $app->get('/settings/', '\Espo\Utils\Api\Rest::getSettings')->conditions( array(
 $app->map('/settings/', '\Espo\Utils\Api\Rest::patchSettings')->via('PATCH');
 //$app->get('/settings/', '\Espo\Utils\Api\Rest::getSettings')->conditions( array('auth' => false) );
 
-$app->get('/:controller/layout/:name/', '\Espo\Utils\Api\Rest::getLayout');
-$app->map('/:controller/layout/:name/', '\Espo\Utils\Api\Rest::patchLayout')->via('PATCH');
-$app->put('/:controller/layout/:name/', '\Espo\Utils\Api\Rest::putLayout');
+//$app->get('/:controller/layout/:name/', '\Espo\Utils\Api\Rest::getLayout');
+//$app->put('/:controller/layout/:name/', '\Espo\Utils\Api\Rest::putLayout');
+//$app->map('/:controller/layout/:name/', '\Espo\Utils\Api\Rest::patchLayout')->via('PATCH');
 
 $app->get('/app/user/', '\Espo\Utils\Api\Rest::getAppUser');
 
 
-/*$app->put('/settings/', 'Rest::putSettings');
+/*$app->get('/:controller/:id', function() {
+	return array(
+		'controller' => ':controller',
+		'action' => 'read',
+        'id' => ':id'
+	);
+})->conditions( array('useController' => true) );
 
-//$app->map('/hello/', 'Rest::putSettings')->via('PATCH');
+$app->post('/:controller', function() {
+	return array(
+		'controller' => ':controller',
+		'action' => 'create',
+	);
+})->conditions( array('useController' => true) );
 
-$app->get('/app/user/', 'Rest::getUserPreferences');
-$app->map('/app/:action', 'Rest::appAction')->via('GET', 'POST');
+$app->put('/:controller/:id', function() {
+	return array(
+		'controller' => ':controller',
+		'action' => 'update',
+		 'id' => ':id'
+	);
+})->conditions( array('useController' => true) );
 
-$app->get('/metadata/:type/:scope/', 'Rest::getMetadata');
-$app->put('/metadata/:type/:scope/', 'Rest::putMetadata');
-$app->get('/metadata/:type/', 'Rest::getMetadataByType');
-
-$app->get('/:controller/', 'Rest::getControllerList');
-$app->get('/:controller/:id/', 'Rest::getController');
-
-$app->get('/:controller/layout/:type/', 'Rest::getLayout');
-
-*/
-
-
-//$app->put('/:controller/layout/:type/', 'Rest::putLayout');
-//$app->map('/:controller/layout/:type/', 'Rest::patchLayout')->via('PATCH');
-
-//$app->put('/:controller/layout/:type/', 'Rest::putLayout');
-
-
-/*$app->put( '/:controller/layout/:type/', function ($controller, $type) use ( $app ) {
-
-
-
-	$mysqli = new mysqli('localhost', 'root', '', 'projects_jet');
-
-	$query= "SELECT * FROM layouts
-				WHERE controller='".$controller."' AND layout_type='".$type."' LIMIT 1";
-	$result = $mysqli->query($query);
-	$selectRow = $result->fetch_assoc();
-
-   	$data = $app->request()->getBody();
-   	//$data = $app->request()->params('payload');
-   	//$dataFull = array_keys($dataPut);
-   	//$data= $dataFull[0];
+$app->patch('/:controller/:id', function() {
+	return array(
+		'controller' => ':controller',
+		'action' => 'patch',
+		 'id' => ':id'
+	);
+})->conditions( array('useController' => true) );
 
 
-	if (empty($selectRow)) {
-		//insert
-		$query= "INSERT INTO layouts (
-						controller,
-						layout_type,
-						data
-					)
-					VALUES (
-						'".$controller."',
-						'".$type."',
-						'".$data."'
-					);";
-	}
-	else {
-		$query= "UPDATE layouts SET data='".$data."'
-					WHERE id='".$selectRow['id']."' ";
-		//update
-	}
+$app->get('/:controller/:id/:link/:foreignId', function() {
+	return array(
+		'controller' => ':controller',
+		'action' => 'readRelated',
+		'id' => ':id',
+		'link' => ':link',
+		'foreignId' => ':foreignId'
+	);
+})->conditions( array('useController' => true) );    */
 
-	$result = $mysqli->query($query);
+//Layout
+$app->get('/:controller/layout/:name/', function() {
+	return array(
+		'controller' => 'Layout',
+		'scope' => ':controller',
+		'action' => ':name',
+	);
+})->conditions( array('useController' => true) );
 
-	echo $data;
-});  */
+$app->put('/:controller/layout/:name/', function() {
+	return array(
+		'controller' => 'Layout',
+		'scope' => ':controller',
+		'action' => ':name',
+	);
+})->conditions( array('useController' => true) );
 
-/*$app->map('/app/:action', 'appAction')->via('GET', 'POST');
-$app->get('/:controller/', 'getControllerList');
-$app->get('/:controller/:id/', 'getController');*/
+$app->map('/:controller/layout/:name/', function() {
+	return array(
+		'controller' => 'Layout',
+		'scope' => ':controller',
+		'action' => ':name',
+	);
+})->via('PATCH')->conditions( array('useController' => true) );
+//END: Layout
 
-/*
-// POST route
-$app->post('/post', function () {
-    echo 'This is a POST route';
-});
-
-// PUT route
-$app->put('/put', function () {
-    echo 'This is a PUT route';
-});
-
-// DELETE route
-$app->delete('/delete', function () {
-    echo 'This is a DELETE route';
-});
-*/
 
 $app->run();
 

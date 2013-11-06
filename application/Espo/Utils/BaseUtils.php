@@ -6,6 +6,27 @@ use Espo\Utils as Utils;
 
 class BaseUtils
 {
+    /**
+	* @var string - default directory separator
+	*/
+	protected $separator= DIRECTORY_SEPARATOR;
+
+	/**
+	* @var array - scope list
+	*/
+	protected $scopes= array();
+
+
+	/**
+    * Get a folder separator
+	*
+	* @return string
+	*/
+    public function getSeparator()
+	{
+		return $this->separator;
+	}
+
 
 	function getObject($name)
 	{
@@ -25,15 +46,15 @@ class BaseUtils
 	/**
     * Get module name if it's a custom module or empty string for core entity
 	*
-	* @param string $entityName
+	* @param string $scopeName
 	*
 	* @return string
 	*/
-	public function getScopeModuleName($entityName)
+	public function getScopeModuleName($scopeName)
 	{
-    	$scopeModuleMap= (array) $this->getObject('Configurator')->get('scopeModuleMap');
+    	$scopeModuleMap= $this->getScopes();
 
-		$lowerEntityName= strtolower($entityName);
+		$lowerEntityName= strtolower($scopeName);
 		foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
 			if ($lowerEntityName==strtolower($rowEntityName)) {
 				return $rowModuleName;
@@ -42,6 +63,132 @@ class BaseUtils
 
 		return '';
 	}
+
+
+	/**
+    * Get Scopes
+	*
+	* @param string $moduleName
+	* @param bool $reload
+	*
+	* @return array
+	*/
+	//NEED TO CHANGE
+	public function getScopes($moduleName= '', $reload = false)
+	{
+    	if (!$reload && !empty($this->scopes)) {
+    		return $this->scopes;
+    	}
+
+
+		$this->scopes = array(
+			'customTest' => '',
+			'Attachment' => '',
+			'Comment' => '',
+			'Attachment' => '',
+			'EmailTemplate' => '',
+			'Role' => '',
+			'Team' => '',
+			'User' => '',
+			'Product' => 'Crm',
+			'Account' => 'Crm',
+			'Contact' => 'Crm',
+			'Lead' => 'Crm',
+			'Opportunity' => 'Crm',
+			'Calendar' => 'Crm',
+			'Meeting' => 'Crm',
+			'Call' => 'Crm',
+			'Task' => 'Crm',
+			'Case' => 'Crm',
+			'Prospect' => 'Crm',
+			'Email' => 'Crm',
+			'emailTemplate' => 'Crm',
+			'inboundEmail' => 'Crm',
+		);
+
+		return $this->scopes;
+	}
+
+
+	/**
+    * Get Scope path, ex. "Modules/Crm" for Account
+    *
+	* @param string $scopeName
+	* @param string $delim - delimiter
+	*
+	* @return string
+	*/
+	public function getScopePath($scopeName, $delim= '/')
+	{
+    	$moduleName= $this->getScopeModuleName($scopeName);
+
+		$config = new Utils\Configurator();
+    	$path= $config->get('espoPath');
+		if (!empty($moduleName)) {
+			$path= str_replace('{*}', $moduleName, $config->get('espoModulePath'));
+		}
+
+		if ($delim!='/') {
+           $path = str_replace('/', $delim, $path);
+		}
+
+		return $path;
+	}
+
+
+	/**
+    * Get Full Scope path, ex. "application/Modules/Crm" for Account
+    *
+	* @param string $scopeName
+	* @param string $delim - delimiter
+	*
+	* @return string
+	*/
+	public function getScopePathFull($scopeName, $delim= '/')
+	{
+		return $this->concatPath('application', $this->getScopePath($scopeName, $delim));
+	}
+
+	/**
+    * Check if scope exists
+	*
+	* @param string $scopeName
+	*
+	* @return bool
+	*/
+	public function isScopeExists($scopeName)
+	{
+    	$scopeModuleMap= $this->getScopes();
+
+		$lowerEntityName= strtolower($scopeName);
+		foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
+			if ($lowerEntityName==strtolower($rowEntityName)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+    * Convert to format with defined delimeter
+   	* ex. Espo/Utils to Espo\Utils
+	*
+	* @param string $name
+	* @param string $delim - delimiter
+	*
+	* @return string
+	*/
+	public function toFormat($name, $delim= '/')
+	{
+    	//preg_match_all('/[\/]/', $name, $match);
+    	//preg_match_all('/(.*)[\/\\\](.*)/', $name, $match);
+		//return $match;
+
+		return preg_replace('/[\/\\\]/', $delim, $name);
+	}
+
 
 	/**
     * Convert name to Camel Case format
@@ -133,6 +280,29 @@ class BaseUtils
 
 		return $array;
 	}
+
+
+	/**
+    * Get a full path of the file
+	*
+	* @param string $folderPath - Folder path, Ex. myfolder
+	* @param string $filePath - File path, Ex. file.json
+	*
+	* @return string
+	*/
+	public function concatPath($folderPath, $filePath='')
+	{
+		if (empty($filePath)) {
+        	return $folderPath;
+    	}
+		else {
+            if (substr($folderPath, -1)==$this->getSeparator()) {
+            	return $folderPath . $filePath;
+            }
+        	return $folderPath . $this->getSeparator() . $filePath;
+		}
+	}
+
 
 	/**
     * Return content of PHP file

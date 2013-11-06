@@ -34,7 +34,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
 		$this->fixture->setUrl('/custom-test/layout/test-put');
 		$data= '["amount","account","closeDate","leadSource","stage","probability","assignedUser"]';
-		$this->assertTrue($this->fixture->isSuccess( $data,1 ));
+		$this->assertTrue($this->fixture->isSuccess( $data ));
 	}
 
 	function testPatch()
@@ -50,7 +50,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->setType('GET');
 
-		$this->fixture->setUrl('/customTest/layout/detail-view');
+		$this->fixture->setUrl('/custom-test/layout/detail');
 		$this->assertTrue($this->fixture->isSuccess( $this->fixture->getResponse() ));
 
 		$this->fixture->setUrl('/need-to-be-not-real/layout/not-real');

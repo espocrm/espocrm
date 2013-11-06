@@ -40,11 +40,11 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->setType('PUT');
 
-		$this->fixture->setUrl('/metadata/custom-test/Account');
+		$this->fixture->setUrl('/metadata/custom-test/account');
 		$data= '{"module":"Test"}';
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
-		$this->fixture->setUrl('/metadata/custom-test/Test');
+		$this->fixture->setUrl('/metadata/custom-test/test');
 		$data= '{"module":"Test","var1":{"subvar1":"NEWsubval1","subvar55":"subval55"}}';
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 	}

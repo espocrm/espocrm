@@ -56,8 +56,7 @@ EOT;
 		$app= Slim::getInstance();
 		$data = $app->request()->getBody();
 
-		$metadata = new Utils\Metadata();
-        $type = $metadata->toCamelCase($type); //convert to camel case view
+		$metadata = new Utils\Metadata();  
 		$result = $metadata->setMetadata($data, $type, $scope);
 
 		if ($result===false) {
@@ -123,16 +122,28 @@ EOT;
 	*
 	* @return void
 	*/
+	/*public function getLayout($controller, $name)
+	{
+    	$ControllerManager = new Utils\Controllers\Manager();
+
+		$params = array('controller' => $controller, 'action' => $name);
+        $action= 'getLayout';
+		$result = $ControllerManager->call($action, $params, $data);
+
+		return Api\Helper::output($result->data, $result->errMessage, $result->errCode);
+
+		//$layout = new Utils\Layout();
+		//$data = $layout->getLayout($controller, $name);
+
+        //return Api\Helper::output($data, 'Cannot get this layout', 404);
+	} */
+
+
 	public function getLayout($controller, $name)
 	{
-		$layout = new Utils\Layout();
-
-		$controller = $layout->toCamelCase($controller);
-		$name = $layout->toCamelCase($name);
-		$data = $layout->getLayout($controller, $name);
-
-        return Api\Helper::output($data, 'Cannot get this layout', 404);
+		 return Api\Helper::output('Rest-get', 'Cannot get layout');
 	}
+
 
 	/**
     * Add or change layout
@@ -141,19 +152,7 @@ EOT;
 	*/
 	public function patchLayout($controller, $name)
 	{
-        $app= Slim::getInstance();
-		$data = $app->request()->getBody();
-
-		$layout= new Utils\Layout();
-		$controller = $layout->toCamelCase($controller);
-		$name = $layout->toCamelCase($name);
-        $result= $layout->mergeLayout($data, $controller, $name);
-
-		if ($result === false) {
-			Api\Helper::displayError('Saving error', 500);
-		}
-
-        return Api\Helper::output($data, 'Cannot get layout');
+        return Api\Helper::output('Rest-patch', 'Cannot get layout');
 	}
 
 
@@ -164,19 +163,7 @@ EOT;
 	*/
 	public function putLayout($controller, $name)
 	{
-        $app= Slim::getInstance();
-		$data = $app->request()->getBody();
-
-		$layout= new Utils\Layout();
-		$controller = $layout->toCamelCase($controller);
-		$name = $layout->toCamelCase($name);
-        $result= $layout->setLayout($data, $controller, $name);  
-
-		if ($result === false) {
-			Api\Helper::displayError('Saving error', 500);
-		}
-
-        return Api\Helper::output($data, 'Cannot get layout');
+		return Api\Helper::output('Rest-put', 'Cannot get layout');
 	}
 
 
