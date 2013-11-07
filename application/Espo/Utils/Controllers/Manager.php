@@ -27,8 +27,9 @@ class Manager
 	{
 		$baseUtils = new Utils\BaseUtils();
 
-		$espoPath = $baseUtils->getObject('Configurator')->get('espoPath');
-		$controllerPath= $baseUtils->concatPath($espoPath, 'Utils/Controllers');
+		$config = $baseUtils->getObject('Configurator');
+		$espoPath = $config->get('espoPath');
+		$controllerPath= $baseUtils->concatPath($espoPath, $config->get('controllerPath'));
 
 		$crud = $baseUtils->getObject('Configurator')->get('crud');
 		$baseAction = $crud->$controllerParams['HttpMethod'];
@@ -51,20 +52,20 @@ class Manager
 
 		//define default values
 		$classInfo = new \stdClass();
-		$classInfo->name = $this->getClassName($controllerPath, 'Controller');
+		$classInfo->name = $this->getClassName($baseUtils->concatPath($espoPath, 'Utils/Controllers'), 'Controller');
 		$classInfo->path = $this->getClassPath($classInfo->name);
 		$classInfo->method = $this->getDefinedMethod($classInfo->name, $controller->baseAction, $controller->action);
 
 
-		//Espo\Utils\Controlles\Layout  and  Custom\Espo\Utils\Controlles\Layout
+		//Espo\Controlles\Layout  and  Custom\Espo\Controlles\Layout
 		$controllerClass = $this->getClassName($controllerPath, $controller->name);
 		$classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
-		//END: Espo\Utils\Controlles\Layout and Custom\Espo\Utils\Controlles\Layout
+		//END: Espo\Controlles\Layout and Custom\Utils\Controlles\Layout
 
 
 		if (!empty($controller->scope)) {
 			//path in Modules dir
-			$controllerDir = $baseUtils->concatPath( $baseUtils->getScopePath($controller->scope), $baseUtils->getObject('Configurator')->get('controllerPath') );
+			$controllerDir = $baseUtils->concatPath( $baseUtils->getScopePath($controller->scope), $config->get('controllerPath') );
 
 			//ex. Modules\Crm\Controllers\Layout  and  Cusom\Modules\Crm\Controllers\Layout
 			$controllerClass = $this->getClassName($controllerDir, $controller->name);

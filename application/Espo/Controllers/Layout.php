@@ -1,10 +1,10 @@
 <?php
 
-namespace Espo\Utils\Controllers;
+namespace Espo\Controllers;
 
 use Espo\Utils as Utils;
 
-class Layout extends Controller
+class Layout extends Utils\Controllers\Controller
 {
 
     public function read($params, $data)
