@@ -3,3 +3,9 @@ data/cache/*
 application/config.php
 /test.php
 /test2.php
+application/Espo/Metadata/scopes/CustomTest.json
+application/Espo/Metadata/customTest/*
+application/Espo/Layouts/customTest/*
+application/Modules/Crm/Metadata/customTest/*
+application/Modules/Crm/Layouts/customTest/*
+

@@ -17,22 +17,30 @@ class Metadata extends FileManager
     * Get Metadata context
 	*
 	* @param $isJSON
+	* @param bool $reload
+	*
 	* @return json | array
 	*/
 	//HERE --- ADD CREATING DOCTRINE METADATA
-	function getMetadata($isJSON=true, $reload=false)
+	public function getMetadata($isJSON=true, $reload=false)
 	{
 		$config= $this->getConfig();
 
-		if (!file_exists($config->cacheFile) || $reload) {
-        	$result= $this->uniteFiles($config, true);
+		if (!$this->getObject('Configurator')->get('useCache')) {
+           	$reload = true;
+		}
 
-			if ($result===false) {
-            	$this->getObject('Log')->add('FATAL', 'Metadata:getMetadata() - metadata unite file cannot be created');
+		if (!file_exists($config->cacheFile) || $reload) {
+        	$data= $this->getMetadataOnly(false, true);
+			if ($data === false) {
+				return false;
 			}
 
+			//save medatada to cache files
+	        $this->setContentPHP($data, $this->getConfig()->cacheFile);
+
 			$this->getObject('Log')->add('Debug', 'Metadata:getMetadata() - converting to doctrine metadata');
-            if ($this->convertToDoctrine($this->getContent($config->cacheFile))) {
+            if ($this->convertToDoctrine($data)) {
             	$this->getObject('Log')->add('Debug', 'Metadata:getMetadata() - database rebuild');
 
 				try{
@@ -43,17 +51,47 @@ class Metadata extends FileManager
             }
 		}
 
-		if (file_exists($config->cacheFile)) {
-			$data= $this->getContent($config->cacheFile);
-            if ($isJSON) {
-            	$data= $this->getObject('JSON')->encode($data);
-            }
+		return $this->getMetadataOnly($isJSON, false);
+	}
 
-			return $data;
+
+
+	/**
+    * Get Metadata only without saving it to the a file and database sync
+	*
+	* @param $isJSON
+	* @param bool $reload
+	*
+	* @return json | array
+	*/
+
+	public function getMetadataOnly($isJSON=true, $reload=false)
+	{
+		$config= $this->getConfig();
+
+		if (!$this->getObject('Configurator')->get('useCache')) {
+        	$reload = true;
 		}
 
-		return false;
+		$data = false;
+		if (!file_exists($config->cacheFile) || $reload) {
+        	$data= $this->uniteFiles($config, true);
+
+			if ($data === false) {
+            	$this->getObject('Log')->add('FATAL', 'Metadata:getMetadata() - metadata unite file cannot be created');
+			}
+		}
+        else if (file_exists($config->cacheFile)) {
+			$data= $this->getContent($config->cacheFile);
+		}
+
+		if ($isJSON) {
+        	$data= $this->getObject('JSON')->encode($data);
+        }
+
+		return $data;
 	}
+
 
 
 	/**
@@ -199,7 +237,7 @@ class Metadata extends FileManager
 	* @param string $configParams - ["name", "cachePath", "corePath", "customPath"]
 	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
 	*
-	* @return bool
+	* @return array
 	*/
 	function uniteFiles($configParams, $recursively=false)
 	{
@@ -217,16 +255,11 @@ class Metadata extends FileManager
 			foreach($dirList as $dirName) {
 				$curPath= str_replace('{*}', $dirName, $configParams->customPath);
                 $content= $this->merge($content, $this->uniteFilesSingle($curPath, $configParams->name, $recursively, $dirName));
-
-				//print_r($content );
 			}
 		}
-
         //END: merge matadata files
 
-		//save medatada to cache files
-        return $this->setContentPHP($content, $this->getConfig()->cacheFile);
-		//END: save medatada to cache files 
+		return $content;
 	}
 
     /**

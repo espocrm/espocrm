@@ -14,7 +14,7 @@ class BaseUtils
 	/**
 	* @var array - scope list
 	*/
-	protected $scopes= array();
+	public $scopes= array();
 
 
 	/**
@@ -80,33 +80,15 @@ class BaseUtils
     		return $this->scopes;
     	}
 
+        $metadata = new Utils\Metadata();
+		$metadataList = $metadata->getMetadataOnly(false);
 
-		$this->scopes = array(
-			'customTest' => '',
-			'Attachment' => '',
-			'Comment' => '',
-			'Attachment' => '',
-			'EmailTemplate' => '',
-			'Role' => '',
-			'Team' => '',
-			'User' => '',
-			'Product' => 'Crm',
-			'Account' => 'Crm',
-			'Contact' => 'Crm',
-			'Lead' => 'Crm',
-			'Opportunity' => 'Crm',
-			'Calendar' => 'Crm',
-			'Meeting' => 'Crm',
-			'Call' => 'Crm',
-			'Task' => 'Crm',
-			'Case' => 'Crm',
-			'Prospect' => 'Crm',
-			'Email' => 'Crm',
-			'emailTemplate' => 'Crm',
-			'inboundEmail' => 'Crm',
-		);
+        $scopes = array();
+		foreach($metadataList['scopes'] as $name => $details) {
+        	$scopes[$name] = isset($details['module']) ? $details['module'] : '';
+		}
 
-		return $this->scopes;
+		return $this->scopes = $scopes;
 	}
 
 

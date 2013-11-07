@@ -208,7 +208,7 @@ class FileManager extends BaseUtils
 	* @param string $configParams - ["name", "cachePath", "corePath", "customPath"]
 	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
 	*
-	* @return bool
+	* @return array
 	*/
 	public function uniteFiles($configParams, $recursively=false)
 	{

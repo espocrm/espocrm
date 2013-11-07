@@ -9,10 +9,9 @@ class Metadata extends Utils\Controllers\Controller
 
     public function read($params, $data)
 	{
-		$metadata= new Utils\Metadata();
-        $devMode= !$metadata->getObject('Configurator')->get('useCache');
+		$metadata= new Utils\Metadata();  
 
-		$data= $metadata->getMetadata(true, $devMode);
+		$data= $metadata->getMetadata(true);
 
        	return array($data, 'Cannot reach metadata data');
 	}
