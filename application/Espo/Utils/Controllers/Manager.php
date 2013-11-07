@@ -25,107 +25,111 @@ class Manager
 	*/
 	public function call($controllerParams, $params, $data = '')
 	{
-	  $baseUtils = new Utils\BaseUtils();
+		$baseUtils = new Utils\BaseUtils();
 
-	  $espoPath = $baseUtils->getObject('Configurator')->get('espoPath');
-	  $controllerPath= $baseUtils->concatPath($espoPath, 'Utils/Controllers');
+		$espoPath = $baseUtils->getObject('Configurator')->get('espoPath');
+		$controllerPath= $baseUtils->concatPath($espoPath, 'Utils/Controllers');
 
-	  $crud = $baseUtils->getObject('Configurator')->get('crud');
-	  $baseAction = $crud->$controllerParams['HttpMethod'];
-	  if (empty($baseAction)) {
-      	return $this->response(false, 'Cannot find action for HTTP Method ['.$controllerParams['HttpMethod'].']', 404);
-	  }
+		$crud = $baseUtils->getObject('Configurator')->get('crud');
+		$baseAction = $crud->$controllerParams['HttpMethod'];
+		if (empty($baseAction)) {
+			return $this->response(false, 'Cannot find action for HTTP Method ['.$controllerParams['HttpMethod'].']', 404);
+		}
 
-	  $controller = (object) array(
-	  	'name' => strtolower($controllerParams['controller']),
-	  	'baseAction' => $baseAction,
-	  	'scope' => $controllerParams['scope'],
-	  	'action' => $controllerParams['action'],
-	  );
-
-
-	  if (!$baseUtils->isScopeExists($controller->scope)) {
-      	return $this->response(false, 'Controller for Scope ['.$controller->scope.'] does not exist.', 404);
-	  }
-
-	  //define default values
-	  $classInfo = new \stdClass();
-      $classInfo->name = $this->getClassName($controllerPath, 'Controller');
-      $classInfo->path = $this->getClassPath($classInfo->name);
-      $classInfo->method = $this->getDefinedMethod($classInfo->name, $controller->baseAction, $controller->action);
+		$controller = (object) array(
+			'name' => strtolower($controllerParams['controller']),
+			'baseAction' => $baseAction,
+			'scope' => isset($controllerParams['scope']) ? $controllerParams['scope'] : '',
+			'action' => isset($controllerParams['action']) ? $controllerParams['action'] : '',
+		);
 
 
-	  //Espo\Utils\Controlles\Layout  and  Custom\Espo\Utils\Controlles\Layout
-	  $controllerClass = $this->getClassName($controllerPath, $controller->name);
-      $classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
-      //END: Espo\Utils\Controlles\Layout and Custom\Espo\Utils\Controlles\Layout
+		if (!empty($controller->scope) && !$baseUtils->isScopeExists($controller->scope)) {
+			return $this->response(false, 'Controller for Scope ['.$controller->scope.'] does not exist.', 404);
+		}
 
 
-	  //path in Modules dir
-	  $controllerDir = $baseUtils->concatPath( $baseUtils->getScopePath($controller->scope), $baseUtils->getObject('Configurator')->get('controllerPath') );
-
-	  //ex. Modules\Crm\Controllers\Layout  and  Cusom\Modules\Crm\Controllers\Layout
-	  $controllerClass = $this->getClassName($controllerDir, $controller->name);
-	  $classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
-	  //END: ex. Modules\Crm\controllers\Layout and Cusom\Modules\Crm\controllers\Layout
+		//define default values
+		$classInfo = new \stdClass();
+		$classInfo->name = $this->getClassName($controllerPath, 'Controller');
+		$classInfo->path = $this->getClassPath($classInfo->name);
+		$classInfo->method = $this->getDefinedMethod($classInfo->name, $controller->baseAction, $controller->action);
 
 
-      //ex. Modules\Crm\Controllers\AccountLayout  and  Custom\Modules\Crm\Controllers\AccountLayout
-	  $controllerClass = $this->getClassName($controllerDir, $controller->scope.'-'.$controller->name);
-	  $classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
-	  //END: ex. Modules\Crm\Controllers\AccountLayout and Custom\Modules\Crm\Controllers\AccountLayout
+		//Espo\Utils\Controlles\Layout  and  Custom\Espo\Utils\Controlles\Layout
+		$controllerClass = $this->getClassName($controllerPath, $controller->name);
+		$classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
+		//END: Espo\Utils\Controlles\Layout and Custom\Espo\Utils\Controlles\Layout
 
 
-	  //CHECK ACTION
-	  if (empty($classInfo->method)) {
-      	return $this->response(false, 'Actions ['.$controller->baseAction.'] and ['.$controller->action.'] do not exist.', 404);
-	  }
-	  //END: CHECK ACTION
+		if (!empty($controller->scope)) {
+			//path in Modules dir
+			$controllerDir = $baseUtils->concatPath( $baseUtils->getScopePath($controller->scope), $baseUtils->getObject('Configurator')->get('controllerPath') );
+
+			//ex. Modules\Crm\Controllers\Layout  and  Cusom\Modules\Crm\Controllers\Layout
+			$controllerClass = $this->getClassName($controllerDir, $controller->name);
+			$classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
+			//END: ex. Modules\Crm\controllers\Layout and Cusom\Modules\Crm\controllers\Layout
 
 
-	  //call class method
-      $className = $classInfo->name;
-	  $classMethod = $classInfo->method;
+			//ex. Modules\Crm\Controllers\AccountLayout  and  Custom\Modules\Crm\Controllers\AccountLayout
+			$controllerClass = $this->getClassName($controllerDir, $controller->scope.'-'.$controller->name);
+			$classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller);
+			//END: ex. Modules\Crm\Controllers\AccountLayout and Custom\Modules\Crm\Controllers\AccountLayout
+		}
 
-	  require_once($classInfo->path);
-	  $class = new $className();
 
-	  //call before method if exists: beforeRead, beforeDetailSmall, beforeReadDetailSmall
-	  $beforeMethod = $this->getDefinedMethod($className, $controller->baseAction, $controller->action, 'before');
-      if ( !empty($beforeMethod) ) {
+		//CHECK ACTION
+		if (empty($classInfo->method)) {
+			return $this->response(false, 'Actions ['.$controller->baseAction.'] and ['.$controller->action.'] do not exist.', 404);
+		}
+		//END: CHECK ACTION
+
+
+
+		//call class method
+		$className = $classInfo->name;
+		$classMethod = $classInfo->method;
+
+		require_once($classInfo->path);
+		$class = new $className();
+
+		//call before method if exists: beforeRead, beforeDetailSmall, beforeReadDetailSmall
+		$beforeMethod = $this->getDefinedMethod($className, $controller->baseAction, $controller->action, 'before');
+		if ( !empty($beforeMethod) ) {
 			$class->$beforeMethod($params, $data);
-	  } //END: call before method if exists
+		} //END: call before method if exists
 
-	  $result = $class->$classMethod($params, $data);
+		$result = $class->$classMethod($params, $data);
 
-      //call after method if exists: afterRead, afterDetailSmall, afterReadDetailSmall
-	  $afterMethod = $this->getDefinedMethod($className, $controller->baseAction, $controller->action, 'after');
-      if ( !empty($afterMethod) ) {
+		//call after method if exists: afterRead, afterDetailSmall, afterReadDetailSmall
+		$afterMethod = $this->getDefinedMethod($className, $controller->baseAction, $controller->action, 'after');
+		if ( !empty($afterMethod) ) {
 			try {
-            	$class->$afterMethod($params, $data, $result);
+				$class->$afterMethod($params, $data, $result);
 			} catch (\Exception $e) {
-                $class->$afterMethod($params, $data);
+				$class->$afterMethod($params, $data);
 			}
-	  } //END: call after method if exists
+		} //END: call after method if exists
 
 
-	  if (is_array($result)) {
+		if (is_array($result)) {
 
-	  	$returnResult = array_values($result);
-		if (!empty($returnResult[2])) {
-        	return $this->response($returnResult[0], $returnResult[1], $returnResult[2]);
+			$returnResult = array_values($result);
+			if (!empty($returnResult[2])) {
+				return $this->response($returnResult[0], $returnResult[1], $returnResult[2]);
+			}
+			if (!empty($returnResult[1])) {
+				return $this->response($returnResult[0], $returnResult[1]);
+			}
+			if (!empty($returnResult[0])) {
+				return $this->response($returnResult[0]);
+			}
+
+			return $this->response(false, 'Cannot find requested controller', 404);
 		}
-		if (!empty($returnResult[1])) {
-        	return $this->response($returnResult[0], $returnResult[1]);
-		}
-		if (!empty($returnResult[0])) {
-        	return $this->response($returnResult[0]);
-		}
 
-		return $this->response(false, 'Cannot find requested controller', 404);
-	  }
-
-	  return $this->response($result);
+		return $this->response($result);
 	}
 
 
@@ -154,19 +158,23 @@ class Manager
 		   	$classMethod = $prefixBaseAction;
 		}
 
+		if (empty($action)) {
+			return $classMethod;
+		}
+
 		//method as 'detailSmall'
-        $prefixAction = $baseUtils->toCamelCase($prefix.$action);
+		$prefixAction = $baseUtils->toCamelCase($prefix.$action);
 		if ( method_exists($className, $prefixAction) ) {
-		   	$classMethod = $prefixAction;
+			$classMethod = $prefixAction;
 		}
 
 		//method as 'readDetailSmall'
 		$fullAction = $baseUtils->toCamelCase($prefix.$baseAction.'-'.$action);
 		if (method_exists($className, $fullAction)) {
-		   	$classMethod = $fullAction;
+			$classMethod = $fullAction;
 		}
 
-        return $classMethod;
+		return $classMethod;
 	}
 
 	/**
@@ -191,10 +199,10 @@ class Manager
 		}
 
 		if ($isCustom) {
-            $baseUtils = new Utils\BaseUtils();
+			$baseUtils = new Utils\BaseUtils();
 			$espoCustomDir = $baseUtils->getObject('Configurator')->get('espoCustomPath');
 			$controllerClass = $espoCustomDir.'\\'.$className;
-        	$classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller, false);
+			$classInfo = $this->setClassInfo($controllerClass, $classInfo, $controller, false);
 		}
 
 		return $classInfo;

@@ -37,7 +37,7 @@ EOT;
 	public function getMetadata()
 	{
     	global $base;
-		$devMode= !$base->config->get('useCache');   
+		$devMode= !$base->config->get('useCache');
 
 		$metadata= new Utils\Metadata();
 		$data= $metadata->getMetadata(true, $devMode);
@@ -56,7 +56,7 @@ EOT;
 		$app= Slim::getInstance();
 		$data = $app->request()->getBody();
 
-		$metadata = new Utils\Metadata();  
+		$metadata = new Utils\Metadata();
 		$result = $metadata->setMetadata($data, $type, $scope);
 
 		if ($result===false) {
@@ -137,36 +137,6 @@ EOT;
 
         //return Api\Helper::output($data, 'Cannot get this layout', 404);
 	} */
-
-
-	public function getLayout($controller, $name)
-	{
-		 return Api\Helper::output('Rest-get', 'Cannot get layout');
-	}
-
-
-	/**
-    * Add or change layout
-	*
-	* @return void
-	*/
-	public function patchLayout($controller, $name)
-	{
-        return Api\Helper::output('Rest-patch', 'Cannot get layout');
-	}
-
-
-	/**
-    * Add or change layout
-	*
-	* @return void
-	*/
-	public function putLayout($controller, $name)
-	{
-		return Api\Helper::output('Rest-put', 'Cannot get layout');
-	}
-
-
 
 }
 
