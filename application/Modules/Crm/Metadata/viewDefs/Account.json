@@ -1,11 +1,6 @@
 {
    "bottomPanels":{
       "detail":[
-         {
-            "name":"stream",
-            "label":"Stream",
-            "view":"Record.Panels.Stream"
-         }
       ]
    },
    "sidePanels":{
