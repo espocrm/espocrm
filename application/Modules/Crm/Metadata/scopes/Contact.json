@@ -1,2 +1,3 @@
 {"entity":true,"layouts":true,"tab":true,"acl":true,"module":"Crm",
-	"customizable": true}
+	"customizable": true,
+	"stream": true}

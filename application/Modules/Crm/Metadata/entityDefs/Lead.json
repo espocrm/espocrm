@@ -22,7 +22,8 @@
         },
         "status": {
             "type": "enum",
-            "options": ["", "New", "Assigned", "In Process", "Converted", "Recycled", "Dead"]
+            "options": ["New", "Assigned", "In Process", "Converted", "Recycled", "Dead"],
+            "default": "New"
         },
         "source": {
             "type": "enum",

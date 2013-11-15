@@ -3,6 +3,12 @@
         "message": {
             "type": "text"
         },
+        "data": {
+            "type": "text"
+        },
+        "type": {
+            "type": "varchar"
+        },
         "parent": {
             "type": "linkParent"
         },
@@ -42,7 +48,7 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "foreign": "attachments"
+            "foreign": "notes"
         }
     },
     "collection": {
