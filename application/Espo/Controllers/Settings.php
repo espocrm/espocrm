@@ -2,22 +2,16 @@
 
 namespace Espo\Controllers;
 
-use Espo\Utils as Utils;
+use Espo\Core\Utils as Utils;
 
-class Settings extends Utils\Controllers\Controller
+class Settings extends \Espo\Core\Controllers\Base
 {
 
     public function read($params, $data)
 	{
-		global $base;
-		$config= new Utils\Configurator();
+        $isAdmin = $this->getContainer()->get('user')->isAdmin();
 
-		$isAdmin= false;
-		if(isset($base->currentUser) && is_object($base->currentUser)) {
-        	$isAdmin= $base->currentUser->isAdmin();
-		}
-
-		$data= $config->getJSON($isAdmin);
+		$data= $this->getContainer()->get('config')->getJsonData($isAdmin);
 
         return array($data, 'Cannot get settings');
 	}
@@ -25,21 +19,15 @@ class Settings extends Utils\Controllers\Controller
 
 	public function patch($params, $data)
 	{  
-		global $base;
-		$config= new Utils\Configurator();
+        $isAdmin = $this->getContainer()->get('user')->isAdmin();
 
-		$isAdmin= false;
-		if(isset($base->currentUser) && is_object($base->currentUser)) {
-        	$isAdmin= $base->currentUser->isAdmin();
-		}
-
-		$result= $config->setJSON($data, $isAdmin);
+		$result= $this->getContainer()->get('config')->setJsonData($data, $isAdmin);
 
         if ($result===false) {
         	return array($result, 'Cannot save settings');
         }
 
-        $data= $config->getJSON($isAdmin);
+        $data= $this->getContainer()->get('config')->getJsonData($isAdmin);
         return array($data, 'Cannot get settings');
 	}   
 

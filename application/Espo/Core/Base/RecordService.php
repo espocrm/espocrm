@@ -13,9 +13,7 @@ abstract class RecordService
 	private $config;
 	
 	private $entityManager;
-	
-	private $entityManager;
-	
+
 	private $datetime;
 	
 	public function setConfig($config)
