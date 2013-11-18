@@ -18,16 +18,16 @@ return array (
   array (
     'name' => 'metadata',
     'cachePath' => 'data/cache/application',
-    'corePath' => 'application/Espo/Metadata',
-    'customPath' => 'application/Modules/{*}/Metadata',
+    'corePath' => 'application/Espo/Resources/metadata',
+    'customPath' => 'application/Modules/{*}/Resources/metadata',
     'doctrineCache' => 'data/cache/doctrine/metadata',
   ),
 
   'layoutConfig' =>
   array (
     'name' => 'layouts',
-    'corePath' => 'application/Espo/Layouts',
-    'customPath' => 'application/Modules/{*}/Layouts',
+    'corePath' => 'application/Espo/Resources/layouts',
+    'customPath' => 'application/Modules/{*}/Resources/layouts',
   ),
 
   'languageConfig' =>

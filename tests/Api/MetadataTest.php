@@ -42,7 +42,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
 		//check if file exists
-		$this->assertTrue(file_exists('application/Modules/Crm/Metadata/customTest/account.json'));
+		$this->assertTrue(file_exists('application/Modules/Crm/Resources/metadata/customTest/Account.json'));
 
 
 		$this->fixture->setUrl('/metadata/custom-test/custom-test');
@@ -50,7 +50,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
 		//check if file exists
-		$this->assertTrue(file_exists('application/Espo/Metadata/customTest/customTest.json'));
+		$this->assertTrue(file_exists('application/Espo/Resources/metadata/customTest/CustomTest.json'));
 	}
 
 

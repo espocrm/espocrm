@@ -96,11 +96,15 @@ class Application
 		//convert all url params to camel case format
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
-			$routeParams= $slim->router()->getCurrentRoute()->getParams();
+			$conditions = $slim->router()->getCurrentRoute()->getConditions();
+			$upperList = isset($conditions['upper']) ? $conditions['upper'] : array();
+
+            $routeParams= $slim->router()->getCurrentRoute()->getParams();
 
 			if (!empty($routeParams)) {
-				foreach($routeParams as &$param) {
-					$param= \Espo\Core\Utils\Util::toCamelCase($param);
+				foreach($routeParams as $name => &$param) {
+                    $isUpper = in_array($name, $upperList) ? true : false;
+					$param= \Espo\Core\Utils\Util::toCamelCase($param, $isUpper);
 				}
 
 			    $slim->router()->getCurrentRoute()->setParams($routeParams);
@@ -187,7 +191,7 @@ EOT;
 				'scope' => ':scope',
 				'action' => ':type',
 			);
-		});
+		})->conditions( array('upper' => array('scope')) );
 		//END: METADATA
 
 		//SETTINGS
@@ -211,7 +215,7 @@ EOT;
 				'scope' => ':controller',
 				'action' => ':name',
 			);
-		});
+		})->conditions( array('upper' => array('controller')) );
 
 		$this->getSlim()->put('/:controller/layout/:name/', function() {
 			return array(
@@ -219,7 +223,7 @@ EOT;
 				'scope' => ':controller',
 				'action' => ':name',
 			);
-		});
+		})->conditions( array('upper' => array('controller')) );
 
 		$this->getSlim()->map('/:controller/layout/:name/', function() {
 			return array(
@@ -227,7 +231,7 @@ EOT;
 				'scope' => ':controller',
 				'action' => ':name',
 			);
-		})->via('PATCH');
+		})->via('PATCH')->conditions( array('upper' => array('controller')) );
 		//END: LAYOUT
 
 

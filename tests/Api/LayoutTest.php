@@ -34,7 +34,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
 		//check if file exists
-		$this->assertTrue(file_exists('application/Espo/Layouts/customTest/testPut.json'));
+		$this->assertTrue(file_exists('application/Espo/Resources/layouts/CustomTest/testPut.json'));
 	}
 
 	function testPatch()
@@ -46,7 +46,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
 		//check if file exists
-		$this->assertTrue(file_exists('application/Espo/Layouts/customTest/testPatch.json'));
+		$this->assertTrue(file_exists('application/Espo/Resources/layouts/CustomTest/testPatch.json'));
 	}
 
 	function testGet()
