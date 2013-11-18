@@ -8,6 +8,9 @@ class Auth extends \Slim\Middleware
 {
 	private $container;
 
+	protected $realm = 'Protected Area';
+
+
 	public function __construct(\Espo\Core\Container $container)
 	{
 		$this->container = $container;

@@ -24,7 +24,7 @@ class Metadata
 		$this->config = $config;
 		$this->uniteFiles = $uniteFiles;
 		$this->fileManager = $fileManager;
-		$this->doctrineConverter = new \Espo\Core\Doctrine\EspoConverter($this);       //TODO
+		$this->doctrineConverter = new \Espo\Core\Doctrine\EspoConverter($entityManager, $this);
 	}
 
 
@@ -85,7 +85,7 @@ class Metadata
             	$GLOBALS['log']->add('Debug', 'Metadata:get() - database rebuild');
 
 				try{
-	        		$this->rebuildDatabase();
+	        		$this->getDoctrineConverter()->rebuildDatabase();
 			   	} catch (\Exception $e) {
 				  	$GLOBALS['log']->add('EXCEPTION', 'Try to rebuildDatabase'.'. Details: '.$e->getMessage());
 				}
@@ -168,7 +168,7 @@ class Metadata
 		//create classes only for "defs" metadata
 		if ($type == $this->doctrineMetadataName) {
         	try{
-	        	$this->generateEntities( array($this->getEntityPath($scope)) );
+	        	$this->getDoctrineConverter()->generateEntities( array($this->getEntityPath($scope)) );
 		   	} catch (\Exception $e) {
 			 	$GLOBALS['log']->add('EXCEPTION', 'Try to generate Entities for '.$this->getEntityPath($scope).'. Details: '.$e->getMessage());
 			}
@@ -211,56 +211,6 @@ class Metadata
         return $result;
 	}
 
-	/**
-	* Rebuild a database accordinly to metadata
-    *
-	* @return bool
-	*/
-	public function rebuildDatabase()
-	{
-		$tool = new \Doctrine\ORM\Tools\SchemaTool($this->getEntityManager());
-
-        $cmf = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory();
-	    $cmf->setEntityManager($this->getEntityManager()); // $em is EntityManager instance
-	    $classes = $cmf->getAllMetadata();
-
-		$tool->updateSchema($classes);
-
-		return true;  //always true, because updateSchema just returns the VOID
-	}
-
-	/**
-	* Rebuild a database accordinly to metadata
-    *
-	* @return bool
-	*/
-	public function generateEntities($classNames)
-	{
-    	if (!is_array($classNames)) {
-    		$classNames= (array) $classNames;
-    	}
-
-		$cmf = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory();
-	    $cmf->setEntityManager($this->getEntityManager()); // $em is EntityManager instance
-
-		$metadata= array();
-		foreach($classNames as $className) {
-        	$metadata[]=  $cmf->getMetadataFor($className);
-		}
-
-		if (!empty($metadata)) {
-			$generator = new \Doctrine\ORM\Tools\EntityGenerator();
-		    $generator->setGenerateAnnotations(false);
-		    $generator->setGenerateStubMethods(true);
-		    $generator->setRegenerateEntityIfExists(false);
-		    $generator->setUpdateEntityIfExists(false);
-		    $generator->generate($metadata, 'application');
-
-			return true; //always true, because generate just returns the VOID
-		}
-
-		return false;
-	}
 
 	/**
     * Unite file content to the file

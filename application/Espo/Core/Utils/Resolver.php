@@ -54,12 +54,12 @@ class Resolver
 
 	protected function DBALException($args)
 	{
-		return $this->getMetadata()->rebuildDatabase();
+		return $this->getMetadata()->getDoctrineConverter()->rebuildDatabase();
 	}
 
     protected function ReflectionException($args)
 	{
-		return $this->getMetadata()->generateEntities($args);
+		return $this->getMetadata()->getDoctrineConverter()->generateEntities($args);
 	}
 
 
