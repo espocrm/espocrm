@@ -15,7 +15,7 @@ class Container
     {
 
     }
-    
+
     
     public function get($name)
     {
@@ -32,8 +32,20 @@ class Container
     	if (method_exists($this, $loadMethod)) {
     		$this->$loadMethod();
     	} else {
-    		// TODO external loader class (\Espo\Core\Loaders\EntityManager::load())
+            //external loader class \Espo\Core\Loaders\<className> or \Custom\Espo\Core\Loaders\<className> with load() method
+			$className = '\Custom\Espo\Core\Loaders\\'.ucfirst($name);
+            if (!class_exists($className)) {
+            	$className = '\Espo\Core\Loaders\\'.ucfirst($name);
+            }
+
+			if (class_exists($className)) {
+            	 $loadClass = new $className($this);
+				 $this->data[$name] = $loadClass->load();
+			}
     	}
+
+		// TODO throw an exception
+    	return null;
     }
 
 
@@ -114,14 +126,6 @@ class Container
     	$this->data['resolver'] = new \Espo\Core\Utils\Resolver(
 			$this->get('metadata')
   		);
-    }
-
-    private function loadEntityManager()
-    {
-		$espoEM = new \Espo\Core\Utils\EntityManager(
-			$this->get('config')
-		);
-        $this->data['entityManager'] = $espoEM->create();
     }
 
 	private function loadControllerManager()

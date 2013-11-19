@@ -185,13 +185,13 @@ EOT;
 			);
 		});
 
-		$this->getSlim()->put('/metadata/:type/:scope/', function() {
+		/*$this->getSlim()->put('/metadata/:type/:scope/', function() {
 			return array(
 				'controller' => 'Metadata',
 				'scope' => ':scope',
 				'action' => ':type',
 			);
-		})->conditions( array('upper' => array('scope')) );
+		})->conditions( array('upper' => array('scope')) ); */
 		//END: METADATA
 
 		//SETTINGS
