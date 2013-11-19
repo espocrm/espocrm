@@ -19,17 +19,14 @@
 
 namespace Doctrine\DBAL\Schema\Visitor;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform,
-    Doctrine\DBAL\Schema\Table,
-    Doctrine\DBAL\Schema\Schema,
-    Doctrine\DBAL\Schema\Column,
-    Doctrine\DBAL\Schema\ForeignKeyConstraint,
-    Doctrine\DBAL\Schema\Constraint,
-    Doctrine\DBAL\Schema\Sequence,
-    Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
+use Doctrine\DBAL\Schema\Sequence;
 
 /**
- * Remove assets from a schema that are not in the default namespace.
+ * Removes assets from a schema that are not in the default namespace.
  *
  * Some databases such as MySQL support cross databases joins, but don't
  * allow to call DDLs to a database from another connected database.
@@ -40,17 +37,17 @@ use Doctrine\DBAL\Platforms\AbstractPlatform,
  * and removes them from the SChema instance.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @since 2.2
+ * @since  2.2
  */
-class RemoveNamespacedAssets implements Visitor
+class RemoveNamespacedAssets extends AbstractVisitor
 {
     /**
-     * @var Schema
+     * @var \Doctrine\DBAL\Schema\Schema
      */
     private $schema;
 
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
      */
     public function acceptSchema(Schema $schema)
     {
@@ -58,7 +55,7 @@ class RemoveNamespacedAssets implements Visitor
     }
 
     /**
-     * @param Table $table
+     * {@inheritdoc}
      */
     public function acceptTable(Table $table)
     {
@@ -66,8 +63,9 @@ class RemoveNamespacedAssets implements Visitor
             $this->schema->dropTable($table->getName());
         }
     }
+
     /**
-     * @param Sequence $sequence
+     * {@inheritdoc}
      */
     public function acceptSequence(Sequence $sequence)
     {
@@ -77,15 +75,7 @@ class RemoveNamespacedAssets implements Visitor
     }
 
     /**
-     * @param Column $column
-     */
-    public function acceptColumn(Table $table, Column $column)
-    {
-    }
-
-    /**
-     * @param Table $localTable
-     * @param ForeignKeyConstraint $fkConstraint
+     * {@inheritdoc}
      */
     public function acceptForeignKey(Table $localTable, ForeignKeyConstraint $fkConstraint)
     {
@@ -101,13 +91,5 @@ class RemoveNamespacedAssets implements Visitor
         if ( ! $foreignTable->isInDefaultNamespace($this->schema->getName()) ) {
             $localTable->removeForeignKey($fkConstraint->getName());
         }
-    }
-
-    /**
-     * @param Table $table
-     * @param Index $index
-     */
-    public function acceptIndex(Table $table, Index $index)
-    {
     }
 }

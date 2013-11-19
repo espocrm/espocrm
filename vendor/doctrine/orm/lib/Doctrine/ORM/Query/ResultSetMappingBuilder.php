@@ -23,7 +23,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
- * A ResultSetMappingBuilder uses the EntityManager to automatically populate entity fields
+ * A ResultSetMappingBuilder uses the EntityManager to automatically populate entity fields.
  *
  * @author Michael Ridgway <mcridgway@gmail.com>
  * @since 2.1
@@ -31,89 +31,222 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 class ResultSetMappingBuilder extends ResultSetMapping
 {
     /**
+     * Picking this rename mode will register entity columns as is,
+     * as they are in the database. This can cause clashes when multiple
+     * entities are fetched that have columns with the same name.
+     *
+     * @var int
+     */
+    const COLUMN_RENAMING_NONE = 1;
+
+    /**
+     * Picking custom renaming allows the user to define the renaming
+     * of specific columns with a rename array that contains column names as
+     * keys and result alias as values.
+     *
+     * @var int
+     */
+    const COLUMN_RENAMING_CUSTOM = 2;
+
+    /**
+     * Incremental renaming uses a result set mapping internal counter to add a
+     * number to each column result, leading to uniqueness. This only works if
+     * you use {@see generateSelectClause()} to generate the SELECT clause for
+     * you.
+     *
+     * @var int
+     */
+    const COLUMN_RENAMING_INCREMENT = 3;
+
+    /**
+     * @var int
+     */
+    private $sqlCounter = 0;
+
+    /**
      * @var EntityManager
      */
     private $em;
 
     /**
-     * @param EntityManager
+     * Default column renaming mode.
+     *
+     * @var int
      */
-    public function __construct(EntityManager $em)
+    private $defaultRenameMode;
+
+    /**
+     * @param EntityManager $em
+     * @param integer       $defaultRenameMode
+     */
+    public function __construct(EntityManager $em, $defaultRenameMode = self::COLUMN_RENAMING_NONE)
     {
-        $this->em = $em;
+        $this->em                = $em;
+        $this->defaultRenameMode = $defaultRenameMode;
     }
 
     /**
      * Adds a root entity and all of its fields to the result set.
      *
-     * @param string $class The class name of the root entity.
-     * @param string $alias The unique alias to use for the root entity.
-     * @param array $renamedColumns Columns that have been renamed (tableColumnName => queryColumnName)
+     * @param string   $class          The class name of the root entity.
+     * @param string   $alias          The unique alias to use for the root entity.
+     * @param array    $renamedColumns Columns that have been renamed (tableColumnName => queryColumnName).
+     * @param int|null $renameMode     One of the COLUMN_RENAMING_* constants or array for BC reasons (CUSTOM).
+     *
+     * @return void
      */
-    public function addRootEntityFromClassMetadata($class, $alias, $renamedColumns = array())
+    public function addRootEntityFromClassMetadata($class, $alias, $renamedColumns = array(), $renameMode = null)
     {
+        $renameMode     = $renameMode ?: $this->defaultRenameMode;
+        $columnAliasMap = $this->getColumnAliasMap($class, $renameMode, $renamedColumns);
+
         $this->addEntityResult($class, $alias);
-        $this->addAllClassFields($class, $alias, $renamedColumns);
+        $this->addAllClassFields($class, $alias, $columnAliasMap);
     }
 
     /**
      * Adds a joined entity and all of its fields to the result set.
      *
-     * @param string $class The class name of the joined entity.
-     * @param string $alias The unique alias to use for the joined entity.
-     * @param string $parentAlias The alias of the entity result that is the parent of this joined result.
-     * @param object $relation The association field that connects the parent entity result with the joined entity result.
-     * @param array $renamedColumns Columns that have been renamed (tableColumnName => queryColumnName)
+     * @param string   $class          The class name of the joined entity.
+     * @param string   $alias          The unique alias to use for the joined entity.
+     * @param string   $parentAlias    The alias of the entity result that is the parent of this joined result.
+     * @param object   $relation       The association field that connects the parent entity result
+     *                                 with the joined entity result.
+     * @param array    $renamedColumns Columns that have been renamed (tableColumnName => queryColumnName).
+     * @param int|null $renameMode     One of the COLUMN_RENAMING_* constants or array for BC reasons (CUSTOM).
+     *
+     * @return void
      */
-    public function addJoinedEntityFromClassMetadata($class, $alias, $parentAlias, $relation, $renamedColumns = array())
+    public function addJoinedEntityFromClassMetadata($class, $alias, $parentAlias, $relation, $renamedColumns = array(), $renameMode = null)
     {
+        $renameMode     = $renameMode ?: $this->defaultRenameMode;
+        $columnAliasMap = $this->getColumnAliasMap($class, $renameMode, $renamedColumns);
+
         $this->addJoinedEntityResult($class, $alias, $parentAlias, $relation);
-        $this->addAllClassFields($class, $alias, $renamedColumns);
+        $this->addAllClassFields($class, $alias, $columnAliasMap);
     }
 
     /**
-     * Adds all fields of the given class to the result set mapping (columns and meta fields)
+     * Adds all fields of the given class to the result set mapping (columns and meta fields).
+     *
+     * @param string $class
+     * @param string $alias
+     * @param array  $columnAliasMap
+     *
+     * @return void
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function addAllClassFields($class, $alias, $renamedColumns = array())
+    protected function addAllClassFields($class, $alias, $columnAliasMap = array())
     {
         $classMetadata = $this->em->getClassMetadata($class);
+        $platform      = $this->em->getConnection()->getDatabasePlatform();
+
         if ($classMetadata->isInheritanceTypeSingleTable() || $classMetadata->isInheritanceTypeJoined()) {
             throw new \InvalidArgumentException('ResultSetMapping builder does not currently support inheritance.');
         }
-        $platform = $this->em->getConnection()->getDatabasePlatform();
+
+
         foreach ($classMetadata->getColumnNames() as $columnName) {
             $propertyName = $classMetadata->getFieldName($columnName);
-            if (isset($renamedColumns[$columnName])) {
-                $columnName = $renamedColumns[$columnName];
-            }
-            $columnName = $platform->getSQLResultCasing($columnName);
-            if (isset($this->fieldMappings[$columnName])) {
+            $columnAlias  = $platform->getSQLResultCasing($columnAliasMap[$columnName]);
+
+            if (isset($this->fieldMappings[$columnAlias])) {
                 throw new \InvalidArgumentException("The column '$columnName' conflicts with another column in the mapper.");
             }
-            $this->addFieldResult($alias, $columnName, $propertyName);
+
+            $this->addFieldResult($alias, $columnAlias, $propertyName);
         }
+
         foreach ($classMetadata->associationMappings as $associationMapping) {
             if ($associationMapping['isOwningSide'] && $associationMapping['type'] & ClassMetadataInfo::TO_ONE) {
                 foreach ($associationMapping['joinColumns'] as $joinColumn) {
-                    $columnName = $joinColumn['name'];
-                    $renamedColumnName = isset($renamedColumns[$columnName]) ? $renamedColumns[$columnName] : $columnName;
-                    $renamedColumnName = $platform->getSQLResultCasing($renamedColumnName);
-                    if (isset($this->metaMappings[$renamedColumnName])) {
-                        throw new \InvalidArgumentException("The column '$renamedColumnName' conflicts with another column in the mapper.");
+                    $columnName  = $joinColumn['name'];
+                    $columnAlias = $platform->getSQLResultCasing($columnAliasMap[$columnName]);
+
+                    if (isset($this->metaMappings[$columnAlias])) {
+                        throw new \InvalidArgumentException("The column '$columnAlias' conflicts with another column in the mapper.");
                     }
-                    $this->addMetaResult($alias, $renamedColumnName, $columnName);
+
+                    $this->addMetaResult(
+                        $alias,
+                        $columnAlias,
+                        $columnName,
+                        (isset($associationMapping['id']) && $associationMapping['id'] === true)
+                    );
                 }
             }
         }
     }
 
+    /**
+     * Gets column alias for a given column.
+     *
+     * @param string $columnName
+     * @param int    $mode
+     * @param array  $customRenameColumns
+     *
+     * @return string
+     */
+    private function getColumnAlias($columnName, $mode, array $customRenameColumns)
+    {
+        switch ($mode) {
+            case self::COLUMN_RENAMING_INCREMENT:
+                return $columnName . $this->sqlCounter++;
+
+            case self::COLUMN_RENAMING_CUSTOM:
+                return isset($customRenameColumns[$columnName])
+                    ? $customRenameColumns[$columnName] : $columnName;
+
+            case self::COLUMN_RENAMING_NONE:
+                return $columnName;
+
+        }
+    }
+
+    /**
+     * Retrieves a class columns and join columns aliases that are used in the SELECT clause.
+     *
+     * This depends on the renaming mode selected by the user.
+     *
+     * @param string $className
+     * @param int    $mode
+     * @param array  $customRenameColumns
+     *
+     * @return array
+     */
+    private function getColumnAliasMap($className, $mode, array $customRenameColumns)
+    {
+        if ($customRenameColumns) { // for BC with 2.2-2.3 API
+            $mode = self::COLUMN_RENAMING_CUSTOM;
+        }
+
+        $columnAlias = array();
+        $class       = $this->em->getClassMetadata($className);
+
+        foreach ($class->getColumnNames() as $columnName) {
+            $columnAlias[$columnName] = $this->getColumnAlias($columnName, $mode, $customRenameColumns);
+        }
+
+        foreach ($class->associationMappings as $associationMapping) {
+            if ($associationMapping['isOwningSide'] && $associationMapping['type'] & ClassMetadataInfo::TO_ONE) {
+                foreach ($associationMapping['joinColumns'] as $joinColumn) {
+                    $columnName = $joinColumn['name'];
+                    $columnAlias[$columnName] = $this->getColumnAlias($columnName, $mode, $customRenameColumns);
+                }
+            }
+        }
+
+        return $columnAlias;
+    }
 
     /**
      * Adds the mappings of the results of native SQL queries to the result set.
      *
-     * @param   ClassMetadataInfo $class
-     * @param   array $queryMapping
-     * @return  ResultSetMappingBuilder
+     * @param ClassMetadataInfo $class
+     * @param array             $queryMapping
+     *
+     * @return ResultSetMappingBuilder
      */
     public function addNamedNativeQueryMapping(ClassMetadataInfo $class, array $queryMapping)
     {
@@ -127,13 +260,13 @@ class ResultSetMappingBuilder extends ResultSetMapping
     /**
      * Adds the class mapping of the results of native SQL queries to the result set.
      *
-     * @param   ClassMetadataInfo $class
-     * @param   string $resultClassName
+     * @param ClassMetadataInfo $class
+     * @param string            $resultClassName
+     *
      * @return  ResultSetMappingBuilder
      */
     public function addNamedNativeQueryResultClassMapping(ClassMetadataInfo $class, $resultClassName)
     {
-
         $classMetadata  = $this->em->getClassMetadata($resultClassName);
         $shortName      = $classMetadata->reflClass->getShortName();
         $alias          = strtolower($shortName[0]).'0';
@@ -166,9 +299,10 @@ class ResultSetMappingBuilder extends ResultSetMapping
     /**
      * Adds the result set mapping of the results of native SQL queries to the result set.
      *
-     * @param   ClassMetadataInfo $class
-     * @param   string $resultSetMappingName
-     * @return  ResultSetMappingBuilder
+     * @param ClassMetadataInfo $class
+     * @param string            $resultSetMappingName
+     *
+     * @return ResultSetMappingBuilder
      */
     public function addNamedNativeQueryResultSetMapping(ClassMetadataInfo $class, $resultSetMappingName)
     {
@@ -212,9 +346,12 @@ class ResultSetMappingBuilder extends ResultSetMapping
      * Adds the entity result mapping of the results of native SQL queries to the result set.
      * 
      * @param ClassMetadataInfo $classMetadata
-     * @param array $entityMapping
-     * @param string $alias
+     * @param array             $entityMapping
+     * @param string            $alias
+     *
      * @return ResultSetMappingBuilder
+     *
+     * @throws \InvalidArgumentException
      */
     public function addNamedNativeQueryEntityResultMapping(ClassMetadataInfo $classMetadata, array $entityMapping, $alias)
     {
@@ -260,5 +397,52 @@ class ResultSetMappingBuilder extends ResultSetMapping
         }
 
         return $this;
+    }
+
+    /**
+     * Generates the Select clause from this ResultSetMappingBuilder.
+     *
+     * Works only for all the entity results. The select parts for scalar
+     * expressions have to be written manually.
+     *
+     * @param array $tableAliases
+     *
+     * @return string
+     */
+    public function generateSelectClause($tableAliases = array())
+    {
+        $sql = "";
+
+        foreach ($this->columnOwnerMap as $columnName => $dqlAlias) {
+            $tableAlias = isset($tableAliases[$dqlAlias])
+                ? $tableAliases[$dqlAlias] : $dqlAlias;
+
+            if ($sql) {
+                $sql .= ", ";
+            }
+
+            $sql .= $tableAlias . ".";
+
+            if (isset($this->fieldMappings[$columnName])) {
+                $class = $this->em->getClassMetadata($this->declaringClasses[$columnName]);
+                $sql  .= $class->fieldMappings[$this->fieldMappings[$columnName]]['columnName'];
+            } else if (isset($this->metaMappings[$columnName])) {
+                $sql .= $this->metaMappings[$columnName];
+            } else if (isset($this->discriminatorColumn[$columnName])) {
+                $sql .= $this->discriminatorColumn[$columnName];
+            }
+
+            $sql .= " AS " . $columnName;
+        }
+
+        return $sql;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->generateSelectClause(array());
     }
 }

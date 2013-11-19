@@ -14,71 +14,56 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\DBAL\Schema;
 
-use Doctrine\DBAL\Events;
-use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 use Doctrine\DBAL\Driver\SQLSrv\SQLSrvException;
+use Doctrine\DBAL\Types\Type;
 
 /**
- * SQL Server Schema Manager
+ * SQL Server Schema Manager.
  *
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @author      Juozas Kaziukenas <juozas@juokaz.com>
- * @since       2.0
+ * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @author  Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author  Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
+ * @author  Juozas Kaziukenas <juozas@juokaz.com>
+ * @author  Steve Müller <st.mueller@dzh-online.de>
+ * @since   2.0
  */
 class SQLServerSchemaManager extends AbstractSchemaManager
 {
     /**
-     * @override
+     * {@inheritdoc}
+     */
+    protected function _getPortableSequenceDefinition($sequence)
+    {
+        return new Sequence($sequence['name'], $sequence['increment'], $sequence['start_value']);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function _getPortableTableColumnDefinition($tableColumn)
     {
-        $dbType = strtolower($tableColumn['TYPE_NAME']);
-
-        $autoincrement = false;
-        if (stripos($dbType, 'identity')) {
-            $dbType = trim(str_ireplace('identity', '', $dbType));
-            $autoincrement = true;
-        }
-
-        $dbType = strtok($dbType, '(), ');
-
-        $type = array();
-        $unsigned = $fixed = null;
+        $dbType = strtok($tableColumn['type'], '(), ');
+        $fixed = null;
+        $length = (int) $tableColumn['length'];
+        $default = $tableColumn['default'];
 
         if (!isset($tableColumn['name'])) {
             $tableColumn['name'] = '';
         }
 
-        $default = $tableColumn['COLUMN_DEF'];
-
         while ($default != ($default2 = preg_replace("/^\((.*)\)$/", '$1', $default))) {
             $default = trim($default2, "'");
+
+            if ($default == 'getdate()') {
+                $default = $this->_platform->getCurrentTimestampSQL();
+            }
         }
 
-        $length = (int) $tableColumn['LENGTH'];
-
-        $type = $this->_platform->getDoctrineTypeMapping($dbType);
-        switch ($type) {
-            case 'char':
-                if ($tableColumn['LENGTH'] == '1') {
-                    $type = 'boolean';
-                    if (preg_match('/^(is|has)/', $tableColumn['name'])) {
-                        $type = array_reverse($type);
-                    }
-                }
-                $fixed = true;
-                break;
-            case 'text':
-                $fixed = false;
-                break;
-        }
         switch ($dbType) {
             case 'nchar':
             case 'nvarchar':
@@ -86,98 +71,104 @@ class SQLServerSchemaManager extends AbstractSchemaManager
                 // Unicode data requires 2 bytes per character
                 $length = $length / 2;
                 break;
+            case 'varchar':
+                // TEXT type is returned as VARCHAR(MAX) with a length of -1
+                if ($length == -1) {
+                    $dbType = 'text';
+                }
+                break;
+        }
+
+        $type = $this->_platform->getDoctrineTypeMapping($dbType);
+
+        switch ($type) {
+            case 'char':
+                $fixed = true;
+                break;
+            case 'text':
+                $fixed = false;
+                break;
         }
 
         $options = array(
             'length' => ($length == 0 || !in_array($type, array('text', 'string'))) ? null : $length,
-            'unsigned' => (bool) $unsigned,
+            'unsigned' => false,
             'fixed' => (bool) $fixed,
             'default' => $default !== 'NULL' ? $default : null,
-            'notnull' => (bool) ($tableColumn['IS_NULLABLE'] != 'YES'),
-            'scale' => $tableColumn['SCALE'],
-            'precision' => $tableColumn['PRECISION'],
-            'autoincrement' => $autoincrement,
+            'notnull' => (bool) $tableColumn['notnull'],
+            'scale' => $tableColumn['scale'],
+            'precision' => $tableColumn['precision'],
+            'autoincrement' => (bool) $tableColumn['autoincrement'],
         );
 
-        return new Column($tableColumn['COLUMN_NAME'], \Doctrine\DBAL\Types\Type::getType($type), $options);
+        $platformOptions = array(
+            'collate' => $tableColumn['collation'] == 'NULL' ? null : $tableColumn['collation']
+        );
+
+        $column = new Column($tableColumn['name'], Type::getType($type), $options);
+        $column->setPlatformOptions($platformOptions);
+
+        return $column;
     }
 
     /**
-     * @override
+     * {@inheritdoc}
+     */
+    protected function _getPortableTableForeignKeysList($tableForeignKeys)
+    {
+        $foreignKeys = array();
+
+        foreach ($tableForeignKeys as $tableForeignKey) {
+            if ( ! isset($foreignKeys[$tableForeignKey['ForeignKey']])) {
+                $foreignKeys[$tableForeignKey['ForeignKey']] = array(
+                    'local_columns' => array($tableForeignKey['ColumnName']),
+                    'foreign_table' => $tableForeignKey['ReferenceTableName'],
+                    'foreign_columns' => array($tableForeignKey['ReferenceColumnName']),
+                    'name' => $tableForeignKey['ForeignKey'],
+                    'options' => array(
+                        'onUpdate' => str_replace('_', ' ', $tableForeignKey['update_referential_action_desc']),
+                        'onDelete' => str_replace('_', ' ', $tableForeignKey['delete_referential_action_desc'])
+                    )
+                );
+            } else {
+                $foreignKeys[$tableForeignKey['ForeignKey']]['local_columns'][] = $tableForeignKey['ColumnName'];
+                $foreignKeys[$tableForeignKey['ForeignKey']]['foreign_columns'][] = $tableForeignKey['ReferenceColumnName'];
+            }
+        }
+
+        return parent::_getPortableTableForeignKeysList($foreignKeys);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function _getPortableTableIndexesList($tableIndexRows, $tableName=null)
     {
-        // TODO: Remove code duplication with AbstractSchemaManager;
-        $result = array();
-        foreach ($tableIndexRows as $tableIndex) {
-            $indexName = $keyName = $tableIndex['index_name'];
-            if (strpos($tableIndex['index_description'], 'primary key') !== false) {
-                $keyName = 'primary';
-            }
-            $keyName = strtolower($keyName);
-
-            $flags = array();
-            if (strpos($tableIndex['index_description'], 'clustered') !== false) {
-                $flags[] = 'clustered';
-            } else if (strpos($tableIndex['index_description'], 'nonclustered') !== false) {
-                $flags[] = 'nonclustered';
-            }
-
-            $result[$keyName] = array(
-                'name' => $indexName,
-                'columns' => explode(', ', $tableIndex['index_keys']),
-                'unique' => strpos($tableIndex['index_description'], 'unique') !== false,
-                'primary' => strpos($tableIndex['index_description'], 'primary key') !== false,
-                'flags' => $flags,
-            );
+        foreach ($tableIndexRows as &$tableIndex) {
+            $tableIndex['non_unique'] = (boolean) $tableIndex['non_unique'];
+            $tableIndex['primary'] = (boolean) $tableIndex['primary'];
+            $tableIndex['flags'] = $tableIndex['flags'] ? array($tableIndex['flags']) : null;
         }
 
-        $eventManager = $this->_platform->getEventManager();
-
-        $indexes = array();
-        foreach ($result as $indexKey => $data) {
-            $index = null;
-            $defaultPrevented = false;
-
-            if (null !== $eventManager && $eventManager->hasListeners(Events::onSchemaIndexDefinition)) {
-                $eventArgs = new SchemaIndexDefinitionEventArgs($data, $tableName, $this->_conn);
-                $eventManager->dispatchEvent(Events::onSchemaIndexDefinition, $eventArgs);
-
-                $defaultPrevented = $eventArgs->isDefaultPrevented();
-                $index = $eventArgs->getIndex();
-            }
-
-            if ( ! $defaultPrevented) {
-                $index = new Index($data['name'], $data['columns'], $data['unique'], $data['primary']);
-            }
-
-            if ($index) {
-                $indexes[$indexKey] = $index;
-            }
-        }
-
-        return $indexes;
+        return parent::_getPortableTableIndexesList($tableIndexRows, $tableName);
     }
 
     /**
-     * @override
+     * {@inheritdoc}
      */
-    public function _getPortableTableForeignKeyDefinition($tableForeignKey)
+    protected function _getPortableTableForeignKeyDefinition($tableForeignKey)
     {
         return new ForeignKeyConstraint(
-                (array) $tableForeignKey['ColumnName'],
-                $tableForeignKey['ReferenceTableName'],
-                (array) $tableForeignKey['ReferenceColumnName'],
-                $tableForeignKey['ForeignKey'],
-                array(
-                    'onUpdate' => str_replace('_', ' ', $tableForeignKey['update_referential_action_desc']),
-                    'onDelete' => str_replace('_', ' ', $tableForeignKey['delete_referential_action_desc']),
-                )
+            $tableForeignKey['local_columns'],
+            $tableForeignKey['foreign_table'],
+            $tableForeignKey['foreign_columns'],
+            $tableForeignKey['name'],
+            $tableForeignKey['options']
         );
     }
 
     /**
-     * @override
+     * {@inheritdoc}
      */
     protected function _getPortableTableDefinition($table)
     {
@@ -185,7 +176,7 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * @override
+     * {@inheritdoc}
      */
     protected function _getPortableDatabaseDefinition($database)
     {
@@ -193,7 +184,7 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * @override
+     * {@inheritdoc}
      */
     protected function _getPortableViewDefinition($view)
     {
@@ -202,12 +193,7 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * List the indexes for a given table returning an array of Index instances.
-     *
-     * Keys of the portable indexes list are all lower-cased.
-     *
-     * @param string $table The name of the table
-     * @return Index[] $tableIndexes
+     * {@inheritdoc}
      */
     public function listTableIndexes($table)
     {
@@ -233,7 +219,7 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * @override
+     * {@inheritdoc}
      */
     public function alterTable(TableDiff $tableDiff)
     {
@@ -246,11 +232,16 @@ class SQLServerSchemaManager extends AbstractSchemaManager
             }
         }
 
-        return parent::alterTable($tableDiff);
+        parent::alterTable($tableDiff);
     }
 
     /**
-     * This function retrieves the constraints for a given column.
+     * Returns the SQL to retrieve the constraints for a given column.
+     *
+     * @param string $table
+     * @param string $column
+     *
+     * @return string
      */
     private function getColumnConstraintSQL($table, $column)
     {

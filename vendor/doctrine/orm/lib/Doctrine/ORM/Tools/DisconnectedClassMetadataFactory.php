@@ -19,8 +19,8 @@
 
 namespace Doctrine\ORM\Tools;
 
+use Doctrine\Common\Persistence\Mapping\StaticReflectionService;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
  * The DisconnectedClassMetadataFactory is used to create ClassMetadataInfo objects
@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  * load some mapping information and use it to do things like generate code
  * from the mapping information.
  *
- * 
+ *
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
@@ -38,8 +38,11 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  */
 class DisconnectedClassMetadataFactory extends ClassMetadataFactory
 {
+    /**
+     * @return \Doctrine\Common\Persistence\Mapping\StaticReflectionService
+     */
     public function getReflectionService()
     {
-        return new \Doctrine\Common\Persistence\Mapping\StaticReflectionService;
+        return new StaticReflectionService();
     }
 }

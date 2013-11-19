@@ -108,11 +108,12 @@ class Lexer extends \Doctrine\Common\Lexer
     const T_WHERE               = 154;
     const T_WITH                = 155;
     const T_PARTIAL             = 156;
+    const T_NEW                 = 157;
 
     /**
      * Creates a new query scanner object.
      *
-     * @param string $input a query string
+     * @param string $input A query string.
      */
     public function __construct($input)
     {

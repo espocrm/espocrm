@@ -19,17 +19,19 @@
 
 namespace Doctrine\ORM\Tools\Console\Command;
 
-use Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console,
-    Doctrine\ORM\Tools\Export\ClassMetadataExporter,
-    Doctrine\ORM\Tools\ConvertDoctrine1Schema,
-    Doctrine\ORM\Tools\EntityGenerator;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console;
+use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
+use Doctrine\ORM\Tools\ConvertDoctrine1Schema;
+use Doctrine\ORM\Tools\EntityGenerator;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Command to convert a Doctrine 1 schema to a Doctrine 2 mapping file.
  *
- * 
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
@@ -37,15 +39,15 @@ use Symfony\Component\Console\Input\InputArgument,
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
  */
-class ConvertDoctrine1SchemaCommand extends Console\Command\Command
+class ConvertDoctrine1SchemaCommand extends Command
 {
     /**
-     * @var EntityGenerator
+     * @var EntityGenerator|null
      */
     private $entityGenerator = null;
 
     /**
-     * @var ClassMetadataExporter
+     * @var ClassMetadataExporter|null
      */
     private $metadataExporter = null;
 
@@ -63,6 +65,8 @@ class ConvertDoctrine1SchemaCommand extends Console\Command\Command
 
     /**
      * @param EntityGenerator $entityGenerator
+     *
+     * @return void
      */
     public function setEntityGenerator(EntityGenerator $entityGenerator)
     {
@@ -83,6 +87,8 @@ class ConvertDoctrine1SchemaCommand extends Console\Command\Command
 
     /**
      * @param ClassMetadataExporter $metadataExporter
+     *
+     * @return void
      */
     public function setMetadataExporter(ClassMetadataExporter $metadataExporter)
     {
@@ -90,12 +96,13 @@ class ConvertDoctrine1SchemaCommand extends Console\Command\Command
     }
 
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
     protected function configure()
     {
         $this
         ->setName('orm:convert-d1-schema')
+        ->setAliases(array('orm:convert:d1-schema'))
         ->setDescription('Converts Doctrine 1.X schema into a Doctrine 2.X schema.')
         ->setDefinition(array(
             new InputArgument(
@@ -129,12 +136,10 @@ EOT
     }
 
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
-    protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getHelper('em')->getEntityManager();
-
         // Process source directories
         $fromPaths = array_merge(array($input->getArgument('from-path')), $input->getOption('from'));
 
@@ -145,19 +150,20 @@ EOT
         $extend = $input->getOption('extend');
         $numSpaces = $input->getOption('num-spaces');
 
-        $this->convertDoctrine1Schema($em, $fromPaths, $destPath, $toType, $numSpaces, $extend, $output);
+        $this->convertDoctrine1Schema($fromPaths, $destPath, $toType, $numSpaces, $extend, $output);
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em
-     * @param array $fromPaths
-     * @param string $destPath
-     * @param string $toType
-     * @param int $numSpaces
-     * @param string|null $extend
-     * @param Console\Output\OutputInterface $output
+     * @param array           $fromPaths
+     * @param string          $destPath
+     * @param string          $toType
+     * @param int             $numSpaces
+     * @param string|null     $extend
+     * @param OutputInterface $output
+     *
+     * @throws \InvalidArgumentException
      */
-    public function convertDoctrine1Schema($em, $fromPaths, $destPath, $toType, $numSpaces, $extend, $output)
+    public function convertDoctrine1Schema(array $fromPaths, $destPath, $toType, $numSpaces, $extend, OutputInterface $output)
     {
         foreach ($fromPaths as &$dirName) {
             $dirName = realpath($dirName);
@@ -166,7 +172,9 @@ EOT
                 throw new \InvalidArgumentException(
                     sprintf("Doctrine 1.X schema directory '<info>%s</info>' does not exist.", $dirName)
                 );
-            } else if ( ! is_readable($dirName)) {
+            }
+
+            if ( ! is_readable($dirName)) {
                 throw new \InvalidArgumentException(
                     sprintf("Doctrine 1.X schema directory '<info>%s</info>' does not have read permissions.", $dirName)
                 );
@@ -177,7 +185,9 @@ EOT
             throw new \InvalidArgumentException(
                 sprintf("Doctrine 2.X mapping destination directory '<info>%s</info>' does not exist.", $destPath)
             );
-        } else if ( ! is_writable($destPath)) {
+        }
+
+        if ( ! is_writable($destPath)) {
             throw new \InvalidArgumentException(
                 sprintf("Doctrine 2.X mapping destination directory '<info>%s</info>' does not have write permissions.", $destPath)
             );
@@ -201,20 +211,20 @@ EOT
         $metadata = $converter->getMetadata();
 
         if ($metadata) {
-            $output->write(PHP_EOL);
+            $output->writeln('');
 
             foreach ($metadata as $class) {
-                $output->write(sprintf('Processing entity "<info>%s</info>"', $class->name) . PHP_EOL);
+                $output->writeln(sprintf('Processing entity "<info>%s</info>"', $class->name));
             }
 
             $exporter->setMetadata($metadata);
             $exporter->export();
 
-            $output->write(PHP_EOL . sprintf(
+            $output->writeln(PHP_EOL . sprintf(
                 'Converting Doctrine 1.X schema to "<info>%s</info>" mapping type in "<info>%s</info>"', $toType, $destPath
             ));
         } else {
-            $output->write('No Metadata Classes to process.' . PHP_EOL);
+            $output->writeln('No Metadata Classes to process.');
         }
     }
 }

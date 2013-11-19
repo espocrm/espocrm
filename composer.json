@@ -1,6 +1,7 @@
 {
     "require": {
-        "doctrine/orm": "2.*",
+        "doctrine/orm": "2.4.*",
+        "symfony/yaml": "2.*",
 		"slim/slim": "2.*"
     },
     "autoload": {

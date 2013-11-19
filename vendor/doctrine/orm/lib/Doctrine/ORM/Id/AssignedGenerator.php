@@ -23,7 +23,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
 /**
- * Special generator for application-assigned identifiers (doesnt really generate anything).
+ * Special generator for application-assigned identifiers (doesn't really generate anything).
  *
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
@@ -36,8 +36,13 @@ class AssignedGenerator extends AbstractIdGenerator
     /**
      * Returns the identifier assigned to the given entity.
      *
-     * @param object $entity
+     * @param EntityManager $em
+     * @param object        $entity
+     *
      * @return mixed
+     *
+     * @throws \Doctrine\ORM\ORMException
+     *
      * @override
      */
     public function generate(EntityManager $em, $entity)
@@ -47,7 +52,7 @@ class AssignedGenerator extends AbstractIdGenerator
         $identifier = array();
 
         foreach ($idFields as $idField) {
-            $value = $class->reflFields[$idField]->getValue($entity);
+            $value = $class->getFieldValue($entity, $idField);
 
             if ( ! isset($value)) {
                 throw ORMException::entityMissingAssignedIdForField($entity, $idField);

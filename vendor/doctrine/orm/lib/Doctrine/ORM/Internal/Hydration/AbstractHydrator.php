@@ -19,12 +19,11 @@
 
 namespace Doctrine\ORM\Internal\Hydration;
 
-use PDO,
-    Doctrine\DBAL\Connection,
-    Doctrine\DBAL\Types\Type,
-    Doctrine\ORM\EntityManager,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use PDO;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Base class for all hydrators. A hydrator is a class that provides some form
@@ -37,25 +36,53 @@ use PDO,
  */
 abstract class AbstractHydrator
 {
-    /** @var \Doctrine\ORM\Query\ResultSetMapping The ResultSetMapping. */
+    /**
+     * The ResultSetMapping.
+     *
+     * @var \Doctrine\ORM\Query\ResultSetMapping
+     */
     protected $_rsm;
 
-    /** @var EntityManager The EntityManager instance. */
+    /**
+     * The EntityManager instance.
+     *
+     * @var EntityManager
+     */
     protected $_em;
 
-    /** @var \Doctrine\DBAL\Platforms\AbstractPlatform The dbms Platform instance */
+    /**
+     * The dbms Platform instance.
+     *
+     * @var \Doctrine\DBAL\Platforms\AbstractPlatform
+     */
     protected $_platform;
 
-    /** @var \Doctrine\ORM\UnitOfWork The UnitOfWork of the associated EntityManager. */
+    /**
+     * The UnitOfWork of the associated EntityManager.
+     *
+     * @var \Doctrine\ORM\UnitOfWork
+     */
     protected $_uow;
 
-    /** @var array The cache used during row-by-row hydration. */
+    /**
+     * The cache used during row-by-row hydration.
+     *
+     * @var array
+     */
     protected $_cache = array();
 
-    /** @var \Doctrine\DBAL\Driver\Statement The statement that provides the data to hydrate. */
+    /**
+     * The statement that provides the data to hydrate.
+     *
+     * @var \Doctrine\DBAL\Driver\Statement
+     */
     protected $_stmt;
 
-    /** @var array The query hints. */
+    /**
+     * The query hints.
+     *
+     * @var array
+     */
     protected $_hints;
 
     /**
@@ -75,6 +102,7 @@ abstract class AbstractHydrator
      *
      * @param object $stmt
      * @param object $resultSetMapping
+     * @param array  $hints
      *
      * @return IterableResult
      */
@@ -97,8 +125,9 @@ abstract class AbstractHydrator
      *
      * @param object $stmt
      * @param object $resultSetMapping
-     * @param array $hints
-     * @return mixed
+     * @param array  $hints
+     *
+     * @return array
      */
     public function hydrateAll($stmt, $resultSetMapping, array $hints = array())
     {
@@ -139,15 +168,20 @@ abstract class AbstractHydrator
     }
 
     /**
-     * Excutes one-time preparation tasks, once each time hydration is started
+     * Executes one-time preparation tasks, once each time hydration is started
      * through {@link hydrateAll} or {@link iterate()}.
+     *
+     * @return void
      */
     protected function prepare()
-    {}
+    {
+    }
 
     /**
-     * Excutes one-time cleanup tasks at the end of a hydration that was initiated
+     * Executes one-time cleanup tasks at the end of a hydration that was initiated
      * through {@link hydrateAll} or {@link iterate()}.
+     *
+     * @return void
      */
     protected function cleanup()
     {
@@ -162,9 +196,13 @@ abstract class AbstractHydrator
      *
      * Template method.
      *
-     * @param array $data The row data.
-     * @param array $cache The cache to use.
-     * @param mixed $result The result to fill.
+     * @param array $data   The row data.
+     * @param array $cache  The cache to use.
+     * @param array $result The result to fill.
+     *
+     * @return void
+     *
+     * @throws HydrationException
      */
     protected function hydrateRowData(array $data, array &$cache, array &$result)
     {
@@ -173,6 +211,8 @@ abstract class AbstractHydrator
 
     /**
      * Hydrates all rows from the current statement instance at once.
+     *
+     * @return array
      */
     abstract protected function hydrateAllData();
 
@@ -183,11 +223,11 @@ abstract class AbstractHydrator
      * Puts the elements of a result row into a new array, grouped by the dql alias
      * they belong to. The column names in the result set are mapped to their
      * field names during this procedure as well as any necessary conversions on
-     * the values applied. Scalar values are kept in a specfic key 'scalars'.
+     * the values applied. Scalar values are kept in a specific key 'scalars'.
      *
-     * @param array $data SQL Result Row
-     * @param array &$cache Cache for column to field result information
-     * @param array &$id Dql-Alias => ID-Hash
+     * @param array  $data               SQL Result Row.
+     * @param array &$cache              Cache for column to field result information.
+     * @param array &$id                 Dql-Alias => ID-Hash.
      * @param array &$nonemptyComponents Does this DQL-Alias has at least one non NULL value?
      *
      * @return array  An array with all the fields (name => value) of the data row,
@@ -234,6 +274,25 @@ abstract class AbstractHydrator
                         // maybe from an additional column that has not been defined in a NativeQuery ResultSetMapping.
                         continue 2;
                 }
+
+                if (isset($this->_rsm->newObjectMappings[$key])) {
+                    $mapping = $this->_rsm->newObjectMappings[$key];
+
+                    $cache[$key]['isNewObjectParameter'] = true;
+                    $cache[$key]['argIndex']             = $mapping['argIndex'];
+                    $cache[$key]['objIndex']             = $mapping['objIndex'];
+                    $cache[$key]['class']                = new \ReflectionClass($mapping['className']);
+                }
+            }
+
+            if (isset($cache[$key]['isNewObjectParameter'])) {
+                $class    = $cache[$key]['class'];
+                $argIndex = $cache[$key]['argIndex'];
+                $objIndex = $cache[$key]['objIndex'];
+                $value    = $cache[$key]['type']->convertToPHPValue($value, $this->_platform);
+
+                $rowData['newObjects'][$objIndex]['class']           = $class;
+                $rowData['newObjects'][$objIndex]['args'][$argIndex] = $value;
             }
 
             if (isset($cache[$key]['isScalar'])) {
@@ -262,7 +321,7 @@ abstract class AbstractHydrator
             }
 
             // in an inheritance hierarchy the same field could be defined several times.
-            // We overwrite this value so long we dont have a non-null value, that value we keep.
+            // We overwrite this value so long we don't have a non-null value, that value we keep.
             // Per definition it cannot be that a field is defined several times and has several values.
             if (isset($rowData[$dqlAlias][$cache[$key]['fieldName']]) && $value === null) {
                 continue;
@@ -352,9 +411,11 @@ abstract class AbstractHydrator
     /**
      * Register entity as managed in UnitOfWork.
      *
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $class
-     * @param object $entity
-     * @param array $data
+     * @param ClassMetadata $class
+     * @param object        $entity
+     * @param array         $data
+     *
+     * @return void
      *
      * @todo The "$id" generation is the same of UnitOfWork#createEntity. Remove this duplication somehow
      */
@@ -383,6 +444,10 @@ abstract class AbstractHydrator
     /**
      * When executed in a hydrate() loop we have to clear internal state to
      * decrease memory consumption.
+     *
+     * @param mixed $eventArgs
+     *
+     * @return void
      */
     public function onClear($eventArgs)
     {

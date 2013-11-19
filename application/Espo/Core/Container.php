@@ -51,11 +51,6 @@ class Container
 
     private function loadSlim()
     {
-    	/* START: remove for composer */
-		require 'vendor/Slim/Slim.php';
-		\Slim\Slim::registerAutoloader();
-		/* END: remove for composer */
-
         $this->data['slim'] = new \Slim\Slim();
     }
 

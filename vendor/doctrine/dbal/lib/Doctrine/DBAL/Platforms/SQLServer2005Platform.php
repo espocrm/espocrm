@@ -20,7 +20,7 @@
 namespace Doctrine\DBAL\Platforms;
 
 /**
- * Platform to ensure compatibility of Doctrine with SQLServer2005 version and
+ * Platform to ensure compatibility of Doctrine with Microsoft SQL Server 2005 version and
  * higher.
  *
  * Differences to SQL Server 2008 are:
@@ -50,5 +50,14 @@ class SQLServer2005Platform extends SQLServerPlatform
     {
         return 'VARCHAR(MAX)';
     }
-}
 
+    /**
+     * {@inheritdoc}
+     *
+     * Returns Microsoft SQL Server 2005 specific keywords class
+     */
+    protected function getReservedKeywordsClass()
+    {
+        return 'Doctrine\DBAL\Platforms\Keywords\SQLServer2005Keywords';
+    }
+}
