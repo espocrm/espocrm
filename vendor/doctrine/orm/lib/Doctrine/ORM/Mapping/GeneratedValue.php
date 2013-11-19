@@ -25,6 +25,12 @@ namespace Doctrine\ORM\Mapping;
  */
 final class GeneratedValue implements Annotation
 {
-     /** @var string */
+    /**
+     * The type of Id generator.
+     *
+     * @var string
+     *
+     * @Enum({"AUTO", "SEQUENCE", "TABLE", "IDENTITY", "NONE", "UUID", "CUSTOM"})
+     */
     public $strategy = 'AUTO';
 }

@@ -19,16 +19,15 @@
 
 namespace Doctrine\ORM\Tools\Console\Command\SchemaTool;
 
-use Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface,
-    Doctrine\ORM\Tools\SchemaTool;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 
 /**
  * Command to create the database schema for a set of classes based on their mappings.
  *
- * 
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
@@ -39,7 +38,7 @@ use Symfony\Component\Console\Input\InputArgument,
 class CreateCommand extends AbstractCommand
 {
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -56,21 +55,32 @@ class CreateCommand extends AbstractCommand
         ))
         ->setHelp(<<<EOT
 Processes the schema and either create it directly on EntityManager Storage Connection or generate the SQL output.
+
+<comment>Hint:</comment> If you have a database with tables that should not be managed
+by the ORM, you can use a DBAL functionality to filter the tables and sequences down
+on a global level:
+
+    \$config->setFilterSchemaAssetsExpression(\$regexp);
 EOT
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function executeSchemaCommand(InputInterface $input, OutputInterface $output, SchemaTool $schemaTool, array $metadatas)
     {
-        if ($input->getOption('dump-sql') === true) {
+        if ($input->getOption('dump-sql')) {
             $sqls = $schemaTool->getCreateSchemaSql($metadatas);
-            $output->write(implode(';' . PHP_EOL, $sqls) . ';' . PHP_EOL);
+            $output->writeln(implode(';' . PHP_EOL, $sqls) . ';');
         } else {
-            $output->write('ATTENTION: This operation should not be executed in a production environment.' . PHP_EOL . PHP_EOL);
+            $output->writeln('ATTENTION: This operation should not be executed in a production environment.' . PHP_EOL);
 
-            $output->write('Creating database schema...' . PHP_EOL);
+            $output->writeln('Creating database schema...');
             $schemaTool->createSchema($metadatas);
-            $output->write('Database schema created successfully!' . PHP_EOL);
+            $output->writeln('Database schema created successfully!');
         }
+
+        return 0;
     }
 }

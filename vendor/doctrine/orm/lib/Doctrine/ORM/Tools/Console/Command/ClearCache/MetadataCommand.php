@@ -19,14 +19,14 @@
 
 namespace Doctrine\ORM\Tools\Console\Command\ClearCache;
 
-use Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console,
-    Doctrine\Common\Cache;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\Common\Cache\ApcCache;
 
 /**
  * Command to clear the metadata cache of the various cache drivers.
- *
  *
  * @link    www.doctrine-project.org
  * @since   2.0
@@ -35,10 +35,10 @@ use Symfony\Component\Console\Input\InputArgument,
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
  */
-class MetadataCommand extends Console\Command\Command
+class MetadataCommand extends Command
 {
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -73,9 +73,9 @@ EOT
     }
 
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
-    protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getHelper('em')->getEntityManager();
         $cacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
@@ -84,11 +84,11 @@ EOT
             throw new \InvalidArgumentException('No Metadata cache driver is configured on given EntityManager.');
         }
 
-        if ($cacheDriver instanceof Cache\ApcCache) {
+        if ($cacheDriver instanceof ApcCache) {
             throw new \LogicException("Cannot clear APC Cache from Console, its shared in the Webserver memory and not accessible from the CLI.");
         }
 
-        $output->write('Clearing ALL Metadata cache entries' . PHP_EOL);
+        $output->writeln('Clearing ALL Metadata cache entries');
 
         $result  = $cacheDriver->deleteAll();
         $message = ($result) ? 'Successfully deleted cache entries.' : 'No cache entries were deleted.';
@@ -98,6 +98,6 @@ EOT
             $message = ($result) ? 'Successfully flushed cache entries.' : $message;
         }
 
-        $output->write($message . PHP_EOL);
+        $output->writeln($message);
     }
 }

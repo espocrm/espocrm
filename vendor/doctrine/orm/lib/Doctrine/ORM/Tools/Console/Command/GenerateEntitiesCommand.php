@@ -19,17 +19,18 @@
 
 namespace Doctrine\ORM\Tools\Console\Command;
 
-use Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console,
-    Doctrine\ORM\Tools\Console\MetadataFilter,
-    Doctrine\ORM\Tools\EntityGenerator,
-    Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Doctrine\ORM\Tools\Console\MetadataFilter;
+use Doctrine\ORM\Tools\EntityGenerator;
+use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Command to generate entity classes and method stubs from your mapping information.
  *
- * 
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
@@ -37,15 +38,16 @@ use Symfony\Component\Console\Input\InputArgument,
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
  */
-class GenerateEntitiesCommand extends Console\Command\Command
+class GenerateEntitiesCommand extends Command
 {
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
     protected function configure()
     {
         $this
         ->setName('orm:generate-entities')
+        ->setAliases(array('orm:generate:entities'))
         ->setDescription('Generate entity classes and method stubs from your mapping information.')
         ->setDefinition(array(
             new InputOption(
@@ -90,7 +92,7 @@ to error and we suggest you use code repositories such as GIT or SVN to make
 backups of your code.
 
 It makes sense to generate the entity code if you are using entities as Data
-Access Objects only and dont put much additional logic on them. If you are
+Access Objects only and don't put much additional logic on them. If you are
 however putting much more logic on the entities you should refrain from using
 the entity-generator and code your entities manually.
 
@@ -104,9 +106,9 @@ EOT
     }
 
     /**
-     * @see Console\Command\Command
+     * {@inheritdoc}
      */
-    protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getHelper('em')->getEntityManager();
 
@@ -122,7 +124,9 @@ EOT
             throw new \InvalidArgumentException(
                 sprintf("Entities destination directory '<info>%s</info>' does not exist.", $input->getArgument('dest-path'))
             );
-        } else if ( ! is_writable($destPath)) {
+        }
+
+        if ( ! is_writable($destPath)) {
             throw new \InvalidArgumentException(
                 sprintf("Entities destination directory '<info>%s</info>' does not have write permissions.", $destPath)
             );
@@ -143,8 +147,8 @@ EOT
             }
 
             foreach ($metadatas as $metadata) {
-                $output->write(
-                    sprintf('Processing entity "<info>%s</info>"', $metadata->name) . PHP_EOL
+                $output->writeln(
+                    sprintf('Processing entity "<info>%s</info>"', $metadata->name)
                 );
             }
 
@@ -152,9 +156,9 @@ EOT
             $entityGenerator->generate($metadatas, $destPath);
 
             // Outputting information message
-            $output->write(PHP_EOL . sprintf('Entity classes generated to "<info>%s</INFO>"', $destPath) . PHP_EOL);
+            $output->writeln(PHP_EOL . sprintf('Entity classes generated to "<info>%s</INFO>"', $destPath));
         } else {
-            $output->write('No Metadata Classes to process.' . PHP_EOL);
+            $output->writeln('No Metadata Classes to process.');
         }
     }
 }

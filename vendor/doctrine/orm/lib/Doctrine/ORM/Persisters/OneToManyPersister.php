@@ -19,8 +19,8 @@
 
 namespace Doctrine\ORM\Persisters;
 
-use Doctrine\ORM\PersistentCollection,
-    Doctrine\ORM\UnitOfWork;
+use Doctrine\ORM\PersistentCollection;
+use Doctrine\ORM\UnitOfWork;
 
 /**
  * Persister for one-to-many collections.
@@ -33,70 +33,101 @@ use Doctrine\ORM\PersistentCollection,
 class OneToManyPersister extends AbstractCollectionPersister
 {
     /**
+     * {@inheritdoc}
+     *
+     * @override
+     */
+    public function get(PersistentCollection $coll, $index)
+    {
+        $mapping   = $coll->getMapping();
+        $uow       = $this->em->getUnitOfWork();
+        $persister = $uow->getEntityPersister($mapping['targetEntity']);
+
+        if (!isset($mapping['indexBy'])) {
+            throw new \BadMethodCallException("Selecting a collection by index is only supported on indexed collections.");
+        }
+
+        return $persister->load(array($mapping['mappedBy'] => $coll->getOwner(), $mapping['indexBy'] => $index), null, null, array(), 0, 1);
+    }
+
+    /**
      * Generates the SQL UPDATE that updates a particular row's foreign
      * key to null.
      *
-     * @param PersistentCollection $coll
+     * @param \Doctrine\ORM\PersistentCollection $coll
+     *
      * @return string
+     *
      * @override
      */
-    protected function _getDeleteRowSQL(PersistentCollection $coll)
+    protected function getDeleteRowSQL(PersistentCollection $coll)
     {
-        $mapping = $coll->getMapping();
-        $class   = $this->_em->getClassMetadata($mapping['targetEntity']);
+        $mapping    = $coll->getMapping();
+        $class      = $this->em->getClassMetadata($mapping['targetEntity']);
+        $tableName  = $this->quoteStrategy->getTableName($class, $this->platform);
+        $idColumns  = $class->getIdentifierColumnNames();
 
-        return 'DELETE FROM ' . $this->quoteStrategy->getTableName($class, $this->platform)
-             . ' WHERE ' . implode('= ? AND ', $class->getIdentifierColumnNames()) . ' = ?';
+        return 'DELETE FROM ' . $tableName
+             . ' WHERE ' . implode('= ? AND ', $idColumns) . ' = ?';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDeleteRowSQLParameters(PersistentCollection $coll, $element)
+    {
+        return array_values($this->uow->getEntityIdentifier($element));
     }
 
     /**
      * {@inheritdoc}
      *
+     * @throws \BadMethodCallException Not used for OneToManyPersister.
      */
-    protected function _getDeleteRowSQLParameters(PersistentCollection $coll, $element)
+    protected function getInsertRowSQL(PersistentCollection $coll)
     {
-        return array_values($this->_uow->getEntityIdentifier($element));
-    }
-
-    protected function _getInsertRowSQL(PersistentCollection $coll)
-    {
-        return "UPDATE xxx SET foreign_key = yyy WHERE foreign_key = zzz";
+        throw new \BadMethodCallException("Insert Row SQL is not used for OneToManyPersister");
     }
 
     /**
-     * Gets the SQL parameters for the corresponding SQL statement to insert the given
-     * element of the given collection into the database.
+     * {@inheritdoc}
      *
-     * @param PersistentCollection $coll
-     * @param mixed $element
+     * @throws \BadMethodCallException Not used for OneToManyPersister.
      */
-    protected function _getInsertRowSQLParameters(PersistentCollection $coll, $element)
-    {}
-
-    /* Not used for OneToManyPersister */
-    protected function _getUpdateRowSQL(PersistentCollection $coll)
+    protected function getInsertRowSQLParameters(PersistentCollection $coll, $element)
     {
-        return;
+        throw new \BadMethodCallException("Insert Row SQL is not used for OneToManyPersister");
     }
 
     /**
-     * Generates the SQL UPDATE that updates all the foreign keys to null.
+     * {@inheritdoc}
      *
-     * @param PersistentCollection $coll
+     * @throws \BadMethodCallException Not used for OneToManyPersister.
      */
-    protected function _getDeleteSQL(PersistentCollection $coll)
+    protected function getUpdateRowSQL(PersistentCollection $coll)
     {
-
+        throw new \BadMethodCallException("Update Row SQL is not used for OneToManyPersister");
     }
 
     /**
-     * Gets the SQL parameters for the corresponding SQL statement to delete
-     * the given collection.
+     * {@inheritdoc}
      *
-     * @param PersistentCollection $coll
+     * @throws \BadMethodCallException Not used for OneToManyPersister.
      */
-    protected function _getDeleteSQLParameters(PersistentCollection $coll)
-    {}
+    protected function getDeleteSQL(PersistentCollection $coll)
+    {
+        throw new \BadMethodCallException("Update Row SQL is not used for OneToManyPersister");
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \BadMethodCallException Not used for OneToManyPersister.
+     */
+    protected function getDeleteSQLParameters(PersistentCollection $coll)
+    {
+        throw new \BadMethodCallException("Update Row SQL is not used for OneToManyPersister");
+    }
 
     /**
      * {@inheritdoc}
@@ -104,14 +135,15 @@ class OneToManyPersister extends AbstractCollectionPersister
     public function count(PersistentCollection $coll)
     {
         $mapping     = $coll->getMapping();
-        $targetClass = $this->_em->getClassMetadata($mapping['targetEntity']);
-        $sourceClass = $this->_em->getClassMetadata($mapping['sourceEntity']);
-        $id          = $this->_em->getUnitOfWork()->getEntityIdentifier($coll->getOwner());
+        $targetClass = $this->em->getClassMetadata($mapping['targetEntity']);
+        $sourceClass = $this->em->getClassMetadata($mapping['sourceEntity']);
+        $id          = $this->em->getUnitOfWork()->getEntityIdentifier($coll->getOwner());
 
         $whereClauses = array();
         $params       = array();
 
-        foreach ($targetClass->associationMappings[$mapping['mappedBy']]['joinColumns'] as $joinColumn) {
+        $joinColumns = $targetClass->associationMappings[$mapping['mappedBy']]['joinColumns'];
+        foreach ($joinColumns as $joinColumn) {
             $whereClauses[] = $joinColumn['name'] . ' = ?';
 
             $params[] = ($targetClass->containsForeignIdentifier)
@@ -119,8 +151,8 @@ class OneToManyPersister extends AbstractCollectionPersister
                 : $id[$sourceClass->fieldNames[$joinColumn['referencedColumnName']]];
         }
 
-        $filterTargetClass = $this->_em->getClassMetadata($targetClass->rootEntityName);
-        foreach ($this->_em->getFilters()->getEnabledFilters() as $filter) {
+        $filterTargetClass = $this->em->getClassMetadata($targetClass->rootEntityName);
+        foreach ($this->em->getFilters()->getEnabledFilters() as $filter) {
             if ($filterExpr = $filter->addFilterConstraint($filterTargetClass, 't')) {
                 $whereClauses[] = '(' . $filterExpr . ')';
             }
@@ -130,33 +162,35 @@ class OneToManyPersister extends AbstractCollectionPersister
              . ' FROM ' . $this->quoteStrategy->getTableName($targetClass, $this->platform) . ' t'
              . ' WHERE ' . implode(' AND ', $whereClauses);
 
-        return $this->_conn->fetchColumn($sql, $params);
+        return $this->conn->fetchColumn($sql, $params);
     }
 
     /**
-     * @param PersistentCollection $coll
-     * @param int $offset
-     * @param int $length
+     * @param \Doctrine\ORM\PersistentCollection $coll
+     * @param int                                $offset
+     * @param int|null                           $length
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function slice(PersistentCollection $coll, $offset, $length = null)
     {
         $mapping   = $coll->getMapping();
-        $uow       = $this->_em->getUnitOfWork();
+        $uow       = $this->em->getUnitOfWork();
         $persister = $uow->getEntityPersister($mapping['targetEntity']);
 
         return $persister->getOneToManyCollection($mapping, $coll->getOwner(), $offset, $length);
     }
 
     /**
-     * @param PersistentCollection $coll
-     * @param object $element
+     * @param \Doctrine\ORM\PersistentCollection $coll
+     * @param object                             $element
+     *
      * @return boolean
      */
     public function contains(PersistentCollection $coll, $element)
     {
         $mapping = $coll->getMapping();
-        $uow     = $this->_em->getUnitOfWork();
+        $uow     = $this->em->getUnitOfWork();
 
         // shortcut for new entities
         $entityState = $uow->getEntityState($element, UnitOfWork::STATE_NEW);
@@ -181,13 +215,14 @@ class OneToManyPersister extends AbstractCollectionPersister
     }
 
     /**
-     * @param PersistentCollection $coll
-     * @param object $element
+     * @param \Doctrine\ORM\PersistentCollection $coll
+     * @param object                             $element
+     *
      * @return boolean
      */
     public function removeElement(PersistentCollection $coll, $element)
     {
-        $uow = $this->_em->getUnitOfWork();
+        $uow = $this->em->getUnitOfWork();
 
         // shortcut for new entities
         $entityState = $uow->getEntityState($element, UnitOfWork::STATE_NEW);
@@ -203,10 +238,10 @@ class OneToManyPersister extends AbstractCollectionPersister
         }
 
         $mapping = $coll->getMapping();
-        $class   = $this->_em->getClassMetadata($mapping['targetEntity']);
+        $class   = $this->em->getClassMetadata($mapping['targetEntity']);
         $sql     = 'DELETE FROM ' . $this->quoteStrategy->getTableName($class, $this->platform)
                  . ' WHERE ' . implode('= ? AND ', $class->getIdentifierColumnNames()) . ' = ?';
 
-        return (bool) $this->_conn->executeUpdate($sql, $this->_getDeleteRowSQLParameters($coll, $element));
+        return (bool) $this->conn->executeUpdate($sql, $this->getDeleteRowSQLParameters($coll, $element));
     }
 }

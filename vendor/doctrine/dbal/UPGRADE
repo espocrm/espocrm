@@ -1,3 +1,13 @@
+# Upgrade to 2.4
+
+## Doctrine\DBAL\Schema\Constraint
+
+If you have custom classes that implement the constraint interface, you have to implement
+an additional method ``getQuotedColumns`` now. This method is used to build proper constraint
+SQL for columns that need to be quoted, like keywords reserved by the specific platform used.
+The method has to return the same values as ``getColumns`` only that those column names that
+need quotation have to be returned quoted for the given platform.
+
 # Upgrade to 2.3
 
 ## Oracle Session Init now sets Numeric Character
@@ -76,7 +86,7 @@ now set to 'utf8'/'utf8_unicode_ci' by default. Previously the MySQL server defa
 
 # Upgrade to 2.2
 
-## Doctrine\DBAL\Connection#insert and Doctrine\DBAL\Connnection#update
+## Doctrine\DBAL\Connection#insert and Doctrine\DBAL\Connection#update
 
 Both methods now accept an optional last parameter $types with binding types of the values passed.
 This can potentially break child classes that have overwritten one of these methods.
@@ -88,7 +98,7 @@ Doctrine\DBAL\Connection#executeQuery() got a new last parameter "QueryCacheProf
 ## Doctrine\DBAL\Driver\Statement split
 
 The Driver statement was split into a ResultStatement and the normal statement extending from it.
-This seperates the configuration and the retrieval API from a statement.
+This separates the configuration and the retrieval API from a statement.
 
 ## MsSql Platform/SchemaManager renamed
 

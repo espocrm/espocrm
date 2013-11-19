@@ -178,7 +178,7 @@ class ProgressHelper extends Helper
      * Starts the progress output.
      *
      * @param OutputInterface $output An Output instance
-     * @param integer         $max    Maximum steps
+     * @param integer|null    $max    Maximum steps
      */
     public function start(OutputInterface $output, $max = null)
     {
@@ -235,8 +235,12 @@ class ProgressHelper extends Helper
             $redraw = true;
         }
 
+        $prevPeriod = intval($this->current / $this->redrawFreq);
+
         $this->current += $step;
-        if ($redraw || 0 === $this->current % $this->redrawFreq) {
+
+        $currPeriod = intval($this->current / $this->redrawFreq);
+        if ($redraw || $prevPeriod !== $currPeriod || $this->max === $this->current) {
             $this->display();
         }
     }
@@ -265,8 +269,12 @@ class ProgressHelper extends Helper
             $redraw = true;
         }
 
+        $prevPeriod = intval($this->current / $this->redrawFreq);
+
         $this->current = $current;
-        if ($redraw || 0 === $this->current % $this->redrawFreq) {
+        
+        $currPeriod = intval($this->current / $this->redrawFreq);
+        if ($redraw || $prevPeriod !== $currPeriod || $this->max === $this->current) {
             $this->display();
         }
     }
