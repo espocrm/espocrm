@@ -294,7 +294,7 @@ class Metadata
 	*/
 	public function getScopeModuleName($scopeName)
 	{
-    	$scopeModuleMap= $this->getScopes();
+    	$scopeModuleMap = $this->getScopes();
 
 		$lowerEntityName = strtolower($scopeName);
 		foreach ($scopeModuleMap as $rowEntityName => $rowModuleName) {
