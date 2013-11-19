@@ -8,7 +8,7 @@ class Metadata
 {
 
 	protected $metadataConfig;
-	protected $doctrineMetadataName= 'defs'; //Metadata "defs" uses for creating the metadata of Doctri
+	protected $doctrineMetadataName = 'defs'; //Metadata "defs" uses for creating the metadata of Doctri
 
 	protected $scopes= array();
 
@@ -63,7 +63,7 @@ class Metadata
 	* @return json | array
 	*/
 	//HERE --- ADD CREATING DOCTRINE METADATA
-	public function get($isJSON=true, $reload=false)
+	public function get($isJSON = true, $reload = false)
 	{
 		$config= $this->getMetaConfig();
 
@@ -106,7 +106,7 @@ class Metadata
 	* @return json | array
 	*/
 
-	public function getMetadataOnly($isJSON=true, $reload=false)
+	public function getMetadataOnly($isJSON = true, $reload = false)
 	{
 		$config= $this->getMetaConfig();
 
@@ -206,7 +206,7 @@ class Metadata
 			$fileName= str_replace('\\', '.', $doctrineMetaWithName['name']).'.php';
             $result&= $this->getFileManager()->setContent($this->getFileManager()->getPHPFormat($doctrineMetaWithName['meta']), $cacheDir, $fileName);
 			//END: create a doctrine metadata file
-        } 
+        }
 
         return $result;
 	}
@@ -220,7 +220,7 @@ class Metadata
 	*
 	* @return array
 	*/
-	function uniteFiles($configParams, $recursively=false)
+	function uniteFiles($configParams, $recursively = false)
 	{
 		if (empty($configParams) || empty($configParams->name) || empty($configParams->cachePath) || empty($configParams->corePath)) {
 			return false;
@@ -268,7 +268,7 @@ class Metadata
 	* @return array
 	*/
 	//NEED TO CHANGE
-	public function getScopes($moduleName= '', $reload = false)
+	public function getScopes($moduleName = '', $reload = false)
 	{
     	if (!$reload && !empty($this->scopes)) {
     		return $this->scopes;
@@ -296,14 +296,14 @@ class Metadata
 	{
     	$scopeModuleMap= $this->getScopes();
 
-		$lowerEntityName= strtolower($scopeName);
-		foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
-			if ($lowerEntityName==strtolower($rowEntityName)) {
+		$lowerEntityName = strtolower($scopeName);
+		foreach ($scopeModuleMap as $rowEntityName => $rowModuleName) {
+			if ($lowerEntityName == strtolower($rowEntityName)) {
 				return $rowModuleName;
 			}
 		}
 
-		return '';
+		return false;
 	}
 
 
@@ -315,16 +315,16 @@ class Metadata
 	*
 	* @return string
 	*/
-	public function getScopePath($scopeName, $delim= '/')
+	public function getScopePath($scopeName, $delim = '/')
 	{
-    	$moduleName= $this->getScopeModuleName($scopeName);
+    	$moduleName = $this->getScopeModuleName($scopeName);
 
-    	$path= $this->getConfig()->get('espoPath');
+    	$path = $this->getConfig()->get('espoPath');
 		if (!empty($moduleName)) {
-			$path= str_replace('{*}', $moduleName, $this->getConfig()->get('espoModulePath'));
+			$path = str_replace('{*}', $moduleName, $this->getConfig()->get('espoModulePath'));
 		}
 
-		if ($delim!='/') {
+		if ($delim != '/') {
            $path = str_replace('/', $delim, $path);
 		}
 
@@ -339,7 +339,7 @@ class Metadata
 	*
 	* @return string
 	*/
-	public function getScopePathFull($scopeName, $delim= '/')
+	public function getScopePathFull($scopeName, $delim = '/')
 	{
 		return Util::concatPath('application', $this->getScopePath($scopeName, $delim));
 	}
@@ -357,7 +357,7 @@ class Metadata
 
 		$lowerEntityName= strtolower($scopeName);
 		foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
-			if ($lowerEntityName==strtolower($rowEntityName)) {
+			if ($lowerEntityName == strtolower($rowEntityName)) {
 				return true;
 			}
 		}
@@ -385,4 +385,4 @@ class Metadata
 }
 
 
-?>
+
