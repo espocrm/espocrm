@@ -4,18 +4,10 @@ set_include_path( dirname(__FILE__) );
 
 require_once "vendor/autoload.php";
 
-
-use Espo\Core;
-$base= \Espo\Core\Base::start();
-
 //error_reporting(-1);
-set_error_handler(array($base->log, 'catchError'), E_ALL);
-set_exception_handler(array($base->log, 'catchException'));
 
 /*
 use Doctrine\ORM\Tools\Setup;
-
-
 
 $isDevMode = true;
 //JSON Driver for Doctrine

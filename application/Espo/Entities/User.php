@@ -2,13 +2,12 @@
 
 namespace Espo\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection,
-	\Espo\Core as Core;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="users")
  */
-class User extends Core\Base
+class User
 {
 	/**
 	 * @var string
@@ -38,6 +37,11 @@ class User extends Core\Base
 		return $this->username;
 	}
 
+	public function getPassword()
+    {
+        return $this->password;
+    }
+
 	public function getIsAdmin()
 	{
 		return $this->isAdmin;
@@ -48,37 +52,4 @@ class User extends Core\Base
 		$this->name = $name;
 	}
 
-	/**
-	*  Check user's credentials (NEED TO REWRITE)
-	*/
-	public function login($username, $password)
-	{
-        $dbUsername= 'admin';
-        $dbPassword= '1';
-
-		if ($username==$dbUsername && $password==$dbPassword) {
-			return true;
-		}
-
-		return false;
-	}
-
-	//NEED TO REWRITE
-    public function isAdmin($username='')
-	{
-    	if (empty($username)) {
-        	$username= $this->getUsername();
-    	}
-
-		if ( !isset($this->id) ||  empty($this->id) ) {
-			global $base;
-			return $base->em->getRepository('\Espo\Entities\User')->findOneBy(array('username' => $username))->getIsAdmin(); //$this->getEntityManager()
-		}
-
-		if ($this->getUsername() == $username) {
-        	return $this->getIsAdmin();
-		}
-
-        return false;
-	}
 }

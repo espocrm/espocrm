@@ -2,15 +2,14 @@
 
 namespace Espo\Controllers;
 
-use Espo\Utils as Utils;
+use Espo\Core\Utils as Utils;
 
-class Layout extends Utils\Controllers\Controller
+class Layout extends \Espo\Core\Controllers\Base
 {
 
     public function read($params, $data)
 	{
-		$layout = new Utils\Layout();
-		$data = $layout->getLayout($params['controller'], $params['name']);
+		$data = $this->getContainer()->get('layout')->get($params['controller'], $params['name']);
 
 		return array($data, 'Cannot get this layout', 404);
 	}
@@ -18,12 +17,13 @@ class Layout extends Utils\Controllers\Controller
 
 	public function update($params, $data)
 	{
-		$layout= new Utils\Layout();
-        $result= $layout->setLayout($data, $params['controller'], $params['name']);
+        $result= $this->getContainer()->get('layout')->set($data, $params['controller'], $params['name']);
 
 		if ($result === false) {
 			return array(false, 'Layout Saving error', 500);
 		}
+
+		$data = $this->getContainer()->get('layout')->get($params['controller'], $params['name']);
 
 		return array($data, 'Cannot get this layout');
 	}
@@ -31,12 +31,13 @@ class Layout extends Utils\Controllers\Controller
 
 	public function patch($params, $data)
 	{
-		$layout= new Utils\Layout();
-        $result= $layout->mergeLayout($data, $params['controller'], $params['name']);
+        $result= $this->getContainer()->get('layout')->merge($data, $params['controller'], $params['name']);
 
 		if ($result === false) {
 			return array(false, 'Layout Saving error', 500);
 		}
+
+		$data = $this->getContainer()->get('layout')->get($params['controller'], $params['name']);
 
         return array($data, 'Cannot get this layout');
 	}
