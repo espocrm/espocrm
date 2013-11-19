@@ -150,7 +150,7 @@ class Metadata
 		$fullPath= $this->getMetaConfig()->corePath;
 		$moduleName= $this->getScopeModuleName($scope);
 
-		if (!empty($moduleName)) {
+		if ($moduleName !== false) {
         	$fullPath= str_replace('{*}', $moduleName, $this->getMetaConfig()->customPath);
 		}
 		$fullPath= Util::concatPath($fullPath, $type);
@@ -320,7 +320,7 @@ class Metadata
     	$moduleName = $this->getScopeModuleName($scopeName);
 
     	$path = $this->getConfig()->get('espoPath');
-		if (!empty($moduleName)) {
+		if ($moduleName !== false) {
 			$path = str_replace('{*}', $moduleName, $this->getConfig()->get('espoModulePath'));
 		}
 

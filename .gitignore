@@ -4,8 +4,8 @@ application/config.php
 /test.php
 /test2.php
 application/Espo/Resources/metadata/scopes/CustomTest.json
-application/Modules/Crm/Resources/metadata/scopes/CustomTest.json
+application/Espo/Modules/Crm/Resources/metadata/scopes/CustomTest.json
 application/Espo/Resources/layouts/CustomTest/*
-application/Modules/Crm/Resources/layouts/CustomTest/*
+application/Espo/Modules/Crm/Resources/layouts/CustomTest/*
 application/Espo/Resources/metadata/customTest/*
-application/Modules/Crm/Resources/metadata/customTest/*
+application/Espo/Modules/Crm/Resources/metadata/customTest/*

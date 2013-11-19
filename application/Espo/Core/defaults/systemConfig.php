@@ -3,23 +3,23 @@
 return array (
   'configPath' => 'application/config.php',
 
-  'customDir' => 'application/Custom',
+  'customDir' => 'application/Espo/Custom',
   'cachePath' => 'data/cache',
   'defaultsPath' => 'application/Espo/Core/defaults',
   'unsetFileName' => 'unset.json',
 
   'espoPath' => 'Espo',
-  'espoModulePath' => 'Modules/{*}',
-  'espoCustomPath' => 'Custom',
+  'espoModulePath' => 'Espo/Modules/{*}',
+  'espoCustomPath' => 'Espo/Custom',
 
-  'controllerPath' => 'Controllers', //path for controllers in module
+  'controllerPath' => 'Controllers', //path for controllers in a module
 
   'metadataConfig' =>
   array (
     'name' => 'metadata',
     'cachePath' => 'data/cache/application',
     'corePath' => 'application/Espo/Resources/metadata',
-    'customPath' => 'application/Modules/{*}/Resources/metadata',
+    'customPath' => 'application/Espo/Modules/{*}/Resources/metadata',
     'doctrineCache' => 'data/cache/doctrine/metadata',
   ),
 
@@ -27,7 +27,7 @@ return array (
   array (
     'name' => 'layouts',
     'corePath' => 'application/Espo/Resources/layouts',
-    'customPath' => 'application/Modules/{*}/Resources/layouts',
+    'customPath' => 'application/Espo/Modules/{*}/Resources/layouts',
   ),
 
   'languageConfig' =>
@@ -35,7 +35,7 @@ return array (
     'name' => '{lang}',
     'cachePath' => 'data/cache/application/Language',
     'corePath' => 'application/Espo/Language',
-    'customPath' => 'application/Modules/{*}/Language',
+    'customPath' => 'application/Espo/Modules/{*}/Language',
   ),
 
   'defaultPermissions' =>

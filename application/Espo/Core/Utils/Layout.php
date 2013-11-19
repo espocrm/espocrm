@@ -123,7 +123,7 @@ class Layout
     	$moduleName= $this->getMetadata()->getScopeModuleName($entityName);
 
     	$path= $this->getLayoutConfig()->corePath;
-		if (!empty($moduleName)) {
+		if ($moduleName !== false) {
 			$path= str_replace('{*}', $moduleName, $this->getLayoutConfig()->customPath);
 		}
         $path= Util::concatPath($path, $entityName);
