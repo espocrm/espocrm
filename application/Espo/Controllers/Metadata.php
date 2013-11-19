@@ -6,15 +6,15 @@ namespace Espo\Controllers;
 class Metadata extends \Espo\Core\Controllers\Base
 {
 
-    public function read($params, $data)
+    public function actionRead($params, $data)
 	{
-		$data= $this->getContainer()->get('metadata')->get(true);
+		$data = $this->getContainer()->get('metadata')->get(true);
 
        	return array($data, 'Cannot reach metadata data');
 	}
 
 
-	public function update($params, $data)
+	public function actionUpdate($params, $data)
 	{
 		$result = $this->getContainer()->get('metadata')->set($data, $params['type'], $params['scope']);
 

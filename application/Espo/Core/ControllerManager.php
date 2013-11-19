@@ -1,22 +1,25 @@
 <?php
 
-namespace Espo\Core\Controllers;
+namespace Espo\Core;
 
 use \Espo\Core\Utils\Util;
 
-class Manager
+class ControllerManager
 {
 	private $config;
 
 	private $metadata;
+	
+	private $container;
 
 
-	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata)
-	{
-		$this->config = $config;
-		$this->metadata = $metadata;
+	public function __construct(\Espo\Core\Container $container)
+	{	
+		$this->container = $container;
+		
+		$this->config = $this->container->get('config');
+		$this->metadata = $this->container->get('metadata');
 	}
-
 
     protected function getConfig()
 	{
@@ -27,7 +30,55 @@ class Manager
 	{
 		return $this->metadata;
 	}
+	
+	
+	public function execute($controllerName, $actionName, $params, $data)
+	{		
+		$customeClassName = '\\Espo\\Custom\\Controllers\\' . $controllerName;
+		if (class_exists($customeClassName)) {
+			$controllerClassName = $customeClassName;
+		} else {
+			$moduleName = $this->metadata->getScopeModuleName($controllerName);
+			if ($moduleName) {
+				$controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . $controllerName;
+			} else {
+				$controllerClassName = '\\Espo\\Controllers\\' . $controllerName;
+			}
+		}
+		
+		$controller = new $controllerClassName($this->container, $this->serviceFactory);
+			
+		$actionNameUcfirst = ucfirst($actionName);
+		
+		$beforeMethodName = 'before' . $actionNameUcfirst;			 
+		if (method_exists($controller, $beforeMethodName)) {
+			$controller->$beforeMethodName($params, $data);
+		}
+		$actionMethodName = 'action' . $actionNameUcfirst;		
+		
+		$result = $controller->$actionMethodName($params, $data);
+		
+		$afterMethodName = 'after' . $actionNameUcfirst;	
+		if (method_exists($controller, $afterMethodName)) {
+			$controller->$afterMethodName($params, $data);
+		}		
+		
+		if (is_array($result)) {
+			$returnResult = array_values($result);
+			if (!empty($returnResult[2])) {
+				return $this->response($returnResult[0], $returnResult[1], $returnResult[2]);
+			}
+			if (!empty($returnResult[1])) {
+				return $this->response($returnResult[0], $returnResult[1]);
+			}
+			if (!empty($returnResult[0])) {
+				return $this->response($returnResult[0]);
+			}
+			return $this->response(false, 'Cannot find requested controller', 404);
+		}
 
+		return $this->response($result);	
+	}	
 
 	/**
     * Manage of all controllers
@@ -38,17 +89,17 @@ class Manager
 	*
 	* @return array
 	*/
-	public function call($controllerParams, $params, $data = '')
+	/*public function call($controllerParams, $params, $data = '')
 	{
-		$config = $this->getConfig();
+		
+	
+		$espoPath = $this->getConfig()->get('espoPath');
+		$controllerPath = Util::concatPath($espoPath, $this->getConfig()->get('controllerPath'));
 
-		$espoPath = $config->get('espoPath');
-		$controllerPath= Util::concatPath($espoPath, $config->get('controllerPath'));
-
-		$crud = $config->get('crud');
-		$baseAction = $crud->$controllerParams['HttpMethod'];
+		$crud = $this->getConfig()->get('crud');
+		$baseAction = $crud->$controllerParams['httpMethod'];
 		if (empty($baseAction)) {
-			return $this->response(false, 'Cannot find action for HTTP Method ['.$controllerParams['HttpMethod'].']', 404);
+			return $this->response(false, 'Cannot find action for HTTP Method ['.$controllerParams['httpMethod'].']', 404);
 		}
 
 		$controller = (object) array(
@@ -63,12 +114,11 @@ class Manager
 			return $this->response(false, 'Controller for Scope ['.$controller->scope.'] does not exist.', 404);
 		}
 
-
 		//define default values
 		$classInfo = new \stdClass();
 		$classInfo->name = $this->getClassName(Util::concatPath($espoPath, 'Core/Base'), 'Controller');
 		$classInfo->path = $this->getClassPath($classInfo->name);
-		$classInfo->method = $this->getDefinedMethod($classInfo->name, $controller->baseAction, $controller->action);
+		$classInfo->method = $this->getDefinedMethod($classInfo->name, $controller->baseAction, $controller->action, 'action');
 
 
 		//Espo\Controlles\Layout  and  Custom\Espo\Controlles\Layout
@@ -79,7 +129,7 @@ class Manager
 
 		if (!empty($controller->scope)) {
 			//path in Modules dir
-			$controllerDir = Util::concatPath( $this->getMetadata()->getScopePath($controller->scope), $config->get('controllerPath') );
+			$controllerDir = Util::concatPath( $this->getMetadata()->getScopePath($controller->scope), $this->getConfig()->get('controllerPath') );
 
 			//ex. Modules\Crm\Controllers\Layout  and  Cusom\Modules\Crm\Controllers\Layout
 			$controllerClass = $this->getClassName($controllerDir, $controller->name);
@@ -105,8 +155,7 @@ class Manager
 		//call class method
 		$className = $classInfo->name;
 		$classMethod = $classInfo->method;
-
-		require_once($classInfo->path);
+		
 		$class = new $className($controllerParams['container'], $controllerParams['serviceFactory']);
 
 		//call before method if exists: beforeRead, beforeDetailSmall, beforeReadDetailSmall
@@ -145,7 +194,7 @@ class Manager
 		}
 
 		return $this->response($result);
-	}
+	}*/
 
 
 
@@ -156,7 +205,7 @@ class Manager
 	*
 	* @return sting
 	*/
-	function getDefinedMethod($className, $baseAction, $action, $prefix = '')
+	/*function getDefinedMethod($className, $baseAction, $action, $prefix = '')
 	{
 		$allActions= get_class_methods($className);
 		$classMethod = '';
@@ -167,7 +216,7 @@ class Manager
 
 		//method as 'read'
 		$prefixBaseAction = Util::toCamelCase($prefix.$baseAction);
-		if ( method_exists($className, $prefixBaseAction) ) {
+		if (method_exists($className, $prefixBaseAction) ) {
 		   	$classMethod = $prefixBaseAction;
 		}
 
@@ -177,7 +226,7 @@ class Manager
 
 		//method as 'detailSmall'
 		$prefixAction = Util::toCamelCase($prefix.$action);
-		if ( method_exists($className, $prefixAction) ) {
+		if (method_exists($className, $prefixAction) ) {
 			$classMethod = $prefixAction;
 		}
 
@@ -188,7 +237,7 @@ class Manager
 		}
 
 		return $classMethod;
-	}
+	}*/
 
 	/**
     * If method exists, then redefine classInfo
@@ -200,10 +249,10 @@ class Manager
 	*
 	* @return object
 	*/
-	protected function setClassInfo($className, \stdClass $classInfo, \stdClass $controller, $isCustom = true)
+	/*protected function setClassInfo($className, \stdClass $classInfo, \stdClass $controller, $isCustom = true)
 	{
 		$classPath = $this->getClassPath($className);
-		$classMethod = $this->getDefinedMethod($className, $controller->baseAction, $controller->action);
+		$classMethod = $this->getDefinedMethod($className, $controller->baseAction, $controller->action, 'action');
 
 		if (file_exists($classPath) && !empty($classMethod) ) {
 			$classInfo->name = $className;
@@ -218,7 +267,7 @@ class Manager
 		}
 
 		return $classInfo;
-	}
+	}*/
 
 
 
@@ -230,14 +279,14 @@ class Manager
 	*
 	* @return string
 	*/
-	protected function getClassName($path, $name = '')
+	/*protected function getClassName($path, $name = '')
 	{
 		if (!empty($name)) {
 		  	$path = Util::concatPath($path, Util::toCamelCase($name, true));
 		}
 
 		return Util::toFormat($path, '\\');
-	}
+	}*/
 
 
 	/**
@@ -248,14 +297,14 @@ class Manager
 	*
 	* @return string
 	*/
-	protected function getClassPath($path, $name = '')
+	/*protected function getClassPath($path, $name = '')
 	{
         if (!empty($name)) {
         	$path = Util::concatPath($path, Util::toCamelCase($name, true));
     	}
 
 		return Util::concatPath('application', Util::toFormat($path, '/').'.php');
-	}
+	}*/
 
 
 	/**
@@ -277,9 +326,4 @@ class Manager
 	}
 
 
-
-
 }
-
-
-?>

@@ -7,7 +7,7 @@ use Espo\Core\Utils as Utils;
 class Settings extends \Espo\Core\Controllers\Base
 {
 
-    public function read($params, $data)
+    public function actionRead($params, $data)
 	{
         $isAdmin = $this->getContainer()->get('user')->isAdmin();
 
@@ -17,7 +17,7 @@ class Settings extends \Espo\Core\Controllers\Base
 	}
 
 
-	public function patch($params, $data)
+	public function actionPatch($params, $data)
 	{  
         $isAdmin = $this->getContainer()->get('user')->isAdmin();
 

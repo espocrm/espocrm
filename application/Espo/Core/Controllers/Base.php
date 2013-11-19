@@ -25,27 +25,27 @@ class Base
 
 
 
-    public function read($params, $data)
+    public function actionRead($params, $data)
 	{
 
 	}
 
-	public function update($params, $data)
+	public function actionUpdate($params, $data)
 	{
 
 	}
 
-	public function patch($params, $data)
+	public function actionPatch($params, $data)
 	{
 
 	}
 
-	public function create($params, $data)
+	public function actionCreate($params, $data)
 	{
 
 	}
 
-	public function delete($params, $data)
+	public function actionDelete($params, $data)
 	{
 
 	}

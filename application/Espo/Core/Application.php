@@ -5,10 +5,6 @@ namespace Espo\Core;
 
 class Application
 {
-
-	protected static $apps = array();
-
-
 	private $metadata;
 
 	private $container;
@@ -63,26 +59,8 @@ class Application
 
         $this->routeHooks();
         $this->routes();
-
         $this->getSlim()->run();
-
-		static::$apps[$name] = $this;
-    
-    	// TODO place routing HERE
-    	// dispatch which controller to use
-    	// $this->controller = new $controllerClassName($this->container, $this->serviceFactory);
-    	// call needed controller method $this->$method($params, $data)
-
-
-		// dont't return anything here
     }
-
-
-	public static function getInstance($name = 'default')
-    {
-        return isset(static::$apps[$name]) ? static::$apps[$name] : null;
-    }
-
 
 	protected function routeHooks()
 	{
@@ -91,7 +69,7 @@ class Application
 		$serviceFactory = $this->getServiceFactory();
 
 		//check user credentials
-		$this->getSlim()->add(new \Espo\Core\Utils\Api\Auth( $container ));
+		$this->getSlim()->add(new \Espo\Core\Utils\Api\Auth($container));
 
 		//convert all url params to camel case format
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
@@ -99,68 +77,63 @@ class Application
 			$conditions = $slim->router()->getCurrentRoute()->getConditions();
 			$upperList = isset($conditions['upper']) ? $conditions['upper'] : array();
 
-            $routeParams= $slim->router()->getCurrentRoute()->getParams();
+            $routeParams = $slim->router()->getCurrentRoute()->getParams();
 
 			if (!empty($routeParams)) {
-				foreach($routeParams as $name => &$param) {
+				foreach ($routeParams as $name => &$param) {
                     $isUpper = in_array($name, $upperList) ? true : false;
-					$param= \Espo\Core\Utils\Util::toCamelCase($param, $isUpper);
+					$param = \Espo\Core\Utils\Util::toCamelCase($param, $isUpper);
 				}
-
 			    $slim->router()->getCurrentRoute()->setParams($routeParams);
 			}
 		});
 		//END: convert all url params to camel case format
-
-
+		
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container, $serviceFactory) {
 
-			$currentRoute = $slim->router()->getCurrentRoute();
-		    $conditions = $currentRoute->getConditions();
+			$route = $slim->router()->getCurrentRoute();
+		    $conditions = $route->getConditions();			
 
 			if (isset($conditions['useController']) && $conditions['useController'] == false) {
 				return;
 			}
 
-			$espoController = call_user_func( $slim->router()->getCurrentRoute()->getCallable() );
-			$espoKeys = is_array($espoController) ? array_keys($espoController) : array();
+			$routeOptions = call_user_func($route->getCallable());
+			$routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : array();
 
-			if (!in_array('controller', $espoKeys, true)) {
-				return $container->get('rest')->render($espoController);
+			if (!in_array('controller', $routeKeys, true)) {
+				return $container->get('rest')->render($routeOptions);
 			}
 
+			$params = $route->getParams();
+			$data = $slim->request()->getBody();						
 
-			$params = $currentRoute->getParams();
-			$data = $slim->request()->getBody();
-
-			//prepare controller Params
-			$controllerParams = array();
-		    $controllerParams['HttpMethod'] = strtolower($slim->request()->getMethod());
-
-			foreach($espoController as $key => $val) {
-				if (strstr($val, ':')) {
-				$paramName = str_replace(':', '', $val);
-					$val = $params[$paramName];
+			foreach ($routeOptions as $key => $value) {
+				if (strstr($value, ':')) {
+					$paramName = str_replace(':', '', $value);
+					$value = $params[$paramName];
 				}
-				$controllerParams[$key] = $val;
+				$controllerParams[$key] = $value;
+			}			
+
+			$controllerName = $controllerParams['controller'];
+			
+			if (!empty($controllerParams['action'])) {
+				$actionName = $controllerParams['action'];
+			} else {
+				$httpMethod = strtolower($slim->request()->getMethod());
+				$actionName = $container->get('config')->get('crud')->$httpMethod;
 			}
-
-			$controllerParams['container'] = $container;
-			$controllerParams['serviceFactory'] = $serviceFactory;
-			//END: prepare controller Params
-
-			$result = $container->get('controllerManager')->call($controllerParams, $params, $data);
+			
+			$controllerManager = new \Espo\Core\ControllerManager($container);			
+			$result = $controllerManager->execute($controllerName, $actionName, $params, $data);
 
 			return $container->get('rest')->render($result->data, $result->errMessage, $result->errCode);
 		});
 
-
-		//return json response
 		$this->getSlim()->hook('slim.after.router', function () use (&$slim) {
 			$slim->contentType('application/json');
-			//$routes->contentType('text/javascript');
 		});
-		//END: return json response
 	}
 
 
@@ -213,7 +186,6 @@ EOT;
 			return array(
 				'controller' => 'Layout',
 				'scope' => ':controller',
-				'action' => ':name',
 			);
 		})->conditions( array('upper' => array('controller')) );
 
@@ -221,7 +193,6 @@ EOT;
 			return array(
 				'controller' => 'Layout',
 				'scope' => ':controller',
-				'action' => ':name',
 			);
 		})->conditions( array('upper' => array('controller')) );
 
@@ -229,7 +200,6 @@ EOT;
 			return array(
 				'controller' => 'Layout',
 				'scope' => ':controller',
-				'action' => ':name',
 			);
 		})->via('PATCH')->conditions( array('upper' => array('controller')) );
 		//END: LAYOUT

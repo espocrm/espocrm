@@ -7,7 +7,7 @@ use Espo\Core\Utils as Utils;
 class Layout extends \Espo\Core\Controllers\Base
 {
 
-    public function read($params, $data)
+    public function actionRead($params, $data)
 	{
 		$data = $this->getContainer()->get('layout')->get($params['controller'], $params['name']);
 
@@ -15,7 +15,7 @@ class Layout extends \Espo\Core\Controllers\Base
 	}
 
 
-	public function update($params, $data)
+	public function actionUpdate($params, $data)
 	{
         $result= $this->getContainer()->get('layout')->set($data, $params['controller'], $params['name']);
 
@@ -29,7 +29,7 @@ class Layout extends \Espo\Core\Controllers\Base
 	}
 
 
-	public function patch($params, $data)
+	public function actionPatch($params, $data)
 	{
         $result= $this->getContainer()->get('layout')->merge($data, $params['controller'], $params['name']);
 

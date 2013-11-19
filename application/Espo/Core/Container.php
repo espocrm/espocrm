@@ -19,10 +19,10 @@ class Container
     
     public function get($name)
     {
-    	if (!empty($this->data[$name])) {
-    		return $this->data[$name];
+    	if (empty($this->data[$name])) {
+    		$this->load($name);
     	}
-    	$this->load($name);
+    	
     	return $this->data[$name];
     }
 
@@ -121,14 +121,6 @@ class Container
     	$this->data['resolver'] = new \Espo\Core\Utils\Resolver(
 			$this->get('metadata')
   		);
-    }
-
-	private function loadControllerManager()
-    {
-    	$this->data['controllerManager'] = new \Espo\Core\Controllers\Manager(
-			$this->get('config'),
-			$this->get('metadata')
-		);
     }
 
 	private function loadDatetime()
