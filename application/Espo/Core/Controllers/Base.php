@@ -17,41 +17,25 @@ class Base
 	{
 		return $this->container;
 	}
+	
+	protected function getUser()
+	{
+		return $this->container->get('user');
+	}
+	
+	protected function getConfig()
+	{
+		return $this->container->get('config');
+	}
+	
+	protected function getMetadata()
+	{
+		return $this->container->get('metadata');
+	}
 
 	protected function getServiceFactory()
 	{
 		return $this->serviceFactory;
 	}
-
-
-
-    public function actionRead($params, $data)
-	{
-
-	}
-
-	public function actionUpdate($params, $data)
-	{
-
-	}
-
-	public function actionPatch($params, $data)
-	{
-
-	}
-
-	public function actionCreate($params, $data)
-	{
-
-	}
-
-	public function actionDelete($params, $data)
-	{
-
-	}
-
-
+ 
 }
-
-
-?>

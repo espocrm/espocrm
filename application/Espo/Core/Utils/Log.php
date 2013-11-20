@@ -58,15 +58,15 @@ class Log
 
 
 	private $fileManager;
-	private $rest;
+	private $output;
 	private $resolver;
 	private $params;
 
 
-	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Rest $rest, \Espo\Core\Utils\Resolver $resolver, \stdClass $params)    
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Output $output, \Espo\Core\Utils\Resolver $resolver, \stdClass $params)    
 	{
 		$this->fileManager = $fileManager;
-		$this->rest = $rest;
+		$this->output = $output;
 		$this->resolver = $resolver;
 		$this->params = $params;
 	}
@@ -78,9 +78,9 @@ class Log
 		return $this->fileManager;
 	}
 
-	protected function getRest()
+	protected function getOutput()
 	{
-		return $this->rest;
+		return $this->output;
 	}
 
 	protected function getResolver()
@@ -105,11 +105,11 @@ class Log
 	*/
 	function catchError($errNo, $errStr, $errFile, $errLine)
     {
-        $errorType= $this->phpErrorTypes[$errNo];
+        $errorType = $this->phpErrorTypes[$errNo];
 		if (empty($errorType)) {
-        	$errorType= $errNo;
+        	$errorType = $errNo;
 		}
-        $errorMessage = $errStr." - ".$errFile.":".$errLine;
+        $errorMessage = $errStr . " - " . $errFile . ":" . $errLine;
 
         return $this->add($errorType, $errorMessage);
     }
@@ -120,7 +120,7 @@ class Log
 	* @param integer $Exception
 	* @return bool
 	*/
-	public function catchException($Exception, $useResolver=true)
+	public function catchException($Exception, $useResolver = true)
     {
 		$errNo = $Exception->getCode();
 		$errorMessage = get_class($Exception).' - '.$Exception->getMessage();
@@ -177,7 +177,7 @@ class Log
 		}
 
 		if (in_array($errorType, $this->dieErrors)) {
-			$this->getRest()->displayError($text, 500);
+			$this->getOutput()->displayError($text, 500);
 		}
 
 		return $status;
@@ -249,6 +249,3 @@ class Log
 	}
 
 }
-
-
-?>

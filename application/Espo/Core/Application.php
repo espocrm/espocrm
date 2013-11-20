@@ -22,7 +22,8 @@ class Application
     {
     	$this->container = new Container();
 
-		$GLOBALS['log'] = $this->log = $this->container->get('log');
+		$GLOBALS['log'] = $this->log = $this->container->get('log');		
+		
         set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
 		set_exception_handler(array($this->getLog(), 'catchException'));
 
@@ -50,13 +51,8 @@ class Application
 		return $this->serviceFactory;
 	}
 
-
-
     public function run($name = 'default')
     {
-    	//set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
-		//set_exception_handler(array($this->getLog(), 'catchException'));
-
         $this->routeHooks();
         $this->routes();
         $this->getSlim()->run();
@@ -76,6 +72,10 @@ class Application
 
 			$conditions = $slim->router()->getCurrentRoute()->getConditions();
 			$upperList = isset($conditions['upper']) ? $conditions['upper'] : array();
+			
+			if (!in_array('controller', $upperList)) {
+				$upperList[] = 'controller';
+			}
 
             $routeParams = $slim->router()->getCurrentRoute()->getParams();
 
@@ -114,9 +114,10 @@ class Application
 					$value = $params[$paramName];
 				}
 				$controllerParams[$key] = $value;
-			}			
-
-			$controllerName = $controllerParams['controller'];
+			}	
+			
+			$controllerName = ucfirst($controllerParams['controller']);		
+			
 			
 			if (!empty($controllerParams['action'])) {
 				$actionName = $controllerParams['action'];
@@ -125,10 +126,14 @@ class Application
 				$actionName = $container->get('config')->get('crud')->$httpMethod;
 			}
 			
-			$controllerManager = new \Espo\Core\ControllerManager($container);			
-			$result = $controllerManager->execute($controllerName, $actionName, $params, $data);
+			try {							
+				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);						
+				$result = $controllerManager->process($controllerName, $actionName, $params, $data);
+				$container->get('output')->render($result);
+			} catch (\Exception $e) {							
+				$container->get('output')->processError($e->getMessage(), $e->getCode());
+			}
 
-			return $container->get('rest')->render($result->data, $result->errMessage, $result->errCode);
 		});
 
 		$this->getSlim()->hook('slim.after.router', function () use (&$slim) {
@@ -141,68 +146,71 @@ class Application
 	{
 		//$this->getSlim()->get('/', '\Espo\Utils\Api\Rest::main')->conditions( array('useController' => false) );
 
+		//TODO move routing to metadata
+		$routes = array(
+			array(
+				'method' => 'get',
+				'route' => 'metadata',
+				'params' => array(
+					'controller' => 'Metadata',	
+				),
+			),
+			array(
+				'method' => 'get',
+				'route' => 'settings',
+				'params' => array(
+					'controller' => 'Settings',	
+				),
+			),
+		);
+
 		$this->getSlim()->get('/', function() {
         	return $template = <<<EOT
-	            <h1>Main Page of REST API!!!</h1>
+	            <h1>EspoCRM REST API!!!</h1>
 EOT;
-		}); // ->conditions( array('useController' => false) );
+		});
 
 		$this->getSlim()->get('/app/user/', function() {
         	return '{"user":{"modified_by_name":"Administrator","created_by_name":"","id":"1","user_name":"admin","user_hash":"","system_generated_password":"0","pwd_last_changed":"","authenticate_id":"","sugar_login":"1","first_name":"","last_name":"Administrator","full_name":"Administrator","name":"Administrator","is_admin":"1","external_auth_only":"0","receive_notifications":"1","description":"","date_entered":"2013-06-13 12:18:44","date_modified":"2013-06-13 12:19:48","modified_user_id":"1","created_by":"","title":"Administrator","department":"","phone_home":"","phone_mobile":"","phone_work":"","phone_other":"","phone_fax":"","status":"Active","address_street":"","address_city":"","address_state":"","address_country":"","address_postalcode":"","UserType":"","deleted":"0","portal_only":"0","show_on_employees":"1","employee_status":"Active","messenger_id":"","messenger_type":"","reports_to_id":"","reports_to_name":"","email1":"test@letrium.com","email_link_type":"","is_group":"0","c_accept_status_fields":" ","m_accept_status_fields":" ","accept_status_id":"","accept_status_name":""},"preferences":{}}';
-		}); //->conditions( array('useController' => false) );
+		});
 
-		//METADATA
+
 		$this->getSlim()->get('/metadata/', function() {
 			return array(
 				'controller' => 'Metadata',
 			);
 		});
 
-		/*$this->getSlim()->put('/metadata/:type/:scope/', function() {
-			return array(
-				'controller' => 'Metadata',
-				'scope' => ':scope',
-				'action' => ':type',
-			);
-		})->conditions( array('upper' => array('scope')) ); */
-		//END: METADATA
-
-		//SETTINGS
 		$this->getSlim()->get('/settings/', function() {
 			return array(
 				'controller' => 'Settings',
 			);
-		}); //->conditions( array('auth' => false) );
-
+		});
 		$this->getSlim()->map('/settings/', function() {
 			return array(
 				'controller' => 'Settings',
 			);
 		})->via('PATCH');
-		//END: SETTINGS
 
-		//LAYOUT
 		$this->getSlim()->get('/:controller/layout/:name/', function() {
 			return array(
 				'controller' => 'Layout',
 				'scope' => ':controller',
 			);
-		})->conditions( array('upper' => array('controller')) );
-
+		});
 		$this->getSlim()->put('/:controller/layout/:name/', function() {
 			return array(
 				'controller' => 'Layout',
 				'scope' => ':controller',
 			);
-		})->conditions( array('upper' => array('controller')) );
-
+		});
 		$this->getSlim()->map('/:controller/layout/:name/', function() {
 			return array(
 				'controller' => 'Layout',
 				'scope' => ':controller',
 			);
-		})->via('PATCH')->conditions( array('upper' => array('controller')) );
-		//END: LAYOUT
+		})->via('PATCH');
+
 
 
 		/*$this->getSlim()->get('/:controller/:id', function() {

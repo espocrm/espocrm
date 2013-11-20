@@ -80,7 +80,7 @@ class Container
     {
     	$this->data['log'] = new \Espo\Core\Utils\Log(
 			$this->get('fileManager'),
-			$this->get('rest'),
+			$this->get('output'),
 			$this->get('resolver'),
 			(object) array(
 				'options' => $this->get('config')->get('logger'),
@@ -89,9 +89,9 @@ class Container
 		);
     }
 
-	private function loadRest()
+	private function loadOutput()
     {
-    	$this->data['rest'] = new \Espo\Core\Utils\Api\Rest(
+    	$this->data['output'] = new \Espo\Core\Utils\Api\Output(
 			$this->get('slim')
 		);
     }
