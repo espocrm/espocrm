@@ -2,15 +2,40 @@
 
 namespace Espo\Core\Controllers;
 
-class Base
-{
-	private $container;
-	private $serviceFactory;
+use \Espo\Core\Container;
+use \Espo\Core\ServiceFactory;
 
-	public function __construct(\Espo\Core\Container $container, \Espo\Core\ServiceFactory $serviceFactory)
+abstract class Base
+{
+	protected $name;
+	
+	private $container;
+	
+	private $serviceFactory;
+	
+	private $serviceClassName = null;
+	
+	private $service = null;
+
+	public function __construct(Container $container, ServiceFactory $serviceFactory)
 	{
 		$this->container = $container;
 		$this->serviceFactory = $serviceFactory;
+		
+		$name = get_class($this);
+		if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
+        	$name = $matches[1];
+    	}
+    	$this->name = $name;
+    	
+    	if (empty($this->serviceClassName)) {
+    		$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
+			if ($moduleName) {
+				$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . $this->name;
+			} else {
+				$className = '\\Espo\\Services\\' . $this->name;
+			}
+    	}
 	}
 
 	protected function getContainer()
@@ -21,6 +46,11 @@ class Base
 	protected function getUser()
 	{
 		return $this->container->get('user');
+	}
+	
+	protected function getAcl()
+	{
+		return $this->container->get('acl');
 	}
 	
 	protected function getConfig()
@@ -36,6 +66,16 @@ class Base
 	protected function getServiceFactory()
 	{
 		return $this->serviceFactory;
+	}
+	
+	protected function getService()
+	{
+		if (!empty($this->service)) {
+			return $this->service;
+		}
+		$this->service = $this->getServiceFactory()->createByClassName($this->serviceClassName);
+		return $this->service;	
+    	
 	}
  
 }

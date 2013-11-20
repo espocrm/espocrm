@@ -140,13 +140,18 @@ class Container
 			)
 		);
     }
-
-	private function loadUser()
+	
+	public function setUser($user)
+	{
+		$this->data['user'] = $user;
+	}
+	
+	/*private function loadUser()
     {
        	$this->data['user'] = new \Espo\Core\Utils\User(
 			$this->get('entityManager'),
 			$this->get('config')
 		);
-    }
+    }*/
 
 }

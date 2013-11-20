@@ -27,7 +27,6 @@ class Metadata
 		$this->doctrineConverter = new \Espo\Core\Doctrine\EspoConverter($entityManager, $this);
 	}
 
-
 	protected function getEntityManager()
 	{
 		return $this->entityManager;

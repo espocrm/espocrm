@@ -2,9 +2,11 @@
 
 namespace Espo\Core;
 
+use \Espo\Core\Exceptions\Error;
+
 class ServiceFactory
 {
-
+	
 	private $container;
 
 	private $metadata;
@@ -12,13 +14,7 @@ class ServiceFactory
     public function __construct(Container $container)
     {
     	$this->container = $container;
-    	$this->metadata = $this->container->get('metadata');
     }
-
-    protected function getCotainer()
-	{
-    	return $this->container;
-	}
 
 	public function createByClassName()
 	{
@@ -31,20 +27,7 @@ class ServiceFactory
     		}
     		return $service;
     	}
-    	// TODO throw an exception
-    	return null;
+    	throw new Error("Class '$className' does not exist");
 	}
-
-
-    public function create($name)
-    {
-    	$moduleName = $this->metadata->getScopeModuleName($name);
-    	if ($moduleName) {
-    		$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . $name;
-    	} else {
-    		$className = '\\Espo\\Services\\' . $name;
-    	}
-    	return $this->createByClassName($className);
-    }
 
 }

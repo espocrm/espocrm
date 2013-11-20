@@ -54,7 +54,7 @@ class Application
     public function run($name = 'default')
     {
         $this->routeHooks();
-        $this->routes();
+        $this->initRoutes();
         $this->getSlim()->run();
     }
 
@@ -63,11 +63,11 @@ class Application
 		$container = $this->getContainer();
 		$slim = $this->getSlim();
 		$serviceFactory = $this->getServiceFactory();
+		
 
-		//check user credentials
-		$this->getSlim()->add(new \Espo\Core\Utils\Api\Auth($container));
+		$auth = new \Espo\Core\Utils\Api\Auth($container->get('entityManager'), $container);
+		$this->getSlim()->add($auth);
 
-		//convert all url params to camel case format
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
 			$conditions = $slim->router()->getCurrentRoute()->getConditions();
@@ -87,7 +87,6 @@ class Application
 			    $slim->router()->getCurrentRoute()->setParams($routeParams);
 			}
 		});
-		//END: convert all url params to camel case format
 		
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container, $serviceFactory) {
 
@@ -102,7 +101,7 @@ class Application
 			$routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : array();
 
 			if (!in_array('controller', $routeKeys, true)) {
-				return $container->get('rest')->render($routeOptions);
+				return $container->get('output')->render($routeOptions);
 			}
 
 			$params = $route->getParams();
@@ -116,8 +115,7 @@ class Application
 				$controllerParams[$key] = $value;
 			}	
 			
-			$controllerName = ucfirst($controllerParams['controller']);		
-			
+			$controllerName = ucfirst($controllerParams['controller']);
 			
 			if (!empty($controllerParams['action'])) {
 				$actionName = $controllerParams['action'];
@@ -142,7 +140,7 @@ class Application
 	}
 
 
-	protected function routes()
+	protected function initRoutes()
 	{
 		//$this->getSlim()->get('/', '\Espo\Utils\Api\Rest::main')->conditions( array('useController' => false) );
 

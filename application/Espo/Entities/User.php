@@ -18,13 +18,13 @@ class User
 	 * @var string
 	 */
 	protected $username;
+	
 	protected $password;
+	
 	protected $isAdmin;
 
 	public function __construct()
 	{
-		//$this->reportedBugs = new ArrayCollection();
-		//$this->assignedBugs = new ArrayCollection();
 	}
 
 	public function getId()
@@ -42,7 +42,7 @@ class User
         return $this->password;
     }
 
-	public function getIsAdmin()
+	public function isAdmin()
 	{
 		return $this->isAdmin;
 	}
@@ -51,5 +51,5 @@ class User
 	{
 		$this->name = $name;
 	}
-
+	
 }
