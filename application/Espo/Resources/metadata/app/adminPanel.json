@@ -3,12 +3,12 @@
       "label":"System",
       "items":[
          {
-            "url":"#admin/settings",
+            "url":"#Admin/settings",
             "label":"Settings",
             "description":"System settings of application."
          },
          {
-            "url":"#admin/clear-cache",
+            "url":"#Admin/clearCache",
             "label":"Clear Cache",
             "description":"Clear all server side cache."
          }
@@ -18,17 +18,17 @@
       "label":"Users",
       "items":[
          {
-            "url":"#user",
+            "url":"#User",
             "label":"Users",
             "description":"Users management."
          },
          {
-            "url":"#team",
+            "url":"#Team",
             "label":"Teams",
             "description":"Teams management."
          },
          {
-            "url":"#role",
+            "url":"#Role",
             "label":"Roles",
             "description":"Roles management."
          }
@@ -38,17 +38,17 @@
       "label":"Email",
       "items":[
          {
-            "url":"#admin/outbound-email",
+            "url":"#Admin/outboundEmail",
             "label":"Outbound Emails",
             "description":"SMTP settings for outgoing emails."
          },
          {
-            "url":"#inbound-email",
+            "url":"#InboundEmail",
             "label":"Inbound Emails",
             "description":"Group IMAP email accouts. Email import and Email-to-Case."
          },
          {
-            "url":"#email-template",
+            "url":"#EmailTemplate",
             "label":"Email Templates",
             "description":"Templates for outbound emails."
          }
@@ -58,7 +58,7 @@
       "label":"Data",
       "items":[
          {
-            "url":"#admin/import",
+            "url":"#Admin/import",
             "label":"Import",
             "description":"Import data from CSV file."
          }
@@ -68,7 +68,7 @@
       "label":"Customization",
       "items":[
          {
-            "url":"#admin/layouts",
+            "url":"#Admin/layouts",
             "label":"Layout Manager",
             "description":"Customize layouts (list, detail, edit, search, mass update)."
          },
@@ -78,7 +78,7 @@
             "description":"Create new fields or customize existing ones."
          },
          {
-            "url":"#admin/user-interface",
+            "url":"#admin/userInterface",
             "label":"User Interface",
             "description":"Configure UI."
          }
