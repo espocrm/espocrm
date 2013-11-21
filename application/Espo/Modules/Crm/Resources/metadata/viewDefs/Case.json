@@ -22,7 +22,7 @@
          "buttons":[
             {
                "label":"Create Case",
-               "link":"#case/create",
+               "link":"#Case/create",
                "style":"primary",
                "acl":"edit"
             }

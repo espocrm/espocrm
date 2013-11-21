@@ -39,7 +39,7 @@
          "buttons":[
             {
                "label":"Create Meeting",
-               "link":"#meeting/create",
+               "link":"#Meeting/create",
                "style":"primary",
                "acl":"edit"
             }

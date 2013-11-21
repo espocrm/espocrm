@@ -30,7 +30,7 @@
          "buttons":[
             {
                "label":"Create Account",
-               "link":"#account/create",
+               "link":"#Account/create",
                "style":"primary",
                "acl":"edit"
             }

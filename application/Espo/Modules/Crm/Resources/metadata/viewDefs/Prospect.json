@@ -7,7 +7,7 @@
          "buttons":[
             {
                "label":"Create Prospect",
-               "link":"#prospect/create",
+               "link":"#Prospect/create",
                "style":"primary",
                "acl":"edit"
             }

@@ -22,7 +22,7 @@
          "buttons":[
             {
                "label":"Create Opportunity",
-               "link":"#opportunity/create",
+               "link":"#Opportunity/create",
                "style":"primary",
                "acl":"edit"
             }

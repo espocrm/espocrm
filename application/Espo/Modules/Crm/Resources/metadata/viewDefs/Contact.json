@@ -22,7 +22,7 @@
          "buttons":[
             {
                "label":"Create Contact",
-               "link":"#contact/create",
+               "link":"#Contact/create",
                "style":"primary",
                "acl":"edit"
             }

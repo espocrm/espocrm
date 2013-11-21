@@ -28,7 +28,7 @@
          "buttons":[
             {
                "label":"Create Lead",
-               "link":"#lead/create",
+               "link":"#Lead/create",
                "style":"primary",
                "acl":"edit"
             }

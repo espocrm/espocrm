@@ -4,7 +4,7 @@
          "buttons":[
             {
                "label":"Create Task",
-               "link":"#task/create",
+               "link":"#Task/create",
                "style":"primary",
                "acl":"edit"
             }
