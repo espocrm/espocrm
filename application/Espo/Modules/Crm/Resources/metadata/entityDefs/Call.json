@@ -38,18 +38,15 @@
         },
         "users": {
             "type": "linkMultiple",
-            "disabled": true,
-            "readOnly": true
+            "disabled": true
         },
         "contacts": {
             "type": "linkMultiple",
-            "disabled": true,
-            "readOnly": true
+            "disabled": true
         },
         "leads": {
             "type": "linkMultiple",
-            "disabled": true,
-            "readOnly": true
+            "disabled": true
         },
         "createdAt": {
             "type": "datetime",

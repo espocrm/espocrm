@@ -74,8 +74,7 @@ abstract class Base
 			return $this->service;
 		}
 		$this->service = $this->getServiceFactory()->createByClassName($this->serviceClassName);
-		return $this->service;	
-    	
+		return $this->service;    	
 	}
  
 }
