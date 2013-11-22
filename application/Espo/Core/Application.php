@@ -68,6 +68,7 @@ class Application
 		$auth = new \Espo\Core\Utils\Api\Auth($container->get('entityManager'), $container);
 		$this->getSlim()->add($auth);
 
+		
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
 			$conditions = $slim->router()->getCurrentRoute()->getConditions();

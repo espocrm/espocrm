@@ -73,12 +73,12 @@
             "description":"Customize layouts (list, detail, edit, search, mass update)."
          },
          {
-            "url":"#admin/fields",
+            "url":"#Admin/fields",
             "label":"Field Manager",
             "description":"Create new fields or customize existing ones."
          },
          {
-            "url":"#admin/userInterface",
+            "url":"#Admin/userInterface",
             "label":"User Interface",
             "description":"Configure UI."
          }
