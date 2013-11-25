@@ -184,7 +184,7 @@ EOT;
 			return array(
 				'controller' => 'Settings',
 			);
-		});
+		})->conditions( array('auth' => false) );
 		$this->getSlim()->map('/settings/', function() {
 			return array(
 				'controller' => 'Settings',

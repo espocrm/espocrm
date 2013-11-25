@@ -14,7 +14,7 @@ class Settings extends \Espo\Core\Controllers\Base
 
 	public function actionPatch($params, $data)
 	{
-		$result = $this->getConfig()->setJsonData($data, $this->getUser()->isAdmin());
+       	$result = $this->getConfig()->setJsonData($data, $this->getUser()->isAdmin());
         if ($result === false) {
         	throw new Error('Cannot save settings');
         }
