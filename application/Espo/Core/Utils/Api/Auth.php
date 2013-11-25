@@ -32,6 +32,7 @@ class Auth extends \Slim\Middleware
 		if (!empty($routes[0])) {
 			$routeConditions = $routes[0]->getConditions();
         	if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
+        		$this->container->setUser(new \Espo\Entities\User());
 	        	$this->next->call();
 				return;
 			}
