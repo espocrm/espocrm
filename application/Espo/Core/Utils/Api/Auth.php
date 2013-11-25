@@ -10,7 +10,7 @@ class Auth extends \Slim\Middleware
 	
 	private $container;
 
-	protected $realm = 'Protected Area';
+	protected $realm = '';
 
 	public function __construct(\Doctrine\ORM\EntityManager $entityManager, \Espo\Core\Container $container)
 	{
