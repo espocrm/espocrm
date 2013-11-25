@@ -18,6 +18,12 @@
       "currency",
       ""
    ],
+   "fields":{
+      "currency":{
+         "type":"varchar",
+         "disabled": true
+      }
+   },
    "search":{
       "basic":false,
       "advanced":true
