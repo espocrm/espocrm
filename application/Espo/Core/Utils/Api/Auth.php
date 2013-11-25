@@ -10,8 +10,6 @@ class Auth extends \Slim\Middleware
 	
 	private $container;
 
-	protected $realm = '';
-
 	public function __construct(\Doctrine\ORM\EntityManager $entityManager, \Espo\Core\Container $container)
 	{
 		$this->entityManager = $entityManager;
@@ -60,11 +58,11 @@ class Auth extends \Slim\Middleware
             if ($isAuthenticated) {
                 $this->next->call();
             } else {
-            	$res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $this->realm));
+            	$res->header('WWW-Authenticate');
             	$res->status(401);
             }
         } else {
-            $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $this->realm));
+            $res->header('WWW-Authenticate');
             $res->status(401);
         }
 	}
