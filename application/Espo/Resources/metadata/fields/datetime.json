@@ -12,6 +12,10 @@
       {
          "name":"after",
          "type":"varchar"
+      },
+      {
+         "name":"before",
+         "type":"varchar"
       }
    ],
    "search":{

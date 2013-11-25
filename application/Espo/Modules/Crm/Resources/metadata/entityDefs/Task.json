@@ -14,7 +14,8 @@
             "default": "Normal"
         },
         "dateStart": {
-            "type": "datetime"
+            "type": "datetime",
+            "before": "dateEnd"
         },
         "dateEnd": {
             "type": "datetime",
