@@ -9,13 +9,15 @@ abstract class Record extends Base
 {
 	protected $serviceClassName = '\\Espo\\Services\\Record';
 	
+	public $defaultAction = 'list';
+	
 	protected function loadService()
 	{
 		parent::loadService();
 		$this->service->setEntityName($this->name);
 	}
 
-	protected function actionRead($params)
+	public function actionRead($params)
 	{
 		$id = $params['id'];
 		$service = $this->getService();
@@ -28,7 +30,7 @@ abstract class Record extends Base
 		return $entity;
 	}
 
-	protected function actionUpdate($params, $data)
+	public function actionUpdate($params, $data)
 	{
 		$id = $params['id'];
 		$service = $this->getService();
@@ -45,7 +47,7 @@ abstract class Record extends Base
 		throw new Error();
 	}
 
-	protected function actionPost($params, $data)
+	public function actionPost($params, $data)
 	{
 		if (!$this->getAcl()->check($this->name, 'edit')) {
 			throw new Forbidden();
@@ -60,7 +62,7 @@ abstract class Record extends Base
 		throw new Error();
 	}
 
-	protected function actionList($params, $where)
+	public function actionList($params, $where)
 	{
 		if (!$this->getAcl()->check($this->name, 'read')) {
 			throw new Forbidden();
@@ -73,18 +75,18 @@ abstract class Record extends Base
 		$asc = $data['asc'];
 		$sortBy = $data['sortBy'];
 
-		$entityList = $service->findEntities({
+		$entityList = $service->findEntities(array(
 			'where' => $where,
 			'offset' => $offset,
 			'limit' => $limit,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
-		});
+		));
 
 		return $entityList;
 	}
 
-	protected function actionDelete($params)
+	public function actionDelete($params)
 	{
 		$id = $params['id'];
 
@@ -101,7 +103,7 @@ abstract class Record extends Base
 		throw new Error();
 	}
 
-	protected function actionMassUpdate($params, $data)
+	public function actionMassUpdate($params, $data)
 	{
 		if (!$this->getAcl()->check($this->name, 'edit')) {
 			throw new Forbidden();
@@ -116,7 +118,7 @@ abstract class Record extends Base
 		return $idsUpdated;
 	}
 
-	protected function actionMassDelete($params, $data)
+	public function actionMassDelete($params, $data)
 	{
 		if (!$this->getAcl()->check($this->name, 'delete')) {
 			throw new Forbidden();
@@ -131,7 +133,7 @@ abstract class Record extends Base
 		return $idsDeleted;
 	}
 
-	protected function actionListLinked($params, $data)
+	public function actionListLinked($params, $data)
 	{
 		$id = $params['id'];
 		$link = $params['link'];
@@ -153,18 +155,18 @@ abstract class Record extends Base
 		$asc = $data['asc'];
 		$sortBy = $data['sortBy'];
 
-		$entityList = $service->findLinkedEntities($entity, $link, {
+		$entityList = $service->findLinkedEntities($entity, $link, array(
 			'where' => $where,
 			'offset' => $offset,
 			'limit' => $limit,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
-		});
+		));
 
 		return $entityList;
 	}
 
-	protected function actionCreateLink($params)
+	public function actionCreateLink($params)
 	{
 		$id = $params['id'];
 		$link = $params['link'];
@@ -184,4 +186,5 @@ abstract class Record extends Base
 
 		throw new Error();
 	}
+}
 

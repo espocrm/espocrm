@@ -116,14 +116,14 @@ class Application
 				$controllerParams[$key] = $value;
 			}	
 			
-			$controllerName = ucfirst($controllerParams['controller']);
+			$controllerName = ucfirst($controllerParams['controller']);			
 			
 			if (!empty($controllerParams['action'])) {
 				$actionName = $controllerParams['action'];
 			} else {
 				$httpMethod = strtolower($slim->request()->getMethod());
 				$actionName = $container->get('config')->get('crud')->$httpMethod;
-			}
+			}			
 			
 			try {							
 				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);						
@@ -164,9 +164,7 @@ class Application
 		);
 
 		$this->getSlim()->get('/', function() {
-        	return $template = <<<EOT
-	            <h1>EspoCRM REST API!!!</h1>
-EOT;
+        	return "EspoCRM REST API";
 		});
 
 		$this->getSlim()->get('/app/user/', function() {
@@ -209,14 +207,13 @@ EOT;
 				'scope' => ':controller',
 			);
 		})->via('PATCH');
-
-
-
-		/*$this->getSlim()->get('/:controller/:id', function() {
+		
+		
+		
+		$this->getSlim()->get('/:controller', function() {
 			return array(
 				'controller' => ':controller',
-				'action' => 'read',
-		        'id' => ':id'
+				'action' => 'index',
 			);
 		});
 
@@ -226,6 +223,16 @@ EOT;
 				'action' => 'create',
 			);
 		});
+
+		/*$this->getSlim()->get('/:controller/:id', function() {
+			return array(
+				'controller' => ':controller',
+				'action' => 'read',
+		        'id' => ':id'
+			);
+		});
+
+
 
 		$this->getSlim()->put('/:controller/:id', function() {
 			return array(

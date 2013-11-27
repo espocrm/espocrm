@@ -16,6 +16,8 @@ abstract class Base
 	protected $serviceClassName = null;
 	
 	private $service = null;
+	
+	public $defaultAction = 'index';
 
 	public function __construct(Container $container, ServiceFactory $serviceFactory)
 	{
@@ -84,5 +86,5 @@ abstract class Base
 		$this->loadService();
 		return $this->service;    	
 	}
- 
+	 
 }

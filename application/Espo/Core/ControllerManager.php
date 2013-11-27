@@ -46,13 +46,18 @@ class ControllerManager
 			} else {
 				$controllerClassName = '\\Espo\\Controllers\\' . $controllerName;
 			}
-		}		
+		}
+
 		
 		if (!class_exists($controllerClassName)) {
 			throw new NotFound("Controller '$controllerName' is not found");
-		}
+		}			
 		
-		$controller = new $controllerClassName($this->container, $this->serviceFactory);		
+		$controller = new $controllerClassName($this->container, $this->serviceFactory);
+		
+		if ($actionName == 'index') {
+			$actionName = $controller->defaultAction;
+		}		
 		
 		$actionNameUcfirst = ucfirst($actionName);
 		
@@ -60,11 +65,9 @@ class ControllerManager
 		if (method_exists($controller, $beforeMethodName)) {
 			$controller->$beforeMethodName($params, $data);
 		}
-		$actionMethodName = 'action' . $actionNameUcfirst;		
+		$actionMethodName = 'action' . $actionNameUcfirst;
 		
-		
-		if (!method_exists($controller, $actionMethodName)) {
-			
+		if (!method_exists($controller, $actionMethodName)) {			
 			throw new NotFound("Action '$actionMethodName' does not exist in controller '$controller'");
 		}	
 			
