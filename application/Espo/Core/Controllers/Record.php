@@ -187,4 +187,3 @@ abstract class Record extends Base
 		throw new Error();
 	}
 }
-

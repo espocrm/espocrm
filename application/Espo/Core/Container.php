@@ -30,7 +30,8 @@ class Container
     {
     	$loadMethod = 'load' . ucfirst($name);
     	if (method_exists($this, $loadMethod)) {
-    		$this->$loadMethod();
+    		$obj = $this->$loadMethod();
+    		$this->data[$name] = $obj;
     	} else {
             //external loader class \Espo\Core\Loaders\<className> or \Custom\Espo\Core\Loaders\<className> with load() method
 			$className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
@@ -51,13 +52,12 @@ class Container
 
     private function loadSlim()
     {
-        $this->data['slim'] = new \Slim\Slim();
+        return new \Slim\Slim();
     }
-
 
 	private function loadFileManager()
     {
-    	$this->data['fileManager'] = new \Espo\Core\Utils\File\Manager(
+    	return new \Espo\Core\Utils\File\Manager(
 			(object) array(
 				'defaultPermissions' => (object)  array (
 				    'dir' => '0775',
@@ -71,14 +71,14 @@ class Container
 
 	private function loadConfig()
     {
-    	$this->data['config'] = new \Espo\Core\Utils\Config(
+    	return new \Espo\Core\Utils\Config(
 			$this->get('fileManager')
 		);
     }
 
 	private function loadLog()
     {
-    	$this->data['log'] = new \Espo\Core\Utils\Log(
+    	return new \Espo\Core\Utils\Log(
 			$this->get('fileManager'),
 			$this->get('output'),
 			$this->get('resolver'),
@@ -91,14 +91,14 @@ class Container
 
 	private function loadOutput()
     {
-    	$this->data['output'] = new \Espo\Core\Utils\Api\Output(
+    	return new \Espo\Core\Utils\Api\Output(
 			$this->get('slim')
 		);
     }
 
 	private function loadMetadata()
     {
-    	$this->data['metadata'] = new \Espo\Core\Utils\Metadata(
+    	return new \Espo\Core\Utils\Metadata(
 			$this->get('entityManager'),
 			$this->get('config'),
 			$this->get('fileManager'),
@@ -109,7 +109,7 @@ class Container
 
 	private function loadLayout()
     {
-    	$this->data['layout'] = new \Espo\Core\Utils\Layout(
+    	return new \Espo\Core\Utils\Layout(
 			$this->get('config'),
 			$this->get('fileManager'),
 			$this->get('metadata')
@@ -118,21 +118,21 @@ class Container
 
 	private function loadResolver()
     {
-    	$this->data['resolver'] = new \Espo\Core\Utils\Resolver(
+    	return new \Espo\Core\Utils\Resolver(
 			$this->get('metadata')
   		);
     }
 
 	private function loadDatetime()
     {
-    	$this->data['datetime'] = new \Espo\Core\Utils\Datetime(
+    	return new \Espo\Core\Utils\Datetime(
 			$this->get('config')
 		);
     }    
 
 	private function loadUniteFiles()
     {
-       	$this->data['uniteFiles'] = new \Espo\Core\Utils\File\UniteFiles(
+       	return new \Espo\Core\Utils\File\UniteFiles(
 			$this->get('fileManager'),
             (object) array(
 				'unsetFileName' => $this->get('config')->get('unsetFileName'),
@@ -140,6 +140,13 @@ class Container
 			)
 		);
     }
+    
+	private function loadAcl()
+	{
+		return new \Espo\Core\Acl(
+			$this->get('user')
+		);
+	}
 	
 	public function setUser($user)
 	{
@@ -148,7 +155,7 @@ class Container
 	
 	/*private function loadUser()
     {
-       	$this->data['user'] = new \Espo\Core\Utils\User(
+       	return new \Espo\Core\Utils\User(
 			$this->get('entityManager'),
 			$this->get('config')
 		);

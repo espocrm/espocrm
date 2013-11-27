@@ -15,7 +15,7 @@ abstract class Base
 	
 	protected $serviceClassName = null;
 	
-	private $service = null;
+	protected $service = null;
 	
 	public $defaultAction = 'index';
 

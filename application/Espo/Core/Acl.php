@@ -6,7 +6,6 @@ class Acl
 {
 	private $data = array();
 
-
 	public function __construct(\Espo\Entities\User $user)
 	{	
 		$this->user = $user;
@@ -15,8 +14,6 @@ class Acl
 
 	public function check($subject, $action)
 	{
-	
+		return true;	
 	}
-
-
 }

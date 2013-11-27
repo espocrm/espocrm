@@ -20,10 +20,8 @@ class EntityManager
     	return $this->container;
 	}
 
-
 	public function load()
 	{
-		//EspoPHPDriver for Doctrine
 		$devMode= !$this->getContainer()->get('config')->get('useCache');
 		$doctrineConfig = Setup::createConfiguration($devMode, null, null);
 		$doctrineConfig->setMetadataDriverImpl(new EspoPHPDriver(
@@ -32,17 +30,14 @@ class EntityManager
 							$this->getContainer()->get('config')->get('defaultsPath').'/doctrine/metadata'
 						)
 		));
-		//END: EspoPHPDriver for Doctrine
 
 		$doctrineConn = (array) $this->getContainer()->get('config')->get('database');
-
-		// obtaining the entity manager
-		return \Doctrine\ORM\EntityManager::create($doctrineConn, $doctrineConfig);
+		
+		$entityManger = \Doctrine\ORM\EntityManager::create($doctrineConn, $doctrineConfig);
+		
+		$entityMangerDecorator = new \Espo\Core\EntityManager($entityManger);
+		//$entityMangerDecorator->setMetadata($this->getContainer()->get('metadata'));
+		
+		return $entityMangerDecorator;
 	}
-
-
-
 }
-
-
-?>

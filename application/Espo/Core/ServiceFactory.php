@@ -16,11 +16,11 @@ class ServiceFactory
     	$this->container = $container;
     }
 
-	public function createByClassName()
+	public function createByClassName($className)
 	{
     	if (class_exists($className)) {
     		$service = new $className();
-    		$dependencies = $service::dependencies;
+    		$dependencies = $service::$dependencies;
     		foreach ($dependencies as $name) {
     			$setMethod = 'set' . ucfirst($name);
     			$service->$setMethod($this->container->get($name));

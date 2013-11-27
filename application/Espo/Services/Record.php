@@ -39,11 +39,15 @@ class Record extends \Espo\Core\Services\Base
 	public function getUser()
 	{
 		return $this->user;
-	}
-	
+	}	
 	
 	public function getEntity($id)
 	{
+		return $this->getEntityManager()->find($this->name, $id);
+	}
 	
+	public function findEntities($where)
+	{
+		return $this->getEntityManager()->getRepository($this->name)->findBy($where);
 	}	
 }
