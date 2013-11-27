@@ -13,7 +13,7 @@ class Application
 
 	private $slim;
 
-
+	private $doctrineConverter;
 
 	/**
      * Constructor
@@ -22,18 +22,26 @@ class Application
     {
     	$this->container = new Container();
 
-		$GLOBALS['log'] = $this->log = $this->container->get('log');		
+		$GLOBALS['log'] = $this->log = $this->container->get('log');
 		
         set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
 		set_exception_handler(array($this->getLog(), 'catchException'));
 
     	$this->serviceFactory = new ServiceFactory($this->container);
 		$this->slim = $this->container->get('slim');
+		$this->metadata = $this->container->get('metadata');
+
+		$this->initMetadata();
     }
 
 	public function getSlim()
 	{
 		return $this->slim;
+	}
+
+	public function getMetadata()
+	{
+		return $this->metadata;
 	}
 
 	public function getContainer()
@@ -51,12 +59,37 @@ class Application
 		return $this->serviceFactory;
 	}
 
+	protected function getDoctrineConverter()
+	{
+		return $this->doctrineConverter;
+	}
+
     public function run($name = 'default')
     {
         $this->routeHooks();
         $this->initRoutes();
         $this->getSlim()->run();
     }
+
+
+	protected function initMetadata()
+	{
+    	$isNotCached = !$this->getMetadata()->isCached();
+
+        $this->getMetadata()->init($isNotCached);
+
+		if ($isNotCached) {
+			$doctrineConverter = new \Espo\Core\Doctrine\EspoConverter($this->container->get('entityManager'), $this->getMetadata(), $this->container->get('fileManager'));
+
+            if ($doctrineConverter->convertToDoctrine()) {
+				try{
+	        		$doctrineConverter->rebuildDatabase();
+			   	} catch (\Exception $e) {
+				  	$GLOBALS['log']->add('EXCEPTION', 'Fault to rebuildDatabase'.'. Details: '.$e->getMessage());
+				}
+            }
+		}
+	}
 
 	protected function routeHooks()
 	{
@@ -116,14 +149,14 @@ class Application
 				$controllerParams[$key] = $value;
 			}	
 			
-			$controllerName = ucfirst($controllerParams['controller']);			
+			$controllerName = ucfirst($controllerParams['controller']);
 			
 			if (!empty($controllerParams['action'])) {
 				$actionName = $controllerParams['action'];
 			} else {
 				$httpMethod = strtolower($slim->request()->getMethod());
 				$actionName = $container->get('config')->get('crud')->$httpMethod;
-			}			
+			}
 			
 			try {							
 				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);						
@@ -164,7 +197,9 @@ class Application
 		);
 
 		$this->getSlim()->get('/', function() {
-        	return "EspoCRM REST API";
+        	return $template = <<<EOT
+	            <h1>EspoCRM REST API!!!</h1>
+EOT;
 		});
 
 		$this->getSlim()->get('/app/user/', function() {
@@ -207,22 +242,8 @@ class Application
 				'scope' => ':controller',
 			);
 		})->via('PATCH');
-		
-		
-		
-		$this->getSlim()->get('/:controller', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'index',
-			);
-		});
 
-		$this->getSlim()->post('/:controller', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'create',
-			);
-		});
+
 
 		/*$this->getSlim()->get('/:controller/:id', function() {
 			return array(
@@ -232,7 +253,12 @@ class Application
 			);
 		});
 
-
+		$this->getSlim()->post('/:controller', function() {
+			return array(
+				'controller' => ':controller',
+				'action' => 'create',
+			);
+		});
 
 		$this->getSlim()->put('/:controller/:id', function() {
 			return array(

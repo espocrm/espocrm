@@ -4,5 +4,9 @@
    "search":{
       "basic":false,
       "advanced":true
+   },
+   "database":{
+      "type":"integer",
+      "autoincrement":true
    }
 }

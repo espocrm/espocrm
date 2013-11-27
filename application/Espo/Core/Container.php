@@ -81,7 +81,6 @@ class Container
     	return new \Espo\Core\Utils\Log(
 			$this->get('fileManager'),
 			$this->get('output'),
-			$this->get('resolver'),
 			(object) array(
 				'options' => $this->get('config')->get('logger'),
 				'datetime' => $this->get('datetime')->getDatetime(),
@@ -99,7 +98,6 @@ class Container
 	private function loadMetadata()
     {
     	return new \Espo\Core\Utils\Metadata(
-			$this->get('entityManager'),
 			$this->get('config'),
 			$this->get('fileManager'),
 			$this->get('uniteFiles')
@@ -114,13 +112,6 @@ class Container
 			$this->get('fileManager'),
 			$this->get('metadata')
 		);
-    }
-
-	private function loadResolver()
-    {
-    	return new \Espo\Core\Utils\Resolver(
-			$this->get('metadata')
-  		);
     }
 
 	private function loadDatetime()
@@ -151,14 +142,6 @@ class Container
 	public function setUser($user)
 	{
 		$this->data['user'] = $user;
-	}
-	
-	/*private function loadUser()
-    {
-       	return new \Espo\Core\Utils\User(
-			$this->get('entityManager'),
-			$this->get('config')
-		);
-    }*/
+	} 
 
 }

@@ -10,7 +10,7 @@ class Auth extends \Slim\Middleware
 	
 	private $container;
 
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager, \Espo\Core\Container $container)
+	public function __construct(\Espo\Core\EntityManager $entityManager, \Espo\Core\Container $container)
 	{
 		$this->entityManager = $entityManager;
 		$this->container = $container;

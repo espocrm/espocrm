@@ -2,5 +2,8 @@
    "search":{
       "basic":false,
       "advanced":false
+   },
+   "database":{
+      "db": false 
    }
 }

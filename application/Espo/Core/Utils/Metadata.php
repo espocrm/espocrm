@@ -9,27 +9,19 @@ class Metadata
 
 	protected $metadataConfig;
 	protected $doctrineMetadataName = 'defs'; //Metadata "defs" uses for creating the metadata of Doctri
+	protected $meta;
 
 	protected $scopes= array();
 
-	private $entityManager;
 	private $config;
-	private $doctrineConverter;
 	private $uniteFiles;
 	private $fileManager;
 
-	public function __construct(\Doctrine\ORM\EntityManager $entityManager, \Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\File\UniteFiles $uniteFiles)
+	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\File\UniteFiles $uniteFiles)
 	{
-		$this->entityManager = $entityManager;
 		$this->config = $config;
 		$this->uniteFiles = $uniteFiles;
 		$this->fileManager = $fileManager;
-		$this->doctrineConverter = new \Espo\Core\Doctrine\EspoConverter($entityManager, $this);
-	}
-
-	protected function getEntityManager()
-	{
-		return $this->entityManager;
 	}
 
 	protected function getConfig()
@@ -37,10 +29,7 @@ class Metadata
 		return $this->config;
 	}
 
-	protected function getDoctrineConverter()
-	{
-		return $this->doctrineConverter;
-	}
+
 
 	protected function getUniteFiles()
 	{
@@ -53,6 +42,39 @@ class Metadata
 	}
 
 
+	public function isCached()
+	{
+    	if (!$this->getConfig()->get('useCache')) {
+           	return false;
+		}
+
+		if (file_exists($this->getMetaConfig()->metadataCacheFile)) {
+			return true;
+		}
+
+		return false;
+	}
+
+
+    public function init($reload = false)
+	{
+       	$data= $this->getMetadataOnly(false, $reload);
+		if ($data === false) {
+			$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been created');
+		}
+
+		$this->meta = $data;
+
+		if ($reload) {
+        	//save medatada to a cache file
+	        $isSaved = $this->getFileManager()->setContentPHP($data, $this->getMetaConfig()->metadataCacheFile);
+			if ($isSaved === false) {
+	        	$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been saved to a cache file');
+			}
+		}
+	}
+
+
 	/**
     * Get Metadata context
 	*
@@ -61,37 +83,16 @@ class Metadata
 	*
 	* @return json | array
 	*/
-	//HERE --- ADD CREATING DOCTRINE METADATA
-	public function get($isJSON = true, $reload = false)
+	public function get($isJSON = false, $reload = false)
 	{
-		$config= $this->getMetaConfig();
-
-		if (!$this->getConfig()->get('useCache')) {
-           	$reload = true;
+		if ($reload) {
+			$this->init();
 		}
 
-		if (!file_exists($config->cacheFile) || $reload) {
-        	$data= $this->getMetadataOnly(false, true);
-			if ($data === false) {
-				return false;
-			}
-
-			//save medatada to cache files
-	        $this->getFileManager()->setContentPHP($data, $this->getMetaConfig()->cacheFile);
-
-			$GLOBALS['log']->add('Debug', 'Metadata:get() - converting to doctrine metadata');
-            if ($this->convertToDoctrine($data)) {
-            	$GLOBALS['log']->add('Debug', 'Metadata:get() - database rebuild');
-
-				try{
-	        		$this->getDoctrineConverter()->rebuildDatabase();
-			   	} catch (\Exception $e) {
-				  	$GLOBALS['log']->add('EXCEPTION', 'Try to rebuildDatabase'.'. Details: '.$e->getMessage());
-				}
-            }
-		}
-
-		return $this->getMetadataOnly($isJSON, false);
+		if ($isJSON) {
+        	return Json::encode($this->meta);
+        }
+		return $this->meta;
 	}
 
 
@@ -104,25 +105,20 @@ class Metadata
 	*
 	* @return json | array
 	*/
-
 	public function getMetadataOnly($isJSON = true, $reload = false)
 	{
 		$config= $this->getMetaConfig();
 
-		if (!$this->getConfig()->get('useCache')) {
-        	$reload = true;
-		}
-
 		$data = false;
-		if (!file_exists($config->cacheFile) || $reload) {
+		if (!file_exists($config->metadataCacheFile) || $reload) {
         	$data= $this->uniteFiles($config, true);
 
 			if ($data === false) {
             	$GLOBALS['log']->add('FATAL', 'Metadata:getMetadata() - metadata unite file cannot be created');
 			}
 		}
-        else if (file_exists($config->cacheFile)) {
-			$data= $this->getFileManager()->getContent($config->cacheFile);
+        else if (file_exists($config->metadataCacheFile)) {
+			$data= $this->getFileManager()->getContent($config->metadataCacheFile);
 		}
 
 		if ($isJSON) {
@@ -146,66 +142,32 @@ class Metadata
 	*/
 	public function set($data, $type, $scope)
 	{
-		$fullPath= $this->getMetaConfig()->corePath;
-		$moduleName= $this->getScopeModuleName($scope);
+		$fullPath = $this->getMetaConfig()->corePath;
+		$moduleName = $this->getScopeModuleName($scope);
 
 		if ($moduleName !== false) {
-        	$fullPath= str_replace('{*}', $moduleName, $this->getMetaConfig()->customPath);
+        	$fullPath = str_replace('{*}', $moduleName, $this->getMetaConfig()->customPath);
 		}
-		$fullPath= Util::concatPath($fullPath, $type);
+		$fullPath = Util::concatPath($fullPath, $type);
 
         //merge data with defaults values
-        $defaults= $this->getUniteFiles()->loadDefaultValues($type, 'metadata');
+        $defaults = $this->getUniteFiles()->loadDefaultValues($type, 'metadata');
 
-        $decoded= Json::getArrayData($data);
-        $mergedValues= Util::merge($defaults, $decoded);
-		$data= Json::encode($mergedValues);
+        $decoded = Json::getArrayData($data);
+        $this->meta = Util::merge($defaults, $decoded);
+		$data= Json::encode($this->meta);
         //END: merge data with defaults values
 
 		$result= $this->getFileManager()->setContent($data, $fullPath, $scope.'.json');
 
 		//create classes only for "defs" metadata
-		if ($type == $this->doctrineMetadataName) {
+		/*if ($type == $this->getMetaConfig()->espoMetadataName) {
         	try{
 	        	$this->getDoctrineConverter()->generateEntities( array($this->getEntityPath($scope)) );
 		   	} catch (\Exception $e) {
 			 	$GLOBALS['log']->add('EXCEPTION', 'Try to generate Entities for '.$this->getEntityPath($scope).'. Details: '.$e->getMessage());
 			}
-		}
-
-        return $result;
-	}
-
-
-    /**
-	* Metadata conversion from Espo format into Doctrine
-    *
-	* @param object $metadata
-	*
-	* @return bool
-	*/
-	protected function convertToDoctrine($metadata)
-	{
-		$cacheDir= $this->getMetaConfig()->doctrineCache;
-
-		//remove all existing files
-		$this->getFileManager()->removeFilesInDir($cacheDir);
-
-		//create files named like "Espo.Entities.User.php"
-		$result= true;
-        foreach($metadata[$this->doctrineMetadataName] as $entityName => $meta) {
-	        $doctrineMetaWithName= $this->getDoctrineConverter()->convert($entityName, $meta, true);
-
-            if (empty($doctrineMetaWithName)) {
-	        	$GLOBALS['log']->add('FATAL', 'Metadata:convertToDoctrine(), Entity:'.$entityName.' - metadata cannot be converted into Doctrine format');
-				return false;
-			}
-
-			//create a doctrine metadata file
-			$fileName= str_replace('\\', '.', $doctrineMetaWithName['name']).'.php';
-            $result&= $this->getFileManager()->setContent($this->getFileManager()->getPHPFormat($doctrineMetaWithName['meta']), $cacheDir, $fileName);
-			//END: create a doctrine metadata file
-        }
+		}*/
 
         return $result;
 	}
@@ -277,7 +239,7 @@ class Metadata
 
         $scopes = array();
 		foreach($metadata['scopes'] as $name => $details) {
-        	$scopes[$name] = isset($details['module']) ? $details['module'] : '';
+        	$scopes[$name] = isset($details['module']) ? $details['module'] : false;
 		}
 
 		return $this->scopes = $scopes;
@@ -369,14 +331,14 @@ class Metadata
 	*
 	* @return object
 	*/
-	protected function getMetaConfig()
+	public function getMetaConfig()
 	{
 		if (isset($this->metadataConfig) && is_object($this->metadataConfig)) {
     		return $this->metadataConfig;
     	}
 
 		$this->metadataConfig = $this->getConfig()->get('metadataConfig');
-		$this->metadataConfig->cacheFile= Util::concatPath($this->metadataConfig->cachePath, $this->metadataConfig->name).'.php';
+		$this->metadataConfig->metadataCacheFile= Util::concatPath($this->metadataConfig->cachePath, $this->metadataConfig->name).'.php';
 
 		return $this->metadataConfig;
 	}

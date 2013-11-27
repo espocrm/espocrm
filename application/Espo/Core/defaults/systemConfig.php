@@ -21,6 +21,7 @@ return array (
     'corePath' => 'application/Espo/Resources/metadata',
     'customPath' => 'application/Espo/Modules/{*}/Resources/metadata',
     'doctrineCache' => 'data/cache/doctrine/metadata',
+    'espoMetadataName' => 'entityDefs',
   ),
 
   'layoutConfig' =>

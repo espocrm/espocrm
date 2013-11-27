@@ -59,15 +59,13 @@ class Log
 
 	private $fileManager;
 	private $output;
-	private $resolver;
 	private $params;
 
 
-	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Output $output, \Espo\Core\Utils\Resolver $resolver, \stdClass $params)    
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Output $output, \stdClass $params)
 	{
 		$this->fileManager = $fileManager;
 		$this->output = $output;
-		$this->resolver = $resolver;
 		$this->params = $params;
 	}
 
@@ -81,11 +79,6 @@ class Log
 	protected function getOutput()
 	{
 		return $this->output;
-	}
-
-	protected function getResolver()
-	{
-		return $this->resolver;
 	}
 
 	protected function getParams()
@@ -120,15 +113,15 @@ class Log
 	* @param integer $Exception
 	* @return bool
 	*/
-	public function catchException($Exception, $useResolver = true)
+	public function catchException($Exception)
     {
 		$errNo = $Exception->getCode();
 		$errorMessage = get_class($Exception).' - '.$Exception->getMessage();
 
  		//try to resolve the problem automatically
- 		if ($useResolver) {
+ 		/*if ($useResolver) {
         	$this->getResolver()->handle($Exception);
- 		}
+ 		} */
 
         $errorType= $this->phpErrorTypes[$errNo];
 		if (empty($errorType)) {

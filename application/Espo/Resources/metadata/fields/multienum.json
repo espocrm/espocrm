@@ -17,5 +17,8 @@
    "search":{
       "basic":false,
       "advanced":false
+   },
+   "database":{
+      "type":"json_array"
    }
 }
