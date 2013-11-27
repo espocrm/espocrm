@@ -35,19 +35,6 @@
                "acl":"edit"
             }
          ]
-      },
-      "detail":{
-         "dropdown":[
-            {
-               "label":"Add Contact",
-               "action":"createRelated",
-               "data":{
-                  "link":"contacts"
-               },
-               "acl":"edit",
-               "aclScope":"Contact"
-            }
-         ]
       }
    }
 }
