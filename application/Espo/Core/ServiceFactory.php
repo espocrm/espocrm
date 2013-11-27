@@ -20,7 +20,7 @@ class ServiceFactory
 	{
     	if (class_exists($className)) {
     		$service = new $className();
-    		$dependencies = $service->dependencies;
+    		$dependencies = $service::dependencies;
     		foreach ($dependencies as $name) {
     			$setMethod = 'set' . ucfirst($name);
     			$service->$setMethod($this->container->get($name));
@@ -29,5 +29,4 @@ class ServiceFactory
     	}
     	throw new Error("Class '$className' does not exist");
 	}
-
 }

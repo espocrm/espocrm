@@ -48,6 +48,7 @@ class Auth extends \Slim\Middleware
 			$username = $authKey;
 			$password = $authSec;
 
+
 		    $user = $this->entityManager->getRepository('\Espo\Entities\User')->findOneBy(array('username' => $username));
 			if ($user) {
 				if ($password == $user->getPassword()) {

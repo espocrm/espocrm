@@ -13,7 +13,7 @@ abstract class Base
 	
 	private $serviceFactory;
 	
-	private $serviceClassName = null;
+	protected $serviceClassName = null;
 	
 	private $service = null;
 
@@ -28,6 +28,9 @@ abstract class Base
     	}
     	$this->name = $name;
     	
+    	//echo $this->name;
+    	//die;
+    	
     	if (empty($this->serviceClassName)) {
     		$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
 			if ($moduleName) {
@@ -37,7 +40,7 @@ abstract class Base
 			}
     	}
 	}
-
+	
 	protected function getContainer()
 	{
 		return $this->container;
@@ -68,12 +71,17 @@ abstract class Base
 		return $this->serviceFactory;
 	}
 	
+	protected function loadService()
+	{
+		$this->service = $this->getServiceFactory()->createByClassName($this->serviceClassName);
+	}
+	
 	protected function getService()
 	{
 		if (!empty($this->service)) {
 			return $this->service;
 		}
-		$this->service = $this->getServiceFactory()->createByClassName($this->serviceClassName);
+		$this->loadService();
 		return $this->service;    	
 	}
  
