@@ -36,7 +36,7 @@ class EntityManager
 		$entityManger = \Doctrine\ORM\EntityManager::create($doctrineConn, $doctrineConfig);
 		
 		$entityMangerDecorator = new \Espo\Core\EntityManager($entityManger);
-		//$entityMangerDecorator->setMetadata($this->getContainer()->get('metadata'));
+		$entityMangerDecorator->setMetadata($this->getContainer()->get('metadata'));
 		
 		return $entityMangerDecorator;
 	}
