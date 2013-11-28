@@ -27,11 +27,7 @@ class EspoConverter
 		$this->metadata = $metadata;
 		$this->fileManager = $fileManager;
 
-		$this->schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->getEntityManager());
-        $this->entityGenerator = new \Doctrine\ORM\Tools\EntityGenerator();
-
-		$this->disconnectedClassMetadataFactory = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory();
-        $this->disconnectedClassMetadataFactory->setEntityManager($this->getEntityManager());   // $em is EntityManager instance
+		$this->doctrineHelper = new \Espo\Core\Doctrine\Helper($this->getEntityManager()->getWrapped());
 	}
 
 	protected function getEntityManager()
@@ -101,7 +97,7 @@ class EspoConverter
 	{
 		$GLOBALS['log']->add('Debug', 'Metadata:get() - converting to doctrine metadata');
 
-		$meta = $this->getMetadata()->get();
+		$meta = $this->getMetadata()->getAll();
 
 		return;   //TODO
     	$this->setMeta($meta);
