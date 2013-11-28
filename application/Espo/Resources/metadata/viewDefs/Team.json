@@ -3,5 +3,9 @@
       "users":{
          "create":false
       }
-   }
+   },
+   "recordViewMaps":{
+      "detail":"Team.Detail",
+      "edit":"Team.Edit"
+   }   
 }

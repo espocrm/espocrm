@@ -3,17 +3,5 @@
       "detail":"User.Record.Detail",
       "edit":"User.Record.Edit",
       "editQuick":"User.Record.Edit"
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create User",
-               "link":"#user/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }

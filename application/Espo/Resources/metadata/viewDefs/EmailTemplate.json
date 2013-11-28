@@ -1,14 +1,1 @@
-{
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Email Template",
-               "link":"#email-template/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
-   }
-}
+{}

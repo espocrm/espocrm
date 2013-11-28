@@ -11,17 +11,5 @@
       "teams":{
          "create":false
       }
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Role",
-               "link":"#role/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }
