@@ -144,7 +144,7 @@ class UniteFiles
 		$fileContent= $this->getFileManager()->getContent($folderPath, $fileName);
 		$decoded= Utils\Json::getArrayData($fileContent);
 
-		if (empty($decoded)) {
+		if (empty($decoded) && !is_array($decoded)) {
         	$GLOBALS['log']->add('FATAL EXCEPTION', 'Syntax error or empty file - '.Utils\Util::concatPath($folderPath, $fileName));
 		}
 		else {
