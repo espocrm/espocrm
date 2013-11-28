@@ -15,7 +15,15 @@ class EntityManager extends \Doctrine\ORM\Decorator\EntityManagerDecorator
 	
     public function getRepository($entityName)
     {
-    	//$fullName = $this->metadata->getEntityPath($entityName);
+    	$fullName = $this->metadata->getEntityPath($entityName);
         return $this->wrapped->getRepository($entityName);
+    }
+    
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getWrapped()
+    {
+    	return $this->wrapped;
     }
 }
