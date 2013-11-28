@@ -29,6 +29,26 @@ abstract class Record extends Base
 
 		return $entity;
 	}
+	
+	public function actionPatch($params, $data)
+	{
+		return $this->actionUpdate($params, $data);
+	}
+	
+	public function actionCreate($params, $data)
+	{
+		if (!$this->getAcl()->check($this->name, 'edit')) {
+			throw new Forbidden();
+		}
+
+		$service = $this->getService();
+		
+		if ($entity = $service->createEntity($data)) {
+			return $entity;
+		}
+
+		throw new Error();
+	}
 
 	public function actionUpdate($params, $data)
 	{
@@ -39,23 +59,8 @@ abstract class Record extends Base
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
-
+		
 		if ($service->updateEntity($entity, $data)) {
-			return $entity;
-		}
-
-		throw new Error();
-	}
-
-	public function actionPost($params, $data)
-	{
-		if (!$this->getAcl()->check($this->name, 'edit')) {
-			throw new Forbidden();
-		}
-
-		$service = $this->getService();
-
-		if ($entity = $service->postEntity($data)) {
 			return $entity;
 		}
 
@@ -181,6 +186,27 @@ abstract class Record extends Base
 		}
 
 		if ($service->linkEntity($entity, $link, $foreignId)) {
+			return true;
+		}
+
+		throw new Error();
+	}
+	
+	public function actionRemoveLink($params)
+	{
+		$id = $params['id'];
+		$link = $params['link'];
+		$foreignId = $params['foreignId'];
+
+		$service = $this->getService();
+		$entity = $service->getEntity($id);
+		$foreignEntityName = $entity->defs['links'][$link]['entity'];
+
+		if (!$this->getAcl()->check($entity, 'edit')) {
+			throw new Forbidden();
+		}
+
+		if ($service->unlinkEntity($entity, $link, $foreignId)) {
 			return true;
 		}
 

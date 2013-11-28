@@ -1,14 +1,1 @@
-{
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Inbound Email",
-               "link":"#InboundEmail/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
-   }
-}
+{}

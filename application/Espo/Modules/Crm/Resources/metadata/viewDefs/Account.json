@@ -1,8 +1,4 @@
 {
-   "bottomPanels":{
-      "detail":[
-      ]
-   },
    "sidePanels":{
       "detail":[
          {
@@ -23,18 +19,6 @@
 
          ],
          "layout":"listSmall"
-      }
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Account",
-               "link":"#Account/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
       }
    }
 }

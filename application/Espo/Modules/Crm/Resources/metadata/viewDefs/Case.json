@@ -16,17 +16,5 @@
             "view":"Crm:Record.Panels.History"
          }
       ]
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Case",
-               "link":"#Case/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }

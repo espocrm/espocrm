@@ -5,10 +5,6 @@
    "recordViewMaps":{
       "detail":"Crm:Lead.Record.Detail"
    },
-   "bottomPanels":{
-      "detail":[
-      ]
-   },
    "sidePanels":{
       "detail":[
          {
@@ -22,17 +18,5 @@
             "view":"Crm:Record.Panels.History"
          }
       ]
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Lead",
-               "link":"#Lead/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }

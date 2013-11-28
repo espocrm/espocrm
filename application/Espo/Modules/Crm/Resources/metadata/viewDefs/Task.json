@@ -1,14 +1,2 @@
 {
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Task",
-               "link":"#Task/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
-   }
 }

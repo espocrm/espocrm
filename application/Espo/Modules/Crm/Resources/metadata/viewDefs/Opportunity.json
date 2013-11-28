@@ -1,8 +1,4 @@
 {
-   "bottomPanels":{
-      "detail":[
-      ]
-   },
    "sidePanels":{
       "detail":[
          {
@@ -16,17 +12,5 @@
             "view":"Crm:Record.Panels.History"
          }
       ]
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Opportunity",
-               "link":"#Opportunity/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }

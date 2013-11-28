@@ -32,4 +32,17 @@ class EntityManager extends \Doctrine\ORM\Decorator\EntityManagerDecorator
     {
     	return $this->wrapped;
     }
+    
+    public function createEntity($entityName)
+    {
+    	$className = $this->metadata->getEntityPath($entityName);
+    	$entity = new $className();
+    	return $entity;
+    }
+    
+    public function getEntityName($entity)
+    {
+    	$className = get_class($entity);
+    	return ltrim($className, '\\');
+    }
 }

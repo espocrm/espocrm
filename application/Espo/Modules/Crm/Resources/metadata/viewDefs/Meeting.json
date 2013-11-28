@@ -33,17 +33,5 @@
             }
          }
       ]
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Meeting",
-               "link":"#Meeting/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }

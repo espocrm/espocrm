@@ -30,17 +30,5 @@
             }
          }
       ]
-   },
-   "menu":{
-      "list":{
-         "buttons":[
-            {
-               "label":"Create Call",
-               "link":"#Call/create",
-               "style":"primary",
-               "acl":"edit"
-            }
-         ]
-      }
    }
 }
