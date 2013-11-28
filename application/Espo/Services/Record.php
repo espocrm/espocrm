@@ -14,6 +14,8 @@ class Record extends \Espo\Core\Services\Base
 	private $user;
 
 	private $entityManager;
+	
+	private $metadata;
 
 	protected $entityName;
 
@@ -31,6 +33,11 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$this->user = $user;
 	}
+	
+	public function setMetadata($metadata)
+	{
+		$this->metadata = $metadata;
+	}
 
 	protected function getEntityManager()
 	{
@@ -41,17 +48,15 @@ class Record extends \Espo\Core\Services\Base
 	{
 		return $this->user;
 	}
+	
+	protected function getMetadata()
+	{
+		return $this->metadata;
+	}
 
 	public function getEntity($id)
 	{
 		return $this->getEntityManager()->getRepository($this->name)->find($id);
-	}
-
-	public function findEntities($params)
-	{
-		$collection = $this->getEntityManager()->getRepository($this->name)->findBy();
-    	$criteria = $this->getCriteriaManager()->createCriteria($params);
-    	return $collection->matching($criteria);
 	}
 
 	public function createEntity($data)
@@ -79,9 +84,18 @@ class Record extends \Espo\Core\Services\Base
 		$this->getEntityManager()->flush();
 		return true;
 	}
+	
+	public function findEntities($params)
+	{
+		// TODO acl filtering
+		$collection = $this->getEntityManager()->getRepository($this->name)->find();
+    	$criteria = $this->getCriteriaManager()->createCriteria($params);
+    	return $collection->matching($criteria);
+	}
 
     public function findLinkedEntities($entity, $link, $params)
     {
+    	// TODO acl filtering
     	$criteria = $this->getCriteriaManager()->createCriteria($params);
     	$methodName = 'get' . ucfirst($link);
     	$collection = $entity->$methodName();
