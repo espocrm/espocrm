@@ -85,7 +85,7 @@ class Json
      * @return bool
      */
 	public static function isJSON($json){
-		if ($json=='[]') {
+		if ($json=='[]' || $json=='{}') {
 			return true;
 		}
 
