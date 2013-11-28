@@ -76,14 +76,43 @@ class Metadata
 
 
 	/**
-    * Get Metadata context
+    * Get Metadata
+	*
+	* @param string $key
+	* @param mixed $return
+	*
+	* @return array
+	*/
+	public function get($key = '', $returns = null)
+	{
+        if (empty($key)) {
+        	return $this->meta;
+        }
+
+		$keys = explode('.', $key);
+
+		$lastMeta = $this->meta;
+		foreach($keys as $keyName) {
+        	if (isset($lastMeta[$keyName]) && is_array($lastMeta)) {
+            	$lastMeta = $lastMeta[$keyName];
+        	} else {
+        		return $returns;
+        	}
+		}
+
+		return $lastMeta;
+	}
+
+
+	/**
+    * Get All Metadata context
 	*
 	* @param $isJSON
 	* @param bool $reload
 	*
 	* @return json | array
 	*/
-	public function get($isJSON = false, $reload = false)
+	public function getAll($isJSON = false, $reload = false)
 	{
 		if ($reload) {
 			$this->init();
