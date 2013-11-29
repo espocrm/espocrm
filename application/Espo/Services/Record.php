@@ -9,6 +9,7 @@ class Record extends \Espo\Core\Services\Base
 	static public $dependencies = array(
 		'entityManager',
 		'user',
+		'metadata',
 	);
 
 	private $user;
