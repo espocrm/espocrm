@@ -28,10 +28,7 @@ abstract class Base
 		if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
         	$name = $matches[1];
     	}
-    	$this->name = $name;
-    	
-    	//echo $this->name;
-    	//die;
+    	$this->name = $name;    	
     	
     	if (empty($this->serviceClassName)) {
     		$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
