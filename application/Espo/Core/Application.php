@@ -79,11 +79,11 @@ class Application
         $this->getMetadata()->init($isNotCached);
 
 		if ($isNotCached) {
-			$doctrineConverter = new \Espo\Core\Doctrine\EspoConverter($this->container->get('entityManager'), $this->getMetadata(), $this->container->get('fileManager'));
+			$doctrineConverter = new \Espo\Core\Doctrine\Converter\Base($this->container->get('entityManager'), $this->getMetadata(), $this->container->get('fileManager'));
 
-            if ($doctrineConverter->convertToDoctrine()) {
+            if ($doctrineConverter->process()) {
 				try{
-	        		$doctrineConverter->rebuildDatabase();
+					$doctrineConverter->getDoctrineHelper()->rebuildDatabase();
 			   	} catch (\Exception $e) {
 				  	$GLOBALS['log']->add('EXCEPTION', 'Fault to rebuildDatabase'.'. Details: '.$e->getMessage());
 				}
