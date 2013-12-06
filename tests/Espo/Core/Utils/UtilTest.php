@@ -180,6 +180,38 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($testResult, Util::objectToArray($testObj));
 	}
 
+	function testGetNaming()
+	{
+    	$this->assertEquals('myPrefixMyName', Util::getNaming('myName', 'myPrefix', 'prefix'));
+
+    	$this->assertEquals('myNameMyPostfix', Util::getNaming('myName', 'myPostfix', 'postfix'));
+    	$this->assertEquals('myNameMyPostfix', Util::getNaming('my_name', 'myPostfix', 'postfix', '_'));
+    	$this->assertEquals('myNameMyPostfix', Util::getNaming('my_name', 'my_postfix', 'postfix', '_'));
+	}
+
+	function testReplaceInArray()
+	{
+		$testArray = array(
+			'option' => array(
+				'default' => '{0}',
+		         'testKey' => array(
+				 	'{0}' => 'testVal',
+				 ),
+			),
+		);
+
+		$testResult = array(
+			'option' => array(
+				'default' => 'DONE',
+		         'testKey' => array(
+				 	'DONE' => 'testVal',
+				 ),
+			),
+		);
+
+		$this->assertEquals($testResult, Util::replaceInArray('{0}', 'DONE', $testArray, true));
+	}
+
 
 	/*function testGetScopeModuleName()
 	{

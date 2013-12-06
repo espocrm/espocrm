@@ -49,13 +49,13 @@ class Util
 	*
 	* @return string
 	*/
-	public static function toCamelCase($name, $capitaliseFirstChar=false)
+	public static function toCamelCase($name, $capitaliseFirstChar = false, $symbol = '-')
 	{
 		if($capitaliseFirstChar) {
 			$name[0] = strtoupper($name[0]);
 		}
 		$func = create_function('$c', 'return strtoupper($c[1]);');
-		return preg_replace_callback('/-([a-z])/', $func, $name);
+		return preg_replace_callback('/'.$symbol.'([a-z])/', $func, $name);
 	}
 
 	/**
@@ -66,10 +66,10 @@ class Util
 	*
 	* @return string
 	*/
-	public static function fromCamelCase($name)
+	public static function fromCamelCase($name, $symbol = '-')
 	{
 		$name[0] = strtolower($name[0]);
-		$func = create_function('$c', 'return "-" . strtolower($c[1]);');
+		$func = create_function('$c', 'return "'.$symbol.'" . strtolower($c[1]);');
 		return preg_replace_callback('/([A-Z])/', $func, $name);
 	}
 
@@ -184,6 +184,58 @@ class Util
     	}
 
         return is_array($object) ? array_map("static::objectToArray", $object) : $object;
+	}
+
+
+	/**
+    * Get Naming according to prefix or postfix type
+	*
+	* @param string $name
+	* @param string $prePostFix
+	* @param string $type
+	*
+	* @return string
+	*/
+	public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '-')
+	{
+		if ($type == 'prefix') {
+        	return static::toCamelCase($prePostFix.$symbol.$name, false, $symbol);
+		} else if ($type == 'postfix') {
+        	return static::toCamelCase($name.$symbol.$prePostFix, false, $symbol);
+		}
+
+		return null;
+	}
+
+
+	/**
+    * Replace $search in array recursively
+	*
+	* @param string $search
+	* @param string $replace
+	* @param string $array
+	* @param string $isKeys
+	*
+	* @return array
+	*/
+	public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
+	{
+		if (!is_array($array)) {
+			return str_replace($search, $replace, $array);
+		}
+
+		$newArr = array();
+		foreach ($array as $key => $value) {
+			$addKey = $key;
+			if ($isKeys) { //Replace keys
+				$addKey = str_replace($search, $replace, $key);
+			}
+
+			// Recurse
+			$newArr[$addKey] = static::replaceInArray($search, $replace, $value, $isKeys);
+		}
+
+		return $newArr;
 	}
 
 }
