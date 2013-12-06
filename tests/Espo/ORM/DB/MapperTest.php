@@ -32,7 +32,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 					return "'" . $args[0] . "'";
 				}));
 				
-		$this->entityFactory = $this->getMock('\\Espo\\ORM\\EntityFactory');
+		$this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
 		$this->entityFactory->expects($this->any())
 		                    ->method('create')
 		                    ->will($this->returnCallback(function() {

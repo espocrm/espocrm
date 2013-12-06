@@ -35,9 +35,9 @@ abstract class Mapper implements IMapper
 		'*' => 'LIKE',
 		'>' => '>',
 		'<' => '<',
+		'>=' => '>=',
+		'<=' => '<=',
 		'=' => '=',
-		'equals' => '=',
-		'like' => 'LIKE',
 	);	
 	
 	// @todo whereClause ? 
@@ -58,7 +58,7 @@ abstract class Mapper implements IMapper
 	}
 	
 	public function selectById(IEntity $entity, $id)
-	{		
+	{
 		$selectPart = $this->getSelect($entity);
 		$joinsPart = $this->getBelongsToJoins($entity);
 		$wherePart = $this->getWhere($entity, array('id' => $id, 'deleted' => 0));

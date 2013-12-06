@@ -35,6 +35,27 @@ interface IEntity
 	 * Resets all fields in the current model.
 	 */
 	function reset();
+	
+	/**
+	 * Set field.
+	 */
+	function set($name, $value);
+	
+	/**
+	 * Get field.
+	 */
+	function get($name);
+	
+	/**
+	 * Check field is set.
+	 */
+	function has($name);
+	
+	/**
+	 * Clear field.
+	 */
+	function clear($name);
+	
 }
 
 

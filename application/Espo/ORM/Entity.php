@@ -16,13 +16,13 @@ abstract class Entity implements IEntity
 	
 	/**
 	 * @var array Defenition of fields.
-	 * @todo make protected in PHP 5.4
+	 * @todo make protected
 	 */	
 	public $fields = array();
 	
 	/**
 	 * @var array Defenition of relations.
-	 * @todo make protected in PHP 5.4
+	 * @todo make protected
 	 */	
 	public $relations = array();
 	
@@ -33,11 +33,19 @@ abstract class Entity implements IEntity
 	protected $container = array();
 	
 	
-	public function __construct()
+	public function __construct($defs = array())
 	{
 		if (empty($this->entityName)) {
 			$this->entityName = end(explode('\\', get_class($this)));
 		}
+		
+		if (!empty($defs['fields'])) {
+			$this->fields = $defs['fields'];
+		}
+		
+		if (!empty($defs['relations'])) {
+			$this->relations = $defs['relations'];
+		}		
 	}	
 	
 	public function clear($name)
@@ -75,6 +83,11 @@ abstract class Entity implements IEntity
 		if ($name == 'id') {
 			return $this->id;
 		}
+		$method = 'get' . ucfirst($name);
+		if (method_exists($this, $method)) {
+			return $this->$method();		
+		}
+		
 		if (isset($this->container[$name])) {
 			return $this->container[$name];
 		}

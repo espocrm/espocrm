@@ -8,18 +8,25 @@ class EntityManager
 
 	protected $repositoryFactory;
 
-	protected $mapper;
+	protected $mapper;	
 
-	protected $repositoryHash = array();
+	protected $metadata;
+
+	protected $repositoryHash = array();	
 
 	public function __construct(\PDO $pdo, $params)
-	{
+	{	
+		$this->metadata = new Metadata();
+		
+		if (!empty($params['metadata'])) {
+			$this->setMetadata($params['metadata']);
+		}
 
 		$entityFactoryClassName = '\\Espo\\ORM\\EntityFactory';
 		if (!empty($params['entityFactoryClassName'])) {
 			$entityFactoryClassName = $params['entityFactoryClassName'];
 		}
-		$this->entityFactory = new $entityFactoryClassName();
+		$this->entityFactory = new $entityFactoryClassName($this->metadata);
 		
 		$mapperClassName = '\\Espo\\ORM\\DB\\MysqlMapper';
 		if (!empty($params['mapperClassName'])) {
@@ -45,6 +52,11 @@ class EntityManager
 			$this->repositoryHash[$name] = $this->repositoryFactory->create($name);
 		}
 		return $this->repositoryHash[$name];
+	}
+	
+	public function setMetadata(array $data)
+	{
+		$this->metadata->setData($data);
 	}	
 }
 
