@@ -4,17 +4,26 @@ namespace Espo\ORM;
 
 class RepositoryFactory
 {
-	protected $entityFactroy;	
+	protected $entityFactroy;
+	
+	protected $entityManager;
+	
+	private $defaultRepositoryClassName = '\\Espo\\ORM\\Repository';	
 
-	public function __construct(EntityFactory $entityFactroy, DB\IMapper $mapper)
+	public function __construct(EntityManager $entityManager, EntityFactory $entityFactroy, DB\IMapper $mapper)
 	{
+		$this->entityManager = $entityManager;
 		$this->entityFactroy = $entityFactroy;
 		$this->mapper = $mapper;		
 	}
 	
 	public function create($name)
 	{
-		$className = $this->normalizeName($name);		
+		$className = $this->entityManager->normalizeRepositoryName($name);
+		
+		if (!class_exists($className)) {
+			$className = $this->defaultRepositoryClassName;
+		}
 		$repository = new $className($name, $this->entityFactroy, $this->mapper);	
 		return $repository;
 	}
@@ -23,6 +32,10 @@ class RepositoryFactory
 	{
 		return $name;
 	}
+	
+	public function setDefaultRepositoryClassName($defaultRepositoryClassName)
+	{
+		$this->defaultRepositoryClassName = $defaultRepositoryClassName;
+	}
 }
-
 

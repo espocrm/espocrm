@@ -9,8 +9,7 @@ class EntityManager
 {
 	private $container;
 
-
-	function __construct(\Espo\Core\Container $container)
+	public function __construct(\Espo\Core\Container $container)
 	{
 		$this->container = $container;
 	}
@@ -31,7 +30,8 @@ class EntityManager
 			'password' => $config->get('database.password'),
 		);
 		
-		$entityManager = new \Espo\ORM\EntityManager($params);
+		$entityManager = new \Espo\Core\ORM\EntityManager($params);		
+		$entityManager->setEspoMetadata($container->get('metadata'));
 		
 		return $entityManager;
 	}

@@ -247,6 +247,13 @@ class Metadata
 
 		return implode($delim, array($path, 'Entities', ucfirst($entityName)));
 	}
+	
+	public function getRepositoryPath($entityName, $delim= '\\')
+	{
+		$path = $this->getScopePath($entityName, $delim);
+
+		return implode($delim, array($path, 'Repositories', ucfirst($entityName)));
+	}
 
 
 	/**

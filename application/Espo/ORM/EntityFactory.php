@@ -6,23 +6,21 @@ class EntityFactory
 {	
 	protected $metadata;
 	
-	public function __construct(Metadata $metadata)
-	{
-		$this->metadata = $metadata;
+	protected $entityManager;
 	
+	public function __construct(EntityManager $entityManager, Metadata $metadata)
+	{
+		$this->entityManager = $entityManager;
+		$this->metadata = $metadata;	
 	}
 	public function create($name)
 	{
-		$className = $this->normalizeName($name);		
+		$className = $this->entityManager->normalizeEntityName($name);		
 		$defs = $this->metdata->get($name);		
 		$entity = new $className($defs);		
 		return $entity;
 	}
-	
-	protected function normalizeName($name)
-	{
-		return $name;
-	}
+
 }
 
 
