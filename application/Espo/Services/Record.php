@@ -21,7 +21,7 @@ class Record extends \Espo\Core\Services\Base
 	
 	private $metadata;
 	
-	private $queryManager;
+	private $selectManager;
 	
 	private $acl;
 
@@ -70,43 +70,47 @@ class Record extends \Espo\Core\Services\Base
 	{
 		return $this->metadata;
 	}
-
-	public function getEntity($id)
+	
+	protected function getRepository()
 	{
-		return $this->getEntityManager()->getRepository($this->name)->find($id);
+		return $this->getEntityManager()->getRepository($this->name);
+	}
+
+	public function getEntity($id = null)
+	{
+		return $this->getRepository()->get($id);
 	}
 	
-	protected function getQueryManager()
+	protected function getSelectManager()
 	{
-		if (empty($this->queryManager)) {
-			$this->queryManager = new QueryManager($this->entityManager, $this->getUser(), $this->getAcl());
+		if (empty($this->selectManager)) {
+			$this->selectManager = new SelectManager($this->entityManager, $this->getUser(), $this->getAcl());
 		}		
-		return $this->queryManager;
+		return $this->selectManager;
 	}
 
 	public function createEntity($data)
 	{
 		// TODO validate $data
-		$entity = $this->getEntityManager()->createEntity($this->name);
-		$entity->fromArray($data);
-		$this->getEntityManager()->persist($entity);
-		$this->getEntityManager()->flush();
-		return $entity;
+		$entity = $this->getEntity();
+		
+		$entity->set($data);
+		$this->getRepository()->save($entity);
+		return $entity->toArray();
 	}
 
 	public function updateEntity($id, $data)
 	{	
+		// TODO validate $data
 		$entity = $this->getEntity($id);
 		
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
-	
-		// TODO validate $data
-		$entity->fromArray($data);
-		$this->getEntityManager()->persist($entity);
-		$this->getEntityManager()->flush();
-		return $entity;
+		
+		$entity->set($data);
+		$this->getRepository()->save($entity);
+		return $entity->toArray();
 	}
 
 	public function deleteEntity($id)
@@ -117,47 +121,48 @@ class Record extends \Espo\Core\Services\Base
 			throw new Forbidden();
 		}
 	
-		$this->getEntityManager()->remove($entity);
-		$this->getEntityManager()->flush();
-		return true;
+		return $this->getRepository()->remove($entity);
 	}
 	
 	public function findEntities($params)
-	{
-		$collection = $this->getEntityManager()->getRepository($this->name)->find();
-    	$qu = $this->getQueryManager()->createListQuery($this->name, $params);
+	{		
+		$selectParams = $this->getSelectManager()->getSelectParams($this->name, $params, true);
+		$collection = $this->getRepository()->find($selectParams);
     	
-    	$collection = $qu->getResult();
-    	return $collection;
+    	return array(
+    		'total' => $this->getRepository()->count($selectParams),
+    		'list' => $collection->toArray() 
+    	);
 	}
 
     public function findLinkedEntities($id, $link, $params)
-    {    
-		$entity = $this->getEntity($id);
-		
-    	$entityName = $this->getEntityManager()->getEntityName($entity);    	
-    	$foreignEntityName = $this->getMetadata()->get('entityDefs.' . $entityName . '.links.' . $link . '.entity');
-		
+    {    	
+    	$entity = $this->getEntity($id);    	
+    	$foreignEntityName = $entity->relations[$link]['entity'];
+    	
 		if (!$this->getAcl()->check($entity, 'read')) {
 			throw new Forbidden();
 		}
 		if (!$this->getAcl()->check($foreignEntityName, 'read')) {
 			throw new Forbidden();
-		}    
-  		
-    	$qu = $this->getQueryManager()->createLinkedListQuery($entity, $link, $params);
+		}
+    	    	
+		$selectParams = $this->getSelectManager()->getSelectParams($foreignEntityName, $params, true);
+		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
     	
-    	$collection = $qu->getResult();
-    	return $collection;
+    	return array(
+    		'total' => $this->getRepository()->countRelated($entity, $link, $selectParams),
+    		'list' => $collection->toArray() 
+    	);
     }
     
     public function linkEntity($id, $link, $foreignId)
     {    
 		$entity = $this->getEntity($id);	
     
-    	$entityName = $this->getEntityManager()->getEntityName($entity);    	
-    	$foreignEntityName = $this->getMetadata()->get('entityDefs.' . $entityName . '.links.' . $link . '.entity');
-    	
+    	$entityName = $entity->getEntityName($entity);
+    	$foreignEntityName = $entity->relations[$link]['entity'];    	   	
+    	    	
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
@@ -166,29 +171,36 @@ class Record extends \Espo\Core\Services\Base
     		throw new Error();
     	}
     	
-    	$methodName = 'get' . ucfirst($link);
-    	$foreignEntity = $this->getEntityManager()->getRepository($foreignEntityName)->find($foreignId);
+    	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
+    	
     	
     	if (!empty($foreignEntity)) {
-			$entity->$methodName()->add($foreignEntity);
+			$this->getRepository()->relate($entity, $link, $foreignEntity);
 			return true;    	
     	}
     }
     
     public function unlinkEntity($id, $link, $foreignId)
     {
-    	$entity = $this->getEntity($id);    
+		$entity = $this->getEntity($id);	
     
-    	$entityName = $this->getEntityManager()->getEntityName($entity);    	
-    	$foreignEntityName = $this->getMetadata()->get('entityDefs.' . $entityName . '.links.' . $link . '.entity');
+    	$entityName = $entity->getEntityName($entity);
+    	$foreignEntityName = $entity->relations[$link]['entity'];    	   	
+    	    	
+		if (!$this->getAcl()->check($entity, 'edit')) {
+			throw new Forbidden();
+		}
     	
     	if (empty($foreignEntityName)) {
     		throw new Error();
     	}
     	
-    	$methodName = 'get' . ucfirst($link);    	
-		$entity->$methodName()->remove($foreignId);
-		return true;
+    	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
+     	
+    	if (!empty($foreignEntity)) {
+			$this->getRepository()->unrelate($entity, $link, $foreignEntity);
+			return true;    	
+    	}
     }
 
 }

@@ -3,7 +3,7 @@
 namespace Espo\Core\Loaders;
 
 use Doctrine\ORM\Tools\Setup,
-	Espo\Core\Doctrine\ORM\Mapping\Driver\EspoPHPDriver;
+    Espo\Core\Doctrine\ORM\Mapping\Driver\EspoPHPDriver;
 
 class EntityManager
 {

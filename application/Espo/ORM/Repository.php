@@ -99,6 +99,15 @@ class Repository
 		return $collection;
 	}
 	
+	public function findOne(array $params = array())
+	{	
+		$collection = $this->find($params);		
+		if (count($collection)) {
+			return $collection[0];
+		}
+		return null;
+	}
+	
 	public function findRelated(Entity $entity, $relationName, array $params = array())
 	{
 		$dataArr = $this->mapper->selectRelated($entity, $relationName, $params);

@@ -134,10 +134,8 @@ abstract class Entity implements IEntity
 	public function setIsNew($isNew)
 	{
 		$this->isNew = $isNew;
-	}
-	
-	
-	
+	}	
+		
 	public function getEntityName()
 	{
 		return $this->entityName;
@@ -151,6 +149,15 @@ abstract class Entity implements IEntity
 	public function hasRelation($relationName)
 	{
 		return isset($this->relations[$relationName]);
+	}
+	
+	public function toArray()
+	{
+		$arr = $this->container;
+		if (isset($this->id)) {
+			$arr['id'] = $this->id;
+		}
+		return $arr;
 	}
 }
 

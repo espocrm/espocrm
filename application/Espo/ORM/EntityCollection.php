@@ -190,6 +190,15 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 		}
 		return false;
 	}
+	
+	public function toArray()
+	{
+		$arr = array();
+		foreach ($this as $entity) {
+			$arr[] = $entity->toArray();
+		}
+		return $arr;
+	}
 
 }
 

@@ -32,7 +32,7 @@ class Auth extends \Slim\Middleware
 		if (!empty($routes[0])) {
 			$routeConditions = $routes[0]->getConditions();
         	if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
-        		$this->container->setUser(new \Espo\Entities\User());
+        		$this->container->setUser($this->entityManager->getEntity('User'));
 	        	$this->next->call();
 				return;
 			}
@@ -49,9 +49,9 @@ class Auth extends \Slim\Middleware
 			$password = $authSec;
 
 
-		    $user = $this->entityManager->getRepository('User')->findOneBy(array('username' => $username));
+		    $user = $this->entityManager->getRepository('User')->findOne(array('username' => $username));
 			if ($user) {
-				if ($password == $user->getPassword()) {
+				if ($password == $user->get('password')) {
 					$this->container->setUser($user);
 					$isAuthenticated = true;
 				}
