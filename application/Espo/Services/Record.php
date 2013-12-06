@@ -10,15 +10,20 @@ class Record extends \Espo\Core\Services\Base
 		'entityManager',
 		'user',
 		'metadata',
+		'acl'
 	);
+	
+	protected $entityName;
 
 	private $user;
 
 	private $entityManager;
 	
 	private $metadata;
-
-	protected $entityName;
+	
+	private $queryManager;
+	
+	private $acl;
 
 	public function setEntityName($entityName)
 	{
@@ -35,6 +40,12 @@ class Record extends \Espo\Core\Services\Base
 		$this->user = $user;
 	}
 	
+	public function setAcl($acl)
+	{
+		$this->acl = $acl;
+	}
+	
+	
 	public function setMetadata($metadata)
 	{
 		$this->metadata = $metadata;
@@ -50,6 +61,11 @@ class Record extends \Espo\Core\Services\Base
 		return $this->user;
 	}
 	
+	protected function getAcl()
+	{
+		return $this->acl;
+	}
+	
 	protected function getMetadata()
 	{
 		return $this->metadata;
@@ -58,6 +74,14 @@ class Record extends \Espo\Core\Services\Base
 	public function getEntity($id)
 	{
 		return $this->getEntityManager()->getRepository($this->name)->find($id);
+	}
+	
+	protected function getQueryManager()
+	{
+		if (empty($this->queryManager)) {
+			$this->queryManager = new QueryManager($this->entityManager, $this->getUser(), $this->getAcl());
+		}		
+		return $this->queryManager;
 	}
 
 	public function createEntity($data)
@@ -70,8 +94,14 @@ class Record extends \Espo\Core\Services\Base
 		return $entity;
 	}
 
-	public function updateEntity($entity, $data)
-	{
+	public function updateEntity($id, $data)
+	{	
+		$entity = $this->getEntity($id);
+		
+		if (!$this->getAcl()->check($entity, 'edit')) {
+			throw new Forbidden();
+		}
+	
 		// TODO validate $data
 		$entity->fromArray($data);
 		$this->getEntityManager()->persist($entity);
@@ -79,8 +109,14 @@ class Record extends \Espo\Core\Services\Base
 		return $entity;
 	}
 
-	public function deleteEntity($entity)
+	public function deleteEntity($id)
 	{
+		$entity = $this->getEntity($id);
+
+		if (!$this->getAcl()->check($entity, 'delete')) {
+			throw new Forbidden();
+		}
+	
 		$this->getEntityManager()->remove($entity);
 		$this->getEntityManager()->flush();
 		return true;
@@ -88,25 +124,43 @@ class Record extends \Espo\Core\Services\Base
 	
 	public function findEntities($params)
 	{
-		// TODO acl filtering
 		$collection = $this->getEntityManager()->getRepository($this->name)->find();
-    	$criteria = $this->getCriteriaManager()->createCriteria($params);
-    	return $collection->matching($criteria);
+    	$qu = $this->getQueryManager()->createListQuery($this->name, $params);
+    	
+    	$collection = $qu->getResult();
+    	return $collection;
 	}
 
-    public function findLinkedEntities($entity, $link, $params)
-    {
-    	// TODO acl filtering
-    	$criteria = $this->getCriteriaManager()->createCriteria($params);
-    	$methodName = 'get' . ucfirst($link);
-    	$collection = $entity->$methodName();
-    	return $collection->matching($criteria);
-    }
-    
-    public function linkEntity($entity, $link, $foreignId)
-    {
+    public function findLinkedEntities($id, $link, $params)
+    {    
+		$entity = $this->getEntity($id);
+		
     	$entityName = $this->getEntityManager()->getEntityName($entity);    	
     	$foreignEntityName = $this->getMetadata()->get('entityDefs.' . $entityName . '.links.' . $link . '.entity');
+		
+		if (!$this->getAcl()->check($entity, 'read')) {
+			throw new Forbidden();
+		}
+		if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+			throw new Forbidden();
+		}    
+  		
+    	$qu = $this->getQueryManager()->createLinkedListQuery($entity, $link, $params);
+    	
+    	$collection = $qu->getResult();
+    	return $collection;
+    }
+    
+    public function linkEntity($id, $link, $foreignId)
+    {    
+		$entity = $this->getEntity($id);	
+    
+    	$entityName = $this->getEntityManager()->getEntityName($entity);    	
+    	$foreignEntityName = $this->getMetadata()->get('entityDefs.' . $entityName . '.links.' . $link . '.entity');
+    	
+		if (!$this->getAcl()->check($entity, 'edit')) {
+			throw new Forbidden();
+		}
     	
     	if (empty($foreignEntityName)) {
     		throw new Error();
@@ -115,15 +169,16 @@ class Record extends \Espo\Core\Services\Base
     	$methodName = 'get' . ucfirst($link);
     	$foreignEntity = $this->getEntityManager()->getRepository($foreignEntityName)->find($foreignId);
     	
-    	if (!empty($foreignEntity)) {    	
-			
+    	if (!empty($foreignEntity)) {
 			$entity->$methodName()->add($foreignEntity);
 			return true;    	
     	}
     }
     
-    public function unlinkEntity($entity, $link, $foreignId)
+    public function unlinkEntity($id, $link, $foreignId)
     {
+    	$entity = $this->getEntity($id);    
+    
     	$entityName = $this->getEntityManager()->getEntityName($entity);    	
     	$foreignEntityName = $this->getMetadata()->get('entityDefs.' . $entityName . '.links.' . $link . '.entity');
     	

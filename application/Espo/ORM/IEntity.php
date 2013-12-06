@@ -1,0 +1,40 @@
+<?php
+
+namespace Espo\ORM;
+
+/**
+ * Model interface.
+ */
+interface IEntity
+{
+	const ID = 'id';
+	const VARCHAR = 'varchar';
+	const TEXT = 'text';
+	const BOOL = 'bool';
+	const FOREIGN_ID = 'foreignId';
+	const FOREIGN = 'foreign';
+	const FOREIGN_TYPE = 'foreignType';
+	const DATE = 'date';
+	const DATETIME = 'datetime';
+	
+	const MANY_MANY = 'manyMany';
+	const HAS_MANY = 'hasMany';
+	const BELONGS_TO = 'belongsTo';
+	const HAS_ONE = 'hasOne';
+	const BELONGS_TO_PARENT = 'belongsToParent';
+	const HAS_CHILDREN = 'hasChildren';
+	
+	/**
+	 * Push values from the array.
+	 * E.g. insert values into the bean from a request data.
+	 * @param array $arr Array of field - value pairs
+	 */
+	function populateFromArray(array $arr);
+	
+	/**
+	 * Resets all fields in the current model.
+	 */
+	function reset();
+}
+
+
