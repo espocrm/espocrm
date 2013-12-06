@@ -4,6 +4,9 @@ namespace Espo\ORM;
 
 class EntityManager
 {	
+
+	protected $pdo;
+	
 	protected $entityFactory;
 
 	protected $repositoryFactory;
@@ -12,10 +15,13 @@ class EntityManager
 
 	protected $metadata;
 
-	protected $repositoryHash = array();	
+	protected $repositoryHash = array();
+	
 
-	public function __construct(\PDO $pdo, $params)
-	{	
+	public function __construct($params)
+	{
+		$this->initPDO($params);
+		
 		$this->metadata = new Metadata();
 		
 		if (!empty($params['metadata'])) {
@@ -41,6 +47,11 @@ class EntityManager
 		$this->repositoryFactory = new $repositoryFactoryClassName($this->entityFactory, $this->mapper);
 	}
 	
+	protected function initPDO($params)
+	{
+		$this->pdo = new \PDO('mysql:host='.$params['host'].';dbname=' . $params['dbname'], $params['user'], $params['password']);	
+	}
+	
 	public function getEntity($name, $id = null)
 	{
 		return $this->getRepository($name)->get($id);
@@ -57,7 +68,11 @@ class EntityManager
 	public function setMetadata(array $data)
 	{
 		$this->metadata->setData($data);
+	}
+	
+	public function getPDO()
+	{
+		return $this->pdo;
 	}	
 }
-
 

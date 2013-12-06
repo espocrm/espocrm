@@ -61,6 +61,7 @@ class Repository
 	{
 		$entity = $this->entityFactory->create($this->entityName);		
 		if (empty($id)) {
+			$entity->setIsNew(true);
 			return $entity;	
 		}					
 		if ($this->mapper->selectById($entity, $id)) {
@@ -74,7 +75,7 @@ class Repository
 		if ($entity->isNew()) {
 			$result = $this->mapper->insert($entity);
 			if ($result) {
-				$entity->setNotNew();
+				$entity->setIsNew(false);
 			}
 			return $result;
 		} else {

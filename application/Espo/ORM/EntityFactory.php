@@ -15,7 +15,7 @@ class EntityFactory
 	{
 		$className = $this->normalizeName($name);		
 		$defs = $this->metdata->get($name);		
-		$entity = new $className($defs);
+		$entity = new $className($defs);		
 		return $entity;
 	}
 	

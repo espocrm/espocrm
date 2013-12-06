@@ -6,7 +6,7 @@ abstract class Entity implements IEntity
 {
 	public $id = null;
 	
-	private $isNew = true;
+	private $isNew = false;
 
 	/**
 	 * Entity name.
@@ -131,10 +131,12 @@ abstract class Entity implements IEntity
 		return $this->isNew;
 	}
 	
-	public function setNotNew()
+	public function setIsNew($isNew)
 	{
-		$this->isNew = false;
+		$this->isNew = $isNew;
 	}
+	
+	
 	
 	public function getEntityName()
 	{

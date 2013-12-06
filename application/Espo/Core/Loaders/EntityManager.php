@@ -22,22 +22,17 @@ class EntityManager
 
 	public function load()
 	{
-		$devMode= !$this->getContainer()->get('config')->get('useCache');
-		$doctrineConfig = Setup::createConfiguration($devMode, null, null);
-		$doctrineConfig->setMetadataDriverImpl(new EspoPHPDriver(
-						array(
-							$this->getContainer()->get('config')->get('metadataConfig')->doctrineCache,
-							$this->getContainer()->get('config')->get('defaultsPath').'/doctrine/metadata'
-						)
-		));
-
-		$doctrineConn = (array) $this->getContainer()->get('config')->get('database');
+		$config = $this->getContainer()->get('config');
 		
-		$entityManger = \Doctrine\ORM\EntityManager::create($doctrineConn, $doctrineConfig);
+		$params = array(
+			'host' => $config->get('database.host'),
+			'dbname' => $config->get('database.dbname'),
+			'user' => $config->get('database.user'),
+			'password' => $config->get('database.password'),
+		);
 		
-		$entityMangerDecorator = new \Espo\Core\EntityManager($entityManger);
-		$entityMangerDecorator->setMetadata($this->getContainer()->get('metadata'));
+		$entityManager = new \Espo\ORM\EntityManager($params);
 		
-		return $entityMangerDecorator;
+		return $entityManager;
 	}
 }
