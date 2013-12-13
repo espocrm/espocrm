@@ -6,7 +6,7 @@
       "advanced":true
    },
    "database":{
-      "type":"integer",
+      "type":"int",
       "autoincrement":true
    }
 }

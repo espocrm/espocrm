@@ -11,6 +11,9 @@
         "name": {
             "type": "personName"
         },
+		"password": {
+            "type": "password"
+        },
         "salutationName": {
             "type": "enum",
             "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]

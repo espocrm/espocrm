@@ -2,14 +2,13 @@
 
 namespace Espo\Core\Utils;
 
-use Doctrine\ORM\Tools;
-
 class Metadata
 {
 
 	protected $metadataConfig;
-	protected $doctrineMetadataName = 'defs'; //Metadata "defs" uses for creating the metadata of Doctri
 	protected $meta;
+
+	private $espoMetadata;
 
 	protected $scopes= array();
 
@@ -189,16 +188,32 @@ class Metadata
 
 		$result= $this->getFileManager()->setContent($data, $fullPath, $scope.'.json');
 
-		//create classes only for "defs" metadata
-		/*if ($type == $this->getMetaConfig()->espoMetadataName) {
-        	try{
-	        	$this->getDoctrineConverter()->generateEntities( array($this->getEntityPath($scope)) );
-		   	} catch (\Exception $e) {
-			 	$GLOBALS['log']->add('EXCEPTION', 'Try to generate Entities for '.$this->getEntityPath($scope).'. Details: '.$e->getMessage());
-			}
-		}*/
-
         return $result;
+	}
+
+
+	public function getEspoMetadata()
+	{
+		if (!empty($this->espoMetadata)) {
+			return $this->espoMetadata;
+		}
+
+		$this->espoMetadata = $this->getFileManager()->getContent($this->getMetaConfig()->cachePath, 'espoMetadata.php');
+
+        return $this->espoMetadata;
+	}
+
+	public function setEspoMetadata(array $espoMetadata)
+	{
+		 $result = $this->getFileManager()->setContentPHP($espoMetadata, $this->getMetaConfig()->cachePath, 'espoMetadata.php');
+		 if ($result == false) {
+		 	$GLOBALS['log']->add('EXCEPTION', 'Metadata::setEspoMetadata() - Cannot save espoMetadata to a file');
+         	throw new \Espo\Core\Exceptions\Error();
+		 }
+
+		 $this->espoMetadata = $espoMetadata;
+
+		 return $result;
 	}
 
 

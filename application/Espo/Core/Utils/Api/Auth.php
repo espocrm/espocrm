@@ -10,7 +10,7 @@ class Auth extends \Slim\Middleware
 	
 	private $container;
 
-	public function __construct(\Espo\Core\EntityManager $entityManager, \Espo\Core\Container $container)
+	public function __construct(\Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Container $container)
 	{
 		$this->entityManager = $entityManager;
 		$this->container = $container;
@@ -48,14 +48,13 @@ class Auth extends \Slim\Middleware
 			$username = $authKey;
 			$password = $authSec;
 
-
-		    $user = $this->entityManager->getRepository('User')->findOne(array('username' => $username));
+		    $user = $this->entityManager->getRepository('User')->findOne(array('userName' => $username));
 			if ($user) {
 				if ($password == $user->get('password')) {
 					$this->container->setUser($user);
 					$isAuthenticated = true;
 				}
-			}		
+			}
 
             if ($isAuthenticated) {
                 $this->next->call();

@@ -73,6 +73,19 @@ class Util
 		return preg_replace_callback('/([A-Z])/', $func, $name);
 	}
 
+    /**
+    * Convert name from Camel Case format to underscore.
+	* ex. camelCase to camel_case
+	*
+	* @param string $name
+	*
+	* @return string
+	*/
+	public static function toUnderScore($name)
+	{
+    	return static::fromCamelCase($name, '_');
+	}
+
 
 	/**
 	* Merge arrays (default PHP function is not suitable)

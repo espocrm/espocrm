@@ -37,7 +37,7 @@ class EntityManager
 		if (!empty($params['mapperClassName'])) {
 			$mapperClassName = $params['mapperClassName'];
 		}
-		$this->mapper = new $mapperClassName($pdo, $this->entityFactory);
+		$this->mapper = new $mapperClassName($this->pdo, $this->entityFactory);
 
 		$repositoryFactoryClassName = '\\Espo\\ORM\\RepositoryFactory';
 		if (!empty($params['repositoryFactoryClassName'])) {

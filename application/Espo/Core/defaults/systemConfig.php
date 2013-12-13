@@ -20,8 +20,6 @@ return array (
     'cachePath' => 'data/cache/application',
     'corePath' => 'application/Espo/Resources/metadata',
     'customPath' => 'application/Espo/Modules/{*}/Resources/metadata',
-    'doctrineCache' => 'data/cache/doctrine/metadata',
-    'espoMetadataName' => 'entityDefs',
   ),
 
   'layoutConfig' =>

@@ -28,10 +28,11 @@ class EntityManager
 			'dbname' => $config->get('database.dbname'),
 			'user' => $config->get('database.user'),
 			'password' => $config->get('database.password'),
+			'metadata' => $this->getContainer()->get('metadata')->getEspoMetadata(),
 		);
-		
-		$entityManager = new \Espo\Core\ORM\EntityManager($params);		
-		$entityManager->setEspoMetadata($container->get('metadata'));
+
+		$entityManager = new \Espo\Core\ORM\EntityManager($params);
+		$entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
 		
 		return $entityManager;
 	}

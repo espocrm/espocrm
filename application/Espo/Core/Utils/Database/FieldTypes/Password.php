@@ -1,5 +1,6 @@
 <?php
-namespace Espo\Core\Doctrine\Types;
+
+namespace Espo\Core\Utils\Database\FieldTypes;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -7,6 +8,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 class Password extends Type
 {
     const PASSWORD = 'password';
+
+	public function getName()
+    {
+        return self::PASSWORD;
+    }
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -24,9 +30,6 @@ class Password extends Type
         return $value;
     } */
 
-    public function getName()
-    {
-        return self::PASSWORD;
-    }
+
 }
 

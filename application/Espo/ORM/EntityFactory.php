@@ -11,12 +11,12 @@ class EntityFactory
 	public function __construct(EntityManager $entityManager, Metadata $metadata)
 	{
 		$this->entityManager = $entityManager;
-		$this->metadata = $metadata;	
+		$this->metadata = $metadata;
 	}
 	public function create($name)
 	{
 		$className = $this->entityManager->normalizeEntityName($name);		
-		$defs = $this->metdata->get($name);		
+		$defs = $this->metadata->get($name);
 		$entity = new $className($defs);		
 		return $entity;
 	}

@@ -4,6 +4,6 @@
       "advanced":false
    },
    "database":{
-      "db": false 
+      "notStorable":true 
    }
 }

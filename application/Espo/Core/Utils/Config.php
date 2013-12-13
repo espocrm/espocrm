@@ -52,13 +52,18 @@ class Config
 	*/
 	public function get($name)
 	{
-		$contentObj = $this->getConfig();
+		$keys = explode('.', $name);
 
-        if (isset($contentObj->$name)) {
-        	return $contentObj->$name;
-        }
+		$lastBranch = $this->getConfig();
+		foreach($keys as $keyName) {
+        	if (isset($lastBranch->$keyName) && is_object($lastBranch)) {
+            	$lastBranch = $lastBranch->$keyName;
+        	} else {
+        		return null;
+        	}
+		}
 
-		return null;
+		return $lastBranch;
 	}
 
 

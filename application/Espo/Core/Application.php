@@ -23,7 +23,7 @@ class Application
     	$this->container = new Container();
 
 		$GLOBALS['log'] = $this->log = $this->container->get('log');
-		
+
         set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
 		set_exception_handler(array($this->getLog(), 'catchException'));
 
@@ -79,15 +79,13 @@ class Application
         $this->getMetadata()->init($isNotCached);
 
 		if ($isNotCached) {
-			$doctrineConverter = new \Espo\Core\Doctrine\Converter\Base($this->container->get('entityManager'), $this->getMetadata(), $this->container->get('fileManager'));
+			$schema = new \Espo\Core\Utils\Database\Schema($this->container->get('config'), $this->getMetadata(), $this->container->get('fileManager'));
 
-            if ($doctrineConverter->process()) {
-				try{
-					$doctrineConverter->getDoctrineHelper()->rebuildDatabase();
-			   	} catch (\Exception $e) {
-				  	$GLOBALS['log']->add('EXCEPTION', 'Fault to rebuildDatabase'.'. Details: '.$e->getMessage());
-				}
-            }
+			try{
+				$schema->rebuild();
+		   	} catch (\Exception $e) {
+			  	$GLOBALS['log']->add('EXCEPTION', 'Fault to rebuild database schema'.'. Details: '.$e->getMessage());
+			}
 		}
 	}
 
@@ -96,12 +94,10 @@ class Application
 		$container = $this->getContainer();
 		$slim = $this->getSlim();
 		$serviceFactory = $this->getServiceFactory();
-		
 
 		$auth = new \Espo\Core\Utils\Api\Auth($container->get('entityManager'), $container);
 		$this->getSlim()->add($auth);
 
-		
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
 			$conditions = $slim->router()->getCurrentRoute()->getConditions();

@@ -44,6 +44,10 @@ class Manager
 	*/
 	function getFileList($path, $recursively=false, $filter='', $fileType='all')
 	{
+    	if (!file_exists($path)) {
+            return false;
+    	}
+
 		$result = array();
 
 		$cdir = scandir($path);

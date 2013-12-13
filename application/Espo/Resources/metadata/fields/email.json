@@ -15,6 +15,6 @@
       "advanced":true
    },
    "database":{
-      "type":"string"
+      "type":"varchar"
    }
 }

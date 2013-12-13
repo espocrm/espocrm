@@ -1,21 +1,21 @@
 <?php
 
-namespace Espo\Core\Doctrine\Converter;
+namespace Espo\Core\Utils\Database;
 
 use Espo\Core\Utils\Util;
 
-class Link
+class Links
 {
     private $metadata;
 
-    private $association;
+    private $relations;
 
 
 	public function __construct(\Espo\Core\Utils\Metadata $metadata)
 	{
 		$this->metadata = $metadata;
 
-		$this->association = new \Espo\Core\Doctrine\Converter\Association();
+		$this->relations = new \Espo\Core\Utils\Database\Relations();
 	}
 
 	protected function getMetadata()
@@ -23,9 +23,9 @@ class Link
 		return $this->metadata;
 	}
 
-	protected function getAssociation()
+	protected function getRelations()
 	{
-		return $this->association;
+		return $this->relations;
 	}
 
 
@@ -34,24 +34,10 @@ class Link
 		if (isset($link['params'])) {
         	return isset($link['params']['entity']) ? $link['params']['entity'] : $entityName;
 		}
+		/*if (!isset($link['entity']) && isset($link['entities'])) {
+			return $link['entities'];
+		} */
 		return isset($link['entity']) ? $link['entity'] : $entityName;
-	}
-
-	public function toUnderScore($name)
-	{
-    	return Util::fromCamelCase($name, '_');
-	}
-
-	protected function getJoinTable($tableName1, $tableName2)
-	{
-		$tables = array(
-        	$this->toUnderScore($tableName1),
-        	$this->toUnderScore($tableName2),
-		);
-
-		asort($tables);
-
-		return implode('_', $tables);
 	}
 
 
@@ -59,21 +45,16 @@ class Link
 	{
 		$params = array();
 		$params['entityName'] = $entityName;
-        $params['usEntityName'] = $this->toUnderScore($entityName);
         $params['link'] = $link;
-		$params['usLinkName'] = $this->toUnderScore($link['name']);
 
         $foreignParams = array();
 		$foreignParams['entityName'] = $this->getLinkEntityName($entityName, $link);
-		$foreignParams['usEntityName'] = $this->toUnderScore($foreignParams['entityName']);
 		$foreignParams['link'] = $foreignLink;
-		$foreignParams['usLinkName'] = $this->toUnderScore($foreignParams['link']['name']);
 
-		$params['targetEntity'] = $this->getMetadata()->getEntityPath($foreignParams['entityName']);
-		$foreignParams['targetEntity'] = $this->getMetadata()->getEntityPath($params['entityName']);
-
-        $params['joinTable'] = $foreignParams['targetEntity'] = $this->getJoinTable($params['entityName'], $foreignParams['entityName']);
-
+		//$params['targetEntity'] = $this->getMetadata()->getEntityPath($foreignParams['entityName']);
+		//$foreignParams['targetEntity'] = $this->getMetadata()->getEntityPath($params['entityName']);
+		$params['targetEntity'] = $foreignParams['entityName'];
+		$foreignParams['targetEntity'] = $params['entityName'];
 
 		if (method_exists($this, $method)) {
         	return $this->$method($params, $foreignParams);
@@ -86,49 +67,59 @@ class Link
 
 	protected function belongsTo($params, $foreignParams)
 	{
-    	return $this->getAssociation()->manyToOneUnidirectional($params, $foreignParams);
+    	return $this->getRelations()->belongsTo($params, $foreignParams);
 	}
-
 
 	//TODO: hook for teams
 	protected function hasMany($params, $foreignParams)
 	{
-    	return $this->getAssociation()->oneToManyUnidirectionalWithJoinTable($params, $foreignParams);
+    	return $this->getRelations()->hasMany($params, $foreignParams);
 	}
 
 
 	protected function hasManyHasMany($params, $foreignParams)
 	{
-		return $this->getAssociation()->manyToManyBidirectional($params, $foreignParams);
+    	return $this->getRelations()->manyMany($params, $foreignParams);
 	}
 
-	protected function hasOne($params, $foreignParams)
-	{
-		return $this->getAssociation()->oneToOneUnidirectional($params, $foreignParams);
-	}
 
-	protected function hasOneBelongsTo($params, $foreignParams)
+	protected function hasChildren($params, $foreignParams)
 	{
-		return $this->getAssociation()->oneToOneBidirectional($params, $foreignParams);
+		return $this->getRelations()->hasChildren($params, $foreignParams);
 	}
 
 
 	protected function belongsToParent($params, $foreignParams)
 	{
-    	return $this->getAssociation()->oneToManySelfReferencing($params, $foreignParams);
+    	return $this->getRelations()->belongsToParent($params, $foreignParams);
 	}
 
 
 
 
+	/*protected function hasChildrenBelongsToParent()
+	{
+    	return $this->getRelations()->hasChildren($params, $foreignParams);
+	}*/
+
+	/*protected function hasManyBelongsTo($params, $foreignParams)
+	{
+		$hasMany = $this->getRelations()->hasMany($params, $foreignParams);
+		$belongsTo = $this->getRelations()->belongsTo($foreignParams, $params);
+        //$belongsTo [Contact] [relations] [account] ['foreignKey'] = 'id'; ???
+
+		return Util::merge($hasMany, $belongsTo);
+	}  */
+
+
 	/*
-	+[0] => belongsTo
+	[0] => belongsTo
     [1] => belongsToParent
     [2] => hasManyBelongsToParent
-    +[3] => hasMany
+    [3] => hasMany
     [4] => hasChildrenBelongsToParent
-    +[5] => hasOne
-    +[6] => hasManyHasMany
+    [5] => hasOne
+    [6] => hasManyHasMany
     [7] => hasManyBelongsTo
     [8] => hasChildrenHasMany
     [9] => hasChildren
@@ -161,7 +152,6 @@ class Link
     [7] => hasManyHasMany
     [8] => hasManyBelongsTo
     [9] => hasChildrenHasMany
-    [10] => hasChildren
     [11] => belongsToHasMany
     [12] => joint
 	*/

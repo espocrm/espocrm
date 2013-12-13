@@ -18,6 +18,6 @@
       "advanced":true
    },
    "database":{
-      "type":"integer"
+      "type":"int"
    }
 }

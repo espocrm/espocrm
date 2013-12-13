@@ -16,5 +16,8 @@
    "search":{
       "basic":false,
       "advanced":true
+   },
+   "database":{
+      "notStorable":true
    }
 }
