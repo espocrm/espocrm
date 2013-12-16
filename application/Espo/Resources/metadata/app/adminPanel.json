@@ -10,7 +10,12 @@
          {
             "url":"#Admin/clearCache",
             "label":"Clear Cache",
-            "description":"Clear all server side cache."
+            "description":"Clear all backend cache."
+         },
+         {
+            "url":"#Admin/rebuild",
+            "label":"Rebuild",
+            "description":"Rebuild backend and clear cache."
          }
       ]
    },
