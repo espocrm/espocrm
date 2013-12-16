@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\Utils\Database;
+namespace Espo\Core\Utils\Database\Converters;
 
 use Espo\Core\Utils\Util,
 	Espo\ORM\Entity;

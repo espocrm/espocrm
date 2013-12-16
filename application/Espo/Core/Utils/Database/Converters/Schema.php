@@ -11,11 +11,6 @@ class Schema
 
 	protected $typeList;
 
-	protected $idParams = array(
-		'type' => 'varchar',
-		'len' => '24',
-	);
-
 	//pair espo::doctrine
 	protected $allowedDbFieldParams = array(
 		'len' => 'length',
@@ -61,25 +56,21 @@ class Schema
 		            case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);
 
-                    case 'id':
-		            case 'foreignId':
-		                $fieldParams = $this->idParams;
-		                break;
-
 		            case 'array':
 		            case 'json_array':
 		                $fieldParams['default'] = ''; //for db type TEXT can't be defined a default value
 		                break;
 		        }
 
-				if (!in_array($fieldParams['type'], $this->typeList)) {
-                	$GLOBALS['log']->add('DEBUG', 'Field type ['.$fieldParams['type'].'] does not exist '.$entityName.':'.$fieldName);
+                $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
+				if (!in_array($fieldType, $this->typeList)) {
+                	$GLOBALS['log']->add('DEBUG', 'Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
 					continue;
 				}
 
 				//echo  Util::toUnderScore($fieldName).', '.$fieldParams['type'].', '.print_r($this->getDbFieldParams($fieldParams),1).'<br />';
 
-				$tables[$entityName]->addColumn(Util::toUnderScore($fieldName), $fieldParams['type'], $this->getDbFieldParams($fieldParams));
+				$tables[$entityName]->addColumn(Util::toUnderScore($fieldName), $fieldType, $this->getDbFieldParams($fieldParams));
 			}
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);

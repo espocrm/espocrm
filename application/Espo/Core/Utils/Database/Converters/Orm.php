@@ -34,12 +34,17 @@ class Orm
 		),
 	);
 
+	protected $idParams = array(
+		'dbType' => 'varchar',
+		'len' => '24',
+	);
+
 
 	public function __construct(\Espo\Core\Utils\Metadata $metadata)
 	{
     	$this->metadata = $metadata;
 
-		$this->links = new \Espo\Core\Utils\Database\Links($this->metadata);
+		$this->links = new \Espo\Core\Utils\Database\Converters\Links($this->metadata);
 	}
 
 
@@ -74,6 +79,34 @@ class Orm
 	}
 
 
+	public function prepare(array $meta)
+	{
+		foreach($meta as $entityName => &$entityParams) {
+			foreach($entityParams['fields'] as $fieldName => &$fieldParams) {
+
+				switch ($fieldParams['type']) {
+                    case 'id':
+		            case 'foreignId':
+		                $fieldParams = array_merge($fieldParams, $this->idParams);
+		                break;
+
+					case 'foreignType':
+		                $fieldParams['dbType'] = Entity::VARCHAR;
+		                $fieldParams['len'] = $this->defaultLength['varchar'];
+		                break;
+
+		            case 'array':
+		            case 'json_array':
+		                unset($fieldParams['default']); //for db type TEXT can't be defined a default value
+		                break;
+		        }
+			}
+		}
+
+		return $meta;
+	}
+
+
 
 
 
@@ -90,6 +123,7 @@ class Orm
 		$outputMeta = array(
 			'id' => array(
 				'type' => Entity::ID,
+				'dbType' => 'varchar',
 			),
 		);
 

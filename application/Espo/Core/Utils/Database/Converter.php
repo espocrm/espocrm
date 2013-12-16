@@ -79,6 +79,8 @@ class Converter
      		$databaseMeta = Util::merge($databaseMeta, $this->getOrmConverter()->process($entityName, $entityMeta, $entityDefs));
         }
 
+        $databaseMeta = $this->getOrmConverter()->prepare($databaseMeta);
+
 		$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
 		$this->setSchemaFromMetadata($schema);
 

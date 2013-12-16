@@ -77,16 +77,6 @@ class Application
     	$isNotCached = !$this->getMetadata()->isCached();
 
         $this->getMetadata()->init($isNotCached);
-
-		if ($isNotCached) {
-			$schema = new \Espo\Core\Utils\Database\Schema($this->container->get('config'), $this->getMetadata(), $this->container->get('fileManager'));
-
-			try{
-				$schema->rebuild();
-		   	} catch (\Exception $e) {
-			  	$GLOBALS['log']->add('EXCEPTION', 'Fault to rebuild database schema'.'. Details: '.$e->getMessage());
-			}
-		}
 	}
 
 	protected function routeHooks()
@@ -180,7 +170,7 @@ class Application
 				'method' => 'get',
 				'route' => 'metadata',
 				'params' => array(
-					'controller' => 'Metadata',	
+					'controller' => 'Metadata',
 				),
 			),
 			array(
@@ -238,6 +228,12 @@ EOT;
 				'scope' => ':controller',
 			);
 		})->via('PATCH');
+
+		$this->getSlim()->get('/app/rebuild/', function() {
+			return array(
+				'controller' => 'Rebuild',
+			);
+		});
 
 
 

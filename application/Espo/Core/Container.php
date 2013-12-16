@@ -138,6 +138,15 @@ class Container
 			$this->get('user')
 		);
 	}
+
+	private function loadSchema()
+	{
+		return new \Espo\Core\Utils\Database\Schema(
+			$this->get('config'),
+			$this->get('metadata'),
+			$this->get('fileManager')
+		);
+	}
 	
 	public function setUser($user)
 	{

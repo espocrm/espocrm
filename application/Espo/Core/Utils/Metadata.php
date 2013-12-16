@@ -15,19 +15,21 @@ class Metadata
 	private $config;
 	private $uniteFiles;
 	private $fileManager;
+	private $converter;
 
 	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\File\UniteFiles $uniteFiles)
 	{
 		$this->config = $config;
 		$this->uniteFiles = $uniteFiles;
 		$this->fileManager = $fileManager;
+
+		$this->converter = new \Espo\Core\Utils\Database\Converter($this);
 	}
 
 	protected function getConfig()
 	{
 		return $this->config;
 	}
-
 
 
 	protected function getUniteFiles()
@@ -38,6 +40,11 @@ class Metadata
     protected function getFileManager()
 	{
 		return $this->fileManager;
+	}
+
+	protected function getConverter()
+	{
+		return $this->converter;
 	}
 
 
@@ -198,7 +205,13 @@ class Metadata
 			return $this->espoMetadata;
 		}
 
-		$this->espoMetadata = $this->getFileManager()->getContent($this->getMetaConfig()->cachePath, 'espoMetadata.php');
+		$espoMetadataFile = Util::concatPath($this->getMetaConfig()->cachePath, 'espoMetadata.php');
+
+		if (!file_exists($espoMetadataFile)) {
+        	$this->getConverter()->process();
+		}
+
+		$this->espoMetadata = $this->getFileManager()->getContent($espoMetadataFile);
 
         return $this->espoMetadata;
 	}

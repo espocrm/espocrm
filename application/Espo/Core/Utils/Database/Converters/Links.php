@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\Utils\Database;
+namespace Espo\Core\Utils\Database\Converters;
 
 use Espo\Core\Utils\Util;
 
@@ -15,7 +15,7 @@ class Links
 	{
 		$this->metadata = $metadata;
 
-		$this->relations = new \Espo\Core\Utils\Database\Relations();
+		$this->relations = new Relations();
 	}
 
 	protected function getMetadata()
