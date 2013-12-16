@@ -81,11 +81,12 @@ class Converter
 
         $databaseMeta = $this->getOrmConverter()->prepare($databaseMeta);
 
-		$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
-		$this->setSchemaFromMetadata($schema);
-
 		//save database meta to a file espoMetadata.php
         $result = $this->getMetadata()->setEspoMetadata($databaseMeta);
+
+
+		$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
+        $this->setSchemaFromMetadata($schema);
 
 
 		$GLOBALS['log']->add('Debug', 'Converter:process() - End: converting metadata to orm format and database schema, result=['.$result.']');

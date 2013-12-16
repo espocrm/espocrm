@@ -48,10 +48,6 @@ class Schema
 					continue;
 				}
 
-				if ($fieldParams['type'] == 'id') {
-					$primaryColumns[] = Util::toUnderScore($fieldName);
-				}
-
 				switch ($fieldParams['type']) {
 		            case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);

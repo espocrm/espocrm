@@ -134,7 +134,7 @@ class Application
 				}
 				$controllerParams[$key] = $value;
 			}	
-			
+
 			$controllerName = ucfirst($controllerParams['controller']);
 			
 			if (!empty($controllerParams['action'])) {
@@ -148,7 +148,7 @@ class Application
 				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);						
 				$result = $controllerManager->process($controllerName, $actionName, $params, $data);
 				$container->get('output')->render($result);
-			} catch (\Exception $e) {							
+			} catch (\Exception $e) {
 				$container->get('output')->processError($e->getMessage(), $e->getCode());
 			}
 
@@ -229,9 +229,10 @@ EOT;
 			);
 		})->via('PATCH');
 
-		$this->getSlim()->get('/app/rebuild/', function() {
+		$this->getSlim()->get('/admin/rebuild/', function() {
 			return array(
-				'controller' => 'Rebuild',
+				'controller' => 'Admin',
+				'action' => 'rebuild',
 			);
 		});
 
