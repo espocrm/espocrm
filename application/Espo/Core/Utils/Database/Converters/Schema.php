@@ -64,8 +64,6 @@ class Schema
 					continue;
 				}
 
-				//echo  Util::toUnderScore($fieldName).', '.$fieldParams['type'].', '.print_r($this->getDbFieldParams($fieldParams),1).'<br />';
-
 				$tables[$entityName]->addColumn(Util::toUnderScore($fieldName), $fieldType, $this->getDbFieldParams($fieldParams));
 			}
 
