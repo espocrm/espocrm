@@ -49,12 +49,15 @@ class Converter
 
 	public function getSchemaFromMetadata()
 	{
-		return $this->schemaFromMetadata;
-	}
+		if (!isset($this->schemaFromMetadata)) {
+        	$databaseMeta = $this->getMetadata()->getEspoMetadata();
+        	$entityDefs = $this->getMetadata()->get('entityDefs');
 
-	protected function setSchemaFromMetadata(\Doctrine\DBAL\Schema\Schema $schema)
-	{
-		$this->schemaFromMetadata = $schema;
+			$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
+			$this->schemaFromMetadata = $schema;
+		}
+
+		return $this->schemaFromMetadata;
 	}
 
 	/**
@@ -80,9 +83,6 @@ class Converter
         }
 
         $databaseMeta = $this->getOrmConverter()->prepare($databaseMeta);
-
-		$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
-		$this->setSchemaFromMetadata($schema);
 
 		//save database meta to a file espoMetadata.php
         $result = $this->getMetadata()->setEspoMetadata($databaseMeta);

@@ -48,10 +48,6 @@ class Schema
 					continue;
 				}
 
-				if ($fieldParams['type'] == 'id') {
-					$primaryColumns[] = Util::toUnderScore($fieldName);
-				}
-
 				switch ($fieldParams['type']) {
 		            case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);
@@ -67,8 +63,6 @@ class Schema
                 	$GLOBALS['log']->add('DEBUG', 'Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
 					continue;
 				}
-
-				//echo  Util::toUnderScore($fieldName).', '.$fieldParams['type'].', '.print_r($this->getDbFieldParams($fieldParams),1).'<br />';
 
 				$tables[$entityName]->addColumn(Util::toUnderScore($fieldName), $fieldType, $this->getDbFieldParams($fieldParams));
 			}

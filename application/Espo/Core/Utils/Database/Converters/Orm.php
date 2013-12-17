@@ -19,6 +19,10 @@ class Orm
 		'int' => 11,
 	);
 
+	protected $defaultValue = array(
+		'bool' => false,
+	);
+
 	/*
 	* //pair espo:doctrine
 	*/
@@ -95,9 +99,8 @@ class Orm
 		                $fieldParams['len'] = $this->defaultLength['varchar'];
 		                break;
 
-		            case 'array':
-		            case 'json_array':
-		                unset($fieldParams['default']); //for db type TEXT can't be defined a default value
+					case 'bool':
+		                $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
 		                break;
 		        }
 			}
@@ -165,7 +168,7 @@ class Orm
 		if (!isset($outputMeta['deleted'])) {
         	$outputMeta['deleted'] = array(
 				'type' => Entity::BOOL,
-				'default' => 0,
+				'default' => false,
 			);
 		}
 
