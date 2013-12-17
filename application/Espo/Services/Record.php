@@ -149,6 +149,9 @@ class Record extends \Espo\Core\Services\Base
     	    	
 		$selectParams = $this->getSelectManager()->getSelectParams($foreignEntityName, $params, true);
 		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+		
+		// TODO
+		// $repository->via($entity, $link)->find($selectParams);
     	
     	return array(
     		'total' => $this->getRepository()->countRelated($entity, $link, $selectParams),
