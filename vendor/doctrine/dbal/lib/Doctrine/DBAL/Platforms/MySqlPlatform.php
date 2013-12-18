@@ -529,7 +529,7 @@ class MySqlPlatform extends AbstractPlatform
                 continue;
             }
 
-            $queryParts[] =  'DROP ' . $column->getQuotedName($this);
+            //$queryParts[] =  'DROP ' . $column->getQuotedName($this); //espo: no needs to remove columns
         }
 
         foreach ($diff->changedColumns as $columnDiff) {
@@ -561,7 +561,7 @@ class MySqlPlatform extends AbstractPlatform
 
         if ( ! $this->onSchemaAlterTable($diff, $tableSql)) {
             if (count($queryParts) > 0) {
-                $sql[] = 'ALTER TABLE ' . $this->espoQuote($diff->name) . ' ' . implode(", ", $queryParts); 
+                $sql[] = 'ALTER TABLE ' . $this->espoQuote($diff->name) . ' ' . implode(", ", $queryParts);
             }
             $sql = array_merge(
                 $this->getPreAlterTableIndexForeignKeySQL($diff),
@@ -701,7 +701,7 @@ class MySqlPlatform extends AbstractPlatform
             return $this->getDropPrimaryKeySQL($table);
         }
 
-        return 'DROP INDEX ' . $indexName . ' ON ' . $table;
+        return 'DROP INDEX ' . $indexName . ' ON ' . $this->espoQuote($table);
     }
 
     /**
@@ -843,6 +843,18 @@ class MySqlPlatform extends AbstractPlatform
     }
 
 	//ESPO: fix problem with quoting table name
+    public function espoQuote($name)
+	{
+		if ($name instanceof Table) {
+            $name = $name->getQuotedName($this);
+        }
+
+		if (isset($name[0]) && $name[0] != '`') {
+        	$name = $this->quoteIdentifier($name);
+		}
+		return $name;
+	}
+
     public function getCreateForeignKeySQL(\Doctrine\DBAL\Schema\ForeignKeyConstraint $foreignKey, $table)
     {
         $query = 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD ' . $this->getForeignKeyDeclarationSQL($foreignKey);
@@ -863,16 +875,26 @@ class MySqlPlatform extends AbstractPlatform
              . ')';
     }
 
-	public function espoQuote($name)
-	{
-		if ($name instanceof Table) {
-            $name = $name->getQuotedName($this);
+	public function getCreateIndexSQL(Index $index, $table)
+    {
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+        $name = $index->getQuotedName($this);
+        $columns = $index->getQuotedColumns($this);
+
+        if (count($columns) == 0) {
+            throw new \InvalidArgumentException("Incomplete definition. 'columns' required.");
         }
 
-		if (isset($name[0]) && $name[0] != '`') {
-        	$name = $this->quoteIdentifier($name);
-		}
-		return $name;
-	}
+        if ($index->isPrimary()) {
+            return $this->getCreatePrimaryKeySQL($index, $table);
+        }
+
+        $query = 'CREATE ' . $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name . ' ON ' . $this->espoQuote($table);
+        $query .= ' (' . $this->getIndexFieldDeclarationListSQL($columns) . ')';
+
+        return $query;
+    }
 	//end: ESPO
 }

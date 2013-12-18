@@ -133,6 +133,7 @@ class Schema
             	$result &= (bool) $connection->executeQuery($sql);
 			} catch (\Exception $e) {
 				$GLOBALS['log']->add('EXCEPTION', 'Rebuild database fault: '.$e);
+				$result = false;
 			}
         }
 

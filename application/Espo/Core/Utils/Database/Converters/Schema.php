@@ -17,6 +17,7 @@ class Schema
 		'len' => 'length',
 		'default' => 'default',
 		'notnull' => 'notnull',
+		'autoincrement' => 'autoincrement',
 	);
 
 
@@ -51,6 +52,7 @@ class Schema
             $tables[$entityName] = $schema->createTable( Util::toUnderScore($entityName) );
 
 			$primaryColumns = array();
+			$uniqueColumns = array();
         	foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
 				if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
@@ -68,6 +70,13 @@ class Schema
 
 					case 'bool':
                         $fieldParams['default'] = intval($fieldParams['default']);
+                    	break;
+
+					case 'int':
+                        if (isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
+                        	$uniqueColumns[] = Util::toUnderScore($fieldName);
+                        }
+						break;
 		        }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
@@ -80,6 +89,9 @@ class Schema
 			}
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
+			if (!empty($uniqueColumns)) {
+            	$tables[$entityName]->addUniqueIndex($uniqueColumns);
+			}
 		}
 
 		//check and create columns/tables for relations
