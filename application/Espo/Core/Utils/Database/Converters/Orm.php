@@ -236,18 +236,23 @@ class Orm
 			$foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$linkEntityName]);
 
 			$method = $currentType;
-			unset($reverseMethod);
 			if ($foreignLink !== false) {
             	$method .= '-'.$foreignLink['params']['type'];
-                $reverseMethod = Util::toCamelCase( $foreignLink['params']['type'].'-'.$currentType );
 			}
             $method = Util::toCamelCase($method);
 
-
 			//echo
-			/*if ($method == 'hasManyBelongsTo' || $reverseMethod == 'belongshasManyBelongsToTo') {
-            	die($entityName.' - '.$linkName);
-			}*/
+			/*if ($method == 'hasManyHasMany' || $reverseMethod == 'belongshasManyBelongsToTo') {
+				if ($entityName == 'Meeting') {
+					echo '<pre>';
+					echo $entityName.': ';
+					print_r(array('name' => $linkName, 'params'=>$linkParams));
+
+					echo $linkEntityName.': ';
+					print_r($foreignLink);
+                	die($entityName.' - '.$linkEntityName.'  -- '.$linkName);
+				}
+			}    */
 
 
 			if (method_exists($this->getLinks(), $method)) {  //ex. hasManyHasMany
@@ -288,7 +293,7 @@ class Orm
 			);
     	}
 
-        $parentLinkName = strtolower($parentLinkName);
+        /*$parentLinkName = strtolower($parentLinkName);
 
 		foreach($currentEntityDefs['links'] as $linkName => $linkParams) {
         	if (isset($linkParams['foreign']) && strtolower($linkParams['foreign']) == $parentLinkName) {
@@ -297,7 +302,7 @@ class Orm
 					'params' => $linkParams,
 				);
         	}
-		}
+		}  */
 
 		return false;
 	}
