@@ -28,7 +28,7 @@ class EntityManager
 			'dbname' => $config->get('database.dbname'),
 			'user' => $config->get('database.user'),
 			'password' => $config->get('database.password'),
-			'metadata' => $this->getContainer()->get('metadata')->getEspoMetadata(),
+			'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
 		);
 
 		$entityManager = new \Espo\Core\ORM\EntityManager($params);

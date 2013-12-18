@@ -199,13 +199,13 @@ class Metadata
 	}
 
 
-	public function getEspoMetadata()
+	public function getOrmMetadata()
 	{
 		if (!empty($this->espoMetadata)) {
 			return $this->espoMetadata;
 		}
 
-		$espoMetadataFile = Util::concatPath($this->getMetaConfig()->cachePath, 'espoMetadata.php');
+		$espoMetadataFile = Util::concatPath($this->getMetaConfig()->cachePath, 'ormMetadata.php');
 
 		if (!file_exists($espoMetadataFile)) {
         	$this->getConverter()->process();
@@ -216,11 +216,11 @@ class Metadata
         return $this->espoMetadata;
 	}
 
-	public function setEspoMetadata(array $espoMetadata)
+	public function setOrmMetadata(array $espoMetadata)
 	{
-		 $result = $this->getFileManager()->setContentPHP($espoMetadata, $this->getMetaConfig()->cachePath, 'espoMetadata.php');
+		 $result = $this->getFileManager()->setContentPHP($espoMetadata, $this->getMetaConfig()->cachePath, 'ormMetadata.php');
 		 if ($result == false) {
-		 	$GLOBALS['log']->add('EXCEPTION', 'Metadata::setEspoMetadata() - Cannot save espoMetadata to a file');
+		 	$GLOBALS['log']->add('EXCEPTION', 'Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
          	throw new \Espo\Core\Exceptions\Error();
 		 }
 
