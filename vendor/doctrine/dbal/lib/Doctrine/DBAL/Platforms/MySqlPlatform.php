@@ -561,8 +561,7 @@ class MySqlPlatform extends AbstractPlatform
 
         if ( ! $this->onSchemaAlterTable($diff, $tableSql)) {
             if (count($queryParts) > 0) {
-                $sql[] = 'ALTER TABLE ' . $diff->name . ' ' . implode(", ", $queryParts);
-                //$sql[] = 'ALTER TABLE `' . $diff->name . '` ' . implode(", ", $queryParts);
+                $sql[] = 'ALTER TABLE ' . $this->espoQuote($diff->name) . ' ' . implode(", ", $queryParts); 
             }
             $sql = array_merge(
                 $this->getPreAlterTableIndexForeignKeySQL($diff),

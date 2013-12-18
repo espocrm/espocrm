@@ -132,8 +132,6 @@ class Orm
 
 		foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
 
-        	//$fieldName = Util::fromCamelCase($fieldName, '_');
-
 			//check if "fields" option exists in $fieldMeta
             $fieldParams['type'] = isset($fieldParams['type']) ? $fieldParams['type'] : '';
 
@@ -160,8 +158,17 @@ class Orm
 					$outputMeta[$fieldName] = $fieldDefs; //push fieldDefs to the main array
 				}
 			}
+		}
 
-			/*Make actions for different types like "link", "linkMultiple", "linkParent" */
+		/*Make actions for different types like "link", "linkMultiple", "linkParent" */
+		foreach($outputMeta as $fieldName => $fieldParams) {
+
+        	switch ($fieldParams['type']) {
+	            case 'linkParent':
+	                $relation = $this->getLinks()->process('linkParent', $entityName, array('name' => $fieldName));
+					$outputMeta = Util::merge($outputMeta, $relation[$entityName]['fields']);
+	                break;
+	        }
 		}
 
 

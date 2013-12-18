@@ -153,6 +153,7 @@ class Relations
 		return $relation;
 	}
 
+	//uses for belongsToParent and linkParent
 	public function belongsToParent($params, $foreignParams)
 	{
         $relation = array();

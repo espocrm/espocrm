@@ -94,6 +94,11 @@ class Links
     	return $this->getRelations()->belongsToParent($params, $foreignParams);
 	}
 
+	protected function linkParent($params, $foreignParams)
+	{
+    	return $this->getRelations()->belongsToParent($params, $foreignParams);
+	}
+
 
 
 
