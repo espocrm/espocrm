@@ -96,7 +96,7 @@ class Record extends \Espo\Core\Services\Base
 		
 		$entity->set($data);
 		$this->getRepository()->save($entity);
-		return $entity->toArray();
+		return $entity;
 	}
 
 	public function updateEntity($id, $data)
@@ -110,7 +110,7 @@ class Record extends \Espo\Core\Services\Base
 		
 		$entity->set($data);
 		$this->getRepository()->save($entity);
-		return $entity->toArray();
+		return $entity;
 	}
 
 	public function deleteEntity($id)
@@ -128,11 +128,11 @@ class Record extends \Espo\Core\Services\Base
 	{		
 		$selectParams = $this->getSelectManager()->getSelectParams($this->name, $params, true);
 		$collection = $this->getRepository()->find($selectParams);
-    	
+
     	return array(
     		'total' => $this->getRepository()->count($selectParams),
-    		'list' => $collection->toArray() 
-    	);
+    		'collection' => $collection,
+    	); 	    	
 	}
 
     public function findLinkedEntities($id, $link, $params)
@@ -152,10 +152,10 @@ class Record extends \Espo\Core\Services\Base
 		
 		// TODO
 		// $repository->via($entity, $link)->find($selectParams);
-    	
+		
     	return array(
     		'total' => $this->getRepository()->countRelated($entity, $link, $selectParams),
-    		'list' => $collection->toArray() 
+    		'collection' => $collection,
     	);
     }
     
@@ -174,8 +174,7 @@ class Record extends \Espo\Core\Services\Base
     		throw new Error();
     	}
     	
-    	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
-    	
+    	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);    	
     	
     	if (!empty($foreignEntity)) {
 			$this->getRepository()->relate($entity, $link, $foreignEntity);

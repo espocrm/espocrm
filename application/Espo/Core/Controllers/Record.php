@@ -27,7 +27,7 @@ abstract class Record extends Base
 			throw new Forbidden();
 		}
 
-		return $entity;
+		return $entity->toArray();
 	}
 	
 	public function actionPatch($params, $data)
@@ -44,7 +44,7 @@ abstract class Record extends Base
 		$service = $this->getService();
 		
 		if ($entity = $service->createEntity($data)) {
-			return $entity;
+			return $entity->toArray();
 		}
 
 		throw new Error();
@@ -59,7 +59,7 @@ abstract class Record extends Base
 		$id = $params['id'];
 		
 		if ($this->getService()->updateEntity($id, $data)) {
-			return $entity;
+			return $entity->toArray();
 		}
 
 		throw new Error();
@@ -77,7 +77,7 @@ abstract class Record extends Base
 		$asc = $data['asc'];
 		$sortBy = $data['sortBy'];
 
-		return $this->getService()->findEntities(array(
+		$result = $this->getService()->findEntities(array(
 			'where' => $where,
 			'offset' => $offset,
 			'limit' => $limit,
@@ -85,10 +85,10 @@ abstract class Record extends Base
 			'sortBy' => $sortBy,
 		));
 		
-		/*return array(
-			'total' => count($entityList),
-			'list' => $entityList
-		);*/
+		return array(
+			'total' => $result['total'],
+			'list' => $result['collection']->toArray()
+		);
 	}
 
 	public function actionDelete($params)
@@ -140,17 +140,17 @@ abstract class Record extends Base
 		$asc = $data['asc'];
 		$sortBy = $data['sortBy'];
 
-		$entityList = $this->getService()->findLinkedEntities($id, $link, array(
+		$result = $this->getService()->findLinkedEntities($id, $link, array(
 			'where' => $where,
 			'offset' => $offset,
 			'limit' => $limit,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
 		));
-
+		
 		return array(
-			'total' => count($entityList),
-			'list' => $entityList
+			'total' => $result['total'],
+			'list' => $result['collection']->toArray()
 		);
 	}
 
