@@ -113,47 +113,16 @@ class Links
 
 
 	/*
-	[0] => belongsTo
-    [1] => belongsToParent
-    [2] => hasManyBelongsToParent
-    [3] => hasMany
-    [4] => hasChildrenBelongsToParent
-    [5] => hasOne
-    [6] => hasManyHasMany
-    [7] => hasManyBelongsTo
-    [8] => hasChildrenHasMany
-    [9] => hasChildren
-    [10] => belongsToHasMany
-    [11] => joint
-
-
-	[0] => belongsTo
-    [1] => belongsToParent
-    [2] => hasManyBelongsToParent
-    [3] => hasMany
-    [4] => hasChildrenBelongsToParent
-    [5] => belongsToParentHasChildren
-    [6] => hasOne
-    [7] => hasManyBelongsTo
-    [8] => hasManyHasMany
-    [9] => belongsToHasMany
-    [10] => joint
-
-
-
-
-	[0] => belongsTo
-    [1] => belongsToParent
-    [2] => hasManyBelongsToParent
-    [3] => hasMany
-    [4] => hasChildrenBelongsToParent
-    [5] => belongsToParentHasChildren
-    [6] => hasOne
-    [7] => hasManyHasMany
-    [8] => hasManyBelongsTo
-    [9] => hasChildrenHasMany
-    [11] => belongsToHasMany
-    [12] => joint
+[0] => belongsTo
+[1] => belongsToParent
+[2] => hasMany
+[3] => hasChildrenBelongsToParent
+[4] => hasManyHasMany
+[5] => hasOne
+[6] => hasManyBelongsTo
+[7] => belongsToHasMany
+[8] => joint
+[9] => belongsToParentHasChildren
 	*/
 
 }

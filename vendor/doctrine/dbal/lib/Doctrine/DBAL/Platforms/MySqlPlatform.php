@@ -562,6 +562,7 @@ class MySqlPlatform extends AbstractPlatform
         if ( ! $this->onSchemaAlterTable($diff, $tableSql)) {
             if (count($queryParts) > 0) {
                 $sql[] = 'ALTER TABLE ' . $diff->name . ' ' . implode(", ", $queryParts);
+                //$sql[] = 'ALTER TABLE `' . $diff->name . '` ' . implode(", ", $queryParts);
             }
             $sql = array_merge(
                 $this->getPreAlterTableIndexForeignKeySQL($diff),
@@ -841,4 +842,38 @@ class MySqlPlatform extends AbstractPlatform
 
         return 'LONGBLOB';
     }
+
+	//ESPO: fix problem with quoting table name
+    public function getCreateForeignKeySQL(\Doctrine\DBAL\Schema\ForeignKeyConstraint $foreignKey, $table)
+    {
+        $query = 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD ' . $this->getForeignKeyDeclarationSQL($foreignKey);
+
+        return $query;
+    }
+
+	public function getIndexDeclarationSQL($name, Index $index)
+    {
+        $columns = $index->getQuotedColumns($this);
+
+        if (count($columns) === 0) {
+            throw new \InvalidArgumentException("Incomplete definition. 'columns' required.");
+        }
+
+        return $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $this->espoQuote($name) . ' ('
+             . $this->getIndexFieldDeclarationListSQL($columns)
+             . ')';
+    }
+
+	public function espoQuote($name)
+	{
+		if ($name instanceof Table) {
+            $name = $name->getQuotedName($this);
+        }
+
+		if (isset($name[0]) && $name[0] != '`') {
+        	$name = $this->quoteIdentifier($name);
+		}
+		return $name;
+	}
+	//end: ESPO
 }

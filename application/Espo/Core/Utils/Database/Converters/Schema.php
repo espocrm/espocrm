@@ -2,7 +2,8 @@
 
 namespace Espo\Core\Utils\Database\Converters;
 
-use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Util,
+	Espo\ORM\Entity;
 
 
 class Schema
@@ -15,6 +16,13 @@ class Schema
 	protected $allowedDbFieldParams = array(
 		'len' => 'length',
 		'default' => 'default',
+	);
+
+
+	//todo: same array in Converters\Orm
+	protected $idParams = array(
+		'dbType' => 'varchar',
+		'len' => '24',
 	);
 
 	public function __construct()
@@ -56,6 +64,9 @@ class Schema
 		            case 'json_array':
 		                $fieldParams['default'] = ''; //for db type TEXT can't be defined a default value
 		                break;
+
+					case 'bool':
+                        $fieldParams['default'] = intval($fieldParams['default']);
 		        }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
@@ -70,12 +81,42 @@ class Schema
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 		}
 
-       /* foreach ($databaseMeta as $entityName => $entityParams) {
+		//check and create columns/tables for relations
+        foreach ($databaseMeta as $entityName => $entityParams) {
 
-        	foreach ($databaseMeta['relations'] as $relationName => $relationParams) {
-            	$myForeign->addForeignKeyConstraint($myTable, array("user_id"), array("id"), array("onUpdate" => "CASCADE"));
+        	foreach ($entityParams['relations'] as $relationName => $relationParams) {
+
+                 switch ($relationParams['type']) {
+		            case 'manyMany':
+						$tableName = $relationParams['relationName'];
+                        $tables[$tableName] = $schema->createTable( Util::toUnderScore($tableName) );
+                        $tables[$tableName]->addColumn('id', $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+
+                        $relationEntities = array($entityName, $relationParams['entity']);
+                        $relationKeys = array($relationParams['key'], $relationParams['foreignKey']);
+						foreach($relationParams['midKeys'] as $index => $midKey) {
+							$usMidKey = Util::toUnderScore($midKey);
+                        	$tables[$tableName]->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+
+							$relationKey = Util::toUnderScore($relationKeys[$index]);
+                            $tables[$tableName]->addForeignKeyConstraint($tables[$relationEntities[$index]], array($usMidKey), array($relationKey));
+						}
+
+                        $tables[$tableName]->addColumn('deleted', 'bool', array('default' => 0));
+						$tables[$tableName]->setPrimaryKey(array("id"));
+						break;
+
+		            case 'belongsTo':
+						$foreignEntity = $relationParams['entity'];
+						$columnName = Util::toUnderScore($relationParams['key']);
+						$foreignKey = Util::toUnderScore($relationParams['foreignKey']);
+		                $tables[$entityName]->addForeignKeyConstraint($tables[$foreignEntity], array($columnName), array($foreignKey));
+		                break;
+		        }
+            	//$myForeign->addForeignKeyConstraint($myTable, array("user_id"), array("id"), array("onUpdate" => "CASCADE"));
 			}
-        }*/
+        }
+		//END: check and create columns/tables for relations
 
 		return $schema;
 	}

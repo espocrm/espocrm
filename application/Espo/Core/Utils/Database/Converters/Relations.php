@@ -36,7 +36,17 @@ class Relations
         $sortedEntities = $this->getSortEntities($params['entityName'], $foreignParams['entityName']);
 
 		$relation = array();
-		if (strtolower($params['entityName']) == strtolower($sortedEntities[0])) {
+
+		//check for duplication if defined a "foreign" key for both sides
+		$process = true;
+        if (isset($params['link']['params']['foreign']) && isset($foreignParams['link']['params']['foreign'])) {
+        	$process = false;
+        	if (strtolower($params['entityName']) == strtolower($sortedEntities[0])) {
+            	$process = true;
+        	}
+        }
+
+		if ($process) {
 			$relation = array(
 				$params['entityName'] => array(
 					'relations' => array(
@@ -102,8 +112,8 @@ class Relations
 			),
 		);
 
-		if (isset($params['link']['foreign'])) {  //???
-        	$relation[$params['entityName']] ['fields'] [$params['link']['name'].'Name'] ['foreign'] = $params['link']['foreign'];
+		if (isset($params['link']['params']['foreign'])) {  //???
+        	$relation[$params['entityName']] ['fields'] [$params['link']['name'].'Name'] ['foreign'] = $params['link']['params']['foreign'];
 		}
 
 		return $relation;
