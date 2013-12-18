@@ -234,15 +234,20 @@ EOT;
 				'controller' => 'Admin',
 				'action' => 'rebuild',
 			);
-		});
+		});		
 
-
-
-		/*$this->getSlim()->get('/:controller/:id', function() {
+		$this->getSlim()->get('/:controller/:id', function() {
 			return array(
 				'controller' => ':controller',
 				'action' => 'read',
 		        'id' => ':id'
+			);
+		});
+		
+		$this->getSlim()->get('/:controller', function() {
+			return array(
+				'controller' => ':controller',
+				'action' => 'index',
 			);
 		});
 
@@ -261,7 +266,7 @@ EOT;
 			);
 		});
 
-		$this->getSlim()->patch('/:controller/:id', function() {
+		$this->getSlim()->post('/:controller/:id', function() {
 			return array(
 				'controller' => ':controller',
 				'action' => 'patch',
@@ -278,7 +283,7 @@ EOT;
 				'link' => ':link',
 				'foreignId' => ':foreignId'
 			);
-		});    */
+		});
 	}
 
 

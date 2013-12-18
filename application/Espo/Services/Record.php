@@ -72,8 +72,8 @@ class Record extends \Espo\Core\Services\Base
 	}
 	
 	protected function getRepository()
-	{
-		return $this->getEntityManager()->getRepository($this->name);
+	{		
+		return $this->getEntityManager()->getRepository($this->entityName);
 	}
 
 	public function getEntity($id = null)
@@ -84,7 +84,7 @@ class Record extends \Espo\Core\Services\Base
 	protected function getSelectManager()
 	{
 		if (empty($this->selectManager)) {
-			$this->selectManager = new SelectManager($this->entityManager, $this->getUser(), $this->getAcl());
+			$this->selectManager = new \Espo\Core\SelectManager($this->entityManager, $this->getUser(), $this->getAcl());
 		}		
 		return $this->selectManager;
 	}

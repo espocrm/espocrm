@@ -77,7 +77,7 @@ abstract class Record extends Base
 		$asc = $data['asc'];
 		$sortBy = $data['sortBy'];
 
-		$entityList = $this->getService()->findEntities(array(
+		return $this->getService()->findEntities(array(
 			'where' => $where,
 			'offset' => $offset,
 			'limit' => $limit,
@@ -85,10 +85,10 @@ abstract class Record extends Base
 			'sortBy' => $sortBy,
 		));
 		
-		return array(
+		/*return array(
 			'total' => count($entityList),
 			'list' => $entityList
-		);
+		);*/
 	}
 
 	public function actionDelete($params)

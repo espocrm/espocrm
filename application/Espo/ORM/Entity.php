@@ -32,12 +32,19 @@ abstract class Entity implements IEntity
 	 */
 	protected $container = array();
 	
+	/**
+	 * @var EntityManager Entity Manager.
+	 */
+	protected $entityManager;
 	
-	public function __construct($defs = array())
+	
+	public function __construct($defs = array(), EntityManager $entityManager = null)
 	{
 		if (empty($this->entityName)) {
 			$this->entityName = end(explode('\\', get_class($this)));
 		}
+		
+		$this->entityManager = $entityManager;
 		
 		if (!empty($defs['fields'])) {
 			$this->fields = $defs['fields'];
@@ -78,7 +85,7 @@ abstract class Entity implements IEntity
 		}
 	}
 	
-	public function get($name)
+	public function get($name, $params = array())
 	{
 		if ($name == 'id') {
 			return $this->id;
@@ -91,6 +98,12 @@ abstract class Entity implements IEntity
 		if (isset($this->container[$name])) {
 			return $this->container[$name];
 		}
+		
+		if (!empty($this->relations[$name])) {
+			$value = $this->entityManager->getRepository($this->entityName)->findRelated($this, $name, $params);
+			return $value;
+		}
+		
 		return null;
 	}
 	
