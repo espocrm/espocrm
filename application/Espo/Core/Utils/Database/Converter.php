@@ -50,7 +50,7 @@ class Converter
 	public function getSchemaFromMetadata()
 	{
 		if (!isset($this->schemaFromMetadata)) {
-        	$databaseMeta = $this->getMetadata()->getEspoMetadata();
+        	$databaseMeta = $this->getMetadata()->getOrmMetadata();
         	$entityDefs = $this->getMetadata()->get('entityDefs');
 
 			$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
@@ -85,7 +85,7 @@ class Converter
         $databaseMeta = $this->getOrmConverter()->prepare($databaseMeta);
 
 		//save database meta to a file espoMetadata.php
-        $result = $this->getMetadata()->setEspoMetadata($databaseMeta);
+        $result = $this->getMetadata()->setOrmMetadata($databaseMeta);
 
 
 		$GLOBALS['log']->add('Debug', 'Converter:process() - End: converting metadata to orm format and database schema, result=['.$result.']');
