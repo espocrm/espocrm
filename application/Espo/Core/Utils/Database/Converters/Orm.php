@@ -90,14 +90,22 @@ class Orm
 
 				switch ($fieldParams['type']) {
                     case 'id':
-		            case 'foreignId':
 		                $fieldParams = array_merge($fieldParams, $this->idParams);
-		                break;
+						break;
+
+					case 'foreignId':
+						$fieldParams = array_merge($fieldParams, $this->idParams);
+                    	$fieldParams['notnull'] = false;
+						break;
 
 					case 'foreignType':
 		                $fieldParams['dbType'] = Entity::VARCHAR;
 		                $fieldParams['len'] = $this->defaultLength['varchar'];
 		                break;
+
+					case 'datetime':
+                    	$fieldParams['notnull'] = false;
+						break;
 
 					case 'bool':
 		                $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];

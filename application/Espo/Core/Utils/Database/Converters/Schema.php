@@ -16,6 +16,7 @@ class Schema
 	protected $allowedDbFieldParams = array(
 		'len' => 'length',
 		'default' => 'default',
+		'notnull' => 'notnull',
 	);
 
 
@@ -99,7 +100,7 @@ class Schema
                         	$tables[$tableName]->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
 
 							$relationKey = Util::toUnderScore($relationKeys[$index]);
-                            $tables[$tableName]->addForeignKeyConstraint($tables[$relationEntities[$index]], array($usMidKey), array($relationKey));
+                            $tables[$tableName]->addForeignKeyConstraint($tables[$relationEntities[$index]], array($usMidKey), array($relationKey), array("onUpdate" => "CASCADE"));
 						}
 
                         $tables[$tableName]->addColumn('deleted', 'bool', array('default' => 0));
@@ -110,7 +111,7 @@ class Schema
 						$foreignEntity = $relationParams['entity'];
 						$columnName = Util::toUnderScore($relationParams['key']);
 						$foreignKey = Util::toUnderScore($relationParams['foreignKey']);
-		                $tables[$entityName]->addForeignKeyConstraint($tables[$foreignEntity], array($columnName), array($foreignKey));
+		                $tables[$entityName]->addForeignKeyConstraint($tables[$foreignEntity], array($columnName), array($foreignKey), array("onUpdate" => "CASCADE"));
 		                break;
 		        }
             	//$myForeign->addForeignKeyConstraint($myTable, array("user_id"), array("id"), array("onUpdate" => "CASCADE"));
