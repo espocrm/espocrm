@@ -7,9 +7,14 @@ class Repository
 {
 	
 	/**
-	 * @var BeanFactory BeanFactory object.
+	 * @var EntityFactory EntityFactory object.
 	 */
 	private $entityFactory;
+	
+	/**
+	 * @var EntityManager EntityManager object.
+	 */
+	protected $entityManager;
 	
 	/**
 	 * @var \MyApp\DB\iMapper DB Mapper.
@@ -41,12 +46,13 @@ class Repository
 	 */	
 	protected $listParams = array();
 	
-	public function __construct($entityName, EntityFactory $entityFactory, DB\iMapper $mapper)
+	public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory, DB\iMapper $mapper)
 	{
 		$this->entityName = $entityName;		
 		$this->entityFactory = $entityFactory;		
 		$this->seed = $this->entityFactory->create($entityName);		
 		$this->entityClassName = get_class($this->seed);
+		$this->entityManager = $entityManager;
 		
 		$this->mapper = $mapper;
 	}	
