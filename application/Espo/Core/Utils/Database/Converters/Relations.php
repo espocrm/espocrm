@@ -8,6 +8,19 @@ use Espo\Core\Utils\Util,
 
 class Relations
 {
+	private $metadata;
+
+	public function __construct(\Espo\Core\Utils\Metadata $metadata)
+	{
+    	$this->metadata = $metadata;
+	}
+
+	protected function getMetadata()
+	{
+		return $this->metadata;
+	}
+
+
 	protected function getSortEntities($entity1, $entity2)
 	{
 		$entities = array(
@@ -20,6 +33,7 @@ class Relations
 		return $entities;
 	}
 
+
 	protected function getJoinTable($tableName1, $tableName2)
 	{
 		$tables = $this->getSortEntities($tableName1, $tableName2);
@@ -28,6 +42,25 @@ class Relations
 	}
 
 
+	protected function getForeignField($name, $entityName)
+	{
+		$foreignField = $this->getMetadata()->get('entityDefs.'.$entityName.'.fields.'.$name);
+
+		if ($foreignField['type'] != Entity::VARCHAR) {
+        	$fieldDefs = $this->getMetadata()->get('fields.'.$foreignField['type']);
+            $naming = isset($fieldDefs['naming']) ? $fieldDefs['naming'] : 'postfix';
+
+			if (isset($fieldDefs['actualFields']) && is_array($fieldDefs['actualFields'])) {
+            	$foreignFieldArray = array();
+				foreach($fieldDefs['actualFields'] as $fieldName) {
+                	$foreignFieldArray[] = Util::getNaming($name, $fieldName, $naming);
+				}
+                return $foreignFieldArray;
+			}
+		}
+
+		return $name;
+	}
 
 
 	//todo sedine in foreign fieldDefs a key for current
@@ -96,6 +129,7 @@ class Relations
 						'type' => Entity::FOREIGN,
 						'relation' => $params['link']['name'],
 						'notStorable' => true,
+						'foreign' => $this->getForeignField('name', $foreignParams['entityName']),
 					),
 					$params['link']['name'].'Id' => array(
 						'type' => Entity::FOREIGN_ID,
@@ -112,9 +146,9 @@ class Relations
 			),
 		);
 
-		if (isset($params['link']['params']['foreign'])) {  //???
+		/*if (isset($params['link']['params']['foreign'])) {  //???
         	$relation[$params['entityName']] ['fields'] [$params['link']['name'].'Name'] ['foreign'] = $params['link']['params']['foreign'];
-		}
+		}  */
 
 		return $relation;
 	}

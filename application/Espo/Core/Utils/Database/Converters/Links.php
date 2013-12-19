@@ -15,7 +15,7 @@ class Links
 	{
 		$this->metadata = $metadata;
 
-		$this->relations = new Relations();
+		$this->relations = new Relations($this->metadata);
 	}
 
 	protected function getMetadata()

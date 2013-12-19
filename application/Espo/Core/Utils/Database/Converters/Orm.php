@@ -29,6 +29,10 @@ class Orm
 	protected $fieldAccordances = array(
 		'type' => 'type',
 		'maxLength' => 'len',
+		'autoincrement' => 'autoincrement',
+		'notStorable' => 'notStorable',
+		'link' => 'relation',
+		'field' => 'foreign',  //todo change "foreign" to "field"
 		'default' => array(
 		   'condition' => '^javascript:',
 		   'conditionEquals' => false,

@@ -6,10 +6,10 @@
    ],
    "fields":{
       "salutation":{
-         "type":"varchar"
+         "type":"enum"
       },
       "first":{
-         "type":"enum"
+         "type":"varchar"
       },
       "last":{
          "type":"varchar"

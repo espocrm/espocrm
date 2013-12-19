@@ -207,7 +207,7 @@ class Metadata
 
 		$espoMetadataFile = Util::concatPath($this->getMetaConfig()->cachePath, 'ormMetadata.php');
 
-		if (!file_exists($espoMetadataFile)) {
+		if (!file_exists($espoMetadataFile) || !$this->getConfig()->get('useCache')) {
         	$this->getConverter()->process();
 		}
 
