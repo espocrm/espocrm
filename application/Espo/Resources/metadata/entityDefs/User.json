@@ -61,7 +61,8 @@
         },
         "roles": {
             "type": "hasMany",
-            "entity": "Role"
+            "entity": "Role",
+            "foreign": "users"
         },
         "preferences": {
             "type": "hasOne",

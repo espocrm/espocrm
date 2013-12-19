@@ -28,7 +28,7 @@ class Acl
 	
 	public function checkScope($subject, $action = null, $isOwner = null, $inTeam = null)
 	{
-		if (isset($this->data[$scope]) {			
+		if (isset($this->data[$scope])) {			
 			if ($this->data[$scope] === false) {
 				return false;
 			}
@@ -112,16 +112,17 @@ class Acl
 	{
 		$aclTables = array();
 
-		$userRoles = $this->user->getRoles();
+		$userRoles = $this->user->get('roles');
+		
 		foreach ($userRoles as $role) {
-			$aclTables[] = json_decode($role->getData());
+			$aclTables[] = json_decode($role->get('data'));
 		}
 
-		$teams = $this->user->getTeams();
+		$teams = $this->user->get('teams');
 		foreach ($teams as $team) {
-			$teamRoles = $team->getRoles();
+			$teamRoles = $team->get('roles');
 			foreach ($teamRoles as $role) {
-				$aclTables[] = json_decode($role->getData());
+				$aclTables[] = json_decode($role->get('data'));
 			}
 		}
 

@@ -3,6 +3,9 @@
         "name": {
             "maxLength": 150,
             "required": true
+        },
+        "data": {
+        	"type": "text"
         }
     },
     "links": {

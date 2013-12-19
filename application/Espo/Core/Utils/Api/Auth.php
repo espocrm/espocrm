@@ -48,7 +48,6 @@ class Auth extends \Slim\Middleware
 			$username = $authKey;
 			$password = $authSec;
 
-			//$user = $this->entityManager->getRepository('User')->findOne(array('userName' => $username));
 		    $user = $this->entityManager->getRepository('User')->findOne(array(
 				'whereClause' => array(
 					'userName' => $username,
