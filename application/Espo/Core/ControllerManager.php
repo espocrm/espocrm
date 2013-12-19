@@ -70,16 +70,19 @@ class ControllerManager
 		if (!method_exists($controller, $actionMethodName)) {			
 			throw new NotFound("Action '$actionMethodName' does not exist in controller '$controller'");
 		}	
-			
+
 		$result = $controller->$actionMethodName($params, $data);
 		
 		$afterMethodName = 'after' . $actionNameUcfirst;	
 		if (method_exists($controller, $afterMethodName)) {
 			$controller->$afterMethodName($params, $data);
 		}
-				
-		return $result;		
+
+		if (is_array($result) || is_bool($result)) {
+        	return \Espo\Core\Utils\Json::encode($result);
+		}
 		
+		return $result;
 	}
 
 }
