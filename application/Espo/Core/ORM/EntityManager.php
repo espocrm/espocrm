@@ -5,6 +5,18 @@ namespace Espo\Core\ORM;
 class EntityManager extends \Espo\ORM\EntityManager
 {
 	protected $espoMetadata;
+	
+	protected $user;
+	
+	public function setUser()
+	{
+		$this->user = $user;
+	}
+	
+	public function getUser()
+	{
+		return $this->user;
+	}	
 
 	public function setEspoMetadata($espoMetadata)
 	{

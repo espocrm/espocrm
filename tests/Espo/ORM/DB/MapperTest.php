@@ -71,7 +71,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testSelectById()
 	{
 		$query = 
-			"SELECT post.id AS id, post.name AS name, CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
+			"SELECT post.id AS id, post.name AS name, TRIM(CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name)) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
 			"FROM post ".
 			"LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id " .
 			"WHERE post.id = '1' AND post.deleted = '0'";
@@ -91,7 +91,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testSelect()
 	{
 		$query = 
-			"SELECT post.id AS id, post.name AS name, CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
+			"SELECT post.id AS id, post.name AS name, TRIM(CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name)) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
 			"FROM post ".
 			"LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id " .
 			"JOIN post_tag ON post.id = post_tag.post_id AND post_tag.deleted = '0' ".
@@ -212,7 +212,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testSelectRelatedBelongsTo()
 	{
 		$query = 
-			"SELECT post.id AS id, post.name AS name, CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
+			"SELECT post.id AS id, post.name AS name, TRIM(CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name)) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
 			"FROM post ".
 			"LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id " .
 			"WHERE post.deleted = '0' AND post.id = '1' ".

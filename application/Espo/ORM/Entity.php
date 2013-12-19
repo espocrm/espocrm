@@ -118,9 +118,11 @@ abstract class Entity implements IEntity
 		return false;
 	}	
 	
-	public function populateFromArray(array $arr, $onlyAccessible = true)
+	public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)
 	{
-		$this->reset();
+		if ($reset) {
+			$this->reset();
+		}
 	
 		foreach ($this->fields as $field => $fieldDefs) {
 			if (isset($arr[$field])) {

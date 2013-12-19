@@ -774,7 +774,7 @@ abstract class Mapper implements IMapper
 									$foreigh[$i] = $this->getAlias($entity, $key) . '.' . $this->toDb($value);
 								}
 							}
-							$fieldPath = 'CONCAT(' . implode(', ', $foreigh). ')';
+							$fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
 						} else {						
 							$fieldPath = $this->getAlias($entity, $key) . '.' . $this->toDb($foreigh);
 						}

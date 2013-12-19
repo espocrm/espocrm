@@ -26,6 +26,8 @@ class Application
 
         set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
 		set_exception_handler(array($this->getLog(), 'catchException'));
+		
+		date_default_timezone_set('UTC');
 
     	$this->serviceFactory = new ServiceFactory($this->container);
 		$this->slim = $this->container->get('slim');
@@ -183,9 +185,7 @@ class Application
 		);
 
 		$this->getSlim()->get('/', function() {
-        	return $template = <<<EOT
-	            <h1>EspoCRM REST API!!!</h1>
-EOT;
+        	return $template = "<h1>EspoCRM REST API</h1>";
 		});
 
 		$this->getSlim()->get('/app/user/', function() {
@@ -262,18 +262,17 @@ EOT;
 			return array(
 				'controller' => ':controller',
 				'action' => 'update',
-				 'id' => ':id'
+				'id' => ':id'
 			);
 		});
 
-		$this->getSlim()->post('/:controller/:id', function() {
+		$this->getSlim()->map('/:controller/:id', function() {
 			return array(
 				'controller' => ':controller',
 				'action' => 'patch',
-				 'id' => ':id'
+				'id' => ':id'
 			);
-		});
-
+		})->via('PATCH');
 
 		$this->getSlim()->get('/:controller/:id/:link/:foreignId', function() {
 			return array(
@@ -285,7 +284,5 @@ EOT;
 			);
 		});
 	}
-
-
 
 }
