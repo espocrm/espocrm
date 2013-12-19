@@ -109,6 +109,7 @@ class Record extends \Espo\Core\Services\Base
 		}
 		
 		$entity->set($data);
+		
 		$this->getRepository()->save($entity);
 		return $entity;
 	}

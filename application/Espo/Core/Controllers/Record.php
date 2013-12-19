@@ -58,7 +58,7 @@ abstract class Record extends Base
 	
 		$id = $params['id'];
 		
-		if ($this->getService()->updateEntity($id, $data)) {
+		if ($entity = $this->getService()->updateEntity($id, $data)) {
 			return $entity->toArray();
 		}
 

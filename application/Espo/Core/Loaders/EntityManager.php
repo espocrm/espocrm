@@ -29,7 +29,7 @@ class EntityManager
 			'user' => $config->get('database.user'),
 			'password' => $config->get('database.password'),
 			'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
-			'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory'
+			'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
 		);
 
 		$entityManager = new \Espo\Core\ORM\EntityManager($params);

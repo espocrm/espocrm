@@ -47,6 +47,10 @@ class ControllerManager
 				$controllerClassName = '\\Espo\\Controllers\\' . $controllerName;
 			}
 		}
+		
+		if ($data) {
+			$data = json_decode($data, true);
+		}
 
 		
 		if (!class_exists($controllerClassName)) {

@@ -55,6 +55,9 @@ class Auth extends \Slim\Middleware
 			));
 
 			if ($user instanceof \Espo\Entities\User) {
+				
+				$this->entityManager->setUser($user);
+			
 				if ($password == $user->get('password')) {
 					$this->container->setUser($user);
 					$isAuthenticated = true;
