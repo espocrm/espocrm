@@ -64,7 +64,8 @@ abstract class Mapper implements IMapper
 		$wherePart = $this->getWhere($entity, array('id' => $id, 'deleted' => 0));
 		
 		$sql = $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart);
-		$ps = $this->pdo->query($sql);
+		$ps = $this->pdo->query($sql);		
+
 		
 		if ($ps) {
 			foreach ($ps as $row) {
@@ -970,7 +971,7 @@ abstract class Mapper implements IMapper
 		$arr = array();
 		$specifiedList = is_array($fields) ? true : false;
 		
-		foreach ($entity->fields as $field => $fieldDefs) {		
+		foreach ($entity->fields as $field => $fieldDefs) {
 			if (!empty($fieldDefs['notStorable'])) {
 				continue;
 			}			
