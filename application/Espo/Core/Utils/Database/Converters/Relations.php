@@ -188,7 +188,8 @@ class Relations
 	}
 
 	//uses for belongsToParent and linkParent
-	public function belongsToParent($params, $foreignParams)
+	//public function belongsToParent($params, $foreignParams)
+	public function linkParent($params, $foreignParams)
 	{
         $relation = array();
 

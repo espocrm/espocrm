@@ -89,14 +89,14 @@ class Links
 	}
 
 
-	protected function belongsToParent($params, $foreignParams)
+	/*protected function belongsToParent($params, $foreignParams)
 	{
     	return $this->getRelations()->belongsToParent($params, $foreignParams);
-	}
+	}*/
 
 	protected function linkParent($params, $foreignParams)
 	{
-    	return $this->getRelations()->belongsToParent($params, $foreignParams);
+    	return $this->getRelations()->linkParent($params, $foreignParams);
 	}
 
 
