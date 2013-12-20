@@ -128,7 +128,7 @@ class Relations
 					$params['link']['name'].'Name' => array(
 						'type' => Entity::FOREIGN,
 						'relation' => $params['link']['name'],
-						'notStorable' => true,
+						//'notStorable' => true,
 						'foreign' => $this->getForeignField('name', $foreignParams['entityName']),
 					),
 					$params['link']['name'].'Id' => array(
@@ -188,7 +188,8 @@ class Relations
 	}
 
 	//uses for belongsToParent and linkParent
-	public function belongsToParent($params, $foreignParams)
+	//public function belongsToParent($params, $foreignParams)
+	public function linkParent($params, $foreignParams)
 	{
         $relation = array();
 

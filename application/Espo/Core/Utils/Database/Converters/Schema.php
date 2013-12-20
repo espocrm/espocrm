@@ -27,6 +27,10 @@ class Schema
 		'len' => '24',
 	);
 
+	protected $notStorableTypes = array(
+		'foreign'
+	);
+
 	public function __construct()
 	{
 		$this->dbalSchema = new \Doctrine\DBAL\Schema\Schema();
@@ -55,7 +59,7 @@ class Schema
 			$uniqueColumns = array();
         	foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
-				if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
+				if ((isset($fieldParams['notStorable']) && $fieldParams['notStorable']) || in_array($fieldParams['type'], $this->notStorableTypes)) {
 					continue;
 				}
 
@@ -81,7 +85,7 @@ class Schema
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
 				if (!in_array($fieldType, $this->typeList)) {
-                	$GLOBALS['log']->add('DEBUG', 'Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
+                	$GLOBALS['log']->add('DEBUG', 'Converters/Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
 					continue;
 				}
 
