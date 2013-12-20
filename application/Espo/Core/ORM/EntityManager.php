@@ -8,7 +8,7 @@ class EntityManager extends \Espo\ORM\EntityManager
 	
 	protected $user;
 	
-	public function setUser()
+	public function setUser($user)
 	{
 		$this->user = $user;
 	}

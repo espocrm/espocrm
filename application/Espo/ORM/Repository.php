@@ -71,6 +71,7 @@ class Repository
 			return $entity;	
 		}					
 		if ($this->mapper->selectById($entity, $id)) {
+			$entity->setFresh();
 			return $entity;
 		}		
 		return null;

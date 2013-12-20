@@ -9,7 +9,7 @@ class Repository extends \Espo\ORM\Repository
 	
 	public function save(Entity $entity)
 	{		
-		$nowString = date('Y-d-m H:i:s', time());
+		$nowString = date('Y-m-d H:i:s', time());
 		
 		if ($entity->isNew()) {
 			if ($entity->hasField('createdAt')) {

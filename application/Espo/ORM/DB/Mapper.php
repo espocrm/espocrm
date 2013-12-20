@@ -646,15 +646,20 @@ abstract class Mapper implements IMapper
 	public function update(IEntity $entity)
 	{		
 		$dataArr = $this->toArray($entity);
-		
+				
 		$setArr = array();
 		foreach ($dataArr as $field => $value) {
 			if ($field == 'id') {
 				continue;
-			}
+			}						
 			if ($entity->fields[$field]['type'] == IEntity::FOREIGN) {
 				continue;
 			}
+			
+			if ($entity->getFetchedValue($field) === $value) {
+				continue;
+			}
+			
 			$setArr[] = $this->toDb($field) . " = " . $this->pdo->quote($value);
 		}
 		
