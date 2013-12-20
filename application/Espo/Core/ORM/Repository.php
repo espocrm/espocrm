@@ -11,6 +11,8 @@ class Repository extends \Espo\ORM\Repository
 	{		
 		$nowString = date('Y-m-d H:i:s', time());
 		
+		$restoreData = array();
+		
 		if ($entity->isNew()) {
 			if ($entity->hasField('createdAt')) {
 				$entity->set('createdAt', $nowString);
@@ -18,6 +20,13 @@ class Repository extends \Espo\ORM\Repository
 			if ($entity->hasField('createdById')) {
 				$entity->set('createdById', $this->entityManager->getUser()->id);
 			}
+			
+			if ($entity->has('modifiedById')) {
+				$restoreData['modifiedById'] = $entity->get('modifiedById');
+			}
+			if ($entity->has('modifiedAt')) {
+				$restoreData['modifiedAt'] = $entity->get('modifiedAt');
+			}			
 			$entity->clear('modifiedById');
 			$entity->clear('modifiedAt');
 		} else {
@@ -27,10 +36,19 @@ class Repository extends \Espo\ORM\Repository
 			if ($entity->hasField('modifiedById')) {
 				$entity->set('modifiedById', $this->entityManager->getUser()->id);
 			}
+			
+			if ($entity->has('createdById')) {
+				$restoreData['createdById'] = $entity->get('createdById');
+			}
+			if ($entity->has('createdAt')) {
+				$restoreData['createdAt'] = $entity->get('createdAt');
+			}
 			$entity->clear('createdById');
 			$entity->clear('createdAt');
 		}		
 		parent::save($entity);
+		
+		$entity->set($restoreData);
 	}
 }
 

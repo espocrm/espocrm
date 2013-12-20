@@ -11,7 +11,6 @@ class User extends \Espo\ORM\Entity
 	
 	public function getName()
 	{
-		die;
 		return $this->get('firstName') . ' ' . $this->get('lastName');
 	}
 }
