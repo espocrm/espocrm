@@ -57,7 +57,7 @@ class Relations
                     	$foreignFieldArray[] = Util::getNaming($name, $fieldName, $naming);
 					}
 				}
-                return $foreignFieldArray;
+				return explode('|', implode('| |', $foreignFieldArray)); //add an empty string between items
 			}
 		}
 
