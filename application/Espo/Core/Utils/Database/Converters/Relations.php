@@ -53,9 +53,11 @@ class Relations
 			if (isset($fieldDefs['actualFields']) && is_array($fieldDefs['actualFields'])) {
             	$foreignFieldArray = array();
 				foreach($fieldDefs['actualFields'] as $fieldName) {
-                	$foreignFieldArray[] = Util::getNaming($name, $fieldName, $naming);
+					if ($fieldName != 'salutation') {
+                    	$foreignFieldArray[] = Util::getNaming($name, $fieldName, $naming);
+					}
 				}
-                return $foreignFieldArray;
+				return explode('|', implode('| |', $foreignFieldArray)); //add an empty string between items
 			}
 		}
 
