@@ -128,7 +128,7 @@ class Relations
 					$params['link']['name'].'Name' => array(
 						'type' => Entity::FOREIGN,
 						'relation' => $params['link']['name'],
-						'notStorable' => true,
+						//'notStorable' => true,
 						'foreign' => $this->getForeignField('name', $foreignParams['entityName']),
 					),
 					$params['link']['name'].'Id' => array(
