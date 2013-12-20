@@ -91,21 +91,9 @@ class Application
 		$this->getSlim()->add($auth);
 
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
-
 			$conditions = $slim->router()->getCurrentRoute()->getConditions();
-			$upperList = isset($conditions['upper']) ? $conditions['upper'] : array();
-			
-			if (!in_array('controller', $upperList)) {
-				$upperList[] = 'controller';
-			}
-
             $routeParams = $slim->router()->getCurrentRoute()->getParams();
-
 			if (!empty($routeParams)) {
-				foreach ($routeParams as $name => &$param) {
-                    $isUpper = in_array($name, $upperList) ? true : false;
-					$param = \Espo\Core\Utils\Util::toCamelCase($param, $isUpper);
-				}
 			    $slim->router()->getCurrentRoute()->setParams($routeParams);
 			}
 		});
@@ -188,23 +176,23 @@ class Application
         	return $template = "<h1>EspoCRM REST API</h1>";
 		});
 
-		$this->getSlim()->get('/app/user/', function() {
+		$this->getSlim()->get('/App/user/', function() {
         	return '{"user":{"modified_by_name":"Administrator","created_by_name":"","id":"1","user_name":"admin","user_hash":"","system_generated_password":"0","pwd_last_changed":"","authenticate_id":"","sugar_login":"1","first_name":"","last_name":"Administrator","full_name":"Administrator","name":"Administrator","is_admin":"1","external_auth_only":"0","receive_notifications":"1","description":"","date_entered":"2013-06-13 12:18:44","date_modified":"2013-06-13 12:19:48","modified_user_id":"1","created_by":"","title":"Administrator","department":"","phone_home":"","phone_mobile":"","phone_work":"","phone_other":"","phone_fax":"","status":"Active","address_street":"","address_city":"","address_state":"","address_country":"","address_postalcode":"","UserType":"","deleted":"0","portal_only":"0","show_on_employees":"1","employee_status":"Active","messenger_id":"","messenger_type":"","reports_to_id":"","reports_to_name":"","email1":"test@letrium.com","email_link_type":"","is_group":"0","c_accept_status_fields":" ","m_accept_status_fields":" ","accept_status_id":"","accept_status_name":""},"preferences":{}}';
 		});
 
 
-		$this->getSlim()->get('/metadata/', function() {
+		$this->getSlim()->get('/Metadata/', function() {
 			return array(
 				'controller' => 'Metadata',
 			);
 		});
 
-		$this->getSlim()->get('/settings/', function() {
+		$this->getSlim()->get('/Settings/', function() {
 			return array(
 				'controller' => 'Settings',
 			);
 		})->conditions( array('auth' => false) );
-		$this->getSlim()->map('/settings/', function() {
+		$this->getSlim()->map('/Settings/', function() {
 			return array(
 				'controller' => 'Settings',
 			);
@@ -229,7 +217,7 @@ class Application
 			);
 		})->via('PATCH');
 
-		$this->getSlim()->get('/admin/rebuild/', function() {
+		$this->getSlim()->get('/Admin/rebuild/', function() {
 			return array(
 				'controller' => 'Admin',
 				'action' => 'rebuild',
