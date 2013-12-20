@@ -24,19 +24,24 @@ abstract class Entity implements IEntity
 	 * @var array Defenition of relations.
 	 * @todo make protected
 	 */	
-	public $relations = array();
-	
+	public $relations = array();	
 	
 	/**
 	 * @var array Field-Value pairs.
 	 */
-	protected $container = array();
+	protected $valuesContainer = array();
+	
+	/**
+	 * @var array Field-Value pairs of initial values (fetched from DB).
+	 */
+	protected $initialValuesContainer = array();
 	
 	/**
 	 * @var EntityManager Entity Manager.
 	 */
 	protected $entityManager;
 	
+		
 	
 	public function __construct($defs = array(), EntityManager $entityManager = null)
 	{
@@ -57,12 +62,12 @@ abstract class Entity implements IEntity
 	
 	public function clear($name)
 	{
-		unset($this->container[$name]);
+		unset($this->valuesContainer[$name]);
 	}
 		
 	public function reset()
 	{
-		$this->container = array();
+		$this->valuesContainer = array();
 	}	
 	
 	public function set($p1, $p2 = null)
@@ -72,7 +77,6 @@ abstract class Entity implements IEntity
 				$p2 = false;
 			}
 			$this->populateFromArray($p1, $p2);
-			return;
 		} else {
 			$name = $p1;
 			$value = $p2;
@@ -80,7 +84,7 @@ abstract class Entity implements IEntity
 				$this->id = $value;
 			}
 			if (array_key_exists($name, $this->fields)) {	
-				$this->container[$name] = $value;
+				$this->valuesContainer[$name] = $value;
 			}
 		}
 	}
@@ -95,8 +99,8 @@ abstract class Entity implements IEntity
 			return $this->$method();		
 		}
 		
-		if (isset($this->container[$name])) {
-			return $this->container[$name];
+		if (isset($this->valuesContainer[$name])) {
+			return $this->valuesContainer[$name];
 		}
 		
 		if (!empty($this->relations[$name])) {
@@ -112,7 +116,7 @@ abstract class Entity implements IEntity
 		if ($name == 'id') {
 			return isset($this->id);
 		}
-		if (isset($this->container[$name])) {
+		if (isset($this->valuesContainer[$name])) {
 			return true;
 		}
 		return false;
@@ -136,7 +140,7 @@ abstract class Entity implements IEntity
 					}
 				}
 				
-				$this->container[$field] = $arr[$field];
+				$this->valuesContainer[$field] = $arr[$field];
 			}
 		}
 	}
@@ -168,11 +172,29 @@ abstract class Entity implements IEntity
 	
 	public function toArray()
 	{
-		$arr = $this->container;
+		$arr = $this->valuesContainer;
 		if (isset($this->id)) {
 			$arr['id'] = $this->id;
 		}
 		return $arr;
+	}
+	
+	public function getFetchedValue($fieldName)
+	{
+		if (isset($this->initialValuesContainer[$fieldName])) {
+			return $this->initialValuesContainer[$fieldName];
+		}
+		return null;
+	}
+	
+	public function resetFetchedValues()
+	{
+		$this->initialValuesContainer = array();
+	}
+	
+	public function setFresh()
+	{
+		$this->initialValuesContainer = $this->valuesContainer;
 	}
 }
 
