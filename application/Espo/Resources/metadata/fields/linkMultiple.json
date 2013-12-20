@@ -17,6 +17,6 @@
       "advanced":true
    },
    "database":{
-      "notStorable":true
+      "skip":true
    }
 }
