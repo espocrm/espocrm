@@ -18,6 +18,7 @@ class Schema
 		'default' => 'default',
 		'notnull' => 'notnull',
 		'autoincrement' => 'autoincrement',
+		'unique' => 'unique',
 	);
 
 
