@@ -140,6 +140,10 @@ class Orm
 				'type' => Entity::ID,
 				'dbType' => 'varchar',
 			),
+			'name' => array(
+				'type' => Entity::VARCHAR,
+                'notStorable' => true,
+			),
 		);
 
 		foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
