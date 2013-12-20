@@ -172,10 +172,23 @@ abstract class Entity implements IEntity
 	
 	public function toArray()
 	{
-		$arr = $this->valuesContainer;
+		/*$arr = $this->valuesContainer;
 		if (isset($this->id)) {
 			$arr['id'] = $this->id;
 		}
+		return $arr;*/
+		
+		$arr = array();
+		if (isset($this->id)) {
+			$arr['id'] = $this->id;
+		}
+		foreach ($this->fields as $field => $defs) {		
+			if ($field == 'id') {
+				continue;
+			}
+			$arr[$field] = $this->get($field);
+
+		}		
 		return $arr;
 	}
 	
