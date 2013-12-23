@@ -171,13 +171,7 @@ abstract class Entity implements IEntity
 	}
 	
 	public function toArray()
-	{
-		/*$arr = $this->valuesContainer;
-		if (isset($this->id)) {
-			$arr['id'] = $this->id;
-		}
-		return $arr;*/
-		
+	{		
 		$arr = array();
 		if (isset($this->id)) {
 			$arr['id'] = $this->id;
@@ -190,6 +184,16 @@ abstract class Entity implements IEntity
 
 		}		
 		return $arr;
+	}
+	
+	public function getFields()
+	{
+		return $this->fields;
+	}
+	
+	public function getRelations()
+	{
+		return $this->relations;
 	}
 	
 	public function getFetchedValue($fieldName)

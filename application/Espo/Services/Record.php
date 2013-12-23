@@ -77,7 +77,23 @@ class Record extends \Espo\Core\Services\Base
 
 	public function getEntity($id = null)
 	{
-		return $this->getRepository()->get($id);
+		$entity = $this->getRepository()->get($id);
+		
+		if (!empty($id)) {
+			if ($entity->hasRelation('teams')) {
+				$teams = $entity->get('teams');
+				$ids = array();
+				$names = array();				
+				foreach ($teams as $team) {
+					$ids[] = $team->id;
+					$names[$team->id] = $team->name;
+				}
+				$entity->set('teamsIds', $ids);
+				$entity->set('teamsNames', $names);
+			}
+		}
+		
+		return $entity;
 	}
 	
 	protected function getSelectManager()

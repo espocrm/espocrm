@@ -131,14 +131,29 @@ class Repository
 		return $this->mapper->countRelated($entity, $relationName, $params);				
 	}
 	
-	public function relate(Entity $entity, $relationName, $foreignEntity)
+	public function relate(Entity $entity, $relationName, $foreign)
 	{
-		return $this->mapper->relate($entity, $relationName, $foreignEntity);
+		if ($foreign instanceof Entity) {
+			return $this->mapper->relate($entity, $relationName, $foreign);
+		}
+		if (is_string($foreign)) {
+			return $this->mapper->addRelation($entity, $relationName, $foreign);
+		}
+		return false;
 	}
 	
-	public function unrelate(Entity $entity, $relationName, $foreignEntity)
+	public function unrelate(Entity $entity, $relationName, $foreign)
 	{
-		return $this->mapper->unrelate($entity, $relationName, $foreignEntity);
+		if ($foreign instanceof Entity) {
+			return $this->mapper->unrelate($entity, $relationName, $foreign);
+		}
+		if (is_string($foreign)) {
+			return $this->mapper->removeRelation($entity, $relationName, $foreign);
+		}
+		if ($foreign === true) {
+			return $this->mapper->removeAllRelations($entity, $relationName);
+		}
+		return false;
 	}
 	
 	public function getAll()
