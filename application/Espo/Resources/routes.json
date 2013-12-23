@@ -126,14 +126,13 @@
   },
 
   {
-  	"route":"/:controller/:id/:link/:foreignId/",
+  	"route":"/:controller/:id/:link",
     "method":"get",
     "params":{
         "controller":":controller",
-		"action":"readRelated",
+		"action":"listLinked",
 		"id":":id",
-		"link":":link",
-		"foreignId":":foreignId"
+		"link":":link"
     }
   }
 
