@@ -90,14 +90,14 @@ class Route
 			foreach($dirList as $currentDirName) {
 
                 $dirNameFull = Util::concatPath($moduleDir, $currentDirName);
-				$routeFile = Util::concatPath($dirNameFull, $this->fileName);
+				$routeFile = Util::concatPath($dirNameFull, 'Resources/'.$this->fileName); 
 
 				$data = $this->getAddData($data, $routeFile);
 			}
 		}
 
 		//if need this path to high priority, move up this code
-		$routeFile = Util::concatPath('application/Espo'.$dirName, $this->fileName);
+		$routeFile = Util::concatPath('application/Espo'.$dirName.'/Resources', $this->fileName);
         $data = $this->getAddData($data, $routeFile);
 
 		if (!$isCustom) {
