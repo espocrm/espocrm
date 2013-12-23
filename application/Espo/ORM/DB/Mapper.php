@@ -937,8 +937,15 @@ abstract class Mapper implements IMapper
 			$join =
 				"JOIN {$relTable} ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
 				. " AND "
-				. "{$relTable}.deleted = " . $this->pdo->quote(0) . " " 
-				. "JOIN {$distantTable} ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
+				. "{$relTable}.deleted = " . $this->pdo->quote(0);
+				
+			if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+				foreach ($relOpt['conditions'] as $f => $v) {
+					$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
+				}			
+			}
+			
+			$join .= " JOIN {$distantTable} ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
 				. " AND "
 				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 

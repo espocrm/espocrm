@@ -1,6 +1,7 @@
 <?php
 
 namespace Espo\Core\ORM;
+use \Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\ORM\EntityManager
 {
@@ -24,7 +25,7 @@ class EntityManager extends \Espo\ORM\EntityManager
 	}
 
 	public function normalizeRepositoryName($name)
-	{
+	{			
 		return $this->espoMetadata->getRepositoryPath($name);
 	}
 

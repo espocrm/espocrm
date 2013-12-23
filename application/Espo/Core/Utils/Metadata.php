@@ -269,18 +269,18 @@ class Metadata
 	*
 	* @return string
 	*/
-	public function getEntityPath($entityName, $delim= '\\')
+	public function getEntityPath($entityName, $delim = '\\')
 	{
 		$path = $this->getScopePath($entityName, $delim);
 
-		return implode($delim, array($path, 'Entities', ucfirst($entityName)));
+		return implode($delim, array($path, 'Entities', Util::normilizeClassName(ucfirst($entityName))));
 	}
 	
-	public function getRepositoryPath($entityName, $delim= '\\')
+	public function getRepositoryPath($entityName, $delim = '\\')
 	{
 		$path = $this->getScopePath($entityName, $delim);
 
-		return implode($delim, array($path, 'Repositories', ucfirst($entityName)));
+		return implode($delim, array($path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))));
 	}
 
 

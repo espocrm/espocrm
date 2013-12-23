@@ -36,26 +36,25 @@ class ControllerManager
 	
 	public function process($controllerName, $actionName, $params, $data)
 	{		
-		$customeClassName = '\\Espo\\Custom\\Controllers\\' . $controllerName;
+		$customeClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
 		if (class_exists($customeClassName)) {
 			$controllerClassName = $customeClassName;
 		} else {
 			$moduleName = $this->metadata->getScopeModuleName($controllerName);
 			if ($moduleName) {
-				$controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . $controllerName;
+				$controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($controllerName);
 			} else {
-				$controllerClassName = '\\Espo\\Controllers\\' . $controllerName;
+				$controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($controllerName);
 			}
 		}
 		
 		if ($data) {
 			$data = json_decode($data, true);
 		}
-
 		
 		if (!class_exists($controllerClassName)) {
 			throw new NotFound("Controller '$controllerName' is not found");
-		}			
+		}		
 		
 		$controller = new $controllerClassName($this->container, $this->serviceFactory);
 		

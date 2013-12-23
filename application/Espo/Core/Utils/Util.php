@@ -6,16 +6,18 @@ namespace Espo\Core\Utils;
 class Util
 {
     /**
-	* @var string - default directory separator
-	*/
-	protected static $separator= DIRECTORY_SEPARATOR;
+	 * @var string - default directory separator
+	 */
+	protected static $separator = DIRECTORY_SEPARATOR;
+	
+	protected static $reservedWords = array('Case');
 
 
 	/**
-    * Get a folder separator
-	*
-	* @return string
-	*/
+     * Get a folder separator
+	 *
+	 * @return string
+	 */
     public static function getSeparator()
 	{
 		return static::$separator;
@@ -23,15 +25,15 @@ class Util
 
 
 	/**
-    * Convert to format with defined delimeter
-   	* ex. Espo/Utils to Espo\Utils
-	*
-	* @param string $name
-	* @param string $delim - delimiter
-	*
-	* @return string
-	*/
-	public static function toFormat($name, $delim= '/')
+     * Convert to format with defined delimeter
+   	 * ex. Espo/Utils to Espo\Utils
+	 *
+	 * @param string $name
+	 * @param string $delim - delimiter
+	 *
+	 * @return string
+	 */
+	public static function toFormat($name, $delim = '/')
 	{
     	//preg_match_all('/[\/]/', $name, $match);
     	//preg_match_all('/(.*)[\/\\\](.*)/', $name, $match);
@@ -169,11 +171,11 @@ class Util
 
 
 	/**
-    * Convert array to object format recursively
-	*
-	* @param array $array
-	* @return object
-	*/
+     * Convert array to object format recursively
+	 *
+	 * @param array $array
+	 * @return object
+	 */
 	public static function arrayToObject($array)
 	{
 		if (is_array($array)) {
@@ -185,11 +187,11 @@ class Util
 
 
 	/**
-    * Convert object to array format recursively
-	*
-	* @param object $object
-	* @return array
-	*/
+     * Convert object to array format recursively
+	 *
+	 * @param object $object
+	 * @return array
+	 */
 	public static function objectToArray($object)
 	{
     	if (is_object($object)) {
@@ -197,6 +199,20 @@ class Util
     	}
 
         return is_array($object) ? array_map("static::objectToArray", $object) : $object;
+	}
+	
+	/**
+     * Appends 'Obj' if name is reserved PHP word.
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public static function normilizeClassName($name)
+	{
+		if (in_array($name, self::$reservedWords)) {
+			$name .= 'Obj';
+		}
+		return $name;
 	}
 
 

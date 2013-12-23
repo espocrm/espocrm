@@ -4,6 +4,7 @@ namespace Espo\Core\Controllers;
 
 use \Espo\Core\Container;
 use \Espo\Core\ServiceFactory;
+use \Espo\Core\Utils\Util;
 
 abstract class Base
 {
@@ -24,18 +25,20 @@ abstract class Base
 		$this->container = $container;
 		$this->serviceFactory = $serviceFactory;
 		
-		$name = get_class($this);
-		if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
-        	$name = $matches[1];
-    	}
-    	$this->name = $name;    	
+		if (empty($this->name)) {
+			$name = get_class($this);
+			if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
+		    	$name = $matches[1];
+			}
+			$this->name = $name;
+    	}  	
     	
     	if (empty($this->serviceClassName)) {
     		$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
 			if ($moduleName) {
-				$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . $this->name;
+				$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . Util::normilizeClassName($this->name);
 			} else {
-				$className = '\\Espo\\Services\\' . $this->name;
+				$className = '\\Espo\\Services\\' . Util::normilizeClassName($this->name);
 			}
     	}
 	}
