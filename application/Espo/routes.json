@@ -1,0 +1,140 @@
+[
+  {
+  	"route":"/",
+    "method":"get",
+    "params":"<h1>EspoCRM REST API<\/h1>"
+  },
+
+  {
+  	"route":"/App/user/",
+    "method":"get",
+    "params":{
+        "controller":"App",
+        "action":"user"
+    }
+  },
+
+  {
+  	"route":"/Metadata/",
+    "method":"get",
+    "params":{
+        "controller":"Metadata"
+    }
+  },
+
+  {
+  	"route":"/Settings/",
+    "method":"get",
+    "params":{
+        "controller":"Settings"
+    },
+	"conditions":{
+        "auth":false
+	}
+  },
+
+  {
+  	"route":"/Settings/",
+    "method":"patch",
+    "params":{
+        "controller":"Settings"
+    }
+  },
+
+  {
+  	"route":"/:controller/layout/:name/",
+    "method":"get",
+    "params":{
+        "controller":"Layout",
+		"scope":":controller"
+    }
+  },
+
+  {
+  	"route":"/:controller/layout/:name/",
+    "method":"put",
+    "params":{
+        "controller":"Layout",
+		"scope":":controller"
+    }
+  },
+
+  {
+  	"route":"/:controller/layout/:name/",
+    "method":"patch",
+    "params":{
+        "controller":"Layout",
+		"scope":":controller"
+    }
+  },
+
+  {
+  	"route":"/Admin/rebuild/",
+    "method":"get",
+    "params":{
+        "controller":"Admin",
+		"action":"rebuild"
+    }
+  },
+
+  {
+  	"route":"/:controller/:id/",
+    "method":"get",
+    "params":{
+        "controller":":controller",
+		"action":"read",
+		"id":":id"
+    }
+  },
+
+  {
+  	"route":"/:controller/",
+    "method":"get",
+    "params":{
+        "controller":":controller",
+		"action":"index"
+    }
+  },
+
+  {
+  	"route":"/:controller/",
+    "method":"post",
+    "params":{
+        "controller":":controller",
+		"action":"create"
+    }
+  },
+
+  {
+  	"route":"/:controller/:id/",
+    "method":"put",
+    "params":{
+        "controller":":controller",
+		"action":"update",
+		"id":":id"
+    }
+  },
+
+  {
+  	"route":"/:controller/:id/",
+    "method":"patch",
+    "params":{
+        "controller":":controller",
+		"action":"patch",
+		"id":":id"
+    }
+  },
+
+  {
+  	"route":"/:controller/:id/:link/:foreignId/",
+    "method":"get",
+    "params":{
+        "controller":":controller",
+		"action":"readRelated",
+		"id":":id",
+		"link":":link",
+		"foreignId":":foreignId"
+    }
+  }
+
+]
