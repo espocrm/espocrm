@@ -2,8 +2,6 @@
 
 namespace Espo\Core\ORM;
 
-use \Espo\ORM\Entity;
-
 class Repository extends \Espo\ORM\Repository
 {
 	

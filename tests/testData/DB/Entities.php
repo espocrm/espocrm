@@ -10,6 +10,54 @@ class TEntity extends Entity
 
 }
 
+class Account extends TEntity
+{
+	public $fields = array(
+			'id' => array(
+				'type' => Entity::ID,			
+			),
+			'name' => array(
+				'type' => Entity::VARCHAR,
+				'len' => 255,			
+			),
+			'deleted' => array(
+				'type' => Entity::BOOL,
+				'default' => 0,
+			),
+	);
+	public $relations = array(
+			'teams' => array(
+				'type' => Entity::MANY_MANY,
+				'entity' => 'Team',
+				'relationName' => 'EntityTeam',
+				'midKeys' => array(
+					'entityId',
+					'teamId',
+				),
+				'conditions' => array('entityType' => 'Account')				
+			),
+	);
+}
+
+class Team extends TEntity
+{	
+	public $fields = array(
+			'id' => array(
+				'type' => Entity::ID,			
+			),
+			'name' => array(
+				'type' => Entity::VARCHAR,
+				'len' => 255,			
+			),
+			'deleted' => array(
+				'type' => Entity::BOOL,
+				'default' => 0,
+			),
+	);
+	public $relations = array();
+}
+
+
 class Post extends TEntity
 {	
 	public $fields = array(

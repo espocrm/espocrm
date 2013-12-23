@@ -513,6 +513,14 @@ abstract class Mapper implements IMapper
 					if ($ps->rowCount() == 0) {						
 						$fieldsPart = $this->toDb($nearKey) . ", " . $this->toDb($distantKey);
 						$valuesPart = $this->pdo->quote($entity->id) . ", " . $this->pdo->quote($relEntity->id);
+						
+						if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+							foreach ($relOpt['conditions'] as $f => $v) {
+								$fieldsPart .= ", " . $this->toDb($f);
+								$valuesPart .= ", " . $this->pdo->quote($v);
+							}					
+						}
+						
 						$sql = $this->composeInsertQuery($relTable, $fieldsPart, $valuesPart);
 						
 						if ($this->pdo->query($sql)) {
@@ -524,6 +532,13 @@ abstract class Mapper implements IMapper
 							$this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
 							AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id) . "
 							";
+							
+						if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+							foreach ($relOpt['conditions'] as $f => $v) {
+								$wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
+							}					
+						}
+							
 						$sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
 						if ($this->pdo->query($sql)) {
 							return true;
@@ -607,6 +622,13 @@ abstract class Mapper implements IMapper
 				if (empty($all)) {
 					$wherePart .= " AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . "";
 				}
+				
+				if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+					foreach ($relOpt['conditions'] as $f => $v) {
+						$wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
+					}					
+				}
+				
 				$sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
 				
 				if ($this->pdo->query($sql)) {
@@ -961,6 +983,12 @@ abstract class Mapper implements IMapper
 			. "{$relTable}." . $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->get($key))
 			. " AND "
 			. "{$relTable}.deleted = " . $this->pdo->quote(0) . "";
+			
+		if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+			foreach ($relOpt['conditions'] as $f => $v) {
+				$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
+			}	
+		}
 		
 		return $join;				
 	}

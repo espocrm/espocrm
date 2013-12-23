@@ -43,8 +43,7 @@ class Record extends \Espo\Core\Services\Base
 	public function setAcl($acl)
 	{
 		$this->acl = $acl;
-	}
-	
+	}	
 	
 	public function setMetadata($metadata)
 	{

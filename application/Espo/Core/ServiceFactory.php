@@ -30,3 +30,4 @@ class ServiceFactory
     	throw new Error("Class '$className' does not exist");
 	}
 }
+

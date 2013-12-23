@@ -242,7 +242,7 @@ class Application
 		$this->getSlim()->post('/:controller', function() {
 			return array(
 				'controller' => ':controller',
-				'action' => 'create',
+				'action' => 'create'
 			);
 		});
 
@@ -261,6 +261,15 @@ class Application
 				'id' => ':id'
 			);
 		})->via('PATCH');
+		
+		$this->getSlim()->get('/:controller/:id/:link', function() {
+			return array(
+				'controller' => ':controller',
+				'action' => 'listLinked',
+				'id' => ':id',
+				'link' => ':link',
+			);
+		});
 
 		$this->getSlim()->get('/:controller/:id/:link/:foreignId', function() {
 			return array(

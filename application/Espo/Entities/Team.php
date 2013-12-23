@@ -2,7 +2,7 @@
 
 namespace Espo\Entities;
 
-class Team extends \Espo\ORM\Entity
+class Team extends \Espo\Core\ORM\Entity
 {
  
 

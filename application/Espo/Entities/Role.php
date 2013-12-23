@@ -2,7 +2,7 @@
 
 namespace Espo\Entities;
 
-class Role extends \Espo\ORM\Entity
+class Role extends \Espo\Core\ORM\Entity
 {
  
 

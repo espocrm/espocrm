@@ -45,7 +45,9 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$this->post = new \Espo\Entities\Post();
 		$this->comment = new \Espo\Entities\Comment();
 		$this->tag = new \Espo\Entities\Tag();
-		$this->note = new \Espo\Entities\Note();		
+		$this->note = new \Espo\Entities\Note();
+		
+		$this->account = new \Espo\Entities\Account();		
 
 	}
 	
@@ -323,6 +325,26 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$this->db->removeAllRelations($this->post, 'tags');	
 	}
 	
+	public function testRemoveRelationManyManyWithCondition()
+	{
+		$query = "UPDATE entity_team SET deleted = 1 WHERE entity_id = '1' AND team_id = '100' AND entity_type = 'Account'";
+		$return = true;
+		$this->mockQuery($query, $return);
+		
+		$this->account->id = '1';
+		$this->db->removeRelation($this->account, 'teams', '100');	
+	}
+	
+	public function testRemoveAllManyManyWithCondition()
+	{
+		$query = "UPDATE entity_team SET deleted = 1 WHERE entity_id = '1' AND entity_type = 'Account'";
+		$return = true;
+		$this->mockQuery($query, $return);
+		
+		$this->account->id = '1';
+		$this->db->removeAllRelations($this->account, 'teams');	
+	}
+	
 	public function testUnrelate()
 	{
 		$query = "UPDATE post_tag SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
@@ -332,7 +354,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$this->post->id = '1';
 		$this->tag->id = '100';
 		$this->db->unrelate($this->post, 'tags', $this->tag);
-	}	
+	}
+		
 		
 	public function testAddRelation()
 	{

@@ -2,7 +2,7 @@
 
 namespace Espo\Entities;
 
-class User extends \Espo\ORM\Entity
+class User extends \Espo\Core\ORM\Entity
 {
 	public function isAdmin()
 	{
