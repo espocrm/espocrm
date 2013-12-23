@@ -137,7 +137,7 @@ class Schema
 			}
         }
 
-		return $result;
+		return (bool) $result;
 	}
 
 

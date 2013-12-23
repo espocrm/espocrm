@@ -360,7 +360,16 @@ class Comparator
     {
         $changedProperties = array();
         if ( $column1->getType() != $column2->getType() ) {
-            $changedProperties[] = 'type';
+
+			//espo: fix problem with executing query for custom types
+			$column1DbTypeName = method_exists($column1->getType(), 'getDbTypeName') ? $column1->getType()->getDbTypeName() : $column1->getType()->getName();
+			$column2DbTypeName = method_exists($column2->getType(), 'getDbTypeName') ? $column2->getType()->getDbTypeName() : $column2->getType()->getName();
+
+			if (strtolower($column1DbTypeName) != strtolower($column2DbTypeName)) {
+            	$changedProperties[] = 'type';
+			}
+            //$changedProperties[] = 'type';
+			//END: espo
         }
 
         if ($column1->getNotnull() != $column2->getNotnull()) {

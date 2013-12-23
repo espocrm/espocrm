@@ -14,6 +14,11 @@ class Password extends Type
         return self::PASSWORD;
     }
 
+	public static function getDbTypeName()
+	{
+		return 'VARCHAR';
+	}
+
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
