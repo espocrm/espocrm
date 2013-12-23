@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.2.0
+ * @version     2.4.0
  * @package     Slim
  *
  * MIT LICENSE
@@ -66,7 +66,9 @@ class PrettyExceptions extends \Slim\Middleware
         try {
             $this->next->call();
         } catch (\Exception $e) {
+            $log = $this->app->getLog(); // Force Slim to append log to env if not already
             $env = $this->app->environment();
+            $env['slim.log'] = $log;
             $env['slim.log']->error($e);
             $this->app->contentType('text/html');
             $this->app->response()->status(500);

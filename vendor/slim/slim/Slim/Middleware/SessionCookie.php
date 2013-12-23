@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.2.0
+ * @version     2.4.0
  * @package     Slim
  *
  * MIT LICENSE
@@ -40,18 +40,14 @@ namespace Slim\Middleware;
  * and instead serializes/unserializes the $_SESSION global
  * variable to/from an HTTP cookie.
  *
- * If a secret key is provided with this middleware, the HTTP
- * cookie will be checked for integrity to ensure the client-side
- * cookie is not changed.
- *
  * You should NEVER store sensitive data in a client-side cookie
- * in any format, encrypted or not. If you need to store sensitive
- * user information in a session, you should rely on PHP's native
- * session implementation, or use other middleware to store
- * session data in a database or alternative server-side cache.
+ * in any format, encrypted (with cookies.encrypt) or not. If you
+ * need to store sensitive user information in a session, you should
+ * rely on PHP's native session implementation, or use other middleware
+ * to store session data in a database or alternative server-side cache.
  *
  * Because this class stores serialized session data in an HTTP cookie,
- * you are inherently limtied to 4 Kb. If you attempt to store
+ * you are inherently limited to 4 Kb. If you attempt to store
  * more than this amount, serialization will fail.
  *
  * @package     Slim
@@ -68,21 +64,19 @@ class SessionCookie extends \Slim\Middleware
     /**
      * Constructor
      *
-     * @param  array $settings
+     * @param array $settings
      */
     public function __construct($settings = array())
     {
-        $this->settings = array_merge(array(
+        $defaults = array(
             'expires' => '20 minutes',
             'path' => '/',
             'domain' => null,
             'secure' => false,
             'httponly' => false,
             'name' => 'slim_session',
-            'secret' => 'CHANGE_ME',
-            'cipher' => MCRYPT_RIJNDAEL_256,
-            'cipher_mode' => MCRYPT_MODE_CBC
-        ), $settings);
+        );
+        $this->settings = array_merge($defaults, $settings);
         if (is_string($this->settings['expires'])) {
             $this->settings['expires'] = strtotime($this->settings['expires']);
         }
@@ -119,7 +113,6 @@ class SessionCookie extends \Slim\Middleware
 
     /**
      * Load session
-     * @param  array $env
      */
     protected function loadSession()
     {
@@ -127,14 +120,14 @@ class SessionCookie extends \Slim\Middleware
             session_start();
         }
 
-        $value = \Slim\Http\Util::decodeSecureCookie(
-            $this->app->request()->cookies($this->settings['name']),
-            $this->settings['secret'],
-            $this->settings['cipher'],
-            $this->settings['cipher_mode']
-        );
+        $value = $this->app->getCookie($this->settings['name']);
+
         if ($value) {
-            $_SESSION = unserialize($value);
+            try {
+                $_SESSION = unserialize($value);
+            } catch (\Exception $e) {
+                $this->app->getLog()->error('Error unserializing session cookie value! ' . $e->getMessage());
+            }
         } else {
             $_SESSION = array();
         }
@@ -145,57 +138,71 @@ class SessionCookie extends \Slim\Middleware
      */
     protected function saveSession()
     {
-        $value = \Slim\Http\Util::encodeSecureCookie(
-            serialize($_SESSION),
-            $this->settings['expires'],
-            $this->settings['secret'],
-            $this->settings['cipher'],
-            $this->settings['cipher_mode']
-        );
+        $value = serialize($_SESSION);
+
         if (strlen($value) > 4096) {
             $this->app->getLog()->error('WARNING! Slim\Middleware\SessionCookie data size is larger than 4KB. Content save failed.');
         } else {
-            $this->app->response()->setCookie($this->settings['name'], array(
-                'value' => $value,
-                'domain' => $this->settings['domain'],
-                'path' => $this->settings['path'],
-                'expires' => $this->settings['expires'],
-                'secure' => $this->settings['secure'],
-                'httponly' => $this->settings['httponly']
-            ));
+            $this->app->setCookie(
+                $this->settings['name'],
+                $value,
+                $this->settings['expires'],
+                $this->settings['path'],
+                $this->settings['domain'],
+                $this->settings['secure'],
+                $this->settings['httponly']
+            );
         }
-        session_destroy();
+        // session_destroy();
     }
 
     /********************************************************************************
     * Session Handler
     *******************************************************************************/
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function open($savePath, $sessionName)
     {
         return true;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function close()
     {
         return true;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function read($id)
     {
         return '';
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function write($id, $data)
     {
         return true;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function destroy($id)
     {
         return true;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function gc($maxlifetime)
     {
         return true;

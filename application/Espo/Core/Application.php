@@ -90,18 +90,10 @@ class Application
 		$auth = new \Espo\Core\Utils\Api\Auth($container->get('entityManager'), $container);
 		$this->getSlim()->add($auth);
 
-		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
-			$conditions = $slim->router()->getCurrentRoute()->getConditions();
-            $routeParams = $slim->router()->getCurrentRoute()->getParams();
-			if (!empty($routeParams)) {
-			    $slim->router()->getCurrentRoute()->setParams($routeParams);
-			}
-		});
-		
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container, $serviceFactory) {
 
 			$route = $slim->router()->getCurrentRoute();
-		    $conditions = $route->getConditions();			
+		    $conditions = $route->getConditions();
 
 			if (isset($conditions['useController']) && $conditions['useController'] == false) {
 				return;
@@ -123,7 +115,7 @@ class Application
 					$value = $params[$paramName];
 				}
 				$controllerParams[$key] = $value;
-			}	
+			}
 
 			$controllerName = ucfirst($controllerParams['controller']);
 			
@@ -135,7 +127,7 @@ class Application
 			}
 			
 			try {							
-				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);						
+				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);
 				$result = $controllerManager->process($controllerName, $actionName, $params, $data);
 				$container->get('output')->render($result);
 			} catch (\Exception $e) {
@@ -152,26 +144,28 @@ class Application
 
 	protected function initRoutes()
 	{
-		//$this->getSlim()->get('/', '\Espo\Utils\Api\Rest::main')->conditions( array('useController' => false) );
+		$routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getContainer()->get('fileManager'));
 
-		//TODO move routing to metadata
-		$routes = array(
-			array(
-				'method' => 'get',
-				'route' => 'metadata',
-				'params' => array(
-					'controller' => 'Metadata',
-				),
-			),
-			array(
-				'method' => 'get',
-				'route' => 'settings',
-				'params' => array(
-					'controller' => 'Settings',	
-				),
-			),
-		);
+		$crudList = array_keys( (array) $this->getContainer()->get('config')->get('crud') );
 
+		foreach($routes->getAll() as $route) {
+
+			$method = strtolower($route['method']);
+			if (!in_array($method, $crudList)) {
+				$GLOBALS['log']->add('ERROR', 'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');
+				continue;
+			}
+
+            $currentRoute = $this->getSlim()->$method($route['route'], function() use ($route) {   //todo change "use" for php 5.4
+	        	return $route['params'];
+			});
+
+			if (isset($route['conditions'])) {
+            	$currentRoute->conditions($route['conditions']);
+			}
+		}
+
+		/* //todo remove when it is tested
 		$this->getSlim()->get('/', function() {
         	return $template = "<h1>EspoCRM REST API</h1>";
 		});
@@ -270,7 +264,8 @@ class Application
 				'link' => ':link',
 				'foreignId' => ':foreignId'
 			);
-		});
+		});  */
+
 	}
 
 }
