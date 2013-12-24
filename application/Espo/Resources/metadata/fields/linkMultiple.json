@@ -15,8 +15,5 @@
    "search":{
       "basic":false,
       "advanced":true
-   },
-   "database":{
-      "skip":true
    }
 }
