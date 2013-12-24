@@ -148,10 +148,6 @@ class Relations
 			),
 		);
 
-		/*if (isset($params['link']['params']['foreign'])) {  //???
-        	$relation[$params['entityName']] ['fields'] [$params['link']['name'].'Name'] ['foreign'] = $params['link']['params']['foreign'];
-		}  */
-
 		return $relation;
 	}
 
@@ -167,15 +163,13 @@ class Relations
 						'foreignType' => $foreignParams['link']['name'].'Type', //???: 'foreignKey' => $params['link']['name'].'Id',
 					),
 				),
-			), 
+			),
 		);
 
 
 		return $relation;
 	}
 
-	//uses for belongsToParent and linkParent
-	//public function belongsToParent($params, $foreignParams)
 	public function linkParent($params, $foreignParams)
 	{
         $relation = array();
@@ -201,6 +195,27 @@ class Relations
 
 		return $relation;
 	}
+
+
+	public function linkMultiple($params, $foreignParams)
+	{
+       	return array(
+			$params['entityName'] => array (
+	           	'fields' => array(
+	               	$params['link']['name'].'Ids' => array(
+						'type' => Entity::VARCHAR,
+						'notStorable' => true,
+					),
+					$params['link']['name'].'Names' => array(
+						'type' => Entity::VARCHAR,
+						'notStorable' => true,
+					),
+				),
+			),
+		);
+	}
+
+
 
 	public function teamRelation($params, $foreignParams)
 	{

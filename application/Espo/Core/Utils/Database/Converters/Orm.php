@@ -181,8 +181,14 @@ class Orm
 
         	switch ($fieldParams['type']) {
 	            case 'linkParent':
-	                $relation = $this->getLinks()->process('linkParent', $entityName, array('name' => $fieldName));
-					$outputMeta = Util::merge($outputMeta, $relation[$entityName]['fields']);
+	                $linkData = $this->getLinks()->process('linkParent', $entityName, array('name' => $fieldName));
+					$outputMeta = Util::merge($outputMeta, $linkData[$entityName]['fields']);
+	                break;
+
+				case 'linkMultiple':
+	                $linkData = $this->getLinks()->process('linkMultiple', $entityName, array('name' => $fieldName));
+					unset($outputMeta[$fieldName]); //no need "linkMultiple" field
+					$outputMeta = Util::merge($outputMeta, $linkData[$entityName]['fields']);
 	                break;
 	        }
 		}
@@ -278,9 +284,9 @@ class Orm
 			}    */
 
 
-			if (method_exists($this->getLinks(), $method)) {  //ex. hasManyHasMany
+			if ( $this->getLinks()->isMethodExists($method) ) {  //ex. hasManyHasMany
             	$convertedLink = $this->getLinks()->process($method, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
-			} else if (method_exists($this->getLinks(), $currentType)) { //ex. hasMany
+			} else { //ex. hasMany
             	$convertedLink = $this->getLinks()->process($currentType, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
 			}
 
@@ -289,7 +295,10 @@ class Orm
 			}   */
 
 			//$relationships = Util::merge($relationships, $convertedLink);
-			$relationships = Util::merge($convertedLink, $relationships);
+			if ($convertedLink !== false) {
+            	$relationships = Util::merge($convertedLink, $relationships);
+			}
+
 
 			//echo $method.' = '.$currentType.' - '.$foreignLink['type'].'<br />';
 		}

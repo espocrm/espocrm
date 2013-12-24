@@ -34,10 +34,17 @@ class Links
 		if (isset($link['params'])) {
         	return isset($link['params']['entity']) ? $link['params']['entity'] : $entityName;
 		}
-		/*if (!isset($link['entity']) && isset($link['entities'])) {
-			return $link['entities'];
-		} */
+
 		return isset($link['entity']) ? $link['entity'] : $entityName;
+	}
+
+	public function isMethodExists($methodName)
+	{
+		if (method_exists($this, $methodName) || method_exists($this->getRelations(), $methodName)) {
+        	return true;
+		}
+
+		return false;
 	}
 
 
@@ -65,28 +72,15 @@ class Links
 					}
 					break;
 	        }
-		}
-		//END: hardcode
-
+		} //END: hardcode
 
 		if (method_exists($this, $method)) {
         	return $this->$method($params, $foreignParams);
+		} else if (method_exists($this->getRelations(), $method)) {
+			return $this->getRelations()->$method($params, $foreignParams);
 		}
 
         return false;
-	}
-
-
-
-	protected function belongsTo($params, $foreignParams)
-	{
-    	return $this->getRelations()->belongsTo($params, $foreignParams);
-	}
-
-	//TODO: hook for teams
-	protected function hasMany($params, $foreignParams)
-	{
-    	return $this->getRelations()->hasMany($params, $foreignParams);
 	}
 
 
@@ -96,47 +90,40 @@ class Links
 	}
 
 
+
+	/*protected function belongsTo($params, $foreignParams)
+	{
+    	return $this->getRelations()->belongsTo($params, $foreignParams);
+	}
+
+	protected function hasMany($params, $foreignParams)
+	{
+    	return $this->getRelations()->hasMany($params, $foreignParams);
+	}
+
 	protected function hasChildren($params, $foreignParams)
 	{
 		return $this->getRelations()->hasChildren($params, $foreignParams);
 	}
 
 
-	/*protected function belongsToParent($params, $foreignParams)
-	{
-    	return $this->getRelations()->belongsToParent($params, $foreignParams);
-	}*/
-
 	protected function linkParent($params, $foreignParams)
 	{
     	return $this->getRelations()->linkParent($params, $foreignParams);
+	}
+
+	protected function linkMultiple($params, $foreignParams)
+	{
+    	return $this->getRelations()->linkMultiple($params, $foreignParams);
 	}
 
 
 	protected function teamRelation($params, $foreignParams)
 	{
     	return $this->getRelations()->teamRelation($params, $foreignParams);
-	}
+	} */
 
-
-
-
-	/*protected function hasChildrenBelongsToParent()
-	{
-    	return $this->getRelations()->hasChildren($params, $foreignParams);
-	}*/
-
-	/*protected function hasManyBelongsTo($params, $foreignParams)
-	{
-		$hasMany = $this->getRelations()->hasMany($params, $foreignParams);
-		$belongsTo = $this->getRelations()->belongsTo($foreignParams, $params);
-        //$belongsTo [Contact] [relations] [account] ['foreignKey'] = 'id'; ???
-
-		return Util::merge($hasMany, $belongsTo);
-	}  */
-
-
-	/*
+/*
 [0] => belongsTo
 [1] => belongsToParent
 [2] => hasMany

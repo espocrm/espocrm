@@ -54,7 +54,7 @@ class Schema
 
 	//convertToSchema
 	public function process(array $databaseMeta, $entityDefs)
-	{
+	{               
 		$schema = $this->getSchema();
 
 		$tables = array();
@@ -125,6 +125,7 @@ class Schema
                                 	$relationParams['midKeys'] = array_merge($relationParams['midKeys'], array_keys($relationParams['conditions']));
 								}
 								$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables, false);
+								//$table->addForeignKeyConstraint($tables['Team'], array($usMidKey), array($relationKey), array("onUpdate" => "CASCADE"));
 							} else {
                             	$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
 							}
