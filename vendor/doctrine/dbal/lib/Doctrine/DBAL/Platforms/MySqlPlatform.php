@@ -593,7 +593,7 @@ class MySqlPlatform extends AbstractPlatform
                         $type = 'UNIQUE ';
                     }
 
-                    $query = 'ALTER TABLE ' . $table . ' DROP INDEX ' . $remIndex->getName() . ', ';
+                    $query = 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP INDEX ' . $remIndex->getName() . ', ';
                     $query .= 'ADD ' . $type . 'INDEX ' . $addIndex->getName();
                     $query .= ' (' . $this->getIndexFieldDeclarationListSQL($addIndex->getQuotedColumns($this)) . ')';
 
@@ -713,7 +713,7 @@ class MySqlPlatform extends AbstractPlatform
      */
     protected function getDropPrimaryKeySQL($table)
     {
-        return 'ALTER TABLE ' . $table . ' DROP PRIMARY KEY';
+        return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP PRIMARY KEY';
     }
 
     /**
@@ -809,7 +809,7 @@ class MySqlPlatform extends AbstractPlatform
             throw new \InvalidArgumentException('getDropTableSQL() expects $table parameter to be string or \Doctrine\DBAL\Schema\Table.');
         }
 
-        return 'DROP TEMPORARY TABLE ' . $table;
+        return 'DROP TEMPORARY TABLE ' . $this->espoQuote($table);
     }
 
     /**
@@ -897,6 +897,37 @@ class MySqlPlatform extends AbstractPlatform
         $query .= ' (' . $this->getIndexFieldDeclarationListSQL($columns) . ')';
 
         return $query;
+    }
+
+	public function getDropConstraintSQL($constraint, $table)
+    {
+        if ($constraint instanceof Constraint) {
+            $constraint = $constraint->getQuotedName($this);
+        }
+
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
+        return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP CONSTRAINT ' . $constraint;
+    }
+
+	public function getDropForeignKeySQL($foreignKey, $table)
+    {
+        if ($foreignKey instanceof ForeignKeyConstraint) {
+            $foreignKey = $foreignKey->getQuotedName($this);
+        }
+
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
+        return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP FOREIGN KEY ' . $foreignKey;
+    }
+
+	public function getCreatePrimaryKeySQL(Index $index, $table)
+    {
+        return 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index->getQuotedColumns($this)) . ')';
     }
 	//end: ESPO
 }
