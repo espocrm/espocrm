@@ -504,7 +504,12 @@ abstract class Mapper implements IMapper
 					
 					$wherePart = 
 						$this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . " ".
-						"AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id);
+						"AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id);						
+					if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+						foreach ($relOpt['conditions'] as $f => $v) {
+							$wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
+						}					
+					}
 					
 					$sql = $this->composeSelectQuery($relTable, '*', '', $wherePart);
 

@@ -10,6 +10,7 @@ class Repository extends \Espo\ORM\Repository
 		$nowString = date('Y-m-d H:i:s', time());		
 		$restoreData = array();
 		
+		
 		if ($entity->isNew()) {
 			if ($entity->hasField('createdAt')) {
 				$entity->set('createdAt', $nowString);
@@ -54,10 +55,10 @@ class Repository extends \Espo\ORM\Repository
 	{
 		foreach ($entity->getRelations() as $name => $defs) {
 			if ($defs['type'] == $entity::HAS_MANY || $defs['type'] == $entity::MANY_MANY) {
-				$fieldName = $name . 'Ids';				
-				if ($entity->has($fieldName)) {
+				$fieldName = $name . 'Ids';
+				if ($entity->has($fieldName)) {					
 					$specifiedIds = $entity->get($fieldName);
-					if (is_array($ids)) {
+					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
 						$existingIds = array();
 						foreach ($entity->get($name) as $foreignEntity) {
@@ -67,7 +68,8 @@ class Repository extends \Espo\ORM\Repository
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
 							}
-						}						
+						}
+										
 						foreach ($specifiedIds as $id) {
 							if (!in_array($id, $existingIds)) {
 								$this->relate($entity, $name, $id);

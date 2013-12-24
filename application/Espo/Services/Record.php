@@ -80,13 +80,13 @@ class Record extends \Espo\Core\Services\Base
 		$entity = $this->getRepository()->get($id);
 		
 		if (!empty($id)) {
-			if ($entity->hasRelation('teams')) {
+			if ($entity->hasRelation('teams') && $entity->hasField('teamsIds')) {
 				$teams = $entity->get('teams');
 				$ids = array();
 				$names = array();				
 				foreach ($teams as $team) {
 					$ids[] = $team->id;
-					$names[$team->id] = $team->name;
+					$names[$team->id] = $team->get('name');
 				}
 				$entity->set('teamsIds', $ids);
 				$entity->set('teamsNames', $names);
@@ -123,7 +123,7 @@ class Record extends \Espo\Core\Services\Base
 			throw new Forbidden();
 		}
 		
-		$entity->set($data);
+		$entity->set($data);		
 		
 		$this->getRepository()->save($entity);
 		return $entity;
