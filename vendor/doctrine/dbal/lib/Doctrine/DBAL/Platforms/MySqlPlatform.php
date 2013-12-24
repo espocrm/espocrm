@@ -546,7 +546,8 @@ class MySqlPlatform extends AbstractPlatform
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
         }
 
-        foreach ($diff->renamedColumns as $oldColumnName => $column) {
+        /* espo: It works not correctly. It can rename some existing fields
+		foreach ($diff->renamedColumns as $oldColumnName => $column) {
             if ($this->onSchemaAlterTableRenameColumn($oldColumnName, $column, $diff, $columnSql)) {
                 continue;
             }
@@ -555,7 +556,7 @@ class MySqlPlatform extends AbstractPlatform
             $columnArray['comment'] = $this->getColumnComment($column);
             $queryParts[] =  'CHANGE ' . $oldColumnName . ' '
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
-        }
+        } */
 
         $sql = array();
         $tableSql = array();

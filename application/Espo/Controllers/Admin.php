@@ -8,7 +8,7 @@ use \Espo\Core\Exceptions\Error,
 class Admin extends \Espo\Core\Controllers\Base
 {
 
-	public function __construct(Container $container, ServiceFactory $serviceFactory)
+	public function __construct(\Espo\Core\Container $container, \Espo\Core\ServiceFactory $serviceFactory)
 	{
 		parent::__construct($container, $serviceFactory);
 

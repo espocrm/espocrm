@@ -167,22 +167,7 @@ class Relations
 						'foreignType' => $foreignParams['link']['name'].'Type', //???: 'foreignKey' => $params['link']['name'].'Id',
 					),
 				),
-			),
-
-            /*$foreignParams['entityName'] => array (
-            	'fields' => array(
-                	$foreignParams['link']['name'].'Id' => array(
-						'type' => Entity::FOREIGN_ID,
-					),
-					$foreignParams['link']['name'].'Type' => array(
-						'type' => Entity::FOREIGN_TYPE,
-					),
-					$foreignParams['link']['name'].'Name' => array(
-						'type' => Entity::VARCHAR,
-						'notStorable' => true,
-					),
-				),
-			), */
+			), 
 		);
 
 
@@ -215,6 +200,27 @@ class Relations
 		}
 
 		return $relation;
+	}
+
+	public function teamRelation($params, $foreignParams)
+	{
+		return array(
+			$params['entityName'] => array(
+				'relations' => array(
+					$params['link']['name'] => array(
+						'type' => Entity::MANY_MANY,
+						'entity' => $params['targetEntity'],
+						'relationName' => 'EntityTeam',
+						'midKeys' => array(
+							'entityId',
+							'teamId',
+						),
+						'conditions' => array('entityType' => $params['entityName']),
+					),
+				),
+			),
+		);
+
 	}
 
 
