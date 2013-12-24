@@ -163,7 +163,7 @@ class Schema
     	$tableName = $relationParams['relationName'];
 
 		$table = $this->getSchema()->createTable( Util::toUnderScore($tableName) );
-		$table->addColumn('id', $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+		$table->addColumn('id', 'int', array('length'=>$this->defaultLength['int'], 'autoincrement' => true));
 
 		if ($isForeignKey) {
 			$relationEntities = array($entityName, $relationParams['entity']);
