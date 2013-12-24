@@ -23,6 +23,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 
 /**
  * The MySqlPlatform provides the behavior, features and SQL dialect of the
@@ -927,6 +928,10 @@ class MySqlPlatform extends AbstractPlatform
 
 	public function getCreatePrimaryKeySQL(Index $index, $table)
     {
+    	if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
         return 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index->getQuotedColumns($this)) . ')';
     }
 	//end: ESPO
