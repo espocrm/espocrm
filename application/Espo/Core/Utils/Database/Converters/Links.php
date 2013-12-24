@@ -56,6 +56,19 @@ class Links
 		$params['targetEntity'] = $foreignParams['entityName'];
 		$foreignParams['targetEntity'] = $params['entityName'];
 
+        //hardcode for Teams
+		if (isset($link['params'])) {
+        	switch ($link['params']['type']) {
+	        	case 'hasMany':
+	                if ($params['targetEntity'] == 'Team') {
+						$method = 'teamRelation';
+					}
+					break;
+	        }
+		}
+		//END: hardcode
+
+
 		if (method_exists($this, $method)) {
         	return $this->$method($params, $foreignParams);
 		}
@@ -97,6 +110,12 @@ class Links
 	protected function linkParent($params, $foreignParams)
 	{
     	return $this->getRelations()->linkParent($params, $foreignParams);
+	}
+
+
+	protected function teamRelation($params, $foreignParams)
+	{
+    	return $this->getRelations()->teamRelation($params, $foreignParams);
 	}
 
 

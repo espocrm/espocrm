@@ -28,6 +28,12 @@ class Schema
 		'len' => '24',
 	);
 
+    //todo: same array in Converters\Orm
+	protected $defaultLength = array(
+		'varchar' => 255,
+		'int' => 11,
+	);
+
 	protected $notStorableTypes = array(
 		'foreign'
 	);
@@ -39,7 +45,7 @@ class Schema
 		$this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
 	}
 
-	protected function getDbalSchema()
+	protected function getSchema()
 	{
     	return $this->dbalSchema;
 	}
@@ -49,7 +55,7 @@ class Schema
 	//convertToSchema
 	public function process(array $databaseMeta, $entityDefs)
 	{
-		$schema = $this->getDbalSchema();
+		$schema = $this->getSchema();
 
 		$tables = array();
 		foreach ($databaseMeta as $entityName => $entityParams) {
@@ -90,7 +96,10 @@ class Schema
 					continue;
 				}
 
-				$tables[$entityName]->addColumn(Util::toUnderScore($fieldName), $fieldType, $this->getDbFieldParams($fieldParams));
+				$columnName = Util::toUnderScore($fieldName);
+				if (!$tables[$entityName]->hasColumn($columnName)) {
+                	$tables[$entityName]->addColumn($columnName, $fieldType, $this->getDbFieldParams($fieldParams));
+				}
 			}
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
@@ -107,21 +116,20 @@ class Schema
                  switch ($relationParams['type']) {
 		            case 'manyMany':
 						$tableName = $relationParams['relationName'];
-                        $tables[$tableName] = $schema->createTable( Util::toUnderScore($tableName) );
-                        $tables[$tableName]->addColumn('id', $this->idParams['dbType'], array('length'=>$this->idParams['len']));
 
-                        $relationEntities = array($entityName, $relationParams['entity']);
-                        $relationKeys = array($relationParams['key'], $relationParams['foreignKey']);
-						foreach($relationParams['midKeys'] as $index => $midKey) {
-							$usMidKey = Util::toUnderScore($midKey);
-                        	$tables[$tableName]->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+                        //check for duplication tables
+						if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
 
-							$relationKey = Util::toUnderScore($relationKeys[$index]);
-                            $tables[$tableName]->addForeignKeyConstraint($tables[$relationEntities[$index]], array($usMidKey), array($relationKey), array("onUpdate" => "CASCADE"));
+							if ($tableName == 'EntityTeam') {  //hardcode for Teams
+								if (isset($relationParams['conditions'])) {
+                                	$relationParams['midKeys'] = array_merge($relationParams['midKeys'], array_keys($relationParams['conditions']));
+								}
+								$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables, false);
+							} else {
+                            	$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
+							}
+
 						}
-
-                        $tables[$tableName]->addColumn('deleted', 'bool', array('default' => 0));
-						$tables[$tableName]->setPrimaryKey(array("id"));
 						break;
 
 		            case 'belongsTo':
@@ -137,6 +145,49 @@ class Schema
 		//END: check and create columns/tables for relations
 
 		return $schema;
+	}
+
+
+	/**
+     * Prepare a relation table for the manyMany relation
+     *
+     * @param array $relationParams
+     * @param array $tables
+     * @param bool $isForeignKey
+	 *
+     * @return \Doctrine\DBAL\Schema\Table
+     */
+	protected function prepareManyMany($entityName, $relationParams, $tables, $isForeignKey = true)
+	{
+    	$tableName = $relationParams['relationName'];
+
+		$table = $this->getSchema()->createTable( Util::toUnderScore($tableName) );
+		$table->addColumn('id', $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+
+		if ($isForeignKey) {
+			$relationEntities = array($entityName, $relationParams['entity']);
+			$relationKeys = array($relationParams['key'], $relationParams['foreignKey']);
+		}
+
+		foreach($relationParams['midKeys'] as $index => $midKey) {
+			$usMidKey = Util::toUnderScore($midKey);
+
+			if (preg_match('/_id$/i', $usMidKey)) {
+            	$table->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+			} else {
+				$table->addColumn($usMidKey, 'varchar', array('length'=>$this->defaultLength['varchar']));
+			}
+
+			if ($isForeignKey) {
+            	$relationKey = Util::toUnderScore($relationKeys[$index]);
+				$table->addForeignKeyConstraint($tables[$relationEntities[$index]], array($usMidKey), array($relationKey), array("onUpdate" => "CASCADE"));
+			}
+		}
+
+		$table->addColumn('deleted', 'bool', array('default' => 0));
+		$table->setPrimaryKey(array("id"));
+
+        return $table;
 	}
 
 
