@@ -154,29 +154,59 @@ abstract class Record extends Base
 		);
 	}
 
-	public function actionCreateLink($params)
+	public function actionCreateLink($params, $data)
 	{
 		$id = $params['id'];
 		$link = $params['link'];
-		$foreignId = $params['foreignId'];
-
-		if ($this->getService()->linkEntity($id, $link, $foreignId)) {
-			return true;
+		
+		$foreignIds = array();		
+		if (isset($data['id'])) {
+			$foreignIds[] = $data['id'];
+		}		
+		if (isset($data['ids']) && is_array($data['ids'])) {
+			foreach ($data['ids'] as $foreignId) {
+				$foreignIds[] = $foreignId;
+			}
 		}
-
-		throw new Error();
+		
+		$result = false;
+		foreach ($foreignIds as $foreignId) {
+			if ($this->getService()->linkEntity($id, $link, $foreignId)) {
+				$result = $result || true;
+			}
+			if ($result) {
+				return true;
+			}
+		}	
+		
+		throw new Error();		
 	}
 	
-	public function actionRemoveLink($params)
+	public function actionRemoveLink($params, $data)
 	{
 		$id = $params['id'];
 		$link = $params['link'];
-		$foreignId = $params['foreignId'];
-
-		if ($this->getService()->unlinkEntity($id, $link, $foreignId)) {
-			return true;
+		
+		$foreignIds = array();		
+		if (isset($data['id'])) {
+			$foreignIds[] = $data['id'];
+		}		
+		if (isset($data['ids']) && is_array($data['ids'])) {
+			foreach ($data['ids'] as $foreignId) {
+				$foreignIds[] = $foreignId;
+			}
 		}
-
-		throw new Error();
-	}
+		
+		$result = false;
+		foreach ($foreignIds as $foreignId) {
+			if ($this->getService()->unlinkEntity($id, $link, $foreignId)) {
+				$result = $result || true;
+			}
+			if ($result) {
+				return true;
+			}
+		}	
+		
+		throw new Error();		
+	}	
 }

@@ -6,7 +6,7 @@
   },
 
   {
-  	"route":"/App/user/",
+  	"route":"/App/user",
     "method":"get",
     "params":{
         "controller":"App",
@@ -15,7 +15,7 @@
   },
 
   {
-  	"route":"/Metadata/",
+  	"route":"/Metadata",
     "method":"get",
     "params":{
         "controller":"Metadata"
@@ -23,7 +23,7 @@
   },
 
   {
-  	"route":"/Settings/",
+  	"route":"/Settings",
     "method":"get",
     "params":{
         "controller":"Settings"
@@ -34,7 +34,7 @@
   },
 
   {
-  	"route":"/Settings/",
+  	"route":"/Settings",
     "method":"patch",
     "params":{
         "controller":"Settings"
@@ -42,7 +42,7 @@
   },
 
   {
-  	"route":"/:controller/layout/:name/",
+  	"route":"/:controller/layout/:name",
     "method":"get",
     "params":{
         "controller":"Layout",
@@ -51,7 +51,7 @@
   },
 
   {
-  	"route":"/:controller/layout/:name/",
+  	"route":"/:controller/layout/:name",
     "method":"put",
     "params":{
         "controller":"Layout",
@@ -60,7 +60,7 @@
   },
 
   {
-  	"route":"/:controller/layout/:name/",
+  	"route":"/:controller/layout/:name",
     "method":"patch",
     "params":{
         "controller":"Layout",
@@ -69,7 +69,7 @@
   },
 
   {
-  	"route":"/Admin/rebuild/",
+  	"route":"/Admin/rebuild",
     "method":"get",
     "params":{
         "controller":"Admin",
@@ -78,7 +78,7 @@
   },
 
   {
-  	"route":"/:controller/:id/",
+  	"route":"/:controller/:id",
     "method":"get",
     "params":{
         "controller":":controller",
@@ -88,7 +88,7 @@
   },
 
   {
-  	"route":"/:controller/",
+  	"route":"/:controller",
     "method":"get",
     "params":{
         "controller":":controller",
@@ -97,7 +97,7 @@
   },
 
   {
-  	"route":"/:controller/",
+  	"route":"/:controller",
     "method":"post",
     "params":{
         "controller":":controller",
@@ -106,7 +106,7 @@
   },
 
   {
-  	"route":"/:controller/:id/",
+  	"route":"/:controller/:id",
     "method":"put",
     "params":{
         "controller":":controller",
@@ -116,7 +116,7 @@
   },
 
   {
-  	"route":"/:controller/:id/",
+  	"route":"/:controller/:id",
     "method":"patch",
     "params":{
         "controller":":controller",
@@ -134,6 +134,29 @@
 		"id":":id",
 		"link":":link"
     }
+  },
+  
+  {
+  	"route":"/:controller/:id/:link",
+    "method":"post",
+    "params":{
+        "controller":":controller",
+		"action":"createLink",
+		"id":":id",
+		"link":":link"
+    }
+  },
+  
+  {
+  	"route":"/:controller/:id/:link",
+    "method":"delete",
+    "params":{
+        "controller":":controller",
+		"action":"removeLink",
+		"id":":id",
+		"link":":link"
+    }
   }
+  
 
 ]
