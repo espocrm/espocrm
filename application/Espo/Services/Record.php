@@ -85,9 +85,11 @@ class Record extends \Espo\Core\Services\Base
 				$ids = array();
 				$names = array();				
 				foreach ($teams as $team) {
-					$ids[] = $team->id;
-					$names[$team->id] = $team->get('name');
+					$id = $team->id;
+					$ids[] = $id;
+					$names[$id] = $team->get('name');
 				}
+				
 				$entity->set('teamsIds', $ids);
 				$entity->set('teamsNames', $names);
 			}

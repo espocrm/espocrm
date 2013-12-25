@@ -47,10 +47,10 @@ class ControllerManager
 				$controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($controllerName);
 			}
 		}
-		
+				
 		if ($data) {
 			$data = json_decode($data, true);
-		}
+		}		
 		
 		if (!class_exists($controllerClassName)) {
 			throw new NotFound("Controller '$controllerName' is not found");
