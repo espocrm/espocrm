@@ -77,9 +77,9 @@ class Record extends \Espo\Core\Services\Base
 
 	public function getEntity($id = null)
 	{
-		$entity = $this->getRepository()->get($id);
+		$entity = $this->getRepository()->get($id);		
 		
-		if (!empty($id)) {
+		if (!empty($entity) && !empty($id)) {
 			if ($entity->hasRelation('teams') && $entity->hasField('teamsIds')) {
 				$teams = $entity->get('teams');
 				$ids = array();
@@ -112,8 +112,12 @@ class Record extends \Espo\Core\Services\Base
 		$entity = $this->getEntity();
 		
 		$entity->set($data);
-		$this->getRepository()->save($entity);
-		return $entity;
+		
+		if ($this->getRepository()->save($entity)) {
+			return $entity;
+		}
+		
+		throw new Error();
 	}
 
 	public function updateEntity($id, $data)
@@ -192,7 +196,11 @@ class Record extends \Espo\Core\Services\Base
     		throw new Error();
     	}
     	
-    	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);    	
+    	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
+    	
+		if (!$this->getAcl()->check($foreignEntity, 'edit')) {
+			throw new Forbidden();
+		}		
     	
     	if (!empty($foreignEntity)) {
 			$this->getRepository()->relate($entity, $link, $foreignEntity);
@@ -216,6 +224,10 @@ class Record extends \Espo\Core\Services\Base
     	}
     	
     	$foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
+    	
+		if (!$this->getAcl()->check($foreignEntity, 'edit')) {
+			throw new Forbidden();
+		}
      	
     	if (!empty($foreignEntity)) {
 			$this->getRepository()->unrelate($entity, $link, $foreignEntity);

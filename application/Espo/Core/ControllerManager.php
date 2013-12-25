@@ -34,7 +34,7 @@ class ControllerManager
 		return $this->metadata;
 	}
 	
-	public function process($controllerName, $actionName, $params, $data)
+	public function process($controllerName, $actionName, $params, $data, $request)
 	{		
 		$customeClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
 		if (class_exists($customeClassName)) {
@@ -66,7 +66,7 @@ class ControllerManager
 		
 		$beforeMethodName = 'before' . $actionNameUcfirst;			 
 		if (method_exists($controller, $beforeMethodName)) {
-			$controller->$beforeMethodName($params, $data);
+			$controller->$beforeMethodName($params, $data, $request);
 		}
 		$actionMethodName = 'action' . $actionNameUcfirst;
 		
@@ -74,11 +74,11 @@ class ControllerManager
 			throw new NotFound("Action '$actionMethodName' does not exist in controller '$controller'");
 		}	
 
-		$result = $controller->$actionMethodName($params, $data);
+		$result = $controller->$actionMethodName($params, $data, $request);
 		
 		$afterMethodName = 'after' . $actionNameUcfirst;	
 		if (method_exists($controller, $afterMethodName)) {
-			$controller->$afterMethodName($params, $data);
+			$controller->$afterMethodName($params, $data, $request);
 		}
 
 		if (is_array($result) || is_bool($result)) {

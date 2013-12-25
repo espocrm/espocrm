@@ -10,7 +10,11 @@ class Repository extends \Espo\ORM\Repository
 		$nowString = date('Y-m-d H:i:s', time());		
 		$restoreData = array();							
 		
-		if ($entity->isNew()) {
+		if ($entity->isNew()) {			
+			if (!$entity->has('id')) {
+				$entity->set('id', uniqid());
+			}
+		
 			if ($entity->hasField('createdAt')) {
 				$entity->set('createdAt', $nowString);
 			}
@@ -43,11 +47,12 @@ class Repository extends \Espo\ORM\Repository
 			$entity->clear('createdById');
 			$entity->clear('createdAt');
 		}		
-		parent::save($entity);
+		$result = parent::save($entity);
 		
-		$entity->set($restoreData);
-		
+		$entity->set($restoreData);		
 		$this->handleSpecifiedRelations($entity);
+		
+		return $result;
 	}
 	
 	protected function handleSpecifiedRelations(Entity $entity)

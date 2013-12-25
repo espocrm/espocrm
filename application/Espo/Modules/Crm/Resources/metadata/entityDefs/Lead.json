@@ -30,8 +30,7 @@
             "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"]
         },
         "opportunityAmount": {
-            "type": "currency",
-            "required": true
+            "type": "currency"
         },
         "website": {
             "type": "url"
@@ -73,8 +72,7 @@
             "type": "bool"
         },
         "description": {
-            "type": "text",
-            "required": true
+            "type": "text"
         },
         "createdAt": {
             "type": "datetime",

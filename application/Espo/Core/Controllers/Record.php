@@ -4,6 +4,7 @@ namespace Espo\Core\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\NotFound;
 
 abstract class Record extends Base
 {
@@ -22,6 +23,10 @@ abstract class Record extends Base
 		$id = $params['id'];
 		$service = $this->getService();
 		$entity = $service->getEntity($id);
+		
+		if (empty($entity)) {
+			throw new NotFound();
+		}
 
 		if (!$this->getAcl()->check($entity, 'read')) {
 			throw new Forbidden();
@@ -65,22 +70,22 @@ abstract class Record extends Base
 		throw new Error();
 	}
 
-	public function actionList($params, $where)
+	public function actionList($params, $where, $request)
 	{
 		if (!$this->getAcl()->check($this->name, 'read')) {
 			throw new Forbidden();
 		}
 
-		$where = $data['where'];
-		$offset = $data['offset'];
-		$limit = $data['limit'];
-		$asc = $data['asc'];
-		$sortBy = $data['sortBy'];
+		$where = $request->get('where');
+		$offset = $request->get('offset');
+		$maxSize = $request->get('maxSize');
+		$asc = $request->get('asc');
+		$sortBy = $request->get('sortBy');	
 
 		$result = $this->getService()->findEntities(array(
 			'where' => $where,
 			'offset' => $offset,
-			'limit' => $limit,
+			'maxSize' => $maxSize,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
 		));
@@ -129,21 +134,21 @@ abstract class Record extends Base
 		return $idsDeleted;
 	}
 
-	public function actionListLinked($params, $data)
+	public function actionListLinked($params, $data, $request)
 	{
 		$id = $params['id'];
-		$link = $params['link'];
+		$link = $params['link'];		
 
-		$where = $data['where'];
-		$offset = $data['offset'];
-		$limit = $data['limit'];
-		$asc = $data['asc'];
-		$sortBy = $data['sortBy'];
+		$where = $request->get('where');
+		$offset = $request->get('offset');
+		$maxSize = $request->get('maxSize');
+		$asc = $request->get('asc');
+		$sortBy = $request->get('sortBy');		
 
 		$result = $this->getService()->findLinkedEntities($id, $link, array(
 			'where' => $where,
 			'offset' => $offset,
-			'limit' => $limit,
+			'maxSize' => $maxSize,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
 		));
@@ -167,7 +172,7 @@ abstract class Record extends Base
 			foreach ($data['ids'] as $foreignId) {
 				$foreignIds[] = $foreignId;
 			}
-		}
+		}		
 		
 		$result = false;
 		foreach ($foreignIds as $foreignId) {

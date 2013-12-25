@@ -124,6 +124,16 @@
 		"id":":id"
     }
   },
+  
+  {
+  	"route":"/:controller/:id",
+    "method":"delete",
+    "params":{
+        "controller":":controller",
+		"action":"delete",
+		"id":":id"
+    }
+  },
 
   {
   	"route":"/:controller/:id/:link",
