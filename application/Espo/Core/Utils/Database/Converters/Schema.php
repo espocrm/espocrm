@@ -51,11 +51,14 @@ class Schema
 	}
 
 
-
 	//convertToSchema
 	public function process(array $databaseMeta, $entityDefs)
 	{
     	$GLOBALS['log']->add('Debug', 'Converters\Schema - Start: building schema');
+
+		//pre actions
+        $this->preProcess($databaseMeta, $entityDefs);
+		//END: pre actions
 
 		$schema = $this->getSchema();
 
@@ -122,7 +125,7 @@ class Schema
                         //check for duplication tables
 						if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
 
-							if ($tableName == 'EntityTeam') {  //hardcode for Teams
+							if (strtolower($tableName) == strtolower('EntityTeam')) {  //hardcode for Teams
 								if (isset($relationParams['conditions'])) {
                                 	$relationParams['midKeys'] = array_merge($relationParams['midKeys'], array_keys($relationParams['conditions']));
 								}
@@ -154,6 +157,20 @@ class Schema
 	}
 
 
+	protected function preProcess(array &$databaseMeta, &$entityDefs)
+	{
+		return;
+		/*echo '<pre>';
+		print_r($databaseMeta);
+		exit;*/
+
+
+		//hardcode for emails
+        $this->createEmailAddressTables();
+		//END: hardcode for emails
+	}
+
+
 	/**
      * Prepare a relation table for the manyMany relation
      *
@@ -172,6 +189,9 @@ class Schema
 
 		if ($isForeignKey) {
 			$relationEntities = array($entityName, $relationParams['entity']);
+			if (!isset($relationParams['key'])) {
+				print_r($relationParams);
+			}
 			$relationKeys = array($relationParams['key'], $relationParams['foreignKey']);
 		}
 
@@ -195,6 +215,23 @@ class Schema
 
         return $table;
 	}
+
+	/*protected function getTableDefs($tableName)
+	{
+		$tableName = 'EmailAddress';
+		$table = $this->getSchema()->createTable( Util::toUnderScore($tableName) );
+        $table->addColumn('id', $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+
+		switch ($tableName) {
+            case 'EmailAddress':
+            	$primaryColumns[] = Util::toUnderScore($fieldName);
+                break;
+
+            case 'EntityEmailAddress':
+            	$primaryColumns[] = Util::toUnderScore($fieldName);
+                break;
+        }
+	} */
 
 
 	protected function getDbFieldParams($fieldParams)

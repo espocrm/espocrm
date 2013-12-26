@@ -92,8 +92,8 @@ class Relations
 							'key' => 'id', //todo specify 'key'
 							'foreignKey' => 'id', //todo specify 'foreignKey'
 							'midKeys' => array(
-								$sortedEntities[0].'Id',
-								$sortedEntities[1].'Id',
+								lcfirst($params['entityName']).'Id',
+								lcfirst($foreignParams['entityName']).'Id',
 							),
 						),
 					),
@@ -260,7 +260,12 @@ class Relations
     	$relationKeys = explode('-', Util::fromCamelCase($params['link']['params']['relationName']));
         $midKeys = array();
 		foreach($relationKeys as $key) {
-        	$midKeys[] = $key.'Id';
+			/*if (strtolower($params['entityName']) == strtolower($key) || $key=='entity') {
+            	$midKeys[0] = $key.'Id6666';
+			} else {
+            	$midKeys[] = $key.'Id';
+			}*/
+            $midKeys[] = $key.'Id';
 		}
 
 		return array(
@@ -269,7 +274,7 @@ class Relations
 					$params['link']['name'] => array(
 						'type' => Entity::MANY_MANY,
 						'entity' => $params['targetEntity'],
-						'relationName' => $params['link']['params']['relationName'],
+						'relationName' => lcfirst($params['link']['params']['relationName']),
 						'midKeys' => $midKeys,
 						'conditions' => array('entityType' => $params['entityName']),
 					),
