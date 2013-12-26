@@ -88,7 +88,8 @@
         },
         "teams": {
             "type": "hasMany",
-            "entity": "Team"
+            "entity": "Team",
+            "relationName": "EntityTeam"
         },
         "users": {
             "type": "hasMany",

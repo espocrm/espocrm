@@ -72,7 +72,8 @@
         },
         "teams": {
             "type": "hasMany",
-            "entity": "Team"
+            "entity": "Team",
+            "relationName": "EntityTeam"
         },
         "parent": {
             "type": "belongsToParent",

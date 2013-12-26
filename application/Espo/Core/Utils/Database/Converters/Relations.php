@@ -217,19 +217,23 @@ class Relations
 
 
 
-	public function teamRelation($params, $foreignParams)
+	//public function teamRelation($params, $foreignParams)
+	public function hasManyWithName($params, $foreignParams)
 	{
+    	$relationKeys = explode('-', Util::fromCamelCase($params['link']['params']['relationName']));
+        $midKeys = array();
+		foreach($relationKeys as $key) {
+        	$midKeys[] = $key.'Id';
+		}
+
 		return array(
 			$params['entityName'] => array(
 				'relations' => array(
 					$params['link']['name'] => array(
 						'type' => Entity::MANY_MANY,
 						'entity' => $params['targetEntity'],
-						'relationName' => 'EntityTeam',
-						'midKeys' => array(
-							'entityId',
-							'teamId',
-						),
+						'relationName' => $params['link']['params']['relationName'],
+						'midKeys' => $midKeys,
 						'conditions' => array('entityType' => $params['entityName']),
 					),
 				),

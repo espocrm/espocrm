@@ -67,7 +67,7 @@ class Converter
 	*/
 	public function process()
 	{
-		$GLOBALS['log']->add('Debug', 'Converter:process() - Start: converting metadata to orm format and database schema');
+		$GLOBALS['log']->add('Debug', 'Converters\Orm - Start: orm convertation');
 
         $entityDefs = $this->getMetadata()->get('entityDefs');
 
@@ -87,8 +87,7 @@ class Converter
 		//save database meta to a file espoMetadata.php
         $result = $this->getMetadata()->setOrmMetadata($databaseMeta);
 
-
-		$GLOBALS['log']->add('Debug', 'Converter:process() - End: converting metadata to orm format and database schema, result=['.$result.']');
+        $GLOBALS['log']->add('Debug', 'Converters\Orm - End: orm convertation, result=['.$result.']');
 
         return $result;
 	}

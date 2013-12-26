@@ -54,7 +54,9 @@ class Schema
 
 	//convertToSchema
 	public function process(array $databaseMeta, $entityDefs)
-	{               
+	{
+    	$GLOBALS['log']->add('Debug', 'Converters\Schema - Start: building schema');
+
 		$schema = $this->getSchema();
 
 		$tables = array();
@@ -144,6 +146,9 @@ class Schema
 			}
         }
 		//END: check and create columns/tables for relations
+
+
+		$GLOBALS['log']->add('Debug', 'Converters\Schema - End: building schema');
 
 		return $schema;
 	}

@@ -76,7 +76,8 @@
         },
         "teams": {
             "type": "hasMany",
-            "entity": "Team"
+            "entity": "Team",
+            "relationName": "EntityTeam"
         },
         "attachments": {
             "type": "hasChildren",

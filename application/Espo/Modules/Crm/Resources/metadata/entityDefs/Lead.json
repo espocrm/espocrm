@@ -134,7 +134,8 @@
         },
         "teams": {
             "type": "hasMany",
-            "entity": "Team"
+            "entity": "Team",
+            "relationName": "EntityTeam"
         },
         "opportunities": {
             "type": "hasMany",

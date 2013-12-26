@@ -28,7 +28,9 @@ class Orm
 	*/
 	protected $fieldAccordances = array(
 		'type' => 'type',
+		'dbType' => 'dbType',
 		'maxLength' => 'len',
+		'len' => 'len',
 		'autoincrement' => 'autoincrement',
 		'notStorable' => 'notStorable',
 		'link' => 'relation',
@@ -107,10 +109,6 @@ class Orm
 		                $fieldParams['len'] = $this->defaultLength['varchar'];
 		                break;
 
-					case 'datetime':
-                    	$fieldParams['notnull'] = false;
-						break;
-
 					case 'bool':
 		                $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
 		                break;
@@ -150,22 +148,21 @@ class Orm
 
 			//check if "fields" option exists in $fieldMeta
             $fieldParams['type'] = isset($fieldParams['type']) ? $fieldParams['type'] : '';
-
 			$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+
 			if (isset($fieldTypeMeta['fields']) && is_array($fieldTypeMeta['fields'])) {
 
-				$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
-            	foreach($fieldTypeMeta['fields'] as $subFieldName => $subFieldParams) {
+            	foreach($fieldTypeMeta['actualFields'] as $subFieldName) {
 
-					//$subFieldNameNaming = Util::fromCamelCase( Util::getNaming($fieldName, $subFieldName, $namingType, '_'), '_' );
-					$subFieldNameNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
-            		if (!isset($entityMeta['fields'][$subFieldNameNaming])) {
-						$subFieldDefs = $this->convertField($entityName, $subFieldName, $subFieldParams);
+					$subField = $this->convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta);
+
+            		//if (!isset($entityMeta['fields'][ $subField['naming'] ])) {
+            		if (!isset($outputMeta[ $subField['naming'] ])) {
+						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params']);
 						if ($subFieldDefs !== false) {
-							$outputMeta[$subFieldNameNaming] = $subFieldDefs; //push fieldDefs to the main array
+							$outputMeta[ $subField['naming'] ] = $subFieldDefs; //push fieldDefs to the main array
 						}
             		}
-
             	}
 
 			} else {
@@ -214,7 +211,11 @@ class Orm
 			$fieldParams['type'] = $this->defaultFieldType;
        	} //END: set default type if exists
 
-		$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+		if (isset($fieldParams['dbType'])) {
+        	$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['dbType']);
+		} else {
+        	$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+		}
 
 		//check if need to skip this field into database metadata
 		if (isset($fieldTypeMeta['database']['skip']) && $fieldTypeMeta['database']['skip'] === true) {
@@ -240,6 +241,50 @@ class Orm
 		} //END: check and set a field length
 
 		return $fieldDefs;
+	}
+
+	protected function convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta)
+	{
+        $subField = array();
+
+		$subField['params'] = $this->getInitValues($fieldParams);
+
+		//if empty field name, then use the main field
+		if (trim($subFieldName) == '') {
+
+			if (!isset($fieldTypeMeta['database'])) {
+				$GLOBALS['log']->add('EXCEPTION', 'Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
+			}
+
+			$subField['name'] = $fieldName;
+			$subField['naming'] = $fieldName;
+			if (isset($fieldTypeMeta['database'])) {
+            	$subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['database']);
+			}
+
+		} else {
+
+			if (!isset($fieldTypeMeta['fields'][$subFieldName])) {
+				$GLOBALS['log']->add('EXCEPTION', 'Empty field defs for ['.$entityName.':'.$subFieldName.'] using "actualFields". Main field ['.$fieldName.']');
+			}
+
+			$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
+
+			$subField['name'] = $subFieldName;
+			$subField['naming'] = Util::getNaming($fieldName, $subFieldName, $namingType);
+			if (isset($fieldTypeMeta['fields'][$subFieldName])) {
+            	$subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['fields'][$subFieldName]);
+			}
+
+		}
+
+		/*
+		name = $subFieldName
+		naming = $subFieldNameNaming
+		params = $subFieldParams
+		*/
+
+		return $subField;
 	}
 
 
