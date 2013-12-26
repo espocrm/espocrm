@@ -11,7 +11,8 @@
     "links": {
         "users": {
             "type": "hasMany",
-            "entity": "User"
+            "entity": "User",
+            "foreign": "roles"
         },
         "teams": {
             "type": "hasMany",
