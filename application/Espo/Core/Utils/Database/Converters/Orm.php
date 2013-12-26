@@ -31,10 +31,12 @@ class Orm
 		'dbType' => 'dbType',
 		'maxLength' => 'len',
 		'len' => 'len',
+		'notnull' => 'notnull',
 		'autoincrement' => 'autoincrement',
 		'notStorable' => 'notStorable',
 		'link' => 'relation',
 		'field' => 'foreign',  //todo change "foreign" to "field"
+		'unique' => 'unique',
 		'default' => array(
 		   'condition' => '^javascript:',
 		   'conditionEquals' => false,
@@ -112,6 +114,12 @@ class Orm
 					case 'bool':
 		                $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
 		                break;
+
+					case 'personName':
+		                $fieldParams['type'] = Entity::VARCHAR;
+						$typeDefs = $this->getLinks()->process('typePersonName', $entityName, array('name' => $fieldName));
+						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
+		                break;
 		        }
 			}
 		}
@@ -139,7 +147,7 @@ class Orm
 				'dbType' => 'varchar',
 			),
 			'name' => array(
-				'type' => Entity::VARCHAR,
+				'type' => isset($entityMeta['fields']['name']['type']) ? $entityMeta['fields']['name']['type'] : Entity::VARCHAR,
                 'notStorable' => true,
 			),
 		);
@@ -222,6 +230,14 @@ class Orm
         	return false;
 		}
 
+		//merge database options from field definition
+		if (isset($fieldTypeMeta['database'])) {
+        	$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['database']);
+		}
+
+		//if (isset($fieldTypeMeta['database']['notnull']))
+
+
 		$fieldDefs = $this->getInitValues($fieldParams);
 
 		//check if field need to be saved in database
@@ -230,10 +246,10 @@ class Orm
        		$fieldDefs['notStorable'] = true;
        	} //END: check if field need to be saved in database
 
-		//merge database options from field definition
-		if (isset($fieldTypeMeta['database'])) {
+        //merge database options from field definition
+		/*if (isset($fieldTypeMeta['database'])) {
         	$fieldDefs = Util::merge($fieldDefs, $fieldTypeMeta['database']);
-		}
+		}*/
 
 		//check and set a field length
 		if (!isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
@@ -297,12 +313,8 @@ class Orm
 
 		$relationships = array();
 		foreach($entityMeta['links'] as $linkName => $linkParams) {
-			//echo $linkName.'<br />';
-			//print_r($linkParams);
 
 			$linkEntityName = $this->getLinks()->getLinkEntityName($entityName, $linkParams);
-			//print_r($entityDefs[$linkEntityName]['links']);
-			//print_r($convertedMeta[$linkEntityName]);
 
 			$currentType = $linkParams['type'];
 			$parentType = '';
@@ -391,7 +403,7 @@ class Orm
 		$values = array();
 		foreach($this->fieldAccordances as $espoType => $doctrineType) {
 
-        	if (isset($fieldParams[$espoType]) && !empty($fieldParams[$espoType])) {
+        	if (isset($fieldParams[$espoType])) {
 
 				if (is_array($doctrineType))  {
 

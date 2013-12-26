@@ -216,6 +216,43 @@ class Relations
 	}
 
 
+	public function typePersonName($params, $foreignParams)
+	{
+		$foreignField = $this->getForeignField($params['link']['name'], $params['entityName']);
+		$tableName = Util::toUnderScore($params['entityName']);
+
+		$fullList = array(); //contains empty string (" ") like delimiter
+		$fieldList = array(); //doesn't contain empty string (" ") like delimiter
+		$like = array();
+		foreach($foreignField as $fieldName) {
+
+            $fieldNameTrimmed = trim($fieldName);
+			if (!empty($fieldNameTrimmed)) {
+				$columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
+
+            	$fullList[] = $fieldList[] = $columnName;
+				$like[] = $columnName." LIKE '{text}'";
+			} else {
+            	$fullList[] = "'".$fieldName."'";
+			}
+		}
+
+       	return array(
+			$params['entityName'] => array (
+	           	'fields' => array(
+	               	$params['link']['name'] => array(
+						'select' => "TRIM(CONCAT(".implode(", ", $fullList)."))",
+					    'where' => array(
+					    	'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE '{text}')",
+					    ),
+					    'orderBy' => implode(", ", $fieldList),
+					),
+				),
+			),
+		);
+	}
+
+
 
 	//public function teamRelation($params, $foreignParams)
 	public function hasManyWithName($params, $foreignParams)
