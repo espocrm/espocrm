@@ -47,6 +47,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$this->tag = new \Espo\Entities\Tag();
 		$this->note = new \Espo\Entities\Note();
 		
+		$this->contact = new \Espo\Entities\Contact();		
 		$this->account = new \Espo\Entities\Account();		
 
 	}
@@ -139,6 +140,35 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($list[0] instanceof Post);
 		$this->assertTrue(isset($list[0]->id));	
 		$this->assertEquals($list[0]->id, '2');	
+	}
+	
+	public function testSelectWithConcat()
+	{
+		$query = 
+			"SELECT contact.id AS id, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS name, contact.first_name AS firstName, contact.last_name AS lastName, contact.deleted AS deleted ".
+			"FROM contact ".
+			"WHERE (contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') AND contact.deleted = '0' ".
+			"ORDER BY contact.first_name, contact.last_name DESC ".
+			"LIMIT 0, 10";
+			
+		$return = new MockDBResult(array(
+			array(
+				'id' => '1',
+				'name' => 'test',
+				'deleted' => 0,
+			),
+		));
+		$this->mockQuery($query, $return);
+		
+		$selectParams = array(
+			'whereClause' => array(
+				'name*' => 'test%',
+			),
+			'order' => 'DESC',
+			'orderBy' => 'name',
+			'limit' => 10
+		);
+		$list = $this->db->select($this->contact, $selectParams);
 	}
 	
 	public function testJoin()

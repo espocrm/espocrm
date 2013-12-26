@@ -844,7 +844,7 @@ abstract class Mapper implements IMapper
 		
 		foreach ($whereClause as $field => $value) {
 		
-			if (!in_array($field, self::$sqlOperators)) {
+			if (!in_array($field, self::$sqlOperators)) {				
 				
 				$inRelated = false;
 
@@ -872,22 +872,26 @@ abstract class Mapper implements IMapper
 					
 					$fieldDefs = $entity->fields[$field];
 					
-					if ($fieldDefs['type'] == IEntity::FOREIGN) {
-						$leftPart = '';
-						if (isset($fieldDefs['relation'])) {
-							$relationName = $fieldDefs['relation'];
-							if (isset($entity->relations[$relationName])) {
-								$keySet = $this->getKeys($entity, $relationName);
-								$key = $keySet['key'];
+					if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operator])) {
+						$whereParts[] = str_replace('{text}', $value, $fieldDefs['where'][$operator]);
+					} else {					
+						if ($fieldDefs['type'] == IEntity::FOREIGN) {
+							$leftPart = '';
+							if (isset($fieldDefs['relation'])) {
+								$relationName = $fieldDefs['relation'];
+								if (isset($entity->relations[$relationName])) {
+									$keySet = $this->getKeys($entity, $relationName);
+									$key = $keySet['key'];
 								
-								$alias = $this->getAlias($entity, $key);
-								if ($alias) {
-									$leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+									$alias = $this->getAlias($entity, $key);
+									if ($alias) {
+										$leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+									}
 								}
 							}
+						} else {
+							$leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field);
 						}
-					} else {
-						$leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field);
 					}
 				} else {
 					$leftPart = $this->toDb($entityName) . '.' . $this->toDb($field);
@@ -1027,17 +1031,21 @@ abstract class Mapper implements IMapper
 		$specifiedList = is_array($fields) ? true : false;
 		
 		foreach ($entity->fields as $field => $fieldDefs) {
-			if (!empty($fieldDefs['notStorable'])) {
-				continue;
-			}			
-			
 			if ($specifiedList) {
 				if (!in_array($field, $fields)) {
 					continue;
 				}
-			}			
+			}
+		
+			if (!empty($fieldDefs['select'])) {
+				$fieldPath = $fieldDefs['select'];
+			} else {			
+				if (!empty($fieldDefs['notStorable'])) {
+					continue;
+				}
+				$fieldPath = $this->getFieldPath($entity, $field);
+			}
 
-			$fieldPath = $this->getFieldPath($entity, $field);
 			$arr[] = $fieldPath . ' AS ' . $field;
 		}
 		
@@ -1051,7 +1059,12 @@ abstract class Mapper implements IMapper
 		$orderStr = "";
 		
 		if (!is_null($orderBy)) {
-			$fieldPath = $this->getFieldPath($entity, $orderBy);
+			$fieldDefs = $entity->fields[$orderBy];
+			if (!empty($fieldDefs['orderBy'])) {
+				$fieldPath = $fieldDefs['orderBy'];
+			} else {			
+				$fieldPath = $this->getFieldPath($entity, $orderBy);
+			}
 			$orderStr .= "ORDER BY {$fieldPath}";
 			if (!is_null($order)) {
 				$order = strtoupper($order);

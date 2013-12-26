@@ -57,6 +57,34 @@ class Team extends TEntity
 	public $relations = array();
 }
 
+class Contact extends TEntity
+{	
+	public $fields = array(
+			'id' => array(
+				'type' => Entity::ID,			
+			),
+			'name' => array(
+				'type' => Entity::VARCHAR,
+				'notStorable' => true,
+				'select' => "TRIM(CONCAT(contact.first_name, ' ', contact.last_name))",
+				'where' => array(
+					'LIKE' => "(contact.first_name LIKE '{text}' OR contact.last_name LIKE '{text}' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE '{text}')",
+				),
+				'orderBy' => "contact.first_name, contact.last_name",
+			),
+			'firstName' => array(
+				'type' => Entity::VARCHAR,	
+			),
+			'lastName' => array(
+				'type' => Entity::VARCHAR,	
+			),
+			'deleted' => array(
+				'type' => Entity::BOOL,
+				'default' => 0,
+			),
+	);
+	public $relations = array();
+}
 
 class Post extends TEntity
 {	
