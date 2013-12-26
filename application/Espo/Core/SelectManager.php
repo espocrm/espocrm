@@ -29,7 +29,7 @@ class SelectManager
 		if (isset($params['asc'])) {
 			if ($params['asc']) {
 				$result['order'] = 'ASC';
-			} {
+			} else {
 				$result['order'] = 'DESC';
 			}
 		}

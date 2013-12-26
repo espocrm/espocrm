@@ -16,7 +16,7 @@ class Acl
 	{
 		$this->user = $user;
 
-		$this->cacheFile = 'data/cache/acl/' . $user->id;
+		$this->cacheFile = 'data/cache/application/acl/' . $user->id;
 
 		if (file_exists($this->cacheFile)) {
 			$cached = include $this->cacheFile;
@@ -70,6 +70,11 @@ class Acl
 		}
 		return true;		
 	}
+	
+	public function toArray()
+	{
+		return $this->data;
+	}
 
 	public function check($subject, $action = null, $isOwner = null, $inTeam = null)
 	{	
@@ -88,8 +93,8 @@ class Acl
 	
 	public function checkIsOwner($entity)
 	{
-		$userId = $this->user->getId();
-		if ($userId === $entity->getAssignedUserId() || $userId === $entity->getCreatedById()) {
+		$userId = $this->user->id;
+		if ($userId === $entity->get('assignedUserId') || $userId === $entity->get('createdById')) {
 			return true;
 		}
 		return false;
@@ -97,8 +102,8 @@ class Acl
 	
 	public function checkInTeam($entity)
 	{
-		$userTeamIds = $this->user->getTeamIds();
-		$teamIds = $entity->getTeamIds();
+		$userTeamIds = $this->user->get('teamsIds');
+		$teamIds = $entity->get('teamsIds');
 		
 		foreach ($userTeamIds as $id) {
 			if (in_array($id, $teamIds)) {

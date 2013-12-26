@@ -6,6 +6,10 @@ class App extends \Espo\Core\Controllers\Record
 {
 	public function actionUser()
 	{		
-		return $this->getUser()->toArray();		
+		return array(
+			'user' => $this->getUser()->toArray(),
+			'acl' => $this->getAcl()->toArray(),
+			'preferences' => array(),
+		);	
 	}
 }

@@ -79,10 +79,35 @@ abstract class Record extends Base
 		$where = $request->get('where');
 		$offset = $request->get('offset');
 		$maxSize = $request->get('maxSize');
-		$asc = $request->get('asc');
-		$sortBy = $request->get('sortBy');	
+		$asc = $request->get('asc') === 'true';
+		$sortBy = $request->get('sortBy');
 
 		$result = $this->getService()->findEntities(array(
+			'where' => $where,
+			'offset' => $offset,
+			'maxSize' => $maxSize,
+			'asc' => $asc,
+			'sortBy' => $sortBy,
+		));
+		
+		return array(
+			'total' => $result['total'],
+			'list' => $result['collection']->toArray()
+		);
+	}
+	
+	public function actionListLinked($params, $data, $request)
+	{
+		$id = $params['id'];
+		$link = $params['link'];		
+
+		$where = $request->get('where');
+		$offset = $request->get('offset');
+		$maxSize = $request->get('maxSize');
+		$asc = $request->get('asc') === 'true';
+		$sortBy = $request->get('sortBy');		
+
+		$result = $this->getService()->findLinkedEntities($id, $link, array(
 			'where' => $where,
 			'offset' => $offset,
 			'maxSize' => $maxSize,
@@ -132,31 +157,6 @@ abstract class Record extends Base
 		$idsDeleted = $this->getService()->massDelete($ids, $where);
 
 		return $idsDeleted;
-	}
-
-	public function actionListLinked($params, $data, $request)
-	{
-		$id = $params['id'];
-		$link = $params['link'];		
-
-		$where = $request->get('where');
-		$offset = $request->get('offset');
-		$maxSize = $request->get('maxSize');
-		$asc = $request->get('asc');
-		$sortBy = $request->get('sortBy');		
-
-		$result = $this->getService()->findLinkedEntities($id, $link, array(
-			'where' => $where,
-			'offset' => $offset,
-			'maxSize' => $maxSize,
-			'asc' => $asc,
-			'sortBy' => $sortBy,
-		));
-		
-		return array(
-			'total' => $result['total'],
-			'list' => $result['collection']->toArray()
-		);
 	}
 
 	public function actionCreateLink($params, $data)

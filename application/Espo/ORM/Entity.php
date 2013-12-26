@@ -140,7 +140,27 @@ abstract class Entity implements IEntity
 					}
 				}
 				
-				$this->valuesContainer[$field] = $arr[$field];
+				$value = $arr[$field];
+				
+				if (!is_null($value)) {
+					switch ($fieldDefs['type']) {
+						case self::VARCHAR:						
+							break;
+						case self::BOOL:
+							$value = ($value === 'true' || $value === '1' || $value === true);
+							break;
+						case self::INT:
+							$value = intval($value);
+							break;
+						case self::FLOAT:
+							$value = floatval($value);
+							break;
+						default:
+							break;
+					}
+				}
+				
+				$this->valuesContainer[$field] = $value;
 			}
 		}
 	}

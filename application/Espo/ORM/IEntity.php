@@ -9,6 +9,8 @@ interface IEntity
 {
 	const ID = 'id';
 	const VARCHAR = 'varchar';
+	const INT = 'int';
+	const FLOAT = 'float';
 	const TEXT = 'text';
 	const BOOL = 'bool';
 	const FOREIGN_ID = 'foreignId';

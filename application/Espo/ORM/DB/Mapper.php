@@ -746,13 +746,8 @@ abstract class Mapper implements IMapper
 	}	
 		
 	protected function fromRow(IEntity $entity, $data)
-	{		
-		foreach ($data as $field => $value) {
-			if (isset($entity->fields[$field])) {
-				$entity->set($field, $value);
-			}
-		}
-		
+	{	
+		$entity->set($data);
 		return $entity;
 	}
 	
