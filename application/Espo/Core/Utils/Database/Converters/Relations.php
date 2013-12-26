@@ -68,40 +68,23 @@ class Relations
 	//todo sedine in foreign fieldDefs a key for current
 	public function manyMany($params, $foreignParams)
 	{
-        $sortedEntities = $this->getSortEntities($params['entityName'], $foreignParams['entityName']);
-
-		$relation = array();
-
-		//check for duplication if defined a "foreign" key for both sides
-		$process = true;
-        if (isset($params['link']['params']['foreign']) && isset($foreignParams['link']['params']['foreign'])) {
-        	$process = false;
-        	if (strtolower($params['entityName']) == strtolower($sortedEntities[0])) {
-            	$process = true;
-        	}
-        }
-
-		if ($process) {
-			$relation = array(
-				$params['entityName'] => array(
-					'relations' => array(
-						$params['link']['name'] => array(
-							'type' => Entity::MANY_MANY,
-							'entity' => $params['targetEntity'],
-							'relationName' => $this->getJoinTable($params['entityName'], $foreignParams['entityName']),
-							'key' => 'id', //todo specify 'key'
-							'foreignKey' => 'id', //todo specify 'foreignKey'
-							'midKeys' => array(
-								lcfirst($params['entityName']).'Id',
-								lcfirst($foreignParams['entityName']).'Id',
-							),
+		return array(
+			$params['entityName'] => array(
+				'relations' => array(
+					$params['link']['name'] => array(
+						'type' => Entity::MANY_MANY,
+						'entity' => $params['targetEntity'],
+						'relationName' => $this->getJoinTable($params['entityName'], $foreignParams['entityName']),
+						'key' => 'id', //todo specify 'key'
+						'foreignKey' => 'id', //todo specify 'foreignKey'
+						'midKeys' => array(
+							lcfirst($params['entityName']).'Id',
+							lcfirst($foreignParams['entityName']).'Id',
 						),
 					),
 				),
-			);
-		}
-
-    	return $relation;
+			),
+		); 
 	}
 
 

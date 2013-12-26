@@ -189,9 +189,6 @@ class Schema
 
 		if ($isForeignKey) {
 			$relationEntities = array($entityName, $relationParams['entity']);
-			if (!isset($relationParams['key'])) {
-				print_r($relationParams);
-			}
 			$relationKeys = array($relationParams['key'], $relationParams['foreignKey']);
 		}
 
