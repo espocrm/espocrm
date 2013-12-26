@@ -28,11 +28,15 @@ class Orm
 	*/
 	protected $fieldAccordances = array(
 		'type' => 'type',
+		'dbType' => 'dbType',
 		'maxLength' => 'len',
+		'len' => 'len',
+		'notnull' => 'notnull',
 		'autoincrement' => 'autoincrement',
 		'notStorable' => 'notStorable',
 		'link' => 'relation',
 		'field' => 'foreign',  //todo change "foreign" to "field"
+		'unique' => 'unique',
 		'default' => array(
 		   'condition' => '^javascript:',
 		   'conditionEquals' => false,
@@ -107,12 +111,14 @@ class Orm
 		                $fieldParams['len'] = $this->defaultLength['varchar'];
 		                break;
 
-					case 'datetime':
-                    	$fieldParams['notnull'] = false;
-						break;
-
 					case 'bool':
 		                $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
+		                break;
+
+					case 'personName':
+		                $fieldParams['type'] = Entity::VARCHAR;
+						$typeDefs = $this->getLinks()->process('typePersonName', $entityName, array('name' => $fieldName));
+						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
 		                break;
 		        }
 			}
@@ -141,7 +147,7 @@ class Orm
 				'dbType' => 'varchar',
 			),
 			'name' => array(
-				'type' => Entity::VARCHAR,
+				'type' => isset($entityMeta['fields']['name']['type']) ? $entityMeta['fields']['name']['type'] : Entity::VARCHAR,
                 'notStorable' => true,
 			),
 		);
@@ -150,22 +156,21 @@ class Orm
 
 			//check if "fields" option exists in $fieldMeta
             $fieldParams['type'] = isset($fieldParams['type']) ? $fieldParams['type'] : '';
-
 			$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+
 			if (isset($fieldTypeMeta['fields']) && is_array($fieldTypeMeta['fields'])) {
 
-				$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
-            	foreach($fieldTypeMeta['fields'] as $subFieldName => $subFieldParams) {
+            	foreach($fieldTypeMeta['actualFields'] as $subFieldName) {
 
-					//$subFieldNameNaming = Util::fromCamelCase( Util::getNaming($fieldName, $subFieldName, $namingType, '_'), '_' );
-					$subFieldNameNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
-            		if (!isset($entityMeta['fields'][$subFieldNameNaming])) {
-						$subFieldDefs = $this->convertField($entityName, $subFieldName, $subFieldParams);
+					$subField = $this->convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta);
+
+            		//if (!isset($entityMeta['fields'][ $subField['naming'] ])) {
+            		if (!isset($outputMeta[ $subField['naming'] ])) {
+						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params']);
 						if ($subFieldDefs !== false) {
-							$outputMeta[$subFieldNameNaming] = $subFieldDefs; //push fieldDefs to the main array
+							$outputMeta[ $subField['naming'] ] = $subFieldDefs; //push fieldDefs to the main array
 						}
             		}
-
             	}
 
 			} else {
@@ -214,12 +219,24 @@ class Orm
 			$fieldParams['type'] = $this->defaultFieldType;
        	} //END: set default type if exists
 
-		$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+		if (isset($fieldParams['dbType'])) {
+        	$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['dbType']);
+		} else {
+        	$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+		}
 
 		//check if need to skip this field into database metadata
 		if (isset($fieldTypeMeta['database']['skip']) && $fieldTypeMeta['database']['skip'] === true) {
         	return false;
 		}
+
+		//merge database options from field definition
+		if (isset($fieldTypeMeta['database'])) {
+        	$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['database']);
+		}
+
+		//if (isset($fieldTypeMeta['database']['notnull']))
+
 
 		$fieldDefs = $this->getInitValues($fieldParams);
 
@@ -229,10 +246,10 @@ class Orm
        		$fieldDefs['notStorable'] = true;
        	} //END: check if field need to be saved in database
 
-		//merge database options from field definition
-		if (isset($fieldTypeMeta['database'])) {
+        //merge database options from field definition
+		/*if (isset($fieldTypeMeta['database'])) {
         	$fieldDefs = Util::merge($fieldDefs, $fieldTypeMeta['database']);
-		}
+		}*/
 
 		//check and set a field length
 		if (!isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
@@ -240,6 +257,50 @@ class Orm
 		} //END: check and set a field length
 
 		return $fieldDefs;
+	}
+
+	protected function convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta)
+	{
+        $subField = array();
+
+		$subField['params'] = $this->getInitValues($fieldParams);
+
+		//if empty field name, then use the main field
+		if (trim($subFieldName) == '') {
+
+			if (!isset($fieldTypeMeta['database'])) {
+				$GLOBALS['log']->add('EXCEPTION', 'Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
+			}
+
+			$subField['name'] = $fieldName;
+			$subField['naming'] = $fieldName;
+			if (isset($fieldTypeMeta['database'])) {
+            	$subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['database']);
+			}
+
+		} else {
+
+			if (!isset($fieldTypeMeta['fields'][$subFieldName])) {
+				$GLOBALS['log']->add('EXCEPTION', 'Empty field defs for ['.$entityName.':'.$subFieldName.'] using "actualFields". Main field ['.$fieldName.']');
+			}
+
+			$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
+
+			$subField['name'] = $subFieldName;
+			$subField['naming'] = Util::getNaming($fieldName, $subFieldName, $namingType);
+			if (isset($fieldTypeMeta['fields'][$subFieldName])) {
+            	$subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['fields'][$subFieldName]);
+			}
+
+		}
+
+		/*
+		name = $subFieldName
+		naming = $subFieldNameNaming
+		params = $subFieldParams
+		*/
+
+		return $subField;
 	}
 
 
@@ -252,12 +313,8 @@ class Orm
 
 		$relationships = array();
 		foreach($entityMeta['links'] as $linkName => $linkParams) {
-			//echo $linkName.'<br />';
-			//print_r($linkParams);
 
 			$linkEntityName = $this->getLinks()->getLinkEntityName($entityName, $linkParams);
-			//print_r($entityDefs[$linkEntityName]['links']);
-			//print_r($convertedMeta[$linkEntityName]);
 
 			$currentType = $linkParams['type'];
 			$parentType = '';
@@ -346,7 +403,7 @@ class Orm
 		$values = array();
 		foreach($this->fieldAccordances as $espoType => $doctrineType) {
 
-        	if (isset($fieldParams[$espoType]) && !empty($fieldParams[$espoType])) {
+        	if (isset($fieldParams[$espoType])) {
 
 				if (is_array($doctrineType))  {
 

@@ -216,20 +216,61 @@ class Relations
 	}
 
 
-
-	public function teamRelation($params, $foreignParams)
+	public function typePersonName($params, $foreignParams)
 	{
+		$foreignField = $this->getForeignField($params['link']['name'], $params['entityName']);
+		$tableName = Util::toUnderScore($params['entityName']);
+
+		$fullList = array(); //contains empty string (" ") like delimiter
+		$fieldList = array(); //doesn't contain empty string (" ") like delimiter
+		$like = array();
+		foreach($foreignField as $fieldName) {
+
+            $fieldNameTrimmed = trim($fieldName);
+			if (!empty($fieldNameTrimmed)) {
+				$columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
+
+            	$fullList[] = $fieldList[] = $columnName;
+				$like[] = $columnName." LIKE '{text}'";
+			} else {
+            	$fullList[] = "'".$fieldName."'";
+			}
+		}
+
+       	return array(
+			$params['entityName'] => array (
+	           	'fields' => array(
+	               	$params['link']['name'] => array(
+						'select' => "TRIM(CONCAT(".implode(", ", $fullList)."))",
+					    'where' => array(
+					    	'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE '{text}')",
+					    ),
+					    'orderBy' => implode(", ", $fieldList),
+					),
+				),
+			),
+		);
+	}
+
+
+
+	//public function teamRelation($params, $foreignParams)
+	public function hasManyWithName($params, $foreignParams)
+	{
+    	$relationKeys = explode('-', Util::fromCamelCase($params['link']['params']['relationName']));
+        $midKeys = array();
+		foreach($relationKeys as $key) {
+        	$midKeys[] = $key.'Id';
+		}
+
 		return array(
 			$params['entityName'] => array(
 				'relations' => array(
 					$params['link']['name'] => array(
 						'type' => Entity::MANY_MANY,
 						'entity' => $params['targetEntity'],
-						'relationName' => 'EntityTeam',
-						'midKeys' => array(
-							'entityId',
-							'teamId',
-						),
+						'relationName' => $params['link']['params']['relationName'],
+						'midKeys' => $midKeys,
 						'conditions' => array('entityType' => $params['entityName']),
 					),
 				),
