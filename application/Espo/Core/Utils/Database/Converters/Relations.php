@@ -118,6 +118,7 @@ class Relations
 					),
 					$params['link']['name'].'Id' => array(
 						'type' => Entity::FOREIGN_ID,
+						'index' => true,
 					),
 				),
 				'relations' => array(
@@ -164,9 +165,11 @@ class Relations
             	'fields' => array(
                 	$params['link']['name'].'Id' => array(
 						'type' => Entity::FOREIGN_ID,
+						'index' => $params['link']['name'],
 					),
 					$params['link']['name'].'Type' => array(
 						'type' => Entity::FOREIGN_TYPE,
+						'index' => $params['link']['name'],
 					),
 					$params['link']['name'].'Name' => array(
 						'type' => Entity::VARCHAR,
@@ -243,11 +246,6 @@ class Relations
     	$relationKeys = explode('-', Util::fromCamelCase($params['link']['params']['relationName']));
         $midKeys = array();
 		foreach($relationKeys as $key) {
-			/*if (strtolower($params['entityName']) == strtolower($key) || $key=='entity') {
-            	$midKeys[0] = $key.'Id6666';
-			} else {
-            	$midKeys[] = $key.'Id';
-			}*/
             $midKeys[] = $key.'Id';
 		}
 

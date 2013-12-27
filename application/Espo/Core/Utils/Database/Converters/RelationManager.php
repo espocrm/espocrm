@@ -4,7 +4,7 @@ namespace Espo\Core\Utils\Database\Converters;
 
 use Espo\Core\Utils\Util;
 
-class Links
+class RelationManager
 {
     private $metadata;
 

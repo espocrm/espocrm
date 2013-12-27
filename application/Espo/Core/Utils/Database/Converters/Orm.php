@@ -9,7 +9,7 @@ class Orm
 {
 	private $metadata;
 
-	private $links;
+	private $relationManager;
 
 	protected $defaultFieldType = 'varchar';
 	protected $defaultNaming = 'postfix';
@@ -37,6 +37,7 @@ class Orm
 		'link' => 'relation',
 		'field' => 'foreign',  //todo change "foreign" to "field"
 		'unique' => 'unique',
+		'index' => 'index',
 		'default' => array(
 		   'condition' => '^javascript:',
 		   'conditionEquals' => false,
@@ -56,7 +57,7 @@ class Orm
 	{
     	$this->metadata = $metadata;
 
-		$this->links = new \Espo\Core\Utils\Database\Converters\Links($this->metadata);
+		$this->relationManager = new RelationManager($this->metadata);
 	}
 
 
@@ -65,9 +66,9 @@ class Orm
 		return $this->metadata;
 	}
 
-	protected function getLinks()
+	protected function getRelationManager()
 	{
-		return $this->links;
+		return $this->relationManager;
 	}
 
 
@@ -117,7 +118,7 @@ class Orm
 
 					case 'personName':
 		                $fieldParams['type'] = Entity::VARCHAR;
-						$typeDefs = $this->getLinks()->process('typePersonName', $entityName, array('name' => $fieldName));
+						$typeDefs = $this->getRelationManager()->process('typePersonName', $entityName, array('name' => $fieldName));
 						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
 		                break;
 		        }
@@ -186,12 +187,12 @@ class Orm
 
         	switch ($fieldParams['type']) {
 	            case 'linkParent':
-	                $linkData = $this->getLinks()->process('linkParent', $entityName, array('name' => $fieldName));
+	                $linkData = $this->getRelationManager()->process('linkParent', $entityName, array('name' => $fieldName));
 					$outputMeta = Util::merge($outputMeta, $linkData[$entityName]['fields']);
 	                break;
 
 				case 'linkMultiple':
-	                $linkData = $this->getLinks()->process('linkMultiple', $entityName, array('name' => $fieldName));
+	                $linkData = $this->getRelationManager()->process('linkMultiple', $entityName, array('name' => $fieldName));
 					unset($outputMeta[$fieldName]); //no need "linkMultiple" field
 					$outputMeta = Util::merge($outputMeta, $linkData[$entityName]['fields']);
 	                break;
@@ -314,7 +315,7 @@ class Orm
 		$relationships = array();
 		foreach($entityMeta['links'] as $linkName => $linkParams) {
 
-			$linkEntityName = $this->getLinks()->getLinkEntityName($entityName, $linkParams);
+			$linkEntityName = $this->getRelationManager()->getLinkEntityName($entityName, $linkParams);
 
 			$currentType = $linkParams['type'];
 			$parentType = '';
@@ -341,14 +342,14 @@ class Orm
 			}    */
 
 
-			if ( $this->getLinks()->isMethodExists($method) ) {  //ex. hasManyHasMany
-            	$convertedLink = $this->getLinks()->process($method, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
+			if ( $this->getRelationManager()->isMethodExists($method) ) {  //ex. hasManyHasMany
+            	$convertedLink = $this->getRelationManager()->process($method, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
 			} else { //ex. hasMany
-            	$convertedLink = $this->getLinks()->process($currentType, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
+            	$convertedLink = $this->getRelationManager()->process($currentType, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
 			}
 
-			/*else if (isset($reverseMethod) && method_exists($this->getLinks(), $reverseMethod)) {
-            	$convertedLink = $this->getLinks()->process($reverseMethod, $entityName, $foreignLink, array('name'=>$linkName, 'params'=>$linkParams));
+			/*else if (isset($reverseMethod) && method_exists($this->getRelationManager(), $reverseMethod)) {
+            	$convertedLink = $this->getRelationManager()->process($reverseMethod, $entityName, $foreignLink, array('name'=>$linkName, 'params'=>$linkParams));
 			}   */
 
 			//$relationships = Util::merge($relationships, $convertedLink);
