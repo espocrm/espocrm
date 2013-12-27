@@ -70,7 +70,7 @@
         }
     },
     "collection": {
-    	"sortBy": "name",
+    	"sortBy": "userName",
     	"asc": true
     }
 }

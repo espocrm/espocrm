@@ -92,11 +92,11 @@ class Record extends \Espo\Core\Services\Base
 				if ($entity->hasRelation($field) && $entity->hasField($field . 'Ids')) {
 					$collection = $entity->get($field);
 					$ids = array();
-					$names = array();		
+					$names = new \stdClass();		
 					foreach ($collection as $e) {
 						$id = $e->id;
 						$ids[] = $id;
-						$names[$id] = $e->get('name');
+						$names->$id = $e->get('name');
 					}			
 					$entity->set($field . 'Ids', $ids);
 					$entity->set($field . 'Names', $names);

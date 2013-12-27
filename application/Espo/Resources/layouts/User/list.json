@@ -1,1 +1,1 @@
-[{"name":"name","width":30,"link":true},{"name":"userName"},{"name":"email"}]
+[{"name":"userName","width":30,"link":true},{"name":"name"},{"name":"email"}]
