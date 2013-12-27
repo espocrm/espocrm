@@ -67,6 +67,16 @@
         "preferences": {
             "type": "hasOne",
             "entity": "Preferences"
+        },
+		"meetings": {
+            "type": "hasMany",
+            "entity": "Meeting",
+            "foreign": "users"
+        },
+		"calls": {
+            "type": "hasMany",
+            "entity": "Call",
+            "foreign": "users"
         }
     },
     "collection": {
