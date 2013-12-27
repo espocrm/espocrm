@@ -72,8 +72,7 @@ class Repository extends \Espo\ORM\Repository
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
 							}
-						}
-										
+						}										
 						foreach ($specifiedIds as $id) {
 							if (!in_array($id, $existingIds)) {
 								$this->relate($entity, $name, $id);

@@ -678,7 +678,7 @@ abstract class Mapper implements IMapper
 		$valuesPart = implode(", ", $valArr);
 		
 		$sql = $this->composeInsertQuery($this->toDb($entity->getEntityName()), $fieldsPart, $valuesPart);
-
+		
 		if ($this->pdo->query($sql)) {			
 			return $entity->id;
 		}
@@ -1074,7 +1074,7 @@ abstract class Mapper implements IMapper
 	
 	protected function composeInsertQuery($table, $fields, $values)
 	{	
-		$sql = "INSERT INTO {$table}";
+		$sql = "INSERT INTO `{$table}`";
 		$sql .= " ({$fields})";
 		if (!is_array($values)) {
 			$sql .= " VALUES ({$values})";
@@ -1087,7 +1087,7 @@ abstract class Mapper implements IMapper
 	
 	protected function composeUpdateQuery($table, $set, $where)
 	{
-		$sql = "UPDATE {$table} SET {$set} WHERE {$where}";
+		$sql = "UPDATE `{$table}` SET {$set} WHERE {$where}";
 		
 		return $sql;
 	}

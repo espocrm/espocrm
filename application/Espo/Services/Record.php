@@ -79,7 +79,8 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$entity = $this->getRepository()->get($id);		
 		if (!empty($entity) && !empty($id)) {		
-			$this->loadLinkMultipleFields($entity);
+			$this->loadLinkMultipleFields($entity);			
+			$this->loadParentNameFields($entity);
 		}		
 		return $entity;
 	}
@@ -105,6 +106,23 @@ class Record extends \Espo\Core\Services\Base
 		}
 	}
 	
+	protected function loadParentNameFields($entity)
+	{
+		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $this->entityName . '.fields', array());
+		foreach ($fieldDefs as $field => $defs) {
+			if ($defs['type'] == 'linkParent') {								
+				$id = $entity->get($field . 'Id');
+				$scope = $entity->get($field . 'Type');
+				
+				if ($scope) {				
+					if ($foreignEntity = $this->getEntityManager()->getEntity($scope, $id)) {
+						$entity->set($field . 'Name', $foreignEntity->get('name'));
+					}
+				}
+			}
+		}
+	}
+	
 	protected function getSelectManager()
 	{
 		if (empty($this->selectManager)) {
@@ -118,11 +136,11 @@ class Record extends \Espo\Core\Services\Base
 		// TODO validate $data
 		$entity = $this->getEntity();
 		
-		$entity->set($data);
+		$entity->set($data);		
 		
 		if ($this->getRepository()->save($entity)) {
 			return $entity;
-		}
+		}		
 		
 		throw new Error();
 	}

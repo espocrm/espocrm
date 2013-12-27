@@ -21,7 +21,7 @@ class MysqlMapper extends Mapper
 			$sql .= " DISTINCT";
 		}
 
-		$sql .= " {$select} FROM {$table}";
+		$sql .= " {$select} FROM `{$table}`";
 		
 		if (!empty($joins)) {
 			$sql .= " {$joins}";

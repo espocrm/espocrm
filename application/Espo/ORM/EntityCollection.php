@@ -9,9 +9,10 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 	private $entityName;
 	
 	private $position = 0;
+	
 	protected $container = array();
 	
-	public function __construct(array $data, $seed = null, EntityFactory $entityFactory = null)
+	public function __construct($data, $seed = null, EntityFactory $entityFactory = null)
 	{
 		$this->container = $data;
 		
