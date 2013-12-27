@@ -17,7 +17,7 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "foreign": "roles"
         }
     },
     "collection": {
