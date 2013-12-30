@@ -50,10 +50,10 @@ class Converter
 	public function getSchemaFromMetadata()
 	{
 		if (!isset($this->schemaFromMetadata)) {
-        	$databaseMeta = $this->getMetadata()->getOrmMetadata();
+        	$ormMeta = $this->getMetadata()->getOrmMetadata();
         	$entityDefs = $this->getMetadata()->get('entityDefs');
 
-			$schema = $this->getSchemaConverter()->process($databaseMeta, $entityDefs);
+			$schema = $this->getSchemaConverter()->process($ormMeta, $entityDefs);
 			$this->schemaFromMetadata = $schema;
 		}
 
@@ -69,23 +69,10 @@ class Converter
 	{
 		$GLOBALS['log']->add('Debug', 'Converters\Orm - Start: orm convertation');
 
-        $entityDefs = $this->getMetadata()->get('entityDefs');
-
-		$databaseMeta = array();
-        foreach($entityDefs as $entityName => $entityMeta) {
-
-			if (empty($entityMeta)) {
-		    	$GLOBALS['log']->add('ERROR', 'Converter:process(), Entity:'.$entityName.' - metadata cannot be converted into database format');
-				continue;
-			}
-
-     		$databaseMeta = Util::merge($databaseMeta, $this->getOrmConverter()->process($entityName, $entityMeta, $entityDefs));
-        }
-
-        $databaseMeta = $this->getOrmConverter()->prepare($databaseMeta);
+		$ormMeta = $this->getOrmConverter()->process();
 
 		//save database meta to a file espoMetadata.php
-        $result = $this->getMetadata()->setOrmMetadata($databaseMeta);
+        $result = $this->getMetadata()->setOrmMetadata($ormMeta);
 
         $GLOBALS['log']->add('Debug', 'Converters\Orm - End: orm convertation, result=['.$result.']');
 
