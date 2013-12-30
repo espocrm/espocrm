@@ -189,16 +189,17 @@ class Activities extends \Espo\Core\Services\Base
 		$row = $sth->fetch(PDO::FETCH_ASSOC);		
 		$totalCount = $row['count'];
 		
+		$qu .= "
+			ORDER BY dateStart DESC
+		";		
+		
 		if (!empty($params['maxSize'])) {
 			$qu .= "
 				LIMIT :offset, :maxSize
 			";	
-		}
-		
+		}		
 
-		/*$qu .= "
-			ORDER BY dateStart DESC
-		";*/			
+	
 
 		$sth = $pdo->prepare($qu);
 		
