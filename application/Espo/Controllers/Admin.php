@@ -6,21 +6,17 @@ use \Espo\Core\Exceptions\Error,
 	\Espo\Core\Exceptions\Forbidden;
 
 class Admin extends \Espo\Core\Controllers\Base
-{
-
-	public function __construct(\Espo\Core\Container $container, \Espo\Core\ServiceFactory $serviceFactory)
+{	
+	protected function checkGlobalAccess()
 	{
-		parent::__construct($container, $serviceFactory);
-
 		if (!$this->getUser()->isAdmin()) {
-        	throw new Forbidden("You do not have access to this area");
+        	throw new Forbidden();
 		}
-	}
-	
+	}	
 
     public function actionRebuild($params, $data)
 	{
-		try{
+		try {
 			$result = $this->getContainer()->get('schema')->rebuild();
 	   	} catch (\Exception $e) {
             $result = false;
@@ -33,5 +29,5 @@ class Admin extends \Espo\Core\Controllers\Base
 
 		return json_encode($result);
 	}
-
 }
+

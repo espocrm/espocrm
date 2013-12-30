@@ -15,59 +15,29 @@ class Record extends \Espo\Core\Services\Base
 	
 	protected $entityName;
 
-	private $user;
-
-	private $entityManager;
-	
-	private $metadata;
-	
-	private $selectManager;
-	
-	private $acl;
-
 	public function setEntityName($entityName)
 	{
 		$this->entityName = $entityName;
 	}
 
-	public function setEntityManager($entityManager)
-	{
-		$this->entityManager = $entityManager;
-	}
-
-	public function setUser($user)
-	{
-		$this->user = $user;
-	}
-	
-	public function setAcl($acl)
-	{
-		$this->acl = $acl;
-	}	
-	
-	public function setMetadata($metadata)
-	{
-		$this->metadata = $metadata;
-	}
-
 	protected function getEntityManager()
 	{
-		return $this->entityManager;
+		return $this->injections['entityManager'];
 	}
 
 	protected function getUser()
 	{
-		return $this->user;
+		return $this->injections['user'];
 	}
 	
 	protected function getAcl()
 	{
-		return $this->acl;
+		return $this->injections['acl'];
 	}
 	
 	protected function getMetadata()
 	{
-		return $this->metadata;
+		return $this->injections['metadata'];
 	}
 	
 	protected function getRepository()

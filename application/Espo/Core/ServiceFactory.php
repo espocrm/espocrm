@@ -22,8 +22,7 @@ class ServiceFactory
     		$service = new $className();
     		$dependencies = $service::$dependencies;
     		foreach ($dependencies as $name) {
-    			$setMethod = 'set' . ucfirst($name);
-    			$service->$setMethod($this->container->get($name));
+    			$service->inject($name, $this->container->get($name));
     		}
     		return $service;
     	}

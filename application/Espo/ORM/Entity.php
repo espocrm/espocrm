@@ -116,7 +116,7 @@ abstract class Entity implements IEntity
 		if ($name == 'id') {
 			return isset($this->id);
 		}
-		if (isset($this->valuesContainer[$name])) {
+		if (array_key_exists($name, $this->valuesContainer)) {
 			return true;
 		}
 		return false;
@@ -129,7 +129,7 @@ abstract class Entity implements IEntity
 		}
 	
 		foreach ($this->fields as $field => $fieldDefs) {
-			if (isset($arr[$field])) {
+			if (array_key_exists($field, $arr)) {
 				if ($field == 'id') {
 					$this->id = $arr[$field]; 
 					continue;

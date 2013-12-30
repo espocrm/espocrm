@@ -14,10 +14,6 @@ abstract class Base
 	
 	private $serviceFactory;
 	
-	protected $serviceClassName = null;
-	
-	protected $service = null;
-	
 	public $defaultAction = 'index';
 
 	public function __construct(Container $container, ServiceFactory $serviceFactory)
@@ -31,16 +27,14 @@ abstract class Base
 		    	$name = $matches[1];
 			}
 			$this->name = $name;
-    	}  	
-    	
-    	if (empty($this->serviceClassName)) {
-    		$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
-			if ($moduleName) {
-				$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . Util::normilizeClassName($this->name);
-			} else {
-				$className = '\\Espo\\Services\\' . Util::normilizeClassName($this->name);
-			}
     	}
+    	
+    	$this->checkGlobalAccess();
+	}
+	
+	protected function checkGlobalAccess()
+	{
+		return;
 	}
 	
 	protected function getContainer()
@@ -73,18 +67,9 @@ abstract class Base
 		return $this->serviceFactory;
 	}
 	
-	protected function loadService()
+	protected function getService($className)
 	{
-		$this->service = $this->getServiceFactory()->createByClassName($this->serviceClassName);
+		return $this->getServiceFactory()->createByClassName($className);
 	}
-	
-	protected function getService()
-	{
-		if (!empty($this->service)) {
-			return $this->service;
-		}
-		$this->loadService();
-		return $this->service;    	
-	}
-	 
 }
+

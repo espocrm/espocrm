@@ -5,23 +5,35 @@ namespace Espo\Core\Controllers;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Utils\Util;
 
 abstract class Record extends Base
 {
-	protected $serviceClassName = '\\Espo\\Services\\Record';
 	
-	public $defaultAction = 'list';
+	public $defaultAction = 'list';	
 	
-	protected function loadService()
+	public function getRecordService()
 	{
-		parent::loadService();
-		$this->service->setEntityName($this->name);
+    	$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
+		if ($moduleName) {
+			$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . Util::normilizeClassName($this->name);
+		} else {
+			$className = '\\Espo\\Services\\' . Util::normilizeClassName($this->name);
+		}    	
+    	if (!class_exists($className)) {
+    		$className = '\\Espo\\Services\\Record';
+    	}
+    	
+    	$service = $this->getService($className);
+    	$service->setEntityName($this->name);
+    	
+    	return $service;
 	}
 
 	public function actionRead($params)
 	{
 		$id = $params['id'];
-		$service = $this->getService();
+		$service = $this->getRecordService();
 		$entity = $service->getEntity($id);
 		
 		if (empty($entity)) {
@@ -46,7 +58,7 @@ abstract class Record extends Base
 			throw new Forbidden();
 		}
 
-		$service = $this->getService();
+		$service = $this->getRecordService();
 		
 		if ($entity = $service->createEntity($data)) {
 			return $entity->toArray();
@@ -63,7 +75,7 @@ abstract class Record extends Base
 	
 		$id = $params['id'];
 		
-		if ($entity = $this->getService()->updateEntity($id, $data)) {
+		if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
 			return $entity->toArray();
 		}
 
@@ -82,7 +94,7 @@ abstract class Record extends Base
 		$asc = $request->get('asc') === 'true';
 		$sortBy = $request->get('sortBy');
 
-		$result = $this->getService()->findEntities(array(
+		$result = $this->getRecordService()->findEntities(array(
 			'where' => $where,
 			'offset' => $offset,
 			'maxSize' => $maxSize,
@@ -107,7 +119,7 @@ abstract class Record extends Base
 		$asc = $request->get('asc') === 'true';
 		$sortBy = $request->get('sortBy');		
 
-		$result = $this->getService()->findLinkedEntities($id, $link, array(
+		$result = $this->getRecordService()->findLinkedEntities($id, $link, array(
 			'where' => $where,
 			'offset' => $offset,
 			'maxSize' => $maxSize,
@@ -125,7 +137,7 @@ abstract class Record extends Base
 	{
 		$id = $params['id'];
 
-		if ($this->getService()->deleteEntity($id)) {
+		if ($this->getRecordService()->deleteEntity($id)) {
 			return true;
 		}
 		throw new Error();
@@ -140,7 +152,7 @@ abstract class Record extends Base
 		$ids = $data['ids'];
 		$where = $data['where'];
 
-		$idsUpdated = $this->getService()->massUpdate($ids, $where);
+		$idsUpdated = $this->getRecordService()->massUpdate($ids, $where);
 
 		return $idsUpdated;
 	}
@@ -154,7 +166,7 @@ abstract class Record extends Base
 		$ids = $data['ids'];
 		$where = $data['where'];
 
-		$idsDeleted = $this->getService()->massDelete($ids, $where);
+		$idsDeleted = $this->getRecordService()->massDelete($ids, $where);
 
 		return $idsDeleted;
 	}
@@ -176,7 +188,7 @@ abstract class Record extends Base
 		
 		$result = false;
 		foreach ($foreignIds as $foreignId) {
-			if ($this->getService()->linkEntity($id, $link, $foreignId)) {
+			if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
 				$result = $result || true;
 			}
 			if ($result) {
@@ -204,7 +216,7 @@ abstract class Record extends Base
 		
 		$result = false;
 		foreach ($foreignIds as $foreignId) {
-			if ($this->getService()->unlinkEntity($id, $link, $foreignId)) {
+			if ($this->getRecordService()->unlinkEntity($id, $link, $foreignId)) {
 				$result = $result || true;
 			}
 			if ($result) {
@@ -215,3 +227,4 @@ abstract class Record extends Base
 		throw new Error();		
 	}	
 }
+

@@ -1,2 +1,14 @@
 [
+  {
+  	"route":"/Activities/:scope/:id/:name",
+    "method":"get",
+    "params":{
+        "controller":"Activities",
+		"action":"list",
+		"scope":":scope",
+		"id":":id",
+		"name":":name"
+    }
+  }
+  
 ]

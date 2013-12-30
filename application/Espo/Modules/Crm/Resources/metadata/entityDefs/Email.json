@@ -1,6 +1,6 @@
 {
     "fields": {
-        "subject": {
+        "name": {
             "type": "varchar",
             "required": true
         },

@@ -8,7 +8,6 @@ use \Espo\Core\Exceptions\Error;
 
 class Layout extends \Espo\Core\Controllers\Base
 {
-
     public function actionRead($params, $data)
 	{
 		$data = $this->getContainer()->get('layout')->get($params['controller'], $params['name']);

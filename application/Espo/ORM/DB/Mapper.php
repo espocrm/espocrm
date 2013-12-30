@@ -136,7 +136,7 @@ abstract class Mapper implements IMapper
 	protected function createSelectQuery(IEntity $entity, $params = array(), $aggregation = null, $aggregationBy = null, $deleted = false)
 	{
 		$whereClause = array();
-		if (isset($params['whereClause'])) {
+		if (array_key_exists('whereClause', $params)) {
 			$whereClause = $params['whereClause'];
 		}
 		
@@ -218,7 +218,7 @@ abstract class Mapper implements IMapper
 		$relEntity = $this->entityFactory->create($relEntityName);
 
 		$whereClause = array();
-		if (isset($params['whereClause'])) {
+		if (array_key_exists('whereClause', $params)) {
 			$whereClause = $params['whereClause'];
 		}
 		
