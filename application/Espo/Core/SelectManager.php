@@ -13,6 +13,8 @@ class SelectManager
 	protected $acl;
 	
 	protected $entityManager;
+	
+	protected $entityName;
 
     public function __construct(ORM\EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl)
     {
@@ -20,8 +22,13 @@ class SelectManager
     	$this->user = $user;
     	$this->acl = $acl;
     }
+    
+    public function setEntityName($entityName)
+    {
+    	$this->entityName = $entityName;
+    }
 
-	public function getSelectParams($entityName, array $params, $withAcl = false)
+	public function getSelectParams(array $params, $withAcl = false)
 	{
 		$result = array();
 		
@@ -45,6 +52,18 @@ class SelectManager
 		
 		if (!empty($params['where']) && is_array($params['where'])) {
 			$where = array();
+			
+			foreach	($params['where'] as $item) {
+				if ($item['type'] == 'boolFilters' && is_array($item['value'])) {
+					foreach ($item['value'] as $filter) {
+						$p = $this->getBoolFilterWhere($filter);
+						if (!empty($p)) {
+							$params['where'][] = $p; 
+						}
+					}
+				}
+			}
+			
 			$linkedWith = array();
 			$ignoreList = array('linkedWith', 'boolFilters');
 			foreach	($params['where'] as $item) {
@@ -66,7 +85,7 @@ class SelectManager
 				$part = array();				
 				foreach ($linkedWith as $link => $ids) {
 					$joins[] = $link;
-					$defs = $this->entityManager->getMetadata()->get($entityName);
+					$defs = $this->entityManager->getMetadata()->get($this->entityName);
 					
 					$entityName = $defs['relations'][$link]['entity'];
 					if ($entityName) {
@@ -86,7 +105,6 @@ class SelectManager
 			//die;
 			
 			$result['whereClause'] = $where;
-			// TODO boolFilters
 		}
 
 		
@@ -157,6 +175,23 @@ class SelectManager
 		}
 		
 		return $part;	
+	}
+	
+	protected function getBoolFilterWhere($filterName, $entityName)
+	{		
+		$method = 'getBoolFilterWhere' . ucfirst($filterName);
+		if (method_exists($this, $method)) {
+			return $this->$method();
+		}		
+	}
+	
+	protected function getBoolFilterWhereOnlyMy()
+	{
+		return array(
+			'type' => 'equals',
+			'field' => 'assignedUserId',
+			'value' => $this->user->id,
+		);
 	}
 }
 

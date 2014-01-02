@@ -43,7 +43,7 @@ class SelectManagerTest extends \PHPUnit_Framework_TestCase
 			)
 		);
 		
-		$result = $this->selectManager->getSelectParams('Account', $params);
+		$result = $this->selectManager->getSelectParams($params);
 
 		$this->assertEquals($result['whereClause'][0]['OR']['name*'], 'Brom');
 	}

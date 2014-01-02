@@ -110,6 +110,6 @@
     "collection": {
     	"sortBy": "dateStart",
     	"asc": false,
-    	"boolFilters": ["onlyMy", "planned"]
+    	"boolFilters": ["onlyMy"]
     }
 }

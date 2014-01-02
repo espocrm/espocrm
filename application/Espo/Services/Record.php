@@ -3,6 +3,7 @@
 namespace Espo\Services;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
 {
@@ -93,12 +94,22 @@ class Record extends \Espo\Core\Services\Base
 		}
 	}
 	
-	protected function getSelectManager()
+	protected function getSelectManager($entityName)
 	{
-		if (empty($this->selectManager)) {
-			$this->selectManager = new \Espo\Core\SelectManager($this->getEntityManager(), $this->getUser(), $this->getAcl());
-		}		
-		return $this->selectManager;
+    	$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
+		if ($moduleName) {
+			$className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . Util::normilizeClassName($entityName);
+		} else {
+			$className = '\\Espo\\SelectManagers\\' . Util::normilizeClassName($entityName);
+		}    	
+    	if (!class_exists($className)) {
+    		$className = '\\Espo\\Core\\SelectManager';
+    	}
+		
+		$selectManager = new $className($this->getEntityManager(), $this->getUser(), $this->getAcl());
+		$selectManager->setEntityName($entityName);
+				
+		return $selectManager;
 	}
 
 	public function createEntity($data)
@@ -143,7 +154,7 @@ class Record extends \Espo\Core\Services\Base
 	
 	public function findEntities($params)
 	{	
-		$selectParams = $this->getSelectManager()->getSelectParams($this->entityName, $params, true);
+		$selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
 		$collection = $this->getRepository()->find($selectParams);
 
     	return array(
@@ -164,7 +175,7 @@ class Record extends \Espo\Core\Services\Base
 			throw new Forbidden();
 		}
     	    	
-		$selectParams = $this->getSelectManager()->getSelectParams($foreignEntityName, $params, true);
+		$selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 		
 		// TODO
