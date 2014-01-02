@@ -11,6 +11,8 @@ class SelectManager
 	protected $user;
 	
 	protected $acl;
+	
+	protected $entityManager;
 
     public function __construct(ORM\EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl)
     {
@@ -41,6 +43,120 @@ class SelectManager
 			$result['limit'] = $params['maxSize'];
 		}
 		
+		if (!empty($params['where']) && is_array($params['where'])) {
+			$where = array();
+			$linkedWith = array();
+			$ignoreList = array('linkedWith', 'boolFilters');
+			foreach	($params['where'] as $item) {
+				if (!in_array($item['type'], $ignoreList)) {
+					$part = $this->getWherePart($item);
+					if (!empty($part)) {
+						$where[] = $part;
+					}					
+				} else {
+					if ($item['type'] == 'linkedWith') {
+						$linkedWith[$item['field']] = $item['value'];
+					}
+				}
+			}
+			
+			if (!empty($linkedWith)) {
+				$joins = array();
+				
+				$part = array();				
+				foreach ($linkedWith as $link => $ids) {
+					$joins[] = $link;
+					$defs = $this->entityManager->getMetadata()->get($entityName);
+					
+					$entityName = $defs['relations'][$link]['entity'];
+					if ($entityName) {
+						$part[$entityName . '.id'] = $ids;
+					}					
+				}
+				
+				if (!empty($part)) {
+					$where[] = $part;
+				}
+				$result['joins'] = $joins;
+				$result['distinct'] = true;
+				
+			}
+			
+			//print_r($where);
+			//die;
+			
+			$result['whereClause'] = $where;
+			// TODO boolFilters
+		}
+
+		
 		return $result;
 	}
+	
+	protected function getWherePart($item)
+	{
+		$part = array();
+		
+		if (!empty($item['type'])) {
+			switch ($item['type']) {
+				case 'or':
+				case 'and':
+					if (is_array($item['value'])) {
+						$arr = array();						
+						foreach ($item['value'] as $i) {
+							$a = $this->getWherePart($i);
+							foreach ($a as $left => $right) {
+								if (!empty($right)) {
+									$arr[$left] = $right;
+								}
+							}
+						}
+						$part[strtoupper($item['type'])] = $arr;						
+					}					
+					break;				
+				case 'like':
+					$part[$item['field'] . '*'] = $item['value'];
+					break;
+				case 'equals':
+				case 'on':
+					$part[$item['field'] . '='] = $item['value'];
+					break;
+				case 'notEquals':
+				case 'notOn':					
+					$part[$item['field'] . '!='] = $item['value'];
+					break;
+				case 'greaterThan':
+				case 'after':					
+					$part[$item['field'] . '>'] = $item['value'];
+					break;
+				case 'lessThan':
+				case 'before':					
+					$part[$item['field'] . '<'] = $item['value'];
+					break;
+				case 'greaterThanOrEquals':				
+					$part[$item['field'] . '>='] = $item['value'];
+					break;
+				case 'lessThanOrEquals':				
+					$part[$item['field'] . '<'] = $item['value'];
+					break;
+				case 'in':
+					$part[$item['field'] . '='] = $item['value'];
+					break;
+				case 'notIn':
+					$part[$item['field'] . '!='] = $item['value'];
+					break;
+				case 'isBetween':
+					if (is_array($item['value'])) {
+						$part['AND'] = array(
+							$item['field'] . '>=' => $item['value'][0],
+							$item['field'] . '<=' => $item['value'][1],
+						);
+					}
+					break;	
+			}		
+		}
+		
+		return $part;	
+	}
 }
+

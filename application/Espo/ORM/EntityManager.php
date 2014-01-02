@@ -68,6 +68,11 @@ class EntityManager
 	{
 		$this->metadata->setData($data);
 	}
+	
+	public function getMetadata()
+	{
+		return $this->metadata;
+	}
 
 	public function getPDO()
 	{

@@ -33,10 +33,10 @@ abstract class Mapper implements IMapper
 	protected static $comparisonOperators = array(			
 		'!=' => '<>',
 		'*' => 'LIKE',
-		'>' => '>',
-		'<' => '<',
 		'>=' => '>=',
 		'<=' => '<=',
+		'>' => '>',
+		'<' => '<',
 		'=' => '=',
 	);	
 	
@@ -98,7 +98,8 @@ abstract class Mapper implements IMapper
 
 	public function select(IEntity $entity, $params = array())
 	{
-		$sql = $this->createSelectQuery($entity, $params);		
+		$sql = $this->createSelectQuery($entity, $params);
+
 
 		$dataArr = array();		
 		$ps = $this->pdo->query($sql);
@@ -152,7 +153,11 @@ abstract class Mapper implements IMapper
 			$selectPart = $this->getSelect($entity);
 			$orderPart = $this->getOrder($entity, $orderBy, $order);
 		} else {
-			$selectPart = $this->getAggregationSelect($entity, $aggregation, $aggregationBy);
+			$aggDist = false;
+			if ($distinct && $aggregation == 'COUNT') {
+				$aggDist = true;
+			}
+			$selectPart = $this->getAggregationSelect($entity, $aggregation, $aggregationBy, $aggDist);
 		}
 		$joinsPart = $this->getBelongsToJoins($entity);
 		$wherePart = $this->getWhere($entity, $whereClause);
@@ -182,7 +187,7 @@ abstract class Mapper implements IMapper
 		}
 	}
 	
-	protected function getAggregationSelect(IEntity $entity, $aggregation, $aggregationBy)
+	protected function getAggregationSelect(IEntity $entity, $aggregation, $aggregationBy, $distinct = false)
 	{
 		if (!isset($entity->fields[$aggregationBy])) {
 			return false;
@@ -190,7 +195,12 @@ abstract class Mapper implements IMapper
 		
 		$aggregation = strtoupper($aggregation);
 		
-		$selectPart = "{$aggregation}(" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($aggregationBy) . ") AS AggregateValue";
+		$distinctPart = '';		
+		if ($distinct) {
+			$distinctPart = 'DISTINCT ';
+		}
+		
+		$selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($aggregationBy) . ") AS AggregateValue";
 		return $selectPart;	
 	}
 	
@@ -314,7 +324,7 @@ abstract class Mapper implements IMapper
 				}
 			break;		
 				
-			case IEntity::MANY_MANY:	
+			case IEntity::MANY_MANY:
 				
 				$MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet);
 				$wherePart = $this->getWhere($relEntity, $whereClause);				
@@ -839,7 +849,11 @@ abstract class Mapper implements IMapper
 		
 		foreach ($whereClause as $field => $value) {
 		
-			if (!in_array($field, self::$sqlOperators)) {				
+			if (is_int($field)) {
+				$field = 'AND';
+			}
+		
+			if (!in_array($field, self::$sqlOperators)) {							
 				
 				$inRelated = false;
 
@@ -858,12 +872,13 @@ abstract class Mapper implements IMapper
 							break;
 						}
 					}
-				}			
+				}				
 			
-				if (!$inRelated) {
+				if (!$inRelated) {				
+					
 					if (!isset($entity->fields[$field])) {
 						continue;
-					}
+					}					
 					
 					$fieldDefs = $entity->fields[$field];
 					
@@ -929,7 +944,7 @@ abstract class Mapper implements IMapper
 				
 				if ($alias) {
 					$joinsArr[] = 
-						"LEFT JOIN " . $this->toDb($r['entity']) . " AS " . $alias . " ON ". 
+						"LEFT JOIN `" . $this->toDb($r['entity']) . "` AS " . $alias . " ON ". 
 						$this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
 				}
 			}
@@ -954,7 +969,7 @@ abstract class Mapper implements IMapper
 			$distantTable = $this->toDb($relOpt['entity']);
 			
 			$join =
-				"JOIN {$relTable} ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
+				"JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
 				. " AND "
 				. "{$relTable}.deleted = " . $this->pdo->quote(0);
 				
@@ -964,7 +979,7 @@ abstract class Mapper implements IMapper
 				}			
 			}
 			
-			$join .= " JOIN {$distantTable} ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
+			$join .= " JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
 				. " AND "
 				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 
@@ -977,7 +992,7 @@ abstract class Mapper implements IMapper
 			$distantTable = $this->toDb($relOpt['entity']);			
 			
 			$join = 
-				"JOIN {$distantTable} ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
+				"JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
 				. " AND "
 				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 				
@@ -1004,7 +1019,7 @@ abstract class Mapper implements IMapper
 		$distantTable = $this->toDb($relOpt['entity']);
 
 		$join =
-			"JOIN {$relTable} ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
+			"JOIN `{$relTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
 			. " AND "
 			. "{$relTable}." . $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->get($key))
 			. " AND "

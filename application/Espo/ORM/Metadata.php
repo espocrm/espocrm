@@ -4,8 +4,7 @@ namespace Espo\ORM;
 
 class Metadata
 {
-
-	private $data = array();
+	protected $data = array();
 	
 	public function setData($data)
 	{

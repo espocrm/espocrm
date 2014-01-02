@@ -75,8 +75,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT post.id AS id, post.name AS name, TRIM(CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name)) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
-			"FROM post ".
-			"LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id " .
+			"FROM `post` ".
+			"LEFT JOIN `user` AS user_1 ON post.created_by_id = user_1.id " .
 			"WHERE post.id = '1' AND post.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -95,11 +95,11 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT post.id AS id, post.name AS name, TRIM(CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name)) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
-			"FROM post ".
-			"LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id " .
-			"JOIN post_tag ON post.id = post_tag.post_id AND post_tag.deleted = '0' ".
-			"JOIN tag ON tag.id = post_tag.tag_id AND tag.deleted = '0' ".
-			"JOIN comment ON post.id = comment.post_id AND comment.deleted = '0' ".
+			"FROM `post` ".
+			"LEFT JOIN `user` AS user_1 ON post.created_by_id = user_1.id " .
+			"JOIN `post_tag` ON post.id = post_tag.post_id AND post_tag.deleted = '0' ".
+			"JOIN `tag` ON tag.id = post_tag.tag_id AND tag.deleted = '0' ".
+			"JOIN `comment` ON post.id = comment.post_id AND comment.deleted = '0' ".
 			"WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tag.name = 'yoTag' AND post.deleted = '0' ".
 			"ORDER BY post.name DESC ".
 			"LIMIT 0, 10";
@@ -146,7 +146,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT contact.id AS id, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS name, contact.first_name AS firstName, contact.last_name AS lastName, contact.deleted AS deleted ".
-			"FROM contact ".
+			"FROM `contact` ".
 			"WHERE (contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') AND contact.deleted = '0' ".
 			"ORDER BY contact.first_name, contact.last_name DESC ".
 			"LIMIT 0, 10";
@@ -175,8 +175,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT comment.id AS id, comment.post_id AS postId, post_1.name AS postName, comment.name AS name, comment.deleted AS deleted ".
-			"FROM comment ".
-			"LEFT JOIN post AS post_1 ON comment.post_id = post_1.id ".
+			"FROM `comment` ".
+			"LEFT JOIN `post` AS post_1 ON comment.post_id = post_1.id ".
 			"WHERE comment.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -200,8 +200,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT tag.id AS id, tag.name AS name, tag.deleted AS deleted ".
-			"FROM tag ".
-			"JOIN post_tag ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
+			"FROM `tag` ".
+			"JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
 			"WHERE tag.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -223,7 +223,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT note.id AS id, note.name AS name, note.parent_id AS parentId, note.parent_type AS parentType, note.deleted AS deleted ".
-			"FROM note ".
+			"FROM `note` ".
 			"WHERE note.deleted = '0' AND note.parent_id = '1' AND note.parent_type = 'Post'";
 		$return = new MockDBResult(array(
 			array(
@@ -245,8 +245,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT post.id AS id, post.name AS name, TRIM(CONCAT(user_1.salutation_name, user_1.first_name, ' ', user_1.last_name)) AS createdByName, post.created_by_id AS createdById, post.deleted AS deleted ".
-			"FROM post ".
-			"LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id " .
+			"FROM `post` ".
+			"LEFT JOIN `user` AS user_1 ON post.created_by_id = user_1.id " .
 			"WHERE post.deleted = '0' AND post.id = '1' ".
 			"LIMIT 0, 1";
 		$return = new MockDBResult(array(
@@ -272,8 +272,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	{
 		$query = 
 			"SELECT COUNT(tag.id) AS AggregateValue ".
-			"FROM tag ".
-			"JOIN post_tag ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
+			"FROM `tag` ".
+			"JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
 			"WHERE tag.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -290,7 +290,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testInsert()
 	{	
-		$query = "INSERT INTO post (id, name) VALUES ('1', 'test')";
+		$query = "INSERT INTO `post` (id, name) VALUES ('1', 'test')";
 		$return = true;
 		$this->mockQuery($query, $return);
 	
@@ -304,7 +304,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testUpdate()
 	{	
-		$query = "UPDATE post SET name = 'test' WHERE post.id = '1' AND post.deleted = '0'";
+		$query = "UPDATE `post` SET name = 'test' WHERE post.id = '1' AND post.deleted = '0'";
 		$return = true;
 		$this->mockQuery($query, $return);
 	
@@ -317,7 +317,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemoveRelationHasMany()
 	{
-		$query = "UPDATE comment SET post_id = NULL WHERE comment.deleted = '0' AND comment.id = '100'";
+		$query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.id = '100'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -327,7 +327,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemoveAllHasMany()
 	{
-		$query = "UPDATE comment SET post_id = NULL WHERE comment.deleted = '0' AND comment.post_id = '1'";
+		$query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.post_id = '1'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -337,7 +337,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemoveRelationManyMany()
 	{
-		$query = "UPDATE post_tag SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
+		$query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -347,7 +347,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemoveAllManyMany()
 	{
-		$query = "UPDATE post_tag SET deleted = 1 WHERE post_id = '1'";
+		$query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -357,7 +357,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemoveRelationManyManyWithCondition()
 	{
-		$query = "UPDATE entity_team SET deleted = 1 WHERE entity_id = '1' AND team_id = '100' AND entity_type = 'Account'";
+		$query = "UPDATE `entity_team` SET deleted = 1 WHERE entity_id = '1' AND team_id = '100' AND entity_type = 'Account'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -367,7 +367,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testRemoveAllManyManyWithCondition()
 	{
-		$query = "UPDATE entity_team SET deleted = 1 WHERE entity_id = '1' AND entity_type = 'Account'";
+		$query = "UPDATE `entity_team` SET deleted = 1 WHERE entity_id = '1' AND entity_type = 'Account'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -377,7 +377,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testUnrelate()
 	{
-		$query = "UPDATE post_tag SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
+		$query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
 		$return = true;
 		$this->mockQuery($query, $return);
 		
@@ -394,7 +394,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testMax()
 	{
-		$query = "SELECT MAX(post.id) AS AggregateValue FROM post LEFT JOIN user AS user_1 ON post.created_by_id = user_1.id";
+		$query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS user_1 ON post.created_by_id = user_1.id";
 		$return = new MockDBResult(array(
 			array (
 				'AggregateValue' => 10,

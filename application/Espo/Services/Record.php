@@ -96,7 +96,7 @@ class Record extends \Espo\Core\Services\Base
 	protected function getSelectManager()
 	{
 		if (empty($this->selectManager)) {
-			$this->selectManager = new \Espo\Core\SelectManager($this->entityManager, $this->getUser(), $this->getAcl());
+			$this->selectManager = new \Espo\Core\SelectManager($this->getEntityManager(), $this->getUser(), $this->getAcl());
 		}		
 		return $this->selectManager;
 	}
@@ -142,8 +142,8 @@ class Record extends \Espo\Core\Services\Base
 	}
 	
 	public function findEntities($params)
-	{		
-		$selectParams = $this->getSelectManager()->getSelectParams($this->name, $params, true);
+	{	
+		$selectParams = $this->getSelectManager()->getSelectParams($this->entityName, $params, true);
 		$collection = $this->getRepository()->find($selectParams);
 
     	return array(
