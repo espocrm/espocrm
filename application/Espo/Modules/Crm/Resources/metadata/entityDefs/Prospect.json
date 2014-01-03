@@ -46,8 +46,7 @@
             "type": "varchar"
         },
         "email": {
-            "type": "email",
-            "required": true
+            "type": "email"
         },
         "phone": {
             "type": "phone",
@@ -65,8 +64,7 @@
             "type": "bool"
         },
         "description": {
-            "type": "text",
-            "required": true
+            "type": "text"
         },
         "createdAt": {
             "type": "datetime",
