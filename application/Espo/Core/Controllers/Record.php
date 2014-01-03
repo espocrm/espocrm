@@ -82,7 +82,7 @@ abstract class Record extends Base
 		throw new Error();
 	}
 
-	public function actionList($params, $where, $request)
+	public function actionList($params, $data, $request)
 	{
 		if (!$this->getAcl()->check($this->name, 'read')) {
 			throw new Forbidden();
@@ -142,17 +142,52 @@ abstract class Record extends Base
 		}
 		throw new Error();
 	}
+	
+	public function actionExport($params, $data, $request)
+	{
+		if (!$this->getAcl()->check($this->name, 'read')) {
+			throw new Forbidden();
+		}		
+	
+		$ids = $request->get('ids');
+		$where = $request->get('where');
+
+		
+		if (!empty($ids)) {
+			$where = array(
+				array(
+					'type' => 'in',
+					'field' => 'id',
+					'value' => $ids
+				)
+			);
+		}
+		
+		$result = $this->getRecordService()->findEntities(array('where' => $where));		
+		$arr = $result['collection']->toArray();
+	
+		header('Content-Type: text/csv');
+		header('Content-Disposition: filename=' . $this->name . '.csv');
+		$fp = fopen('php://output', 'w');
+		fputcsv($fp, array_keys($arr[0]));
+		foreach ($arr as $row) {
+			fputcsv($fp, $row);
+		}
+		fclose($fp);	
+		die;
+	}
 
 	public function actionMassUpdate($params, $data)
 	{
 		if (!$this->getAcl()->check($this->name, 'edit')) {
 			throw new Forbidden();
-		}
+		}		
 
 		$ids = $data['ids'];
 		$where = $data['where'];
+		$attributes = $data['attributes'];
 
-		$idsUpdated = $this->getRecordService()->massUpdate($ids, $where);
+		$idsUpdated = $this->getRecordService()->massUpdate($attributes, $ids, $where);
 
 		return $idsUpdated;
 	}

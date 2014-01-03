@@ -88,5 +88,12 @@ class EntityManager
 	{
 		return $name;
 	}
+	
+	public function createCollection($entityName, $data = array())
+	{
+		$seed = $this->getEntity($entityName);		
+		$collection = new EntityCollection($data, $seed, $this->entityFactory);		
+		return $collection;
+	}
 }
 

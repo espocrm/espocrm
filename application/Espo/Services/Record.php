@@ -11,7 +11,8 @@ class Record extends \Espo\Core\Services\Base
 		'entityManager',
 		'user',
 		'metadata',
-		'acl'
+		'acl',
+		'config'
 	);
 	
 	protected $entityName;
@@ -34,6 +35,11 @@ class Record extends \Espo\Core\Services\Base
 	protected function getAcl()
 	{
 		return $this->injections['acl'];
+	}
+	
+	protected function getConfig()
+	{
+		return $this->injections['config'];
 	}
 	
 	protected function getMetadata()
@@ -239,6 +245,28 @@ class Record extends \Espo\Core\Services\Base
 			$this->getRepository()->unrelate($entity, $link, $foreignEntity);
 			return true;    	
     	}
+    }
+    
+    public function massUpdate($attributes = array(), $ids = array(), $where = array())
+    {
+    	$idsUpdated = array();    	
+    	$repository = $this->getRepository();
+    	    	
+    	if (!empty($ids)) {
+    		foreach ($ids as $id) {
+    			$entity = $this->getEntity($id);
+    			if ($this->getAcl()->check($entity, 'edit')) {
+    				$entity->set($attributes);
+    				if ($repository->save($entity)) {
+    					$idsUpdated[] = $id;
+    				}
+    			}
+    		}
+    	}
+    	
+    	return $idsUpdated;
+    	
+    	// TODO update $where
     }
 
 }

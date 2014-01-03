@@ -55,9 +55,9 @@ class ControllerManager
 		if (!class_exists($controllerClassName)) {
 			throw new NotFound("Controller '$controllerName' is not found");
 		}		
-		
+
 		$controller = new $controllerClassName($this->container, $this->serviceFactory);
-		
+
 		if ($actionName == 'index') {
 			$actionName = $controller->defaultAction;
 		}		

@@ -40,6 +40,33 @@
         "controller":"Settings"
     }
   },
+  
+  {
+  	"route":"/:controller/action/:action",
+    "method":"post",
+    "params":{
+        "controller":":controller",
+        "action":":action"
+    }
+  },
+  
+  {
+  	"route":"/:controller/action/:action",
+    "method":"put",
+    "params":{
+        "controller":":controller",
+        "action":":action"
+    }
+  },
+  
+  {
+  	"route":"/:controller/action/:action",
+    "method":"get",
+    "params":{
+        "controller":":controller",
+        "action":":action"
+    }
+  },
 
   {
   	"route":"/:controller/layout/:name",
