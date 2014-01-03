@@ -70,7 +70,7 @@ class Contact extends TEntity
 				'where' => array(
 					'LIKE' => "(contact.first_name LIKE '{text}' OR contact.last_name LIKE '{text}' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE '{text}')",
 				),
-				'orderBy' => "contact.first_name, contact.last_name",
+				'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
 			),
 			'firstName' => array(
 				'type' => Entity::VARCHAR,	

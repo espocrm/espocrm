@@ -100,7 +100,6 @@ abstract class Mapper implements IMapper
 	{
 		$sql = $this->createSelectQuery($entity, $params);
 
-
 		$dataArr = array();		
 		$ps = $this->pdo->query($sql);
 		if ($ps) {
@@ -1068,19 +1067,23 @@ abstract class Mapper implements IMapper
 	{		
 		$orderStr = "";
 		
-		if (!is_null($orderBy)) {
-			$fieldDefs = $entity->fields[$orderBy];
-			if (!empty($fieldDefs['orderBy'])) {
-				$fieldPath = $fieldDefs['orderBy'];
-			} else {			
-				$fieldPath = $this->getFieldPath($entity, $orderBy);
-			}
-			$orderStr .= "ORDER BY {$fieldPath}";
+		if (!is_null($orderBy)) {		
 			if (!is_null($order)) {
 				$order = strtoupper($order);
-				if (in_array($order, array('ASC', 'DESC'))) {
-					$orderStr .= " " . $order;
+				if (!in_array($order, array('ASC', 'DESC'))) {
+					$order = 'ASC';
 				}
+			} else {
+				$order = 'ASC';
+			}
+		
+			$fieldDefs = $entity->fields[$orderBy];
+			if (!empty($fieldDefs['orderBy'])) {
+				$orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
+				$orderStr .= "ORDER BY {$orderPart}";				
+			} else {			
+				$fieldPath = $this->getFieldPath($entity, $orderBy);
+				$orderStr .= "ORDER BY {$fieldPath} " . $order;
 			}
 		}
 		

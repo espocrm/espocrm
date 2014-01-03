@@ -142,13 +142,13 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($list[0]->id, '2');	
 	}
 	
-	public function testSelectWithConcat()
+	public function testSelectWithSpecifiedParams()
 	{
 		$query = 
 			"SELECT contact.id AS id, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS name, contact.first_name AS firstName, contact.last_name AS lastName, contact.deleted AS deleted ".
 			"FROM `contact` ".
 			"WHERE (contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') AND contact.deleted = '0' ".
-			"ORDER BY contact.first_name, contact.last_name DESC ".
+			"ORDER BY contact.first_name DESC, contact.last_name DESC ".
 			"LIMIT 0, 10";
 			
 		$return = new MockDBResult(array(

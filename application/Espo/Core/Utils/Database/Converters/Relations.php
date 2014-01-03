@@ -231,7 +231,7 @@ class Relations
 					    'where' => array(
 					    	'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE '{text}')",
 					    ),
-					    'orderBy' => implode(", ", $fieldList),
+					    'orderBy' => implode(", ", array_map(function ($item) {return $item . ' {direction}';}, $fieldList)),
 					),
 				),
 			),
