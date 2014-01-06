@@ -3,6 +3,7 @@
 namespace Espo\Services;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
@@ -58,7 +59,14 @@ class Record extends \Espo\Core\Services\Base
 		if (!empty($entity) && !empty($id)) {		
 			$this->loadLinkMultipleFields($entity);			
 			$this->loadParentNameFields($entity);
-		}		
+		}
+		
+		if (!empty($entity) && !empty($id)) {			
+			if (!$this->getAcl()->check($entity, 'read')) {
+				throw new Forbidden();
+			}
+		}
+				
 		return $entity;
 	}
 	
@@ -67,18 +75,7 @@ class Record extends \Espo\Core\Services\Base
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $this->entityName . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
 			if ($defs['type'] == 'linkMultiple') {
-				if ($entity->hasRelation($field) && $entity->hasField($field . 'Ids')) {
-					$collection = $entity->get($field);
-					$ids = array();
-					$names = new \stdClass();		
-					foreach ($collection as $e) {
-						$id = $e->id;
-						$ids[] = $id;
-						$names->$id = $e->get('name');
-					}			
-					$entity->set($field . 'Ids', $ids);
-					$entity->set($field . 'Names', $names);
-				}				
+				$entity->loadLinkMultipleField($field);	
 			}
 		}
 	}

@@ -15,6 +15,7 @@ class Acl
 	public function __construct(\Espo\Entities\User $user)
 	{
 		$this->user = $user;
+		$this->user->loadLinkMultipleField('teams');
 
 		$this->cacheFile = 'data/cache/application/acl/' . $user->id;
 
@@ -22,21 +23,22 @@ class Acl
 			$cached = include $this->cacheFile;
 		} else {
 			$this->load();
+			$this->initSolid();
 			$this->buildCache();
 		}
 	}
 	
-	public function checkScope($subject, $action = null, $isOwner = null, $inTeam = null)
+	public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null)
 	{
-		if (isset($this->data[$scope])) {			
+		if (array_key_exists($scope, $this->data)) {			
 			if ($this->data[$scope] === false) {
 				return false;
 			}
 			if ($this->data[$scope] === true) {
 				return true;
 			}
-			if ($action) {			
-				if (isset($this->data[$scope][$action])) {
+			if (!is_null($action)) {		
+				if (array_key_exists($action, $this->data[$scope])) {
 					$value = $this->data[$scope][$action];
 			
 					if ($value === 'all' || $value === true) {
@@ -45,9 +47,9 @@ class Acl
 			
 					if (!$value || $value === 'no') {
 						return false;					
-					}
+					}					
 				
-					if ($isOwner === null) {
+					if (is_null($isOwner)) {
 						return true;
 					}
 				
@@ -82,17 +84,38 @@ class Acl
 			return true;
 		}
 		if (is_string($subject)) {
-			return $this->checkScope($subject, $action = null, $isOwner = null, $inTeam = null);
+			return $this->checkScope($subject, $action, $isOwner, $inTeam);
 		} else {
 			$entity = $subject;
-			$entityName = ltrim(get_class($entity), '\\');			
-			
+			$entityName = $entity->getEntityName();			
 			return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $this->checkInTeam($entity));
 		}
+	}
+			
+	public function checkReadOnlyTeam($scope)
+	{
+		if (isset($this->data[$scope]) && isset($this->data[$scope]['read'])) {
+			return $this->data[$scope]['read'] === 'team';
+		}
+		return false;
+	}
+	
+	public function checkReadOnlyOwn($scope)
+	{
+		if ($this->user->isAdmin()) {
+			return false;
+		}
+		if (isset($this->data[$scope]) && isset($this->data[$scope]['read'])) {
+			return $this->data[$scope]['read'] === 'own';
+		}
+		return false;
 	}
 	
 	public function checkIsOwner($entity)
 	{
+		if ($this->user->isAdmin()) {
+			return false;
+		}
 		$userId = $this->user->id;
 		if ($userId === $entity->get('assignedUserId') || $userId === $entity->get('createdById')) {
 			return true;
@@ -132,6 +155,21 @@ class Acl
 		}
 
 		$this->data = $this->merge($aclTables);
+	}
+	
+	private function initSolid()
+	{
+		$this->data['User'] = array(
+			'read' => 'all',
+			'edit' => 'no',
+			'delete' => 'no',					
+		);
+		$this->data['Team'] = array(
+			'read' => 'all',
+			'edit' => 'no',
+			'delete' => 'no',					
+		);
+		$this->data['Role'] = false;
 	}
 
 	private function merge($tables)

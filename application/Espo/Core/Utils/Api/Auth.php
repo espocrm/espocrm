@@ -42,7 +42,6 @@ class Auth extends \Slim\Middleware
         $authSec = $req->headers('PHP_AUTH_PW');
 
         if ($authKey && $authSec) {
-
 			$isAuthenticated = false;
 			
 			$username = $authKey;
@@ -51,20 +50,14 @@ class Auth extends \Slim\Middleware
 		    $user = $this->entityManager->getRepository('User')->findOne(array(
 				'whereClause' => array(
 					'userName' => $username,
+					'password' => md5($password)
 				),
 			));
-
-			if ($user instanceof \Espo\Entities\User) {
-				
-				$this->entityManager->setUser($user);
-			
-				if ($password == $user->get('password')) {
-					$this->container->setUser($user);
-					$isAuthenticated = true;
-				}
+			if ($user instanceof \Espo\Entities\User) {				
+				$this->entityManager->setUser($user);	
+				$this->container->setUser($user);
+				$isAuthenticated = true;				
 			}
-
-
             if ($isAuthenticated) {
                 $this->next->call();
             } else {

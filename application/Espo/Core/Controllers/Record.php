@@ -33,15 +33,10 @@ abstract class Record extends Base
 	public function actionRead($params)
 	{
 		$id = $params['id'];
-		$service = $this->getRecordService();
-		$entity = $service->getEntity($id);
+		$entity = $this->getRecordService()->getEntity($id);
 		
 		if (empty($entity)) {
 			throw new NotFound();
-		}
-
-		if (!$this->getAcl()->check($entity, 'read')) {
-			throw new Forbidden();
 		}
 
 		return $entity->toArray();

@@ -32,6 +32,7 @@ class EntityManager extends \Espo\ORM\EntityManager
 	public function normalizeEntityName($name)
 	{
 		return $this->espoMetadata->getEntityPath($name);
-	}
+	}	
+
 }
 

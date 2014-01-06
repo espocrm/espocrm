@@ -60,8 +60,11 @@ abstract class Entity implements IEntity
 		}		
 	}	
 	
-	public function clear($name)
+	public function clear($name = null)
 	{
+		if (is_null($name)) {
+			$this->reset();
+		}
 		unset($this->valuesContainer[$name]);
 	}
 		

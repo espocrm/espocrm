@@ -27,11 +27,19 @@ class SelectManager
     {
     	$this->entityName = $entityName;
     }
-
-	public function getSelectParams(array $params, $withAcl = false)
-	{
-		$result = array();
-		
+    
+    protected function limit($params, &$result)
+    {
+		if (isset($params['offset']) && !is_null($params['offset'])) {
+			$result['offset'] = $params['offset'];
+		}
+		if (isset($params['maxSize']) && !is_null($params['maxSize'])) {
+			$result['limit'] = $params['maxSize'];
+		}
+    }
+    
+    protected function order($params, &$result)
+    {
 		if (!empty($params['sortBy'])) {
 			$result['orderBy'] = $params['sortBy'];
 		}
@@ -42,14 +50,10 @@ class SelectManager
 				$result['order'] = 'DESC';
 			}
 		}
-		
-		if (isset($params['offset']) && !is_null($params['offset'])) {
-			$result['offset'] = $params['offset'];
-		}
-		if (isset($params['maxSize']) && !is_null($params['maxSize'])) {
-			$result['limit'] = $params['maxSize'];
-		}
-		
+    }
+    
+    protected function where($params, &$result)
+    {
 		if (!empty($params['where']) && is_array($params['where'])) {
 			$where = array();
 			
@@ -101,12 +105,42 @@ class SelectManager
 				
 			}
 			
-			//print_r($where);
-			//die;
-			
 			$result['whereClause'] = $where;
 		}
+    }
+    
+    protected function access(&$result)
+    {
+    	if ($this->acl->checkReadOnlyOwn($this->entityName)) {
+    		if (!array_key_exists('whereClause', $result)) {
+    			$result['whereClause'] = array();
+    		}
+    		$result['whereClause']['assignedUserId'] = $this->user->id;    				
+    	}
+    	if ($this->acl->checkReadOnlyTeam($this->entityName)) {
+    		if (!array_key_exists('whereClause', $result)) {
+    			$result['whereClause'] = array();
+    		}
+    		if (!array_key_exists('joins', $result)) {
+    			$result['joins'] = array();
+    			if (!in_array('teams', $result['joins'])) {
+    				$result['joins'][] = 'teams';
+    			}
+    		}   		
+    		$result['whereClause']['Team.id'] = $this->user->get('teamsIds');    				
+    	}    	
+    }
 
+	public function getSelectParams(array $params, $withAcl = false)
+	{
+		$result = array();
+		
+		$this->order($params, $result);		
+		$this->limit($params, $result);
+		$this->where($params, $result);
+		if ($withAcl) {
+			$this->access($result);
+		}
 		
 		return $result;
 	}
