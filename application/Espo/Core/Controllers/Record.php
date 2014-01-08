@@ -88,6 +88,7 @@ abstract class Record extends Base
 		$maxSize = $request->get('maxSize');
 		$asc = $request->get('asc') === 'true';
 		$sortBy = $request->get('sortBy');
+		$q = $request->get('q');
 
 		$result = $this->getRecordService()->findEntities(array(
 			'where' => $where,
@@ -95,6 +96,7 @@ abstract class Record extends Base
 			'maxSize' => $maxSize,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
+			'q' => $q,
 		));
 		
 		return array(
@@ -112,7 +114,8 @@ abstract class Record extends Base
 		$offset = $request->get('offset');
 		$maxSize = $request->get('maxSize');
 		$asc = $request->get('asc') === 'true';
-		$sortBy = $request->get('sortBy');		
+		$sortBy = $request->get('sortBy');
+		$q = $request->get('q');	
 
 		$result = $this->getRecordService()->findLinkedEntities($id, $link, array(
 			'where' => $where,
@@ -120,6 +123,7 @@ abstract class Record extends Base
 			'maxSize' => $maxSize,
 			'asc' => $asc,
 			'sortBy' => $sortBy,
+			'q' => $q,
 		));
 		
 		return array(

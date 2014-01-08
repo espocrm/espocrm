@@ -109,6 +109,16 @@ class SelectManager
 		}
     }
     
+    protected function q($params, &$result)
+    {
+		if (!empty($params['q'])) {
+			if (empty($result['whereClause'])) {
+				$result['whereClause'] = array();
+			}
+			$result['whereClause']['name*'] = $params['q'] . '%';
+		}	
+	}    
+    
     protected function access(&$result)
     {
     	if ($this->acl->checkReadOnlyOwn($this->entityName)) {
@@ -138,6 +148,8 @@ class SelectManager
 		$this->order($params, $result);		
 		$this->limit($params, $result);
 		$this->where($params, $result);
+		$this->q($params, $result);
+		
 		if ($withAcl) {
 			$this->access($result);
 		}
