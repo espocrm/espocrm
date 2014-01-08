@@ -15,14 +15,12 @@ class Container
     {
 
     }
-
     
     public function get($name)
     {
     	if (empty($this->data[$name])) {
     		$this->load($name);
-    	}
-    	
+    	}    	
     	return $this->data[$name];
     }
 
@@ -73,6 +71,13 @@ class Container
     {
     	return new \Espo\Core\Utils\Config(
 			$this->get('fileManager')
+		);
+    }
+    
+	private function loadHookManager()
+    {
+    	return new \Espo\Core\HookManager(
+			$this
 		);
     }
 
@@ -154,3 +159,4 @@ class Container
 	} 
 
 }
+

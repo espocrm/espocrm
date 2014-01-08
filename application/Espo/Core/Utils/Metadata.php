@@ -10,12 +10,14 @@ class Metadata
 
 	private $espoMetadata;
 
-	protected $scopes= array();
+	protected $scopes = array();
 
 	private $config;
 	private $uniteFiles;
 	private $fileManager;
 	private $converter;
+	
+	private $moduleList = null;
 
 	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\File\UniteFiles $uniteFiles)
 	{
@@ -287,13 +289,11 @@ class Metadata
 	/**
     * Get Scopes
 	*
-	* @param string $moduleName
-	* @param bool $reload
 	*
 	* @return array
 	*/
 	//NEED TO CHANGE
-	public function getScopes($moduleName = '', $reload = false)
+	public function getScopes()
 	{
     	if (!$reload && !empty($this->scopes)) {
     		return $this->scopes;
@@ -308,6 +308,24 @@ class Metadata
 
 		return $this->scopes = $scopes;
 	}
+	
+	public function getModuleList()
+	{
+		if (is_null($this->moduleList)) {
+			$this->moduleList = array();
+			$scopes = $this->getScopes();
+			// TODO order
+			foreach ($this->scopes as $defs) {
+				if (!empty($defs['module'])) {
+					$module = $defs['module'];
+					if (!in_array($module, $this->moduleList)) {
+						$this->moduleList[] = $module;
+					}  
+				}
+			}
+		}		
+		return $this->moduleList;
+	}
 
 
 	/**
@@ -319,16 +337,7 @@ class Metadata
 	*/
 	public function getScopeModuleName($scopeName)
 	{
-    	$scopeModuleMap = $this->getScopes();
-
-		$lowerEntityName = strtolower($scopeName);
-		foreach ($scopeModuleMap as $rowEntityName => $rowModuleName) {
-			if ($lowerEntityName == strtolower($rowEntityName)) {
-				return $rowModuleName;
-			}
-		}
-
-		return false;
+    	return $this->get('scopes.' . $scopeName . '.module', false);
 	}
 
 

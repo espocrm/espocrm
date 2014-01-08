@@ -5,11 +5,8 @@ namespace Espo\Core;
 use \Espo\Core\Exceptions\Error;
 
 class ServiceFactory
-{
-	
+{	
 	private $container;
-
-	private $metadata;
 
     public function __construct(Container $container)
     {
