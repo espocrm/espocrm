@@ -13,8 +13,5 @@
    "search":{
       "basic":true,
       "advanced":true
-   },
-   "database":{
-      "type":"varchar"
    }
 }
