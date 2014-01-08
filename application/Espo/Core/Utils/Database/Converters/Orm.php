@@ -72,9 +72,30 @@ class Orm
 	}
 
 
+    public function process()
+	{
+		$entityDefs = $this->getMetadata()->get('entityDefs');
+
+		$ormMeta = array();
+        foreach($entityDefs as $entityName => $entityMeta) {
+
+			if (empty($entityMeta)) {
+		    	$GLOBALS['log']->add('ERROR', 'Converters\Orm:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
+				continue;
+			}
+
+     		$ormMeta = Util::merge($ormMeta, $this->convertEntity($entityName, $entityMeta, $entityDefs));
+        }
+
+        $ormMeta = $this->afterProcess($ormMeta);
+
+        return $ormMeta;
+	}
+
+
 
 	//convertToDatabaseFormat
-	public function process($entityName, $entityMeta, $entityDefs)
+	protected function convertEntity($entityName, $entityMeta, $entityDefs)
 	{
 		$ormMeta = array();
 		$ormMeta[$entityName] = array(
@@ -88,18 +109,32 @@ class Orm
 
 		$convertedLinks = $this->convertLinks($entityName, $entityMeta, $entityDefs);
 
-        return Util::merge($ormMeta, $convertedLinks);
+		$ormMeta = Util::merge($ormMeta, $convertedLinks);
+
+		//todo: move to separate file
+		//hardcode for emails
+        if (!isset($ormMeta['EmailAddress'])) {
+        	$ormMeta['EmailAddress'] = $this->getOrmDefs('EmailAddress');
+        }
+
+		if (!isset($ormMeta['EntityEmailAddress'])) {
+        	$ormMeta['EntityEmailAddress'] = $this->getOrmDefs('EntityEmailAddress');
+        } //END: hardcode for emails
+
+        return $ormMeta;
 	}
 
 
-	public function prepare(array $meta)
+	public function afterProcess(array $meta)
 	{
 		foreach($meta as $entityName => &$entityParams) {
 			foreach($entityParams['fields'] as $fieldName => &$fieldParams) {
 
 				switch ($fieldParams['type']) {
                     case 'id':
-		                $fieldParams = array_merge($fieldParams, $this->idParams);
+						if ($fieldParams['dbType'] != 'int') {
+                        	$fieldParams = array_merge($fieldParams, $this->idParams);
+						}                                                             
 						break;
 
 					case 'foreignId':
@@ -328,20 +363,6 @@ class Orm
 			}
             $method = Util::toCamelCase($method);
 
-			//echo
-			/*if ($method == 'hasManyHasMany' || $reverseMethod == 'belongshasManyBelongsToTo') {
-				if ($entityName == 'Meeting') {
-					echo '<pre>';
-					echo $entityName.': ';
-					print_r(array('name' => $linkName, 'params'=>$linkParams));
-
-					echo $linkEntityName.': ';
-					print_r($foreignLink);
-                	die($entityName.' - '.$linkEntityName.'  -- '.$linkName);
-				}
-			}    */
-
-
 			if ( $this->getRelationManager()->isMethodExists($method) ) {  //ex. hasManyHasMany
             	$convertedLink = $this->getRelationManager()->process($method, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
 			} else { //ex. hasMany
@@ -425,5 +446,101 @@ class Orm
 		}
 
 		return $values;
+	}
+
+
+	//todo: move to separete file
+	protected function getOrmDefs($tableName)
+	{
+		switch ($tableName) {
+            case 'EmailAddress':
+            	return array(
+					'fields' => array(
+                       	'id' =>
+						array (
+						  'type' => 'id',
+						  'dbType' => $this->idParams['dbType'],
+						  'len' => $this->idParams['len'],
+						),
+						'emailAddress' =>
+						array (
+						  'type' => 'varchar',
+						  'len' => 150,
+						),
+						'emailAddressLower' =>
+						array (
+						  'type' => 'varchar',
+						  'len' => 150,
+						),
+						'invalid' =>
+						array (
+						  'type' => 'bool',
+						  'default' => 0,
+						),
+						'optOut' =>
+						array (
+						  'type' => 'bool',
+						  'default' => 0,
+						),
+                           'deleted' =>
+						array (
+						  'type' => 'bool',
+						  'default' => 0,
+						),
+					),
+					'relations' => array(
+					),
+				);
+                break;
+
+            case 'EntityEmailAddress':
+            	return array(
+					'fields' => array(
+                       	'id' =>
+						array (
+						  'type' => 'id',
+						  'dbType' => 'int',
+						  'len' => $this->defaultLength['int'],
+						  'autoincrement' => true,
+						  'unique' => true,
+						),
+						'entityId' =>
+						array (
+						  'type' => $this->idParams['dbType'],
+						  'len' => $this->idParams['len'],
+                          'index' => 'entity',
+						),
+						'emailAddressId' =>
+						array (
+						  'type' => $this->idParams['dbType'],
+						  'len' => $this->idParams['len'],
+						),
+						'entityType' =>
+						array (
+						  'type' => 'varchar',
+						  'len' => $this->defaultLength['varchar'],
+						  'index' => 'entity',
+						),
+						'primary' =>
+						array (
+						  'type' => 'bool',
+						  'default' => 0,
+						),
+						'replyTo' =>
+						array (
+						  'type' => 'bool',
+						  'default' => 0,
+						),
+                        'deleted' =>
+						array (
+						  'type' => 'bool',
+						  'default' => 0,
+						),
+					),
+					'relations' => array(
+					),
+				);
+                break;
+        }
 	}
 }

@@ -56,10 +56,6 @@ class Schema
 	{
     	$GLOBALS['log']->add('Debug', 'Converters\Schema - Start: building schema');
 
-		//pre actions
-        $this->preProcess($ormMeta, $entityDefs);
-		//END: pre actions
-
 		$schema = $this->getSchema();
 
 		$tables = array();
@@ -143,7 +139,8 @@ class Schema
                         //check for duplication tables
 						if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
 
-							if (strtolower($tableName) == strtolower('entityTeam')) {  //hardcode for Teams
+							if (isset($entityDefs[$entityName]['links'][$relationName]['relationName'])) {  //todo: rename relationName to helperName
+
 								if (isset($relationParams['conditions'])) {
                                 	$relationParams['midKeys'] = array_merge($relationParams['midKeys'], array_keys($relationParams['conditions']));
 								}
@@ -165,7 +162,6 @@ class Schema
 		                $tables[$entityName]->addForeignKeyConstraint($tables[$foreignEntity], array($columnName), array($foreignKey), array("onUpdate" => "CASCADE"));
 		                break;
 		        }
-            	//$myForeign->addForeignKeyConstraint($myTable, array("user_id"), array("id"), array("onUpdate" => "CASCADE"));
 			}
         }
 		//END: check and create columns/tables for relations
@@ -175,20 +171,6 @@ class Schema
 
 		return $schema;
 	}
-
-
-	protected function preProcess(array &$ormMeta, &$entityDefs)
-	{
-		//hardcode for emails
-        if (!isset($ormMeta['EmailAddress'])) {
-        	$ormMeta['EmailAddress'] = $this->getOrmDefs('EmailAddress');
-        }
-
-		if (!isset($ormMeta['EntityEmailAddress'])) {
-        	$ormMeta['EntityEmailAddress'] = $this->getOrmDefs('EntityEmailAddress');
-        } //END: hardcode for emails
-	}
-
 
 	/**
      * Prepare a relation table for the manyMany relation
@@ -230,100 +212,6 @@ class Schema
 		$table->setPrimaryKey(array("id"));
 
         return $table;
-	}
-
-	protected function getOrmDefs($tableName)
-	{
-		switch ($tableName) {
-            case 'EmailAddress':
-            	return array(
-					'fields' => array(
-                       	'id' =>
-						array (
-						  'type' => 'id',
-						  'dbType' => $this->idParams['dbType'],
-						  'len' => $this->idParams['len'],
-						),
-						'emailAddress' =>
-						array (
-						  'type' => 'varchar',
-						  'len' => 150,
-						),
-						'emailAddressLower' =>
-						array (
-						  'type' => 'varchar',
-						  'len' => 150,
-						),
-						'invalid' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-						'optOut' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-                           'deleted' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-					),
-					'relations' => array(
-					),
-				);
-                break;
-
-            case 'EntityEmailAddress':
-            	return array(
-					'fields' => array(
-                       	'id' =>
-						array (
-						  'type' => 'id',
-						  'dbType' => 'int',
-						  'len' => $this->defaultLength['int'],
-						  'autoincrement' => true,
-						  'unique' => true,
-						),
-						'entityId' =>
-						array (
-						  'type' => $this->idParams['dbType'],
-						  'len' => $this->idParams['len'],
-                          'index' => 'entity',
-						),
-						'emailAddressId' =>
-						array (
-						  'type' => $this->idParams['dbType'],
-						  'len' => $this->idParams['len'],
-						),
-						'entityType' =>
-						array (
-						  'type' => 'varchar',
-						  'len' => $this->defaultLength['varchar'],
-						  'index' => 'entity',
-						),
-						'primary' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-						'replyTo' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-                        'deleted' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-					),
-					'relations' => array(
-					),
-				);
-                break;
-        }
 	}
 
 
