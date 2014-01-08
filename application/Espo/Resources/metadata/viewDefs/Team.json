@@ -4,7 +4,7 @@
          "create":false
       }
    },
-   "recordViewMaps":{
+   "recordViews":{
       "detail":"Team.Detail",
       "edit":"Team.Edit"
    }   

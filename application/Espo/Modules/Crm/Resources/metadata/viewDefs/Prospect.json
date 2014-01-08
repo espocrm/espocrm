@@ -1,4 +1,7 @@
 {
+   "views":{
+      "detail":"Crm:Prospect.Detail"
+   },
    "menu":{
       "detail":{
          "buttons":[

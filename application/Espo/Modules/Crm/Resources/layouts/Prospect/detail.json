@@ -1,1 +1,1 @@
-[{"label":"Overview","rows":[[{"name":"name"},{"name":"account"}],[{"name":"email"},{"name":"phone"}],[{"name":"title"},{"name":"doNotCall"}],[{"name":"address"},{"name":"website"}],[{"name":"description"},false]]}]
+[{"label":"Overview","rows":[[{"name":"name"},{"name":"accountName"}],[{"name":"email"},{"name":"phone"}],[{"name":"title"},{"name":"doNotCall"}],[{"name":"address"},{"name":"website"}],[{"name":"description"},false]]}]

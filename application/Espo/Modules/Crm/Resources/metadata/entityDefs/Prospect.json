@@ -20,7 +20,7 @@
             "type": "varchar",
             "maxLength": 100
         },
-        "account": {
+        "accountName": {
             "type": "varchar",
             "maxLength": 100
         },

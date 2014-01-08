@@ -55,6 +55,18 @@ class EntityManager
 	{
 		return $this->getRepository($name)->get($id);
 	}
+	
+	public function saveEntity(Entity $entity)
+	{
+		$entityName = $entity->getEntityName();
+		return $this->getRepository($entityName)->save($entity);
+	}
+	
+	public function removeEntity(Entity $entity)
+	{
+		$entityName = $entity->getEntityName();
+		return $this->getRepository($entityName)->remove($entity);
+	}
 
 	public function getRepository($name)
 	{

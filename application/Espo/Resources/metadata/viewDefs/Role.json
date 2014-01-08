@@ -1,5 +1,5 @@
 {
-   "recordViewMaps":{
+   "recordViews":{
       "detail":"Role.Record.Detail",
       "edit":"Role.Record.Edit",
       "editQuick":"Role.Record.Edit"

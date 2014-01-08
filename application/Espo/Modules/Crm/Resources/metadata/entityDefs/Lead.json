@@ -101,17 +101,17 @@
         "teams": {
             "type": "linkMultiple"
         },
-        "account": {
+        "createdAccount": {
             "type": "link",
             "disabled": true,
             "readOnly": true
         },
-        "contact": {
+        "createdContact": {
             "type": "link",
             "disabled": true,
             "readOnly": true
         },
-        "opportunity": {
+        "createdOpportunity": {
             "type": "link",
             "disabled": true,
             "readOnly": true
@@ -155,15 +155,15 @@
             "entity": "Task",
             "foreign": "parent"
         },
-        "account": {
+        "createdAccount": {
             "type": "belongsTo",
             "entity": "Account"
         },
-        "contact": {
+        "createdContact": {
             "type": "belongsTo",
             "entity": "Contact"
         },
-        "opportunity": {
+        "createdOpportunity": {
             "type": "belongsTo",
             "entity": "Opportunity"
         }
@@ -175,33 +175,22 @@
             "email": "email",
             "phone": "phone",
             "address": "address",
-            "assignedUser": "assignedUser"
+            "assignedUser": "assignedUser",
+            "teams": "teams"
         },
         "Account": {
             "name": "accountName",
             "website": "website",
             "email": "email",
             "phone": "phoneOffice",
-            "assignedUser": "assignedUser"
+            "assignedUser": "assignedUser",
+            "teams": "teams"
         },
         "Opportunity": {
             "amount": "opportunityAmount",
             "leadSource": "source",
-            "assignedUser": "assignedUser"
-        }
-    },
-    "convertLinks": {
-        "Account": {
-            "Contact": "contacts",
-            "Opportunity": "oppotunities"
-        },
-        "Contact": {
-            "Opportunity": "oppotunities"
-        },
-        "Lead": {
-            "Account": "account",
-            "Contact": "contact",
-            "Opportunity": "oppotunity"
+            "assignedUser": "assignedUser",
+            "teams": "teams"
         }
     },
     "collection": {

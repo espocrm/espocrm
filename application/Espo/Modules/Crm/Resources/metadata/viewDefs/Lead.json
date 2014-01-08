@@ -1,8 +1,8 @@
 {
-   "viewMaps":{
+   "views":{
       "detail":"Crm:Lead.Detail"
    },
-   "recordViewMaps":{
+   "recordViews":{
       "detail":"Crm:Lead.Record.Detail"
    },
    "sidePanels":{
