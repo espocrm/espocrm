@@ -23,7 +23,7 @@
         "description": {
             "type": "text"
         },
-        "email": {
+        "emailAddress": {
             "type": "email"
         },
         "phone": {

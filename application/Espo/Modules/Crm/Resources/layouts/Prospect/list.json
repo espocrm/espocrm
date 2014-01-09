@@ -1,1 +1,1 @@
-[{"name":"name","width":30,"link":true},{"name":"email"},{"name":"phone"},{"name":"accountName"},{"name":"createdAt"}]
+[{"name":"name","width":30,"link":true},{"name":"emailAddress"},{"name":"phone"},{"name":"accountName"},{"name":"createdAt"}]

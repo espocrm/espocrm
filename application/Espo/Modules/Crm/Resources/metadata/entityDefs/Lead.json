@@ -53,7 +53,7 @@
         "addressPostalCode": {
             "type": "varchar"
         },
-        "email": {
+        "emailAddress": {
             "type": "email"
         },
         "phone": {
@@ -172,7 +172,7 @@
         "Contact": {
             "name": "name",
             "title": "title",
-            "email": "email",
+            "emailAddress": "emailAddress",
             "phone": "phone",
             "address": "address",
             "assignedUser": "assignedUser",
@@ -181,7 +181,7 @@
         "Account": {
             "name": "accountName",
             "website": "website",
-            "email": "email",
+            "emailAddress": "emailAddress",
             "phone": "phoneOffice",
             "assignedUser": "assignedUser",
             "teams": "teams"

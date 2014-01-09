@@ -45,7 +45,7 @@
         "addressPostalCode": {
             "type": "varchar"
         },
-        "email": {
+        "emailAddress": {
             "type": "email"
         },
         "phone": {

@@ -1,1 +1,1 @@
-[{"name":"name"},{"name":"email","type":"base","sortable":false,"params":{}},{"name":"city"}]
+[{"name":"name"},{"name":"emailAddress","type":"base","sortable":false,"params":{}},{"name":"city"}]

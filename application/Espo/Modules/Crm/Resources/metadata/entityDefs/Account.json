@@ -7,7 +7,7 @@
         "website": {
             "type": "url"
         },
-        "email": {
+        "emailAddress": {
             "type": "email"
         },
         "phone": {
