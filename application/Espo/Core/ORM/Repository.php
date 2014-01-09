@@ -8,10 +8,7 @@ class Repository extends \Espo\ORM\Repository
 	{		
 		$entity = $this->getEntityFactory()->create($this->entityName);
 		$params = array();
-		if ($entity->hasRelation('emailAddresses')) {
-			$params['distinct'] = true;
-			$params['leftJoins'] = array('emailAddresses');
-		}
+		$this->handleEmailAddressParams($params);
 		if ($this->mapper->selectById($entity, $id, $params)) {
 			$entity->setFresh();
 			return $entity;
