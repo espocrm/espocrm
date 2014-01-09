@@ -470,6 +470,64 @@ class RelationsTest extends \PHPUnit_Framework_TestCase
 	}
 
 
+	function testEntityEmailAddress()
+	{
+		$input = array(
+			'params' => array (
+			  'entityName' => 'User',
+			  'link' =>
+			  array (
+			    'name' => 'email',
+			  ),
+			  'targetEntity' => 'User',
+			),
+
+			'foreignParams' => array (
+			  'entityName' => 'User',
+			  'link' =>
+			  array (
+			  ),
+			  'targetEntity' => 'User',
+			),
+		);
+
+		$result = array (
+		  'User' =>
+		  array (
+		    'relations' =>
+		    array (
+		      'email' =>
+		      array (
+		        'type' => 'manyMany',
+		        'entity' => 'EmailAddress',
+		        'relationName' => 'entityEmailAddress',
+		        'midKeys' =>
+		        array (
+		          0 => 'entity_id',
+		          1 => 'email_address_id',
+		        ),
+		        'conditions' =>
+		        array (
+		          'entityType' => 'User',
+		        ),
+		        'additionalColumns' =>
+		        array (
+		          'primary' =>
+		          array (
+		            'type' => 'bool',
+		            'default' => false,
+		          ),
+		        ),
+		      ),
+		    ),
+		  ),
+		);
+
+		//todo: move to RelationManager file
+		$this->assertEquals( $result, $this->invokeMethod('entityEmailAddress', array($input['params'], $input['foreignParams'])) );
+	}
+
+
 
 
 

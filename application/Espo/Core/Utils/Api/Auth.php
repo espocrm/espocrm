@@ -41,6 +41,8 @@ class Auth extends \Slim\Middleware
 		$authKey = $req->headers('PHP_AUTH_USER');
         $authSec = $req->headers('PHP_AUTH_PW');
 
+		$GLOBALS['log']->add('DEBUG', 'AUTH: Try to authenticate');
+
         if ($authKey && $authSec) {
 			$isAuthenticated = false;
 			
@@ -53,11 +55,16 @@ class Auth extends \Slim\Middleware
 					'password' => md5($password)
 				),
 			));
-			if ($user instanceof \Espo\Entities\User) {				
-				$this->entityManager->setUser($user);	
+
+
+			if ($user instanceof \Espo\Entities\User) {
+				$this->entityManager->setUser($user);
 				$this->container->setUser($user);
-				$isAuthenticated = true;				
+				$isAuthenticated = true;
 			}
+
+            $GLOBALS['log']->add('DEBUG', 'AUTH: Result of authenticate =['.$isAuthenticated.']');
+
             if ($isAuthenticated) {
                 $this->next->call();
             } else {

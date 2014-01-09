@@ -111,16 +111,6 @@ class Orm
 
 		$ormMeta = Util::merge($ormMeta, $convertedLinks);
 
-		//todo: move to separate file
-		//hardcode for emails
-        if (!isset($ormMeta['EmailAddress'])) {
-        	$ormMeta['EmailAddress'] = $this->getOrmDefs('EmailAddress');
-        }
-
-		if (!isset($ormMeta['EntityEmailAddress'])) {
-        	$ormMeta['EntityEmailAddress'] = $this->getOrmDefs('EntityEmailAddress');
-        } //END: hardcode for emails
-
         return $ormMeta;
 	}
 
@@ -155,6 +145,11 @@ class Orm
 		                $fieldParams['type'] = Entity::VARCHAR;
 						$typeDefs = $this->getRelationManager()->process('typePersonName', $entityName, array('name' => $fieldName));
 						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
+		                break;
+
+					case 'email':
+						$typeDefs = $this->getRelationManager()->process('entityEmailAddress', $entityName, array('name' => $fieldName));
+						$entityParams = Util::merge($entityParams, $typeDefs[$entityName]);
 		                break;
 		        }
 			}
@@ -448,99 +443,4 @@ class Orm
 		return $values;
 	}
 
-
-	//todo: move to separete file
-	protected function getOrmDefs($tableName)
-	{
-		switch ($tableName) {
-            case 'EmailAddress':
-            	return array(
-					'fields' => array(
-                       	'id' =>
-						array (
-						  'type' => 'id',
-						  'dbType' => $this->idParams['dbType'],
-						  'len' => $this->idParams['len'],
-						),
-						'emailAddress' =>
-						array (
-						  'type' => 'varchar',
-						  'len' => 150,
-						),
-						'emailAddressLower' =>
-						array (
-						  'type' => 'varchar',
-						  'len' => 150,
-						),
-						'invalid' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-						'optOut' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-                           'deleted' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-					),
-					'relations' => array(
-					),
-				);
-                break;
-
-            case 'EntityEmailAddress':
-            	return array(
-					'fields' => array(
-                       	'id' =>
-						array (
-						  'type' => 'id',
-						  'dbType' => 'int',
-						  'len' => $this->defaultLength['int'],
-						  'autoincrement' => true,
-						  'unique' => true,
-						),
-						'entityId' =>
-						array (
-						  'type' => $this->idParams['dbType'],
-						  'len' => $this->idParams['len'],
-                          'index' => 'entity',
-						),
-						'emailAddressId' =>
-						array (
-						  'type' => $this->idParams['dbType'],
-						  'len' => $this->idParams['len'],
-						),
-						'entityType' =>
-						array (
-						  'type' => 'varchar',
-						  'len' => $this->defaultLength['varchar'],
-						  'index' => 'entity',
-						),
-						'primary' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-						'replyTo' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-                        'deleted' =>
-						array (
-						  'type' => 'bool',
-						  'default' => 0,
-						),
-					),
-					'relations' => array(
-					),
-				);
-                break;
-        }
-	}
 }

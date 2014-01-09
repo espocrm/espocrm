@@ -52,14 +52,15 @@ class Auth extends \Slim\Middleware
 			$user = $this->entityManager->getRepository('User')->findOne(array(
 				'whereClause' => array(
 					'userName' => $username,
+					'password' => md5($password)
 				),
 			));
 
+
 			if ($user instanceof \Espo\Entities\User) {
-				if ($password == $user->get('password')) {
-					$this->container->setUser($user);
-					$isAuthenticated = true;
-				}
+				$this->entityManager->setUser($user);
+				$this->container->setUser($user);
+				$isAuthenticated = true;
 			}
 
 			//$isAuthenticated = true;

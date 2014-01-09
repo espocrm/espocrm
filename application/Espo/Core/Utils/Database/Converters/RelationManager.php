@@ -63,21 +63,22 @@ class RelationManager
 		$params['targetEntity'] = $foreignParams['entityName'];
 		$foreignParams['targetEntity'] = $params['entityName'];
 
-        //entityDefs item with Relation Name
-        if (isset($link['params']['relationName'])) {  //todo rename to 'helperName' or other one
-        	$helperName = ucfirst($link['params']['relationName']);
 
-        	$className = '\Espo\Custom\Core\Utils\Database\Helpers\\'.$helperName;
-            if (!class_exists($className)) {
-            	$className = '\Espo\Core\Utils\Database\Helpers\\'.$helperName;
-            }
+		//relationDefs defined in separate file
+		//todo rename to 'helperName' or other one
+        $helperName = isset($link['params']['relationName']) ? ucfirst($link['params']['relationName']) : ucfirst($method);
 
-			if (class_exists($className)) {
-            	 $helperClass = new $className();
-				 return $helperClass->getRelation($params, $foreignParams);
-			}
-        }
-		//END: entityDefs item with Relation Name
+       	$className = '\Espo\Custom\Core\Utils\Database\Helpers\\'.$helperName;
+		if (!class_exists($className)) {
+			$className = '\Espo\Core\Utils\Database\Helpers\\'.$helperName;
+		}
+
+		if (class_exists($className) && method_exists($className, 'getRelation')) {
+        	$helperClass = new $className();
+			return $helperClass->getRelation($params, $foreignParams);
+		}
+		//END: relationDefs defined in separate file
+		
 
 		if (method_exists($this, $method)) {
         	return $this->$method($params, $foreignParams);
