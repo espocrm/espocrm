@@ -112,8 +112,7 @@ class Schema
 					} else if (is_string($fieldParams['index'])) {
                         $indexList[ $fieldParams['index'] ][] = $columnName;
 					}
-				}
-				//END: add index
+				} //END: add index
 			}
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
@@ -202,12 +201,6 @@ class Schema
 
 
 		//add additionalColumns
-		if (isset($relationParams['conditions'])) {
-			foreach($relationParams['conditions'] as $fieldName => $condition) {
-            	$table->addColumn(Util::toUnderScore($fieldName), 'varchar', array('length'=>$this->defaultLength['varchar']));
-			}
-		}
-
 		if (isset($relationParams['additionalColumns'])) {
 			foreach($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
 
@@ -220,8 +213,7 @@ class Schema
 
             	$table->addColumn(Util::toUnderScore($fieldName), $fieldParams['type'], $this->getDbFieldParams($fieldParams));
 			}
-		}
-		//END: add additionalColumns
+		} //END: add additionalColumns
 
 
 		$table->addColumn('deleted', 'bool', array('default' => 0));

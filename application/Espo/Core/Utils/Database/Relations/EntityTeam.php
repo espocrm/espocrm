@@ -1,11 +1,11 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Helpers;
+namespace Espo\Core\Utils\Database\Relations;
 
 class EntityTeam
 {
 
-	public function getRelation($params, $foreignParams)
+	public function load($params, $foreignParams)
 	{
 		return array(
 			$params['entityName'] => array(
@@ -20,6 +20,12 @@ class EntityTeam
 						),
 						'conditions' => array(
 							'entityType' => $params['entityName'],
+						),
+						'additionalColumns' => array(
+							'entityType' => array(
+								'type' => 'varchar',
+        						'len' => 100,
+							),
 						),
 					),
 				),
