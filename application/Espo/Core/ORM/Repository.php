@@ -3,7 +3,45 @@
 namespace Espo\Core\ORM;
 
 class Repository extends \Espo\ORM\Repository
-{
+{	
+	protected function getEntityById($id)
+	{		
+		$entity = $this->getEntityFactory()->create($this->entityName);
+		$params = array();
+		if ($entity->hasRelation('emailAddresses')) {
+			$params['distinct'] = true;
+			$params['leftJoins'] = array('emailAddresses');
+		}
+		if ($this->mapper->selectById($entity, $id, $params)) {
+			$entity->setFresh();
+			return $entity;
+		}		
+		return null;
+	}
+	
+	protected function handleEmailAddressParams(&$params)
+	{
+		$defs = $this->getEntityManager()->getMetadata()->get($this->entityName);
+		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
+			$params['distinct'] = true;	
+			if (empty($params['leftJoins'])) {
+				$params['leftJoins'] = array();
+			}
+			$params['leftJoins'] = array('emailAddresses');
+		}
+	}
+	
+	public function find(array $params = array())
+	{
+		$this->handleEmailAddressParams($params);		
+		return parent::find($params);
+	}
+	
+	public function findRelated(Entity $entity, $relationName, array $params = array())
+	{
+		$this->handleEmailAddressParams($params);		
+		return parent::findRelated($entity, $relationName, $params);
+	}
 	
 	public function save(Entity $entity)
 	{		

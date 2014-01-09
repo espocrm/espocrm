@@ -9,7 +9,7 @@ class Repository
 	/**
 	 * @var EntityFactory EntityFactory object.
 	 */
-	private $entityFactory;
+	protected $entityFactory;
 	
 	/**
 	 * @var EntityManager EntityManager object.
@@ -19,7 +19,7 @@ class Repository
 	/**
 	 * @var \MyApp\DB\iMapper DB Mapper.
 	 */
-	private $mapper;	
+	protected $mapper;	
 	
 	/**
 	 * @var iModel Seed entity.
@@ -57,24 +57,45 @@ class Repository
 		$this->mapper = $mapper;
 	}	
 	
+	protected function getEntityFactory()
+	{
+		return $this->entityFactory;
+	}
+	
+	protected function getEntityManager()
+	{
+		return $this->entityManager;
+	}
+	
 	public function reset()
 	{
 		$this->whereClause = array();
 		$this->listParams = array();
 	}
 	
-	public function get($id = null)
+	protected function getNewEntity()
 	{
-		$entity = $this->entityFactory->create($this->entityName);		
-		if (empty($id)) {
-			$entity->setIsNew(true);
-			return $entity;	
-		}					
+		$entity = $this->entityFactory->create($this->entityName);
+		$entity->setIsNew(true);
+		return $entity;	
+	}
+	
+	protected function getEntityById($id)
+	{
+		$entity = $this->entityFactory->create($this->entityName);
 		if ($this->mapper->selectById($entity, $id)) {
 			$entity->setFresh();
 			return $entity;
-		}		
+		}
 		return null;
+	}
+	
+	public function get($id = null)
+	{				
+		if (empty($id)) {
+			return $this->getNewEntity();
+		}					
+		return $this->getEntityById($id);
 	}
 	
 	public function save(Entity $entity)

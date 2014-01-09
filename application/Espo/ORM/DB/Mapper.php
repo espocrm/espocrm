@@ -49,6 +49,7 @@ abstract class Mapper implements IMapper
 		'customWhere',
 		'customJoin',
 		'joins',
+		'leftJoins',
 		'distinct',
 	);
 	
@@ -57,15 +58,18 @@ abstract class Mapper implements IMapper
 		$this->entityFactory = $entityFactory;
 	}
 	
-	public function selectById(IEntity $entity, $id)
-	{
-		$selectPart = $this->getSelect($entity);
-		$joinsPart = $this->getBelongsToJoins($entity);
-		$wherePart = $this->getWhere($entity, array('id' => $id, 'deleted' => 0));
+	public function selectById(IEntity $entity, $id, $params = array())
+	{		
+		if (!array_key_exists('whereClause', $params)) {
+			$params['whereClause'] = array();
+		}
 		
-		$sql = $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart);
-		$ps = $this->pdo->query($sql);		
-
+		$params['whereClause']['id'] = $id;
+		$params['whereClause']['deleted'] = 0;		
+		
+		$sql = $this->createSelectQuery($entity, $params);		
+		
+		$ps = $this->pdo->query($sql);
 		
 		if ($ps) {
 			foreach ($ps as $row) {
@@ -177,6 +181,16 @@ abstract class Mapper implements IMapper
 				}
 				$joinsPart .= $joinsRelated;
 			}
+		}
+		
+		if (!empty($leftJoins) && is_array($leftJoins)) {
+			$joinsRelated = $this->getJoins($entity, $leftJoins, true);
+			if (!empty($joinsRelated)) {
+				if (!empty($joinsPart)) {
+					$joinsPart .= ' ';
+				}
+				$joinsPart .= $joinsRelated;
+			}
 		}		
 		
 		if (empty($aggregation)) {
@@ -203,11 +217,11 @@ abstract class Mapper implements IMapper
 		return $selectPart;	
 	}
 	
-	protected function getJoins(IEntity $entity, array $joins)
+	protected function getJoins(IEntity $entity, array $joins, $left = false)
 	{
 		$joinsArr = array();
 		foreach ($joins as $relationName) {
-			if ($joinRelated = $this->getJoinRelated($entity, $relationName)) {
+			if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left)) {
 				$joinsArr[] = $joinRelated;
 			}
 		}
@@ -952,10 +966,12 @@ abstract class Mapper implements IMapper
 		return implode(' ', $joinsArr);
 	}
 	
-	protected function getJoinRelated(IEntity $entity, $relationName)
+	protected function getJoinRelated(IEntity $entity, $relationName, $left = false)
 	{
 		$relOpt = $entity->relations[$relationName];
 		$keySet = $this->getKeys($entity, $relationName);
+		
+		$pre = ($left) ? 'LEFT ' : '';
 		
 		if ($relOpt['type'] == IEntity::MANY_MANY) {
 			
@@ -965,10 +981,11 @@ abstract class Mapper implements IMapper
 			$distantKey = $keySet['distantKey'];				
 
 			$relTable = $this->toDb($relOpt['relationName']);
-			$distantTable = $this->toDb($relOpt['entity']);
+			$distantTable = $this->toDb($relOpt['entity']);			
+			
 			
 			$join =
-				"JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
+				"{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
 				. " AND "
 				. "{$relTable}.deleted = " . $this->pdo->quote(0);
 				
@@ -978,7 +995,7 @@ abstract class Mapper implements IMapper
 				}			
 			}
 			
-			$join .= " JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
+			$join .= " {$pre}JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
 				. " AND "
 				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 
@@ -991,7 +1008,7 @@ abstract class Mapper implements IMapper
 			$distantTable = $this->toDb($relOpt['entity']);			
 			
 			$join = 
-				"JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
+				"{$pre}JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
 				. " AND "
 				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 				
