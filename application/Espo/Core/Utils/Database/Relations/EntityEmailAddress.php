@@ -10,7 +10,7 @@ class EntityEmailAddress
 		return array(
 			$params['entityName'] => array(
 				'relations' => array(
-					$params['link']['name'] => array(
+					$params['link']['name'].'es' => array(
 						'type' => 'manyMany',
 						'entity' => 'EmailAddress',
 						'relationName' => 'entityEmailAddress',
