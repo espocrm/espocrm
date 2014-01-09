@@ -68,14 +68,14 @@ class RelationManager
 		//todo rename to 'helperName' or other one
         $helperName = isset($link['params']['relationName']) ? ucfirst($link['params']['relationName']) : ucfirst($method);
 
-       	$className = '\Espo\Custom\Core\Utils\Database\Helpers\\'.$helperName;
+       	$className = '\Espo\Custom\Core\Utils\Database\Relations\\'.$helperName;
 		if (!class_exists($className)) {
-			$className = '\Espo\Core\Utils\Database\Helpers\\'.$helperName;
+			$className = '\Espo\Core\Utils\Database\Relations\\'.$helperName;
 		}
 
-		if (class_exists($className) && method_exists($className, 'getRelation')) {
+		if (class_exists($className) && method_exists($className, 'load')) {
         	$helperClass = new $className();
-			return $helperClass->getRelation($params, $foreignParams);
+			return $helperClass->load($params, $foreignParams);
 		}
 		//END: relationDefs defined in separate file
 		
