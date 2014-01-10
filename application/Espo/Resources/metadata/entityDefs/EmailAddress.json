@@ -8,10 +8,6 @@
             "type": "varchar",
             "required": true
         },
-        "add": {
-            "type": "varchar",
-            "required": true
-        },
         "invalid": {
             "type": "bool"
         },
