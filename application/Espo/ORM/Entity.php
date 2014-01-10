@@ -86,8 +86,13 @@ abstract class Entity implements IEntity
 			if ($name == 'id') {
 				$this->id = $value;
 			}
-			if (array_key_exists($name, $this->fields)) {	
-				$this->valuesContainer[$name] = $value;
+			if ($this->hasField($name)) {
+				$method = 'set' . ucfirst($name);
+				if (method_exists($this, $method)) {
+					$this->$method($value);
+				} else {
+					$this->valuesContainer[$name] = $value;
+				}
 			}
 		}
 	}
@@ -163,7 +168,12 @@ abstract class Entity implements IEntity
 					}
 				}
 				
-				$this->valuesContainer[$field] = $value;
+				$method = 'set' . ucfirst($field);
+				if (method_exists($this, $method)) {
+					$this->$method($value);
+				} else {
+					$this->valuesContainer[$field] = $value;
+				}
 			}
 		}
 	}
