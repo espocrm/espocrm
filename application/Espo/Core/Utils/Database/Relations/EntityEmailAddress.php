@@ -2,6 +2,8 @@
 
 namespace Espo\Core\Utils\Database\Relations;
 
+use \Espo\Core\Utils\Util;
+
 class EntityEmailAddress
 {
 
@@ -9,6 +11,17 @@ class EntityEmailAddress
 	{
 		return array(
 			$params['entityName'] => array(
+			   	'fields' => array(
+                	$params['link']['name'] => array(
+						'select' => 'email_address.name',
+				        'where' =>
+				        array (
+				          'LIKE' => 'email_address.name LIKE \'{text}\'',
+				          '=' => 'email_address.name = \'{text}\'',
+				        ),
+				        'orderBy' => 'email_address.name {direction}',
+					),
+				),
 				'relations' => array(
 					$params['link']['name'].'es' => array(
 						'type' => 'manyMany',
