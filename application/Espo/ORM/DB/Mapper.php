@@ -51,6 +51,7 @@ abstract class Mapper implements IMapper
 		'joins',
 		'leftJoins',
 		'distinct',
+		'joinConditions',
 	);
 	
 	public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory) {
@@ -103,7 +104,7 @@ abstract class Mapper implements IMapper
 	public function select(IEntity $entity, $params = array())
 	{
 		$sql = $this->createSelectQuery($entity, $params);
-
+		
 		$dataArr = array();		
 		$ps = $this->pdo->query($sql);
 		if ($ps) {
@@ -174,7 +175,7 @@ abstract class Mapper implements IMapper
 		}
 		
 		if (!empty($joins) && is_array($joins)) {
-			$joinsRelated = $this->getJoins($entity, $joins);
+			$joinsRelated = $this->getJoins($entity, $joins, false, $joinConditions);
 			if (!empty($joinsRelated)) {
 				if (!empty($joinsPart)) {
 					$joinsPart .= ' ';
@@ -184,7 +185,7 @@ abstract class Mapper implements IMapper
 		}
 		
 		if (!empty($leftJoins) && is_array($leftJoins)) {
-			$joinsRelated = $this->getJoins($entity, $leftJoins, true);
+			$joinsRelated = $this->getJoins($entity, $leftJoins, true, $joinConditions);
 			if (!empty($joinsRelated)) {
 				if (!empty($joinsPart)) {
 					$joinsPart .= ' ';
@@ -217,11 +218,15 @@ abstract class Mapper implements IMapper
 		return $selectPart;	
 	}
 	
-	protected function getJoins(IEntity $entity, array $joins, $left = false)
+	protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
 	{
 		$joinsArr = array();
 		foreach ($joins as $relationName) {
-			if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left)) {
+			$conditions = array();
+			if (!empty($joinConditions[$relationName])) {
+				$conditions = $joinConditions[$relationName];
+			}
+			if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left, $conditions)) {
 				$joinsArr[] = $joinRelated;
 			}
 		}
@@ -871,7 +876,9 @@ abstract class Mapper implements IMapper
 				$inRelated = false;
 
 				if (strpos($field, '.') !== false) {
-					list($entityName, $field) = array_map('trim', explode('.', $field));					
+					list($entityName, $field) = array_map('trim', explode('.', $field));
+					$entityName = preg_replace('/[^A-Za-z0-9_]+/', '', $entityName);
+					$field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);			
 					$inRelated = true;
 				}
 		
@@ -966,7 +973,7 @@ abstract class Mapper implements IMapper
 		return implode(' ', $joinsArr);
 	}
 	
-	protected function getJoinRelated(IEntity $entity, $relationName, $left = false)
+	protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array())
 	{
 		$relOpt = $entity->relations[$relationName];
 		$keySet = $this->getKeys($entity, $relationName);
@@ -981,18 +988,18 @@ abstract class Mapper implements IMapper
 			$distantKey = $keySet['distantKey'];				
 
 			$relTable = $this->toDb($relOpt['relationName']);
-			$distantTable = $this->toDb($relOpt['entity']);			
-			
+			$distantTable = $this->toDb($relOpt['entity']);
 			
 			$join =
 				"{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
 				. " AND "
-				. "{$relTable}.deleted = " . $this->pdo->quote(0);
+				. "{$relTable}.deleted = " . $this->pdo->quote(0);			
 				
 			if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-				foreach ($relOpt['conditions'] as $f => $v) {
-					$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
-				}			
+				$conditions = array_merge($conditions, $relOpt['conditions']);
+			}
+			foreach ($conditions as $f => $v) {
+				$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
 			}
 			
 			$join .= " {$pre}JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
@@ -1005,7 +1012,9 @@ abstract class Mapper implements IMapper
 		if ($relOpt['type'] == IEntity::HAS_MANY) {
 		
 			$foreignKey = $keySet['foreignKey'];
-			$distantTable = $this->toDb($relOpt['entity']);			
+			$distantTable = $this->toDb($relOpt['entity']);	
+			
+			// TODO conditions		
 			
 			$join = 
 				"{$pre}JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)

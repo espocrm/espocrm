@@ -7,7 +7,8 @@ class EmailAddress extends \Espo\Core\ORM\Entity
 
 	protected function setName($value)
 	{
-		$this->set('lower', strtolower($value));
+		$this->valuesContainer['name'] = $value;
+		$this->set('lower', strtolower($value));		
 	} 
 
 }

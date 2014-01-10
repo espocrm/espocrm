@@ -57,6 +57,11 @@ class Repository
 		$this->mapper = $mapper;
 	}	
 	
+	protected function handleSelectParams(&$params)
+	{
+
+	}
+	
 	protected function getEntityFactory()
 	{
 		return $this->entityFactory;
@@ -82,8 +87,11 @@ class Repository
 	
 	protected function getEntityById($id)
 	{
+		$params = array();
+		$this->handleSelectParams($params);
+		
 		$entity = $this->entityFactory->create($this->entityName);
-		if ($this->mapper->selectById($entity, $id)) {
+		if ($this->mapper->selectById($entity, $id, $params)) {
 			$entity->setFresh();
 			return $entity;
 		}
@@ -118,6 +126,7 @@ class Repository
 
 	public function find(array $params = array())
 	{	
+		$this->handleSelectParams($params);
 		$params = $this->getSelectParams($params);		
 
 		$dataArr = $this->mapper->select($this->seed, $params);				
@@ -138,6 +147,7 @@ class Repository
 	
 	public function findRelated(Entity $entity, $relationName, array $params = array())
 	{
+		$this->handleSelectParams($params);
 		$dataArr = $this->mapper->selectRelated($entity, $relationName, $params);
 		
 		$entityName = $entity->relations[$relationName]['entity'];		
@@ -149,6 +159,7 @@ class Repository
 		
 	public function countRelated(Entity $entity, $relationName, array $params = array())
 	{
+		$this->handleSelectParams($params);
 		return $this->mapper->countRelated($entity, $relationName, $params);				
 	}
 	
@@ -185,6 +196,8 @@ class Repository
 	
 	public function count(array $params = array())
 	{	
+		$this->handleSelectParams($params);
+		
 		$params = $this->getSelectParams($params);		
 		return $this->mapper->count($this->seed, $params);
 	}
@@ -207,7 +220,8 @@ class Repository
 		return $this->mapper->sum($this->seed, $params, $field);
 	}
 
-	// @todo use abstract class for list params
+	// @TODO use abstract class for list params
+	// @TODO join conditions
 	public function join()
 	{	
 		$args = func_get_args();
@@ -287,14 +301,9 @@ class Repository
 		return $params;
 	}	
 	
-	public function commit()
-	{		
-		$this->unitOfWork->commit();
-		
-		foreach ($this->getLastInserted() as $entity) {
-			$this->identityMap->add($entity);
-		}
+	protected function getPDO()
+	{
+		return $this->getEntityManager()->getPDO();	
 	}
 }
-
 

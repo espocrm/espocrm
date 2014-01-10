@@ -16,34 +16,38 @@ class Repository extends \Espo\ORM\Repository
 		return null;
 	}
 	
+	protected function handleSelectParams(&$params)
+	{
+		$this->handleEmailAddressParams($params);
+	}
+	
 	protected function handleEmailAddressParams(&$params)
 	{
 		$defs = $this->getEntityManager()->getMetadata()->get($this->entityName);
-		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
-			$params['distinct'] = true;	
+		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {				
 			if (empty($params['leftJoins'])) {
 				$params['leftJoins'] = array();
 			}
+			if (empty($params['whereClause'])) {
+				$params['whereClause'] = array();
+			}
+			if (empty($params['joinConditions'])) {
+				$params['joinConditions'] = array();
+			}
+			$params['distinct'] = true;
 			$params['leftJoins'] = array('emailAddresses');
+			$params['joinConditions'] = array(
+				'emailAddresses' => array(
+					'primary' => 1
+				)
+			);
 		}
-	}
-	
-	public function find(array $params = array())
-	{
-		$this->handleEmailAddressParams($params);		
-		return parent::find($params);
-	}
-	
-	public function findRelated(Entity $entity, $relationName, array $params = array())
-	{
-		$this->handleEmailAddressParams($params);		
-		return parent::findRelated($entity, $relationName, $params);
-	}
+	}	
 	
 	public function save(Entity $entity)
 	{		
 		$nowString = date('Y-m-d H:i:s', time());		
-		$restoreData = array();							
+		$restoreData = array();					
 		
 		if ($entity->isNew()) {			
 			if (!$entity->has('id')) {
@@ -81,13 +85,95 @@ class Repository extends \Espo\ORM\Repository
 			}
 			$entity->clear('createdById');
 			$entity->clear('createdAt');
-		}		
+		}
 		$result = parent::save($entity);
+			
+		$entity->set($restoreData);	
 		
-		$entity->set($restoreData);		
+		$this->handleEmailAddressSave($entity);	
 		$this->handleSpecifiedRelations($entity);
 		
 		return $result;
+	}
+	
+	protected function handleEmailAddressSave(Entity $entity)
+	{
+		if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {
+			$email = $entity->get('emailAddress');			
+			$pdo = $this->getPDO();
+			
+			if (!empty($email)) {
+				if ($email != $entity->getFetchedValue('emailAddress')) {
+					$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress');
+					$emailAddress = $emailAddressRepository->where(array('lower' => strtolower($email)))->findOne();
+					$isNewEmailAddress = false;
+					if (!$emailAddress) {
+						$emailAddress = $emailAddressRepository->get();
+						$emailAddress->set('name', $email);
+						$emailAddressRepository->save($emailAddress);						
+						$isNewEmailAddress = true;
+					}
+					
+					$query = "
+						UPDATE entity_email_address 
+						SET `primary` = 0
+						WHERE
+							entity_id = ".$pdo->quote($entity->id)." AND
+							entity_type = ".$pdo->quote($this->entityName)."						
+					";
+					$sth = $pdo->prepare($query);
+					$sth->execute();
+					
+					$sth = null;
+					if (!$isNewEmailAddress) {
+						$query = "
+							SELECT * FROM entity_email_address 
+							WHERE
+								entity_id = ".$pdo->quote($entity->id)." AND
+								entity_type = ".$pdo->quote($this->entityName)." AND
+								email_address_id = ".$pdo->quote($emailAddress->id)."							
+						";
+						$sth = $pdo->prepare($query);
+						$sth->execute();
+					}
+					if (!$isNewEmailAddress && $sth->fetch()) {						
+						$query = "
+							UPDATE entity_email_address 
+							SET `primary` = 1
+							WHERE
+								entity_id = ".$pdo->quote($entity->id)." AND
+								entity_type = ".$pdo->quote($this->entityName)." AND
+								email_address_id = ".$pdo->quote($emailAddress->id)."							
+						";
+						$sth = $pdo->prepare($query);
+						$sth->execute();						
+					} else {
+						$query = "
+							INSERT INTO entity_email_address  
+							(entity_id, entity_type, email_address_id, `primary`)
+							VALUES
+							(".$pdo->quote($entity->id).", ".$pdo->quote($this->entityName).", ".$pdo->quote($emailAddress->id).", 1)					
+						";
+
+						$sth = $pdo->prepare($query);
+						$sth->execute();
+					}					
+				}
+			} else {
+				$fetched = $entity->getFetchedValue('emailAddress');
+				if (!empty($fetched)) {
+						$query = "
+							DELETE FROM entity_email_address  
+							WHERE
+								entity_id = ".$pdo->quote($entity->id)." AND
+								entity_type = ".$pdo->quote($this->entityName)." AND
+								primary = 1				
+						";
+						$sth = $pdo->prepare($query);
+						$sth->execute();
+				}
+			}					
+		}
 	}
 	
 	protected function handleSpecifiedRelations(Entity $entity)
