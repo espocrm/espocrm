@@ -124,8 +124,17 @@ class Orm
                     case 'id':
 						if ($fieldParams['dbType'] != 'int') {
                         	$fieldParams = array_merge($fieldParams, $this->idParams);
-						}                                                             
+						}
 						break;
+
+                    case 'foreign':
+		                $typeDefs = $this->getRelationManager()->process('foreignType', $entityName, array(
+							'name' => $fieldName,
+							'foreign' => $fieldParams['foreign'],
+							'entity' => $entityParams['relations'][$fieldParams['relation']]['entity'],
+						));
+						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
+		                break;
 
 					case 'foreignId':
 						$fieldParams = array_merge($fieldParams, $this->idParams);
