@@ -161,6 +161,17 @@
 		"id":":id"
     }
   },
+  
+  {
+  	"route":"/:controller/:id/stream",
+    "method":"get",
+    "params":{
+        "controller":"Stream",
+		"action":"list",
+		"id":":id",
+		"scope":":controller"
+    }
+  },
 
   {
   	"route":"/:controller/:id/:link",

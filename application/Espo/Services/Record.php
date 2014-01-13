@@ -163,7 +163,7 @@ class Record extends \Espo\Core\Services\Base
     	return array(
     		'total' => $this->getRepository()->count($selectParams),
     		'collection' => $collection,
-    	); 	    	
+    	);
 	}
 
     public function findLinkedEntities($id, $link, $params)

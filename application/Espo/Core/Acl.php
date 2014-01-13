@@ -170,6 +170,11 @@ class Acl
 			'delete' => 'no',					
 		);
 		$this->data['Role'] = false;
+		$this->data['Note'] = array(
+			'read' => 'own',
+			'edit' => 'own',
+			'delete' => 'own',					
+		);
 	}
 
 	private function merge($tables)

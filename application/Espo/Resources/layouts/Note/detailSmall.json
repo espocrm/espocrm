@@ -1,0 +1,13 @@
+[
+	{
+		"label":"",
+		"rows": [
+			[
+				{"name":"message"}
+			],
+			[
+				{"name":"attachments"}
+			]
+		]
+	}
+]

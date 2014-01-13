@@ -47,7 +47,8 @@ class ControllerManager
 				$controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($controllerName);
 			}
 		}
-				
+		
+			
 		if ($data) {
 			$data = json_decode($data, true);
 		}		
