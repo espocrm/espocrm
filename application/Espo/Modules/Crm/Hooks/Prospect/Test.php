@@ -1,6 +1,6 @@
 <?php
 
-namespace \Espo\Modules\Crm\Hooks\Prospect;
+namespace Espo\Modules\Crm\Hooks\Prospect;
 
 class Test extends \Espo\Core\Hooks\Base
 {

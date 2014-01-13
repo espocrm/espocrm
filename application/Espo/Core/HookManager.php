@@ -2,7 +2,8 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Error,
+	\Espo\Core\Utils\Util;
 
 class HookManager
 {	
@@ -14,33 +15,51 @@ class HookManager
 	
 	protected $cacheFile = 'data/cache/application/hooks.php';
 
+	/**
+     * List of defined hooks
+     *
+     * @var array
+     */
+	protected $hookList = array(
+		'beforeSave',
+		'afterSave',
+	);
+
+
     public function __construct(Container $container)
     {
     	$this->container = $container;
     	$this->loadHooks();     	
     }
     
-    protected getConfig()
+    protected function getConfig()
     {
     	return $this->container->get('config');
     }
-    
+
+	protected function getFileManager()
+	{
+		return $this->container->get('fileManager');
+	}
+
+
     protected function loadHooks()
-    {    
+    {
     	if ($this->getConfig()->get('useCache') && file_exists($this->cacheFile)) {
-    		$this->hooks = include($this->cacheFile);
+    		$this->hooks = $this->getFileManager()->getContent($this->cacheFile);
+    		//$this->hooks = include($this->cacheFile);
     		return;
     	} 
     	
     	$metadata = $this->container->get('metadata');
-    	
-    	// TODO scan Espo/Hooks/{ScopeName}/{HookName}.php
+
+		$this->hooks = $this->getHookData( array('Espo/Hooks', 'Espo/Custom/Hooks') );
     	foreach ($metadata->getModuleList() as $moduleName) {
-    		// TODO scan Espo/Modules/{$moduleName}/ScopeName/HookName.php
+			$this->hooks = array_merge($this->hooks, $this->getHookData( array('Espo/Modules/'.$moduleName.'/Hooks', 'Espo/Custom/Modules/'.$moduleName.'/Hooks') ));
     	}
-    
+
     	if ($this->getConfig()->get('useCache')) {
-    		// TODO write $this->hooks into cache file
+			$this->getFileManager()->setContentPHP($this->hooks, $this->cacheFile);
     	}
     }
     
@@ -71,5 +90,58 @@ class HookManager
     	}
     	throw new Error("Class '$className' does not exist");
 	}
+
+    /**
+     * Get and merge hook data by checking the files exist in $hookDirs
+	 *
+	 * @param array $hookDirs - it can be an array('Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Custom/Modules/Crm/Hooks')
+	 *
+	 * @return array
+	 */
+	protected function getHookData(array $hookDirs)
+	{
+		$hooks = array();
+
+		foreach($hookDirs as $hookDir) {
+
+	        $fullHookDir = 'application/'.$hookDir;
+			if (file_exists($fullHookDir)) {
+	        	$fileList = $this->getFileManager()->getFileList($fullHookDir, 1, '\.php$', 'file');
+
+	            foreach($fileList as $scopeName => $hookFiles) {
+
+					$hookScopeDirPath = Util::concatPath($hookDir, $scopeName);
+
+					$scopeHooks = array();
+					foreach($hookFiles as $hookFile) {
+						$hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);
+	                	$className = '\\'.Util::toFormat(preg_replace('/\.php$/i', '', $hookFilePath), '\\');
+
+						foreach($this->hookList as $hookName) {
+							if (method_exists($className, $hookName)) {
+								$scopeHooks[$hookName][$className::$order][] = $className;
+							}
+						}
+					}
+
+					//sort hooks by order
+	                foreach($scopeHooks as $hookName => $hookList) {
+						ksort($hookList);
+
+						$sortedHookList = array();
+						foreach($hookList as $hookDetails) {
+	                    	$sortedHookList = array_merge($sortedHookList, $hookDetails);
+						}
+
+                        $hooks[$scopeName][$hookName] = isset($hooks[$scopeName][$hookName]) ? array_merge($hooks[$scopeName][$hookName], $sortedHookList) : $sortedHookList;
+					}
+	            }
+			}
+
+		}
+
+		return $hooks;
+	}
+
 }
 

@@ -295,7 +295,7 @@ class Metadata
 	//NEED TO CHANGE
 	public function getScopes()
 	{
-    	if (!$reload && !empty($this->scopes)) {
+    	if (!empty($this->scopes)) {
     		return $this->scopes;
     	}
 
@@ -314,16 +314,16 @@ class Metadata
 		if (is_null($this->moduleList)) {
 			$this->moduleList = array();
 			$scopes = $this->getScopes();
+
 			// TODO order
-			foreach ($this->scopes as $defs) {
-				if (!empty($defs['module'])) {
-					$module = $defs['module'];
-					if (!in_array($module, $this->moduleList)) {
-						$this->moduleList[] = $module;
-					}  
+			foreach ($scopes as $moduleName) {
+				if (!empty($moduleName)) {
+					if (!in_array($moduleName, $this->moduleList)) {
+						$this->moduleList[] = $moduleName;
+					}
 				}
 			}
-		}		
+		}
 		return $this->moduleList;
 	}
 

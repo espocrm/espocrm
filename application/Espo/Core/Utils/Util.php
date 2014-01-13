@@ -161,6 +161,10 @@ class Util
 		if (empty($filePath)) {
         	return $folderPath;
     	}
+	if (empty($folderPath)) {
+        	return $filePath;
+    	}
+
 		else {
             if (substr($folderPath, -1) == static::getSeparator()) {
             	return $folderPath . $filePath;

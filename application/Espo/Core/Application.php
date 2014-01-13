@@ -13,8 +13,6 @@ class Application
 
 	private $slim;
 
-	private $doctrineConverter;
-
 	/**
      * Constructor
      */
@@ -59,11 +57,6 @@ class Application
 	public function getServiceFactory()
 	{
 		return $this->serviceFactory;
-	}
-
-	protected function getDoctrineConverter()
-	{
-		return $this->doctrineConverter;
 	}
 
     public function run($name = 'default')
