@@ -262,7 +262,27 @@ abstract class Mapper implements IMapper
 		if (!$totalCount) {
 			$selectPart = $this->getSelect($relEntity);
 			$joinsPart = $this->getBelongsToJoins($relEntity);			
-			$orderPart = $this->getOrder($relEntity, $orderBy, $order);			
+			$orderPart = $this->getOrder($relEntity, $orderBy, $order);
+			
+			if (!empty($joins) && is_array($joins)) {
+				$joinsRelated = $this->getJoins($relEntity, $joins, false, $joinConditions);
+				if (!empty($joinsRelated)) {
+					if (!empty($joinsPart)) {
+						$joinsPart .= ' ';
+					}
+					$joinsPart .= $joinsRelated;
+				}
+			}
+		
+			if (!empty($leftJoins) && is_array($leftJoins)) {
+				$joinsRelated = $this->getJoins($relEntity, $leftJoins, true, $joinConditions);
+				if (!empty($joinsRelated)) {
+					if (!empty($joinsPart)) {
+						$joinsPart .= ' ';
+					}
+					$joinsPart .= $joinsRelated;
+				}
+			}		
 		
 		} else {
 			$selectPart = $this->getAggregationSelect($relEntity, 'COUNT', 'id');
@@ -322,7 +342,7 @@ abstract class Mapper implements IMapper
 				$dataArr = array();
 				
 				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $offset, $limit);
-			
+				
 				$ps = $this->pdo->query($sql);		
 				if ($ps) {					
 					if (!$totalCount) {

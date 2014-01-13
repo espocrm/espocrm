@@ -4,26 +4,19 @@ namespace Espo\Core\ORM;
 
 class Repository extends \Espo\ORM\Repository
 {	
-	protected function getEntityById($id)
-	{		
-		$entity = $this->getEntityFactory()->create($this->entityName);
-		$params = array();
-		$this->handleEmailAddressParams($params);
-		if ($this->mapper->selectById($entity, $id, $params)) {
-			$entity->setFresh();
-			return $entity;
+	
+	protected function handleSelectParams(&$params, $entityName = false)
+	{
+		$this->handleEmailAddressParams($params, $entityName);
+	}
+	
+	protected function handleEmailAddressParams(&$params, $entityName = false)
+	{
+		if (empty($entityName)) {
+			$entityName = $this->entityName;
 		}		
-		return null;
-	}
-	
-	protected function handleSelectParams(&$params)
-	{
-		$this->handleEmailAddressParams($params);
-	}
-	
-	protected function handleEmailAddressParams(&$params)
-	{
-		$defs = $this->getEntityManager()->getMetadata()->get($this->entityName);
+		
+		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
 		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {				
 			if (empty($params['leftJoins'])) {
 				$params['leftJoins'] = array();
