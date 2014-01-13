@@ -4,26 +4,19 @@ namespace Espo\Core\ORM;
 
 class Repository extends \Espo\ORM\Repository
 {	
-	protected function getEntityById($id)
-	{		
-		$entity = $this->getEntityFactory()->create($this->entityName);
-		$params = array();
-		$this->handleEmailAddressParams($params);
-		if ($this->mapper->selectById($entity, $id, $params)) {
-			$entity->setFresh();
-			return $entity;
+	
+	protected function handleSelectParams(&$params, $entityName = false)
+	{
+		$this->handleEmailAddressParams($params, $entityName);
+	}
+	
+	protected function handleEmailAddressParams(&$params, $entityName = false)
+	{
+		if (empty($entityName)) {
+			$entityName = $this->entityName;
 		}		
-		return null;
-	}
-	
-	protected function handleSelectParams(&$params)
-	{
-		$this->handleEmailAddressParams($params);
-	}
-	
-	protected function handleEmailAddressParams(&$params)
-	{
-		$defs = $this->getEntityManager()->getMetadata()->get($this->entityName);
+		
+		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
 		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {				
 			if (empty($params['leftJoins'])) {
 				$params['leftJoins'] = array();
@@ -102,75 +95,43 @@ class Repository extends \Espo\ORM\Repository
 			$email = $entity->get('emailAddress');			
 			$pdo = $this->getPDO();
 			
+			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress');
+			
 			if (!empty($email)) {
-				if ($email != $entity->getFetchedValue('emailAddress')) {
-					$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress');
-					$emailAddress = $emailAddressRepository->where(array('lower' => strtolower($email)))->findOne();
+				if ($email != $entity->getFetchedValue('emailAddress')) {					
+					
+					$emailAddressNew = $emailAddressRepository->where(array('lower' => strtolower($email)))->findOne();									
 					$isNewEmailAddress = false;
-					if (!$emailAddress) {
-						$emailAddress = $emailAddressRepository->get();
-						$emailAddress->set('name', $email);
-						$emailAddressRepository->save($emailAddress);						
+					if (!$emailAddressNew) {
+						$emailAddressNew = $emailAddressRepository->get();
+						$emailAddressNew->set('name', $email);
+						$emailAddressRepository->save($emailAddressNew);						
 						$isNewEmailAddress = true;
 					}
 					
+					$emailOld = $entity->getFetchedValue('emailAddress');					
+					if (!empty($emailOld)) {
+						$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();					
+						$this->unrelate($entity, 'emailAddresses', $emailAddressOld);
+					}					
+					$this->relate($entity, 'emailAddresses', $emailAddressNew);
+					
 					$query = "
 						UPDATE entity_email_address 
-						SET `primary` = 0
+						SET `primary` = 1
 						WHERE
 							entity_id = ".$pdo->quote($entity->id)." AND
-							entity_type = ".$pdo->quote($this->entityName)."						
+							entity_type = ".$pdo->quote($this->entityName)." AND
+							email_address_id = ".$pdo->quote($emailAddressNew->id)."							
 					";
 					$sth = $pdo->prepare($query);
 					$sth->execute();
-					
-					$sth = null;
-					if (!$isNewEmailAddress) {
-						$query = "
-							SELECT * FROM entity_email_address 
-							WHERE
-								entity_id = ".$pdo->quote($entity->id)." AND
-								entity_type = ".$pdo->quote($this->entityName)." AND
-								email_address_id = ".$pdo->quote($emailAddress->id)."							
-						";
-						$sth = $pdo->prepare($query);
-						$sth->execute();
-					}
-					if (!$isNewEmailAddress && $sth->fetch()) {						
-						$query = "
-							UPDATE entity_email_address 
-							SET `primary` = 1
-							WHERE
-								entity_id = ".$pdo->quote($entity->id)." AND
-								entity_type = ".$pdo->quote($this->entityName)." AND
-								email_address_id = ".$pdo->quote($emailAddress->id)."							
-						";
-						$sth = $pdo->prepare($query);
-						$sth->execute();						
-					} else {
-						$query = "
-							INSERT INTO entity_email_address  
-							(entity_id, entity_type, email_address_id, `primary`)
-							VALUES
-							(".$pdo->quote($entity->id).", ".$pdo->quote($this->entityName).", ".$pdo->quote($emailAddress->id).", 1)					
-						";
-
-						$sth = $pdo->prepare($query);
-						$sth->execute();
-					}					
 				}
 			} else {
-				$fetched = $entity->getFetchedValue('emailAddress');
-				if (!empty($fetched)) {
-						$query = "
-							DELETE FROM entity_email_address  
-							WHERE
-								entity_id = ".$pdo->quote($entity->id)." AND
-								entity_type = ".$pdo->quote($this->entityName)." AND
-								primary = 1				
-						";
-						$sth = $pdo->prepare($query);
-						$sth->execute();
+				$emailOld = $entity->getFetchedValue('emailAddress');
+				if (!empty($emailOld)) {
+					$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();					
+					$this->unrelate($entity, 'emailAddresses', $emailAddressOld);						
 				}
 			}					
 		}
