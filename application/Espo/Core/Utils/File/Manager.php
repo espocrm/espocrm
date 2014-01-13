@@ -20,7 +20,7 @@ class Manager
 	private $params;
 
 
-	public function __construct(\stdClass $params)    
+	public function __construct(\stdClass $params)
 	{
 		$this->params = $params;
 	}
@@ -36,13 +36,14 @@ class Manager
     * Get a list of files in specified directory
 	*
 	* @param string $path string - Folder path, Ex. myfolder
-	* @param bool $recursively - Find files in subfolders
+	* @param bool | int $recursively - Find files in subfolders
 	* @param string $filter - Filter for files. Use regular expression, Ex. \.json$
 	* @param string $fileType [all, file, dir] - Filter for type of files/directories.
+	* @param bool $isReturnSingleArray - if need to return a single array of file list
 	*
 	* @return array
 	*/
-	function getFileList($path, $recursively=false, $filter='', $fileType='all')
+	function getFileList($path, $recursively=false, $filter='', $fileType='all', $isReturnSingleArray = false)
 	{
     	if (!file_exists($path)) {
             return false;
@@ -57,8 +58,9 @@ class Manager
 			{
 				$add= false;
 				if (is_dir($path . Utils\Util::getSeparator() . $value)) {
-					if ($recursively) {
-						$result[$value] = $this->getFileList($path.Utils\Util::getSeparator().$value, $recursively, $filter, $fileType);
+					if ($recursively || (is_int($recursively) && $recursively!=0) ) {
+						$nextRecursively = is_int($recursively) ? ($recursively-1) : $recursively;
+						$result[$value] = $this->getFileList($path.Utils\Util::getSeparator().$value, $nextRecursively, $filter, $fileType);
 					}
 					else if (in_array($fileType, array('all', 'dir'))){
 						$add= true;
@@ -82,7 +84,35 @@ class Manager
 			}
 		}
 
+		if ($isReturnSingleArray) {
+			return $this->getSingeFileList($result);
+		}
+
 		return $result;
+	}
+
+	/**
+    * Convert file list to a single array
+	*
+	* @param aray $fileList
+	* @param string $parentDirName 
+	*
+	* @return aray
+	*/
+	protected function getSingeFileList(array $fileList, $parentDirName = '')
+	{
+		$singleFileList = array();
+    	foreach($fileList as $dirName => $fileName) {		
+		
+        	if (is_array($fileName)) {		
+			$currentDir = Utils\Util::concatPath($parentDirName, $dirName);
+            		$singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $currentDir));
+        	} else {
+            	$singleFileList[] = Utils\Util::concatPath($parentDirName, $fileName);
+        	}
+    	}
+
+		return $singleFileList;
 	}
 
 	/**
@@ -419,7 +449,7 @@ class Manager
 	*
 	* @return string | false
 	*/
-	function getPHPFormat($content)
+	public function getPHPFormat($content)
 	{
 		if (empty($content)) {
             return false;

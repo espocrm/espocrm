@@ -1,6 +1,6 @@
 <?php
 
-namespace \Espo\Core\Hooks;
+namespace Espo\Core\Hooks;
 
 class Base
 {	
