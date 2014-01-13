@@ -107,7 +107,8 @@ class Application
 			}
 
 			$params = $route->getParams();
-			$data = $slim->request()->getBody();						
+			$data = $slim->request()->getBody();			
+						
 
 			foreach ($routeOptions as $key => $value) {
 				if (strstr($value, ':')) {
@@ -116,6 +117,8 @@ class Application
 				}
 				$controllerParams[$key] = $value;
 			}
+			
+			$params = array_merge($params, $controllerParams);
 
 			$controllerName = ucfirst($controllerParams['controller']);
 			
