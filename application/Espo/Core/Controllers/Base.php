@@ -14,7 +14,7 @@ abstract class Base
 	
 	private $serviceFactory;
 	
-	public $defaultAction = 'index';
+	public static $defaultAction = 'index';
 
 	public function __construct(Container $container, ServiceFactory $serviceFactory)
 	{

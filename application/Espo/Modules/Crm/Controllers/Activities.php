@@ -7,6 +7,8 @@ use \Espo\Core\Exceptions\Error,
 
 class Activities extends \Espo\Core\Controllers\Base
 {
+	public static $defaultAction = 'index';
+	
 	protected $serviceClassName = '\\Espo\\Modules\\Crm\\Services\\Activities';
 
 	public function actionList($params, $data, $request)

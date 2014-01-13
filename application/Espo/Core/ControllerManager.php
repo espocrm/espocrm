@@ -59,7 +59,7 @@ class ControllerManager
 		$controller = new $controllerClassName($this->container, $this->serviceFactory);
 
 		if ($actionName == 'index') {
-			$actionName = $controller->defaultAction;
+			$actionName = $controllerClassName::$defaultAction;
 		}		
 		
 		$actionNameUcfirst = ucfirst($actionName);

@@ -10,7 +10,7 @@ use \Espo\Core\Utils\Util;
 abstract class Record extends Base
 {
 	
-	public $defaultAction = 'list';	
+	public static $defaultAction = 'list';	
 	
 	public function getRecordService()
 	{
