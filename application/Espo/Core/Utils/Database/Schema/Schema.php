@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\Utils\Database;
+namespace Espo\Core\Utils\Database\Schema;
 
 use \Doctrine\DBAL\Types\Type;
 
@@ -28,7 +28,7 @@ class Schema
 		$this->comparator = new \Doctrine\DBAL\Schema\Comparator();
 		$this->initFieldTypes();
 
-		$this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata);
+		$this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
 	}
 
 

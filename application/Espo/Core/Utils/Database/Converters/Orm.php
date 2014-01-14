@@ -8,6 +8,7 @@ use Espo\Core\Utils\Util,
 class Orm
 {
 	private $metadata;
+	private $fileManager;
 
 	private $relationManager;
 
@@ -53,9 +54,10 @@ class Orm
 	);
 
 
-	public function __construct(\Espo\Core\Utils\Metadata $metadata)
+	public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
 	{
     	$this->metadata = $metadata;
+    	$this->fileManager = $fileManager;
 
 		$this->relationManager = new RelationManager($this->metadata);
 	}
@@ -64,6 +66,11 @@ class Orm
 	protected function getMetadata()
 	{
 		return $this->metadata;
+	}
+
+	protected function getFileManager()
+	{
+    	return $this->fileManager;
 	}
 
 	protected function getRelationManager()

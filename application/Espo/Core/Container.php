@@ -146,7 +146,7 @@ class Container
 
 	private function loadSchema()
 	{
-		return new \Espo\Core\Utils\Database\Schema(
+		return new \Espo\Core\Utils\Database\Schema\Schema(
 			$this->get('config'),
 			$this->get('metadata'),
 			$this->get('fileManager')

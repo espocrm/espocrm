@@ -25,7 +25,7 @@ class Metadata
 		$this->uniteFiles = $uniteFiles;
 		$this->fileManager = $fileManager;
 
-		$this->converter = new \Espo\Core\Utils\Database\Converter($this);
+		$this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
 	}
 
 	protected function getConfig()
