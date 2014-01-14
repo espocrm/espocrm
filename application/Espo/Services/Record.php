@@ -70,9 +70,9 @@ class Record extends \Espo\Core\Services\Base
 		return $entity;
 	}
 	
-	protected function loadLinkMultipleFields($entity)
+	protected function loadLinkMultipleFields(Entity $entity)
 	{
-		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $this->entityName . '.fields', array());
+		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
 			if ($defs['type'] == 'linkMultiple') {
 				$entity->loadLinkMultipleField($field);	
@@ -80,9 +80,9 @@ class Record extends \Espo\Core\Services\Base
 		}
 	}
 	
-	protected function loadParentNameFields($entity)
+	protected function loadParentNameFields(Entity $entity)
 	{
-		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $this->entityName . '.fields', array());
+		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
 			if ($defs['type'] == 'linkParent') {								
 				$id = $entity->get($field . 'Id');
@@ -159,6 +159,10 @@ class Record extends \Espo\Core\Services\Base
 	{	
 		$selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
 		$collection = $this->getRepository()->find($selectParams);
+		
+		foreach ($collection as $entity) {
+			$this->loadParentNameFields($entity);
+		}
 
     	return array(
     		'total' => $this->getRepository()->count($selectParams),
@@ -180,6 +184,10 @@ class Record extends \Espo\Core\Services\Base
     	    	
 		$selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+		
+		foreach ($collection as $entity) {
+			$this->loadParentNameFields($entity);
+		}
 		
 		// TODO
 		// $repository->via($entity, $link)->find($selectParams);

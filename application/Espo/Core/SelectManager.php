@@ -45,8 +45,11 @@ class SelectManager
     {
 		if (!empty($params['sortBy'])) {
 			$result['orderBy'] = $params['sortBy'];
-			if ($this->metadata->get("entityDefs.{$this->entityName}.fields." . $result['orderBy'] . ".type") == 'link') {
+			$type = $this->metadata->get("entityDefs.{$this->entityName}.fields." . $result['orderBy'] . ".type");
+			if ($type == 'link') {
 				$result['orderBy'] .= 'Name';
+			} else if ($type == 'linkParent') {
+				$result['orderBy'] .= 'Type';
 			}			
 		}
 		if (isset($params['asc'])) {
