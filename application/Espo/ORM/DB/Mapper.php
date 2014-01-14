@@ -1140,8 +1140,13 @@ abstract class Mapper implements IMapper
 			if (!empty($fieldDefs['orderBy'])) {
 				$orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
 				$orderStr .= "ORDER BY {$orderPart}";				
-			} else {			
+			} else {
 				$fieldPath = $this->getFieldPath($entity, $orderBy);
+				if ($fieldDefs['type'] == iEntity::FOREIGN) {
+				
+				} else {		
+					
+				}
 				$orderStr .= "ORDER BY {$fieldPath} " . $order;
 			}
 		}
