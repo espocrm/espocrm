@@ -34,6 +34,7 @@ class EntityManager
 
 		$entityManager = new \Espo\Core\ORM\EntityManager($params);
 		$entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
+		$entityManager->setHookManager($this->getContainer()->get('hookManager'));
 		
 		return $entityManager;
 	}

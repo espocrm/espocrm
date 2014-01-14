@@ -46,20 +46,20 @@ class HookManager
     protected function loadHooks()
     {
     	if ($this->getConfig()->get('useCache') && file_exists($this->cacheFile)) {
-    		$this->hooks = $this->getFileManager()->getContent($this->cacheFile);
-    		//$this->hooks = include($this->cacheFile);
+    		$this->data = $this->getFileManager()->getContent($this->cacheFile);
     		return;
     	} 
     	
     	$metadata = $this->container->get('metadata');
 
-		$this->hooks = $this->getHookData( array('Espo/Hooks', 'Espo/Custom/Hooks') );
+		$this->data = $this->getHookData( array('Espo/Hooks', 'Espo/Custom/Hooks') );
     	foreach ($metadata->getModuleList() as $moduleName) {
-			$this->hooks = array_merge($this->hooks, $this->getHookData( array('Espo/Modules/'.$moduleName.'/Hooks', 'Espo/Custom/Modules/'.$moduleName.'/Hooks') ));
-    	}
+			$this->data = array_merge($this->data, $this->getHookData( array('Espo/Modules/'.$moduleName.'/Hooks', 'Espo/Custom/Modules/'.$moduleName.'/Hooks') ));
+    	}   	
+
 
     	if ($this->getConfig()->get('useCache')) {
-			$this->getFileManager()->setContentPHP($this->hooks, $this->cacheFile);
+			$this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
     	}
     }
     

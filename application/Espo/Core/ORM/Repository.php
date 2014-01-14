@@ -38,7 +38,9 @@ class Repository extends \Espo\ORM\Repository
 	}	
 	
 	public function save(Entity $entity)
-	{		
+	{
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity);
+				
 		$nowString = date('Y-m-d H:i:s', time());		
 		$restoreData = array();					
 		
@@ -85,6 +87,8 @@ class Repository extends \Espo\ORM\Repository
 		
 		$this->handleEmailAddressSave($entity);	
 		$this->handleSpecifiedRelations($entity);
+		
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
 		
 		return $result;
 	}
