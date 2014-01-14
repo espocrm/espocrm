@@ -109,7 +109,7 @@ class Record extends \Espo\Core\Services\Base
     		$className = '\\Espo\\Core\\SelectManager';
     	}
 		
-		$selectManager = new $className($this->getEntityManager(), $this->getUser(), $this->getAcl());
+		$selectManager = new $className($this->getEntityManager(), $this->getUser(), $this->getAcl(), $this->getMetadata());
 		$selectManager->setEntityName($entityName);
 				
 		return $selectManager;

@@ -15,12 +15,15 @@ class SelectManager
 	protected $entityManager;
 	
 	protected $entityName;
+	
+	protected $metadata;
 
-    public function __construct(ORM\EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl)
+    public function __construct(ORM\EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
     {
     	$this->entityManager = $entityManager;
     	$this->user = $user;
     	$this->acl = $acl;
+    	$this->metadata = $metadata;
     }
     
     public function setEntityName($entityName)
@@ -42,6 +45,9 @@ class SelectManager
     {
 		if (!empty($params['sortBy'])) {
 			$result['orderBy'] = $params['sortBy'];
+			if ($this->metadata->get("entityDefs.{$this->entityName}.fields." . $result['orderBy'] . ".type") == 'link') {
+				$result['orderBy'] .= 'Name';
+			}			
 		}
 		if (isset($params['asc'])) {
 			if ($params['asc']) {
