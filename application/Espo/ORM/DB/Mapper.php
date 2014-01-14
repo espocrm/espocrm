@@ -811,22 +811,35 @@ abstract class Mapper implements IMapper
 			return false;
 		}		
 	}
-	
+
 	protected function getTableAliases(IEntity $entity)
 	{	
 		$aliases = array();
-		$c = 0;		
-		foreach ($entity->relations as $r) {
+		$c = 0;
+		
+		$occuranceHash = array();
+				
+		foreach ($entity->relations as $name => $r) {
 			if ($r['type'] == IEntity::BELONGS_TO) {
 				$key = $r['key'];
+				$table = $this->toDb($r['entity']);
+				
 				if (!array_key_exists($key, $aliases)) {
-					$c++;
-					$suffix = '_' . $c;					
-					$aliases[$key] = $this->toDb($r['entity']) . $suffix;
-					
-				}			
+					if (array_key_exists($table, $occuranceHash)) {
+						$occuranceHash[$table]++;
+					} else {			
+						$occuranceHash[$table] = 0;
+					}			
+					$suffix = '_f';					
+					if ($occuranceHash[$table] > 0) {						
+						$suffix .= '_' . $occuranceHash[$table];
+					}
+										
+					$aliases[$key] = $table . $suffix;		
+				}		
 			}
 		}
+		
 		return $aliases;
 	}
 	

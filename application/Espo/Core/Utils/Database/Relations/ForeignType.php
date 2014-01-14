@@ -18,7 +18,7 @@ class ForeignType
 		$orderBy = array();
 		foreach($params['link']['foreign'] as $foreignField) {
         	if (trim($foreignField) != '') {
-            	$orderBy[] = $usForeignEntity.'_1.'.Util::toUnderScore($foreignField).' {direction}';
+            	$orderBy[] = $usForeignEntity.'_f.'.Util::toUnderScore($foreignField).' {direction}';
         	}
 		}     
 
