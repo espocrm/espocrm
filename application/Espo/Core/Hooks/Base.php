@@ -19,7 +19,7 @@ class Base
 		$this->injections[$name] = $object;
 	}
 	
-	public static $order = 0;
+	public static $order = 9;
 	
 	protected function getEntityManager()
 	{
