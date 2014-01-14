@@ -9,6 +9,15 @@
 		"id":":id",
 		"name":":name"
     }
+  },
+  
+  {
+  	"route":"/Activities",
+    "method":"get",
+    "params":{
+        "controller":"Activities",
+		"action":"listEvents"
+    }
   }
   
 ]

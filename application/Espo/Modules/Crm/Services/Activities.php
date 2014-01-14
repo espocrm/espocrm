@@ -254,5 +254,37 @@ class Activities extends \Espo\Core\Services\Base
 		
 		return $result;	
 	}
+	
+	public function getEvents($from, $to)
+	{
+		$pdo = $this->getPDO();
+	
+		$sql = "
+			SELECT 'Meeting' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd FROM `meeting`
+			WHERE 
+				deleted = 0 AND
+				date_start >= ".$pdo->quote($from)." AND
+				date_start < ".$pdo->quote($to)."
+			UNION
+			SELECT 'Call' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd FROM `call`
+			WHERE 
+				deleted = 0 AND
+				date_start >= ".$pdo->quote($from)." AND
+				date_start < ".$pdo->quote($to)."
+			UNION
+			SELECT 'Task' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd FROM `task`
+			WHERE 
+				deleted = 0 AND
+				date_start >= ".$pdo->quote($from)." AND
+				date_start < ".$pdo->quote($to)."
+		";
+
+		
+		$sth = $pdo->prepare($sql);		
+		$sth->execute();		
+		$rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $rows;
+	}
 }
 
