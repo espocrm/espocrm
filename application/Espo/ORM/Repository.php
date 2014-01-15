@@ -129,8 +129,9 @@ class Repository
 		$this->handleSelectParams($params);
 		$params = $this->getSelectParams($params);		
 
-		$dataArr = $this->mapper->select($this->seed, $params);				
-		$collection = new EntityCollection($dataArr, $this->seed, $this->entityFactory);
+		$dataArr = $this->mapper->select($this->seed, $params);
+			
+		$collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
 		$this->reset();
 		
 		return $collection;
@@ -148,20 +149,20 @@ class Repository
 	public function findRelated(Entity $entity, $relationName, array $params = array())
 	{
 		$entityName = $entity->relations[$relationName]['entity'];
-		$this->handleSelectParams($params, $entityName);
+		$this->handleSelectParams($params, $entityName);		
 		
 		$dataArr = $this->mapper->selectRelated($entity, $relationName, $params);
-		$seed = $this->entityFactory->create($entityName);
 		
-		$collection = new EntityCollection($dataArr, $seed, $this->entityFactory);	
+		$collection = new EntityCollection($dataArr, $entityName, $this->entityFactory);	
 		return $collection;
 	}	
 		
 	public function countRelated(Entity $entity, $relationName, array $params = array())
-	{
+	{		
 		$entityName = $entity->relations[$relationName]['entity'];
 		$this->handleSelectParams($params, $entityName);
-		return $this->mapper->countRelated($entity, $relationName, $params);				
+		
+		$this->mapper->countRelated($entity, $relationName, $params);
 	}
 	
 	public function relate(Entity $entity, $relationName, $foreign)

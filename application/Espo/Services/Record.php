@@ -158,12 +158,12 @@ class Record extends \Espo\Core\Services\Base
 	public function findEntities($params)
 	{	
 		$selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
-		$collection = $this->getRepository()->find($selectParams);
+		$collection = $this->getRepository()->find($selectParams);		
 		
-		foreach ($collection as $entity) {
-			$this->loadParentNameFields($entity);
+		foreach ($collection as $e) {
+			$this->loadParentNameFields($e);
 		}
-
+		
     	return array(
     		'total' => $this->getRepository()->count($selectParams),
     		'collection' => $collection,
@@ -185,12 +185,9 @@ class Record extends \Espo\Core\Services\Base
 		$selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 		
-		foreach ($collection as $entity) {
-			$this->loadParentNameFields($entity);
+		foreach ($collection as $e) {
+			$this->loadParentNameFields($e);
 		}
-		
-		// TODO
-		// $repository->via($entity, $link)->find($selectParams);
 		
     	return array(
     		'total' => $this->getRepository()->countRelated($entity, $link, $selectParams),

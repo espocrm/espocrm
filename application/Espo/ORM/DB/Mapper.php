@@ -113,7 +113,7 @@ abstract class Mapper implements IMapper
 		
 		if ($this->returnCollection) {		
 			$collectionClass = $this->collectionClass;
-			$entityArr = new $collectionClass($dataArr, $entity, $this->entityFactory);			
+			$entityArr = new $collectionClass($dataArr, $entity->getEntityName(), $this->entityFactory);			
 			return $entityArr;
 		} else {
 			return $dataArr;
@@ -356,7 +356,7 @@ abstract class Mapper implements IMapper
 				}
 				if ($this->returnCollection) {
 					$collectionClass = $this->collectionClass;
-					return new $collectionClass($dataArr, $relEntity, $this->entityFactory);
+					return new $collectionClass($dataArr, $relEntity->getEntityName(), $this->entityFactory);
 				} else {
 					return $dataArr;
 				}
@@ -387,7 +387,7 @@ abstract class Mapper implements IMapper
 				}
 				if ($this->returnCollection) {
 					$collectionClass = $this->collectionClass;
-					return new $collectionClass($dataArr, $relEntity, $this->entityFactory);
+					return new $collectionClass($dataArr, $relEntity->getEntityName(), $this->entityFactory);
 				} else {
 					return $dataArr;
 				}

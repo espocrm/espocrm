@@ -12,14 +12,10 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 	
 	protected $container = array();
 	
-	public function __construct($data = array(), $seed = null, EntityFactory $entityFactory = null)
+	public function __construct($data = array(), $entityName, EntityFactory $entityFactory = null)
 	{
-		$this->container = $data;
-		
-		$this->seed = $seed;
-		if (!empty($seed)) {		
-			$this->entityName = $this->seed->getEntityName();
-		}
+		$this->container = $data;		
+		$this->entityName = $entityName;
 		$this->entityFactory = $entityFactory;
 	}
 	

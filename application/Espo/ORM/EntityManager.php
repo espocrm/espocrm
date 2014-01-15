@@ -44,6 +44,8 @@ class EntityManager
 			$repositoryFactoryClassName = $params['repositoryFactoryClassName'];
 		}
 		$this->repositoryFactory = new $repositoryFactoryClassName($this, $this->entityFactory, $this->mapper);
+		
+		$this->init();
 	}
 
 	protected function initPDO($params)
@@ -106,6 +108,10 @@ class EntityManager
 		$seed = $this->getEntity($entityName);		
 		$collection = new EntityCollection($data, $seed, $this->entityFactory);		
 		return $collection;
+	}
+	
+	protected function init()
+	{
 	}
 }
 

@@ -126,6 +126,7 @@ abstract class Record extends Base
 			'q' => $q,
 		));
 		
+		
 		return array(
 			'total' => $result['total'],
 			'list' => $result['collection']->toArray()
