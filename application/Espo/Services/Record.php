@@ -59,6 +59,7 @@ class Record extends \Espo\Core\Services\Base
 		if (!empty($entity) && !empty($id)) {		
 			$this->loadLinkMultipleFields($entity);			
 			$this->loadParentNameFields($entity);
+			$this->loadIsFollowed($entity);
 		}
 		
 		if (!empty($entity) && !empty($id)) {			
@@ -68,6 +69,18 @@ class Record extends \Espo\Core\Services\Base
 		}
 				
 		return $entity;
+	}
+	
+	protected function loadIsFollowed(Entity $entity)
+	{
+		$pdo = $this->getEntityManager()->getPDO();
+		$sql = "
+			SELECT id FROM subscription 
+			WHERE entity_id = " . $pdo->quote($entity->get('id')) . " AND " . $entity->getEntityName();
+			
+		if ($pdo->prepare($sql)->execute()) {
+			$entity->set('isFollowed', true);
+		}
 	}
 	
 	protected function loadLinkMultipleFields(Entity $entity)
@@ -270,6 +283,70 @@ class Record extends \Espo\Core\Services\Base
     	
     	// TODO update $where
     }
+    
+    public function follow($id, $userId = null)
+    {
+    	$entity = $this->getEntity($id);
+    	if (!$this->getAcl()->check($entity, 'read')) {
+    		throw new Forbidden();
+    	}
+    	
+		if (!$this->getMetadata()->get('scopes.' . $this->entityName . '.stream')) {
+			throw new Error();
+		}
+		
+		if (empty($userId)) {
+			$userId = $this->getUser()->id;
+		}
+		
+		$pdo = $this->getEntityManager()->getPDO();
+		$sql = "
+			SELECT id FROM subscription 
+			WHERE 
+				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
+				user_id = " . $pdo->quote($userId) . "
+		";
+		
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+			
+		if (!$sth->fetchAll()) {
+			$sql = "
+				INSERT INTO subscription
+				(entity_id, entity_type, user_id)
+				VALUES
+				(".$pdo->quote($entity->id).", ".$pdo->quote($entity->getEntityName()).", ".$pdo->quote($userId).")
+			";
+			$sth = $pdo->prepare($sql)->execute();
+		}
+		return 1;
+    }
+    
+    public function unfollow($id, $userId = null)
+    {
+    	$entity = $this->getEntity($id);
+    	if (!$this->getAcl()->check($entity, 'read')) {
+    		throw new Forbidden();
+    	}
+    	
+		if (!$this->getMetadata()->get('scopes.' . $this->entityName . '.stream')) {
+			throw new Error();
+		}
+		
+		if (empty($userId)) {
+			$userId = $this->getUser()->id;
+		}
 
+		$sql = "
+			DELETE FROM subscription
+			(entity_id, entity_type, user_id)
+			WHERE 
+				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
+				user_id = " . $pdo->quote($userId) . "
+		";
+		$sth = $pdo->prepare($sql)->execute();
+		
+		return 1;
+    }
 }
 

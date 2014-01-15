@@ -260,6 +260,24 @@ abstract class Record extends Base
 		}	
 		
 		throw new Error();		
-	}	
+	}
+	
+	public function actionFollow($params)
+	{
+		if (!$this->getAcl()->check($this->name, 'read')) {
+			throw new Forbidden();
+		}
+		$id = $params['id'];
+		return $this->getRecordService()->follow($id);		
+	}
+	
+	public function actionUnfollow($params)
+	{
+		if (!$this->getAcl()->check($this->name, 'read')) {
+			throw new Forbidden();
+		}
+		$id = $params['id'];
+		return $this->getRecordService()->unfollow($id);		
+	}
 }
 

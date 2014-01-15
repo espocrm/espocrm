@@ -172,6 +172,26 @@
 		"scope":":controller"
     }
   },
+  
+  {
+  	"route":"/:controller/:id/subscription",
+    "method":"put",
+    "params":{
+        "controller":":controller",
+        "id":":id",
+        "action":"follow"
+    }
+  },
+  
+  {
+  	"route":"/:controller/:id/subscription",
+    "method":"delete",
+    "params":{
+        "controller":":controller",
+        "id":":id",
+        "action":"unfollow"
+    }
+  },
 
   {
   	"route":"/:controller/:id/:link",
