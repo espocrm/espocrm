@@ -9,6 +9,8 @@ class Converter
 {
 	private $metadata;
 
+	private $fileManager;
+
 	private $schemaConverter;
 
 
@@ -21,13 +23,14 @@ class Converter
 	//private $meta;
 
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
 	{
 		$this->metadata = $metadata;
+		$this->fileManager = $fileManager;
 
-        $this->ormConverter = new Converters\Orm($this->metadata);
+        $this->ormConverter = new Converters\Orm($this->metadata, $this->fileManager);
 
-        $this->schemaConverter = new Converters\Schema();
+        $this->schemaConverter = new Schema\Converter($this->fileManager);
 	}
 
 

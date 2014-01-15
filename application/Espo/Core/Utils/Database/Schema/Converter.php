@@ -1,15 +1,17 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Converters;
+namespace Espo\Core\Utils\Database\Schema;
 
 use Espo\Core\Utils\Util,
 	Espo\ORM\Entity;
 
 
-class Schema
+class Converter
 {
 	private $dbalSchema;
 	private $fileManager;
+
+	private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/customTables';
 
 	protected $typeList;
 
@@ -63,12 +65,10 @@ class Schema
 	//convertToSchema
 	public function process(array $ormMeta, $entityDefs)
 	{
-    	$GLOBALS['log']->add('Debug', 'Converters\Schema - Start: building schema');
+    	$GLOBALS['log']->add('Debug', 'Schema\Converter - Start: building schema');
 
-		//check if exist files in "Tables" directory
-
-		//END: check if exist files in "Tables" directory
-
+		//check if exist files in "Tables" directory and merge with ormMetadata
+        $ormMeta = Util::merge($ormMeta, $this->getCustomTables());
 
 		$schema = $this->getSchema();
 
@@ -90,15 +90,6 @@ class Schema
 		            case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);
 						break;
-
-		            /*case 'array':
-		            case 'json_array':
-		                $fieldParams['default'] = ''; //for db type TEXT can't be defined a default value
-		                break;
-
-					case 'bool':
-                        $fieldParams['default'] = intval($fieldParams['default']);
-                    	break;*/
 
 					case 'int':
                         if (isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
@@ -143,6 +134,10 @@ class Schema
 		//check and create columns/tables for relations
         foreach ($ormMeta as $entityName => $entityParams) {
 
+			if (!isset($entityParams['relations'])) {
+				continue;
+			}
+
         	foreach ($entityParams['relations'] as $relationName => $relationParams) {
 
                  switch ($relationParams['type']) {
@@ -167,7 +162,7 @@ class Schema
 		//END: check and create columns/tables for relations
 
 
-		$GLOBALS['log']->add('Debug', 'Converters\Schema - End: building schema');
+		$GLOBALS['log']->add('Debug', 'Schema\Converter - End: building schema');
 
 		return $schema;
 	}
@@ -261,4 +256,26 @@ class Schema
 
 		return $dbFieldParams;
 	}
+
+
+	/*
+	 * @return array - ormMeta
+	 */
+	protected function getCustomTables()
+	{
+		$customTables = array();
+
+		$fileList = $this->getFileManager()->getFileList($this->customTablePath, false, '\.php$', 'file');
+
+		foreach($fileList as $fileName) {
+			$fileData = $this->getFileManager()->getContent($this->customTablePath, $fileName);
+			if (is_array($fileData)) {
+            	$customTables = array_merge($customTables, $fileData);
+			}
+		}
+
+        return $customTables;
+	}
+
+
 }
