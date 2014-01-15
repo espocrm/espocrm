@@ -34,8 +34,43 @@ class Stream extends \Espo\Core\Services\Base
 		return $this->injections['metadata'];
 	}
 	
-	public function find($scope, $id, $params)
+	public function findUserStream($params = array())
 	{
+		$selectParams = array(
+			'offset' => $params['offset'],
+			'limit' => $params['maxSize'],
+			'orderBy' => 'createdAt',
+			'order' => 'DESC',
+			'customJoin' => "
+				JOIN subscription ON 
+					note.parent_type = subscription.entity_type AND 
+					note.parent_id = subscription.entity_id AND
+					subscription.user_id = '" . $this->getUser()->id . "'
+			"
+		);
+	
+		$collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
+		
+		foreach ($collection as $e) {
+			if ($e->get('type') == 'Post' && $e->get('parentId') && $e->get('parentType')) {
+				$entity = $this->getEntityManager()->getEntity($e->get('parentType'), $e->get('parentId'));
+				$e->set('parentName', $entity->get('name'));
+			}
+		}
+				
+		$count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
+    	
+    	return array(
+    		'total' => $count,
+    		'collection' => $collection,
+    	);	
+	}
+	
+	public function find($scope, $id, $params = array())
+	{
+		if ($scope == 'User') {
+			return $this->findUserStream($params);
+		}
 		$entity = $this->getEntityManager()->getEntity($scope, $id);
 		
 		if (empty($entity)) {

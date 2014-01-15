@@ -42,6 +42,16 @@
   },
   
   {
+  	"route":"/Stream",
+    "method":"get",
+    "params":{
+        "controller":"Stream",
+		"action":"list",
+		"scope": "User"
+    }
+  },
+  
+  {
   	"route":"/:controller/action/:action",
     "method":"post",
     "params":{

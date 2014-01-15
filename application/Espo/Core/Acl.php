@@ -11,20 +11,26 @@ class Acl
 	private $actionList = array('read', 'edit', 'delete');
 
 	private $levelList = array('all', 'team', 'own', 'no');
+	
+	private $fileManager;
 
-	public function __construct(\Espo\Entities\User $user)
+	public function __construct(\Espo\Entities\User $user, $config, $fileManager)
 	{
 		$this->user = $user;
+		$this->fileManager = $fileManager;		
+		
 		$this->user->loadLinkMultipleField('teams');
-
+		
 		$this->cacheFile = 'data/cache/application/acl/' . $user->id;
 
-		if (file_exists($this->cacheFile)) {
+		if ($config->get('useCache') && file_exists($this->cacheFile)) {
 			$cached = include $this->cacheFile;
 		} else {
 			$this->load();
 			$this->initSolid();
-			$this->buildCache();
+			if ($config->get('useCache')) {
+				$this->buildCache();
+			}
 		}
 	}
 	
@@ -211,7 +217,7 @@ class Acl
 	private function buildCache()
 	{
 		$contents = '<' . '?'. 'php return ' .  var_export($this->data, true)  . ';';
-		file_put_contents($this->cacheFile, $contents);
+		$this->fileManager()->setContent($this->cacheFile, $contents);
 	}
 }
 

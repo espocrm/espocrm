@@ -140,7 +140,9 @@ class Container
 	private function loadAcl()
 	{
 		return new \Espo\Core\Acl(
-			$this->get('user')
+			$this->get('user'),
+			$this->get('config'),
+			$this->get('fileManager')
 		);
 	}
 

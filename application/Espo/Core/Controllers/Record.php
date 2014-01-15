@@ -12,7 +12,12 @@ abstract class Record extends Base
 	
 	public static $defaultAction = 'list';	
 	
-	public function getRecordService()
+	protected function getEntityManager()
+	{
+		return $this->getContainer()->get('entityManager');
+	}
+	
+	protected function getRecordService()
 	{
     	$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
 		if ($moduleName) {
@@ -145,6 +150,8 @@ abstract class Record extends Base
 	
 	public function actionExport($params, $data, $request)
 	{
+		// TODO move to service
+		
 		if (!$this->getAcl()->check($this->name, 'read')) {
 			throw new Forbidden();
 		}		
@@ -166,15 +173,34 @@ abstract class Record extends Base
 		$result = $this->getRecordService()->findEntities(array('where' => $where));		
 		$arr = $result['collection']->toArray();
 	
-		header('Content-Type: text/csv');
-		header('Content-Disposition: filename=' . $this->name . '.csv');
-		$fp = fopen('php://output', 'w');
+		
+		$fp = fopen('php://temp', 'w');		
 		fputcsv($fp, array_keys($arr[0]));
 		foreach ($arr as $row) {
 			fputcsv($fp, $row);
 		}
-		fclose($fp);	
-		die;
+		rewind($fp);
+		$csv = stream_get_contents($fp);
+		fclose($fp);
+		
+		$fileName = "Export_{$this->name}.csv";
+		
+		$attachment = $this->getEntityManager()->getEntity('Attachment');
+		$attachment->set('name', $fileName);
+		$attachment->set('extension', 'csv');
+		$attachment->set('type', 'text/csv');
+		
+		$this->getEntityManager()->saveEntity($attachment);
+		
+		if (!empty($attachment->id)) {		
+			$this->getContainer()->get('fileManager')->setContent($csv, 'data/upload/' . $attachment->id);
+			
+			// TODO cron job to remove file
+			
+			return $attachment->id;
+		}
+			
+		throw new Error();		
 	}
 
 	public function actionMassUpdate($params, $data)

@@ -2,6 +2,7 @@
 
 namespace Espo\Services;
 
+use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Utils\Util;
@@ -71,15 +72,34 @@ class Record extends \Espo\Core\Services\Base
 		return $entity;
 	}
 	
-	protected function loadIsFollowed(Entity $entity)
+	protected function checkIsFollowed(Entity $entity, $userId = null)
 	{
+		if (empty($userId)) {
+			$userId = $this->getUser()->id;
+		}
+	
 		$pdo = $this->getEntityManager()->getPDO();
 		$sql = "
 			SELECT id FROM subscription 
-			WHERE entity_id = " . $pdo->quote($entity->get('id')) . " AND " . $entity->getEntityName();
-			
-		if ($pdo->prepare($sql)->execute()) {
+			WHERE 
+				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
+				user_id = " . $pdo->quote($userId) . "
+		";
+		
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		if ($sth->fetchAll()) {
+			return true;
+		}
+		return false;
+	}
+	
+	protected function loadIsFollowed(Entity $entity)
+	{	
+		if ($this->checkIsFollowed($entity)) {
 			$entity->set('isFollowed', true);
+		} else {
+			$entity->set('isFollowed', false);
 		}
 	}
 	
@@ -300,22 +320,13 @@ class Record extends \Espo\Core\Services\Base
 		}
 		
 		$pdo = $this->getEntityManager()->getPDO();
-		$sql = "
-			SELECT id FROM subscription 
-			WHERE 
-				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-				user_id = " . $pdo->quote($userId) . "
-		";
-		
-		$sth = $pdo->prepare($sql);
-		$sth->execute();
 			
-		if (!$sth->fetchAll()) {
+		if (!$this->checkIsFollowed($entity, $userId)) {
 			$sql = "
 				INSERT INTO subscription
 				(entity_id, entity_type, user_id)
 				VALUES
-				(".$pdo->quote($entity->id).", ".$pdo->quote($entity->getEntityName()).", ".$pdo->quote($userId).")
+				(".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
 			";
 			$sth = $pdo->prepare($sql)->execute();
 		}
@@ -335,11 +346,12 @@ class Record extends \Espo\Core\Services\Base
 		
 		if (empty($userId)) {
 			$userId = $this->getUser()->id;
-		}
+		}		
+		
+		$pdo = $this->getEntityManager()->getPDO();
 
 		$sql = "
 			DELETE FROM subscription
-			(entity_id, entity_type, user_id)
 			WHERE 
 				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
 				user_id = " . $pdo->quote($userId) . "

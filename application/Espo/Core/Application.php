@@ -100,8 +100,7 @@ class Application
 			}
 
 			$params = $route->getParams();
-			$data = $slim->request()->getBody();			
-						
+			$data = $slim->request()->getBody();
 
 			foreach ($routeOptions as $key => $value) {
 				if (strstr($value, ':')) {

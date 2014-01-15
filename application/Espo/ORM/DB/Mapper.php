@@ -171,7 +171,7 @@ abstract class Mapper implements IMapper
 		}
 		
 		if (!empty($customJoin)) {
-			$joinsPart .= ' ' . $customJoin;
+			$joinsPart .= ' ' . $customJoin . ' ';
 		}
 		
 		if (!empty($joins) && is_array($joins)) {
