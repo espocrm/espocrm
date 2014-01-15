@@ -168,7 +168,23 @@ class Orm
 						$entityParams = Util::merge($entityParams, $typeDefs[$entityName]);
 		                break;
 		        }
+
+
+                //todo move to separate file
+                //add a field 'isFollowed' for stream => true
+                $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
+                if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
+                    if (!isset($entityParams['fields']['isFollowed'])) {
+                        $entityParams['fields']['isFollowed'] = array(
+                            'type' => 'varchar',
+                            'notStorable' => true,
+                        );
+                    }
+                }
+                //END: add a field 'isFollowed' for stream => true
+
 			}
+
 		}
 
 		return $meta;
