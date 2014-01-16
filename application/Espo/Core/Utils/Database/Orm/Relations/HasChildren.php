@@ -9,6 +9,16 @@ class HasChildren extends \Espo\Core\Utils\Database\Orm\Base
 	{
 		return array(
 			$params['entityName'] => array (
+				'fields' => array(
+	               	$params['link']['name'].'Ids' => array(
+						'type' => 'varchar',
+						'notStorable' => true,
+					),
+					$params['link']['name'].'Names' => array(
+						'type' => 'varchar',
+						'notStorable' => true,
+					),
+				),
 				'relations' => array(
                 	$params['link']['name'] => array(
 						'type' => 'hasChildren',
