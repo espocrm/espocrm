@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Converters;
+namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util;
 
@@ -38,14 +38,30 @@ class RelationManager
 		return isset($link['entity']) ? $link['entity'] : $entityName;
 	}
 
-	public function isMethodExists($methodName)
+	public function isRelationExists($relationName)
 	{
-		if (method_exists($this, $methodName) || method_exists($this->getRelations(), $methodName)) {
-        	return true;
+		if ($this->getRelationClass($relationName) !== false) {
+			return true;
 		}
 
 		return false;
 	}
+
+    protected function getRelationClass($relationName)
+    {
+        $relationName = ucfirst($relationName);
+
+        $className = '\Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
+		if (!class_exists($className)) {
+			$className = '\Espo\Core\Utils\Database\Orm\Relations\\'.$relationName;
+		}
+
+		if (class_exists($className)) {
+        	return $className;
+		}
+
+        return false;
+    }
 
 
 	public function process($method, $entityName, $link, $foreignLink = array())
@@ -63,37 +79,32 @@ class RelationManager
 		$params['targetEntity'] = $foreignParams['entityName'];
 		$foreignParams['targetEntity'] = $params['entityName'];
 
-
 		//relationDefs defined in separate file
-		//todo rename to 'helperName' or other one
-        $helperName = isset($link['params']['relationName']) ? ucfirst($link['params']['relationName']) : ucfirst($method);
+        $relationName = isset($link['params']['relationName']) ? ucfirst($link['params']['relationName']) : ucfirst($method);
 
-       	$className = '\Espo\Custom\Core\Utils\Database\Relations\\'.$helperName;
-		if (!class_exists($className)) {
-			$className = '\Espo\Core\Utils\Database\Relations\\'.$helperName;
-		}
+       	$className = $this->getRelationClass($relationName);
 
-		if (class_exists($className) && method_exists($className, 'load')) {
-        	$helperClass = new $className();
+		if ($className !== false && method_exists($className, 'load')) {
+        	$helperClass = new $className($this->metadata);
 			return $helperClass->load($params, $foreignParams);
 		}
 		//END: relationDefs defined in separate file
 		
 
-		if (method_exists($this, $method)) {
+		/*if (method_exists($this, $method)) {
         	return $this->$method($params, $foreignParams);
 		} else if (method_exists($this->getRelations(), $method)) {
 			return $this->getRelations()->$method($params, $foreignParams);
-		}
+		}  */
 
         return false;
 	}
 
 
-	protected function hasManyHasMany($params, $foreignParams)
+	/*protected function hasManyHasMany($params, $foreignParams)
 	{
-    	return $this->getRelations()->manyMany($params, $foreignParams);
-	}
+    	return $this->process('manyMany', $params, $foreignParams);
+	} */
 
 
 

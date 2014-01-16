@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Converters;
+namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util,
 	Espo\ORM\Entity;
@@ -19,28 +19,6 @@ class Relations
 	{
 		return $this->metadata;
 	}
-
-
-	protected function getSortEntities($entity1, $entity2)
-	{
-		$entities = array(
-        	Util::toCamelCase(lcfirst($entity1)),
-        	Util::toCamelCase(lcfirst($entity2)),
-		);
-
-		sort($entities);
-
-		return $entities;
-	}
-
-
-	protected function getJoinTable($tableName1, $tableName2)
-	{
-		$tables = $this->getSortEntities($tableName1, $tableName2);
-
-		return Util::toCamelCase( implode('-', $tables) );
-	}
-
 
 	protected function getForeignField($name, $entityName)
 	{
@@ -66,7 +44,7 @@ class Relations
 
 
 	//todo sedine in foreign fieldDefs a key for current
-	public function manyMany($params, $foreignParams)
+	/*public function manyMany($params, $foreignParams)
 	{
 		return array(
 			$params['entityName'] => array(
@@ -84,11 +62,11 @@ class Relations
 					),
 				),
 			),
-		); 
-	}
+		);
+	} */
 
 
-	public function hasMany($params, $foreignParams)
+	/*public function hasMany($params, $foreignParams)
 	{
 		$relation = array(
 			$params['entityName'] => array (
@@ -103,27 +81,26 @@ class Relations
 		);
 
         return $relation;
-	}
+	} */
 
-	public function belongsTo($params, $foreignParams)
+	/*public function belongsTo($params, $foreignParams)
 	{
 		 $relation = array (
 			$params['entityName'] => array (
 				'fields' => array(
 					$params['link']['name'].'Name' => array(
-						'type' => Entity::FOREIGN,
+						'type' => 'foreign',
 						'relation' => $params['link']['name'],
-						//'notStorable' => true,
 						'foreign' => $this->getForeignField('name', $foreignParams['entityName']),
 					),
 					$params['link']['name'].'Id' => array(
-						'type' => Entity::FOREIGN_ID,
+						'type' => 'foreignId',
 						'index' => true,
 					),
 				),
 				'relations' => array(
                 	$params['link']['name'] => array(
-						'type' => Entity::BELONGS_TO,
+						'type' => 'belongsTo',
 						'entity' => $params['targetEntity'],
 						'key' => $params['link']['name'].'Id',
 						'foreignKey' => 'id', //????
@@ -133,9 +110,9 @@ class Relations
 		);
 
 		return $relation;
-	}
+	} */
 
-	public function hasChildren($params, $foreignParams)
+	/*public function hasChildren($params, $foreignParams)
 	{
 		$relation = array(
 			$params['entityName'] => array (
@@ -152,9 +129,9 @@ class Relations
 
 
 		return $relation;
-	}
+	}  */
 
-	public function linkParent($params, $foreignParams)
+	/*public function linkParent($params, $foreignParams)
 	{
         $relation = array();
 
@@ -180,10 +157,10 @@ class Relations
 		}
 
 		return $relation;
-	}
+	} */
 
 
-	public function linkMultiple($params, $foreignParams)
+   /*	public function linkMultiple($params, $foreignParams)
 	{
        	return array(
 			$params['entityName'] => array (
@@ -199,10 +176,10 @@ class Relations
 				),
 			),
 		);
-	}
+	}  */
 
 
-	public function typePersonName($params, $foreignParams)
+	/*public function typePersonName($params, $foreignParams)
 	{
 		$foreignField = $this->getForeignField($params['link']['name'], $params['entityName']);
 		$tableName = Util::toUnderScore($params['entityName']);
@@ -236,14 +213,14 @@ class Relations
 				),
 			),
 		);
-	}
+	}*/
 
 
 
 	//public function teamRelation($params, $foreignParams)
 	public function hasManyWithName($params, $foreignParams)
 	{
-    	$relationKeys = explode('-', Util::fromCamelCase($params['link']['params']['relationName']));
+       	$relationKeys = explode('-', Util::fromCamelCase($params['link']['params']['relationName']));
         $midKeys = array();
 		foreach($relationKeys as $key) {
             $midKeys[] = $key.'Id';

@@ -271,6 +271,41 @@ class Util
 		return $newArr;
 	}
 
+    /**
+     * Unset content items defined in the unset.json
+	 *
+	 * @param array $content
+	 * @param array $unsets in format
+             array(
+                $entity['name'] => array(
+                    'fields.UnsetFieldName',
+                ),
+             )
+	 *
+	 * @return array
+	 */
+	public static function unsetInArray(array $content, array $unsets)
+	{
+		foreach($unsets as $rootKey => $unsetItem){
+			if (!empty($unsetItem)){
+				foreach($unsetItem as $unsetSett){
+					if (!empty($unsetSett)){
+						$keyItems = explode('.', $unsetSett);
+						$currVal = "\$content['{$rootKey}']";
+						foreach($keyItems as $keyItem){
+							$currVal .= "['{$keyItem}']";
+						}
+
+						$currVal = "if (isset({$currVal})) unset({$currVal});";
+						eval($currVal);
+					}
+				}
+			}
+		}
+
+		return $content;
+	}
+
 }
 
 
