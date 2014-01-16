@@ -2,9 +2,11 @@
 
 namespace Espo\Core\Hooks;
 
-class Base
+use \Espo\Core\Interfaces\Injectable;
+
+class Base implements Injectable
 {	
-	static public $dependencies = array();
+	protected $dependencies = array();
 	
 	protected $injections = array(
 		'entityManager',
@@ -14,13 +16,32 @@ class Base
 		'user',
 	);
 	
+	public static $order = 9;
+	
+	public function __construct()
+	{
+		$this->init();
+	}
+	
+	protected function init()
+	{	
+	}
+	
+	public function getDependencyList()
+	{
+		return $this->dependencies;
+	}
+	
+	protected function getInjection($name)
+	{
+		return $this->injections[$name];
+	}
+	
 	public function inject($name, $object)
 	{
 		$this->injections[$name] = $object;
 	}
-	
-	public static $order = 9;
-	
+		
 	protected function getEntityManager()
 	{
 		return $this->injections['entityManager'];

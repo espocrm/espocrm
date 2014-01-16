@@ -1,0 +1,9 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Link
+Icon[en_US]=gnome-panel-launcher
+URL=/var/www
+Name[en_US]=www
+Name=www
+Icon=gnome-panel-launcher

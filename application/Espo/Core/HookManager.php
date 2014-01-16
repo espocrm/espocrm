@@ -25,7 +25,6 @@ class HookManager
 		'afterSave',
 	);
 
-
     public function __construct(Container $container)
     {
     	$this->container = $container;
@@ -41,7 +40,6 @@ class HookManager
 	{
 		return $this->container->get('fileManager');
 	}
-
 
     protected function loadHooks()
     {
@@ -82,7 +80,7 @@ class HookManager
 	{
     	if (class_exists($className)) {
     		$hook = new $className();
-    		$dependencies = $hook::$dependencies;
+    		$dependencies = $hook->getDependencyList();
     		foreach ($dependencies as $name) {
     			$hook->inject($name, $this->container->get($name));
     		}

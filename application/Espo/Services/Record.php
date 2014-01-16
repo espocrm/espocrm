@@ -9,7 +9,7 @@ use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
 {
-	static public $dependencies = array(
+	protected $dependencies = array(
 		'entityManager',
 		'user',
 		'metadata',
@@ -147,6 +147,11 @@ class Record extends \Espo\Core\Services\Base
 				
 		return $selectManager;
 	}
+	
+	protected function storeEntity(Entity $entity)
+	{
+		return $this->getRepository()->save($entity);
+	}
 
 	public function createEntity($data)
 	{
@@ -155,7 +160,7 @@ class Record extends \Espo\Core\Services\Base
 		
 		$entity->set($data);		
 		
-		if ($this->getRepository()->save($entity)) {
+		if ($this->storeEntity($entity)) {
 			return $entity;
 		}		
 		
@@ -173,8 +178,11 @@ class Record extends \Espo\Core\Services\Base
 		
 		$entity->set($data);		
 		
-		$this->getRepository()->save($entity);
-		return $entity;
+		if ($this->storeEntity($entity)) {
+			return $entity;
+		}
+
+		throw new Error();
 	}
 
 	public function deleteEntity($id)

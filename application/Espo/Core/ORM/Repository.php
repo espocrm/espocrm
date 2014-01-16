@@ -137,16 +137,17 @@ class Repository extends \Espo\ORM\Repository
 					$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();					
 					$this->unrelate($entity, 'emailAddresses', $emailAddressOld);						
 				}
-			}					
+			}
 		}
 	}
 	
 	protected function handleSpecifiedRelations(Entity $entity)
 	{
-		foreach ($entity->getRelations() as $name => $defs) {
-			if ($defs['type'] == $entity::HAS_MANY || $defs['type'] == $entity::MANY_MANY) {
+		$relationTypes = array($entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN);
+		foreach ($entity->getRelations() as $name => $defs) {			
+			if (in_array($defs['type'], $relationTypes)) {
 				$fieldName = $name . 'Ids';
-				if ($entity->has($fieldName)) {					
+				if ($entity->has($fieldName)) {										
 					$specifiedIds = $entity->get($fieldName);
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
@@ -172,5 +173,6 @@ class Repository extends \Espo\ORM\Repository
 			}
 		}
 	}
+
 }
 

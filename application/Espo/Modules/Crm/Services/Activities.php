@@ -7,7 +7,7 @@ use \PDO;
 
 class Activities extends \Espo\Core\Services\Base
 {
-	static public $dependencies = array(
+	protected $dependencies = array(
 		'entityManager',
 		'user',
 		'metadata',

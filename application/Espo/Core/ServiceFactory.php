@@ -17,7 +17,7 @@ class ServiceFactory
 	{
     	if (class_exists($className)) {
     		$service = new $className();
-    		$dependencies = $service::$dependencies;
+    		$dependencies = $service->getDependencyList();
     		foreach ($dependencies as $name) {
     			$service->inject($name, $this->container->get($name));
     		}

@@ -2,9 +2,11 @@
 
 namespace Espo\Core\Services;
 
-abstract class Base
+use \Espo\Core\Interfaces\Injectable;
+
+abstract class Base implements Injectable
 {
-	static public $dependencies = array();
+	protected $dependencies = array();
 	
 	protected $injections = array();
 	
@@ -12,5 +14,24 @@ abstract class Base
 	{
 		$this->injections[$name] = $object;
 	}
- 
+	
+	public function __construct()
+	{
+		$this->init();
+	}	
+	
+	protected function init()
+	{	
+	}
+	
+	protected function getInjection($name)
+	{
+		return $this->injections[$name];
+	}
+	
+	public function getDependencyList()
+	{
+		return $this->dependencies;
+	}
 }
+

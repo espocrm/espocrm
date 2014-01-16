@@ -7,7 +7,7 @@ use \Espo\Core\Exceptions\NotFound;
 
 class Stream extends \Espo\Core\Services\Base
 {	
-	static public $dependencies = array(
+	protected $dependencies = array(
 		'entityManager',
 		'user',
 		'metadata',

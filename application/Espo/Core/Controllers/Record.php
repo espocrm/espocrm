@@ -158,7 +158,6 @@ abstract class Record extends Base
 	
 		$ids = $request->get('ids');
 		$where = $request->get('where');
-
 		
 		if (!empty($ids)) {
 			$where = array(
