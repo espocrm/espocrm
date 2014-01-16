@@ -5,7 +5,7 @@ namespace Espo\Core\Utils;
 class Route
 {
 	protected $fileName = 'routes.json';
-	protected $cacheFileName = 'application/routes.php';
+	protected $cacheFile = 'data/cache/application/routes.php';
 
 	protected $data = null;
 
@@ -62,14 +62,12 @@ class Route
 
 	protected function init()
 	{
-		$cacheFile = Util::concatPath($this->getConfig()->get('cachePath'), $this->cacheFileName);
-
-		if (file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
-			$this->data = $this->getFileManager()->getContent($cacheFile);
+		if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
+			$this->data = $this->getFileManager()->getContent($this->cacheFile);
 		} else {
         	$this->data = $this->uniteFiles();
 
-			$result = $this->getFileManager()->setContentPHP($this->data, $cacheFile);
+			$result = $this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
 			 if ($result == false) {
 			 	$GLOBALS['log']->add('EXCEPTION', 'Route::init() - Cannot save Routes to a file');
 	         	throw new \Espo\Core\Exceptions\Error();
@@ -90,7 +88,7 @@ class Route
 			foreach($dirList as $currentDirName) {
 
                 $dirNameFull = Util::concatPath($moduleDir, $currentDirName);
-				$routeFile = Util::concatPath($dirNameFull, 'Resources/'.$this->fileName); 
+				$routeFile = Util::concatPath($dirNameFull, 'Resources/'.$this->fileName);
 
 				$data = $this->getAddData($data, $routeFile);
 			}
@@ -130,11 +128,32 @@ class Route
 			return $data;
 		}
 
-		foreach($newData as $route) {
-        	$data[] = $route;
+		foreach($newData as $route) {  
+			
+			$route['route'] = $this->adjustPath($route['route']);
+			
+        	$data[] = $route;               
 		}
 
         return $data;
 	}
+
+    /**
+     * Check and adjust the route path
+	 *
+	 * @param string $routePath - it can be "/App/user",  "App/user"
+	 *
+	 * @return string - "/App/user"
+	 */
+    protected function adjustPath($routePath)
+    {
+		$routePath = trim($routePath);
+
+		if ( substr($routePath,0,1) != '/') {
+			return '/'.$routePath;	
+		}
+
+		return $routePath;
+    }
 
 }
