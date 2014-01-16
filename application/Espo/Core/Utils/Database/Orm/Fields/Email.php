@@ -1,18 +1,16 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Relations;
+namespace Espo\Core\Utils\Database\Orm\Fields;
 
-use \Espo\Core\Utils\Util;
-
-class EntityEmailAddress
+class Email extends \Espo\Core\Utils\Database\Orm\Base
 {
 
-	public function load($params, $foreignParams)
+	public function load($entity, $field)
 	{
-		return array(
-			$params['entityName'] => array(
+        return array(
+			$entity['name'] => array(
 			   	'fields' => array(
-                	$params['link']['name'] => array(
+                	$field['name'] => array(
 						'select' => 'email_address.name',
 				        'where' =>
 				        array (
@@ -23,7 +21,7 @@ class EntityEmailAddress
 					),
 				),
 				'relations' => array(
-					$params['link']['name'].'es' => array(
+					$field['name'].'es' => array(
 						'type' => 'manyMany',
 						'entity' => 'EmailAddress',
 						'relationName' => 'entityEmailAddress',
@@ -32,7 +30,7 @@ class EntityEmailAddress
 							'email_address_id',
 						),
 						'conditions' => array(
-							'entityType' => $params['entityName'],
+							'entityType' => $entity['name'],
 						),
 						'additionalColumns' => array(
                             'entityType' => array(
@@ -49,5 +47,6 @@ class EntityEmailAddress
 			),
 		);
 	}
+
 
 }

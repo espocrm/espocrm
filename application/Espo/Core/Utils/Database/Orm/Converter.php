@@ -1,11 +1,11 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Converters;
+namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util,
 	Espo\ORM\Entity;
 
-class Orm
+class Converter
 {
 	private $metadata;
 	private $fileManager;
@@ -57,7 +57,7 @@ class Orm
 	public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
 	{
     	$this->metadata = $metadata;
-    	$this->fileManager = $fileManager;
+    	$this->fileManager = $fileManager; //need to featue with ormHooks. Ex. isFollowed field
 
 		$this->relationManager = new RelationManager($this->metadata);
 	}
@@ -87,7 +87,7 @@ class Orm
         foreach($entityDefs as $entityName => $entityMeta) {
 
 			if (empty($entityMeta)) {
-		    	$GLOBALS['log']->add('ERROR', 'Converters\Orm:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
+		    	$GLOBALS['log']->add('ERROR', 'Orm\Converter:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
 				continue;
 			}
 
@@ -124,6 +124,47 @@ class Orm
 
 	public function afterProcess(array $meta)
 	{
+	    //load custom field definitions and customCodes
+        foreach($meta as $entityName => &$entityParams) {
+			foreach($entityParams['fields'] as $fieldName => $fieldParams) {
+
+                //load custom field definitions
+                $fieldType = ucfirst($fieldParams['type']);
+                $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\'.$fieldType;
+        		if (!class_exists($className)) {
+        			$className = '\Espo\Core\Utils\Database\Orm\Fields\\'.$fieldType;
+        		}
+
+                if (class_exists($className) && method_exists($className, 'load')) {
+                	$helperClass = new $className($this->metadata);
+        			$fieldResult = $helperClass->load(
+                        array('name' => $entityName, 'params' => $entityParams),
+                        array('name' => $fieldName, 'params' => $fieldParams)
+                    );
+                    if (isset($fieldResult['unset'])) {
+                        $meta = Util::unsetInArray($meta, $fieldResult['unset']);
+                        unset($fieldResult['unset']);
+                    }
+
+                    $meta = Util::merge($meta, $fieldResult);
+        		} //END: load custom field definitions
+
+
+                //todo move to separate file
+                //add a field 'isFollowed' for scopes with 'stream => true'
+                $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
+                if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
+                    if (!isset($entityParams['fields']['isFollowed'])) {
+                        $entityParams['fields']['isFollowed'] = array(
+                            'type' => 'varchar',
+                            'notStorable' => true,
+                        );
+                    }
+                } //END: add a field 'isFollowed' for stream => true
+
+			}
+        }
+
 		foreach($meta as $entityName => &$entityParams) {
 			foreach($entityParams['fields'] as $fieldName => &$fieldParams) {
 
@@ -133,15 +174,6 @@ class Orm
                         	$fieldParams = array_merge($fieldParams, $this->idParams);
 						}
 						break;
-
-                    /*case 'foreign':
-		                $typeDefs = $this->getRelationManager()->process('foreignType', $entityName, array(
-							'name' => $fieldName,
-							'foreign' => $fieldParams['foreign'],
-							'entity' => $entityParams['relations'][$fieldParams['relation']]['entity'],
-						));
-						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
-		                break;*/
 
 					case 'foreignId':
 						$fieldParams = array_merge($fieldParams, $this->idParams);
@@ -156,33 +188,7 @@ class Orm
 					case 'bool':
 		                $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
 		                break;
-
-					case 'personName':
-		                $fieldParams['type'] = Entity::VARCHAR;
-						$typeDefs = $this->getRelationManager()->process('typePersonName', $entityName, array('name' => $fieldName));
-						$fieldParams = Util::merge($fieldParams, $typeDefs[$entityName]['fields'][$fieldName]);
-		                break;
-
-					case 'email':
-						$typeDefs = $this->getRelationManager()->process('entityEmailAddress', $entityName, array('name' => $fieldName));
-						$entityParams = Util::merge($entityParams, $typeDefs[$entityName]);
-		                break;
 		        }
-
-
-                //todo move to separate file
-                //add a field 'isFollowed' for stream => true
-                $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
-                if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
-                    if (!isset($entityParams['fields']['isFollowed'])) {
-                        $entityParams['fields']['isFollowed'] = array(
-                            'type' => 'varchar',
-                            'notStorable' => true,
-                        );
-                    }
-                }
-                //END: add a field 'isFollowed' for stream => true
-
 			}
 
 		}
@@ -191,17 +197,14 @@ class Orm
 	}
 
 
-
-
-
     /**
-	* Metadata conversion from Espo format into Doctrine
-    *
-	* @param string $entityName
-	* @param array $entityMeta
-	*
-	* @return array
-	*/
+	 * Metadata conversion from Espo format into Doctrine
+     *
+	 * @param string $entityName
+	 * @param array $entityMeta
+	 *
+	 * @return array
+	 */
 	protected function convertFields($entityName, $entityMeta)
 	{
 		$outputMeta = array(
@@ -227,7 +230,6 @@ class Orm
 
 					$subField = $this->convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta);
 
-            		//if (!isset($entityMeta['fields'][ $subField['naming'] ])) {
             		if (!isset($outputMeta[ $subField['naming'] ])) {
 						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params']);
 						if ($subFieldDefs !== false) {
@@ -243,24 +245,6 @@ class Orm
 				}
 			}
 		}
-
-		/*Make actions for different types like "link", "linkMultiple", "linkParent" */
-		foreach($outputMeta as $fieldName => $fieldParams) {
-
-        	switch ($fieldParams['type']) {
-	            case 'linkParent':
-	                $linkData = $this->getRelationManager()->process('linkParent', $entityName, array('name' => $fieldName));
-					$outputMeta = Util::merge($outputMeta, $linkData[$entityName]['fields']);
-	                break;
-
-				case 'linkMultiple':
-	                $linkData = $this->getRelationManager()->process('linkMultiple', $entityName, array('name' => $fieldName));
-					unset($outputMeta[$fieldName]); //no need "linkMultiple" field
-					$outputMeta = Util::merge($outputMeta, $linkData[$entityName]['fields']);
-	                break;
-	        }
-		}
-
 
 		if (!isset($outputMeta['deleted'])) {
         	$outputMeta['deleted'] = array(
@@ -390,7 +374,7 @@ class Orm
 			}
             $method = Util::toCamelCase($method);
 
-			if ( $this->getRelationManager()->isMethodExists($method) ) {  //ex. hasManyHasMany
+			if ( $this->getRelationManager()->isRelationExists($method) ) {  //ex. hasManyHasMany
             	$convertedLink = $this->getRelationManager()->process($method, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
 			} else { //ex. hasMany
             	$convertedLink = $this->getRelationManager()->process($currentType, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
@@ -430,17 +414,6 @@ class Orm
 				'params' => $currentEntityDefs['links'][$parentLinkParams['foreign']],
 			);
     	}
-
-        /*$parentLinkName = strtolower($parentLinkName);
-
-		foreach($currentEntityDefs['links'] as $linkName => $linkParams) {
-        	if (isset($linkParams['foreign']) && strtolower($linkParams['foreign']) == $parentLinkName) {
-				return array(
-					'name' => $linkName,
-					'params' => $linkParams,
-				);
-        	}
-		}  */
 
 		return false;
 	}

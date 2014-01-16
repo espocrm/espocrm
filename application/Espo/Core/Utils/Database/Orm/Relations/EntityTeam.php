@@ -1,8 +1,8 @@
 <?php
 
-namespace Espo\Core\Utils\Database\Relations;
+namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class EntityTeam
+class EntityTeam extends \Espo\Core\Utils\Database\Orm\Base
 {
 
 	public function load($params, $foreignParams)

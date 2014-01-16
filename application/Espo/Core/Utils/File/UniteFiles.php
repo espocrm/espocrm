@@ -120,7 +120,7 @@ class UniteFiles
 		}
 
 		//unset content
-        $content= $this->uniteFilesUnset($content, $unsets);
+        $content= Utils\Util::unsetInArray($content, $unsets);
 		//END: unset content
 
 		/*print_r($content);
@@ -163,36 +163,6 @@ class UniteFiles
 		}
 
 		return array();
-	}
-
-	/**
-    * Unset content items defined in the unset.json
-	*
-	* @param array $content
-	* @param array $unsets
-	*
-	* @return array
-	*/
-	public function uniteFilesUnset($content, $unsets)
-	{
-		foreach($unsets as $rootKey => $unsetItem){
-			if (!empty($unsetItem)){
-				foreach($unsetItem as $unsetSett){
-					if (!empty($unsetSett)){
-						$keyItems = explode('.', $unsetSett);
-						$currVal = "\$content['{$rootKey}']";
-						foreach($keyItems as $keyItem){
-							$currVal .= "['{$keyItem}']";
-						}
-
-						$currVal = "if (isset({$currVal})) unset({$currVal});";
-						eval($currVal);
-					}
-				}
-			}
-		}
-
-		return $content;
 	}
 
 	/**
