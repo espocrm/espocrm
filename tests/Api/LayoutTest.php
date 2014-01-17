@@ -2,9 +2,6 @@
 
 namespace tests\Api;
 
-require_once('tests/testBootstrap.php');
-
-
 class LayoutTest extends \PHPUnit_Framework_TestCase
 {
 	protected $fixture;
@@ -29,34 +26,62 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->setType('PUT');
 
-		$this->fixture->setUrl('/custom-test/layout/test-put');
+		$this->fixture->setUrl('/CustomTest/layout/testPut');
 		$data= '["amount","account","closeDate","leadSource","stage","probability","assignedUser"]';
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
 		//check if file exists
-		$this->assertTrue(file_exists('application/Espo/Resources/layouts/CustomTest/testPut.json'));
+		$file = 'application/Espo/Custom/Resources/layouts/CustomTest/testPut.json';
+		
+		$fileExists = file_exists($file);
+		$this->assertTrue($fileExists);   
+				
+		if ($fileExists) {
+			$content = file_get_contents($file);   
+						
+			$this->assertEquals($data, $content);  				
+			
+			@unlink($file);
+		}        		
 	}
 
 	function testPatch()
 	{
 		$this->fixture->setType('PATCH');
 
-		$this->fixture->setUrl('/custom-test/layout/test-patch');
+		$this->fixture->setUrl('/CustomTest/layout/testPatch');
 		$data= '[{"label":"MyLabel"}]';
+		$this->assertTrue($this->fixture->isSuccess( $data ));  		
+		
+		$data= '[{"isPathed":true}]';
 		$this->assertTrue($this->fixture->isSuccess( $data ));
 
 		//check if file exists
-		$this->assertTrue(file_exists('application/Espo/Resources/layouts/CustomTest/testPatch.json'));
+		$file = 'application/Espo/Custom/Resources/layouts/CustomTest/testPatch.json';
+		
+		$fileExists = file_exists($file);
+		$this->assertTrue($fileExists);
+		
+		if ($fileExists) {    
+			
+			$content = file_get_contents($file);   
+						
+			//$data= '[{"label":"MyLabel","isPathed":true}]';
+			$data= '[{"isPathed":true}]';  //now PATCH works like PUT
+			$this->assertEquals($data, $content);  
+			
+			@unlink($file);
+		}
 	}
 
 	function testGet()
 	{
 		$this->fixture->setType('GET');
 
-		$this->fixture->setUrl('/custom-test/layout/detail');
+		$this->fixture->setUrl('/CustomTest/layout/detail');
 		$this->assertTrue($this->fixture->isSuccess( ));
 
-		$this->fixture->setUrl('/need-to-be-not-real/layout/not-real');
+		$this->fixture->setUrl('/needToBeNotReal/layout/notReal');
 		$response= $this->fixture->getResponse();
 		$this->assertEquals(404, $response['code']);
 	}   

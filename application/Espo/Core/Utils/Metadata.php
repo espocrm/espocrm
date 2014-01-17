@@ -353,7 +353,7 @@ class Metadata
 	{
     	$moduleName = $this->getScopeModuleName($scopeName);
 
-    	$path = $this->getConfig()->get('espoPath');
+    	$path = 'Espo';
 		if ($moduleName !== false) {
 			$path = str_replace('{*}', $moduleName, $this->getConfig()->get('espoModulePath'));
 		}

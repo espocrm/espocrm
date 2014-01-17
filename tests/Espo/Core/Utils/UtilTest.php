@@ -2,8 +2,6 @@
 
 namespace tests\Espo\Core\Utils;
 
-require_once('tests/testBootstrap.php');
-
 use Espo\Core\Utils\Util;
 
 
