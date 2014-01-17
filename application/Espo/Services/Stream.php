@@ -5,6 +5,8 @@ namespace Espo\Services;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
+use Espo\ORM\Entity;
+
 class Stream extends \Espo\Core\Services\Base
 {	
 	protected $dependencies = array(
@@ -34,6 +36,21 @@ class Stream extends \Espo\Core\Services\Base
 		return $this->injections['metadata'];
 	}
 	
+	public function unfollowAllUsersFromEntity(Entity $entity)
+	{
+		if (empty($entity->id)) {
+			return;
+		}
+		
+		$pdo = $this->getEntityManager()->getPDO();
+		$sql = "
+			DELETE FROM subscription
+			WHERE 
+				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . "
+		";
+		$sth = $pdo->prepare($sql)->execute();	
+	}
+	
 	public function findUserStream($params = array())
 	{
 		$selectParams = array(
@@ -58,9 +75,11 @@ class Stream extends \Espo\Core\Services\Base
 		}
 		
 		foreach ($collection as $e) {
-			if ($e->get('type') == 'Post' && $e->get('parentId') && $e->get('parentType')) {
+			if ($e->get('parentId') && $e->get('parentType')) {
 				$entity = $this->getEntityManager()->getEntity($e->get('parentType'), $e->get('parentId'));
-				$e->set('parentName', $entity->get('name'));
+				if ($entity) {
+					$e->set('parentName', $entity->get('name'));
+				}
 			}			
 		}
 				
@@ -114,6 +133,34 @@ class Stream extends \Espo\Core\Services\Base
     		'total' => $count,
     		'collection' => $collection,
     	);		
+	}
+	
+	protected function loadAssignedUserName(Entity $entity)
+	{
+		$user = $this->getEntityManager()->getEntity('User', $entity->get('assignedUserId'));
+		if ($user) {
+			$entity->set('assignedUserName', $user->get('name'));
+		}
+	}
+	
+	public function noteCreate(Entity $entity)
+	{
+		$note = $this->getEntityManager()->getEntity('Note');
+		
+		$note->set('type', 'Create');		
+		$note->set('parentId', $entity->id);
+		$note->set('parentType', $entity->getEntityName());
+
+		if ($entity->get('assignedUserId') != $entity->get('createdById')) {
+			if (!$entity->has('assignedUserName')) {
+				$this->loadAssignedUserName($entity);
+			}
+			$note->set('data', json_encode(array(
+				'assignedUserId' => $entity->get('assignedUserId'),
+				'assignedUserName' => $entity->get('assignedUserName'),
+			)));			
+		}
+		$this->getEntityManager()->saveEntity($note);
 	}
 }
 

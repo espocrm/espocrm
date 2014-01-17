@@ -8,8 +8,6 @@ class Application
 	private $metadata;
 
 	private $container;
-	
-	private $serviceFactory;
 
 	private $slim;
 
@@ -27,7 +25,6 @@ class Application
 		
 		date_default_timezone_set('UTC');
 
-    	$this->serviceFactory = new ServiceFactory($this->container);
 		$this->slim = $this->container->get('slim');
 		$this->metadata = $this->container->get('metadata');
 
@@ -54,11 +51,6 @@ class Application
 		return $this->log;
 	}
 
-	public function getServiceFactory()
-	{
-		return $this->serviceFactory;
-	}
-
     public function run($name = 'default')
     {
         $this->routeHooks();
@@ -78,12 +70,11 @@ class Application
 	{
 		$container = $this->getContainer();
 		$slim = $this->getSlim();
-		$serviceFactory = $this->getServiceFactory();
 
 		$auth = new \Espo\Core\Utils\Api\Auth($container->get('entityManager'), $container);
 		$this->getSlim()->add($auth);
 
-		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container, $serviceFactory) {
+		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
 			$route = $slim->router()->getCurrentRoute();
 		    $conditions = $route->getConditions();
@@ -122,7 +113,7 @@ class Application
 			}
 			
 			try {							
-				$controllerManager = new \Espo\Core\ControllerManager($container, $serviceFactory);
+				$controllerManager = new \Espo\Core\ControllerManager($container);
 				$result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request());
 				$container->get('output')->render($result);
 			} catch (\Exception $e) {
@@ -140,10 +131,9 @@ class Application
 	protected function initRoutes()
 	{
 		$routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getContainer()->get('fileManager'));
-
 		$crudList = array_keys( (array) $this->getContainer()->get('config')->get('crud') );
 
-		foreach($routes->getAll() as $route) {
+		foreach ($routes->getAll() as $route) {
 
 			$method = strtolower($route['method']);
 			if (!in_array($method, $crudList)) {
@@ -159,117 +149,7 @@ class Application
             	$currentRoute->conditions($route['conditions']);
 			}
 		}
-
-		/* //todo remove when it is tested
-		$this->getSlim()->get('/', function() {
-        	return $template = "<h1>EspoCRM REST API</h1>";
-		});
-
-		$this->getSlim()->get('/App/user/', function() {
-        	return '{"user":{"modified_by_name":"Administrator","created_by_name":"","id":"1","user_name":"admin","user_hash":"","system_generated_password":"0","pwd_last_changed":"","authenticate_id":"","sugar_login":"1","first_name":"","last_name":"Administrator","full_name":"Administrator","name":"Administrator","is_admin":"1","external_auth_only":"0","receive_notifications":"1","description":"","date_entered":"2013-06-13 12:18:44","date_modified":"2013-06-13 12:19:48","modified_user_id":"1","created_by":"","title":"Administrator","department":"","phone_home":"","phone_mobile":"","phone_work":"","phone_other":"","phone_fax":"","status":"Active","address_street":"","address_city":"","address_state":"","address_country":"","address_postalcode":"","UserType":"","deleted":"0","portal_only":"0","show_on_employees":"1","employee_status":"Active","messenger_id":"","messenger_type":"","reports_to_id":"","reports_to_name":"","email1":"test@letrium.com","email_link_type":"","is_group":"0","c_accept_status_fields":" ","m_accept_status_fields":" ","accept_status_id":"","accept_status_name":""},"preferences":{}}';
-		});
-
-
-		$this->getSlim()->get('/Metadata/', function() {
-			return array(
-				'controller' => 'Metadata',
-			);
-		});
-
-		$this->getSlim()->get('/Settings/', function() {
-			return array(
-				'controller' => 'Settings',
-			);
-		})->conditions( array('auth' => false) );
-		$this->getSlim()->map('/Settings/', function() {
-			return array(
-				'controller' => 'Settings',
-			);
-		})->via('PATCH');
-
-		$this->getSlim()->get('/:controller/layout/:name/', function() {
-			return array(
-				'controller' => 'Layout',
-				'scope' => ':controller',
-			);
-		});
-		$this->getSlim()->put('/:controller/layout/:name/', function() {
-			return array(
-				'controller' => 'Layout',
-				'scope' => ':controller',
-			);
-		});
-		$this->getSlim()->map('/:controller/layout/:name/', function() {
-			return array(
-				'controller' => 'Layout',
-				'scope' => ':controller',
-			);
-		})->via('PATCH');
-
-		$this->getSlim()->get('/Admin/rebuild/', function() {
-			return array(
-				'controller' => 'Admin',
-				'action' => 'rebuild',
-			);
-		});		
-
-		$this->getSlim()->get('/:controller/:id', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'read',
-		        'id' => ':id'
-			);
-		});
-		
-		$this->getSlim()->get('/:controller', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'index',
-			);
-		});
-
-		$this->getSlim()->post('/:controller', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'create'
-			);
-		});
-
-		$this->getSlim()->put('/:controller/:id', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'update',
-				'id' => ':id'
-			);
-		});
-
-		$this->getSlim()->map('/:controller/:id', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'patch',
-				'id' => ':id'
-			);
-		})->via('PATCH');
-		
-		$this->getSlim()->get('/:controller/:id/:link', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'listLinked',
-				'id' => ':id',
-				'link' => ':link',
-			);
-		});
-
-		$this->getSlim()->get('/:controller/:id/:link/:foreignId', function() {
-			return array(
-				'controller' => ':controller',
-				'action' => 'readRelated',
-				'id' => ':id',
-				'link' => ':link',
-				'foreignId' => ':foreignId'
-			);
-		});  */
-
 	}
 
 }
+

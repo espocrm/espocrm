@@ -12,14 +12,11 @@ abstract class Base
 	
 	private $container;
 	
-	private $serviceFactory;
-	
 	public static $defaultAction = 'index';
 
-	public function __construct(Container $container, ServiceFactory $serviceFactory)
+	public function __construct(Container $container)
 	{
 		$this->container = $container;
-		$this->serviceFactory = $serviceFactory;
 		
 		if (empty($this->name)) {
 			$name = get_class($this);
@@ -64,7 +61,7 @@ abstract class Base
 
 	protected function getServiceFactory()
 	{
-		return $this->serviceFactory;
+		return $this->container->get('serviceFactory');
 	}
 	
 	protected function getService($className)

@@ -99,6 +99,13 @@ class Container
 			$this->get('slim')
 		);
     }
+    
+	private function loadServiceFactory()
+    {
+    	return new \Espo\Core\ServiceFactory(
+			$this
+		);
+    }
 
 	private function loadMetadata()
     {

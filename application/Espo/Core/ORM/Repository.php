@@ -35,6 +35,16 @@ class Repository extends \Espo\ORM\Repository
 				)
 			);
 		}
+	}
+	
+	public function remove(Entity $entity)
+	{	
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
+		
+		$result = parent::remove($entity);
+		
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
+		return $result;
 	}	
 	
 	public function save(Entity $entity)
