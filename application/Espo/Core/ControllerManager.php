@@ -12,16 +12,13 @@ class ControllerManager
 	private $metadata;
 	
 	private $container;
-	
-	private $serviceFactory;
 
-	public function __construct(\Espo\Core\Container $container, \Espo\Core\ServiceFactory $serviceFactory)
+	public function __construct(\Espo\Core\Container $container)
 	{	
 		$this->container = $container;
 		
 		$this->config = $this->container->get('config');
 		$this->metadata = $this->container->get('metadata');
-		$this->serviceFactory = $serviceFactory;
 	}
 
     protected function getConfig()
@@ -56,7 +53,7 @@ class ControllerManager
 			throw new NotFound("Controller '$controllerName' is not found");
 		}		
 
-		$controller = new $controllerClassName($this->container, $this->serviceFactory);
+		$controller = new $controllerClassName($this->container);
 
 		if ($actionName == 'index') {
 			$actionName = $controllerClassName::$defaultAction;

@@ -39,8 +39,7 @@ abstract class Entity implements IEntity
 	/**
 	 * @var EntityManager Entity Manager.
 	 */
-	protected $entityManager;
-	
+	protected $entityManager;	
 		
 	
 	public function __construct($defs = array(), EntityManager $entityManager = null)

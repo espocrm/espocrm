@@ -310,7 +310,7 @@ class Record extends \Espo\Core\Services\Base
     	return $idsUpdated;
     	
     	// TODO update $where
-    }
+    }    
     
     public function follow($id, $userId = null)
     {

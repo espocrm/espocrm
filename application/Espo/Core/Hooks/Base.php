@@ -6,15 +6,15 @@ use \Espo\Core\Interfaces\Injectable;
 
 class Base implements Injectable
 {	
-	protected $dependencies = array();
-	
-	protected $injections = array(
+	protected $dependencies = array(
 		'entityManager',
 		'config',
 		'metadata',
 		'acl',
 		'user',
 	);
+	
+	protected $injections = array();
 	
 	public static $order = 9;
 	

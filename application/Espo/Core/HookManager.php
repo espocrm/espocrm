@@ -23,6 +23,8 @@ class HookManager
 	protected $hookList = array(
 		'beforeSave',
 		'afterSave',
+		'beforeRemove',
+		'afterRemove',
 	);
 
     public function __construct(Container $container)
@@ -52,9 +54,8 @@ class HookManager
 
 		$this->data = $this->getHookData( array('Espo/Hooks', 'Espo/Custom/Hooks') );
     	foreach ($metadata->getModuleList() as $moduleName) {
-			$this->data = array_merge($this->data, $this->getHookData( array('Espo/Modules/'.$moduleName.'/Hooks', 'Espo/Custom/Modules/'.$moduleName.'/Hooks') ));
-    	}   	
-
+			$this->data = array_merge($this->data, $this->getHookData(array('Espo/Modules/'.$moduleName.'/Hooks', 'Espo/Custom/Modules/'.$moduleName.'/Hooks')));
+    	}
 
     	if ($this->getConfig()->get('useCache')) {
 			$this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
@@ -73,7 +74,10 @@ class HookManager
     				$hook->$hookName($injection);				
     			}
     		}
-    	}    	
+    	}
+    	if ($scope != 'Common') {
+    		$this->process('Common', $hookName, $injection);
+    	}  	  	
     }
 	
 	public function createHookByClassName($className)
@@ -81,7 +85,7 @@ class HookManager
     	if (class_exists($className)) {
     		$hook = new $className();
     		$dependencies = $hook->getDependencyList();
-    		foreach ($dependencies as $name) {
+    		foreach ($dependencies as $name) {    			
     			$hook->inject($name, $this->container->get($name));
     		}
     		return $hook;
@@ -100,13 +104,13 @@ class HookManager
 	{
 		$hooks = array();
 
-		foreach($hookDirs as $hookDir) {
+		foreach ($hookDirs as $hookDir) {
 
 	        $fullHookDir = 'application/'.$hookDir;
 			if (file_exists($fullHookDir)) {
 	        	$fileList = $this->getFileManager()->getFileList($fullHookDir, 1, '\.php$', 'file');
 
-	            foreach($fileList as $scopeName => $hookFiles) {
+	            foreach ($fileList as $scopeName => $hookFiles) {
 
 					$hookScopeDirPath = Util::concatPath($hookDir, $scopeName);
 
@@ -123,7 +127,7 @@ class HookManager
 					}
 
 					//sort hooks by order
-	                foreach($scopeHooks as $hookName => $hookList) {
+	                foreach ($scopeHooks as $hookName => $hookList) {
 						ksort($hookList);
 
 						$sortedHookList = array();
