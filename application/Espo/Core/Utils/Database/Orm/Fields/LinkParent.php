@@ -16,7 +16,8 @@ class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
 					),
 					$field['name'].'Type' => array(
 						'type' => 'foreignType',
-						'index' => $field['name'],
+						'notnull' => false,
+						'index' => $field['name'], 						 
 					),
 					$field['name'].'Name' => array(
 						'type' => 'varchar',
