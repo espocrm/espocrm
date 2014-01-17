@@ -52,10 +52,16 @@ class Stream extends \Espo\Core\Services\Base
 		$collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
 		
 		foreach ($collection as $e) {
+			if ($e->get('type') == 'Post') {
+				$e->loadLinkMultipleField('attachments');
+			}
+		}
+		
+		foreach ($collection as $e) {
 			if ($e->get('type') == 'Post' && $e->get('parentId') && $e->get('parentType')) {
 				$entity = $this->getEntityManager()->getEntity($e->get('parentType'), $e->get('parentId'));
 				$e->set('parentName', $entity->get('name'));
-			}
+			}			
 		}
 				
 		$count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
@@ -93,6 +99,12 @@ class Stream extends \Espo\Core\Services\Base
 			'orderBy' => 'createdAt',
 			'order' => 'DESC'
 		));
+		
+		foreach ($collection as $e) {
+			if ($e->get('type') == 'Post') {
+				$e->loadLinkMultipleField('attachments');
+			}
+		}
 		
 		$count = $this->getEntityManager()->getRepository('Note')->count(array(
 			'whereClause' => $where,
