@@ -45,12 +45,14 @@
             "type": "enum",
             "options": ["Round-Robin", "Least-Busy"]
         },
-        "caseEmailTemplate": {
+        "reply": {
+            "type": "bool"
+        },
+        "replyEmailTemplate": {
             "type": "link"
         },
         "replyFromAddress": {
-            "type": "varchar",
-            "required": true
+            "type": "varchar"
         },
         "replyFromName": {
             "type": "varchar"
@@ -86,7 +88,7 @@
             "entity": "Team",
             "relationName": "EntityTeam"
         },
-        "caseEmailTemplate": {
+        "replyEmailTemplate": {
             "type": "belongsTo",
             "entity": "EmailTemplate"
         }

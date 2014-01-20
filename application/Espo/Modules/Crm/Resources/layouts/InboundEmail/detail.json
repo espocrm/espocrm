@@ -1,1 +1,43 @@
-[{"label":"Main","rows":[[{"name":"name"},{"name":"status"}]]},{"label":"IMAP","rows":[[{"name":"serverAddress"},{"name":"username"}],[{"name":"serverPort"},{"name":"password"}],[{"name":"monitoredFolders"},{"name":"removeMessagesFromServer"}],[{"name":"trashFolder"},false]]},{"label":"Actions","rows":[[{"name":"createCase"},false],[{"name":"caseDistribution"},{"name":"replyFromAddress"}],[{"name":"caseEmailTemplate"},{"name":"replyFromName"}]]}]
+[
+	{
+		"label":"Main",
+		"rows":[
+			[
+				{"name":"name"},
+				{"name":"status"}
+			]
+		]
+	},
+	{
+		"label":"IMAP",
+		"rows":[
+			[
+				{"name":"serverAddress"},{"name":"username"}
+			],
+			[
+			{"name":"serverPort"},{"name":"password"}],
+			[{"name":"monitoredFolders"},{"name":"removeMessagesFromServer"}],
+			[{"name":"trashFolder"},false]
+		]
+	},
+	{
+		"label":"Actions",
+		"rows": [
+			[
+				{"name":"createCase"},{"name":"reply"}
+			],
+			[
+				{"name":"caseDistribution"},
+				{"name":"replyEmailTemplate"}
+			],
+			[
+				false,
+				{"name":"replyFromAddress"}
+			],
+			[
+				false,
+				{"name":"replyFromName"}
+			]
+		]
+	}
+]
