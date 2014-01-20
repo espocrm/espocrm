@@ -14,10 +14,13 @@ class Record extends \Espo\Core\Services\Base
 		'user',
 		'metadata',
 		'acl',
-		'config'
+		'config',
+		'serviceFactory',
 	);
 	
 	protected $entityName;
+	
+	private $streamService;
 
 	public function setEntityName($entityName)
 	{
@@ -27,6 +30,11 @@ class Record extends \Espo\Core\Services\Base
 	protected function getEntityManager()
 	{
 		return $this->injections['entityManager'];
+	}
+	
+	protected function getServiceFactory()
+	{
+		return $this->injections['serviceFactory'];
 	}
 
 	protected function getUser()
@@ -72,31 +80,17 @@ class Record extends \Espo\Core\Services\Base
 		return $entity;
 	}
 	
-	protected function checkIsFollowed(Entity $entity, $userId = null)
-	{
-		if (empty($userId)) {
-			$userId = $this->getUser()->id;
-		}
-	
-		$pdo = $this->getEntityManager()->getPDO();
-		$sql = "
-			SELECT id FROM subscription 
-			WHERE 
-				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-				user_id = " . $pdo->quote($userId) . "
-		";
-		
-		$sth = $pdo->prepare($sql);
-		$sth->execute();
-		if ($sth->fetchAll()) {
-			return true;
-		}
-		return false;
-	}
+    protected function getStreamService()
+    {
+    	if (empty($this->streamService)) {
+    		$this->streamService = $this->getServiceFactory()->createByClassName('\\Espo\\Services\\Stream');
+    	}
+    	return $this->streamService;
+    } 
 	
 	protected function loadIsFollowed(Entity $entity)
 	{	
-		if ($this->checkIsFollowed($entity)) {
+		if ($this->getStreamService()->checkIsFollowed($entity)) {
 			$entity->set('isFollowed', true);
 		} else {
 			$entity->set('isFollowed', false);
@@ -310,7 +304,7 @@ class Record extends \Espo\Core\Services\Base
     	return $idsUpdated;
     	
     	// TODO update $where
-    }    
+    }
     
     public function follow($id, $userId = null)
     {
@@ -319,26 +313,11 @@ class Record extends \Espo\Core\Services\Base
     		throw new Forbidden();
     	}
     	
-		if (!$this->getMetadata()->get('scopes.' . $this->entityName . '.stream')) {
-			throw new Error();
-		}
-		
 		if (empty($userId)) {
 			$userId = $this->getUser()->id;
 		}
-		
-		$pdo = $this->getEntityManager()->getPDO();
-			
-		if (!$this->checkIsFollowed($entity, $userId)) {
-			$sql = "
-				INSERT INTO subscription
-				(entity_id, entity_type, user_id)
-				VALUES
-				(".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
-			";
-			$sth = $pdo->prepare($sql)->execute();
-		}
-		return 1;
+
+		return $this->getStreamService()->followEntity($entity, $userId);
     }
     
     public function unfollow($id, $userId = null)
@@ -346,27 +325,13 @@ class Record extends \Espo\Core\Services\Base
     	$entity = $this->getEntity($id);
     	if (!$this->getAcl()->check($entity, 'read')) {
     		throw new Forbidden();
-    	}
-    	
-		if (!$this->getMetadata()->get('scopes.' . $this->entityName . '.stream')) {
-			throw new Error();
-		}
+    	}    	
 		
 		if (empty($userId)) {
 			$userId = $this->getUser()->id;
-		}		
+		}
 		
-		$pdo = $this->getEntityManager()->getPDO();
-
-		$sql = "
-			DELETE FROM subscription
-			WHERE 
-				entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-				user_id = " . $pdo->quote($userId) . "
-		";
-		$sth = $pdo->prepare($sql)->execute();
-		
-		return 1;
+		return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
 }
 

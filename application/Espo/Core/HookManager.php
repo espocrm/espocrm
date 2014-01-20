@@ -64,6 +64,10 @@ class HookManager
     
     public function process($scope, $hookName, $injection = null)
     {	
+    	if ($scope != 'Common') {
+    		$this->process('Common', $hookName, $injection);
+    	}
+    	
     	if (!empty($this->data[$scope])) {
     		if (!empty($this->data[$scope][$hookName])) {
     			foreach ($this->data[$scope][$hookName] as $className) {
@@ -74,10 +78,7 @@ class HookManager
     				$hook->$hookName($injection);				
     			}
     		}
-    	}
-    	if ($scope != 'Common') {
-    		$this->process('Common', $hookName, $injection);
-    	}  	  	
+    	} 	  	
     }
 	
 	public function createHookByClassName($className)

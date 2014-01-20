@@ -122,7 +122,7 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 	{
 		$entity = $this->entityFactory->create($this->entityName);
 		$entity->set($dataArray);
-		$entity->setFresh();		
+		$entity->setAsFetched();		
 		return $entity;
 	}
 

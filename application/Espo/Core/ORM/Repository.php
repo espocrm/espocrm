@@ -42,8 +42,9 @@ class Repository extends \Espo\ORM\Repository
 		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
 		
 		$result = parent::remove($entity);
-		
-		$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
+		if ($result) {
+			$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
+		}
 		return $result;
 	}	
 	
@@ -98,7 +99,9 @@ class Repository extends \Espo\ORM\Repository
 		$this->handleEmailAddressSave($entity);	
 		$this->handleSpecifiedRelations($entity);
 		
-		$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
+		if ($result) {
+			$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
+		}
 		
 		return $result;
 	}
@@ -112,7 +115,7 @@ class Repository extends \Espo\ORM\Repository
 			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress');
 			
 			if (!empty($email)) {
-				if ($email != $entity->getFetchedValue('emailAddress')) {					
+				if ($email != $entity->getFetched('emailAddress')) {					
 					
 					$emailAddressNew = $emailAddressRepository->where(array('lower' => strtolower($email)))->findOne();									
 					$isNewEmailAddress = false;
@@ -123,7 +126,7 @@ class Repository extends \Espo\ORM\Repository
 						$isNewEmailAddress = true;
 					}
 					
-					$emailOld = $entity->getFetchedValue('emailAddress');					
+					$emailOld = $entity->getFetched('emailAddress');					
 					if (!empty($emailOld)) {
 						$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();					
 						$this->unrelate($entity, 'emailAddresses', $emailAddressOld);
@@ -142,7 +145,7 @@ class Repository extends \Espo\ORM\Repository
 					$sth->execute();
 				}
 			} else {
-				$emailOld = $entity->getFetchedValue('emailAddress');
+				$emailOld = $entity->getFetched('emailAddress');
 				if (!empty($emailOld)) {
 					$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();					
 					$this->unrelate($entity, 'emailAddresses', $emailAddressOld);						

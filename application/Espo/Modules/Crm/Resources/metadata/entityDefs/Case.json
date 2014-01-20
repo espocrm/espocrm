@@ -15,11 +15,13 @@
         "priority": {
             "type": "enum",
             "options": ["Low", "Normal", "High", "Urgent"],
-            "default": "Normal"
+            "default": "Normal",
+            "audited": true
         },
         "type": {
             "type": "enum",
-            "options": ["", "Question", "Incident", "Problem"]
+            "options": ["", "Question", "Incident", "Problem"],
+            "audited": true
         },
         "description": {
             "type": "text"

@@ -30,7 +30,8 @@
             "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"]
         },
         "opportunityAmount": {
-            "type": "currency"
+            "type": "currency",
+            "audited": true
         },
         "website": {
             "type": "url"
