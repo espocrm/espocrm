@@ -33,7 +33,7 @@ class Stream extends \Espo\Core\Services\Base
 			), 
 		),
 		'Opportunity' => array(
-			'field' => 'status',
+			'field' => 'stage',
 			'style' => array(
 				'Closed Won' => 'success',
 				'Closed Lost' => 'danger',
