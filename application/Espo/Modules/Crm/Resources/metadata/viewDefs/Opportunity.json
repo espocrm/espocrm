@@ -1,4 +1,7 @@
 {
+   "views":{
+      "detail":"Crm:Opportunity.Detail"
+   },
    "sidePanels":{
       "detail":[
          {
