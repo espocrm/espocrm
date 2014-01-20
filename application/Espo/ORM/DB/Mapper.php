@@ -710,17 +710,25 @@ abstract class Mapper implements IMapper
 	{
 		$this->removeRelation($entity, $relationName, null, true);
 	}
+	
+	protected function quote($value)
+	{
+		if (is_null($value)) {
+			return 'NULL';
+		} else {
+			return $this->pdo->quote($value);
+		}
+	}
 
 	public function insert(IEntity $entity)
 	{	
 		$dataArr = $this->toArray($entity);
-		
 	
 		$fieldArr = array();
 		$valArr = array();
 		foreach ($dataArr as $field => $value) {
 			$fieldArr[] = $this->toDb($field);			
-			$valArr[] = $this->pdo->quote($value);			
+			$valArr[] = $this->quote($value);			
 		}		
 		$fieldsPart = implode(", ", $fieldArr);
 		$valuesPart = implode(", ", $valArr);
@@ -747,11 +755,11 @@ abstract class Mapper implements IMapper
 				continue;
 			}
 			
-			if ($entity->getFetchedValue($field) === $value) {
+			if ($entity->getFetched($field) === $value) {
 				continue;
 			}
 			
-			$setArr[] = $this->toDb($field) . " = " . $this->pdo->quote($value);
+			$setArr[] = $this->toDb($field) . " = " . $this->quote($value);
 		}
 		
 		if (count($setArr) == 0) {

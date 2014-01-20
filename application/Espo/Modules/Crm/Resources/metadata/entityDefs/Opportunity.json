@@ -6,7 +6,8 @@
         },
         "amount": {
             "type": "currency",
-            "required": true
+            "required": true,
+            "audited": true
         },
         "account": {
             "type": "link",
@@ -30,7 +31,8 @@
         },
         "closeDate": {
             "type": "date",
-            "required": true
+            "required": true,
+            "audited": true
         },
         "description": {
             "type": "text"

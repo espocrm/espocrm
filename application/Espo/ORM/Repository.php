@@ -92,7 +92,7 @@ class Repository
 		
 		$entity = $this->entityFactory->create($this->entityName);
 		if ($this->mapper->selectById($entity, $id, $params)) {
-			$entity->setFresh();
+			$entity->setAsFetched();
 			return $entity;
 		}
 		return null;

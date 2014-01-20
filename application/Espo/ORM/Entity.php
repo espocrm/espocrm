@@ -34,13 +34,14 @@ abstract class Entity implements IEntity
 	/**
 	 * @var array Field-Value pairs of initial values (fetched from DB).
 	 */
-	protected $initialValuesContainer = array();
+	protected $fetchedValuesContainer = array();
 	
 	/**
 	 * @var EntityManager Entity Manager.
 	 */
-	protected $entityManager;	
-		
+	protected $entityManager;
+	
+	protected $isFetched = false;
 	
 	public function __construct($defs = array(), EntityManager $entityManager = null)
 	{
@@ -228,22 +229,33 @@ abstract class Entity implements IEntity
 		return $this->relations;
 	}
 	
-	public function getFetchedValue($fieldName)
+	public function isFetched()
 	{
-		if (isset($this->initialValuesContainer[$fieldName])) {
-			return $this->initialValuesContainer[$fieldName];
+		return $this->isFetched;
+	}
+	
+	public function isFieldChanged($fieldName)
+	{
+		return $this->get($fieldName) != $this->getFetched($fieldName);
+	}
+	
+	public function getFetched($fieldName)
+	{
+		if (isset($this->fetchedValuesContainer[$fieldName])) {
+			return $this->fetchedValuesContainer[$fieldName];
 		}
 		return null;
 	}
 	
 	public function resetFetchedValues()
 	{
-		$this->initialValuesContainer = array();
+		$this->fetchedValuesContainer = array();
 	}
 	
-	public function setFresh()
+	public function setAsFetched()
 	{
-		$this->initialValuesContainer = $this->valuesContainer;
+		$this->isFetched = true;
+		$this->fetchedValuesContainer = $this->valuesContainer;
 	}
 }
 
