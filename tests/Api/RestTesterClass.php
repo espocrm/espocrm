@@ -14,7 +14,7 @@ class RestTesterClass
 
 	function __construct()
 	{
-		$config = include('tests/config.php');
+		$config = include('tests/Api/config.php');
 
         $this->apiUrl = $config['apiUrl'];
         $this->username = $config['username'];

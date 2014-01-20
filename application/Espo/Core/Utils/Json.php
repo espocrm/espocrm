@@ -84,11 +84,14 @@ class Json
      * @param string $json
      * @return bool
      */
-	public static function isJSON($json){
-		if ($json=='[]' || $json=='{}') {
+	public static function isJSON($json)
+	{  
+		if ($json === '[]' || $json === '{}') {     
 			return true;
-		}
-
+		} else if (is_array($json)) {  	   	
+        	return false;
+		}                   	    
+		
 	    return static::decode($json) != null;
 	}
 

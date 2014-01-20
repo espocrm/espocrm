@@ -8,11 +8,8 @@ return array (
   'defaultsPath' => 'application/Espo/Core/defaults',
   'unsetFileName' => 'unset.json',
 
-  'espoPath' => 'Espo',
   'espoModulePath' => 'Espo/Modules/{*}',
   'espoCustomPath' => 'Espo/Custom',
-
-  'controllerPath' => 'Controllers', //path for controllers in a module
 
   'metadataConfig' =>
   array (
@@ -20,13 +17,6 @@ return array (
     'cachePath' => 'data/cache/application',
     'corePath' => 'application/Espo/Resources/metadata',
     'customPath' => 'application/Espo/Modules/{*}/Resources/metadata',
-  ),
-
-  'layoutConfig' =>
-  array (
-    'name' => 'layouts',
-    'corePath' => 'application/Espo/Resources/layouts',
-    'customPath' => 'application/Espo/Modules/{*}/Resources/layouts',
   ),
 
   'languageConfig' =>
@@ -61,7 +51,6 @@ return array (
     'configPath',
     'cachePath',
     'metadataConfig',
-    'layoutConfig',
     'languageConfig',
     'database',
     'customPath',
@@ -71,10 +60,8 @@ return array (
     'configCustomPathFull',
     'crud',
     'customDir',
-    'espoPath',
     'espoModulePath',
     'espoCustomPath',
-    'controllerPath',
     'scopeModuleMap',
   ),
   'adminItems' =>

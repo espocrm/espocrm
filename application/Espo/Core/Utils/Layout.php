@@ -4,12 +4,30 @@ namespace Espo\Core\Utils;
 
 class Layout
 {
-
-	private $layoutConfig;
-
 	private $config;
 	private $fileManager;
-	private $metadata;
+	private $metadata;   
+	
+	/**
+     * @var string - uses for loading default values
+     */
+	private $name = 'layout';       	
+	
+	/**
+     * @var array - path to layout files
+     */
+	private $paths = array(
+		'corePath' => 'application/Espo/Resources/layouts',
+    	'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',		                              			
+	);  
+	
+	/**
+     * @var array - path to layout files in custom folder
+     */
+	private $customPaths = array(
+		'corePath' => 'application/Espo/Custom/Resources/layouts',
+   		'modulePath' => 'application/Espo/Custom/Modules/{*}/Resources/layouts',	
+	); 
 
 
 	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata)
@@ -36,22 +54,24 @@ class Layout
 
 
 	/**
-    * Get Layout context
-	*
-	* @param $controller
-	* @param $name
-	*
-	* @return json
-	*/
+     * Get Layout context
+	 *
+	 * @param $controller
+	 * @param $name
+	 *
+	 * @return json
+	 */
 	function get($controller, $name)
-	{
-		$fileFullPath = Util::concatPath($this->getLayoutPath($controller), $name.'.json');
-
+	{                                                                                        
+		$fileFullPath = Util::concatPath($this->getLayoutPath($controller, true), $name.'.json');   		
 		if (!file_exists($fileFullPath)) {
+			$fileFullPath = Util::concatPath($this->getLayoutPath($controller), $name.'.json');	
+		}                                                                               		
 
+		if (!file_exists($fileFullPath)) {     
 			//load defaults
 			$defaultPath = $this->getConfig()->get('defaultsPath');
-			$fileFullPath =  Util::concatPath( Util::concatPath($defaultPath, $this->getLayoutConfig()->name), $name.'.json' );
+			$fileFullPath =  Util::concatPath( Util::concatPath($defaultPath, $this->name), $name.'.json' );
 			//END: load defaults
 
 			if (!file_exists($fileFullPath)) {
@@ -60,97 +80,81 @@ class Layout
 		}
 
 		return $this->getFileManager()->getContent($fileFullPath);
-	}
-
-
+	}  
+	
+	
 	/**
-	* Merge layout data
-	* Ex. $controller= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
-    *
-	* @param JSON string $data
-	* @param string $controller - ex. Account
-	* @param string $name - detail
-	*
-	* @return bool
-	*/
-	function merge($data, $controller, $name)
-	{
-		$layoutPath = $this->getLayoutPath($controller);
-
-        /*//merge data with defaults values
-        $defaults = $this->loadDefaultValues($name, $this->getLayoutConfig()->name);
-
-        $decoded = $this->getArrayData($data);
-        $mergedValues= $this->merge($defaults, $decoded);
-		$data= $this->getObject('JSON')->encode($mergedValues);
-        //END: merge data with defaults values */
-
-        return $this->getFileManager()->mergeContent($data, $layoutPath, $name.'.json', true);
-	}
-
-
-	/**
-	* Set Layout data
-	* Ex. $controller= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
-    *
-	* @param JSON string $data
-	* @param string $controller - ex. Account
-	* @param string $name - detail
-	*
-	* @return bool
-	*/
+	 * Set Layout data
+	 * Ex. $controller= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
+     *
+	 * @param JSON string $data
+	 * @param string $controller - ex. Account
+	 * @param string $name - detail
+	 * 
+	 * @return bool
+	 */
 	function set($data, $controller, $name)
 	{
 		if (empty($controller) || empty($name)) {
 			return false;
 		}
 		
-		$layoutPath = $this->getLayoutPath($controller);
+		$layoutPath = $this->getLayoutPath($controller, true);
+		
+		if (!Json::isJSON($data)) {
+			$data = Json::encode($data);	
+		}   
 
         return $this->getFileManager()->setContent($data, $layoutPath, $name.'.json');
 	}
 
-    /**
-    * Get Layout path, ex. application/Modules/Crm/Layouts/Account
-    *
-	* @param string $entityName
-	* @param bool $delim - delimiter
-	*
-	* @return string
-	*/
-	public function getLayoutPath($entityName, $delim= '/')
-	{
-    	$moduleName= $this->getMetadata()->getScopeModuleName($entityName);
-
-    	$path= $this->getLayoutConfig()->corePath;
-		if ($moduleName !== false) {
-			$path= str_replace('{*}', $moduleName, $this->getLayoutConfig()->customPath);
-		}
-        $path= Util::concatPath($path, $entityName);
-
-		if ($delim!='/') {
-           $path = str_replace('/', $delim, $path);
-		}
-
-		return $path;
-	}
-
 
 	/**
-    * Get settings for Layout
-	*
-	* @return object
-	*/
-	protected function getLayoutConfig()
+	 * Merge layout data
+	 * Ex. $controller= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
+     *
+	 * @param JSON string $data
+	 * @param string $controller - ex. Account
+	 * @param string $name - detail
+	 *
+	 * @return bool
+	 */
+	function merge($data, $controller, $name)
 	{
-		if (isset($this->layoutConfig) && is_object($this->layoutConfig)) {
-    		return $this->layoutConfig;
-    	}
+		$prevData = $this->get($controller, $name);
+		
+		$prevDataArray= Json::getArrayData($prevData);
+		$dataArray= Json::getArrayData($data);
 
-		$this->layoutConfig = $this->getConfig()->get('layoutConfig');
+        $data= Util::merge($prevDataArray, $dataArray);   		
+	    $data= Json::encode($data);   		
 
-		return $this->layoutConfig;
-	}
+        return $this->set($data, $controller, $name);
+	}  	
+
+    /**
+     * Get Layout path, ex. application/Modules/Crm/Layouts/Account
+     *
+	 * @param string $entityName
+	 * @param bool $isCustom - if need to check custom folder
+	 *
+	 * @return string
+	 */
+	public function getLayoutPath($entityName, $isCustom = false)
+	{                                                                    
+		$paths = $isCustom ? $this->customPaths : $this->paths;
+	
+    	$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
+		
+    	$path = $paths['corePath'];
+		if ($moduleName !== false) {
+			$path = str_replace('{*}', $moduleName, $paths['modulePath']);
+		}
+        $path = Util::concatPath($path, $entityName);
+
+		return $path;
+	}  
+ 
 
 }
 
