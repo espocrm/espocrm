@@ -7,26 +7,18 @@ use Espo\Core\Utils\Util;
 class RelationManager
 {
     private $metadata;
-
-    private $relations;
-
+	
 
 	public function __construct(\Espo\Core\Utils\Metadata $metadata)
 	{
-		$this->metadata = $metadata;
-
-		$this->relations = new Relations($this->metadata);
+		$this->metadata = $metadata;  	  
 	}
 
 	protected function getMetadata()
 	{
 		return $this->metadata;
-	}
+	} 
 
-	protected function getRelations()
-	{
-		return $this->relations;
-	}
 
 
 	public function getLinkEntityName($entityName, $link)
