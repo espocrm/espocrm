@@ -1,0 +1,7 @@
+{
+   "relationshipPanels":{
+      "log":{
+         "readOnly": true
+      }
+   }  
+}

@@ -4,23 +4,18 @@
             "type": "varchar",
             "required": true
         },
-        "body": {
-            "type": "text"
-        },
-        "isHtml": {
-            "type": "bool",
-            "default": true
-        },
-        "attachments": {
-            "type": "linkMultiple"
-        },
-        "assignedUser": {
-            "type": "link",
+        "job": {
+            "type": "varchar",
             "required": true
         },
-        "teams": {
-            "type": "linkMultiple"
+        "status": {
+            "type": "enum",
+            "options": ["Active", "Inactive"] 
         },
+        "scheduling": {
+        	"type": "varchar",
+            "required": true        	
+		},
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -39,19 +34,6 @@
         }
     },
     "links": {
-        "attachments": {
-            "type": "hasMany",
-            "entity": "Attachment"
-        },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
-            "relationName": "EntityTeam"
-        },
-        "assignedUser": {
-            "type": "belongsTo",
-            "entity": "User"
-        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
@@ -59,6 +41,11 @@
         "modifiedBy": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "log": {
+        	"type": "hasMany",
+        	"entity": "ScheduledJobLogRecord",
+        	"foreign": "scheduledJob"
         }
     },
     "collection": {
