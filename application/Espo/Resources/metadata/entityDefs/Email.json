@@ -20,6 +20,18 @@
             "type": "varchar",
             "db": false
         },
+		"fromEmailAddresses": {
+			"type": "link"
+		},
+		"toEmailAddresses": {
+			"type": "linkMultiple"
+		},
+		"ccEmailAddresses": {
+			"type": "linkMultiple"
+		},
+		"bccEmailAddresses": {
+			"type": "linkMultiple"
+		},
         "body": {
             "type": "text"
         },
