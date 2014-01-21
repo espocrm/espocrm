@@ -118,7 +118,7 @@ class Schema
 	{
 		if ($this->getConverter()->process() === false) {
         	return false;
-		}
+		} 
 
 		$currentSchema = $this->getCurrentSchema();
 		$metadataSchema = $this->getConverter()->getSchemaFromMetadata();

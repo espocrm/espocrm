@@ -2,7 +2,7 @@
 
 namespace Espo\Core\Utils\Api;
 
-use \Slim\Slim;
+use \Espo\Core\Utils\Api\Slim;
 
 class Auth extends \Slim\Middleware
 {

@@ -39,6 +39,8 @@ class Converter
 		'field' => 'foreign',  //todo change "foreign" to "field"
 		'unique' => 'unique',
 		'index' => 'index',
+		/*'conditions' => 'conditions',
+		'additionalColumns' => 'additionalColumns',	*/	
 		'default' => array(
 		   'condition' => '^javascript:',
 		   'conditionEquals' => false,

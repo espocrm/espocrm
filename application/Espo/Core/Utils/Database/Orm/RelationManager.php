@@ -55,6 +55,14 @@ class RelationManager
         return false;
     }
 
+    protected function isMethodExists($relationName)
+    {
+    	$className = $this->getRelationClass($relationName);
+
+    	return method_exists($className, 'load');
+    }
+
+
 
 	public function process($method, $entityName, $link, $foreignLink = array())
 	{
@@ -72,13 +80,15 @@ class RelationManager
 		$foreignParams['targetEntity'] = $params['entityName'];
 
 		//relationDefs defined in separate file
-        $relationName = isset($link['params']['relationName']) ? ucfirst($link['params']['relationName']) : ucfirst($method);
+		if (isset($link['params']['relationName']) && $this->isMethodExists($link['params']['relationName'])) {
+        	$className = $this->getRelationClass($link['params']['relationName']);	
+		} else if ($this->isMethodExists($method)) { 
+			$className = $this->getRelationClass($method);
+		}
 
-       	$className = $this->getRelationClass($relationName);
-
-		if ($className !== false && method_exists($className, 'load')) {
-        	$helperClass = new $className($this->metadata);
-			return $helperClass->load($params, $foreignParams);
+		if (isset($className) && $className !== false) {
+			$helperClass = new $className($this->metadata);
+			return $helperClass->process($params, $foreignParams);	
 		}
 		//END: relationDefs defined in separate file
 		
