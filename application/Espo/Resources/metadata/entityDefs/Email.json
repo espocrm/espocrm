@@ -20,7 +20,7 @@
             "type": "varchar",
             "db": false
         },
-		"fromEmailAddresses": {
+		"fromEmailAddress": {
 			"type": "link"
 		},
 		"toEmailAddresses": {
