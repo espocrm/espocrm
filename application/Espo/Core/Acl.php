@@ -2,6 +2,8 @@
 
 namespace Espo\Core;
 
+use \Espo\Core\Exceptions\Error;
+
 class Acl
 {
 	private $data = array();
@@ -17,12 +19,16 @@ class Acl
 	public function __construct(\Espo\Entities\User $user, $config, $fileManager)
 	{
 		$this->user = $user;
-		$this->fileManager = $fileManager;		
+		$this->fileManager = $fileManager;
+		
+		if (!$this->user->isFetched()) {
+			throw new Error();
+		}
 		
 		$this->user->loadLinkMultipleField('teams');
 		
 		$this->cacheFile = 'data/cache/application/acl/' . $user->id;
-
+		
 		if ($config->get('useCache') && file_exists($this->cacheFile)) {
 			$cached = include $this->cacheFile;
 		} else {

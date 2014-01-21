@@ -159,47 +159,7 @@ abstract class Record extends Base
 		$ids = $request->get('ids');
 		$where = $request->get('where');
 		
-		if (!empty($ids)) {
-			$where = array(
-				array(
-					'type' => 'in',
-					'field' => 'id',
-					'value' => $ids
-				)
-			);
-		}
-		
-		$result = $this->getRecordService()->findEntities(array('where' => $where));		
-		$arr = $result['collection']->toArray();
-	
-		
-		$fp = fopen('php://temp', 'w');		
-		fputcsv($fp, array_keys($arr[0]));
-		foreach ($arr as $row) {
-			fputcsv($fp, $row);
-		}
-		rewind($fp);
-		$csv = stream_get_contents($fp);
-		fclose($fp);
-		
-		$fileName = "Export_{$this->name}.csv";
-		
-		$attachment = $this->getEntityManager()->getEntity('Attachment');
-		$attachment->set('name', $fileName);
-		$attachment->set('extension', 'csv');
-		$attachment->set('type', 'text/csv');
-		
-		$this->getEntityManager()->saveEntity($attachment);
-		
-		if (!empty($attachment->id)) {		
-			$this->getContainer()->get('fileManager')->setContent($csv, 'data/upload/' . $attachment->id);
-			
-			// TODO cron job to remove file
-			
-			return $attachment->id;
-		}
-			
-		throw new Error();		
+		return $this->getRecordService()->export($ids, $where);		
 	}
 
 	public function actionMassUpdate($params, $data)

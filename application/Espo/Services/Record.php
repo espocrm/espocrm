@@ -16,6 +16,7 @@ class Record extends \Espo\Core\Services\Base
 		'acl',
 		'config',
 		'serviceFactory',
+		'fileManager',
 	);
 	
 	protected $entityName;
@@ -45,6 +46,11 @@ class Record extends \Espo\Core\Services\Base
 	protected function getAcl()
 	{
 		return $this->injections['acl'];
+	}
+	
+	protected function getFileManager()
+	{
+		return $this->injections['fileManager'];
 	}
 	
 	protected function getConfig()
@@ -332,6 +338,46 @@ class Record extends \Espo\Core\Services\Base
 		}
 		
 		return $this->getStreamService()->unfollowEntity($entity, $userId);
+    }
+    
+    public function export($ids, $where)
+    {    
+		if (!empty($ids)) {
+			$where = array(
+				array(
+					'type' => 'in',
+					'field' => 'id',
+					'value' => $ids
+				)
+			);
+		}
+    
+		$result = $this->findEntities(array('where' => $where));		
+		$arr = $result['collection']->toArray();	
+		
+		$fp = fopen('php://temp', 'w');		
+		fputcsv($fp, array_keys($arr[0]));
+		foreach ($arr as $row) {
+			fputcsv($fp, $row);
+		}
+		rewind($fp);
+		$csv = stream_get_contents($fp);
+		fclose($fp);
+		
+		$fileName = "Export_{$this->entityName}.csv";
+		
+		$attachment = $this->getEntityManager()->getEntity('Attachment');
+		$attachment->set('name', $fileName);
+		$attachment->set('type', 'text/csv');
+		
+		$this->getEntityManager()->saveEntity($attachment);
+		
+		if (!empty($attachment->id)) {		
+			$this->getInjection('fileManager')->setContent($csv, 'data/upload/' . $attachment->id);			
+			// TODO cron job to remove file			
+			return $attachment->id;
+		}			
+		throw new Error();
     }
 }
 
