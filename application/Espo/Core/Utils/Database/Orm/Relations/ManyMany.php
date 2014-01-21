@@ -7,6 +7,12 @@ use Espo\Core\Utils\Util;
 class ManyMany extends \Espo\Core\Utils\Database\Orm\Base
 {
 
+	protected $allowParams = array(
+		'relationName',
+		'conditions',
+		'additionalColumns',
+	);
+
 	public function load($params, $foreignParams)
 	{
 		return array(
