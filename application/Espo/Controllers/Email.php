@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Modules\Crm\Controllers;
+namespace Espo\Controllers;
 
 class Email extends \Espo\Core\Controllers\Record
 {

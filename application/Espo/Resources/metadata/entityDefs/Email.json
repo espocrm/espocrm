@@ -36,7 +36,9 @@
             "type": "text"
         },
         "status": {
-            "type": "varchar"
+            "type": "enum",
+            "options": ["Draft", "Sending", "Sent", "Archived"],
+            "readOnly": true
         },
         "attachments": {
             "type": "linkMultiple"
@@ -66,8 +68,7 @@
         },
         "assignedUser": {
             "type": "link",
-            "required": true,
-            "default": "javascript: return {assignedUserId: this.getUser().id, assignedUserName: this.getUser().get(\"name\")};"
+            "required": true
         },
         "teams": {
             "type": "linkMultiple"

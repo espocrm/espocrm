@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Entities;
 
 class Email extends \Espo\Core\ORM\Entity
 {
