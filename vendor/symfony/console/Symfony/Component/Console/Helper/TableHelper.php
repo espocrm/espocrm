@@ -161,6 +161,29 @@ class TableHelper extends Helper
     {
         $this->rows[] = array_values($row);
 
+        $keys = array_keys($this->rows);
+        $rowKey = array_pop($keys);
+
+        foreach ($row as $key => $cellValue) {
+            if (!strstr($cellValue, "\n")) {
+                continue;
+            }
+
+            $lines = explode("\n", $cellValue);
+            $this->rows[$rowKey][$key] = $lines[0];
+            unset($lines[0]);
+
+            foreach ($lines as $lineKey => $line) {
+                $nextRowKey = $rowKey + $lineKey + 1;
+
+                if (isset($this->rows[$nextRowKey])) {
+                    $this->rows[$nextRowKey][$key] = $line;
+                } else {
+                    $this->rows[$nextRowKey] = array($key => $line);
+                }
+            }
+        }
+
         return $this;
     }
 
@@ -404,6 +427,8 @@ class TableHelper extends Helper
             $width += strlen($cell) - mb_strlen($cell, $encoding);
         }
 
+        $width += $this->strlen($cell) - $this->computeLengthWithoutDecoration($cell);
+
         $content = sprintf($this->cellRowContentFormat, $cell);
 
         $this->output->write(sprintf($cellFormat, str_pad($content, $width, $this->paddingChar, $this->padType)));
@@ -461,15 +486,7 @@ class TableHelper extends Helper
      */
     private function getCellWidth(array $row, $column)
     {
-        if ($column < 0) {
-            return 0;
-        }
-
-        if (isset($row[$column])) {
-            return $this->strlen($row[$column]);
-        }
-
-        return $this->getCellWidth($row, $column - 1);
+        return isset($row[$column]) ? $this->computeLengthWithoutDecoration($row[$column]) : 0;
     }
 
     /**
@@ -479,6 +496,18 @@ class TableHelper extends Helper
     {
         $this->columnWidths = array();
         $this->numberOfColumns = null;
+    }
+
+    private function computeLengthWithoutDecoration($string)
+    {
+        $formatter = $this->output->getFormatter();
+        $isDecorated = $formatter->isDecorated();
+        $formatter->setDecorated(false);
+
+        $string = $formatter->format($string);
+        $formatter->setDecorated($isDecorated);
+
+        return $this->strlen($string);
     }
 
     /**

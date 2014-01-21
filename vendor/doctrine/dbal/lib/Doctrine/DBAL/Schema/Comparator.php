@@ -322,11 +322,11 @@ class Comparator
      */
     public function diffForeignKey(ForeignKeyConstraint $key1, ForeignKeyConstraint $key2)
     {
-        if (array_map('strtolower', $key1->getLocalColumns()) != array_map('strtolower', $key2->getLocalColumns())) {
+        if (array_map('strtolower', $key1->getUnquotedLocalColumns()) != array_map('strtolower', $key2->getUnquotedLocalColumns())) {
             return true;
         }
 
-        if (array_map('strtolower', $key1->getForeignColumns()) != array_map('strtolower', $key2->getForeignColumns())) {
+        if (array_map('strtolower', $key1->getUnquotedForeignColumns()) != array_map('strtolower', $key2->getUnquotedForeignColumns())) {
             return true;
         }
 
@@ -360,23 +360,22 @@ class Comparator
     {
         $changedProperties = array();
         if ( $column1->getType() != $column2->getType() ) {
-
-			//espo: fix problem with executing query for custom types
-			$column1DbTypeName = method_exists($column1->getType(), 'getDbTypeName') ? $column1->getType()->getDbTypeName() : $column1->getType()->getName();
-			$column2DbTypeName = method_exists($column2->getType(), 'getDbTypeName') ? $column2->getType()->getDbTypeName() : $column2->getType()->getName();
-
-			if (strtolower($column1DbTypeName) != strtolower($column2DbTypeName)) {
-            	$changedProperties[] = 'type';
-			}
-            //$changedProperties[] = 'type';
-			//END: espo
+            $changedProperties[] = 'type';
         }
 
         if ($column1->getNotnull() != $column2->getNotnull()) {
             $changedProperties[] = 'notnull';
         }
 
-        if ($column1->getDefault() != $column2->getDefault()) {
+        $column1Default = $column1->getDefault();
+        $column2Default = $column2->getDefault();
+
+        if ($column1Default != $column2Default ||
+            // Null values need to be checked additionally as they tell whether to create or drop a default value.
+            // null != 0, null != false, null != '' etc. This affects platform's table alteration SQL generation.
+            (null === $column1Default && null !== $column2Default) ||
+            (null === $column2Default && null !== $column1Default)
+        ) {
             $changedProperties[] = 'default';
         }
 

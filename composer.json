@@ -2,7 +2,8 @@
     "require": {
         "doctrine/orm": "2.4.*",
         "symfony/yaml": "2.*",
-		"slim/slim": "2.*"
+		"slim/slim": "2.*",
+		"zendframework/zend-mail": "2.*"
     },
     "autoload": {
         "psr-0": {

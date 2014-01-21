@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.0.0
@@ -50,6 +50,7 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPAR
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Author.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Book.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'ClassWithToString.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'SampleArrayAccess.php';
 
 /**
  *
@@ -57,7 +58,7 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPAR
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
@@ -268,7 +269,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
     /**
      * @covers PHPUnit_Framework_Assert::assertArrayHasKey
      */
-    public function testAssertArrayHasKeyAcceptsArrayAccessValue()
+    public function testAssertArrayHasKeyAcceptsArrayObjectValue()
     {
         $array = new ArrayObject();
         $array['foo'] = 'bar';
@@ -279,9 +280,30 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertArrayHasKey
      * @expectedException PHPUnit_Framework_AssertionFailedError
      */
-    public function testAssertArrayHasKeyProperlyFailsWithArrayAccessValue()
+    public function testAssertArrayHasKeyProperlyFailsWithArrayObjectValue()
     {
         $array = new ArrayObject();
+        $array['bar'] = 'bar';
+        $this->assertArrayHasKey('foo', $array);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertArrayHasKey
+     */
+    public function testAssertArrayHasKeyAcceptsArrayAccessValue()
+    {
+        $array = new SampleArrayAccess();
+        $array['foo'] = 'bar';
+        $this->assertArrayHasKey('foo', $array);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertArrayHasKey
+     * @expectedException PHPUnit_Framework_AssertionFailedError
+     */
+    public function testAssertArrayHasKeyProperlyFailsWithArrayAccessValue()
+    {
+        $array = new SampleArrayAccess();
         $array['bar'] = 'bar';
         $this->assertArrayHasKey('foo', $array);
     }

@@ -175,6 +175,31 @@ TABLE
 TABLE
             ),
             array(
+                array('ISBN', 'Title', 'Author'),
+                array(
+                    array("99921-58-10-7", "Divine\nComedy", "Dante Alighieri"),
+                    array("9971-5-0210-2", "Harry Potter\nand the Chamber of Secrets", "Rowling\nJoanne K."),
+                    array("9971-5-0210-2", "Harry Potter\nand the Chamber of Secrets", "Rowling\nJoanne K."),
+                    array("960-425-059-0", "The Lord of the Rings", "J. R. R.\nTolkien"),
+                ),
+                TableHelper::LAYOUT_DEFAULT,
+<<<TABLE
++---------------+----------------------------+-----------------+
+| ISBN          | Title                      | Author          |
++---------------+----------------------------+-----------------+
+| 99921-58-10-7 | Divine                     | Dante Alighieri |
+|               | Comedy                     |                 |
+| 9971-5-0210-2 | Harry Potter               | Rowling         |
+|               | and the Chamber of Secrets | Joanne K.       |
+| 9971-5-0210-2 | Harry Potter               | Rowling         |
+|               | and the Chamber of Secrets | Joanne K.       |
+| 960-425-059-0 | The Lord of the Rings      | J. R. R.        |
+|               |                            | Tolkien         |
++---------------+----------------------------+-----------------+
+
+TABLE
+            ),
+            array(
                 array('ISBN', 'Title'),
                 array(),
                 TableHelper::LAYOUT_DEFAULT,
@@ -190,6 +215,40 @@ TABLE
                 array(),
                 TableHelper::LAYOUT_DEFAULT,
                 '',
+            ),
+            'Cell text with tags used for Output styling' => array(
+                array('ISBN', 'Title', 'Author'),
+                array(
+                    array('<info>99921-58-10-7</info>', '<error>Divine Comedy</error>', '<fg=blue;bg=white>Dante Alighieri</fg=blue;bg=white>'),
+                    array('9971-5-0210-0', 'A Tale of Two Cities', '<info>Charles Dickens</>'),
+                ),
+                TableHelper::LAYOUT_DEFAULT,
+<<<TABLE
++---------------+----------------------+-----------------+
+| ISBN          | Title                | Author          |
++---------------+----------------------+-----------------+
+| 99921-58-10-7 | Divine Comedy        | Dante Alighieri |
+| 9971-5-0210-0 | A Tale of Two Cities | Charles Dickens |
++---------------+----------------------+-----------------+
+
+TABLE
+            ),
+            'Cell text with tags not used for Output styling' => array(
+                array('ISBN', 'Title', 'Author'),
+                array(
+                    array('<strong>99921-58-10-700</strong>', '<f>Divine Com</f>', 'Dante Alighieri'),
+                    array('9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'),
+                ),
+                TableHelper::LAYOUT_DEFAULT,
+<<<TABLE
++----------------------------------+----------------------+-----------------+
+| ISBN                             | Title                | Author          |
++----------------------------------+----------------------+-----------------+
+| <strong>99921-58-10-700</strong> | <f>Divine Com</f>    | Dante Alighieri |
+| 9971-5-0210-0                    | A Tale of Two Cities | Charles Dickens |
++----------------------------------+----------------------+-----------------+
+
+TABLE
             ),
         );
     }

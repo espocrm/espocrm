@@ -418,10 +418,10 @@ class PostgreSqlPlatform extends AbstractPlatform
                 continue;
             }
 
-            $oldColumnName = $columnDiff->oldColumnName;
+            $oldColumnName = $columnDiff->getOldColumnName()->getQuotedName($this);
             $column = $columnDiff->column;
 
-            if ($columnDiff->hasChanged('type')) {
+            if ($columnDiff->hasChanged('type') || $columnDiff->hasChanged('precision') || $columnDiff->hasChanged('scale')) {
                 $type = $column->getType();
 
                 // here was a server version check before, but DBAL API does not support this anymore.
@@ -430,7 +430,10 @@ class PostgreSqlPlatform extends AbstractPlatform
             }
 
             if ($columnDiff->hasChanged('default')) {
-                $query = 'ALTER ' . $oldColumnName . ' SET ' . $this->getDefaultValueDeclarationSQL($column->toArray());
+                $defaultClause = null === $column->getDefault()
+                    ? ' DROP DEFAULT'
+                    : ' SET' . $this->getDefaultValueDeclarationSQL($column->toArray());
+                $query = 'ALTER ' . $oldColumnName . $defaultClause;
                 $sql[] = 'ALTER TABLE ' . $diff->name . ' ' . $query;
             }
 
@@ -484,7 +487,7 @@ class PostgreSqlPlatform extends AbstractPlatform
                 $sql[] = 'ALTER TABLE ' . $diff->name . ' RENAME TO ' . $diff->newName;
             }
 
-            $sql = array_merge($sql, $this->_getAlterTableIndexForeignKeySQL($diff), $commentsSQL);
+            $sql = array_merge($this->getPreAlterTableIndexForeignKeySQL($diff), $sql, $this->getPostAlterTableIndexForeignKeySQL($diff), $commentsSQL);
         }
 
         return array_merge($sql, $tableSql, $columnSql);

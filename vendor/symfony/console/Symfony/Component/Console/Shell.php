@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\Console;
 
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Process\ProcessBuilder;
@@ -104,7 +103,7 @@ EOF
                 ;
 
                 $output = $this->output;
-                $process->run(function($type, $data) use ($output) {
+                $process->run(function ($type, $data) use ($output) {
                     $output->writeln($data);
                 });
 

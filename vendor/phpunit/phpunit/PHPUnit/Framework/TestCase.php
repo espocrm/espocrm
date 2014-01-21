@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.0.0
@@ -90,7 +90,7 @@
  * @package    PHPUnit
  * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
@@ -388,7 +388,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
-     * @return string
+     * @return boolean
      * @since  Method available since Release 3.6.0
      */
     public function hasOutput()
@@ -1299,14 +1299,17 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     /**
      * Returns a mock object for the specified class.
      *
-     * @param  string  $originalClassName
-     * @param  array   $methods
-     * @param  array   $arguments
-     * @param  string  $mockClassName
-     * @param  boolean $callOriginalConstructor
-     * @param  boolean $callOriginalClone
-     * @param  boolean $callAutoload
-     * @param  boolean $cloneArguments
+     * @param  string     $originalClassName       Name of the class to mock.
+     * @param  array|null $methods                 When provided, only methods whose names are in the array
+     *                                             are replaced with a configurable test double. The behavior
+     *                                             of the other methods is not changed.
+     *                                             Providing null means that no methods will be replaced.
+     * @param  array      $arguments               Parameters to pass to the original class' constructor.
+     * @param  string     $mockClassName           Class name for the generated test double class.
+     * @param  boolean    $callOriginalConstructor Can be used to disable the call to the original class' constructor.
+     * @param  boolean    $callOriginalClone       Can be used to disable the call to the original class' clone constructor.
+     * @param  boolean    $callAutoload            Can be used to disable __autoload() during the generation of the test double class.
+     * @param  boolean    $cloneArguments
      * @return PHPUnit_Framework_MockObject_MockObject
      * @throws PHPUnit_Framework_Exception
      * @since  Method available since Release 3.0.0

@@ -76,11 +76,6 @@ class Column extends AbstractAsset
      */
     protected $_autoincrement = false;
 
-	/**
-     * @var boolean
-     */
-    protected $_unique = false;   //espo
-
     /**
      * @var array
      */
@@ -223,18 +218,6 @@ class Column extends AbstractAsset
     public function setNotnull($notnull)
     {
         $this->_notnull = (bool)$notnull;
-
-        return $this;
-    }
-
-	/**
-     * @param boolean $unique
-     *
-     * @return \Doctrine\DBAL\Schema\Column
-     */
-    public function setUnique($unique) //espo
-    {
-        $this->_unique = (bool)$unique;
 
         return $this;
     }
@@ -504,7 +487,6 @@ class Column extends AbstractAsset
             'fixed'         => $this->_fixed,
             'unsigned'      => $this->_unsigned,
             'autoincrement' => $this->_autoincrement,
-            'unique' => $this->_unique, //espo
             'columnDefinition' => $this->_columnDefinition,
             'comment' => $this->_comment,
         ), $this->_platformOptions, $this->_customSchemaOptions);

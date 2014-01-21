@@ -560,74 +560,6 @@
         ]
     },
     {
-        "name": "doctrine/dbal",
-        "version": "v2.4.1",
-        "version_normalized": "2.4.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/doctrine/dbal.git",
-            "reference": "328357bd9eea9d671fe5fff0737f01953bfe66a0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/dbal/zipball/328357bd9eea9d671fe5fff0737f01953bfe66a0",
-            "reference": "328357bd9eea9d671fe5fff0737f01953bfe66a0",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/common": "~2.4",
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*",
-            "symfony/console": "~2.0"
-        },
-        "suggest": {
-            "symfony/console": "Allows use of the command line interface"
-        },
-        "time": "2013-11-12 12:38:28",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Doctrine\\DBAL\\": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jonathan Wage",
-                "email": "jonwage@gmail.com",
-                "homepage": "http://www.jwage.com/",
-                "role": "Creator"
-            },
-            {
-                "name": "Guilherme Blanco",
-                "email": "guilhermeblanco@gmail.com",
-                "homepage": "http://www.instaclick.com"
-            },
-            {
-                "name": "Roman Borschel",
-                "email": "roman@code-factory.org"
-            },
-            {
-                "name": "Benjamin Eberlei",
-                "email": "kontakt@beberlei.de"
-            }
-        ],
-        "description": "Database Abstraction Layer",
-        "homepage": "http://www.doctrine-project.org",
-        "keywords": [
-            "database",
-            "dbal",
-            "persistence",
-            "queryobject"
-        ]
-    },
-    {
         "name": "doctrine/orm",
         "version": "v2.4.1",
         "version_normalized": "2.4.1.0",
@@ -868,131 +800,6 @@
         ]
     },
     {
-        "name": "phpunit/phpunit",
-        "version": "3.7.28",
-        "version_normalized": "3.7.28.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/sebastianbergmann/phpunit.git",
-            "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
-            "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
-            "shasum": ""
-        },
-        "require": {
-            "ext-dom": "*",
-            "ext-pcre": "*",
-            "ext-reflection": "*",
-            "ext-spl": "*",
-            "php": ">=5.3.3",
-            "phpunit/php-code-coverage": "~1.2.1",
-            "phpunit/php-file-iterator": ">=1.3.1",
-            "phpunit/php-text-template": ">=1.1.1",
-            "phpunit/php-timer": ">=1.0.4",
-            "phpunit/phpunit-mock-objects": "~1.2.0",
-            "symfony/yaml": "~2.0"
-        },
-        "require-dev": {
-            "pear-pear/pear": "1.9.4"
-        },
-        "suggest": {
-            "ext-json": "*",
-            "ext-simplexml": "*",
-            "ext-tokenizer": "*",
-            "phpunit/php-invoker": ">=1.1.0,<1.2.0"
-        },
-        "time": "2013-10-17 07:27:40",
-        "bin": [
-            "composer/bin/phpunit"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.7.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "PHPUnit/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            "",
-            "../../symfony/yaml/"
-        ],
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sebastian@phpunit.de",
-                "role": "lead"
-            }
-        ],
-        "description": "The PHP Unit Testing framework.",
-        "homepage": "http://www.phpunit.de/",
-        "keywords": [
-            "phpunit",
-            "testing",
-            "xunit"
-        ]
-    },
-    {
-        "name": "symfony/yaml",
-        "version": "v2.4.0",
-        "version_normalized": "2.4.0.0",
-        "target-dir": "Symfony/Component/Yaml",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/Yaml.git",
-            "reference": "1ae235a1b9d3ad3d9f3860ff20acc072df95b7f5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Yaml/zipball/1ae235a1b9d3ad3d9f3860ff20acc072df95b7f5",
-            "reference": "1ae235a1b9d3ad3d9f3860ff20acc072df95b7f5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-11-26 16:40:27",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\Yaml\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Yaml Component",
-        "homepage": "http://symfony.com"
-    },
-    {
         "name": "slim/slim",
         "version": "2.4.0",
         "version_normalized": "2.4.0.0",
@@ -1041,19 +848,212 @@
         ]
     },
     {
+        "name": "symfony/yaml",
+        "version": "v2.4.1",
+        "version_normalized": "2.4.1.0",
+        "target-dir": "Symfony/Component/Yaml",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Yaml.git",
+            "reference": "4e1a237fc48145fae114b96458d799746ad89aa0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/Yaml/zipball/4e1a237fc48145fae114b96458d799746ad89aa0",
+            "reference": "4e1a237fc48145fae114b96458d799746ad89aa0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-12-28 08:12:03",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Yaml\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Yaml Component",
+        "homepage": "http://symfony.com"
+    },
+    {
+        "name": "phpunit/phpunit",
+        "version": "3.7.29",
+        "version_normalized": "3.7.29.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/phpunit.git",
+            "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
+            "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
+            "shasum": ""
+        },
+        "require": {
+            "ext-dom": "*",
+            "ext-pcre": "*",
+            "ext-reflection": "*",
+            "ext-spl": "*",
+            "php": ">=5.3.3",
+            "phpunit/php-code-coverage": "~1.2.1",
+            "phpunit/php-file-iterator": ">=1.3.1",
+            "phpunit/php-text-template": ">=1.1.1",
+            "phpunit/php-timer": ">=1.0.4",
+            "phpunit/phpunit-mock-objects": "~1.2.0",
+            "symfony/yaml": "~2.0"
+        },
+        "require-dev": {
+            "pear-pear/pear": "1.9.4"
+        },
+        "suggest": {
+            "ext-json": "*",
+            "ext-simplexml": "*",
+            "ext-tokenizer": "*",
+            "phpunit/php-invoker": ">=1.1.0,<1.2.0"
+        },
+        "time": "2014-01-15 06:46:38",
+        "bin": [
+            "composer/bin/phpunit"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.7.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "PHPUnit/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "include-path": [
+            "",
+            "../../symfony/yaml/"
+        ],
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sebastian@phpunit.de",
+                "role": "lead"
+            }
+        ],
+        "description": "The PHP Unit Testing framework.",
+        "homepage": "http://www.phpunit.de/",
+        "keywords": [
+            "phpunit",
+            "testing",
+            "xunit"
+        ]
+    },
+    {
+        "name": "doctrine/dbal",
+        "version": "v2.4.2",
+        "version_normalized": "2.4.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/dbal.git",
+            "reference": "fec965d330c958e175c39e61c3f6751955af32d0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/dbal/zipball/fec965d330c958e175c39e61c3f6751955af32d0",
+            "reference": "fec965d330c958e175c39e61c3f6751955af32d0",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/common": "~2.4",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*",
+            "symfony/console": "~2.0"
+        },
+        "suggest": {
+            "symfony/console": "Allows use of the command line interface"
+        },
+        "time": "2014-01-01 16:43:57",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\DBAL\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com",
+                "homepage": "http://www.jwage.com/",
+                "role": "Creator"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com",
+                "homepage": "http://www.instaclick.com"
+            },
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de"
+            }
+        ],
+        "description": "Database Abstraction Layer",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "database",
+            "dbal",
+            "persistence",
+            "queryobject"
+        ]
+    },
+    {
         "name": "symfony/console",
-        "version": "v2.4.0",
-        "version_normalized": "2.4.0.0",
+        "version": "v2.4.1",
+        "version_normalized": "2.4.1.0",
         "target-dir": "Symfony/Component/Console",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Console.git",
-            "reference": "3c1496ae96d24ccc6c340fcc25f71d7a1ab4c12c"
+            "reference": "4c1ed2ff514bd85ee186eebb010ccbdeeab05af7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Console/zipball/3c1496ae96d24ccc6c340fcc25f71d7a1ab4c12c",
-            "reference": "3c1496ae96d24ccc6c340fcc25f71d7a1ab4c12c",
+            "url": "https://api.github.com/repos/symfony/Console/zipball/4c1ed2ff514bd85ee186eebb010ccbdeeab05af7",
+            "reference": "4c1ed2ff514bd85ee186eebb010ccbdeeab05af7",
             "shasum": ""
         },
         "require": {
@@ -1065,7 +1065,7 @@
         "suggest": {
             "symfony/event-dispatcher": ""
         },
-        "time": "2013-11-27 09:10:40",
+        "time": "2014-01-01 08:14:50",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1094,5 +1094,322 @@
         ],
         "description": "Symfony Console Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "zendframework/zend-stdlib",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Stdlib",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendStdlib.git",
+            "reference": "f440ecfc828d61d620662a03987c8287e1e4801e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/f440ecfc828d61d620662a03987c8287e1e4801e",
+            "reference": "f440ecfc828d61d620662a03987c8287e1e4801e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+            "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
+        },
+        "time": "2013-10-20 06:00:20",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Stdlib\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "keywords": [
+            "stdlib",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-mime",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Mime",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendMime.git",
+            "reference": "34f88da8dc21bc89fce030c4b7f7b0155f59fb99"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendMime/zipball/34f88da8dc21bc89fce030c4b7f7b0155f59fb99",
+            "reference": "34f88da8dc21bc89fce030c4b7f7b0155f59fb99",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "time": "2013-08-21 17:07:24",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Mime\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "keywords": [
+            "mime",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-loader",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Loader",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendLoader.git",
+            "reference": "9e3537a6012dc0b184f66f8668e6c33fd805f0eb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendLoader/zipball/9e3537a6012dc0b184f66f8668e6c33fd805f0eb",
+            "reference": "9e3537a6012dc0b184f66f8668e6c33fd805f0eb",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-10-20 06:00:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Loader\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "keywords": [
+            "loader",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-servicemanager",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/ServiceManager",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendServiceManager.git",
+            "reference": "064bb1d0441529aded2f213a10002cc4523f328c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendServiceManager/zipball/064bb1d0441529aded2f213a10002cc4523f328c",
+            "reference": "064bb1d0441529aded2f213a10002cc4523f328c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "zendframework/zend-di": "Zend\\Di component"
+        },
+        "time": "2013-10-23 20:00:05",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\ServiceManager\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "keywords": [
+            "servicemanager",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-math",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Math",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendMath.git",
+            "reference": "7cba0957e916b705ba280f31919e6acfa3d983fd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendMath/zipball/7cba0957e916b705ba280f31919e6acfa3d983fd",
+            "reference": "7cba0957e916b705ba280f31919e6acfa3d983fd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if OpenSSL/Mcrypt extensions are unavailable"
+        },
+        "time": "2013-10-02 08:00:14",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Math\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "keywords": [
+            "math",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-crypt",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Crypt",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendCrypt.git",
+            "reference": "97755b496cda7889887adf1d283f8d32c86674b9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendCrypt/zipball/97755b496cda7889887adf1d283f8d32c86674b9",
+            "reference": "97755b496cda7889887adf1d283f8d32c86674b9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "zendframework/zend-math": "self.version",
+            "zendframework/zend-servicemanager": "self.version",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "time": "2013-06-12 19:48:13",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Crypt\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "keywords": [
+            "crypt",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-mail",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Mail",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendMail.git",
+            "reference": "654e02f0490b7ecbfb18150383c6b4e01fd6f1d3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendMail/zipball/654e02f0490b7ecbfb18150383c6b4e01fd6f1d3",
+            "reference": "654e02f0490b7ecbfb18150383c6b4e01fd6f1d3",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "zendframework/zend-crypt": "self.version",
+            "zendframework/zend-loader": "self.version",
+            "zendframework/zend-mime": "self.version",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
+            "zendframework/zend-validator": "Zend\\Validator component"
+        },
+        "time": "2013-10-20 21:00:05",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Mail\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
+        "keywords": [
+            "mail",
+            "zf2"
+        ]
     }
 ]
