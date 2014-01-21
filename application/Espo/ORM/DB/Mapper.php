@@ -763,7 +763,7 @@ abstract class Mapper implements IMapper
 		}
 		
 		if (count($setArr) == 0) {
-			return false;
+			return $entity->id;
 		}
 		
 		$setPart = implode(', ', $setArr);		

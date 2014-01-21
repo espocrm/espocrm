@@ -94,15 +94,15 @@ class Repository extends \Espo\ORM\Repository
 		}
 		$result = parent::save($entity);
 			
-		$entity->set($restoreData);	
+		$entity->set($restoreData);
+		
 		
 		$this->handleEmailAddressSave($entity);	
 		$this->handleSpecifiedRelations($entity);
-		
-		if ($result) {
+
+		if ($result) {		
 			$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
 		}
-		
 		return $result;
 	}
 	
@@ -160,7 +160,7 @@ class Repository extends \Espo\ORM\Repository
 		foreach ($entity->getRelations() as $name => $defs) {			
 			if (in_array($defs['type'], $relationTypes)) {
 				$fieldName = $name . 'Ids';
-				if ($entity->has($fieldName)) {										
+				if ($entity->has($fieldName)) {								
 					$specifiedIds = $entity->get($fieldName);
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
@@ -185,7 +185,9 @@ class Repository extends \Espo\ORM\Repository
 				}
 			}
 		}
+		
 	}
+	
 
 }
 
