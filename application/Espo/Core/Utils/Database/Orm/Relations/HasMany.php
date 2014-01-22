@@ -4,6 +4,11 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class HasMany extends \Espo\Core\Utils\Database\Orm\Base
 {
+	protected $allowParams = array(
+		'relationName',
+		'conditions',
+		'additionalColumns',
+	);
 
 	public function load($params, $foreignParams)
 	{
@@ -23,11 +28,11 @@ class HasMany extends \Espo\Core\Utils\Database\Orm\Base
                 	$params['link']['name'] => array(
 						'type' => 'hasMany',
 						'entity' => $params['targetEntity'],
-						'foreignKey' => lcfirst($foreignParams['link']['name'].'Id'), //???: 'foreignKey' => $params['link']['name'].'Id',
+						'foreignKey' => lcfirst($foreignParams['link']['name'].'Id'), //???: 'foreignKey' => $params['link']['name'].'Id',						
 					),
 				),
 			),
-		);
+		);		
 
         return $relation;
 	}

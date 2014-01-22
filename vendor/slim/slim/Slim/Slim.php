@@ -1249,12 +1249,12 @@ class Slim
      */
     public function run()
     {
-        //set_error_handler(array('\Slim\Slim', 'handleErrors')); //Espo: no needs to use this handler
+        set_error_handler(array('\Slim\Slim', 'handleErrors')); 
 
         //Apply final outer middleware layers
         if ($this->config('debug')) {
             //Apply pretty exceptions only in debug to avoid accidental information leakage in production
-            //$this->add(new \Slim\Middleware\PrettyExceptions()); //Espo: no needs to use this handler 
+            $this->add(new \Slim\Middleware\PrettyExceptions());
         }
 
         //Invoke middleware and application stack

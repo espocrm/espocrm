@@ -50,7 +50,8 @@ class Container
 
     private function loadSlim()
     {
-        return new \Slim\Slim();
+        //return new \Slim\Slim();
+        return new \Espo\Core\Utils\Api\Slim();
     }
 
 	private function loadFileManager()

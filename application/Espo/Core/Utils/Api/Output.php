@@ -7,7 +7,7 @@ class Output
 	private $slim;
 
 
-    public function __construct(\Slim\Slim $slim)
+    public function __construct(\Espo\Core\Utils\Api\Slim $slim)
     {
     	$this->slim = $slim;
     }

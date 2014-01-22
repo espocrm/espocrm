@@ -8,6 +8,8 @@ class Base
 {
 	private $metadata;
 
+	protected $allowParams = array();
+
 	public function __construct(\Espo\Core\Utils\Metadata $metadata)
 	{
     	$this->metadata = $metadata;
@@ -17,6 +19,35 @@ class Base
 	{
 		return $this->metadata;
 	}
+
+
+	public function process($params, $foreignParams)
+	{				
+		$load = $this->load($params, $foreignParams);		
+
+		$load = $this->mergeAllowedParams($load, $params);
+
+		return $load;		
+	}
+
+
+	private function mergeAllowedParams($load, $params)
+	{		
+		if (!empty($this->allowParams)) {
+			$linkParams = &$load[$params['entityName']] ['relations'] [$params['link']['name']];
+		
+			foreach ($this->allowParams as $name) {
+				if (isset($params['link']['params'][$name]) && !isset($linkParams[$name])) {
+					$linkParams[$name] = $params['link']['params'][$name];	
+				}
+			} 
+		}		
+
+		return $load;
+	}
+
+
+
 
     protected function getForeignField($name, $entityName)
 	{
@@ -39,5 +70,7 @@ class Base
 
 		return $name;
 	}
+
+
 
 }
