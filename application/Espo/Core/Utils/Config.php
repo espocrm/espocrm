@@ -156,7 +156,8 @@ class Config
 			return $restrictedConfig;
 		}
 
-		return Json::encode( Util::objectToArray($restrictedConfig) );
+		//return Json::encode( Util::objectToArray($restrictedConfig) );
+		return Util::objectToArray($restrictedConfig);
 	}
 
 
@@ -167,14 +168,14 @@ class Config
 	* @return bool
 	*/
 	//HERE
-	public function setJsonData($json, $isAdmin=false)
+	public function setJsonData($data, $isAdmin=false)
 	{
-		$decoded= Json::decode($json, true);
+		//$decoded= Json::decode($json, true);
 
 		$restrictItems= $this->getRestrictItems($isAdmin);
 
 		$values= array();
-        foreach($decoded as $key => $item) {
+        foreach($data as $key => $item) {
         	if (!in_array($key, $restrictItems)) {
 				$values[$key]= $item;
         	}
