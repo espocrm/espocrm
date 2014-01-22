@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\Utils\Database\FieldTypes;
+namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
