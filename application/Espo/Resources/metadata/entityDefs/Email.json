@@ -6,11 +6,13 @@
         },
         "from": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "required": true
         },
         "to": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "required": true
         },
         "cc": {
             "type": "varchar",

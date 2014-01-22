@@ -59,7 +59,6 @@ class Repository
 	
 	protected function handleSelectParams(&$params)
 	{
-
 	}
 	
 	protected function getEntityFactory()
@@ -106,22 +105,47 @@ class Repository
 		return $this->getEntityById($id);
 	}
 	
+	protected function beforeSave(Entity $entity)
+	{		
+	}
+	
+	protected function afterSave(Entity $entity)
+	{		
+	}
+	
 	public function save(Entity $entity)
 	{	
+		$this->beforeSave($entity);
 		if ($entity->isNew()) {
 			$result = $this->mapper->insert($entity);
 			if ($result) {
 				$entity->setIsNew(false);
 			}
-			return $result;
 		} else {
-			return $this->mapper->update($entity);
+			$result = $this->mapper->update($entity);
 		}
+		if ($result) {	
+			$this->afterSave($entity);
+		}
+		return $result;
+	}
+	
+	protected function beforeRemove(Entity $entity)
+	{		
+	}
+	
+	protected function afterRemove(Entity $entity)
+	{		
 	}
 		
 	public function remove(Entity $entity)
 	{	
-		return $this->mapper->delete($entity);
+		$this->beforeRemove($entity);
+		$result = $this->mapper->delete($entity);
+		if ($result) {
+			$this->afterRemove($entity);
+		}
+		return $result;
 	}
 
 	public function find(array $params = array())

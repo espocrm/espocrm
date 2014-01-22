@@ -2,8 +2,19 @@
 	{
 		"label":"",
 		"rows":[
-			[{"name":"from"}],
-			[{"name":"to"}],
+			[
+				{
+					"name":"from",
+					"params": {
+						"readOnly": true					
+					}
+				}			
+			],
+			[
+				{
+					"name":"to"
+				}
+			],
 			[{"name":"cc"}],
 			[{"name":"bcc"}],
 			[{"name":"name"}],
