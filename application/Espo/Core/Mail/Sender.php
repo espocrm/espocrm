@@ -58,37 +58,28 @@ class Sender
 			}
 			$message->addFrom($email->get('outboundEmailFromAddress'), $email->get('outboundEmailFromName'));
 		}
-
-		$toIds = $email->get('toEmailAddressesIds');
-		if (is_array($toIds)) {
-			$hash = $email->get('toEmailAddressesNames');
-			foreach ($toIds as $id) {
-				$address = $hash[$id];
-				if (!empty($address)) {
-					$message->addTo($address);
-				}
+		
+		$value = $email->get('to');
+		$arr = explode(';', $value);
+		if (is_array($arr)) {
+			foreach ($arr as $address) {
+				$message->addTo(trim($address));
 			}
 		}
-
-		$ccIds = $email->get('ccEmailAddressesIds');
-		if (is_array($toIds)) {
-			$hash = $email->get('ccEmailAddressesIds');
-			foreach ($ccIds as $id) {
-				$address = $hash[$id];
-				if (!empty($address)) {
-					$message->addCC($address);
-				}
+		
+		$value = $email->get('cc');
+		$arr = explode(';', $value);
+		if (is_array($arr)) {
+			foreach ($arr as $address) {
+				$message->addCC(trim($address));
 			}
 		}
-
-		$bccIds = $email->get('bccEmailAddressesIds');
-		if (is_array($toIds)) {
-			$hash = $email->get('bccEmailAddressesIds');
-			foreach ($bccIds as $id) {
-				$address = $hash[$id];
-				if (!empty($address)) {
-					$message->addBCC($address);
-				}
+		
+		$value = $email->get('bcc');
+		$arr = explode(';', $value);
+		if (is_array($arr)) {
+			foreach ($arr as $address) {
+				$message->addBCC(trim($address));
 			}
 		}
 
@@ -97,7 +88,11 @@ class Sender
 		
 		// TODO attachments
 
-		return $this->transport->send($message);
+		$result = $this->transport->send($message);
+		if ($result) {
+			$email->set('status', 'Sent');
+		}
+		return $result;
 	}
 }
 

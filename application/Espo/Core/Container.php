@@ -101,6 +101,13 @@ class Container
 		);
     }
     
+	private function loadMailSender()
+    {
+    	return new \Espo\Core\Mail\Sender(
+			$this->get('config')
+		);
+    }
+    
 	private function loadServiceFactory()
     {
     	return new \Espo\Core\ServiceFactory(

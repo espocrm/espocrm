@@ -183,17 +183,9 @@ class Repository extends \Espo\ORM\Repository
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
 						$existingIds = array();
-						if ($fieldName == 'toEmailAddressesIds') {
-							
-						}
 						foreach ($entity->get($name) as $foreignEntity) {
 							$existingIds[] = $foreignEntity->id;
-						}
-						if ($fieldName == 'toEmailAddressesIds') {
-							print_r($existingIds);
-							print_r($specifiedIds);
-						}
-										
+						}										
 						foreach ($existingIds as $id) {
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
@@ -210,8 +202,7 @@ class Repository extends \Espo\ORM\Repository
 					}
 				}
 			}
-		}
-		die;		
+		}	
 	}
 }
 

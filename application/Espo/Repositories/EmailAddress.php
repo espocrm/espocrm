@@ -25,6 +25,9 @@ class EmailAddress extends \Espo\Core\ORM\Repository
 				$exist[] = $ea->get('lower');
 			}
 			foreach ($arr as $address) {
+				if (empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
+					continue;
+				}
 				if (!in_array(strtolower($address), $exist)) {
 					$ea = $this->get();
 					$ea->set('name', $address);
