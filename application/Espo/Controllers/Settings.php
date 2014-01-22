@@ -9,7 +9,7 @@ class Settings extends \Espo\Core\Controllers\Base
 
     public function actionRead($params, $data)
 	{
-		return $this->getConfig()->getJsonData($this->getUser()->isAdmin());
+		return $this->getConfig()->getData($this->getUser()->isAdmin());
 	}
 
 	public function actionPatch($params, $data)

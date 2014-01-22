@@ -141,7 +141,7 @@ class Config
 	* @param $isAdmin
 	* @return object
 	*/
-	public function getJsonData($isAdmin=false, $encode=true)
+	public function getData($isAdmin=false, $encode=true)
 	{
         $configObj = $this->getConfig();
 
@@ -156,7 +156,6 @@ class Config
 			return $restrictedConfig;
 		}
 
-		//return Json::encode( Util::objectToArray($restrictedConfig) );
 		return Util::objectToArray($restrictedConfig);
 	}
 
@@ -168,9 +167,8 @@ class Config
 	* @return bool
 	*/
 	//HERE
-	public function setJsonData($data, $isAdmin=false)
+	public function setData($data, $isAdmin=false)
 	{
-		//$decoded= Json::decode($json, true);
 
 		$restrictItems= $this->getRestrictItems($isAdmin);
 
@@ -196,7 +194,6 @@ class Config
     	}
 
 		if (empty($this->adminItems)) {
-        	//$this->adminItems= array_merge( (array) $this->getConfig()->systemItems, (array) $this->getConfig()->adminItems );
         	$this->adminItems= Util::merge( (array) $this->getConfig()->systemItems, (array) $this->getConfig()->adminItems );
 		}
 
