@@ -8,6 +8,8 @@ use Zend\Mail\Message;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
 
+use \Espo\Core\Exceptions\Error;
+
 class Sender
 {
 	protected $config;
@@ -17,7 +19,7 @@ class Sender
 	public function __construct($config)
 	{
 		$this->config = $config;
-		$this->trasport = new SmtpTransport();
+		$this->transport = new SmtpTransport();
 		$this->setupGlobal();
 	}
 
@@ -29,7 +31,7 @@ class Sender
 			'name' => 'admin',
 			'host' => $config->get('smtpServer'),
 			'port' => $config->get('smtpPort'),
-			'connection_config' => array();
+			'connection_config' => array()
 		);
 		if ($config->get('smtpAuth')) {
 			$opts['connection_class'] = 'login';
@@ -41,7 +43,7 @@ class Sender
 		}
 
 		$options = new SmtpOptions($opts);
-		$transport->setOptions($options);
+		$this->transport->setOptions($options);
 
 		return $this;
 	}
@@ -49,45 +51,44 @@ class Sender
 	public function send(Email $email)
 	{
 		$message = new Message();
+		
+		$config = $this->config;
 
-		if ($email->get('fromEmailAddressName')) {
-			$message->addFrom($email->get('fromEmailAddressName'));
+		if ($email->get('from')) {
+			$message->addFrom(trim($email->get('from')));
 		} else {
 			if (!$config->get('outboundEmailFromAddress')) {
 				throw new Error('outboundEmailFromAddress is not specified in config.');
 			}
-			$message->addFrom($email->get('outboundEmailFromAddress'), $email->get('outboundEmailFromName'));
+			$message->addFrom($config->get('outboundEmailFromAddress'), $config->get('outboundEmailFromName'));
 		}
-
-		$toIds = $email->get('toEmailAddressesIds');
-		if (is_array($toIds)) {
-			$hash = $email->get('toEmailAddressesNames');
-			foreach ($toIds as $id) {
-				$address = $hash[$id];
-				if (!empty($address)) {
-					$message->addTo($address);
+		
+		$value = $email->get('to');
+		if ($value) {
+			$arr = explode(';', $value);
+			if (is_array($arr)) {
+				foreach ($arr as $address) {
+					$message->addTo(trim($address));				
 				}
 			}
 		}
-
-		$ccIds = $email->get('ccEmailAddressesIds');
-		if (is_array($toIds)) {
-			$hash = $email->get('ccEmailAddressesIds');
-			foreach ($ccIds as $id) {
-				$address = $hash[$id];
-				if (!empty($address)) {
-					$message->addCC($address);
+		
+		$value = $email->get('cc');
+		if ($value) {
+			$arr = explode(';', $value);
+			if (is_array($arr)) {
+				foreach ($arr as $address) {
+					$message->addCC(trim($address));
 				}
 			}
 		}
-
-		$bccIds = $email->get('bccEmailAddressesIds');
-		if (is_array($toIds)) {
-			$hash = $email->get('bccEmailAddressesIds');
-			foreach ($bccIds as $id) {
-				$address = $hash[$id];
-				if (!empty($address)) {
-					$message->addBCC($address);
+		
+		$value = $email->get('bcc');
+		if ($value) {
+			$arr = explode(';', $value);
+			if (is_array($arr)) {
+				foreach ($arr as $address) {
+					$message->addBCC(trim($address));
 				}
 			}
 		}
@@ -97,7 +98,14 @@ class Sender
 		
 		// TODO attachments
 
-		return $this->transport->send($message);
+		try {
+			$this->transport->send($message);
+			$email->set('status', 'Sent');
+			$email->set('dateSent', date("Y-m-d H:i:s"));
+		} catch (\Exception $e) {
+			throw new Error($e->getMessage(), 500);
+		}
+			
 	}
 }
 

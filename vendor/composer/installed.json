@@ -1411,5 +1411,64 @@
             "mail",
             "zf2"
         ]
+    },
+    {
+        "name": "zendframework/zend-validator",
+        "version": "2.2.5",
+        "version_normalized": "2.2.5.0",
+        "target-dir": "Zend/Validator",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendValidator.git",
+            "reference": "8c23193a617a03dd7ee6c25049132c942f31ec28"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendValidator/zipball/8c23193a617a03dd7ee6c25049132c942f31ec28",
+            "reference": "8c23193a617a03dd7ee6c25049132c942f31ec28",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "require-dev": {
+            "zendframework/zend-filter": "self.version",
+            "zendframework/zend-i18n": "self.version",
+            "zendframework/zend-math": "self.version",
+            "zendframework/zend-servicemanager": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-db": "Zend\\Db component",
+            "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
+            "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages as well as to use the various Date validators",
+            "zendframework/zend-math": "Zend\\Math component",
+            "zendframework/zend-resources": "Translations of validator messages",
+            "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
+            "zendframework/zend-uri": "Zend\\Uri component, required by the Uri and Sitemap\\Loc validators"
+        },
+        "time": "2013-10-20 06:00:22",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Validator\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "provides a set of commonly needed validators",
+        "keywords": [
+            "validator",
+            "zf2"
+        ]
     }
 ]

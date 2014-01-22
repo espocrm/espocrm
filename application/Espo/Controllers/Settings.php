@@ -9,15 +9,15 @@ class Settings extends \Espo\Core\Controllers\Base
 
     public function actionRead($params, $data)
 	{
-		return $this->getConfig()->getJsonData($this->getUser()->isAdmin());
+		return $this->getConfig()->getData($this->getUser()->isAdmin());
 	}
 
 	public function actionPatch($params, $data)
 	{
-       	$result = $this->getConfig()->setJsonData($data, $this->getUser()->isAdmin());
+       	$result = $this->getConfig()->setData($data, $this->getUser()->isAdmin());
         if ($result === false) {
         	throw new Error('Cannot save settings');
         }
-        return $this->getConfig()->getJsonData($this->getUser()->isAdmin());
+        return $this->getConfig()->getData($this->getUser()->isAdmin());
 	}
 }

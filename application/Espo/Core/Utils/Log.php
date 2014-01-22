@@ -140,7 +140,7 @@ class Log
 	*/
 	protected function logError($text)
 	{
-        $text= $this->getParams()->datetime.' '.$text;
+        $text = date('Y-m-d H:i:s') . ' ' . $text;
 		return $this->getFileManager()->appendContent($text, $this->getParams()->options->dir, $this->getParams()->options->file);
 	}
 

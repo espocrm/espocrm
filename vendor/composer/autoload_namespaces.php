@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator'),
     'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib'),
     'Zend\\ServiceManager\\' => array($vendorDir . '/zendframework/zend-servicemanager'),
     'Zend\\Mime\\' => array($vendorDir . '/zendframework/zend-mime'),

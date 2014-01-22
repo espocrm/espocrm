@@ -236,7 +236,7 @@ abstract class Mapper implements IMapper
 
 	public function selectRelated(IEntity $entity, $relationName, $params = array(), $totalCount = false)
 	{		
-		$relOpt = $entity->relations[$relationName];		
+		$relOpt = $entity->relations[$relationName];
 		
 		if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
 			throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityName() . " entity");
@@ -311,7 +311,8 @@ abstract class Mapper implements IMapper
 				}
 			
 				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, 0, 1);
-				$ps = $this->pdo->query($sql);
+				$ps = $this->pdo->query($sql);			
+
 
 				if ($ps) {
 					foreach ($ps as $row) {
@@ -327,6 +328,7 @@ abstract class Mapper implements IMapper
 				
 			case IEntity::HAS_MANY:
 			case IEntity::HAS_CHILDREN:
+			
 				$whereClause[$foreignKey] = $entity->get($key);
 				
 				if ($relType == IEntity::HAS_CHILDREN) {

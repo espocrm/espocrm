@@ -12,7 +12,7 @@ class Admin extends \Espo\Core\Controllers\Base
 		if (!$this->getUser()->isAdmin()) {
         	throw new Forbidden();
 		}
-	}	
+	}
 
     public function actionRebuild($params, $data)
 	{

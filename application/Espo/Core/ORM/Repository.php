@@ -37,6 +37,18 @@ class Repository extends \Espo\ORM\Repository
 		}
 	}
 	
+	protected function beforeRemove(Entity $entity)
+	{
+		parent::beforeRemove($entity);
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
+	}
+	
+	protected function afterRemove(Entity $entity)
+	{
+		parent::afterRemove($entity);
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
+	}
+	
 	public function remove(Entity $entity)
 	{	
 		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
@@ -46,12 +58,22 @@ class Repository extends \Espo\ORM\Repository
 			$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
 		}
 		return $result;
-	}	
+	}
+	
+	protected function beforeSave(Entity $entity)
+	{
+		parent::beforeSave($entity);
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity);
+	}
+	
+	protected function afterSave(Entity $entity)
+	{
+		parent::afterSave($entity);
+		$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
+	}
 	
 	public function save(Entity $entity)
-	{
-		$this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity);
-				
+	{			
 		$nowString = date('Y-m-d H:i:s', time());		
 		$restoreData = array();					
 		
@@ -94,15 +116,11 @@ class Repository extends \Espo\ORM\Repository
 		}
 		$result = parent::save($entity);
 			
-		$entity->set($restoreData);
-		
+		$entity->set($restoreData);		
 		
 		$this->handleEmailAddressSave($entity);	
 		$this->handleSpecifiedRelations($entity);
 
-		if ($result) {		
-			$this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
-		}
 		return $result;
 	}
 	
@@ -159,15 +177,15 @@ class Repository extends \Espo\ORM\Repository
 		$relationTypes = array($entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN);
 		foreach ($entity->getRelations() as $name => $defs) {			
 			if (in_array($defs['type'], $relationTypes)) {
-				$fieldName = $name . 'Ids';
-				if ($entity->has($fieldName)) {								
+				$fieldName = $name . 'Ids';				
+				if ($entity->has($fieldName)) {												
 					$specifiedIds = $entity->get($fieldName);
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
 						$existingIds = array();
 						foreach ($entity->get($name) as $foreignEntity) {
 							$existingIds[] = $foreignEntity->id;
-						}				
+						}										
 						foreach ($existingIds as $id) {
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
@@ -184,10 +202,7 @@ class Repository extends \Espo\ORM\Repository
 					}
 				}
 			}
-		}
-		
+		}	
 	}
-	
-
 }
 

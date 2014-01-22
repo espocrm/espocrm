@@ -89,7 +89,6 @@ class Container
 			$this->get('output'),
 			(object) array(
 				'options' => $this->get('config')->get('logger'),
-				'datetime' => $this->get('datetime')->getDatetime(),
 			)
 		);
     }
@@ -98,6 +97,13 @@ class Container
     {
     	return new \Espo\Core\Utils\Api\Output(
 			$this->get('slim')
+		);
+    }
+    
+	private function loadMailSender()
+    {
+    	return new \Espo\Core\Mail\Sender(
+			$this->get('config')
 		);
     }
     
@@ -125,14 +131,7 @@ class Container
 			$this->get('fileManager'),
 			$this->get('metadata')
 		);
-    }
-
-	private function loadDatetime()
-    {
-    	return new \Espo\Core\Utils\Datetime(
-			$this->get('config')
-		);
-    }    
+    } 
 
 	private function loadUniteFiles()
     {

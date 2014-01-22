@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+             "readOnly": true
+        },
+        "status": {
+            "type": "varchar",
+             "readOnly": true
+        },
+        "executionTime": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "scheduledJob": {
+        	"type": "link"
+		}
+    },
+    "links": {
+        "scheduledJob": {
+            "type": "belongsTo",
+            "entity": "ScheduledJob"
+        }
+    },
+    "collection": {
+    	"sortBy": "createdAt",
+    	"asc": false
+    }
+}

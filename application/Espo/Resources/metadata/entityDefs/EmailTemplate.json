@@ -4,10 +4,6 @@
             "type": "varchar",
             "required": true
         },
-        "subject": {
-            "type": "varchar",
-            "required": true
-        },
         "body": {
             "type": "text"
         },

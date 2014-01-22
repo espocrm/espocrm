@@ -75,9 +75,7 @@ class Record extends \Espo\Core\Services\Base
 			$this->loadLinkMultipleFields($entity);			
 			$this->loadParentNameFields($entity);
 			$this->loadIsFollowed($entity);
-		}
-		
-		if (!empty($entity) && !empty($id)) {			
+			
 			if (!$this->getAcl()->check($entity, 'read')) {
 				throw new Forbidden();
 			}

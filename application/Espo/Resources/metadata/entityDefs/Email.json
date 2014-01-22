@@ -6,11 +6,13 @@
         },
         "from": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "required": true
         },
         "to": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "required": true
         },
         "cc": {
             "type": "varchar",
@@ -20,18 +22,6 @@
             "type": "varchar",
             "db": false
         },
-		"fromEmailAddress": {
-			"type": "link"
-		},
-		"toEmailAddresses": {
-			"type": "linkMultiple"
-		},
-		"ccEmailAddresses": {
-			"type": "linkMultiple"
-		},
-		"bccEmailAddresses": {
-			"type": "linkMultiple"
-		},
         "body": {
             "type": "text"
         },
@@ -47,8 +37,7 @@
             "type": "linkParent"
         },
         "dateSent": {
-            "type": "datetime",
-            "default": "javascript: return this.dateTime.getNow(15);"
+            "type": "datetime"
         },
         "createdAt": {
             "type": "datetime",
