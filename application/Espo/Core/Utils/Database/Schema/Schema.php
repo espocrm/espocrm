@@ -18,6 +18,16 @@ class Schema
 
 	private $connection;
 
+	protected $drivers = array(
+		'mysqli' => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',		
+		'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',		
+	);
+
+	protected $fieldTypePaths = array(
+		'Espo/Core/Utils/Database/DBAL/FieldTypes',
+		'Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
+	);
+
 
 	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
 	{
@@ -25,7 +35,7 @@ class Schema
 		$this->metadata = $metadata;
 		$this->fileManager = $fileManager;
 
-		$this->comparator = new \Doctrine\DBAL\Schema\Comparator();
+		$this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
 		$this->initFieldTypes();
 
 		$this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
@@ -72,6 +82,9 @@ class Schema
 		$dbalConfig = new \Doctrine\DBAL\Configuration();
 
 		$connectionParams = (array) $this->getConfig()->get('database');
+		
+		$connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
+		unset($connectionParams['driver']);
 
 		$this->connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $dbalConfig);
 
@@ -81,12 +94,7 @@ class Schema
 
 	protected function initFieldTypes()
 	{
-    	$typePaths = array(
-        	'Espo/Core/Utils/Database/FieldTypes',
-            'Espo/Custom/Core/Utils/Database/FieldTypes',
-		);
-
-		foreach($typePaths as $path) {
+		foreach($this->fieldTypePaths as $path) {
 
         	$typeList = $this->getFileManager()->getFileList('application/'.$path, false, '\.php$');
 			if ($typeList !== false) {

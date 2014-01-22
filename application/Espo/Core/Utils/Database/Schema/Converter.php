@@ -11,7 +11,7 @@ class Converter
 	private $dbalSchema;
 	private $fileManager;
 
-	private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/customTables';
+	private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/CustomTables';
 
 	protected $typeList;
 
@@ -148,18 +148,7 @@ class Converter
 						if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
                         	$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
 						}
-						break;
-
-					case 'hasMany':
-						if (isset($relationParams['relationName'])) {
-							$tableName = $relationParams['relationName'];
-
-	                        //check for duplication tables
-							if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
-	                        	$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
-							}
-						}						
-						break;
+						break;					
 
 		            case 'belongsTo':
 						$foreignEntity = $relationParams['entity'];
