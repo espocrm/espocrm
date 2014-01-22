@@ -19,7 +19,7 @@ class Email extends Record
 		return $this->injections['mailSender'];
 	}
 	
-	public function createEntity(Entity $data)
+	public function createEntity($data)
 	{
 		$entity = parent::createEntity($data);
 		

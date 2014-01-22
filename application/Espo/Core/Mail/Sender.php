@@ -4,6 +4,10 @@ namespace Espo\Core\Mail;
 
 use \Espo\Entities\Email;
 
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
+use Zend\Mime\Mime as Mime;
+
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
@@ -94,9 +98,33 @@ class Sender
 		}
 
 		$message->setSubject($email->get('name'));
-		$message->setBody($email->get('body'));
 		
-		// TODO attachments
+		$body = new MimeMessage;		
+		$parts = array();
+				
+		$bodyPart = new MimePart($email->get('body'));		
+		$bodyPart->type = 'text/plain';		
+		$parts[] = $bodyPart;
+		
+		$aCollection = $email->get('attachments');
+		if (!empty($aCollection)) {
+			foreach ($aCollection as $a) {
+				$fileName = 'data/upload/' . $a->id;
+				$attachment = new MimePart(file_get_contents($fileName));
+				$attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+				$attachment->encoding = Mime::ENCODING_BASE64;
+				$attachment->filename = $a->get('name');
+				if ($a->get('type')) {
+					$attachment->type = $a->get('type');
+				}
+				$parts[] = $attachment;
+			}
+		}
+		
+		
+		$body->setParts($parts);
+		
+		$message->setBody($body);		
 
 		try {
 			$this->transport->send($message);
