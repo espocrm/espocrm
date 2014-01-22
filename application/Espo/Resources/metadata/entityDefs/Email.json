@@ -22,18 +22,6 @@
             "type": "varchar",
             "db": false
         },
-		"fromEmailAddress": {
-			"type": "link"
-		},
-		"toEmailAddresses": {
-			"type": "linkMultiple"
-		},
-		"ccEmailAddresses": {
-			"type": "linkMultiple"
-		},
-		"bccEmailAddresses": {
-			"type": "linkMultiple"
-		},
         "body": {
             "type": "text"
         },
