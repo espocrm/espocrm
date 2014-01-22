@@ -49,7 +49,7 @@ class Activities extends \Espo\Core\Services\Base
 		$qu = "
 			SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
 			       meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-			       meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId'
+			       meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status
 			FROM `meeting`
 			LEFT JOIN `user` ON user.id = meeting.assigned_user_id
 		";
@@ -97,7 +97,7 @@ class Activities extends \Espo\Core\Services\Base
 		$qu = "
 			SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
 			       call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-			       call.parent_type AS 'parentType', call.parent_id AS 'parentId'
+			       call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status
 			FROM `call`
 			LEFT JOIN `user` ON user.id = call.assigned_user_id
 		";
@@ -145,7 +145,7 @@ class Activities extends \Espo\Core\Services\Base
 		$qu = "
 			SELECT email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
 			       email.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-			       email.parent_type AS 'parentType', email.parent_id AS 'parentId'
+			       email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status
 			FROM `email`
 			LEFT JOIN `user` ON user.id = email.assigned_user_id
 		";
@@ -260,19 +260,19 @@ class Activities extends \Espo\Core\Services\Base
 		$pdo = $this->getPDO();
 	
 		$sql = "
-			SELECT 'Meeting' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd FROM `meeting`
+			SELECT 'Meeting' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd, status AS status FROM `meeting`
 			WHERE 
 				deleted = 0 AND
 				date_start >= ".$pdo->quote($from)." AND
 				date_start < ".$pdo->quote($to)."
 			UNION
-			SELECT 'Call' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd FROM `call`
+			SELECT 'Call' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd, status AS status FROM `call`
 			WHERE 
 				deleted = 0 AND
 				date_start >= ".$pdo->quote($from)." AND
 				date_start < ".$pdo->quote($to)."
 			UNION
-			SELECT 'Task' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd FROM `task`
+			SELECT 'Task' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd, status AS status FROM `task`
 			WHERE 
 				deleted = 0 AND
 				date_start >= ".$pdo->quote($from)." AND

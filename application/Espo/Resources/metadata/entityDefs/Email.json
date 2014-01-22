@@ -37,8 +37,7 @@
             "type": "linkParent"
         },
         "dateSent": {
-            "type": "datetime",
-            "default": "javascript: return this.dateTime.getNow(15);"
+            "type": "datetime"
         },
         "createdAt": {
             "type": "datetime",

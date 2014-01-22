@@ -6,7 +6,7 @@
 				{
 					"name":"from",
 					"params": {
-						"readOnly": true					
+						"readOnly": false					
 					}
 				}			
 			],

@@ -25,14 +25,10 @@ class Email extends Record
 		
 		if ($entity && $entity->get('status') == 'Sending') {
 			$sent = $this->getMailSender()->send($entity);
-			if ($sent) {
-				$this->getEntityManager()->saveEntity($entity);
-			} else {
-				throw new Error();
-			}
+			$this->getEntityManager()->saveEntity($entity);
 		}
 		
-		return $result;
+		return $entity;
 	}
 		
 	public function getEntity($id = null)
