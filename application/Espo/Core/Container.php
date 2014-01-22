@@ -89,7 +89,6 @@ class Container
 			$this->get('output'),
 			(object) array(
 				'options' => $this->get('config')->get('logger'),
-				'datetime' => $this->get('datetime')->getDatetime(),
 			)
 		);
     }
@@ -132,14 +131,7 @@ class Container
 			$this->get('fileManager'),
 			$this->get('metadata')
 		);
-    }
-
-	private function loadDatetime()
-    {
-    	return new \Espo\Core\Utils\Datetime(
-			$this->get('config')
-		);
-    }    
+    } 
 
 	private function loadUniteFiles()
     {
