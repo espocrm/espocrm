@@ -31,7 +31,7 @@ class Output
 
 		ob_clean();
     	echo $data;
-		$this->getSlim()->stop();
+		//$this->getSlim()->stop();
 	}
 	
 	public function processError($message = 'Error', $code = 500)
