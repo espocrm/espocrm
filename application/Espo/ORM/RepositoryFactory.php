@@ -10,11 +10,10 @@ class RepositoryFactory
 	
 	protected $defaultRepositoryClassName = '\\Espo\\ORM\\Repository';	
 
-	public function __construct(EntityManager $entityManager, EntityFactory $entityFactroy, DB\IMapper $mapper)
+	public function __construct(EntityManager $entityManager, EntityFactory $entityFactroy)
 	{
 		$this->entityManager = $entityManager;
 		$this->entityFactroy = $entityFactroy;
-		$this->mapper = $mapper;		
 	}
 	
 	public function create($name)
@@ -24,7 +23,8 @@ class RepositoryFactory
 		if (!class_exists($className)) {
 			$className = $this->defaultRepositoryClassName;
 		}
-		$repository = new $className($name, $this->entityManager, $this->entityFactroy, $this->mapper);	
+		
+		$repository = new $className($name, $this->entityManager, $this->entityFactroy);	
 		return $repository;
 	}
 	

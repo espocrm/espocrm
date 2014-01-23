@@ -9,7 +9,7 @@ class App extends \Espo\Core\Controllers\Record
 		return array(
 			'user' => $this->getUser()->toArray(),
 			'acl' => $this->getAcl()->toArray(),
-			'preferences' => array(),
+			'preferences' => $this->getPreferences()->toArray()
 		);	
 	}
 }

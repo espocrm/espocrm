@@ -67,6 +67,11 @@ class Container
 			)
 		);
     }
+    
+	private function loadPreferences()
+    {    	
+    	return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
+    }
 
 	private function loadConfig()
     {
@@ -123,7 +128,6 @@ class Container
 		);
     }
 
-
 	private function loadLayout()
     {
     	return new \Espo\Core\Utils\Layout(
@@ -165,7 +169,6 @@ class Container
 	public function setUser($user)
 	{
 		$this->data['user'] = $user;
-	} 
-
+	}
 }
 

@@ -11,7 +11,7 @@ class EntityManager
 
 	protected $repositoryFactory;
 
-	protected $mapper;
+	protected $mappers = array();
 
 	protected $metadata;
 
@@ -32,20 +32,23 @@ class EntityManager
 			$entityFactoryClassName = $params['entityFactoryClassName'];
 		}
 		$this->entityFactory = new $entityFactoryClassName($this, $this->metadata);
-
-		$mapperClassName = '\\Espo\\ORM\\DB\\MysqlMapper';
-		if (!empty($params['mapperClassName'])) {
-			$mapperClassName = $params['mapperClassName'];
-		}
-		$this->mapper = new $mapperClassName($this->pdo, $this->entityFactory);
+	
 
 		$repositoryFactoryClassName = '\\Espo\\ORM\\RepositoryFactory';
 		if (!empty($params['repositoryFactoryClassName'])) {
 			$repositoryFactoryClassName = $params['repositoryFactoryClassName'];
 		}
-		$this->repositoryFactory = new $repositoryFactoryClassName($this, $this->entityFactory, $this->mapper);
+		$this->repositoryFactory = new $repositoryFactoryClassName($this, $this->entityFactory);
 		
 		$this->init();
+	}
+	
+	public function getMapper($className)
+	{
+		if (empty($this->mappers[$className])) {
+			$this->mappers[$className] = new $className($this->pdo, $this->entityFactory);
+		}
+		return $this->mappers[$className];
 	}
 
 	protected function initPDO($params)

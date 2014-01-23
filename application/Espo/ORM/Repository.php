@@ -2,9 +2,11 @@
 
 namespace Espo\ORM;
 
-
+// TODO make it abstract; use Mysql Repostitory
 class Repository
 {
+	
+	public static $mapperClassName = '\\Espo\\Core\\ORM\\DB\\MysqlMapper';
 	
 	/**
 	 * @var EntityFactory EntityFactory object.
@@ -17,7 +19,7 @@ class Repository
 	protected $entityManager;
 	
 	/**
-	 * @var \MyApp\DB\iMapper DB Mapper.
+	 * @var Object Mapper.
 	 */
 	protected $mapper;	
 	
@@ -46,16 +48,23 @@ class Repository
 	 */	
 	protected $listParams = array();
 	
-	public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory, DB\iMapper $mapper)
+	
+	public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
 	{
 		$this->entityName = $entityName;		
 		$this->entityFactory = $entityFactory;		
 		$this->seed = $this->entityFactory->create($entityName);		
 		$this->entityClassName = get_class($this->seed);
-		$this->entityManager = $entityManager;
-		
-		$this->mapper = $mapper;
-	}	
+		$this->entityManager = $entityManager;		
+	}
+	
+	protected function getMapper()
+	{
+		if (empty($this->mapper)) {
+			$this->mapper = $this->getEntityManager()->getMapper(self::$mapperClassName);
+		}	
+		return $this->mapper;
+	}		
 	
 	protected function handleSelectParams(&$params)
 	{
@@ -90,7 +99,7 @@ class Repository
 		$this->handleSelectParams($params);
 		
 		$entity = $this->entityFactory->create($this->entityName);
-		if ($this->mapper->selectById($entity, $id, $params)) {
+		if ($this->getMapper()->selectById($entity, $id, $params)) {
 			$entity->setAsFetched();
 			return $entity;
 		}
@@ -117,12 +126,12 @@ class Repository
 	{	
 		$this->beforeSave($entity);
 		if ($entity->isNew()) {
-			$result = $this->mapper->insert($entity);
+			$result = $this->getMapper()->insert($entity);
 			if ($result) {
 				$entity->setIsNew(false);
 			}
 		} else {
-			$result = $this->mapper->update($entity);
+			$result = $this->getMapper()->update($entity);
 		}
 		if ($result) {	
 			$this->afterSave($entity);
@@ -141,7 +150,7 @@ class Repository
 	public function remove(Entity $entity)
 	{	
 		$this->beforeRemove($entity);
-		$result = $this->mapper->delete($entity);
+		$result = $this->getMapper()->delete($entity);
 		if ($result) {
 			$this->afterRemove($entity);
 		}
@@ -153,7 +162,7 @@ class Repository
 		$this->handleSelectParams($params);
 		$params = $this->getSelectParams($params);		
 
-		$dataArr = $this->mapper->select($this->seed, $params);
+		$dataArr = $this->getMapper()->select($this->seed, $params);
 			
 		$collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
 		$this->reset();
@@ -175,7 +184,7 @@ class Repository
 		$entityName = $entity->relations[$relationName]['entity'];
 		$this->handleSelectParams($params, $entityName);		
 		
-		$dataArr = $this->mapper->selectRelated($entity, $relationName, $params);
+		$dataArr = $this->getMapper()->selectRelated($entity, $relationName, $params);
 		
 		$collection = new EntityCollection($dataArr, $entityName, $this->entityFactory);	
 		return $collection;
@@ -186,16 +195,16 @@ class Repository
 		$entityName = $entity->relations[$relationName]['entity'];
 		$this->handleSelectParams($params, $entityName);
 		
-		return $this->mapper->countRelated($entity, $relationName, $params);
+		return $this->getMapper()->countRelated($entity, $relationName, $params);
 	}
 	
 	public function relate(Entity $entity, $relationName, $foreign)
 	{
 		if ($foreign instanceof Entity) {
-			return $this->mapper->relate($entity, $relationName, $foreign);
+			return $this->getMapper()->relate($entity, $relationName, $foreign);
 		}
 		if (is_string($foreign)) {
-			return $this->mapper->addRelation($entity, $relationName, $foreign);
+			return $this->getMapper()->addRelation($entity, $relationName, $foreign);
 		}
 		return false;
 	}
@@ -203,13 +212,13 @@ class Repository
 	public function unrelate(Entity $entity, $relationName, $foreign)
 	{
 		if ($foreign instanceof Entity) {
-			return $this->mapper->unrelate($entity, $relationName, $foreign);
+			return $this->getMapper()->unrelate($entity, $relationName, $foreign);
 		}
 		if (is_string($foreign)) {
-			return $this->mapper->removeRelation($entity, $relationName, $foreign);
+			return $this->getMapper()->removeRelation($entity, $relationName, $foreign);
 		}
 		if ($foreign === true) {
-			return $this->mapper->removeAllRelations($entity, $relationName);
+			return $this->getMapper()->removeAllRelations($entity, $relationName);
 		}
 		return false;
 	}
@@ -225,25 +234,25 @@ class Repository
 		$this->handleSelectParams($params);
 		
 		$params = $this->getSelectParams($params);		
-		return $this->mapper->count($this->seed, $params);
+		return $this->getMapper()->count($this->seed, $params);
 	}
 	
 	public function max($field)
 	{	
 		$params = $this->getSelectParams();		
-		return $this->mapper->max($this->seed, $params, $field);
+		return $this->getMapper()->max($this->seed, $params, $field);
 	}
 	
 	public function min($field)
 	{	
 		$params = $this->getSelectParams();		
-		return $this->mapper->min($this->seed, $params, $field);
+		return $this->getMapper()->min($this->seed, $params, $field);
 	}
 	
 	public function sum($field)
 	{	
 		$params = $this->getSelectParams();		
-		return $this->mapper->sum($this->seed, $params, $field);
+		return $this->getMapper()->sum($this->seed, $params, $field);
 	}
 
 	// @TODO use abstract class for list params

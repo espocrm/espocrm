@@ -54,6 +54,11 @@ abstract class Base
 		return $this->container->get('config');
 	}
 	
+	protected function getPreferences()
+	{
+		return $this->container->get('preferences');
+	}
+	
 	protected function getMetadata()
 	{
 		return $this->container->get('metadata');

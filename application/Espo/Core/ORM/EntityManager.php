@@ -24,6 +24,7 @@ class EntityManager extends \Espo\ORM\EntityManager
 	public function setEspoMetadata($espoMetadata)
 	{
 		$this->espoMetadata = $espoMetadata;
+		$this->repositoryFactory->setEspoMetadata($espoMetadata);
 	}
 	
 	public function setHookManager(\Espo\Core\HookManager $hookManager)
@@ -45,11 +46,5 @@ class EntityManager extends \Espo\ORM\EntityManager
 	{
 		return $this->espoMetadata->getEntityPath($name);
 	}
-	
-	public function init()
-	{
-		$this->mapper->setReturnCollection(false);
-	}
-
 }
 

@@ -4,6 +4,16 @@ namespace Espo\Core\ORM;
 
 class Repository extends \Espo\ORM\Repository
 {	
+
+	protected function getMetadata()
+	{
+		return $this->metadata;
+	}	
+	
+	public function setMetadata($metadata)
+	{
+		$this->metadata = $metadata;
+	}
 	
 	protected function handleSelectParams(&$params, $entityName = false)
 	{
