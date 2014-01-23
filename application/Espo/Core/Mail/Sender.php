@@ -19,16 +19,32 @@ class Sender
 	protected $config;
 
 	protected $transport;
+	
+	protected $isGlobal = false;
 
 	public function __construct($config)
 	{
-		$this->config = $config;
-		$this->transport = new SmtpTransport();
-		$this->setupGlobal();
+		$this->config = $config;		
+		$this->useGlobal();
+	}
+	
+	public function useSmtp($smtp)
+	{		
+		$this->isGlobal = false;
+		
+		// TODO setup smtp
+		
+		return $this;
 	}
 
-	protected function setupGlobal()
+	public function useGlobal()
 	{
+		if ($this->isGlobal) {
+			return $this;
+		}
+		
+		$this->transport = new SmtpTransport();
+		
 		$config = $this->config;
 
 		$opts = array(
@@ -48,6 +64,8 @@ class Sender
 
 		$options = new SmtpOptions($opts);
 		$this->transport->setOptions($options);
+		
+		$this->isGlobal = true;
 
 		return $this;
 	}
@@ -119,11 +137,9 @@ class Sender
 				}
 				$parts[] = $attachment;
 			}
-		}
+		}		
 		
-		
-		$body->setParts($parts);
-		
+		$body->setParts($parts);		
 		$message->setBody($body);		
 
 		try {
@@ -133,7 +149,8 @@ class Sender
 		} catch (\Exception $e) {
 			throw new Error($e->getMessage(), 500);
 		}
-			
+		
+		$this->useGlobal();		
 	}
 }
 

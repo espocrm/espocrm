@@ -343,7 +343,10 @@ abstract class Mapper implements IMapper
 				}
 				$dataArr = array();
 				
+
+				
 				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $offset, $limit);
+				
 				
 				$ps = $this->pdo->query($sql);		
 				if ($ps) {					

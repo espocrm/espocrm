@@ -24,7 +24,18 @@ class Email extends Record
 		$entity = parent::createEntity($data);
 		
 		if ($entity && $entity->get('status') == 'Sending') {
-			$sent = $this->getMailSender()->send($entity);
+			$emailSender = $this->getMailSender();
+			
+			if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {			
+				//$emailSender->useSmtp(); // TODO use smtp
+			} else {
+				if (!$this->getConfig()->get('outboundEmailIsShared')) {
+					throw new Error('Can not use system smtp. outboundEmailIsShared is false.');					
+				}
+			}
+			
+			$emailSender->send($entity);		
+			
 			$this->getEntityManager()->saveEntity($entity);
 		}
 		

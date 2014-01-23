@@ -89,6 +89,32 @@ class Activities extends \Espo\Core\Services\Base
 			";
 		}
 		
+		if ($scope == 'Account') {
+			$tQu = $qu;			
+			$qu = "
+				SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
+					   meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
+					   meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status
+				FROM `meeting`
+				LEFT JOIN `user` ON user.id = meeting.assigned_user_id
+				JOIN contact_meeting ON 
+					meeting.id = contact_meeting.meeting_id AND 
+					contact_meeting.deleted = 0
+				JOIN contact ON 
+					contact_meeting.contact_id = contact.id AND					
+					contact.deleted = 0
+				WHERE 
+					meeting.deleted = 0 AND
+					meeting.status {$op} ('". implode("', '", $notIn) . "') AND
+					contact.account_id = ".$this->getPDO()->quote($id)."					
+			";			
+			$qu = "				
+				{$tQu}
+				UNION 
+				{$qu}				
+			";
+		}
+
 		return $qu;
 	}
 	
@@ -137,32 +163,76 @@ class Activities extends \Espo\Core\Services\Base
 			";
 		}
 		
+		if ($scope == 'Account') {
+			$tQu = $qu;			
+			$qu = "
+				SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
+					   call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
+					   call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status
+				FROM `call`
+				LEFT JOIN `user` ON user.id = call.assigned_user_id
+				JOIN call_contact ON 
+					call.id = call_contact.call_id AND 
+					call_contact.deleted = 0
+				JOIN contact ON 
+					call_contact.contact_id = contact.id AND					
+					contact.deleted = 0
+				WHERE 
+					call.deleted = 0 AND
+					call.status {$op} ('". implode("', '", $notIn) . "') AND
+					contact.account_id = ".$this->getPDO()->quote($id)."					
+			";			
+			$qu = "				
+				{$tQu}
+				UNION 
+				{$qu}				
+			";
+		}
+		
 		return $qu;
 	}
 	
 	protected function getEmailQuery($scope, $id, $op = 'IN', $notIn = array())
 	{
 		$qu = "
-			SELECT email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
-			       email.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-			       email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status
+			SELECT DISTINCT
+				email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
+				email.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
+				email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status
 			FROM `email`
 			LEFT JOIN `user` ON user.id = email.assigned_user_id
 		";
+		
+		if ($this->isPerson($scope)) {
+			$qu .= "
+				JOIN email_email_address ON
+					email_email_address.email_id = email.id AND
+					email_email_address.deleted = 0				
+				JOIN entity_email_address ON
+					entity_email_address.email_address_id = email_email_address.email_address_id AND			 
+					entity_email_address.entity_id = ".$this->getPDO()->quote($id)." AND 
+					entity_email_address.entity_type = ".$this->getPDO()->quote($scope)." AND 
+					entity_email_address.deleted = 0			
+			";
+		}		
+		
 
 		$qu .= "
 			WHERE email.deleted = 0
-		";		
-
-		$qu .= "
-			AND email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id)."
 		";
+		
+		if (!$this->isPerson($scope)) {
+			$qu .= "
+				AND email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id)."
+			";
+		}
 		
 		if (!empty($notIn)) {
 			$qu .= "
 				AND email.status {$op} ('". implode("', '", $notIn) . "')
 			";
 		}
+
 		
 		return $qu;
 	}

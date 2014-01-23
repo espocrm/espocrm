@@ -186,7 +186,7 @@ class Repository
 		$entityName = $entity->relations[$relationName]['entity'];
 		$this->handleSelectParams($params, $entityName);
 		
-		$this->mapper->countRelated($entity, $relationName, $params);
+		return $this->mapper->countRelated($entity, $relationName, $params);
 	}
 	
 	public function relate(Entity $entity, $relationName, $foreign)

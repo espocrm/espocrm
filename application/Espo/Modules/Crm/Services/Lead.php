@@ -43,10 +43,34 @@ class Lead extends \Espo\Services\Record
     			$entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
     		}
     		$lead->set('createdContactId', $contact->id);
+    		
+   		
+    		  		
     	}
 
 		$lead->set('status', 'Converted');		
     	$entityManager->saveEntity($lead);
+    	
+    	if ($meetings = $lead->get('meetings')) {
+    		foreach ($meetings as $meeting) {
+    			if (!empty($contact)) {
+    				$entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
+    			}
+    			if (!empty($opportunity)) {
+    				$entityManager->getRepository('Opportunity')->relate($opportunity, 'meetings', $meeting);
+    			}
+    		}
+    	}
+    	if ($calls = $lead->get('calls')) {
+    		foreach ($calls as $call) {
+    			if (!empty($contact)) {
+    				$entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
+    			}
+    			if (!empty($opportunity)) {
+    				$entityManager->getRepository('Opportunity')->relate($opportunity, 'calls', $call);
+    			}
+    		}
+    	} 
 
     	return $lead;
 	}
