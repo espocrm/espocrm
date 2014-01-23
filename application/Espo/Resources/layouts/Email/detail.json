@@ -2,12 +2,12 @@
 	{
 		"label":"",
 		"rows":[
-			[{"name":"status"},{"name":"parent"}],
-			[{"name":"dateSent"}, false],
+			[{"name":"status"},false],
+			[{"name":"dateSent"}, {"name":"parent"}],
 			[{"name":"from"},{"name":"cc"}],
 			[{"name":"to"},{"name":"bcc"}],
-			[{"name":"name"}],
-			[{"name":"body"}],
+			[{"name":"name","fullWidth":true}],
+			[{"name":"body","fullWidth":true}],
 			[{"name":"attachments","type":"attachmentMultiple"}]
 		]
 	}

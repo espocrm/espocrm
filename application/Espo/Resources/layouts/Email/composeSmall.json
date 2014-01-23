@@ -6,17 +6,17 @@
 				{
 					"name":"from",
 					"view": "Crm:Email.Fields.FromAddress"
-				}			
+				},
+				{"name":"cc"}			
 			],
 			[
 				{
 					"name":"to"
-				}
+				},
+				{"name":"bcc"}
 			],
-			[{"name":"cc"}],
-			[{"name":"bcc"}],
-			[{"name":"name"}],
-			[{"name":"body"}],
+			[{"name":"name","fullWidth":true}],
+			[{"name":"body","fullWidth":true}],
 			[{"name":"attachments","type":"attachmentMultiple"}]
 		]
 	}
