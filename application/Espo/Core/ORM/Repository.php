@@ -24,15 +24,5 @@ abstract class Repository extends \Espo\ORM\Repository implements Injectable
 	{
 		return $this->dependencies;
 	}	
-	
-	protected function getMetadata()
-	{
-		return $this->metadata;
-	}	
-	
-	public function setMetadata($metadata)
-	{
-		$this->metadata = $metadata;
-	}
 }
 

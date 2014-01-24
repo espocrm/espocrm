@@ -1,46 +1,30 @@
 [
 	[
 		{
-			"name": "OpportunitiesByStage",
-			"id": 1
+			"name": "OpportunitiesByLeadSource",
+			"id": "d5"
 		},
 		{
 			"name": "SalesByMonth",
-			"id": 2
+			"id": "d2"
 		},
 		{
-			"name": "Opportunities",
-			"id": 3
-		},
-		{
-			"name": "Leads",
-			"id": 4
+			"name": "Tasks",
+			"id": "d3"
 		}
 	],
 	[
 		{
 			"name": "Stream",
-			"id": 5
+			"id": "d4"
 		},
 		{
-			"name": "OpportunitiesByLeadSource",
-			"id": 6
+			"name": "OpportunitiesByStage",
+			"id": "d1"
 		},
 		{
 			"name": "SalesPipeline",
-			"id": 7
-		},
-		{
-			"name": "Calendar",
-			"id": 8
-		},
-		{
-			"name": "Cases",
-			"id": 9
-		},
-		{
-			"name": "Tasks",
-			"id": 10
+			"id": "d6"
 		}
 	]
 ]

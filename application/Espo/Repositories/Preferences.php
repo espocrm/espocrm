@@ -7,7 +7,8 @@ use Espo\ORM\Entity;
 class Preferences extends \Espo\Core\ORM\Repository
 {
 	protected $dependencies = array(
-		'fileManager'
+		'fileManager',
+		'metadata',
 	);
 	
 	protected $data = array();
@@ -19,9 +20,14 @@ class Preferences extends \Espo\Core\ORM\Repository
 		return $this->getInjection('fileManager');
 	}
 	
+	protected function getMetadata()
+	{
+		return $this->getInjection('metadata');
+	}
+	
 	protected function getFilePath($id)
 	{
-		return 'data/preferences/' . $id . '.php';
+		return 'data/preferences/' . $id . '.json';
 	}
 	
 	public function get($id = null)
@@ -32,14 +38,15 @@ class Preferences extends \Espo\Core\ORM\Repository
 			if (empty($this->data[$id])) {
 				$fileName = $this->getFilePath($id);
 				if (file_exists($fileName)) {
-					$this->data[$id] = $this->getFileManager()->getContent($fileName);
+					$this->data[$id] = json_decode($this->getFileManager()->getContent($fileName));
 				} else {
 					$fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
 					$defaults = array();
+					$defaults['dashboardLayout'] = $this->getMetadata()->get('app.defaultDashboardLayout');
 					foreach ($fields as $field => $d) {
 						if (array_key_exists('default', $d)) {
-							$defaults[$field] = $d['default'];
-						}
+							$defaults[$field] = $d['default'];							
+						}						
 					}
 					$this->data[$id] = $defaults;
 				}			
@@ -55,7 +62,7 @@ class Preferences extends \Espo\Core\ORM\Repository
 			$this->data[$entity->id] = $entity->toArray();
 			
 			$fileName = $this->getFilePath($entity->id);
-			$this->getFileManager()->setContentPHP($this->data[$entity->id], $fileName);
+			$this->getFileManager()->setContent(json_encode($this->data[$entity->id]), $fileName);
 			return $entity;
 		}
 	}

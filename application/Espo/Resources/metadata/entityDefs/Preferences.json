@@ -30,12 +30,12 @@
         "defaultCurrency": {
             "type": "enum",
             "default": "USD"
-        }
-    },
-    "links": {
-        "user": {
-            "type": "belongsTo",
-            "entity": "User"
+        },
+        "dashboardLayout": {
+        	"type": "text"        	
+        },
+        "dashletOptions": {
+        	"type": "text"
         }
     }
 }

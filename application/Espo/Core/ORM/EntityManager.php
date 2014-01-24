@@ -36,7 +36,6 @@ class EntityManager extends \Espo\ORM\EntityManager
 	public function setEspoMetadata($espoMetadata)
 	{
 		$this->espoMetadata = $espoMetadata;
-		$this->repositoryFactory->setEspoMetadata($espoMetadata);
 	}
 	
 	public function setHookManager(\Espo\Core\HookManager $hookManager)

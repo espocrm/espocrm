@@ -13,7 +13,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {	
 	public static $mapperClassName = '\\Espo\\Core\\ORM\\DB\\MysqlMapper';	
 	
-	protected $dependencies = array();
+	protected $dependencies = array(
+		'metadata'
+	);
 	
 	protected $injections = array();
 	
@@ -34,12 +36,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
 	protected function getMetadata()
 	{
-		return $this->metadata;
-	}	
-	
-	public function setMetadata($metadata)
-	{
-		$this->metadata = $metadata;
+		return $this->getInjection('metadata');
 	}
 	
 	protected function handleSelectParams(&$params, $entityName = false)
