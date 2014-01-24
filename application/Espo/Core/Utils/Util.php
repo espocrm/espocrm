@@ -275,31 +275,32 @@ class Util
 	 *
 	 * @param array $content
 	 * @param array $unsets in format
-     *        array(
-     *           $entity['name'] => array(
-     *               'fields.UnsetFieldName',
-     *           ),
-     *       )
+	 *   array(
+	 * 		'EntityName1' => array( 'unset1', 'unset2' ),                             
+	 * 		'EntityName2' => array( 'unset1', 'unset2' ),                             
+	 *  )
+	 * 	OR
+	 * 	array('EntityName1.unset1', 'EntityName1.unset2', .....)
 	 *
 	 * @return array
 	 */
 	public static function unsetInArray(array $content, array $unsets)
 	{
 		foreach($unsets as $rootKey => $unsetItem){
-			if (!empty($unsetItem)){
-				foreach($unsetItem as $unsetSett){
-					if (!empty($unsetSett)){
-						$keyItems = explode('.', $unsetSett);
-						$currVal = "\$content['{$rootKey}']";
-						foreach($keyItems as $keyItem){
-							$currVal .= "['{$keyItem}']";
-						}
-
-						$currVal = "if (isset({$currVal})) unset({$currVal});";
-						eval($currVal);
+			$unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
+			
+			foreach($unsetItem as $unsetSett){
+				if (!empty($unsetSett)){
+					$keyItems = explode('.', $unsetSett);
+					$currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
+					foreach($keyItems as $keyItem){
+						$currVal .= "['{$keyItem}']";
 					}
+
+					$currVal = "if (isset({$currVal})) unset({$currVal});";
+					eval($currVal);
 				}
-			}
+			}			
 		}
 
 		return $content;

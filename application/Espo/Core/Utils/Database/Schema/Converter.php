@@ -11,7 +11,7 @@ class Converter
 	private $dbalSchema;
 	private $fileManager;
 
-	private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/CustomTables';
+	private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/tables';
 
 	protected $typeList;
 
@@ -62,13 +62,19 @@ class Converter
 	}
 
 
-	//convertToSchema
 	public function process(array $ormMeta, $entityDefs)
 	{
     	$GLOBALS['log']->add('Debug', 'Schema\Converter - Start: building schema');
 
 		//check if exist files in "Tables" directory and merge with ormMetadata
-        $ormMeta = Util::merge($ormMeta, $this->getCustomTables());
+        $ormMeta = Util::merge($ormMeta, $this->getCustomTables());       	
+
+        //unset some keys in orm
+        if (isset($ormMeta['unset'])) {
+			$ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
+			unset($ormMeta['unset']);
+		} //END: unset some keys in orm
+		
 
 		$schema = $this->getSchema();
 
@@ -269,8 +275,8 @@ class Converter
 
 		foreach($fileList as $fileName) {
 			$fileData = $this->getFileManager()->getContent($this->customTablePath, $fileName);
-			if (is_array($fileData)) {
-            	$customTables = array_merge($customTables, $fileData);
+			if (is_array($fileData)) {				
+            	$customTables = Util::merge($customTables, $fileData);
 			}
 		}
 
