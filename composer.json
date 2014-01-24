@@ -8,7 +8,8 @@
     },
     "autoload": {
         "psr-0": {
-            "": "application/"
+            "": "application/",
+            "tests": ""
         }
     },
 	"require-dev": {

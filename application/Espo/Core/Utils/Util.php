@@ -44,13 +44,12 @@ class Util
 
 
 	/**
-    * Convert name to Camel Case format
-   	* ex. camel-case to camelCase
-	*
-	* @param string $name
-	*
-	* @return string
-	*/
+	 * Convert name to Camel Case format, ex. camel-case to camelCase
+	 * @param  string  $name
+	 * @param  boolean $capitaliseFirstChar
+	 * @param  string  $symbol
+	 * @return string
+	 */
 	public static function toCamelCase($name, $capitaliseFirstChar = false, $symbol = '-')
 	{
 		if($capitaliseFirstChar) {
@@ -276,11 +275,11 @@ class Util
 	 *
 	 * @param array $content
 	 * @param array $unsets in format
-             array(
-                $entity['name'] => array(
-                    'fields.UnsetFieldName',
-                ),
-             )
+     *        array(
+     *           $entity['name'] => array(
+     *               'fields.UnsetFieldName',
+     *           ),
+     *       )
 	 *
 	 * @return array
 	 */
@@ -305,6 +304,23 @@ class Util
 
 		return $content;
 	}
+
+
+	/**
+	 * Get class name from the file path
+	 * 
+	 * @param  string $filePath
+	 * 
+	 * @return string
+	 */
+	public static function getClassName($filePath)
+	{
+		$className = preg_replace('/\.php$/i', '', $filePath);
+		$className = preg_replace('/^application\//i', '', $className);
+		$className = '\\'.static::toFormat($className, '\\');
+
+		return $className;
+	}	
 
 }
 

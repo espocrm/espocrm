@@ -211,6 +211,15 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
+	function testGetClassName()
+	{
+		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload.php'));
+
+		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('Espo/EntryPoints/Donwload.php'));
+	}
+
+
+
 	/*function testGetScopeModuleName()
 	{
        $this->assertEquals('Crm', $this->fixture->getScopeModuleName('Account'));
