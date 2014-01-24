@@ -44,13 +44,12 @@ class Util
 
 
 	/**
-    * Convert name to Camel Case format
-   	* ex. camel-case to camelCase
-	*
-	* @param string $name
-	*
-	* @return string
-	*/
+	 * Convert name to Camel Case format, ex. camel-case to camelCase
+	 * @param  string  $name
+	 * @param  boolean $capitaliseFirstChar
+	 * @param  string  $symbol
+	 * @return string
+	 */
 	public static function toCamelCase($name, $capitaliseFirstChar = false, $symbol = '-')
 	{
 		if($capitaliseFirstChar) {
@@ -276,35 +275,53 @@ class Util
 	 *
 	 * @param array $content
 	 * @param array $unsets in format
-             array(
-                $entity['name'] => array(
-                    'fields.UnsetFieldName',
-                ),
-             )
+	 *   array(
+	 * 		'EntityName1' => array( 'unset1', 'unset2' ),                             
+	 * 		'EntityName2' => array( 'unset1', 'unset2' ),                             
+	 *  )
+	 * 	OR
+	 * 	array('EntityName1.unset1', 'EntityName1.unset2', .....)
 	 *
 	 * @return array
 	 */
 	public static function unsetInArray(array $content, array $unsets)
 	{
 		foreach($unsets as $rootKey => $unsetItem){
-			if (!empty($unsetItem)){
-				foreach($unsetItem as $unsetSett){
-					if (!empty($unsetSett)){
-						$keyItems = explode('.', $unsetSett);
-						$currVal = "\$content['{$rootKey}']";
-						foreach($keyItems as $keyItem){
-							$currVal .= "['{$keyItem}']";
-						}
-
-						$currVal = "if (isset({$currVal})) unset({$currVal});";
-						eval($currVal);
+			$unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
+			
+			foreach($unsetItem as $unsetSett){
+				if (!empty($unsetSett)){
+					$keyItems = explode('.', $unsetSett);
+					$currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
+					foreach($keyItems as $keyItem){
+						$currVal .= "['{$keyItem}']";
 					}
+
+					$currVal = "if (isset({$currVal})) unset({$currVal});";
+					eval($currVal);
 				}
-			}
+			}			
 		}
 
 		return $content;
 	}
+
+
+	/**
+	 * Get class name from the file path
+	 * 
+	 * @param  string $filePath
+	 * 
+	 * @return string
+	 */
+	public static function getClassName($filePath)
+	{
+		$className = preg_replace('/\.php$/i', '', $filePath);
+		$className = preg_replace('/^application\//i', '', $className);
+		$className = '\\'.static::toFormat($className, '\\');
+
+		return $className;
+	}	
 
 }
 

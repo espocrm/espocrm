@@ -395,26 +395,24 @@ class Manager
 	*
 	* @return array
 	*/
-	function getFileName($filename, $ext='')
-	{
+	public function getFileName($fileName, $ext='')
+	{		
 		if (empty($ext)) {
-			$realFileName= substr($filename, 0, strrpos($filename, '.', -1));
+			$fileName= substr($fileName, 0, strrpos($fileName, '.', -1));
 		}
 		else {
 			if (substr($ext, 0, 1)!='.') {
             	$ext= '.'.$ext;
 			}
 
-			if (substr($filename, -(strlen($ext)))==$ext) {
-				$realFileName= substr($filename, 0, -(strlen($ext)));
+			if (substr($fileName, -(strlen($ext)))==$ext) {
+				$fileName= substr($fileName, 0, -(strlen($ext)));
 			}
         }
 
-		if (!empty($realFileName)) {
-			return $realFileName;
-		}
+        $exFileName = explode('/', Utils\Util::toFormat($fileName, '/'));        
 
-		return $filename;
+		return end($exFileName);
 	}
 
 

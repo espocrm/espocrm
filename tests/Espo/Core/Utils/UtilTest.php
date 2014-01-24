@@ -211,6 +211,152 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
+	function testGetClassName()
+	{
+		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload.php'));
+
+		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('Espo/EntryPoints/Donwload.php'));
+	}
+
+	function testUnsetInArrayNotSingle()
+	{
+		$input = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (
+					'subV' => '125',
+					'subO' => array(
+	                	'subOV' => '125',
+	                	'subOV2' => '125',
+					),
+				),	
+			),			
+		);
+
+		$unsets = array(
+			'Account' => array(				
+				'sub.subO.subOV', 'sub.subV',
+			),						
+		);
+
+		$result = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (					
+					'subO' => array(
+	                	'subOV2' => '125',
+					),
+				),	
+			),			
+		);
+
+        $this->assertEquals($result, Util::unsetInArray($input, $unsets));
+	}
+
+	function testUnsetInArraySingle()
+	{
+		$input = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (
+					'subV' => '125',
+					'subO' => array(
+	                	'subOV' => '125',
+	                	'subOV2' => '125',
+					),
+				),	
+			),			
+		);
+
+		$unsets = array(						
+			'Account.sub.subO.subOV', 'Account.sub.subV',							
+		);
+
+		$result = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (					
+					'subO' => array(
+	                	'subOV2' => '125',
+					),
+				),	
+			),			
+		);
+
+        $this->assertEquals($result, Util::unsetInArray($input, $unsets));
+	}
+
+
+	function testUnsetInArrayTogether()
+	{
+		$input = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (
+					'subV' => '125',
+					'subO' => array(
+	                	'subOV' => '125',
+	                	'subOV2' => '125',
+					),
+				),	
+			),			
+		);
+
+		$unsets = array(	
+			'Account' => array(
+				'sub.subO.subOV',	
+			),					
+			'Account.sub.subV',							
+		);
+
+		$result = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (					
+					'subO' => array(
+	                	'subOV2' => '125',
+					),
+				),	
+			),			
+		);
+
+        $this->assertEquals($result, Util::unsetInArray($input, $unsets));
+	}
+
+
+	function testUnsetInArray()
+	{
+		$input = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (
+					'subV' => '125',
+					'subO' => array(
+	                	'subOV' => '125',
+	                	'subOV2' => '125',
+					),
+				),	
+			),
+			'Contact' => array(
+				'useCache' => true,	
+			),			
+		);
+
+		$unsets = array(							
+			'Account',							
+		);
+
+		$result = array(
+			'Contact' => array(
+				'useCache' => true,	
+			),		
+		);
+
+        $this->assertEquals($result, Util::unsetInArray($input, $unsets));
+	}
+
+
+
 	/*function testGetScopeModuleName()
 	{
        $this->assertEquals('Crm', $this->fixture->getScopeModuleName('Account'));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Core\EntryPoints;
+namespace Espo\EntryPoints;
 
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;

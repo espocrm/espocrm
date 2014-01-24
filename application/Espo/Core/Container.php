@@ -87,6 +87,13 @@ class Container
 		);
     }
 
+    private function loadEntryPointManager()
+	{
+		return new \Espo\Core\EntryPointManager(
+			$this
+		);
+	}
+
 	private function loadLog()
     {
     	return new \Espo\Core\Utils\Log(
