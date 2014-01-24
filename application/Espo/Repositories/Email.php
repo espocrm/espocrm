@@ -4,7 +4,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class Email extends \Espo\Core\ORM\Repository
+class Email extends \Espo\Core\ORM\Repositories\RDB
 {	
 	protected function prepareAddressess(Entity $entity, $type)
 	{

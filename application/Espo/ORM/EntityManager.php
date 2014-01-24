@@ -16,10 +16,12 @@ class EntityManager
 	protected $metadata;
 
 	protected $repositoryHash = array();
+	
+	protected $params = array();
 
 	public function __construct($params)
 	{
-		$this->initPDO($params);
+		$this->params = $params;
 
 		$this->metadata = new Metadata();
 
@@ -46,13 +48,14 @@ class EntityManager
 	public function getMapper($className)
 	{
 		if (empty($this->mappers[$className])) {
-			$this->mappers[$className] = new $className($this->pdo, $this->entityFactory);
+			$this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory);
 		}
 		return $this->mappers[$className];
 	}
 
-	protected function initPDO($params)
+	protected function initPDO()
 	{
+		$params = $this->params;
 		$this->pdo = new \PDO('mysql:host='.$params['host'].';dbname=' . $params['dbname'], $params['user'], $params['password']);
 	}
 
@@ -93,6 +96,9 @@ class EntityManager
 
 	public function getPDO()
 	{
+		if (empty($this->pdo)) {
+			$this->initPDO();
+		}
 		return $this->pdo;
 	}
 

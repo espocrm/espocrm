@@ -11,6 +11,18 @@ class EntityManager extends \Espo\ORM\EntityManager
 	
 	protected $user;
 	
+	protected $container;
+	
+	public function setContainer(\Espo\Core\Container $container)
+	{
+		$this->container = $container;	
+	}
+	
+	public function getContainer()
+	{
+		return $this->container;	
+	}
+	
 	public function setUser($user)
 	{
 		$this->user = $user;

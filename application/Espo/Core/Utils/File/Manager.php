@@ -121,9 +121,9 @@ class Manager
 	* @param string $folderPath string - Folder path, Ex. myfolder
 	* @param bool $filePath - File path, Ex. file.json
 	*
-	* @return string | bool
+	* @return string | bool | array
 	*/
-	function getContent($folderPath, $filePath='')
+	function getContent($folderPath, $filePath = '')
 	{
 		$fullPath= Utils\Util::concatPath($folderPath, $filePath);
 
@@ -140,7 +140,7 @@ class Manager
 	*
 	* @return bool
 	*/
-	function setContent($content, $folderPath, $filePath='')
+	function setContent($content, $folderPath, $filePath = '')
 	{
 		$fullPath= Utils\Util::concatPath($folderPath, $filePath);
 
@@ -156,7 +156,7 @@ class Manager
 	*
 	* @return bool
 	*/
-	function setContentPHP($content, $folderPath, $filePath='')
+	function setContentPHP($content, $folderPath, $filePath = '')
 	{
 		return $this->setContent($this->getPHPFormat($content), $folderPath, $filePath);
 	}
@@ -324,8 +324,7 @@ class Manager
 
 		return false;
 	}
-
-
+	
 	/**
     * Remove all files in defined directory
 	*
@@ -335,7 +334,7 @@ class Manager
 	public function removeFiles($filePaths, $dirPath='')
 	{
 		if (!is_array($filePaths)) {
-			$filePaths= (array) $filePaths;
+			$filePaths = (array) $filePaths;
 		}
 
 		$result= true;
@@ -345,7 +344,7 @@ class Manager
 			}
 
 			if (file_exists($filePath) && is_file($filePath)) {
-            	$result&= unlink($filePath);
+            	$result &= unlink($filePath);
 			}
 		}
 
@@ -789,4 +788,3 @@ return '.var_export($content, true).';
 
 }
 
-?>

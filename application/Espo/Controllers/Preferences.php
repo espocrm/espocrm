@@ -17,16 +17,41 @@ class Preferences extends \Espo\Core\Controllers\Base
 	{
 		return $this->getContainer()->get('entityManager');
 	}
-
-    public function actionRead($params)
+	
+	protected function handleUserAccess($userId)
 	{
-		$userId = $params['id'];
 		if (!$this->getUser()->isAdmin()) {
 			if ($this->getUser()->id != $userId) {
 				throw new Forbidden();
 			}
 		}
-		$entity =  $this->getEntityManager()->getEntity('Preferences', $userId);
+	}
+	
+	public function actionPatch($params, $data)
+	{
+		return $this->actionUpdate($params, $data);
+	}	
+
+	public function actionUpdate($params, $data)
+	{
+		$userId = $params['id'];
+		$this->handleUserAccess($userId);		
+
+		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);
+		if ($entity) {
+			$entity->set($data);
+			$this->getEntityManager()->saveEntity($entity);
+			return $entity->toArray();		
+		}
+		throw new Error();
+	}
+
+    public function actionRead($params)
+	{
+		$userId = $params['id'];
+		$this->handleUserAccess($userId);
+
+		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);
 		if ($entity) {
 			return $entity->toArray();		
 		}

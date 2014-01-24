@@ -4,7 +4,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class EmailAddress extends \Espo\Core\ORM\Repository
+class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 {
 	public function getIds($arr = array())
 	{		
