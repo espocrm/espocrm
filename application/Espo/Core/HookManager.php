@@ -52,9 +52,9 @@ class HookManager
     	
     	$metadata = $this->container->get('metadata');
 
-		$this->data = $this->getHookData( array('Espo/Hooks', 'Espo/Custom/Hooks') );
+		$this->data = $this->getHookData(array('Espo/Hooks', 'Espo/Custom/Hooks') );
     	foreach ($metadata->getModuleList() as $moduleName) {
-			$this->data = array_merge($this->data, $this->getHookData(array('Espo/Modules/'.$moduleName.'/Hooks', 'Espo/Custom/Modules/'.$moduleName.'/Hooks')));
+			$this->data = array_merge($this->data, $this->getHookData(array('Espo/Modules/' . $moduleName . '/Hooks')));
     	}
 
     	if ($this->getConfig()->get('useCache')) {

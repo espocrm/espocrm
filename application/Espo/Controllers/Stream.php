@@ -16,7 +16,7 @@ class Stream extends \Espo\Core\Controllers\Base
 		$offset = intval($request->get('offset'));
 		$maxSize = intval($request->get('maxSize'));
 		
-		$service = $this->getService('\\Espo\\Services\\Stream');		
+		$service = $this->getService('Stream');		
 		
 		$result = $service->find($scope, $id, array(
 			'offset' => $offset,

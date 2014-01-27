@@ -25,15 +25,8 @@ class EntryPointManager
      */
 	private $paths = array(
 		'corePath' => 'application/Espo/EntryPoints',
-    	'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',		                              			
-	);  
-	
-	/**
-     * @var array - path to entryPoint files in a custom folder
-     */
-	private $customPaths = array(
-		'corePath' => 'application/Espo/Custom/EntryPoints',
-   		'modulePath' => 'application/Espo/Custom/Modules/{*}/EntryPoints',	
+    	'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',
+    	'customPath' => 'application/Espo/Custom/EntryPoints',	                              			
 	);
 
 
@@ -55,7 +48,7 @@ class EntryPointManager
 
 	public function checkAuthRequired($name)
 	{
-		$className = $this->get($name);
+		$className = $this->getClassName($name);
 		if ($className === false) {
 			throw new NotFound();
 		}
@@ -64,7 +57,7 @@ class EntryPointManager
 
 	public function run($name) 
 	{
-		$className = $this->get($name);
+		$className = $this->getClassName($name);
 		if ($className === false) {
 			throw new NotFound();
 		}
@@ -73,14 +66,12 @@ class EntryPointManager
 		$entryPoint->run();
 	}
 
-	protected function get($name = '')
+	protected function getClassName($name)
 	{
+		$name = Util::normilizeClassName($name);
+		
 		if (!isset($this->data)) {
 			$this->init();
-		}
-
-		if (empty($name)) {
-			return $this->data; 	
 		}
 
 		$name = ucfirst($name);
@@ -92,61 +83,50 @@ class EntryPointManager
 	}
 
 
-	protected function getAll()
-	{		
-        return $this->get();        
-	}
-
 	protected function init()
 	{
-		if (file_exists($this->cacheFile) && $this->getContainer()->get('config')->get('useCache')) {
+		$config = $this->getContainer()->get('config');
+	
+		if (file_exists($this->cacheFile) && $config->get('useCache')) {
 			$this->data = $this->getFileManager()->getContent($this->cacheFile);
-		} else {		
-
-			$this->data = $this->getData( array($this->paths['corePath'], $this->customPaths['corePath']) );
+		} else {	
+			$this->data = $this->getClassNameHash(array($this->paths['corePath'], $this->paths['customPath']) );
 	    	foreach ($this->getContainer()->get('metadata')->getModuleList() as $moduleName) {
-	    		$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-	    		$customPath = str_replace('{*}', $moduleName, $this->customPaths['modulePath']);
+	    		$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);	    		
 
-				$this->data = array_merge($this->data, $this->getData(array($path, $customPath)));
+				$this->data = array_merge($this->data, $this->getClassNameHash(array($path)));
 	    	}
-
-			$result = $this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
-			 if ($result == false) {
-			 	$GLOBALS['log']->add('EXCEPTION', 'EntryPoint::init() - Cannot save EntryPoints to a file');
-	         	throw new \Espo\Core\Exceptions\Error();
-			 }
+	    	if ($config->get('useCache')) {
+				$result = $this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
+				if ($result == false) {
+			    	throw new \Espo\Core\Exceptions\Error();
+				}
+			}
 		}
 	}
-
-	protected function getData(array $dirs)
+	
+	// TODO delegate to another class
+	protected function getClassNameHash(array $dirs)
 	{
-		$entryPoints = array();
-
-		foreach ($dirs as $dir) {
-	      
+		$data = array();
+		foreach ($dirs as $dir) {	      
 			if (file_exists($dir)) {
 	        	$fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');
-
-	            foreach ($fileList as $file) {
-					
+	            foreach ($fileList as $file) {					
 					$filePath = Util::concatPath($dir, $file);
-
                 	$className = Util::getClassName($filePath);       
                 	$fileName = $this->getFileManager()->getFileName($filePath);  
 
 					foreach ($this->allowMethods as $methodName) {	
 						if (method_exists($className, $methodName)) {							
-							$entryPoints[$fileName] = $className;
+							$data[$fileName] = $className;
 						}
 					}					
 					
 	            }
 			}
-
 		}
-
-		return $entryPoints;
+		return $data;
 	}   
 
 }

@@ -19,20 +19,14 @@ abstract class Record extends Base
 	
 	protected function getRecordService()
 	{
-    	$moduleName = $this->getMetadata()->getScopeModuleName($this->name);
-		if ($moduleName) {
-			$className = '\\Espo\\Modules\\' . $moduleName . '\\Services\\' . Util::normilizeClassName($this->name);
-		} else {
-			$className = '\\Espo\\Services\\' . Util::normilizeClassName($this->name);
-		}    	
-    	if (!class_exists($className)) {
-    		$className = '\\Espo\\Services\\Record';
+    	if ($this->getServiceFactory()->checkExists($this->name)) {
+    		$service = $this->getServiceFactory()->create($this->name);
+    	} else {
+    		$service = $this->getServiceFactory()->create('Record');
     	}
-    	
-    	$service = $this->getService($className);
-    	$service->setEntityName($this->name);
-    	
-    	return $service;
+		$service->setEntityName($this->name);
+		
+		return $service;
 	}
 
 	public function actionRead($params)

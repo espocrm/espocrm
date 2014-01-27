@@ -8,9 +8,7 @@ use \Espo\Core\Exceptions\Error,
 
 class Activities extends \Espo\Core\Controllers\Base
 {
-	public static $defaultAction = 'index';
-	
-	protected $serviceClassName = '\\Espo\\Modules\\Crm\\Services\\Activities';
+	public static $defaultAction = 'index';	
 	
 	public function actionListEvents($params, $data, $request)
 	{
@@ -21,7 +19,7 @@ class Activities extends \Espo\Core\Controllers\Base
 			throw new BadRequest();
 		}
 		
-		$service = $this->getService($this->serviceClassName);
+		$service = $this->getService('Activities');
 		return $service->getEvents($from, $to);
 	}
 
@@ -42,7 +40,7 @@ class Activities extends \Espo\Core\Controllers\Base
 			$scope = $where['scope'];
 		}		
 		
-		$service = $this->getService($this->serviceClassName);
+		$service = $this->getService('Activities');
 
 		$methodName = 'get' . ucfirst($name);
 		

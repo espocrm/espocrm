@@ -1,6 +1,7 @@
 <?php
 
 namespace Espo\Core\ORM;
+
 use \Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\ORM\EntityManager
@@ -12,6 +13,10 @@ class EntityManager extends \Espo\ORM\EntityManager
 	protected $user;
 	
 	protected $container;
+	
+	private $repositoryClassNameHash = array();
+	
+	private $entityClassNameHash = array();
 	
 	public function setContainer(\Espo\Core\Container $container)
 	{
@@ -50,12 +55,26 @@ class EntityManager extends \Espo\ORM\EntityManager
 
 	public function normalizeRepositoryName($name)
 	{			
-		return $this->espoMetadata->getRepositoryPath($name);
+		if (empty($this->repositoryClassNameHash[$name])) {
+			$className = '\\Espo\\Custom\\Repositories\\' . Util::normilizeClassName($name);
+			if (!class_exists($className)) {
+				$className = $this->espoMetadata->getRepositoryPath($name);
+			}
+			$this->repositoryClassNameHash[$name] = $className;
+		}
+		return $this->repositoryClassNameHash[$name];
 	}
-
+	
 	public function normalizeEntityName($name)
-	{
-		return $this->espoMetadata->getEntityPath($name);
+	{			
+		if (empty($this->entityClassNameHash[$name])) {
+			$className = '\\Espo\\Custom\\Entities\\' . Util::normilizeClassName($name);
+			if (!class_exists($className)) {
+				$className = $this->espoMetadata->getEntityPath($name);
+			}
+			$this->entityClassNameHash[$name] = $className;
+		}
+		return $this->entityClassNameHash[$name];
 	}
 }
 

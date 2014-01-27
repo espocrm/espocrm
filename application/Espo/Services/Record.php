@@ -87,7 +87,7 @@ class Record extends \Espo\Core\Services\Base
     protected function getStreamService()
     {
     	if (empty($this->streamService)) {
-    		$this->streamService = $this->getServiceFactory()->createByClassName('\\Espo\\Services\\Stream');
+    		$this->streamService = $this->getServiceFactory()->create('Stream');
     	}
     	return $this->streamService;
     } 

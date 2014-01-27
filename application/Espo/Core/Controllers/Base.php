@@ -69,9 +69,9 @@ abstract class Base
 		return $this->container->get('serviceFactory');
 	}
 	
-	protected function getService($className)
+	protected function getService($name)
 	{
-		return $this->getServiceFactory()->createByClassName($className);
+		return $this->getServiceFactory()->create($name);
 	}
 }
 
