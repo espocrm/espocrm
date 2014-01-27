@@ -16,6 +16,10 @@
         	"type": "varchar",
             "required": true        	
 		},
+        "lastRun": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

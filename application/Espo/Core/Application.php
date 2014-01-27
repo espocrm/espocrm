@@ -97,6 +97,13 @@ class Application
     	$slim->run();  	
     }
     
+    public function runCron()
+    {
+    	$auth = $this->getAuth();
+    	$auth->useNoAuth();
+    	// TODO cron manager
+    }
+    
 	protected function routeHooks()
 	{
 		$container = $this->getContainer();

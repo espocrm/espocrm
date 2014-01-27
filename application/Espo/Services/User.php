@@ -2,6 +2,8 @@
 
 namespace Espo\Services;
 
+use \Espo\Core\Exceptions\Forbidden;
+
 class User extends Record
 {	
 	public function getEntity($id)
@@ -30,10 +32,21 @@ class User extends Record
 	
 	public function updateEntity($id, $data)
 	{
+		if ($id == 'system') {
+			$data['isAdmin'] = true;
+		}
 		if (array_key_exists('password', $data)) {
 			$data['password'] = md5($data['password']);
 		}
 		return parent::updateEntity($id, $data);		
+	}
+	
+	public function deleteEntity($id)
+	{
+		if ($id == 'system') {
+			throw new Forbidden();
+		}
+		return parent::deleteEntity($id);	
 	}
 }
 

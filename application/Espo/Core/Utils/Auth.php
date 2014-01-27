@@ -2,6 +2,8 @@
 
 namespace Espo\Core\Utils;
 
+use \Espo\Core\Exceptions\Error;
+
 class Auth 
 {
 	protected $container;
@@ -14,7 +16,13 @@ class Auth
 	public function useNoAuth()
 	{
 		$entityManager = $this->container->get('entityManager');		
-		$this->container->setUser($entityManager->getEntity('User'));
+		
+		$user = $entityManager->getRepository('User')->get('system');		
+		if (!$user) {
+			throw new Error('System user is not found');			
+		}		
+
+		$this->container->setUser($user);
 	}
 	
 	public function login($username, $password)
