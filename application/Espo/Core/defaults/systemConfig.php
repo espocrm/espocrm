@@ -37,6 +37,13 @@ return array (
   'dateFormat' => 'MM/DD/YYYY',
   'timeFormat' => 'HH:mm',
 
+  'systemUser' => array(
+    'id' => 'system',
+    'userName' => 'system',
+    'firstName' => '',
+    'lastName' => 'System',    
+  ),
+
   'crud' => array(
   	'get' => 'read',
   	'post' => 'create',

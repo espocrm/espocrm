@@ -95,13 +95,7 @@ class Converter
 				switch ($fieldParams['type']) {
 		            case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);
-						break;
-
-					case 'int':
-                        if (isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
-                        	$uniqueColumns[] = Util::toUnderScore($fieldName);
-                        }
-						break;
+						break;					
 		        }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
@@ -115,6 +109,10 @@ class Converter
                 	$tables[$entityName]->addColumn($columnName, $fieldType, $this->getDbFieldParams($fieldParams));
 				}
 
+				//add unique
+				if ($fieldParams['type']!= 'id' && isset($fieldParams['unique']) && $fieldParams['unique']) {
+		        	$uniqueColumns[] = Util::toUnderScore($fieldName);
+		        } //END: add unique
 
 				//add index. It can be defined in entityDefs as "index"
 				if (isset($fieldParams['index'])) {
@@ -134,7 +132,7 @@ class Converter
 			}
 			if (!empty($uniqueColumns)) {
             	$tables[$entityName]->addUniqueIndex($uniqueColumns);
-			}
+			}			
 		}
 
 		//check and create columns/tables for relations
@@ -258,6 +256,11 @@ class Converter
 			case 'bool':
 	            $dbFieldParams['default'] = intval($dbFieldParams['default']);
 	            break;
+        }
+
+
+        if ( isset($fieldParams['autoincrement']) && $fieldParams['autoincrement'] ) {
+        	$dbFieldParams['unique'] = true;
         }
 
 		return $dbFieldParams;
