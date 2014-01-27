@@ -31,7 +31,6 @@ class Output
 
 		ob_clean();
     	echo $data;
-		//$this->getSlim()->stop();
 	}
 	
 	public function processError($message = 'Error', $code = 500)
@@ -56,7 +55,7 @@ class Output
 	{
         $GLOBALS['log']->add('INFO', 'Display Error: '.$text.', Code: '.$statusCode.' URL: '.$_SERVER['REQUEST_URI']);
 
-		if ( !empty( $this->slim) ) {
+		if (!empty( $this->slim)) {
 			$this->getSlim()->response()->status($statusCode);
 			$this->getSlim()->response()->header('X-Status-Reason', $text);
 			$this->getSlim()->stop();
@@ -69,4 +68,3 @@ class Output
 
 }
 
-?>

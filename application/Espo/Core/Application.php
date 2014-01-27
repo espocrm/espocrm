@@ -10,6 +10,8 @@ class Application
 	private $container;
 
 	private $slim;
+	
+	private $auth;
 
 	/**
      * Constructor
@@ -23,23 +25,32 @@ class Application
         set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
 		set_exception_handler(array($this->getLog(), 'catchException'));
 		
-		date_default_timezone_set('UTC');
-
-		$this->slim = $this->container->get('slim');
-		$this->metadata = $this->container->get('metadata');
-
-		$this->initMetadata();
+		date_default_timezone_set('UTC');			
     }
 
 	public function getSlim()
 	{
+		if (empty($this->slim)) {
+			$this->slim = $this->container->get('slim');
+		}
 		return $this->slim;
 	}
 
 	public function getMetadata()
 	{
+		if (empty($this->metadata)) {
+			$this->metadata = $this->container->get('metadata');
+		}
 		return $this->metadata;
 	}
+	
+    protected function getAuth()
+    {
+    	if (empty($this->auth)) {
+    		$this->auth = new \Espo\Core\Utils\Auth($this->container);
+    	}
+    	return $this->auth;
+    }
 
 	public function getContainer()
 	{
@@ -57,22 +68,44 @@ class Application
         $this->initRoutes();
         $this->getSlim()->run();
     }
-
-
-	protected function initMetadata()
-	{
-    	$isNotCached = !$this->getMetadata()->isCached();
-
-        $this->getMetadata()->init($isNotCached);
-	}
-
+    
+    public function runEntryPoint($entryPoint)
+    {	
+    	if (empty($entryPoint)) {
+    		throw new \Error();
+    	}
+    	
+    	$slim = $this->getSlim();
+    	$container = $this->getContainer();
+    	
+		$slim->get('/', function() {});
+    	
+    	$entryPointManager = new \Espo\Core\EntryPointManager($container);    	
+    	
+    	$auth = $this->getAuth();
+    	$apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
+    	$slim->add($apiAuth);    	
+    	
+		$slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container) {			
+			try {
+				$entryPointManager->run($entryPoint); 
+			} catch (\Exception $e) {
+				$container->get('output')->processError($e->getMessage(), $e->getCode());
+			}
+		});
+    	
+    	$slim->run();  	
+    }
+    
 	protected function routeHooks()
 	{
 		$container = $this->getContainer();
 		$slim = $this->getSlim();
-
-		$auth = new \Espo\Core\Utils\Api\Auth($container->get('entityManager'), $container);
-		$this->getSlim()->add($auth);
+		
+		$auth = $this->getAuth();
+		
+		$apiAuth = new \Espo\Core\Utils\Api\Auth($auth);
+		$this->getSlim()->add($apiAuth);
 
 		$this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
@@ -119,7 +152,6 @@ class Application
 			} catch (\Exception $e) {
 				$container->get('output')->processError($e->getMessage(), $e->getCode());
 			}
-
 		});
 
 		$this->getSlim()->hook('slim.after.router', function () use (&$slim) {
@@ -150,6 +182,5 @@ class Application
 			}
 		}
 	}
-
 }
 

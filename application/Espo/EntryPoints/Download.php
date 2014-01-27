@@ -8,10 +8,11 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Download extends \Espo\Core\EntryPoints\Base
 {
-	protected $authRequired = true;
+	public static $authRequired = true;
 	
 	public function run()
 	{
+	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
@@ -19,21 +20,22 @@ class Download extends \Espo\Core\EntryPoints\Base
 		
 		$attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 		
-		if ($attachment) {
+		if (!$attachment) {
 			throw new NotFound();
-		}
+		}		
 		
-		if ($enity->get('parentId') && $enity->get('parentType')) {
-			$parent = $this->getEntityManager()->getEntity($enity->get('parentType'), $enity->get('parentId'));			
+		if ($attachment->get('parentId') && $attachment->get('parentType')) {
+			$parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));			
 			if (!$this->getAcl()->check($parent)) {
 				throw new Forbidden();
 			}
 		}
 		
 		$fileName = "data/upload/{$attachment->id}";
-		if (!file_exists($fileName)) {		
+		
+		if (!file_exists($fileName)) {
 			throw new NotFound();
-		}		
+		}			
 		
 		header('Content-Description: File Transfer');
 		if ($attachment->get('type')) {

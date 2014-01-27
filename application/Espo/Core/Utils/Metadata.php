@@ -26,6 +26,8 @@ class Metadata
 		$this->fileManager = $fileManager;
 
 		$this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
+		
+		$this->init(!$this->isCached());
 	}
 
 	protected function getConfig()

@@ -10,7 +10,7 @@ abstract class Base
 {
 	private $container;
 	
-	protected $authRequired = true;
+	public static $authRequired = true;
 	
 	protected function getContainer()
 	{
@@ -29,12 +29,12 @@ abstract class Base
 	
 	protected function getEntityManager()
 	{
-		$this->getContainer()->get('entityManager');
+		return $this->getContainer()->get('entityManager');
 	}
 	
 	protected function getServiceFactory()
 	{
-		$this->getContainer()->get('serviceFactory');
+		return $this->getContainer()->get('serviceFactory');
 	}	
 	
 	protected function getConfig()
@@ -45,22 +45,11 @@ abstract class Base
 	protected function getMetadata()
 	{
 		return $this->getContainer()->get('metadata');
-	}
-	
-	protected function checkAccess()
-	{
-		if ($this->authRequired) {
-			return $this->getUser()->isFetched();
-		}
-		return false;
-	}
+	}	
 	
 	public function __construct(Container $container)
 	{
 		$this->container = $container;
-    	if (!$this->checkAccess()) {
-    		throw new Forbidden();
-    	}
 	}
 	
 	abstract public function run();	
