@@ -284,7 +284,10 @@ class Converter
         	$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['database']);
 		}
 
-		//if (isset($fieldTypeMeta['database']['notnull']))
+		//if defined 'notnull => false' and 'required => true', then remove 'notnull'
+		if (isset($fieldParams['notnull']) && !$fieldParams['notnull'] && isset($fieldParams['required']) && $fieldParams['required']) {
+			unset($fieldParams['notnull']);
+		} //END 		
 
 
 		$fieldDefs = $this->getInitValues($fieldParams);
