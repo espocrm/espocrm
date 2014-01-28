@@ -110,17 +110,13 @@ class Converter
 				}
 
 				//add unique
-				if ($fieldParams['type']!= 'id' && isset($fieldParams['unique']) && $fieldParams['unique']) {
-		        	$uniqueColumns[] = Util::toUnderScore($fieldName);
+				if ($fieldParams['type']!= 'id' && isset($fieldParams['unique'])) {		        	
+		        	$uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns);
 		        } //END: add unique
 
 				//add index. It can be defined in entityDefs as "index"
 				if (isset($fieldParams['index'])) {
- 					if ($fieldParams['index'] === true) {
-                    	$indexList[] = array($columnName);
-					} else if (is_string($fieldParams['index'])) {
-                        $indexList[ $fieldParams['index'] ][] = $columnName;
-					}
+					$indexList = $this->getKeyList($columnName, $fieldParams['index'], $indexList); 					
 				} //END: add index
 			}
 
@@ -130,8 +126,11 @@ class Converter
                 	$tables[$entityName]->addIndex($indexItem);
 				}
 			}
+
 			if (!empty($uniqueColumns)) {
-            	$tables[$entityName]->addUniqueIndex($uniqueColumns);
+				foreach($uniqueColumns as $uniqueItem) {
+                	$tables[$entityName]->addUniqueIndex($uniqueItem);
+				}            	
 			}			
 		}
 
@@ -264,6 +263,23 @@ class Converter
         }
 
 		return $dbFieldParams;
+	}
+
+	/**
+	 * Get key list (index, unique). Ex. index => true OR index => 'somename'
+	 * @param  string $columnName Column name (underscore field name)
+	 * @param  bool | string $keyValue   
+	 * @return array 
+	 */
+	protected function getKeyList($columnName, $keyValue, array $keyList)
+	{
+		if ($keyValue === true) {
+        	$keyList[] = array($columnName);
+		} else if (is_string($keyValue)) {
+            $keyList[$keyValue][] = $columnName;
+		}
+
+		return $keyList;
 	}
 
 

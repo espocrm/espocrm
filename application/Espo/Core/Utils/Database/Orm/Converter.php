@@ -289,7 +289,7 @@ class Converter
 			unset($fieldParams['notnull']);
 		} //END 		
 
-
+		
 		$fieldDefs = $this->getInitValues($fieldParams);
 
 		//check if field need to be saved in database
