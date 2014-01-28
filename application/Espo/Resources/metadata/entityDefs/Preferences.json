@@ -1,7 +1,8 @@
 {
     "fields": {
         "timeZone": {
-            "type": "enum"
+            "type": "enum",
+            "detault": "UTC"
         },
         "dateFormat": {
             "type": "enum",
