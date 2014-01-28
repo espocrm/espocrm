@@ -36,6 +36,30 @@
         },
         "dashletOptions": {
         	"type": "text"
+        },
+        "smtpServer": {
+            "type": "varchar"
+        },
+        "smtpPort": {
+            "type": "int",
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "smtpAuth": {
+            "type": "bool",
+            "default": true
+        },
+        "smtpSecurity": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "smtpUsername": {
+            "type": "varchar",
+            "required": true
+        },
+        "smtpPassword": {
+            "type": "password"
         }
     }
 }

@@ -21,24 +21,46 @@ class Sender
 	protected $transport;
 	
 	protected $isGlobal = false;
+	
+	protected $params = array();
 
 	public function __construct($config)
 	{
 		$this->config = $config;		
 		$this->useGlobal();
-	}
+	}	
 	
-	public function useSmtp($smtp)
+	public function useSmtp(array $params = array())
 	{		
-		$this->isGlobal = false;
+		$this->isGlobal = false;		
+		$this->params = $params;
 		
-		// TODO setup smtp
+		$this->transport = new SmtpTransport();
 		
+		$opts = array(
+			'name' => 'admin',
+			'host' => $params['server'],
+			'port' => $params['port'],
+			'connection_config' => array()
+		);
+		if ($params['auth']) {
+			$opts['connection_class'] = 'login';
+			$opts['connection_config']['username'] = $params['username'];
+			$opts['connection_config']['password'] = $params['password'];
+		}
+		if ($params['security']) {
+			$opts['connection_config']['ssl'] = strtolower($params['security']);
+		}
+
+		$options = new SmtpOptions($opts);
+		$this->transport->setOptions($options);
+				
 		return $this;
 	}
 
 	public function useGlobal()
 	{
+		$this->params = array();
 		if ($this->isGlobal) {
 			return $this;
 		}
@@ -77,12 +99,22 @@ class Sender
 		$config = $this->config;
 
 		if ($email->get('from')) {
-			$message->addFrom(trim($email->get('from')));
-		} else {
-			if (!$config->get('outboundEmailFromAddress')) {
-				throw new Error('outboundEmailFromAddress is not specified in config.');
+			$fromName = null;
+			if (!empty($this->params['fromName'])) {
+				$fromName = $this->params['fromName'];
+			} else {
+				$fromName = $config->get('outboundEmailFromName');
 			}
-			$message->addFrom($config->get('outboundEmailFromAddress'), $config->get('outboundEmailFromName'));
+			$message->addFrom(trim($email->get('from')), $fromName);
+		} else {
+			if (!empty($this->params['fromAddress']) && !empty($this->params['fromName'])) {
+				$message->addFrom($this->params['fromAddress'], $this->params['fromName']);
+			} else {
+				if (!$config->get('outboundEmailFromAddress')) {
+					throw new Error('outboundEmailFromAddress is not specified in config.');
+				}
+				$message->addFrom($config->get('outboundEmailFromAddress'), $config->get('outboundEmailFromName'));
+			}
 		}
 		
 		$value = $email->get('to');

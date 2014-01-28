@@ -37,8 +37,9 @@ class Preferences extends \Espo\Core\ORM\Repository
 			$entity->id = $id;
 			if (empty($this->data[$id])) {
 				$fileName = $this->getFilePath($id);
+				
 				if (file_exists($fileName)) {
-					$this->data[$id] = json_decode($this->getFileManager()->getContent($fileName));
+					$this->data[$id] = json_decode($this->getFileManager()->getContent($fileName), true);
 				} else {
 					$fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
 					$defaults = array();
@@ -51,7 +52,9 @@ class Preferences extends \Espo\Core\ORM\Repository
 					$this->data[$id] = $defaults;
 				}			
 			}
+			
 			$entity->set($this->data[$id]);
+			$d = $entity->toArray();
 			return $entity;
 		}		
 	}

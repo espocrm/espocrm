@@ -1,9 +1,20 @@
-[{
-	"label": "Locale",
-	"rows": [
-		[{"name": "dateFormat"}, {"name": "timeFormat"}],
-		[{"name": "timeZone"}, {"name": "weekStart"}],
-		[{"name": "defaultCurrency"}],
-		[{"name": "thousandSeparator"}, {"name": "decimalMark"}]
-	]
-}]
+[
+	{
+		"label": "Locale",
+		"rows": [
+			[{"name": "dateFormat"}, {"name": "timeFormat"}],
+			[{"name": "timeZone"}, {"name": "weekStart"}],
+			[{"name": "defaultCurrency"}],
+			[{"name": "thousandSeparator"}, {"name": "decimalMark"}]
+		]
+	},
+	{
+		"label": "SMTP",
+		"rows": [
+			[{"name": "smtpServer"}, {"name": "smtpPort"}],
+			[{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
+			[{"name": "smtpUsername"}],
+			[{"name": "smtpPassword"}]
+		]
+	}
+]
