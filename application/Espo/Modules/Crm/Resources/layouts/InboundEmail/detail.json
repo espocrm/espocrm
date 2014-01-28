@@ -16,7 +16,7 @@
 			],
 			[
 			{"name":"serverPort"},{"name":"password"}],
-			[{"name":"monitoredFolders"},{"name":"removeMessagesFromServer"}],
+			[{"name":"monitoredFolders"}],
 			[{"name":"trashFolder"},false]
 		]
 	},

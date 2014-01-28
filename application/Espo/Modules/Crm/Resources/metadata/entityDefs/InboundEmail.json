@@ -30,10 +30,9 @@
             "default": "INBOX"
         },
         "trashFolder": {
-            "type": "varchar"
-        },
-        "removeMessagesFromServer": {
-            "type": "bool"
+            "type": "varchar",
+            "required": true,
+            "default": "TRASH"
         },
         "teams": {
             "type": "linkMultiple"
