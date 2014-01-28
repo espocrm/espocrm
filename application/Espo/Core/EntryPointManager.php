@@ -115,7 +115,8 @@ class EntryPointManager
 	            foreach ($fileList as $file) {					
 					$filePath = Util::concatPath($dir, $file);
                 	$className = Util::getClassName($filePath);       
-                	$fileName = $this->getFileManager()->getFileName($filePath);  
+                	$fileName = $this->getFileManager()->getFileName($filePath); 
+                	$fileName = ucfirst($fileName); 
 
 					foreach ($this->allowMethods as $methodName) {	
 						if (method_exists($className, $methodName)) {							

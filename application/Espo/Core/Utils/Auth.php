@@ -41,7 +41,7 @@ class Auth
 		if ($user instanceof \Espo\Entities\User) {
 			$entityManager->setUser($user);
 			$this->container->setUser($user);
-			$GLOBALS['log']->add('DEBUG', 'AUTH: Result of authenticate =[' . $isAuthenticated . ']');
+			$GLOBALS['log']->add('DEBUG', 'AUTH: Result of authenticate is [true]');
 			return true;
 		}
 	}
