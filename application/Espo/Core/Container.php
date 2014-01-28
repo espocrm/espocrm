@@ -162,7 +162,8 @@ class Container
 		return new \Espo\Core\Utils\Database\Schema\Schema(
 			$this->get('config'),
 			$this->get('metadata'),
-			$this->get('fileManager')
+			$this->get('fileManager'),
+			$this->get('entityManager')
 		);
 	}
 	

@@ -12,6 +12,8 @@ class Schema
 
 	private $fileManager;
 
+	private $entityManager;
+
 	private $comparator;
 
 	private $converter;
@@ -29,11 +31,12 @@ class Schema
 	);
 
 
-	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
+	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, $entityManager)
 	{
 		$this->config = $config;
 		$this->metadata = $metadata;
 		$this->fileManager = $fileManager;
+		$this->entityManager = $entityManager;
 
 		$this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
 		$this->initFieldTypes();
@@ -55,6 +58,11 @@ class Schema
 	protected function getFileManager()
 	{
 		return $this->fileManager;
+	}
+
+	protected function getEntityManager()
+	{
+		return $this->entityManager;
 	}
 
 	protected function getComparator()
@@ -120,8 +128,8 @@ class Schema
 
 
 	/*
-	* Rebuild database schema
-	*/
+	 * Rebuild database schema
+	 */
 	public function rebuild()
 	{
 		if ($this->getConverter()->process() === false) {
@@ -145,7 +153,31 @@ class Schema
 			}
         }
 
+        //addSystemUser
+        $this->addSystemUser();
+        //END: addSystemUser
+
 		return (bool) $result;
+	}
+
+
+	protected function addSystemUser()
+	{
+		$userId = $this->getConfig()->get('systemUser.id');
+
+		$entity = $this->getEntityManager()->getEntity('User', $userId);
+
+		if (!isset($entity)) {
+
+			$systemUser = (array) $this->getConfig()->get('systemUser');
+
+			$entity = $this->getEntityManager()->getEntity('User');
+			$entity->set($systemUser);			
+
+			return $this->getEntityManager()->saveEntity($entity);			
+		}		
+
+		return true;
 	}
 
 
