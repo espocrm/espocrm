@@ -120,8 +120,14 @@ class Sender
 		$body = new MimeMessage;		
 		$parts = array();
 				
-		$bodyPart = new MimePart($email->get('body'));		
-		$bodyPart->type = 'text/plain';		
+		$bodyPart = new MimePart($email->get('body'));
+		
+		if ($email->get('isHtml')) {
+			$bodyPart->type = 'text/html';	
+		} else {
+			$bodyPart->type = 'text/plain';
+		}		
+			
 		$parts[] = $bodyPart;
 		
 		$aCollection = $email->get('attachments');

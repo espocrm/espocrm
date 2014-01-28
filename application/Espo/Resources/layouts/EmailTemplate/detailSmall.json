@@ -1,0 +1,20 @@
+[
+	{
+		"label":"",
+		"rows":[
+			[
+				{
+					"name":"name"
+				}
+			],
+			[{"name":"subject"}],
+			[
+				{
+					"name":"isHtml"
+				}
+			],
+			[{"name":"body","fullWidth":true}],
+			[{"name":"attachments"}]
+		]
+	}
+]

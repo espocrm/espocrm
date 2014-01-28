@@ -23,7 +23,12 @@
             "db": false
         },
         "body": {
-            "type": "text"
+            "type": "text",
+            "view": "Fields.Wysiwyg"
+        },
+        "isHtml": {
+            "type": "bool",
+            "default": true
         },
         "status": {
             "type": "enum",
@@ -31,7 +36,8 @@
             "readOnly": true
         },
         "attachments": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "Fields.AttachmentMultiple"
         },
         "parent": {
             "type": "linkParent"

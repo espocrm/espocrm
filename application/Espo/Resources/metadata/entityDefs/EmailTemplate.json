@@ -4,15 +4,20 @@
             "type": "varchar",
             "required": true
         },
+        "subject": {
+            "type": "varchar"
+        },
         "body": {
-            "type": "text"
+            "type": "text",
+            "view": "Fields.Wysiwyg"
         },
         "isHtml": {
             "type": "bool",
             "default": true
         },
         "attachments": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "Fields.AttachmentMultiple"
         },
         "assignedUser": {
             "type": "link",

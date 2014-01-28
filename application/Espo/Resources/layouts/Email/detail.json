@@ -7,8 +7,13 @@
 			[{"name":"from"},{"name":"cc"}],
 			[{"name":"to"},{"name":"bcc"}],
 			[{"name":"name","fullWidth":true}],
+			[
+				{
+					"name":"isHtml"
+				}
+			],
 			[{"name":"body","fullWidth":true}],
-			[{"name":"attachments","type":"attachmentMultiple"}]
+			[{"name":"attachments"}]
 		]
 	}
 ]

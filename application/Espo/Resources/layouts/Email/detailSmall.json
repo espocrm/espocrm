@@ -5,9 +5,9 @@
 			[{"name":"dateSent"}],
 			[{"name":"from"}],
 			[{"name":"to"}],
-			[{"name":"name"}],
+			[{"name":"name"}],			
 			[{"name":"body"}],
-			[{"name":"attachments","type":"attachmentMultiple"}]
+			[{"name":"attachments"}]
 		]
 	}
 ]
