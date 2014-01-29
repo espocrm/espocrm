@@ -257,5 +257,14 @@ abstract class Entity implements IEntity
 		$this->isFetched = true;
 		$this->fetchedValuesContainer = $this->valuesContainer;
 	}
+	
+	public function populateDefaults()
+	{
+		foreach ($this->fields as $field => $defs) {
+			if (array_key_exists('default', $defs)) {
+				$this->valuesContainer[$field] = $defs['default'];
+			}
+		}
+	}
 }
 

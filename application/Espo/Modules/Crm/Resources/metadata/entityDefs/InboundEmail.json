@@ -8,11 +8,11 @@
             "type": "enum",
             "options": ["Active", "Inactive"]
         },
-        "serverAddress": {
+        "host": {
             "type": "varchar",
             "required": true
         },
-        "serverPort": {
+        "port": {
             "type": "varchar",
             "default": "143",
             "required": true
@@ -31,7 +31,6 @@
         },
         "trashFolder": {
             "type": "varchar",
-            "required": true,
             "default": "TRASH"
         },
         "teams": {

@@ -12,12 +12,17 @@
 		"label":"IMAP",
 		"rows":[
 			[
-				{"name":"serverAddress"},{"name":"username"}
+				{"name":"host"},{"name":"username"}
 			],
 			[
-			{"name":"serverPort"},{"name":"password"}],
-			[{"name":"monitoredFolders"}],
-			[{"name":"trashFolder"},false]
+				{"name":"port"},{"name":"password"}
+			],
+			[
+				{"name":"monitoredFolders"}
+			],
+			[
+				{"name":"trashFolder"},false
+			]
 		]
 	},
 	{

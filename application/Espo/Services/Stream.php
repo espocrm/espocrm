@@ -237,6 +237,26 @@ class Stream extends \Espo\Core\Services\Base
 		}
 	}
 	
+	public function noteEmail(Entity $entity, Entity $email)
+	{
+		$entityName = $entity->getEntityName();
+		
+		$note = $this->getEntityManager()->getEntity('Note');
+		
+		$note->set('type', 'Email');
+		$note->set('parentId', $entity->id);
+		$note->set('parentType', $entityName);
+		
+		$data = array();
+		
+		$data['emailId'] = $email->id;
+		$data['emailName'] = $email->get('name');	
+		
+		$note->set('data', json_encode($data));
+						
+		$this->getEntityManager()->saveEntity($note);
+	}
+	
 	public function noteCreate(Entity $entity)
 	{
 		$entityName = $entity->getEntityName();

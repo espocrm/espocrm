@@ -244,11 +244,11 @@ class RDB extends \Espo\ORM\Repository
 		if (empty($this->listParams['joins'])) {
 			$this->listParams['joins'] = array();
 		}
-		
+			
 		foreach ($args as &$param) {
 			if (is_array($param)) {
 				foreach ($param as $k => $v) {
-					$this->listParams['joins'][] = array();				
+					$this->listParams['joins'][] = $v;				
 				}			
 			} else {
 				$this->listParams['joins'][] = $param;

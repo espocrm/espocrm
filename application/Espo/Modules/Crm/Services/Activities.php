@@ -49,7 +49,7 @@ class Activities extends \Espo\Core\Services\Base
 		$qu = "
 			SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
 			       meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-			       meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status
+			       meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status, meeting.created_at AS createdAt
 			FROM `meeting`
 			LEFT JOIN `user` ON user.id = meeting.assigned_user_id
 		";
@@ -94,7 +94,7 @@ class Activities extends \Espo\Core\Services\Base
 			$qu = "
 				SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
 					   meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-					   meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status
+					   meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status, meeting.created_at AS createdAt
 				FROM `meeting`
 				LEFT JOIN `user` ON user.id = meeting.assigned_user_id
 				JOIN contact_meeting ON 
@@ -123,7 +123,7 @@ class Activities extends \Espo\Core\Services\Base
 		$qu = "
 			SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
 			       call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-			       call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status
+			       call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status, call.created_at AS createdAt
 			FROM `call`
 			LEFT JOIN `user` ON user.id = call.assigned_user_id
 		";
@@ -168,7 +168,7 @@ class Activities extends \Espo\Core\Services\Base
 			$qu = "
 				SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
 					   call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-					   call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status
+					   call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status, call.created_at AS createdAt
 				FROM `call`
 				LEFT JOIN `user` ON user.id = call.assigned_user_id
 				JOIN call_contact ON 
@@ -198,21 +198,26 @@ class Activities extends \Espo\Core\Services\Base
 			SELECT DISTINCT
 				email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
 				email.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-				email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status
+				email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status, email.created_at AS createdAt
 			FROM `email`
 			LEFT JOIN `user` ON user.id = email.assigned_user_id
 		";
 		
 		if ($this->isPerson($scope)) {
 			$qu .= "
-				JOIN email_email_address ON
+				LEFT JOIN entity_email_address AS entity_email_address_2 ON
+					entity_email_address_2.email_address_id = email.from_email_address_id AND
+					entity_email_address_2.entity_type = " . $this->getPDO()->quote($scope) . " AND 
+					entity_email_address_2.deleted = 0
+				
+				LEFT JOIN email_email_address ON
 					email_email_address.email_id = email.id AND
 					email_email_address.deleted = 0				
-				JOIN entity_email_address ON
-					entity_email_address.email_address_id = email_email_address.email_address_id AND			 
-					entity_email_address.entity_id = ".$this->getPDO()->quote($id)." AND 
-					entity_email_address.entity_type = ".$this->getPDO()->quote($scope)." AND 
-					entity_email_address.deleted = 0			
+				LEFT JOIN entity_email_address AS entity_email_address_1 ON
+					entity_email_address_1.email_address_id = email_email_address.email_address_id AND			 
+					
+					entity_email_address_1.entity_type = " . $this->getPDO()->quote($scope) . " AND 
+					entity_email_address_1.deleted = 0			
 			";
 		}		
 		
@@ -224,6 +229,10 @@ class Activities extends \Espo\Core\Services\Base
 		if (!$this->isPerson($scope)) {
 			$qu .= "
 				AND email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id)."
+			";
+		} else {
+			$qu .= "
+				AND (entity_email_address_1.entity_id = ".$this->getPDO()->quote($id)." OR entity_email_address_2.entity_id = ".$this->getPDO()->quote($id).")
 			";
 		}
 		
@@ -260,7 +269,7 @@ class Activities extends \Espo\Core\Services\Base
 		$totalCount = $row['count'];
 		
 		$qu .= "
-			ORDER BY dateStart DESC
+			ORDER BY dateStart DESC, createdAt DESC
 		";		
 		
 		if (!empty($params['maxSize'])) {

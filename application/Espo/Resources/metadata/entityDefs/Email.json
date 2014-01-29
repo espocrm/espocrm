@@ -4,6 +4,11 @@
             "type": "varchar",
             "required": true
         },
+        "subject": {
+            "type": "varchar",
+            "required": true,
+            "notStorable": true
+        },
         "from": {
             "type": "varchar",
             "db": false,
@@ -21,6 +26,10 @@
         "bcc": {
             "type": "varchar",
             "db": false
+        },
+        "bodyPlain": {
+            "type": "text",
+            "readOnly": true
         },
         "body": {
             "type": "text",

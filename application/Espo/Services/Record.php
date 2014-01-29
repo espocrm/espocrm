@@ -130,14 +130,17 @@ class Record extends \Espo\Core\Services\Base
 	
 	protected function getSelectManager($entityName)
 	{
-    	$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
-		if ($moduleName) {
-			$className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . Util::normilizeClassName($entityName);
-		} else {
-			$className = '\\Espo\\SelectManagers\\' . Util::normilizeClassName($entityName);
-		}    	
-    	if (!class_exists($className)) {
-    		$className = '\\Espo\\Core\\SelectManager';
+    	$className = '\\Espo\\Custom\\SelectManagers\\' . Util::normilizeClassName($entityName);
+		if (!class_exists($className)) {
+			$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
+			if ($moduleName) {
+				$className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . Util::normilizeClassName($entityName);
+			} else {
+				$className = '\\Espo\\SelectManagers\\' . Util::normilizeClassName($entityName);
+			}    	
+			if (!class_exists($className)) {
+				$className = '\\Espo\\Core\\SelectManager';
+			}
     	}
 		
 		$selectManager = new $className($this->getEntityManager(), $this->getUser(), $this->getAcl(), $this->getMetadata());
