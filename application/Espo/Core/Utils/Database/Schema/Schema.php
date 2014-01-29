@@ -31,7 +31,7 @@ class Schema
 	);
 
 
-	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, $entityManager)
+	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager)
 	{
 		$this->config = $config;
 		$this->metadata = $metadata;
