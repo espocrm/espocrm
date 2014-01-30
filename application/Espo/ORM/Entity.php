@@ -46,7 +46,8 @@ abstract class Entity implements IEntity
 	public function __construct($defs = array(), EntityManager $entityManager = null)
 	{
 		if (empty($this->entityName)) {
-			$this->entityName = end(explode('\\', get_class($this)));
+			$classNames = explode('\\', get_class($this));
+			$this->entityName = end($classNames);
 		}
 		
 		$this->entityManager = $entityManager;
