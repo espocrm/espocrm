@@ -13,7 +13,7 @@ class Stream extends \Espo\Core\Services\Base
 		'Lead' => array(
 			'field' => 'status',
 			'style' => array(
-				'New' => 'default',				
+				'New' => 'warning',				
 				'Assigned' => 'primary',
 				'In Process' => 'primary',
 				'Converted' => 'success',
@@ -24,7 +24,7 @@ class Stream extends \Espo\Core\Services\Base
 		'Case' => array(
 			'field' => 'status',
 			'style' => array(
-				'New' => 'default',
+				'New' => 'warning',
 				'Assigned' => 'primary',
 				'Pending' => 'default',
 				'Closed' => 'success',
@@ -34,7 +34,7 @@ class Stream extends \Espo\Core\Services\Base
 		),
 		'Opportunity' => array(
 			'field' => 'stage',
-			'style' => array(
+			'style' => array(				
 				'Closed Won' => 'success',
 				'Closed Lost' => 'danger',
 			), 
