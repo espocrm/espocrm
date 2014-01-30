@@ -23,8 +23,9 @@ class Record extends Base
     		$service = $this->getServiceFactory()->create($this->name);
     	} else {
     		$service = $this->getServiceFactory()->create('Record');
+    		$service->setEntityName($this->name);
     	}
-		$service->setEntityName($this->name);
+		
 		
 		return $service;
 	}

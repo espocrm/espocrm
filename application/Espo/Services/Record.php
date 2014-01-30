@@ -22,6 +22,20 @@ class Record extends \Espo\Core\Services\Base
 	protected $entityName;
 	
 	private $streamService;
+	
+	public function __construct()
+	{
+		parent::__construct();
+		if (empty($this->entityName)) {
+			$name = get_class($this);
+			if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
+		    	$name = $matches[1];
+			}
+			if ($name != 'Record') {
+				$this->entityName = $name;
+			}
+    	}
+	}
 
 	public function setEntityName($entityName)
 	{
@@ -80,7 +94,6 @@ class Record extends \Espo\Core\Services\Base
 				throw new Forbidden();
 			}
 		}
-				
 		return $entity;
 	}
 	

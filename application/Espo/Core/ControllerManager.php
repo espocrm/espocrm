@@ -46,9 +46,14 @@ class ControllerManager
 		}		
 			
 		if ($data) {
-			$data = json_decode($data, true);
-		}		
+			$data = json_decode($data);
+		}
+
 		
+		if ($data instanceof \stdClass) {
+			$data = get_object_vars($data);
+		}
+
 		if (!class_exists($controllerClassName)) {
 			throw new NotFound("Controller '$controllerName' is not found");
 		}		

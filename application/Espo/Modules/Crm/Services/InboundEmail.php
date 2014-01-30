@@ -8,6 +8,8 @@ use \Espo\Core\Exceptions\Forbidden;
 class InboundEmail extends \Espo\Services\Record
 {
 	
+	
+	
 	protected function init()
 	{
 		$this->dependencies[] = 'fileManager';
@@ -85,7 +87,6 @@ class InboundEmail extends \Espo\Services\Record
 					$storage->removeMessage(1);
 				}
 			}
-
 		}	
 	}
 	
@@ -142,9 +143,7 @@ class InboundEmail extends \Espo\Services\Record
 				$this->importPartDataToEmail($email, $message);
 			}
 
-			$this->getEntityManager()->saveEntity($email);
-			echo $email->id ."<br>";
-			
+			$this->getEntityManager()->saveEntity($email);		
 
 			if ($inboundEmail->get('createCase')) {
 				// TODO check case exists
@@ -208,7 +207,8 @@ class InboundEmail extends \Espo\Services\Record
 		$email->set('parentType', 'Case');
 		$email->set('parentId', $case->id);
 		$this->getEntityManager()->saveEntity($email);
-	
+		
+		$case = $this->getEntityManager()->getEntity('Case', $case->id);			
 		return $case;		
 	}
 	
@@ -256,29 +256,34 @@ class InboundEmail extends \Espo\Services\Record
 		try {
 			$replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');		
 			if ($replyEmailTemplateId) {
-				$params = array();
+				$entityHash = array();
 				if ($case) {
-					$params['Case'] = $case;
+					$entityHash['Case'] = $case;
 					if ($case->get('contactId')) {
 						$contact = $this->getEntityManager()->getEntity('Contact', $case->get('contactId'));
 					}
 				}
 				if (empty($contact)) {
 					$contact = $this->getEntityManager()->getEntity('Contact');					
-					$contant->set('lastName', $email->get('fromName')); 
+					$contact->set('name', $email->get('fromName')); 
 				}
 				
-				$params['Person'] = $contact;
-				$params['Contact'] = $contact;
+				
+				$entityHash['Person'] = $contact;
+				$entityHash['Contact'] = $contact;				
 					
 				$emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
-				$replyData = $emailTemplateService->parse($replyEmailTemplateId, $params, true);
+				
+				$replyData = $emailTemplateService->parse($replyEmailTemplateId, array('entityHash' => $entityHash), true);
 				
 				$reply = $this->getEntityManager()->getEntity('Email');
 				$reply->set('to', $email->get('from'));
 				$reply->set('subject', $replyData['subject']);
 				$reply->set('body', $replyData['body']);
-				$reply->set('attachmentsIds', $replyData['attachmentsIds']); 
+				$reply->set('isHtml', $replyData['isHtml']);
+				$reply->set('attachmentsIds', $replyData['attachmentsIds']);
+				
+				$this->getEntityManager()->saveEntity($reply);
 				
 				$sender = $this->getMailSender()->useGlobal();				
 				$senderParams = array();				
@@ -291,6 +296,11 @@ class InboundEmail extends \Espo\Services\Record
 				$sender->setParams($senderParams);				
 				$sender->send($reply);
 				
+				foreach ($reply->get('attachments') as $attachment) {
+					$this->getEntityManager()->removeEntity($attachment);
+				}
+				
+				$this->getEntityManager()->removeEntity($reply);
 			}		
 			
 		} catch (\Exception $e){

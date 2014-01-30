@@ -125,7 +125,7 @@ class RDB extends \Espo\ORM\Repository
 	
 	protected function afterRemove(Entity $entity)
 	{		
-	}
+	}	
 		
 	public function remove(Entity $entity)
 	{	

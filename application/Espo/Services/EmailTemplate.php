@@ -21,14 +21,16 @@ class EmailTemplate extends Record
 	}
 	
 	public function parse($id, array $params = array(), $copyAttachments = false)
-	{
+	{			
 		$emailTemplate = $this->getEntity($id);
 		if (empty($emailTemplate)) {
 			throw new NotFound();
 		}
 		
 		$entityList = array();
-		
+		if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
+			$entityList = $params['entityHash'];
+		}		
 
 		if (!empty($params['emailAddress'])) {
 			$emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
@@ -93,20 +95,21 @@ class EmailTemplate extends Record
 					$this->getEntityManager()->saveEntity($clone);
 						
 					$contents = $this->getFileManager()->getContent('data/upload/' . $attachment->id);
-					if (empty($content)) {
+					if (empty($contents)) {
 						continue;
 					}
 					$this->getFileManager()->setContent($contents, 'data/upload/' . $clone->id);			
 			
-					$attachmentsIds[] = $clone['id'];
+					$attachmentsIds[] = $clone->id;
 				}
 			}
-		}
+		}		
 		
 		return array(
 			'subject' => $subject,
 			'body' => $body,
-			'attachmentsIds' => $attachmentsIds
+			'attachmentsIds' => $attachmentsIds,
+			'isHtml' => $emailTemplate->get('isHtml')
 		);		
 	}
 	

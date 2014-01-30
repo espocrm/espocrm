@@ -18,7 +18,7 @@ abstract class Base implements Injectable
 	public function __construct()
 	{
 		$this->init();
-	}	
+	}
 	
 	protected function init()
 	{	
