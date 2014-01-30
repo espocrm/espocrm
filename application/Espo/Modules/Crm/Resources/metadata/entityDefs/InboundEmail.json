@@ -30,8 +30,7 @@
             "default": "INBOX"
         },
         "trashFolder": {
-            "type": "varchar",
-            "default": "TRASH"
+            "type": "varchar"
         },
         "teams": {
             "type": "linkMultiple"

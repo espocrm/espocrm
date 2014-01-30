@@ -7,13 +7,17 @@
         "subject": {
             "type": "varchar",
             "required": true,
-            "notStorable": true
+            "db": false
+        },
+        "fromName": {
+            "type": "varchar",
+            "db": false
         },
         "from": {
             "type": "varchar",
             "db": false,
             "required": true
-        },
+        },        
         "to": {
             "type": "varchar",
             "db": false,
@@ -104,7 +108,7 @@
         "parent": {
             "type": "belongsToParent",
             "entities": [],
-            "foreign": "attachments"
+            "foreign": "emails"
         },
         "fromEmailAddress": {
             "type": "belongsTo",

@@ -28,7 +28,19 @@ class Sender
 	{
 		$this->config = $config;		
 		$this->useGlobal();
-	}	
+	}
+	
+	public function resetParams()
+	{
+		$this->params = array();
+		return $this;
+	}
+	
+	public function setParams(array $params = array())
+	{
+		$this->params = array_merge($this->params, $params);
+		return $this;
+	}
 	
 	public function useSmtp(array $params = array())
 	{		
@@ -107,14 +119,22 @@ class Sender
 			}
 			$message->addFrom(trim($email->get('from')), $fromName);
 		} else {
-			if (!empty($this->params['fromAddress']) && !empty($this->params['fromName'])) {
-				$message->addFrom($this->params['fromAddress'], $this->params['fromName']);
+			if (!empty($this->params['fromAddress'])) {
+				$fromAddress = $this->params['fromAddress'];
 			} else {
 				if (!$config->get('outboundEmailFromAddress')) {
 					throw new Error('outboundEmailFromAddress is not specified in config.');
 				}
-				$message->addFrom($config->get('outboundEmailFromAddress'), $config->get('outboundEmailFromName'));
+				$fromAddress = $config->get('outboundEmailFromAddress');
 			}
+			
+			if (!empty($this->params['fromName'])) {
+				$fromName = $this->params['fromName'];
+			} else {
+				$fromName = $config->get('outboundEmailFromName');
+			}			
+
+			$message->addFrom($fromAddress, $fromName);			
 		}
 		
 		$value = $email->get('to');

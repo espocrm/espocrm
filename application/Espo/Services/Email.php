@@ -50,8 +50,7 @@ class Email extends Record
 				if (!$this->getConfig()->get('outboundEmailIsShared')) {
 					throw new Error('Can not use system smtp. outboundEmailIsShared is false.');					
 				}
-			}
-			
+			}			
 			
 			$emailSender->send($entity);		
 			

@@ -9,8 +9,18 @@ use \Espo\Core\Exceptions\NotFound;
 
 class EmailTemplate extends Record
 {
+
+	protected function init()
+	{
+		$this->dependencies[] = 'fileManager';
+	}
 	
-	public function parse($id, array $params = array())
+	protected function getFileManager()
+	{
+		return $this->injections['fileManager'];
+	}
+	
+	public function parse($id, array $params = array(), $copyAttachments = false)
 	{
 		$emailTemplate = $this->getEntity($id);
 		if (empty($emailTemplate)) {
@@ -68,16 +78,40 @@ class EmailTemplate extends Record
 			$body = $this->parseText($type, $entity, $body);
 		}
 		
+		$attachmentsIds = array();
+		
+		if ($copyAttachments) {
+			$attachmentList = $emailTemplate->get('attachments');		
+			if (!empty($attachmentList)) {
+				foreach ($attachmentList as $attachment) {
+					$clone = $this->getEntityManager()->getEntity('Attachment');
+					$data = $attachment->toArray();
+					unset($data['parentType']);
+					unset($data['parentId']);
+					unset($data['id']);
+					$clone->set($data);
+					$this->getEntityManager()->saveEntity($clone);
+						
+					$contents = $this->getFileManager()->getContent('data/upload/' . $attachment->id);
+					if (empty($content)) {
+						continue;
+					}
+					$this->getFileManager()->setContent($contents, 'data/upload/' . $clone->id);			
+			
+					$attachmentsIds[] = $clone['id'];
+				}
+			}
+		}
+		
 		return array(
 			'subject' => $subject,
 			'body' => $body,
-		);
-		
+			'attachmentsIds' => $attachmentsIds
+		);		
 	}
 	
 	protected function parseText($type, Entity $entity, $text)
-	{
-		
+	{		
 		$fields = array_keys($entity->getFields());
 		foreach ($fields as $field) {
 			$text = str_replace('{' . $type . '.' . $field . '}', $entity->get($field), $text);

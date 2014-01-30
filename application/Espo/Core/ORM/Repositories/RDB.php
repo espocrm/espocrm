@@ -211,8 +211,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		$relationTypes = array($entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN);
 		foreach ($entity->getRelations() as $name => $defs) {			
 			if (in_array($defs['type'], $relationTypes)) {
-				$fieldName = $name . 'Ids';				
-				if ($entity->has($fieldName)) {												
+				$fieldName = $name . 'Ids';					
+				if ($entity->has($fieldName)) {																
 					$specifiedIds = $entity->get($fieldName);
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
@@ -224,7 +224,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
 							}
-						}										
+						}									
 						foreach ($specifiedIds as $id) {
 							if (!in_array($id, $existingIds)) {
 								$this->relate($entity, $name, $id);
@@ -236,7 +236,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 					}
 				}
 			}
-		}	
+		}
 	}
 }
 

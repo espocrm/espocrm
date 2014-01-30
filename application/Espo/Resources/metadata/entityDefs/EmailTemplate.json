@@ -45,8 +45,9 @@
     },
     "links": {
         "attachments": {
-            "type": "hasMany",
-            "entity": "Attachment"
+            "type": "hasChildren",
+            "entity": "Attachment",
+            "foreign": "parent"
         },
         "teams": {
             "type": "hasMany",

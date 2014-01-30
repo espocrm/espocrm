@@ -177,7 +177,12 @@ class Record extends \Espo\Core\Services\Base
 			throw new Forbidden();
 		}
 		
-		$entity->set($data);		
+		print_r($data);
+		//die;
+				
+		$entity->set($data);
+		
+		$d = $entity->get('attachmentsIds');
 		
 		if ($this->storeEntity($entity)) {
 			return $entity;

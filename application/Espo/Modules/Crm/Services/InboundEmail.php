@@ -11,11 +11,17 @@ class InboundEmail extends \Espo\Services\Record
 	protected function init()
 	{
 		$this->dependencies[] = 'fileManager';
+		$this->dependencies[] = 'mailSender';
 	}
 	
 	protected function getFileManager()
 	{
 		return $this->injections['fileManager'];
+	}
+	
+	protected function getMailSender()
+	{
+		return $this->injections['mailSender'];
 	}
 	
 	protected function findFolder($storage, $path)
@@ -110,6 +116,11 @@ class InboundEmail extends \Espo\Services\Record
 			$email->set('assignedUserId', $this->getUser()->id);
 		
 			$fromArr = $this->getAddressListFromMessage($message, 'from');
+			
+			if (isset($message->from)) {
+				$email->set('fromName', $message->from);
+			}
+			
 			$email->set('from', $fromArr[0]);
 			$email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));		
 			$email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
@@ -126,8 +137,7 @@ class InboundEmail extends \Espo\Services\Record
 			if ($message->isMultipart()) {
 				foreach (new \RecursiveIteratorIterator($message) as $part) {
 					$this->importPartDataToEmail($email, $part);
-				}
-			
+				}			
 			} else {
 				$this->importPartDataToEmail($email, $message);
 			}
@@ -152,10 +162,14 @@ class InboundEmail extends \Espo\Services\Record
 					}
 				} else {
 					$case = $this->emailToCase($email, $inboundEmail->get('caseDistribution'));
-					// TODO auto-reply
+					if ($inboundEmail->get('reply')) {
+						$this->autoReply($inboundEmail, $email, $case);
+					}
 				}
 			} else {
-				// TODO auto-reply
+				if ($inboundEmail->get('reply')) {
+					$this->autoReply($inboundEmail, $email);
+				}
 			}
 			
 			$result = true;
@@ -177,8 +191,7 @@ class InboundEmail extends \Espo\Services\Record
 		$case->set('teamsIds', $email->get('teamsIds'));
 		
 		// TODO distribution
-		$case->set('assignedUserId', $this->getUser()->id);
-		
+		$case->set('assignedUserId', $this->getUser()->id);		
 		
 		$contact = $this->getEntityManager()->getRepository('Contact')->where(array(
 			'EmailAddress.id' => $email->get('fromEmailAddressId')
@@ -236,6 +249,53 @@ class InboundEmail extends \Espo\Services\Record
 		} catch (\Exception $e){
 			// TODO log	
 		}		
+	}
+	
+	protected function autoReply($inboundEmail, $email, $case = null)
+	{	
+		try {
+			$replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');		
+			if ($replyEmailTemplateId) {
+				$params = array();
+				if ($case) {
+					$params['Case'] = $case;
+					if ($case->get('contactId')) {
+						$contact = $this->getEntityManager()->getEntity('Contact', $case->get('contactId'));
+					}
+				}
+				if (empty($contact)) {
+					$contact = $this->getEntityManager()->getEntity('Contact');					
+					$contant->set('lastName', $email->get('fromName')); 
+				}
+				
+				$params['Person'] = $contact;
+				$params['Contact'] = $contact;
+					
+				$emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
+				$replyData = $emailTemplateService->parse($replyEmailTemplateId, $params, true);
+				
+				$reply = $this->getEntityManager()->getEntity('Email');
+				$reply->set('to', $email->get('from'));
+				$reply->set('subject', $replyData['subject']);
+				$reply->set('body', $replyData['body']);
+				$reply->set('attachmentsIds', $replyData['attachmentsIds']); 
+				
+				$sender = $this->getMailSender()->useGlobal();				
+				$senderParams = array();				
+				if ($inboundEmail->get('replyFromAddress')) {
+					$senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
+				}
+				if ($inboundEmail->get('replyFromName')) {
+					$senderParams['fromName'] = $inboundEmail->get('replyFromName');
+				}
+				$sender->setParams($senderParams);				
+				$sender->send($reply);
+				
+			}		
+			
+		} catch (\Exception $e){
+			// TODO log	
+		}
 	}	
 }
 
