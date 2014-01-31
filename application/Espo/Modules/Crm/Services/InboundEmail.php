@@ -28,7 +28,7 @@ class InboundEmail extends \Espo\Services\Record
 	
 	protected function findFolder($storage, $path)
 	{
-		$arr = explode('/', $path);
+		$arr = explode('.', $path);
 		$pointer = $storage->getFolders();
 		foreach ($arr as $folderName) {
 			$pointer = $pointer->$folderName;
@@ -40,7 +40,6 @@ class InboundEmail extends \Espo\Services\Record
 	public function fetchFromMailServer($id)
 	{
 		$inboundEmail = $this->getEntity($id);
-		$inboundEmail->loadLinkMultipleField('teams');
 		
 		if ($inboundEmail->get('status') != 'Active') {
 			throw new Error();
@@ -58,11 +57,16 @@ class InboundEmail extends \Espo\Services\Record
 		}
 		
 		$trash = null;
-		$trashFolder = $inboundEmail->get('trashFolder');		
-		if ($trashFolder) {
-			$trash = $this->findFolder($storage, $trashFolder);
+		$trashFolder = $inboundEmail->get('trashFolder');
+		if (empty($trashFolder)) {
+			$trashFolder = 'INBOX.Trash';
 		}
-
+		try {
+			$trash = $this->findFolder($storage, $trashFolder);
+		} catch (\Exception $e) {
+			throw new Error("No trash folder '{$trashFolder}' found for Inbound Email {$id}");
+		}
+		
 		$monitoredFolders = $inboundEmail->get('monitoredFolders');
 		if (empty($monitoredFolders)) {
 			$monitoredFolders = 'INBOX';
@@ -82,9 +86,7 @@ class InboundEmail extends \Espo\Services\Record
 			
 			while ($storage->countMessages()) {
 				if ($trash) {
-					$folder->moveMessage(1, $trash);
-				} else {
-					$storage->removeMessage(1);
+					$storage->moveMessage(1, $trash);
 				}
 			}
 		}	
@@ -109,12 +111,19 @@ class InboundEmail extends \Espo\Services\Record
 		
 		try {
 			$email = $this->getEntityManager()->getEntity('Email');
-			$email->set('teamsIds', $inboundEmail->get('teamsIds'));
+			if ($inboundEmail->get('teamId')) {
+				$email->set('teamsIds', array($inboundEmail->get('teamId')));
+			}
+			
 			$email->set('isHtml', false);		
 			$email->set('name', $message->subject);
 			$email->set('attachmentsIds', array());
-		
-			$email->set('assignedUserId', $this->getUser()->id);
+			
+			$userId = $this->getUser()->id;		
+			if ($inboundEmail->get('assignToUserId')) {
+				$userId = $inboundEmail->get('assignToUserId');
+			}
+			$email->set('assignedUserId', $userId);			
 		
 			$fromArr = $this->getAddressListFromMessage($message, 'from');
 			
@@ -146,8 +155,6 @@ class InboundEmail extends \Espo\Services\Record
 			$this->getEntityManager()->saveEntity($email);		
 
 			if ($inboundEmail->get('createCase')) {
-				// TODO check case exists
-				
 				if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
 					$caseNumber = $m[1];
 					$case = $this->getEntityManager()->getRepository('Case')->where(array(
@@ -160,37 +167,96 @@ class InboundEmail extends \Espo\Services\Record
 						$this->getServiceFactory()->create('Stream')->noteEmail($case, $email);
 					}
 				} else {
-					$case = $this->emailToCase($email, $inboundEmail->get('caseDistribution'));
+					$params = array(
+						'caseDistribution' => $inboundEmail->get('caseDistribution'),
+						'teamId' => $inboundEmail->get('teamId'),
+						'userId' => $inboundEmail->get('assignToUserId'),
+					);
+					$case = $this->emailToCase($email, $params);
+					$user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
 					if ($inboundEmail->get('reply')) {
-						$this->autoReply($inboundEmail, $email, $case);
+						$this->autoReply($inboundEmail, $email, $case, $user);
 					}
 				}
 			} else {
 				if ($inboundEmail->get('reply')) {
-					$this->autoReply($inboundEmail, $email);
+					$user = $this->getEntityManager()->getEntity('User', $userId);
+					$this->autoReply($inboundEmail, $email, $user);
 				}
 			}
 			
 			$result = true;
 			
 		} catch (\Exception $e){
-			// TODO log
-			
+			// TODO log			
 		}
 		
 		return $result;
 	}
 	
-	protected function emailToCase(\Espo\Entities\Email $email, $caseDistribution = 'Round-Robin')
+	protected function assignRoundRobin($case, $team)
+	{
+		$roundRobin = new \Espo\Modules\Crm\Business\CaseDistribution\RoundRobin($this->getEntityManager());
+		$user = $roundRobin->getUser($team);
+		if ($user) {
+			$case->set('assignedUserId', $user->id);
+		}
+	}
+	
+	protected function assignLeastBusy($case, $team)
+	{
+		$leastBusy = new \Espo\Modules\Crm\Business\CaseDistribution\LeastBusy($this->getEntityManager());
+		$user = $leastBusy->getUser($team);
+		if ($user) {
+			$case->set('assignedUserId', $user->id);
+		}
+	}
+	
+	protected function emailToCase(\Espo\Entities\Email $email, array $params = array())
 	{
 		$case = $this->getEntityManager()->getEntity('Case');		
 		$case->populateDefaults();		
 		$case->set('name', $email->get('name'));
-		$case->set('description', $email->get('bodyPlain'));		
-		$case->set('teamsIds', $email->get('teamsIds'));
+		$case->set('description', $email->get('bodyPlain'));
 		
-		// TODO distribution
-		$case->set('assignedUserId', $this->getUser()->id);		
+		$userId = $this->getUser()->id;
+		if (!empty($params['userId'])) {
+			$userId = $params['userId'];
+		}		
+		$case->set('assignedUserId', $userId);
+		
+		$teamId = false;
+		if (!empty($params['teamId'])) {
+			$teamId = $params['teamId'];
+		}		
+		if ($teamId) {
+			$case->set('teamsIds', array($teamId));
+		}
+		
+		$caseDistribution = 'Direct-Assignment';
+		if (!empty($params['caseDistribution'])) {
+			$caseDistribution = $params['caseDistribution'];
+		}
+		
+		switch ($caseDistribution) {
+			case 'Round-Robin':
+				if ($teamId) {
+					$team = $this->getEntityManager()->getEntity('Team', $teamId);
+					if ($team) {					
+						$this->assignRoundRobin($case, $team);
+					}
+				}
+				break;
+			case 'Least-Busy':				
+				if ($teamId) {
+					$team = $this->getEntityManager()->getEntity('Team', $teamId);
+					if ($team) {					
+						$this->assignLeastBusy($case, $team);
+					}
+				}
+				break;
+		}
+			
 		
 		$contact = $this->getEntityManager()->getRepository('Contact')->where(array(
 			'EmailAddress.id' => $email->get('fromEmailAddressId')
@@ -251,7 +317,7 @@ class InboundEmail extends \Espo\Services\Record
 		}		
 	}
 	
-	protected function autoReply($inboundEmail, $email, $case = null)
+	protected function autoReply($inboundEmail, $email, $case = null, $user = null)
 	{	
 		try {
 			$replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');		
@@ -270,7 +336,11 @@ class InboundEmail extends \Espo\Services\Record
 				
 				
 				$entityHash['Person'] = $contact;
-				$entityHash['Contact'] = $contact;				
+				$entityHash['Contact'] = $contact;
+				
+				if ($user) {
+					$entityHash['User'] = $user;
+				}			
 					
 				$emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
 				

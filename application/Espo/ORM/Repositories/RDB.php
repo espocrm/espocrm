@@ -152,7 +152,7 @@ class RDB extends \Espo\ORM\Repository
 	
 	public function findOne(array $params = array())
 	{	
-		$collection = $this->find($params);		
+		$collection = $this->limit(0, 1)->find($params);		
 		if (count($collection)) {
 			return $collection[0];
 		}

@@ -1,1 +1,6 @@
-{}
+{
+   "recordViews":{
+      "detail":"Crm:InboundEmail.Record.Detail",
+      "edit":"Crm:InboundEmail.Record.Edit"
+   }
+}

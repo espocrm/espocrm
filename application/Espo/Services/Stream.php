@@ -92,6 +92,9 @@ class Stream extends \Espo\Core\Services\Base
 	
 	public function followEntity(Entity $entity, $userId)
 	{
+		if ($userId == 'system') {
+			return;
+		}
 		if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
 			throw new Error();
 		}

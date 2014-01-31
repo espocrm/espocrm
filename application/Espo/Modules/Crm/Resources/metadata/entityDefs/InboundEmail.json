@@ -30,17 +30,23 @@
             "default": "INBOX"
         },
         "trashFolder": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true,
+            "default": "INBOX.Trash"            
         },
-        "teams": {
-            "type": "linkMultiple"
+        "assignToUser": {
+            "type": "link"
+        },
+        "team": {
+            "type": "link"
         },
         "createCase": {
             "type": "bool"
         },
         "caseDistribution": {
             "type": "enum",
-            "options": ["Round-Robin", "Least-Busy"]
+            "options": ["Direct-Assignment", "Round-Robin", "Least-Busy"],
+            "default": "Direct-Assignment"
         },
         "reply": {
             "type": "bool"
@@ -80,10 +86,13 @@
             "type": "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
-            "relationName": "EntityTeam"
+        "assignToUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "team": {
+            "type": "belongsTo",
+            "entity": "Team"
         },
         "replyEmailTemplate": {
             "type": "belongsTo",
