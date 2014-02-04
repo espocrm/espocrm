@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "data": {
+            "type": "text"
+        },
+        "type": {
+            "type": "varchar"
+        },
+        "read": {
+            "type": "bool"
+        },
+        "user": {
+        	"type": "link"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+    	"user": {
+    		"type": "belongsTo",
+    		"entity": "User"
+    	}
+    },
+    "collection": {
+    	"sortBy": "createdAt",
+    	"asc": false
+    }
+}

@@ -334,28 +334,36 @@ class Activities extends \Espo\Core\Services\Base
 		return $result;	
 	}
 	
-	public function getEvents($from, $to)
+	public function getEvents($userId, $from, $to)
 	{
 		$pdo = $this->getPDO();
 	
 		$sql = "
-			SELECT 'Meeting' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd, status AS status FROM `meeting`
+			SELECT 'Meeting' AS scope, meeting.id AS id, meeting.name AS name, meeting.date_start AS dateStart, meeting.date_end AS dateEnd, meeting.status AS status 
+			FROM `meeting`
+			JOIN meeting_user ON meeting_user.meeting_id = meeting.id
 			WHERE 
-				deleted = 0 AND
-				date_start >= ".$pdo->quote($from)." AND
-				date_start < ".$pdo->quote($to)."
+				meeting.deleted = 0 AND
+				meeting.date_start >= ".$pdo->quote($from)." AND
+				meeting.date_start < ".$pdo->quote($to)." AND
+				meeting_user.user_id =".$pdo->quote($userId)." 
 			UNION
-			SELECT 'Call' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd, status AS status FROM `call`
+			SELECT 'Call' AS scope, call.id AS id, call.name AS name, call.date_start AS dateStart, call.date_end AS dateEnd, call.status AS status 
+			FROM `call`
+			JOIN call_user ON call_user.call_id = call.id
 			WHERE 
-				deleted = 0 AND
-				date_start >= ".$pdo->quote($from)." AND
-				date_start < ".$pdo->quote($to)."
+				call.deleted = 0 AND
+				call.date_start >= ".$pdo->quote($from)." AND
+				call.date_start < ".$pdo->quote($to)." AND
+				call_user.user_id = ".$pdo->quote($userId)." 
 			UNION
-			SELECT 'Task' AS scope, id AS id, name AS name, date_start AS dateStart, date_end AS dateEnd, status AS status FROM `task`
+			SELECT 'Task' AS scope, task.id AS id, task.name AS name, task.date_start AS dateStart, task.date_end AS dateEnd, task.status AS status 
+			FROM `task`
 			WHERE 
-				deleted = 0 AND
-				date_start >= ".$pdo->quote($from)." AND
-				date_start < ".$pdo->quote($to)."
+				task.deleted = 0 AND
+				task.date_start >= ".$pdo->quote($from)." AND
+				task.date_start < ".$pdo->quote($to)." AND
+				task.assigned_user_id = ".$pdo->quote($userId)."
 		";
 
 		

@@ -24,8 +24,7 @@ class Record extends Base
     	} else {
     		$service = $this->getServiceFactory()->create('Record');
     		$service->setEntityName($this->name);
-    	}
-		
+    	}		
 		
 		return $service;
 	}
@@ -68,7 +67,7 @@ class Record extends Base
 			throw new Forbidden();
 		}
 	
-		$id = $params['id'];
+		$id = $params['id'];		
 		
 		if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
 			return $entity->toArray();

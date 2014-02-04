@@ -103,7 +103,7 @@ class Record extends \Espo\Core\Services\Base
     		$this->streamService = $this->getServiceFactory()->create('Stream');
     	}
     	return $this->streamService;
-    } 
+    }
 	
 	protected function loadIsFollowed(Entity $entity)
 	{	
@@ -184,14 +184,15 @@ class Record extends \Espo\Core\Services\Base
 	public function updateEntity($id, $data)
 	{	
 		// TODO validate $data
+		
+		unset($data['deleted']);
+		
 		$entity = $this->getEntity($id);
 		
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
 		
-		print_r($data);
-		//die;
 				
 		$entity->set($data);
 		

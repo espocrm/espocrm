@@ -103,7 +103,7 @@ abstract class Mapper implements IMapper
 
 	public function select(IEntity $entity, $params = array())
 	{
-		$sql = $this->createSelectQuery($entity, $params);
+		$sql = $this->createSelectQuery($entity, $params);		
 		
 		$dataArr = array();		
 		$ps = $this->pdo->query($sql);
@@ -737,7 +737,7 @@ abstract class Mapper implements IMapper
 		$valuesPart = implode(", ", $valArr);
 		
 		$sql = $this->composeInsertQuery($this->toDb($entity->getEntityName()), $fieldsPart, $valuesPart);
-		
+
 		if ($this->pdo->query($sql)) {			
 			return $entity->id;
 		}
@@ -1008,7 +1008,7 @@ abstract class Mapper implements IMapper
 				
 				if ($alias) {
 					$joinsArr[] = 
-						"LEFT JOIN `" . $this->toDb($r['entity']) . "` AS " . $alias . " ON ". 
+						"LEFT JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ". 
 						$this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
 				}
 			}
@@ -1125,7 +1125,7 @@ abstract class Mapper implements IMapper
 				$fieldPath = $this->getFieldPath($entity, $field);
 			}
 
-			$arr[] = $fieldPath . ' AS ' . $field;
+			$arr[] = $fieldPath . ' AS `' . $field . '`';
 		}
 		
 		$select = implode(', ', $arr);

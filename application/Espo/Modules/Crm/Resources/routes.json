@@ -16,8 +16,7 @@
     "method":"get",
     "params":{
         "controller":"Activities",
-		"action":"listEvents"
+		"action":"listCalendarEvents"
     }
-  }
-  
+  }  
 ]

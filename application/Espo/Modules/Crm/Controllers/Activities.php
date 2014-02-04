@@ -10,7 +10,7 @@ class Activities extends \Espo\Core\Controllers\Base
 {
 	public static $defaultAction = 'index';	
 	
-	public function actionListEvents($params, $data, $request)
+	public function actionListCalendarEvents($params, $data, $request)
 	{
 		$from = $request->get('from');
 		$to = $request->get('to');
@@ -19,8 +19,9 @@ class Activities extends \Espo\Core\Controllers\Base
 			throw new BadRequest();
 		}
 		
+		
 		$service = $this->getService('Activities');
-		return $service->getEvents($from, $to);
+		return $service->getEvents($this->getUser()->id, $from, $to);
 	}
 
 	public function actionList($params, $data, $request)

@@ -13,7 +13,7 @@ class Stream extends \Espo\Core\Services\Base
 		'Lead' => array(
 			'field' => 'status',
 			'style' => array(
-				'New' => 'warning',				
+				'New' => 'primary',				
 				'Assigned' => 'primary',
 				'In Process' => 'primary',
 				'Converted' => 'success',
@@ -24,7 +24,7 @@ class Stream extends \Espo\Core\Services\Base
 		'Case' => array(
 			'field' => 'status',
 			'style' => array(
-				'New' => 'warning',
+				'New' => 'primary',
 				'Assigned' => 'primary',
 				'Pending' => 'default',
 				'Closed' => 'success',
