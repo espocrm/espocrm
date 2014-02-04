@@ -192,7 +192,6 @@ class Record extends \Espo\Core\Services\Base
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
-		
 				
 		$entity->set($data);
 		
