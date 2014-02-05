@@ -26,7 +26,6 @@ class Notifications extends \Espo\Core\Hooks\Base
 			$parentId = $entity->get('parentId');			
 		
 			if ($parentType && $parentId) {
-				$userIds = array();
 				$pdo = $this->getEntityManager()->getPDO();
 				$sql = "
 					SELECT user_id AS userId 

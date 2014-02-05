@@ -45,7 +45,6 @@ class Stream extends \Espo\Core\Hooks\Base
 		
 		if ($this->checkHasStream($entity)) {
 			if (!$entity->isFetched()) {
-				$this->getStreamService()->noteCreate($entity);
 				
 				$assignedUserId = $entity->get('assignedUserId');
 				$createdById = $entity->get('createdById');
@@ -56,7 +55,8 @@ class Stream extends \Espo\Core\Hooks\Base
 				
 				if (!empty($assignedUserId) && $createdById != $assignedUserId) {
 					$this->getStreamService()->followEntity($entity, $assignedUserId);
-				}								
+				}	
+				$this->getStreamService()->noteCreate($entity);							
 			} else {
 				if ($entity->isFieldChanged('assignedUserId')) {
 					$assignedUserId = $entity->get('assignedUserId');
