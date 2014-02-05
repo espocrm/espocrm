@@ -16,6 +16,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
 		'metadata',
 		'acl',
 		'selectManagerFactory',
+		'config',
 	);
 	
 	protected function getSelectManagerFactory()
@@ -43,15 +44,14 @@ class GlobalSearch extends \Espo\Core\Services\Base
 		return $this->injections['metadata'];
 	}
 	
+	protected function getConfig()
+	{
+		return $this->injections['config'];
+	}
+	
 	public function find($query, $offset)
 	{
-		$entityNameList = array(
-			'Account',
-			'Contact',
-			'Lead',
-			'Prospect',
-			'Opportunity',
-		);
+		$entityNameList = $this->getConfig()->get('globalSearchEntityList');
 		
 		$list = array();
 		$count = 0;
