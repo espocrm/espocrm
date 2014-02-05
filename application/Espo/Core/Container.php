@@ -45,9 +45,8 @@ class Container
 
 		// TODO throw an exception
     	return null;
-    }
-
-
+    }    
+    
     private function loadSlim()
     {
         //return new \Slim\Slim();
@@ -116,6 +115,16 @@ class Container
     {
     	return new \Espo\Core\ServiceFactory(
 			$this
+		);
+    }
+    
+	private function loadSelectManagerFactory()
+    {
+    	return new \Espo\Core\SelectManagerFactory(
+			$this->get('entityManager'),
+			$this->get('user'),
+			$this->get('acl'),
+			$this->get('metadata')
 		);
     }
 

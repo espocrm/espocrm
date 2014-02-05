@@ -1,10 +1,12 @@
 <?php
 
-namespace Espo\Core;
+namespace Espo\Core\SelectManagers;
 
 use \Espo\Core\Exceptions\Error;
 
-class SelectManager
+use \Espo\Core\Acl;
+
+class Base
 {	
 	protected $container;
 	
@@ -18,7 +20,7 @@ class SelectManager
 	
 	protected $metadata;
 
-    public function __construct(ORM\EntityManager $entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
+    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
     {
     	$this->entityManager = $entityManager;
     	$this->user = $user;
@@ -131,6 +133,7 @@ class SelectManager
     protected function access(&$result)
     {
     	if ($this->acl->checkReadOnlyOwn($this->entityName)) {
+
     		if (!array_key_exists('whereClause', $result)) {
     			$result['whereClause'] = array();
     		}
@@ -142,12 +145,20 @@ class SelectManager
     		}
     		if (!array_key_exists('joins', $result)) {
     			$result['joins'] = array();
-    			if (!in_array('teams', $result['joins'])) {
-    				$result['joins'][] = 'teams';
-    			}
-    		}   		
-    		$result['whereClause']['Team.id'] = $this->user->get('teamsIds');    				
+    		}
+    		if (!in_array('teams', $result['joins'])) {
+    			$result['joins'][] = 'teams';
+    		}
+    		   		
+    		$result['whereClause']['Team.id'] = $this->user->get('teamsIds'); 			
     	}    	
+    }
+    
+    public function getAclParams()
+    {
+    	$result = array();
+    	$this->access($result);
+    	return $result;
     }
 
 	public function getSelectParams(array $params, $withAcl = false)

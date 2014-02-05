@@ -2,7 +2,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class CaseObj extends \Espo\Core\SelectManager
+class CaseObj extends \Espo\Core\SelectManagers\Base
 {
 
 	protected function getBoolFilterWhereOpen()

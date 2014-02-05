@@ -2,9 +2,8 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Opportunity extends \Espo\Core\SelectManager
+class Opportunity extends \Espo\Core\SelectManagers\Base
 {
-
 	protected function getBoolFilterWhereOpen()
 	{
 		return array(

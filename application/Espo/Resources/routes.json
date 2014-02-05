@@ -52,6 +52,16 @@
   },
   
   {
+  	"route":"/GlobalSearch/:query",
+    "method":"get",
+    "params":{
+        "controller":"GlobalSearch",
+		"action":"search",
+		"query": ":query"		
+    }
+  },
+  
+  {
   	"route":"/:controller/action/:action",
     "method":"post",
     "params":{

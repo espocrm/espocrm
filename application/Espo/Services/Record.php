@@ -17,6 +17,7 @@ class Record extends \Espo\Core\Services\Base
 		'config',
 		'serviceFactory',
 		'fileManager',
+		'selectManagerFactory',
 	);
 	
 	protected $entityName;
@@ -50,6 +51,11 @@ class Record extends \Espo\Core\Services\Base
 	protected function getServiceFactory()
 	{
 		return $this->injections['serviceFactory'];
+	}
+	
+	protected function getSelectManagerFactory()
+	{
+		return $this->injections['selectManagerFactory'];
 	}
 
 	protected function getUser()
@@ -143,23 +149,7 @@ class Record extends \Espo\Core\Services\Base
 	
 	protected function getSelectManager($entityName)
 	{
-    	$className = '\\Espo\\Custom\\SelectManagers\\' . Util::normilizeClassName($entityName);
-		if (!class_exists($className)) {
-			$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
-			if ($moduleName) {
-				$className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . Util::normilizeClassName($entityName);
-			} else {
-				$className = '\\Espo\\SelectManagers\\' . Util::normilizeClassName($entityName);
-			}    	
-			if (!class_exists($className)) {
-				$className = '\\Espo\\Core\\SelectManager';
-			}
-    	}
-		
-		$selectManager = new $className($this->getEntityManager(), $this->getUser(), $this->getAcl(), $this->getMetadata());
-		$selectManager->setEntityName($entityName);
-				
-		return $selectManager;
+    	return $this->getSelectManagerFactory()->create($entityName);
 	}
 	
 	protected function storeEntity(Entity $entity)

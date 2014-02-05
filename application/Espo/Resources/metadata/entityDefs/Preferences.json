@@ -49,7 +49,7 @@
         },
         "smtpAuth": {
             "type": "bool",
-            "default": true
+            "default": false
         },
         "smtpSecurity": {
             "type": "enum",
