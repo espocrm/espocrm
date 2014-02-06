@@ -175,6 +175,15 @@ class Container
 			$this->get('entityManager')
 		);
 	}
+
+	private function loadClassMerger()
+	{
+		return new \Espo\Core\Utils\File\ClassMerger(
+			$this->get('fileManager'),
+			$this->get('config'),
+			$this->get('metadata')
+		);
+	}
 	
 	public function setUser($user)
 	{

@@ -37,6 +37,12 @@ return array (
   'dateFormat' => 'MM/DD/YYYY',
   'timeFormat' => 'HH:mm',
 
+  'cron' => array(
+    'maxJobNumber' => 15, /*Max number of jobs per one execution*/    
+    'jobPeriod' => 7800, /*Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35*/
+    'minExecutionTime' => 50, /*to avoid too frequency execution*/
+  ),
+
   'systemUser' => array(
     'id' => 'system',
     'userName' => 'system',
