@@ -6,7 +6,13 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Planned", "Held", "Not Held"]
+            "options": ["Planned", "Held", "Not Held"],
+            "default": "Planned",
+            "view": "Fields.EnumStyled",
+            "style": {
+            	"Held": "success",
+            	"Not Held": "danger"
+            }
         },
         "dateStart": {
             "type": "datetime",

@@ -23,7 +23,11 @@
         "status": {
             "type": "enum",
             "options": ["New", "Assigned", "In Process", "Converted", "Recycled", "Dead"],
-            "default": "New"
+            "default": "New",
+            "view": "Fields.EnumStyled",
+            "style": {
+            	"Converted": "success"
+            }
         },
         "source": {
             "type": "enum",
