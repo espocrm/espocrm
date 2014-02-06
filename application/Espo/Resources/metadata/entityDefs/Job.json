@@ -1,0 +1,51 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true            
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Pending", "Running", "Success", "Failed"],
+            "default": "Pending"
+        },
+        "executeTime": {
+            "type": "datetime",
+            "required": true
+        },
+        "serviceName": {
+            "type": "varchar",
+            "required": true,
+            "len":100 
+        },
+        "method": {
+            "type": "varchar",
+            "required": true,
+            "len":100
+        },
+        "data": {
+            "type": "text" 
+        },        
+        "scheduledJob": {
+            "type": "link"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "scheduledJob": {
+            "type": "belongsTo",
+            "entity": "ScheduledJob"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    }
+}

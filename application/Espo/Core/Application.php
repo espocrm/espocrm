@@ -101,7 +101,10 @@ class Application
     {
     	$auth = $this->getAuth();
     	$auth->useNoAuth();
-    	// TODO cron manager
+
+    	$cronManager = new \Espo\Core\CronManager($this->container);
+
+		$cronManager->run();    	
     }
     
 	protected function routeHooks()

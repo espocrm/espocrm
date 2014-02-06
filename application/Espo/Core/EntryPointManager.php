@@ -16,7 +16,7 @@ class EntryPointManager
 
 	protected $cacheFile = 'data/cache/application/entryPoints.php';
 
-	protected $allowMethods = array(
+	protected $allowedMethods = array(
 		'run',
 	);	
 
@@ -85,50 +85,11 @@ class EntryPointManager
 
 	protected function init()
 	{
-		$config = $this->getContainer()->get('config');
-	
-		if (file_exists($this->cacheFile) && $config->get('useCache')) {
-			$this->data = $this->getFileManager()->getContent($this->cacheFile);
-		} else {	
-			$this->data = $this->getClassNameHash(array($this->paths['corePath'], $this->paths['customPath']) );
-	    	foreach ($this->getContainer()->get('metadata')->getModuleList() as $moduleName) {
-	    		$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);	    		
-
-				$this->data = array_merge($this->data, $this->getClassNameHash(array($path)));
-	    	}
-	    	if ($config->get('useCache')) {
-				$result = $this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
-				if ($result == false) {
-			    	throw new \Espo\Core\Exceptions\Error();
-				}
-			}
-		}
-	}
-	
-	// TODO delegate to another class
-	protected function getClassNameHash(array $dirs)
-	{
-		$data = array();
-		foreach ($dirs as $dir) {	      
-			if (file_exists($dir)) {
-	        	$fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');
-	            foreach ($fileList as $file) {					
-					$filePath = Util::concatPath($dir, $file);
-                	$className = Util::getClassName($filePath);       
-                	$fileName = $this->getFileManager()->getFileName($filePath); 
-                	$fileName = ucfirst($fileName); 
-
-					foreach ($this->allowMethods as $methodName) {	
-						if (method_exists($className, $methodName)) {							
-							$data[$fileName] = $className;
-						}
-					}					
-					
-	            }
-			}
-		}
-		return $data;
-	}   
+		$classMerger = $this->getContainer()->get('classMerger');
+		$classMerger->setAllowedMethods($this->allowedMethods);
+		$this->data = $classMerger->getData($this->cacheFile, $this->paths);
+	}	
+	 
 
 }
 

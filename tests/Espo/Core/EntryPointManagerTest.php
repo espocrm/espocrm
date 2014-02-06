@@ -28,11 +28,7 @@ class EntryPointManagerTest extends \PHPUnit_Framework_TestCase
         $this->reflection->setProperty('paths', array(
             'corePath' => 'tests/testData/EntryPoints/Espo/EntryPoints',
             'modulePath' => 'tests/testData/EntryPoints/Espo/Modules/Crm/EntryPoints',                                             
-        ));   
-        $this->reflection->setProperty('customPaths', array(
-            'corePath' => '',
-            'modulePath' => '',                                             
-        ));     
+        ));             
     }
 
     protected function tearDown()
@@ -40,24 +36,13 @@ class EntryPointManagerTest extends \PHPUnit_Framework_TestCase
         $this->object = NULL;
     }
 
-
-    function testGetData()
-    {
-        $result = array(
-            'Download' => '\tests\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => '\tests\testData\EntryPoints\Espo\EntryPoints\Test',
-            'InModule' => '\tests\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'          
-        );        
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($this->reflection->getProperty('paths'))) ); 
-    }	
-
     function testGet()
     {
         $this->reflection->setProperty('data', array(
             'Test' => '\tests\testData\EntryPoints\Espo\EntryPoints\Test',            
         ));
 
-        $this->assertEquals('\tests\testData\EntryPoints\Espo\EntryPoints\Test', $this->reflection->invokeMethod('get', array('test')) );
+        $this->assertEquals('\tests\testData\EntryPoints\Espo\EntryPoints\Test', $this->reflection->invokeMethod('getClassName', array('test')) );
     }
 
 
