@@ -14,6 +14,11 @@
             "name":"history",
             "label":"History",
             "view":"Crm:Record.Panels.History"
+         },
+         {
+            "name":"tasks",
+            "label":"Tasks",
+            "view":"Crm:Record.Panels.Tasks"
          }
       ]
    }

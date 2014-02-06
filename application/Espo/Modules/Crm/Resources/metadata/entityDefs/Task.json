@@ -83,6 +83,6 @@
     "collection": {
     	"sortBy": "createdAt",
     	"asc": false,
-    	"boolFilters": ["onlyMy"]
+    	"boolFilters": ["onlyMy", "active"]
     }
 }
