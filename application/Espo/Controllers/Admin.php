@@ -29,5 +29,19 @@ class Admin extends \Espo\Core\Controllers\Base
 
 		return json_encode($result);
 	}
+
+	public function actionClearCache($params, $data)
+	{		
+		$cacheDir = $this->getContainer()->get('config')->get('cachePath');			
+
+		$result = $this->getContainer()->get('fileManager')->removeInDir($cacheDir);
+
+		if ($result === false) {
+			throw new Error("Error while clearing cache");
+		}
+
+		return json_encode($result);
+	}
+
 }
 
