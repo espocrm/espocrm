@@ -120,7 +120,16 @@
     "method":"get",
     "params":{
         "controller":"Admin",
-		"action":"rebuild"
+        "action":"rebuild"
+    }
+  },
+  
+  {
+    "route":"/Admin/clearCache",
+    "method":"get",
+    "params":{
+        "controller":"Admin",
+        "action":"clearCache"
     }
   },
 
