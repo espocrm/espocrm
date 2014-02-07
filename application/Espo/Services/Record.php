@@ -5,6 +5,7 @@ namespace Espo\Services;
 use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
@@ -156,13 +157,27 @@ class Record extends \Espo\Core\Services\Base
 	{
 		return $this->getRepository()->save($entity);
 	}
+	
+	protected function isValid($entity)
+	{
+		$fieldDefs = $entity->getFields();
+		if ($entity->hasField('name') && !empty($fieldDefs['name']['required'])) {
+			if (!$entity->get('name')) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public function createEntity($data)
 	{
-		// TODO validate $data
 		$entity = $this->getEntity();
 		
-		$entity->set($data);		
+		$entity->set($data);
+		
+		if (!$this->isValid($entity)) {
+			throw new BadRequest();
+		}		
 		
 		if ($this->storeEntity($entity)) {
 			return $entity;
@@ -170,11 +185,10 @@ class Record extends \Espo\Core\Services\Base
 		
 		throw new Error();
 	}
-
+	
+	
 	public function updateEntity($id, $data)
-	{	
-		// TODO validate $data
-		
+	{			
 		unset($data['deleted']);
 		
 		$entity = $this->getEntity($id);
@@ -184,6 +198,10 @@ class Record extends \Espo\Core\Services\Base
 		}
 				
 		$entity->set($data);
+		
+		if (!$this->isValid($entity)) {
+			throw new BadRequest();
+		}
 		
 		$d = $entity->get('attachmentsIds');
 		
