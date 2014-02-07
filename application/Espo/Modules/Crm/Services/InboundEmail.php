@@ -8,8 +8,6 @@ use \Espo\Core\Exceptions\Forbidden;
 class InboundEmail extends \Espo\Services\Record
 {
 	
-	
-	
 	protected function init()
 	{
 		$this->dependencies[] = 'fileManager';
@@ -36,7 +34,6 @@ class InboundEmail extends \Espo\Services\Record
 		return $pointer;
 	}
 	
-	// TODO try catch this in cron
 	public function fetchFromMailServer($id)
 	{
 		$inboundEmail = $this->getEntity($id);
@@ -254,9 +251,10 @@ class InboundEmail extends \Espo\Services\Record
 						$this->assignLeastBusy($case, $team);
 					}
 				}
-				break;
+				break;				
 		}
-			
+		
+		$email->set('assignedUserId', $case->get('assignedUserId'));
 		
 		$contact = $this->getEntityManager()->getRepository('Contact')->where(array(
 			'EmailAddress.id' => $email->get('fromEmailAddressId')

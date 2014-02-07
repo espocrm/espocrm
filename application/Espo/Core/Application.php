@@ -94,17 +94,16 @@ class Application
 			}
 		});
     	
-    	$slim->run();  	
+    	$slim->run();
     }
     
     public function runCron()
     {
     	$auth = $this->getAuth();
-    	$auth->useNoAuth();
-
+    	$auth->useNoAuth();  	
+    	
     	$cronManager = new \Espo\Core\CronManager($this->container);
-
-		$cronManager->run();    	
+		$cronManager->run();
     }
     
 	protected function routeHooks()

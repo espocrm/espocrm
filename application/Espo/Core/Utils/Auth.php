@@ -20,8 +20,9 @@ class Auth
 		$user = $entityManager->getRepository('User')->get('system');		
 		if (!$user) {
 			throw new Error('System user is not found');			
-		}		
+		}
 
+		$entityManager->setUser($user);
 		$this->container->setUser($user);
 	}
 	

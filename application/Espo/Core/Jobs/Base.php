@@ -32,6 +32,11 @@ abstract class Base
 	protected function getMetadata()
 	{
 		return $this->getContainer()->get('metadata');
+	}
+	
+	protected function getUser()
+	{
+		return $this->getContainer()->get('user');
 	}	
 	
 	public function __construct(Container $container)

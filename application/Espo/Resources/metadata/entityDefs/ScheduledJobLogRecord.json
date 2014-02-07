@@ -10,7 +10,7 @@
              "readOnly": true
         },
         "executionTime": {
-            "type": "varchar",
+            "type": "datetime",
             "readOnly": true
         },
         "createdAt": {
@@ -28,7 +28,7 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
+    	"sortBy": "executionTime",
     	"asc": false
     }
 }
