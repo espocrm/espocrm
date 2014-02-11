@@ -87,8 +87,8 @@ return array (
   array(
     'base' => 'USD',
     'rate' => array(
-      'USD' => 1.0,
       'EUR' => 1.37,
+      'GBP' => 1.67,
     ),    
   ),
 );
