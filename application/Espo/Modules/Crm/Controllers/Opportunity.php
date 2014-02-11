@@ -38,8 +38,12 @@ class Opportunity extends \Espo\Core\Controllers\Record
 		$dateTo = $request->get('dateTo');
 		
 		return array(
-			'month' => array('2013-01','2013-02','2013-03','2013-04','2013-05','2013-06'),
-			'values' => array(1200, 3000, 4000, 2500, 3000)
+			'2013-01' => 1200,
+			'2013-02' => 3000,			
+			'2013-03' => 4000,
+			'2013-04' => 2500,
+			'2013-05' => 3000,
+			'2013-06' => 2900,
 		);
 	}
 	
