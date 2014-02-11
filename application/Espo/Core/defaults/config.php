@@ -83,6 +83,14 @@ return array (
     'logger',
     'devMode',
   ),
+  'currency' =>
+  array(
+    'base' => 'USD',
+    'rate' => array(
+      'USD' => 1.0,
+      'EUR' => 1.37,
+    ),    
+  ),
 );
 
 ?>

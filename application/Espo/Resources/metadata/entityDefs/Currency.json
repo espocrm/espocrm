@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "rate": {
+            "type": "float"
+        }
+    }
+}
