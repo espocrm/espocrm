@@ -4,7 +4,7 @@ namespace Espo\Core\Utils\File;
 
 use \Espo\Core\Utils\Util;
 
-class ClassMerger 
+class ClassParser 
 {
 	private $fileManager;
 
@@ -50,27 +50,37 @@ class ClassMerger
 	/**
 	 * Return path data of classes
 	 * @param  string  $cacheFile full path for a cache file, ex. data/cache/application/entryPoints.php
-	 * @param  array  $paths in format array(
+	 * @param  string | array $paths in format array(
 	 *	'corePath' => '',
      *	'modulePath' => '',
      *	'customPath' => '',
 	 * );
 	 * @return array 
 	 */
-	public function getData($cacheFile, array $paths)
+	public function getData($paths, $cacheFile = false)
 	{		
 		$data = null;
 
-		if (file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
-			$data = $this->getFileManager()->getContent($cacheFile);
-		} else {	
-			$data = $this->getClassNameHash(array($paths['corePath'], $paths['customPath']) );
-	    	foreach ($this->getMetadata()->getModuleList() as $moduleName) {
-	    		$path = str_replace('{*}', $moduleName, $paths['modulePath']);	    		
+		if (is_string($paths)) {
+			$paths = array(
+				'corePath' => $paths,	
+			);	
+		}
 
-				$data = array_merge($data, $this->getClassNameHash(array($path)));
-	    	}
-	    	if ($this->getConfig()->get('useCache')) {
+		if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
+			$data = $this->getFileManager()->getContent($cacheFile);
+		} else {					
+			$data = $this->getClassNameHash( $this->getInitPaths($paths) );
+
+			if (isset($paths['modulePath'])) {
+				foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+		    		$path = str_replace('{*}', $moduleName, $paths['modulePath']);	    		
+
+					$data = array_merge($data, $this->getClassNameHash(array($path)));
+		    	}	
+			}
+	    	
+	    	if ($cacheFile && $this->getConfig()->get('useCache')) {
 				$result = $this->getFileManager()->setContentPHP($data, $cacheFile);
 				if ($result == false) {
 			    	throw new \Espo\Core\Exceptions\Error();
@@ -87,7 +97,8 @@ class ClassMerger
 		$data = array();
 		foreach ($dirs as $dir) {	      
 			if (file_exists($dir)) {
-	        	$fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');
+	        	$fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');	        	
+
 	            foreach ($fileList as $file) {					
 					$filePath = Util::concatPath($dir, $file);
                 	$className = Util::getClassName($filePath);       
@@ -105,4 +116,27 @@ class ClassMerger
 		}
 		return $data;
 	}  
+
+	/**
+	 * Get init paths like corePath and/or customPath
+	 * @param  array  $paths 
+	 * @return array        
+	 */
+	protected function getInitPaths(array $paths)
+	{
+		$allowedInitPath = array(
+			'corePath', 
+			'customPath', 
+		);
+
+		$initPaths = array();
+
+		foreach ($allowedInitPath as $pathName) {
+			if (isset($paths[$pathName])) {
+				$initPaths[] = $paths[$pathName];	
+			}
+		}
+
+		return $initPaths;
+	}
 }

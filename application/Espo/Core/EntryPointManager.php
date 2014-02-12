@@ -85,9 +85,9 @@ class EntryPointManager
 
 	protected function init()
 	{
-		$classMerger = $this->getContainer()->get('classMerger');
-		$classMerger->setAllowedMethods($this->allowedMethods);
-		$this->data = $classMerger->getData($this->cacheFile, $this->paths);
+		$classParser = $this->getContainer()->get('classParser');
+		$classParser->setAllowedMethods($this->allowedMethods);
+		$this->data = $classParser->getData($this->paths, $this->cacheFile);
 	}	
 	 
 

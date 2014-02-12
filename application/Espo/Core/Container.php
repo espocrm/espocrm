@@ -172,13 +172,14 @@ class Container
 			$this->get('config'),
 			$this->get('metadata'),
 			$this->get('fileManager'),
-			$this->get('entityManager')
+			$this->get('entityManager'),
+			$this->get('classParser')
 		);
 	}
 
-	private function loadClassMerger()
+	private function loadClassParser()
 	{
-		return new \Espo\Core\Utils\File\ClassMerger(
+		return new \Espo\Core\Utils\File\ClassParser(
 			$this->get('fileManager'),
 			$this->get('config'),
 			$this->get('metadata')

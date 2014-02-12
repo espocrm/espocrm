@@ -14,6 +14,8 @@ class Schema
 
 	private $entityManager;
 
+	private $classParser;
+
 	private $comparator;
 
 	private $converter;
@@ -30,13 +32,34 @@ class Schema
 		'Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
 	);
 
+	/**
+	 * Paths of rebuild action folders
+	 * @var array
+	 */
+	protected $rebuildActionsPath = array(
+		'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
+		'customPath' => 'application/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',		
+	);
 
-	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager)
+	/**
+	 * Array of rebuildActions classes in format:
+	 *  array(
+	 *  	'beforeRebuild' => array(...),
+	 *  	'afterRebuild' => array(...),
+	 *  )
+	 * @var array
+	 */
+	protected $rebuildActionClasses = null; 
+
+
+
+	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Utils\File\ClassParser $classParser)
 	{
 		$this->config = $config;
 		$this->metadata = $metadata;
 		$this->fileManager = $fileManager;
 		$this->entityManager = $entityManager;
+		$this->classParser = $classParser;
 
 		$this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
 		$this->initFieldTypes();
@@ -73,6 +96,11 @@ class Schema
 	protected function getConverter()
 	{
 		return $this->converter;
+	}
+
+	protected function getClassParser()
+	{
+		return $this->classParser;
 	}
 
 	public function getPlatform()
@@ -139,6 +167,9 @@ class Schema
 		$currentSchema = $this->getCurrentSchema();
 		$metadataSchema = $this->getConverter()->getSchemaFromMetadata();
 
+		$this->initRebuildActions($currentSchema, $metadataSchema);
+		$this->executeRebuildActions('beforeRebuild');
+
 		$queries = $this->getDiffSql($currentSchema, $metadataSchema);
 
 		$result = true;
@@ -153,15 +184,13 @@ class Schema
 			}
         }
 
-        //addSystemUser
-        $this->addSystemUser();
-        //END: addSystemUser
+        $this->executeRebuildActions('afterRebuild');
 
 		return (bool) $result;
 	}
 
 
-	protected function addSystemUser()
+	/*protected function addSystemUser()
 	{
 		$userId = $this->getConfig()->get('systemUser.id');
 
@@ -178,9 +207,7 @@ class Schema
 		}		
 
 		return true;
-	}
-
-
+	}*/
 
 	/*
 	* Get current database schema
@@ -219,6 +246,55 @@ class Schema
 	}
 
 
+
+	/**
+	 * Init Rebuild Actions, get all classes and create them
+	 * @return void
+	 */
+	protected function initRebuildActions($currentSchema = null, $metadataSchema = null)
+	{
+		$methods = array('beforeRebuild', 'afterRebuild');
+
+		$this->getClassParser()->setAllowedMethods($methods);
+		$rebuildActions = $this->getClassParser()->getData($this->rebuildActionsPath);
+
+		$classes = array(); 
+		foreach ($rebuildActions as $actionName => $actionClass) {
+			$rebuildActionClass = new $actionClass($this->metadata, $this->config, $this->entityManager);	
+			if (isset($currentSchema)) {
+				$rebuildActionClass->setCurrentSchema($currentSchema); 	
+			}
+			if (isset($metadataSchema)) {
+				$rebuildActionClass->setMetadataSchema($metadataSchema); 	
+			}				
+
+			foreach ($methods as $methodName) {
+				if (method_exists($rebuildActionClass, $methodName)) {
+					$classes[$methodName][] = $rebuildActionClass;
+				}
+			}
+		}
+
+		$this->rebuildActionClasses = $classes;
+	}
+
+	/**
+	 * Execute actions for RebuildAction classes
+	 * @param  string $action action name, possible values 'beforeRebuild' | 'afterRebuild'
+	 * @return void
+	 */
+	protected function executeRebuildActions($action = 'beforeRebuild')
+	{
+		if (!isset($this->rebuildActionClasses)) {
+			$this->initRebuildActions();	
+		}
+
+		if (isset($this->rebuildActionClasses[$action])) {
+			foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
+				$rebuildActionClass->$action();
+			}
+		}		
+	}
 
 
 }
