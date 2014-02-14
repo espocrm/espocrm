@@ -56,8 +56,9 @@ class Container
 	private function loadFileManager()
     {
     	return new \Espo\Core\Utils\File\Manager(
-			(object) array(
-				'defaultPermissions' => (object)  array (
+			array(
+				'defaultPermissions' => 
+				array (
 				    'dir' => '0775',
 				    'file' => '0664',
 				    'user' => '',
@@ -91,7 +92,7 @@ class Container
     	return new \Espo\Core\Utils\Log(
 			$this->get('fileManager'),
 			$this->get('output'),
-			(object) array(
+			array(
 				'options' => $this->get('config')->get('logger'),
 			)
 		);
@@ -150,7 +151,7 @@ class Container
     {
        	return new \Espo\Core\Utils\File\UniteFiles(
 			$this->get('fileManager'),
-            (object) array(
+            array(
 				'unsetFileName' => $this->get('config')->get('unsetFileName'),
 				'defaultsPath' => $this->get('config')->get('defaultsPath'),
 			)

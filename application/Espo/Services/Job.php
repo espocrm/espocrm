@@ -9,7 +9,7 @@ class Job extends Record
 
 	public function getPendingJobs()
 	{
-		$jobConfigs = (array) $this->getConfig()->get('cron');				
+		$jobConfigs = $this->getConfig()->get('cron');				
 
 		$currentTime = time();
 		$periodTime = $currentTime - intval($jobConfigs['jobPeriod']);

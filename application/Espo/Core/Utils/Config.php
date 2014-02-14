@@ -22,12 +22,12 @@ class Config
 
 
 	/**
-	 * Contains content of default config
+	 * Contains content of config
      *
 	 * @access private
-	 * @var string
+	 * @var array
 	 */
-	private $lastConfigObj;
+	private $configData;
 
 	private $fileManager;
 
@@ -54,10 +54,10 @@ class Config
 	{
 		$keys = explode('.', $name);
 
-		$lastBranch = $this->getConfig();
+		$lastBranch = $this->loadConfig();
 		foreach ($keys as $keyName) {
-        	if (isset($lastBranch->$keyName) && is_object($lastBranch)) {
-            	$lastBranch = $lastBranch->$keyName;
+        	if (isset($lastBranch[$keyName]) && is_array($lastBranch)) {
+            	$lastBranch = $lastBranch[$keyName];
         	} else {
         		return null;
         	}
@@ -82,7 +82,7 @@ class Config
 
         $content = array($name => $value);
 		$status = $this->getFileManager()->mergeContentPHP($content, $this->get('configPath'), '', true);
-        $this->getConfig(true);
+        $this->loadConfig(true);
 
 		return $status;
 	}
@@ -105,20 +105,20 @@ class Config
 		}
 
 		$status = $this->getFileManager()->mergeContentPHP($values, $this->get('configPath'), '', true);
-        $this->getConfig(true);
+        $this->loadConfig(true);
 
 		return $status;
 	}
 
     /**
      * Return an Object of all configs
-	 *
-	 * @return object
-	 */
-	 function getConfig($reload=false)
+     * @param  boolean $reload 
+     * @return array()
+     */
+	protected function loadConfig($reload = false)
 	{
-		if (!$reload && isset($this->lastConfigObj) && !empty($this->lastConfigObj)) {
-        	return $this->lastConfigObj;
+		if (!$reload && isset($this->configData) && !empty($this->configData)) {
+        	return $this->configData;
 		}
 
 		$defaultConfig = $this->getFileManager()->getContent($this->defaultConfigPath);
@@ -128,35 +128,31 @@ class Config
 			$GLOBALS['log']->add('FATAL', 'Check syntax or permission of your '.$defaultConfig['configPath']);
 		}
 
-		$this->lastConfigObj = Util::arrayToObject( Util::merge((array) $defaultConfig, (array) $config) );
+		$this->configData =  Util::merge((array) $defaultConfig, (array) $config);
 		$this->adminItems = $this->getRestrictItems();
 
-		return $this->lastConfigObj;
+		return $this->configData;
 	}
 
 
 	/**
-     * Get JSON config acording to restrictions for a user
+     * Get config acording to restrictions for a user
 	 *
 	 * @param $isAdmin
-	 * @return object
+	 * @return array
 	 */
-	public function getData($isAdmin=false, $encode=true)
+	public function getData($isAdmin=false)
 	{
-        $configObj = $this->getConfig();
+        $configData = $this->loadConfig();
 
-		$restrictedConfig = $configObj;
+		$restrictedConfig = $configData;
 		foreach($this->getRestrictItems($isAdmin) as $name) {
-			if (isset($restrictedConfig->$name)) {
-            	unset($restrictedConfig->$name);
+			if (isset($restrictedConfig[$name])) {
+            	unset($restrictedConfig[$name]);
 			}
-		}
+		}		
 
-		if (!$encode) {
-			return $restrictedConfig;
-		}
-
-		return Util::objectToArray($restrictedConfig);
+		return $restrictedConfig;
 	}
 
 
@@ -189,12 +185,14 @@ class Config
 	 */
 	protected function getRestrictItems($onlySystemItems = false)
 	{
-    	if ($onlySystemItems) {
-        	return ((array) $this->getConfig()->systemItems);
+		$configData = $this->loadConfig();
+
+    	if ($onlySystemItems) {    		
+        	return $configData['systemItems'];
     	}
 
 		if (empty($this->adminItems)) {
-        	$this->adminItems= Util::merge( (array) $this->getConfig()->systemItems, (array) $this->getConfig()->adminItems );
+        	$this->adminItems= Util::merge($configData['systemItems'], $configData['adminItems']);
 		}
 
 		return $this->adminItems;

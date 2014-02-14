@@ -13,7 +13,7 @@ class AddSystemUser extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 
 		if (!isset($entity)) {
 
-			$systemUser = (array) $this->getConfig()->get('systemUser');
+			$systemUser = $this->getConfig()->get('systemUser');
 
 			$entity = $this->getEntityManager()->getEntity('User');
 			$entity->set($systemUser);			

@@ -14,8 +14,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {  
     	$this->object = new \Espo\Core\Utils\File\Manager(
-			(object) array(
-				'defaultPermissions' => (object)  array (
+			array(
+				'defaultPermissions' => array (
 				    'dir' => '0775',
 				    'file' => '0664',
 				    'user' => '',

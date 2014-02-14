@@ -20,7 +20,7 @@ class Manager
 	private $params;
 
 
-	public function __construct(\stdClass $params)
+	public function __construct(array $params)
 	{
 		$this->params = $params;
 	}
@@ -299,9 +299,11 @@ class Manager
 	 */
 	public function checkCreateFile($filePath)
 	{
+		$defaultPermissions = $this->getDefaultPermissions();
+
 		if (file_exists($filePath)) {
 
-			if (!in_array($this->getCurrentPermission($filePath), array($this->getDefaultPermissions()->file, $this->getDefaultPermissions()->dir))) {
+			if (!in_array($this->getCurrentPermission($filePath), array($defaultPermissions['file'], $defaultPermissions['dir']))) {
             	return $this->setDefaultPermissions($filePath, true);
 			}
 			return true;
@@ -309,7 +311,7 @@ class Manager
 
 		$pathParts= pathinfo($filePath);
 		if (!file_exists($pathParts['dirname'])) {
-            $dirPermission= $this->getDefaultPermissions()->dir;
+            $dirPermission= $defaultPermissions['dir'];
             $dirPermission= is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
 			if (!mkdir($pathParts['dirname'], $dirPermission, true)) {
@@ -481,12 +483,12 @@ return '.var_export($content, true).';
 	 */
     public function getDefaultPermissions()
 	{
-    	if (isset($this->defaultPermissions) && is_object($this->defaultPermissions)) {
+    	if (isset($this->defaultPermissions) && is_array($this->defaultPermissions)) {
     		return $this->defaultPermissions;
     	}
 
-		//$this->defaultPermissions = $this->getConfig()->get('defaultPermissions');
-		$this->defaultPermissions = $this->getParams()->defaultPermissions;
+		$params = $this->getParams();		
+		$this->defaultPermissions = $params['defaultPermissions'];
 
 		return $this->defaultPermissions;
 	}
@@ -507,12 +509,12 @@ return '.var_export($content, true).';
 
         $permission= $this->getDefaultPermissions();
 
-        $result= $this->chmod($path, array($permission->file, $permission->dir), $recurse);
-		if (!empty($permission->user)) {
-        	$result&= $this->chown($path, $permission->user, $recurse);
+        $result= $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
+		if (!empty($permission['user'])) {
+        	$result&= $this->chown($path, $permission['user'], $recurse);
 		}
-		if (!empty($permission->group)) {
-        	$result&= $this->chgrp($path, $permission->group, $recurse);
+		if (!empty($permission['group'])) {
+        	$result&= $this->chgrp($path, $permission['group'], $recurse);
 		}
 
         return $result;
@@ -765,9 +767,11 @@ return '.var_export($content, true).';
 	 */
 	function getDefaultOwner($usePosix=false)
 	{
-		$owner= $this->getDefaultPermissions()->user;
+		$defaultPermissions = $this->getDefaultPermissions();
+
+		$owner = $defaultPermissions['user'];
     	if (empty($owner) && $usePosix) {
-        	$owner= posix_getuid();
+        	$owner = posix_getuid();
     	}
 
 		if (empty($owner)) {
@@ -784,9 +788,11 @@ return '.var_export($content, true).';
 	 */
 	function getDefaultGroup($usePosix=false)
 	{
-		$group= $this->getDefaultPermissions()->group;
+		$defaultPermissions = $this->getDefaultPermissions();
+
+		$group = $defaultPermissions['group'];
     	if (empty($group) && $usePosix) {
-        	$group= posix_getegid();
+        	$group = posix_getegid();
     	}
 
 		if (empty($group)) {

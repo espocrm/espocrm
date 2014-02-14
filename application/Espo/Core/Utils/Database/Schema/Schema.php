@@ -117,7 +117,7 @@ class Schema
 
 		$dbalConfig = new \Doctrine\DBAL\Configuration();
 
-		$connectionParams = (array) $this->getConfig()->get('database');
+		$connectionParams = $this->getConfig()->get('database');
 		
 		$connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
 		unset($connectionParams['driver']);
@@ -189,25 +189,6 @@ class Schema
 		return (bool) $result;
 	}
 
-
-	/*protected function addSystemUser()
-	{
-		$userId = $this->getConfig()->get('systemUser.id');
-
-		$entity = $this->getEntityManager()->getEntity('User', $userId);
-
-		if (!isset($entity)) {
-
-			$systemUser = (array) $this->getConfig()->get('systemUser');
-
-			$entity = $this->getEntityManager()->getEntity('User');
-			$entity->set($systemUser);			
-
-			return $this->getEntityManager()->saveEntity($entity);			
-		}		
-
-		return true;
-	}*/
 
 	/*
 	* Get current database schema

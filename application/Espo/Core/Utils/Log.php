@@ -62,7 +62,7 @@ class Log
 	private $params;
 
 
-	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Output $output, \stdClass $params)
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Output $output, array $params)
 	{
 		$this->fileManager = $fileManager;
 		$this->output = $output;
@@ -141,7 +141,9 @@ class Log
 	protected function logError($text)
 	{
         $text = date('Y-m-d H:i:s') . ' ' . $text;
-		return $this->getFileManager()->appendContent($text, $this->getParams()->options->dir, $this->getParams()->options->file);
+
+        $params = $this->getParams();
+		return $this->getFileManager()->appendContent($text, $params['options']['dir'], $params['options']['file']);
 	}
 
 	/**
@@ -184,7 +186,8 @@ class Log
 	*/
 	protected function isSave($errorType)
 	{
-		$configLevel= $this->getLevelValue($this->getParams()->options->level);
+		$params = $this->getParams();
+		$configLevel= $this->getLevelValue($params['options']['level']);
 		$errorLevel= $this->getLevelValue($errorType);
 
 		if ($configLevel >= $errorLevel) {

@@ -9,7 +9,7 @@ class UniteFiles
 	private $fileManager;
 	private $params;
 
-	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \stdClass $params)
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, array $params)
 	{
     	$this->fileManager = $fileManager;
     	$this->params = $params;
@@ -32,7 +32,7 @@ class UniteFiles
 	/**
     * Unite file content to the file
 	*
-	* @param string $configParams - ["name", "cachePath", "corePath", "customPath"]
+	* @param string $configParams - array('name', 'cachePath', 'corePath', 'customPath')
 	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
 	*
 	* @return array
@@ -40,21 +40,21 @@ class UniteFiles
 	public function uniteFiles($configParams, $recursively=false)
 	{
 		//EXAMPLE OF IMPLEMENTATION IN METADATA CLASS
-		/*if (empty($configParams) || empty($configParams->name) || empty($configParams->cachePath) || empty($configParams->corePath)) {
+		/*if (empty($configParams) || empty($configParams['name']) || empty($configParams['cachePath']) || empty($configParams['corePath'])) {
 			return false;
 		}
 
 		//merge matadata files
-	   	$content= $this->uniteFilesSingle($configParams->corePath, $configParams->name, $recursively);
+	   	$content= $this->uniteFilesSingle($configParams['corePath'], $configParams['name'], $recursively);
 
-		if (!empty($configParams->customPath)) {
-			$customDir= strstr($configParams->customPath, '{*}', true);
+		if (!empty($configParams['customPath'])) {
+			$customDir= strstr($configParams['customPath'], '{*}', true);
         	$dirList= $this->getFileList($customDir, false, '', 'dir');
 
 			foreach($dirList as $dirName) {
-				$curPath= str_replace('{*}', $dirName, $configParams->customPath);
+				$curPath= str_replace('{*}', $dirName, $configParams['customPath']);
                 //$content= array_merge($content, $this->uniteFilesSingle($curPath, $recursively));
-                $content= Utils\Util::merge($content, $this->uniteFilesSingle($curPath, $configParams->name, $recursively));
+                $content= Utils\Util::merge($content, $this->uniteFilesSingle($curPath, $configParams['name'], $recursively));
 			}
 		}
         //END: merge matadata files
@@ -62,7 +62,7 @@ class UniteFiles
 		//save medatada to cache files
 		$jsonData= $this->getObject('JSON')->encode($content);
 
-		$cacheFile= Utils\Util::concatPath($configParams->cachePath, $configParams->name);
+		$cacheFile= Utils\Util::concatPath($configParams['cachePath'], $configParams['name']);
         $result= $this->setContent($jsonData, $cacheFile.'.json');
         $result&= $this->setContent($this->getFileManager()->getPHPFormat($content), $cacheFile.'.php');
 		//END: save medatada to cache files
@@ -74,7 +74,7 @@ class UniteFiles
     * Unite file content to the file for one directory [NOW ONLY FOR METADATA, NEED TO CHECK FOR LAYOUTS AND OTHERS]
 	*
 	* @param string $dirPath
-	* @param string $type - name of type ["metadata", "layouts"], ex. metadataConfig->name
+	* @param string $type - name of type array("metadata", "layouts"), ex. metadataConfig['name']
 	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
 	* @param string $moduleName - name of module if exists
 	*
@@ -85,7 +85,8 @@ class UniteFiles
 		if (empty($dirPath) || !file_exists($dirPath)) {
 			return false;
 		}
-        $unsetFileName = $this->getParams()->unsetFileName; //TODO
+		$params = $this->getParams();
+        $unsetFileName = $params['unsetFileName']; 
         //$unsetFileName = $this->getConfig('unsetFileName');
 
 		//get matadata files
@@ -175,7 +176,8 @@ class UniteFiles
 	*/
 	function loadDefaultValues($name, $type='metadata')
 	{
-        $defaultPath= $this->getParams()->defaultsPath;
+		$params = $this->getParams();
+        $defaultPath= $params['defaultsPath'];
         //$defaultPath= $this->getConfig('defaultsPath');
 
 		$defaultValue= $this->getFileManager()->getContent( Utils\Util::concatPath($defaultPath, $type), $name.'.json');

@@ -21,7 +21,7 @@ class EntryPointManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->reflection = new ReflectionHelper($this->object);
 
-        $fileManager = new \Espo\Core\Utils\File\Manager( (object) array());
+        $fileManager = new \Espo\Core\Utils\File\Manager( array() );        
         $this->reflection->setProperty('fileManager', $fileManager); 
 
         $this->reflection->setProperty('cacheFile', 'tests/testData/EntryPoints/cache/entryPoints.php');        

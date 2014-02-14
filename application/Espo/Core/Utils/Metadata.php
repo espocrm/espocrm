@@ -58,7 +58,8 @@ class Metadata
            	return false;
 		}
 
-		if (file_exists($this->getMetaConfig()->metadataCacheFile)) {
+		$metaConfig = $this->getMetaConfig();
+		if (file_exists($metaConfig['metadataCacheFile'])) {
 			return true;
 		}
 
@@ -77,7 +78,8 @@ class Metadata
 
 		if ($reload) {
         	//save medatada to a cache file
-	        $isSaved = $this->getFileManager()->setContentPHP($data, $this->getMetaConfig()->metadataCacheFile);
+        	$metaConfig = $this->getMetaConfig();
+	        $isSaved = $this->getFileManager()->setContentPHP($data, $metaConfig['metadataCacheFile']);
 			if ($isSaved === false) {
 	        	$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been saved to a cache file');
 			}
@@ -146,22 +148,22 @@ class Metadata
 	*/
 	public function getMetadataOnly($isJSON = true, $reload = false)
 	{
-		$config= $this->getMetaConfig();
+		$metaConfig = $this->getMetaConfig();
 
 		$data = false;
-		if (!file_exists($config->metadataCacheFile) || $reload) {
-        	$data= $this->uniteFiles($config, true);
+		if (!file_exists($metaConfig['metadataCacheFile']) || $reload) {
+        	$data = $this->uniteFiles($metaConfig, true);
 
 			if ($data === false) {
             	$GLOBALS['log']->add('FATAL', 'Metadata:getMetadata() - metadata unite file cannot be created');
 			}
 		}
-        else if (file_exists($config->metadataCacheFile)) {
-			$data= $this->getFileManager()->getContent($config->metadataCacheFile);
+        else if (file_exists($metaConfig['metadataCacheFile'])) {
+			$data = $this->getFileManager()->getContent($metaConfig['metadataCacheFile']);
 		}
 
 		if ($isJSON) {
-        	$data= Json::encode($data);
+        	$data = Json::encode($data);
         }
 
 		return $data;
@@ -181,11 +183,13 @@ class Metadata
 	*/
 	public function set($data, $type, $scope)
 	{
-		$fullPath = $this->getMetaConfig()->corePath;
+		$metaConfig = $this->getMetaConfig();
+
+		$fullPath = $metaConfig['corePath'];
 		$moduleName = $this->getScopeModuleName($scope);
 
 		if ($moduleName !== false) {
-        	$fullPath = str_replace('{*}', $moduleName, $this->getMetaConfig()->customPath);
+        	$fullPath = str_replace('{*}', $moduleName, $metaConfig['customPath']);
 		}
 		$fullPath = Util::concatPath($fullPath, $type);
 
@@ -209,7 +213,9 @@ class Metadata
 			return $this->espoMetadata;
 		}
 
-		$espoMetadataFile = Util::concatPath($this->getMetaConfig()->cachePath, 'ormMetadata.php');
+		$metaConfig = $this->getMetaConfig();
+
+		$espoMetadataFile = Util::concatPath($metaConfig['cachePath'], 'ormMetadata.php');
 
 		if (!file_exists($espoMetadataFile) || !$this->getConfig()->get('useCache')) {
         	$this->getConverter()->process();
@@ -222,42 +228,44 @@ class Metadata
 
 	public function setOrmMetadata(array $espoMetadata)
 	{
-		 $result = $this->getFileManager()->setContentPHP($espoMetadata, $this->getMetaConfig()->cachePath, 'ormMetadata.php');
-		 if ($result == false) {
+		$metaConfig = $this->getMetaConfig();
+
+		$result = $this->getFileManager()->setContentPHP($espoMetadata, $metaConfig['cachePath'], 'ormMetadata.php');
+		if ($result == false) {
 		 	$GLOBALS['log']->add('EXCEPTION', 'Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
          	throw new \Espo\Core\Exceptions\Error();
-		 }
+		}
 
-		 $this->espoMetadata = $espoMetadata;
+		$this->espoMetadata = $espoMetadata;
 
-		 return $result;
+		return $result;
 	}
 
 
 	/**
     * Unite file content to the file
 	*
-	* @param string $configParams - ["name", "cachePath", "corePath", "customPath"]
+	* @param string $configParams - array("name", "cachePath", "corePath", "customPath")
 	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
 	*
 	* @return array
 	*/
 	function uniteFiles($configParams, $recursively = false)
 	{
-		if (empty($configParams) || empty($configParams->name) || empty($configParams->cachePath) || empty($configParams->corePath)) {
+		if (empty($configParams) || empty($configParams['name']) || empty($configParams['cachePath']) || empty($configParams['corePath'])) {
 			return false;
 		}
 
 		//merge matadata files
-	   	$content= $this->getUniteFiles()->uniteFilesSingle($configParams->corePath, $configParams->name, $recursively);
+	   	$content= $this->getUniteFiles()->uniteFilesSingle($configParams['corePath'], $configParams['name'], $recursively);
 
-		if (!empty($configParams->customPath)) {
-			$customDir= strstr($configParams->customPath, '{*}', true);
+		if (!empty($configParams['customPath'])) {
+			$customDir= strstr($configParams['customPath'], '{*}', true);
         	$dirList= $this->getFileManager()->getFileList($customDir, false, '', 'dir');
 
 			foreach($dirList as $dirName) {
-				$curPath= str_replace('{*}', $dirName, $configParams->customPath);
-                $content= Util::merge($content, $this->getUniteFiles()->uniteFilesSingle($curPath, $configParams->name, $recursively, $dirName));
+				$curPath= str_replace('{*}', $dirName, $configParams['customPath']);
+                $content= Util::merge($content, $this->getUniteFiles()->uniteFilesSingle($curPath, $configParams['name'], $recursively, $dirName));
 			}
 		}
         //END: merge matadata files
@@ -404,16 +412,16 @@ class Metadata
 	/**
     * Get settings for Metadata
 	*
-	* @return object
+	* @return array
 	*/
 	public function getMetaConfig()
 	{
-		if (isset($this->metadataConfig) && is_object($this->metadataConfig)) {
+		if (isset($this->metadataConfig) && is_array($this->metadataConfig)) {
     		return $this->metadataConfig;
     	}
 
 		$this->metadataConfig = $this->getConfig()->get('metadataConfig');
-		$this->metadataConfig->metadataCacheFile= Util::concatPath($this->metadataConfig->cachePath, $this->metadataConfig->name).'.php';
+		$this->metadataConfig['metadataCacheFile'] = Util::concatPath($this->metadataConfig['cachePath'], $this->metadataConfig['name']).'.php';
 
 		return $this->metadataConfig;
 	}

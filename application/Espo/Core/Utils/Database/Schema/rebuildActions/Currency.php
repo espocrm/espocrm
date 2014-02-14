@@ -7,9 +7,7 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 	
 	public function afterRebuild()
 	{	 
-		$currencyConfig = (array) $this->getConfig()->get('currency');
-		$currencyConfig['rate'] = (array) $currencyConfig['rate'];  //todo remove this line after update Config	
-
+		$currencyConfig = $this->getConfig()->get('currency');	
 		$currencyConfig['rate'][ $currencyConfig['base'] ] = '1.00';	
 
 		$pdo = $this->getEntityManager()->getPDO();	

@@ -151,7 +151,8 @@ class Application
 				$actionName = $controllerParams['action'];
 			} else {
 				$httpMethod = strtolower($slim->request()->getMethod());
-				$actionName = $container->get('config')->get('crud')->$httpMethod;
+				$crudList = $container->get('config')->get('crud');
+				$actionName = $crudList[$httpMethod];
 			}
 			
 			try {							
@@ -172,7 +173,7 @@ class Application
 	protected function initRoutes()
 	{
 		$routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getContainer()->get('fileManager'));
-		$crudList = array_keys( (array) $this->getContainer()->get('config')->get('crud') );
+		$crudList = array_keys( $this->getContainer()->get('config')->get('crud') );
 
 		foreach ($routes->getAll() as $route) {
 

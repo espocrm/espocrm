@@ -16,7 +16,7 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {  
-    	$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager( (object) array());
+    	$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager( array() );
     	$this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
     	$this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
 
