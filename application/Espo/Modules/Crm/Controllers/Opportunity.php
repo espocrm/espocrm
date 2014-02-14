@@ -9,14 +9,31 @@ class Opportunity extends \Espo\Core\Controllers\Record
 		$dateFrom = $request->get('dateFrom');
 		$dateTo = $request->get('dateTo');
 		
-		return array(
-			'Call' => 5000,
-			'Partner' => 3400,
-			'Public Relations' => 6700,
-			'Web Site' => 5000,
-			'Campaign' => 3200,
-			'Other' => 5000,
-		);
+		$pdo = $this->getEntityManager()->getPDO();
+		
+		$sql = "
+			SELECT opportunity.lead_source AS `leadSource`, SUM(opportunity.amount * currency.rate * opportunity.probability / 100) as `amount`
+			FROM opportunity
+			JOIN currency ON currency.id = opportunity.amount_currency
+			WHERE 
+				opportunity.deleted = 0 AND
+				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
+				opportunity.close_date < ".$pdo->quote($dateTo)." AND
+				opportunity.stage <> 'Closed Lost' AND
+				opportunity.lead_source <> ''
+			GROUP BY opportunity.lead_source				
+		";
+		
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		
+		$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row['leadSource']] = floatval($row['amount']);
+		}		
+		return $result;
 	}
 	
 	public function actionReportByStage($params, $data, $request)
@@ -24,27 +41,67 @@ class Opportunity extends \Espo\Core\Controllers\Record
 		$dateFrom = $request->get('dateFrom');
 		$dateTo = $request->get('dateTo');
 		
-		return array(
-			'Prospecting' => 5000,
-			'Qualification' => 3400,
-			'Needs Analysis' => 6700,
-			'Closed Won' => 5000,
-		);
+		$pdo = $this->getEntityManager()->getPDO();
+		
+		$sql = "
+			SELECT opportunity.stage AS `stage`, SUM(opportunity.amount * currency.rate) as `amount`
+			FROM opportunity
+			JOIN currency ON currency.id = opportunity.amount_currency
+			WHERE 
+				opportunity.deleted = 0 AND
+				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
+				opportunity.close_date < ".$pdo->quote($dateTo)." AND
+				opportunity.stage <> 'Closed Lost'
+			GROUP BY opportunity.lead_source
+			ORDER BY `amount` DESC			
+		";
+		
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		
+		$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row['stage']] = floatval($row['amount']);
+		}	
+				
+		return $result;
 	}
 	
 	public function actionReportSalesByMonth($params, $data, $request)
 	{
 		$dateFrom = $request->get('dateFrom');
 		$dateTo = $request->get('dateTo');
+				
+		$pdo = $this->getEntityManager()->getPDO();
 		
-		return array(
-			'2013-01' => 1200,
-			'2013-02' => 3000,			
-			'2013-03' => 4000,
-			'2013-04' => 2500,
-			'2013-05' => 3000,
-			'2013-06' => 2900,
-		);
+		$sql = "
+			SELECT DATE_FORMAT(opportunity.close_date, '%Y-%m') AS `month`, SUM(opportunity.amount * currency.rate) as `amount`
+			FROM opportunity
+			JOIN currency ON currency.id = opportunity.amount_currency
+			WHERE 
+				opportunity.deleted = 0 AND
+				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
+				opportunity.close_date < ".$pdo->quote($dateTo)." AND
+				opportunity.stage = 'Closed Won'
+			
+			GROUP BY DATE_FORMAT(opportunity.close_date, '%Y-%m')
+			ORDER BY opportunity.close_date						
+		";
+		
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		
+		$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row['month']] = floatval($row['amount']);
+		}	
+				
+		return $result;
+		
 	}
 	
 	public function actionReportSalesPipeline($params, $data, $request)
@@ -52,12 +109,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
 		$dateFrom = $request->get('dateFrom');
 		$dateTo = $request->get('dateTo');
 		
-		return array(
-			'Prospecting' => 6000,
-			'Qualification' => 3400,
-			'Needs Analysis' => 2700,
-			'Closed Won' => 2000,
-		);
+		return $this->getService('Opportunity')->reportSalesPipeline($dateFrom, $dateTo);
 	}
 }
 
