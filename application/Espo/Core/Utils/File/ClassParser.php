@@ -68,7 +68,7 @@ class ClassParser
 		}
 
 		if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
-			$data = $this->getFileManager()->getContent($cacheFile);
+			$data = $this->getFileManager()->getContents($cacheFile);
 		} else {					
 			$data = $this->getClassNameHash( $this->getInitPaths($paths) );
 
@@ -81,7 +81,7 @@ class ClassParser
 			}
 	    	
 	    	if ($cacheFile && $this->getConfig()->get('useCache')) {
-				$result = $this->getFileManager()->setContentPHP($data, $cacheFile);
+				$result = $this->getFileManager()->putContentsPHP($cacheFile, $data);
 				if ($result == false) {
 			    	throw new \Espo\Core\Exceptions\Error();
 				}

@@ -79,7 +79,7 @@ class Metadata
 		if ($reload) {
         	//save medatada to a cache file
         	$metaConfig = $this->getMetaConfig();
-	        $isSaved = $this->getFileManager()->setContentPHP($data, $metaConfig['metadataCacheFile']);
+	        $isSaved = $this->getFileManager()->putContentsPHP($metaConfig['metadataCacheFile'], $data);
 			if ($isSaved === false) {
 	        	$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been saved to a cache file');
 			}
@@ -159,7 +159,7 @@ class Metadata
 			}
 		}
         else if (file_exists($metaConfig['metadataCacheFile'])) {
-			$data = $this->getFileManager()->getContent($metaConfig['metadataCacheFile']);
+			$data = $this->getFileManager()->getContents($metaConfig['metadataCacheFile']);
 		}
 
 		if ($isJSON) {
@@ -201,7 +201,7 @@ class Metadata
 		$data= Json::encode($this->meta);
         //END: merge data with defaults values
 
-		$result= $this->getFileManager()->setContent($data, $fullPath, $scope.'.json');
+		$result= $this->getFileManager()->putContents(array($fullPath, $scope.'.json'), $data);
 
         return $result;
 	}
@@ -221,7 +221,7 @@ class Metadata
         	$this->getConverter()->process();
 		}
 
-		$this->espoMetadata = $this->getFileManager()->getContent($espoMetadataFile);
+		$this->espoMetadata = $this->getFileManager()->getContents($espoMetadataFile);
 
         return $this->espoMetadata;
 	}
@@ -230,7 +230,7 @@ class Metadata
 	{
 		$metaConfig = $this->getMetaConfig();
 
-		$result = $this->getFileManager()->setContentPHP($espoMetadata, $metaConfig['cachePath'], 'ormMetadata.php');
+		$result = $this->getFileManager()->putContentsPHP(array($metaConfig['cachePath'], 'ormMetadata.php'), $espoMetadata);
 		if ($result == false) {
 		 	$GLOBALS['log']->add('EXCEPTION', 'Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
          	throw new \Espo\Core\Exceptions\Error();

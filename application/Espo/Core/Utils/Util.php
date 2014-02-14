@@ -160,7 +160,7 @@ class Util
 		if (empty($filePath)) {
         	return $folderPath;
     	}
-	if (empty($folderPath)) {
+		if (empty($folderPath)) {
         	return $filePath;
     	}
 

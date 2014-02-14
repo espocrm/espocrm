@@ -33,7 +33,7 @@ class ServiceFactory
 		$config = $this->getContainer()->get('config');
 		
 		if (file_exists($this->cacheFile) && $config->get('useCache')) {
-			$this->data = $this->getFileManager()->getContent($this->cacheFile);
+			$this->data = $this->getFileManager()->getContents($this->cacheFile);
 		} else {	
 			$this->data = $this->getClassNameHash(array($this->paths['corePath'], $this->paths['customPath']));
 
@@ -42,7 +42,7 @@ class ServiceFactory
 				$this->data = array_merge($this->data, $this->getClassNameHash(array($path)));
 	    	}	    	
 			if ($config->get('useCache')) {
-				$result = $this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
+				$result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
 				if ($result == false) {
 					throw new \Espo\Core\Exceptions\Error();
 				}

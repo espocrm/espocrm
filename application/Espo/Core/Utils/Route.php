@@ -63,11 +63,11 @@ class Route
 	protected function init()
 	{
 		if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
-			$this->data = $this->getFileManager()->getContent($this->cacheFile);
+			$this->data = $this->getFileManager()->getContents($this->cacheFile);
 		} else {
         	$this->data = $this->uniteFiles();
 
-			$result = $this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
+			$result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
 			 if ($result == false) {
 			 	$GLOBALS['log']->add('EXCEPTION', 'Route::init() - Cannot save Routes to a file');
 	         	throw new \Espo\Core\Exceptions\Error();
@@ -108,7 +108,7 @@ class Route
 	protected function getAddData($currData, $routeFile)
 	{
 		if (file_exists($routeFile)) {
-        	$content= $this->getFileManager()->getContent($routeFile);
+        	$content= $this->getFileManager()->getContents($routeFile);
 			$arrayContent = Json::getArrayData($content);
 			if (empty($arrayContent)) {
             	$GLOBALS['log']->add('ERROR', 'Route::uniteFiles() - Empty file or syntax error - ['.$routeFile.']');

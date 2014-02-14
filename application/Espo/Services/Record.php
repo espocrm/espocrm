@@ -400,7 +400,7 @@ class Record extends \Espo\Core\Services\Base
 		$this->getEntityManager()->saveEntity($attachment);
 		
 		if (!empty($attachment->id)) {		
-			$this->getInjection('fileManager')->setContent($csv, 'data/upload/' . $attachment->id);			
+			$this->getInjection('fileManager')->putContents('data/upload/' . $attachment->id, $csv);			
 			// TODO cron job to remove file			
 			return $attachment->id;
 		}			

@@ -21,7 +21,7 @@ class Attachment extends Record
 		list($prefix, $contents) = explode(',', $data['file']);		
 		
 		if (!empty($entity->id)) {
-			$this->getFileManager()->setContent(base64_decode($contents), 'data/upload/' . $entity->id);
+			$this->getFileManager()->putContents('data/upload/' . $entity->id, base64_decode($contents));
 		}
 					
 		return $entity;

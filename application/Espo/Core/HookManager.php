@@ -46,7 +46,7 @@ class HookManager
     protected function loadHooks()
     {
     	if ($this->getConfig()->get('useCache') && file_exists($this->cacheFile)) {
-    		$this->data = $this->getFileManager()->getContent($this->cacheFile);
+    		$this->data = $this->getFileManager()->getContents($this->cacheFile);
     		return;
     	} 
     	
@@ -58,7 +58,7 @@ class HookManager
     	}
 
     	if ($this->getConfig()->get('useCache')) {
-			$this->getFileManager()->setContentPHP($this->data, $this->cacheFile);
+			$this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
     	}
     }
     

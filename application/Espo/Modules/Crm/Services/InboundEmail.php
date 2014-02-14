@@ -303,7 +303,7 @@ class InboundEmail extends \Espo\Services\Record
 												
 							$path = 'data/upload/' . $attachment->id;						
 							$content = base64_decode($part->getContent());
-							$this->getFileManager()->setContent($content, $path);
+							$this->getFileManager()->putContents($path, $content);
 							$attachmentsIds = $email->get('attachmentsIds');
 							$attachmentsIds[] = $attachment->id;
 							$email->set('attachmentsIds', $attachmentsIds);

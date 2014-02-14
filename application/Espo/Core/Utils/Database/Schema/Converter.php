@@ -293,7 +293,7 @@ class Converter
 		$fileList = $this->getFileManager()->getFileList($this->customTablePath, false, '\.php$', 'file');
 
 		foreach($fileList as $fileName) {
-			$fileData = $this->getFileManager()->getContent($this->customTablePath, $fileName);
+			$fileData = $this->getFileManager()->getContents( array($this->customTablePath, $fileName) );
 			if (is_array($fileData)) {				
             	$customTables = Util::merge($customTables, $fileData);
 			}

@@ -65,7 +65,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 			
 		$this->objects['fileManager']
 			->expects($this->exactly(1))
-            ->method('getContent')
+            ->method('getContents')
             ->will($this->returnValue($result));
 			
 		$this->assertEquals($result, $this->object->get('User', 'detail'));  		

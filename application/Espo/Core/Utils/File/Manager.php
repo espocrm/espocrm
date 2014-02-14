@@ -116,80 +116,100 @@ class Manager
 	}
 
 	/**
-     * Get content from file
-	 *
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
-	 *
-	 * @return string | bool | array
+	 * Reads entire file into a string
+	 * 
+	 * @param  string | array  $paths  Ex. 'path.php' OR array('dir', 'path.php')
+	 * @param  boolean $useIncludePath 
+	 * @param  resource  $context          
+	 * @param  integer $offset           	        
+	 * @param  integer $maxlen           	        
+	 * @return mixed                    
 	 */
-	function getContent($folderPath, $filePath = '')
+	public function getContents($paths, $useIncludePath = false, $context = null, $offset = -1, $maxlen = null)
 	{
-		$fullPath= Utils\Util::concatPath($folderPath, $filePath);
+		$fullPath = $this->concatPaths($paths);
 
-		return $this->fileGetContents($fullPath);
+		if (file_exists($fullPath)) {
+
+			if (strtolower(substr($fullPath, -4))=='.php') {
+				return include($fullPath);
+			} else {
+				if (isset($maxlen)) {
+					return file_get_contents($fullPath, $useIncludePath, $context, $offset, $maxlen);
+				} else {
+					return file_get_contents($fullPath, $useIncludePath, $context, $offset);	
+				}            	
+			}
+
+		}
+
+		return false;		
 	}
 
 
 	/**
-     * Save content to file
-	 *
-	 * @param string $data
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
-	 *
-	 * @return bool
+	 * Write data to a file
+	 * 
+	 * @param  string | array  $paths   
+	 * @param  mixed  $data    
+	 * @param  integer $flags   
+	 * @param  resource  $context 
+	 * 
+	 * @return bool           
 	 */
-	function setContent($content, $folderPath, $filePath = '')
+	public function putContents($paths, $data, $flags = 0, $context = null)
 	{
-		$fullPath= Utils\Util::concatPath($folderPath, $filePath);
+		$fullPath = $this->concatPaths($paths); //todo remove after changing the params
 
-		return $this->filePutContents($fullPath, $content);
+		if ($this->checkCreateFile($fullPath) === false) {
+			return false;
+		}
+
+        return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);		
 	}
 
 	/**
      * Save PHP content to file
 	 *
-	 * @param string $data
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
+	 * @param string | array $paths
+	 * @param string $data	 
 	 *
 	 * @return bool
 	 */
-	function setContentPHP($content, $folderPath, $filePath = '')
+	public function putContentsPHP($paths, $data)
 	{
-		return $this->setContent($this->getPHPFormat($content), $folderPath, $filePath);
+		return $this->putContents($paths, $this->getPHPFormat($data));
 	}
 
 	/**
      * Save JSON content to file
 	 *
+	 * @param string | array $paths
 	 * @param string $data
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
 	 *
 	 * @return bool
 	 */
-	function setContentJSON($content, $folderPath, $filePath='')
+	public function putContentsJSON($paths, $data)
 	{
-		if (!Utils\Json::isJSON($content)) {
-        	$content= Utils\Json::encode($data);
+		if (!Utils\Json::isJSON($data)) {
+        	$data= Utils\Json::encode($data);
         }
-		return $this->setContent($content, $folderPath, $filePath);
+
+		return $this->putContents($paths, $data);
 	}
 
     /**
      * Merge file content and save it to a file
 	 *
-	 * @param string $data JSON string
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
+	 * @param string | array $paths
+	 * @param string $content JSON string
+	 * @param bool $isJSON
 	 *
 	 * @return bool
 	 */
-	function mergeContent($content, $folderPath, $filePath = '', $isJSON = false)
+	public function mergeContents($paths, $content, $isJSON = false)
 	{
-		$fileContent= $this->getContent($folderPath, $filePath);
+		$fileContent= $this->getContents($paths);
 
 		$savedDataArray= $this->getArrayData($fileContent);
 		$newDataArray= $this->getArrayData($content);
@@ -199,22 +219,21 @@ class Manager
 	        $data= Utils\Json::encode($data);
 		}
 
-        return $this->setContent($data, $folderPath, $filePath);
+        return $this->putContents($paths, $data);
 	}
 
 	/**
      * Merge PHP content and save it to a file
 	 *
-	 * @param string $data
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
+	 * @param string | array $paths
+	 * @param string $content
 	 * @param bool $onlyFirstLevel - Merge only first level. Ex. current: array('test'=>array('item1', 'item2')).  $content= array('test'=>array('item1'),). Result will be array('test'=>array('item1')).
 	 *
 	 * @return bool
 	 */
-	function mergeContentPHP($content, $folderPath, $filePath='', $onlyFirstLevel= false)
+	public function mergeContentsPHP($paths, $content, $onlyFirstLevel= false)
 	{
-        $fileContent= $this->getContent($folderPath, $filePath);
+        $fileContent= $this->getContents($paths);
 
 		$savedDataArray= $this->getArrayData($fileContent);
 		$newDataArray= $this->getArrayData($content);
@@ -228,68 +247,42 @@ class Manager
 
         $data= Utils\Util::merge($savedDataArray, $newDataArray);
 
-        return $this->setContentPHP($data, $folderPath, $filePath);
+        return $this->putContentsPHP($paths, $data);
 	}
 
 	/**
      * Append the content to the end of the file
 	 *
-	 * @param string $content
-	 * @param string $folderPath string - Folder path, Ex. myfolder
-	 * @param bool $filePath - File path, Ex. file.json
+	 * @param string | array $paths
+	 * @param mixed $data
 	 *
 	 * @return bool
 	 */
-	function appendContent($content, $folderPath, $filePath='')
+	public function appendContents($paths, $data)
 	{
-		$fullPath= Utils\Util::concatPath($folderPath, $filePath);
-
-		return $this->filePutContents($fullPath, $content, FILE_APPEND | LOCK_EX);
+		return $this->putContents($paths, $data, FILE_APPEND | LOCK_EX);		
 	}
-
-
 
 
 	/**
-     * Write a string to a file
-	 *
-	 * @param string $filename
-	 * @param mixed $data
-	 * @param int $flags
-	 *
-	 * @return bool
+	 * Concat paths
+	 * @param  string | array  $paths Ex. array('pathPart1', 'pathPart2', 'pathPart3')
+	 * @return string
 	 */
-	public function filePutContents($filename, $data, $flags = 0)
+	protected function concatPaths($paths)
 	{
-		if ($this->checkCreateFile($filename) === false) {
-			return false;
+		if (is_string($paths)) {
+			return $paths;
 		}
 
-        return (file_put_contents($filename, $data, $flags) !== FALSE);
-	}
-
-    /**
-     * Reads entire file into a string
-	 *
-	 * @param string $filename
-	 * @param bool $useIncludePath
-	 *
-	 * @return string | false
-	 */
-	function fileGetContents($filename, $useIncludePath=false)
-	{
-		if (file_exists($filename)) {
-
-			if (strtolower(substr($filename, -4))=='.php') {
-				return include($filename);
-			} else {
-            	return file_get_contents($filename, $useIncludePath);
-			}
-
+		$fullPath = '';
+		foreach ($paths as $path) {
+			$fullPath = Utils\Util::concatPath($fullPath, $path);
 		}
 
-		return false;
+		return $fullPath;
 	}
+
 
 	/**
      * Create a new file if not exists with all folders in the path.
@@ -330,10 +323,11 @@ class Manager
 	/**
      * Remove all files in defined directory
 	 *
+	 * @param array $filePaths - File paths list
 	 * @param string $dirPath - directory path
 	 * @return bool
 	 */
-	public function removeFiles($filePaths, $dirPath='')
+	public function removeFiles($filePaths, $dirPath = null)
 	{
 		if (!is_array($filePaths)) {
 			$filePaths = (array) $filePaths;
@@ -341,7 +335,7 @@ class Manager
 
 		$result= true;
 		foreach($filePaths as $filePath) {
-			if (!empty($dirPath)) {
+			if (isset($dirPath)) {
             	$filePath= Utils\Util::concatPath($dirPath, $filePath);
 			}
 

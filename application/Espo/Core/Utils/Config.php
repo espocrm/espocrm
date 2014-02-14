@@ -81,7 +81,7 @@ class Config
         }
 
         $content = array($name => $value);
-		$status = $this->getFileManager()->mergeContentPHP($content, $this->get('configPath'), '', true);
+		$status = $this->getFileManager()->mergeContentsPHP($this->get('configPath'), $content, true);
         $this->loadConfig(true);
 
 		return $status;
@@ -104,7 +104,7 @@ class Config
         	return false;
 		}
 
-		$status = $this->getFileManager()->mergeContentPHP($values, $this->get('configPath'), '', true);
+		$status = $this->getFileManager()->mergeContentsPHP($this->get('configPath'), $values, true);
         $this->loadConfig(true);
 
 		return $status;
@@ -121,9 +121,9 @@ class Config
         	return $this->configData;
 		}
 
-		$defaultConfig = $this->getFileManager()->getContent($this->defaultConfigPath);
+		$defaultConfig = $this->getFileManager()->getContents($this->defaultConfigPath);
 
-		$config = $this->getFileManager()->getContent($defaultConfig['configPath']);
+		$config = $this->getFileManager()->getContents($defaultConfig['configPath']);
 		if (empty($config)) {
 			$GLOBALS['log']->add('FATAL', 'Check syntax or permission of your '.$defaultConfig['configPath']);
 		}

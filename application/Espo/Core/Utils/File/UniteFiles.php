@@ -63,8 +63,8 @@ class UniteFiles
 		$jsonData= $this->getObject('JSON')->encode($content);
 
 		$cacheFile= Utils\Util::concatPath($configParams['cachePath'], $configParams['name']);
-        $result= $this->setContent($jsonData, $cacheFile.'.json');
-        $result&= $this->setContent($this->getFileManager()->getPHPFormat($content), $cacheFile.'.php');
+        $result= $this->putContents($cacheFile.'.json', $jsonData);
+        $result&= $this->putContents($cacheFile.'.php', $this->getFileManager()->getPHPFormat($content));
 		//END: save medatada to cache files
 
 		return $result; */
@@ -106,12 +106,12 @@ class UniteFiles
 
 			} else { /*get content from a single file*/
 				if ($fileName == $unsetFileName) {
-					$fileContent = $this->getFileManager()->getContent($dirPath, $fileName);
+					$fileContent = $this->getFileManager()->getContents(array($dirPath, $fileName));
 					$unsets = Utils\Json::getArrayData($fileContent);
 					continue;
 				} /*END: Save data from unset.json*/
 
-				$mergedValues = $this->uniteFilesGetContent($dirPath, $fileName, $defaultValues);
+				$mergedValues = $this->uniteFilesGetContent(array($dirPath, $fileName), $defaultValues);
 
 				if (!empty($mergedValues)) {
                    	$name = $this->getFileManager()->getFileName($fileName, '.json');
@@ -134,15 +134,14 @@ class UniteFiles
     /**
     * Helpful method for get content from files for unite Files
 	*
-	* @param string $folderPath string - Folder path, Ex. myfolder
-	* @param bool $filePath - File path, Ex. file.json
+	* @param string | array $paths	
 	* @param string | array() $defaults - It can be a string like ["metadata","layouts"] OR an array with default values
 	*
 	* @return array
 	*/
-	public function uniteFilesGetContent($folderPath, $fileName, $defaults)
+	public function uniteFilesGetContent($paths, $defaults)
 	{
-		$fileContent= $this->getFileManager()->getContent($folderPath, $fileName);
+		$fileContent= $this->getFileManager()->getContents($paths);
 		$decoded= Utils\Json::getArrayData($fileContent);
 
 		if (empty($decoded) && !is_array($decoded)) {
@@ -177,10 +176,9 @@ class UniteFiles
 	function loadDefaultValues($name, $type='metadata')
 	{
 		$params = $this->getParams();
-        $defaultPath= $params['defaultsPath'];
-        //$defaultPath= $this->getConfig('defaultsPath');
+        $defaultPath= $params['defaultsPath'];        
 
-		$defaultValue= $this->getFileManager()->getContent( Utils\Util::concatPath($defaultPath, $type), $name.'.json');
+		$defaultValue= $this->getFileManager()->getContents( array($defaultPath, $type, $name.'.json') );
 		if ($defaultValue!==false) {
         	//return default array
 			return Utils\Json::decode($defaultValue, true);

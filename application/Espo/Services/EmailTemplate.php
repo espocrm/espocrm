@@ -94,11 +94,11 @@ class EmailTemplate extends Record
 					$clone->set($data);
 					$this->getEntityManager()->saveEntity($clone);
 						
-					$contents = $this->getFileManager()->getContent('data/upload/' . $attachment->id);
+					$contents = $this->getFileManager()->getContents('data/upload/' . $attachment->id);
 					if (empty($contents)) {
 						continue;
 					}
-					$this->getFileManager()->setContent($contents, 'data/upload/' . $clone->id);			
+					$this->getFileManager()->putContents('data/upload/' . $clone->id, $contents);			
 			
 					$attachmentsIds[] = $clone->id;
 				}

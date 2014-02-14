@@ -2,6 +2,8 @@
 
 namespace tests\Espo\Core\Utils\File;
 
+use tests\ReflectionHelper;
+
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,6 +12,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 	protected $objects;
 
 	protected $filesPath= 'tests/testData/FileManager';
+
+	protected $reflection;
 
     protected function setUp()
     {  
@@ -23,6 +27,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 			  ),
 			)
 		);
+
+		$this->reflection = new ReflectionHelper($this->object);
     }
 
     protected function tearDown()
@@ -40,6 +46,63 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Donwload', $this->object->getFileName('\Donwload.php'));
 
 		$this->assertEquals('Donwload', $this->object->getFileName('application/Espo/EntryPoints/Donwload.php'));
+	}
+
+	function testGetContents()
+	{
+		$result = file_get_contents($this->filesPath.'/getContent/test.json');
+		$this->assertEquals($result, $this->object->getContents( array($this->filesPath, 'getContent/test.json') ));
+	}
+
+
+	function testPutContents()
+	{
+		$testPath= $this->filesPath.'/setContent';
+
+        $result= 'next value';
+		$this->assertTrue($this->object->putContents(array($testPath, 'test.json'), $result));
+
+    	$this->assertEquals($result, $this->object->getContents( array($testPath, 'test.json')) );
+
+    	$this->assertTrue($this->object->putContents(array($testPath, 'test.json'), 'initial value'));
+	}
+
+
+	function testConcatPaths()
+	{
+		$input = 'application/Espo/Resources/metadata/app/panel.json';
+		$result = 'application/Espo/Resources/metadata/app/panel.json';
+
+		$this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+
+
+		$input = array(
+			'application',
+			'Espo/Resources/metadata/',
+			'app',
+			'panel.json',
+		);
+		$result = 'application/Espo/Resources/metadata/app/panel.json';
+
+		$this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+
+
+		$input = array(
+			'application/Espo/Resources/metadata/app',			
+			'panel.json',
+		);
+		$result = 'application/Espo/Resources/metadata/app/panel.json';
+
+		$this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+
+
+		$input = array(
+			'application/Espo/Resources/metadata/app/',			
+			'panel.json',
+		);
+		$result = 'application/Espo/Resources/metadata/app/panel.json';
+
+		$this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
 	}
 
 

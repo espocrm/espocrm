@@ -61,12 +61,16 @@ class Log
 	private $output;
 	private $params;
 
+	protected $logFilePath;
+
 
 	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Api\Output $output, array $params)
 	{
 		$this->fileManager = $fileManager;
 		$this->output = $output;
 		$this->params = $params;
+
+		$this->logFilePath = Util::concatPath($params['options']['dir'], $params['options']['file']);
 	}
 
 
@@ -143,7 +147,7 @@ class Log
         $text = date('Y-m-d H:i:s') . ' ' . $text;
 
         $params = $this->getParams();
-		return $this->getFileManager()->appendContent($text, $params['options']['dir'], $params['options']['file']);
+		return $this->getFileManager()->appendContents($this->logFilePath, $text);
 	}
 
 	/**

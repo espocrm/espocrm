@@ -48,7 +48,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->objects['fileManager']
             ->expects($this->once())
-            ->method('getContent')
+            ->method('getContents')
             ->will($this->returnValue(false));
 
         $this->objects['config']
@@ -64,7 +64,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->objects['fileManager']
             ->expects($this->once())
-            ->method('getContent')
+            ->method('getContents')
             ->will($this->returnValue(time()-60));
 
         $this->objects['config']
@@ -80,7 +80,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->objects['fileManager']
             ->expects($this->once())
-            ->method('getContent')
+            ->method('getContents')
             ->will($this->returnValue(time()-49));
 
         $this->objects['config']

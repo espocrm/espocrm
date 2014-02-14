@@ -79,7 +79,7 @@ class Layout
 			}
 		}
 
-		return $this->getFileManager()->getContent($fileFullPath);
+		return $this->getFileManager()->getContents($fileFullPath);
 	}  
 	
 	
@@ -105,7 +105,7 @@ class Layout
 			$data = Json::encode($data);	
 		}   
 
-        return $this->getFileManager()->setContent($data, $layoutPath, $name.'.json');
+        return $this->getFileManager()->putContents(array($layoutPath, $name.'.json'), $data);
 	}
 
 
