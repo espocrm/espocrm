@@ -2,6 +2,8 @@
 
 namespace tests\Espo\Core\Utils;
 
+use tests\ReflectionHelper;
+
 
 class LayoutTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,15 +11,21 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 	
 	protected $objects;
 
+	protected $reflection;
+
 	protected $filesPath= 'tests/testData/FileManager';
 
     protected function setUp()
     {                          
-		$this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock(); 	
 		$this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock(); 			
 		$this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock(); 			
 
-        $this->object = new \Espo\Core\Utils\Layout($this->objects['config'], $this->objects['fileManager'], $this->objects['metadata']);
+        $this->object = new \Espo\Core\Utils\Layout($this->objects['fileManager'], $this->objects['metadata']);
+
+        $this->reflection = new ReflectionHelper($this->object);  
+        $this->reflection->setProperty('params', array(
+        	'application/Espo/Core/defaults',
+        ) );       
     }
 
     protected function tearDown()
@@ -29,24 +37,24 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 	function testGetLayoutPathCore()
 	{                                                                                  
 		$this->objects['metadata']
-			->expects($this->exactly(2))
+			->expects($this->exactly(1))
             ->method('getScopeModuleName')
             ->will($this->returnValue(false));
 			
-		$this->assertEquals('application/Espo/Resources/layouts/User', $this->object->getLayoutPath('User'));  		
-		$this->assertEquals('application/Espo/Custom/Resources/layouts/User', $this->object->getLayoutPath('User', true));				   
+		$this->assertEquals('application/Espo/Resources/layouts/User', $this->reflection->invokeMethod('getLayoutPath', array('User')) );  		
+		$this->assertEquals('application/Espo/Custom/Resources/layouts/User', $this->reflection->invokeMethod('getLayoutPath', array('User', true)) );				   
 	}
 	
 	
 	function testGetLayoutPathModule()
 	{
 		$this->objects['metadata']
-			->expects($this->exactly(2))
+			->expects($this->exactly(1))
             ->method('getScopeModuleName')
             ->will($this->returnValue('Crm'));
 			
-		$this->assertEquals('application/Espo/Modules/Crm/Resources/layouts/Call', $this->object->getLayoutPath('Call'));  		
-		$this->assertEquals('application/Espo/Custom/Modules/Crm/Resources/layouts/Call', $this->object->getLayoutPath('Call', true));
+		$this->assertEquals('application/Espo/Modules/Crm/Resources/layouts/Call', $this->reflection->invokeMethod('getLayoutPath', array('Call')) );  		
+		$this->assertEquals('application/Espo/Custom/Resources/layouts/Call', $this->reflection->invokeMethod('getLayoutPath', array('Call', true)) );
 	}
 	
 	function testGet()
@@ -54,14 +62,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 		$result = '[{"label":"Overview","rows":[[{"name":"userName"},{"name":"isAdmin"}],[{"name":"name"},{"name":"title"}],[{"name":"defaultTeam"}],[{"name":"emailAddress"},{"name":"phone"}]]}]';	
 	
 		$this->objects['metadata']
-			->expects($this->exactly(2))
+			->expects($this->exactly(1))
             ->method('getScopeModuleName')
-            ->will($this->returnValue(false));
-		
-		$this->objects['config']
-			->expects($this->never())
-            ->method('get')
-            ->will($this->returnValue('application/Espo/Core/defaults'));
+            ->will($this->returnValue(false));	
 			
 		$this->objects['fileManager']
 			->expects($this->exactly(1))

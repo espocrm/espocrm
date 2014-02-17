@@ -7,12 +7,15 @@ use Espo\Core\Utils;
 class UniteFiles
 {
 	private $fileManager;
-	private $params;
 
-	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, array $params)
+	protected $params = array(
+		'unsetFileName' => 'unset.json',
+		'defaultsPath' => 'application/Espo/Core/defaults',
+	);
+
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager)
 	{
-    	$this->fileManager = $fileManager;
-    	$this->params = $params;
+    	$this->fileManager = $fileManager;    
 	}
 
 
@@ -21,23 +24,16 @@ class UniteFiles
 		return $this->fileManager;
 	}
 
-	protected function getParams()
-	{
-		return $this->params;
-	}
-
-
-
 
 	/**
-    * Unite file content to the file
-	*
-	* @param string $configParams - array('name', 'cachePath', 'corePath', 'customPath')
-	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
-	*
-	* @return array
-	*/
-	public function uniteFiles($configParams, $recursively=false)
+     * Unite file content to the file
+	 *
+	 * @param string $configParams - array('name', 'cachePath', 'corePath', 'customPath')
+	 * @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
+	 *
+	 * @return array
+	 */
+	public function uniteFiles($configParams, $recursively = false)
 	{
 		//EXAMPLE OF IMPLEMENTATION IN METADATA CLASS
 		/*if (empty($configParams) || empty($configParams['name']) || empty($configParams['cachePath']) || empty($configParams['corePath'])) {
@@ -71,23 +67,21 @@ class UniteFiles
 	}
 
     /**
-    * Unite file content to the file for one directory [NOW ONLY FOR METADATA, NEED TO CHECK FOR LAYOUTS AND OTHERS]
-	*
-	* @param string $dirPath
-	* @param string $type - name of type array("metadata", "layouts"), ex. metadataConfig['name']
-	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
-	* @param string $moduleName - name of module if exists
-	*
-	* @return string - content of the files
-	*/
-	public function uniteFilesSingle($dirPath, $type, $recursively=false, $moduleName= '')
+     * Unite file content to the file for one directory [NOW ONLY FOR METADATA, NEED TO CHECK FOR LAYOUTS AND OTHERS]
+	 *
+	 * @param string $dirPath
+	 * @param string $type - name of type array("metadata", "layouts"), ex. $this->name
+	 * @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
+	 * @param string $moduleName - name of module if exists
+	 *
+	 * @return string - content of the files
+	 */
+	public function uniteFilesSingle($dirPath, $type, $recursively = false, $moduleName = '')
 	{
 		if (empty($dirPath) || !file_exists($dirPath)) {
 			return false;
 		}
-		$params = $this->getParams();
-        $unsetFileName = $params['unsetFileName']; 
-        //$unsetFileName = $this->getConfig('unsetFileName');
+        $unsetFileName = $this->params['unsetFileName'];      
 
 		//get matadata files
 		$fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
@@ -132,13 +126,13 @@ class UniteFiles
 	}
 
     /**
-    * Helpful method for get content from files for unite Files
-	*
-	* @param string | array $paths	
-	* @param string | array() $defaults - It can be a string like ["metadata","layouts"] OR an array with default values
-	*
-	* @return array
-	*/
+     * Helpful method for get content from files for unite Files
+	 *
+	 * @param string | array $paths	
+	 * @param string | array() $defaults - It can be a string like ["metadata","layouts"] OR an array with default values
+	 *
+	 * @return array
+	 */
 	public function uniteFilesGetContent($paths, $defaults)
 	{
 		$fileContent= $this->getFileManager()->getContents($paths);
@@ -166,17 +160,16 @@ class UniteFiles
 	}
 
 	/**
-    * Load default values for selected type [metadata, layouts]
-	*
-	* @param string $name
-	* @param string $type - [metadata, layouts]
-	*
-	* @return array
-	*/
+     * Load default values for selected type [metadata, layouts]
+	 *
+	 * @param string $name
+	 * @param string $type - [metadata, layouts]
+	 *
+	 * @return array
+	 */
 	function loadDefaultValues($name, $type='metadata')
 	{
-		$params = $this->getParams();
-        $defaultPath= $params['defaultsPath'];        
+        $defaultPath= $this->params['defaultsPath'];        
 
 		$defaultValue= $this->getFileManager()->getContents( array($defaultPath, $type, $name.'.json') );
 		if ($defaultValue!==false) {

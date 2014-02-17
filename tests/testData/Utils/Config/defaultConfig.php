@@ -32,8 +32,6 @@ return array (
     'adminItems',
     'configPath',
     'cachePath',
-    'metadataConfig',
-    'languageConfig',
     'database',
     'customPath',
     'defaultsPath', 

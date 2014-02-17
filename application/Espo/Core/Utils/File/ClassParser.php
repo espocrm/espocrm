@@ -70,15 +70,19 @@ class ClassParser
 		if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
 			$data = $this->getFileManager()->getContents($cacheFile);
 		} else {					
-			$data = $this->getClassNameHash( $this->getInitPaths($paths) );
+			$data = $this->getClassNameHash($paths['corePath']);
 
 			if (isset($paths['modulePath'])) {
 				foreach ($this->getMetadata()->getModuleList() as $moduleName) {
 		    		$path = str_replace('{*}', $moduleName, $paths['modulePath']);	    		
 
-					$data = array_merge($data, $this->getClassNameHash(array($path)));
+					$data = array_merge($data, $this->getClassNameHash($path));
 		    	}	
 			}
+
+			if (isset($paths['customPath'])) {
+				$data = array_merge($data, $this->getClassNameHash($paths['customPath']));	
+			}			
 	    	
 	    	if ($cacheFile && $this->getConfig()->get('useCache')) {
 				$result = $this->getFileManager()->putContentsPHP($cacheFile, $data);
@@ -92,8 +96,12 @@ class ClassParser
 	}
 	
 
-	protected function getClassNameHash(array $dirs)
+	protected function getClassNameHash($dirs)
 	{
+		if (is_string($dirs)) {
+			$dirs = (array) $dirs;	
+		}
+
 		$data = array();
 		foreach ($dirs as $dir) {	      
 			if (file_exists($dir)) {
@@ -114,29 +122,8 @@ class ClassParser
 	            }
 			}
 		}
+
 		return $data;
-	}  
-
-	/**
-	 * Get init paths like corePath and/or customPath
-	 * @param  array  $paths 
-	 * @return array        
-	 */
-	protected function getInitPaths(array $paths)
-	{
-		$allowedInitPath = array(
-			'corePath', 
-			'customPath', 
-		);
-
-		$initPaths = array();
-
-		foreach ($allowedInitPath as $pathName) {
-			if (isset($paths[$pathName])) {
-				$initPaths[] = $paths[$pathName];	
-			}
-		}
-
-		return $initPaths;
 	}
+	
 }

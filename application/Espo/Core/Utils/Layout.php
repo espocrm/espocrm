@@ -4,42 +4,33 @@ namespace Espo\Core\Utils;
 
 class Layout
 {
-	private $config;
 	private $fileManager;
 	private $metadata;   
 	
 	/**
      * @var string - uses for loading default values
      */
-	private $name = 'layout';       	
-	
+	private $name = 'layout';   
+
+	protected $params = array(	
+		'defaultsPath' => 'application/Espo/Core/defaults',
+	); 
+
+
 	/**
      * @var array - path to layout files
      */
 	private $paths = array(
 		'corePath' => 'application/Espo/Resources/layouts',
-    	'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',		                              			
-	);  
+    	'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',
+    	'customPath' => 'application/Espo/Custom/Resources/layouts',	                              			
+	);   	
 	
-	/**
-     * @var array - path to layout files in custom folder
-     */
-	private $customPaths = array(
-		'corePath' => 'application/Espo/Custom/Resources/layouts',
-   		'modulePath' => 'application/Espo/Custom/Modules/{*}/Resources/layouts',	
-	); 
 
-
-	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata)
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata)
 	{
-		$this->config = $config;
 		$this->fileManager = $fileManager;
 		$this->metadata = $metadata;
-	}
-
-	protected function getConfig()
-	{
-    	return $this->config;
 	}
 
 	protected function getFileManager()
@@ -61,7 +52,7 @@ class Layout
 	 *
 	 * @return json
 	 */
-	function get($controller, $name)
+	public function get($controller, $name)
 	{                                                                                        
 		$fileFullPath = Util::concatPath($this->getLayoutPath($controller, true), $name.'.json');   		
 		if (!file_exists($fileFullPath)) {
@@ -70,7 +61,7 @@ class Layout
 
 		if (!file_exists($fileFullPath)) {     
 			//load defaults
-			$defaultPath = $this->getConfig()->get('defaultsPath');
+			$defaultPath = $this->params['defaultsPath'];
 			$fileFullPath =  Util::concatPath( Util::concatPath($defaultPath, $this->name), $name.'.json' );
 			//END: load defaults
 
@@ -93,7 +84,7 @@ class Layout
 	 * 
 	 * @return bool
 	 */
-	function set($data, $controller, $name)
+	public function set($data, $controller, $name)
 	{
 		if (empty($controller) || empty($name)) {
 			return false;
@@ -119,7 +110,7 @@ class Layout
 	 *
 	 * @return bool
 	 */
-	function merge($data, $controller, $name)
+	public function merge($data, $controller, $name)
 	{
 		$prevData = $this->get($controller, $name);
 		
@@ -140,16 +131,19 @@ class Layout
 	 *
 	 * @return string
 	 */
-	public function getLayoutPath($entityName, $isCustom = false)
-	{                                                                    
-		$paths = $isCustom ? $this->customPaths : $this->paths;
-	
-    	$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
+	protected function getLayoutPath($entityName, $isCustom = false)
+	{                               
+		$path = $this->paths['customPath'];  
+
+		if (!$isCustom) {
+			$moduleName = $this->getMetadata()->getScopeModuleName($entityName);
 		
-    	$path = $paths['corePath'];
-		if ($moduleName !== false) {
-			$path = str_replace('{*}', $moduleName, $paths['modulePath']);
-		}
+	    	$path = $this->paths['corePath'];
+			if ($moduleName !== false) {
+				$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+			}	
+		}                                   
+    	
         $path = Util::concatPath($path, $entityName);
 
 		return $path;

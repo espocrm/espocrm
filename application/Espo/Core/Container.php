@@ -133,30 +133,17 @@ class Container
     {
     	return new \Espo\Core\Utils\Metadata(
 			$this->get('config'),
-			$this->get('fileManager'),
-			$this->get('uniteFiles')
+			$this->get('fileManager')
 		);
     }
 
 	private function loadLayout()
     {
-    	return new \Espo\Core\Utils\Layout(
-			$this->get('config'),
+    	return new \Espo\Core\Utils\Layout(			
 			$this->get('fileManager'),
 			$this->get('metadata')
 		);
     } 
-
-	private function loadUniteFiles()
-    {
-       	return new \Espo\Core\Utils\File\UniteFiles(
-			$this->get('fileManager'),
-            array(
-				'unsetFileName' => $this->get('config')->get('unsetFileName'),
-				'defaultsPath' => $this->get('config')->get('defaultsPath'),
-			)
-		);
-    }
     
 	private function loadAcl()
 	{

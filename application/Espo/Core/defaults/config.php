@@ -5,19 +5,9 @@ return array (
 
   'customDir' => 'application/Espo/Custom',
   'cachePath' => 'data/cache',
-  'defaultsPath' => 'application/Espo/Core/defaults',
-  'unsetFileName' => 'unset.json',
 
   'espoModulePath' => 'Espo/Modules/{*}',
   'espoCustomPath' => 'Espo/Custom',
-
-  'metadataConfig' =>
-  array (
-    'name' => 'metadata',
-    'cachePath' => 'data/cache/application',
-    'corePath' => 'application/Espo/Resources/metadata',
-    'customPath' => 'application/Espo/Modules/{*}/Resources/metadata',
-  ),
 
   'languageConfig' =>
   array (
@@ -63,19 +53,13 @@ return array (
     'adminItems',
     'configPath',
     'cachePath',
-    'metadataConfig',
     'languageConfig',
     'database',
     'customPath',
-    'defaultsPath',
-    'unsetFileName',
-    'configPathFull',
-    'configCustomPathFull',
     'crud',
     'customDir',
     'espoModulePath',
     'espoCustomPath',
-    'scopeModuleMap',
   ),
   'adminItems' =>
   array (
@@ -91,6 +75,8 @@ return array (
       'GBP' => 1.67,
     ),    
   ),
+
+  'defaultLanguage' => 'enUs',  
 );
 
 ?>
