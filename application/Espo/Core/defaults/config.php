@@ -3,11 +3,7 @@
 return array (
   'configPath' => 'application/config.php',
 
-  'customDir' => 'application/Espo/Custom',
   'cachePath' => 'data/cache',
-
-  'espoModulePath' => 'Espo/Modules/{*}',
-  'espoCustomPath' => 'Espo/Custom',
 
   'languageConfig' =>
   array (
@@ -55,11 +51,7 @@ return array (
     'cachePath',
     'languageConfig',
     'database',
-    'customPath',
-    'crud',
-    'customDir',
-    'espoModulePath',
-    'espoCustomPath',
+    'crud', 
   ),
   'adminItems' =>
   array (

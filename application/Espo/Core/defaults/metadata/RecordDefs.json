@@ -1,7 +1,0 @@
-{
-	"name":"TestModuleName",
-	"var1": {
-     	"subvar1":"subval1",
-     	"subvar2":"subval2"
-	}
-}

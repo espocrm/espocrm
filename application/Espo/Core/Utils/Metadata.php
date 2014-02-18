@@ -196,23 +196,14 @@ class Metadata
 	*/
 	public function set($data, $type, $scope)
 	{
-		$fullPath = $this->paths['corePath'];
+		$path = $this->paths['corePath'];
 		$moduleName = $this->getScopeModuleName($scope);
 
 		if ($moduleName !== false) {
-        	$fullPath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-		}
-		$fullPath = Util::concatPath($fullPath, $type);
+        	$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+		}	
 
-        //merge data with defaults values
-        $defaults = $this->getUniteFiles()->loadDefaultValues($type, 'metadata');
-
-        $decoded = Json::getArrayData($data);
-        $this->meta = Util::merge($defaults, $decoded);
-		$data= Json::encode($this->meta);
-        //END: merge data with defaults values
-
-		$result= $this->getFileManager()->putContents(array($fullPath, $scope.'.json'), $data);
+		$result= $this->getFileManager()->putContents(array($path, $type, $scope.'.json'), $data);
 
         return $result;
 	}
@@ -302,7 +293,6 @@ class Metadata
 	/**
     * Get Scopes
 	*
-	*
 	* @return array
 	*/
 	//NEED TO CHANGE
@@ -315,7 +305,7 @@ class Metadata
 		$metadata = $this->getMetadataOnly(false);
 
         $scopes = array();
-		foreach($metadata['scopes'] as $name => $details) {
+		foreach ($metadata['scopes'] as $name => $details) {
         	$scopes[$name] = isset($details['module']) ? $details['module'] : false;
 		}
 
@@ -366,10 +356,7 @@ class Metadata
 	{
     	$moduleName = $this->getScopeModuleName($scopeName);
 
-    	$path = 'Espo';
-		if ($moduleName !== false) {
-			$path = str_replace('{*}', $moduleName, $this->getConfig()->get('espoModulePath'));
-		}
+    	$path = ($moduleName !== false) ? 'Espo/Modules/'.$moduleName : 'Espo';
 
 		if ($delim != '/') {
            $path = str_replace('/', $delim, $path);
@@ -379,25 +366,12 @@ class Metadata
 	}
 
 	/**
-    * Get Full Scope path, ex. "application/Modules/Crm" for Account
-    *
-	* @param string $scopeName
-	* @param string $delim - delimiter
-	*
-	* @return string
-	*/
-	public function getScopePathFull($scopeName, $delim = '/')
-	{
-		return Util::concatPath('application', $this->getScopePath($scopeName, $delim));
-	}
-
-	/**
-    * Check if scope exists
-	*
-	* @param string $scopeName
-	*
-	* @return bool
-	*/
+     * Check if scope exists
+	 *
+	 * @param string $scopeName
+	 *
+	 * @return bool
+	 */
 	public function isScopeExists($scopeName)
 	{
     	$scopeModuleMap= $this->getScopes();
