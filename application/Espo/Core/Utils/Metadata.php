@@ -4,12 +4,12 @@ namespace Espo\Core\Utils;
 
 class Metadata
 {
-	protected $meta;	
+	protected $meta = null;	
 
 	protected $scopes = array();
 
 	private $config;
-	private $uniteFiles;
+	private $unifier;
 	private $fileManager;
 	private $converter;
 
@@ -40,7 +40,7 @@ class Metadata
 		$this->config = $config;
 		$this->fileManager = $fileManager;
 
-		$this->uniteFiles = new \Espo\Core\Utils\File\UniteFiles($this->fileManager);
+		$this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
 
 		$this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);		
 		
@@ -53,9 +53,9 @@ class Metadata
 	}
 
 
-	protected function getUniteFiles()
+	protected function getUnifier()
 	{
-		return $this->uniteFiles;
+		return $this->unifier;
 	}
 
     protected function getFileManager()
@@ -85,7 +85,7 @@ class Metadata
 
     public function init($reload = false)
 	{
-       	$data= $this->getMetadataOnly(false, $reload);
+       	$data = $this->getMetadataOnly(false, $reload);
 		if ($data === false) {
 			$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been created');
 		}
@@ -101,6 +101,20 @@ class Metadata
 		}
 	}
 
+	/**
+	 * Get unified metadata
+	 * 
+	 * @return array
+	 */
+	protected function getData()
+	{
+		if (!isset($this->meta)) {
+			$this->init();
+		}
+
+		return $this->meta;
+	}
+
 
 	/**
     * Get Metadata
@@ -110,24 +124,9 @@ class Metadata
 	*
 	* @return array
 	*/
-	public function get($key = '', $returns = null)
+	public function get($key = null, $returns = null)
 	{
-        if (empty($key)) {
-        	return $this->meta;
-        }
-
-		$keys = explode('.', $key);
-
-		$lastMeta = $this->meta;
-		foreach($keys as $keyName) {
-        	if (isset($lastMeta[$keyName]) && is_array($lastMeta)) {
-            	$lastMeta = $lastMeta[$keyName];
-        	} else {
-        		return $returns;
-        	}
-		}
-
-		return $lastMeta;
+		return Util::getValueByKey($this->getData(), $key, $returns);        
 	}
 
 
@@ -165,7 +164,7 @@ class Metadata
 	{
 		$data = false;
 		if (!file_exists($this->cacheFile) || $reload) {
-        	$data = $this->uniteFiles();
+        	$data = $this->getUnifier()->unify($this->name, $this->paths, true);
 
 			if ($data === false) {
             	$GLOBALS['log']->add('FATAL', 'Metadata:getMetadata() - metadata unite file cannot be created');
@@ -238,43 +237,14 @@ class Metadata
 	}
 
 
-	/**
-    * Unite file content to the file
-	*
-	* @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
-	*
-	* @return array
-	*/
-	protected function uniteFiles($recursively = true)
-	{
-	   	$content = $this->getUniteFiles()->uniteFilesSingle($this->paths['corePath'], $this->name, $recursively);
-
-		if (!empty($this->paths['modulePath'])) {
-			$customDir = strstr($this->paths['modulePath'], '{*}', true);
-        	$dirList = $this->getFileManager()->getFileList($customDir, false, '', 'dir');
-
-			foreach ($dirList as $dirName) {
-				$curPath = str_replace('{*}', $dirName, $this->paths['modulePath']);
-                $content = Util::merge($content, $this->getUniteFiles()->uniteFilesSingle($curPath, $this->name, $recursively, $dirName));
-			}
-		}
-
-		//todo check customPaths
-		if (!empty($this->paths['customPath'])) {			
-			$content = Util::merge($content, $this->getUniteFiles()->uniteFilesSingle($this->paths['customPath'], $this->name, $recursively));
-		}
-
-		return $content;
-	}
-
     /**
-    * Get Entity path, ex. Espo.Entities.Account or Modules\Crm\Entities\MyModule
-    *
-	* @param string $entityName
-	* @param bool $delim - delimiter
-	*
-	* @return string
-	*/
+     * Get Entity path, ex. Espo.Entities.Account or Modules\Crm\Entities\MyModule
+     *
+	 * @param string $entityName
+	 * @param bool $delim - delimiter
+	 *
+	 * @return string
+	 */
 	public function getEntityPath($entityName, $delim = '\\')
 	{
 		$path = $this->getScopePath($entityName, $delim);
@@ -291,11 +261,10 @@ class Metadata
 
 
 	/**
-    * Get Scopes
-	*
-	* @return array
-	*/
-	//NEED TO CHANGE
+     * Get Scopes
+	 *
+	 * @return array
+	 */
 	public function getScopes()
 	{
     	if (!empty($this->scopes)) {
@@ -312,6 +281,11 @@ class Metadata
 		return $this->scopes = $scopes;
 	}
 	
+	/**
+	 * Get Module List
+	 * 
+	 * @return array
+	 */
 	public function getModuleList()
 	{
 		if (is_null($this->moduleList)) {
@@ -332,12 +306,12 @@ class Metadata
 
 
 	/**
-    * Get module name if it's a custom module or empty string for core entity
-	*
-	* @param string $scopeName
-	*
-	* @return string
-	*/
+     * Get module name if it's a custom module or empty string for core entity
+	 *
+	 * @param string $scopeName
+	 *
+	 * @return string
+	 */
 	public function getScopeModuleName($scopeName)
 	{
     	return $this->get('scopes.' . $scopeName . '.module', false);
@@ -345,13 +319,13 @@ class Metadata
 
 
 	/**
-    * Get Scope path, ex. "Modules/Crm" for Account
-    *
-	* @param string $scopeName
-	* @param string $delim - delimiter
-	*
-	* @return string
-	*/
+     * Get Scope path, ex. "Modules/Crm" for Account
+     *
+	 * @param string $scopeName
+	 * @param string $delim - delimiter
+	 *
+	 * @return string
+	 */
 	public function getScopePath($scopeName, $delim = '/')
 	{
     	$moduleName = $this->getScopeModuleName($scopeName);
@@ -366,12 +340,12 @@ class Metadata
 	}
 
 	/**
-     * Check if scope exists
-	 *
-	 * @param string $scopeName
-	 *
-	 * @return bool
-	 */
+      * Check if scope exists
+	  *
+	  * @param string $scopeName
+	  *
+	  * @return bool
+	  */
 	public function isScopeExists($scopeName)
 	{
     	$scopeModuleMap= $this->getScopes();

@@ -173,6 +173,15 @@ class Container
 			$this->get('metadata')
 		);
 	}
+
+	private function loadI18n()
+	{
+		return new \Espo\Core\Utils\I18n(
+			$this->get('fileManager'),
+			$this->get('config'),
+			$this->get('preferences')
+		);
+	}
 	
 	public function setUser($user)
 	{

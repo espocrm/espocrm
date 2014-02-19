@@ -67,8 +67,7 @@ return array (
       'GBP' => 1.67,
     ),    
   ),
-
-  'defaultLanguage' => 'enUs',  
+  
 );
 
 ?>

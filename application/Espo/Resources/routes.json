@@ -23,6 +23,14 @@
   },
 
   {
+    "route":"i18n",
+    "method":"get",
+    "params":{
+        "controller":"I18n"
+    }
+  },
+
+  {
   	"route":"/Settings",
     "method":"get",
     "params":{
@@ -253,7 +261,7 @@
 		"id":":id",
 		"link":":link"
     }
-  }
+  } 
   
 
 ]

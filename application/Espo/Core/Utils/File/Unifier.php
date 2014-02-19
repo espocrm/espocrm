@@ -4,7 +4,7 @@ namespace Espo\Core\Utils\File;
 
 use Espo\Core\Utils;
 
-class UniteFiles
+class Unifier
 {
 	private $fileManager;
 
@@ -28,43 +28,33 @@ class UniteFiles
 	/**
      * Unite file content to the file
 	 *
-	 * @param string $configParams - array('name', 'cachePath', 'corePath', 'customPath')
 	 * @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
 	 *
 	 * @return array
 	 */
-	public function uniteFiles($configParams, $recursively = false)
+	public function unify($name, $paths, $recursively = false)
 	{
-		//EXAMPLE OF IMPLEMENTATION IN METADATA CLASS
-		/*if (empty($configParams) || empty($configParams['name']) || empty($configParams['cachePath']) || empty($configParams['corePath'])) {
-			return false;
-		}
+	   	$content = $this->unifySingle($paths['corePath'], $name, $recursively);
 
-		//merge matadata files
-	   	$content= $this->uniteFilesSingle($configParams['corePath'], $configParams['name'], $recursively);
+		if (!empty($paths['modulePath'])) {
+			$customDir = strstr($paths['modulePath'], '{*}', true);
+        	$dirList = $this->getFileManager()->getFileList($customDir, false, '', 'dir');
 
-		if (!empty($configParams['customPath'])) {
-			$customDir= strstr($configParams['customPath'], '{*}', true);
-        	$dirList= $this->getFileList($customDir, false, '', 'dir');
-
-			foreach($dirList as $dirName) {
-				$curPath= str_replace('{*}', $dirName, $configParams['customPath']);
-                //$content= array_merge($content, $this->uniteFilesSingle($curPath, $recursively));
-                $content= Utils\Util::merge($content, $this->uniteFilesSingle($curPath, $configParams['name'], $recursively));
+			foreach ($dirList as $dirName) {
+				$curPath = str_replace('{*}', $dirName, $paths['modulePath']);
+                $content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $dirName));
 			}
 		}
-        //END: merge matadata files
 
-		//save medatada to cache files
-		$jsonData= $this->getObject('JSON')->encode($content);
+		//todo check customPaths
+		if (!empty($paths['customPath'])) {			
+			$content = Utils\Util::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
+		}
 
-		$cacheFile= Utils\Util::concatPath($configParams['cachePath'], $configParams['name']);
-        $result= $this->putContents($cacheFile.'.json', $jsonData);
-        $result&= $this->putContents($cacheFile.'.php', $this->getFileManager()->getPHPFormat($content));
-		//END: save medatada to cache files
-
-		return $result; */
+		return $content;
 	}
+
+
 
     /**
      * Unite file content to the file for one directory [NOW ONLY FOR METADATA, NEED TO CHECK FOR LAYOUTS AND OTHERS]
@@ -76,7 +66,7 @@ class UniteFiles
 	 *
 	 * @return string - content of the files
 	 */
-	public function uniteFilesSingle($dirPath, $type, $recursively = false, $moduleName = '')
+	protected function unifySingle($dirPath, $type, $recursively = false, $moduleName = '')
 	{
 		if (empty($dirPath) || !file_exists($dirPath)) {
 			return false;
@@ -86,9 +76,6 @@ class UniteFiles
 		//get matadata files
 		$fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
 
-		//print_r($fileList);
-		//echo '<hr />';
-
 		$defaultValues = $this->loadDefaultValues($this->getFileManager()->getDirName($dirPath), $type);
 
 		$content= array();
@@ -96,7 +83,7 @@ class UniteFiles
 		foreach($fileList as $dirName => $fileName) {
 
 			if (is_array($fileName)) {  /*get content from files in a sub directory*/
-                $content[$dirName]= $this->uniteFilesSingle(Utils\Util::concatPath($dirPath,$dirName), $type, false, $moduleName); //only first level of a sub directory
+                $content[$dirName]= $this->unifySingle(Utils\Util::concatPath($dirPath,$dirName), $type, false, $moduleName); //only first level of a sub directory
 
 			} else { /*get content from a single file*/
 				if ($fileName == $unsetFileName) {
@@ -105,7 +92,7 @@ class UniteFiles
 					continue;
 				} /*END: Save data from unset.json*/
 
-				$mergedValues = $this->uniteFilesGetContent(array($dirPath, $fileName), $defaultValues);
+				$mergedValues = $this->unifyGetContents(array($dirPath, $fileName), $defaultValues);
 
 				if (!empty($mergedValues)) {
                    	$name = $this->getFileManager()->getFileName($fileName, '.json');
@@ -118,10 +105,6 @@ class UniteFiles
         $content= Utils\Util::unsetInArray($content, $unsets);
 		//END: unset content
 
-		/*print_r($content);
-		print_r($unsets);
-		echo '<hr />'; */
-
 		return $content;
 	}
 
@@ -133,15 +116,14 @@ class UniteFiles
 	 *
 	 * @return array
 	 */
-	public function uniteFilesGetContent($paths, $defaults)
+	protected function unifyGetContents($paths, $defaults)
 	{
 		$fileContent= $this->getFileManager()->getContents($paths);
 		$decoded= Utils\Json::getArrayData($fileContent);
 
 		if (empty($decoded) && !is_array($decoded)) {
         	$GLOBALS['log']->add('FATAL EXCEPTION', 'Syntax error or empty file - '.Utils\Util::concatPath($folderPath, $fileName));
-		}
-		else {
+		} else {
             //Default values
             if (is_string($defaults) && !empty($defaults)) {
             	$defType= $defaults;
@@ -167,7 +149,7 @@ class UniteFiles
 	 *
 	 * @return array
 	 */
-	function loadDefaultValues($name, $type='metadata')
+	protected function loadDefaultValues($name, $type='metadata')
 	{
         $defaultPath= $this->params['defaultsPath'];        
 

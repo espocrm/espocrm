@@ -65,7 +65,7 @@ class Route
 		if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
 			$this->data = $this->getFileManager()->getContents($this->cacheFile);
 		} else {
-        	$this->data = $this->uniteFiles();
+        	$this->data = $this->unify();
 
 			$result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
 			 if ($result == false) {
@@ -75,7 +75,7 @@ class Route
 		}
 	}
 
-	protected function uniteFiles($isCustom = false)
+	protected function unify($isCustom = false)
 	{
         $dirName = $isCustom ? '/Custom' : '';
 
@@ -99,7 +99,7 @@ class Route
         $data = $this->getAddData($data, $routeFile);
 
 		if (!$isCustom) {
-        	$data = $this->addToData($this->uniteFiles(true), $data);
+        	$data = $this->addToData($this->unify(true), $data);
 		}
 
 		return $data;
@@ -111,7 +111,7 @@ class Route
         	$content= $this->getFileManager()->getContents($routeFile);
 			$arrayContent = Json::getArrayData($content);
 			if (empty($arrayContent)) {
-            	$GLOBALS['log']->add('ERROR', 'Route::uniteFiles() - Empty file or syntax error - ['.$routeFile.']');
+            	$GLOBALS['log']->add('ERROR', 'Route::unify() - Empty file or syntax error - ['.$routeFile.']');
 				return $currData;
 			}
 

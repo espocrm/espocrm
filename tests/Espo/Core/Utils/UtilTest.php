@@ -355,6 +355,39 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, Util::unsetInArray($input, $unsets));
 	}
 
+	function testGetValueByKey()
+	{
+		$inputArray = array(
+			'Account' => array(
+				'useCache' => true,
+				'sub' =>  array (
+					'subV' => '125',
+					'subO' => array(
+	                	'subOV' => '125',
+	                	'subOV2' => '125',
+					),
+				),	
+			),
+			'Contact' => array(
+				'useCache' => true,	
+			),			
+		);		
+        
+
+        $this->assertEquals($inputArray, Util::getValueByKey($inputArray));
+        $this->assertEquals($inputArray, Util::getValueByKey($inputArray, ''));
+
+        $this->assertEquals('125', Util::getValueByKey($inputArray, 'Account.sub.subV'));
+
+        $result = array('useCache' => true,	);
+        $this->assertEquals($result, Util::getValueByKey($inputArray, 'Contact'));
+
+        $this->assertNull(Util::getValueByKey($inputArray, 'Contact.notExists'));
+
+        $this->assertEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.notExists', 'customReturns'));
+        $this->assertNotEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.useCache', 'customReturns'));
+	}
+
 
 
 	/*function testGetScopeModuleName()

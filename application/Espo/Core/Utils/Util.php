@@ -323,6 +323,35 @@ class Util
 		return $className;
 	}	
 
+
+	/**
+	 * Return values of defined $key. 
+	 * 
+	 * @param  array $array   
+	 * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
+	 * @param  mixed $returns 
+	 * @return mixed 
+	 */
+	public static function getValueByKey(array $array, $key = null, $returns = null)
+	{
+		if (!isset($key) || empty($key)) {
+        	return $array;
+        }
+
+		$keys = explode('.', $key);
+
+		$lastItem = $array;
+		foreach($keys as $keyName) {
+        	if (isset($lastItem[$keyName]) && is_array($lastItem)) {
+            	$lastItem = $lastItem[$keyName];
+        	} else {
+        		return $returns;
+        	}
+		}
+
+		return $lastItem;
+	}
+
 }
 
 

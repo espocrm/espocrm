@@ -61,6 +61,11 @@
         },
         "smtpPassword": {
             "type": "password"
+        },
+        "language": {
+            "type": "enum",
+            "options": ["en_US"],
+            "default": "en_US"            
         }
     }
 }

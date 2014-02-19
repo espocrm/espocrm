@@ -5,7 +5,8 @@
 			[{"name": "dateFormat"}, {"name": "timeFormat"}],
 			[{"name": "timeZone"}, {"name": "weekStart"}],
 			[{"name": "defaultCurrency"}],
-			[{"name": "thousandSeparator"}, {"name": "decimalMark"}]
+			[{"name": "thousandSeparator"}, {"name": "decimalMark"}],
+			[{"name": "language"}]
 		]
 	},
 	{
