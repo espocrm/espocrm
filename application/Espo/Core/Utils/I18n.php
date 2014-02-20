@@ -66,6 +66,10 @@ class I18n
 		if (!isset($this->currentLanguage)) {
 			$this->currentLanguage = $this->getPreferences()->get('language');
 		}
+		
+		if (empty($this->currentLanguage)) {
+			$this->currentLanguage = 'en_US';
+		}		
 
 		return $this->currentLanguage;
 	}
@@ -88,7 +92,7 @@ class I18n
 		$data = $this->getData();
 
 		if (!isset($data) || $data === false) {
-			throw new NotFound('I18n: current language ['.$this->getLanguage().'] does not found');	
+			throw new Error('I18n: current language ['.$this->getLanguage().'] does not found');	
 		}
 
 		return Util::getValueByKey($data, $key, $returns);

@@ -23,7 +23,7 @@
   },
 
   {
-    "route":"i18n",
+    "route":"I18n",
     "method":"get",
     "params":{
         "controller":"I18n"
