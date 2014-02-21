@@ -19,7 +19,18 @@
 	},
 	"labels": {
 		"Modified": "Modified",
-		"Created": "Created"
+		"Created": "Created",
+		"Create": "Create",
+		"Add Filter": "Add Filter",
+		"Reset": "Reset",
+		"Menu": "Menu",
+		"More": "More",
+		"Search": "Search",
+		"Only My": "Only My",
+		"Admin": "Admin",
+		"About": "About",
+		"Log Out": "Log Out",
+		"Preferences": "Preferences"
 	},
 	"fields": {
 		"name": "Name",
@@ -28,9 +39,28 @@
 		"createdAt": "Created At",
 		"modifiedAt": "Modified At",
 		"createdBy": "Created By",
-		"modifiedBy": "Modified At"
+		"modifiedBy": "Modified At",
+		"title": "Title",
+		"dateFrom": "Date From",
+		"dateTo": "Date To",
+		"autorefreshInterval": "Auto-refresh Interval",
+		"displayRecords": "Display Records"
 	},
 	"dashlets": {
 		"Stream": "Stream"		
+	},
+	"lists": {
+		"monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+		"monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		"dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+		"dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+	},
+	"options": {
+		"salutationName": {
+			"Mr.": "Mr.",
+			"Mrs.": "Mrs.",
+			"Dr.": "Dr.",
+			"Drs.": "Drs."
+		}
 	}
 }
