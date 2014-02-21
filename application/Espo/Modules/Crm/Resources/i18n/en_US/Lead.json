@@ -1,0 +1,21 @@
+{
+	"fields": {
+		"name": "Name",
+		"emailAddress": "Email",
+		"title": "Title",
+		"website": "Website",
+		"phone": "Phone",
+		"accountName": "Account Name",
+		"doNotCall": "Do Not Call",
+		"address": "Address",
+		"status": "Status",
+		"source": "Source",
+		"opportunityAmount": "Opportunity Amount",
+		"description": "Description",
+		"createdAccount": "Account",
+		"createdContact": "Contact",
+		"createdOpportunity": "Opportunity"
+	},
+	"links": {
+	}
+}

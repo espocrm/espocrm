@@ -1,0 +1,31 @@
+{
+	"fields": {
+		"useCache": "Use Cache",
+		"dateFormat": "Date Format",
+		"timeFormat": "Time Format",
+		"timeZone": "Time Zone",
+		"weekStart": "First Day of Week",
+		"thousandSeparator": "Thousand Separator",
+		"decimalMark": "Decimal Mark",
+		"defaultCurrency": "Default Currency",
+		"currencyList": "Currency List",
+		
+		"smtpServer": "Server",
+		"smtpPort": "Port",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Security",
+		"smtpUsername": "Username",
+		"emailAddress": "Email",
+		"smtpPassword": "Password",
+		"outboundEmailFromName": "From Name",
+		"outboundEmailFromAddress": "From Address",
+		"outboundEmailIsShared": "Is Shared",
+		
+		"recordsPerPage": "Records Per Page",
+		"recordsPerPageSmall": "Records Per Page (Small)",		
+		"tabList": "Tab List",
+		"quickCreateList": "Quick Create List"
+	},
+	"links": {
+	}
+}

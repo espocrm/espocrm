@@ -1,0 +1,23 @@
+{
+	"fields": {
+		"name": "Name",
+		"team": "Team",
+		"status": "Status",
+		"assignToUser": "Assign to User",
+		"host": "Host",
+		"username": "Username",
+		"password": "Password",
+		"port": "Port",
+		"monitoredFolders": "Monitored Folders",
+		"trashFolder": "Trash Folder",
+		
+		"createCase": "Create Case",
+		"reply": "Reply",
+		"caseDistribution": "Case Distribution",
+		"replyEmailTemplate": "Reply Email Template",
+		"replyFromAddress": "Reply From Address",
+		"replyFromName": "Reply From Name"
+	},
+	"links": {
+	}
+}

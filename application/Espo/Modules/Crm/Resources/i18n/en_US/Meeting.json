@@ -1,0 +1,16 @@
+{
+	"fields": {
+		"name": "Name",
+		"parent": "Parent",
+		"status": "Status",
+		"dateStart": "Date Start",
+		"dateEnd": "Date End",
+		"duration": "Duration",
+		"description": "Description",
+		"users": "Users",
+		"contacts": "Contacts",
+		"leads": "Leads"
+	},
+	"links": {
+	}
+}

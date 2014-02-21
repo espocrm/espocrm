@@ -1,0 +1,13 @@
+{
+	"fields": {
+		"name": "Name",
+		"parent": "Parent",
+		"status": "Status",
+		"dateStart": "Date Start",
+		"dateEnd": "Date Due",
+		"priority": "Priority",
+		"description": "Description"
+	},
+	"links": {
+	}
+}

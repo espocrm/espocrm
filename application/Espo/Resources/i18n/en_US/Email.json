@@ -1,0 +1,18 @@
+{
+	"fields": {
+		"name": "Subject",
+		"parent": "Parent",
+		"status": "Status",
+		"dateSent": "Date Sent",
+		"from": "From",
+		"to": "To",
+		"cc": "CC",
+		"bcc": "BCC",
+		"isHtml": "Is Html",
+		"body": "Body",
+		"subject": "Subject",
+		"attachments": "Attachments"
+	},
+	"links": {
+	}
+}

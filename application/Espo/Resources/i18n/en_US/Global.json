@@ -1,0 +1,36 @@
+{
+	"scopeNames": {
+		"Email": "Email",
+		"User": "User",
+		"Team": "Team",
+		"Role": "Role",
+		"EmailTemplate": "Email Template",
+		"OutboundEmail": "Outbound Email",
+		"ScheduledJob": "Scheduled Job"
+	},
+	"scopeNamesPlural": {
+		"Email": "Emails",
+		"User": "Users",
+		"Team": "Teams",
+		"Role": "Roles",
+		"EmailTemplate": "Email Templates",
+		"OutboundEmail": "Outbound Emails",
+		"ScheduledJob": "Scheduled Jobs"
+	},
+	"labels": {
+		"Modified": "Modified",
+		"Created": "Created"
+	},
+	"fields": {
+		"name": "Name",
+		"assignedUser": "Assigned User",
+		"teams": "Teams",
+		"createdAt": "Created At",
+		"modifiedAt": "Modified At",
+		"createdBy": "Created By",
+		"modifiedBy": "Modified At"
+	},
+	"dashlets": {
+		"Stream": "Stream"		
+	}
+}

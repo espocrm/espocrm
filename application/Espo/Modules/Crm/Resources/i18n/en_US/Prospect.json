@@ -1,0 +1,15 @@
+{
+	"fields": {
+		"name": "Name",
+		"emailAddress": "Email",
+		"title": "Title",
+		"website": "Website",
+		"accountName": "Account Name",
+		"phone": "Phone",
+		"doNotCall": "Do Not Call",
+		"address": "Address",
+		"description": "Description"
+	},
+	"links": {
+	}
+}

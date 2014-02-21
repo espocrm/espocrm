@@ -1,0 +1,14 @@
+{
+	"fields": {
+		"name": "Name",
+		"number": "Number",
+		"status": "Status",
+		"account": "Account",
+		"contact": "Contact",
+		"priority": "Priority",
+		"type": "Type",
+		"description": "Description"
+	},
+	"links": {
+	}
+}

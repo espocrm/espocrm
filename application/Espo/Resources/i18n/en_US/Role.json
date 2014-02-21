@@ -1,0 +1,10 @@
+{
+	"fields": {
+		"name": "Name",
+		"roles": "Roles"
+	},
+	"links": {
+		"users": "Users",
+		"teams": "Teams"
+	}
+}

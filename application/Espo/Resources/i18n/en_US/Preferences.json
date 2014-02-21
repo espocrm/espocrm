@@ -1,0 +1,23 @@
+{
+	"fields": {
+		"dateFormat": "Date Format",
+		"timeFormat": "Time Format",
+		"timeZone": "Time Zone",
+		"weekStart": "First Day of Week",
+		"thousandSeparator": "Thousand Separator",
+		"decimalMark": "Decimal Mark",
+		"defaultCurrency": "Default Currency",
+		"currencyList": "Currency List",
+		"language": "Language",
+		
+		"smtpServer": "Server",
+		"smtpPort": "Port",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Security",
+		"smtpUsername": "Username",
+		"emailAddress": "Email",
+		"smtpPassword": "Password"
+	},
+	"links": {
+	}
+}

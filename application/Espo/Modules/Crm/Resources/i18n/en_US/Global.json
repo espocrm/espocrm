@@ -1,0 +1,39 @@
+{
+	"scopeNames": {
+		"Account": "Account",
+		"Contact": "Contact",
+		"Lead": "Lead",
+		"Prospect": "Prospect",
+		"Opportunity": "Opportunity",
+		"Meeting": "Meeting",
+		"Calendar": "Calendar",
+		"Call": "Call",
+		"Task": "Task",
+		"Case": "Case",
+		"InboundEmail": "Inbound Email"
+	},
+	"scopeNamesPlural": {
+		"Account": "Accounts",
+		"Contact": "Contacts",
+		"Lead": "Leads",
+		"Prospect": "Prospects",
+		"Opportunity": "Opportunities",
+		"Meeting": "Meetings",
+		"Calendar": "Calendar",
+		"Call": "Calls",
+		"Task": "Tasks",
+		"Case": "Cases",
+		"InboundEmail": "Inbound Emails"
+	},
+	"dashlets": {
+		"Leads": "My Leads",
+		"Opportunities": "My Opportunities",
+		"Tasks": "My Tasks",
+		"Cases": "My Cases",
+		"Calendar": "Calendar",
+		"OpportunitiesByStage": "Opportunities by Stage",
+		"OpportunitiesByLeadSource": "Opportunities by Lead Source",
+		"SalesByMonth": "Sales by Month",
+		"SalesPipeline": "Sales Pipeline"		
+	}
+}

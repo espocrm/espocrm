@@ -1,0 +1,20 @@
+{
+	"fields": {
+		"name": "Name",
+		"emailAddress": "Email",
+		"website": "Website",
+		"phone": "Phone",
+		"fax": "Fax",
+		"billingAddress": "Billing Address",
+		"shippingAddress": "Shipping Address",
+		"description": "Description",
+		"sicCode": "Sic Code",
+		"industry": "Industry",
+		"type": "Type"		
+	},
+	"links": {
+		"contacts": "Contacts",
+		"opportunities": "Opportunities",
+		"cases": "Cases"
+	}
+}

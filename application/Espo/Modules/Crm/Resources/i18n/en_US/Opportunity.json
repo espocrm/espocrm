@@ -1,0 +1,16 @@
+{
+	"fields": {
+		"name": "Name",
+		"account": "Account",
+		"stage": "Stage",
+		"amount": "Amount",
+		"probability": "Probability",
+		"leadSource": "Lead Source",
+		"doNotCall": "Do Not Call",
+		"closeDate": "Close Date",
+		"description": "Description"
+	},
+	"links": {
+		"contacts": "Contacts"
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"fields": {
+		"name": "Name",
+		"status": "Status",
+		"job": "Job",
+		"scheduling": "Scheduling"
+	},
+	"links": {
+		"log": "Log"
+	}
+}
