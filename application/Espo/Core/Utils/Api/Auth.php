@@ -24,7 +24,7 @@ class Auth extends \Slim\Middleware
 		$req = $this->app->request();        
 
 		$uri = $req->getResourceUri();
-		$httpMethod = $req->getMethod();
+		$httpMethod = $req->getMethod();		
 
 		if (is_null($this->authRequired)) {
 			$routes = $this->app->router()->getMatchedRoutes($httpMethod, $uri);
@@ -46,7 +46,7 @@ class Auth extends \Slim\Middleware
 		}
 
 		$authKey = $req->headers('PHP_AUTH_USER');
-        $authSec = $req->headers('PHP_AUTH_PW');
+        $authSec = $req->headers('PHP_AUTH_PW');   
 
         if ($authKey && $authSec) {
 			$isAuthenticated = false;
@@ -61,8 +61,9 @@ class Auth extends \Slim\Middleware
             } else {
 				$this->processUnauthorized();
             }
-        } else {
-           $this->processUnauthorized();
+        } else {        	
+        	$this->showDialog = true;	
+			$this->processUnauthorized();
         }
 	}
 	
@@ -71,11 +72,12 @@ class Auth extends \Slim\Middleware
 		$res = $this->app->response();
 		
 		if ($this->showDialog) {
-			$res->header('WWW-Authenticate', sprintf('Basic realm="%s"', ''));
+			$res->header('WWW-Authenticate', 'Basic realm=""');
 		} else {
 			$res->header('WWW-Authenticate');
 		}
 		$res->status(401);		
 	}
+
 }
 
