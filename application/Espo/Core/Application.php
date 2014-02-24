@@ -20,11 +20,7 @@ class Application
     {
     	$this->container = new Container();
 
-		$GLOBALS['log'] = $this->container->get('log');		
-		/*$GLOBALS['log'] = $this->container->get('logOld');	
-
-        set_error_handler(array($GLOBALS['log'], 'catchError'), E_ALL);
-		set_exception_handler(array($GLOBALS['log'], 'catchException'));*/	
+		$GLOBALS['log'] = $this->container->get('log');			
 			
 		date_default_timezone_set('UTC');			
     }
