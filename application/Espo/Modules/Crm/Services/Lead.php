@@ -17,24 +17,26 @@ class Lead extends \Espo\Services\Record
 
     	$entityManager = $this->getEntityManager();
 
-    	if (!empty($recordsData['Account'])) {
+
+    	if (!empty($recordsData->Account)) {
+    	
     		$account = $entityManager->getEntity('Account');
-    		$account->set($recordsData['Account']);
+    		$account->set(get_object_vars($recordsData->Account));
     		$entityManager->saveEntity($account);
     		$lead->set('createdAccountId', $account->id);
     	}
-    	if (!empty($recordsData['Opportunity'])) {
+    	if (!empty($recordsData->Opportunity)) {
     		$opportunity = $entityManager->getEntity('Opportunity');
-    		$opportunity->set($recordsData['Opportunity']);
+    		$opportunity->set(get_object_vars($recordsData->Opportunity));
     		if (isset($account)) {
     			$opportunity->set('accountId', $account->id);
     		}
     		$entityManager->saveEntity($opportunity);
     		$lead->set('createdOpportunityId', $opportunity->id);
     	}
-    	if (!empty($recordsData['Contact'])) {
+    	if (!empty($recordsData->Contact)) {
     		$contact = $entityManager->getEntity('Contact');
-    		$contact->set($recordsData['Contact']);
+    		$contact->set(get_object_vars($recordsData->Contact));
     		if (isset($account)) {
     			$contact->set('accountId', $account->id);
     		}
@@ -42,10 +44,7 @@ class Lead extends \Espo\Services\Record
     		if (isset($opportunity)) {
     			$entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
     		}
-    		$lead->set('createdContactId', $contact->id);
-    		
-   		
-    		  		
+    		$lead->set('createdContactId', $contact->id);    		  		
     	}
 
 		$lead->set('status', 'Converted');		
