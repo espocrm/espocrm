@@ -30,7 +30,12 @@
 		"Admin": "Admin",
 		"About": "About",
 		"Log Out": "Log Out",
-		"Preferences": "Preferences"		
+		"Preferences": "Preferences",
+		"State": "State",
+		"Street": "Street",
+		"Country": "Country",
+		"City": "City",
+		"PostalCode": "Postal Code"	
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",
@@ -49,7 +54,13 @@
 		"dateFrom": "Date From",
 		"dateTo": "Date To",
 		"autorefreshInterval": "Auto-refresh Interval",
-		"displayRecords": "Display Records"
+		"displayRecords": "Display Records",
+		"billingAddressCity": "City",
+		"billingAddressCountry": "Country",
+		"billingAddressPostalCode": "Postal Code",
+		"addressCity": "City",
+		"addressCountry": "Country",
+		"addressPostalCode": "Postal Code"
 	},
 	"dashlets": {
 		"Stream": "Stream"		

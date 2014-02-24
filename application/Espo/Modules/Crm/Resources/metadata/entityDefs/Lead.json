@@ -189,6 +189,11 @@
             "website": "website",
             "emailAddress": "emailAddress",
             "phone": "phoneOffice",
+            "billingAddressStreet": "addressStreet",
+            "billingAddressCity": "addressCity",
+            "billingAddressState": "addressState",
+            "billingAddressPostalCode": "addressPostalCode",
+            "billingAddressCountry": "addressCountry",            
             "assignedUser": "assignedUser",
             "teams": "teams"
         },
