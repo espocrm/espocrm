@@ -30,7 +30,12 @@
 		"Admin": "Admin",
 		"About": "About",
 		"Log Out": "Log Out",
-		"Preferences": "Preferences"
+		"Preferences": "Preferences"		
+	},
+	"boolFilters": {
+		"onlyMy": "Only My",
+		"open": "Open",
+		"active": "Active"
 	},
 	"fields": {
 		"name": "Name",

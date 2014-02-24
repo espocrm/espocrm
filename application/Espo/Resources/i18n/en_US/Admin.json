@@ -1,0 +1,12 @@
+{
+	"layouts": {
+		"list": "List",
+		"detail": "Detail",
+		"listSmall": "List (Small)",
+		"detailSmall": "Detail (Small)",
+		"filters": "Search Filters (Text)",
+		"filtersAdvanced": "Search Filters (Advanced)",
+		"massUpdate": "Mass Update",
+		"relationships": "Relationships"
+	}
+}
