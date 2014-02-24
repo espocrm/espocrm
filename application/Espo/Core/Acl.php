@@ -223,7 +223,7 @@ class Acl
 	private function buildCache()
 	{
 		$contents = '<' . '?'. 'php return ' .  var_export($this->data, true)  . ';';
-		$this->fileManager()->putContents($contents, $this->cacheFile);
+		$this->fileManager->putContents($contents, $this->cacheFile);
 	}
 }
 
