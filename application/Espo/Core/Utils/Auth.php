@@ -28,7 +28,7 @@ class Auth
 	
 	public function login($username, $password)
 	{
-		$GLOBALS['log']->add('DEBUG', 'AUTH: Try to authenticate');
+		$GLOBALS['log']->debug('AUTH: Try to authenticate');
 		
 		$entityManager = $this->container->get('entityManager');
 		
@@ -42,7 +42,7 @@ class Auth
 		if ($user instanceof \Espo\Entities\User) {
 			$entityManager->setUser($user);
 			$this->container->setUser($user);
-			$GLOBALS['log']->add('DEBUG', 'AUTH: Result of authenticate is [true]');
+			$GLOBALS['log']->debug('AUTH: Result of authenticate is [true]');
 			return true;
 		}
 	}

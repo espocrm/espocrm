@@ -175,11 +175,11 @@ class Schema
 		$result = true;
 		$connection = $this->getConnection();
 		foreach ($queries as $sql) {
-			$GLOBALS['log']->add('DEBUG', 'SCHEMA, Execute Query: '.$sql);
+			$GLOBALS['log']->debug('SCHEMA, Execute Query: '.$sql);
 			try {
             	$result &= (bool) $connection->executeQuery($sql);
 			} catch (\Exception $e) {
-				$GLOBALS['log']->add('EXCEPTION', 'Rebuild database fault: '.$e);
+				$GLOBALS['log']->alert('Rebuild database fault: '.$e);
 				$result = false;
 			}
         }

@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.4.0
+ * @version     2.4.2
  *
  * MIT LICENSE
  *
@@ -492,6 +492,22 @@ class SlimTest extends PHPUnit_Framework_TestCase
         $s->get('/bar', function () { echo "xyz"; });
         $s->call();
         $this->assertEquals(404, $s->response()->status());
+    }
+
+    /**
+     * Tests if route will match in case-insensitive manner if configured to do so
+     */
+    public function testRouteMatchesInCaseInsensitiveMannerIfConfigured()
+    {
+        \Slim\Environment::mock(array(
+            'PATH_INFO' => '/BaR', // Does not match route case
+        ));
+        $s = new \Slim\Slim(array('routes.case_sensitive' => false));
+        $route = $s->get('/bar', function () { echo "xyz"; });
+        $s->call();
+        $this->assertEquals(200, $s->response()->status());
+        $this->assertEquals('xyz', $s->response()->body());
+        $this->assertEquals('/bar', $route->getPattern());
     }
 
     /**

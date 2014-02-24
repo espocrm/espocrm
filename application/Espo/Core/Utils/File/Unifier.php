@@ -122,7 +122,7 @@ class Unifier
 		$decoded= Utils\Json::getArrayData($fileContent);
 
 		if (empty($decoded) && !is_array($decoded)) {
-        	$GLOBALS['log']->add('FATAL EXCEPTION', 'Syntax error or empty file - '.Utils\Util::concatPath($folderPath, $fileName));
+        	$GLOBALS['log']->emergency('Syntax error or empty file - '.Utils\Util::concatPath($folderPath, $fileName));
 		} else {
             //Default values
             if (is_string($defaults) && !empty($defaults)) {

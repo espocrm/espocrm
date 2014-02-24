@@ -31,12 +31,10 @@ class Json
 	    }
 
 		if ($json===null) {
-			$GLOBALS['log']->add('ERROR', 'Value cannot be decoded to JSON - '.print_r($value, true));
+			$GLOBALS['log']->error('Value cannot be decoded to JSON - '.print_r($value, true));
 		}
 
-        return $json;
-
-		//JSON_PRETTY_PRINT
+        return $json;		
 	}
 
 	/**
@@ -51,13 +49,9 @@ class Json
 	public static function decode($json, $assoc = false, $depth = 512, $options = 0)
 	{
 		if (is_array($json)) {
-			$GLOBALS['log']->add('WARNING', 'JSON:decode() - JSON cannot be decoded - '.$json);
+			$GLOBALS['log']->warning('JSON:decode() - JSON cannot be decoded - '.$json);
 			return false;
 		}
-
-		/*if (strstr($json, '\\') && !strstr($json, '(\\')) {
-        	$json = preg_replace('/([^\\\])(\\\)([^\/\\\])/', '$1\\\\\\\$3', $json);
-		}  */
 
 	    if(version_compare(phpversion(), '5.4.0', '>=')) {
 	        $json = json_decode($json, $assoc, $depth, $options);
@@ -68,11 +62,6 @@ class Json
 	    else {
 	        $json = json_decode($json, $assoc);
 	    }
-
-		/*if ($json===null) {
-			$Log= new Utils\Log();
-			$Log->add('WARNING', 'JSON:decode() - JSON string cannot be decoded - '.$json);
-		}*/
 
 	    return $json;
 	}

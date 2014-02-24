@@ -125,7 +125,7 @@ class Config
 
 		$config = $this->getFileManager()->getContents($defaultConfig['configPath']);
 		if (empty($config)) {
-			$GLOBALS['log']->add('FATAL', 'Check syntax or permission of your '.$defaultConfig['configPath']);
+			$GLOBALS['log']->emergency('Check syntax or permission of your '.$defaultConfig['configPath']);
 		}
 
 		$this->configData =  Util::merge((array) $defaultConfig, (array) $config);

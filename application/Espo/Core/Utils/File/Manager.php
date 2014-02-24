@@ -308,7 +308,7 @@ class Manager
             $dirPermission= is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
 			if (!mkdir($pathParts['dirname'], $dirPermission, true)) {
-                $GLOBALS['log']->add('FATAL', 'Permission denied: unable to generate a folder on the server - '.$pathParts['dirname']);
+                $GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$pathParts['dirname']);
                 return false;
 			}
 		}

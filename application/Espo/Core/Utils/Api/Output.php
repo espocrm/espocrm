@@ -35,7 +35,7 @@ class Output
 	
 	public function processError($message = 'Error', $code = 500)
 	{
-		$GLOBALS['log']->add('ERROR', 'API ['.$this->getSlim()->request()->getMethod().']:'.$this->getSlim()->router()->getCurrentRoute()->getPattern().', Params:'.print_r($this->getSlim()->router()->getCurrentRoute()->getParams(), true).', InputData: '.$this->getSlim()->request()->getBody().' - '.$message);
+		$GLOBALS['log']->error('API ['.$this->getSlim()->request()->getMethod().']:'.$this->getSlim()->router()->getCurrentRoute()->getPattern().', Params:'.print_r($this->getSlim()->router()->getCurrentRoute()->getParams(), true).', InputData: '.$this->getSlim()->request()->getBody().' - '.$message);
 		$this->displayError($message, $code);
 		
 		ob_clean();
@@ -53,7 +53,7 @@ class Output
 	*/
 	public function displayError($text, $statusCode = 500)
 	{
-        $GLOBALS['log']->add('INFO', 'Display Error: '.$text.', Code: '.$statusCode.' URL: '.$_SERVER['REQUEST_URI']);
+        $GLOBALS['log']->info('Display Error: '.$text.', Code: '.$statusCode.' URL: '.$_SERVER['REQUEST_URI']);
 
 		if (!empty( $this->slim)) {
 			$this->getSlim()->response()->status($statusCode);
@@ -61,7 +61,7 @@ class Output
 			$this->getSlim()->stop();
 	    }
 		else {
-			$GLOBALS['log']->add('INFO', 'Could not get Slim instance. It looks like a direct call (bypass API). URL: '.$_SERVER['REQUEST_URI']);
+			$GLOBALS['log']->info('Could not get Slim instance. It looks like a direct call (bypass API). URL: '.$_SERVER['REQUEST_URI']);
 			die($text);
 		}
 	}

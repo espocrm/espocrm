@@ -89,7 +89,7 @@ class Converter
         foreach($entityDefs as $entityName => $entityMeta) {
 
 			if (empty($entityMeta)) {
-		    	$GLOBALS['log']->add('ERROR', 'Orm\Converter:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
+		    	$GLOBALS['log']->critical('Orm\Converter:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
 				continue;
 			}
 
@@ -264,7 +264,7 @@ class Converter
 	{
 		//set default type if exists
        	if (!isset($fieldParams['type']) || empty($fieldParams['type'])) {
-       		$GLOBALS['log']->add('WARNING', 'Field type does not exist for '.$entityName.':'.$fieldName.'. Use default type ['.$this->defaultFieldType.']');
+       		$GLOBALS['log']->warning('Field type does not exist for '.$entityName.':'.$fieldName.'. Use default type ['.$this->defaultFieldType.']');
 			$fieldParams['type'] = $this->defaultFieldType;
        	} //END: set default type if exists
 
@@ -321,7 +321,7 @@ class Converter
 		if (trim($subFieldName) == '') {
 
 			if (!isset($fieldTypeMeta['database'])) {
-				$GLOBALS['log']->add('EXCEPTION', 'Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
+				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
 			}
 
 			$subField['name'] = $fieldName;
@@ -333,7 +333,7 @@ class Converter
 		} else {
 
 			if (!isset($fieldTypeMeta['fields'][$subFieldName])) {
-				$GLOBALS['log']->add('EXCEPTION', 'Empty field defs for ['.$entityName.':'.$subFieldName.'] using "actualFields". Main field ['.$fieldName.']');
+				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$subFieldName.'] using "actualFields". Main field ['.$fieldName.']');
 			}
 
 			$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;

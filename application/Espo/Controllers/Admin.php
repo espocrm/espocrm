@@ -20,7 +20,7 @@ class Admin extends \Espo\Core\Controllers\Base
 			$result = $this->getContainer()->get('schema')->rebuild();
 	   	} catch (\Exception $e) {
             $result = false;
-		  	$GLOBALS['log']->add('EXCEPTION', 'Fault to rebuild database schema'.'. Details: '.$e->getMessage());
+		  	$GLOBALS['log']->error('Fault to rebuild database schema'.'. Details: '.$e->getMessage());
 		}
 
 		if ($result === false) {

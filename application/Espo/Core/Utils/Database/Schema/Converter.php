@@ -64,7 +64,7 @@ class Converter
 
 	public function process(array $ormMeta, $entityDefs)
 	{
-    	$GLOBALS['log']->add('Debug', 'Schema\Converter - Start: building schema');
+    	$GLOBALS['log']->debug('Schema\Converter - Start: building schema');
 
 		//check if exist files in "Tables" directory and merge with ormMetadata
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables());       	
@@ -100,7 +100,7 @@ class Converter
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
 				if (!in_array($fieldType, $this->typeList)) {
-                	$GLOBALS['log']->add('DEBUG', 'Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
+                	$GLOBALS['log']->debug('Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
 					continue;
 				}
 
@@ -165,7 +165,7 @@ class Converter
 		//END: check and create columns/tables for relations
 
 
-		$GLOBALS['log']->add('Debug', 'Schema\Converter - End: building schema');
+		$GLOBALS['log']->debug('Schema\Converter - End: building schema');
 
 		return $schema;
 	}

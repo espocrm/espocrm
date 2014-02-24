@@ -17,9 +17,9 @@
   <email>sb@sebastian-bergmann.de</email>
   <active>yes</active>
  </lead>
- <date>2013-09-10</date>
+ <date>2014-02-03</date>
  <version>
-  <release>1.2.13</release>
+  <release>1.2.15</release>
   <api>1.2.11</api>
  </version>
  <stability>
@@ -42,6 +42,7 @@
          <dir name="css">
           <file baseinstalldir="/" name="bootstrap-responsive.min.css" role="php" />
           <file baseinstalldir="/" name="bootstrap.min.css" role="php" />
+          <file baseinstalldir="/" name="nv.d3.css" role="php" />
           <file baseinstalldir="/" name="style.css" role="php" />
          </dir>
          <dir name="img">
@@ -50,9 +51,10 @@
          </dir>
          <dir name="js">
           <file baseinstalldir="/" name="bootstrap.min.js" role="php" />
-          <file baseinstalldir="/" name="highcharts.js" role="php" />
+          <file baseinstalldir="/" name="d3.min.js" role="php" />
           <file baseinstalldir="/" name="html5shiv.js" role="php" />
           <file baseinstalldir="/" name="jquery.min.js" role="php" />
+          <file baseinstalldir="/" name="nv.d3.min.js" role="php" />
          </dir>
          <file baseinstalldir="/" name="coverage_bar.html.dist" role="php" />
          <file baseinstalldir="/" name="dashboard.html.dist" role="php" />
@@ -116,7 +118,7 @@
    <package>
     <name>Text_Template</name>
     <channel>pear.phpunit.de</channel>
-    <min>1.1.1</min>
+    <min>1.2.0</min>
    </package>
   </required>
   <optional>

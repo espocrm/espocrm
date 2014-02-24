@@ -87,16 +87,16 @@ class Container
 		);
     }
 
-	private function loadLog()
+	/*private function loadLogOld()
     {
-    	return new \Espo\Core\Utils\Log(
+    	return new \Espo\Core\Utils\LogOld(
 			$this->get('fileManager'),
 			$this->get('output'),
 			array(
 				'options' => $this->get('config')->get('logger'),
 			)
 		);
-    }
+    }*/
 
 	private function loadOutput()
     {

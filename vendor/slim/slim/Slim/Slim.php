@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.4.0
+ * @version     2.4.2
  * @package     Slim
  *
  * MIT LICENSE
@@ -54,7 +54,7 @@ class Slim
     /**
      * @const string
      */
-    const VERSION = '2.4.0';
+    const VERSION = '2.4.2';
 
     /**
      * @var \Slim\Helper\Set
@@ -308,7 +308,9 @@ class Slim
             'cookies.cipher' => MCRYPT_RIJNDAEL_256,
             'cookies.cipher_mode' => MCRYPT_MODE_CBC,
             // HTTP
-            'http.version' => '1.1'
+            'http.version' => '1.1',
+            // Routing
+            'routes.case_sensitive' => true
         );
     }
 
@@ -434,7 +436,7 @@ class Slim
     {
         $pattern = array_shift($args);
         $callable = array_pop($args);
-        $route = new \Slim\Route($pattern, $callable);
+        $route = new \Slim\Route($pattern, $callable, $this->settings['routes.case_sensitive']);
         $this->router->map($route);
         if (count($args) > 0) {
             $route->setMiddleware($args);
@@ -1249,7 +1251,7 @@ class Slim
      */
     public function run()
     {
-        set_error_handler(array('\Slim\Slim', 'handleErrors')); 
+        set_error_handler(array('\Slim\Slim', 'handleErrors'));
 
         //Apply final outer middleware layers
         if ($this->config('debug')) {

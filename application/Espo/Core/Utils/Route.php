@@ -68,9 +68,8 @@ class Route
         	$this->data = $this->unify();
 
 			$result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
-			 if ($result == false) {
-			 	$GLOBALS['log']->add('EXCEPTION', 'Route::init() - Cannot save Routes to a file');
-	         	throw new \Espo\Core\Exceptions\Error();
+			 if ($result == false) {			
+	         	throw new \Espo\Core\Exceptions\Error('Route - Cannot save unified routes');
 			 }
 		}
 	}
@@ -111,7 +110,7 @@ class Route
         	$content= $this->getFileManager()->getContents($routeFile);
 			$arrayContent = Json::getArrayData($content);
 			if (empty($arrayContent)) {
-            	$GLOBALS['log']->add('ERROR', 'Route::unify() - Empty file or syntax error - ['.$routeFile.']');
+            	$GLOBALS['log']->error('Route::unify() - Empty file or syntax error - ['.$routeFile.']');
 				return $currData;
 			}
 

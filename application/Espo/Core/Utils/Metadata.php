@@ -87,7 +87,7 @@ class Metadata
 	{
        	$data = $this->getMetadataOnly(false, $reload);
 		if ($data === false) {
-			$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been created');
+			$GLOBALS['log']->emergency('Metadata:init() - metadata has not been created');
 		}
 
 		$this->meta = $data;
@@ -96,7 +96,7 @@ class Metadata
         	//save medatada to a cache file    
 	        $isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $data);
 			if ($isSaved === false) {
-	        	$GLOBALS['log']->add('FATAL', 'Metadata:init() - metadata has not been saved to a cache file');
+	        	$GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
 			}
 		}
 	}
@@ -167,7 +167,7 @@ class Metadata
         	$data = $this->getUnifier()->unify($this->name, $this->paths, true);
 
 			if ($data === false) {
-            	$GLOBALS['log']->add('FATAL', 'Metadata:getMetadata() - metadata unite file cannot be created');
+            	$GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
 			}
 		}
         else if (file_exists($this->cacheFile)) {
@@ -226,9 +226,8 @@ class Metadata
 	public function setOrmMetadata(array $ormMeta)
 	{
 		$result = $this->getFileManager()->putContentsPHP($this->ormCacheFile, $ormMeta);
-		if ($result == false) {
-		 	$GLOBALS['log']->add('EXCEPTION', 'Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
-         	throw new \Espo\Core\Exceptions\Error();
+		if ($result == false) {		 
+         	throw new \Espo\Core\Exceptions\Error('Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
 		}
 
 		$this->ormMeta = $ormMeta;

@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.4.0
+ * @version     2.4.2
  *
  * MIT LICENSE
  *
@@ -508,6 +508,19 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test get content type for built-in PHP server
+     */
+    public function testGetContentTypeForBuiltInServer()
+    {
+        $env = \Slim\Environment::mock(array(
+            'slim.input' => '',
+            'HTTP_CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
+        ));
+        $req = new \Slim\Http\Request($env);
+        $this->assertEquals('application/json; charset=ISO-8859-4', $req->getContentType());
+    }
+
+    /**
      * Test get content type
      */
     public function testGetContentTypeWhenNotExists()
@@ -515,6 +528,19 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $env = \Slim\Environment::mock();
         $req = new \Slim\Http\Request($env);
         $this->assertNull($req->getContentType());
+    }
+
+    /**
+     * Test get content type with built-in server
+     */
+    public function testGetContentTypeWithBuiltInServer()
+    {
+        $env = \Slim\Environment::mock(array(
+            'slim.input' => '',
+            'HTTP_CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
+        ));
+        $req = new \Slim\Http\Request($env);
+        $this->assertEquals('application/json; charset=ISO-8859-4', $req->getContentType());
     }
 
     /**

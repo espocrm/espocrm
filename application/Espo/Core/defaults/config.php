@@ -5,12 +5,12 @@ return array (
 
   'cachePath' => 'data/cache',
 
-  'languageConfig' =>
+  'logger' => 
   array (
-    'name' => '{lang}',
-    'cachePath' => 'data/cache/application/Language',
-    'corePath' => 'application/Espo/Language',
-    'customPath' => 'application/Espo/Modules/{*}/Language',
+    'path' => 'data/logs/espo.log',    
+    'level' => 'DEBUG', /*DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY*/
+    'isRotate' => true, /*rotate every day every logs files*/
+    'maxRotateFiles' => 60, /*max number of rorate files*/
   ),
 
   'defaultPermissions' =>
@@ -49,7 +49,6 @@ return array (
     'adminItems',
     'configPath',
     'cachePath',
-    'languageConfig',
     'database',
     'crud', 
   ),

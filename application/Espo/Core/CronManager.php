@@ -99,7 +99,7 @@ class CronManager
 	public function run()
 	{
 		if (!$this->checkLastRunTime()) {
-			$GLOBALS['log']->add('INFO', 'Cron Manager: Stop cron running, too frequency execution');
+			$GLOBALS['log']->info('Cron Manager: Stop cron running, too frequency execution');
 			return; //stop cron running, too frequency execution 
 		}
 
@@ -127,7 +127,7 @@ class CronManager
 				}	
 			} catch (\Exception $e) {
 				$isSuccess = false;
-				$GLOBALS['log']->add('INFO', 'Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
+				$GLOBALS['log']->info('Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
 			}					
 
 			$status = $isSuccess ? 'Success' : 'Failed';
@@ -163,7 +163,7 @@ class CronManager
 				//$nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 				$prevDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');		
 			} catch (\Exception $e) {
-				$GLOBALS['log']->add('Exception', 'ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
+				$GLOBALS['log']->error('ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
 				continue;
 			}					
 			

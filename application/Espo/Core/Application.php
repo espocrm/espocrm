@@ -20,11 +20,12 @@ class Application
     {
     	$this->container = new Container();
 
-		$GLOBALS['log'] = $this->log = $this->container->get('log');
+		$GLOBALS['log'] = $this->container->get('log');		
+		/*$GLOBALS['log'] = $this->container->get('logOld');	
 
-        set_error_handler(array($this->getLog(), 'catchError'), E_ALL);
-		set_exception_handler(array($this->getLog(), 'catchException'));
-		
+        set_error_handler(array($GLOBALS['log'], 'catchError'), E_ALL);
+		set_exception_handler(array($GLOBALS['log'], 'catchException'));*/	
+			
 		date_default_timezone_set('UTC');			
     }
 
@@ -55,11 +56,6 @@ class Application
 	public function getContainer()
 	{
 		return $this->container;
-	}
-
-	public function getLog()
-	{
-		return $this->log;
 	}
 
     public function run($name = 'default')
@@ -179,7 +175,7 @@ class Application
 
 			$method = strtolower($route['method']);
 			if (!in_array($method, $crudList)) {
-				$GLOBALS['log']->add('ERROR', 'Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');
+				$GLOBALS['log']->error('Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');
 				continue;
 			}
 
