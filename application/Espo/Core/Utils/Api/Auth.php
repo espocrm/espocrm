@@ -62,7 +62,9 @@ class Auth extends \Slim\Middleware
 				$this->processUnauthorized();
             }
         } else {        	
-        	$this->showDialog = true;	
+        	if (!isXMLHttpRequest()) {
+        		$this->showDialog = true;		
+        	}        	
 			$this->processUnauthorized();
         }
 	}
@@ -77,6 +79,19 @@ class Auth extends \Slim\Middleware
 			$res->header('WWW-Authenticate');
 		}
 		$res->status(401);		
+	}
+
+	protected function isXMLHttpRequest()
+	{
+		$req = $this->app->request();  
+
+		$httpXRequestedWith = $req->headers('HTTP_X_REQUESTED_WITH');
+
+		if (isset($httpXRequestedWith) && strtolower($httpXRequestedWith) == 'xmlhttprequest') {
+			return true;
+		}
+
+		return false;
 	}
 
 }
