@@ -62,7 +62,7 @@ class Auth extends \Slim\Middleware
 				$this->processUnauthorized();
             }
         } else {        	
-        	if (!isXMLHttpRequest()) {
+        	if (!$this->isXMLHttpRequest()) {
         		$this->showDialog = true;		
         	}        	
 			$this->processUnauthorized();
