@@ -17,7 +17,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {     
     	$this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager( array() ); 	
+		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager(); 	
 
 		//set to use cache
 		$this->objects['config']

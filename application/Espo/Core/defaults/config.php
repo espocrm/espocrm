@@ -10,7 +10,7 @@ return array (
     'path' => 'data/logs/espo.log',    
     'level' => 'DEBUG', /*DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY*/
     'isRotate' => true, /*rotate every day every logs files*/
-    'maxRotateFiles' => 60, /*max number of rorate files*/
+    'maxRotateFiles' => 60, /*max number of rotate files*/
   ),
 
   'defaultPermissions' =>

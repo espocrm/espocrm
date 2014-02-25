@@ -6,23 +6,23 @@ use Espo\Core\Utils;
 
 class Manager
 {
-    /**
-	* @var object - default permission settings
-	*/
-	protected $defaultPermissions;
+	protected $appCache = 'application';
 
-	/**
-	* @var object - default permission settings
-	*/
-	protected $appCache= 'application';
-
-
-	private $params;
+	protected $params = array(
+		'defaultPermissions' => array (
+		    'dir' => '0775',
+		    'file' => '0664',
+		    'user' => '',
+		    'group' => '',
+		),
+	);
 
 
-	public function __construct(array $params)
+	public function __construct(array $params = null)
 	{
-		$this->params = $params;
+		if (isset($params)) {
+			$this->params = $params;
+		}		
 	}
 
 	protected function getParams()
@@ -43,7 +43,7 @@ class Manager
 	 *
 	 * @return array
 	 */
-	function getFileList($path, $recursively=false, $filter='', $fileType='all', $isReturnSingleArray = false)
+	public function getFileList($path, $recursively=false, $filter='', $fileType='all', $isReturnSingleArray = false)
 	{
     	if (!file_exists($path)) {
             return false;
@@ -290,7 +290,7 @@ class Manager
 	 * @param string $filePath
 	 * @return string
 	 */
-	public function checkCreateFile($filePath)
+	protected function checkCreateFile($filePath)
 	{
 		$defaultPermissions = $this->getDefaultPermissions();
 
@@ -433,7 +433,7 @@ class Manager
 	 *
 	 * @return array
 	 */
-	function getDirName($path)
+	public function getDirName($path)
 	{
 		$pieces= explode(Utils\Util::getSeparator(), $path);
         if (empty($pieces[count($pieces)-1])) {
@@ -477,14 +477,8 @@ return '.var_export($content, true).';
 	 */
     public function getDefaultPermissions()
 	{
-    	if (isset($this->defaultPermissions) && is_array($this->defaultPermissions)) {
-    		return $this->defaultPermissions;
-    	}
-
 		$params = $this->getParams();		
-		$this->defaultPermissions = $params['defaultPermissions'];
-
-		return $this->defaultPermissions;
+		return $params['defaultPermissions'];
 	}
 
 	/**
@@ -495,20 +489,20 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-    public function setDefaultPermissions($path, $recurse=false)
+    public function setDefaultPermissions($path, $recurse = false)
 	{
 		if (!file_exists($path)) {
 			return false;
 		}
 
-        $permission= $this->getDefaultPermissions();
+        $permission = $this->getDefaultPermissions();
 
-        $result= $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
+        $result = $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
 		if (!empty($permission['user'])) {
-        	$result&= $this->chown($path, $permission['user'], $recurse);
+        	$result &= $this->chown($path, $permission['user'], $recurse);
 		}
 		if (!empty($permission['group'])) {
-        	$result&= $this->chgrp($path, $permission['group'], $recurse);
+        	$result &= $this->chgrp($path, $permission['group'], $recurse);
 		}
 
         return $result;
@@ -521,7 +515,7 @@ return '.var_export($content, true).';
 	 * @param string $filename
 	 * @return string | bool
 	 */
-	function getCurrentPermission($filePath)
+	public function getCurrentPermission($filePath)
 	{
 		if (!file_exists($filePath)) {
 			return false;
@@ -541,7 +535,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chmod($path, $octal, $recurse=false)
+	public function chmod($path, $octal, $recurse = false)
 	{
     	if (!file_exists($path)) {
 			return false;
@@ -603,7 +597,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chmodRecurse($path, $fileOctal=0644, $dirOctal=0755)
+	protected function chmodRecurse($path, $fileOctal=0644, $dirOctal=0755)
 	{
 		if (!file_exists($path)) {
 			return false;
@@ -635,7 +629,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chmodReal($filename,  $mode)
+	protected function chmodReal($filename,  $mode)
 	{
 		$result= chmod($filename, $mode);
 
@@ -658,7 +652,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chown($path, $user='', $recurse=false)
+	public function chown($path, $user='', $recurse=false)
 	{
     	if (!file_exists($path)) {
 			return false;
@@ -685,8 +679,8 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chownRecurse($path, $user) {
-
+	protected function chownRecurse($path, $user) 
+	{
 		if (!file_exists($path)) {
 			return false;
 		}
@@ -710,14 +704,14 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chgrp($path, $group='', $recurse=false)
+	public function chgrp($path, $group = null, $recurse = false)
 	{
     	if (!file_exists($path)) {
 			return false;
 		}
 
-		if (empty($group)) {
-			$group= $this->getDefaultGroup();
+		if (!isset($group)) {
+			$group = $this->getDefaultGroup();
 		}
 
 		//Set chgrp for non-recursive request
@@ -738,7 +732,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return bool
 	 */
-	function chgrpRecurse($path, $group) {
+	protected function chgrpRecurse($path, $group) {
 
 		if (!file_exists($path)) {
 			return false;
@@ -759,7 +753,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return int  - owner id
 	 */
-	function getDefaultOwner($usePosix=false)
+	public function getDefaultOwner($usePosix = false)
 	{
 		$defaultPermissions = $this->getDefaultPermissions();
 
@@ -780,7 +774,7 @@ return '.var_export($content, true).';
 	 *
 	 * @return int  - group id
 	 */
-	function getDefaultGroup($usePosix=false)
+	public function getDefaultGroup($usePosix = false)
 	{
 		$defaultPermissions = $this->getDefaultPermissions();
 

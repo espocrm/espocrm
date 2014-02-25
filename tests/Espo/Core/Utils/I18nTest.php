@@ -15,15 +15,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {                          
-		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager( array(
-				'defaultPermissions' => array (
-				    'dir' => '0775',
-				    'file' => '0664',
-				    'user' => '',
-				    'group' => '',
-			  ),
-			) 
-		); 
+		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager(); 
 
 		$this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();	 	
 		$map = array(   
