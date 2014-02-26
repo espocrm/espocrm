@@ -20,9 +20,9 @@ class Application
     {
     	$this->container = new Container();
 
-		$GLOBALS['log'] = $this->container->get('log');			
-			
-		date_default_timezone_set('UTC');			
+		date_default_timezone_set('UTC');
+		
+		$GLOBALS['log'] = $this->container->get('log');					
     }
 
 	public function getSlim()
