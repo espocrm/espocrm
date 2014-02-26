@@ -35,7 +35,7 @@
 		"Street": "Street",
 		"Country": "Country",
 		"City": "City",
-		"PostalCode": "Postal Code"	
+		"PostalCode": "Postal Code"		
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",
