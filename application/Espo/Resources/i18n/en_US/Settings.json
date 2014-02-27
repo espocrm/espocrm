@@ -26,6 +26,10 @@
 		"tabList": "Tab List",
 		"quickCreateList": "Quick Create List"
 	},
-	"links": {
+	"options": {
+		"weekStart": {
+			"0": "Sunday",
+			"1": "Monday"
+		}
 	}
 }
