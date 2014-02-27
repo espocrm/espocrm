@@ -385,15 +385,18 @@ class Stream extends \Espo\Core\Services\Base
 		$became = array();
 		
 		foreach ($auditedFields as $field => $attrs) {
-			foreach ($attrs as $attr) {
-				$updated = false;
+			$updated = false;
+			foreach ($attrs as $attr) {				
 				if ($entity->get($attr) != $entity->getFetched($attr)) {
-					$was[$attr] = $entity->getFetched($attr);
-					$became[$attr] = $entity->get($attr);
+
 					$updated = true;					
 				}
-				if ($updated) {
-					$updatedFields[] = $field;
+			}
+			if ($updated) {
+				$updatedFields[] = $field;
+				foreach ($attrs as $attr) {
+					$was[$attr] = $entity->getFetched($attr);
+					$became[$attr] = $entity->get($attr);
 				}
 			}
 		}
