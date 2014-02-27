@@ -51,8 +51,10 @@ class Preferences extends \Espo\Core\Controllers\Base
 		$userId = $params['id'];
 		$this->handleUserAccess($userId);
 
-		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);
-		$entity->set('name', $this->getUser()->get('name'));
+		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);		
+		$user = $this->getEntityManager()->getEntity('User', $userId);
+		
+		$entity->set('name', $user->get('name'));
 		if ($entity) {
 			return $entity->toArray();		
 		}
