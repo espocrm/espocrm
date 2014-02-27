@@ -5,7 +5,7 @@ namespace Espo\Core\Utils\File;
 use Espo\Core\Utils;
 
 class Permission
-{	
+{
 	protected $params = array(
 		'defaultPermissions' => array (
 		    'dir' => '0775',
@@ -20,7 +20,7 @@ class Permission
 	{
 		if (isset($params)) {
 			$this->params = $params;
-		}		
+		}
 	}
 
 	protected function getParams()
@@ -36,10 +36,10 @@ class Permission
 	 */
     public function getDefaultPermissions()
 	{
-		$params = $this->getParams();		
+		$params = $this->getParams();
 		return $params['defaultPermissions'];
 	}
-	
+
 
 	/**
      * Set default permission
@@ -157,16 +157,17 @@ class Permission
 	 *
 	 * @return bool
 	 */
-	protected function chmodRecurse($path, $fileOctal=0644, $dirOctal=0755)
+	protected function chmodRecurse($path, $fileOctal = 0644, $dirOctal = 0755)
 	{
 		if (!file_exists($path)) {
 			return false;
 		}
 
 		if (is_file($path)) {
-			chmod($path, $fileOctal);
+			return chmod($path, $fileOctal);
 		}
-		elseif (is_dir($path)) {
+
+		if (is_dir($path)) {
 			$allFiles = scandir($path);
 			$items = array_slice($allFiles, 2);
 
@@ -174,10 +175,10 @@ class Permission
 				$this->chmodRecurse($path. Utils\Util::getSeparator() .$item, $fileOctal, $dirOctal);
 			}
 
-			$this->chmodReal($path, $dirOctal);
+			return $this->chmodReal($path, $dirOctal);
 		}
 
-		return true;
+		return false;
 	}
 
 
@@ -235,11 +236,11 @@ class Permission
      * Change owner permission recirsive
 	 *
 	 * @param string $path
-	 * @param string $user 
+	 * @param string $user
 	 *
 	 * @return bool
 	 */
-	protected function chownRecurse($path, $user) 
+	protected function chownRecurse($path, $user)
 	{
 		if (!file_exists($path)) {
 			return false;
