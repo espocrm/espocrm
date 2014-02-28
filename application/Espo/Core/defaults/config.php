@@ -5,12 +5,17 @@ return array (
 
   'cachePath' => 'data/cache',
 
+  'database' => 
+  array (
+    'driver' => 'pdo_mysql',
+    'host' => 'localhost',    
+  ),
   'logger' => 
   array (
     'path' => 'data/logs/espo.log',    
-    'level' => 'DEBUG', /*DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY*/
+    'level' => 'ERROR', /*DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY*/
     'isRotate' => true, /*rotate every day every logs files*/
-    'maxRotateFiles' => 60, /*max number of rotate files*/
+    'maxRotateFiles' => 30, /*max number of rotate files*/
   ),
 
   'defaultPermissions' =>
