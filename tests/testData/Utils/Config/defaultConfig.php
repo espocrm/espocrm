@@ -35,8 +35,7 @@ return array (
     'database',
     'customPath',
     'defaultsPath', 
-    'crud',   
-    'scopeModuleMap',
+    'crud', 
   ),
   'adminItems' =>
   array (
