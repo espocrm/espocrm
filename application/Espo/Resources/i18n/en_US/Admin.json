@@ -4,8 +4,7 @@
 		"detail": "Detail",
 		"listSmall": "List (Small)",
 		"detailSmall": "Detail (Small)",
-		"filters": "Search Filters (Text)",
-		"filtersAdvanced": "Search Filters (Advanced)",
+		"filtersAdvanced": "Search Filters",
 		"massUpdate": "Mass Update",
 		"relationships": "Relationships"
 	}

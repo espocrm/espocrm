@@ -3,8 +3,11 @@
 		"name": "Name",
 		"emailAddress": "Email",
 		"title": "Title",
-		"phone": "Phone",
 		"account": "Account",
+		"phone": "Phone",
+		"phoneOffice": "Phone (Office)",
+		"fax": "Fax",
+		"accountType": "Account Type",
 		"doNotCall": "Do Not Call",
 		"address": "Address",
 		"description": "Description"	
