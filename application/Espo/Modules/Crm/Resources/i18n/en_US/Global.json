@@ -34,6 +34,9 @@
 		"OpportunitiesByStage": "Opportunities by Stage",
 		"OpportunitiesByLeadSource": "Opportunities by Lead Source",
 		"SalesByMonth": "Sales by Month",
-		"SalesPipeline": "Sales Pipeline"		
+		"SalesPipeline": "Sales Pipeline"	
+	},
+	"labels": {
+		"Create InboundEmail": "Create Inbound Email"
 	}
 }

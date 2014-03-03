@@ -35,7 +35,9 @@
 		"Street": "Street",
 		"Country": "Country",
 		"City": "City",
-		"PostalCode": "Postal Code"		
+		"PostalCode": "Postal Code",
+		"Create ScheduledJob": "Create Scheduled Job",
+		"Create EmailTemplate": "Create Email Template"
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",
