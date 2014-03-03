@@ -97,6 +97,15 @@ class Application
     	$cronManager = new \Espo\Core\CronManager($this->container);
 		$cronManager->run();
     }
+
+    public function isInstalled()
+    {
+    	$configFile = $this->getContainer()->get('config')->get('configPath');
+		if (!file_exists($configFile)) {
+			header("Location: install/");
+			exit;
+		}
+    }
     
 	protected function routeHooks()
 	{

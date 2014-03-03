@@ -4,11 +4,7 @@ include "bootstrap.php";
 	
 $app = new \Espo\Core\Application();
 
-$configFile = $app->getContainer()->get('config')->get('configPath');
-if (!file_exists($configFile)) {
-	header("Location: install/");
-	exit;
-}
+$app->isInstalled();
 
 if (empty($_GET['entryPoint'])) {
 	include "main.html";
