@@ -202,7 +202,7 @@ class Metadata
         	$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
 		}	
 
-		$result= $this->getFileManager()->putContents(array($path, $type, $scope.'.json'), $data);
+		$result= $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
 
         return $result;
 	}

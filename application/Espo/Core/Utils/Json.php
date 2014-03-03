@@ -14,10 +14,14 @@ class Json
      */
 	public static function encode($value, $options = 0, $depth = 512)
 	{
-		if(version_compare(phpversion(), '5.5.0', '>=')) {
+		if ($options == 0) {
+			$options = JSON_PRETTY_PRINT;	
+		}
+
+		if (version_compare(phpversion(), '5.5.0', '>=')) {
 	        $json = json_encode($value, $options, $depth);
 	    }
-	    elseif(version_compare(phpversion(), '5.3.0', '>=')) {
+	    elseif (version_compare(phpversion(), '5.3.0', '>=')) {
 			/*Check if options are supported for this version of PHP*/
 	    	if (is_int($options)) {
             	$json = json_encode($value, $options);

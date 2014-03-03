@@ -98,13 +98,18 @@ class Application
 		$cronManager->run();
     }
 
-    public function isInstalled()
+    public function isInstalled($useRedirect = true)
     {
-    	$configFile = $this->getContainer()->get('config')->get('configPath');
-		if (!file_exists($configFile)) {
+    	$configFile = $this->getContainer()->get('config')->get('configPath');    	
+
+    	$result = file_exists($configFile) ? true : false;
+
+		if ($useRedirect && !$result) {
 			header("Location: install/");
 			exit;
 		}
+
+		return $result;
     }
     
 	protected function routeHooks()

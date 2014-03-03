@@ -31,6 +31,7 @@ return array (
     1 => 'EUR',
   ),
   'testOption' => 'Another Wrong Value',
+  'testOption2' => 'Test2',
 );
 
 ?>

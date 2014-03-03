@@ -76,6 +76,10 @@ class Config
 	 */
 	public function set($name, $value='')
 	{
+		if (is_array($name)) {
+			return $this->setArray($name);
+		}
+
         if (Json::isJSON($value)) {
         	$value= Json::decode($value);
         }
@@ -94,7 +98,7 @@ class Config
 	 * @param array $values
 	 * @return bool
 	 */
-	public function setArray($values)
+	protected function setArray($values)
 	{
 		if (Json::isJSON($values)) {
         	$values = Json::decode($values);
@@ -162,10 +166,8 @@ class Config
 	 * @param $isAdmin
 	 * @return bool
 	 */
-	//HERE
 	public function setData($data, $isAdmin=false)
 	{
-
 		$restrictItems = $this->getRestrictItems($isAdmin);
 
 		$values= array();

@@ -67,4 +67,25 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->object->set($setKey, 'Another Wrong Value'));
 	}
 
+	function testSetArray()
+	{
+		$this->reflection->setProperty('defaultConfigPath', 'tests/testData/Utils/Config/defaultConfigArray.php');
+
+		$values = array(
+			'testOption' => 'Test',
+			'testOption2' => 'Test2',			
+		);        
+
+        $this->assertTrue($this->object->set($values));
+        $this->assertEquals('Test', $this->object->get('testOption'));
+        $this->assertEquals('Test2', $this->object->get('testOption2'));
+
+        $wrongArray = array(
+        	'testOption' => 'Another Wrong Value',
+        );
+        $this->assertTrue($this->object->set($wrongArray));
+
+        $this->reflection->setProperty('defaultConfigPath', $this->defaultConfigPath);
+	}
+
 }
