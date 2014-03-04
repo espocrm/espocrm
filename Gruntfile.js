@@ -8,6 +8,7 @@ module.exports = function (grunt) {
 		copy: {
 			build: {
 				expand: true,
+				dot: true,
 				src: [
 					'api/**',
 					'application/**',
