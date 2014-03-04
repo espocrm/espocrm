@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 					'api/**',
 					'application/**',
 					'data',
+					'install/**',
 					'vendor/**',
 					'bootstrap.php',
 					'cron.php',

@@ -1,0 +1,37 @@
+#page-content {
+	position: relative;
+	max-width: 90%;
+	margin: 0 auto;
+	min-width: 400px;
+}
+
+.license-field {
+	width: 100%;
+}
+
+.point-lbl {
+	cursor: pointer;
+}
+
+select[name="user-lang"] {
+	width: 200px;
+}
+
+.panel-body {
+	min-height: 400px;
+}
+
+.btn-panel {
+	margin-top: 20px;
+}
+.panel-title {
+	text-align: center;
+}
+
+.loading-icon {
+    background-image: url("../img/loading-icon.gif");
+    background-repeat: no-repeat;
+    height: 31px;
+    width: 31px;
+	float: right;
+}

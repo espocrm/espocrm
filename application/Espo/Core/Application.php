@@ -100,9 +100,12 @@ class Application
 
     public function isInstalled($useRedirect = true)
     {
-    	$configFile = $this->getContainer()->get('config')->get('configPath');    	
+    	$config = $this->getContainer()->get('config');       	
 
-    	$result = file_exists($configFile) ? true : false;
+    	$result = false;
+    	if (file_exists($config->get('configPath')) && $config->get('isInstalled')) {
+    		$result = true;	
+    	}
 
 		if ($useRedirect && !$result) {
 			header("Location: install/");
