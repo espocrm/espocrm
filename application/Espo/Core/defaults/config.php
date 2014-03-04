@@ -88,7 +88,8 @@ return array (
     'defaultPermissions',
     'logger',
     'devMode',
-  ),  
+  ), 
+  'isInstalled' => false, 
 );
 
 ?>

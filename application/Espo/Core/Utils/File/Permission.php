@@ -2,7 +2,8 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils;
+use Espo\Core\Utils,
+	Espo\Core\Exceptions\Error;
 
 class Permission
 {
@@ -149,7 +150,7 @@ class Permission
 
 
     /**
-     * Change permissions recirsive
+     * Change permissions recursive
 	 *
 	 * @param string $filename
 	 * @param int $fileOctal - ex. 0644
@@ -164,7 +165,7 @@ class Permission
 		}
 
 		if (is_file($path)) {
-			return chmod($path, $fileOctal);
+			return $this->chmodReal($path, $fileOctal);
 		}
 
 		if (is_dir($path)) {
@@ -182,26 +183,7 @@ class Permission
 	}
 
 
-	/**
-     * Change permissions recirsive
-	 *
-	 * @param string $filename
-	 * @param int $mode - ex. 0644
-	 *
-	 * @return bool
-	 */
-	protected function chmodReal($filename,  $mode)
-	{
-		$result= chmod($filename, $mode);
-
-		if (!$result) {
-			$this->chown($filename, $this->getDefaultOwner(true));
-			$this->chgrp($filename, $this->getDefaultGroup(true));
-			$result= chmod($filename, $mode);
-		}
-
-        return $result;
-	}
+	
 
 
 	/**
@@ -220,12 +202,12 @@ class Permission
 		}
 
 		if (empty($user)) {
-			$user= $this->getDefaultOwner();
+			$user = $this->getDefaultOwner();
 		}
 
 		//Set chown for non-recursive request
 		if (!$recurse) {
-            return chowm($path, $user);
+            return $this->chownReal($path, $user);
 		}
 
 		//Recursive chown
@@ -233,7 +215,7 @@ class Permission
 	}
 
 	/**
-     * Change owner permission recirsive
+     * Change owner permission recursive
 	 *
 	 * @param string $path
 	 * @param string $user
@@ -253,7 +235,7 @@ class Permission
 			$this->chownRecurse($path. Utils\Util::getSeparator() .$item, $user);
 		}
 
-		return chowm($path, $user);
+		return $this->chownReal($path, $user);
 	}
 
 	/**
@@ -277,7 +259,7 @@ class Permission
 
 		//Set chgrp for non-recursive request
 		if (!$recurse) {
-            return chgrp($path, $group);
+            return $this->chgrpReal($path, $group);
 		}
 
 		//Recursive chown
@@ -285,7 +267,7 @@ class Permission
 	}
 
 	/**
-     * Change group permission recirsive
+     * Change group permission recursive
 	 *
 	 * @param string $filename
 	 * @param int $fileOctal - ex. 0644
@@ -306,7 +288,60 @@ class Permission
 			$this->chgrpRecurse($path. Utils\Util::getSeparator() .$item, $group);
 		}
 
-		return chgrp($path, $group);
+		return $this->chgrpReal($path, $group);
+	}
+
+
+	/**
+     * Change permissions recursive
+	 *
+	 * @param string $filename
+	 * @param int $mode - ex. 0644
+	 *
+	 * @return bool
+	 */
+	protected function chmodReal($filename,  $mode)
+	{
+		try {
+			$result = chmod($filename, $mode);	
+		} catch (\Exception $e) {
+			$result = false;
+		}
+
+		if (!$result) {
+			$this->chown($filename, $this->getDefaultOwner(true));
+			$this->chgrp($filename, $this->getDefaultGroup(true));
+
+			try {
+				$result = chmod($filename, $mode);	
+			} catch (\Exception $e) {
+				throw new Error($e->getMessage());
+			}			
+		}
+
+        return $result;
+	}
+
+	protected function chownReal($path, $user)
+	{
+		try {
+			$result = chown($path, $user);	
+		} catch (\Exception $e) {
+			throw new Error($e->getMessage());				
+		}
+		
+        return $result;
+	}
+
+	protected function chgrpReal($path, $group)
+	{
+		try {
+			$result = chgrp($path, $group);	
+		} catch (\Exception $e) {
+			throw new Error($e->getMessage());				
+		}
+		
+        return $result;
 	}
 
 	/**
