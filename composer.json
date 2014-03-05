@@ -10,7 +10,8 @@
     "autoload": {
         "psr-0": {
             "": "application/",
-            "tests": ""
+            "tests": "",
+            "Espo\\Custom": "custom/"
         }
     },
 	"require-dev": {
