@@ -2,16 +2,9 @@
 
 return array(
 	'Main page title' => 'Welcome to EspoCRM',
-	'Main page header' => 'Welcome to EspoCRM. Before installing, please check if you have the following information:<br>
-<br>
-    Database host<br> 
-    Database name<br>
-    Database username<br>
-    Database password<br>       
-<br><br>
-Please select the language to use EspoCRM.',
-	'Start page title' => 'Start page title',
-	'Step1 page title' => 'Step1 page title',
+	'Main page header' => '',
+	'Start page title' => 'License Agreement',
+	'Step1 page title' => 'License Agreement',
 	'License Agreement' => 'License Agreement',
 	'I accept the agreement' => 'I accept the agreement',
 	'Choose your language:' => 'Choose your language:',
@@ -20,13 +13,13 @@ Please select the language to use EspoCRM.',
 	'Database User Name' => 'Database User Name',
 	'Database User Password' => 'Database User Password',
 	'Database driver' => 'Database driver',
-	'Step2 page title' => 'Step2 page title',
-	'Step3 page title' => 'Step3 page title',
-	'Admin Name' => 'Admin Name',
+	'Step2 page title' => 'Database configuration',
+	'Step3 page title' => 'Administrator Setup',
+	'User Name' => 'User Name',
 	'Password' => 'Password',
-	'Confirm Password' => 'Confirm Password',
-	'Errors page title' => 'Errors page title',
-	'Finish page title' => 'Finish page title',
+	'Confirm Password' => 'Confirm your Password',
+	'Errors page title' => 'Errors',
+	'Finish page title' => 'Success',
 	'Congratulation! Welcome to EspoCRM!' => 'Congratulation! Welcome to EspoCRM!',
 	'admin' => 'admin',
 	
@@ -57,7 +50,7 @@ Please select the language to use EspoCRM.',
 	),
 	'user languages' => array(
 		'en_US' => 'English (US)',
-		'de_DE' => 'German',
+		//'de_DE' => 'German',
 	),
 	// controll
 	'Start' => 'Start',
@@ -65,7 +58,7 @@ Please select the language to use EspoCRM.',
 	'Next' => 'Next',
 	'Go to EspoCRM' => 'Go to EspoCRM',
 	'Re-check' => 'Re-check',
-	'Test settings' => 'Test settings',
+	'Test settings' => 'Test Connection',
 	
 	// db errors
 	'1049' => 'Unknown database',

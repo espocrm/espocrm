@@ -35,3 +35,8 @@ select[name="user-lang"] {
     width: 31px;
 	float: right;
 }
+
+.devices {
+	width: 50%;
+	height: 50%;
+}

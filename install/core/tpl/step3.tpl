@@ -10,7 +10,7 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<label class="field-label-website control-label">{$langs['Admin Name']} *</label>
+						<label class="field-label-website control-label">{$langs['User Name']} *</label>
 						<div class="field field-website">
 							<input type="text" value="{$fields['user-name'].value}" name="user-name" class="main-element form-control">
 						</div>

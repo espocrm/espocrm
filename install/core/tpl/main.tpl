@@ -1,9 +1,15 @@
+<header class="panel-heading">
+	<h4 class="panel-title">{$langs['Main page title']}</h4>
+</header>
 <form id="nav">
 	<div class="panel-body">
 		<div id="msg-box" class="alert hide"></div>
 		<div class="row">
 			<div class=" col-md-13">
 				<div align="center">
+				<div class="content-img">
+					<img class="devices" src="img/devices.png" alt="EspoCRM">
+				</div>
 				{$langs['Main page header']}
 				</div>
 			</div>
