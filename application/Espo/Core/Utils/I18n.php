@@ -27,7 +27,7 @@ class I18n
 	private $paths = array(
 		'corePath' => 'application/Espo/Resources/i18n',
 		'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n',
-		'customPath' => 'application/Espo/Custom/Resources/i18n',	                              			
+		'customPath' => 'custom/Espo/Custom/Resources/i18n',	                              			
 	);
 
 

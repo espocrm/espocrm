@@ -2,7 +2,8 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use \Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Type,
+	Espo\Core\Utils\Util;
 
 class Schema
 {
@@ -28,8 +29,8 @@ class Schema
 	);
 
 	protected $fieldTypePaths = array(
-		'Espo/Core/Utils/Database/DBAL/FieldTypes',
-		'Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
+		'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
+		'custom/Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
 	);
 
 	/**
@@ -38,7 +39,7 @@ class Schema
 	 */
 	protected $rebuildActionsPath = array(
 		'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
-		'customPath' => 'application/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',		
+		'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',		
 	);
 
 	/**
@@ -132,12 +133,14 @@ class Schema
 	{
 		foreach($this->fieldTypePaths as $path) {
 
-        	$typeList = $this->getFileManager()->getFileList('application/'.$path, false, '\.php$');
+        	$typeList = $this->getFileManager()->getFileList($path, false, '\.php$');
 			if ($typeList !== false) {
             	foreach($typeList as $name) {
 					$typeName = preg_replace('/\.php$/i', '', $name);
 					$dbalTypeName = strtolower($typeName);
-					$class = \Espo\Core\Utils\Util::toFormat($path, '\\').'\\'.$typeName;
+
+					$filePath = Util::concatPath($path, $typeName);	               
+	                $class = Util::getClassName($filePath);				
 
 					if( ! Type::hasType($dbalTypeName) ) {
 						Type::addType($dbalTypeName, $class);

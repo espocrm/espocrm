@@ -23,7 +23,7 @@ class Metadata
 	private $paths = array(
 		'corePath' => 'application/Espo/Resources/metadata',
     	'modulePath' => 'application/Espo/Modules/{*}/Resources/metadata',
-    	'customPath' => 'application/Espo/Custom/Resources/metadata',	                              			
+    	'customPath' => 'custom/Espo/Custom/Resources/metadata',
 	);  
 
 

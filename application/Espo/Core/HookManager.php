@@ -27,6 +27,13 @@ class HookManager
 		'afterRemove',
 	);
 
+	protected $paths = array(
+		'corePath' => 'application/Espo/Hooks',
+    	'modulePath' => 'application/Espo/Modules/{*}/Hooks',
+    	'customPath' => 'custom/Espo/Custom/Hooks',	                              			
+	);
+
+
     public function __construct(Container $container)
     {
     	$this->container = $container;
@@ -52,10 +59,14 @@ class HookManager
     	
     	$metadata = $this->container->get('metadata');
 
-		$this->data = $this->getHookData(array('Espo/Hooks', 'Espo/Custom/Hooks') );
+		$this->data = $this->getHookData($this->paths['corePath']);
+
     	foreach ($metadata->getModuleList() as $moduleName) {
-			$this->data = array_merge($this->data, $this->getHookData(array('Espo/Modules/' . $moduleName . '/Hooks')));
+    		$modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);    		
+			$this->data = array_merge($this->data, $this->getHookData($modulePath));
     	}
+
+    	$this->data = array_merge($this->data, $this->getHookData($this->paths['customPath']));
 
     	if ($this->getConfig()->get('useCache')) {
 			$this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
@@ -97,19 +108,22 @@ class HookManager
     /**
      * Get and merge hook data by checking the files exist in $hookDirs
 	 *
-	 * @param array $hookDirs - it can be an array('Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Custom/Modules/Crm/Hooks')
+	 * @param array $hookDirs - it can be an array('Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Modules/Crm/Hooks')
 	 *
 	 * @return array
 	 */
-	protected function getHookData(array $hookDirs)
+	protected function getHookData($hookDirs)
 	{
+		if (is_string($hookDirs)) {
+			$hookDirs = (array) $hookDirs;	
+		}
+
 		$hooks = array();
 
 		foreach ($hookDirs as $hookDir) {
-
-	        $fullHookDir = 'application/'.$hookDir;
-			if (file_exists($fullHookDir)) {
-	        	$fileList = $this->getFileManager()->getFileList($fullHookDir, 1, '\.php$', 'file');
+	        
+			if (file_exists($hookDir)) {
+	        	$fileList = $this->getFileManager()->getFileList($hookDir, 1, '\.php$', 'file');
 
 	            foreach ($fileList as $scopeName => $hookFiles) {
 
@@ -117,8 +131,8 @@ class HookManager
 
 					$scopeHooks = array();
 					foreach($hookFiles as $hookFile) {
-						$hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);
-	                	$className = '\\'.Util::toFormat(preg_replace('/\.php$/i', '', $hookFilePath), '\\');
+						$hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);	               
+	                	$className = Util::getClassName($hookFilePath);
 
 						foreach($this->hookList as $hookName) {
 							if (method_exists($className, $hookName)) {

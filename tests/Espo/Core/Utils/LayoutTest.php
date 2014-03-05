@@ -42,7 +42,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
 			
 		$this->assertEquals('application/Espo/Resources/layouts/User', $this->reflection->invokeMethod('getLayoutPath', array('User')) );  		
-		$this->assertEquals('application/Espo/Custom/Resources/layouts/User', $this->reflection->invokeMethod('getLayoutPath', array('User', true)) );				   
+		$this->assertEquals('custom/Espo/Custom/Resources/layouts/User', $this->reflection->invokeMethod('getLayoutPath', array('User', true)) );				   
 	}
 	
 	
@@ -54,7 +54,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Crm'));
 			
 		$this->assertEquals('application/Espo/Modules/Crm/Resources/layouts/Call', $this->reflection->invokeMethod('getLayoutPath', array('Call')) );  		
-		$this->assertEquals('application/Espo/Custom/Resources/layouts/Call', $this->reflection->invokeMethod('getLayoutPath', array('Call', true)) );
+		$this->assertEquals('custom/Espo/Custom/Resources/layouts/Call', $this->reflection->invokeMethod('getLayoutPath', array('Call', true)) );
 	}
 	
 	function testGet()

@@ -4,17 +4,24 @@ namespace Espo\Core\Utils;
 
 class Route
 {
-	protected $fileName = 'routes.json';
-	protected $cacheFile = 'data/cache/application/routes.php';
-
 	protected $data = null;
 
 	private $fileManager;
 	private $config;
+	private $metadata;
 
-	public function __construct(Config $config, File\Manager $fileManager)
+	protected $cacheFile = 'data/cache/application/routes.php';
+
+	protected $paths = array(
+		'corePath' => 'application/Espo/Resources/routes.json',
+    	'modulePath' => 'application/Espo/Modules/{*}/Resources/routes.json',
+    	'customPath' => 'custom/Espo/Custom/Resources/routes.json',	                              			
+	);
+
+	public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
 	{
 		$this->config = $config;
+		$this->metadata = $metadata;
 		$this->fileManager = $fileManager;
 	}
 
@@ -26,6 +33,11 @@ class Route
 	protected function getFileManager()
 	{
 		return $this->fileManager;
+	}
+
+	protected function getMetadata()
+	{
+		return $this->metadata;
 	}
 
 
@@ -74,32 +86,18 @@ class Route
 		}
 	}
 
-	protected function unify($isCustom = false)
+	protected function unify()
 	{
-        $dirName = $isCustom ? '/Custom' : '';
+		$data = array();
 
-	   	$data = array();
+		$data = $this->getAddData($data, $this->paths['customPath']);		
 
-		$moduleDir = 'application/Espo'.$dirName.'/Modules';
-		if (file_exists($moduleDir)) {
-        	$dirList= $this->getFileManager()->getFileList($moduleDir, false, '', 'dir');
+    	foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+    		$modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);    		
+			$data = $this->getAddData($data, $modulePath);
+    	}
 
-			foreach($dirList as $currentDirName) {
-
-                $dirNameFull = Util::concatPath($moduleDir, $currentDirName);
-				$routeFile = Util::concatPath($dirNameFull, 'Resources/'.$this->fileName);
-
-				$data = $this->getAddData($data, $routeFile);
-			}
-		}
-
-		//if need this path to high priority, move up this code
-		$routeFile = Util::concatPath('application/Espo'.$dirName.'/Resources', $this->fileName);
-        $data = $this->getAddData($data, $routeFile);
-
-		if (!$isCustom) {
-        	$data = $this->addToData($this->unify(true), $data);
-		}
+    	$data = $this->getAddData($data, $this->paths['corePath']);
 
 		return $data;
 	}

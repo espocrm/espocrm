@@ -31,7 +31,7 @@ class Container
     		$obj = $this->$loadMethod();
     		$this->data[$name] = $obj;
     	} else {
-            //external loader class \Espo\Core\Loaders\<className> or \Custom\Espo\Core\Loaders\<className> with load() method
+            //external loader class \Espo\Core\Loaders\<className> or \Espo\Custom\Core\Loaders\<className> with load() method
 			$className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
             if (!class_exists($className)) {
             	$className = '\Espo\Core\Loaders\\'.ucfirst($name);

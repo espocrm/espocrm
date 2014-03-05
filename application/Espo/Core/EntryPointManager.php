@@ -26,7 +26,7 @@ class EntryPointManager
 	private $paths = array(
 		'corePath' => 'application/Espo/EntryPoints',
     	'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',
-    	'customPath' => 'application/Espo/Custom/EntryPoints',	                              			
+    	'customPath' => 'custom/Espo/Custom/EntryPoints',	                              			
 	);
 
 

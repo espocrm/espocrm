@@ -181,7 +181,7 @@ class Application
 
 	protected function initRoutes()
 	{
-		$routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getContainer()->get('fileManager'));
+		$routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
 		$crudList = array_keys( $this->getContainer()->get('config')->get('crud') );
 
 		foreach ($routes->getAll() as $route) {

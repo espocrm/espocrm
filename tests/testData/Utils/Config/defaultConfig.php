@@ -1,7 +1,7 @@
 <?php
 
-return array (
-  'configPath' => 'tests/testData/Utils/Config/testArray.php',
+return array (  
+  'configPath' => 'tests/testData/Utils/Config/config.php',
 
   'dateFormat' => 'MM/DD/YYYY',
   'timeFormat' => 'HH:mm',

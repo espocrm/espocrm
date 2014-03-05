@@ -22,8 +22,8 @@ class Layout
      */
 	private $paths = array(
 		'corePath' => 'application/Espo/Resources/layouts',
-    	'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',
-    	'customPath' => 'application/Espo/Custom/Resources/layouts',	                              			
+    	'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',    	                              			
+    	'customPath' => 'custom/Espo/Custom/Resources/layouts',	                              			
 	);   	
 	
 

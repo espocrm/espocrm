@@ -15,10 +15,10 @@ class ServiceFactory
 	/**
      * @var array - path to Service files
      */
-	private $paths = array(
+	protected $paths = array(
 		'corePath' => 'application/Espo/Services',
     	'modulePath' => 'application/Espo/Modules/{*}/Services',
-    	'customPath' => 'application/Espo/Custom/Services',	                              			
+    	'customPath' => 'custom/Espo/Custom/Services',	                              			
 	);
 	
 	protected $data;	
@@ -35,12 +35,15 @@ class ServiceFactory
 		if (file_exists($this->cacheFile) && $config->get('useCache')) {
 			$this->data = $this->getFileManager()->getContents($this->cacheFile);
 		} else {	
-			$this->data = $this->getClassNameHash(array($this->paths['corePath'], $this->paths['customPath']));
+			$this->data = $this->getClassNameHash($this->paths['corePath']);
 
 	    	foreach ($this->getContainer()->get('metadata')->getModuleList() as $moduleName) {
 	    		$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-				$this->data = array_merge($this->data, $this->getClassNameHash(array($path)));
-	    	}	    	
+				$this->data = array_merge($this->data, $this->getClassNameHash($path));
+	    	}	 
+
+	    	$this->data = array_merge($this->data, $this->getClassNameHash($this->paths['customPath']));  
+
 			if ($config->get('useCache')) {
 				$result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
 				if ($result == false) {
@@ -106,8 +109,12 @@ class ServiceFactory
 	}
 	
 	// TODO delegate to another class
-	protected function getClassNameHash(array $dirs)
+	protected function getClassNameHash($dirs)
 	{
+		if (is_string($dirs)) {
+			$dirs = (array) $dirs;	
+		}
+
 		$data = array();
 		
 		foreach ($dirs as $dir) {	      

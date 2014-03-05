@@ -21,7 +21,7 @@ class ScheduledJob
 	private $paths = array(
 		'corePath' => 'application/Espo/Jobs',
     	'modulePath' => 'application/Espo/Modules/{*}/Jobs',
-    	'customPath' => 'application/Espo/Custom/Jobs',	                              			
+    	'customPath' => 'custom/Espo/Custom/Jobs',	                              			
 	);
 
 
