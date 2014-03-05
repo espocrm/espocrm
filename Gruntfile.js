@@ -12,6 +12,7 @@ module.exports = function (grunt) {
 				src: [
 					'api/**',
 					'application/**',
+					'custom/**',
 					'data',
 					'install/**',
 					'vendor/**',
