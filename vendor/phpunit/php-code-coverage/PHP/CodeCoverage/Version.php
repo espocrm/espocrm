@@ -44,7 +44,7 @@
  */
 
 /**
- * 
+ *
  *
  * @category   PHP
  * @package    CodeCoverage
@@ -56,7 +56,7 @@
  */
 class PHP_CodeCoverage_Version
 {
-    const VERSION = '1.2.15';
+    const VERSION = '1.2.16';
     protected static $version;
 
     /**
@@ -72,7 +72,7 @@ class PHP_CodeCoverage_Version
             if (is_dir(dirname(dirname(__DIR__)) . '/.git')) {
                 $dir = getcwd();
                 chdir(__DIR__);
-                $version = exec('git describe --tags');
+                $version = @exec('git describe --tags');
                 chdir($dir);
 
                 if ($version) {
