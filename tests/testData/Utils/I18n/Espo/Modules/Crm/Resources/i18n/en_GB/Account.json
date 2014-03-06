@@ -1,5 +1,7 @@
 {
-	"name":"Account",
-	"label":"Crm Module",
-	"source":"Crm Module"	
+	"fields": {
+		"name":"Account",
+		"label":"Crm Module",
+		"source":"Crm Module"
+	}		
 }

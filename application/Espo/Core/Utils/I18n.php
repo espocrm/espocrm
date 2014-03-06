@@ -92,7 +92,7 @@ class I18n
 			$translated = array();
 
 			foreach ($label as $subLabel) {
-				$key = $scope.'.'.$category.'.'.$label;
+				$key = $scope.'.'.$category.'.'.$subLabel;
 				$translated[$subLabel] = $this->get($key, $subLabel);	
 			}
 

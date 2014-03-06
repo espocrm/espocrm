@@ -1,5 +1,7 @@
 {
-	"name":"User",
-	"label":"Core",
-	"source":"Core"	
+	"fields": {
+		"name":"User",
+		"label":"Core",
+		"source":"Core"		
+	}		
 }

@@ -72,24 +72,33 @@ class I18nTest extends \PHPUnit_Framework_TestCase
 	function testGetData()
 	{
 		$result = array (
-		  'User' => 
-		  array (
-		    'name' => 'User',
-		    'label' => 'Core',
-		    'source' => 'Core',
-		  ),
-		  'Account' => 
-		  array (
-		    'name' => 'Account',
-		    'label' => 'Custom',
-		    'source' => 'Crm Module',
-		  ),
-		  'Contact' => 
-		  array (
-		    'name' => 'Contact',
-		    'label' => 'Custom',
-		    'source' => 'Crm Module',
-		  ),
+			'User' => 
+			array(
+			  'fields' => 
+			  array (
+			    'name' => 'User',
+			    'label' => 'Core',
+			    'source' => 'Core',
+			  ),
+			),
+			'Account' => 
+			array (
+				'fields' => 
+			  	array (
+					'name' => 'Account',
+					'label' => 'Custom',
+					'source' => 'Crm Module',
+				),
+			),
+			'Contact' => 
+			array (
+				'fields' => 
+			  	array (
+					'name' => 'Contact',
+					'label' => 'Custom',
+					'source' => 'Crm Module',
+				),
+			),
 		);
 		$this->assertEquals($result, $this->reflection->invokeMethod('getData', array()));	
 	}
@@ -98,14 +107,32 @@ class I18nTest extends \PHPUnit_Framework_TestCase
 	function testGet()
 	{
 		$result = array (
-			'name' => 'User',
-			'label' => 'Core',
-			'source' => 'Core',
+			'fields' => 
+			array(
+				'name' => 'User',
+				'label' => 'Core',
+				'source' => 'Core',
+			),			
 		);
 		$this->assertEquals($result, $this->object->get('User'));
 
 		$result = 'User';
-		$this->assertEquals($result, $this->object->get('User.name'));
+		$this->assertEquals($result, $this->object->get('User.fields.name'));
+	}
+
+	function testTranslate()
+	{		
+		$this->assertEquals('Core', $this->object->translate('label', 'fields', 'User'));
+
+		$input = array(
+			'name',
+			'label',
+		);
+		$result = array(
+			'name' => 'User',
+			'label' => 'Core',
+		);
+		$this->assertEquals($result, $this->object->translate($input, 'fields', 'User'));
 	}
 
 
