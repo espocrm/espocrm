@@ -107,6 +107,11 @@
             "type": "array",
             "default": ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"],
             "translation": "App.scopeNames"
+        },
+        "language": {
+            "type": "enum",
+            "options": ["en_US"],
+            "default": "en_US"            
         }
     }
 }

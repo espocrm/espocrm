@@ -9,6 +9,7 @@
 		"decimalMark": "Decimal Mark",
 		"defaultCurrency": "Default Currency",
 		"currencyList": "Currency List",
+		"language": "Language",
 		
 		"smtpServer": "Server",
 		"smtpPort": "Port",

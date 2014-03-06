@@ -1,13 +1,15 @@
 {
 	"fields": {
-		"name": "Subject",
+		"name": "Name",
 		"userName": "User Name",
 		"title": "Title",
 		"isAdmin": "Is Admin",
 		"defaultTeam": "Default Team",
 		"emailAddress": "Email",
 		"phone": "Phone",
-		"roles": "Roles"
+		"roles": "Roles",
+		"password": "Password",
+		"passwordConfirm": "Confirm Password"
 	},
 	"links": {
 	}

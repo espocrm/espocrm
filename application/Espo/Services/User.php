@@ -21,13 +21,32 @@ class User extends Record
 	    }
 	    return $result;	    
 	}
+	
+	protected function createDefaultPreferences(\Espo\Entities\User $user)
+	{
+		$preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);		
+		$config = $this->getConfig();
+		$defaults = array(
+			'timeZone' => $config->get('timeZone'),
+			'language' => $config->get('language'),
+			'dateFormat' => $config->get('dateFormat'),
+			'timeFormat' => $config->get('timeFormat'),
+			'weekStart' => $config->get('weekStart'),
+			'thousandSeparator' => $config->get('thousandSeparator'),
+			'decimalMark' => $config->get('decimalMark'),
+		);
+		$preferences->set($defaults);		
+		$this->getEntityManager()->saveEntity($preferences);
+	}
 		
 	public function createEntity($data)
 	{
 		if (array_key_exists('password', $data)) {
 			$data['password'] = md5($data['password']);
 		}
-		return parent::createEntity($data);		
+		$user = parent::createEntity($data);		
+		$this->createDefaultPreferences($user);		
+		return $user;			
 	}
 	
 	public function updateEntity($id, $data)
