@@ -91,6 +91,9 @@
 			"Mrs.": "Mrs.",
 			"Dr.": "Dr.",
 			"Drs.": "Drs."
+		},
+		"language": {
+			"en_US": "English (United States)"
 		}
 	}
 }
