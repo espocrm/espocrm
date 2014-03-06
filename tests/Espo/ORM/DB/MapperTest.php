@@ -76,7 +76,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$query = 
 			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(user_f.salutation_name, user_f.first_name, ' ', user_f.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
 			"FROM `post` ".
-			"LEFT JOIN `user` AS user_f ON post.created_by_id = user_f.id " .
+			"LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id " .
 			"WHERE post.id = '1' AND post.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -271,7 +271,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testCountRelated()
 	{
 		$query = 
-			"SELECT COUNT(tag.id) AS `AggregateValue` ".
+			"SELECT COUNT(tag.id) AS AggregateValue ".
 			"FROM `tag` ".
 			"JOIN `post_tag` ON tag.id = post_tag.tag_id AND post_tag.post_id = '1' AND post_tag.deleted = '0' ".
 			"WHERE tag.deleted = '0'";
@@ -394,7 +394,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	
 	public function testMax()
 	{
-		$query = "SELECT MAX(post.id) AS `AggregateValue` FROM `post` LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id";
+		$query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id";
 		$return = new MockDBResult(array(
 			array (
 				'AggregateValue' => 10,
