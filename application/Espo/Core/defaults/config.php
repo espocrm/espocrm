@@ -24,7 +24,7 @@ return array (
     0 => 'USD',
     1 => 'EUR',
   ),
-  'defaultLanguage' => 'en_US',
+  'language' => 'en_US',
   'defaultCurrency' => 'USD',
   'outboundEmailIsShared' => true,
   'outboundEmailFromName' => 'EspoCRM',

@@ -68,7 +68,7 @@ class I18n
 		}
 		
 		if (empty($this->currentLanguage)) {
-			$this->currentLanguage = $this->getConfig()->get('defaultLanguage');
+			$this->currentLanguage = $this->getConfig()->get('language');
 		}		
 
 		return $this->currentLanguage;
