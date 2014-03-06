@@ -68,7 +68,7 @@ class I18n
 		}
 		
 		if (empty($this->currentLanguage)) {
-			$this->currentLanguage = 'en_US';
+			$this->currentLanguage = $this->getConfig()->get('defaultLanguage');
 		}		
 
 		return $this->currentLanguage;
