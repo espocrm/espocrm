@@ -169,6 +169,8 @@ class Metadata
 			if ($data === false) {
             	$GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
 			}
+
+			$data = $this->setLanguage($data);			
 		}
         else if (file_exists($this->cacheFile)) {
 			$data = $this->getFileManager()->getContents($this->cacheFile);
@@ -177,6 +179,30 @@ class Metadata
 		if ($isJSON) {
         	$data = Json::encode($data);
         }
+
+		return $data;
+	}
+
+	/**
+	 * Set language list and default for Settings, Preferences metadata
+	 * 
+	 * @param array $data Meta
+	 * @return array $data
+	 */
+	protected function setLanguage($data)
+	{
+		$languageList = $this->getConfig()->get('languageList');
+		$language = $this->getConfig()->get('language');
+
+		if (isset($data['entityDefs']['Settings']['fields']['language'])) {
+			$data['entityDefs']['Settings']['fields']['language']['options'] = $languageList;	
+			$data['entityDefs']['Settings']['fields']['language']['default'] = $language;	
+		}
+
+		if (isset($data['entityDefs']['Preferences']['fields']['language'])) {
+			$data['entityDefs']['Preferences']['fields']['language']['options'] = $languageList;	
+			$data['entityDefs']['Preferences']['fields']['language']['default'] = $language;	
+		}		
 
 		return $data;
 	}

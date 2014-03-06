@@ -31,7 +31,7 @@ class I18n
 	);
 
 
-	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config, \Espo\Entities\Preferences $preferences)
+	public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config, \Espo\Entities\Preferences $preferences = null)
 	{
 		$this->fileManager = $fileManager;
 		$this->config = $config;
@@ -63,7 +63,7 @@ class I18n
 
 	public function getLanguage()
 	{
-		if (!isset($this->currentLanguage)) {
+		if (!isset($this->currentLanguage) && isset($this->preferences)) {
 			$this->currentLanguage = $this->getPreferences()->get('language');
 		}
 		
@@ -84,6 +84,24 @@ class I18n
 		$langCacheFile = str_replace('{*}', $this->getLanguage(), $this->cacheFile);
 
 		return $langCacheFile;
+	}
+
+	public function translate($label, $category = 'labels', $scope = 'Global') 
+	{
+		if (is_array($label)) {
+			$translated = array();
+
+			foreach ($label as $subLabel) {
+				$key = $scope.'.'.$category.'.'.$label;
+				$translated[$subLabel] = $this->get($key, $subLabel);	
+			}
+
+		} else {
+			$key = $scope.'.'.$category.'.'.$label;
+			$translated = $this->get($key, $label);	
+		}		
+
+		return $translated;
 	}
 
 

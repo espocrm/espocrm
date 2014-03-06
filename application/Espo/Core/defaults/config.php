@@ -23,8 +23,7 @@ return array (
   array (
     0 => 'USD',
     1 => 'EUR',
-  ),
-  'language' => 'en_US',
+  ),  
   'defaultCurrency' => 'USD',
   'outboundEmailIsShared' => true,
   'outboundEmailFromName' => 'EspoCRM',
@@ -34,7 +33,11 @@ return array (
   'smtpAuth' => true,
   'smtpSecurity' => '',
   'smtpUsername' => '',
-  'smtpPassword' => '',
+  'smtpPassword' => '',  
+  'languageList' => array(
+    'en_US',
+  ),
+  'language' => 'en_US',
   'logger' => 
   array (
     'path' => 'data/logs/espo.log',    
