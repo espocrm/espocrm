@@ -207,7 +207,7 @@ class Manager
 	        $data= Utils\Json::encode($data);
 		}
 
-        return $this->putContents($paths, $data);
+        return $this->putContents($paths, $data, JSON_PRETTY_PRINT);
 	}
 
 	/**

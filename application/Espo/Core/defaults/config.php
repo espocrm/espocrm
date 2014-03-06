@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'configPath' => 'application/config.php',
+  'configPath' => 'data/config.php',
   'cachePath' => 'data/cache',
 
   'database' => 
@@ -24,6 +24,7 @@ return array (
     0 => 'USD',
     1 => 'EUR',
   ),
+  'language' => 'en_US',
   'defaultCurrency' => 'USD',
   'outboundEmailIsShared' => true,
   'outboundEmailFromName' => 'EspoCRM',

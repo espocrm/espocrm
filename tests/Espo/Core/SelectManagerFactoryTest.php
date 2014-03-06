@@ -22,9 +22,9 @@ class SelectManagerTest extends \PHPUnit_Framework_TestCase
 		unset($this->selectManager);
 	}
 	
-	/*public function testWhere()
+	public function testWhere()
 	{
-		$params = array(
+		/*$params = array(
 			'where' => array(
 				array(
 					'type' => 'or',
@@ -46,7 +46,7 @@ class SelectManagerTest extends \PHPUnit_Framework_TestCase
 		
 		$result = $this->selectManager->getSelectParams($params);
 
-		$this->assertEquals($result['whereClause'][0]['OR']['name*'], 'Brom');
-	}*/
+		$this->assertEquals($result['whereClause'][0]['OR']['name*'], 'Brom');*/
+	}
 }
 

@@ -14,10 +14,6 @@ class Json
      */
 	public static function encode($value, $options = 0, $depth = 512)
 	{
-		if ($options == 0) {
-			$options = JSON_PRETTY_PRINT;	
-		}
-
 		if (version_compare(phpversion(), '5.5.0', '>=')) {
 	        $json = json_encode($value, $options, $depth);
 	    }
