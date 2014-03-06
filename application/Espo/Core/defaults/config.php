@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'configPath' => 'application/config.php',
+  'configPath' => 'data/config.php',
   'cachePath' => 'data/cache',
 
   'database' => 
