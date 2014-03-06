@@ -2,7 +2,7 @@
 
 $fields = array(
 	'user-lang' => array(
-		'default' => 'en_US',
+		'default' => (isset($settingsDefaults['language']['default'])) ? $settingsDefaults['language']['default'] : 'en_US',
 	),
 );
 

@@ -51,8 +51,11 @@ else {
 	$langs = include('core/i18n/en_US.php');
 }
 
+$settingsDefaults = $installer->getSettingDefaults();
 $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
+
+$smarty->assign("settingsDefaults", $settingsDefaults);
 
 $systemTest = new SystemTest();
 

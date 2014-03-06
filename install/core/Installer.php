@@ -4,6 +4,7 @@
 class Installer
 {
 	protected $app = null;
+	protected $i18n = null;	
 
 	protected $isAuth = false;
 
@@ -23,6 +24,20 @@ class Installer
 		'api/v1' => 'api',
 		'client/res/templates/login.tpl' => 'client/res/templates',
 	);
+
+
+	protected $settingList = array(
+		'dateFormat',
+		'timeFormat',
+		'timeZone',
+		'weekStart',
+		'defaultCurrency' => array(
+			'currencyList', 'defaultCurrency',
+		),		
+		'smtpSecurity',	
+		'language',	
+	);
+
 
 
 	public function __construct()
@@ -60,6 +75,27 @@ class Installer
 		return $this->writableListError;
 	}
 
+	protected function getI18n()
+	{
+		if (!isset($this->i18n)) {
+			$this->i18n = $this->app->getContainer()->get('i18n');	
+		}
+
+		return $this->i18n;
+	}
+
+	public function getLanguageList()
+	{
+		$config = $this->app->getContainer()->get('config');
+
+		$languageList = array(
+			'options' => $config->get('languageList'),
+		);
+		$translated = $this->translateSetting('language', $languageList);		
+
+		return $translated['options'];
+	}
+
 	/**
 	 * Save data 
 	 * 
@@ -76,25 +112,25 @@ class Installer
 	 */
 	public function saveData($database, $language)
 	{
-		$config = $this->app->getContainer()->get('config');
-
 		$initData = include('install/core/init/config.php');
 
 		$data = array(
 			'database' => $database,				
+			'language' => $language,				
 		);
 
 		$data = array_merge($data, $initData);
-		$result = $config->set($data);
+		$result = $this->saveConfig($data);
 
-		$meta = array(
-			'fields' => array(
-				'language' => array(
-					'default' => $language,
-				),
-			),
-		);
-		$result &= $this->app->getMetadata()->set($meta, 'entityDefs', 'Preferences');
+		return $result;
+	}
+
+
+	public function saveConfig($data)
+	{
+		$config = $this->app->getContainer()->get('config');
+		
+		$result = $config->set($data);
 
 		return $result;
 	}
@@ -116,6 +152,10 @@ class Installer
 		return $this->app->getContainer()->get('schema')->rebuild();
 	}
 
+	public function setPreferences($preferences)
+	{
+		return $this->saveConfig($preferences);
+	}
 
 	public function createUser($userName, $password)
 	{
@@ -218,5 +258,55 @@ class Installer
 
 		return $result;
 	}
+
+
+	public function getSettingDefaults()
+	{
+		$defaults = array();	
+
+		$settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');				
+
+		foreach ($this->settingList as $fieldName => $field) {
+
+			if (is_array($field)) {
+				$fieldDefaults = array();
+				foreach ($field as $subField) {
+					if (isset($settingDefs[$subField])) {
+						$fieldDefaults = array_merge($fieldDefaults, $this->translateSetting($subField, $settingDefs[$subField])); 	
+					}
+				}
+				$defaults[$fieldName] = $fieldDefaults;
+
+			} else if (isset($settingDefs[$field])) {
+
+				$defaults[$field] = $this->translateSetting($field, $settingDefs[$field]);	
+			}
+		}
+
+		return $defaults;
+	}
+
+	protected function translateSetting($name, array $settingDefs)
+	{
+		if (isset($settingDefs['options'])) {
+			$optionLabel = $this->getI18n()->translate($name, 'options', 'Settings');
+
+			if ($optionLabel == $name) {
+				$optionLabel = $this->getI18n()->translate($name, 'options', 'Global');	
+			}
+
+			if ($optionLabel == $name) {
+				$optionLabel = array();
+				foreach ($settingDefs['options'] as $key => $value) {
+					$optionLabel[$value] = $value;
+				}
+			}
+
+			$settingDefs['options'] = $optionLabel;	
+		}		
+	
+		return $settingDefs;
+	}
+
 
 }

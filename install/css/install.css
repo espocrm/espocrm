@@ -1,9 +1,3 @@
-#page-content {
-	position: relative;
-	max-width: 90%;
-	margin: 0 auto;
-	min-width: 400px;
-}
 
 .license-field {
 	width: 100%;
@@ -17,9 +11,10 @@ select[name="user-lang"] {
 	width: 200px;
 }
 
-.panel-body {
-	min-height: 400px;
+.subpanel {
+	text-align: left ;
 }
+
 
 .btn-panel {
 	margin-top: 20px;
@@ -40,3 +35,4 @@ select[name="user-lang"] {
 	width: 50%;
 	height: 50%;
 }
+

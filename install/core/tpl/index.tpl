@@ -16,7 +16,7 @@
 		</style>
 	</head>
 	<body>
-		<div id="page-content">
+		<div class="col-md-offset-1 col-md-10">
 			<div class="panel panel-default">
 				{include file="header.tpl"}
 				{include file="$tplName"}

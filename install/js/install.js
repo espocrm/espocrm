@@ -17,6 +17,7 @@ var InstallScript = function(opt) {
 	
 	this.connSett = {};
 	this.userSett = {};
+	this.firstUserPreferences = {};
 	this.checkActions = [
 		{
 			'action': 'checkWritable',
@@ -127,7 +128,7 @@ InstallScript.prototype.step2 = function() {
 InstallScript.prototype.step3 = function() {
 	var self = this;
 	var backAction = 'step2';
-	var nextAction = 'finish';
+	var nextAction = 'step4';
 	
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
@@ -146,12 +147,51 @@ InstallScript.prototype.step3 = function() {
 			success: function(){
 				self.showLoading();
 				self.actionsChecking();
+				//self.goTo(nextAction);
 			},
 			error: function(msg) {
 				$("#next").removeAttr('disabled');
 				self.showMsg({msg: self.getLang(msg), error: true});
 			}
 		});
+	})
+}
+
+InstallScript.prototype.step4 = function() {
+	var self = this;
+	var backAction = 'step3';
+	var nextAction = 'finish';
+	
+	$('#back').click(function(){
+		$(this).attr('disabled', 'disabled');
+		self.goTo(backAction);
+	})
+	
+	$("#next").click(function(){
+		$(this).attr('disabled', 'disabled');
+		self.setFirstUserPreferences();
+		if (!self.validate()) {
+			$(this).removeAttr('disabled');
+			return;
+		}
+		var data = self.firstUserPreferences;
+	
+		data.action = 'setPreferences';
+		$.ajax({
+			url: "index.php",
+			type: "POST",
+			data: data,
+			dataType: 'json',
+		})
+		.done(function(ajaxData){
+			if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
+				self.goTo(nextAction);
+			}
+		})
+		.fail(function(ajaxData){
+			
+		})
+		
 	})
 }
 
@@ -188,6 +228,27 @@ InstallScript.prototype.setUserSett = function() {
 	this.userSett.name = $('[name="user-name"]').val();
 	this.userSett.pass = $('[name="user-pass"]').val();
 	this.userSett.confPass = $('[name="user-confirm-pass"]').val();
+}
+
+InstallScript.prototype.setFirstUserPreferences = function() {
+	this.firstUserPreferences.dateFormat = $('[name="dateFormat"]').val();
+	this.firstUserPreferences.timeFormat = $('[name="timeFormat"]').val();
+	this.firstUserPreferences.timeZone = $('[name="timeZone"]').val();
+	this.firstUserPreferences.weekStart = $('[name="weekStart"]').val();
+	this.firstUserPreferences.defaultCurrency = $('[name="defaultCurrency"]').val();
+	this.firstUserPreferences.thousandSeparator = $('[name="thousandSeparator"]').val();
+	this.firstUserPreferences.decimalMark = $('[name="decimalMark"]').val();
+	this.firstUserPreferences.language = $('[name="language"]').val();
+	this.firstUserPreferences.smtpServer = $('[name="smtpServer"]').val();
+	this.firstUserPreferences.smtpPort = $('[name="smtpPort"]').val();
+	this.firstUserPreferences.smtpAuth = $('[name="smtpAuth"]').is(':checked');
+	this.firstUserPreferences.smtpSecurity = $('[name="smtpSecurity"]').val();
+	this.firstUserPreferences.smtpUsername = $('[name="smtpUsername"]').val();
+	this.firstUserPreferences.smtpPassword = $('[name="smtpPassword"]').val();
+	this.firstUserPreferences.outboundEmailFromName = $('[name="outboundEmailFromName"]').val();
+	this.firstUserPreferences.outboundEmailFromAddress = $('[name="outboundEmailFromAddress"]').val();
+	this.firstUserPreferences.outboundEmailIsShared = $('[name="outboundEmailIsShared"]').is(':checked');
+
 }
 
 InstallScript.prototype.checkSett = function(opt) {
@@ -267,12 +328,15 @@ InstallScript.prototype.validate = function() {
 		case 'step3':
 			fieldRequired = ['user-name', 'user-pass', 'user-confirm-pass'];
 			break;
+		case 'step4':
+			fieldRequired = ['thousandSeparator', 'decimalMark', 'smtpUsername'];
+			break;
 		
 		
 	}
 	var len = fieldRequired.length;
 	for (var index = 0; index < len; index++) {
-		elem = $('[name="'+fieldRequired[index]+'"]');
+		elem = $('[name="'+fieldRequired[index]+'"]').filter(':visible');
 		if (elem.length > 0) {
 			if (elem.val() == '') {
 				elem.parent().parent().addClass('has-error');
@@ -495,7 +559,7 @@ InstallScript.prototype.callbackAjaxPerm = function(data) {
 InstallScript.prototype.callbackChecking = function(data) {
 	this.hideLoading();
 	if (typeof(data) != 'undefined' && data.success) {
-		this.goTo('finish');
+		this.goTo('step4');
 	}
 	else {
 		var desc = (typeof(data.errorMsg))? data.errorMsg : '';

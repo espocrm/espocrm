@@ -20,7 +20,7 @@
 			<label class="field-label-website control-label">{$langs['Choose your language:']}</label>
 			<div class="field field-website">
 				<select name="user-lang" class="form-control">
-					{foreach from=$langs['user languages'] item=lbl key=val}
+					{foreach from=$settingsDefaults['language'].options item=lbl key=val}
 						{if $val == $fields['user-lang'].value}
 							<option selected="selected" value="{$val}">{$lbl}</option>
 						{else}
