@@ -29,7 +29,7 @@ class EmailAddress extends \Espo\Core\ORM\Entity
 
 	protected function setName($value)
 	{
-		if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+		if (empty($value)) {
 			throw new Error("Not valid email address '{$value}'");
 		}
 		$this->valuesContainer['name'] = $value;
