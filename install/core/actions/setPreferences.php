@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 $result = array('success' => false, 'errorMsg' => '');
 
 if (!empty($_SESSION['install'])) {// required fields //['user-name']) && !empty($_SESSION['install']['user-pass'])) {

@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 $result = array('success' => false, 'errorMsg' => '');
 
 // create user

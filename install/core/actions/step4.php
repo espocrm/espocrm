@@ -1,5 +1,5 @@
 <?php
-//unset($_SESSION['install']);die;
+
 $fields = array(
 	'dateFormat' =>array (
 		'default' => (isset($settingsDefaults['dateFormat']['default'])) ? $settingsDefaults['dateFormat']['default'] : '',

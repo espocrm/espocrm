@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 $result = array('success' => false, 'errors' => array());
 
 if (!empty($_REQUEST['url'])) {

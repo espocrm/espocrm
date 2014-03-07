@@ -81,9 +81,9 @@ class SystemTest
 		} elseif (isset($_SERVER['IIS_UrlRewriteModule'])) {
 		    return true;
 		} elseif (getenv('ESPO_MR')=='On' ) {
-			echo true;
+			return true;
 		} elseif (isset($_SERVER['ESPO_MR'])) {
-			echo true;
+			return true;
 		}
 		
 		return false;

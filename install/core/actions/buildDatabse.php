@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 $result = array('success' => true, 'errorMsg' => '');
 
 $installer->buildDatabase();

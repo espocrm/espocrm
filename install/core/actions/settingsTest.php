@@ -1,6 +1,6 @@
 <?php
 
-
+ob_start();
 
 $result = array('success' => true, 'errors' => array());
 

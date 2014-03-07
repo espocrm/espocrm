@@ -11,4 +11,3 @@ if (empty($_GET['entryPoint'])) {
 } else {
 	$app->runEntryPoint($_GET['entryPoint']);
 }
-
