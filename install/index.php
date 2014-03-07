@@ -15,21 +15,19 @@ $installer = new Installer();
 // check if app was installed
 if ($installer->isInstalled() && !isset($_SESSION['install']['installProcess'])) {
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	$url = str_replace('install/', '', $url);
-	$url = str_replace('install', '', $url);
+	$url = preg_replace('/install\/?/', '', $url, 1);
 	$url = strtok($url, '#');
 	$url = strtok($url, '?');
 	header("Location: {$url}");
 	exit;
 }
 else {
+	// double check if infinite loop
 	$_SESSION['install']['installProcess'] = true;
 }
 
 $smarty->caching = false;
 $smarty->setTemplateDir('install/core/tpl');
-
-
 
 // temp save all settings
 $ignore = array('desc', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');

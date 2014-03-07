@@ -170,7 +170,7 @@ class Metadata
             	$GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
 			}
 
-			$data = $this->setLanguage($data);			
+			$data = $this->setLanguageFromConfig($data);			
 		}
         else if (file_exists($this->cacheFile)) {
 			$data = $this->getFileManager()->getContents($this->cacheFile);
@@ -189,21 +189,23 @@ class Metadata
 	 * @param array $data Meta
 	 * @return array $data
 	 */
-	protected function setLanguage($data)
+	protected function setLanguageFromConfig($data)
 	{
+		$entityList = array(
+			'Settings',	
+			'Preferences',	
+		);
+
 		$languageList = $this->getConfig()->get('languageList');
 		$language = $this->getConfig()->get('language');
 
-		if (isset($data['entityDefs']['Settings']['fields']['language'])) {
-			$data['entityDefs']['Settings']['fields']['language']['options'] = $languageList;	
-			$data['entityDefs']['Settings']['fields']['language']['default'] = $language;	
+		foreach ($entityList as $entityName) {
+			if (isset($data['entityDefs'][$entityName]['fields']['language'])) {
+				$data['entityDefs'][$entityName]['fields']['language']['options'] = $languageList;	
+				$data['entityDefs'][$entityName]['fields']['language']['default'] = $language;	
+			}	
 		}
-
-		if (isset($data['entityDefs']['Preferences']['fields']['language'])) {
-			$data['entityDefs']['Preferences']['fields']['language']['options'] = $languageList;	
-			$data['entityDefs']['Preferences']['fields']['language']['default'] = $language;	
-		}		
-
+	
 		return $data;
 	}
 

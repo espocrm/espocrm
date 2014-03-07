@@ -576,8 +576,7 @@ InstallScript.prototype.callbackChecking = function(data) {
 
 InstallScript.prototype.goToEspo = function() {
 	var loc = window.location.href;
-	loc = loc.replace('install/', '');
-	loc = loc.replace('install', '');
+	loc = loc.replace(/install\/?/, '');
 	window.location.replace(loc);
 }
 
