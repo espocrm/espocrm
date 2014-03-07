@@ -326,7 +326,7 @@ class Record extends \Espo\Core\Services\Base
     		foreach ($ids as $id) {
     			$entity = $this->getEntity($id);
     			if ($this->getAcl()->check($entity, 'edit')) {
-    				$entity->set($attributes);
+    				$entity->set(get_object_vars($attributes));
     				if ($repository->save($entity)) {
     					$idsUpdated[] = $id;
     				}
