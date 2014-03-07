@@ -500,12 +500,12 @@ InstallScript.prototype.checkAjaxPermUrl = function(url) {
 	var self = this;
 	
 	var urlAjax = '../'+url;
-	var re = $.ajax({
+	var realJqXHR = $.ajax({
 		url: urlAjax,
 		type: "GET",
 	})
 	.always(function(data, textStatus, jqXHR){
-		var status = jqXHR.status || 404;
+		var status = jqXHR.status || realJqXHR.status || 404;
 		status += '';
 		if (status == '200' || status == '401') {
 			var data = {'success': 1};
