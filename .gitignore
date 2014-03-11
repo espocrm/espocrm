@@ -11,3 +11,4 @@ application/Espo/Resources/metadata/customTest/*
 application/Espo/Modules/Crm/Resources/metadata/customTest/*
 build
 node_modules
+client
