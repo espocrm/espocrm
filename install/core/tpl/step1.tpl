@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">						
 						<div class="field field-website">
-							<textarea rows="15" class="license-field">{$license}</textarea>
+							<textarea rows="16" class="license-field">{$license}</textarea>
 						</div>
 					</div>
 				</div>

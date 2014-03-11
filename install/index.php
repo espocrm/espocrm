@@ -19,7 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
- 
+
+error_reporting(0);
 session_start();
 
 require_once('../bootstrap.php');
@@ -65,28 +66,39 @@ $langFileName = 'core/i18n/'.$userLang.'.php';
 $langs = array();
 if (file_exists('install/'.$langFileName)) {
 	$langs = include($langFileName);
-}
-else {
+} else {
 	$langs = include('core/i18n/en_US.php');
 }
 
-$settingsDefaults = $installer->getSettingDefaults();
 $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
 
-$smarty->assign("settingsDefaults", $settingsDefaults);
-
 $systemTest = new SystemTest();
-
-// get urls for api
-$ajaxUrls = $installer->getAjaxUrls();
-$smarty->assign("ajaxUrls", json_encode($ajaxUrls));
 
 // include actions and set tpl name
 $tplName = 'main.tpl';
 $actionsDir = 'core/actions';
 $actionFile = '';
 $action = (!empty($_REQUEST['action']))? $_REQUEST['action'] : 'main';
+
+switch ($action) {
+	case 'main':
+		$languageList = $installer->getLanguageList();
+		$smarty->assign("languageList", $languageList); 
+		break;
+
+	case 'step3':
+	case 'errors':
+    	$ajaxUrls = $installer->getAjaxUrls();
+		$smarty->assign("ajaxUrls", json_encode($ajaxUrls));  
+		break;
+
+    case 'step4':
+    case 'errors':
+    	$settingsDefaults = $installer->getSettingDefaults();
+		$smarty->assign("settingsDefaults", $settingsDefaults);    
+		break; 		
+}
 
 $actionFile = $actionsDir.'/'.$action.'.php';
 $tplName = $action.'.tpl';
