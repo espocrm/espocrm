@@ -38,6 +38,11 @@
         "dashletOptions": {
         	"type": "text"
         },
+        "smtpEmailAddress": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
+        },
         "smtpServer": {
             "type": "varchar"
         },

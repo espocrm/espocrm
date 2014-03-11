@@ -74,12 +74,12 @@ class Preferences extends \Espo\Core\Controllers\Base
 		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);		
 		$user = $this->getEntityManager()->getEntity('User', $userId);
 		
+		$entity->set('smtpEmailAddress', $user->get('emailAddress'));
 		$entity->set('name', $user->get('name'));
 		if ($entity) {
 			return $entity->toArray();		
 		}
 		throw new NotFound();
 	}
-
 }
 
