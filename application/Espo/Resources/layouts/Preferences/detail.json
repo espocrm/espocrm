@@ -12,6 +12,11 @@
 	{
 		"label": "SMTP",
 		"rows": [
+			[
+				{
+					"name": "smtpEmailAddress"
+				}
+			],
 			[{"name": "smtpServer"}, {"name": "smtpPort"}],
 			[{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
 			[{"name": "smtpUsername"}],

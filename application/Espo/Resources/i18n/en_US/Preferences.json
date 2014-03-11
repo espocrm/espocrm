@@ -16,7 +16,8 @@
 		"smtpSecurity": "Security",
 		"smtpUsername": "Username",
 		"emailAddress": "Email",
-		"smtpPassword": "Password"
+		"smtpPassword": "Password",
+		"smtpEmailAddress": "Email Address"
 	},
 	"links": {
 	},
