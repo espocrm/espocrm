@@ -188,10 +188,40 @@ class Record extends \Espo\Core\Services\Base
 		}
 		return true;
 	}
+	
+	protected function stripTags($string)
+	{
+		return strip_tags($string, '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>');
+	}	
+	
+	protected function filterInput(&$data)
+	{
+		
+		foreach ($data as $key => $value) {
+			if (is_array($data[$key])) {
+				foreach ($data[$key] as $i => $v) {
+					if (is_string($data[$key][$i])) {
+						$data[$key][$i] = $this->stripTags($data[$key][$i]);
+					}
+				}
+			} else if ($data[$key] instanceof \stdClass) {
+				$propertyList = get_object_vars($data[$key]);
+				foreach ($propertyList as $property) {
+					if (is_string($data[$key]->$property)) {
+						$data[$key]->$property = $this->stripTags($data[$key]->$property);
+					}
+				}
+			} else if (is_string($data[$key])) {
+				$data[$key] = $this->stripTags($data[$key]);
+			}
+		}
+	}
 
 	public function createEntity($data)
 	{
 		$entity = $this->getEntity();
+		
+		$this->filterInput($data);
 		
 		$entity->set($data);
 		
@@ -210,6 +240,8 @@ class Record extends \Espo\Core\Services\Base
 	public function updateEntity($id, $data)
 	{			
 		unset($data['deleted']);
+		
+		$this->filterInput($data);
 		
 		$entity = $this->getEntity($id);
 		
