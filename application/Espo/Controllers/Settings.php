@@ -26,10 +26,14 @@ use \Espo\Core\Exceptions\Error;
 
 class Settings extends \Espo\Core\Controllers\Base
 {
-
     public function actionRead($params, $data)
 	{
 		return $this->getConfig()->getData($this->getUser()->isAdmin());
+	}
+	
+	public function actionUpdate($params, $data)
+	{
+		return $this->actionPatch($params, $data);
 	}
 
 	public function actionPatch($params, $data)

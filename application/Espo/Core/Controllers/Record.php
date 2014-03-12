@@ -173,7 +173,9 @@ class Record extends Base
 		$ids = $request->get('ids');
 		$where = $request->get('where');
 		
-		return $this->getRecordService()->export($ids, $where);		
+		return array(
+			'id' => $this->getRecordService()->export($ids, $where)
+		);		
 	}
 
 	public function actionMassUpdate($params, $data)
