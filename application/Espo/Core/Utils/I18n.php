@@ -106,7 +106,19 @@ class I18n
 		return $langCacheFile;
 	}
 
-	public function translate($label, $category = 'labels', $scope = 'Global') 
+	/**
+	 * Translate label/labels
+	 * 
+	 * @param  string | array $label name of label
+	 * @param  string $category        
+	 * @param  string $scope           
+	 * @param  array $requiredOptions List of required options. 
+	 *  Ex., $requiredOptions = array('en_US', 'de_DE')
+	 *  "language" option has only array('en_US' => 'English (United States)',)	  
+	 *  Result will be array('en_US' => 'English (United States)', 'de_DE' => 'de_DE',)	  
+	 * @return string | array
+	 */
+	public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null) 
 	{
 		if (is_array($label)) {
 			$translated = array();
@@ -119,6 +131,16 @@ class I18n
 		} else {
 			$key = $scope.'.'.$category.'.'.$label;
 			$translated = $this->get($key, $label);	
+
+			if (is_array($translated) && isset($requiredOptions)) {
+
+				$optionKeys = array_keys($translated);
+				foreach ($requiredOptions as $option) {
+					if (!in_array($option, $optionKeys)) {
+						$translated[$option] = $option;
+					}
+				}	
+			}
 		}		
 
 		return $translated;
