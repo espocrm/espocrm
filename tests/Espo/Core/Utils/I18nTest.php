@@ -99,7 +99,18 @@ class I18nTest extends \PHPUnit_Framework_TestCase
 					'source' => 'Crm Module',
 				),
 			),
+			'Global' => 
+			array (
+				'options' => 
+			  	array (
+					'language' => 
+					array (
+				      'en_US' => 'English (United States)',
+				    )
+				),
+			),
 		);
+
 		$this->assertEquals($result, $this->reflection->invokeMethod('getData', array()));	
 	}
 
@@ -133,6 +144,28 @@ class I18nTest extends \PHPUnit_Framework_TestCase
 			'label' => 'Core',
 		);
 		$this->assertEquals($result, $this->object->translate($input, 'fields', 'User'));
+	}
+
+	function testTranslateOption()
+	{
+		$result = array(
+			'en_US' => 'English (United States)',
+		);
+		$this->assertEquals($result, $this->object->translate('language', 'options'));
+	}
+
+	function testTranslateOptionWithRequiredOptions()
+	{
+		$result = array(
+			'en_US' => 'English (United States)',
+			'de_DE' => 'de_DE',
+		);
+		$requiredOptions = array(
+			'en_US',	
+			'de_DE',	
+		);
+
+		$this->assertEquals($result, $this->object->translate('language', 'options', 'Global', $requiredOptions));
 	}
 
 

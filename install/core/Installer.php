@@ -111,12 +111,11 @@ class Installer
 	{
 		$config = $this->app->getContainer()->get('config');
 
-		$languageList = array(
-			'options' => $config->get('languageList'),
-		);
-		$translated = $this->translateSetting('language', $languageList);		
+		$languageList = $config->get('languageList');
+		
+		$translated = $this->getI18n()->translate('language', 'options', 'Global', $languageList);			
 
-		return $translated['options'];
+		return $translated;
 	}
 
 	/**
@@ -210,6 +209,7 @@ class Installer
 		$entity->set('userName', $userName);			
 		$entity->set('password', md5($password));			
 		$entity->set('lastName', 'Administrator');			
+		$entity->set('isAdmin', '1');			
 
 		$userId = $this->getEntityManager()->saveEntity($entity);
 		
@@ -301,6 +301,10 @@ class Installer
 
 				$defaults[$field] = $this->translateSetting($field, $settingDefs[$field]);	
 			}
+		}
+
+		if (isset($defaults['language'])) {
+			$defaults['language']['options'] = $this->getLanguageList();	
 		}
 
 		return $defaults;
