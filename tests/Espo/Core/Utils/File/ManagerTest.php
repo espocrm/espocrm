@@ -105,6 +105,61 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
 	}
 
+	function testGetDirName()
+	{
+		$input = 'data/logs/espo.log';
+		$result = 'logs';
+		$this->assertEquals($result, $this->object->getDirName($input, false));
+
+		$input = 'data/logs/espo.log/';
+		$result = 'logs';
+		$this->assertEquals($result, $this->object->getDirName($input, false));
+
+		$input = 'application/Espo/Resources/metadata/entityDefs';
+		$result = 'metadata';
+		$this->assertEquals($result, $this->object->getDirName($input, false));
+
+		$input = 'application/Espo/Resources/metadata/entityDefs/';
+		$result = 'metadata';
+		$this->assertEquals($result, $this->object->getDirName($input, false));
+
+		$input = '/application/Espo/Resources/metadata/entityDefs';
+		$result = 'metadata';
+		$this->assertEquals($result, $this->object->getDirName($input, false));
+
+		$input = 'notRealPath/logs/espo.log';
+		$result = 'logs';
+		$this->assertEquals($result, $this->object->getDirName($input, false));
+	}
+
+
+	function testGetDirNameFullPath()
+	{
+		$input = 'data/logs/espo.log';
+		$result = 'data/logs';
+		$this->assertEquals($result, $this->object->getDirName($input));
+
+		$input = 'data/logs/espo.log/';
+		$result = 'data/logs';
+		$this->assertEquals($result, $this->object->getDirName($input));
+
+		$input = 'application/Espo/Resources/metadata/entityDefs';
+		$result = 'application/Espo/Resources/metadata';
+		$this->assertEquals($result, $this->object->getDirName($input));
+
+		$input = 'application/Espo/Resources/metadata/entityDefs/';
+		$result = 'application/Espo/Resources/metadata';
+		$this->assertEquals($result, $this->object->getDirName($input));
+
+		$input = '/application/Espo/Resources/metadata/entityDefs';
+		$result = '/application/Espo/Resources/metadata';
+		$this->assertEquals($result, $this->object->getDirName($input));
+
+		$input = 'notRealPath/logs/espo.log';
+		$result = 'notRealPath/logs';	
+		$this->assertEquals($result, $this->object->getDirName($input));
+	}
+
 
 }
 

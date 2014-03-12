@@ -208,7 +208,7 @@ class Installer
 
 		$entity->set('userName', $userName);			
 		$entity->set('password', md5($password));			
-		$entity->set('lastName', 'Administrator');			
+		$entity->set('lastName', 'Admin');			
 		$entity->set('isAdmin', '1');			
 
 		$userId = $this->getEntityManager()->saveEntity($entity);
