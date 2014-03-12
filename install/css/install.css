@@ -36,3 +36,11 @@ select[name="user-lang"] {
 	height: 50%;
 }
 
+.panel-body {
+	min-height: 400px;
+}
+
+.panel-body .panel-body {
+	min-height: 50px;
+}
+

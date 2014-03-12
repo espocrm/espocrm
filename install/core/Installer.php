@@ -64,6 +64,9 @@ class Installer
 	{
 		$this->app = new \Espo\Core\Application();
 		$this->writableList[] = $this->app->getContainer()->get('config')->get('configPath');
+
+		$user = $this->getEntityManager()->getEntity('User');
+		$this->app->getContainer()->setUser($user);
 	}
 
 	protected function getEntityManager()
@@ -158,9 +161,6 @@ class Installer
 
 	public function buildDatabase()
 	{
-		$user = $this->getEntityManager()->getEntity('User');
-		$this->app->getContainer()->setUser($user);
-
 		try {
 			$this->app->getContainer()->get('schema')->rebuild();
 		} catch (\Exception $e) {	
