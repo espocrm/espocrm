@@ -66,7 +66,14 @@ class Auth extends \Slim\Middleware
 		}
 
 		$authKey = $req->headers('PHP_AUTH_USER');
-        $authSec = $req->headers('PHP_AUTH_PW');   
+        $authSec = $req->headers('PHP_AUTH_PW'); 
+
+        $httpEspo = $req->headers('HTTP_ESPO');
+        if (isset($httpEspo)) {        	
+        	$credentials = explode(':', base64_decode($httpEspo));
+        	$authKey = $credentials[0];
+        	$authSec = $credentials[1]; 	
+        }  
 
         if ($authKey && $authSec) {
 			$isAuthenticated = false;
