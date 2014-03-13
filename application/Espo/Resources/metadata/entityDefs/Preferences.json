@@ -21,12 +21,14 @@
         },
         "thousandSeparator": {
             "type": "varchar",
-            "default": ","
+            "default": ",",
+            "maxLength": 1
         },
         "decimalMark": {
             "type": "varchar",
             "default": ".",
-            "required": true
+            "required": true,
+            "maxLength": 1
         },
         "defaultCurrency": {
             "type": "enum",
