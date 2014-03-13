@@ -227,9 +227,9 @@ class Record extends Base
 			if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
 				$result = $result || true;
 			}
-			if ($result) {
-				return true;
-			}
+		}
+		if ($result) {
+			return true;
 		}	
 		
 		throw new Error();		
