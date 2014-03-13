@@ -96,7 +96,8 @@ class Unifier
 		//get matadata files
 		$fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
 
-		$defaultValues = $this->loadDefaultValues($this->getFileManager()->getDirName($dirPath), $type);
+		$dirName = $this->getFileManager()->getDirName($dirPath, false);
+		$defaultValues = $this->loadDefaultValues($dirName, $type);
 
 		$content= array();
 		$unsets= array();

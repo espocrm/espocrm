@@ -291,6 +291,36 @@ class Manager
 		return $fullPath;
 	}
 
+	/**
+	 * Create a new dir
+	 * 
+	 * @param  string | array $path     
+	 * @param  int $permission - ex. 0755
+	 * @return bool
+	 */
+	public function mkdir($path, $permission = null)
+	{
+		$fullPath = $this->concatPaths($path);
+
+		if (file_exists($fullPath)) {
+			return true;
+		}
+
+		if (!isset($permission)) {
+			$defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();		
+			$permission = (string) $defaultPermissions['dir'];
+			$permission = base_convert($permission, 8, 10);				
+		}
+
+		try {
+			$result = mkdir($fullPath, $permission, true);
+		} catch (\Exception $e) {			
+			$GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$fullPath);	
+		}
+
+		return isset($result) ? $result : false; 
+	}
+
 
 	/**
      * Create a new file if not exists with all folders in the path.
@@ -310,10 +340,10 @@ class Manager
 			return true;
 		}
 
-		$pathParts= pathinfo($filePath);
+		$pathParts = pathinfo($filePath);
 		if (!file_exists($pathParts['dirname'])) {
-            $dirPermission= $defaultPermissions['dir'];
-            $dirPermission= is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
+            $dirPermission = $defaultPermissions['dir'];
+            $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
 			if (!mkdir($pathParts['dirname'], $dirPermission, true)) {
                 $GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$pathParts['dirname']);
@@ -438,21 +468,21 @@ class Manager
      * Get a directory name from the path
 	 *
 	 * @param string $path
+	 * @param bool $isFullPath
 	 *
 	 * @return array
 	 */
-	public function getDirName($path)
-	{
-		$pieces= explode(Utils\Util::getSeparator(), $path);
-        if (empty($pieces[count($pieces)-1])) {
-        	unset($pieces[count($pieces)-1]);
-        }
+	public function getDirName($path, $isFullPath = true)
+	{		
+		$pathInfo = pathinfo($path);
 
-		if ($this->getFileName($path)!=$path) {
-			return $pieces[count($pieces)-2];
+		if (!$isFullPath) {
+			$pieces = explode('/', $pathInfo['dirname']);
+
+			return $pieces[count($pieces)-1];	
 		}
 
-		return $pieces[count($pieces)-1];
+		return $pathInfo['dirname'];		
 	}
 
 
@@ -471,26 +501,6 @@ class Manager
 		}
 
         return '<?php
-/************************************************************************
- * This file is part of EspoCRM.
- *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014  Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
- *
- * EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
 
 return '.var_export($content, true).';
 
