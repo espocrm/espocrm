@@ -195,6 +195,12 @@ class Application
 
 		$this->getSlim()->hook('slim.after.router', function () use (&$slim) {
 			$slim->contentType('application/json');
+
+			$res = $slim->response();
+			$res->header('Expires', '0');
+			$res->header('Last-Modified', gmdate("D, d M Y H:i:s") . " GMT");
+			$res->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');	
+			$res->header('Pragma', 'no-cache');						
 		});
 	}
 
