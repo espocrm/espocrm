@@ -68,9 +68,9 @@ class Auth extends \Slim\Middleware
 		$authKey = $req->headers('PHP_AUTH_USER');
         $authSec = $req->headers('PHP_AUTH_PW'); 
 
-        $httpEspo = $req->headers('HTTP_ESPO');
-        if (isset($httpEspo)) {        	
-        	$credentials = explode(':', base64_decode($httpEspo));
+        $espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
+        if (isset($espoAuth)) {        	
+        	$credentials = explode(':', base64_decode($espoAuth));
         	$authKey = $credentials[0];
         	$authSec = $credentials[1]; 	
         }  
