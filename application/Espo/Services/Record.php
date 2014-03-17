@@ -419,6 +419,11 @@ class Record extends \Espo\Core\Services\Base
 		return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
     
+    public function checkEntityIsDuplicate(Entity $entity)
+    {
+    
+    }
+    
     public function export($ids, $where)
     {    
 		if (!empty($ids)) {
@@ -429,10 +434,38 @@ class Record extends \Espo\Core\Services\Base
 					'value' => $ids
 				)
 			);
+		}   
+		
+		$selectParams = $this->getSelectManager($this->entityName)->getSelectParams(array('where' => $where), true);
+		$collection = $this->getRepository()->find($selectParams);
+				
+		$arr = array();
+		
+		$collection->toArray();
+		
+		$fields = null;
+		foreach ($collection as $entity) {
+			if (empty($fields)) {
+				$fields = array();
+				foreach ($entity->getFields() as $field => $defs) {
+					if (empty($defs['notStorable'])) {
+						$fields[] = $field;	
+					} else {
+						if ($defs['type'] == 'email') {
+							$fields[] = $field;
+						} else if ($defs['name'] == 'name') {
+							$fields[] = $field;
+						}
+					}
+				}
+			}
+			
+			$row = array();
+			foreach ($fields as $field) {
+				$row[$field] = $entity->get($field);
+			}
+			$arr[] = $row;
 		}
-    
-		$result = $this->findEntities(array('where' => $where));		
-		$arr = $result['collection']->toArray();	
 		
 		$fp = fopen('php://temp', 'w');		
 		fputcsv($fp, array_keys($arr[0]));
