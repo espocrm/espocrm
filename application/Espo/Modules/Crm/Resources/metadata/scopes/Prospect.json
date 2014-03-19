@@ -4,5 +4,6 @@
 	"tab": true,
 	"acl": true,
 	"module": "Crm",
-	"customizable": true
+	"customizable": true,
+	"importable": true
 }

@@ -68,7 +68,7 @@
       "label":"Data",
       "items":[
          {
-            "url":"#Admin/import",
+            "url":"#Import",
             "label":"Import",
             "description":"Import data from CSV file."
          }
