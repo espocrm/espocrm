@@ -39,6 +39,25 @@ class Import extends \Espo\Core\Services\Base
 		'serviceFactory',
 	);
 	
+	protected $dateFormatsMap = array(
+		'YYYY-MM-DD' => 'Y-m-d',
+		'DD-MM-YYYY' => 'd-m-Y',
+		'MM-DD-YYYY' => 'm-d-Y',
+		'MM/DD/YYYY' => 'm/d/Y',
+		'DD/MM/YYYY' => 'd/m/Y',
+		'DD.MM.YYYY' => 'd.m.Y',
+		'MM.DD.YYYY' => 'm.d.Y',
+		'YYYY.MM.DD' => 'Y.m.d',		
+	);
+	
+	protected $timeFormatsMap = array(
+		'HH:mm' => 'H:i',
+		'hh:mm a' => 'G:i a',
+		'hh:mma' => 'G:ia',
+		'hh:mm A' => 'G:iA',
+		'hh:mmA' => 'G:iA',		
+	);
+	
 	protected function getSelectManagerFactory()
 	{
 		return $this->injections['selectManagerFactory'];
@@ -83,7 +102,8 @@ class Import extends \Espo\Core\Services\Base
 		$enclosure = '"';
 		if (!empty($params['textQualifier'])) {
 			$enclosure = $params['textQualifier'];
-		}
+		}		
+				
 		
 		$lines = explode("\n", $contents);
 		
@@ -92,7 +112,7 @@ class Import extends \Espo\Core\Services\Base
 			'updatedIds' => array(),
 			'duplicateIds' => array(),			 
 		);	
-	
+		
 		foreach ($lines as $i => $line) {
 			if ($i == 0 && !empty($params['headerRow'])) {
 				continue;
@@ -112,23 +132,47 @@ class Import extends \Espo\Core\Services\Base
 				$result['duplicateIds'][] = $r['id'];
 			}		
 		}
-		print_r($result);
-		die;
 		
 		return $result;	
 	}
 	
 	public function importRow($scope, array $fields, array $row, array $params = array())
 	{
-		$entity = $this->getEntityManager()->getEntity($scope);
+		// TODO create related records or related if exists, e.g. Account from accountName
+		
+		$id = null;
+		if (!empty($params['action'])) {
+			if ($params['action'] == 'createAndUpdate' && in_array('id', $fields)) {
+				$i = array_search('id', $fields);
+				$id = $row[$i];
+				if (empty($id)) {
+					$id = null;
+				}			
+			}
+		}
+		
+		
+		$entity = $this->getEntityManager()->getEntity($scope, $id);
+		
+		$entity->set('assignedUserId', $this->getUser()->id);
+		
+		if (!empty($params['defaultValues'])) {
+			$entity->set(get_object_vars($params['defaultValues']));
+		}
+		
 		$fieldsDefs = $entity->getFields();
 
 		foreach ($fields as $i => $field) {
 			if (!empty($field)) {
-				$value = $row[$i];
-			
+				if ($field == 'id') {
+					continue;
+				}
+				$value = $row[$i];			
 				if (array_key_exists($field, $fieldsDefs)) {
-					$entity->set($field, $value);		
+					if ($value !== '') {
+						$entity->set($field, $this->parseValue($entity, $field, $value, $params));
+						echo $value . ' ';
+					}	
 				}
 			}		
 		}
@@ -137,11 +181,78 @@ class Import extends \Espo\Core\Services\Base
 		
 		$a = $entity->toArray();
 		
-		if ($this->getEntityManager()->saveEntity($entity)) {	
+		if ($this->getEntityManager()->saveEntity($entity)) {
 			$result['id'] = $entity->id;
-			$result['imported'] = true;	
+			if (empty($id)) {
+				$result['imported'] = true;
+			} else {
+				$result['updated'] = true;
+			}
 		}
 		return $result;
+	}
+	
+	protected function parseValue(Entity $entity, $field, $value, $params = array())
+	{
+		$decimalMark = '.';
+		if (!empty($params['decimalMark'])) {
+			$decimalMark = $params['decimalMark'];
+		}
+		
+		$defaultCurrency = 'USD';
+		if (!empty($params['defaultCurrency'])) {
+			$dateFormat = $params['defaultCurrency'];
+		}
+		
+		$dateFormat = 'Y-m-d';
+		if (!empty($params['dateFormat'])) {
+			$dateFormat = $params['dateFormat'];
+		}
+		
+		$timeFormat = 'H:i';
+		if (!empty($params['timeFormat'])) {
+			$timeFormat = $params['timeFormat'];
+		}
+		
+		$fieldDefs = $entity->getFields();
+		
+		if (!empty($fieldDefs[$field])) {
+			$type = $fieldDefs[$field]['type'];
+			
+			switch ($type) {
+				case Entity::DATE:
+					$dt = \DateTime::createFromFormat($dateFormat, $value);
+					if ($dt) {
+						return $dt->format('Y-m-d');
+					}
+					break;
+				case Entity::DATETIME:
+					$dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value);
+					if ($dt) {
+						return $dt->format('Y-m-d H:i');
+					}
+					break;
+				case Entity::FLOAT:										
+					$currencyField = $field . 'Currency';
+					if ($entity->hasField($currencyField)) {
+						if (!$entity->has($currencyField)) {
+							$entity->set($currencyField, $defaultCurrency);
+						}
+					}
+					
+					$a = explode($decimalMark, $value);
+					$a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
+					
+					if (count($a) > 1) {
+						return $a[0] . '.' . $a[1];
+					} else {
+						return $a[0];
+					}
+					break;
+			}
+			
+		}
+		return $value;		
 	}
 }
 

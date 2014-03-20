@@ -38,6 +38,8 @@ class Import extends \Espo\Core\Controllers\Base
         	'timeFormat' => $data['timeFormat'],
         	'decimalMark' => $data['decimalMark'],
         	'currency' => $data['currency'],
+        	'defaultValues' => $data['defaultValues'],
+        	'action' => $data['action'],
         );
         
         if (!$this->getAcl()->check($data['entityType'], 'edit')) {
