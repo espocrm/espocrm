@@ -133,12 +133,17 @@ class Import extends \Espo\Core\Services\Base
 			}		
 		}
 		
-		return $result;	
+		return array(
+			'countCreated' => count($result['importedIds']),
+			'countUpdated' => count($result['updatedIds']),
+			'duplicateIds' => $result['duplicateIds'],
+		);	
 	}
 	
 	public function importRow($scope, array $fields, array $row, array $params = array())
 	{
-		// TODO create related records or related if exists, e.g. Account from accountName
+		// TODO create related records or related if exists, e.g. Account from accountName (skip users)
+		// Duplicate check
 		
 		$id = null;
 		if (!empty($params['action'])) {
@@ -161,20 +166,47 @@ class Import extends \Espo\Core\Services\Base
 		}
 		
 		$fieldsDefs = $entity->getFields();
+		$relDefs = $entity->getRelations();
 
 		foreach ($fields as $i => $field) {
 			if (!empty($field)) {
 				if ($field == 'id') {
 					continue;
-				}
+				}								
 				$value = $row[$i];			
 				if (array_key_exists($field, $fieldsDefs)) {
 					if ($value !== '') {
 						$entity->set($field, $this->parseValue($entity, $field, $value, $params));
-						echo $value . ' ';
 					}	
 				}
 			}		
+		}
+		
+		
+		
+		foreach ($fields as $i => $field) {
+			if (array_key_exists($field, $fieldsDefs) && $fieldsDefs[$field]['type'] == Entity::FOREIGN) {
+				if ($entity->has($field)) {
+					$relation = $fieldsDefs[$field]['relation'];					
+					if ($field == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
+						if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
+							$name = $entity->get($field);
+							$scope = $relDefs[$relation]['entity'];							
+							$found = $this->getEntityManager()->getRepository($scope)->where(array('name' => $name))->findOne();
+														
+							if ($found) {
+								$entity->set($relation . 'Id', $found->id);
+							} else {										
+								if (!in_array($scope, 'User', 'Team')) {
+								
+									// TODO create related record with name $name and relate
+								}
+							}										
+						}												
+					}
+				}
+			}
+			
 		}
 
 		$result = array();
