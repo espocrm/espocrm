@@ -23,6 +23,6 @@
       "advanced":true
    },
    "database":{
-      "notnull":false
+      "notNull":false
    }
 }

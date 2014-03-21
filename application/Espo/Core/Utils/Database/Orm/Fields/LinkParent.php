@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
@@ -36,8 +36,8 @@ class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
 					),
 					$field['name'].'Type' => array(
 						'type' => 'foreignType',
-						'notnull' => false,
-						'index' => $field['name'], 						 
+						'notNull' => false,
+						'index' => $field['name'],
 					),
 					$field['name'].'Name' => array(
 						'type' => 'varchar',

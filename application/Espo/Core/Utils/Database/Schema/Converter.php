@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema;
 
@@ -35,11 +35,11 @@ class Converter
 
 	protected $typeList;
 
-	//pair espo::doctrine
+	//pair ORM => doctrine
 	protected $allowedDbFieldParams = array(
 		'len' => 'length',
 		'default' => 'default',
-		'notnull' => 'notnull',
+		'notNull' => 'notnull',
 		'autoincrement' => 'autoincrement',
 		'unique' => 'unique',
 	);
@@ -87,14 +87,14 @@ class Converter
     	$GLOBALS['log']->debug('Schema\Converter - Start: building schema');
 
 		//check if exist files in "Tables" directory and merge with ormMetadata
-        $ormMeta = Util::merge($ormMeta, $this->getCustomTables());       	
+        $ormMeta = Util::merge($ormMeta, $this->getCustomTables());
 
         //unset some keys in orm
         if (isset($ormMeta['unset'])) {
 			$ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
 			unset($ormMeta['unset']);
 		} //END: unset some keys in orm
-		
+
 
 		$schema = $this->getSchema();
 
@@ -115,7 +115,7 @@ class Converter
 				switch ($fieldParams['type']) {
 		            case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);
-						break;					
+						break;
 		        }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
@@ -130,13 +130,13 @@ class Converter
 				}
 
 				//add unique
-				if ($fieldParams['type']!= 'id' && isset($fieldParams['unique'])) {		        	
+				if ($fieldParams['type']!= 'id' && isset($fieldParams['unique'])) {
 		        	$uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns);
 		        } //END: add unique
 
 				//add index. It can be defined in entityDefs as "index"
 				if (isset($fieldParams['index'])) {
-					$indexList = $this->getKeyList($columnName, $fieldParams['index'], $indexList); 					
+					$indexList = $this->getKeyList($columnName, $fieldParams['index'], $indexList);
 				} //END: add index
 			}
 
@@ -150,8 +150,8 @@ class Converter
 			if (!empty($uniqueColumns)) {
 				foreach($uniqueColumns as $uniqueItem) {
                 	$tables[$entityName]->addUniqueIndex($uniqueItem);
-				}            	
-			}			
+				}
+			}
 		}
 
 		//check and create columns/tables for relations
@@ -171,7 +171,7 @@ class Converter
 						if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
                         	$tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
 						}
-						break;					
+						break;
 
 		            case 'belongsTo':
 						$foreignEntity = $relationParams['entity'];
@@ -288,8 +288,8 @@ class Converter
 	/**
 	 * Get key list (index, unique). Ex. index => true OR index => 'somename'
 	 * @param  string $columnName Column name (underscore field name)
-	 * @param  bool | string $keyValue   
-	 * @return array 
+	 * @param  bool | string $keyValue
+	 * @return array
 	 */
 	protected function getKeyList($columnName, $keyValue, array $keyList)
 	{
@@ -314,7 +314,7 @@ class Converter
 
 		foreach($fileList as $fileName) {
 			$fileData = $this->getFileManager()->getContents( array($this->customTablePath, $fileName) );
-			if (is_array($fileData)) {				
+			if (is_array($fileData)) {
             	$customTables = Util::merge($customTables, $fileData);
 			}
 		}
