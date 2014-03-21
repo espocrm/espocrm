@@ -18,12 +18,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Utils;
-use Monolog\Handler;
+use Espo\Core\Utils,
+	Espo\Core\Utils\Log\Monolog\Handler;
 
 class Log
 {
@@ -41,12 +41,11 @@ class Log
 
 	public function load()
 	{
-		$config = $this->getContainer()->get('config');
+		$logConfig = $this->getContainer()->get('config')->get('logger');
 
-		$logConfig = $config->get('logger');
-		
-		$log = new Utils\Log('Espo');	
-		$levelCode = $log->getLevelCode($logConfig['level']);	
+		$log = new Utils\Log('Espo');
+
+		$levelCode = $log->getLevelCode($logConfig['level']);
 
 		if ($logConfig['isRotate']) {
 			$handler = new Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
@@ -54,7 +53,11 @@ class Log
 			$handler = new Handler\StreamHandler($logConfig['path'], $levelCode);
 		}
 		$log->pushHandler($handler);
-		\Monolog\ErrorHandler::register($log);			
+
+		$errorHandler = new \Monolog\ErrorHandler($log);
+		$errorHandler->registerExceptionHandler(null, false);
+		$errorHandler->registerErrorHandler(array(), false);
+		$errorHandler->registerFatalHandler();
 
 		return $log;
 	}

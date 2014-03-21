@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
 
@@ -45,14 +45,14 @@ class Converter
 	);
 
 	/*
-	* //pair espo:doctrine
+	* //pair Espo => ORM
 	*/
 	protected $fieldAccordances = array(
 		'type' => 'type',
 		'dbType' => 'dbType',
 		'maxLength' => 'len',
 		'len' => 'len',
-		'notnull' => 'notnull',
+		'notNull' => 'notNull',
 		'autoincrement' => 'autoincrement',
 		'notStorable' => 'notStorable',
 		'link' => 'relation',
@@ -60,7 +60,7 @@ class Converter
 		'unique' => 'unique',
 		'index' => 'index',
 		/*'conditions' => 'conditions',
-		'additionalColumns' => 'additionalColumns',	*/	
+		'additionalColumns' => 'additionalColumns',	*/
 		'default' => array(
 		   'condition' => '^javascript:',
 		   'conditionEquals' => false,
@@ -199,7 +199,7 @@ class Converter
 
 					case 'foreignId':
 						$fieldParams = array_merge($fieldParams, $this->idParams);
-                    	$fieldParams['notnull'] = false;
+                    	$fieldParams['notNull'] = false;
 						break;
 
 					case 'foreignType':
@@ -304,12 +304,12 @@ class Converter
         	$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['database']);
 		}
 
-		//if defined 'notnull => false' and 'required => true', then remove 'notnull'
-		if (isset($fieldParams['notnull']) && !$fieldParams['notnull'] && isset($fieldParams['required']) && $fieldParams['required']) {
-			unset($fieldParams['notnull']);
-		} //END 		
+		//if defined 'notNull => false' and 'required => true', then remove 'notNull'
+		if (isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) && $fieldParams['required']) {
+			unset($fieldParams['notNull']);
+		} //END
 
-		
+
 		$fieldDefs = $this->getInitValues($fieldParams);
 
 		//check if field need to be saved in database
@@ -448,23 +448,23 @@ class Converter
 	protected function getInitValues(array $fieldParams)
 	{
 		$values = array();
-		foreach($this->fieldAccordances as $espoType => $doctrineType) {
+		foreach($this->fieldAccordances as $espoType => $ormType) {
 
         	if (isset($fieldParams[$espoType])) {
 
-				if (is_array($doctrineType))  {
+				if (is_array($ormType))  {
 
                     $conditionRes = false;
 					if (!is_array($fieldParams[$espoType])) {
-                    	$conditionRes = preg_match('/'.$doctrineType['condition'].'/i', $fieldParams[$espoType]);
+                    	$conditionRes = preg_match('/'.$ormType['condition'].'/i', $fieldParams[$espoType]);
 					}
 
-					if (!$conditionRes || ($conditionRes && $conditionRes === $doctrineType['conditionEquals']) )  {
+					if (!$conditionRes || ($conditionRes && $conditionRes === $ormType['conditionEquals']) )  {
 						$value = is_array($fieldParams[$espoType]) ? json_encode($fieldParams[$espoType]) : $fieldParams[$espoType];
-						$values = Util::merge( $values, Util::replaceInArray('{0}', $value, $doctrineType['value']) );
+						$values = Util::merge( $values, Util::replaceInArray('{0}', $value, $ormType['value']) );
 					}
 				} else {
-                	$values[$doctrineType] = $fieldParams[$espoType];
+                	$values[$ormType] = $fieldParams[$espoType];
 				}
 
 			}
