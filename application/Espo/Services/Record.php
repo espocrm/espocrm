@@ -443,11 +443,25 @@ class Record extends \Espo\Core\Services\Base
 		
 		$collection->toArray();
 		
+		$fieldsToSkip = array(
+			'modifiedByName',
+			'createdByName',
+			'modifiedById',
+			'createdById',
+			'modifiedAt',
+			'createdAt',
+			'deleted',
+		);
+		
 		$fields = null;
 		foreach ($collection as $entity) {
 			if (empty($fields)) {
 				$fields = array();
 				foreach ($entity->getFields() as $field => $defs) {
+					if (in_array($field, $fieldsToSkip)) {
+						continue;
+					}
+				
 					if (empty($defs['notStorable'])) {
 						$fields[] = $field;	
 					} else {
