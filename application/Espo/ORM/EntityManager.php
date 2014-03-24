@@ -76,7 +76,9 @@ class EntityManager
 	protected function initPDO()
 	{
 		$params = $this->params;
+
 		$this->pdo = new \PDO('mysql:host='.$params['host'].';dbname=' . $params['dbname'], $params['user'], $params['password']);
+		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 	}
 
 	public function getEntity($name, $id = null)
