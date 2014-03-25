@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
 
@@ -27,42 +27,42 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Utils\Util;
 
 class ServiceFactory
-{	
+{
 	private $container;
-	
+
 	protected $cacheFile = 'data/cache/application/services.php';
-	
+
 	/**
      * @var array - path to Service files
      */
 	protected $paths = array(
 		'corePath' => 'application/Espo/Services',
     	'modulePath' => 'application/Espo/Modules/{*}/Services',
-    	'customPath' => 'custom/Espo/Custom/Services',	                              			
+    	'customPath' => 'custom/Espo/Custom/Services',
 	);
-	
-	protected $data;	
+
+	protected $data;
 
     public function __construct(Container $container)
     {
-    	$this->container = $container;    	
-    }       
-    
+    	$this->container = $container;
+    }
+
 	protected function init()
 	{
 		$config = $this->getContainer()->get('config');
-		
+
 		if (file_exists($this->cacheFile) && $config->get('useCache')) {
 			$this->data = $this->getFileManager()->getContents($this->cacheFile);
-		} else {	
+		} else {
 			$this->data = $this->getClassNameHash($this->paths['corePath']);
 
 	    	foreach ($this->getContainer()->get('metadata')->getModuleList() as $moduleName) {
 	    		$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
 				$this->data = array_merge($this->data, $this->getClassNameHash($path));
-	    	}	 
+	    	}
 
-	    	$this->data = array_merge($this->data, $this->getClassNameHash($this->paths['customPath']));  
+	    	$this->data = array_merge($this->data, $this->getClassNameHash($this->paths['customPath']));
 
 			if ($config->get('useCache')) {
 				$result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
@@ -72,21 +72,21 @@ class ServiceFactory
 			}
 		}
 	}
-	
+
 	protected function getFileManager()
 	{
 		return $this->container->get('fileManager');
 	}
-	
+
 	protected function getContainer()
 	{
 		return $this->container;
 	}
-	
+
 	protected function getClassName($name)
 	{
 		$name = Util::normilizeClassName($name);
-		
+
 		if (!isset($this->data)) {
 			$this->init();
 		}
@@ -95,17 +95,17 @@ class ServiceFactory
 		if (isset($this->data[$name])) {
 			return $this->data[$name];
 		}
-		
-        return false; 
+
+        return false;
 	}
-	
+
 	public function checkExists($name) {
 		$className = $this->getClassName($name);
 		if (!empty($className)) {
 			return true;
 		}
 	}
-    
+
     public function create($name)
     {
     	$className = $this->getClassName($name);
@@ -113,7 +113,7 @@ class ServiceFactory
     		throw new Error();
     	}
     	return $this->createByClassName($className);
-    }  
+    }
 
 	protected function createByClassName($className)
 	{
@@ -127,28 +127,28 @@ class ServiceFactory
     	}
     	throw new Error("Class '$className' does not exist");
 	}
-	
+
 	// TODO delegate to another class
 	protected function getClassNameHash($dirs)
 	{
 		if (is_string($dirs)) {
-			$dirs = (array) $dirs;	
+			$dirs = (array) $dirs;
 		}
 
 		$data = array();
-		
-		foreach ($dirs as $dir) {	      
+
+		foreach ($dirs as $dir) {
 			if (file_exists($dir)) {
 	        	$fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');
-	            foreach ($fileList as $file) {					
+	            foreach ($fileList as $file) {
 					$filePath = Util::concatPath($dir, $file);
-                	$className = Util::getClassName($filePath);       
-                	$fileName = $this->getFileManager()->getFileName($filePath);							
-					$data[$fileName] = $className;					
+                	$className = Util::getClassName($filePath);
+                	$fileName = $this->getFileManager()->getFileName($filePath);
+					$data[$fileName] = $className;
 	            }
 			}
 		}
 		return $data;
-	}	
+	}
 }
 

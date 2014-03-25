@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\SelectManagers;
 
@@ -27,17 +27,17 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Acl;
 
 class Base
-{	
+{
 	protected $container;
-	
+
 	protected $user;
-	
+
 	protected $acl;
-	
+
 	protected $entityManager;
-	
+
 	protected $entityName;
-	
+
 	protected $metadata;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -47,12 +47,12 @@ class Base
     	$this->acl = $acl;
     	$this->metadata = $metadata;
     }
-    
+
     public function setEntityName($entityName)
     {
     	$this->entityName = $entityName;
     }
-    
+
     protected function limit($params, &$result)
     {
 		if (isset($params['offset']) && !is_null($params['offset'])) {
@@ -62,7 +62,7 @@ class Base
 			$result['limit'] = $params['maxSize'];
 		}
     }
-    
+
     protected function order($params, &$result)
     {
 		if (!empty($params['sortBy'])) {
@@ -72,7 +72,7 @@ class Base
 				$result['orderBy'] .= 'Name';
 			} else if ($type == 'linkParent') {
 				$result['orderBy'] .= 'Type';
-			}			
+			}
 		}
 		if (isset($params['asc'])) {
 			if ($params['asc']) {
@@ -82,23 +82,23 @@ class Base
 			}
 		}
     }
-    
+
     protected function where($params, &$result)
     {
 		if (!empty($params['where']) && is_array($params['where'])) {
 			$where = array();
-			
+
 			foreach	($params['where'] as $item) {
 				if ($item['type'] == 'boolFilters' && is_array($item['value'])) {
 					foreach ($item['value'] as $filter) {
 						$p = $this->getBoolFilterWhere($filter);
 						if (!empty($p)) {
-							$params['where'][] = $p; 
+							$params['where'][] = $p;
 						}
 					}
 				}
 			}
-			
+
 			$linkedWith = array();
 			$ignoreList = array('linkedWith', 'boolFilters');
 			foreach	($params['where'] as $item) {
@@ -106,40 +106,40 @@ class Base
 					$part = $this->getWherePart($item);
 					if (!empty($part)) {
 						$where[] = $part;
-					}					
+					}
 				} else {
 					if ($item['type'] == 'linkedWith') {
 						$linkedWith[$item['field']] = $item['value'];
 					}
 				}
 			}
-			
+
 			if (!empty($linkedWith)) {
 				$joins = array();
-				
-				$part = array();				
+
+				$part = array();
 				foreach ($linkedWith as $link => $ids) {
 					$joins[] = $link;
 					$defs = $this->entityManager->getMetadata()->get($this->entityName);
-					
+
 					$entityName = $defs['relations'][$link]['entity'];
 					if ($entityName) {
 						$part[$entityName . '.id'] = $ids;
-					}					
+					}
 				}
-				
+
 				if (!empty($part)) {
 					$where[] = $part;
 				}
 				$result['joins'] = $joins;
 				$result['distinct'] = true;
-				
+
 			}
-			
+
 			$result['whereClause'] = $where;
 		}
     }
-    
+
     protected function q($params, &$result)
     {
 		if (!empty($params['q'])) {
@@ -147,9 +147,9 @@ class Base
 				$result['whereClause'] = array();
 			}
 			$result['whereClause']['name*'] = $params['q'] . '%';
-		}	
-	}    
-    
+		}
+	}
+
     protected function access(&$result)
     {
     	if ($this->acl->checkReadOnlyOwn($this->entityName)) {
@@ -157,7 +157,7 @@ class Base
     		if (!array_key_exists('whereClause', $result)) {
     			$result['whereClause'] = array();
     		}
-    		$result['whereClause']['assignedUserId'] = $this->user->id;    				
+    		$result['whereClause']['assignedUserId'] = $this->user->id;
     	}
     	if ($this->acl->checkReadOnlyTeam($this->entityName)) {
     		if (!array_key_exists('whereClause', $result)) {
@@ -169,11 +169,11 @@ class Base
     		if (!in_array('teams', $result['joins'])) {
     			$result['joins'][] = 'teams';
     		}
-    		   		
-    		$result['whereClause']['Team.id'] = $this->user->get('teamsIds'); 			
-    	}    	
+
+    		$result['whereClause']['Team.id'] = $this->user->get('teamsIds');
+    	}
     }
-    
+
     public function getAclParams()
     {
     	$result = array();
@@ -184,29 +184,29 @@ class Base
 	public function getSelectParams(array $params, $withAcl = false)
 	{
 		$result = array();
-		
-		$this->order($params, $result);		
+
+		$this->order($params, $result);
 		$this->limit($params, $result);
 		$this->where($params, $result);
 		$this->q($params, $result);
-		
+
 		if ($withAcl) {
 			$this->access($result);
 		}
-		
+
 		return $result;
 	}
-	
+
 	protected function getWherePart($item)
 	{
 		$part = array();
-		
+
 		if (!empty($item['type'])) {
 			switch ($item['type']) {
 				case 'or':
 				case 'and':
 					if (is_array($item['value'])) {
-						$arr = array();						
+						$arr = array();
 						foreach ($item['value'] as $i) {
 							$a = $this->getWherePart($i);
 							foreach ($a as $left => $right) {
@@ -215,9 +215,9 @@ class Base
 								}
 							}
 						}
-						$part[strtoupper($item['type'])] = $arr;						
-					}					
-					break;				
+						$part[strtoupper($item['type'])] = $arr;
+					}
+					break;
 				case 'like':
 					$part[$item['field'] . '*'] = $item['value'];
 					break;
@@ -226,21 +226,21 @@ class Base
 					$part[$item['field'] . '='] = $item['value'];
 					break;
 				case 'notEquals':
-				case 'notOn':					
+				case 'notOn':
 					$part[$item['field'] . '!='] = $item['value'];
 					break;
 				case 'greaterThan':
-				case 'after':					
+				case 'after':
 					$part[$item['field'] . '>'] = $item['value'];
 					break;
 				case 'lessThan':
-				case 'before':					
+				case 'before':
 					$part[$item['field'] . '<'] = $item['value'];
 					break;
-				case 'greaterThanOrEquals':				
+				case 'greaterThanOrEquals':
 					$part[$item['field'] . '>='] = $item['value'];
 					break;
-				case 'lessThanOrEquals':				
+				case 'lessThanOrEquals':
 					$part[$item['field'] . '<'] = $item['value'];
 					break;
 				case 'in':
@@ -256,21 +256,21 @@ class Base
 							$item['field'] . '<=' => $item['value'][1],
 						);
 					}
-					break;	
-			}		
+					break;
+			}
 		}
-		
-		return $part;	
+
+		return $part;
 	}
-	
+
 	protected function getBoolFilterWhere($filterName, $entityName)
-	{		
+	{
 		$method = 'getBoolFilterWhere' . ucfirst($filterName);
 		if (method_exists($this, $method)) {
 			return $this->$method();
-		}		
+		}
 	}
-	
+
 	protected function getBoolFilterWhereOnlyMy()
 	{
 		return array(

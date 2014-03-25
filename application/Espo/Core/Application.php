@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
 
@@ -30,7 +30,7 @@ class Application
 	private $container;
 
 	private $slim;
-	
+
 	private $auth;
 
 	/**
@@ -41,8 +41,8 @@ class Application
     	$this->container = new Container();
 
 		date_default_timezone_set('UTC');
-		
-		$GLOBALS['log'] = $this->container->get('log');					
+
+		$GLOBALS['log'] = $this->container->get('log');
     }
 
 	public function getSlim()
@@ -60,7 +60,7 @@ class Application
 		}
 		return $this->metadata;
 	}
-	
+
     protected function getAuth()
     {
     	if (empty($this->auth)) {
@@ -80,51 +80,51 @@ class Application
         $this->initRoutes();
         $this->getSlim()->run();
     }
-    
+
     public function runEntryPoint($entryPoint)
-    {	
+    {
     	if (empty($entryPoint)) {
     		throw new \Error();
     	}
-    	
+
     	$slim = $this->getSlim();
     	$container = $this->getContainer();
-    	
+
 		$slim->get('/', function() {});
-    	
-    	$entryPointManager = new \Espo\Core\EntryPointManager($container);    	
-    	
+
+    	$entryPointManager = new \Espo\Core\EntryPointManager($container);
+
     	$auth = $this->getAuth();
     	$apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
-    	$slim->add($apiAuth);    	
-    	
-		$slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container) {			
+    	$slim->add($apiAuth);
+
+		$slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container) {
 			try {
-				$entryPointManager->run($entryPoint); 
+				$entryPointManager->run($entryPoint);
 			} catch (\Exception $e) {
 				$container->get('output')->processError($e->getMessage(), $e->getCode());
 			}
 		});
-    	
+
     	$slim->run();
     }
-    
+
     public function runCron()
     {
     	$auth = $this->getAuth();
-    	$auth->useNoAuth();  	
-    	
+    	$auth->useNoAuth();
+
     	$cronManager = new \Espo\Core\CronManager($this->container);
 		$cronManager->run();
     }
 
     public function isInstalled($useRedirect = true)
     {
-    	$config = $this->getContainer()->get('config');       	
+    	$config = $this->getContainer()->get('config');
 
     	$result = false;
     	if (file_exists($config->get('configPath')) && $config->get('isInstalled')) {
-    		$result = true;	
+    		$result = true;
     	}
 
 		if ($useRedirect && !$result) {
@@ -134,14 +134,14 @@ class Application
 
 		return $result;
     }
-    
+
 	protected function routeHooks()
 	{
 		$container = $this->getContainer();
 		$slim = $this->getSlim();
-		
+
 		$auth = $this->getAuth();
-		
+
 		$apiAuth = new \Espo\Core\Utils\Api\Auth($auth);
 		$this->getSlim()->add($apiAuth);
 
@@ -171,11 +171,11 @@ class Application
 				}
 				$controllerParams[$key] = $value;
 			}
-			
+
 			$params = array_merge($params, $controllerParams);
 
 			$controllerName = ucfirst($controllerParams['controller']);
-			
+
 			if (!empty($controllerParams['action'])) {
 				$actionName = $controllerParams['action'];
 			} else {
@@ -183,8 +183,8 @@ class Application
 				$crudList = $container->get('config')->get('crud');
 				$actionName = $crudList[$httpMethod];
 			}
-			
-			try {							
+
+			try {
 				$controllerManager = new \Espo\Core\ControllerManager($container);
 				$result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request());
 				$container->get('output')->render($result);
@@ -199,8 +199,8 @@ class Application
 			$res = $slim->response();
 			$res->header('Expires', '0');
 			$res->header('Last-Modified', gmdate("D, d M Y H:i:s") . " GMT");
-			$res->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');	
-			$res->header('Pragma', 'no-cache');						
+			$res->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+			$res->header('Pragma', 'no-cache');
 		});
 	}
 

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
 
@@ -35,12 +35,12 @@ class Container
     {
 
     }
-    
+
     public function get($name)
     {
     	if (empty($this->data[$name])) {
     		$this->load($name);
-    	}    	
+    	}
     	return $this->data[$name];
     }
 
@@ -65,8 +65,8 @@ class Container
 
 		// TODO throw an exception
     	return null;
-    }    
-    
+    }
+
     private function loadSlim()
     {
         //return new \Slim\Slim();
@@ -77,13 +77,13 @@ class Container
     {
     	return new \Espo\Core\Utils\File\Manager(
 			array(
-				'defaultPermissions' => $this->get('config')->get('defaultPermissions'),				
+				'defaultPermissions' => $this->get('config')->get('defaultPermissions'),
 			)
 		);
     }
-    
+
 	private function loadPreferences()
-    {    	
+    {
     	return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
     }
 
@@ -93,7 +93,7 @@ class Container
 			new \Espo\Core\Utils\File\Manager()
 		);
     }
-    
+
 	private function loadHookManager()
     {
     	return new \Espo\Core\HookManager(
@@ -107,21 +107,21 @@ class Container
 			$this->get('slim')
 		);
     }
-    
+
 	private function loadMailSender()
     {
     	return new \Espo\Core\Mail\Sender(
 			$this->get('config')
 		);
     }
-    
+
 	private function loadServiceFactory()
     {
     	return new \Espo\Core\ServiceFactory(
 			$this
 		);
     }
-    
+
 	private function loadSelectManagerFactory()
     {
     	return new \Espo\Core\SelectManagerFactory(
@@ -142,12 +142,12 @@ class Container
 
 	private function loadLayout()
     {
-    	return new \Espo\Core\Utils\Layout(			
+    	return new \Espo\Core\Utils\Layout(
 			$this->get('fileManager'),
 			$this->get('metadata')
 		);
-    } 
-    
+    }
+
 	private function loadAcl()
 	{
 		return new \Espo\Core\Acl(
@@ -185,7 +185,7 @@ class Container
 			$this->get('preferences')
 		);
 	}
-	
+
 	public function setUser($user)
 	{
 		$this->data['user'] = $user;
