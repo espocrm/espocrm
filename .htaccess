@@ -1,3 +1,5 @@
+DirectoryIndex index.php
+
 <IfModule mod_rewrite.c>
 
 #SetEnv HTTP_MOD_REWRITE On
