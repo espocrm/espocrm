@@ -37,7 +37,10 @@
 		"City": "City",
 		"PostalCode": "Postal Code",
 		"Create ScheduledJob": "Create Scheduled Job",
-		"Create EmailTemplate": "Create Email Template"
+		"Create EmailTemplate": "Create Email Template"		
+	},
+	"messages": {
+		"duplicate": "The record you are creating seems to be a duplicate"
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",

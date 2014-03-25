@@ -26,7 +26,15 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
 class Lead extends \Espo\Services\Record
-{
+{	
+	protected function getDuplicateWhereClause(Entity $entity)
+	{
+		return array(
+			'firstName' => $entity->get('firstName'),
+			'lastName' => $entity->get('lastName'),
+		);
+	}
+	
 	public function convert($id, $recordsData)
 	{
     	$lead = $this->getEntity($id);

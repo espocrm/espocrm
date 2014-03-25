@@ -23,9 +23,12 @@
 namespace Espo\Services;
 
 use \Espo\ORM\Entity;
+
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Conflict;
+
 use \Espo\Core\Utils\Util;
 
 class Record extends \Espo\Core\Services\Base
@@ -227,7 +230,18 @@ class Record extends \Espo\Core\Services\Base
 		
 		if (!$this->isValid($entity)) {
 			throw new BadRequest();
-		}		
+		}
+		
+		if (empty($data['forceDuplicate'])) {
+			$duplicates = $this->checkEntityForDuplicate($entity);
+			if (!empty($duplicates)) {
+				$reason = array(
+					'reason' => 'Duplicate',
+					'data' => $duplicates
+				);
+				throw new Conflict(json_encode($reason));
+			}
+		}	
 		
 		if ($this->storeEntity($entity)) {
 			return $entity;
@@ -419,9 +433,26 @@ class Record extends \Espo\Core\Services\Base
 		return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
     
-    public function checkEntityIsDuplicate(Entity $entity)
+    protected function getDuplicateWhereClause(Entity $entity)
     {
+    	return false;
+    }
     
+    public function checkEntityForDuplicate(Entity $entity)
+    {		
+		$where = $this->getDuplicateWhereClause($entity);
+		
+		if ($where) {
+			$duplicates = $this->getRepository()->where($where)->find();
+			if (count($duplicates)) {
+				$result = array();
+				foreach ($duplicates as $e) {
+					$result[$e->id] = $e->get('name');
+				}
+				return $result;
+			}
+		}    	
+    	return false;
     }
     
     public function export($ids, $where)
