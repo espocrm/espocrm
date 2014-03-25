@@ -31,8 +31,8 @@ class CronManager
 	private $scheduledJobCron;
 	private $serviceCron;
 
-	private $jobFactory;
-	private $scheduledJobFactory;
+	private $jobService;
+	private $scheduledJobService;
 
 	protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';	
 
@@ -47,8 +47,8 @@ class CronManager
 		$this->scheduledJobCron = new \Espo\Core\Cron\ScheduledJob( $this->container );	
 		$this->serviceCron = new \Espo\Core\Cron\Service( $this->container->get('serviceFactory') );	
 
-		$this->jobFactory = $this->container->get('serviceFactory')->create('job');
-		$this->scheduledJobFactory = $this->container->get('serviceFactory')->create('scheduledJob');
+		$this->jobService = $this->container->get('serviceFactory')->create('job');
+		$this->scheduledJobService = $this->container->get('serviceFactory')->create('scheduledJob');
 	}
 
 	protected function getContainer()
@@ -66,14 +66,14 @@ class CronManager
 		return $this->fileManager;
 	}
 
-	protected function getJobFactory()
+	protected function getJobService()
 	{
-		return $this->jobFactory;
+		return $this->jobService;
 	}
 
-	protected function getScheduledJobFactory()
+	protected function getScheduledJobService()
 	{
-		return $this->scheduledJobFactory;
+		return $this->scheduledJobService;
 	}
 
 	protected function getScheduledJobCron()
@@ -129,11 +129,11 @@ class CronManager
 		$this->createJobsFromScheduledJobs();
 
 
-		$pendingJobs = $this->getJobFactory()->getPendingJobs();		
+		$pendingJobs = $this->getJobService()->getPendingJobs();		
 
 		foreach ($pendingJobs as $job) {
 
-			$this->getJobFactory()->updateEntity($job['id'], array(
+			$this->getJobService()->updateEntity($job['id'], array(
 				'status' => 'Running',
 			));				
 
@@ -152,13 +152,13 @@ class CronManager
 
 			$status = $isSuccess ? 'Success' : 'Failed';
 
-			$this->getJobFactory()->updateEntity($job['id'], array(
+			$this->getJobService()->updateEntity($job['id'], array(
 				'status' => $status,
 			));
 
 			//set status in the schedulerJobLog
 			if (!empty($job['scheduled_job_id'])) {
-				$this->getScheduledJobFactory()->addLogRecord($job['scheduled_job_id'], $status); 
+				$this->getScheduledJobService()->addLogRecord($job['scheduled_job_id'], $status); 
 			}						
 		}	
 
@@ -170,7 +170,7 @@ class CronManager
 	 */
 	protected function createJobsFromScheduledJobs()
 	{
-		$activeScheduledJobs = $this->getScheduledJobFactory()->getActiveJobs(); 
+		$activeScheduledJobs = $this->getScheduledJobService()->getActiveJobs(); 
 
 		$createdJobs = array();
 		foreach ($activeScheduledJobs as $scheduledJob) {
@@ -191,7 +191,7 @@ class CronManager
 				$prevDate = date('Y-m-d H:i:00');		
 			}			
 
-			$existsJob = $this->getJobFactory()->getJobByScheduledJob($scheduledJob['id'], $prevDate);					
+			$existsJob = $this->getJobService()->getJobByScheduledJob($scheduledJob['id'], $prevDate);					
 
 			if (!isset($existsJob) || empty($existsJob)) {
 				//create a job
@@ -202,12 +202,11 @@ class CronManager
 					'executeTime' => $prevDate,
 					'method' => $scheduledJob['job'],
 				);
-				$createdJobs[] = $this->getJobFactory()->createEntity($data);					
+				$createdJobs[] = $this->getJobService()->createEntity($data);					
 			}			
 		}	
 
 		return $createdJobs;	
-	}
-
-	
+	}	
 }
+
