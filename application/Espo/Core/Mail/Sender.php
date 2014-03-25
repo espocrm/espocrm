@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Mail;
 
@@ -39,36 +39,36 @@ class Sender
 	protected $config;
 
 	protected $transport;
-	
+
 	protected $isGlobal = false;
-	
+
 	protected $params = array();
 
 	public function __construct($config)
 	{
-		$this->config = $config;		
+		$this->config = $config;
 		$this->useGlobal();
 	}
-	
+
 	public function resetParams()
 	{
 		$this->params = array();
 		return $this;
 	}
-	
+
 	public function setParams(array $params = array())
 	{
 		$this->params = array_merge($this->params, $params);
 		return $this;
 	}
-	
+
 	public function useSmtp(array $params = array())
-	{		
-		$this->isGlobal = false;		
+	{
+		$this->isGlobal = false;
 		$this->params = $params;
-		
+
 		$this->transport = new SmtpTransport();
-		
+
 		$opts = array(
 			'name' => 'admin',
 			'host' => $params['server'],
@@ -86,7 +86,7 @@ class Sender
 
 		$options = new SmtpOptions($opts);
 		$this->transport->setOptions($options);
-				
+
 		return $this;
 	}
 
@@ -96,9 +96,9 @@ class Sender
 		if ($this->isGlobal) {
 			return $this;
 		}
-		
+
 		$this->transport = new SmtpTransport();
-		
+
 		$config = $this->config;
 
 		$opts = array(
@@ -118,7 +118,7 @@ class Sender
 
 		$options = new SmtpOptions($opts);
 		$this->transport->setOptions($options);
-		
+
 		$this->isGlobal = true;
 
 		return $this;
@@ -127,7 +127,7 @@ class Sender
 	public function send(Email $email)
 	{
 		$message = new Message();
-		
+
 		$config = $this->config;
 
 		if ($email->get('from')) {
@@ -147,26 +147,26 @@ class Sender
 				}
 				$fromAddress = $config->get('outboundEmailFromAddress');
 			}
-			
+
 			if (!empty($this->params['fromName'])) {
 				$fromName = $this->params['fromName'];
 			} else {
 				$fromName = $config->get('outboundEmailFromName');
-			}			
+			}
 
-			$message->addFrom($fromAddress, $fromName);			
+			$message->addFrom($fromAddress, $fromName);
 		}
-		
+
 		$value = $email->get('to');
 		if ($value) {
 			$arr = explode(';', $value);
 			if (is_array($arr)) {
 				foreach ($arr as $address) {
-					$message->addTo(trim($address));				
+					$message->addTo(trim($address));
 				}
 			}
 		}
-		
+
 		$value = $email->get('cc');
 		if ($value) {
 			$arr = explode(';', $value);
@@ -176,7 +176,7 @@ class Sender
 				}
 			}
 		}
-		
+
 		$value = $email->get('bcc');
 		if ($value) {
 			$arr = explode(';', $value);
@@ -188,20 +188,20 @@ class Sender
 		}
 
 		$message->setSubject($email->get('name'));
-		
-		$body = new MimeMessage;		
+
+		$body = new MimeMessage;
 		$parts = array();
-				
+
 		$bodyPart = new MimePart($email->get('body'));
-		
+
 		if ($email->get('isHtml')) {
-			$bodyPart->type = 'text/html';	
+			$bodyPart->type = 'text/html';
 		} else {
 			$bodyPart->type = 'text/plain';
-		}		
-			
+		}
+
 		$parts[] = $bodyPart;
-		
+
 		$aCollection = $email->get('attachments');
 		if (!empty($aCollection)) {
 			foreach ($aCollection as $a) {
@@ -215,10 +215,10 @@ class Sender
 				}
 				$parts[] = $attachment;
 			}
-		}		
-		
-		$body->setParts($parts);		
-		$message->setBody($body);		
+		}
+
+		$body->setParts($parts);
+		$message->setBody($body);
 
 		try {
 			$this->transport->send($message);
@@ -227,8 +227,8 @@ class Sender
 		} catch (\Exception $e) {
 			throw new Error($e->getMessage(), 500);
 		}
-		
-		$this->useGlobal();		
+
+		$this->useGlobal();
 	}
 }
 

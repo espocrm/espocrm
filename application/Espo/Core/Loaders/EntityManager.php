@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Loaders;
 
@@ -42,7 +42,7 @@ class EntityManager
 	public function load()
 	{
 		$config = $this->getContainer()->get('config');
-		
+
 		$params = array(
 			'host' => $config->get('database.host'),
 			'dbname' => $config->get('database.dbname'),
@@ -56,7 +56,7 @@ class EntityManager
 		$entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
 		$entityManager->setHookManager($this->getContainer()->get('hookManager'));
 		$entityManager->setContainer($this->getContainer());
-		
+
 		return $entityManager;
 	}
 }
