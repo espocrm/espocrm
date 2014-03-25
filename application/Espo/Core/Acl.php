@@ -47,7 +47,7 @@ class Acl
 		
 		$this->user->loadLinkMultipleField('teams');
 		
-		$this->cacheFile = 'data/cache/application/acl/' . $user->id;
+		$this->cacheFile = 'data/cache/application/acl/' . $user->id . '.php';
 		
 		if ($config->get('useCache') && file_exists($this->cacheFile)) {
 			$cached = include $this->cacheFile;
