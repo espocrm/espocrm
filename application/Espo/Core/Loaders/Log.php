@@ -57,7 +57,6 @@ class Log
 		$errorHandler = new \Monolog\ErrorHandler($log);
 		$errorHandler->registerExceptionHandler(null, false);
 		$errorHandler->registerErrorHandler(array(), false);
-		$errorHandler->registerFatalHandler();
 
 		return $log;
 	}

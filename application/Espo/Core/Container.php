@@ -186,6 +186,13 @@ class Container
 		);
 	}
 
+	private function loadScheduledJob()
+	{
+		return new \Espo\Core\Cron\ScheduledJob(
+			$this
+		);
+	}
+
 	public function setUser($user)
 	{
 		$this->data['user'] = $user;

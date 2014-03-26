@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Cron;
 
@@ -41,7 +41,7 @@ class ScheduledJob
 	private $paths = array(
 		'corePath' => 'application/Espo/Jobs',
     	'modulePath' => 'application/Espo/Modules/{*}/Jobs',
-    	'customPath' => 'custom/Espo/Custom/Jobs',	                              			
+    	'customPath' => 'custom/Espo/Custom/Jobs',
 	);
 
 
@@ -60,39 +60,78 @@ class ScheduledJob
 		return $this->container->get('entityManager');
 	}
 
-
-
-
 	public function run(array $job)
 	{
 		$jobName = $job['method'];
 
 		$className = $this->getClassName($jobName);
 		if ($className === false) {
-			throw new NotFound(); 
+			throw new NotFound();
 		}
 
 		$jobClass = new $className($this->container);
 		$method = $this->allowedMethod;
 
-		$jobClass->$method();		
+		$jobClass->$method();
 	}
 
-
-	protected function getClassName($name)
+	/**
+	 * Get list of all jobs
+	 *
+	 * @return array
+	 */
+	public function getAll()
 	{
-		$name = Util::normilizeClassName($name);
-		
 		if (!isset($this->data)) {
 			$this->init();
 		}
 
+		return $this->data;
+	}
+
+	/**
+	 * Get class name of a job by name
+	 *
+	 * @param  string $name
+	 * @return string
+	 */
+	public function get($name)
+	{
+		return $this->getClassName($name);
+	}
+
+	/**
+	 * Get list of all job names
+	 *
+	 * @return array
+	 */
+	public function getAllNamesOnly()
+	{
+		$data = $this->getAll();
+
+		$namesOnly = array_keys($data);
+
+		return $namesOnly;
+	}
+
+	/**
+	 * Get class name of a job
+	 *
+	 * @param  string $name
+	 * @return string
+	 */
+	protected function getClassName($name)
+	{
+		$name = Util::normilizeClassName($name);
+
+		$data = $this->getAll();
+
 		$name = ucfirst($name);
-		if (isset($this->data[$name])) {
-			return $this->data[$name];
+		if (isset($data[$name])) {
+			return $data[$name];
 		}
-		
-        return false; 
+
+        return false;
 	}
 
 	/**
@@ -104,6 +143,6 @@ class ScheduledJob
 		$classParser = $this->getContainer()->get('classParser');
 		$classParser->setAllowedMethods( array($this->allowedMethod) );
 		$this->data = $classParser->getData($this->paths, $this->cacheFile);
-	}	
+	}
 
 }

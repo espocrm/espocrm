@@ -44,7 +44,7 @@ class CronManager
 		$this->config = $this->container->get('config');
 		$this->fileManager = $this->container->get('fileManager');
 
-		$this->scheduledJobCron = new \Espo\Core\Cron\ScheduledJob( $this->container );
+		$this->scheduledJobCron = $this->container->get('scheduledJob');
 		$this->serviceCron = new \Espo\Core\Cron\Service( $this->container->get('serviceFactory'));
 
 		$this->jobService = $this->container->get('serviceFactory')->create('job');
