@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -26,7 +26,7 @@ use \Espo\Core\Exceptions\Error,
 	\Espo\Core\Exceptions\Forbidden;
 
 class Admin extends \Espo\Core\Controllers\Base
-{	
+{
 	protected function checkGlobalAccess()
 	{
 		if (!$this->getUser()->isAdmin()) {
@@ -51,8 +51,8 @@ class Admin extends \Espo\Core\Controllers\Base
 	}
 
 	public function actionClearCache($params, $data)
-	{		
-		$cacheDir = $this->getContainer()->get('config')->get('cachePath');			
+	{
+		$cacheDir = $this->getContainer()->get('config')->get('cachePath');
 
 		$result = $this->getContainer()->get('fileManager')->removeInDir($cacheDir);
 
@@ -61,6 +61,13 @@ class Admin extends \Espo\Core\Controllers\Base
 		}
 
 		return json_encode($result);
+	}
+
+	public function actionJobs()
+	{
+		$scheduledJob = $this->getContainer()->get('scheduledJob');
+
+		return $scheduledJob->getAllNamesOnly();
 	}
 
 }

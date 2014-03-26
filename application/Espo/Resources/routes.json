@@ -48,7 +48,16 @@
         "controller":"Settings"
     }
   },
-  
+
+  {
+    "route":"/Admin/jobs",
+    "method":"get",
+    "params":{
+        "controller":"Admin",
+        "action":"jobs"
+    }
+  },
+
   {
   	"route":"/Stream",
     "method":"get",
@@ -58,17 +67,17 @@
 		"scope": "User"
     }
   },
-  
+
   {
   	"route":"/GlobalSearch/:query",
     "method":"get",
     "params":{
         "controller":"GlobalSearch",
 		"action":"search",
-		"query": ":query"		
+		"query": ":query"
     }
   },
-  
+
   {
   	"route":"/:controller/action/:action",
     "method":"post",
@@ -77,7 +86,7 @@
         "action":":action"
     }
   },
-  
+
   {
   	"route":"/:controller/action/:action",
     "method":"put",
@@ -86,7 +95,7 @@
         "action":":action"
     }
   },
-  
+
   {
   	"route":"/:controller/action/:action",
     "method":"get",
@@ -131,7 +140,7 @@
         "action":"rebuild"
     }
   },
-  
+
   {
     "route":"/Admin/clearCache",
     "method":"get",
@@ -188,7 +197,7 @@
 		"id":":id"
     }
   },
-  
+
   {
   	"route":"/:controller/:id",
     "method":"delete",
@@ -198,7 +207,7 @@
 		"id":":id"
     }
   },
-  
+
   {
   	"route":"/:controller/:id/stream",
     "method":"get",
@@ -209,7 +218,7 @@
 		"scope":":controller"
     }
   },
-  
+
   {
   	"route":"/:controller/:id/subscription",
     "method":"put",
@@ -219,7 +228,7 @@
         "action":"follow"
     }
   },
-  
+
   {
   	"route":"/:controller/:id/subscription",
     "method":"delete",
@@ -240,7 +249,7 @@
 		"link":":link"
     }
   },
-  
+
   {
   	"route":"/:controller/:id/:link",
     "method":"post",
@@ -251,7 +260,7 @@
 		"link":":link"
     }
   },
-  
+
   {
   	"route":"/:controller/:id/:link",
     "method":"delete",
@@ -261,7 +270,7 @@
 		"id":":id",
 		"link":":link"
     }
-  } 
-  
+  }
+
 
 ]
