@@ -43,7 +43,7 @@ class Email extends Record
 	protected function getPreferences()
 	{
 		return $this->injections['preferences'];
-	}
+	}	
 	
 	public function createEntity($data)
 	{
@@ -52,18 +52,10 @@ class Email extends Record
 		if ($entity && $entity->get('status') == 'Sending') {
 			$emailSender = $this->getMailSender();
 			
-			if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {				
-				$smtpParams = array();				
-				$smtpParams['server'] = $this->getPreferences()->get('smtpServer');
-				if (!empty($smtpParams['server'])) {	
-					$smtpParams['fromName'] = $this->getUser()->get('name');
-					$smtpParams['port'] = $this->getPreferences()->get('smtpPort');
-					$smtpParams['server'] = $this->getPreferences()->get('smtpServer');	
-					$smtpParams['auth'] = $this->getPreferences()->get('smtpAuth');
-					$smtpParams['security'] = $this->getPreferences()->get('smtpSecurity');
-					$smtpParams['username'] = $this->getPreferences()->get('smtpUsername');
-					$smtpParams['password'] = $this->getPreferences()->get('smtpPassword');
-									
+			if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {
+				$smtpParams = $this->getPreferences()->getSmtpParams();												
+				if ($smtpParams) {
+					$smtpParams['fromName'] = $this->getUser()->get('name');									
 					$emailSender->useSmtp($smtpParams);
 				}
 			} else {
