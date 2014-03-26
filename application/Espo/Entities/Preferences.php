@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Entities;
 
@@ -27,11 +27,11 @@ class Preferences extends \Espo\Core\ORM\Entity
 
 	public function getSmtpParams()
 	{
-		$smtpParams = array();				
+		$smtpParams = array();
 		$smtpParams['server'] = $this->get('smtpServer');
 		if ($smtpParams['server']) {
 			$smtpParams['port'] = $this->get('smtpPort');
-			$smtpParams['server'] = $this->get('smtpServer');	
+			$smtpParams['server'] = $this->get('smtpServer');
 			$smtpParams['auth'] = $this->get('smtpAuth');
 			$smtpParams['security'] = $this->get('smtpSecurity');
 			$smtpParams['username'] = $this->get('smtpUsername');
@@ -40,7 +40,6 @@ class Preferences extends \Espo\Core\ORM\Entity
 		} else {
 			return false;
 		}
-	}	
-	
+	}
 }
 

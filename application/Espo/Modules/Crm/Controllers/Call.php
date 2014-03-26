@@ -22,7 +22,30 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\NotFound;
+
 class Call extends \Espo\Core\Controllers\Record
 {
+
+	public function actionSendInvitations($params, $data)
+	{		
+		if (empty($data['id'])) {
+    		throw new BadRequest();
+		}
+		
+		$entity = $this->getRecordService()->getEntity($data['id']);
+		
+		if (!$entity) {
+			throw new NotFound();
+		}	
+		
+		if (!$this->getAcl()->check($entity, 'edit')) {
+			throw new Forbidden();
+		}
+		
+		return $this->getRecordService()->sendInvitations($entity);
+	}
 
 }

@@ -29,6 +29,86 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Meeting extends \Espo\Services\Record
 {
+	protected function init()
+	{
+		$this->dependencies[] = 'mailSender';
+		$this->dependencies[] = 'preferences';
+		$this->dependencies[] = 'i18n';
+	}
+	
+	protected function getMailSender()
+	{
+		return $this->injections['mailSender'];
+	}
+
+	protected function getPreferences()
+	{
+		return $this->injections['preferences'];
+	}
+	
+	protected function getI18n()
+	{
+		return $this->injections['i18n'];
+	}
+	
+	
+	protected function parseInvitationTemplate($contents, $entity, $invitee = null)
+	{
+		$contents = str_replace('{name}', $entity->get('name'), $contents);
+		$contents = str_replace('{activityType}', strtolower($this->getI18n()->translate($entity->getEntityName(), 'scopeNames')), $contents);
+		$contents = str_replace('{dateStart}', $entity->get('dateStart'), $contents);
+		return $contents;
+	}
+	
+	protected function sendInvitation(Entity $entity, Entity $invitee)
+	{
+		$email = $this->getEntityManager()->getEntity('Email');
+		$email->set('to', $invitee->get('emailAddress'));
+		
+		$subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.tpl';
+		if (!file_exists($subjectTplFileName)) {
+			$subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.tpl';
+		}		
+		$subjectTpl = file_get_contents($subjectTplFileName);
+		
+		$bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.tpl';
+		if (!file_exists($bodyTplFileName)) {
+			$bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.tpl';
+		}		
+		$bodyTpl = file_get_contents($bodyTplFileName);
+		
+		$subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee);
+		$body = $this->parseInvitationTemplate($bodyTpl, $entity, $invitee);
+		
+		$email->set('subject', $subject);
+		$email->set('body', $body);
+		$email->set('isHtml', true);
+		
+		$emailSender = $this->getMailSender();
+		
+		$emailSender->send($email);		
+	}
+	
+	public function sendInvitations(Entity $entity)
+	{	
+		$users = $entity->get('users');
+		foreach ($users as $user) {
+			$this->sendInvitation($entity, $user);
+		}
+		
+		$contacts = $entity->get('contacts');
+		foreach ($contacts as $contact) {
+			$this->sendInvitation($entity, $contact);
+		}
+		
+		$leads = $entity->get('leads');
+		foreach ($leads as $lead) {
+			$this->sendInvitation($entity, $lead);
+		}
+		
+		return true;		
+	}
+	
 	protected function storeEntity(Entity $entity)
 	{
 		$assignedUserId = $entity->get('assignedUserId');
