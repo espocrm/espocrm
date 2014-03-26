@@ -6,7 +6,8 @@
         },
         "job": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "view": "ScheduledJob.Fields.Job"
         },
         "status": {
             "type": "enum",
@@ -14,7 +15,8 @@
         },
         "scheduling": {
         	"type": "varchar",
-            "required": true        	
+            "required": true,
+            "view": "ScheduledJob.Fields.Scheduling"    	
 		},
         "lastRun": {
             "type": "datetime",
