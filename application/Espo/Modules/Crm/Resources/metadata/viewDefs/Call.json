@@ -1,4 +1,7 @@
 {
+   "views":{
+      "detail":"Crm:Call.Detail"
+   },
    "sidePanels":{
       "detail":[
          {

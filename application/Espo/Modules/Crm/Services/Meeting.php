@@ -52,19 +52,37 @@ class Meeting extends \Espo\Services\Record
 	}
 	
 	
-	protected function parseInvitationTemplate($contents, $entity, $invitee = null)
+	protected function parseInvitationTemplate($contents, $entity, $invitee = null, $uid = null)
 	{
 		$contents = str_replace('{name}', $entity->get('name'), $contents);
-		$contents = str_replace('{activityType}', strtolower($this->getI18n()->translate($entity->getEntityName(), 'scopeNames')), $contents);
+		$contents = str_replace('{eventType}', strtolower($this->getI18n()->translate($entity->getEntityName(), 'scopeNames')), $contents);		
 		$contents = str_replace('{dateStart}', $entity->get('dateStart'), $contents);
+		if ($invitee) {
+			$contents = str_replace('{inviteeName}', $invitee->get('name'), $contents);
+		}
+		if ($uid) {
+			$siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
+			$contents = str_replace('{acceptLink}', $siteUrl . '?entryPoint=acceptEvent&uid=' . $uid->id, $contents);
+			$contents = str_replace('{declineLink}', $siteUrl . '?entryPoint=declineEvent&uid=' . $uid->id, $contents);
+		}
 		return $contents;
 	}
 	
 	protected function sendInvitation(Entity $entity, Entity $invitee)
 	{
+		
+		$uid = $this->getEntityManager()->getEntity('UniqueId');		
+		$uid->set('data', json_encode(array(	
+			'eventType' => $entity->getEntityName(),
+			'eventId' => $entity->id,
+			'inviteeId' => $invitee->id,
+			'inviteeType' => $invitee->getEntityName(),
+		)));
+		$this->getEntityManager()->saveEntity($uid);
+		
 		$email = $this->getEntityManager()->getEntity('Email');
 		$email->set('to', $invitee->get('emailAddress'));
-		
+						
 		$subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.tpl';
 		if (!file_exists($subjectTplFileName)) {
 			$subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.tpl';
@@ -77,8 +95,8 @@ class Meeting extends \Espo\Services\Record
 		}		
 		$bodyTpl = file_get_contents($bodyTplFileName);
 		
-		$subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee);
-		$body = $this->parseInvitationTemplate($bodyTpl, $entity, $invitee);
+		$subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee, $uid);
+		$body = $this->parseInvitationTemplate($bodyTpl, $entity, $invitee, $uid);
 		
 		$email->set('subject', $subject);
 		$email->set('body', $body);
