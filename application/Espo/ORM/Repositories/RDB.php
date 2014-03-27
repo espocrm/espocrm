@@ -90,6 +90,7 @@ class RDB extends \Espo\ORM\Repository
 	{
 		$entity = $this->entityFactory->create($this->entityName);
 		$entity->setIsNew(true);
+		$entity->populateDefaults();
 		return $entity;	
 	}
 	

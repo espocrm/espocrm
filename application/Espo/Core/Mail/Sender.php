@@ -191,12 +191,17 @@ class Sender
 
 		$body = new MimeMessage;
 		$parts = array();
-
-		$bodyPart = new MimePart($email->get('body'));
+		
 
 		if ($email->get('isHtml')) {
+			$bodyPart = new MimePart($email->get('body'));
 			$bodyPart->type = 'text/html';
-		} else {
+		} else {			
+			if ($email->get('bodyPlain')) {
+				$bodyPart = new MimePart($email->get('bodyPlain'));
+			} else {
+				$bodyPart = new MimePart($email->get('body'));
+			}
 			$bodyPart->type = 'text/plain';
 		}
 

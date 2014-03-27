@@ -20,26 +20,17 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Repositories;
 
-class Preferences extends \Espo\Core\ORM\Entity
+use Espo\ORM\Entity;
+
+class UniqueId extends \Espo\Core\ORM\Repositories\RDB
 {
-
-	public function getSmtpParams()
+	protected function getNewEntity()
 	{
-		$smtpParams = array();
-		$smtpParams['server'] = $this->get('smtpServer');
-		if ($smtpParams['server']) {
-			$smtpParams['port'] = $this->get('smtpPort');
-			$smtpParams['server'] = $this->get('smtpServer');
-			$smtpParams['auth'] = $this->get('smtpAuth');
-			$smtpParams['security'] = $this->get('smtpSecurity');
-			$smtpParams['username'] = $this->get('smtpUsername');
-			$smtpParams['password'] = $this->get('smtpPassword');
-			return $smtpParams;
-		} else {
-			return false;
-		}
+		$entity = parent::getNewEntity();
+		$entity->set('name', uniqid());
+		return $entity;
 	}
 }
 
