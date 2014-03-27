@@ -52,10 +52,10 @@ class Import extends \Espo\Core\Services\Base
 	
 	protected $timeFormatsMap = array(
 		'HH:mm' => 'H:i',
-		'hh:mm a' => 'G:i a',
-		'hh:mma' => 'G:ia',
-		'hh:mm A' => 'G:iA',
-		'hh:mmA' => 'G:iA',		
+		'hh:mm a' => 'h:i a',
+		'hh:mma' => 'h:ia',
+		'hh:mm A' => 'h:iA',
+		'hh:mmA' => 'h:iA',		
 	);
 	
 	protected function getSelectManagerFactory()
