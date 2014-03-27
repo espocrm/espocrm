@@ -62,13 +62,13 @@ class Meeting extends \Espo\Services\Record
 		}
 		if ($uid) {
 			$siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
-			$contents = str_replace('{acceptLink}', $siteUrl . '?entryPoint=acceptEvent&uid=' . $uid->id, $contents);
-			$contents = str_replace('{declineLink}', $siteUrl . '?entryPoint=declineEvent&uid=' . $uid->id, $contents);
+			$contents = str_replace('{acceptLink}', $siteUrl . '?entryPoint=eventConfirmation&action=accept&uid=' . $uid->get('name'), $contents);
+			$contents = str_replace('{declineLink}', $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name'), $contents);
 		}
 		return $contents;
 	}
 	
-	protected function sendInvitation(Entity $entity, Entity $invitee)
+	protected function sendInvitation(Entity $entity, Entity $invitee, $link)
 	{
 		
 		$uid = $this->getEntityManager()->getEntity('UniqueId');		
@@ -77,6 +77,7 @@ class Meeting extends \Espo\Services\Record
 			'eventId' => $entity->id,
 			'inviteeId' => $invitee->id,
 			'inviteeType' => $invitee->getEntityName(),
+			'link' => $link
 		)));
 		$this->getEntityManager()->saveEntity($uid);
 		
@@ -111,17 +112,17 @@ class Meeting extends \Espo\Services\Record
 	{	
 		$users = $entity->get('users');
 		foreach ($users as $user) {
-			$this->sendInvitation($entity, $user);
+			$this->sendInvitation($entity, $user, 'users');
 		}
 		
 		$contacts = $entity->get('contacts');
 		foreach ($contacts as $contact) {
-			$this->sendInvitation($entity, $contact);
+			$this->sendInvitation($entity, $contact, 'contacts');
 		}
 		
 		$leads = $entity->get('leads');
 		foreach ($leads as $lead) {
-			$this->sendInvitation($entity, $lead);
+			$this->sendInvitation($entity, $lead, 'leads');
 		}
 		
 		return true;		
