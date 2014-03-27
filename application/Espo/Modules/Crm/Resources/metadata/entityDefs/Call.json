@@ -99,17 +99,38 @@
         "users": {
             "type": "hasMany",
             "entity": "User",
-            "foreign": "calls"
+            "foreign": "calls",
+            "additionalColumns": {
+            	"status": {
+            		"type": "varchar",
+            		"len": "36",
+            		"default": "None"
+            	}
+            }
         },
         "contacts": {
             "type": "hasMany",
             "entity": "Contact",
-            "foreign": "calls"
+            "foreign": "calls",
+            "additionalColumns": {
+            	"status": {
+            		"type": "varchar",
+            		"len": "36",
+            		"default": "None"
+            	}
+            }
         },
         "leads": {
             "type": "hasMany",
             "entity": "Lead",
-            "foreign": "calls"
+            "foreign": "calls",
+            "additionalColumns": {
+            	"status": {
+            		"type": "varchar",
+            		"len": "36",
+            		"default": "None"
+            	}
+            }
         },
         "parent": {
             "type": "belongsToParent",
