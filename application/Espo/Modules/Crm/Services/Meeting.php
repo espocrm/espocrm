@@ -34,6 +34,7 @@ class Meeting extends \Espo\Services\Record
 		$this->dependencies[] = 'mailSender';
 		$this->dependencies[] = 'preferences';
 		$this->dependencies[] = 'i18n';
+		$this->dependencies[] = 'dateTime';
 	}
 	
 	protected function getMailSender()
@@ -51,12 +52,16 @@ class Meeting extends \Espo\Services\Record
 		return $this->injections['i18n'];
 	}
 	
+	protected function getDateTime()
+	{
+		return $this->injections['dateTime'];
+	}	
 	
 	protected function parseInvitationTemplate($contents, $entity, $invitee = null, $uid = null)
-	{
+	{		
 		$contents = str_replace('{name}', $entity->get('name'), $contents);
 		$contents = str_replace('{eventType}', strtolower($this->getI18n()->translate($entity->getEntityName(), 'scopeNames')), $contents);		
-		$contents = str_replace('{dateStart}', $entity->get('dateStart'), $contents);
+		$contents = str_replace('{dateStart}', $this->getDateTime()->convertSystemDateTimeToGlobal($entity->get('dateStart')), $contents);
 		if ($invitee) {
 			$contents = str_replace('{inviteeName}', $invitee->get('name'), $contents);
 		}

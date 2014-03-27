@@ -114,6 +114,15 @@ class Container
 			$this->get('config')
 		);
     }
+    
+	private function loadDateTime()
+    {
+    	return new \Espo\Core\Utils\DateTime(
+			$this->get('config')->get('dateFormat'),
+			$this->get('config')->get('timeFormat'),
+			$this->get('config')->get('timeZone')
+		);
+    }
 
 	private function loadServiceFactory()
     {
