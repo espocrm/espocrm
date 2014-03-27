@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
 
@@ -28,11 +28,16 @@ class Base
 {
 	private $metadata;
 
+	private $params;
+
+	private $foreignParams;
+
 	protected $allowParams = array();
+
 
 	public function __construct(\Espo\Core\Utils\Metadata $metadata)
 	{
-    	$this->metadata = $metadata;
+		$this->metadata = $metadata;
 	}
 
 	protected function getMetadata()
@@ -40,48 +45,93 @@ class Base
 		return $this->metadata;
 	}
 
+	protected function getParams()
+	{
+		return $this->params;
+	}
+
+	protected function getForeignParams()
+	{
+		return $this->foreignParams;
+	}
+
+	protected function setParams(array $params)
+	{
+		$this->params = $params;
+	}
+
+	protected function setForeignParams(array $foreignParams)
+	{
+		$this->foreignParams = $foreignParams;
+	}
+
 
 	public function process($params, $foreignParams)
-	{				
-		$load = $this->load($params, $foreignParams);		
+	{
+		$this->setParams($params);
+		$this->setForeignParams($foreignParams);
 
-		$load = $this->mergeAllowedParams($load, $params);
+		$loads = $this->load($params, $foreignParams);
 
-		return $load;		
+		$loads = $this->mergeAllowedParams($loads);
+
+		return $loads;
 	}
 
+	private function mergeAllowedParams($loads)
+	{
+		$params = $this->getParams();
 
-	private function mergeAllowedParams($load, $params)
-	{		
 		if (!empty($this->allowParams)) {
-			$linkParams = &$load[$params['entityName']] ['relations'] [$params['link']['name']];
-		
-			foreach ($this->allowParams as $name) {
-				if (isset($params['link']['params'][$name]) && !isset($linkParams[$name])) {
-					$linkParams[$name] = $params['link']['params'][$name];	
-				}
-			} 
-		}		
+			$linkParams = &$loads[$params['entityName']] ['relations'] [$params['link']['name']];
 
-		return $load;
+			foreach ($this->allowParams as $name) {
+
+				$additionalParrams = $this->getAllowedAdditionalParams($name);
+
+				if (isset($additionalParrams) && !isset($linkParams[$name])) {
+					$linkParams[$name] = $additionalParrams;
+				}
+			}
+		}
+
+		return $loads;
 	}
 
+	private function getAllowedAdditionalParams($allowedItemName)
+	{
+		$params = $this->getParams();
+		$foreignParams = $this->getForeignParams();
 
+		$linkParams = isset($params['link']['params'][$allowedItemName]) ? $params['link']['params'][$allowedItemName] : null;
+		$foreignLinkParams = isset($foreignParams['link']['params'][$allowedItemName]) ? $foreignParams['link']['params'][$allowedItemName] : null;
 
+		$additionalParrams = null;
 
-    protected function getForeignField($name, $entityName)
+		if (isset($linkParams) && isset($foreignLinkParams)) {
+			$additionalParrams = Util::merge($linkParams, $foreignLinkParams);
+		} else if (isset($linkParams)) {
+			$additionalParrams = $linkParams;
+		} else if (isset($foreignLinkParams)) {
+			$additionalParrams = $foreignLinkParams;
+		}
+
+		return $additionalParrams;
+	}
+
+	protected function getForeignField($name, $entityName)
 	{
 		$foreignField = $this->getMetadata()->get('entityDefs.'.$entityName.'.fields.'.$name);
 
 		if ($foreignField['type'] != 'varchar') {
-        	$fieldDefs = $this->getMetadata()->get('fields.'.$foreignField['type']);
-            $naming = isset($fieldDefs['naming']) ? $fieldDefs['naming'] : 'postfix';
+			$fieldDefs = $this->getMetadata()->get('fields.'.$foreignField['type']);
+			$naming = isset($fieldDefs['naming']) ? $fieldDefs['naming'] : 'postfix';
 
 			if (isset($fieldDefs['actualFields']) && is_array($fieldDefs['actualFields'])) {
-            	$foreignFieldArray = array();
+				$foreignFieldArray = array();
 				foreach($fieldDefs['actualFields'] as $fieldName) {
 					if ($fieldName != 'salutation') {
-                    	$foreignFieldArray[] = Util::getNaming($name, $fieldName, $naming);
+						$foreignFieldArray[] = Util::getNaming($name, $fieldName, $naming);
 					}
 				}
 				return explode('|', implode('| |', $foreignFieldArray)); //add an empty string between items
