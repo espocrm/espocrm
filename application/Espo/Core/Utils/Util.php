@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils;
 
@@ -29,7 +29,7 @@ class Util
 	 * @var string - default directory separator
 	 */
 	protected static $separator = DIRECTORY_SEPARATOR;
-	
+
 	protected static $reservedWords = array('Case');
 
 
@@ -128,7 +128,7 @@ class Util
 		foreach($mainArray as $maKey => $maVal) {
 			$found = false;
 			foreach($array as $aKey => $aVal) {
-				if ((string)$maKey == (string)$aKey){  
+				if ((string)$maKey == (string)$aKey){
 					$found = true;
 					if (is_array($maVal) && is_array($aVal)){
 						$array[$maKey] = static::merge($aVal, $maVal);
@@ -223,7 +223,7 @@ class Util
 
         return is_array($object) ? array_map("static::objectToArray", $object) : $object;
 	}
-	
+
 	/**
      * Appends 'Obj' if name is reserved PHP word.
 	 *
@@ -294,21 +294,27 @@ class Util
      * Unset content items defined in the unset.json
 	 *
 	 * @param array $content
-	 * @param array $unsets in format
+	 * @param string | array $unsets in format
 	 *   array(
-	 * 		'EntityName1' => array( 'unset1', 'unset2' ),                             
-	 * 		'EntityName2' => array( 'unset1', 'unset2' ),                             
+	 * 		'EntityName1' => array( 'unset1', 'unset2' ),
+	 * 		'EntityName2' => array( 'unset1', 'unset2' ),
 	 *  )
 	 * 	OR
 	 * 	array('EntityName1.unset1', 'EntityName1.unset2', .....)
+	 * 	OR
+	 * 	'EntityName1.unset1'
 	 *
 	 * @return array
 	 */
-	public static function unsetInArray(array $content, array $unsets)
+	public static function unsetInArray(array $content, $unsets)
 	{
+		if (is_string($unsets))	{
+			$unsets = (array) $unsets;
+		}
+
 		foreach($unsets as $rootKey => $unsetItem){
 			$unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
-			
+
 			foreach($unsetItem as $unsetSett){
 				if (!empty($unsetSett)){
 					$keyItems = explode('.', $unsetSett);
@@ -320,7 +326,7 @@ class Util
 					$currVal = "if (isset({$currVal})) unset({$currVal});";
 					eval($currVal);
 				}
-			}			
+			}
 		}
 
 		return $content;
@@ -329,9 +335,9 @@ class Util
 
 	/**
 	 * Get class name from the file path
-	 * 
+	 *
 	 * @param  string $filePath
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function getClassName($filePath)
@@ -341,16 +347,16 @@ class Util
 		$className = '\\'.static::toFormat($className, '\\');
 
 		return $className;
-	}	
+	}
 
 
 	/**
-	 * Return values of defined $key. 
-	 * 
-	 * @param  array $array   
+	 * Return values of defined $key.
+	 *
+	 * @param  array $array
 	 * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
-	 * @param  mixed $returns 
-	 * @return mixed 
+	 * @param  mixed $returns
+	 * @return mixed
 	 */
 	public static function getValueByKey(array $array, $key = null, $returns = null)
 	{

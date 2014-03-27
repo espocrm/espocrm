@@ -193,6 +193,13 @@ class Container
 		);
 	}
 
+	private function loadDataManager()
+	{
+		return new \Espo\Core\DataManager(
+			$this
+		);
+	}
+
 	public function setUser($user)
 	{
 		$this->data['user'] = $user;
