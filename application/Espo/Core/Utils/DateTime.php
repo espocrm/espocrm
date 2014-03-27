@@ -39,7 +39,8 @@ class DateTime
 	protected $timeFormats = array(
 		'HH:mm' => 'H:i',
 		'hh:mm A' => 'h:i A',
-		'hh:mm a' => 'h:i a',
+		'hh:mm a' => 'h:ia',
+		'hh:mmA' => 'h:iA',
 	);
 	
 	public function __construct($dateFormat = 'YYYY-MM-DD', $timeFormat = 'HH:mm', $timeZone = 'UTC')

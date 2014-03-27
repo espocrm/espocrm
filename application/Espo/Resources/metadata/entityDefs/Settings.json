@@ -30,7 +30,7 @@
         },
         "timeFormat": {
             "type": "enum",
-            "options": ["HH:mm", "hh:mm A", "hh:mm a"],
+            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
             "default": "HH:mm"
         },
         "weekStart": {
