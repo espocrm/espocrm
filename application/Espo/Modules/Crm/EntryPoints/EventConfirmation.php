@@ -48,8 +48,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
 		$uniqueId = $this->getEntityManager()->getRepository('UniqueId')->where(array('name' => $uid))->findOne();
 		
 		if (!$uniqueId) {
-			//throw new NotFound();
-			echo "Link is not available";
+			throw new NotFound();
 			return;
 		}
 		
