@@ -18,13 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils;
 
 class Metadata
 {
-	protected $meta = null;	
+	protected $meta = null;
 
 	protected $scopes = array();
 
@@ -34,17 +34,17 @@ class Metadata
 	private $converter;
 
 	/**
-     * @var string - uses for loading default values
-     */
+	 * @var string - uses for loading default values
+	 */
 	private $name = 'metadata';
 
-	private $cacheFile = 'data/cache/application/metadata.php';	
+	private $cacheFile = 'data/cache/application/metadata.php';
 
 	private $paths = array(
 		'corePath' => 'application/Espo/Resources/metadata',
-    	'modulePath' => 'application/Espo/Modules/{*}/Resources/metadata',
-    	'customPath' => 'custom/Espo/Custom/Resources/metadata',
-	);  
+		'modulePath' => 'application/Espo/Modules/{*}/Resources/metadata',
+		'customPath' => 'custom/Espo/Custom/Resources/metadata',
+	);
 
 
 	protected $ormMeta = null;
@@ -52,7 +52,7 @@ class Metadata
 	private $ormCacheFile = 'data/cache/application/ormMetadata.php';
 
 
-	
+
 	private $moduleList = null;
 
 	public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
@@ -62,8 +62,8 @@ class Metadata
 
 		$this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
 
-		$this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);		
-		
+		$this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
+
 		$this->init(!$this->isCached());
 	}
 
@@ -78,7 +78,7 @@ class Metadata
 		return $this->unifier;
 	}
 
-    protected function getFileManager()
+	protected function getFileManager()
 	{
 		return $this->fileManager;
 	}
@@ -91,10 +91,10 @@ class Metadata
 
 	public function isCached()
 	{
-    	if (!$this->getConfig()->get('useCache')) {
-           	return false;
+		if (!$this->getConfig()->get('useCache')) {
+			return false;
 		}
-	
+
 		if (file_exists($this->cacheFile)) {
 			return true;
 		}
@@ -103,9 +103,9 @@ class Metadata
 	}
 
 
-    public function init($reload = false)
+	public function init($reload = false)
 	{
-       	$data = $this->getMetadataOnly(false, $reload);
+		$data = $this->getMetadataOnly(false, $reload);
 		if ($data === false) {
 			$GLOBALS['log']->emergency('Metadata:init() - metadata has not been created');
 		}
@@ -113,17 +113,17 @@ class Metadata
 		$this->meta = $data;
 
 		if ($reload) {
-        	//save medatada to a cache file    
-	        $isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $data);
+			//save medatada to a cache file
+			$isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $data);
 			if ($isSaved === false) {
-	        	$GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
+				$GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
 			}
 		}
 	}
 
 	/**
 	 * Get unified metadata
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getData()
@@ -137,7 +137,7 @@ class Metadata
 
 
 	/**
-    * Get Metadata
+	* Get Metadata
 	*
 	* @param string $key
 	* @param mixed $return
@@ -146,12 +146,12 @@ class Metadata
 	*/
 	public function get($key = null, $returns = null)
 	{
-		return Util::getValueByKey($this->getData(), $key, $returns);        
+		return Util::getValueByKey($this->getData(), $key, $returns);
 	}
 
 
 	/**
-    * Get All Metadata context
+	* Get All Metadata context
 	*
 	* @param $isJSON
 	* @param bool $reload
@@ -165,15 +165,15 @@ class Metadata
 		}
 
 		if ($isJSON) {
-        	return Json::encode($this->meta);
-        }
+			return Json::encode($this->meta);
+		}
 		return $this->meta;
 	}
 
 
 
 	/**
-    * Get Metadata only without saving it to the a file and database sync
+	* Get Metadata only without saving it to the a file and database sync
 	*
 	* @param $isJSON
 	* @param bool $reload
@@ -184,36 +184,36 @@ class Metadata
 	{
 		$data = false;
 		if (!file_exists($this->cacheFile) || $reload) {
-        	$data = $this->getUnifier()->unify($this->name, $this->paths, true);
+			$data = $this->getUnifier()->unify($this->name, $this->paths, true);
 
 			if ($data === false) {
-            	$GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
+				$GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
 			}
 
-			$data = $this->setLanguageFromConfig($data);			
+			$data = $this->setLanguageFromConfig($data);
 		}
-        else if (file_exists($this->cacheFile)) {
+		else if (file_exists($this->cacheFile)) {
 			$data = $this->getFileManager()->getContents($this->cacheFile);
 		}
 
 		if ($isJSON) {
-        	$data = Json::encode($data);
-        }
+			$data = Json::encode($data);
+		}
 
 		return $data;
 	}
 
 	/**
 	 * Set language list and default for Settings, Preferences metadata
-	 * 
+	 *
 	 * @param array $data Meta
 	 * @return array $data
 	 */
 	protected function setLanguageFromConfig($data)
 	{
 		$entityList = array(
-			'Settings',	
-			'Preferences',	
+			'Settings',
+			'Preferences',
 		);
 
 		$languageList = $this->getConfig()->get('languageList');
@@ -221,20 +221,19 @@ class Metadata
 
 		foreach ($entityList as $entityName) {
 			if (isset($data['entityDefs'][$entityName]['fields']['language'])) {
-				$data['entityDefs'][$entityName]['fields']['language']['options'] = $languageList;	
-				$data['entityDefs'][$entityName]['fields']['language']['default'] = $language;	
-			}	
+				$data['entityDefs'][$entityName]['fields']['language']['options'] = $languageList;
+				$data['entityDefs'][$entityName]['fields']['language']['default'] = $language;
+			}
 		}
-	
+
 		return $data;
 	}
-
 
 
 	/**
 	* Set Metadata data
 	* Ex. $type= menu, $scope= Account then will be created a file metadataFolder/menu/Account.json
-    *
+	*
 	* @param JSON string $data
 	* @param string $type - ex. menu
 	* @param string $scope - Account
@@ -243,39 +242,39 @@ class Metadata
 	*/
 	public function set($data, $type, $scope)
 	{
-		$path = $this->paths['corePath'];
-		$moduleName = $this->getScopeModuleName($scope);
+		$path = $this->paths['customPath'];
 
-		if ($moduleName !== false) {
-        	$path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-		}	
+		if (file_exists($path)) {
+			$result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
+		} else {
+			$result = $this->getFileManager()->putContentsJSON(array($path, $type, $scope.'.json'), $data);
+		}
 
-		$result= $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
+		$this->init(true);
 
         return $result;
 	}
 
-
-	public function getOrmMetadata()
+	public function getOrmMetadata($reload = false)
 	{
-		if (!empty($this->ormMeta)) {
+		if (!empty($this->ormMeta) && !$reload) {
 			return $this->ormMeta;
 		}
 
-		if (!file_exists($this->ormCacheFile) || !$this->getConfig()->get('useCache')) {
-        	$this->getConverter()->process();
+		if (!file_exists($this->ormCacheFile) || !$this->getConfig()->get('useCache') || $reload) {
+			$this->getConverter()->process();
 		}
 
 		$this->ormMeta = $this->getFileManager()->getContents($this->ormCacheFile);
 
-        return $this->ormMeta;
+		return $this->ormMeta;
 	}
 
 	public function setOrmMetadata(array $ormMeta)
 	{
 		$result = $this->getFileManager()->putContentsPHP($this->ormCacheFile, $ormMeta);
-		if ($result == false) {		 
-         	throw new \Espo\Core\Exceptions\Error('Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
+		if ($result == false) {
+			throw new \Espo\Core\Exceptions\Error('Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
 		}
 
 		$this->ormMeta = $ormMeta;
@@ -283,10 +282,9 @@ class Metadata
 		return $result;
 	}
 
-
-    /**
-     * Get Entity path, ex. Espo.Entities.Account or Modules\Crm\Entities\MyModule
-     *
+	/**
+	 * Get Entity path, ex. Espo.Entities.Account or Modules\Crm\Entities\MyModule
+	 *
 	 * @param string $entityName
 	 * @param bool $delim - delimiter
 	 *
@@ -298,7 +296,7 @@ class Metadata
 
 		return implode($delim, array($path, 'Entities', Util::normilizeClassName(ucfirst($entityName))));
 	}
-	
+
 	public function getRepositoryPath($entityName, $delim = '\\')
 	{
 		$path = $this->getScopePath($entityName, $delim);
@@ -308,29 +306,29 @@ class Metadata
 
 
 	/**
-     * Get Scopes
+	 * Get Scopes
 	 *
 	 * @return array
 	 */
 	public function getScopes()
 	{
-    	if (!empty($this->scopes)) {
-    		return $this->scopes;
-    	}
+		if (!empty($this->scopes)) {
+			return $this->scopes;
+		}
 
 		$metadata = $this->getMetadataOnly(false);
 
-        $scopes = array();
+		$scopes = array();
 		foreach ($metadata['scopes'] as $name => $details) {
-        	$scopes[$name] = isset($details['module']) ? $details['module'] : false;
+			$scopes[$name] = isset($details['module']) ? $details['module'] : false;
 		}
 
 		return $this->scopes = $scopes;
 	}
-	
+
 	/**
 	 * Get Module List
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getModuleList()
@@ -353,7 +351,7 @@ class Metadata
 
 
 	/**
-     * Get module name if it's a custom module or empty string for core entity
+	 * Get module name if it's a custom module or empty string for core entity
 	 *
 	 * @param string $scopeName
 	 *
@@ -361,13 +359,13 @@ class Metadata
 	 */
 	public function getScopeModuleName($scopeName)
 	{
-    	return $this->get('scopes.' . $scopeName . '.module', false);
+		return $this->get('scopes.' . $scopeName . '.module', false);
 	}
 
 
 	/**
-     * Get Scope path, ex. "Modules/Crm" for Account
-     *
+	 * Get Scope path, ex. "Modules/Crm" for Account
+	 *
 	 * @param string $scopeName
 	 * @param string $delim - delimiter
 	 *
@@ -375,19 +373,19 @@ class Metadata
 	 */
 	public function getScopePath($scopeName, $delim = '/')
 	{
-    	$moduleName = $this->getScopeModuleName($scopeName);
+		$moduleName = $this->getScopeModuleName($scopeName);
 
-    	$path = ($moduleName !== false) ? 'Espo/Modules/'.$moduleName : 'Espo';
+		$path = ($moduleName !== false) ? 'Espo/Modules/'.$moduleName : 'Espo';
 
 		if ($delim != '/') {
-           $path = str_replace('/', $delim, $path);
+		   $path = str_replace('/', $delim, $path);
 		}
 
 		return $path;
 	}
 
 	/**
-      * Check if scope exists
+	  * Check if scope exists
 	  *
 	  * @param string $scopeName
 	  *
@@ -395,7 +393,7 @@ class Metadata
 	  */
 	public function isScopeExists($scopeName)
 	{
-    	$scopeModuleMap= $this->getScopes();
+		$scopeModuleMap= $this->getScopes();
 
 		$lowerEntityName= strtolower($scopeName);
 		foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
@@ -408,6 +406,3 @@ class Metadata
 	}
 
 }
-
-
-

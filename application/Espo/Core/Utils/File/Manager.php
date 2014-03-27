@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\File;
 
@@ -103,16 +103,16 @@ class Manager
      * Convert file list to a single array
 	 *
 	 * @param aray $fileList
-	 * @param string $parentDirName 
+	 * @param string $parentDirName
 	 *
 	 * @return aray
 	 */
 	protected function getSingeFileList(array $fileList, $parentDirName = '')
 	{
 		$singleFileList = array();
-    	foreach($fileList as $dirName => $fileName) {		
-		
-        	if (is_array($fileName)) {		
+    	foreach($fileList as $dirName => $fileName) {
+
+        	if (is_array($fileName)) {
 			$currentDir = Utils\Util::concatPath($parentDirName, $dirName);
             		$singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $currentDir));
         	} else {
@@ -125,17 +125,17 @@ class Manager
 
 	/**
 	 * Reads entire file into a string
-	 * 
-	 * @param  string | array  $paths  Ex. 'path.php' OR array('dir', 'path.php')
-	 * @param  boolean $useIncludePath 
-	 * @param  resource  $context          
-	 * @param  integer $offset           	        
-	 * @param  integer $maxlen           	        
-	 * @return mixed                    
+	 *
+	 * @param  string | array  $path  Ex. 'path.php' OR array('dir', 'path.php')
+	 * @param  boolean $useIncludePath
+	 * @param  resource  $context
+	 * @param  integer $offset
+	 * @param  integer $maxlen
+	 * @return mixed
 	 */
-	public function getContents($paths, $useIncludePath = false, $context = null, $offset = -1, $maxlen = null)
+	public function getContents($path, $useIncludePath = false, $context = null, $offset = -1, $maxlen = null)
 	{
-		$fullPath = $this->concatPaths($paths);
+		$fullPath = $this->concatPaths($path);
 
 		if (file_exists($fullPath)) {
 
@@ -145,79 +145,81 @@ class Manager
 				if (isset($maxlen)) {
 					return file_get_contents($fullPath, $useIncludePath, $context, $offset, $maxlen);
 				} else {
-					return file_get_contents($fullPath, $useIncludePath, $context, $offset);	
-				}            	
+					return file_get_contents($fullPath, $useIncludePath, $context, $offset);
+				}
 			}
 
 		}
 
-		return false;		
+		return false;
 	}
 
 
 	/**
 	 * Write data to a file
-	 * 
-	 * @param  string | array  $paths   
-	 * @param  mixed  $data    
-	 * @param  integer $flags   
-	 * @param  resource  $context 
-	 * 
-	 * @return bool           
+	 *
+	 * @param  string | array  $path
+	 * @param  mixed  $data
+	 * @param  integer $flags
+	 * @param  resource  $context
+	 *
+	 * @return bool
 	 */
-	public function putContents($paths, $data, $flags = 0, $context = null)
+	public function putContents($path, $data, $flags = 0, $context = null)
 	{
-		$fullPath = $this->concatPaths($paths); //todo remove after changing the params
+		$fullPath = $this->concatPaths($path); //todo remove after changing the params
 
 		if ($this->checkCreateFile($fullPath) === false) {
 			return false;
 		}
 
-        return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);		
+        return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
 	}
 
 	/**
      * Save PHP content to file
 	 *
-	 * @param string | array $paths
-	 * @param string $data	 
+	 * @param string | array $path
+	 * @param string $data
 	 *
 	 * @return bool
 	 */
-	public function putContentsPHP($paths, $data)
+	public function putContentsPHP($path, $data)
 	{
-		return $this->putContents($paths, $this->getPHPFormat($data));
+		return $this->putContents($path, $this->getPHPFormat($data));
 	}
 
 	/**
      * Save JSON content to file
 	 *
-	 * @param string | array $paths
+	 * @param string | array $path
 	 * @param string $data
+	 * @param  integer $flags
+	 * @param  resource  $context
 	 *
 	 * @return bool
 	 */
-	public function putContentsJSON($paths, $data)
+	public function putContentsJSON($path, $data)
 	{
 		if (!Utils\Json::isJSON($data)) {
-        	$data= Utils\Json::encode($data);
+        	$data = Utils\Json::encode($data);
         }
 
-		return $this->putContents($paths, $data);
+		return $this->putContents($path, $data, JSON_PRETTY_PRINT);
 	}
 
     /**
      * Merge file content and save it to a file
 	 *
-	 * @param string | array $paths
+	 * @param string | array $path
 	 * @param string $content JSON string
 	 * @param bool $isJSON
 	 *
 	 * @return bool
 	 */
-	public function mergeContents($paths, $content, $isJSON = false)
+	public function mergeContents($path, $content, $isJSON = false)
 	{
-		$fileContent= $this->getContents($paths);
+		$fileContent = $this->getContents($path);
 
 		$savedDataArray= $this->getArrayData($fileContent);
 		$newDataArray= $this->getArrayData($content);
@@ -227,21 +229,21 @@ class Manager
 	        $data= Utils\Json::encode($data);
 		}
 
-        return $this->putContents($paths, $data, JSON_PRETTY_PRINT);
+        return $this->putContents($path, $data, JSON_PRETTY_PRINT);
 	}
 
 	/**
      * Merge PHP content and save it to a file
 	 *
-	 * @param string | array $paths
+	 * @param string | array $path
 	 * @param string $content
 	 * @param bool $onlyFirstLevel - Merge only first level. Ex. current: array('test'=>array('item1', 'item2')).  $content= array('test'=>array('item1'),). Result will be array('test'=>array('item1')).
 	 *
 	 * @return bool
 	 */
-	public function mergeContentsPHP($paths, $content, $onlyFirstLevel= false)
+	public function mergeContentsPHP($path, $content, $onlyFirstLevel= false)
 	{
-        $fileContent= $this->getContents($paths);
+        $fileContent = $this->getContents($path);
 
 		$savedDataArray= $this->getArrayData($fileContent);
 		$newDataArray= $this->getArrayData($content);
@@ -255,20 +257,41 @@ class Manager
 
         $data= Utils\Util::merge($savedDataArray, $newDataArray);
 
-        return $this->putContentsPHP($paths, $data);
+        return $this->putContentsPHP($path, $data);
 	}
 
 	/**
      * Append the content to the end of the file
 	 *
-	 * @param string | array $paths
+	 * @param string | array $path
 	 * @param mixed $data
 	 *
 	 * @return bool
 	 */
-	public function appendContents($paths, $data)
+	public function appendContents($path, $data)
 	{
-		return $this->putContents($paths, $data, FILE_APPEND | LOCK_EX);		
+		return $this->putContents($path, $data, FILE_APPEND | LOCK_EX);
+	}
+
+	/**
+	 * Unset some element of content data
+	 *
+	 * @param  string | array $path
+	 * @param  array | string $unsets [description]
+	 * @return [type]         [description]
+	 */
+	public function unsetContents($path, $unsets)
+	{
+		$currentData = $this->getContents($path);
+
+		$currentDataArray= $this->getArrayData($currentData);
+		if (!is_array($currentDataArray)) {
+			return false;
+		}
+
+		$unsettedData = Utils\Util::unsetInArray($currentData, $unsets);
+
+		return $this->putContents($path, $unsettedData);
 	}
 
 
@@ -293,8 +316,8 @@ class Manager
 
 	/**
 	 * Create a new dir
-	 * 
-	 * @param  string | array $path     
+	 *
+	 * @param  string | array $path
 	 * @param  int $permission - ex. 0755
 	 * @return bool
 	 */
@@ -307,18 +330,18 @@ class Manager
 		}
 
 		if (!isset($permission)) {
-			$defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();		
+			$defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
 			$permission = (string) $defaultPermissions['dir'];
-			$permission = base_convert($permission, 8, 10);				
+			$permission = base_convert($permission, 8, 10);
 		}
 
 		try {
 			$result = mkdir($fullPath, $permission, true);
-		} catch (\Exception $e) {			
-			$GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$fullPath);	
+		} catch (\Exception $e) {
+			$GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$fullPath);
 		}
 
-		return isset($result) ? $result : false; 
+		return isset($result) ? $result : false;
 	}
 
 
@@ -357,7 +380,7 @@ class Manager
 
 		return false;
 	}
-	
+
 	/**
      * Remove all files in defined directory
 	 *
@@ -390,7 +413,7 @@ class Manager
 	 *
 	 * @param string $dirPath - directory path
 	 * @param bool $removeWithDir - if remove with directory
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function removeInDir($dirPath, $removeWithDir = false)
@@ -398,21 +421,21 @@ class Manager
     	$fileList= $this->getFileList($dirPath, false);
 
     	$result = true;
-    	foreach ($fileList as $file) { 
+    	foreach ($fileList as $file) {
     		$fullPath = Utils\Util::concatPath($dirPath, $file);
     		if (is_dir($fullPath)) {
     			$result &= $this->removeInDir($fullPath, true);
     		} else {
     			$result &= unlink($fullPath);
-    		}	        
-	    }	
+    		}
+	    }
 
 	    if ($removeWithDir) {
 	    	rmdir($dirPath);
-	    }	
+	    }
 
 		return $result;
-	} 
+	}
 
 
     /**  //TODO remove
@@ -444,7 +467,7 @@ class Manager
 	 * @return array
 	 */
 	public function getFileName($fileName, $ext='')
-	{		
+	{
 		if (empty($ext)) {
 			$fileName= substr($fileName, 0, strrpos($fileName, '.', -1));
 		}
@@ -458,7 +481,7 @@ class Manager
 			}
         }
 
-        $exFileName = explode('/', Utils\Util::toFormat($fileName, '/'));        
+        $exFileName = explode('/', Utils\Util::toFormat($fileName, '/'));
 
 		return end($exFileName);
 	}
@@ -473,16 +496,16 @@ class Manager
 	 * @return array
 	 */
 	public function getDirName($path, $isFullPath = true)
-	{		
+	{
 		$pathInfo = pathinfo($path);
 
 		if (!$isFullPath) {
 			$pieces = explode('/', $pathInfo['dirname']);
 
-			return $pieces[count($pieces)-1];	
+			return $pieces[count($pieces)-1];
 		}
 
-		return $pathInfo['dirname'];		
+		return $pathInfo['dirname'];
 	}
 
 
