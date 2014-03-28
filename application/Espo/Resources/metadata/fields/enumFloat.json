@@ -7,10 +7,6 @@
       {
          "name":"default",
          "type":"float"
-      },
-      {
-         "name":"translation",
-         "type":"varchar"
       }
    ],
    "search":{

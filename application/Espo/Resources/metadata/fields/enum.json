@@ -12,10 +12,6 @@
       {
          "name":"default",
          "type":"varchar"
-      },
-      {
-         "name":"translation",
-         "type":"varchar"
       }
    ],
    "search":{
