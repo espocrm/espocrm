@@ -81,7 +81,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 			if (empty($params['joinConditions'])) {
 				$params['joinConditions'] = array();
 			}
-			$params['distinct'] = true;
 			$params['leftJoins'] = array('emailAddresses');
 			$params['joinConditions'] = array(
 				'emailAddresses' => array(
