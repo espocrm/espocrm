@@ -28,7 +28,7 @@ if (!empty($_SESSION['install'])) {// required fields //['user-name']) && !empty
 		'dateFormat' => $_SESSION['install']['dateFormat'], 
 		'timeFormat' => $_SESSION['install']['timeFormat'],
 		'timeZone' => $_SESSION['install']['timeZone'],
-		'weekStart' => $_SESSION['install']['weekStart'],
+		'weekStart' => (int)$_SESSION['install']['weekStart'],
 		'defaultCurrency' => $_SESSION['install']['defaultCurrency'],
 		'thousandSeparator' => $_SESSION['install']['thousandSeparator'],
 		'decimalMark' => $_SESSION['install']['decimalMark'],

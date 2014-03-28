@@ -19,7 +19,22 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
+ 
 
+
+$serverType = $systemHelper->getServerType();
+$rootDir = dirname(__FILE__);
+$rootDir = preg_replace('/\/install\/core\/actions\/?/', '', $rootDir, 1);
+$cronFile = $rootDir.'/cron.php';
+$phpBinDir = (defined("PHP_BINDIR"))? PHP_BINDIR.'/php' : 'php';
+
+$cronHelp = (isset($langs['cronHelp'][$serverType]))? $langs['cronHelp'][$serverType] : $langs['cronHelp']['default'];
+$cronHelp = str_replace('<cron-file>', $cronFile, $cronHelp);
+$cronHelp = str_replace('<php-bin-dir>', $phpBinDir, $cronHelp);
+$cronTitle = (isset($langs['cronTitle'][$serverType]))? $langs['cronTitle'][$serverType] : $langs['cronTitle']['default'];
+
+$smarty->assign('cronTitle', $cronTitle);
+$smarty->assign('cronHelp', $cronHelp);
 // clean session
 $installer->setSuccess();
 session_unset();

@@ -18,13 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
+use Espo\Core\Utils\Util;
 
 class Installer
 {
 	protected $app = null;
-	protected $i18n = null;	
+	protected $i18n = null;
+
+	protected $systemHelper = null;
 
 	protected $isAuth = false;
 
@@ -36,10 +39,10 @@ class Installer
 
 	/**
 	 * Ajax Urls, pairs: url:directory (if bad permission)
-	 * 
+	 *
 	 * @var array
 	 */
-	protected $ajaxUrls = array(		
+	protected $ajaxUrls = array(
 		'api/v1/Settings' => 'api',
 		'api/v1' => 'api',
 		'client/res/templates/login.tpl' => 'client/res/templates',
@@ -53,9 +56,9 @@ class Installer
 		'weekStart',
 		'defaultCurrency' => array(
 			'currencyList', 'defaultCurrency',
-		),		
-		'smtpSecurity',	
-		'language',	
+		),
+		'smtpSecurity',
+		'language',
 	);
 
 
@@ -67,6 +70,9 @@ class Installer
 
 		$user = $this->getEntityManager()->getEntity('User');
 		$this->app->getContainer()->setUser($user);
+
+		require_once('install/core/SystemHelper.php');
+		$this->systemHelper = new SystemHelper();
 	}
 
 	protected function getEntityManager()
@@ -74,17 +80,22 @@ class Installer
 		return $this->app->getContainer()->get('entityManager');
 	}
 
+	protected function getSystemHelper()
+	{
+		return $this->systemHelper;
+	}
+
 
 	protected function auth()
 	{
 		if (!$this->isAuth) {
 			$auth = new \Espo\Core\Utils\Auth($this->app->getContainer());
-			$auth->useNoAuth();	
+			$auth->useNoAuth();
 
 			$this->isAuth = true;
-		}		
+		}
 
-		return $this->isAuth;		
+		return $this->isAuth;
 	}
 
 	public function isInstalled()
@@ -101,7 +112,7 @@ class Installer
 	protected function getI18n()
 	{
 		if (!isset($this->i18n)) {
-			$this->i18n = $this->app->getContainer()->get('i18n');	
+			$this->i18n = $this->app->getContainer()->get('i18n');
 		}
 
 		return $this->i18n;
@@ -112,16 +123,16 @@ class Installer
 		$config = $this->app->getContainer()->get('config');
 
 		$languageList = $config->get('languageList');
-		
-		$translated = $this->getI18n()->translate('language', 'options', 'Global', $languageList);			
+
+		$translated = $this->getI18n()->translate('language', 'options', 'Global', $languageList);
 
 		return $translated;
 	}
 
 	/**
-	 * Save data 
-	 * 
-	 * @param  array $database 
+	 * Save data
+	 *
+	 * @param  array $database
 	 * array (
 	 *   'driver' => 'pdo_mysql',
 	 *   'host' => 'localhost',
@@ -129,16 +140,19 @@ class Installer
 	 *   'user' => 'root',
 	 *   'password' => '',
 	 * ),
-	 * @param  string $language     
-	 * @return bool          
+	 * @param  string $language
+	 * @return bool
 	 */
 	public function saveData($database, $language)
 	{
 		$initData = include('install/core/init/config.php');
 
+		$siteUrl = $this->getSystemHelper()->getBaseUrl();
+
 		$data = array(
-			'database' => $database,				
-			'language' => $language,				
+			'database' => $database,
+			'language' => $language,
+			'siteUrl' => $siteUrl,
 		);
 
 		$data = array_merge($data, $initData);
@@ -151,7 +165,7 @@ class Installer
 	public function saveConfig($data)
 	{
 		$config = $this->app->getContainer()->get('config');
-		
+
 		$result = $config->set($data);
 
 		return $result;
@@ -162,7 +176,7 @@ class Installer
 	{
 		try {
 			$this->app->getContainer()->get('schema')->rebuild();
-		} catch (\Exception $e) {	
+		} catch (\Exception $e) {
 
 		}
 
@@ -176,44 +190,73 @@ class Installer
 		return $this->saveConfig($preferences);
 	}
 
+	protected function createRecords()
+	{
+		$records = include('install/core/init/records.php');
+
+		$result = true;
+		foreach ($records as $entityName => $recordList) {
+			foreach ($recordList as $data) {
+				$result &= $this->createRecord($entityName, $data);
+			}
+		}
+
+		return $result;
+	}
+
+	protected function createRecord($entityName, $data)
+	{
+		if (isset($data['id'])) {
+
+			$entity = $this->getEntityManager()->getEntity($entityName, $data['id']);
+
+			if (!isset($entity)) {
+				$pdo = $this->getEntityManager()->getPDO();
+
+				$sql = "SELECT id FROM `".Util::toUnderScore($entityName)."` WHERE `id` = '".$data['id']."'";
+				$sth = $pdo->prepare($sql);
+				$sth->execute();
+
+				$deletedEntity = $sth->fetch(\PDO::FETCH_ASSOC);
+
+				if ($deletedEntity) {
+					$sql = "UPDATE `".Util::toUnderScore($entityName)."` SET deleted = '0' WHERE `id` = '".$data['id']."'";
+					$pdo->prepare($sql)->execute();
+
+					$entity = $this->getEntityManager()->getEntity($entityName, $data['id']);
+				}
+			}
+		}
+
+		if (!isset($entity)) {
+			$entity = $this->getEntityManager()->getEntity($entityName);
+		}
+
+		$entity->set($data);
+
+		$id = $this->getEntityManager()->saveEntity($entity);
+
+		return is_string($id);
+	}
+
+
 	public function createUser($userName, $password)
 	{
 		$this->auth();
 
-		$userId = '1';
+		$user = array(
+			'id' => '1',
+			'userName' => $userName,
+			'password' => md5($password),
+			'lastName' => 'Admin',
+			'isAdmin' => '1',
+		);
 
-		$entity = $this->getEntityManager()->getEntity('User', $userId);
+		$result = $this->createRecord('User', $user);
 
-		if (!isset($entity)) {
-			$pdo = $this->getEntityManager()->getPDO();	
+		$result &= $this->createRecords();
 
-			$sql = "SELECT id FROM `user` WHERE `id` = '".$userId."'";
-			$sth = $pdo->prepare($sql);
-			$sth->execute();
-
-			$deletedUser = $sth->fetch(\PDO::FETCH_ASSOC);					
-
-			if ($deletedUser) {				 
-				$sql = "UPDATE `user` SET deleted = '0' WHERE `id` = '".$userId."'";								
-				$pdo->prepare($sql)->execute();	
-
-				$entity = $this->getEntityManager()->getEntity('User', $userId);
-			}												
-		}		
-
-		if (!isset($entity)) {		
-			$entity = $this->getEntityManager()->getEntity('User');		
-			$entity->set('id', $userId);								
-		}	
-
-		$entity->set('userName', $userName);			
-		$entity->set('password', md5($password));			
-		$entity->set('lastName', 'Admin');			
-		$entity->set('isAdmin', '1');			
-
-		$userId = $this->getEntityManager()->saveEntity($entity);
-		
-		return is_string($userId);
+		return $result;
 	}
 
 	public function isWritable()
@@ -228,15 +271,15 @@ class Installer
 			if (!file_exists($item)) {
 				$item = $fileManager->getDirName($item);
 			}
-			
+
 			if (file_exists($item) && !is_writable($item)) {
 
 				$fileManager->getPermissionUtils()->setDefaultPermissions($item);
 				if (!is_writable($item)) {
 					$result = false;
 					$this->writableListError[] = $item;
-				}				
-			}	
+				}
+			}
 		}
 
 		return $result;
@@ -260,14 +303,14 @@ class Installer
 			$uniqueList = array_unique($this->ajaxUrls);
 			foreach ($uniqueList as $url => $path) {
 				$result = $fileManager->getPermissionUtils()->chmod($path, $permission, true);
-			}	
-		} else {	
+			}
+		} else {
 			if (isset($this->ajaxUrls[$url])) {
-				$path = $this->ajaxUrls[$url];				
+				$path = $this->ajaxUrls[$url];
 				$result = $fileManager->getPermissionUtils()->chmod($path, $permission, true);
 			}
-		}		
-		
+		}
+
 		return $result;
 	}
 
@@ -282,9 +325,9 @@ class Installer
 
 	public function getSettingDefaults()
 	{
-		$defaults = array();	
+		$defaults = array();
 
-		$settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');				
+		$settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
 
 		foreach ($this->settingList as $fieldName => $field) {
 
@@ -292,19 +335,19 @@ class Installer
 				$fieldDefaults = array();
 				foreach ($field as $subField) {
 					if (isset($settingDefs[$subField])) {
-						$fieldDefaults = array_merge($fieldDefaults, $this->translateSetting($subField, $settingDefs[$subField])); 	
+						$fieldDefaults = array_merge($fieldDefaults, $this->translateSetting($subField, $settingDefs[$subField]));
 					}
 				}
 				$defaults[$fieldName] = $fieldDefaults;
 
 			} else if (isset($settingDefs[$field])) {
 
-				$defaults[$field] = $this->translateSetting($field, $settingDefs[$field]);	
+				$defaults[$field] = $this->translateSetting($field, $settingDefs[$field]);
 			}
 		}
 
 		if (isset($defaults['language'])) {
-			$defaults['language']['options'] = $this->getLanguageList();	
+			$defaults['language']['options'] = $this->getLanguageList();
 		}
 
 		return $defaults;
@@ -316,7 +359,7 @@ class Installer
 			$optionLabel = $this->getI18n()->translate($name, 'options', 'Settings');
 
 			if ($optionLabel == $name) {
-				$optionLabel = $this->getI18n()->translate($name, 'options', 'Global');	
+				$optionLabel = $this->getI18n()->translate($name, 'options', 'Global');
 			}
 
 			if ($optionLabel == $name) {
@@ -326,9 +369,9 @@ class Installer
 				}
 			}
 
-			$settingDefs['options'] = $optionLabel;	
-		}		
-	
+			$settingDefs['options'] = $optionLabel;
+		}
+
 		return $settingDefs;
 	}
 

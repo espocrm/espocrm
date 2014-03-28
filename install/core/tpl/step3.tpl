@@ -47,10 +47,15 @@
 	{literal}
 	$(function(){
 	{/literal}
-		var langs = {$langsJs};
-		var ajaxUrls = {$ajaxUrls};
+		var opt = {
+			action: 'step3',
+			langs: {$langsJs},
+			ajaxUrls: {$ajaxUrls},
+			modRewriteUrl: '{$modRewriteUrl}',
+			serverType: '{$serverType}'
+		}
 	{literal}
-		var installScript = new InstallScript({action: 'step3', langs: langs, ajaxUrls: ajaxUrls});
+		var installScript = new InstallScript(opt);
 	})
 	{/literal}
 </script>

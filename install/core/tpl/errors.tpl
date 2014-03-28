@@ -20,10 +20,15 @@
 	{literal}
 	$(function(){
 	{/literal}
-		var langs = {$langsJs};
-		var ajaxUrls = {$ajaxUrls};
+		var opt = {
+			action: 'errors',
+			langs: {$langsJs},
+			ajaxUrls: {$ajaxUrls},
+			modRewriteUrl: '{$modRewriteUrl}',
+			serverType: '{$serverType}'
+		}
 	{literal}
-		var installScript = new InstallScript({action: 'errors', langs: langs, ajaxUrls: ajaxUrls});
+		var installScript = new InstallScript(opt);
 	})
 	{/literal}
 </script>

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 return array(
 	'Main page title' => 'Welcome to EspoCRM',
@@ -44,7 +44,7 @@ return array(
 	'Congratulation! Welcome to EspoCRM!' => 'Congratulation! EspoCRM has been successfully installed.',
 	'admin' => 'admin',
 	'localhost' => 'localhost',
-	
+
 	'Locale' => 'Locale',
 	'Outbound Email Configuration' => 'Outbound Email Configuration',
 	'SMTP' => 'SMTP',
@@ -60,7 +60,7 @@ return array(
 	'Default Currency' => 'Default Currency',
 	'Currency List' => 'Currency List',
 	'Language' => 'Language',
-		
+
 	'smtpServer' => 'Server',
 	'smtpPort' => 'Port',
 	'smtpAuth' => 'Auth',
@@ -68,8 +68,8 @@ return array(
 	'smtpUsername' => 'Username',
 	'emailAddress' => 'Email',
 	'smtpPassword' => 'Password',
-		
-	
+
+
 	// messages
 	'Some errors occurred!' => 'Some errors occurred!',
 	'Supported php version >=' => 'Supported php version >=',
@@ -90,11 +90,46 @@ return array(
 	'Permission denied' => 'Permission denied',
 	'Cannot write to files' => 'Cannot write to file(s)',
 	'Can not save settings' => 'Can not save settings',
-	
+	'Cannot save preferences' => 'Cannot save preferences',
+
 	'db driver' => array(
 		'mysqli' => 'MySQLi',
 		'pdo_mysql' => 'PDO MySQL',
-	),	
+	),
+
+	'modRewriteHelp' => array(
+		'apache' => 'Enable "mod_rewrite" in Apache server',
+		'nginx' => 'Add this code to Nginx Host Config (inside "server" block):<br>
+<pre>
+location /api/v1/ {
+    if (!-e $request_filename){
+        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;
+    }
+}
+
+location / {
+    rewrite reset/?$ reset.html break;
+}</pre>',
+		'microsoft-iis' => 'Enable "URL Rewrite" Module in IIS server',
+		'default' => 'Enable Rewrite Module in your server (e.g. mod_rewrite in Apache)',
+	),
+
+	'cronTitle' => array(
+		'apache' => 'To Setup Crontab:',
+		'nginx' => 'To Setup Crontab:',
+		'microsoft-iis' => 'To Setup Scheduled Task:',
+		'default' => 'To Setup Cron job:',
+	),
+
+	'cronHelp' => array(
+		'apache' => 'Note: Add this line to the crontab file to run Espo Scheduled Jobs:
+* * * * * <php-bin-dir> -f <cron-file> > /dev/null 2>&1',
+		'nginx' => 'Note: Add this line to Tasks to run Espo Scheduled Jobs:
+* * * * * <php-bin-dir> -f <cron-file> > /dev/null 2>&1',
+		'microsoft-iis' => 'Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:
+<php-bin-dir>.exe -f <cron-file>',
+		'default' => 'Run command <cron-file>',
+	),
 
 	// controll
 	'Start' => 'Start',
@@ -103,7 +138,7 @@ return array(
 	'Go to EspoCRM' => 'Go to EspoCRM',
 	'Re-check' => 'Re-check',
 	'Test settings' => 'Test Connection',
-	
+
 	// db errors
 	'1049' => 'Unknown database',
 	'2005' => 'Unknown MySQL server host',

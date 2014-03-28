@@ -12,6 +12,13 @@
 		</div>
 	</form>
 </div>
+
+{if $cronHelp}
+&nbsp;{$cronTitle}
+<pre>
+{$cronHelp}
+</pre>
+{/if}
 <footer class="modal-footer">
 	<button class="btn btn-primary" type="button" id="start">{$langs['Go to EspoCRM']}</button>
 </footer>
