@@ -21,6 +21,7 @@ module.exports = function (grunt) {
 					'index.php',
 					'LICENSE.txt',
 					'.htaccess',
+					'Web.config',
 				],
 				dest: 'build/',
 			},
