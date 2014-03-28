@@ -83,7 +83,7 @@
             "description":"Customize layouts (list, detail, edit, search, mass update)."
          },
          {
-            "url":"#Admin/fields",
+            "url":"#Admin/fieldManager",
             "label":"Field Manager",
             "description":"Create new fields or customize existing ones."
          },
