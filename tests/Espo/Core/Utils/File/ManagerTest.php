@@ -8,7 +8,7 @@ use tests\ReflectionHelper;
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
 	protected $object;
-	
+
 	protected $objects;
 
 	protected $filesPath= 'tests/testData/FileManager';
@@ -16,7 +16,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 	protected $reflection;
 
     protected function setUp()
-    {  
+    {
     	$this->object = new \Espo\Core\Utils\File\Manager(
 			array(
 				'defaultPermissions' => array (
@@ -36,8 +36,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->object = NULL;
     }
 
-	
-	function testGetFileName()
+
+	public function testGetFileName()
 	{
 		$this->assertEquals('Donwload', $this->object->getFileName('Donwload.php'));
 
@@ -48,14 +48,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Donwload', $this->object->getFileName('application/Espo/EntryPoints/Donwload.php'));
 	}
 
-	function testGetContents()
+	public function testGetContents()
 	{
 		$result = file_get_contents($this->filesPath.'/getContent/test.json');
 		$this->assertEquals($result, $this->object->getContents( array($this->filesPath, 'getContent/test.json') ));
 	}
 
 
-	function testPutContents()
+	public function testPutContents()
 	{
 		$testPath= $this->filesPath.'/setContent';
 
@@ -68,7 +68,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testConcatPaths()
+	public function testConcatPaths()
 	{
 		$input = 'application/Espo/Resources/metadata/app/panel.json';
 		$result = 'application/Espo/Resources/metadata/app/panel.json';
@@ -88,7 +88,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
 
 		$input = array(
-			'application/Espo/Resources/metadata/app',			
+			'application/Espo/Resources/metadata/app',
 			'panel.json',
 		);
 		$result = 'application/Espo/Resources/metadata/app/panel.json';
@@ -97,7 +97,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
 
 		$input = array(
-			'application/Espo/Resources/metadata/app/',			
+			'application/Espo/Resources/metadata/app/',
 			'panel.json',
 		);
 		$result = 'application/Espo/Resources/metadata/app/panel.json';
@@ -105,7 +105,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
 	}
 
-	function testGetDirName()
+	public function testGetDirName()
 	{
 		$input = 'data/logs/espo.log';
 		$result = 'logs';
@@ -133,7 +133,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testGetDirNameFullPath()
+	public function testGetDirNameFullPath()
 	{
 		$input = 'data/logs/espo.log';
 		$result = 'data/logs';
@@ -156,8 +156,22 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, $this->object->getDirName($input));
 
 		$input = 'notRealPath/logs/espo.log';
-		$result = 'notRealPath/logs';	
+		$result = 'notRealPath/logs';
 		$this->assertEquals($result, $this->object->getDirName($input));
+	}
+
+	public function testUnsetContents()
+	{
+		$testPath = $this->filesPath.'/unsets/test.json';
+
+		$initData = '{"fields":{"someName":{"type":"varchar","maxLength":40},"someName2":{"type":"varchar","maxLength":36}}}';
+		$this->object->putContents($testPath, $initData);
+
+		$unsets = 'fields.someName2';
+		$this->assertTrue($this->object->unsetContents($testPath, $unsets));
+
+		$result = '{"fields":{"someName":{"type":"varchar","maxLength":40}}}';
+		$this->assertJsonStringEqualsJsonFile($testPath, $result);
 	}
 
 

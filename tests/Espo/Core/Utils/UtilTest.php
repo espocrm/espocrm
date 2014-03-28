@@ -230,25 +230,25 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	                	'subOV' => '125',
 	                	'subOV2' => '125',
 					),
-				),	
-			),			
+				),
+			),
 		);
 
 		$unsets = array(
-			'Account' => array(				
+			'Account' => array(
 				'sub.subO.subOV', 'sub.subV',
-			),						
+			),
 		);
 
 		$result = array(
 			'Account' => array(
 				'useCache' => true,
-				'sub' =>  array (					
+				'sub' =>  array (
 					'subO' => array(
 	                	'subOV2' => '125',
 					),
-				),	
-			),			
+				),
+			),
 		);
 
         $this->assertEquals($result, Util::unsetInArray($input, $unsets));
@@ -265,23 +265,23 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	                	'subOV' => '125',
 	                	'subOV2' => '125',
 					),
-				),	
-			),			
+				),
+			),
 		);
 
-		$unsets = array(						
-			'Account.sub.subO.subOV', 'Account.sub.subV',							
+		$unsets = array(
+			'Account.sub.subO.subOV', 'Account.sub.subV',
 		);
 
 		$result = array(
 			'Account' => array(
 				'useCache' => true,
-				'sub' =>  array (					
+				'sub' =>  array (
 					'subO' => array(
 	                	'subOV2' => '125',
 					),
-				),	
-			),			
+				),
+			),
 		);
 
         $this->assertEquals($result, Util::unsetInArray($input, $unsets));
@@ -299,26 +299,26 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	                	'subOV' => '125',
 	                	'subOV2' => '125',
 					),
-				),	
-			),			
+				),
+			),
 		);
 
-		$unsets = array(	
+		$unsets = array(
 			'Account' => array(
-				'sub.subO.subOV',	
-			),					
-			'Account.sub.subV',							
+				'sub.subO.subOV',
+			),
+			'Account.sub.subV',
 		);
 
 		$result = array(
 			'Account' => array(
 				'useCache' => true,
-				'sub' =>  array (					
+				'sub' =>  array (
 					'subO' => array(
 	                	'subOV2' => '125',
 					),
-				),	
-			),			
+				),
+			),
 		);
 
         $this->assertEquals($result, Util::unsetInArray($input, $unsets));
@@ -336,21 +336,45 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	                	'subOV' => '125',
 	                	'subOV2' => '125',
 					),
-				),	
+				),
 			),
 			'Contact' => array(
-				'useCache' => true,	
-			),			
+				'useCache' => true,
+			),
 		);
 
-		$unsets = array(							
-			'Account',							
+		$unsets = array(
+			'Account',
 		);
 
 		$result = array(
 			'Contact' => array(
-				'useCache' => true,	
-			),		
+				'useCache' => true,
+			),
+		);
+
+        $this->assertEquals($result, Util::unsetInArray($input, $unsets));
+	}
+
+	public function testUnsetInArrayByString()
+	{
+		$input = array(
+			'Account' => array(
+				'useCache' => true,
+			),
+			'Contact' => array(
+				'useCache' => true,
+			),
+		);
+
+		$unsets = 'Account.useCache';
+
+		$result = array(
+			'Account' => array(
+			),
+			'Contact' => array(
+				'useCache' => true,
+			),
 		);
 
         $this->assertEquals($result, Util::unsetInArray($input, $unsets));
@@ -367,13 +391,13 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	                	'subOV' => '125',
 	                	'subOV2' => '125',
 					),
-				),	
+				),
 			),
 			'Contact' => array(
-				'useCache' => true,	
-			),			
-		);		
-        
+				'useCache' => true,
+			),
+		);
+
 
         $this->assertEquals($inputArray, Util::getValueByKey($inputArray));
         $this->assertEquals($inputArray, Util::getValueByKey($inputArray, ''));
