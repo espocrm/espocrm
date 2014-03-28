@@ -18,38 +18,44 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 
 $result = array('success' => true, 'errors' => array());
 
-$res = $systemTest->checkRequirements();
+$res = $systemHelper->checkRequirements();
 $result['success'] &= $res['success'];
 if (!empty($res['errors'])) {
 	$result['errors'] = array_merge($result['errors'], $res['errors']);
 }
 
-if (!$systemTest->checkModRewrite()) {
+/*if (!$systemHelper->checkModRewrite()) {
 	$result['success'] = false;
-	$result['errors']['modRewrite'] = 'Enable mod_rewrite in Apache server';
-}
+	$result['errors']['modRewrite'] = $langs['modRewriteHelp']['default'];
+
+	$serverType = $systemHelper->getServerType();
+	if (isset($langs['modRewriteHelp'][$serverType])) {
+		$result['errors']['modRewrite'] = $langs['modRewriteHelp'][$serverType];
+	}
+}*/
+
 
 if (!empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQUEST['dbUserName'])) {
 	$connect = false;
-	
+
 	$dbName = $_REQUEST['dbName'];
 	$hostName = $_REQUEST['hostName'];
 	$dbUserName = $_REQUEST['dbUserName'];
 	$dbUserPass = $_REQUEST['dbUserPass'];
 	$dbDriver = (!empty($_REQUEST['dbDriver']))? $_REQUEST['dbDriver'] : 'pdo_mysql';
-	
-	$res = $systemTest->checkDbConnection($hostName, $dbUserName, $dbUserPass, $dbName, $dbDriver);
+
+	$res = $systemHelper->checkDbConnection($hostName, $dbUserName, $dbUserPass, $dbName, $dbDriver);
 	$result['success'] &= $res['success'];
 	if (!empty($res['errors'])) {
 		$result['errors'] = array_merge($result['errors'], $res['errors']);
 	}
-	
+
 }
 
 ob_clean();

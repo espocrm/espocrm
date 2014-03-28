@@ -17,40 +17,52 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 var InstallScript = function(opt) {
 	this.reChecking = false;
-	
+
 	if (typeof(opt.action) !== 'undefined') {
 		var action = opt.action;
 		this.action = action;
 		this[action]();
 	}
-	
+
 	if (typeof(opt.langs) !== 'undefined') {
 		this.langs = opt.langs;
 	}
-	
+
 	if (typeof(opt.ajaxUrls) !== 'undefined') {
 		this.ajaxUrls = opt.ajaxUrls;
 	}
-	
+
+	if (typeof(opt.modRewriteUrl) !== 'undefined') {
+		this.modRewriteUrl = opt.modRewriteUrl;
+	}
+
+	if (typeof(opt.serverType) !== 'undefined') {
+		this.serverType = opt.serverType;
+	}
+
 	this.connSett = {};
 	this.userSett = {};
 	this.firstUserPreferences = {};
 	this.checkActions = [
 		{
+			'action': 'checkModRewrite',
+			'break': true,
+		},
+		{
 			'action': 'checkWritable',
 			'break': true,
-		}, 
+		},
 		{
 			'action': 'applySett',
 			'break': true,
-		}, 
+		},
 		{
 			'action': 'buildDatabse',
 			'break': true,
-		}, 
+		},
 		{
 			'action': 'createUser',
 			'break': true,
@@ -67,12 +79,12 @@ var InstallScript = function(opt) {
 InstallScript.prototype.main = function() {
 	var self = this;
 	var nextAction = 'step1';
-	
+
 	$("#start").click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(nextAction);
 	})
-	
+
 	$('[name="user-lang"]').change(function(){
 		self.goTo(self.action);
 	})
@@ -82,16 +94,16 @@ InstallScript.prototype.step1 = function() {
 	var self = this;
 	var backAction = 'main';
 	var nextAction = 'step2';
-	
+
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
 	})
-	
+
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
 		var licenseAgree = $('#license-agree');
-		
+
 		if (licenseAgree.length > 0 && !licenseAgree.is(':checked')) {
 			$(this).removeAttr('disabled');
 			self.showMsg({msg: self.getLang('You must agree to the license agreement'), error: true});
@@ -106,12 +118,12 @@ InstallScript.prototype.step2 = function() {
 	var self = this;
 	var backAction = 'step1';
 	var nextAction = 'step3';
-	
+
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
 	})
-						
+
 	$('#test-connection, #next').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.setConnSett();
@@ -120,7 +132,7 @@ InstallScript.prototype.step2 = function() {
 			return;
 		}
 		self.showLoading();
-		
+
 		var btn = $(this);
 		self.checkSett({
 			success: function(data) {
@@ -139,9 +151,9 @@ InstallScript.prototype.step2 = function() {
 				$('#test-connection').removeAttr('disabled');
 				self.hideLoading();
 			}, // success END
-			
+
 		}) // checkSett END
-		
+
 	})
 }
 
@@ -149,12 +161,12 @@ InstallScript.prototype.step3 = function() {
 	var self = this;
 	var backAction = 'step2';
 	var nextAction = 'step4';
-	
+
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
 	})
-	
+
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.setUserSett();
@@ -162,7 +174,7 @@ InstallScript.prototype.step3 = function() {
 			$(this).removeAttr('disabled');
 			return;
 		}
-		
+
 		self.checkPass({
 			success: function(){
 				self.showLoading();
@@ -181,12 +193,12 @@ InstallScript.prototype.step4 = function() {
 	var self = this;
 	var backAction = 'step3';
 	var nextAction = 'finish';
-	
+
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
 	})
-	
+
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.setFirstUserPreferences();
@@ -195,7 +207,7 @@ InstallScript.prototype.step4 = function() {
 			return;
 		}
 		var data = self.firstUserPreferences;
-	
+
 		data.action = 'setPreferences';
 		$.ajax({
 			url: "index.php",
@@ -209,15 +221,15 @@ InstallScript.prototype.step4 = function() {
 			}
 		})
 		.fail(function(ajaxData){
-			
+
 		})
-		
+
 	})
 }
 
 InstallScript.prototype.errors = function() {
 	var self = this;
-	
+
 	this.reChecking = true;
 	var nextAction = '';
 	$("#re-check").click(function(){
@@ -229,7 +241,7 @@ InstallScript.prototype.errors = function() {
 
 InstallScript.prototype.finish = function() {
 	var self = this;
-	
+
 	var nextAction = '';
 	$("#start").click(function(){
 		self.goToEspo();
@@ -274,7 +286,7 @@ InstallScript.prototype.setFirstUserPreferences = function() {
 InstallScript.prototype.checkSett = function(opt) {
 	var self = this;
 	this.hideMsg();
-	
+
 	var data = this.connSett;
 	data.action = 'settingsTest';
 	$.ajax({
@@ -295,7 +307,7 @@ InstallScript.prototype.checkSett = function(opt) {
 				if (typeof(errors.phpVersion) !== 'undefined') {
 					msg += self.getLang('Supported php version >=')+' '+errors.phpVersion+rowDelim;
 				}
-				
+
 				if (typeof(errors.exts) !== 'undefined') {
 					var exts = errors.exts;
 					var len = exts.length;
@@ -305,11 +317,11 @@ InstallScript.prototype.checkSett = function(opt) {
 						msg += temp+rowDelim;
 					}
 				}
-				
+
 				if (typeof(errors.modRewrite) !== 'undefined') {
-					msg += self.getLang('Enable mod_rewrite in Apache server')+rowDelim;
+					msg += errors.modRewrite+rowDelim;
 				}
-				
+
 				if (typeof(errors.dbConnect) !== 'undefined') {
 					if (typeof(errors.dbConnect.errorCode) !== 'undefined') {
 						var temp = self.getLang(errors.dbConnect.errorCode);
@@ -321,13 +333,13 @@ InstallScript.prototype.checkSett = function(opt) {
 					msg += temp+rowDelim;
 				}
 			}
-			
+
 			if (msg == '') {
 				msg = self.getLang('Some errors occurred!');
 			}
 			self.showMsg({msg: msg, error: true});
 		}
-		
+
 		opt.success(data);
 	})
 	.fail(function(){
@@ -351,8 +363,8 @@ InstallScript.prototype.validate = function() {
 		case 'step4':
 			fieldRequired = ['thousandSeparator', 'decimalMark', 'smtpUsername'];
 			break;
-		
-		
+
+
 	}
 	var len = fieldRequired.length;
 	for (var index = 0; index < len; index++) {
@@ -361,13 +373,13 @@ InstallScript.prototype.validate = function() {
 			if (elem.val() == '') {
 				elem.parent().parent().addClass('has-error');
 				valid = false;
-			} 
+			}
 			else {
 				elem.parent().parent().removeClass('has-error');
 			}
 		}
 	}
-	
+
 	return valid;
 }
 
@@ -376,62 +388,62 @@ InstallScript.prototype.setForm = function(opt) {
 	var formId = opt.formId || 'nav';
 	var action = opt.action || 'main';
 	var desc = opt.desc || '';
-	
+
 	var actionField = $('<input>', {'name': 'action', 'value': action, 'type': 'hidden'});
 	$('#'+formId).append(actionField);
 	var descField = $('<textarea>', {'name': 'desc', 'value': action, 'type': 'hidden'});
 	descField.val(desc);
 	descField.css('display', 'none');
 	$('#'+formId).append(descField);
-	
+
 	$('#'+formId).attr('method', 'POST');
 }
 
-InstallScript.prototype.goTo = function(action) {	
+InstallScript.prototype.goTo = function(action) {
 	this.setForm({action: action});
 	$('#nav').submit();
 }
 
-InstallScript.prototype.getLang = function(key) {	
+InstallScript.prototype.getLang = function(key) {
 	return (typeof(this.langs) !== 'undefined' && typeof(this.langs[key]) !== 'undefined')? this.langs[key] : key;
 }
 
 InstallScript.prototype.showMsg = function(opt) {
 	this.hideMsg();
-	
+
 	var msg = opt.msg || '';
 	var error = opt.error || false;
 	$('#msg-box').html(msg);
 	$('#msg-box').removeClass('hide');
 	$('#msg-box').removeClass('alert-success');
 	$('#msg-box').removeClass('alert-danger');
-	
+
 	if (error) $('#msg-box').addClass('alert-danger');
 	else $('#msg-box').addClass('alert-success');
 }
 
-InstallScript.prototype.hideMsg = function() {	
+InstallScript.prototype.hideMsg = function() {
 	$('#msg-box').html('');
 	$('#msg-box').addClass('hide');
 }
 
-InstallScript.prototype.showLoading = function() {	
+InstallScript.prototype.showLoading = function() {
 	$('.loading-icon').removeClass('hide');
 }
 
-InstallScript.prototype.hideLoading = function() {	
+InstallScript.prototype.hideLoading = function() {
 	$('.loading-icon').addClass('hide');
 }
 
 InstallScript.prototype.checkPass = function(opt) {
 	var succesHand = opt.success || function(){};
 	var errorHand = opt.error || function(msg){};
-	
+
 	if (this.userSett.pass != this.userSett.confPass) {
 		errorHand('Passwords do not match');
 		return;
 	}
-	
+
 	succesHand();
 }
 
@@ -447,7 +459,7 @@ InstallScript.prototype.actionsChecking = function() {
 InstallScript.prototype.checkAction = function(dataMain) {
 	var self = this;
 	var data = {};
-	
+
 	if (this.checkIndex == this.checkActions.length) {
 		self.callbackChecking(dataMain);
 		return;
@@ -455,6 +467,11 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	var currIndex = this.checkIndex;
 	var checkAction = this.checkActions[currIndex].action;
 	this.checkIndex++;
+	
+	if (checkAction == 'checkModRewrite') {
+		this.checkModRewrite();
+		return;
+	}
 	if (checkAction == 'checkAjaxPermission') {
 		this.checkAjaxPermission();
 		return;
@@ -463,7 +480,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		data['user-name'] = this.userSett.name;
 		data['user-pass'] = this.userSett.pass;
 	}
-	
+
 	data.action = checkAction;
 	$.ajax({
 		url: "index.php",
@@ -473,12 +490,12 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	})
 	.done(function(ajaxData){
 		if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
-			
+
 			self.checkAction(ajaxData);
 		}
 		else {
-			if (typeof(self.checkActions[currIndex]) != 'undefined' 
-				&& typeof(self.checkActions[currIndex].break) != 'undefined' 
+			if (typeof(self.checkActions[currIndex]) != 'undefined'
+				&& typeof(self.checkActions[currIndex].break) != 'undefined'
 				&& self.checkActions[currIndex].break) {
 				// break next checking
 				self.callbackChecking(ajaxData);
@@ -486,8 +503,8 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		}
 	})
 	.fail(function(ajaxData){
-		if (typeof(self.checkActions[currIndex]) != 'undefined' 
-			&& typeof(self.checkActions[currIndex].break) != 'undefined' 
+		if (typeof(self.checkActions[currIndex]) != 'undefined'
+			&& typeof(self.checkActions[currIndex].break) != 'undefined'
 			&& self.checkActions[currIndex].break) {
 			// break next checking
 			var ajaxData = {
@@ -504,11 +521,11 @@ InstallScript.prototype.checkAction = function(dataMain) {
 
 InstallScript.prototype.checkAjaxPermission = function() {
 	var self = this;
-	
+
 	this.ajaxUrlFinished = 0;
 	this.ajaxUrlPermRes = true;
 	this.ajaxUrlPermMsgs = [];
-	
+
 	var len = this.ajaxUrls.length;
 	for (var count = 0; count < len; count++) {
 		var url = this.ajaxUrls[count];
@@ -516,9 +533,31 @@ InstallScript.prototype.checkAjaxPermission = function() {
 	}
 }
 
+InstallScript.prototype.checkModRewrite = function() {
+	var self = this;
+	this.modRewriteUrl;
+	
+	var urlAjax = '..'+this.modRewriteUrl;;
+	var realJqXHR = $.ajax({
+		url: urlAjax,
+		type: "GET",
+	})
+	.always(function(data, textStatus, jqXHR){
+		var status = jqXHR.status || realJqXHR.status || 404;
+		status += '';
+		var data = {'success': 0};
+		if (status == '200' || status == '401') {
+			var data = {'success': 1};
+		}
+		
+		self.callbackModRewrite(data);
+		
+	})
+}
+
 InstallScript.prototype.checkAjaxPermUrl = function(url) {
 	var self = this;
-	
+
 	var urlAjax = '../'+url;
 	var realJqXHR = $.ajax({
 		url: urlAjax,
@@ -545,7 +584,7 @@ InstallScript.prototype.checkAjaxPermUrl = function(url) {
 				self.callbackAjaxPerm(ajaxData);
 			})
 			.fail(function(){
-				
+
 				var ajaxData = {
 					'success': false,
 					'errorMsg': ['Ajax failed']+': '+url,
@@ -562,7 +601,7 @@ InstallScript.prototype.callbackAjaxPerm = function(data) {
 		this.ajaxUrlPermRes = false;
 		this.ajaxUrlPermMsgs.push(data.errorMsg);
 	}
-	
+
 	if (this.ajaxUrlFinished == this.ajaxUrls.length) {
 		// all urls was checked
 		var ajaxData = {
@@ -573,6 +612,31 @@ InstallScript.prototype.callbackAjaxPerm = function(data) {
 			ajaxData.errorMsg = errorMsg;
 		}
 		this.checkAction(ajaxData);
+	}
+}
+
+InstallScript.prototype.callbackModRewrite = function(data) {
+	var ajaxData = {
+		'success': true,
+	}
+	
+	if (typeof(data.success) != 'undefined' && data.success) {
+		this.checkAction(ajaxData);
+		return;
+	}
+	ajaxData.success = false;
+	ajaxData.errorMsg = (typeof(this.langs) !== 'undefined' && typeof(this.langs['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['modRewriteHelp'][this.serverType] : this.langs['modRewriteHelp']['default'];
+	
+	var realCheckIndex = this.checkIndex - 1;
+	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'
+		&& typeof(this.checkActions[realCheckIndex].break) != 'undefined') {
+		if (this.checkActions[realCheckIndex].break) {
+			// break next checking
+			this.callbackChecking(ajaxData);
+		}
+		else {
+			this.checkAction(ajaxData);
+		}
 	}
 }
 

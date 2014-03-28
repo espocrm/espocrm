@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 error_reporting(0);
 session_start();
@@ -29,7 +29,7 @@ require_once ('install/vendor/smarty/libs/Smarty.class.php');
 
 require_once 'core/Installer.php';
 
-require_once 'core/SystemTest.php';
+require_once 'core/SystemHelper.php';
 
 $smarty = new Smarty();
 $installer = new Installer();
@@ -73,7 +73,7 @@ if (file_exists('install/'.$langFileName)) {
 $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
 
-$systemTest = new SystemTest();
+$systemHelper = new SystemHelper();
 
 // include actions and set tpl name
 $tplName = 'main.tpl';
@@ -84,20 +84,24 @@ $action = (!empty($_REQUEST['action']))? $_REQUEST['action'] : 'main';
 switch ($action) {
 	case 'main':
 		$languageList = $installer->getLanguageList();
-		$smarty->assign("languageList", $languageList); 
+		$smarty->assign("languageList", $languageList);
 		break;
 
 	case 'step3':
 	case 'errors':
     	$ajaxUrls = $installer->getAjaxUrls();
-		$smarty->assign("ajaxUrls", json_encode($ajaxUrls));  
+		$smarty->assign("ajaxUrls", json_encode($ajaxUrls));
+		$modRewriteUrl = $systemHelper->getModRewriteUrl();
+		$smarty->assign("modRewriteUrl", $modRewriteUrl);
+		$serverType = $systemHelper->getServerType();
+		$smarty->assign("serverType", $serverType);
 		break;
 
     case 'step4':
     case 'errors':
     	$settingsDefaults = $installer->getSettingDefaults();
-		$smarty->assign("settingsDefaults", $settingsDefaults);    
-		break; 		
+		$smarty->assign("settingsDefaults", $settingsDefaults);
+		break;
 }
 
 $actionFile = $actionsDir.'/'.$action.'.php';
