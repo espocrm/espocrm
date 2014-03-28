@@ -244,16 +244,34 @@ class Metadata
 	{
 		$path = $this->paths['customPath'];
 
-		if (file_exists($path)) {
-			$result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
-		} else {
-			$result = $this->getFileManager()->putContentsJSON(array($path, $type, $scope.'.json'), $data);
-		}
+		$result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
 
 		$this->init(true);
 
         return $result;
 	}
+
+	/**
+	 * Unset some fields and other stuff in metadat
+	 *
+	 * @param  array | string $unsets Ex. 'fields.name'
+	 * @param  string $type Ex. 'entityDefs'
+	 * @param  string $scope
+	 * @return bool
+	 */
+	public function unsets($unsets, $type, $scope)
+	{
+		$path = $this->paths['customPath'];
+
+		$result = $this->getFileManager()->unsetContents(array($path, $type, $scope.'.json'), $unsets, true);
+
+		if ($result == false) {
+			$GLOBALS['log']->warning('Metadata unsets available only for custom code.');
+		}
+
+		return $result;
+	}
+
 
 	public function getOrmMetadata($reload = false)
 	{

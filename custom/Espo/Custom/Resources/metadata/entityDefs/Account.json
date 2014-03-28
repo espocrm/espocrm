@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "someName": {
+            "type": "varchar",
+            "maxLength": 40
+        },
+        "someName2": {
+            "type": "varchar",
+            "maxLength": 40
+        },
+        "some": {
+            "type": "varchar",
+            "maxLength": 40
+        }
+    }
+}

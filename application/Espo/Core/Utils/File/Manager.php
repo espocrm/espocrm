@@ -199,13 +199,13 @@ class Manager
 	 *
 	 * @return bool
 	 */
-	public function putContentsJSON($path, $data)
+	public function putContentsJson($path, $data)
 	{
 		if (!Utils\Json::isJSON($data)) {
-        	$data = Utils\Json::encode($data);
+        	$data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
         }
 
-		return $this->putContents($path, $data, JSON_PRETTY_PRINT);
+		return $this->putContents($path, $data);
 	}
 
     /**
@@ -226,10 +226,10 @@ class Manager
 
         $data= Utils\Util::merge($savedDataArray, $newDataArray);
 		if ($isJSON) {
-	        $data= Utils\Json::encode($data);
+	        $data= Utils\Json::encode($data, JSON_PRETTY_PRINT);
 		}
 
-        return $this->putContents($path, $data, JSON_PRETTY_PRINT);
+        return $this->putContents($path, $data);
 	}
 
 	/**
@@ -278,18 +278,23 @@ class Manager
 	 *
 	 * @param  string | array $path
 	 * @param  array | string $unsets [description]
-	 * @return [type]         [description]
+	 * @return bool
 	 */
-	public function unsetContents($path, $unsets)
+	public function unsetContents($path, $unsets, $isJSON = true)
 	{
 		$currentData = $this->getContents($path);
-
-		$currentDataArray= $this->getArrayData($currentData);
-		if (!is_array($currentDataArray)) {
+		if ($currentData == false) {
+			$GLOBALS['log']->notice('FileManager::unsetContents: File ['.$this->concatPaths($path).'] does not exist.');
 			return false;
 		}
 
-		$unsettedData = Utils\Util::unsetInArray($currentData, $unsets);
+		$currentDataArray = $this->getArrayData($currentData);
+
+		$unsettedData = Utils\Util::unsetInArray($currentDataArray, $unsets);
+
+		if ($isJSON) {
+			return $this->putContentsJson($path, $unsettedData);
+		}
 
 		return $this->putContents($path, $unsettedData);
 	}

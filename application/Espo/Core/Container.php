@@ -114,7 +114,7 @@ class Container
 			$this->get('config')
 		);
     }
-    
+
 	private function loadDateTime()
     {
     	return new \Espo\Core\Utils\DateTime(
@@ -206,6 +206,13 @@ class Container
 	{
 		return new \Espo\Core\DataManager(
 			$this
+		);
+	}
+
+	private function loadFieldManager()
+	{
+		return new \Espo\Core\Utils\FieldManager(
+			$this->get('metadata')
 		);
 	}
 
