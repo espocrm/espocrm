@@ -33,13 +33,13 @@ use PDO;
  */
 class MysqlMapper extends Mapper
 {		
-	protected function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null)
+	protected function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false)
 	{	
 		$sql = "SELECT";
 		
-		if (!empty($distinct)) {
+		/*if (!empty($distinct)) {
 			$sql .= " DISTINCT";
-		}
+		}*/
 
 		$sql .= " {$select} FROM `{$table}`";
 		
@@ -49,6 +49,10 @@ class MysqlMapper extends Mapper
 		
 		if (!empty($where)) {
 			$sql .= " WHERE {$where}";
+		}
+		
+		if (!empty($distinct)) {
+			$sql .= " GROUP BY `{$table}`.id";
 		}
 		
 		if (!empty($order)) {

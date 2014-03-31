@@ -216,8 +216,8 @@ abstract class Mapper implements IMapper
 		
 		if (empty($aggregation)) {
 			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $offset, $limit, $distinct);
-		} else {
-			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, $distinct);
+		} else {			
+			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $aggregation = true);
 		}
 	}
 	
@@ -1053,6 +1053,52 @@ abstract class Mapper implements IMapper
 
 			$relTable = $this->toDb($relOpt['relationName']);
 			$distantTable = $this->toDb($relOpt['entity']);
+			
+			/*$join =
+				"{$pre}JOIN ("
+				. "SELECT DISTINCT {$distantTable}.*, {$relTable}." . $this->toDb($nearKey) . "";
+			$join .= " FROM `{$distantTable}`";
+			
+			$join .= " JOIN `{$relTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey);
+		
+			$join .= " WHERE {$distantTable}.deleted = " . $this->pdo->quote(0);
+				
+			if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+				$conditions = array_merge($conditions, $relOpt['conditions']);
+			}
+			foreach ($conditions as $f => $v) {
+				$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
+			}
+				
+			$join .= ") `{$distantTable}` ON {$distantTable}." . $this->toDb($nearKey) . " = {$this->toDb($entity->getEntityName())}." . $this->toDb($key);				
+
+			return $join;*/
+			
+			
+			
+			
+			/*$join =
+				"{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
+				. " AND "
+				. "{$relTable}.deleted = " . $this->pdo->quote(0);			
+				
+			if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+				$conditions = array_merge($conditions, $relOpt['conditions']);
+			}
+			foreach ($conditions as $f => $v) {
+				$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
+			}
+			
+			$join .= " {$pre}JOIN (SELECT DISTINCT * FROM `{$distantTable}` "
+				. " WHERE "
+				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . ") AS`{$distantTable}`"
+				. " ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey);
+
+			return $join;*/
+			
+			
+			
+			
 			
 			$join =
 				"{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
