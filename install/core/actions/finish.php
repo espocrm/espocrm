@@ -23,10 +23,11 @@
 
 
 $serverType = $systemHelper->getServerType();
+$serverType = 'microsoft-iis';
 $rootDir = dirname(__FILE__);
 $rootDir = preg_replace('/\/install\/core\/actions\/?/', '', $rootDir, 1);
-$cronFile = $rootDir.'/cron.php';
-$phpBinDir = (defined("PHP_BINDIR"))? PHP_BINDIR.'/php' : 'php';
+$cronFile = $rootDir.DIRECTORY_SEPARATOR.'cron.php';
+$phpBinDir = (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
 
 $cronHelp = (isset($langs['cronHelp'][$serverType]))? $langs['cronHelp'][$serverType] : $langs['cronHelp']['default'];
 $cronHelp = str_replace('<cron-file>', $cronFile, $cronHelp);
