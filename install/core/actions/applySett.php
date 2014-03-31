@@ -34,7 +34,7 @@ $data = array(
 $lang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
 if (!$installer->saveData($data, $lang)) {
 	$result['success'] = false;
-	$result['errorMsg'] = 'Can not save settings';
+	$result['errorMsg'] = $langs['Can not save settings'];
 }
 
 ob_clean();
