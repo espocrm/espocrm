@@ -753,7 +753,7 @@ abstract class Mapper implements IMapper
 			$fieldArr[] = $this->toDb($field);			
 			$valArr[] = $this->quote($value);			
 		}		
-		$fieldsPart = implode(", ", $fieldArr);
+		$fieldsPart = "`" . implode("`, `", $fieldArr) . "`";
 		$valuesPart = implode(", ", $valArr);
 		
 		$sql = $this->composeInsertQuery($this->toDb($entity->getEntityName()), $fieldsPart, $valuesPart);
