@@ -4,7 +4,6 @@ namespace tests\Espo\Core\Utils;
 
 use tests\ReflectionHelper;
 
-
 class FieldManagerTest extends \PHPUnit_Framework_TestCase
 {
 	protected $object;
@@ -26,6 +25,61 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		$this->object = NULL;
+	}
+
+	public function testCreateExistingField()
+	{
+		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+
+		$data = array(
+			"type" => "varchar",
+			"maxLength" => "50",
+		);
+
+		$this->objects['metadata']
+			->expects($this->once())
+			->method('get')
+			->will($this->returnValue($data));
+
+		$this->object->create('varName', $data, 'CustomEntity');
+	}
+
+	public function testUpdateCoreField()
+	{
+		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+
+		$data = array(
+			"type" => "varchar",
+			"maxLength" => "50",
+		);
+
+		$this->objects['metadata']
+			->expects($this->once())
+			->method('get')
+			->will($this->returnValue($data));
+
+		$this->object->update('name', $data, 'Account');
+	}
+
+	public function testUpdateCustomField()
+	{
+		$data = array(
+			"type" => "varchar",
+			"maxLength" => "50",
+			"isCustom" => true,
+		);
+
+		$this->objects['metadata']
+			->expects($this->once())
+			->method('get')
+			->will($this->returnValue($data));
+
+		$this->objects['metadata']
+			->expects($this->once())
+			->method('get')
+			->will($this->returnValue(true));
+
+		$this->object->update('varName', $data, 'CustomEntity');
 	}
 
 
@@ -61,6 +115,14 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 			),
 		);
 		$this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array($input1, $input2)));
+	}
+
+	public function testDeleteTestFile()
+	{
+		$file = 'custom/Espo/Custom/Resources/metadata/entityDefs/CustomEntity.json';
+		if (file_exists($file)) {
+			@unlink($file);
+		}
 	}
 
 

@@ -22,6 +22,8 @@
 
 namespace Espo\Core\Utils;
 
+use \Espo\Core\Exceptions\Error;
+
 class FieldManager
 {
 	private $metadata;
@@ -49,11 +51,21 @@ class FieldManager
 
 	public function create($name, $fieldDef, $scope)
 	{
+		$existingField = $this->read($name, $scope);
+		if (isset($existingField)) {
+			throw new Error('Field ['.$name.'] exists in '.$scope);
+		}
+
 		return $this->update($name, $fieldDef, $scope);
 	}
 
 	public function update($name, $fieldDef, $scope)
 	{
+		$existingField = $this->read($name, $scope);
+		if (isset($existingField) && (!isset($existingField['isCustom']) || !$existingField['isCustom'])) {
+			throw new Error('Core field ['.$name.'] cannot be changed in '.$scope);
+		}
+
 		/*Add option to metadata that identify the custom field*/
 		if (!isset($fieldDef[$this->customOptionName]) || !$fieldDef[$this->customOptionName]) {
 			$fieldDef[$this->customOptionName] = true;

@@ -269,6 +269,8 @@ class Metadata
 			$GLOBALS['log']->warning('Metadata unsets available only for custom code.');
 		}
 
+		$this->init(true);
+
 		return $result;
 	}
 

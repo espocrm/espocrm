@@ -39,6 +39,17 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, $this->fixture->getResponse($input)['response']);
 	}
 
+	public function testCreateSameField()
+	{
+		$this->fixture->setType('POST');
+
+		$this->fixture->setUrl('/Admin/fieldManager/CustomEntity');
+
+		$input = '{"name":"customField","type":"varchar","maxLength":50}';
+
+		$this->assertEquals(500, $this->fixture->getResponse($input)['code']);
+	}
+
 
 	public function testReadAfterCreate()
 	{
@@ -59,6 +70,17 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		$result = '{"type":"varchar","maxLength":50,"isCustom":true,"default":"this is a test"}';
 
 		$this->assertEquals($result, $this->fixture->getResponse($input)['response']);
+	}
+
+	public function testUpdateCoreField()
+	{
+		$this->fixture->setType('PUT');
+
+		$this->fixture->setUrl('/Admin/fieldManager/Account/name');
+
+		$input = '{"type":"varchar","maxLength":50,"default":"this is a test"}';
+
+		$this->assertEquals(500, $this->fixture->getResponse($input)['code']);
 	}
 
 	public function testReadAfterUpdate()
