@@ -25,7 +25,7 @@ use Espo\Core\Utils\Util;
 class Installer
 {
 	protected $app = null;
-	protected $i18n = null;
+	protected $language = null;
 
 	protected $systemHelper = null;
 
@@ -109,13 +109,13 @@ class Installer
 		return $this->writableListError;
 	}
 
-	protected function getI18n()
+	protected function getLanguage()
 	{
-		if (!isset($this->i18n)) {
-			$this->i18n = $this->app->getContainer()->get('i18n');
+		if (!isset($this->language)) {
+			$this->language = $this->app->getContainer()->get('language');
 		}
 
-		return $this->i18n;
+		return $this->language;
 	}
 
 	public function getLanguageList()
@@ -124,7 +124,7 @@ class Installer
 
 		$languageList = $config->get('languageList');
 
-		$translated = $this->getI18n()->translate('language', 'options', 'Global', $languageList);
+		$translated = $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
 
 		return $translated;
 	}
@@ -356,10 +356,10 @@ class Installer
 	protected function translateSetting($name, array $settingDefs)
 	{
 		if (isset($settingDefs['options'])) {
-			$optionLabel = $this->getI18n()->translate($name, 'options', 'Settings');
+			$optionLabel = $this->getLanguage()->translate($name, 'options', 'Settings');
 
 			if ($optionLabel == $name) {
-				$optionLabel = $this->getI18n()->translate($name, 'options', 'Global');
+				$optionLabel = $this->getLanguage()->translate($name, 'options', 'Global');
 			}
 
 			if ($optionLabel == $name) {

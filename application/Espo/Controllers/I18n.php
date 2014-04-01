@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -27,6 +27,6 @@ class I18n extends \Espo\Core\Controllers\Base
 
     public function actionRead($params, $data)
 	{
-		return $this->getContainer()->get('i18n')->getAll();
+		return $this->getContainer()->get('language')->getAll();
 	}
 }
