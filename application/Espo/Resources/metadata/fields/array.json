@@ -18,6 +18,7 @@
       "basic":false,
       "advanced":false
    },
+   "notCreatable": true,
    "database":{
       "type":"json_array"
    }

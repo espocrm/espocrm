@@ -1,0 +1,20 @@
+{
+   "params":[
+      {
+         "name":"link",
+         "type":"varchar"
+      },
+      {
+         "name":"field",
+         "type":"varchar"
+      }
+   ],
+   "search":{
+      "basic":false,
+      "advanced":false
+   },
+   "notCreatable": true,
+   "database":{
+      "skip":true
+   }
+}

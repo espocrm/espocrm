@@ -24,6 +24,7 @@
       }
    },
    "mergable":false,
+   "notCreatable": true,
    "search":{
       "basic":false,
       "advanced":true

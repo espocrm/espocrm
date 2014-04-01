@@ -1,4 +1,7 @@
 {
+	"labels": {
+		"Add Field": "Add Field"
+	},
 	"layouts": {
 		"list": "List",
 		"detail": "Detail",
@@ -7,5 +10,44 @@
 		"filtersAdvanced": "Search Filters",
 		"massUpdate": "Mass Update",
 		"relationships": "Relationships"
+	},
+	"fieldTypes": {
+		"address": "Address",
+		"foreign": "Foreign",
+		"duration": "Duration",
+		"password": "Password",
+		"parsonName": "Person Name",
+		"autoincrement": "Auto-increment",
+		"bool": "Bool",
+		"currency": "Currency",
+		"date": "Date",
+		"datetime": "DateTime",
+		"email": "Email",
+		"enum": "Enum",
+		"enumInt": "Enum Integer",
+		"enumFloat": "Enum Float",
+		"float": "Float",
+		"int": "Int",
+		"link": "Link",
+		"linkMultiple": "Link Multiple",
+		"linkParent": "Link Parent",
+		"multienim": "Multienum",
+		"phone": "Phone",
+		"text": "Text",
+		"url": "Url",
+		"varchar": "Varchar"				
+	},
+	"fieldParams": {
+		"type": "Type",
+		"name": "Name",
+		"label": "Label",
+		"required": "Required",
+		"default": "Default",
+		"maxLength": "Max Length",
+		"options": "Options",
+		"after": "After (field)",
+		"before": "Before (field)",
+		"link": "Link",
+		"field": "Field"			
 	}
 }

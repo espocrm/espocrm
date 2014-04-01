@@ -1,4 +1,5 @@
 {
+   "notCreatable": true,
    "database":{
       "type":"int"
    }

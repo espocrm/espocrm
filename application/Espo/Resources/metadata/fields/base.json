@@ -3,6 +3,7 @@
       "basic":false,
       "advanced":false
    },
+   "notCreatable": true,
    "database":{
       "notStorable":true 
    }
