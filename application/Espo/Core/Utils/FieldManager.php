@@ -28,6 +28,8 @@ class FieldManager
 
 	protected $metadataType = 'entityDefs';
 
+	protected $customOptionName = 'isCustom';
+
 
 	public function __construct(Metadata $metadata)
 	{
@@ -52,6 +54,11 @@ class FieldManager
 
 	public function update($name, $fieldDef, $scope)
 	{
+		/*Add option to metadata that identify the custom field*/
+		if (!isset($fieldDef[$this->customOptionName]) || !$fieldDef[$this->customOptionName]) {
+			$fieldDef[$this->customOptionName] = true;
+		}
+
 		$defs = $this->normalizeDefs($name, $fieldDef);
 
 		return $this->setEntityDefs($defs, $scope);

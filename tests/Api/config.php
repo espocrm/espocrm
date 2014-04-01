@@ -2,7 +2,7 @@
 
 return array(
 	'apiTestsEnabled' => false,
-	'apiUrl' => 'http://172.20.0.1/espocrm/api',
+	'apiUrl' => 'http://172.20.0.1/taras/espo/api/v1',
 	'username' => 'admin',
 	'password' => '1',
 );
