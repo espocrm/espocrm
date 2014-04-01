@@ -32,8 +32,11 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->setType('POST');
 
 		$this->fixture->setUrl('/Admin/fieldManager/CustomEntity');
-		$data = '{"name":"customField","type":"varchar","maxLength":50}';
-		$this->assertTrue($this->fixture->isSuccess($data));
+
+		$input = '{"name":"customField","type":"varchar","maxLength":50}';
+		$result = '{"type":"varchar","maxLength":50,"isCustom":true}';
+
+		$this->assertEquals($result, $this->fixture->getResponse($input)['response']);
 	}
 
 
@@ -51,8 +54,11 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->setType('PUT');
 
 		$this->fixture->setUrl('/Admin/fieldManager/CustomEntity/customField');
-		$data = '{"type":"varchar","maxLength":50,"default":"this is a test"}';
-		$this->assertTrue($this->fixture->isSuccess($data));
+
+		$input = '{"type":"varchar","maxLength":50,"default":"this is a test"}';
+		$result = '{"type":"varchar","maxLength":50,"isCustom":true,"default":"this is a test"}';
+
+		$this->assertEquals($result, $this->fixture->getResponse($input)['response']);
 	}
 
 	public function testReadAfterUpdate()
@@ -69,7 +75,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->setType('DELETE');
 
 		$this->fixture->setUrl('/Admin/fieldManager/CustomEntity/customField');
-		$this->assertTrue($this->fixture->isSuccess());
+		$this->assertEquals('true', $this->fixture->getResponse()['response']);
 	}
 
 	public function testReadAfterDetele()
