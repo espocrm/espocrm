@@ -186,9 +186,9 @@ class Container
 		);
 	}
 
-	private function loadI18n()
+	private function loadLanguage()
 	{
-		return new \Espo\Core\Utils\I18n(
+		return new \Espo\Core\Utils\Language(
 			$this->get('fileManager'),
 			$this->get('config'),
 			$this->get('preferences')

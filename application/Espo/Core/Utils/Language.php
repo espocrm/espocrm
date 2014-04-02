@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils;
 
@@ -26,7 +26,7 @@ use \Espo\Core\Utils\Util,
 	\Espo\Core\Exceptions\NotFound,
 	\Espo\Core\Exceptions\Error;
 
-class I18n
+class Language
 {
 	private $fileManager;
 	private $config;
@@ -47,7 +47,7 @@ class I18n
 	private $paths = array(
 		'corePath' => 'application/Espo/Resources/i18n',
 		'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n',
-		'customPath' => 'custom/Espo/Custom/Resources/i18n',	                              			
+		'customPath' => 'custom/Espo/Custom/Resources/i18n',
 	);
 
 
@@ -57,7 +57,7 @@ class I18n
 		$this->config = $config;
 		$this->preferences = $preferences;
 
-		$this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);		
+		$this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
 	}
 
 	protected function getFileManager()
@@ -86,10 +86,10 @@ class I18n
 		if (!isset($this->currentLanguage) && isset($this->preferences)) {
 			$this->currentLanguage = $this->getPreferences()->get('language');
 		}
-		
+
 		if (empty($this->currentLanguage)) {
 			$this->currentLanguage = $this->getConfig()->get('language');
-		}		
+		}
 
 		return $this->currentLanguage;
 	}
@@ -108,40 +108,45 @@ class I18n
 
 	/**
 	 * Translate label/labels
-	 * 
-	 * @param  string | array $label name of label
-	 * @param  string $category        
-	 * @param  string $scope           
-	 * @param  array $requiredOptions List of required options. 
+	 *
+	 * @param  string $label name of label
+	 * @param  string $category
+	 * @param  string $scope
+	 * @param  array $requiredOptions List of required options.
 	 *  Ex., $requiredOptions = array('en_US', 'de_DE')
-	 *  "language" option has only array('en_US' => 'English (United States)',)	  
-	 *  Result will be array('en_US' => 'English (United States)', 'de_DE' => 'de_DE',)	  
+	 *  "language" option has only array('en_US' => 'English (United States)',)
+	 *  Result will be array('en_US' => 'English (United States)', 'de_DE' => 'de_DE',)
 	 * @return string | array
 	 */
-	public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null) 
+	public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
 	{
 		if (is_array($label)) {
 			$translated = array();
 
 			foreach ($label as $subLabel) {
-				$key = $scope.'.'.$category.'.'.$subLabel;
-				$translated[$subLabel] = $this->get($key, $subLabel);	
+				$translated[$subLabel] = $this->translate($subLabel, $category, $scope, $requiredOptions);
 			}
 
-		} else {
-			$key = $scope.'.'.$category.'.'.$label;
-			$translated = $this->get($key, $label);	
+			return $translated;
+		}
 
-			if (is_array($translated) && isset($requiredOptions)) {
+		$key = $scope.'.'.$category.'.'.$label;
+		$translated = $this->get($key);
 
-				$optionKeys = array_keys($translated);
-				foreach ($requiredOptions as $option) {
-					if (!in_array($option, $optionKeys)) {
-						$translated[$option] = $option;
-					}
-				}	
+		if (!isset($translated)) {
+			$key = 'Global.'.$category.'.'.$label;
+			$translated = $this->get($key, $label);
+		}
+
+		if (is_array($translated) && isset($requiredOptions)) {
+
+			$optionKeys = array_keys($translated);
+			foreach ($requiredOptions as $option) {
+				if (!in_array($option, $optionKeys)) {
+					$translated[$option] = $option;
+				}
 			}
-		}		
+		}
 
 		return $translated;
 	}
@@ -152,7 +157,7 @@ class I18n
 		$data = $this->getData();
 
 		if (!isset($data) || $data === false) {
-			throw new Error('I18n: current language ['.$this->getLanguage().'] does not found');	
+			throw new Error('Language: current language ['.$this->getLanguage().'] does not found');
 		}
 
 		return Util::getValueByKey($data, $key, $returns);
@@ -167,40 +172,40 @@ class I18n
 
 	/**
 	 * Get data of Unifier language files
-	 * 
-	 * @return array 
+	 *
+	 * @return array
 	 */
 	protected function getData()
 	{
 		if (!isset($this->data)) {
-			$this->init(); 	
+			$this->init();
 		}
 
 		return $this->data;
 	}
 
-	
+
 	protected function init()
 	{
 		if (!file_exists($this->getLangCacheFile()) || !$this->getConfig()->get('useCache')) {
-			$this->fullData = $this->getUnifier()->unify($this->name, $this->paths, true);	
+			$this->fullData = $this->getUnifier()->unify($this->name, $this->paths, true);
 
 			$result = true;
 			foreach ($this->fullData as $i18nName => $i18nData) {
 				$i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
-				$result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);	
+				$result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
 			}
-			
-			if ($result == false) {	
-				throw new Error('I18n::init() - Cannot save data to a cache');
+
+			if ($result == false) {
+				throw new Error('Language::init() - Cannot save data to a cache');
 			}
 		}
-		
-		$this->data = $this->getFileManager()->getContents($this->getLangCacheFile());		
+
+		$this->data = $this->getFileManager()->getContents($this->getLangCacheFile());
 	}
 
 
-	
+
 
 
 
