@@ -98,6 +98,22 @@
 		},
 		"language": {
 			"en_US": "English (United States)"
+		},
+		"dateSearchRanges": {
+			"on": "On",
+			"notOn": "Not On",
+			"after": "After",
+			"before": "Before",
+			"between": "Between"
+		},
+		"intSearchRanges": {
+			"equals": "Equals",
+			"notEquals": "Not Equals",
+			"greaterThan": "Greater Than",
+			"lessThan": "Less Than",
+			"greaterThanOrEquals": "Greater Than or Equals",
+			"lessThanOrEquals": "Less Than or Equals",
+			"between": "Between"
 		}
 	}
 }
