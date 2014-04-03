@@ -24,6 +24,7 @@ namespace Espo\Services;
 
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\Error;
 
 use Espo\ORM\Entity;
 
@@ -37,6 +38,7 @@ class Import extends \Espo\Core\Services\Base
 		'selectManagerFactory',
 		'config',
 		'serviceFactory',
+		'fileManager',
 	);
 	
 	protected $dateFormatsMap = array(
@@ -67,6 +69,11 @@ class Import extends \Espo\Core\Services\Base
 	{
 		return $this->injections['entityManager'];
 	}
+	
+	protected function getFileManager()
+	{
+		return $this->injections['fileManager'];
+	}
 
 	protected function getUser()
 	{
@@ -93,7 +100,7 @@ class Import extends \Espo\Core\Services\Base
 		return $this->injections['serviceFactory'];
 	}	
 	
-	public function import($scope, array $fields, $contents, array $params = array())
+	public function import($scope, array $fields, $attachmentId, array $params = array())
 	{
 		$delimiter = ',';
 		if (!empty($params['fieldDelimiter'])) {
@@ -103,7 +110,12 @@ class Import extends \Espo\Core\Services\Base
 		if (!empty($params['textQualifier'])) {
 			$enclosure = $params['textQualifier'];
 		}		
-				
+		
+		$contents = $this->getFileManager()->getContents('data/upload/' . $attachmentId);
+		
+		if (empty($contents)) {
+			throw new Error('Import error');
+		}
 		
 		$lines = explode("\n", $contents);
 		

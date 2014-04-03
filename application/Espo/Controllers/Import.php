@@ -27,7 +27,33 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
 class Import extends \Espo\Core\Controllers\Base
-{
+{	
+	
+	protected function getFileManager()
+	{
+		return $this->getContainer()->get('fileManager');
+	}
+	
+	protected function getEntityManager()
+	{
+		return $this->getContainer()->get('entityManager');
+	}
+	
+	public function actionUploadFile($params, $data)
+	{	
+		$contents = $data;
+		
+		$attachment = $this->getEntityManager()->getEntity('Attachment');
+		$attachment->set('type', 'text/csv');		
+		$this->getEntityManager()->saveEntity($attachment);
+		
+		$this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+		
+		return array(
+			'attachmentId' => $attachment->id
+		);
+	}
+	
 	public function actionCreate($params, $data)
 	{   
         $importParams = array(
@@ -42,11 +68,13 @@ class Import extends \Espo\Core\Controllers\Base
         	'action' => $data['action'],
         );
         
+        $attachmentId = $data['attachmentId'];
+        
         if (!$this->getAcl()->check($data['entityType'], 'edit')) {
         	throw new Forbidden();
         }
         
-		return $this->getService('Import')->import($data['entityType'], $data['fields'], $data['fileContents'], $importParams);
+		return $this->getService('Import')->import($data['entityType'], $data['fields'], $attachmentId, $importParams);
 	}
 }
 
