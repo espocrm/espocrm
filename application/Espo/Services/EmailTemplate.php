@@ -101,6 +101,7 @@ class EmailTemplate extends Record
 		}
 		
 		$attachmentsIds = array();
+		$attachmentsNames = new \StdClass();
 		
 		if ($copyAttachments) {
 			$attachmentList = $emailTemplate->get('attachments');		
@@ -120,7 +121,8 @@ class EmailTemplate extends Record
 					}
 					$this->getFileManager()->putContents('data/upload/' . $clone->id, $contents);			
 			
-					$attachmentsIds[] = $clone->id;
+					$attachmentsIds[] = $id = $clone->id;
+					$attachmentsNames->$id = $clone->get('name');
 				}
 			}
 		}		
@@ -129,6 +131,7 @@ class EmailTemplate extends Record
 			'subject' => $subject,
 			'body' => $body,
 			'attachmentsIds' => $attachmentsIds,
+			'attachmentsNames' => $attachmentsNames,
 			'isHtml' => $emailTemplate->get('isHtml')
 		);		
 	}

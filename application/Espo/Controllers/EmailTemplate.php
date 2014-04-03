@@ -38,7 +38,7 @@ class EmailTemplate extends \Espo\Core\Controllers\Record
 			'emailAddress' => $request->get('emailAddress'),
 			'parentType' => $request->get('parentType'),
 			'parentId' => $request->get('parentId'),
-		));
+		), true);
 	}
 
 }
