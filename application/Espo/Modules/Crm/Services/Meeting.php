@@ -23,6 +23,7 @@
 namespace Espo\Modules\Crm\Services;
 
 use \Espo\ORM\Entity;
+use \Espo\Modules\Crm\Business\Event\Invitations;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
@@ -56,78 +57,29 @@ class Meeting extends \Espo\Services\Record
 	{
 		return $this->injections['dateTime'];
 	}
-
-	protected function parseInvitationTemplate($contents, $entity, $invitee = null, $uid = null)
+	
+	protected function getInvitationManager()
 	{
-		$contents = str_replace('{name}', $entity->get('name'), $contents);
-		$contents = str_replace('{eventType}', strtolower($this->getLanguage()->translate($entity->getEntityName(), 'scopeNames')), $contents);
-		$contents = str_replace('{dateStart}', $this->getDateTime()->convertSystemDateTimeToGlobal($entity->get('dateStart')), $contents);
-		if ($invitee) {
-			$contents = str_replace('{inviteeName}', $invitee->get('name'), $contents);
-		}
-		if ($uid) {
-			$siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
-			$contents = str_replace('{acceptLink}', $siteUrl . '?entryPoint=eventConfirmation&action=accept&uid=' . $uid->get('name'), $contents);
-			$contents = str_replace('{declineLink}', $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name'), $contents);
-		}
-		return $contents;
-	}
-
-	protected function sendInvitation(Entity $entity, Entity $invitee, $link)
-	{
-
-		$uid = $this->getEntityManager()->getEntity('UniqueId');
-		$uid->set('data', json_encode(array(
-			'eventType' => $entity->getEntityName(),
-			'eventId' => $entity->id,
-			'inviteeId' => $invitee->id,
-			'inviteeType' => $invitee->getEntityName(),
-			'link' => $link
-		)));
-		$this->getEntityManager()->saveEntity($uid);
-
-		$email = $this->getEntityManager()->getEntity('Email');
-		$email->set('to', $invitee->get('emailAddress'));
-
-		$subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.tpl';
-		if (!file_exists($subjectTplFileName)) {
-			$subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.tpl';
-		}
-		$subjectTpl = file_get_contents($subjectTplFileName);
-
-		$bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.tpl';
-		if (!file_exists($bodyTplFileName)) {
-			$bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.tpl';
-		}
-		$bodyTpl = file_get_contents($bodyTplFileName);
-
-		$subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee, $uid);
-		$body = $this->parseInvitationTemplate($bodyTpl, $entity, $invitee, $uid);
-
-		$email->set('subject', $subject);
-		$email->set('body', $body);
-		$email->set('isHtml', true);
-
-		$emailSender = $this->getMailSender();
-
-		$emailSender->send($email);
+		return new Invitations($this->getEntityManager(), $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
 	}
 
 	public function sendInvitations(Entity $entity)
 	{
+		$invitationManager = $this->getInvitationManager();
+		
 		$users = $entity->get('users');
 		foreach ($users as $user) {
-			$this->sendInvitation($entity, $user, 'users');
+			$invitationManager->sendInvitation($entity, $user, 'users');
 		}
 
 		$contacts = $entity->get('contacts');
 		foreach ($contacts as $contact) {
-			$this->sendInvitation($entity, $contact, 'contacts');
+			$invitationManager->sendInvitation($entity, $contact, 'contacts');
 		}
 
 		$leads = $entity->get('leads');
 		foreach ($leads as $lead) {
-			$this->sendInvitation($entity, $lead, 'leads');
+			$invitationManager->sendInvitation($entity, $lead, 'leads');
 		}
 
 		return true;
