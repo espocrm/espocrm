@@ -13,6 +13,7 @@
       "basic":false,
       "advanced":true
    },
+   "notCreatable": true,
    "database":{
       "type":"int"
    }
