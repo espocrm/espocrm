@@ -85,7 +85,7 @@ class DataManager
 		}
 
 		if ($result === false) {
-			throw new Exceptions\Error("Error while rebuilding database");
+			throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
 		}
 
 		return $result;

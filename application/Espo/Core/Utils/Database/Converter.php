@@ -43,14 +43,14 @@ class Converter
 	//private $meta;
 
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
+	public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
 	{
 		$this->metadata = $metadata;
 		$this->fileManager = $fileManager;
 
-        $this->ormConverter = new Orm\Converter($this->metadata, $this->fileManager);
+		$this->ormConverter = new Orm\Converter($this->metadata, $this->fileManager);
 
-        $this->schemaConverter = new Schema\Converter($this->fileManager);
+		$this->schemaConverter = new Schema\Converter($this->fileManager);
 	}
 
 
@@ -61,23 +61,21 @@ class Converter
 
 	protected function getOrmConverter()
 	{
-    	return $this->ormConverter;
+		return $this->ormConverter;
 	}
 
-    protected function getSchemaConverter()
+	protected function getSchemaConverter()
 	{
-    	return $this->schemaConverter;
+		return $this->schemaConverter;
 	}
 
 
 	public function getSchemaFromMetadata($entityList = array())
 	{
-		//if (!isset($this->schemaFromMetadata)) {
-        	$ormMeta = $this->getMetadata()->getOrmMetadata();
-        	$entityDefs = $this->getMetadata()->get('entityDefs');
+		$ormMeta = $this->getMetadata()->getOrmMetadata();
+		$entityDefs = $this->getMetadata()->get('entityDefs');
 
-			$this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityDefs, $entityList);
-		//}
+		$this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityDefs, $entityList);
 
 		return $this->schemaFromMetadata;
 	}
@@ -94,11 +92,11 @@ class Converter
 		$ormMeta = $this->getOrmConverter()->process();
 
 		//save database meta to a file espoMetadata.php
-        $result = $this->getMetadata()->setOrmMetadata($ormMeta);
+		$result = $this->getMetadata()->setOrmMetadata($ormMeta);
 
-        $GLOBALS['log']->debug('Orm\Converter - End: orm convertation, result=['.$result.']');
+		$GLOBALS['log']->debug('Orm\Converter - End: orm convertation, result=['.$result.']');
 
-        return $result;
+		return $result;
 	}
 
 
