@@ -34,5 +34,16 @@ class Email extends \Espo\Core\ORM\Entity
 	{
 		return $this->set('name', $value);
 	}
+	
+	public function addAttachment(\Espo\Entities\Attachment $attachment)
+	{
+		if (!empty($this->id)) {
+			$attachment->set('parentId', $this->id);
+			$attachment->set('parentType', 'Email');
+			if ($this->entityManager->saveEntity($attachment)) {
+				return true;
+			}
+		}
+	}
 }
 
