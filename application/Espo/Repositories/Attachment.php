@@ -20,31 +20,35 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Services;
+namespace Espo\Repositories;
 
-class Attachment extends Record
+use Espo\ORM\Entity;
+
+class Attachment extends \Espo\Core\ORM\Repositories\RDB
 {
-	/*protected function init()
-	{
-		$this->dependencies[] = 'fileManager';
-	}
+	protected $dependencies = array(
+		'fileManager',
+	);
 	
 	protected function getFileManager()
 	{
 		return $this->getInjection('fileManager');
-	}*/
-
-	public function createEntity($data)
-	{		
-		if (!empty($data['file'])) {
-			list($prefix, $contents) = explode(',', $data['file']);		
-			$contents = base64_decode($contents);
-			$data['contents'] = $contents;
+	}
+	
+	public function save(Entity $entity)
+	{
+		$isNew = $entity->isNew();
+		$result = parent::save($entity);
+		
+		if ($isNew) {
+			if (!empty($entity->id) && $entity->has('contents')) {
+				$contents = $entity->get('contents');
+				$this->getFileManager()->putContents('data/upload/' . $entity->id, $contents);
+			}
 		}
 		
-		$entity = parent::createEntity($data);
-					
-		return $entity;
+		return $result;
 	}
+
 }
 
