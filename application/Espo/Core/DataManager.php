@@ -41,13 +41,13 @@ class DataManager
 	 *
 	 * @return bool
 	 */
-	public function rebuild()
+	public function rebuild($entityList = array())
 	{
 		$result = $this->clearCache();
 
 		$result &= $this->rebuildMetadata();
 
-		$result &= $this->rebuildDatabase();
+		$result &= $this->rebuildDatabase($entityList);
 
 		return $result;
 	}
@@ -64,7 +64,7 @@ class DataManager
 		$result = $this->getContainer()->get('fileManager')->removeInDir($cacheDir);
 
 		if ($result === false) {
-			throw new Error("Error while clearing cache");
+			throw new Exceptions\Error("Error while clearing cache");
 		}
 
 		return $result;
@@ -75,17 +75,17 @@ class DataManager
 	 *
 	 * @return bool
 	 */
-	public function rebuildDatabase()
+	public function rebuildDatabase($entityList = array())
 	{
 		try {
-			$result = $this->getContainer()->get('schema')->rebuild();
+			$result = $this->getContainer()->get('schema')->rebuild($entityList);
 		} catch (\Exception $e) {
 			$result = false;
 			$GLOBALS['log']->error('Fault to rebuild database schema'.'. Details: '.$e->getMessage());
 		}
 
 		if ($result === false) {
-			throw new Error("Error while rebuilding database");
+			throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
 		}
 
 		return $result;
