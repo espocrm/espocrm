@@ -52,7 +52,8 @@
 			langs: {$langsJs},
 			ajaxUrls: {$ajaxUrls},
 			modRewriteUrl: '{$modRewriteUrl}',
-			serverType: '{$serverType}'
+			serverType: '{$serverType}',
+			OS: '{$OS}'
 		}
 	{literal}
 		var installScript = new InstallScript(opt);

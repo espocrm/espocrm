@@ -42,6 +42,10 @@ var InstallScript = function(opt) {
 	if (typeof(opt.serverType) !== 'undefined') {
 		this.serverType = opt.serverType;
 	}
+	
+	if (typeof(opt.OS) !== 'undefined') {
+		this.OS = opt.OS;
+	}
 
 	this.connSett = {};
 	this.userSett = {};
@@ -525,6 +529,7 @@ InstallScript.prototype.checkAjaxPermission = function() {
 	this.ajaxUrlFinished = 0;
 	this.ajaxUrlPermRes = true;
 	this.ajaxUrlPermMsgs = [];
+	this.ajaxUrlPermInstructions = [];
 
 	var len = this.ajaxUrls.length;
 	for (var count = 0; count < len; count++) {
@@ -600,6 +605,9 @@ InstallScript.prototype.callbackAjaxPerm = function(data) {
 	if (typeof(data.success) != 'undefined' && !data.success) {
 		this.ajaxUrlPermRes = false;
 		this.ajaxUrlPermMsgs.push(data.errorMsg);
+		if (typeof(data.errorFixInstruction) != 'undefined') {
+			this.ajaxUrlPermInstructions.push(data.errorFixInstruction);
+		}
 	}
 
 	if (this.ajaxUrlFinished == this.ajaxUrls.length) {
@@ -608,7 +616,10 @@ InstallScript.prototype.callbackAjaxPerm = function(data) {
 			'success': this.ajaxUrlPermRes
 		}
 		if (!this.ajaxUrlPermRes) {
-			var errorMsg = this.getLang('Permission denied') + ':<br>' + this.ajaxUrlPermMsgs.join('<br>');
+			var errorMsg = this.getLang('Permission denied') + ' ( ' + this.ajaxUrlPermMsgs.join(', ') + ' ) .';
+			if (this.ajaxUrlPermInstructions.length > 0) {
+				errorMsg += '<br>' + this.getLang('permissionInstruction').replace('"{C}"', this.ajaxUrlPermInstructions.join('<br>'));
+			}
 			ajaxData.errorMsg = errorMsg;
 		}
 		this.checkAction(ajaxData);
@@ -625,8 +636,10 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 		return;
 	}
 	ajaxData.success = false;
-	ajaxData.errorMsg = (typeof(this.langs) !== 'undefined' && typeof(this.langs['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['modRewriteHelp'][this.serverType] : this.langs['modRewriteHelp']['default'];
-	
+	if (typeof(this.langs) !== 'undefined') {
+		ajaxData.errorMsg = (typeof(this.langs['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['modRewriteHelp'][this.serverType] : this.langs['modRewriteHelp']['default'];
+		ajaxData.errorMsg += (typeof(this.langs['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['modRewriteInstruction'][this.serverType][this.OS] : '';
+	}
 	var realCheckIndex = this.checkIndex - 1;
 	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'
 		&& typeof(this.checkActions[realCheckIndex].break) != 'undefined') {

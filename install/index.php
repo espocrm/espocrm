@@ -20,16 +20,36 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-error_reporting(0);
+//error_reporting(-1);
 session_start();
 
 require_once('../bootstrap.php');
 
+// get user selected language
+$userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
+$langFileName = 'core/i18n/'.$userLang.'.php';
+$langs = array();
+if (file_exists('install/'.$langFileName)) {
+	$langs = include($langFileName);
+} else {
+	$langs = include('core/i18n/en_US.php');
+}
+
+require_once 'core/SystemHelper.php';
+$systemHelper = new SystemHelper();
+
+if (!$systemHelper->initWritable()) {
+	$dir = $systemHelper->getWritableDir();
+
+	$message = $langs['Bad init Permission'];
+	$message = str_replace('{*}', $dir, $message);
+	$message = str_replace('{C}', $systemHelper->getPermissionCommands($dir, '775'), $message);
+	die($message);
+}
+
 require_once ('install/vendor/smarty/libs/Smarty.class.php');
 
 require_once 'core/Installer.php';
-
-require_once 'core/SystemHelper.php';
 
 $smarty = new Smarty();
 $installer = new Installer();
@@ -60,20 +80,8 @@ if (!empty($_REQUEST)) {
 	}
 }
 
-// get user selected language
-$userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
-$langFileName = 'core/i18n/'.$userLang.'.php';
-$langs = array();
-if (file_exists('install/'.$langFileName)) {
-	$langs = include($langFileName);
-} else {
-	$langs = include('core/i18n/en_US.php');
-}
-
 $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
-
-$systemHelper = new SystemHelper();
 
 // include actions and set tpl name
 $tplName = 'main.tpl';
@@ -95,6 +103,8 @@ switch ($action) {
 		$smarty->assign("modRewriteUrl", $modRewriteUrl);
 		$serverType = $systemHelper->getServerType();
 		$smarty->assign("serverType", $serverType);
+		$os = $systemHelper->getOS();
+		$smarty->assign("OS", $os);
 		break;
 
     case 'step4':

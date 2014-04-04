@@ -35,10 +35,21 @@ class SystemHelper
 
 	protected $modRewriteUrl = '/api/v1/Metadata';
 
+	protected $writableDir = 'data';
 
-	public function __construct()
+
+	public function initWritable()
 	{
+		if (is_writable($this->writableDir)) {
+			return true;
+		}
 
+		return false;
+	}
+
+	public function getWritableDir()
+	{
+		return $this->writableDir;
 	}
 
 
@@ -96,92 +107,6 @@ class SystemHelper
 		return $result;
 	}
 
-	public function checkModRewrite()
-	{
-		if ( function_exists('apache_get_modules') && in_array('mod_rewrite',apache_get_modules()) ) {
-			return true;
-		} elseif (isset($_SERVER['IIS_UrlRewriteModule'])) {
-			return true;
-		} elseif (getenv('ESPO_MR')=='On' ) {
-			return true;
-		} elseif (isset($_SERVER['ESPO_MR'])) {
-			return true;
-		} elseif ($this->checkModRewriteByUrl()) {
-			return true;
-		}
-
-		return false;
-	}
-
-	protected function checkModRewriteByUrl()
-	{
-		$url = $this->getBaseUrl().$this->modRewriteUrl;
-
-		if (!$this->isCurl()) {
-			$httpCode = $this->getHttpCodeByCurl($url);
-		}
-
-		$httpCode = $this->getHttpCodeByHeader($url);
-
-		if ($httpCode != false && !empty($httpCode)) {
-			if ($httpCode == '200' || $httpCode == '401') {
-				return true;
-			}
-		}
-
-		return false;
-	}
-	
-	public function getModRewriteUrl()
-	{
-		return $this->modRewriteUrl;
-	}
-
-	protected function getHttpCodeByCurl($url)
-	{
-		$ch = curl_init($url);
-
-		curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-
-		$response = curl_exec($ch);
-		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-		curl_close($ch);
-
-		if ($response != false && !empty($httpCode)) {
-			return $httpCode;
-		}
-
-		return false;
-	}
-
-	protected function getHttpCodeByHeader($url)
-	{
-		stream_context_set_default(
-			array(
-				'http' => array(
-					'timeout' => 3.0,
-				)
-			)
-		);
-		$headers = get_headers($url);
-
-		if ($headers != false) {
-
-			preg_match('/HTTP.*([0-9]{3})/i', $headers[0], $match);
-
-			return $httpCode = trim($match[1]);
-		}
-
-		return false;
-	}
-
-	protected function isCurl()
-	{
-		return function_exists('curl_version');
-	}
-
 	public function getBaseUrl()
 	{
 		$pageUrl = ($_SERVER["HTTPS"] == 'on') ? 'https://' : 'http://';
@@ -197,6 +122,10 @@ class SystemHelper
 		return $baseUrl;
 	}
 
+	public function getModRewriteUrl()
+	{
+		return $this->modRewriteUrl;
+	}
 
 	/**
 	 * Get web server name
@@ -208,9 +137,123 @@ class SystemHelper
 		$serverSoft = $_SERVER['SERVER_SOFTWARE'];
 
 		preg_match('/^(.*)\//i', $serverSoft, $match);
+		if (empty($match[1])) {
+			preg_match('/^(.*)\/?/i', $serverSoft, $match);
+		}
 		$serverName = strtolower( trim($match[1]) );
 
 		return $serverName;
+	}
+
+	/**
+	 * Get Operating System of web server. Details http://en.wikipedia.org/wiki/Uname
+	 *
+	 * @return string  Ex. "windows", "mac", "linux"
+	 */
+	public function getOS()
+	{
+		$osList = array(
+			'windows' => array(
+				'win',
+				'UWIN',
+			),
+			'mac' => array(
+				'mac',
+				'darwin',
+			),
+			'linux' => array(
+				'linux',
+				'cygwin',
+				'GNU',
+				'FreeBSD',
+				'OpenBSD',
+				'NetBSD',
+			),
+		);
+
+		$sysOS = strtolower(PHP_OS);
+
+		foreach ($osList as $osName => $osSystem) {
+			if (preg_match('/^('.implode('|', $osSystem).')/i', $sysOS)) {
+				return $osName;
+			}
+		}
+
+		return false;
+	}
+
+
+	public function getRootDir()
+	{
+		$rootDir = dirname(__FILE__);
+
+		$rootDir = preg_replace('/\/install\/core\/?/', '', $rootDir, 1);
+
+		return $rootDir;
+	}
+
+	public function getPhpBin()
+	{
+		return (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
+	}
+
+	public function getChmodCommand($path, $permissions = array('755'), $isFile = null)
+	{
+		$path = $this->getFullPath($path);
+
+		if (is_string($permissions)) {
+			$permissions = (array) $permissions;
+		}
+
+		if (!isset($isFile) && count($permissions) == 1) {
+			return 'chmod -R '.$permissions[0].' '.$path;
+		}
+
+		$bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
+
+		$commands = array();
+		$commands[] = 'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
+		$commands[] = 'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
+
+		if (count($permissions) >= 2) {
+			return implode(' && ', $commands);
+		}
+
+		return $isFile ? $commands[0] : $commands[1];
+	}
+
+	public function getChownCommand($path)
+	{
+		$owner = posix_getuid();
+		$group = posix_getegid();
+
+		if (empty($owner) || empty($group)) {
+			return null;
+		}
+
+		return 'chown -R '.$owner.':'.$group.' '.$this->getFullPath($path);
+	}
+
+	public function getFullPath($path)
+	{
+		if (!empty($path)) {
+			$path = DIRECTORY_SEPARATOR . $path;
+		}
+
+		return $this->getRootDir() . $path;
+	}
+
+	public function getPermissionCommands($path, $permissions = array('644', '755'), $isFile = null)
+	{
+		$commands = array();
+		$commands[] = $this->getChmodCommand($path, $permissions, $isFile);
+
+		$chown = $this->getChownCommand($path);
+		if (isset($chown)) {
+			$commands[] = $chown;
+		}
+
+		return implode(' && ', $commands);
 	}
 
 }

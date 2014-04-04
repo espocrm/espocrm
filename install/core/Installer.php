@@ -295,7 +295,6 @@ class Installer
 	public function fixAjaxPermission($url = null)
 	{
 		$permission = array(0644, 0755);
-
 		$fileManager = $this->app->getContainer()->get('fileManager');
 
 		$result = false;
@@ -310,7 +309,7 @@ class Installer
 				$result = $fileManager->getPermissionUtils()->chmod($path, $permission, true);
 			}
 		}
-
+		
 		return $result;
 	}
 
