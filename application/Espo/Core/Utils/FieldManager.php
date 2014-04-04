@@ -61,26 +61,33 @@ class FieldManager
 
 	public function update($name, $fieldDef, $scope)
 	{
-		$existingField = $this->read($name, $scope);
-		if (isset($existingField) && (!isset($existingField['isCustom']) || !$existingField['isCustom'])) {
-			throw new Error('Core field ['.$name.'] cannot be changed in '.$scope);
-		}
-
-		/*Add option to metadata that identify the custom field*/
-		if (!isset($fieldDef[$this->customOptionName]) || !$fieldDef[$this->customOptionName]) {
+		/*Add option to metadata to identify the custom field*/
+		if (!$this->isCore($name, $scope)) {
 			$fieldDef[$this->customOptionName] = true;
 		}
 
-		$defs = $this->normalizeDefs($name, $fieldDef);
-
-		return $this->setEntityDefs($defs, $scope);
+		return $this->setEntityDefs($name, $fieldDef, $scope);
 	}
 
 	public function delete($name, $scope)
 	{
+		if ($this->isCore($name, $scope)) {
+			throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
+		}
+
 		$unsets = 'fields.'.$name;
 
 		return $this->getMetadata()->unsets($unsets, $this->metadataType, $scope);
+	}
+
+	protected function setEntityDefs($name, $fieldDef, $scope)
+	{
+		$fieldDef = $this->normalizeDefs($name, $fieldDef);
+
+		$data = Json::encode($fieldDef);
+		$result = $this->getMetadata()->set($data, $this->metadataType, $scope);
+
+		return $result;
 	}
 
 	/**
@@ -92,6 +99,16 @@ class FieldManager
 	 */
 	protected function normalizeDefs($fieldName, array $fieldDef)
 	{
+		if (isset($fieldDef['name'])) {
+			unset($fieldDef['name']);
+		}
+
+		foreach ($fieldDef as $defName => $defValue) {
+			if (!isset($defValue)) {
+				unset($fieldDef[$defName]);
+			}
+		}
+
 		return array(
 			'fields' => array(
 				$fieldName => $fieldDef,
@@ -99,13 +116,14 @@ class FieldManager
 		);
 	}
 
-
-	protected function setEntityDefs($defs, $scope)
+	protected function isCore($name, $scope)
 	{
-		$data = Json::encode($defs);
-		$result = $this->getMetadata()->set($data, $this->metadataType, $scope);
+		$existingField = $this->read($name, $scope);
+		if (isset($existingField) && (!isset($existingField[$this->customOptionName]) || !$existingField[$this->customOptionName])) {
+			return true;
+		}
 
-		return $result;
+		return false;
 	}
 
 

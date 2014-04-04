@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
 
@@ -30,13 +30,13 @@ class ControllerManager
 	private $config;
 
 	private $metadata;
-	
+
 	private $container;
 
 	public function __construct(\Espo\Core\Container $container)
-	{	
+	{
 		$this->container = $container;
-		
+
 		$this->config = $this->container->get('config');
 		$this->metadata = $this->container->get('metadata');
 	}
@@ -50,9 +50,9 @@ class ControllerManager
 	{
 		return $this->metadata;
 	}
-	
+
 	public function process($controllerName, $actionName, $params, $data, $request)
-	{		
+	{
 		$customeClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
 		if (class_exists($customeClassName)) {
 			$controllerClassName = $customeClassName;
@@ -63,42 +63,42 @@ class ControllerManager
 			} else {
 				$controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($controllerName);
 			}
-		}		
-		
-		if ($data && $request->getContentType() == 'application/json') {
+		}
+
+		if ($data && stristr($request->getContentType(), 'application/json')) {
 			$data = json_decode($data);
 		}
 
-		
+
 		if ($data instanceof \stdClass) {
 			$data = get_object_vars($data);
 		}
 
 		if (!class_exists($controllerClassName)) {
 			throw new NotFound("Controller '$controllerName' is not found");
-		}		
+		}
 
 		$controller = new $controllerClassName($this->container);
 
 		if ($actionName == 'index') {
 			$actionName = $controllerClassName::$defaultAction;
-		}		
-		
+		}
+
 		$actionNameUcfirst = ucfirst($actionName);
-		
-		$beforeMethodName = 'before' . $actionNameUcfirst;			 
+
+		$beforeMethodName = 'before' . $actionNameUcfirst;
 		if (method_exists($controller, $beforeMethodName)) {
 			$controller->$beforeMethodName($params, $data, $request);
 		}
 		$actionMethodName = 'action' . $actionNameUcfirst;
-		
-		if (!method_exists($controller, $actionMethodName)) {			
+
+		if (!method_exists($controller, $actionMethodName)) {
 			throw new NotFound("Action '$actionMethodName' does not exist in controller '$controller'");
-		}	
+		}
 
 		$result = $controller->$actionMethodName($params, $data, $request);
-		
-		$afterMethodName = 'after' . $actionNameUcfirst;	
+
+		$afterMethodName = 'after' . $actionNameUcfirst;
 		if (method_exists($controller, $afterMethodName)) {
 			$controller->$afterMethodName($params, $data, $request);
 		}
@@ -106,7 +106,7 @@ class ControllerManager
 		if (is_array($result) || is_bool($result)) {
         	return \Espo\Core\Utils\Json::encode($result);
 		}
-		
+
 		return $result;
 	}
 
