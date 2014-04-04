@@ -24,16 +24,6 @@ namespace Espo\Services;
 
 class Attachment extends Record
 {
-	/*protected function init()
-	{
-		$this->dependencies[] = 'fileManager';
-	}
-	
-	protected function getFileManager()
-	{
-		return $this->getInjection('fileManager');
-	}*/
-
 	public function createEntity($data)
 	{		
 		if (!empty($data['file'])) {
