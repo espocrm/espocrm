@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database;
 
@@ -70,15 +70,14 @@ class Converter
 	}
 
 
-	public function getSchemaFromMetadata()
+	public function getSchemaFromMetadata($entityList = array())
 	{
-		if (!isset($this->schemaFromMetadata)) {
+		//if (!isset($this->schemaFromMetadata)) {
         	$ormMeta = $this->getMetadata()->getOrmMetadata();
         	$entityDefs = $this->getMetadata()->get('entityDefs');
 
-			$schema = $this->getSchemaConverter()->process($ormMeta, $entityDefs);
-			$this->schemaFromMetadata = $schema;
-		}
+			$this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityDefs, $entityList);
+		//}
 
 		return $this->schemaFromMetadata;
 	}

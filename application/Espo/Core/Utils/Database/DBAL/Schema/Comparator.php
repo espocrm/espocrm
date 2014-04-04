@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
@@ -39,7 +39,7 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
 
 			if (strtolower($column1DbTypeName) != strtolower($column2DbTypeName)) {
             	$changedProperties[] = 'type';
-			}            
+			}
 			//END: espo
         }
 

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Platforms;
 
@@ -31,242 +31,242 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 {
 
 	public function getAlterTableSQL(TableDiff $diff)
-    {
-        $columnSql = array();
-        $queryParts = array();
-        if ($diff->newName !== false) {
-            $queryParts[] = 'RENAME TO ' . $diff->newName;
-        }
+	{
+		$columnSql = array();
+		$queryParts = array();
+		if ($diff->newName !== false) {
+			$queryParts[] = 'RENAME TO ' . $diff->newName;
+		}
 
-        foreach ($diff->addedColumns as $column) {
-            if ($this->onSchemaAlterTableAddColumn($column, $diff, $columnSql)) {
-                continue;
-            }
+		foreach ($diff->addedColumns as $column) {
+			if ($this->onSchemaAlterTableAddColumn($column, $diff, $columnSql)) {
+				continue;
+			}
 
-            $columnArray = $column->toArray();
-            $columnArray['comment'] = $this->getColumnComment($column);
-            $queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
-        }
+			$columnArray = $column->toArray();
+			$columnArray['comment'] = $this->getColumnComment($column);
+			$queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
+		}
 
-        foreach ($diff->removedColumns as $column) {
-            if ($this->onSchemaAlterTableRemoveColumn($column, $diff, $columnSql)) {
-                continue;
-            }
+		foreach ($diff->removedColumns as $column) {
+			if ($this->onSchemaAlterTableRemoveColumn($column, $diff, $columnSql)) {
+				continue;
+			}
 
-            //$queryParts[] =  'DROP ' . $column->getQuotedName($this); //espo: no needs to remove columns
-        }
+			//$queryParts[] =  'DROP ' . $column->getQuotedName($this); //espo: no needs to remove columns
+		}
 
-        foreach ($diff->changedColumns as $columnDiff) {
-            if ($this->onSchemaAlterTableChangeColumn($columnDiff, $diff, $columnSql)) {
-                continue;
-            }
+		foreach ($diff->changedColumns as $columnDiff) {
+			if ($this->onSchemaAlterTableChangeColumn($columnDiff, $diff, $columnSql)) {
+				continue;
+			}
 
-            /* @var $columnDiff \Doctrine\DBAL\Schema\ColumnDiff */
-            $column = $columnDiff->column;
-            $columnArray = $column->toArray();
-            $columnArray['comment'] = $this->getColumnComment($column);
+			/* @var $columnDiff \Doctrine\DBAL\Schema\ColumnDiff */
+			$column = $columnDiff->column;
+			$columnArray = $column->toArray();
+			$columnArray['comment'] = $this->getColumnComment($column);
 
-            $queryParts[] =  'CHANGE ' . ($columnDiff->oldColumnName) . ' '
-                    . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
-        }
+			$queryParts[] =  'CHANGE ' . $this->espoQuote($columnDiff->oldColumnName) . ' '
+					. $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
+		}
 
-        //espo: It works not correctly. It can rename some existing fields
+		//espo: It works not correctly. It can rename some existing fields
 		foreach ($diff->renamedColumns as $oldColumnName => $column) {
-            if ($this->onSchemaAlterTableRenameColumn($oldColumnName, $column, $diff, $columnSql)) {
-                continue;
-            }
+			if ($this->onSchemaAlterTableRenameColumn($oldColumnName, $column, $diff, $columnSql)) {
+				continue;
+			}
 
-            $columnArray = $column->toArray();
-            $columnArray['comment'] = $this->getColumnComment($column);
-            /*$queryParts[] =  'CHANGE ' . $oldColumnName . ' '
-                    . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
-            $queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); //espo: fixed the problem		   
-        } //espo: END    	
-		
-		
+			$columnArray = $column->toArray();
+			$columnArray['comment'] = $this->getColumnComment($column);
+			/*$queryParts[] =  'CHANGE ' . $oldColumnName . ' '
+					. $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
+			$queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); //espo: fixed the problem
+		} //espo: END
+
+
 		$sql = array();
-        $tableSql = array();
+		$tableSql = array();
 
-        if ( ! $this->onSchemaAlterTable($diff, $tableSql)) {
-            if (count($queryParts) > 0) {
-                $sql[] = 'ALTER TABLE ' . $this->espoQuote($diff->name) . ' ' . implode(", ", $queryParts);
-            }
-            $sql = array_merge(
-                $this->getPreAlterTableIndexForeignKeySQL($diff),
-                $sql,
-                $this->getPostAlterTableIndexForeignKeySQL($diff)
-            );
-        }         
-		
-
-        return array_merge($sql, $tableSql, $columnSql);
-    }
+		if ( ! $this->onSchemaAlterTable($diff, $tableSql)) {
+			if (count($queryParts) > 0) {
+				$sql[] = 'ALTER TABLE ' . $this->espoQuote($diff->name) . ' ' . implode(", ", $queryParts);
+			}
+			$sql = array_merge(
+				$this->getPreAlterTableIndexForeignKeySQL($diff),
+				$sql,
+				$this->getPostAlterTableIndexForeignKeySQL($diff)
+			);
+		}
 
 
-    protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
-    {
-        $sql = array();
-        $table = $diff->name;
-
-        foreach ($diff->removedIndexes as $remKey => $remIndex) {
-
-            foreach ($diff->addedIndexes as $addKey => $addIndex) {
-                if ($remIndex->getColumns() == $addIndex->getColumns()) {
-
-                    $type = '';
-                    if ($addIndex->isUnique()) {
-                        $type = 'UNIQUE ';
-                    }
-
-                    $query = 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP INDEX ' . $remIndex->getName() . ', ';
-                    $query .= 'ADD ' . $type . 'INDEX ' . $addIndex->getName();
-                    $query .= ' (' . $this->getIndexFieldDeclarationListSQL($addIndex->getQuotedColumns($this)) . ')';
-
-                    $sql[] = $query;
-
-                    unset($diff->removedIndexes[$remKey]);
-                    unset($diff->addedIndexes[$addKey]);
-
-                    break;
-                }
-            }
-        }
-
-        $sql = array_merge($sql, parent::getPreAlterTableIndexForeignKeySQL($diff));
-
-        return $sql;
-    }
+		return array_merge($sql, $tableSql, $columnSql);
+	}
 
 
-    public function getDropIndexSQL($index, $table=null)
-    {
-        if ($index instanceof Index) {
-            $indexName = $index->getQuotedName($this);
-        } else if(is_string($index)) {
-            $indexName = $index;
-        } else {
-            throw new \InvalidArgumentException('MysqlPlatform::getDropIndexSQL() expects $index parameter to be string or \Doctrine\DBAL\Schema\Index.');
-        }
+	protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
+	{
+		$sql = array();
+		$table = $diff->name;
 
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        } else if(!is_string($table)) {
-            throw new \InvalidArgumentException('MysqlPlatform::getDropIndexSQL() expects $table parameter to be string or \Doctrine\DBAL\Schema\Table.');
-        }
+		foreach ($diff->removedIndexes as $remKey => $remIndex) {
 
-        if ($index instanceof Index && $index->isPrimary()) {
-            // mysql primary keys are always named "PRIMARY",
-            // so we cannot use them in statements because of them being keyword.
-            return $this->getDropPrimaryKeySQL($table);
-        }
+			foreach ($diff->addedIndexes as $addKey => $addIndex) {
+				if ($remIndex->getColumns() == $addIndex->getColumns()) {
 
-        return 'DROP INDEX ' . $indexName . ' ON ' . $this->espoQuote($table);
-    }
+					$type = '';
+					if ($addIndex->isUnique()) {
+						$type = 'UNIQUE ';
+					}
 
-    protected function getDropPrimaryKeySQL($table)
-    {
-        return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP PRIMARY KEY';
-    }
+					$query = 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP INDEX ' . $remIndex->getName() . ', ';
+					$query .= 'ADD ' . $type . 'INDEX ' . $addIndex->getName();
+					$query .= ' (' . $this->getIndexFieldDeclarationListSQL($addIndex->getQuotedColumns($this)) . ')';
 
-    public function getDropTemporaryTableSQL($table)
-    {
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        } else if(!is_string($table)) {
-            throw new \InvalidArgumentException('getDropTableSQL() expects $table parameter to be string or \Doctrine\DBAL\Schema\Table.');
-        }
+					$sql[] = $query;
 
-        return 'DROP TEMPORARY TABLE ' . $this->espoQuote($table);
-    }
+					unset($diff->removedIndexes[$remKey]);
+					unset($diff->addedIndexes[$addKey]);
 
-    //ESPO: fix problem with quoting table name
-    public function espoQuote($name)
+					break;
+				}
+			}
+		}
+
+		$sql = array_merge($sql, parent::getPreAlterTableIndexForeignKeySQL($diff));
+
+		return $sql;
+	}
+
+
+	public function getDropIndexSQL($index, $table=null)
+	{
+		if ($index instanceof Index) {
+			$indexName = $index->getQuotedName($this);
+		} else if(is_string($index)) {
+			$indexName = $index;
+		} else {
+			throw new \InvalidArgumentException('MysqlPlatform::getDropIndexSQL() expects $index parameter to be string or \Doctrine\DBAL\Schema\Index.');
+		}
+
+		if ($table instanceof Table) {
+			$table = $table->getQuotedName($this);
+		} else if(!is_string($table)) {
+			throw new \InvalidArgumentException('MysqlPlatform::getDropIndexSQL() expects $table parameter to be string or \Doctrine\DBAL\Schema\Table.');
+		}
+
+		if ($index instanceof Index && $index->isPrimary()) {
+			// mysql primary keys are always named "PRIMARY",
+			// so we cannot use them in statements because of them being keyword.
+			return $this->getDropPrimaryKeySQL($table);
+		}
+
+		return 'DROP INDEX ' . $indexName . ' ON ' . $this->espoQuote($table);
+	}
+
+	protected function getDropPrimaryKeySQL($table)
+	{
+		return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP PRIMARY KEY';
+	}
+
+	public function getDropTemporaryTableSQL($table)
+	{
+		if ($table instanceof Table) {
+			$table = $table->getQuotedName($this);
+		} else if(!is_string($table)) {
+			throw new \InvalidArgumentException('getDropTableSQL() expects $table parameter to be string or \Doctrine\DBAL\Schema\Table.');
+		}
+
+		return 'DROP TEMPORARY TABLE ' . $this->espoQuote($table);
+	}
+
+	//ESPO: fix problem with quoting table name
+	public function espoQuote($name)
 	{
 		if ($name instanceof Table) {
-            $name = $name->getQuotedName($this);
-        }
+			$name = $name->getQuotedName($this);
+		}
 
 		if (isset($name[0]) && $name[0] != '`') {
-        	$name = $this->quoteIdentifier($name);
+			$name = $this->quoteIdentifier($name);
 		}
 		return $name;
 	}
 
-    public function getCreateForeignKeySQL(\Doctrine\DBAL\Schema\ForeignKeyConstraint $foreignKey, $table)
-    {
-        $query = 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD ' . $this->getForeignKeyDeclarationSQL($foreignKey);
+	public function getCreateForeignKeySQL(\Doctrine\DBAL\Schema\ForeignKeyConstraint $foreignKey, $table)
+	{
+		$query = 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD ' . $this->getForeignKeyDeclarationSQL($foreignKey);
 
-        return $query;
-    }
+		return $query;
+	}
 
 	public function getIndexDeclarationSQL($name, Index $index)
-    {
-        $columns = $index->getQuotedColumns($this);
+	{
+		$columns = $index->getQuotedColumns($this);
 
-        if (count($columns) === 0) {
-            throw new \InvalidArgumentException("Incomplete definition. 'columns' required.");
-        }
+		if (count($columns) === 0) {
+			throw new \InvalidArgumentException("Incomplete definition. 'columns' required.");
+		}
 
-        return $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $this->espoQuote($name) . ' ('
-             . $this->getIndexFieldDeclarationListSQL($columns)
-             . ')';
-    }
+		return $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $this->espoQuote($name) . ' ('
+			 . $this->getIndexFieldDeclarationListSQL($columns)
+			 . ')';
+	}
 
 	public function getCreateIndexSQL(Index $index, $table)
-    {
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
-        $name = $index->getQuotedName($this);
-        $columns = $index->getQuotedColumns($this);
+	{
+		if ($table instanceof Table) {
+			$table = $table->getQuotedName($this);
+		}
+		$name = $index->getQuotedName($this);
+		$columns = $index->getQuotedColumns($this);
 
-        if (count($columns) == 0) {
-            throw new \InvalidArgumentException("Incomplete definition. 'columns' required.");
-        }
+		if (count($columns) == 0) {
+			throw new \InvalidArgumentException("Incomplete definition. 'columns' required.");
+		}
 
-        if ($index->isPrimary()) {
-            return $this->getCreatePrimaryKeySQL($index, $table);
-        }
+		if ($index->isPrimary()) {
+			return $this->getCreatePrimaryKeySQL($index, $table);
+		}
 
-        $query = 'CREATE ' . $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name . ' ON ' . $this->espoQuote($table);
-        $query .= ' (' . $this->getIndexFieldDeclarationListSQL($columns) . ')';
+		$query = 'CREATE ' . $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name . ' ON ' . $this->espoQuote($table);
+		$query .= ' (' . $this->getIndexFieldDeclarationListSQL($columns) . ')';
 
-        return $query;
-    }
+		return $query;
+	}
 
 	public function getDropConstraintSQL($constraint, $table)
-    {
-        if ($constraint instanceof Constraint) {
-            $constraint = $constraint->getQuotedName($this);
-        }
+	{
+		if ($constraint instanceof Constraint) {
+			$constraint = $constraint->getQuotedName($this);
+		}
 
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
+		if ($table instanceof Table) {
+			$table = $table->getQuotedName($this);
+		}
 
-        return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP CONSTRAINT ' . $constraint;
-    }
+		return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP CONSTRAINT ' . $constraint;
+	}
 
 	public function getDropForeignKeySQL($foreignKey, $table)
-    {
-        if ($foreignKey instanceof ForeignKeyConstraint) {
-            $foreignKey = $foreignKey->getQuotedName($this);
-        }
+	{
+		if ($foreignKey instanceof ForeignKeyConstraint) {
+			$foreignKey = $foreignKey->getQuotedName($this);
+		}
 
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
+		if ($table instanceof Table) {
+			$table = $table->getQuotedName($this);
+		}
 
-        return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP FOREIGN KEY ' . $foreignKey;
-    }
+		return 'ALTER TABLE ' . $this->espoQuote($table) . ' DROP FOREIGN KEY ' . $foreignKey;
+	}
 
 	public function getCreatePrimaryKeySQL(Index $index, $table)
-    {
-    	if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
+	{
+		if ($table instanceof Table) {
+			$table = $table->getQuotedName($this);
+		}
 
-        return 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index->getQuotedColumns($this)) . ')';
-    }
-	//end: ESPO	
+		return 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index->getQuotedColumns($this)) . ')';
+	}
+	//end: ESPO
 }
