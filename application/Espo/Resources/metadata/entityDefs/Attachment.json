@@ -22,6 +22,10 @@
         "createdBy": {
             "type": "link",
             "readOnly": true
+        },
+        "contents": {
+            "type": "text",
+            "notStorable": true
         }
     },
     "links": {

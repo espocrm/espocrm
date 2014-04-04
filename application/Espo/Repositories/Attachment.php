@@ -20,30 +20,35 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Entities;
+namespace Espo\Repositories;
 
-class Email extends \Espo\Core\ORM\Entity
+use Espo\ORM\Entity;
+
+class Attachment extends \Espo\Core\ORM\Repositories\RDB
 {
-
-	protected function getSubject()
+	protected $dependencies = array(
+		'fileManager',
+	);
+	
+	protected function getFileManager()
 	{
-		return $this->get('name');
+		return $this->getInjection('fileManager');
 	}
 	
-	protected function setSubject($value)
+	public function save(Entity $entity)
 	{
-		return $this->set('name', $value);
-	}
-	
-	public function addAttachment(\Espo\Entities\Attachment $attachment)
-	{
-		if (!empty($this->id)) {
-			$attachment->set('parentId', $this->id);
-			$attachment->set('parentType', 'Email');
-			if ($this->entityManager->saveEntity($attachment)) {
-				return true;
+		$isNew = $entity->isNew();
+		$result = parent::save($entity);
+		
+		if ($isNew) {
+			if (!empty($entity->id) && $entity->has('contents')) {
+				$contents = $entity->get('contents');
+				$this->getFileManager()->putContents('data/upload/' . $entity->id, $contents);
 			}
 		}
+		
+		return $result;
 	}
+
 }
 
