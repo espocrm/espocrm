@@ -22,6 +22,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Exceptions\Error;
+
 class Metadata
 {
 	protected $meta = null;
@@ -245,6 +247,9 @@ class Metadata
 		$path = $this->paths['customPath'];
 
 		$result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
+		if ($result === false) {
+			throw new Error("Error saving metadata. See log file for details.");
+		}
 
 		$this->init(true);
 

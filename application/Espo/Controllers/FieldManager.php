@@ -52,19 +52,22 @@ class FieldManager extends \Espo\Core\Controllers\Base
 			throw new Error("Field 'name' cannnot be empty");
 		}
 
-		$name = $data['name'];
-		unset($data['name']);
+		$fieldManager = $this->getContainer()->get('fieldManager');
+		$fieldManager->create($data['name'], $data, $params['scope']);
 
-		$this->getContainer()->get('fieldManager')->create($name, $data, $params['scope']);
+		$this->getContainer()->get('dataManager')->rebuild($params['scope']);
 
-		return $this->getContainer()->get('fieldManager')->read($name, $params['scope']);
+		return $fieldManager->read($data['name'], $params['scope']);
 	}
 
 	public function actionUpdate($params, $data)
 	{
-		$this->getContainer()->get('fieldManager')->update($params['name'], $data, $params['scope']);
+		$fieldManager = $this->getContainer()->get('fieldManager');
+		$fieldManager->update($params['name'], $data, $params['scope']);
 
-		return $this->getContainer()->get('fieldManager')->read($params['name'], $params['scope']);
+		$this->getContainer()->get('dataManager')->rebuild($params['scope']);
+
+		return $fieldManager->read($params['name'], $params['scope']);
 	}
 
 	public function actionDelete($params, $data)
