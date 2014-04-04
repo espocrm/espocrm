@@ -185,10 +185,15 @@ class RDB extends \Espo\ORM\Repository
 		$entityName = $entity->relations[$relationName]['entity'];
 		$this->handleSelectParams($params, $entityName);		
 		
-		$dataArr = $this->getMapper()->selectRelated($entity, $relationName, $params);
+		$result = $this->getMapper()->selectRelated($entity, $relationName, $params);		
+
+		if (is_array($result)) {
+			$collection = new EntityCollection($result, $entityName, $this->entityFactory);	
+			return $collection;
+		} else {
+			return $result;
+		}
 		
-		$collection = new EntityCollection($dataArr, $entityName, $this->entityFactory);	
-		return $collection;
 	}	
 		
 	public function countRelated(Entity $entity, $relationName, array $params = array())
