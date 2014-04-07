@@ -33,6 +33,7 @@ return array (
   'recordsPerPage' => 20,
   'recordsPerPageSmall' => 5,
   'applicationName' => 'EspoCRM',
+  'version' => '@@version',
   'timeZone' => 'UTC',
   'dateFormat' => 'MM/DD/YYYY',
   'timeFormat' => 'HH:mm',
@@ -113,7 +114,6 @@ return array (
     'logger',
     'devMode',
   ), 
-  'isInstalled' => false, 
+  'isInstalled' => false,  
 );
 
-?>
