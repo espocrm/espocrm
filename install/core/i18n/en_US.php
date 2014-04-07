@@ -23,7 +23,8 @@
 return array(
 	'Main page title' => 'Welcome to EspoCRM',
 	'Main page header' => '',
-	'Bad init Permission' => 'Permission denied for "{*}" directory. Please set 775 for "{*}" or just execute this command in the terminal <pre><b>{C}</b></pre>',
+	'Bad init Permission' => 'Permission denied for "{*}" directory. Please set 775 for "{*}" or just execute this command in the terminal <pre><b>{C}</b></pre>
+	Operation not permitted? Try this one: {CSU}',
 	'Start page title' => 'License Agreement',
 	'Step1 page title' => 'License Agreement',
 	'License Agreement' => 'License Agreement',
@@ -90,7 +91,7 @@ return array(
 	'Cannot create user' => 'Cannot create user',
 	'Permission denied' => 'Permission denied',
 	'permissionInstruction' => '<br>Run this in Terminal<pre><b>"{C}"</b></pre>',
-	'Cannot write to files' => 'Cannot write to file(s)',
+	'Permission denied to files' => 'Permission denied to file(s)',
 	'Can not save settings' => 'Can not save settings',
 	'Cannot save preferences' => 'Cannot save preferences',
 

@@ -44,6 +44,7 @@ if (!$systemHelper->initWritable()) {
 	$message = $langs['Bad init Permission'];
 	$message = str_replace('{*}', $dir, $message);
 	$message = str_replace('{C}', $systemHelper->getPermissionCommands($dir, '775'), $message);
+	$message = str_replace('{CSU}', $systemHelper->getPermissionCommands($dir, '775', true), $message);
 	die($message);
 }
 

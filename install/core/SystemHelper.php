@@ -197,41 +197,45 @@ class SystemHelper
 		return (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
 	}
 
-	public function getChmodCommand($path, $permissions = array('755'), $isFile = null)
+	public function getChmodCommand($path, $permissions = array('755'), $isSudo = false, $isFile = null)
 	{
 		$path = $this->getFullPath($path);
+
+		$sudoStr = $isSudo ? 'sudo ' : '';
 
 		if (is_string($permissions)) {
 			$permissions = (array) $permissions;
 		}
 
 		if (!isset($isFile) && count($permissions) == 1) {
-			return 'chmod -R '.$permissions[0].' '.$path;
+			return $sudoStr.'chmod -R '.$permissions[0].' '.$path;
 		}
 
 		$bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
 
 		$commands = array();
-		$commands[] = 'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
-		$commands[] = 'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
+		$commands[] = $sudoStr.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
+		$commands[] = $sudoStr.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
 
 		if (count($permissions) >= 2) {
-			return implode(' && ', $commands);
+			return implode('; ', $commands);
 		}
 
 		return $isFile ? $commands[0] : $commands[1];
 	}
 
-	public function getChownCommand($path)
+	public function getChownCommand($path, $isSudo = false)
 	{
 		$owner = posix_getuid();
 		$group = posix_getegid();
+
+		$sudoStr = $isSudo ? 'sudo ' : '';
 
 		if (empty($owner) || empty($group)) {
 			return null;
 		}
 
-		return 'chown -R '.$owner.':'.$group.' '.$this->getFullPath($path);
+		return $sudoStr.'chown -R '.$owner.':'.$group.' '.$this->getFullPath($path);
 	}
 
 	public function getFullPath($path)
@@ -243,12 +247,12 @@ class SystemHelper
 		return $this->getRootDir() . $path;
 	}
 
-	public function getPermissionCommands($path, $permissions = array('644', '755'), $isFile = null)
+	public function getPermissionCommands($path, $permissions = array('644', '755'), $isSudo = false, $isFile = null)
 	{
 		$commands = array();
-		$commands[] = $this->getChmodCommand($path, $permissions, $isFile);
+		$commands[] = $this->getChmodCommand($path, $permissions, $isSudo, $isFile);
 
-		$chown = $this->getChownCommand($path);
+		$chown = $this->getChownCommand($path, $isSudo);
 		if (isset($chown)) {
 			$commands[] = $chown;
 		}
