@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 $result = array('success' => true, 'errorMsg' => '');
@@ -29,7 +29,8 @@ if (!$installer->isWritable()) {
  	foreach ($urls as &$url) {
 		$url = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$url;
  	}
-	$result['errorMsg'] = $langs['Cannot write to files'].':<br>'.implode('<br>', $urls);
+	$result['errorMsg'] = $langs['Permission denied to files'].':<br>'.implode('<br>', $urls);
+	$result['errorFixInstruction'] = $systemHelper->getPermissionCommands('', array('644', '755'));
 }
 
 ob_clean();

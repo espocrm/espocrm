@@ -30,7 +30,7 @@ if (!empty($_REQUEST['url'])) {
 	else {
 		$result['success'] = false;
 		$result['errorMsg'] = $_REQUEST['url'];
-		$result['errorFixInstruction'] = $systemHelper->getPermissionCommands($_REQUEST['url'], array('644', '755'));
+		$result['errorFixInstruction'] = $systemHelper->getPermissionCommands('', array('644', '755'));
 	}
 }
 

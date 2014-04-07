@@ -9,12 +9,16 @@
         },
         "firstName": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 100,
+            "notNull":true,
+            "default":""
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true
+            "required": true,
+            "notNull":true,
+            "default":""
         },
         "title": {
             "type": "varchar",
@@ -193,7 +197,7 @@
             "billingAddressCity": "addressCity",
             "billingAddressState": "addressState",
             "billingAddressPostalCode": "addressPostalCode",
-            "billingAddressCountry": "addressCountry",            
+            "billingAddressCountry": "addressCountry",
             "assignedUser": "assignedUser",
             "teams": "teams"
         },
