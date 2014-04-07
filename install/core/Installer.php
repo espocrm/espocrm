@@ -174,15 +174,16 @@ class Installer
 
 	public function buildDatabase()
 	{
-		try {
-			$this->app->getContainer()->get('schema')->rebuild();
-		} catch (\Exception $e) {
+		$result = false;
 
+		try {
+			$result = $this->app->getContainer()->get('schema')->rebuild();
+		} catch (\Exception $e) {
+			$this->auth();
+			$result = $this->app->getContainer()->get('schema')->rebuild();
 		}
 
-		$this->auth();
-
-		return $this->app->getContainer()->get('schema')->rebuild();
+		return $result;
 	}
 
 	public function setPreferences($preferences)
@@ -309,7 +310,7 @@ class Installer
 				$result = $fileManager->getPermissionUtils()->chmod($path, $permission, true);
 			}
 		}
-		
+
 		return $result;
 	}
 

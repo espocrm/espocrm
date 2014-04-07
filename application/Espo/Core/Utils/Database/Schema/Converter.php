@@ -73,7 +73,6 @@ class Converter
 		$this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
 	}
 
-
 	protected function getFileManager()
 	{
 		return $this->fileManager;
@@ -82,20 +81,6 @@ class Converter
 	protected function getSchema()
 	{
 		return $this->dbalSchema;
-	}
-
-	protected function setOrmMeta(array $ormMeta)
-	{
-		$this->ormMeta = $ormMeta;
-	}
-
-	protected function getOrmMeta()
-	{
-		if (!isset($this->ormMeta)) {
-			throw new Error("ORM metadata cannot be empty");
-		}
-
-		return $this->ormMeta;
 	}
 
 
@@ -112,12 +97,10 @@ class Converter
 			unset($ormMeta['unset']);
 		} //END: unset some keys in orm
 
-		$this->setOrmMeta($ormMeta);
-
 		if (!empty($entityList)) {
 			$entityList = is_string($entityList) ? (array) $entityList : $entityList;
 
-			$dependentEntities = $this->getDependentEntities($entityList);
+			$dependentEntities = $this->getDependentEntities($entityList, $ormMeta);
 			$GLOBALS['log']->debug('Rebuild Database for entities: ['.implode(', ', $entityList).'] with dependent entities: ['.implode(', ', $dependentEntities).']');
 
 			$ormMeta = array_intersect_key($ormMeta, array_flip($dependentEntities));
@@ -128,7 +111,17 @@ class Converter
 		$tables = array();
 		foreach ($ormMeta as $entityName => $entityParams) {
 
-			$tables[$entityName] = $schema->createTable( Util::toUnderScore($entityName) );
+			$tableName = Util::toUnderScore($entityName);
+
+			if ($schema->hasTable($tableName)) {
+				if (!isset($tables[$entityName])) {
+					$tables[$entityName] = $schema->getTable($tableName);
+				}
+				$GLOBALS['log']->debug('DBAL: Table ['.$tableName.'] exists.');
+				continue;
+			}
+
+			$tables[$entityName] = $schema->createTable($tableName);
 
 			$primaryColumns = array();
 			$uniqueColumns = array();
@@ -228,15 +221,19 @@ class Converter
 	 */
 	protected function prepareManyMany($entityName, $relationParams, $tables)
 	{
-		$tableName = $relationParams['relationName'];
+		$tableName = Util::toUnderScore($relationParams['relationName']);
+
+		if ($this->getSchema()->hasTable($tableName)) {
+			$GLOBALS['log']->debug('DBAL: Table ['.$tableName.'] exists.');
+			return $this->getSchema()->getTable($tableName);
+		}
 
 		$isForeignKey = true;
 		if (!isset($relationParams['key']) || !isset($relationParams['foreignKey'])) {
 			$isForeignKey = false;
 		}
 
-
-		$table = $this->getSchema()->createTable( Util::toUnderScore($tableName) );
+		$table = $this->getSchema()->createTable($tableName);
 		$table->addColumn('id', 'int', array('length'=>$this->defaultLength['int'], 'autoincrement' => true, 'notnull' => true,));  //'unique' => true,
 
 		if ($isForeignKey) {
@@ -350,13 +347,11 @@ class Converter
 		return $customTables;
 	}
 
-	protected function getDependentEntities($entityList, $dependentEntities = array())
+	protected function getDependentEntities($entityList, $ormMeta, $dependentEntities = array())
 	{
 		if (is_string($entityList)) {
 			$entityList = (array) $entityList;
 		}
-
-		$ormMeta = $this->getOrmMeta();
 
 		foreach ($entityList as $entityName) {
 
@@ -372,7 +367,7 @@ class Converter
 					$relationEntity = $relationParams['entity'];
 
 					if (!in_array($relationEntity, $dependentEntities)) {
-						$dependentEntities = $this->getDependentEntities($relationEntity, $dependentEntities);
+						$dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
 					}
 				}
 			}
