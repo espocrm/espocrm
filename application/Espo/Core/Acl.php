@@ -36,10 +36,9 @@ class Acl
 	
 	private $fileManager;
 
-	public function __construct(\Espo\Entities\User $user, $config, $fileManager)
+	public function __construct(\Espo\Entities\User $user, $config = null, $fileManager = null)
 	{
-		$this->user = $user;
-		$this->fileManager = $fileManager;
+		$this->user = $user;		
 		
 		if (!$this->user->isFetched()) {
 			throw new Error();
@@ -47,17 +46,23 @@ class Acl
 		
 		$this->user->loadLinkMultipleField('teams');
 		
+		if ($fileManager) {
+			$this->fileManager = $fileManager;
+		}
+			
 		$this->cacheFile = 'data/cache/application/acl/' . $user->id . '.php';
 		
-		if ($config->get('useCache') && file_exists($this->cacheFile)) {
+		if ($config && $config->get('useCache') && file_exists($this->cacheFile)) {
 			$cached = include $this->cacheFile;
 		} else {
 			$this->load();
 			$this->initSolid();
-			if ($config->get('useCache')) {
+			if ($config && $fileManager && $config->get('useCache')) {
 				$this->buildCache();
 			}
 		}
+
+
 	}
 	
 	public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null)
