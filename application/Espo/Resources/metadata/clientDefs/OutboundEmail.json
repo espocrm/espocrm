@@ -1,7 +1,0 @@
-{
-   "recordViews":{
-      "detail":"OutboundEmail.Record.Detail",
-      "edit":"OutboundEmail.Record.Edit",
-      "editQuick":"OutboundEmail.Record.Edit"
-   }
-}

@@ -1,4 +1,5 @@
 {
+   "controller": "Controllers.Record",
    "views":{
       "detail":"Crm:Opportunity.Detail"
    },

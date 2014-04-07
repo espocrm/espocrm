@@ -1,7 +1,8 @@
 {
-   "relationshipPanels":{
-      "log":{
-         "readOnly": true
-      }
-   }  
+  "controller": "Controllers.Record",
+  "relationshipPanels":{
+     "log":{
+        "readOnly": true
+     }
+  }  
 }
