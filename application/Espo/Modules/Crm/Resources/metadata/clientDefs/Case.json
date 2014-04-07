@@ -1,4 +1,5 @@
 {
+   "controller": "Controllers.Record",
    "bottomPanels":{
       "detail":[
       ]
