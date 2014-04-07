@@ -6,5 +6,26 @@
 	"links": {
 		"users": "Users",
 		"teams": "Teams"
+	},
+	"labels": {
+		"Access": "Access"
+	},
+	"options": {
+		"accessList": {
+			"not-set": "not-set",
+			"enabled": "enabled",
+			"disabled": "disabled"
+		},
+		"levelList": {
+			"all": "all",
+			"team": "team",
+			"own": "own",
+			"no": "no"
+		}
+	},
+	"actions": {
+		"read": "Read",
+		"edit": "Edit",
+		"delete": "Delete"
 	}
 }
