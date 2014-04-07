@@ -253,7 +253,7 @@ class SystemHelper
 			$commands[] = $chown;
 		}
 
-		return implode(' && ', $commands);
+		return implode('; ', $commands);
 	}
 
 }
