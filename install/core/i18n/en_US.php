@@ -23,6 +23,7 @@
 return array(
 	'Main page title' => 'Welcome to EspoCRM',
 	'Main page header' => '',
+	'Bad init Permission' => 'Permission denied for "{*}" directory. Please set 775 for "{*}" or just execute this command in the terminal <pre><b>{C}</b></pre>',
 	'Start page title' => 'License Agreement',
 	'Step1 page title' => 'License Agreement',
 	'License Agreement' => 'License Agreement',
@@ -88,6 +89,7 @@ return array(
 	'Ajax failed' => 'Ajax failed',
 	'Cannot create user' => 'Cannot create user',
 	'Permission denied' => 'Permission denied',
+	'permissionInstruction' => '<br>Run this in Terminal<pre><b>"{C}"</b></pre>',
 	'Cannot write to files' => 'Cannot write to file(s)',
 	'Can not save settings' => 'Can not save settings',
 	'Cannot save preferences' => 'Cannot save preferences',
@@ -95,6 +97,20 @@ return array(
 	'db driver' => array(
 		'mysqli' => 'MySQLi',
 		'pdo_mysql' => 'PDO MySQL',
+	),
+
+	'modRewriteInstruction' => array(
+		'apache' => array(
+			'linux' => '<br><br>Run those commands in Terminal<pre><b>1. a2enmod rewrite <br>2. service apache2 restart</b></pre>',
+			'windows' => '<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>
+2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules/mod_rewrite.so (remove the pound \'#\' sign from in front of the line)<br>
+3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.
+</pre>',
+		),
+		'microsoft-iis' => array(
+			'windows' => '',
+
+		),
 	),
 
 	'modRewriteHelp' => array(

@@ -174,15 +174,16 @@ class Installer
 
 	public function buildDatabase()
 	{
-		try {
-			$this->app->getContainer()->get('schema')->rebuild();
-		} catch (\Exception $e) {
+		$result = false;
 
+		try {
+			$result = $this->app->getContainer()->get('schema')->rebuild();
+		} catch (\Exception $e) {
+			$this->auth();
+			$result = $this->app->getContainer()->get('schema')->rebuild();
 		}
 
-		$this->auth();
-
-		return $this->app->getContainer()->get('schema')->rebuild();
+		return $result;
 	}
 
 	public function setPreferences($preferences)
@@ -295,7 +296,6 @@ class Installer
 	public function fixAjaxPermission($url = null)
 	{
 		$permission = array(0644, 0755);
-
 		$fileManager = $this->app->getContainer()->get('fileManager');
 
 		$result = false;

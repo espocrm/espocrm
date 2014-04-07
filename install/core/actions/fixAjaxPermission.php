@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 $result = array('success' => false, 'errors' => array());
@@ -30,6 +30,7 @@ if (!empty($_REQUEST['url'])) {
 	else {
 		$result['success'] = false;
 		$result['errorMsg'] = $_REQUEST['url'];
+		$result['errorFixInstruction'] = $systemHelper->getPermissionCommands($_REQUEST['url'], array('644', '755'));
 	}
 }
 

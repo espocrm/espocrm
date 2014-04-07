@@ -30,17 +30,6 @@ if (!empty($res['errors'])) {
 	$result['errors'] = array_merge($result['errors'], $res['errors']);
 }
 
-/*if (!$systemHelper->checkModRewrite()) {
-	$result['success'] = false;
-	$result['errors']['modRewrite'] = $langs['modRewriteHelp']['default'];
-
-	$serverType = $systemHelper->getServerType();
-	if (isset($langs['modRewriteHelp'][$serverType])) {
-		$result['errors']['modRewrite'] = $langs['modRewriteHelp'][$serverType];
-	}
-}*/
-
-
 if (!empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQUEST['dbUserName'])) {
 	$connect = false;
 
