@@ -49,5 +49,9 @@
 		"before": "Before (field)",
 		"link": "Link",
 		"field": "Field"			
+	},
+	"messages": {
+		"upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
+		"upgradeBackup": "We recommend you to make backup of your EspoCRM files and data before upgrade."
 	}
 }
