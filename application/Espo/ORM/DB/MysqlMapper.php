@@ -79,12 +79,16 @@ class MysqlMapper extends Mapper
 
 		} else {
 			$field[0] = strtolower($field[0]);
-			$func = create_function('$c', 'return "_" . strtolower($c[1]);');
-			$dbField = preg_replace_callback('/([A-Z])/', $func, $field);
+			$dbField = preg_replace_callback('/([A-Z])/', array($this, 'toDbConversion'), $field);
 
 			$this->fieldsMapCache[$field] = $dbField;
 			return $dbField;
 		}
+	}
+
+	protected function toDbConversion($matches)
+	{
+		return "_" . strtolower($matches[1]);
 	}
 }
 ?>

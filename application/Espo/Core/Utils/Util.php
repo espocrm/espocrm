@@ -25,7 +25,7 @@ namespace Espo\Core\Utils;
 
 class Util
 {
-    /**
+	/**
 	 * @var string - default directory separator
 	 */
 	protected static $separator = DIRECTORY_SEPARATOR;
@@ -34,19 +34,19 @@ class Util
 
 
 	/**
-     * Get a folder separator
+	 * Get a folder separator
 	 *
 	 * @return string
 	 */
-    public static function getSeparator()
+	public static function getSeparator()
 	{
 		return static::$separator;
 	}
 
 
 	/**
-     * Convert to format with defined delimeter
-   	 * ex. Espo/Utils to Espo\Utils
+	 * Convert to format with defined delimeter
+	 * ex. Espo/Utils to Espo\Utils
 	 *
 	 * @param string $name
 	 * @param string $delim - delimiter
@@ -55,11 +55,7 @@ class Util
 	 */
 	public static function toFormat($name, $delim = '/')
 	{
-    	//preg_match_all('/[\/]/', $name, $match);
-    	//preg_match_all('/(.*)[\/\\\](.*)/', $name, $match);
-		//return $match;
-
-		return preg_replace('/[\/\\\]/', $delim, $name);
+		return preg_replace("/[\/\\\]/", $delim, $name);
 	}
 
 
@@ -75,54 +71,59 @@ class Util
 		if($capitaliseFirstChar) {
 			$name[0] = strtoupper($name[0]);
 		}
-		$func = create_function('$c', 'return strtoupper($c[1]);');
-		return preg_replace_callback('/'.$symbol.'([a-z])/', $func, $name);
+		return preg_replace_callback('/'.$symbol.'([a-z])/', 'static::toCamelCaseConversion', $name);
+	}
+
+	protected static function toCamelCaseConversion($matches)
+	{
+		return strtoupper($matches[1]);
 	}
 
 	/**
-    * Convert name from Camel Case format.
-	* ex. camelCase to camel-case
-	*
-	* @param string $name
-	*
-	* @return string
-	*/
+	 * Convert name from Camel Case format.
+	 * ex. camelCase to camel-case
+	 *
+	 * @param string $name
+	 *
+	 * @return string
+	 */
 	public static function fromCamelCase($name, $symbol = '-')
 	{
 		$name[0] = strtolower($name[0]);
-		$func = create_function('$c', 'return "'.$symbol.'" . strtolower($c[1]);');
-		return preg_replace_callback('/([A-Z])/', $func, $name);
+		return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
+					 return $symbol . strtolower($matches[1]);
+				}, $name);
 	}
 
-    /**
-    * Convert name from Camel Case format to underscore.
-	* ex. camelCase to camel_case
-	*
-	* @param string $name
-	*
-	* @return string
-	*/
+	/**
+	 * Convert name from Camel Case format to underscore.
+	 * ex. camelCase to camel_case
+	 *
+	 * @param string $name
+	 *
+	 * @return string
+	 */
 	public static function toUnderScore($name)
 	{
-    	return static::fromCamelCase($name, '_');
+		return static::fromCamelCase($name, '_');
 	}
 
 
 	/**
-	* Merge arrays (default PHP function is not suitable)
-	*
-	* @param array $array
-	* @param array $mainArray - chief array (priority is same as for array_merge())
-	* @return array
-	*/
+	 * Merge arrays (default PHP function is not suitable)
+	 *
+	 * @param array $array
+	 * @param array $mainArray - chief array (priority is same as for array_merge())
+	 * @return array
+	 */
 	public static function merge($array, $mainArray)
 	{
 		if (is_array($array) && !is_array($mainArray)) {
-    		return $array;
-    	} else if (!is_array($array) && is_array($mainArray)) {
-    		return $mainArray;
-    	} else if (!is_array($array) && !is_array($mainArray)) {
-        	return array();
+			return $array;
+		} else if (!is_array($array) && is_array($mainArray)) {
+			return $mainArray;
+		} else if (!is_array($array) && !is_array($mainArray)) {
+			return array();
 		}
 
 		foreach($mainArray as $maKey => $maVal) {
@@ -168,33 +169,33 @@ class Util
 
 
 	/**
-    * Get a full path of the file
-	*
-	* @param string $folderPath - Folder path, Ex. myfolder
-	* @param string $filePath - File path, Ex. file.json
-	*
-	* @return string
-	*/
+ 	 * Get a full path of the file
+	 *
+	 * @param string $folderPath - Folder path, Ex. myfolder
+	 * @param string $filePath - File path, Ex. file.json
+	 *
+	 * @return string
+	 */
 	public static function concatPath($folderPath, $filePath='')
 	{
 		if (empty($filePath)) {
-        	return $folderPath;
-    	}
+			return $folderPath;
+		}
 		if (empty($folderPath)) {
-        	return $filePath;
-    	}
+			return $filePath;
+		}
 
 		else {
-            if (substr($folderPath, -1) == static::getSeparator()) {
-            	return $folderPath . $filePath;
-            }
-        	return $folderPath . static::getSeparator() . $filePath;
+			if (substr($folderPath, -1) == static::getSeparator()) {
+				return $folderPath . $filePath;
+			}
+			return $folderPath . static::getSeparator() . $filePath;
 		}
 	}
 
 
 	/**
-     * Convert array to object format recursively
+	 * Convert array to object format recursively
 	 *
 	 * @param array $array
 	 * @return object
@@ -210,22 +211,22 @@ class Util
 
 
 	/**
-     * Convert object to array format recursively
+	 * Convert object to array format recursively
 	 *
 	 * @param object $object
 	 * @return array
 	 */
 	public static function objectToArray($object)
 	{
-    	if (is_object($object)) {
+		if (is_object($object)) {
 			$object = (array) $object;
-    	}
+		}
 
-        return is_array($object) ? array_map("static::objectToArray", $object) : $object;
+		return is_array($object) ? array_map("static::objectToArray", $object) : $object;
 	}
 
 	/**
-     * Appends 'Obj' if name is reserved PHP word.
+	 * Appends 'Obj' if name is reserved PHP word.
 	 *
 	 * @param string $name
 	 * @return string
@@ -240,7 +241,7 @@ class Util
 
 
 	/**
-    * Get Naming according to prefix or postfix type
+	* Get Naming according to prefix or postfix type
 	*
 	* @param string $name
 	* @param string $prePostFix
@@ -251,9 +252,9 @@ class Util
 	public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '-')
 	{
 		if ($type == 'prefix') {
-        	return static::toCamelCase($prePostFix.$symbol.$name, false, $symbol);
+			return static::toCamelCase($prePostFix.$symbol.$name, false, $symbol);
 		} else if ($type == 'postfix') {
-        	return static::toCamelCase($name.$symbol.$prePostFix, false, $symbol);
+			return static::toCamelCase($name.$symbol.$prePostFix, false, $symbol);
 		}
 
 		return null;
@@ -261,15 +262,15 @@ class Util
 
 
 	/**
-    * Replace $search in array recursively
-	*
-	* @param string $search
-	* @param string $replace
-	* @param string $array
-	* @param string $isKeys
-	*
-	* @return array
-	*/
+	 * Replace $search in array recursively
+	 *
+	 * @param string $search
+	 * @param string $replace
+	 * @param string $array
+	 * @param string $isKeys
+	 *
+	 * @return array
+	 */
 	public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
 	{
 		if (!is_array($array)) {
@@ -290,8 +291,8 @@ class Util
 		return $newArr;
 	}
 
-    /**
-     * Unset content items defined in the unset.json
+	/**
+	 * Unset content items defined in the unset.json
 	 *
 	 * @param array $content
 	 * @param string | array $unsets in format
@@ -361,18 +362,18 @@ class Util
 	public static function getValueByKey(array $array, $key = null, $returns = null)
 	{
 		if (!isset($key) || empty($key)) {
-        	return $array;
-        }
+			return $array;
+		}
 
 		$keys = explode('.', $key);
 
 		$lastItem = $array;
 		foreach($keys as $keyName) {
-        	if (isset($lastItem[$keyName]) && is_array($lastItem)) {
-            	$lastItem = $lastItem[$keyName];
-        	} else {
-        		return $returns;
-        	}
+			if (isset($lastItem[$keyName]) && is_array($lastItem)) {
+				$lastItem = $lastItem[$keyName];
+			} else {
+				return $returns;
+			}
 		}
 
 		return $lastItem;
