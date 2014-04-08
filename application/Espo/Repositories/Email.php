@@ -62,5 +62,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 		
 		parent::beforeSave($entity);
 	}
+	
+	protected function beforeRemove(Entity $entity)
+	{		
+		parent::beforeRemove($entity);
+		$attachments = $entity->get('attachments');
+		foreach ($attachments as $attachment) {
+			$this->getEntityManager()->removeEntity($attachment);
+		}
+	}
 }
 
