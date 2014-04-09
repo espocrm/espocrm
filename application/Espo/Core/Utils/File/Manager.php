@@ -400,7 +400,7 @@ class Manager
 		}
 
 		$result= true;
-		foreach($filePaths as $filePath) {
+		foreach ($filePaths as $filePath) {
 			if (isset($dirPath)) {
             	$filePath= Utils\Util::concatPath($dirPath, $filePath);
 			}
@@ -411,6 +411,19 @@ class Manager
 		}
 
 		return $result;
+	}
+	
+	/**
+     * Remove file by given path
+	 *
+	 * @param array $filePath - File path
+	 * @return bool
+	 */
+	public function removeFile($filePath)
+	{
+		if (file_exists($filePath) && is_file($filePath)) {
+           	return unlink($filePath);
+		}
 	}
 
     /**

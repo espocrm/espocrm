@@ -23,7 +23,7 @@
 namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error,
-	\Espo\Core\Exceptions\Forbidden;
+    \Espo\Core\Exceptions\Forbidden;
 
 class Admin extends \Espo\Core\Controllers\Base
 {
@@ -53,6 +53,15 @@ class Admin extends \Espo\Core\Controllers\Base
 		$scheduledJob = $this->getContainer()->get('scheduledJob');
 
 		return $scheduledJob->getAllNamesOnly();
+	}
+	
+	public function actionUploadUpgradePackage()
+	{
+		throw new Error("Your EspoCRM version doesn't match for this upgrade package.");
+		
+		return array(
+			'version' => '1.1',			
+		);
 	}
 
 }

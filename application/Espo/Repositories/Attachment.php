@@ -49,6 +49,12 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 		
 		return $result;
 	}
+	
+	protected function afterRemove(Entity $entity)
+	{		
+		parent::afterRemove($entity);
+		$this->getFileManager()->removeFile('data/upload/' . $entity->id);
+	}
 
 }
 
