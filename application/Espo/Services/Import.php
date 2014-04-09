@@ -188,6 +188,46 @@ class Import extends \Espo\Core\Services\Base
 				$value = $row[$i];			
 				if (array_key_exists($field, $fieldsDefs)) {
 					if ($value !== '') {
+						$type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");
+						if ($type == 'personName') {
+							$lastNameField = 'last' . ucfirst($field);
+							$firstNameField = 'first' . ucfirst($field);
+							
+							$firstName = '';
+							$lastName = $value;
+							switch ($params['personNameFormat']) {
+
+								case 'f l':
+									$pos = strpos($value, ' ');
+									if ($pos) {
+										$firstName = trim(substr($value, 0, $pos));
+										$lastName = trim(substr($value, $pos + 1));
+									}
+									break;
+								case 'l f':
+									$pos = strpos($value, ' ');
+									if ($pos) {
+										$lastName = trim(substr($value, 0, $pos));
+										$firstName = trim(substr($value, $pos + 1));
+									}
+									break;
+								case 'l, f':
+									$pos = strpos($value, ',');
+									if ($pos) {
+										$lastName = trim(substr($value, 0, $pos));
+										$firstName = trim(substr($value, $pos + 1));
+									}
+									break;
+							}
+							
+							if (!$entity->get($firstNameField)) {
+								$entity->set($firstNameField, $firstName);
+							}
+							if (!$entity->get($lastNameField)) {
+								$entity->set($lastNameField, $lastName);
+							}
+							continue;
+						}					
 						$entity->set($field, $this->parseValue($entity, $field, $value, $params));
 					}	
 				}

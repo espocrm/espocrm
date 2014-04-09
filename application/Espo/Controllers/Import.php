@@ -62,6 +62,7 @@ class Import extends \Espo\Core\Controllers\Base
         	'textQualifier' => $data['textQualifier'],
         	'dateFormat' => $data['dateFormat'],
         	'timeFormat' => $data['timeFormat'],
+        	'personNameFormat' => $data['personNameFormat'],
         	'decimalMark' => $data['decimalMark'],
         	'currency' => $data['currency'],
         	'defaultValues' => $data['defaultValues'],
