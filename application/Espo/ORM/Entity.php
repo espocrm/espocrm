@@ -92,6 +92,11 @@ abstract class Entity implements IEntity
 	public function reset()
 	{
 		$this->valuesContainer = array();
+	}
+	
+	protected function setValue($name, $value)
+	{
+		$this->valuesContainer[$name] = $value;
 	}	
 	
 	public function set($p1, $p2 = null)

@@ -22,7 +22,8 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class Lead extends \Espo\Core\ORM\Entity
+class Lead extends \Espo\Core\Entities\Person
 {
-	public static $person = true;
+
 }
+

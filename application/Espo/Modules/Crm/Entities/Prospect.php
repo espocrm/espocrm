@@ -22,7 +22,8 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class Prospect extends \Espo\Core\ORM\Entity
+class Prospect extends \Espo\Core\Entities\Person
 {
-	public static $person = true;
+	
 }
+

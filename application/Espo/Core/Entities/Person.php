@@ -20,9 +20,30 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Core\Entities;
 
-class Contact extends \Espo\Core\Entities\Person
+class Person extends \Espo\Core\ORM\Entity
 {
-
+	public static $person = true;
+	
+	public function setLastName($value)
+	{
+		$this->setValue('lastName', $value);
+		
+		$firstName = $this->get('firstName');
+		if (!empty($firstName)) {
+			$this->setValue('name', $firstName . ' ' . $value);
+		}
+	}
+	
+	public function setFirstName($value)
+	{
+		$this->setValue('firstName', $value);
+		
+		$lastName = $this->get('lastName');
+		if (!empty($lastName)) {
+			$this->setValue('name', $value . ' ' . $lastName);
+		}
+	}
 }
+
