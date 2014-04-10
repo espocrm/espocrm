@@ -13,6 +13,11 @@
             "description":"Jobs which are executed by cron."
          },
          {
+            "url":"#Admin/upgrade",
+            "label":"Upgrade",
+            "description":"Upgrade EspoCRM."
+         },
+         {
             "url":"#Admin/clearCache",
             "label":"Clear Cache",
             "description":"Clear all backend cache."
