@@ -28,6 +28,10 @@ class User extends Record
 {	
 	public function getEntity($id)
 	{		
+		if ($id == 'system') {
+			throw new Forbidden();
+		}
+		
 		$entity = parent::getEntity($id);
 	    $entity->clear('password');	 
 	    return $entity;	    
@@ -81,7 +85,7 @@ class User extends Record
 	public function updateEntity($id, $data)
 	{
 		if ($id == 'system') {
-			$data['isAdmin'] = true;
+			throw new Forbidden();
 		}
 		if (array_key_exists('password', $data)) {
 			$data['password'] = md5($data['password']);
