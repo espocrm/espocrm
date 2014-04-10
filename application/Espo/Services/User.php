@@ -35,6 +35,15 @@ class User extends Record
 	
 	public function findEntities($params)
 	{		
+		if (empty($params['where'])) {
+			$params['where'] = array();
+		}
+		$params['where'][] = array(
+			'type' => 'notEquals',
+			'field' => 'id',
+			'value' => 'system'
+		);
+		
 		$result = parent::findEntities($params);
 	    foreach ($result['collection'] as $entity) {
 	    	$entity->clear('password');
@@ -86,6 +95,6 @@ class User extends Record
 			throw new Forbidden();
 		}
 		return parent::deleteEntity($id);	
-	}
+	}	
 }
 
