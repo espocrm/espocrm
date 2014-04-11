@@ -1,0 +1,59 @@
+{
+	"templates": [
+		"dashlet",
+		"detail",
+		"edit",
+		"edit-modal",
+		"header",
+		"list",
+		"login",
+		"select-modal",
+		"site.header",
+		"site.navbar"
+	],
+	"layoutTypes": [
+		"columns-2",
+		"record",
+		"list-row",
+		"list-row-expanded"
+	],
+	"classes": [
+		"Views.Base",
+		"Views.Dashlet",
+		"Views.Edit",		
+		"Views.Header",
+		"Views.List",
+		"Views.Login",
+		"Views.SelectModal",
+		"Views.EditModal",
+		"Views.Record.Edit",
+		"Views.Record.List",
+		"Views.Record.ListButtons.Relationship",
+		"Views.Record.Search",
+		"Views.Site.Header",
+		"Views.Site.Master",
+		"Views.Site.Navbar",
+		"Views.Home",
+		"Views.Dashboard",
+		"Views.Search.Filter",
+		
+		"Views.Fields.Address",
+		"Views.Fields.Bool",				
+		"Views.Fields.Datetime",		
+		"Views.Fields.Email",
+		"Views.Fields.Enum",
+		"Views.Fields.Float",		
+		"Views.Fields.LinkMultiple",
+		"Views.Fields.LinkParent",
+		"Views.Fields.PersonName",
+		"Views.Fields.Phone",
+		"Views.Fields.Text",
+		
+		"Controllers.Home",
+		"Controllers.Record",
+		
+		"Models.Settings",
+		"Models.User",
+		"Models.Preferences"	
+	]
+}

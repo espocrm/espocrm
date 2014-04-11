@@ -1,0 +1,22 @@
+.date-title {
+	text-align: center;
+}
+
+.date-title h4 {
+	margin: 10px 0 0;
+}
+
+.fc-event-vert .fc-event-bg {
+	background-color: none !important;
+	opacity: 0 !important;
+}
+
+.dashlet-body div.calendar {
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-bottom: -15px;
+	margin-top: -15px;
+}
+
+
+
