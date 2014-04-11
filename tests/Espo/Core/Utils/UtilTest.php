@@ -133,6 +133,14 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 
 		$result= 'dir1/dir2/file1.json';
 		$this->assertEquals($result, Util::concatPath('dir1/dir2/file1.json'));
+
+		$input = array('dir1/dir2', 'file1.json');
+		$result= 'dir1/dir2/file1.json';
+		$this->assertEquals($result, Util::concatPath($input));
+
+		$input = array('dir1/', 'dir2', 'file1.json');
+		$result = 'dir1/dir2/file1.json';
+		$this->assertEquals($result, Util::concatPath($input));
 	}
 
 

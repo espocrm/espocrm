@@ -54,14 +54,26 @@ class Admin extends \Espo\Core\Controllers\Base
 
 		return $scheduledJob->getAllNamesOnly();
 	}
-	
-	public function actionUploadUpgradePackage()
+
+	public function actionUploadUpgradePackage($params, $data)
 	{
-		throw new Error("Your EspoCRM version doesn't match for this upgrade package.");
-		
+		$upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+
+		$upgradeId = $upgradeManager->upload($data);
+
 		return array(
-			'version' => '1.1',			
+			'id' => $upgradeId,
+			'version' => $upgradeManager->getMainFile()['version'],
 		);
+	}
+
+	public function actionRunUpgrade($params, $data)
+	{
+		$upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+
+		$upgradeManager->run($data);
+
+		return true;
 	}
 
 }

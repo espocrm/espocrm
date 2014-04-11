@@ -77,7 +77,7 @@ class RotatingFileHandler extends StreamHandler
 
 			$logFilesToBeRemoved = array_slice($logFiles, $this->maxFiles);
 
-			$this->getFileManager()->removeFiles($logFilesToBeRemoved, $dirPath);
+			$this->getFileManager()->removeFile($logFilesToBeRemoved, $dirPath);
 		}
 	}
 
