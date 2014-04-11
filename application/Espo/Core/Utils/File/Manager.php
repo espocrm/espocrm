@@ -22,7 +22,8 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils;
+use Espo\Core\Utils,
+	Espo\Core\Exceptions\Error;
 
 class Manager
 {
@@ -41,7 +42,7 @@ class Manager
 
 
 	/**
-     * Get a list of files in specified directory
+	 * Get a list of files in specified directory
 	 *
 	 * @param string $path string - Folder path, Ex. myfolder
 	 * @param bool | int $recursively - Find files in subfolders
@@ -53,9 +54,9 @@ class Manager
 	 */
 	public function getFileList($path, $recursively=false, $filter='', $fileType='all', $isReturnSingleArray = false)
 	{
-    	if (!file_exists($path)) {
-            return false;
-    	}
+		if (!file_exists($path)) {
+			return false;
+		}
 
 		$result = array();
 
@@ -81,11 +82,11 @@ class Manager
 				if ($add) {
 					if (!empty($filter)) {
 						if (preg_match('/'.$filter.'/i', $value)) {
-                           	$result[] = $value;
+							$result[] = $value;
 						}
 					}
 					else {
-                       	$result[] = $value;
+						$result[] = $value;
 					}
 				}
 
@@ -100,7 +101,7 @@ class Manager
 	}
 
 	/**
-     * Convert file list to a single array
+	 * Convert file list to a single array
 	 *
 	 * @param aray $fileList
 	 * @param string $parentDirName
@@ -110,15 +111,15 @@ class Manager
 	protected function getSingeFileList(array $fileList, $parentDirName = '')
 	{
 		$singleFileList = array();
-    	foreach($fileList as $dirName => $fileName) {
+		foreach($fileList as $dirName => $fileName) {
 
-        	if (is_array($fileName)) {
+			if (is_array($fileName)) {
 			$currentDir = Utils\Util::concatPath($parentDirName, $dirName);
-            		$singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $currentDir));
-        	} else {
-            	$singleFileList[] = Utils\Util::concatPath($parentDirName, $fileName);
-        	}
-    	}
+					$singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $currentDir));
+			} else {
+				$singleFileList[] = Utils\Util::concatPath($parentDirName, $fileName);
+			}
+		}
 
 		return $singleFileList;
 	}
@@ -154,7 +155,6 @@ class Manager
 		return false;
 	}
 
-
 	/**
 	 * Write data to a file
 	 *
@@ -170,14 +170,14 @@ class Manager
 		$fullPath = $this->concatPaths($path); //todo remove after changing the params
 
 		if ($this->checkCreateFile($fullPath) === false) {
-			return false;
+			throw new Error('Permission denied in '. $path);
 		}
 
-        return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
+		return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
 	}
 
 	/**
-     * Save PHP content to file
+	 * Save PHP content to file
 	 *
 	 * @param string | array $path
 	 * @param string $data
@@ -190,7 +190,7 @@ class Manager
 	}
 
 	/**
-     * Save JSON content to file
+	 * Save JSON content to file
 	 *
 	 * @param string | array $path
 	 * @param string $data
@@ -202,14 +202,14 @@ class Manager
 	public function putContentsJson($path, $data)
 	{
 		if (!Utils\Json::isJSON($data)) {
-        	$data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
-        }
+			$data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
+		}
 
 		return $this->putContents($path, $data);
 	}
 
-    /**
-     * Merge file content and save it to a file
+	/**
+	 * Merge file content and save it to a file
 	 *
 	 * @param string | array $path
 	 * @param string $content JSON string
@@ -224,16 +224,16 @@ class Manager
 		$savedDataArray= $this->getArrayData($fileContent);
 		$newDataArray= $this->getArrayData($content);
 
-        $data= Utils\Util::merge($savedDataArray, $newDataArray);
+		$data= Utils\Util::merge($savedDataArray, $newDataArray);
 		if ($isJSON) {
-	        $data= Utils\Json::encode($data, JSON_PRETTY_PRINT);
+			$data= Utils\Json::encode($data, JSON_PRETTY_PRINT);
 		}
 
-        return $this->putContents($path, $data);
+		return $this->putContents($path, $data);
 	}
 
 	/**
-     * Merge PHP content and save it to a file
+	 * Merge PHP content and save it to a file
 	 *
 	 * @param string | array $path
 	 * @param string $content
@@ -243,25 +243,25 @@ class Manager
 	 */
 	public function mergeContentsPHP($path, $content, $onlyFirstLevel= false)
 	{
-        $fileContent = $this->getContents($path);
+		$fileContent = $this->getContents($path);
 
 		$savedDataArray= $this->getArrayData($fileContent);
 		$newDataArray= $this->getArrayData($content);
 
 		if ($onlyFirstLevel) {
-        	foreach($newDataArray as $key => $val) {
+			foreach($newDataArray as $key => $val) {
 				$setVal= is_array($val) ? array() : '';
-	        	$savedDataArray[$key]= $setVal;
+				$savedDataArray[$key]= $setVal;
 			}
 		}
 
-        $data= Utils\Util::merge($savedDataArray, $newDataArray);
+		$data= Utils\Util::merge($savedDataArray, $newDataArray);
 
-        return $this->putContentsPHP($path, $data);
+		return $this->putContentsPHP($path, $data);
 	}
 
 	/**
-     * Append the content to the end of the file
+	 * Append the content to the end of the file
 	 *
 	 * @param string | array $path
 	 * @param mixed $data
@@ -330,7 +330,7 @@ class Manager
 	{
 		$fullPath = $this->concatPaths($path);
 
-		if (file_exists($fullPath)) {
+		if (file_exists($fullPath) && is_dir($path)) {
 			return true;
 		}
 
@@ -349,9 +349,44 @@ class Manager
 		return isset($result) ? $result : false;
 	}
 
+	/**
+	 * Copy files from one direcoty to another
+	 *
+	 * @param  string  $sourcePath
+	 * @param  string  $destPath
+	 * @param  boolean $recursively
+	 * @return boolen
+	 */
+	public function copy($sourcePath, $destPath, $recursively = false)
+	{
+		$sourcePath = $this->concatPaths($sourcePath);
+		$destPath = $this->concatPaths($destPath);
+
+		if (is_file($sourcePath)) {
+			$fileList = (array) $sourcePath;
+		} else {
+			$fileList = $this->getFileList($sourcePath, $recursively, '', 'all', true);
+		}
+
+		$res = true;
+		foreach ($fileList as $file) {
+
+			$sourceFile = $this->concatPaths(array($sourcePath, $file));
+			$destFile = $this->concatPaths(array($destPath, $file));
+
+			if ($this->checkCreateFile($destFile) === false) {
+				throw new Error('Permission denied in '. $destFile);
+			}
+
+			$res &= copy($sourceFile, $destFile);
+		}
+
+		return $res;
+	}
+
 
 	/**
-     * Create a new file if not exists with all folders in the path.
+	 * Create a new file if not exists with all folders in the path.
 	 *
 	 * @param string $filePath
 	 * @return string
@@ -363,71 +398,57 @@ class Manager
 		if (file_exists($filePath)) {
 
 			if (!in_array($this->getPermissionUtils()->getCurrentPermission($filePath), array($defaultPermissions['file'], $defaultPermissions['dir']))) {
-            	return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
+				return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
 			}
 			return true;
 		}
 
 		$pathParts = pathinfo($filePath);
 		if (!file_exists($pathParts['dirname'])) {
-            $dirPermission = $defaultPermissions['dir'];
-            $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
+			$dirPermission = $defaultPermissions['dir'];
+			$dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
 			if (!mkdir($pathParts['dirname'], $dirPermission, true)) {
-                $GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$pathParts['dirname']);
-                return false;
+				throw new Error('Permission denied: unable to generate a folder on the server - '.$pathParts['dirname']);
 			}
 		}
 
 		if (touch($filePath)) {
-        	return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
+			return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
 		}
 
 		return false;
 	}
 
 	/**
-     * Remove all files in defined directory
+	 * Remove file/files by given path
 	 *
 	 * @param array $filePaths - File paths list
 	 * @param string $dirPath - directory path
 	 * @return bool
 	 */
-	public function removeFiles($filePaths, $dirPath = null)
+	public function removeFile($filePaths, $dirPath = null)
 	{
 		if (!is_array($filePaths)) {
 			$filePaths = (array) $filePaths;
 		}
 
-		$result= true;
+		$result = true;
 		foreach ($filePaths as $filePath) {
 			if (isset($dirPath)) {
-            	$filePath= Utils\Util::concatPath($dirPath, $filePath);
+				$filePath = Utils\Util::concatPath($dirPath, $filePath);
 			}
 
 			if (file_exists($filePath) && is_file($filePath)) {
-            	$result &= unlink($filePath);
+				$result &= unlink($filePath);
 			}
 		}
 
 		return $result;
 	}
-	
-	/**
-     * Remove file by given path
-	 *
-	 * @param array $filePath - File path
-	 * @return bool
-	 */
-	public function removeFile($filePath)
-	{
-		if (file_exists($filePath) && is_file($filePath)) {
-           	return unlink($filePath);
-		}
-	}
 
-    /**
-     * Remove all files in defined directory
+	/**
+	 * Remove all files inside given path
 	 *
 	 * @param string $dirPath - directory path
 	 * @param bool $removeWithDir - if remove with directory
@@ -436,28 +457,57 @@ class Manager
 	 */
 	public function removeInDir($dirPath, $removeWithDir = false)
 	{
-    	$fileList= $this->getFileList($dirPath, false);
+		$fileList = $this->getFileList($dirPath, false);
 
-    	$result = true;
-    	foreach ($fileList as $file) {
-    		$fullPath = Utils\Util::concatPath($dirPath, $file);
-    		if (is_dir($fullPath)) {
-    			$result &= $this->removeInDir($fullPath, true);
-    		} else {
-    			$result &= unlink($fullPath);
-    		}
-	    }
+		$result = true;
+		foreach ($fileList as $file) {
+			$fullPath = Utils\Util::concatPath($dirPath, $file);
+			if (is_dir($fullPath)) {
+				$result &= $this->removeInDir($fullPath, true);
+			} else {
+				$result &= unlink($fullPath);
+			}
+		}
 
-	    if ($removeWithDir) {
-	    	rmdir($dirPath);
-	    }
+		if ($removeWithDir) {
+			rmdir($dirPath);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Remove items (files or directories)
+	 *
+	 * @param  string | array $items
+	 * @param  string $dirPath
+	 * @return boolean
+	 */
+	public function remove($items, $dirPath = null)
+	{
+		if (!is_array($items)) {
+			$items = (array) $items;
+		}
+
+		$result = true;
+		foreach ($items as $item) {
+			if (isset($dirPath)) {
+				$item = Utils\Util::concatPath($dirPath, $item);
+			}
+
+			if (is_dir($item)) {
+				$result = $this->removeInDir($item, true);
+			} else {
+				$result = $this->removeFile($item);
+			}
+		}
 
 		return $result;
 	}
 
 
-    /**  //TODO remove
-     * Get an array data (if JSON convert to array)
+	/**  //TODO remove
+	 * Get an array data (if JSON convert to array)
 	 *
 	 * @param mixed $data - can be JSON, array
 	 *
@@ -466,18 +516,18 @@ class Manager
 	protected function getArrayData($data)
 	{
 		if (is_array($data)) {
-        	return $data;
+			return $data;
 		}
 		else if (Utils\Json::isJSON($data)) {
-        	return Utils\Json::decode($data, true);
-        }
+			return Utils\Json::decode($data, true);
+		}
 
 		return array();
 	}
 
 
 	/**
-     * Get a filename without the file extension
+	 * Get a filename without the file extension
 	 *
 	 * @param string $filename
 	 * @param string $ext - extension, ex. '.json'
@@ -491,22 +541,22 @@ class Manager
 		}
 		else {
 			if (substr($ext, 0, 1)!='.') {
-            	$ext= '.'.$ext;
+				$ext= '.'.$ext;
 			}
 
 			if (substr($fileName, -(strlen($ext)))==$ext) {
 				$fileName= substr($fileName, 0, -(strlen($ext)));
 			}
-        }
+		}
 
-        $exFileName = explode('/', Utils\Util::toFormat($fileName, '/'));
+		$exFileName = explode('/', Utils\Util::toFormat($fileName, '/'));
 
 		return end($exFileName);
 	}
 
 
 	/**
-     * Get a directory name from the path
+	 * Get a directory name from the path
 	 *
 	 * @param string $path
 	 * @param bool $isFullPath
@@ -528,7 +578,7 @@ class Manager
 
 
 	/**
-     * Return content of PHP file
+	 * Return content of PHP file
 	 *
 	 * @param string $varName - name of variable which contains the content
 	 * @param array $content
@@ -538,10 +588,10 @@ class Manager
 	public function getPHPFormat($content)
 	{
 		if (empty($content)) {
-            return false;
+			return false;
 		}
 
-        return '<?php
+		return '<?php
 
 return '.var_export($content, true).';
 

@@ -171,13 +171,21 @@ class Util
 	/**
  	 * Get a full path of the file
 	 *
-	 * @param string $folderPath - Folder path, Ex. myfolder
+	 * @param string | array $folderPath - Folder path, Ex. myfolder
 	 * @param string $filePath - File path, Ex. file.json
 	 *
 	 * @return string
 	 */
-	public static function concatPath($folderPath, $filePath='')
+	public static function concatPath($folderPath, $filePath = null)
 	{
+		if (is_array($folderPath)) {
+			$fullPath = '';
+			foreach ($folderPath as $path) {
+				$fullPath = static::concatPath($fullPath, $path);
+			}
+			return $fullPath;
+		}
+
 		if (empty($filePath)) {
 			return $folderPath;
 		}
@@ -185,12 +193,10 @@ class Util
 			return $filePath;
 		}
 
-		else {
-			if (substr($folderPath, -1) == static::getSeparator()) {
-				return $folderPath . $filePath;
-			}
-			return $folderPath . static::getSeparator() . $filePath;
+		if (substr($folderPath, -1) == static::getSeparator()) {
+			return $folderPath . $filePath;
 		}
+		return $folderPath . static::getSeparator() . $filePath;
 	}
 
 
