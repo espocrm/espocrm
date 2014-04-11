@@ -114,6 +114,14 @@
 			"greaterThanOrEquals": "Greater Than or Equals",
 			"lessThanOrEquals": "Less Than or Equals",
 			"between": "Between"
+		},
+		"autorefreshInterval": {
+			"0": "None",
+			"0.5": "30 seconds",
+			"1": "1 minute",
+			"2": "2 minutes",
+			"5": "5 minutes",
+			"10": "10 minutes"
 		}
 	}
 }
