@@ -23,6 +23,7 @@
 namespace Espo\Core\Upgrades;
 
 use Espo\Core\Utils\Util,
+	Espo\Core\Utils\Json,
 	Espo\Core\Exceptions\Error;
 
 abstract class Base
@@ -37,7 +38,7 @@ abstract class Base
 
 	protected $upgradeId = null;
 
-	protected $mainFileName = 'main.php';
+	protected $manifestName = 'manifest.json';
 
 	protected $data;
 
@@ -106,6 +107,8 @@ abstract class Base
 	{
 		$upgradeId = $this->createUpgradeId();
 
+		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: start upload the package.');
+
 		$upgradePath = $this->getUpgradePath();
 		$upgradePackagePath = $this->getUpgradePath(true);
 
@@ -128,6 +131,8 @@ abstract class Base
 			throw new Error("Your EspoCRM version doesn't match for this upgrade package.");
 		}
 
+		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: end upload the package.');
+
 		return $upgradeId;
 	}
 
@@ -139,12 +144,14 @@ abstract class Base
 	 */
 	public function run($upgradeId)
 	{
+		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: start run.');
+
 		$this->setUpgradeId($upgradeId);
 
 		/* run before install script */
 		$this->runScript('before');
 
-		/* remove files defined in a mainFile */
+		/* remove files defined in a manifest */
 		if (!$this->deleteFiles()) {
 			throw new Error('Permission denied to delete files.');
 		}
@@ -161,6 +168,8 @@ abstract class Base
 
 		/* delete unziped files */
 		$this->deletePackageFiles();
+
+		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: end run.');
 	}
 
 
@@ -197,7 +206,8 @@ abstract class Base
 	 */
 	protected function isAcceptable()
 	{
-		$version = $this->getMainFile()['acceptableVersions'];
+		$manifest = $this->getManifest();
+		$version = $manifest['acceptableVersions'];
 
 		$currentVersion = $this->getConfig()->get('version');
 
@@ -267,16 +277,16 @@ abstract class Base
 	}
 
 	/**
-	 * Delete files defined in a main file
+	 * Delete files defined in a manifest
 	 *
 	 * @return boolen
 	 */
 	protected function deleteFiles()
 	{
-		$mainFile = $this->getMainFile();
+		$manifest = $this->getManifest();
 
-		if (!empty($mainFile['delete'])) {
-			return $this->getFileManager()->remove($mainFile['delete']);
+		if (!empty($manifest['delete'])) {
+			return $this->getFileManager()->remove($manifest['delete']);
 		}
 
 		return true;
@@ -296,27 +306,28 @@ abstract class Base
 		return $this->getFileManager()->copy($filesPath, '', true);
 	}
 
-	public function getMainFile()
+	public function getManifest()
 	{
-		if (!isset($this->data['mainFile'])) {
+		if (!isset($this->data['manifest'])) {
 			$upgradePath = $this->getUpgradePath();
-			$this->data['mainFile'] = $this->getFileManager()->getContents(array($upgradePath, $this->mainFileName));
+			 $manifestJson = $this->getFileManager()->getContents(array($upgradePath, $this->manifestName));
+			 $this->data['manifest'] = Json::decode($manifestJson, true);
 
-			if (!$this->checkMainFile($this->data['mainFile'])) {
+			if (!$this->checkManifest($this->data['manifest'])) {
 				throw new Error('Unsupported package');
 			}
 		}
 
-		return $this->data['mainFile'];
+		return $this->data['manifest'];
 	}
 
 	/**
-	 * Check if the main file is correct
+	 * Check if the manifest is correct
 	 *
-	 * @param  array  $mainFile
+	 * @param  array  $manifest
 	 * @return boolean
 	 */
-	protected function checkMainFile(array $mainFile)
+	protected function checkManifest(array $manifest)
 	{
 		$requiredFields = array(
 			'name',
@@ -325,7 +336,7 @@ abstract class Base
 		);
 
 		foreach ($requiredFields as $fieldName) {
-			if (empty($mainFile[$fieldName])) {
+			if (empty($manifest[$fieldName])) {
 				return false;
 			}
 		}
