@@ -44,9 +44,11 @@ Espo.define('Views.Admin.Upgrade.Done', 'Views.Modal', function (Dep) {
 					name: 'close',
 					label: 'Close',
 					onClick: function (dialog) {
-						this.getRouter().navigate('#Admin', {trigger: true});
-										
-					}.bind(this);
+						setTimeout(function () {
+							this.getRouter().navigate('#Admin', {trigger: true});
+						}.bind(this), 500);
+						dialog.close();										
+					}.bind(this)
 				} 
 			];
 					

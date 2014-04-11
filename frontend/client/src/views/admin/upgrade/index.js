@@ -111,7 +111,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 		
 		run: function (id, version) {			
 			var msg = this.translate('Upgrading...', 'labels', 'Admin');
-			this.notify('Please wait...');			
+			this.notify('Please wait...');
 			this.textNotification(msg);				
 			
 			$.ajax({
@@ -132,6 +132,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 				this.createView('popup', 'Admin.Upgrade.Done', {
 					version: version
 				}, function (view) {
+					this.notify(false);
 					view.render();					
 				}.bind(this));
 			}.bind(this));
