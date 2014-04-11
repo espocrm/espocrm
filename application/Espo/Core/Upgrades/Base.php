@@ -52,8 +52,8 @@ abstract class Base
 	);
 
 	protected $paths = array(
-		'files' => 'Files',
-		'scripts' => 'Scripts',
+		'files' => 'files',
+		'scripts' => 'scripts',
 	);
 
 
@@ -146,6 +146,10 @@ abstract class Base
 	{
 		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: start run.');
 
+		if (empty($upgradeId)) {
+			throw new Error('Upgrade ID was not specified.');
+		}
+
 		$this->setUpgradeId($upgradeId);
 
 		/* run before install script */
@@ -161,7 +165,9 @@ abstract class Base
 			throw new Error('Cannot copy files.');
 		}
 
-		$this->getContainer()->get('dataManager')->rebuild();
+		if (!$this->systemRebuild()) {
+			throw new Error('Error occurred while EspoCRM rebuild.');
+		}
 
 		/* run before install script */
 		$this->runScript('after');
@@ -310,11 +316,15 @@ abstract class Base
 	{
 		if (!isset($this->data['manifest'])) {
 			$upgradePath = $this->getUpgradePath();
-			 $manifestJson = $this->getFileManager()->getContents(array($upgradePath, $this->manifestName));
-			 $this->data['manifest'] = Json::decode($manifestJson, true);
+			$manifestJson = $this->getFileManager()->getContents(array($upgradePath, $this->manifestName));
+			$this->data['manifest'] = Json::decode($manifestJson, true);
+
+			if (!$this->data['manifest']) {
+				throw new Error('Syntax error in manifest.json.');
+			}
 
 			if (!$this->checkManifest($this->data['manifest'])) {
-				throw new Error('Unsupported package');
+				throw new Error('Unsupported package.');
 			}
 		}
 
@@ -356,6 +366,16 @@ abstract class Base
 
 		$res = $this->getFileManager()->removeInDir($upgradePath, true);
 		$res &= $this->getFileManager()->removeFile($upgradePackagePath);
+
+		return $res;
+	}
+
+	protected function systemRebuild()
+	{
+		$manifest = $this->getManifest();
+
+		$res = $this->getConfig()->set('version', $manifest['version']);
+		$res &= $this->getContainer()->get('dataManager')->rebuild();
 
 		return $res;
 	}
