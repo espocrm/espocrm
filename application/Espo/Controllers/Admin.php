@@ -60,10 +60,11 @@ class Admin extends \Espo\Core\Controllers\Base
 		$upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
 
 		$upgradeId = $upgradeManager->upload($data);
+		$manifest = $upgradeManager->getManifest();
 
 		return array(
 			'id' => $upgradeId,
-			'version' => $upgradeManager->getMainFile()['version'],
+			'version' => $manifest['version'],
 		);
 	}
 
