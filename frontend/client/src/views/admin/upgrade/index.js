@@ -120,8 +120,9 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 				data: JSON.stringify({
 					id: id
 				}),
-				error: function () {
-					this.textNotification(this.translate('Error occured'));
+				error: function (xhr) {
+					var msg = xhr.getResponseHeader('X-Status-Reason');
+					this.textNotification(this.translate('Error') + ': ' + msg);
 				}.bind(this)			
 			}).done(function () {
 				var cache = this.getCache();
