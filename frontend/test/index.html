@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Espo Spec Runner</title>
+
+	<link rel="shortcut icon" type="image/png" href="jasmine_favicon.png">
+	<link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+	<script type="text/javascript" src="jasmine/jasmine.js"></script>
+	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+	
+	<script type="text/javascript" src="../lib/jquery-2.0.2.min.js"></script>
+	<script type="text/javascript" src="../lib/underscore-min.js"></script>
+	<script type="text/javascript" src="../lib/backbone-min.js"></script>
+	<script type="text/javascript" src="../lib/handlebars.js"></script>	
+	<script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../lib/moment.min.js"></script>
+	<script type="text/javascript" src="../lib/moment-timezone.min.js"></script>
+	<script type="text/javascript" src="../lib/moment-timezone-data.js"></script>	
+	
+	<script type="text/javascript" src="../../bull/src/bull.factory.js"></script>
+	<script type="text/javascript" src="../../bull/src/bull.view.js"></script>
+	<script type="text/javascript" src="../../bull/src/bull.loader.js"></script>
+	<script type="text/javascript" src="../../bull/src/bull.cacher.js"></script>
+	<script type="text/javascript" src="../../bull/src/bull.templator.js"></script>
+	<script type="text/javascript" src="../../bull/src/bull.layouter.js"></script>
+	<script type="text/javascript" src="../../bull/src/bull.renderer.js"></script>
+
+	<script type="text/javascript" src="jet-test.js"></script>
+	
+	<script type="text/javascript" src="../src/loader.js"></script>
+	<script type="text/javascript" src="spec/test.loader.js"></script>
+	
+	<script type="text/javascript" src="../src/model.js"></script>
+	<script type="text/javascript" src="spec/test.model.js"></script>
+	
+	<script type="text/javascript" src="../src/collection.js"></script>
+	<script type="text/javascript" src="spec/test.collection.js"></script>	
+	
+	<script type="text/javascript" src="../src/router.js"></script>
+	<script type="text/javascript" src="spec/test.router.js"></script>
+	
+	<script type="text/javascript" src="../src/controller.js"></script>
+	<script type="text/javascript" src="spec/test.controller.js"></script>
+	
+	<script type="text/javascript" src="../src/utils.js"></script>
+	<script type="text/javascript" src="spec/test.utils.js"></script>
+	
+	<script type="text/javascript" src="../src/cache.js"></script>
+	<script type="text/javascript" src="spec/test.cache.js"></script>
+	
+	<script type="text/javascript" src="../src/metadata.js"></script>
+	<script type="text/javascript" src="spec/test.metadata.js"></script>
+	
+	<script type="text/javascript" src="../src/layout-manager.js"></script>
+	<script type="text/javascript" src="spec/test.layout-manager.js"></script>
+	
+	<script type="text/javascript" src="../src/acl.js"></script>
+	<script type="text/javascript" src="spec/test.acl.js"></script>
+	
+	<script type="text/javascript" src="../src/date-time.js"></script>
+	<script type="text/javascript" src="spec/test.date-time.js"></script>
+	
+	<script type="text/javascript" src="../src/search-manager.js"></script>
+	<script type="text/javascript" src="spec/test.search-manager.js"></script>
+	
+	<script type="text/javascript" src="../src/field-manager.js"></script>
+	<script type="text/javascript" src="spec/test.field-manager.js"></script>
+	
+	<script type="text/javascript" src="../src/view.js"></script>
+	
+	<script type="text/javascript" src="../src/views/record/detail.js"></script>
+	<script type="text/javascript" src="spec/views/record/test.detail.js"></script>
+	
+	<script type="text/javascript" src="../src/views/fields/base.js"></script>
+	<script type="text/javascript" src="spec/views/fields/test.base.js"></script>
+	
+	<script type="text/javascript" src="../src/views/fields/email.js"></script>
+	<script type="text/javascript" src="spec/views/fields/test.email.js"></script>
+	
+	<script type="text/javascript" src="../src/views/fields/int.js"></script>
+	<script type="text/javascript" src="spec/views/fields/test.int.js"></script>
+
+	<script type="text/javascript">
+		(function() {
+			var jasmineEnv = jasmine.getEnv();
+			jasmineEnv.updateInterval = 1000;
+
+			var htmlReporter = new jasmine.HtmlReporter();
+
+			jasmineEnv.addReporter(htmlReporter);
+
+			jasmineEnv.specFilter = function(spec) {
+				return htmlReporter.specFilter(spec);
+			};
+
+			var currentWindowOnload = window.onload;
+
+			window.onload = function() {
+				if (currentWindowOnload) {
+					currentWindowOnload();
+				}
+				execJasmine();
+			};
+
+			function execJasmine() {
+				jasmineEnv.execute();
+			}
+		})();
+	</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
-  "name": "espo-backend",
-  "version": "0.1.0",
+  "name": "espocrm",
+  "version": "1.0-b4",
   "description": "",
   "main": "index.php",
   "repository": "",
@@ -10,6 +10,11 @@
     "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-replace": "~0.5.1"
+    "grunt-replace": "~0.5.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-cssmin": "~0.6.2",
+    "grunt-contrib-less": "~0.7.0",
+    "grunt-mkdir": "~0.1.1"
   }
 }

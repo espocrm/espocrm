@@ -1,0 +1,102 @@
+@line-height-base:        1.36;
+@line-height-computed:    floor(@font-size-base * @line-height-base);
+@headings-line-height: 1;
+
+@font-family-sans-serif: 'Open Sans', sans-serif;
+@font-family-base: @font-family-sans-serif;
+@headings-font-family: @font-family-base;
+
+
+@border-radius-base: 0;
+@border-radius-large: 0;
+@border-radius-small: 0;
+
+@container-tablet: none;
+@container-desktop: none;
+@container-large-desktop: none;
+@grid-gutter-width: 16px;
+@container-lg: @container-large-desktop;
+
+.container-fixed() {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  .clearfix();
+}
+
+@button-radius: 0px;
+
+@modal-title-padding: 10px;
+@modal-backdrop-bg: #DBDBDB;
+
+@padding-base-horizontal: 10px;
+
+@navbar-height: 44px;
+@navbar-padding-vertical: ((@navbar-height - @line-height-computed) / 2);
+
+@brand-primary: #5184B0;
+@brand-danger: #CF605D;
+@brand-info: #CEE6ED;
+@brand-success: #87C956;
+@brand-warning: #F59C0C;
+
+@main-gray: #E8ECED;
+
+@input-border: #D1D5D6;
+
+@btn-default-bg: @main-gray;
+@btn-default-border: @main-gray;
+
+@btn-success-border: @btn-success-bg;
+@btn-primary-border: @btn-primary-bg;
+@btn-danger-border: @btn-danger-bg;
+@btn-info-border: @btn-info-bg;
+@btn-warning-border: @btn-warning-bg;
+
+@state-info-bg: @brand-info;
+@state-warning-text: #9E7328;
+
+@navbar-inverse-color:                      @gray-light;
+@navbar-inverse-bg:                         #4A6492;
+@navbar-inverse-border:                     transparent;
+@navbar-inverse-link-color:                 #DFDFDF;
+@navbar-inverse-link-hover-color:           #fff;
+@navbar-inverse-link-hover-bg:              transparent;
+@navbar-inverse-link-active-color:          @navbar-inverse-link-hover-color;
+@navbar-inverse-link-active-bg:             darken(@navbar-inverse-bg, 10%);
+@navbar-inverse-link-disabled-color:        #444;
+@navbar-inverse-link-disabled-bg:           transparent;
+@navbar-inverse-toggle-hover-bg: darken(@navbar-inverse-bg, 10%);
+
+@body-bg: #FEFEFE;
+@panel-bg: #FFF;
+
+@default-border-color: @main-gray;
+@default-heading-bg-color: @main-gray;
+
+@well-bg: @default-heading-bg-color;
+@breadcrumb-bg: @default-heading-bg-color;
+@pre-bg: @default-heading-bg-color;
+@table-bg-hover: @default-heading-bg-color;
+@progress-bg: @default-heading-bg-color;
+@list-group-hover-bg: @default-heading-bg-color;
+@panel-footer-bg: @default-heading-bg-color;
+@panel-default-heading-bg: @default-heading-bg-color;
+
+@panel-default-border: @default-border-color;
+@list-group-border: @default-border-color;
+@panel-inner-border: @default-border-color;
+@panel-default-border: @default-border-color;
+@thumbnail-border: @default-border-color;
+@table-border-color: @default-border-color;
+@navbar-default-toggle-hover-bg: @default-border-color;
+@navbar-default-toggle-border-color: @default-border-color;
+@nav-tabs-border-color: @default-border-color;
+@nav-tabs-active-link-hover-border-color: @default-border-color;
+@nav-tabs-justified-link-border-color: @default-border-color;
+@pagination-border: @default-border-color;
+@list-group-border: @default-border-color;
+
+@zindex-tooltip: 1600;
+@navbar-collapse-max-height: none;

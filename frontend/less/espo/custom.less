@@ -1,0 +1,520 @@
+.btn {
+	border-radius: @button-radius;
+}
+
+.panel-heading {
+	padding: 6px 10px;
+}
+
+.panel-body {
+  padding: 14px;
+  .clearfix();
+}
+
+.pagination-sm {
+  .pagination-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @button-radius);
+}
+
+.pagination-sm > li > a {
+	line-height: @line-height-small;
+}
+
+.modal-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid @modal-header-border-color;
+  min-height: (10px + @modal-title-line-height);
+}
+
+.modal-footer {
+	margin-top: 10px;
+	padding: 15px 20px 15px;
+}
+
+.table thead > tr > th {
+    border-bottom: 1px solid @table-border-color;
+} 
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.panel-group .panel + .panel {
+	margin-top: 4px;
+}
+
+.alert {
+	padding: 5px 18px;
+}
+
+label {
+  margin-bottom: 3px; 
+}
+
+.table {
+	margin-bottom: 10px;
+}
+
+.page-header {
+  margin: 10px 0;
+  border-bottom: 0;
+  padding-bottom: 2px;
+}
+
+.modal-header {
+	background-color: @default-heading-bg-color;
+}
+
+div.list-expanded > ul > li > div.expanded-row > .cell {
+	padding-left: 6px;
+	padding-right: 3px;
+	border-left: 1px solid @default-border-color;
+}
+
+div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
+	padding-left: 0;
+	border-left: 0;
+}
+
+table.table > thead th a {
+	color: @gray-light;
+}
+
+table.table > thead th {
+	color: @gray-light;
+}
+
+ .cell > label {
+	color: @gray-light; 
+}
+
+ .cell label {
+	font-weight: normal;
+}
+
+.cell label {
+	margin-bottom: 2px;
+}
+
+.btn.active {
+	box-shadow: none;
+}
+
+.navbar-inverse {
+	border-bottom-width: 0 !important;
+}
+
+@media (min-width: @screen-lg-min) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+body {
+	padding-top: 55px;
+}
+
+.navbar-brand {
+	padding: 3px 8px;
+}
+
+#global-search-input {
+	width: 165px;
+	margin-top: 1px;
+}
+
+.progress.pre-loading {
+	margin-top: -50px;
+	margin-bottom: 31px;
+}
+
+.edit form {
+	margin: 0;
+}
+
+.button-container {
+	padding: 0 0 10px;
+}
+
+.margin {
+	margin: 8px 0;
+}
+
+ul.dropdown-menu > li.checkbox {
+	margin-left: 20px;
+}
+
+.page-header h3 {
+	margin-top: 0px;
+	margin-bottom: 8px;	
+}
+
+.list-buttons-container > div {
+	float: left;
+	margin-right: 15px;
+}
+
+.list-container .pagination {
+	margin: 0;
+}
+
+.floated-row > div  {
+	float: left;
+	margin-right: 15px;
+}
+
+.search-row {
+	margin-left: -3px !important;
+	margin-right: -3px !important;
+}
+
+.search-row > div {
+	padding-left: 2px !important;
+	padding-right: 2px !important;
+}
+
+.btn-icon > span {
+	margin: 0 20px;
+}
+
+.field .row {
+	margin-left: -5px !important;
+	margin-right: -5px !important;	
+}
+
+.field .row > div {
+	padding-left: 5px !important;
+	padding-right: 5px !important;
+	float: left;
+}
+
+.field .form-control, .field .btn {
+	margin-bottom: 3px;
+}
+
+.field .link-container {
+	margin-bottom: 0px;
+}
+
+@media screen and (min-width: 768px) {
+	.modal-dialog {
+		width: 740px !important;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.modal-dialog {
+		width: 900px !important;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.navbar-fixed-top {
+		position: static;
+	}
+	body {
+		padding-top: 0;
+	}
+}
+
+.list-row-buttons span.caret {
+	border-top-color: #999;
+}
+
+.list > table {
+	margin-bottom: 0;
+}
+
+.list > ul {
+	margin-bottom: 0;
+}
+
+.list > table td input[type="checkbox"] {
+	margin: 0;
+	position: relative;
+	top: 3px;
+}
+
+.list > table th span.caret {
+	border-top-color: #999;
+}
+.list > table th span.caret-up {
+	border-bottom-color: #999;
+}
+
+.filter a.remove-filter {
+	display: none;
+}
+.filter:hover a.remove-filter {
+	display: block;
+}
+
+select[multiple].input-sm {
+	height: 90px !important;
+}
+
+.panel-body > .list-container > .list-expanded {
+	margin-left: -15px;
+	margin-right: -15px;
+}
+.panel-body > .list-container > .list {
+	margin-left: -15px;
+	margin-right: -15px;
+}
+.panel-body > .list-container > .list > table td:first-child,
+.panel-body > .list-container > .list > table th:first-child {
+	padding-left: 15px;
+}
+.panel-body > .list-container > .list > table td:last-child,
+.panel-body > .list-container > .list > table th:last-child {
+	padding-right: 15px;
+}
+
+.list-expanded > .show-more {
+	padding: 0px;
+	margin-top: -1px;	
+}
+
+.list-expanded > li.show-more > .btn {
+	margin-left: -1px;
+	margin-right: -4px;
+}
+
+.list-expanded > ul > li .list-row-buttons {
+	margin-right: -12px;
+	margin-top: -10px;
+}
+
+.show-more > .btn {
+	border-radius: 0;
+
+	border-color: #e0e0e0;
+}
+
+.panel-body > .list-container:first-child > .list-expanded:first-child {
+	margin-top: -15px;	
+}
+.panel-body > .list-container:last-child > .list-expanded:last-child {
+	margin-bottom: -15px;
+}
+
+.panel-body > .list-container:first-child > .list:first-child {
+	margin-top: -15px;
+}
+.panel-body > .list-container:last-child > .list:last-child {
+	margin-bottom: -15px;
+}
+
+.expanded-row {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+#notifications-panel .expanded-row {
+	white-space: normal;
+	overflow: hidden;
+}
+
+#notifications-panel .right {
+	padding-top: 5px;
+}
+
+.expanded-row .cell {
+	display: inline-block;
+}
+
+.caret-up {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	vertical-align: middle;
+	border-bottom: 4px solid #000;
+	border-right: 4px solid transparent;
+	border-top: 0 dotted;
+	border-left: 4px solid transparent;
+	content: "";
+}
+
+.list > table {
+	table-layout: fixed;
+}
+
+.list > table td, table.list th { 
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.list > table td.cell-buttons {
+	overflow: visible;
+}
+
+.panel.dashlet > .panel-heading > .menu-container {
+	margin-top: -8px;
+	right: -10px;
+}
+
+.panel.dashlet > .panel-body {
+	height: 295px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.panel-heading > .btn-group {
+	top: -7px;
+	right: -11px;
+}
+
+.list-container + .button-container {
+	margin-top: 6px;
+	padding-bottom: 0;
+}
+
+td.cell-buttons > .btn-group {
+	margin-top: -8px;
+	margin-bottom: -8px;
+	margin-right: -10px;
+}
+
+.list-expanded > li > .right > .btn-group {
+	top: -7px;
+	right: -11px;
+}
+
+.panel {
+	border-width: 2px;	
+}
+
+.panel-heading > .btn-group > .btn {
+	border-radius: 0 !important;
+}
+
+.list > table thead > th {
+	border-top-width: 1px !important;
+}
+
+.show-more > .btn-block {
+	text-align: left;
+	padding-left: 15px;
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+
+.gray-box {
+	background-color: @gray-lighter;
+	margin: 0 5px 3px 0;	
+	padding: 3px 3px 3px 5px;	
+}
+
+.stick-sub {
+	position: fixed;
+	top: 0;
+	margin: 44px 0 0;
+	z-index: 4;
+}
+
+.stick-sub.button-container {
+	background-color: @body-bg;
+	padding: 3px 3px 3px 0;
+	width: 100%;
+}
+
+
+@media screen and (max-width: 768px) {
+	.stick-sub {
+		margin-top: 0;
+	}
+}
+
+@font-face {
+     font-family: Open Sans;
+     src: url('../fonts/open-sans-regular.eot?') format('eot'),
+          url('../fonts/open-sans-regular.woff') format('woff'),
+          url('../fonts/open-sans-regular.ttf')  format('truetype'),
+          url('../fonts/open-sans-regular.svg#svgFontName') format('svg');
+}
+
+.badge-circle {
+	width:8px;
+	height:8px;
+	border-radius: 4px;
+	text-align: center;
+	display: table-cell;
+	font-size: 5px;
+	line-height: 8px;
+	text-align: center;
+	background-color: @main-gray;
+}
+
+.badge-circle.badge-circle-danger {
+	background-color: @brand-danger;
+}
+.badge-circle.badge-circle-warning {
+	background-color: @brand-warning;
+}
+
+.danger.glyphicon {
+	color: @brand-danger;
+}
+
+.warning.glyphicon {
+	color: @brand-warning;
+}
+
+html, body {
+	height: 100%;
+}
+
+body > .content {
+	height: auto;
+	min-height: 100%;
+	padding-bottom: 35px;	
+}
+
+body > footer {
+    clear: both;
+    position: relative;
+    height: 26px;
+    margin-top: -28px;
+	background-color: @gray-lighter;
+}
+
+body > footer > p {
+	padding: 6px 0; 
+}
+body > footer > p, 
+body > footer > p a, 
+body > footer > p a:hover, 
+body > footer > p a:active, 
+body > footer > p a:visited {
+	color: @gray;
+}
+
+.navbar-collapse {
+	overflow-x: hidden !important;
+}
+
+
+#notifications-panel > .panel > .panel-body {
+	max-height: 294px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+@media screen and (max-width: 768px) {
+	.list {
+		width: auto;
+		overflow-y: hidden;
+		overflow-x: scroll;
+	}
+	.list.list-expanded {
+		width: auto;
+		overflow-x: hidden;
+	}
+	.list > table {
+		min-width: 768px;
+	}
+}
+
