@@ -185,7 +185,7 @@ abstract class Base
 			throw new Error('Another upgrade process is currently running.');
 		}
 
-		$this->upgradeId = uniqid('upg');
+		$this->upgradeId = uniqid();
 
 		return $this->upgradeId;
 	}
