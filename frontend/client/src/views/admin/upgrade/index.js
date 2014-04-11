@@ -98,7 +98,6 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 					
 					view.once('run', function () {
 						view.close();
-						this.$el.find('.panel.notify').addClass('hidden');
 						this.$el.find('.panel.upload').addClass('hidden');
 						this.run(data.id, data.version);
 					}, this);
@@ -106,16 +105,24 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 			}.bind(this)).error;
 		},
 		
-		run: function (id, version) {
-			Espo.Utils.notify(this.translate('Upgrading...', 'labels', 'Admin'));			
-			this.$el.find('.panel.upload').removeClass('hidden');
+		textNotification: function (text) {
+			this.$el.find('.notify-text').html(text);	
+		},
+		
+		run: function (id, version) {			
+			var msg = this.translate('Upgrading...', 'labels', 'Admin');
+			this.notify('Please wait...');			
+			this.textNotification(msg);				
 			
 			$.ajax({
 				url: 'Admin/action/runUpgrade',
 				type: 'POST',
 				data: JSON.stringify({
 					id: id
-				})				
+				}),
+				error: function () {
+					this.textNotification(this.translate('Error occured'));
+				}.bind(this)			
 			}).done(function () {
 				var cache = this.getCache();
 				if (cache) {

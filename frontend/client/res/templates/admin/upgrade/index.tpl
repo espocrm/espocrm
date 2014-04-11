@@ -2,7 +2,7 @@
 
 <div class="panel panel-danger notify">
 	<div class="panel-body">
-		<p class="text-danger">
+		<p class="text-danger notify-text">
 			{{backupsMsg}}
 		</p>
 	</div>
@@ -23,11 +23,4 @@
 	</div>
 </div>
 
-<div class="panel panel-danger run hidden">
-	<div class="panel-body">
-		<p class="text-danger">
-			{{translate 'Upgrading...' scope='Admin'}}
-		</p>
-	</div>
-</div>
 
