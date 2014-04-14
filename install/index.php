@@ -39,7 +39,7 @@ require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
 
 if (!$systemHelper->initWritable()) {
-	$dir = $systemHelper->getWritableDir();
+	$dir = $systemHelper->getSystemDir();
 
 	$message = $langs['Bad init Permission'];
 	$message = str_replace('{*}', $dir, $message);
