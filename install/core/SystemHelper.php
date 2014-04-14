@@ -247,12 +247,26 @@ class SystemHelper
 		return $this->getRootDir() . $path;
 	}
 
+	/**
+	 * Get permission commands
+	 *
+	 * @param  string | array  $path
+	 * @param  string | array  $permissions
+	 * @param  boolean $isSudo
+	 * @param  bool  $isFile
+	 * @return string
+	 */
 	public function getPermissionCommands($path, $permissions = array('644', '755'), $isSudo = false, $isFile = null)
 	{
-		$commands = array();
-		$commands[] = $this->getChmodCommand($path, $permissions, $isSudo, $isFile);
+		if (is_string($path)) {
+			$path = array_fill(0, 2, $path);
+		}
+		list($chmodPath, $chownPath) = $path;
 
-		$chown = $this->getChownCommand($path, $isSudo);
+		$commands = array();
+		$commands[] = $this->getChmodCommand($chmodPath, $permissions, $isSudo, $isFile);
+
+		$chown = $this->getChownCommand($chownPath, $isSudo);
 		if (isset($chown)) {
 			$commands[] = $chown;
 		}

@@ -47,6 +47,10 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 	public function testUpdateCoreField()
 	{
 		//$this->setExpectedException('\Espo\Core\Exceptions\Error');
+		$this->objects['metadata']
+			->expects($this->once())
+			->method('set')
+			->will($this->returnValue(true));
 
 		$data = array(
 			"type" => "varchar",
@@ -76,7 +80,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 
 		$this->objects['metadata']
 			->expects($this->once())
-			->method('get')
+			->method('set')
 			->will($this->returnValue(true));
 
 		$this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));

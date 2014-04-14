@@ -86,47 +86,47 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	public function testGetMainFileIncorrect()
+	public function testGetManifestIncorrect()
 	{
 		$this->setExpectedException('\Espo\Core\Exceptions\Error');
 
-		$mainFile = array(
-			'name' => 'Upgrade 1.0-b3 to 1.0-b4',
-		);
+		$manifest = '{
+			"name": "Upgrade 1.0-b3 to 1.0-b4"
+		}';
 
 		$this->objects['fileManager']
 			->expects($this->once())
 			->method('getContents')
-			->will($this->returnValue($mainFile));
+			->will($this->returnValue($manifest));
 
-		$this->reflection->invokeMethod('getMainFile', array());
+		$this->reflection->invokeMethod('getManifest', array());
 	}
 
 
-	public function testGetMainFile()
+	public function testGetManifest()
 	{
-		$mainFile = array(
-			'name' => 'Upgrade 1.0-b3 to 1.0-b4',
-			'version' => '1.0-b4',
-			'acceptableVersions' =>array(
-				'1.0-b3',
-			),
-			'releaseDate' => '2014-04-08',
-			'author' => 'EspoCRM',
-			'description' => 'Upgrade 1.0-b3 to 1.0-b4',
-		);
+		$manifest = '{
+			"name": "Upgrade 1.0-b3 to 1.0-b4",
+			"version": "1.0-b4",
+			"acceptableVersions": [
+				"1.0-b3"
+			],
+			"releaseDate": "2014-04-08",
+			"author": "EspoCRM",
+			"description": "Upgrade 1.0-b3 to 1.0-b4"
+		}';
 
 		$this->objects['fileManager']
 			->expects($this->once())
 			->method('getContents')
-			->will($this->returnValue($mainFile));
+			->will($this->returnValue($manifest));
 
-		$this->assertEquals( $mainFile, $this->reflection->invokeMethod('getMainFile', array()) );
+		$this->assertEquals( json_decode($manifest,true), $this->reflection->invokeMethod('getManifest', array()) );
 	}
 
 	/**
-     * @dataProvider acceptableData
-     */
+	 * @dataProvider acceptableData
+	 */
 	public function testIsAcceptable($version)
 	{
 		$this->objects['config']
@@ -134,26 +134,26 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 			->method('get')
 			->will($this->returnValue('11.5.2'));
 
-		$this->reflection->setProperty('data', array('mainFile' => array('acceptableVersions' => $version)));
+		$this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
 		$this->assertTrue( $this->reflection->invokeMethod('isAcceptable', array()) );
 	}
 
 	public function acceptableData()
-    {
-        return array(
-          array( '11.5.2' ),
-          array( array('11.5.2') ),
-          array( array('1.4', '11.5.2') ),
-          array( '11.*' ),
-          array( '11\.*' ),
-          array( '11.5*' ),
-        );
-    }
+	{
+		return array(
+		  array( '11.5.2' ),
+		  array( array('11.5.2') ),
+		  array( array('1.4', '11.5.2') ),
+		  array( '11.*' ),
+		  array( '11\.*' ),
+		  array( '11.5*' ),
+		);
+	}
 
 
-    /**
-     * @dataProvider acceptableDataFalse
-     */
+	/**
+	 * @dataProvider acceptableDataFalse
+	 */
 	public function testIsAcceptableFalse($version)
 	{
 		$this->objects['config']
@@ -161,28 +161,28 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 			->method('get')
 			->will($this->returnValue('11.5.2'));
 
-		$this->reflection->setProperty('data', array('mainFile' => array('acceptableVersions' => $version)));
+		$this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
 		$this->assertFalse( $this->reflection->invokeMethod('isAcceptable', array()) );
 	}
 
 	public function acceptableDataFalse()
-    {
-        return array(
-          array( '1.*' ),
-        );
-    }
+	{
+		return array(
+		  array( '1.*' ),
+		);
+	}
 
 
-    public function testGetUpgradePath()
-    {
-    	$upgradeId = $this->reflection->invokeMethod('getUpgradeId', array());
-    	$upgradePath = 'tests/testData/Upgrades/data/upload/upgrades/'.$upgradeId;
+	public function testGetUpgradePath()
+	{
+		$upgradeId = $this->reflection->invokeMethod('getUpgradeId', array());
+		$upgradePath = 'tests/testData/Upgrades/data/upload/upgrades/'.$upgradeId;
 
-    	$this->assertEquals( $upgradePath, $this->reflection->invokeMethod('getUpgradePath', array()) );
+		$this->assertEquals( $upgradePath, $this->reflection->invokeMethod('getUpgradePath', array()) );
 
-    	$postfix = $this->reflection->getProperty('packagePostfix');
-    	$this->assertEquals( $upgradePath.$postfix, $this->reflection->invokeMethod('getUpgradePath', array(true)) );
-    }
+		$postfix = $this->reflection->getProperty('packagePostfix');
+		$this->assertEquals( $upgradePath.$postfix, $this->reflection->invokeMethod('getUpgradePath', array(true)) );
+	}
 
 
 
