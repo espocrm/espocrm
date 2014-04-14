@@ -188,8 +188,19 @@ class Installer
 
 	public function setPreferences($preferences)
 	{
-		return $this->saveConfig($preferences);
+		$currencyList = $this->app->getContainer()->get('config')->get('currencyList');
+		if (!in_array($preferences['defaultCurrency'], $currencyList)) {
+			$preferences['currencyList'] = array($preferences['defaultCurrency']);
+		}
+
+		$res = $this->saveConfig($preferences);
+
+		/*save these settings for admin*/
+		$this->setAdminPreferences($preferences);
+
+		return $res;
 	}
+
 
 	protected function createRecords()
 	{
@@ -258,6 +269,30 @@ class Installer
 		$result &= $this->createRecords();
 
 		return $result;
+	}
+
+	protected function setAdminPreferences($preferences)
+	{
+		$allowedPreferences = array(
+			'dateFormat',
+			'timeFormat',
+			'timeZone',
+			'weekStart',
+			'defaultCurrency',
+			'thousandSeparator',
+			'decimalMark',
+			'language',
+		);
+
+		$data = array_intersect_key($preferences, array_flip($allowedPreferences));
+
+		$entity = $this->getEntityManager()->getEntity('Preferences', '1');
+		if ($entity) {
+			$entity->set($data);
+			return $this->getEntityManager()->saveEntity($entity);
+		}
+
+		return false;
 	}
 
 	public function isWritable()

@@ -31,6 +31,6 @@ $cronTitle = (isset($langs['cronTitle'][$serverType]))? $langs['cronTitle'][$ser
 
 $smarty->assign('cronTitle', $cronTitle);
 $smarty->assign('cronHelp', $cronHelp);
-// clean session
 $installer->setSuccess();
+// clean session
 session_unset();
