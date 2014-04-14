@@ -20,7 +20,6 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-//error_reporting(-1);
 session_start();
 
 require_once('../bootstrap.php');
@@ -39,7 +38,7 @@ require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
 
 if (!$systemHelper->initWritable()) {
-	$dir = $systemHelper->getWritableDir();
+	$dir = $systemHelper->getSystemDir();
 
 	$message = $langs['Bad init Permission'];
 	$message = str_replace('{*}', $dir, $message);

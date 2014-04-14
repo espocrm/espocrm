@@ -221,8 +221,8 @@ class Manager
 	{
 		$fileContent = $this->getContents($path);
 
-		$savedDataArray= $this->getArrayData($fileContent);
-		$newDataArray= $this->getArrayData($content);
+		$savedDataArray = Utils\Json::getArrayData($fileContent);
+		$newDataArray = Utils\Json::getArrayData($content);
 
 		$data= Utils\Util::merge($savedDataArray, $newDataArray);
 		if ($isJSON) {
@@ -245,8 +245,8 @@ class Manager
 	{
 		$fileContent = $this->getContents($path);
 
-		$savedDataArray= $this->getArrayData($fileContent);
-		$newDataArray= $this->getArrayData($content);
+		$savedDataArray = Utils\Json::getArrayData($fileContent);
+		$newDataArray = Utils\Json::getArrayData($content);
 
 		if ($onlyFirstLevel) {
 			foreach($newDataArray as $key => $val) {
@@ -288,7 +288,7 @@ class Manager
 			return false;
 		}
 
-		$currentDataArray = $this->getArrayData($currentData);
+		$currentDataArray = Utils\Json::getArrayData($currentData);
 
 		$unsettedData = Utils\Util::unsetInArray($currentDataArray, $unsets);
 
@@ -504,27 +504,6 @@ class Manager
 
 		return $result;
 	}
-
-
-	/**  //TODO remove
-	 * Get an array data (if JSON convert to array)
-	 *
-	 * @param mixed $data - can be JSON, array
-	 *
-	 * @return array
-	 */
-	protected function getArrayData($data)
-	{
-		if (is_array($data)) {
-			return $data;
-		}
-		else if (Utils\Json::isJSON($data)) {
-			return Utils\Json::decode($data, true);
-		}
-
-		return array();
-	}
-
 
 	/**
 	 * Get a filename without the file extension

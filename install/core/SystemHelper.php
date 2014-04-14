@@ -35,21 +35,29 @@ class SystemHelper
 
 	protected $modRewriteUrl = '/api/v1/Metadata';
 
-	protected $writableDir = 'data';
+	protected $systemConfig = 'data/config.php';
 
 
 	public function initWritable()
 	{
-		if (is_writable($this->writableDir)) {
-			return true;
+		$pathInfo = pathinfo($this->systemConfig);
+
+		if (!is_writable($pathInfo['dirname'])) {
+			return false;
 		}
 
-		return false;
+		if (!@touch($this->systemConfig)) {
+			return false;
+		}
+
+		return true;
 	}
 
-	public function getWritableDir()
+	public function getSystemDir()
 	{
-		return $this->writableDir;
+		$pathInfo = pathinfo($this->systemConfig);
+
+		return $pathInfo['dirname'];
 	}
 
 
