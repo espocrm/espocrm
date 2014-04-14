@@ -343,7 +343,7 @@ class Manager
 		try {
 			$result = mkdir($fullPath, $permission, true);
 		} catch (\Exception $e) {
-			$GLOBALS['log']->critical('Permission denied: unable to generate a folder on the server - '.$fullPath);
+			$GLOBALS['log']->critical('Permission denied: unable to create the folder on the server - '.$fullPath);
 		}
 
 		return isset($result) ? $result : false;
@@ -409,7 +409,7 @@ class Manager
 			$dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
 			if (!mkdir($pathParts['dirname'], $dirPermission, true)) {
-				throw new Error('Permission denied: unable to generate a folder on the server - '.$pathParts['dirname']);
+				throw new Error('Permission denied: unable to create a folder on the server - '.$pathParts['dirname']);
 			}
 		}
 
