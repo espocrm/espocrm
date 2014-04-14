@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Api;
 
@@ -27,90 +27,95 @@ use \Espo\Core\Utils\Api\Slim;
 class Auth extends \Slim\Middleware
 {
 	protected $auth;
-	
+
 	protected $authRequired = null;
-	
+
 	protected $showDialog = false;
 
 	public function __construct(\Espo\Core\Utils\Auth $auth, $authRequired = null, $showDialog = false)
 	{
-		$this->auth = $auth;		
-		$this->authRequired = $authRequired;		
-		$this->showDialog = $showDialog;		
-	}	
+		$this->auth = $auth;
+		$this->authRequired = $authRequired;
+		$this->showDialog = $showDialog;
+	}
 
 	function call()
 	{
-		$req = $this->app->request();        
+		$req = $this->app->request();
 
 		$uri = $req->getResourceUri();
-		$httpMethod = $req->getMethod();		
+		$httpMethod = $req->getMethod();
+
+		$authUsername = $req->headers('PHP_AUTH_USER');
+		$authPassword = $req->headers('PHP_AUTH_PW');
+
+		$espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
+		if (isset($espoAuth)) {
+			$credentials = explode(':', base64_decode($espoAuth));
+			$authUsername = $credentials[0];
+			$authPassword = $credentials[1];
+		}
 
 		if (is_null($this->authRequired)) {
 			$routes = $this->app->router()->getMatchedRoutes($httpMethod, $uri);
 
 			if (!empty($routes[0])) {
 				$routeConditions = $routes[0]->getConditions();
-		    	if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {        	
-		    		$this->auth->useNoAuth();
-			    	$this->next->call();
+				if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
+
+					if ($authUsername && $authPassword) {
+						$isAuthenticated = $this->auth->login($authUsername, $authPassword);
+						if ($isAuthenticated) {
+							$this->next->call();
+							return;
+						}
+					}
+
+					$this->auth->useNoAuth();
+					$this->next->call();
 					return;
 				}
 			}
 		} else {
 			if (!$this->authRequired) {
-		    	$this->auth->useNoAuth();
-			    $this->next->call();
+				$this->auth->useNoAuth();
+				$this->next->call();
 				return;
 			}
 		}
 
-		$authKey = $req->headers('PHP_AUTH_USER');
-        $authSec = $req->headers('PHP_AUTH_PW'); 
+		if ($authUsername && $authPassword) {
 
-        $espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
-        if (isset($espoAuth)) {        	
-        	$credentials = explode(':', base64_decode($espoAuth));
-        	$authKey = $credentials[0];
-        	$authSec = $credentials[1]; 	
-        }  
+			$isAuthenticated = $this->auth->login($authUsername, $authPassword);
 
-        if ($authKey && $authSec) {
-			$isAuthenticated = false;
-			
-			$username = $authKey;
-			$password = $authSec;
-			
-			$isAuthenticated = $this->auth->login($username, $password);           
-
-            if ($isAuthenticated) {
-                $this->next->call();
-            } else {
+			if ($isAuthenticated) {
+				$this->next->call();
+			} else {
 				$this->processUnauthorized();
-            }
-        } else {        	
-        	if (!$this->isXMLHttpRequest()) {
-        		$this->showDialog = true;		
-        	}        	
+			}
+		} else {
+			if (!$this->isXMLHttpRequest()) {
+				$this->showDialog = true;
+			}
 			$this->processUnauthorized();
-        }
+		}
 	}
-	
+
 	protected function processUnauthorized()
 	{
 		$res = $this->app->response();
-		
+
 		if ($this->showDialog) {
 			$res->header('WWW-Authenticate', 'Basic realm=""');
 		} else {
 			$res->header('WWW-Authenticate');
 		}
-		$res->status(401);		
+		$res->status(401);
 	}
 
 	protected function isXMLHttpRequest()
 	{
-		$req = $this->app->request();  
+		$req = $this->app->request();
 
 		$httpXRequestedWith = $req->headers('HTTP_X_REQUESTED_WITH');
 
