@@ -12,5 +12,7 @@
 		"passwordConfirm": "Confirm Password"
 	},
 	"links": {
+		"teams": "Teams",
+		"roles": "Roles"
 	}
 }

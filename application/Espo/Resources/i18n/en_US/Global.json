@@ -80,6 +80,10 @@
 		"shippingAddressState": "State (Shipping)",
 		"shippingAddressPostalCode": "Postal Code (Shipping)"
 	},
+	"links": {
+		"teams": "Teams",
+		"users": "Users"
+	},
 	"dashlets": {
 		"Stream": "Stream"		
 	},

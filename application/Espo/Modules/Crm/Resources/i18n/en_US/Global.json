@@ -38,5 +38,14 @@
 	},
 	"labels": {
 		"Create InboundEmail": "Create Inbound Email"
+	},
+	"links": {
+		"contacts": "Contacts",
+		"opportunities": "Opportunities",
+		"leads": "Leads",		
+		"meetings": "Meetings",
+		"calls": "Calls",
+		"tasks": "Tasks",
+		"emails": "Emails"
 	}
 }
