@@ -401,7 +401,8 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			}
 			
 			if (!attrs) {
-				this.notify('You have not modified the record', 'warning');
+				var msg = this.translate('notModified', 'messages');
+				Espo.Ui.warning(msg, 'warning');
 				this.trigger('cancel:save');
 				this.enableButtons();
 				return true;

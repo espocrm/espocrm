@@ -5,5 +5,8 @@
 	},
 	"links": {
 		"users": "Users"
+	},
+	"labels": {
+		"Create Team": "Create Team"
 	}
 }

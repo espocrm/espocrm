@@ -8,6 +8,9 @@
 	"links": {
 		"log": "Log"
 	},
+	"labels": {
+		"Create ScheduledJob": "Create Scheduled Job"
+	},
 	"options": {
 		"job": {
 			"CheckInboundEmails": "Check Inbound Emails",

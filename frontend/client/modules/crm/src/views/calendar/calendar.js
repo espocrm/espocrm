@@ -199,7 +199,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				defaultView: this.mode,
 				weekNumbers: true,
 				editable: true,
-				aspectRatio: 1.56,
+				aspectRatio: 1.62,
 				selectable: true,
 				selectHelper: true,
 				ignoreTimezone: true,

@@ -8,5 +8,8 @@
 		"attachments": "Attachments"
 	},
 	"links": {
-	}
+	},
+	"labels": {
+		"Create EmailTemplate": "Create Email Template"
+	},
 }
