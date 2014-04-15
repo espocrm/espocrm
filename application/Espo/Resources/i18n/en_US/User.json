@@ -14,5 +14,8 @@
 	"links": {
 		"teams": "Teams",
 		"roles": "Roles"
+	},
+	"labels": {
+		"Create User": "Create User"
 	}
 }
