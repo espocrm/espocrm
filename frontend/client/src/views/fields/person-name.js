@@ -70,7 +70,7 @@ Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
 			var validate = function (name) {
 				if (this.model.isRequired(name)) {
 					if (this.model.get(name) === '') {
-						var msg = this.translate(name, 'fields', this.model.name) + " " + this.translate("is required");
+						var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
 						this.showValidationMessage(msg, 'input[name="'+name+'"]');
 						return true;
 					}

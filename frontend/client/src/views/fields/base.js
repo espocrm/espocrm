@@ -412,7 +412,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 		validateRequired: function () {
 			if (this.params.required || this.model.isRequired(this.name)) {
 				if (this.model.get(this.name) === '') {
-					var msg = this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("is required");
+					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
 					this.showValidationMessage(msg);
 					return true;
 				}

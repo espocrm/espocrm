@@ -121,7 +121,8 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 
 		validateDatetime: function () {
 			if (this.model.get(this.name) === -1) {
-				this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("should be valid date/time"));
+				var msg = this.translate('fieldShouldBeDatetime', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+				this.showValidationMessage(msg);
 				return true;
 			}
 		},

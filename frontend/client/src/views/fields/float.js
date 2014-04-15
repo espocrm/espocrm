@@ -72,7 +72,8 @@ Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
 		validateFloat: function () {
 			var value = this.model.get(this.name);
 			if (isNaN(value)) {
-				this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("should be a float"));
+				var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+				this.showValidationMessage(msg);
 				return true;
 			}
 		},

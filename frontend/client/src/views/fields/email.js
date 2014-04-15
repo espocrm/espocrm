@@ -36,8 +36,9 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		validateEmail: function () {
 			if (this.model.get(this.name)) {		
 				var re = /\S+@+\S+/;
-				if (!re.test(this.model.get(this.name))) {
-					this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("must be a valid email address"));
+				if (!re.test(this.model.get(this.name))) {				
+					var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+					this.showValidationMessage(msg);
 					return true;
 				}
 			}

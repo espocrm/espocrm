@@ -151,8 +151,9 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		
 		validateRequired: function () {
 			if (this.params.required || this.model.isRequired(this.name)) {
-				if (this.model.get(this.name) === null) {						
-					this.showValidationMessage(this.translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("is required"));
+				if (this.model.get(this.name) === null) {
+					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+					this.showValidationMessage(msg);
 					return true;
 				}
 			}
@@ -160,7 +161,8 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		
 		validateDate: function () {
 			if (this.model.get(this.name) === -1) {
-				this.showValidationMessage(this.translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("should be valid date"));
+				var msg = this.translate('fieldShouldBeDate', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+				this.showValidationMessage(msg);
 				return true;
 			}
 		},
@@ -172,7 +174,9 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 				var otherValue = this.model.get(field);
 				if (value && otherValue) {
 					if (moment(value).unix() <= moment(otherValue).unix()) {
-						var msg = this.translate(this.name, 'fields', this.model.name) + " " + this.translate("should be after") + " " + this.translate(field, 'fields', this.model.name);
+						var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+						                                                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+						
 						this.showValidationMessage(msg);
 						return true;	
 					}
@@ -187,7 +191,8 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 				var otherValue = this.model.get(field);
 				if (value && otherValue) {
 					if (moment(value).unix() >= moment(otherValue).unix()) {
-						var msg = this.translate(this.name, 'fields', this.model.name) + " " + this.translate("should be before") + " " + this.translate(field, 'fields', this.model.name);
+						var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+						                                                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 						this.showValidationMessage(msg);
 						return true;	
 					}

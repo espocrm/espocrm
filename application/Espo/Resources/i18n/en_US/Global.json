@@ -41,7 +41,19 @@
 		"Create EmailTemplate": "Create Email Template"		
 	},
 	"messages": {
-		"duplicate": "The record you are creating seems to be a duplicate"
+		"duplicate": "The record you are creating seems to be a duplicate",
+		"fieldIsRequired": "{field} is required",
+		"fieldShouldBeEmail": "{field} should be valid email",
+		"fieldShouldBeFloat": "{field} should be valid float",
+		"fieldShouldBeInt": "{field} should be valid integer",
+		"fieldShouldBeDate": "{field} should be valid date",
+		"fieldShouldBeDatetime": "{field} should be valid date/time",
+		"fieldShouldAfter": "{field} should be after {otherField}",
+		"fieldShouldBefore": "{field} should be before {otherField}",
+		"fieldShouldBeBetween": "{field} should be between {min} and {max}",
+		"fieldShouldBeLess": "{field} should be less then {value}",
+		"fieldShouldBeGreater": "{field} should be greater then {value}",
+		"fieldBadPasswordConfirm": "{field} confirmed improperly"
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",

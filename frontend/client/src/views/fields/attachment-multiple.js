@@ -238,7 +238,8 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 		validateRequired: function () {
 			if (this.model.isRequired(this.name)) {
 				if (this.model.get(this.idsName).length == 0) {
-					this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + ' ' + this.getLanguage().translate('is required'));
+					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+					this.showValidationMessage(msg);
 					return true;
 				}
 			}

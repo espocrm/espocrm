@@ -60,7 +60,8 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
 		validateInt: function () {
 			var value = this.model.get(this.name);
 			if (isNaN(value)) {
-				this.showValidationMessage(this.name + " should be an integer");
+				var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+				this.showValidationMessage(msg);
 				return true;
 			}
 		},
@@ -77,18 +78,25 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
 		
 			if (minValue !== null && maxValue !== null) {
 				if (value < minValue || value > maxValue ) {
-					this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("should be between") + " " + minValue  + " " + this.getLanguage().translate("and")  + " " + maxValue + "");
+					var msg = this.translate('fieldShouldBeBetween', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+					                                                            .replace('{min}', minValue)
+					                                                            .replace('{max}', maxValue);
+					this.showValidationMessage(msg);
 					return true;
 				}
 			} else {
 				if (minValue !== null) {
 					if (value < minValue) {
-						this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("should not be less than") + " " + minValue);
+						var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+						                                                         .replace('{value}', minValue);
+						this.showValidationMessage(msg);
 						return true;
 					}
 				} else if (maxValue !== null) {
 					if (value > maxValue) {
-						this.showValidationMessage(this.getLanguage().translate(this.name, 'fields', this.model.name) + " " + this.getLanguage().translate("should not be greater than") + " " + maxValue);
+						var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+						                                                            .replace('{value}', maxValue);
+						this.showValidationMessage(msg);
 						return true;
 					}
 				}
