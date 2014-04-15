@@ -72,7 +72,11 @@ class FieldManager extends \Espo\Core\Controllers\Base
 
 	public function actionDelete($params, $data)
 	{
-		return $this->getContainer()->get('fieldManager')->delete($params['name'], $params['scope']);
+		$res = $this->getContainer()->get('fieldManager')->delete($params['name'], $params['scope']);
+
+		$this->getContainer()->get('dataManager')->rebuildMetadata();
+
+		return $res;
 	}
 
 }

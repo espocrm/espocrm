@@ -264,14 +264,14 @@ class Metadata
 	 * @param  string $scope
 	 * @return bool
 	 */
-	public function unsets($unsets, $type, $scope)
+	public function delete($unsets, $type, $scope)
 	{
 		$path = $this->paths['customPath'];
 
 		$result = $this->getFileManager()->unsetContents(array($path, $type, $scope.'.json'), $unsets, true);
 
 		if ($result == false) {
-			$GLOBALS['log']->warning('Metadata unsets available only for custom code.');
+			$GLOBALS['log']->warning('Delete metadata items available only for custom code.');
 		}
 
 		$this->init(true);
