@@ -22,7 +22,8 @@
         "thousandSeparator": {
             "type": "varchar",
             "default": ",",
-            "maxLength": 1
+            "maxLength": 1,
+            "view": "Settings.Fields.ThousandSeparator"
         },
         "decimalMark": {
             "type": "varchar",
