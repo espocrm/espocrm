@@ -28,14 +28,17 @@ class FieldManager
 {
 	private $metadata;
 
+	private $language;
+
 	protected $metadataType = 'entityDefs';
 
 	protected $customOptionName = 'isCustom';
 
 
-	public function __construct(Metadata $metadata)
+	public function __construct(Metadata $metadata, Language $language)
 	{
 		$this->metadata = $metadata;
+		$this->language = $language;
 	}
 
 	protected function getMetadata()
@@ -43,15 +46,24 @@ class FieldManager
 		return $this->metadata;
 	}
 
+	protected function getLanguage()
+	{
+		return $this->language;
+	}
+
 
 	public function read($name, $scope)
 	{
-		return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
+		$fieldDef = $this->getFieldDef($name, $scope);
+
+		$fieldDef['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
+
+		return $fieldDef;
 	}
 
 	public function create($name, $fieldDef, $scope)
 	{
-		$existingField = $this->read($name, $scope);
+		$existingField = $this->getFieldDef($name, $scope);
 		if (isset($existingField)) {
 			throw new Error('Field ['.$name.'] exists in '.$scope);
 		}
@@ -66,7 +78,15 @@ class FieldManager
 			$fieldDef[$this->customOptionName] = true;
 		}
 
-		return $this->setEntityDefs($name, $fieldDef, $scope);
+		$res = true;
+		if (isset($fieldDef['label'])) {
+			$res &= $this->setLabel($name, $fieldDef['label'], $scope);
+			unset($fieldDef['label']);
+		}
+
+		$res &= $this->setEntityDefs($name, $fieldDef, $scope);
+
+		return (bool) $res;
 	}
 
 	public function delete($name, $scope)
@@ -76,8 +96,11 @@ class FieldManager
 		}
 
 		$unsets = 'fields.'.$name;
+		$res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
 
-		return $this->getMetadata()->unsets($unsets, $this->metadataType, $scope);
+		$this->deleteLabel($name, $scope);
+
+		return $res;
 	}
 
 	protected function setEntityDefs($name, $fieldDef, $scope)
@@ -85,9 +108,24 @@ class FieldManager
 		$fieldDef = $this->normalizeDefs($name, $fieldDef);
 
 		$data = Json::encode($fieldDef);
-		$result = $this->getMetadata()->set($data, $this->metadataType, $scope);
+		$res = $this->getMetadata()->set($data, $this->metadataType, $scope);
 
-		return $result;
+		return $res;
+	}
+
+	protected function setLabel($name, $value, $scope)
+	{
+		return $this->getLanguage()->set($name, $value, 'fields', $scope);
+	}
+
+	protected function deleteLabel($name, $scope)
+	{
+		return $this->getLanguage()->delete($name, 'fields', $scope);
+	}
+
+	protected function getFieldDef($name, $scope)
+	{
+		return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
 	}
 
 	/**
@@ -118,7 +156,7 @@ class FieldManager
 
 	protected function isCore($name, $scope)
 	{
-		$existingField = $this->read($name, $scope);
+		$existingField = $this->getFieldDef($name, $scope);
 		if (isset($existingField) && (!isset($existingField[$this->customOptionName]) || !$existingField[$this->customOptionName])) {
 			return true;
 		}

@@ -212,7 +212,8 @@ class Container
 	private function loadFieldManager()
 	{
 		return new \Espo\Core\Utils\FieldManager(
-			$this->get('metadata')
+			$this->get('metadata'),
+			$this->get('language')
 		);
 	}
 

@@ -184,10 +184,43 @@ class Language
 		return $this->data;
 	}
 
-
-	protected function init()
+	public function set($label, $value, $category = 'labels', $scope = 'Global')
 	{
-		if (!file_exists($this->getLangCacheFile()) || !$this->getConfig()->get('useCache')) {
+		$path = $this->paths['customPath'];
+		$currentLanguage = $this->getLanguage();
+
+		$data = $this->normalizeDefs($label, $value, $category);
+
+		$result = $this->getFileManager()->mergeContents(array($path, $currentLanguage, $scope.'.json'), $data, true);
+		if ($result === false) {
+			throw new Error("Error saving languages. See log file for details.");
+		}
+
+		$this->init(true);
+
+        return $result;
+	}
+
+	public function delete($label, $category = 'labels', $scope = 'Global')
+	{
+		$path = $this->paths['customPath'];
+		$currentLanguage = $this->getLanguage();
+
+		$unsets = array(
+			$category => $label,
+		);
+
+		$result = $this->getFileManager()->unsetContents(array($path, $currentLanguage, $scope.'.json'), $unsets, true);
+
+		$this->init(true);
+
+		return $result;
+	}
+
+
+	protected function init($reload = false)
+	{
+		if ($reload || !file_exists($this->getLangCacheFile()) || !$this->getConfig()->get('useCache')) {
 			$this->fullData = $this->getUnifier()->unify($this->name, $this->paths, true);
 
 			$result = true;
@@ -202,6 +235,21 @@ class Language
 		}
 
 		$this->data = $this->getFileManager()->getContents($this->getLangCacheFile());
+	}
+
+	protected function normalizeDefs($label, $value, $category)
+	{
+		if (!is_array($label)) {
+			$label = array(
+				$label => $value,
+			);
+		}
+
+		$data = array(
+			$category => $label,
+		);
+
+		return $data;
 	}
 
 
