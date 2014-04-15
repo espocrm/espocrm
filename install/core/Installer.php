@@ -189,7 +189,7 @@ class Installer
 	public function setPreferences($preferences)
 	{
 		$currencyList = $this->app->getContainer()->get('config')->get('currencyList');
-		if (!in_array($preferences['defaultCurrency'], $currencyList)) {
+		if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
 			$preferences['currencyList'] = array($preferences['defaultCurrency']);
 		}
 
@@ -285,6 +285,9 @@ class Installer
 		);
 
 		$data = array_intersect_key($preferences, array_flip($allowedPreferences));
+		if (empty($data)) {
+			return true;
+		}
 
 		$entity = $this->getEntityManager()->getEntity('Preferences', '1');
 		if ($entity) {

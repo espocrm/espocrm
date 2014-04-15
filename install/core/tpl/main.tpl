@@ -1,5 +1,5 @@
 <header class="panel-heading">
-	<h4 class="panel-title">{$langs['Main page title']}</h4>
+	<h4 class="panel-title">{$langs['labels']['Main page title']}</h4>
 </header>
 <form id="nav">
 	<div class="panel-body">
@@ -10,14 +10,14 @@
 				<div class="content-img">
 					<img class="devices" src="img/devices.png" alt="EspoCRM">
 				</div>
-				{$langs['Main page header']}
+				{$langs['labels']['Main page header']}
 				</div>
 			</div>
 		</div>
 	</div>
 	<footer class="modal-footer">
 		<div class="cell cell-website pull-left" align="left">
-			<label class="field-label-website control-label">{$langs['Choose your language:']}</label>
+			<label class="field-label-website control-label">{$langs['fields']['Choose your language:']}</label>
 			<div class="field field-website">
 				<select name="user-lang" class="form-control">
 					{foreach from=$languageList item=lbl key=val}
@@ -30,7 +30,7 @@
 				</select>
 			</div>
 		</div>
-		<button class="btn btn-primary" type="button" id="start">{$langs['Start']}</button>
+		<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Start']}</button>
 	</footer>
 </form>
 <script>

@@ -1,0 +1,118 @@
+{
+	"labels": {
+		"Main page title": "Welcome to EspoCRM",
+		"Main page header": "",
+		"Start page title": "License Agreement",
+		"Step1 page title": "License Agreement",
+		"License Agreement": "License Agreement",
+		"I accept the agreement": "I accept the agreement",
+		"Step2 page title": "Database configuration",
+		"Step3 page title": "Administrator Setup",
+		"Step4 page title": "System settings",
+		"Step5 page title": "SMTP settings for outgoing emails",
+		"Errors page title": "Errors",
+		"Finish page title": "Installation is complete",
+		"Congratulation! Welcome to EspoCRM!": "Congratulation! EspoCRM has been successfully installed.",
+		"admin": "admin",
+		"localhost": "localhost",
+		"Locale": "Locale",
+		"Outbound Email Configuration": "Outbound Email Configuration",
+		"SMTP": "SMTP",
+		"Start": "Start",
+		"Back": "Back",
+		"Next": "Next",
+		"Go to EspoCRM": "Go to EspoCRM",
+		"Re-check": "Re-check",
+		"Test settings": "Test Connection"
+	},
+	"fields": {
+		"Choose your language:": "Choose your language:",
+		"Database Name": "Database Name",
+		"Host Name": "Host Name",
+		"Database User Name": "Database User Name",
+		"Database User Password": "Database User Password",
+		"Database driver": "Database driver",
+		"User Name": "User Name",
+		"Password": "Password",
+		"Confirm Password": "Confirm your Password",
+		"From Address": "From Address",
+		"From Name": "From Name",
+		"Is Shared": "Is Shared",
+		"Date Format": "Date Format",
+		"Time Format": "Time Format",
+		"Time Zone": "Time Zone",
+		"First Day of Week": "First Day of Week",
+		"Thousand Separator": "Thousand Separator",
+		"Decimal Mark": "Decimal Mark",
+		"Default Currency": "Default Currency",
+		"Currency List": "Currency List",
+		"Language": "Language",
+		"smtpServer": "Server",
+		"smtpPort": "Port",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Security",
+		"smtpUsername": "Username",
+		"emailAddress": "Email",
+		"smtpPassword": "Password"
+	},
+	"messages": {
+		"Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}<\/b><\/pre>\n\tOperation not permitted? Try this one: {CSU}",
+		"Some errors occurred!": "Some errors occurred!",
+		"Supported php version >=": "Supported php version >=",
+		"The PHP extension was not found...": "The <b>{extName}<\/b> PHP extension was not found...",
+		"All Settings correct": "All Settings are correct",
+		"Failed to connect to database": "Failed to connect to database",
+		"PHP version:": "PHP version:",
+		"You must agree to the license agreement": "You must agree to the license agreement",
+		"Passwords do not match": "Passwords do not match",
+		"Enable mod_rewrite in Apache server": "Enable mod_rewrite in Apache server",
+		"checkWritable error": "checkWritable error",
+		"applySett error": "applySett error",
+		"buildDatabse error": "buildDatabse error",
+		"createUser error": "createUser error",
+		"checkAjaxPermission error": "checkAjaxPermission error",
+		"Ajax failed": "Ajax failed",
+		"Cannot create user": "Cannot create user",
+		"Permission denied": "Permission denied",
+		"permissionInstruction": "<br>Run this in Terminal<pre><b>\"{C}\"<\/b><\/pre>",
+		"Permission denied to files": "Permission denied to file(s)",
+		"Can not save settings": "Can not save settings",
+		"Cannot save preferences": "Cannot save preferences",
+		"Thousand Separator and Decimal Mark equal": "Thousand Separator and Decimal Mark cannot be equal",
+		"1049": "Unknown database",
+		"2005": "Unknown MySQL server host",
+		"1045": "Access denied for user"
+	},
+	"options": {
+		"db driver": {
+			"mysqli": "MySQLi",
+			"pdo_mysql": "PDO MySQL"
+		},
+		"modRewriteInstruction": {
+			"apache": {
+				"linux": "<br><br>Run those commands in Terminal<pre><b>1. a2enmod rewrite <br>2. service apache2 restart<\/b><\/pre>",
+				"windows": "<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules\/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.\n<\/pre>"
+			},
+			"microsoft-iis": {
+				"windows": ""
+			}
+		},
+		"modRewriteHelp": {
+			"apache": "Enable \"mod_rewrite\" in Apache server",
+			"nginx": "Add this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation \/api\/v1\/ {\n    if (!-e $request_filename){\n        rewrite ^\/api\/v1\/(.*)$ \/api\/v1\/index.php last; break;\n    }\n}\n\nlocation \/ {\n    rewrite reset\/?$ reset.html break;\n}<\/pre>",
+			"microsoft-iis": "Enable \"URL Rewrite\" Module in IIS server",
+			"default": "Enable Rewrite Module in your server (e.g. mod_rewrite in Apache)"
+		},
+		"cronTitle": {
+			"linux": "To Setup Crontab:",
+			"windows": "To Setup Scheduled Task:",
+			"default": "To Setup Cron job:"
+		},
+		"cronHelp": {
+			"linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:\n* * * * * {phpBinDir} -f {cronFile} > \/dev\/null 2>&1",
+			"mac": "Note: Add this line to Tasks to run Espo Scheduled Jobs:\n* * * * * {phpBinDir} -f {cronFile} > \/dev\/null 2>&1",
+			"windows": "Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:\n{phpBinDir}.exe -f {cronFile}",
+			"default": "Run command {cronFile}"
+		}
+	}
+}

@@ -25,14 +25,15 @@ $result = array('success' => false, 'errorMsg' => '');
 
 if (!empty($_SESSION['install'])) {
 	$preferences = array(
-		'dateFormat' => $_SESSION['install']['dateFormat'], 
-		'timeFormat' => $_SESSION['install']['timeFormat'],
-		'timeZone' => $_SESSION['install']['timeZone'],
-		'weekStart' => (int)$_SESSION['install']['weekStart'],
-		'defaultCurrency' => $_SESSION['install']['defaultCurrency'],
-		'thousandSeparator' => $_SESSION['install']['thousandSeparator'],
-		'decimalMark' => $_SESSION['install']['decimalMark'],
-		'language' => $_SESSION['install']['language'],
+		'smtpServer' => $_SESSION['install']['smtpServer'],
+		'smtpPort' => $_SESSION['install']['smtpPort'],
+		'smtpAuth' => (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['smtpAuth'] == 'false' || !$_SESSION['install']['smtpAuth'])? false : true,
+		'smtpSecurity' => $_SESSION['install']['smtpSecurity'],
+		'smtpUsername' => $_SESSION['install']['smtpUsername'],
+		'smtpPassword' => $_SESSION['install']['smtpPassword'],
+		'outboundEmailFromName' => $_SESSION['install']['outboundEmailFromName'],
+		'outboundEmailFromAddress' => $_SESSION['install']['outboundEmailFromAddress'],
+		'outboundEmailIsShared' => (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['outboundEmailIsShared'] == 'false' || !$_SESSION['install']['smtpAuth'])? false : true,
 	);
 	$res = $installer->setPreferences($preferences);
 	if (!empty($res)) {

@@ -23,7 +23,7 @@
 $fields = array(
 	'db-name' => array(),
 	'host-name' => array(
-		'default' => (isset($langs['localhost']))? $langs['localhost'] : '',),
+		'default' => (isset($langs['labels']['localhost']))? $langs['labels']['localhost'] : '',),
 	'db-user-name' => array(),
 	'db-user-password' => array(),
 	'db-driver' => array()

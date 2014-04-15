@@ -21,11 +21,19 @@
  ************************************************************************/ 
 
 $fields = array(
-	'user-name' => array(
-		'default' => (isset($langs['labels']['admin']))? $langs['labels']['admin'] : 'admin',
+	'smtpServer' => array(),
+	'smtpPort' => array(
+		'default' => '25',
 	),
-	'user-pass' => array(),
-	'user-confirm-pass' => array(),
+	'smtpAuth' => array(),
+	'smtpSecurity' => array(
+		'default' => (isset($settingsDefaults['smtpSecurity']['default'])) ? $settingsDefaults['smtpSecurity']['default'] : ''),
+	'smtpUsername' => array(),
+	'smtpPassword' => array(),
+	
+	'outboundEmailFromName' => array(),
+	'outboundEmailFromAddress' => array(),
+	'outboundEmailIsShared' => array(),
 );
 
 foreach ($fields as $fieldName => $field) {

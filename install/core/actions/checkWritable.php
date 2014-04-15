@@ -29,7 +29,7 @@ if (!$installer->isWritable()) {
  	foreach ($urls as &$url) {
 		$url = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$url;
  	}
-	$result['errorMsg'] = $langs['Permission denied to files'].':<br>'.implode('<br>', $urls);
+	$result['errorMsg'] = $langs['messages']['Permission denied to files'].':<br>'.implode('<br>', $urls);
 	$result['errorFixInstruction'] = $systemHelper->getPermissionCommands('', array('644', '755'));
 }
 

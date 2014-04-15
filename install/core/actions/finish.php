@@ -20,14 +20,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-$serverType = $systemHelper->getServerType();
+$os = $systemHelper->getOS();
 
 $cronFile = $systemHelper->getRootDir().DIRECTORY_SEPARATOR.'cron.php';
 
-$cronHelp = (isset($langs['cronHelp'][$serverType]))? $langs['cronHelp'][$serverType] : $langs['cronHelp']['default'];
-$cronHelp = str_replace('<cron-file>', $cronFile, $cronHelp);
-$cronHelp = str_replace('<php-bin-dir>', $systemHelper->getPhpBin(), $cronHelp);
-$cronTitle = (isset($langs['cronTitle'][$serverType]))? $langs['cronTitle'][$serverType] : $langs['cronTitle']['default'];
+$cronHelp = (isset($langs['options']['cronHelp'][$os]))? $langs['options']['cronHelp'][$os] : $langs['options']['cronHelp']['default'];
+$cronHelp = str_replace('{cronFile}', $cronFile, $cronHelp);
+$cronHelp = str_replace('{phpBinDir}', $systemHelper->getPhpBin(), $cronHelp);
+$cronTitle = (isset($langs['options']['cronTitle'][$os]))? $langs['options']['cronTitle'][$os] : $langs['options']['cronTitle']['default'];
 
 $smarty->assign('cronTitle', $cronTitle);
 $smarty->assign('cronHelp', $cronHelp);

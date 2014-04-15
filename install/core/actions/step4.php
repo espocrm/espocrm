@@ -38,20 +38,7 @@ $fields = array(
 	),
 	'language' => array(
 		'default'=> (!empty($_SESSION['install']['user-lang'])) ? $_SESSION['install']['user-lang'] : 'en_US'
-		),
-	'smtpServer' => array(),
-	'smtpPort' => array(
-		'default' => '25',
 	),
-	'smtpAuth' => array(),
-	'smtpSecurity' => array(
-		'default' => (isset($settingsDefaults['smtpSecurity']['default'])) ? $settingsDefaults['smtpSecurity']['default'] : ''),
-	'smtpUsername' => array(),
-	'smtpPassword' => array(),
-	
-	'outboundEmailFromName' => array(),
-	'outboundEmailFromAddress' => array(),
-	'outboundEmailIsShared' => array(),
 );
 
 foreach ($fields as $fieldName => $field) {

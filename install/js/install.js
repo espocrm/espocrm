@@ -49,7 +49,8 @@ var InstallScript = function(opt) {
 
 	this.connSett = {};
 	this.userSett = {};
-	this.firstUserPreferences = {};
+	this.systemSettings = {};
+	this.emailSettings = {};
 	this.checkActions = [
 		{
 			'action': 'checkModRewrite',
@@ -110,7 +111,7 @@ InstallScript.prototype.step1 = function() {
 
 		if (licenseAgree.length > 0 && !licenseAgree.is(':checked')) {
 			$(this).removeAttr('disabled');
-			self.showMsg({msg: self.getLang('You must agree to the license agreement'), error: true});
+			self.showMsg({msg: self.getLang('You must agree to the license agreement', 'messages'), error: true});
 		}
 		else {
 			self.goTo(nextAction);
@@ -142,7 +143,7 @@ InstallScript.prototype.step2 = function() {
 			success: function(data) {
 				if (data.success) {
 					if (btn.attr('id') == 'next') self.goTo(nextAction);
-					else self.showMsg({msg: self.getLang('All Settings correct')});
+					else self.showMsg({msg: self.getLang('All Settings correct', 'messages')});
 				}
 				else {
 					$('#next').removeAttr('disabled');
@@ -154,7 +155,7 @@ InstallScript.prototype.step2 = function() {
 				$('#next').removeAttr('disabled');
 				$('#test-connection').removeAttr('disabled');
 				self.hideLoading();
-			}, // success END
+			}, // error END
 
 		}) // checkSett END
 
@@ -183,11 +184,10 @@ InstallScript.prototype.step3 = function() {
 			success: function(){
 				self.showLoading();
 				self.actionsChecking();
-				//self.goTo(nextAction);
 			},
 			error: function(msg) {
 				$("#next").removeAttr('disabled');
-				self.showMsg({msg: self.getLang(msg), error: true});
+				self.showMsg({msg: self.getLang(msg, 'messages'), error: true});
 			}
 		});
 	})
@@ -196,7 +196,7 @@ InstallScript.prototype.step3 = function() {
 InstallScript.prototype.step4 = function() {
 	var self = this;
 	var backAction = 'step3';
-	var nextAction = 'finish';
+	var nextAction = 'step5';
 
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
@@ -205,12 +205,12 @@ InstallScript.prototype.step4 = function() {
 
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
-		self.setFirstUserPreferences();
+		self.setSystemSett();
 		if (!self.validate()) {
 			$(this).removeAttr('disabled');
 			return;
 		}
-		var data = self.firstUserPreferences;
+		var data = self.systemSettings;
 
 		data.action = 'setPreferences';
 		$.ajax({
@@ -229,6 +229,65 @@ InstallScript.prototype.step4 = function() {
 		})
 
 	})
+}
+
+InstallScript.prototype.step5 = function() {
+	var self = this;
+	var backAction = 'step4';
+	var nextAction = 'finish';
+
+	$('#back').click(function(){
+		$(this).attr('disabled', 'disabled');
+		self.goTo(backAction);
+	})
+
+	$("#next").click(function(){
+		$(this).attr('disabled', 'disabled');
+		self.setEmailSett();
+		if (!self.validate()) {
+			$(this).removeAttr('disabled');
+			return;
+		}
+		var data = self.emailSettings;
+
+		data.action = 'setEmailSett';
+		$.ajax({
+			url: "index.php",
+			type: "POST",
+			data: data,
+			dataType: 'json',
+		})
+		.done(function(ajaxData){
+			if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
+				self.goTo(nextAction);
+			}
+		})
+		.fail(function(ajaxData){
+
+		})
+
+	})
+	
+	$('.field-smtpAuth').find('input[type="checkbox"]').change( function(e){
+		if ($(this).is(':checked')) {
+			$('.cell-smtpPassword').removeClass('hide');
+			$('.cell-smtpUsername').removeClass('hide');
+		}
+		else {
+			$('.cell-smtpPassword').addClass('hide');
+			$('.cell-smtpUsername').addClass('hide');
+			$('.cell-smtpUsername').find('input').val('');
+			$('.cell-smtpPassword').find('input').val('');
+		}
+	});
+	$('[name="smtpSecurity"]').change( function(e){
+		if ($(this).val() == '') {
+			$('[name="smtpPort"]').val('25');			
+		}
+		else {
+			$('[name="smtpPort"]').val('465');
+		}
+	});
 }
 
 InstallScript.prototype.errors = function() {
@@ -266,25 +325,27 @@ InstallScript.prototype.setUserSett = function() {
 	this.userSett.confPass = $('[name="user-confirm-pass"]').val();
 }
 
-InstallScript.prototype.setFirstUserPreferences = function() {
-	this.firstUserPreferences.dateFormat = $('[name="dateFormat"]').val();
-	this.firstUserPreferences.timeFormat = $('[name="timeFormat"]').val();
-	this.firstUserPreferences.timeZone = $('[name="timeZone"]').val();
-	this.firstUserPreferences.weekStart = $('[name="weekStart"]').val();
-	this.firstUserPreferences.defaultCurrency = $('[name="defaultCurrency"]').val();
-	this.firstUserPreferences.thousandSeparator = $('[name="thousandSeparator"]').val();
-	this.firstUserPreferences.decimalMark = $('[name="decimalMark"]').val();
-	this.firstUserPreferences.language = $('[name="language"]').val();
-	this.firstUserPreferences.smtpServer = $('[name="smtpServer"]').val();
-	this.firstUserPreferences.smtpPort = $('[name="smtpPort"]').val();
-	this.firstUserPreferences.smtpAuth = $('[name="smtpAuth"]').is(':checked');
-	this.firstUserPreferences.smtpSecurity = $('[name="smtpSecurity"]').val();
-	this.firstUserPreferences.smtpUsername = $('[name="smtpUsername"]').val();
-	this.firstUserPreferences.smtpPassword = $('[name="smtpPassword"]').val();
-	this.firstUserPreferences.outboundEmailFromName = $('[name="outboundEmailFromName"]').val();
-	this.firstUserPreferences.outboundEmailFromAddress = $('[name="outboundEmailFromAddress"]').val();
-	this.firstUserPreferences.outboundEmailIsShared = $('[name="outboundEmailIsShared"]').is(':checked');
+InstallScript.prototype.setSystemSett = function() {
+	this.systemSettings.dateFormat = $('[name="dateFormat"]').val();
+	this.systemSettings.timeFormat = $('[name="timeFormat"]').val();
+	this.systemSettings.timeZone = $('[name="timeZone"]').val();
+	this.systemSettings.weekStart = $('[name="weekStart"]').val();
+	this.systemSettings.defaultCurrency = $('[name="defaultCurrency"]').val();
+	this.systemSettings.thousandSeparator = $('[name="thousandSeparator"]').val();
+	this.systemSettings.decimalMark = $('[name="decimalMark"]').val();
+	this.systemSettings.language = $('[name="language"]').val();
+}
 
+InstallScript.prototype.setEmailSett = function() {
+	this.emailSettings.smtpServer = $('[name="smtpServer"]').val();
+	this.emailSettings.smtpPort = $('[name="smtpPort"]').val();
+	this.emailSettings.smtpAuth = $('[name="smtpAuth"]').is(':checked');
+	this.emailSettings.smtpSecurity = $('[name="smtpSecurity"]').val();
+	this.emailSettings.smtpUsername = $('[name="smtpUsername"]').val();
+	this.emailSettings.smtpPassword = $('[name="smtpPassword"]').val();
+	this.emailSettings.outboundEmailFromName = $('[name="outboundEmailFromName"]').val();
+	this.emailSettings.outboundEmailFromAddress = $('[name="outboundEmailFromAddress"]').val();
+	this.emailSettings.outboundEmailIsShared = $('[name="outboundEmailIsShared"]').is(':checked');
 }
 
 InstallScript.prototype.checkSett = function(opt) {
@@ -309,15 +370,15 @@ InstallScript.prototype.checkSett = function(opt) {
 			if (typeof(data.errors)) {
 				var errors = data.errors;
 				if (typeof(errors.phpVersion) !== 'undefined') {
-					msg += self.getLang('Supported php version >=')+' '+errors.phpVersion+rowDelim;
+					msg += self.getLang('Supported php version >=', 'messages')+' '+errors.phpVersion+rowDelim;
 				}
 
 				if (typeof(errors.exts) !== 'undefined') {
 					var exts = errors.exts;
 					var len = exts.length;
 					for (var index = 0; index < len; index++) {
-						var temp = self.getLang('The <ext-name> PHP extension was not found...');
-						temp = temp.replace('<ext-name>', exts[index]);
+						var temp = self.getLang('The {extName} PHP extension was not found...', 'messages');
+						temp = temp.replace('{extName}', exts[index]);
 						msg += temp+rowDelim;
 					}
 				}
@@ -328,7 +389,7 @@ InstallScript.prototype.checkSett = function(opt) {
 
 				if (typeof(errors.dbConnect) !== 'undefined') {
 					if (typeof(errors.dbConnect.errorCode) !== 'undefined') {
-						var temp = self.getLang(errors.dbConnect.errorCode);
+						var temp = self.getLang(errors.dbConnect.errorCode, 'messages');
 						if (temp == errors.dbConnect.errorCode && typeof(errors.dbConnect.errorMsg) !== 'undefined') temp = errors.dbConnect.errorMsg;
 					}
 					else if (typeof(errors.dbConnect.errorMsg) !== 'undefined') {
@@ -339,7 +400,7 @@ InstallScript.prototype.checkSett = function(opt) {
 			}
 
 			if (msg == '') {
-				msg = self.getLang('Some errors occurred!');
+				msg = self.getLang('Some errors occurred!', 'messages');
 			}
 			self.showMsg({msg: msg, error: true});
 		}
@@ -347,13 +408,15 @@ InstallScript.prototype.checkSett = function(opt) {
 		opt.success(data);
 	})
 	.fail(function(){
-		msg = self.getLang('Ajax failed');
+		msg = self.getLang('Ajax failed', 'messages');
 		self.showMsg({msg: msg, error: true});
 		opt.error();
 	})
 }
 
 InstallScript.prototype.validate = function() {
+	this.hideMsg();
+	
 	var valid = true;
 	var elem = null;
 	var fieldRequired = [];
@@ -365,7 +428,11 @@ InstallScript.prototype.validate = function() {
 			fieldRequired = ['user-name', 'user-pass', 'user-confirm-pass'];
 			break;
 		case 'step4':
-			fieldRequired = ['thousandSeparator', 'decimalMark', 'smtpUsername'];
+			fieldRequired = ['decimalMark'];
+			break;
+			break;
+		case 'step5':
+			fieldRequired = ['smtpUsername'];
 			break;
 
 
@@ -382,6 +449,20 @@ InstallScript.prototype.validate = function() {
 				elem.parent().parent().removeClass('has-error');
 			}
 		}
+	}
+	
+	// decimal and group sep
+	$('[name="thousandSeparator"]').parent().parent().removeClass('has-error');
+	if (typeof(this.systemSettings.thousandSeparator) !== 'undefined' 
+		&& typeof(this.systemSettings.decimalMark) !== 'undefined' 
+		&& this.systemSettings.thousandSeparator == this.systemSettings.decimalMark
+		&& valid) {
+		
+		$('[name="thousandSeparator"]').parent().parent().addClass('has-error');
+		$('[name="decimalMark"]').parent().parent().addClass('has-error');
+		msg = this.getLang('Thousand Separator and Decimal Mark equal', 'messages');
+		this.showMsg({msg: msg, error: true});
+		valid = false;
 	}
 
 	return valid;
@@ -408,8 +489,8 @@ InstallScript.prototype.goTo = function(action) {
 	$('#nav').submit();
 }
 
-InstallScript.prototype.getLang = function(key) {
-	return (typeof(this.langs) !== 'undefined' && typeof(this.langs[key]) !== 'undefined')? this.langs[key] : key;
+InstallScript.prototype.getLang = function(key, type) {
+	return (typeof(this.langs) !== 'undefined' && typeof(this.langs[type]) !== 'undefined' && typeof(this.langs[type][key]) !== 'undefined')? this.langs[type][key] : key;
 }
 
 InstallScript.prototype.showMsg = function(opt) {
@@ -616,9 +697,9 @@ InstallScript.prototype.callbackAjaxPerm = function(data) {
 			'success': this.ajaxUrlPermRes
 		}
 		if (!this.ajaxUrlPermRes) {
-			var errorMsg = this.getLang('Permission denied') + ' ( ' + this.ajaxUrlPermMsgs.join(', ') + ' ) .';
+			var errorMsg = this.getLang('Permission denied', 'messages') + ' ( ' + this.ajaxUrlPermMsgs.join(', ') + ' ) .';
 			if (this.ajaxUrlPermInstructions.length > 0) {
-				errorMsg += '<br>' + this.getLang('permissionInstruction').replace('"{C}"', this.ajaxUrlPermInstructions.join('<br>'));
+				errorMsg += '<br>' + this.getLang('permissionInstruction', 'messages').replace('"{C}"', this.ajaxUrlPermInstructions.join('<br>'));
 			}
 			ajaxData.errorMsg = errorMsg;
 		}
@@ -637,8 +718,8 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 	}
 	ajaxData.success = false;
 	if (typeof(this.langs) !== 'undefined') {
-		ajaxData.errorMsg = (typeof(this.langs['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['modRewriteHelp'][this.serverType] : this.langs['modRewriteHelp']['default'];
-		ajaxData.errorMsg += (typeof(this.langs['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['modRewriteInstruction'][this.serverType][this.OS] : '';
+		ajaxData.errorMsg = (typeof(this.langs['options']['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteHelp'][this.serverType] : this.langs['options']['modRewriteHelp']['default'];
+		ajaxData.errorMsg += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
 	}
 	var realCheckIndex = this.checkIndex - 1;
 	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'

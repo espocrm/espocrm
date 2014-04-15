@@ -1,5 +1,5 @@
 <header class="panel-heading">
-	<h4 class="panel-title">{$langs['Step2 page title']}</h4>
+	<h4 class="panel-title">{$langs['labels']['Step2 page title']}</h4>
 </header>
 <div class="panel-body body">
 		
@@ -10,7 +10,7 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<label class="field-label-website control-label">{$langs['Host Name']} *</label>
+						<label class="field-label-website control-label">{$langs['fields']['Host Name']} *</label>
 						<div class="field field-website">
 							<input type="text" value="{$fields['host-name'].value}" name="host-name" class="main-element form-control">
 						</div>
@@ -23,7 +23,7 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<label class="field-label-website control-label">{$langs['Database Name']} *</label>
+						<label class="field-label-website control-label">{$langs['fields']['Database Name']} *</label>
 						<div class="field field-website">
 							<input type="text" value="{$fields['db-name'].value}" name="db-name" class="main-element form-control">
 						</div>
@@ -36,7 +36,7 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<label class="field-label-website control-label">{$langs['Database User Name']} *</label>
+						<label class="field-label-website control-label">{$langs['fields']['Database User Name']} *</label>
 						<div class="field field-website">
 							<input type="text" value="{$fields['db-user-name'].value}" name="db-user-name" class="main-element form-control">
 						</div>
@@ -48,7 +48,7 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<label class="field-label-website control-label">{$langs['Database User Password']}</label>
+						<label class="field-label-website control-label">{$langs['fields']['Database User Password']}</label>
 						<div class="field field-website">
 							<input type="password" value="{$fields['db-user-password'].value}" name="db-user-password" class="main-element form-control">
 						</div>
@@ -59,13 +59,13 @@
 	</form>
 			
 	<div class="btn-panel">
-		<button class="btn btn-default" type="button" id="test-connection">{$langs['Test settings']}</button>
+		<button class="btn btn-default" type="button" id="test-connection">{$langs['labels']['Test settings']}</button>
 	</div>
 </div>		
 		
 <footer class="modal-footer">
-	<button class="btn btn-default" type="button" id="back">{$langs['Back']}</button>
-	<button class="btn btn-primary" type="button" id="next">{$langs['Next']}</button>
+	<button class="btn btn-default" type="button" id="back">{$langs['labels']['Back']}</button>
+	<button class="btn btn-primary" type="button" id="next">{$langs['labels']['Next']}</button>
 </footer>
 <script>
 	{literal}

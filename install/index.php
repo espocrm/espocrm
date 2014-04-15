@@ -26,21 +26,22 @@ require_once('../bootstrap.php');
 
 // get user selected language
 $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
-$langFileName = 'core/i18n/'.$userLang.'.php';
+$langFileName = 'core/i18n/'.$userLang.'/install.json';
 $langs = array();
 if (file_exists('install/'.$langFileName)) {
-	$langs = include($langFileName);
+	$langs = file_get_contents('install/'.$langFileName);
 } else {
-	$langs = include('core/i18n/en_US.php');
+	$langs = file_get_contents('install/core/i18n/en_US/install.json');
 }
+$langs = json_decode($langs, true);
 
 require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
 
 if (!$systemHelper->initWritable()) {
-	$dir = $systemHelper->getSystemDir();
+	$dir = $systemHelper->getWritableDir();
 
-	$message = $langs['Bad init Permission'];
+	$message = $langs['messages']['Bad init Permission'];
 	$message = str_replace('{*}', $dir, $message);
 	$message = str_replace('{C}', $systemHelper->getPermissionCommands(array($dir, ''), '775'), $message);
 	$message = str_replace('{CSU}', $systemHelper->getPermissionCommands(array($dir, ''), '775', true), $message);
@@ -108,7 +109,11 @@ switch ($action) {
 		break;
 
     case 'step4':
-    case 'errors':
+    	$settingsDefaults = $installer->getSettingDefaults();
+		$smarty->assign("settingsDefaults", $settingsDefaults);
+		break;
+
+    case 'step5':
     	$settingsDefaults = $installer->getSettingDefaults();
 		$smarty->assign("settingsDefaults", $settingsDefaults);
 		break;

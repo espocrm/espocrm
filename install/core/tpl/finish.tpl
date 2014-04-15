@@ -1,12 +1,12 @@
 <header class="panel-heading">
-	<h4 class="panel-title">{$langs['Finish page title']}</h4>
+	<h4 class="panel-title">{$langs['labels']['Finish page title']}</h4>
 </header>
 <div class="panel-body body">
 	<form id="nav">
 		<div class="row">
 			<div class=" col-md-13">
 				<div class="panel-body" align="center">
-					{$langs['Congratulation! Welcome to EspoCRM!']}
+					{$langs['labels']['Congratulation! Welcome to EspoCRM!']}
 				</div>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 </pre>
 {/if}
 <footer class="modal-footer">
-	<button class="btn btn-primary" type="button" id="start">{$langs['Go to EspoCRM']}</button>
+	<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Go to EspoCRM']}</button>
 </footer>
 <script>
 	{literal}
