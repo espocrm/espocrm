@@ -42,8 +42,6 @@ return array (
   'decimalMark' => '.',
   'currencyList' =>
   array (
-	0 => 'USD',
-	1 => 'EUR',
   ),
   'defaultCurrency' => 'USD',
   'outboundEmailIsShared' => true,
@@ -83,7 +81,6 @@ return array (
 	'base' => 'USD',
 	'rate' => array(
 	  'EUR' => 1.37,
-	  'GBP' => 1.67,
 	),
   ),
   'crud' => array(
