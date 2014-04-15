@@ -176,6 +176,19 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 					$block.show();
 				}
 			}.bind(this));
+			
+			var fields = this.getFields();
+			
+			var fieldInEditMode = null;		
+			for (var field in fields) {				
+				var fieldView = fields[field];
+				this.listenTo(fieldView, 'edit', function (view) {
+					if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
+						fieldInEditMode.inlineEditClose();
+					}
+					fieldInEditMode = view;					
+				}.bind(this));
+			}
 		},
 		
 		setEditMode: function () {

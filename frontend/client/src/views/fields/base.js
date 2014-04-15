@@ -277,7 +277,8 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 
 		setupSearch: function () {},
 
-		inlineEditSave: function () {		
+		inlineEditSave: function () {			
+			
 			var data = this.fetch();						
 			
 			var self = this;
@@ -323,7 +324,11 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 			this.inlineEditClose(true);
 		},
 
-		inlineEditClose: function (dontReset) {		
+		inlineEditClose: function (dontReset) {
+			if (this.mode != 'edit') {
+				return;
+			}
+				
 			var cell = this.getCellElement();
 			this.setMode('detail');
 			this.once('after:render', function () {
@@ -340,8 +345,10 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 		},
 
 		inlineEdit: function () {
-			this.setMode('edit');
 			var self = this;
+			
+			this.trigger('edit', this);			
+			this.setMode('edit');			
 			
 			this.initialAttributes = this.model.getClonedAttributes();
 			
