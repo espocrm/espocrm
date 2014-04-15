@@ -44,8 +44,7 @@ Espo.define('Views.Fields.Bool', 'Views.Fields.Base', function (Dep) {
 		
 		fetchSearch: function () {
 			var data = {
-				type: 'equals',
-				value: this.$element.get(0).checked,
+				type: this.$element.get(0).checked ? 'isTrue' : 'isFalse',
 			};
 			return data;				
 		},

@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 		cssmin: {
 			minify: {
 				files: {
-					'build/tmp/client/css/<%= pkg.name %>.min.css': [
+					'build/tmp/client/css/espo.min.css': [
 						'frontend/client/css/bootstrap.css',
 						'frontend/client/css/datepicker.css',
 						'frontend/client/css/jquery.timepicker.css',
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
 				mangle: false,
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
 			},
-			'build/tmp/client/<%= pkg.name %>.min.js': [
+			'build/tmp/client/espo.min.js': [
 					'frontend/client/lib/jquery-2.0.2.min.js',
 					'frontend/client/lib/underscore-min.js',
 					'frontend/client/lib/backbone-min.js',
@@ -99,16 +99,17 @@ module.exports = function (grunt) {
 		copy: {
 			frontendFolders: {
 				expand: true,
+				cwd: 'frontend/client',
 				src: [
-					'frontend/client/src/**',
-					'frontend/client/res/**',
-					'frontend/client/fonts/**',
-					'frontend/client/cfg/**',
-					'frontend/client/modules/**',
-					'frontend/client/img/**',
-					'frontend/client/css/**',
+					'src/**',
+					'res/**',
+					'fonts/**',
+					'cfg/**',
+					'modules/**',
+					'img/**',
+					'css/**',
 				],
-				dest: 'build/tmp/',
+				dest: 'build/tmp/client',
 			},
 			frontendHtml: {
 				src: 'frontend/html/reset.html',

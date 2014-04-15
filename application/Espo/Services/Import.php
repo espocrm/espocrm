@@ -98,7 +98,68 @@ class Import extends \Espo\Core\Services\Base
 	protected function getServiceFactory()
 	{
 		return $this->injections['serviceFactory'];
-	}	
+	}
+	
+	
+	protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
+	{
+		$o = array();
+		$cnt = strlen($string);
+		$esc = false;
+		$escesc = false;
+		$num = 0;
+		$i = 0;
+		while ($i < $cnt) {
+			$s = $string[$i];
+			if ($s == $CSV_LINEBREAK) {
+				if ($esc) {
+					$o[$num].= $s;
+				}
+				else {
+					$i++;
+					break;
+				}
+			}
+			elseif ($s == $CSV_SEPARATOR) {
+				if ($esc) {
+					$o[$num].= $s;
+				}
+				else {
+					$num++;
+					$esc = false;
+					$escesc = false;
+				}
+			}
+			elseif ($s == $CSV_ENCLOSURE) {
+				if ($escesc) {
+					$o[$num].= $CSV_ENCLOSURE;
+					$escesc = false;
+				}
+
+				if ($esc) {
+					$esc = false;
+					$escesc = true;
+				}
+				else {
+					$esc = true;
+					$escesc = false;
+				}
+			}
+			else {
+				if ($escesc) {
+					$o[$num].= $CSV_ENCLOSURE;
+					$escesc = false;
+				}
+
+				$o[$num].= $s;
+			}
+
+			$i++;
+		}
+		$string = substr($string, $i);
+		return $o;
+	}
+		
 	
 	public function import($scope, array $fields, $attachmentId, array $params = array())
 	{
@@ -115,21 +176,19 @@ class Import extends \Espo\Core\Services\Base
 		
 		if (empty($contents)) {
 			throw new Error('Import error');
-		}
-		
-		$lines = explode("\n", $contents);
+		}		
 		
 		$result	= array(
 			'importedIds' => array(),
 			'updatedIds' => array(),
 			'duplicateIds' => array(),			 
 		);	
-		
-		foreach ($lines as $i => $line) {
+		$i = -1;
+		while ($arr = $this->readCsvString(&$contents, $delimiter, $enclosure)) {
+			$i++;			
 			if ($i == 0 && !empty($params['headerRow'])) {
 				continue;
 			}
-			$arr = str_getcsv($line, $delimiter, $enclosure);
 			if (count($arr) == 1 && empty($arr[0])) {
 				continue;
 			}
@@ -142,9 +201,9 @@ class Import extends \Espo\Core\Services\Base
 			}
 			if (!empty($r['duplicate'])) {
 				$result['duplicateIds'][] = $r['id'];
-			}		
+			}
+					
 		}
-		
 		return array(
 			'countCreated' => count($result['importedIds']),
 			'countUpdated' => count($result['updatedIds']),
