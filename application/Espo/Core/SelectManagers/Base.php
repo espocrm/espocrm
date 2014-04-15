@@ -249,6 +249,12 @@ class Base
 				case 'notIn':
 					$part[$item['field'] . '!='] = $item['value'];
 					break;
+				case 'isTrue':
+					$part[$item['field'] . '='] = true;
+					break;
+				case 'isFalse':
+					$part[$item['field'] . '='] = false;
+					break;
 				case 'between':
 					if (is_array($item['value'])) {
 						$part['AND'] = array(
