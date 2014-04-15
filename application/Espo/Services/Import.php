@@ -184,7 +184,7 @@ class Import extends \Espo\Core\Services\Base
 			'duplicateIds' => array(),			 
 		);	
 		$i = -1;
-		while ($arr = $this->readCsvString(&$contents, $delimiter, $enclosure)) {
+		while ($arr = $this->readCsvString($contents, $delimiter, $enclosure)) {
 			$i++;			
 			if ($i == 0 && !empty($params['headerRow'])) {
 				continue;
