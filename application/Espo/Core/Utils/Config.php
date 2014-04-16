@@ -62,15 +62,14 @@ class Config
 		return $this->fileManager;
 	}
 
-
-
 	/**
 	 * Get an option from config
 	 *
 	 * @param string $name
+	 * @param string $default
 	 * @return string | array
 	 */
-	public function get($name)
+	public function get($name, $default = null)
 	{
 		$keys = explode('.', $name);
 
@@ -79,7 +78,7 @@ class Config
 			if (isset($lastBranch[$keyName]) && is_array($lastBranch)) {
 				$lastBranch = $lastBranch[$keyName];
 			} else {
-				return null;
+				return $default;
 			}
 		}
 
@@ -94,7 +93,7 @@ class Config
 	 * @param string $value
 	 * @return bool
 	 */
-	public function set($name, $value='')
+	public function set($name, $value = '')
 	{
 		if (is_array($name)) {
 			return $this->setArray($name);

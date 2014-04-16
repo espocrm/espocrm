@@ -26,15 +26,15 @@ Espo.Cache = Bull.Cacher.extend({
 	
 	_prefix: 'espo-cache',
 	
-	handleActuality: function (timestamp) {
-		var stored = this.get('app', 'timestamp');
+	handleActuality: function (cacheTimestamp) {
+		var stored = parseInt(this.get('app', 'cacheTimestamp'));
 		if (stored) {
-			if (stored != timestamp) {
+			if (stored !== cacheTimestamp) {
 				this.clear();
 			}
 		} else {
 			this.clear();
-			this.set('app', 'timestamp', timestamp);
+			this.set('app', 'cacheTimestamp', cacheTimestamp);
 		}
 	},
 

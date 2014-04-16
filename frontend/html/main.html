@@ -11,7 +11,7 @@
 			$(function () {
 				var app = new Espo.App({
 					useCache: true,
-					r: '@@timestamp'
+					cacheTimestamp: {{cacheTimestamp}}
 				}, function (app) {
 					app.start();
 				});
