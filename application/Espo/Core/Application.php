@@ -80,6 +80,16 @@ class Application
         $this->initRoutes();
         $this->getSlim()->run();
     }
+    
+    public function runClient()
+    {
+    	$config = $this->getContainer()->get('config');
+    	
+    	$html = file_get_contents('main.html');
+    	$html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
+    	echo $html;
+    	exit; 
+    }
 
     public function runEntryPoint($entryPoint)
     {
