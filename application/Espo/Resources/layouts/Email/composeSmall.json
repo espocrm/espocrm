@@ -10,23 +10,19 @@
 				{"name":"cc"}			
 			],
 			[
-				{
-					"name":"to"
-				},
+				{"name":"to"},
 				{"name":"bcc"}
 			],
 			[{"name":"name","fullWidth":true}],
 			[
-				{
-					"name":"isHtml"
-				},
+				false,
 				{
 					"name":"selectTemplate",
 					"view":"Email.Fields.SelectTemplate" 
 				}
 			],
 			[{"name":"body","fullWidth":true}],
-			[{"name":"attachments"}]
+			[{"name":"attachments"},{"name":"isHtml"}]
 		]
 	}
 ]

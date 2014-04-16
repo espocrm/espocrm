@@ -8,13 +8,8 @@
 				}
 			],
 			[{"name":"subject","fullWidth":true}],
-			[
-				{
-					"name":"isHtml"
-				}
-			],
 			[{"name":"body","fullWidth":true}],
-			[{"name":"attachments"}]
+			[{"name":"attachments"},{"name":"isHtml"}]
 		]
 	}
 ]

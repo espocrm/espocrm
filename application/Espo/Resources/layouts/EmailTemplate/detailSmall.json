@@ -2,19 +2,10 @@
 	{
 		"label":"",
 		"rows":[
-			[
-				{
-					"name":"name"
-				}
-			],
+			[{"name":"name"}],
 			[{"name":"subject"}],
-			[
-				{
-					"name":"isHtml"
-				}
-			],
 			[{"name":"body","fullWidth":true}],
-			[{"name":"attachments"}]
+			[{"name":"attachments"},{"name":"isHtml"}]
 		]
 	}
 ]
