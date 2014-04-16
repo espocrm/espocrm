@@ -7,6 +7,12 @@
 				<br>
 				{{translate 'Updated' scope='Import'}}: {{result.countUpdated}}	
 			</div>
+			
+			<div style="margin-top: 10px;">
+				{{#if result.countCreated}}
+				<button class="btn btn-danger" data-action="revert">{{translate 'Revert' scope='Import'}}</button>
+				{{/if}}
+			</div>
 		</div>
 	</div>
 

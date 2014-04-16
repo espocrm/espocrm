@@ -159,7 +159,20 @@ class Import extends \Espo\Core\Services\Base
 		$string = substr($string, $i);
 		return $o;
 	}
-		
+	
+	public function revert($scope, array $idsToRemove)
+	{
+		$ids = array();
+		if (!empty($scope) && !empty($idsToRemove)) {
+			foreach ($idsToRemove as $id) {
+				$entity = $this->getEntityManager()->getEntity($scope, $id); 
+				if ($this->getEntityManager()->removeEntity($entity)) {
+					$ids[] = $id;	
+				}
+			}
+		}
+		return $ids;		
+	}
 	
 	public function import($scope, array $fields, $attachmentId, array $params = array())
 	{
@@ -207,6 +220,7 @@ class Import extends \Espo\Core\Services\Base
 		return array(
 			'countCreated' => count($result['importedIds']),
 			'countUpdated' => count($result['updatedIds']),
+			'importedIds' => $result['importedIds'],
 			'duplicateIds' => $result['duplicateIds'],
 		);	
 	}

@@ -54,6 +54,11 @@ class Import extends \Espo\Core\Controllers\Base
 		);
 	}
 	
+	public function actionRevert($params, $data)
+	{			
+		return $this->getService('Import')->revert($data['entityType'], $data['idsToRemove']);
+	}
+	
 	public function actionCreate($params, $data)
 	{   
         $importParams = array(

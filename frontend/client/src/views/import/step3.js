@@ -31,12 +31,38 @@ Espo.define('Views.Import.Step3', 'View', function (Dep) {
 			};		
 		},
 		
+		events: {
+			'click button[data-action="revert"]': function () {
+				this.revert();
+			},
+		},
+		
 		setup: function () {
 			this.formData = this.options.formData;
 			this.scope = this.formData.entityType;
 			
 			this.result = this.options.result || {};
-		},		
+		},
+		
+		revert: function () {
+			this.notify('Please wait...');
+			
+			this.$el.find('[data-action="revert"]').addClass('disabled');			
+			
+			$.ajax({
+				type: 'POST',
+				url: 'Import/action/revert',
+				data: JSON.stringify({
+					entityType: this.formData.entityType,
+					idsToRemove: this.result.importedIds
+				}),
+				timeout: 150000,
+				success: function (result) {
+					Espo.Ui.success(this.translate('Reverted', 'labels', 'Import'));
+					this.$el.find('[data-action="revert"]').remove();
+				}.bind(this)
+			});
+		}		
 					
 	});
 });
