@@ -26,8 +26,9 @@ $app = new \Espo\Core\Application();
 
 $app->isInstalled();
 
-if (empty($_GET['entryPoint'])) {
-	$app->runClient();
-} else {
+if (!empty($_GET['entryPoint'])) {
 	$app->runEntryPoint($_GET['entryPoint']);
+	exit;	
 }
+
+$app->runClient();
