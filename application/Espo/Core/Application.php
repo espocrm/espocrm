@@ -87,6 +87,7 @@ class Application
     	
     	$html = file_get_contents('main.html');
     	$html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
+    	$html = str_replace('{{useCache}}', $config->get('useCache') ? 'true' : 'false' , $html);
     	echo $html;
     	exit; 
     }
