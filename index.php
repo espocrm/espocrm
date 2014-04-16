@@ -18,17 +18,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 include "bootstrap.php";
-	
+
 $app = new \Espo\Core\Application();
 
-$app->isInstalled();
+if (!$app->isInstalled()) {
+	header("Location: install/");
+	exit;
+}
 
 if (!empty($_GET['entryPoint'])) {
 	$app->runEntryPoint($_GET['entryPoint']);
-	exit;	
+	exit;
 }
 
 $app->runClient();

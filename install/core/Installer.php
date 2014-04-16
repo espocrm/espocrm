@@ -105,7 +105,7 @@ class Installer
 
 	public function isInstalled()
 	{
-		return $this->app->isInstalled(false);
+		return $this->app->isInstalled();
 	}
 
 

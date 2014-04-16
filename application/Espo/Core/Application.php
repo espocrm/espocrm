@@ -80,16 +80,16 @@ class Application
         $this->initRoutes();
         $this->getSlim()->run();
     }
-    
+
     public function runClient()
     {
     	$config = $this->getContainer()->get('config');
-    	
+
     	$html = file_get_contents('main.html');
     	$html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
     	$html = str_replace('{{useCache}}', $config->get('useCache') ? 'true' : 'false' , $html);
     	echo $html;
-    	exit; 
+    	exit;
     }
 
     public function runEntryPoint($entryPoint)
@@ -129,21 +129,15 @@ class Application
 		$cronManager->run();
     }
 
-    public function isInstalled($useRedirect = true)
+    public function isInstalled()
     {
     	$config = $this->getContainer()->get('config');
 
-    	$result = false;
     	if (file_exists($config->get('configPath')) && $config->get('isInstalled')) {
-    		$result = true;
+    		return true;
     	}
 
-		if ($useRedirect && !$result) {
-			header("Location: install/");
-			exit;
-		}
-
-		return $result;
+		return false;
     }
 
 	protected function routeHooks()
