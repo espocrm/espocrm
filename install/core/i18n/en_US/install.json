@@ -102,17 +102,6 @@
 			"nginx": "Add this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation \/api\/v1\/ {\n    if (!-e $request_filename){\n        rewrite ^\/api\/v1\/(.*)$ \/api\/v1\/index.php last; break;\n    }\n}\n\nlocation \/ {\n    rewrite reset\/?$ reset.html break;\n}<\/pre>",
 			"microsoft-iis": "Enable \"URL Rewrite\" Module in IIS server",
 			"default": "Enable Rewrite Module in your server (e.g. mod_rewrite in Apache)"
-		},
-		"cronTitle": {
-			"linux": "To Setup Crontab:",
-			"windows": "To Setup Scheduled Task:",
-			"default": "To Setup Cron job:"
-		},
-		"cronHelp": {
-			"linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:\n* * * * * {phpBinDir} -f {cronFile} > \/dev\/null 2>&1",
-			"mac": "Note: Add this line to Tasks to run Espo Scheduled Jobs:\n* * * * * {phpBinDir} -f {cronFile} > \/dev\/null 2>&1",
-			"windows": "Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:\n{phpBinDir}.exe -f {cronFile}",
-			"default": "Run command {cronFile}"
 		}
 	}
 }

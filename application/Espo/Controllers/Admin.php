@@ -77,5 +77,10 @@ class Admin extends \Espo\Core\Controllers\Base
 		return true;
 	}
 
+	public function actionCronMessage($params, $data)
+	{
+		return $this->getContainer()->get('scheduledJob')->getSetupMessage();
+	}
+
 }
 

@@ -75,9 +75,14 @@ class Installer
 		$this->systemHelper = new SystemHelper();
 	}
 
+	protected function getContainer()
+	{
+		return $this->app->getContainer();
+	}
+
 	protected function getEntityManager()
 	{
-		return $this->app->getContainer()->get('entityManager');
+		return $this->getContainer()->get('entityManager');
 	}
 
 	protected function getSystemHelper()
@@ -161,7 +166,6 @@ class Installer
 		return $result;
 	}
 
-
 	public function saveConfig($data)
 	{
 		$config = $this->app->getContainer()->get('config');
@@ -170,7 +174,6 @@ class Installer
 
 		return $result;
 	}
-
 
 	public function buildDatabase()
 	{
@@ -251,7 +254,6 @@ class Installer
 		return is_string($id);
 	}
 
-
 	public function createUser($userName, $password)
 	{
 		$this->auth();
@@ -324,12 +326,10 @@ class Installer
 		return $result;
 	}
 
-
 	public function getAjaxUrls()
 	{
 		return array_keys($this->ajaxUrls);
 	}
-
 
 	public function fixAjaxPermission($url = null)
 	{
@@ -359,7 +359,6 @@ class Installer
 
 		return $result;
 	}
-
 
 	public function getSettingDefaults()
 	{
@@ -411,6 +410,11 @@ class Installer
 		}
 
 		return $settingDefs;
+	}
+
+	public function getCronMessage()
+	{
+		return $this->getContainer()->get('scheduledJob')->getSetupMessage();
 	}
 
 
