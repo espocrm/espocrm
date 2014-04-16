@@ -48,6 +48,8 @@ class Record extends \Espo\Core\Services\Base
 	
 	private $streamService;
 	
+	protected $notFilteringFields = array();
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -203,6 +205,9 @@ class Record extends \Espo\Core\Services\Base
 		foreach ($data as $key => $value) {
 			if (is_array($data[$key])) {
 				foreach ($data[$key] as $i => $v) {
+					if (in_array($i, $this->notFilteringFields)) {
+						continue;
+					}
 					if (is_string($data[$key][$i])) {
 						$data[$key][$i] = $this->stripTags($data[$key][$i]);
 					}
@@ -210,11 +215,17 @@ class Record extends \Espo\Core\Services\Base
 			} else if ($data[$key] instanceof \stdClass) {
 				$propertyList = get_object_vars($data[$key]);
 				foreach ($propertyList as $property) {
+					if (in_array($property, $this->notFilteringFields)) {
+						continue;
+					}
 					if (is_string($data[$key]->$property)) {
 						$data[$key]->$property = $this->stripTags($data[$key]->$property);
 					}
 				}
 			} else if (is_string($data[$key])) {
+				if (in_array($key, $this->notFilteringFields)) {
+					continue;
+				}
 				$data[$key] = $this->stripTags($data[$key]);
 			}
 		}

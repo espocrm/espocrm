@@ -24,6 +24,9 @@ namespace Espo\Services;
 
 class Attachment extends Record
 {
+	
+	protected $notFilteringFields = array('contents');	
+		
 	public function createEntity($data)
 	{		
 		if (!empty($data['file'])) {
