@@ -10,14 +10,12 @@
         "firstName": {
             "type": "varchar",
             "maxLength": 100,
-            "notNull":true,
             "default":""
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
             "required": true,
-            "notNull":true,
             "default":""
         },
         "title": {
