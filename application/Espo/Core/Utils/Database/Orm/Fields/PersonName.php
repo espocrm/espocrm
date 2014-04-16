@@ -59,7 +59,7 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 				'fields' => array(
 					$field['name'] => array(
 						'type' => 'varchar',
-						'select' => "TRIM(CONCAT(".implode(", ", $fullList)."))",
+						'select' => $this->getSelect($fullList),
 						'where' => array(
 							'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE '{text}' OR CONCAT(".implode(", ", $fullListReverse).") LIKE '{text}')",
 							'=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = '{text}' OR CONCAT(".implode(", ", $fullListReverse).") = '{text}')",
@@ -69,6 +69,22 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 				),
 			),
 		);
+	}
+
+	protected function getSelect(array $fullList)
+	{
+		foreach ($fullList as &$item) {
+
+			$rowItem = trim($item, " '");
+
+			if (!empty($rowItem)) {
+				$item = "IFNULL(".$item.", '')";
+			}
+		}
+
+		$select = "TRIM(CONCAT(".implode(", ", $fullList)."))";
+
+		return $select;
 	}
 
 }

@@ -23,7 +23,6 @@
       "advanced":true
    },
    "database":{
-      "notNull":true,
       "default":""
    }
 }
