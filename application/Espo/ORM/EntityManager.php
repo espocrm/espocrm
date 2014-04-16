@@ -77,7 +77,7 @@ class EntityManager
 	{
 		$params = $this->params;
 
-		$this->pdo = new \PDO('mysql:host='.$params['host'].';dbname=' . $params['dbname'], $params['user'], $params['password']);
+		$this->pdo = new \PDO('mysql:host='.$params['host'].';dbname=' . $params['dbname'] . ';charset=utf8', $params['user'], $params['password']);
 		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 	}
 
