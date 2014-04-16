@@ -197,36 +197,34 @@ class Record extends \Espo\Core\Services\Base
 	protected function stripTags($string)
 	{
 		return strip_tags($string, '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>');
+	}
+	
+	protected function filterInputField($field, $value)
+	{
+		if (in_array($field, $this->notFilteringFields)) {
+			return $value;
+		}
+		$methodName = 'filterInputField' . ucfirst($field);
+		if (method_exists($this, $methodName)) {
+			$value = $this->$methodName($value);
+		}
+		return $value;
 	}	
 	
 	protected function filterInput(&$data)
-	{
-		
+	{		
 		foreach ($data as $key => $value) {
 			if (is_array($data[$key])) {
 				foreach ($data[$key] as $i => $v) {
-					if (in_array($i, $this->notFilteringFields)) {
-						continue;
-					}
-					if (is_string($data[$key][$i])) {
-						$data[$key][$i] = $this->stripTags($data[$key][$i]);
-					}
+					$data[$key][$i] = $this->filterInputField($i, $data[$key][$i]);
 				}
 			} else if ($data[$key] instanceof \stdClass) {
 				$propertyList = get_object_vars($data[$key]);
 				foreach ($propertyList as $property) {
-					if (in_array($property, $this->notFilteringFields)) {
-						continue;
-					}
-					if (is_string($data[$key]->$property)) {
-						$data[$key]->$property = $this->stripTags($data[$key]->$property);
-					}
+					$data[$key]->$property = $this->filterInputField($property, $data[$key]->$property);			
 				}
-			} else if (is_string($data[$key])) {
-				if (in_array($key, $this->notFilteringFields)) {
-					continue;
-				}
-				$data[$key] = $this->stripTags($data[$key]);
+			} else {
+				$data[$key] = $this->filterInputField($key, $data[$key]);
 			}
 		}
 	}
