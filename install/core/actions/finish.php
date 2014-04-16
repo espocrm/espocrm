@@ -20,17 +20,12 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-$os = $systemHelper->getOS();
+$cronMessage = $installer->getCronMessage();
 
-$cronFile = $systemHelper->getRootDir().DIRECTORY_SEPARATOR.'cron.php';
+$smarty->assign('cronTitle', $cronMessage['label']);
+$smarty->assign('cronHelp', $cronMessage['command']);
 
-$cronHelp = (isset($langs['options']['cronHelp'][$os]))? $langs['options']['cronHelp'][$os] : $langs['options']['cronHelp']['default'];
-$cronHelp = str_replace('{cronFile}', $cronFile, $cronHelp);
-$cronHelp = str_replace('{phpBinDir}', $systemHelper->getPhpBin(), $cronHelp);
-$cronTitle = (isset($langs['options']['cronTitle'][$os]))? $langs['options']['cronTitle'][$os] : $langs['options']['cronTitle']['default'];
-
-$smarty->assign('cronTitle', $cronTitle);
-$smarty->assign('cronHelp', $cronHelp);
 $installer->setSuccess();
+
 // clean session
 session_unset();

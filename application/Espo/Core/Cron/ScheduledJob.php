@@ -28,26 +28,37 @@ use Espo\Core\Exceptions\NotFound,
 class ScheduledJob
 {
 	private $container;
+	private $systemUtil;
 
 	protected $data = null;
 
 	protected $cacheFile = 'data/cache/application/jobs.php';
 
+	protected $cronFile = 'cron.php';
+
 	protected $allowedMethod = 'run';
 
 	/**
-     * @var array - path to cron job files
-     */
+	 * @var array - path to cron job files
+	 */
 	private $paths = array(
 		'corePath' => 'application/Espo/Jobs',
-    	'modulePath' => 'application/Espo/Modules/{*}/Jobs',
-    	'customPath' => 'custom/Espo/Custom/Jobs',
+		'modulePath' => 'application/Espo/Modules/{*}/Jobs',
+		'customPath' => 'custom/Espo/Custom/Jobs',
+	);
+
+	protected $cronSetup = array(
+		'linux' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+		'windows' => '{PHP-BIN-DIR}.exe -f {CRON-FILE}',
+		'mac' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+		'default' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE}',
 	);
 
 
 	public function __construct(\Espo\Core\Container $container)
 	{
 		$this->container = $container;
+		$this->systemUtil = new \Espo\Core\Utils\System();
 	}
 
 	protected function getContainer()
@@ -58,6 +69,11 @@ class ScheduledJob
 	protected function getEntityManager()
 	{
 		return $this->container->get('entityManager');
+	}
+
+	protected function getSystemUtil()
+	{
+		return $this->systemUtil;
 	}
 
 	public function run(array $job)
@@ -131,7 +147,7 @@ class ScheduledJob
 			return $data[$name];
 		}
 
-        return false;
+		return false;
 	}
 
 	/**
@@ -143,6 +159,27 @@ class ScheduledJob
 		$classParser = $this->getContainer()->get('classParser');
 		$classParser->setAllowedMethods( array($this->allowedMethod) );
 		$this->data = $classParser->getData($this->paths, $this->cacheFile);
+	}
+
+
+	public function getSetupMessage()
+	{
+		$language = $this->getContainer()->get('language');
+
+		$OS = $this->getSystemUtil()->getOS();
+		$phpBin = $this->getSystemUtil()->getPhpBin();
+		$cronFile = Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile);
+		$desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
+
+		$label = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
+
+		$command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
+		$command = str_replace(array('{PHP-BIN-DIR}', '{CRON-FILE}'), array($phpBin, $cronFile), $command);
+
+		return array(
+			'label' => $label,
+			'command' => $command,
+		);
 	}
 
 }
