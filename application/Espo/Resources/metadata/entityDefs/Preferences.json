@@ -44,7 +44,8 @@
         "smtpEmailAddress": {
             "type": "varchar",
             "readOnly": true,
-            "notStorable": true
+            "notStorable": true,
+            "view": "Preferences.Fields.SmtpEmailAddress"
         },
         "smtpServer": {
             "type": "varchar"
