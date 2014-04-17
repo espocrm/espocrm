@@ -367,12 +367,6 @@ class Converter
 
 		}
 
-		/*
-		name = $subFieldName
-		naming = $subFieldNameNaming
-		params = $subFieldParams
-		*/
-
 		return $subField;
 	}
 
@@ -406,17 +400,9 @@ class Converter
 				$convertedLink = $this->getRelationManager()->process($currentType, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
 			}
 
-			/*else if (isset($reverseMethod) && method_exists($this->getRelationManager(), $reverseMethod)) {
-				$convertedLink = $this->getRelationManager()->process($reverseMethod, $entityName, $foreignLink, array('name'=>$linkName, 'params'=>$linkParams));
-			}   */
-
-			//$relationships = Util::merge($relationships, $convertedLink);
 			if ($convertedLink !== false) {
 				$relationships = Util::merge($convertedLink, $relationships);
 			}
-
-
-			//echo $method.' = '.$currentType.' - '.$foreignLink['type'].'<br />';
 		}
 
 		return $relationships;

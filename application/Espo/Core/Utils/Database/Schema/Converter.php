@@ -194,10 +194,8 @@ class Converter
 						break;
 
 					case 'belongsTo':
-						$foreignEntity = $relationParams['entity'];
 						$columnName = Util::toUnderScore($relationParams['key']);
-						$foreignKey = Util::toUnderScore($relationParams['foreignKey']);
-						$tables[$entityName]->addForeignKeyConstraint($tables[$foreignEntity], array($columnName), array($foreignKey), array("onUpdate" => "CASCADE"));
+						$tables[$entityName]->addIndex(array($columnName));
 						break;
 				}
 			}
@@ -213,9 +211,9 @@ class Converter
 	/**
 	 * Prepare a relation table for the manyMany relation
 	 *
+	 * @param string $entityName
 	 * @param array $relationParams
 	 * @param array $tables
-	 * @param bool $isForeignKey
 	 *
 	 * @return \Doctrine\DBAL\Schema\Table
 	 */
@@ -228,33 +226,17 @@ class Converter
 			return $this->getSchema()->getTable($tableName);
 		}
 
-		$isForeignKey = true;
-		if (!isset($relationParams['key']) || !isset($relationParams['foreignKey'])) {
-			$isForeignKey = false;
-		}
-
 		$table = $this->getSchema()->createTable($tableName);
 		$table->addColumn('id', 'int', array('length'=>$this->defaultLength['int'], 'autoincrement' => true, 'notnull' => true,));  //'unique' => true,
-
-		if ($isForeignKey) {
-			$relationEntities = array($entityName, $relationParams['entity']);
-			$relationKeys = array($relationParams['key'], $relationParams['foreignKey']);
-		}
 
 		//add midKeys to a schema
 		foreach($relationParams['midKeys'] as $index => $midKey) {
 
 			$usMidKey = Util::toUnderScore($midKey);
 			$table->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+			$table->addIndex(array($usMidKey));
 
-			if ($isForeignKey) {
-				$relationKey = Util::toUnderScore($relationKeys[$index]);
-				$table->addForeignKeyConstraint($tables[$relationEntities[$index]], array($usMidKey), array($relationKey), array("onUpdate" => "CASCADE"));
-			} else {
-				$table->addIndex(array($usMidKey));
-			}
 		} //END: add midKeys to a schema
-
 
 		//add additionalColumns
 		if (isset($relationParams['additionalColumns'])) {

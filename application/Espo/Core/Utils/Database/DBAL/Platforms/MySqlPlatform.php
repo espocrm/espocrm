@@ -22,9 +22,11 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Platforms;
 
-use Doctrine\DBAL\Schema\TableDiff;
-use Doctrine\DBAL\Schema\Index;
-use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\TableDiff,
+	Doctrine\DBAL\Schema\Index,
+	Doctrine\DBAL\Schema\Table,
+	Doctrine\DBAL\Schema\Constraint,
+	Doctrine\DBAL\Schema\ForeignKeyConstraint;
 
 
 class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
