@@ -40,7 +40,14 @@
 		"Create InboundEmail": "Create Inbound Email",
 		"Activities": "Activities",
 		"History": "History",
-		"Attendees": "Attendees"
+		"Attendees": "Attendees",
+		"Schedule Meeting": "Schedule Meeting",
+		"Schedule Call": "Schedule Call",
+		"Compose Email": "Compose Email",
+		"Log Meeting": "Log Meeting",
+		"Log Call": "Log Call",
+		"Archive Email": "Archive Email",
+		"Create Task": "Create Task"
 	},
 	"links": {
 		"contacts": "Contacts",
