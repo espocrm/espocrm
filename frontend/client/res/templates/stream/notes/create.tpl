@@ -7,9 +7,9 @@
 		<span class="label label-{{statusStyle}}">{{statusText}}</span>
 		{{/if}}
 		
-		<span class="text-muted">{{{createdBy}}} {{translate 'created'}}
-			{{#if isUserStream}} {{parentTypeString}} {{{parent}}} {{else}} {{translate 'this'}} {{parentTypeString}}{{/if}}
-			{{#if assignedUserId}} {{translate 'assigned to'}} {{#if assignedToYou}}{{translate 'you'}}{{else}}<a href="#User/view/{{assignedUserId}}">{{assignedUserName}}</a>{{/if}}{{/if}}
+		<span class="text-muted">{{{createdBy}}} {{translate 'created' category='stream'}}
+			{{#if isUserStream}} {{parentTypeString}} {{{parent}}} {{else}} {{translate 'this' category='stream'}} {{parentTypeString}}{{/if}}
+			{{#if assignedUserId}} {{translate 'assigned to' category='stream'}} {{#if assignedToYou}}{{translate 'you' category='stream'}}{{else}}<a href="#User/view/{{assignedUserId}}">{{assignedUserName}}</a>{{/if}}{{/if}}
 		</span>
 	</div>
 	

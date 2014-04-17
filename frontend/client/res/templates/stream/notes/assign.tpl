@@ -3,9 +3,9 @@
 {{/unless}}
 	
 	<div>
-		<span class="text-muted">{{{createdBy}}} {{translate 'assigned'}}
+		<span class="text-muted">{{{createdBy}}} {{translate 'assigned' category='stream'}}
 			{{#if isUserStream}} {{parentTypeString}} {{{parent}}} {{else}} {{translate 'this'}} {{parentTypeString}}{{/if}} 
-			{{translate 'to'}} {{#if assignedToYou}}{{translate 'you'}}{{else}}<a href="#User/view/{{assignedUserId}}">{{assignedUserName}}</a>{{/if}}
+			{{translate 'to' category='stream'}} {{#if assignedToYou}}{{translate 'you' category='stream'}}{{else}}<a href="#User/view/{{assignedUserId}}">{{assignedUserName}}</a>{{/if}}
 		</span>		
 	</div>	
 	

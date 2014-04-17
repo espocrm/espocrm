@@ -20,8 +20,8 @@
 	
 	
 	<div class="">
-		<span class="text-muted">{{{createdBy}}} {{#if message}}{{translate 'posted'}}{{else}}{{#if attachments}}{{translate 'attached'}}{{/if}}{{/if}}
-		{{#if isUserStream}} {{translate 'on'}} {{parentTypeString}} {{{parent}}}{{/if}}
+		<span class="text-muted">{{{createdBy}}} {{#if message}}{{translate 'posted' category='stream'}}{{else}}{{#if attachments}}{{translate 'attached' category='stream'}}{{/if}}{{/if}}
+		{{#if isUserStream}} {{translate 'on' category='stream'}} {{parentTypeString}} {{{parent}}}{{/if}}
 		</span>
 	</div>
 	
