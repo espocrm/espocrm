@@ -41,7 +41,6 @@ Espo.define('Views.ScheduledJob.List', 'Views.List', function (Dep) {
 				error: function (x) {
 				}.bind(this)
 			}).done(function (data) {
-				console.log(data);
 				this.$el.find('.cronjob .message').html(data.message);
 				this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
 			}.bind(this));		
