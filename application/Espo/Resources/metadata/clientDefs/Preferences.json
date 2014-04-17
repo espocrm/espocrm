@@ -2,7 +2,7 @@
    "recordViews":{
       "edit": "Preferences.Record.Edit"
    },
-   "ciews":{
+   "views":{
       "edit": "Preferences.Edit"
    }   
 }

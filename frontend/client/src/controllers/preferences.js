@@ -23,11 +23,7 @@ Espo.define('Controllers.Preferences', 'Controllers.Record', function (Dep) {
 			
 	return Dep.extend({		
 	
-		defaultAction: 'own',
-		
-		viewMap: {
-			edit: 'Preferences.Edit',
-		},
+		defaultAction: 'own',		
 		
 		getModel: function (callback) {		
 			var model = new Espo['Models.Preferences']();
