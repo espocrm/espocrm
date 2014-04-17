@@ -46,9 +46,8 @@
 		"City": "City",
 		"PostalCode": "Postal Code",
 		"Followed": "Followed",
-		"Follow": "Follow"		
-		
-		
+		"Follow": "Follow",
+		"Clear Local Cache": "Clear Local Cache"		
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
