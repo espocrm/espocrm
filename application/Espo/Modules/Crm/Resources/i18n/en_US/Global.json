@@ -39,7 +39,8 @@
 	"labels": {
 		"Create InboundEmail": "Create Inbound Email",
 		"Activities": "Activities",
-		"History": "History"
+		"History": "History",
+		"Attendees": "Attendees"
 	},
 	"links": {
 		"contacts": "Contacts",
