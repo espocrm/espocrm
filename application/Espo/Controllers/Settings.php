@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -30,7 +30,7 @@ class Settings extends \Espo\Core\Controllers\Base
 	{
 		return $this->getConfig()->getData($this->getUser()->isAdmin());
 	}
-	
+
 	public function actionUpdate($params, $data)
 	{
 		return $this->actionPatch($params, $data);
@@ -42,6 +42,9 @@ class Settings extends \Espo\Core\Controllers\Base
         if ($result === false) {
         	throw new Error('Cannot save settings');
         }
+
+        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
+
         return $this->getConfig()->getData($this->getUser()->isAdmin());
 	}
 }
