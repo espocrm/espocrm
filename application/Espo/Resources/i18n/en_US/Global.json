@@ -29,6 +29,8 @@
 		"Created": "Created",
 		"Create": "Create",
 		"Add Filter": "Add Filter",
+		"Add Dashlet": "Add Dashlet",
+		"Add": "Add",
 		"Reset": "Reset",
 		"Menu": "Menu",
 		"More": "More",
@@ -38,6 +40,8 @@
 		"Admin": "Admin",
 		"About": "About",
 		"Refresh": "Refresh",
+		"Remove": "Remove",
+		"Options": "Options",
 		"Log Out": "Log Out",
 		"Preferences": "Preferences",
 		"State": "State",
@@ -57,7 +61,8 @@
 		"Active": "Active",
 		"Inactive": "Inactive",
 		"Write your comment here": "Write your comment here",
-		"Post": "Post"
+		"Post": "Post",
+		"Stream": "Stream"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
