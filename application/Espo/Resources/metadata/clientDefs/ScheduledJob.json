@@ -4,5 +4,8 @@
      "log":{
         "readOnly": true
      }
-  }  
+  },
+  "views": {
+    "list": "ScheduledJob.List"  	
+  }
 }

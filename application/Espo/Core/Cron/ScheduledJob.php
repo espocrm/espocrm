@@ -171,13 +171,13 @@ class ScheduledJob
 		$cronFile = Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile);
 		$desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
 
-		$label = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
+		$message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
 
 		$command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
 		$command = str_replace(array('{PHP-BIN-DIR}', '{CRON-FILE}'), array($phpBin, $cronFile), $command);
 
 		return array(
-			'label' => $label,
+			'message' => $message,
 			'command' => $command,
 		);
 	}

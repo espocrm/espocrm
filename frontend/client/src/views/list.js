@@ -37,13 +37,17 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 				view: 'Header'
 			}
 		},
+		
+		searchPanel: true,
 
 		setup: function () {
-			this.createView('search', 'Record.Search', {
-				collection: this.collection,
-				el: '#main > .search-container',
-				searchManager: this.options.searchManager,
-			});		
+			if (this.searchPanel) {
+				this.createView('search', 'Record.Search', {
+					collection: this.collection,
+					el: '#main > .search-container',
+					searchManager: this.options.searchManager,
+				});
+			}	
 
 			this.menu.buttons.unshift({
 				link: '#' + this.scope + '/create',
