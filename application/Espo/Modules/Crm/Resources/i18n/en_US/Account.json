@@ -16,5 +16,22 @@
 		"contacts": "Contacts",
 		"opportunities": "Opportunities",
 		"cases": "Cases"
+	},
+	"options": {
+		"type": {
+			"Customer": "Customer",
+			"Investor": "Investor",
+			"Partner": "Partner",
+			"Reseller": "Reseller"
+		},
+		"industry": {
+			"Apparel": "Apparel",
+			"Banking": "Banking",
+			"Computer Software": "Computer Software",
+			"Education": "Education",
+			"Electronics": "Electronics",
+			"Finance": "Finance",
+			"Insurance": "Insurance"
+		}
 	}
 }

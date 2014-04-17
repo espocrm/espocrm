@@ -12,5 +12,29 @@
 	},
 	"links": {
 		"contacts": "Contacts"
+	},
+	"options": {
+		"stage": {
+			"Prospecting": "Prospecting",
+			"Qualification": "Qualification",
+			"Needs Analysis": "Needs Analysis",
+			"Value Proposition": "Value Proposition",
+			"Id. Decision Makers": "Id. Decision Makers",
+			"Perception Analysis": "Perception Analysis",
+			"Proposal/Price Quote": "Proposal/Price Quote",
+			"Negotiation/Review": "Negotiation/Review",
+			"Closed Won": "Closed Won",
+			"Closed Lost": "Closed Lost" 
+		},
+		"leadSource": {
+			"Call": "Call",
+			"Email": "Email",
+			"Existing Customer": "Existing Customer",
+			"Partner": "Partner",
+			"Public Relations": "Public Relations",
+			"Web Site": "Web Site",
+			"Campaign": "Campaign",
+			"Other": "Other"
+		}
 	}
 }

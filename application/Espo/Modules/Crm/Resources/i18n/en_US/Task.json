@@ -10,5 +10,19 @@
 		"isOverdue": "Is Overdue"
 	},
 	"links": {
+	},
+	"options": {
+		"status": {
+			"Not Started": "Not Started",
+			"Started": "Started",
+			"Completed": "Completed",
+			"Canceled": "Canceled"
+		},
+		"priority" : {
+			"Low": "Low",
+			"Normal": "Normal",
+			"High": "High",
+			"Urgent": "Urgent"
+		}
 	}
 }

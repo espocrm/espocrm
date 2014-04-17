@@ -15,5 +15,11 @@
 		"selectTemplate": "Select Template"
 	},
 	"links": {
+	},
+	"options": {
+		"Draft": "Draft",
+		"Sending": "Sending",
+		"Sent": "Sent",
+		"Archived": "Archived"
 	}
 }

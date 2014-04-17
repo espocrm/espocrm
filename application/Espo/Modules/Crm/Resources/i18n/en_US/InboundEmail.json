@@ -19,5 +19,16 @@
 		"replyFromName": "Reply From Name"
 	},
 	"links": {
+	},
+	"options": {
+		"status": {
+			"Active": "Active",
+			"Inactive": "Inactive"
+		},
+		"caseDistribution": {
+			"Direct-Assignment": "Direct-Assignment",
+			"Round-Robin": "Round-Robin",
+			"Least-Busy": "Least-Busy"
+		}
 	}
 }

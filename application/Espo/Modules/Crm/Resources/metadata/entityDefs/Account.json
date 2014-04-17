@@ -22,7 +22,7 @@
         },
         "industry": {
             "type": "enum",
-            "options": ["", "Apparel", "Banking", "Education", "Electronics", "Finance", "Insurance", "IT"]
+            "options": ["", "Apparel", "Banking", "Computer Software", "Education", "Electronics", "Finance", "Insurance"]
         },
         "sicCode": {
             "type": "varchar",

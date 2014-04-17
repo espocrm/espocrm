@@ -13,5 +13,16 @@
 		"leads": "Leads"
 	},
 	"links": {
+	},
+	"options": {
+		"status": {
+			"Planned": "Planned",
+			"Held": "Held",
+			"Not Held": "Not Held"
+		},
+		"direction": {
+			"Outbound": "Outbound",
+			"Inbound": "Inbound"
+		}
 	}
 }

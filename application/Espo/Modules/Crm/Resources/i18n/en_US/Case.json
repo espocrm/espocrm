@@ -10,5 +10,26 @@
 		"description": "Description"
 	},
 	"links": {
+	},
+	"options": {
+		"status": {
+			"New": "New",
+			"Assigned": "Assigned",
+			"Pending": "Pending",
+			"Closed": "Closed",
+			"Rejected": "Rejected",
+			"Duplicate": "Duplicate"
+		},
+		"priority" : {
+			"Low": "Low",
+			"Normal": "Normal",
+			"High": "High",
+			"Urgent": "Urgent"
+		},
+		"type": {
+			"Question": "Question",
+			"Incident": "Incident",
+			"Problem": "Problem"
+		}
 	}
 }
