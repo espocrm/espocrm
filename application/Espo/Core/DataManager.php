@@ -67,6 +67,8 @@ class DataManager
 			throw new Exceptions\Error("Error while clearing cache");
 		}
 
+		$this->updateCacheTimestamp();
+
 		return $result;
 	}
 
@@ -88,6 +90,8 @@ class DataManager
 			throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
 		}
 
+		$this->updateCacheTimestamp();
+
 		return $result;
 	}
 
@@ -104,7 +108,21 @@ class DataManager
 
 		$ormMeta = $metadata->getOrmMetadata(true);
 
+		$this->updateCacheTimestamp();
+
 		return empty($ormMeta) ? false : true;
+	}
+
+	/**
+	 * Update cache timestamp
+	 *
+	 * @return bool
+	 */
+	public function updateCacheTimestamp()
+	{
+		$config = $this->getContainer()->get('config');
+
+		return $config->set('cacheTimestamp', time());
 	}
 
 

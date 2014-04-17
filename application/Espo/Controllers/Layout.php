@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -44,6 +44,8 @@ class Layout extends \Espo\Core\Controllers\Base
 		if ($result === false) {
 			throw new Error("Error while saving layout");
 		}
+
+		$this->getContainer()->get('dataManager')->updateCacheTimestamp();
 
 		return $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
 	}
