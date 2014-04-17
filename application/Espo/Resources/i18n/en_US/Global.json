@@ -78,7 +78,8 @@
 		"Post": "Post",
 		"Stream": "Stream",
 		"Show more": "Show more",
-		"Dashlet Options": "Dashlet Options"
+		"Dashlet Options": "Dashlet Options",
+		"Full Form": "Full Form"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
