@@ -77,7 +77,8 @@
 		"Write your comment here": "Write your comment here",
 		"Post": "Post",
 		"Stream": "Stream",
-		"Show more": "Show more"
+		"Show more": "Show more",
+		"Dashlet Options": "Dashlet Options"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
