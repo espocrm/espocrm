@@ -3,8 +3,8 @@
 {{/unless}}
 	
 	<div>
-		<span class="text-muted">{{{createdBy}}} {{translate 'updated'}}
-		{{#if isUserStream}} {{parentTypeString}} {{{parent}}} {{else}} {{translate 'this'}} {{parentTypeString}}{{/if}}
+		<span class="text-muted">{{{createdBy}}} {{translate 'updated' category='stream'}}
+		{{#if isUserStream}} {{parentTypeString}} {{{parent}}} {{else}} {{translate 'this' category='stream'}} {{parentTypeString}}{{/if}}
 		<a href="javascript:" data-action="expandDetails"><span class="glyphicon glyphicon-chevron-down"></span></a>
 		</span>
 	</div>
@@ -12,7 +12,7 @@
 	<div class="hidden details">
 		<span>
 			{{#each fieldsArr}}
-				{{translate field category='fields' scope=../parentType}}: {{{var was ../this}}} {{translate 'to'}} {{{var became ../this}}}
+				{{translate field category='fields' scope=../parentType}}: {{{var was ../this}}} {{translate 'to' category='stream'}} {{{var became ../this}}}
 				<br>				
 			{{/each}}
 		</span>

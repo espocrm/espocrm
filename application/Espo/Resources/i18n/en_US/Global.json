@@ -47,7 +47,17 @@
 		"PostalCode": "Postal Code",
 		"Followed": "Followed",
 		"Follow": "Follow",
-		"Clear Local Cache": "Clear Local Cache"		
+		"Clear Local Cache": "Clear Local Cache",
+		"Actions": "Actions",
+		"Delete": "Delete",
+		"Mass Update": "Mass Update",
+		"Export": "Export",
+		"No Data": "No Data",
+		"All": "All",
+		"Active": "Active",
+		"Inactive": "Inactive",
+		"Write your comment here": "Write your comment here",
+		"Post": "Post"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
@@ -108,6 +118,17 @@
 	},
 	"dashlets": {
 		"Stream": "Stream"		
+	},
+	"stream": {
+		"this": "this",
+		"on": "on",
+		"to": "to",
+		"you": "you",
+		"updated": "updated",
+		"assigned": "assigned",
+		"posted": "posted",
+		"attached": "attached",
+		"has been received": "has been received"		
 	},
 	"lists": {
 		"monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

@@ -5,8 +5,8 @@
 	<div>
 		<span class="label label-{{style}}">{{statusText}}</span>
 		<span class="text-muted">		
-			{{{createdBy}}} {{translate 'updated'}} {{translate field category='fields' scope=parentType}}
-			{{#if isUserStream}} {{translate 'on'}} {{parentTypeString}} {{{parent}}}{{/if}}		
+			{{{createdBy}}} {{translate 'updated' category='stream'}} {{translate field category='fields' scope=parentType}}
+			{{#if isUserStream}} {{translate 'on' category='stream'}} {{parentTypeString}} {{{parent}}}{{/if}}		
 		</span>
 	</div>
 	

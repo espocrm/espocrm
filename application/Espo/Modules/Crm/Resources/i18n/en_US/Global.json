@@ -37,7 +37,9 @@
 		"SalesPipeline": "Sales Pipeline"	
 	},
 	"labels": {
-		"Create InboundEmail": "Create Inbound Email"
+		"Create InboundEmail": "Create Inbound Email",
+		"Activities": "Activities",
+		"History": "History"
 	},
 	"links": {
 		"contacts": "Contacts",
