@@ -68,8 +68,12 @@ Espo.define('Views.EditModal', 'Views.Modal', function (Dep) {
 					}.bind(this)
 				});
 			}
+			
+			if ('fullFormButton' in this.options) {
+				this.fullFormButton = this.options.fullFormButton;
+			}
 
-			if (this.options.fullFormButton !== false && this.fullFormButton) {
+			if (this.fullFormButton) {
 				this.buttons.push({
 					name: 'fullForm',
 					text: this.getLanguage().translate('Full Form'),

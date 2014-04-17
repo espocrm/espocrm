@@ -104,7 +104,7 @@ Espo.define('Views.SelectModal', 'Views.Modal', function (Dep) {
 						this.createView('list', 'Record.List', {
 							collection: collection,
 							el: this.containerSelector + ' .list-container',
-							selectable: true,
+							selectable: true,							
 							checkboxes: this.multiple,
 							actions: false,
 							rowButtons: false,
@@ -131,7 +131,7 @@ Espo.define('Views.SelectModal', 'Views.Modal', function (Dep) {
 			this.notify('Loading...');
 			this.createView('quickCreate', 'EditModal', {
 				scope: this.scope,
-				fullForm: false,
+				fullFormButton: false,
 			}, function (view) {
 				view.once('after:render', function () {
 					self.notify(false);
