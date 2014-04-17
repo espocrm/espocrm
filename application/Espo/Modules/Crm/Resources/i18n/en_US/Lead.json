@@ -1,4 +1,7 @@
 {
+	"labels": {
+		"Converted To": "Converted To"
+	},
 	"fields": {
 		"name": "Name",
 		"emailAddress": "Email",
