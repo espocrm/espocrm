@@ -83,6 +83,14 @@ return array (
 	  'EUR' => 1.37,
 	),
   ),
+  'globalSearchEntityList' => 
+  array (
+    0 => 'Account',
+    1 => 'Contact',
+    2 => 'Lead',
+    3 => 'Prospect',
+    4 => 'Opportunity',
+  ),
   'crud' => array(
 	'get' => 'read',
 	'post' => 'create',
