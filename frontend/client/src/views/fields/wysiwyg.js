@@ -25,6 +25,8 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 	
 		type: 'wysiwyg',	
 		
+		detailTemplate: 'fields.wysiwyg.detail',
+		
 		editTemplate: 'fields.wysiwyg.edit',
 		
 		setup: function () {			
