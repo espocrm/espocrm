@@ -40,6 +40,13 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 		},
 
 		events: {
+			'click .navbar-collapse.in a': function (e) {
+				var $a = $(e.currentTarget);
+				var href = $a.attr('href');
+				if (href && href != '#') {
+					this.$el.find('.navbar-collapse.in').collapse('hide');
+				}
+			},
 			'click a[data-action="quick-create"]': function (e) {
 				e.preventDefault();
 				var scope = $(e.currentTarget).data('name');
