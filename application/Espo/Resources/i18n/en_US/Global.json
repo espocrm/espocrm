@@ -120,22 +120,7 @@
 		"dateFrom": "Date From",
 		"dateTo": "Date To",
 		"autorefreshInterval": "Auto-refresh Interval",
-		"displayRecords": "Display Records",
-		"billingAddressCity": "City (Billing)",
-		"billingAddressCountry": "Country (Billing)",
-		"billingAddressPostalCode": "Postal Code (Billing)",
-		"billingAddressState": "State (Billing)",
-		"billingAddressStreet": "Street (Billing)",
-		"addressCity": "City",
-		"addressStreet": "Street",
-		"addressCountry": "Country",
-		"addressState": "State",
-		"addressPostalCode": "Postal Code",		
-		"shippingAddressCity": "City (Shipping)",
-		"shippingAddressStreet": "Street (Shipping)",
-		"shippingAddressCountry": "Country (Shipping)",
-		"shippingAddressState": "State (Shipping)",
-		"shippingAddressPostalCode": "Postal Code (Shipping)"
+		"displayRecords": "Display Records"
 	},
 	"links": {
 		"teams": "Teams",

@@ -49,6 +49,23 @@
 		"Archive Email": "Archive Email",
 		"Create Task": "Create Task"
 	},
+	"fields": {
+		"billingAddressCity": "City",
+		"billingAddressCountry": "Country",
+		"billingAddressPostalCode": "Postal Code",
+		"billingAddressState": "State",
+		"billingAddressStreet": "Street",
+		"addressCity": "City",
+		"addressStreet": "Street",
+		"addressCountry": "Country",
+		"addressState": "State",
+		"addressPostalCode": "Postal Code",		
+		"shippingAddressCity": "City (Shipping)",
+		"shippingAddressStreet": "Street (Shipping)",
+		"shippingAddressCountry": "Country (Shipping)",
+		"shippingAddressState": "State (Shipping)",
+		"shippingAddressPostalCode": "Postal Code (Shipping)"
+	},
 	"links": {
 		"contacts": "Contacts",
 		"opportunities": "Opportunities",
