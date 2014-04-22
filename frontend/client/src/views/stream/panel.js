@@ -23,7 +23,9 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 
 	return Dep.extend({
 
-		template: 'stream.panel',	
+		template: 'stream.panel',
+		
+		postingMode: false,	
 
 		events: _.extend({
 			'focus textarea.note': function (e) {
@@ -56,17 +58,34 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 		}, Dep.prototype.events),
 		
 		enablePostingMode: function () {
-			this.$el.find('.buttons-panel').removeClass('hide');
+			this.$el.find('.buttons-panel').removeClass('hide');			
+			
+			if (!this.postingMode) {
+				$('body').on('click.stream-panel', function (e) {
+					e.stopPropagation();
+					var $element = $(e.toElement);
+					if (!$.contains(this.$el.get(0), e.toElement)) {					
+											
+						if (this.$textarea.val() == '') {
+							var attachmentsIds = this.seed.get('attachmentsIds');
+							if (!attachmentsIds.length) {
+								$('body').off('click.stream-panel');
+								this.disablePostingMode();
+							}
+						}
+					}
+				}.bind(this));
+			}
+			
+			this.postingMode = true;
 		},
 		
 		disablePostingMode: function () {
-			this.attachmentIds = [];
+			this.postingMode = false;
+			
 			this.$textarea.val('');
-			
-			
-			this.getView('attachments').empty();
-			
-			this.$el.find('.buttons-panel').addClass('hide');
+			this.getView('attachments').empty();			
+			this.$el.find('.buttons-panel').addClass('hide');			
 		},
 
 		setup: function () {
