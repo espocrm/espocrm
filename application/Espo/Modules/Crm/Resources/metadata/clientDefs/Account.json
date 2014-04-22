@@ -1,5 +1,8 @@
 {
    "controller": "Controllers.Record",
+   "views":{
+      "detail":"Crm:Account.Detail"
+   },
    "sidePanels":{
       "detail":[
          {

@@ -161,8 +161,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			
 			var attributes = {};
 			
-			(this.relatedAttributeList[link] || []).forEach(function (attr) {
-				attributes[attr] = this.model.get(attr);
+			Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
+				attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
 			}, this);
 
 			this.notify('Loading...');

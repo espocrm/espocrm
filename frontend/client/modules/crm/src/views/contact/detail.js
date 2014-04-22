@@ -23,8 +23,15 @@ Espo.define('Crm:Views.Contact.Detail', 'Views.Detail', function (Dep) {
 
 	return Dep.extend({
 
-		relatedAttributeList: {
-			'opportunities': ['accountId', 'accountName'],
+		relatedAttributeMap: {
+			'opportunities': {
+				'accountId': 'accountId',
+				'accountName': 'accountName'
+			},
+			'cases': {
+				'accountId': 'accountId',
+				'accountName': 'accountName'
+			},
 		},
 		
 	});

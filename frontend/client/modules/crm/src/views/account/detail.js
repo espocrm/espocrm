@@ -19,14 +19,18 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
+Espo.define('Crm:Views.Account.Detail', 'Views.Detail', function (Dep) {
 
 	return Dep.extend({
-
+	
 		relatedAttributeMap: {
 			'contacts': {
-				'accountId': 'accountId',
-				'accountName': 'accountName'
+				'phone': 'phone',
+				'billingAddressCity': 'addressCity',
+				'billingAddressStreet': 'addressStreet',
+				'billingAddressPostalCode': 'addressPostalCode',
+				'billingAddressState': 'addressState',
+				'billingAddressCountry': 'addressCountry'
 			},
 		},
 		
