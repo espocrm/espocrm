@@ -22,6 +22,8 @@
 (function (Espo, _, Handlebars) {
 
 	Espo.ViewHelper = function (options) {
+		this.urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+		
 		this._registerHandlebarsHelpers();
 	}
 
@@ -38,7 +40,6 @@
 		language: null,
 
 		_registerHandlebarsHelpers: function () {
-
 			var self = this;
 
 			Handlebars.registerHelper('img', function (img) {
@@ -129,6 +130,15 @@
 			Handlebars.registerHelper('breaklines', function (text) {
 				text = Handlebars.Utils.escapeExpression(text || '');
 				text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+				return new Handlebars.SafeString(text);
+			});
+			
+			Handlebars.registerHelper('complexText', function (text) {
+				text = Handlebars.Utils.escapeExpression(text || '');
+				text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+				text = text.replace(self.urlRegex, function (url) {  
+					return '<a href="' + url + '">' + url + '</a>';  
+				});
 				return new Handlebars.SafeString(text);
 			});
 
