@@ -169,35 +169,43 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 				}
 				
 				fileList.forEach(function (file) {
-					var attachment = model.clone();
 					
 					var $att = this.addAttachmentBox(file.name);					
 					
 					$att.find('.remove-attachment').on('click.uploading', function () {
 						canceledList.push(attachment.cid);
 						totalCount--;
-					});					
-
-					attachment.set('name', file.name);
-					attachment.set('type', file.type || 'text/plain');
-					attachment.set('size', file.size);
-					attachment.once('sync', function () {					
-						if (canceledList.indexOf(attachment.cid) === -1) {
-							$att.trigger('ready');							
-							this.pushAttachment(attachment);
-							$att.attr('data-id', attachment.id);
-							uploadedCount++;						
-							if (uploadedCount == totalCount) {								
-								afterAttachmentsUploaded.call(this);
-							}
-						}
-					}, this);
+					});
+					
+					var attachment = model.clone();
 
 					var fileReader = new FileReader();
-					fileReader.onload = function (e) {
-						attachment.set('file', e.target.result);
-						attachment.save();
-					};
+					fileReader.onload = function (e) {					
+						$.ajax({
+							type: 'POST',
+							url: 'Attachment/action/upload',
+							data: e.target.result,
+							contentType: 'multipart/encrypted',
+						}).done(function (data) {
+								
+							attachment.id = data.attachmentId;							
+							attachment.set('name', file.name);
+							attachment.set('type', file.type || 'text/plain');
+							attachment.set('size', file.size);
+							attachment.once('sync', function () {
+								if (canceledList.indexOf(attachment.cid) === -1) {
+									$att.trigger('ready');							
+									this.pushAttachment(attachment);
+									$att.attr('data-id', attachment.id);
+									uploadedCount++;			
+									if (uploadedCount == totalCount) {								
+										afterAttachmentsUploaded.call(this);
+									}
+								}
+							}, this);						
+							attachment.save();
+						}.bind(this));
+					}.bind(this);
 					fileReader.readAsDataURL(file);
 				}, this);
 			}.bind(this));
