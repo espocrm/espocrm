@@ -24,5 +24,8 @@
 			"Outbound": "Outbound",
 			"Inbound": "Inbound"
 		}
+	},
+	"labels": {
+		"Create Call": "Create Call"
 	}
 }

@@ -31,5 +31,8 @@
 			"Incident": "Incident",
 			"Problem": "Problem"
 		}
+	},
+	"labels": {
+		"Create Case": "Create Case"
 	}
 }

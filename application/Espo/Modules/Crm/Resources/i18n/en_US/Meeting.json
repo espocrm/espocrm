@@ -19,5 +19,8 @@
 			"Held": "Held",
 			"Not Held": "Not Held"
 		}
+	},
+	"labels": {
+		"Create Meeting": "Create Meeting"
 	}
 }

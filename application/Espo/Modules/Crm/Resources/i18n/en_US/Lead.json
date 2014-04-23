@@ -1,6 +1,7 @@
 {
 	"labels": {
-		"Converted To": "Converted To"
+		"Converted To": "Converted To",
+		"Create Lead": "Create Lead"
 	},
 	"fields": {
 		"name": "Name",

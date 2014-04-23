@@ -30,5 +30,8 @@
 			"Round-Robin": "Round-Robin",
 			"Least-Busy": "Least-Busy"
 		}
+	},
+	"labels": {
+		"Create InboundEmail": "Create Inbound Email"
 	}
 }

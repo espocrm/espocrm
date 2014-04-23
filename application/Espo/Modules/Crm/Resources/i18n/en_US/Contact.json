@@ -15,5 +15,8 @@
 	"links": {
 		"opportunities": "Opportunities",
 		"cases": "Cases"
+	},
+	"labels": {
+		"Create Contact": "Create Contact"
 	}
 }

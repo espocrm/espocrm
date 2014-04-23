@@ -24,5 +24,8 @@
 			"High": "High",
 			"Urgent": "Urgent"
 		}
+	},
+	"labels": {
+		"Create Task": "Create Task"
 	}
 }

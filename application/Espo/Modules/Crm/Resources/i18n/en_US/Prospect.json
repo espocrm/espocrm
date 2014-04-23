@@ -13,5 +13,8 @@
 		"description": "Description"
 	},
 	"links": {
+	},
+	"labels": {
+		"Create Prospect": "Create Prospect"
 	}
 }

@@ -33,5 +33,8 @@
 			"Finance": "Finance",
 			"Insurance": "Insurance"
 		}
+	},
+	"labels": {
+		"Create Account": "Create Account"
 	}
 }

@@ -36,5 +36,8 @@
 			"Campaign": "Campaign",
 			"Other": "Other"
 		}
+	},
+	"labels": {
+		"Create Opportunity": "Create Opportunity"
 	}
 }
