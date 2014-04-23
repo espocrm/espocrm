@@ -21,6 +21,9 @@
 		}
 	},
 	"labels": {
-		"Create Meeting": "Create Meeting"
+		"Create Meeting": "Create Meeting",
+		"Set Held": "Set Held",
+		"Set Not Held": "Set Not Held",
+		"Send Invitations": "Send Invitations"
 	}
 }
