@@ -49,10 +49,10 @@ class ScheduledJobTest extends \PHPUnit_Framework_TestCase
 	public function testGetSetupMessage()
 	{
 		$cronSetup = array (
-			'linux' => 'linux label',
-			'mac' => 'mac label',
-			'windows' => 'windows label',
-			'default' => 'default label',
+			'linux' => 'linux message',
+			'mac' => 'mac message',
+			'windows' => 'windows message',
+			'default' => 'default message',
 		);
 
 		$this->objects['language']
@@ -63,7 +63,7 @@ class ScheduledJobTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['SERVER_SOFTWARE'] = 'Apache/2.2.17 (Ubuntu)';
 
 		$res = array(
-			'label' => 'linux label',
+			'message' => 'linux message',
 			'command' => 'linux command',
 		);
 

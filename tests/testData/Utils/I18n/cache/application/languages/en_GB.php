@@ -1,6 +1,16 @@
 <?php
 
 return array (
+  'Global' => 
+  array (
+    'options' => 
+    array (
+      'language' => 
+      array (
+        'en_US' => 'English (United States)',
+      ),
+    ),
+  ),
   'User' => 
   array (
     'fields' => 
