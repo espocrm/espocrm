@@ -58,6 +58,7 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 			}
 			
 			this.model = new Espo.Model();
+			this.model.name = 'Admin';
 			this.model.urlRoot = 'Admin/fieldManager/' + this.scope;
 			
 			this.model.defs = {

@@ -57,7 +57,7 @@
 		"url": "Url",
 		"varchar": "Varchar"				
 	},
-	"fieldParams": {
+	"fields": {
 		"type": "Type",
 		"name": "Name",
 		"label": "Label",
@@ -68,7 +68,10 @@
 		"after": "After (field)",
 		"before": "Before (field)",
 		"link": "Link",
-		"field": "Field"			
+		"field": "Field",
+		"min": "Min",
+		"max": "Max",
+		"translation": "Translation"		
 	},
 	"messages": {
 		"upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
