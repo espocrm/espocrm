@@ -16,6 +16,7 @@
       "basic":false,
       "advanced":true
    },
+   "notCreatable": true,
    "database":{
       "skip":true
    }
