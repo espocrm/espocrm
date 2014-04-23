@@ -104,12 +104,12 @@
         "tabList": {
             "type": "array",
             "default": ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect"],
-            "translation": "App.scopeNamesPlural"
+            "translation": "Global.scopeNamesPlural"
         },
         "quickCreateList": {
             "type": "array",
             "default": ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"],
-            "translation": "App.scopeNames"
+            "translation": "Global.scopeNames"
         },
         "language": {
             "type": "enum",

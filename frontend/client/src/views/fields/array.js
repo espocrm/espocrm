@@ -23,7 +23,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 
 	return Dep.extend({
 
-		type: 'enum',
+		type: 'array',
 
 		listTemplate: 'fields.array.detail',
 
@@ -34,7 +34,8 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 		data: function () {
 			return _.extend({
 				selected: this.selected,
-				translatedOptions: this.translatedOptions
+				translatedOptions: this.translatedOptions,
+				hasOptions: this.params.options ? true : false
 			}, Dep.prototype.data.call(this));
 		},
 		
@@ -43,12 +44,32 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 				var value = $(e.currentTarget).data('value');
 				this.removeValue(value);
 			},
+			'click [data-action="showAddModal"]': function () {			
+				var options = [];
+				
+				this.params.options.forEach(function (item) {
+					if (!~this.selected.indexOf(item)) {
+						options.push(item);
+					}
+				}, this);
+				this.createView('addModal', 'Modals.ArrayFieldAdd', {
+					options: options,
+					translatedOptions: this.translatedOptions					
+				}, function (view) {
+					view.render();
+					this.listenToOnce(view, 'add', function (item) {
+						this.addValue(item);
+						view.close();
+					}.bind(this));
+				}.bind(this));
+			}
 		},
 
 		setup: function () {
 			Dep.prototype.setup.call(this);			
 			
 			var t = {};
+			
 			if (this.params.translation) {
 				var data = this.getLanguage().data;
 				var arr = this.params.translation.split('.');
@@ -61,9 +82,10 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 				}, this);
 			} else {
 				t = this.translate(this.name, 'options', this.model.name);
-			}
+			}						
+			
 
-			this.translatedOptions = null;
+			this.translatedOptions = null;			
 					
 			var translatedOptions = {};
 			if (this.params.options) {
@@ -75,8 +97,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 					}
 				}.bind(this));
 				this.translatedOptions = translatedOptions;
-			}
-			
+			}			
 			
 			this.selected = _.clone(this.model.get(this.name) || []);				
 		},
@@ -86,7 +107,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 			var $select = this.$select = this.$el.find('.select');
 			
 			if (this.params.options) {				
-				var options = [];				
+				/*var options = [];				
 				for (var i in this.translatedOptions) {
 					options.push(this.translatedOptions[i]);
 				}								
@@ -109,7 +130,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 						this.addValue(s.value);
 						$select.val('');
 					}.bind(this)
-				});
+				});*/
 			} else {
 				$select.on('keypress', function (e) {
 					if (e.keyCode == 13) {

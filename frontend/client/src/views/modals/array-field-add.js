@@ -19,25 +19,42 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.UserInterface', 'Views.Settings.Record.Edit', function (Dep) {		
+Espo.define('Views.Modals.ArrayFieldAdd', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
-		
-		layoutName: 'userInterface',	
 	
-		setup: function () {
-			Dep.prototype.setup.call(this);				
+		cssName: 'add-modal',
 		
-			this.model.defs.fields.tabList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-				return this.getMetadata().get('scopes/' + scope + '/tab');
-			}, this);
-			
-			this.model.defs.fields.quickCreateList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-				return this.getMetadata().get('scopes/' + scope + '/entity') && this.getMetadata().get('scopes/' + scope + '/tab');
-			}, this);
+		template: 'modals.array-field-add',
+		
+		data: function () {
+			return {
+				optionList: this.options.options,
+				translatedOptions: this.options.translatedOptions
+			};
 		},
 		
-	});		
-	
+		events: {
+			'click button[data-action="add"]': function (e) {
+				var value = $(e.currentTarget).data('value');
+				this.trigger('add', value);
+			},
+		},
+		
+		setup: function () {
+					
+			this.buttons = [
+				{
+					name: 'cancel',
+					label: 'Cancel',
+					onClick: function (dialog) {
+						dialog.close();
+					}
+				} 
+			];			
+
+		},
+
+	});
 });
 
