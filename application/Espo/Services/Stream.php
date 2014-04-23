@@ -319,6 +319,24 @@ class Stream extends \Espo\Core\Services\Base
 		$this->getEntityManager()->saveEntity($note);
 	}
 	
+	public function noteCreateRelated(Entity $entity, $entityType, $id, $action = 'created')
+	{
+		$note = $this->getEntityManager()->getEntity('Note');
+		
+		$note->set('type', 'CreateRelated');		
+		$note->set('parentId', $id);
+		$note->set('parentType', $entityType);
+
+		$note->set('data', json_encode(array(
+			'action' => $action,
+			'entityType' => $entity->getEntityName(),
+			'entityId' => $entity->id,
+			'entityName' => $entity->get('name')
+		)));			
+
+		$this->getEntityManager()->saveEntity($note);	
+	}
+	
 	public function noteAssign(Entity $entity)
 	{
 		$note = $this->getEntityManager()->getEntity('Note');

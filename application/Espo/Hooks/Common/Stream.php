@@ -59,6 +59,24 @@ class Stream extends \Espo\Core\Hooks\Base
 		}
 	}
 	
+	protected function handleCreateRelated(Entity $entity)
+	{
+		$relationDefs = $entity->getRelations();
+			
+		foreach ($relationDefs as $relation => $defs) {
+			if ($defs['type'] == 'belongsTo') {
+				$field = $relation . 'Id';
+				$scope = $defs['entity'];
+				if ($entity->has($field)) {
+					$entityId = $entity->get($field);
+					if (!empty($entityId) && $this->getMetadata()->get("scopes.{$scope}.stream")) {
+						$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+					}
+				}
+			}
+		}
+	}
+	
 	public function afterSave(Entity $entity)
 	{
 		$entityName = $entity->getEntityName();
@@ -76,7 +94,8 @@ class Stream extends \Espo\Core\Hooks\Base
 				if (!empty($assignedUserId) && $createdById != $assignedUserId) {
 					$this->getStreamService()->followEntity($entity, $assignedUserId);
 				}	
-				$this->getStreamService()->noteCreate($entity);							
+				$this->getStreamService()->noteCreate($entity);
+									
 			} else {
 				if ($entity->isFieldChanged('assignedUserId')) {
 					$assignedUserId = $entity->get('assignedUserId');
@@ -94,9 +113,13 @@ class Stream extends \Espo\Core\Hooks\Base
 						$this->getStreamService()->noteStatus($entity, $field);
 					}
 				}			
-			}			
+			}	
 
-		}	
+		}
+		
+		/*if (!$entity->isFetched() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
+			$this->handleCreateRelated($entity);
+		}*/
 	}
 	
 	protected function getStreamService()
