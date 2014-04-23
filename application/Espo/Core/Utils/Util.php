@@ -108,15 +108,24 @@ class Util
 		return static::fromCamelCase($name, '_');
 	}
 
-
 	/**
 	 * Merge arrays (default PHP function is not suitable)
 	 *
 	 * @param array $array
 	 * @param array $mainArray - chief array (priority is same as for array_merge())
+	 * @param array $rewriteLevel - Merge by rewrite level, level numering starts from 1. Ex.
+	 *                     array(
+	 *                     	'level1' => array(
+	 *                     		'level2' => array(
+	 *                     	 		'level3' => array(
+	 *                     		  		'key' => 'value',
+	 *                     	 	   	),
+	 *                     	 	),
+	 *                     	),
+	 *                     )
 	 * @return array
 	 */
-	public static function merge($array, $mainArray)
+	public static function merge($array, $mainArray, $rewriteLevel = null)
 	{
 		if (is_array($array) && !is_array($mainArray)) {
 			return $array;
@@ -126,47 +135,50 @@ class Util
 			return array();
 		}
 
-		foreach($mainArray as $maKey => $maVal) {
-			$found = false;
-			foreach($array as $aKey => $aVal) {
-				if ((string)$maKey == (string)$aKey){
-					$found = true;
-					if (is_array($maVal) && is_array($aVal)){
-						$array[$maKey] = static::merge($aVal, $maVal);
-					}
-					else {
+		foreach($mainArray as $mainKey => $mainValue) {
 
-						if (is_array($aVal)){
-							$array[$maKey] = static::merge($aVal, array($maVal));
+			$found = false;
+			foreach($array as $key => $value) {
+
+				if ((string)$mainKey == (string)$key){
+
+					$found = true;
+					if (is_array($mainValue) || is_array($value)){
+
+						if (!isset($rewriteLevel) || $rewriteLevel != 1) {
+							$array[$mainKey] = static::merge((array) $value, (array) $mainValue, --$rewriteLevel);
+							continue;
 						}
-						elseif (is_array($maVal)){
-							$array[$maKey] = static::merge(array($aVal), $maVal);
-						}
-						else {
-							//merge logic
-							if (!is_numeric($maKey)){
-								$array[$maKey] = $maVal;
-							}
-							elseif (!in_array($maVal, $array)) {
-								$array[] = $maVal;
-							}
-							//END: merge ligic
-						}
+
+						/* merge only 1st level*/
+						$mergeValue = array('mergeLevel' => (array) $value);
+						$mergeMainValue = array('mergeLevel' => (array) $mainValue);
+						$mergeRes = array_merge($mergeValue, $mergeMainValue);
+						$array[$mainKey] = $mergeRes['mergeLevel'];
+						continue;
 					}
+
+					//merge logic
+					if (!is_numeric($mainKey)){
+						$array[$mainKey] = $mainValue;
+					}
+					elseif (!in_array($mainValue, $array)) {
+						$array[] = $mainValue;
+					}
+					//END: merge ligic
 
 					break;
 				}
 			}
 			// add an item if key not found
 			if (!$found){
-				$array[$maKey] = $maVal;
+				$array[$mainKey] = $mainValue;
 			}
 
 		}
 
 		return $array;
 	}
-
 
 	/**
  	 * Get a full path of the file

@@ -41,6 +41,8 @@ class Language
 
 	protected $cacheFile = 'data/cache/application/languages/{*}.php';
 
+	protected $defaultLanguage = 'en_US';
+
 	/**
      * @var array
      */
@@ -226,6 +228,10 @@ class Language
 			$result = true;
 			foreach ($this->fullData as $i18nName => $i18nData) {
 				$i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
+
+				if ($i18nName != $this->defaultLanguage) {
+					$i18nData = Util::merge($this->fullData[$this->defaultLanguage], $i18nData, 3);
+				}
 				$result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
 			}
 
