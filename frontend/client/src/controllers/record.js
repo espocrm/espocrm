@@ -32,12 +32,12 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 		},
 
 		getViewName: function (type) {
-			return this.viewMap[type] || this.getMetadata().get('clientDefs/' + this.name + '/views/' + type) || Espo.Utils.upperCaseFirst(type);
+			return this.viewMap[type] || this.getMetadata().get('clientDefs.' + this.name + '.views.' + type) || Espo.Utils.upperCaseFirst(type);
 		},
 
 		getViews: function (type) {
 			var views = {};
-			var recordView = this.getMetadata().get('clientDefs/' + this.name + '/recordViews/' + type);
+			var recordView = this.getMetadata().get('clientDefs.' + this.name + '.recordViews.' + type);
 			if (recordView) {
 				if (!views.body) {
 					views.body = {};

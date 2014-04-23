@@ -110,7 +110,7 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
 			this.scopeList = [];				
 			var scopesAll = Object.keys(this.getMetadata().get('scopes'));
 			scopesAll.forEach(function (scope) {
-				if (this.getMetadata().get('scopes/' + scope + '/acl')) {
+				if (this.getMetadata().get('scopes.' + scope + '.acl')) {
 					this.scopeList.push(scope);
 				}
 			}.bind(this));	

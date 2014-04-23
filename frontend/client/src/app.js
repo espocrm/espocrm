@@ -115,9 +115,9 @@ _.extend(Espo.App.prototype, {
 			this.metadata.load(function () {
 				this.fieldManager.defs = this.metadata.get('fields');	
 				
-				this.settings.defs = this.metadata.get('entityDefs/Settings');
-				this.user.defs = this.metadata.get('entityDefs/User');
-				this.preferences.defs = this.metadata.get('entityDefs/Preferences');			
+				this.settings.defs = this.metadata.get('entityDefs.Settings');
+				this.user.defs = this.metadata.get('entityDefs.User');
+				this.preferences.defs = this.metadata.get('entityDefs.Preferences');			
 										
 				this._initRouter();
 			}.bind(this));
@@ -197,9 +197,9 @@ _.extend(Espo.App.prototype, {
 		}
 		if (!(name in this.controllers)) {		
 			try {
-				var className = this.metadata.get('clientDefs/' + name + '/controller');
+				var className = this.metadata.get('clientDefs.' + name + '.controller');
 				if (!className) {
-					var module = this.metadata.get('scopes/' + name + '/module');
+					var module = this.metadata.get('scopes.' + name + '.module');
 					className = Espo.Utils.composeClassName(module, name, 'Controllers');
 				}
 				

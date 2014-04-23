@@ -31,7 +31,7 @@ Espo.define('Views.Admin.Index', 'View', function (Dep) {
 		},
 		
 		setup: function () {
-			this.links = this.getMetadata().get('app/adminPanel');
+			this.links = this.getMetadata().get('app.adminPanel');
 		},
 		
 		updatePageTitle: function () {

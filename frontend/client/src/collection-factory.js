@@ -35,8 +35,8 @@ _.extend(Espo.CollectionFactory.prototype, {
 		
 		this.modelFactory.getSeed(name, function (seed) {
 			
-			var asc = this.modelFactory.metadata.get('entityDefs/' + name + '/collection/asc');
-			var sortBy = this.modelFactory.metadata.get('entityDefs/' + name + '/collection/sortBy');
+			var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
+			var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
 
 			var collectionClass = Espo.Collection;
 

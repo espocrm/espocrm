@@ -76,7 +76,7 @@
 		},
 
 		setup: function () {
-			var additionalPanels = this.getMetadata().get('clientDefs/' + this.scope + '/sidePanels/' + this.mode) || [];
+			var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.mode) || [];
 			additionalPanels.forEach(function (panel) {
 				this.panels.push(panel);
 			}.bind(this));

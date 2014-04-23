@@ -50,7 +50,7 @@ Espo.define('Views.Main', 'View', function (Dep) {
 			this.menu = {};
 			
 			if (this.name && this.scope) {					
-				var menu = this.getMetadata().get('clientDefs/' + this.scope + '/menu/' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
+				var menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
 				this.menu = _.clone(menu);
 			}
 			

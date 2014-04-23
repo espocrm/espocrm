@@ -64,7 +64,7 @@
 			defaultValue = defaultValue || null;
 
 			var pointer = this.data;
-			var arr = path.split('/');
+			var arr = path.split('.');
 			var result = defaultValue;
 			arr.forEach(function (key, i) {
 				if (!(key in pointer)) {

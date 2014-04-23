@@ -131,7 +131,7 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 		},
 		
 		getFieldList: function () {
-			var defs = this.getMetadata().get('entityDefs/' + this.scope + '/fields');
+			var defs = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
 			
 			var fieldList = [];
 			for (var field in defs) {
@@ -144,7 +144,7 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 		getFieldDropdown: function (num, name) {
 			name = name || false;
 			
-			var fields = this.getMetadata().get('entityDefs/' + this.scope + '/fields');
+			var fields = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
 			
 			var fieldList = [];
 			fieldList.push('id');

@@ -58,7 +58,7 @@
 				
 			this.seeds[name] = modelClass.extend({
 				name: name,
-				defs: this.metadata.get('entityDefs/' + name, {}),
+				defs: this.metadata.get('entityDefs.' + name, {}),
 				dateTime: this.dateTime,
 				_user: this.user
 			});

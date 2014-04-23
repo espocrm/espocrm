@@ -60,7 +60,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 				return this.fields != null && this.moreFields != null;
 			}.bind(this));
 			
-			this.boolFilters = this.getMetadata().get('entityDefs/' + this.scope + '/collection/boolFilters') || [];
+			this.boolFilters = this.getMetadata().get('entityDefs.' + this.scope + '.collection.boolFilters') || [];
 
 			this._helper.layoutManager.get(this.scope, 'filtersAdvanced', function (list) {
 				this.moreFields = list;

@@ -58,9 +58,9 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 			
 			this.wait(true);
 			
-			var panels = _.clone(this.getMetadata().get('clientDefs/' + scope + '/bottomPanels/' + this.mode) || []);
+			var panels = _.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 			
-			if (this.mode == 'detail' && this.getMetadata().get('scopes/' + scope + '/stream')) {
+			if (this.mode == 'detail' && this.getMetadata().get('scopes.' + scope + '.stream')) {
 				panels.unshift({
 				    "name":"stream",
 				    "label":"Stream",
@@ -101,7 +101,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 					this.panels.push(p);
 					
 					var viewName = 'Record.Panels.Relationship';
-					var defs = this.getMetadata().get('clientDefs/' + scope + '/relationshipPanels/' + name) || {};						
+					var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};						
 
 					var total = 8;
 

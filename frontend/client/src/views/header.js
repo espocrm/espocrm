@@ -78,7 +78,7 @@ Espo.define('Views.Header', 'View', function (Dep) {
 				}.bind(this));
 
 				if (name != 'default') {
-					var defaultMenu = this.getMetadata().get('clientDefs/' + scope + '/menu/default') || {};
+					var defaultMenu = this.getMetadata().get('clientDefs.' + scope + '.menu.default') || {};
 					types.forEach(function (type) {
 						if (defaultMenu[type]) {
 							if (!items[type]) {

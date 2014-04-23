@@ -48,7 +48,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			Dep.prototype.setup.call(this);
 			
 			if (this.model.has('isFollowed')) {
-				if (this.getMetadata().get('scopes/' + this.scope + '/stream')) {
+				if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
 					if (this.model.get('isFollowed')) {
 						this.menu.buttons.unshift({
 							name: 'unfollow',
