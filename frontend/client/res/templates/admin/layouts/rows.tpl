@@ -70,7 +70,7 @@
 			<header>Enabled</header>
 			<ul class="enabled connected">
 				{{#each layout}}
-					<li draggable="true" {{#each ../dataAttributes}}data-{{this}}="{{attr ../this this}}" {{/each}}>
+					<li draggable="true" {{#each ../dataAttributes}}data-{{this}}="{{prop ../this this}}" {{/each}}>
 						<div class="left">
 							<label>{{label}}</label>
 						</div>

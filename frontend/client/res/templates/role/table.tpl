@@ -14,7 +14,7 @@
 				{{#if ../editMode}}
 					<select name="{{name}}" class="form-control" data-type="access">{{options ../../accessList access scope='Role' field='accessList'}}</select>
 				{{else}}
-					<span style="color: {{attr ../../colors access}};">{{translateOption access scope='Role' field='accessList'}}</span>
+					<span style="color: {{prop ../../colors access}};">{{translateOption access scope='Role' field='accessList'}}</span>
 				{{/if}}	
 			</td>					
 			
@@ -26,7 +26,7 @@
 						</select>
 					{{else}}
 						{{#ifNotEqual ../../access 'not-set'}}
-							<span style="color: {{attr ../../../../colors level}};">{{translateOption ../level field='levelList' scope='Role'}}</span>
+							<span style="color: {{prop ../../../../colors level}};">{{translateOption ../level field='levelList' scope='Role'}}</span>
 						{{/ifNotEqual}}
 					{{/if}}					
 				</td>

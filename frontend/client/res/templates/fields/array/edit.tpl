@@ -2,7 +2,7 @@
 {{#each selected}}
 	<div class="list-group-item" data-value="{{this}}">
 		{{#if ../translatedOptions}}
-			{{attr ../../translatedOptions this}}&nbsp;
+			{{prop ../../translatedOptions this}}&nbsp;
 		{{else}}
 			{{this}}
 		{{/if}}

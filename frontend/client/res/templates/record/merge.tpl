@@ -6,10 +6,10 @@
 				<th width="20%"></th>				
 				{{#each models}}
 				<th width="5%">
-					<input type="radio" name="check-all" value="{{attr this 'id'}}" data-id="{{id}}" class="pull-right">
+					<input type="radio" name="check-all" value="{{prop this 'id'}}" data-id="{{id}}" class="pull-right">
 				</th>
 				<th>
-					<a href="#{{../scope}}/view/{{attr this 'id'}}">{{get this 'name'}}</a>
+					<a href="#{{../scope}}/view/{{prop this 'id'}}">{{get this 'name'}}</a>
 				</th>
 				{{/each}}
 			</tr>

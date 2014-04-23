@@ -46,7 +46,7 @@
 				return new Handlebars.SafeString("<img src=\"img/" + img + "\"></img>");
 			});
 
-			Handlebars.registerHelper('attr', function (object, name) {
+			Handlebars.registerHelper('prop', function (object, name) {
 				if (name in object) {
 					return object[name];
 				}
