@@ -67,52 +67,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 							
 			},
 			'click [data-action="showMore"]': function () {
-				var collection = this.collection;
-				var offset = collection.offset = collection.length;		
-				var $showMore = this.$el.find('.show-more');
-				var $list = this.$el.find(this.listContainerEl);
-				
-				$showMore.children('a').addClass('disabled');	
-				this.notify('Loading...');
-				
-				var final = function () {
-					$showMore.parent().append($showMore);
-					if (collection.total > collection.length) {
-						$showMore.removeClass('hide');
-					}
-					$showMore.children('a').removeClass('disabled');
-					this.notify(false);
-				}.bind(this);
-				
-				var success = function () {
-					$showMore.addClass('hide');
-					
-					var rowCount = collection.length - collection.offset;
-					var rowsReady = 0;
-					for (var i = collection.offset; i < collection.length; i++) {
-						var model = collection.at(i);
-								
-						this.buildRow(i, model, function (view) {							
-							view.getHtml(function (html) {
-								$list.append(html);								
-								rowsReady++;
-								if (rowsReady == rowCount) {			
-									final();
-								}													
-							}.bind(this));	
-						});						
-					}
-					collection.offset = 0;					
-					this.noRebuild = true;
-				}.bind(this);
-				
-				collection.fetch({
-					success: success,
-					remove: false,
-				});			
+				this.showMoreRecords();		
 			},
 			'click a.sort': function (e) {
-				var field = $(e.currentTarget).data('name');				
+				var field = $(e.currentTarget).data('name');			
 				
 				var asc = true;
 				if (field === this.collection.sortBy && this.collection.asc) {
@@ -167,43 +125,14 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 					this.$el.find('.list > table tbody tr').removeClass('active');
 				}
 			},
-			'click [data-action="quickEdit"]': function (e) {
-				var id = $(e.currentTarget).data('id');
-				Espo.Ui.notify('Loading...');
-				this.createView('quickEdit', 'EditModal', {
-					scope: this.scope,
-					id: id
-				}, function (view) {
-					view.once('after:render', function () {
-						Espo.Ui.notify(false);
-					});
-					view.render();
-					view.once('after:save', function () {
-						this.collection.fetch();
-					}, this);
-				}.bind(this));
+			'click [data-action="quickEdit"]': function (e) {				
+				var id = $(e.currentTarget).data('id');				
+				this.quickEdit(id);				
+
 			},
 			'click [data-action="quickRemove"]': function (e) {
 				var id = $(e.currentTarget).data('id');
-				var model = this.collection.get(id);
-				if (!this.getAcl().checkModel(model, 'delete')) {
-					this.notify('Access denied', 'error');
-					return false;
-				}
-				var self = this;
-				if (confirm(this.translate('Are you sure you want to remove the record?'))) {
-					this.collection.remove(model);
-					this.$el.find('tr[data-id="'+id+'"]').remove();
-					this.notify('Removing...');			
-					model.destroy({
-						success: function () {
-							Espo.Ui.notify('Record has been removed');
-						}.bind(this),
-						error: function () {
-							self.notify('Error occured', 'error');
-						},
-					});
-				}			
+				this.quickRemove(id);
 			},
 		},
 
@@ -679,6 +608,90 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				if (typeof callback == 'function') {
 					callback();
 				}
+			}
+		},
+		
+		showMoreRecords: function () {
+			var collection = this.collection;
+			var offset = collection.offset = collection.length;		
+			var $showMore = this.$el.find('.show-more');
+			var $list = this.$el.find(this.listContainerEl);
+				
+			$showMore.children('a').addClass('disabled');	
+			this.notify('Loading...');
+				
+			var final = function () {
+				$showMore.parent().append($showMore);
+				if (collection.total > collection.length) {
+					$showMore.removeClass('hide');
+				}
+				$showMore.children('a').removeClass('disabled');
+				this.notify(false);
+			}.bind(this);
+				
+			var success = function () {
+				$showMore.addClass('hide');
+				
+				var rowCount = collection.length - collection.offset;
+				var rowsReady = 0;
+				for (var i = collection.offset; i < collection.length; i++) {
+					var model = collection.at(i);
+							
+					this.buildRow(i, model, function (view) {							
+						view.getHtml(function (html) {
+							$list.append(html);								
+							rowsReady++;
+							if (rowsReady == rowCount) {			
+								final();
+							}													
+						}.bind(this));	
+					});						
+				}
+				collection.offset = 0;					
+				this.noRebuild = true;
+			}.bind(this);
+			
+			collection.fetch({
+				success: success,
+				remove: false,
+			});
+		},
+		
+		quickEdit: function (id) {
+			this.notify('Loading...');
+			this.createView('quickEdit', 'EditModal', {
+				scope: this.scope,
+				id: id
+			}, function (view) {
+				view.once('after:render', function () {
+					Espo.Ui.notify(false);
+				});
+				view.render();
+				view.once('after:save', function () {
+					this.collection.fetch();
+				}, this);
+			}.bind(this));
+		},
+		
+		quickRemove: function (id) {
+			var model = this.collection.get(id);				
+			if (!this.getAcl().checkModel(model, 'delete')) {
+				this.notify('Access denied', 'error');
+				return false;
+			}
+			var self = this;
+			if (confirm(this.translate('Are you sure?'))) {
+				this.collection.remove(model);
+				this.notify('Removing...');			
+				model.destroy({
+					success: function () {
+						self.notify('Removed', 'success');
+						self.collection.fetch();
+					},
+					error: function () {
+						self.notify('Error occured', 'error');
+					},
+				});
 			}
 		}
 	});

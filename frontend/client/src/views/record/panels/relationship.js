@@ -174,11 +174,12 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 			if (confirm(this.translate('Are you sure?'))) {
 				var model = this.collection.get(id);
 				self.notify('Removing...');
-				model.once('destroy', function () {
-					self.notify('Removed', 'success');
-					self.collection.fetch();
-				}.bind(this));
-				model.destroy();
+				model.destroy({
+					success: function () {
+						self.notify('Removed', 'success');
+						self.collection.fetch();
+					},
+				});
 			}
 		},
 	});
