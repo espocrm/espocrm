@@ -62,7 +62,7 @@ class Stream extends \Espo\Core\Hooks\Base
 	protected function isLinkObservableInStream($scope, $link)
 	{
 		return $this->getMetadata()->get("scopes.{$scope}.stream") && 
-		       in_array($link, $this->getMetadata()->get("app.streamCreateRelated.{$scope}", array()));
+		       in_array($link, $this->getMetadata()->get("entityDefs.Note.streamRelated.{$scope}", array()));
 	}
 	
 	protected function handleCreateRelated(Entity $entity)
