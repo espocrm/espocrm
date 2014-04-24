@@ -76,21 +76,8 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
 			}.bind(this));
 		},
 		
-		actionRefresh: function () {
-			var maxSize = this.collection.maxSize;
-			var offset = this.collection.offset;
-			
-			var collection = this.collection;
-			
-			collection.offset = 0;
-			collection.maxSize = this.collection.length;
-			
-			this.collection.fetch({
-				success: function () {
-					collection.offset = offset;
-					collection.maxSize = maxSize;	
-				},
-			});
+		actionRefresh: function () {			
+			this.collection.fetch();
 		},
 	});
 });

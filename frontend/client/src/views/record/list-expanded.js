@@ -41,7 +41,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
 		checkedList: null,
 		
-		listContainerEl: '.list',
+		listContainerEl: '.list > ul',
 
 		_loadListLayout: function (callback) {
 			var type = this.type + 'Expanded';

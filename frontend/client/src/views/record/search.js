@@ -125,10 +125,12 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 				this.updateCollection();
 			},
 			'click button[data-action="refresh"]': function (e) {
-				this.notify('Loading...');
+				this.notify('Loading...');				
 				this.listenToOnce(this.collection, 'sync', function () {
 					this.notify(false);
 				}.bind(this));
+				
+				this.collection.reset();
 				this.collection.fetch();
 			},
 		},
@@ -164,7 +166,8 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 		},
 
 		updateCollection: function () {
-			this.notify('Searching...');
+			this.collection.reset();
+			this.notify('Please wait...');
 			this.listenTo(this.collection, 'sync', function () {
 				this.notify(false);
 			}.bind(this));

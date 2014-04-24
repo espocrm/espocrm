@@ -542,7 +542,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		},
 		
 		buildRow: function (i, model, callback) {
-			var key = 'row-' + i;
+			var key = 'row-' + model.id;
+			
 			this.rows.push(key);
 			this.getInternalLayout(function (internalLayout) {
 				if (this.type == 'list' && Object.prototype.toString.call(internalLayout) === '[object Array]') {
@@ -570,8 +571,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		buildRows: function (callback) {
 			this.checkedList = [];
 			this.rows = [];
+			
 
-			if (this.collection.length > 0) {					
+			if (this.collection.length > 0) {
+							
 				var i = 0;
 				var c = !this.pagination ? 1 : 2;
 				var func = function () {
@@ -612,8 +615,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		},
 		
 		showMoreRecords: function () {
-			var collection = this.collection;
-			var offset = collection.offset = collection.length;		
+			var collection = this.collection;			
+					
 			var $showMore = this.$el.find('.show-more');
 			var $list = this.$el.find(this.listContainerEl);
 				
@@ -628,32 +631,36 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				$showMore.children('a').removeClass('disabled');
 				this.notify(false);
 			}.bind(this);
+			
+			var initialCount = collection.length;
 				
 			var success = function () {
 				$showMore.addClass('hide');
 				
-				var rowCount = collection.length - collection.offset;
+				var temp = collection.models[initialCount - 1];				
+				
+				var rowCount = collection.length - initialCount;
 				var rowsReady = 0;
-				for (var i = collection.offset; i < collection.length; i++) {
+				for (var i = initialCount; i < collection.length; i++) {					
 					var model = collection.at(i);
-							
-					this.buildRow(i, model, function (view) {							
+					
+					this.buildRow(i, model, function (view) {			
 						view.getHtml(function (html) {
 							$list.append(html);								
 							rowsReady++;
 							if (rowsReady == rowCount) {			
 								final();
 							}													
-						}.bind(this));	
+						}.bind(this));
 					});						
-				}
-				collection.offset = 0;					
+				}	
 				this.noRebuild = true;
 			}.bind(this);
 			
 			collection.fetch({
 				success: success,
 				remove: false,
+				more: true,
 			});
 		},
 		

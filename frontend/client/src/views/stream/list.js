@@ -26,7 +26,7 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
 		type: 'listStream',
 	
 		buildRow: function (i, model, callback) {
-			var key = 'row-' + i;
+			var key = 'row-' + model.id;
 			this.rows.push(key);
 			
 			var type = model.get('type');						
