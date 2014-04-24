@@ -75,22 +75,34 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				$showMore.children('a').addClass('disabled');	
 				this.notify('Loading...');
 				
-				var success = function () {
-					for (var i = collection.offset; i < collection.length; i++) {
-						var model = collection.at(i);			
-						this.buildRow(i, model, function (view) {
-							view.getHtml(function (html) {
-								$list.append(html);								
-							}.bind(this));	
-						});						
-					}
-					collection.offset = 0;
+				var final = function () {
 					$showMore.parent().append($showMore);
-					if (collection.total <= collection.length) {
-						$showMore.addClass('hide');
+					if (collection.total > collection.length) {
+						$showMore.removeClass('hide');
 					}
 					$showMore.children('a').removeClass('disabled');
 					this.notify(false);
+				}.bind(this);
+				
+				var success = function () {
+					$showMore.addClass('hide');
+					
+					var rowCount = collection.length - collection.offset;
+					var rowsReady = 0;
+					for (var i = collection.offset; i < collection.length; i++) {
+						var model = collection.at(i);
+								
+						this.buildRow(i, model, function (view) {							
+							view.getHtml(function (html) {
+								$list.append(html);								
+								rowsReady++;
+								if (rowsReady == rowCount) {			
+									final();
+								}													
+							}.bind(this));	
+						});						
+					}
+					collection.offset = 0;					
 					this.noRebuild = true;
 				}.bind(this);
 				
