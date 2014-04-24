@@ -99,7 +99,7 @@ Espo.Collection = Backbone.Collection.extend({
 		this.asc = options.asc || this.asc;
 		this.where = options.where || this.where;
 
-		options.data.maxSize = options.more ? this.maxSize : (this.length || this.maxSize);
+		options.data.maxSize = options.more ? this.maxSize : ((this.length > this.maxSize) ? this.length : this.maxSize);
 		options.data.offset = options.more ? this.length : this.offset;
 		options.data.sortBy = this.sortBy;
 		options.data.asc = this.asc;
