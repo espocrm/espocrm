@@ -62,7 +62,6 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 			
 			if (!this.postingMode) {
 				$('body').on('click.stream-panel', function (e) {
-					e.stopPropagation();
 					var $element = $(e.toElement);
 					if (!$.contains(this.$el.get(0), e.toElement)) {					
 											
