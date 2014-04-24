@@ -138,7 +138,8 @@
 		"assigned": "assigned",
 		"posted": "posted",
 		"attached": "attached",
-		"has been received": "has been received"		
+		"has been received": "has been received",
+		"linked to": "linked to"		
 	},
 	"lists": {
 		"monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

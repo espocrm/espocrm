@@ -59,19 +59,48 @@ class Stream extends \Espo\Core\Hooks\Base
 		}
 	}
 	
+	protected function isLinkObservableInStream($scope, $link)
+	{
+		return $this->getMetadata()->get("scopes.{$scope}.stream") && 
+		       in_array($link, $this->getMetadata()->get("app.streamCreateRelated.{$scope}", array()));
+	}
+	
 	protected function handleCreateRelated(Entity $entity)
 	{
-		$relationDefs = $entity->getRelations();
+		$linkDefs = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".links", array());
 			
-		foreach ($relationDefs as $relation => $defs) {
+		foreach ($linkDefs as $link => $defs) {
 			if ($defs['type'] == 'belongsTo') {
-				$field = $relation . 'Id';
+				$foreign = $defs['foreign'];
 				$scope = $defs['entity'];
-				if ($entity->has($field)) {
-					$entityId = $entity->get($field);
-					if (!empty($entityId) && $this->getMetadata()->get("scopes.{$scope}.stream")) {
-						$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+				$entityId = $entity->get($link . 'Id');
+				if (!empty($scope) && !empty($entityId)) {
+					if (!$this->isLinkObservableInStream($scope, $foreign)) {
+						continue;
 					}
+					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+				}
+			} else if ($defs['type'] == 'belongsToParent') {		
+				$foreign = $defs['foreign'];
+				$scope = $entity->get($link . 'Type');
+				$entityId = $entity->get($link . 'Id');
+				if (!empty($scope) && !empty($entityId)) {
+					if (!$this->isLinkObservableInStream($scope, $foreign)) {
+						continue;
+					}
+					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+					
+				}
+			} else if ($defs['type'] == 'hasMany') {		
+				$foreign = $defs['foreign'];
+				$scope = $defs['entity'];
+				$entityIds = $entity->get($link . 'Ids');
+				if (!empty($scope) && is_array($entityIds) && !empty($entityIds)) {
+					if (!$this->isLinkObservableInStream($scope, $foreign)) {
+						continue;
+					}
+					$entityId = $entityIds[0];
+					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);					
 				}
 			}
 		}
@@ -117,9 +146,9 @@ class Stream extends \Espo\Core\Hooks\Base
 
 		}
 		
-		/*if (!$entity->isFetched() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
+		if (!$entity->isFetched() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
 			$this->handleCreateRelated($entity);
-		}*/
+		}
 	}
 	
 	protected function getStreamService()

@@ -4,7 +4,7 @@
 
 	<div>
 		
-		<span class="text-muted">{{{createdBy}}} {{translate action category='relateActions'}} {{relatedTypeString}} <a href="#{{entityType}}/view/{{entityId}}">{{entityName}}</a> {{translate 'on' category='stream'}}
+		<span class="text-muted">{{{createdBy}}} {{translate action category='relateActions'}} {{relatedTypeString}} <a href="#{{entityType}}/view/{{entityId}}">{{entityName}}</a> {{translate 'linked to' category='stream'}}
 			{{#if isUserStream}} {{parentTypeString}} {{{parent}}} {{else}} {{translate 'this' category='stream'}} {{parentTypeString}}{{/if}}
 		</span>
 	</div>
