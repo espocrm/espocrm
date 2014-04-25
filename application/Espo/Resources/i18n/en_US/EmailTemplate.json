@@ -5,7 +5,8 @@
 		"isHtml": "Is Html",
 		"body": "Body",
 		"subject": "Subject",
-		"attachments": "Attachments"
+		"attachments": "Attachments",
+		"insertField": ""
 	},
 	"links": {
 	},
