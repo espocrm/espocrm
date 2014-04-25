@@ -19,13 +19,16 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.FieldManager = function (defs) {
+Espo.FieldManager = function (defs, metadata) {
 	this.defs = defs;
+	this.metadata = metadata;
 };
 
 _.extend(Espo.FieldManager.prototype, {
 
 	defs: null,
+	
+	metadata: null,
 
 	getSearchParams: function (fieldType) {
 		if (fieldType in this.defs) {
@@ -57,6 +60,18 @@ _.extend(Espo.FieldManager.prototype, {
 			}
 		}
 		return false;
+	},
+	
+	getEntityAttributes: function (entityName) {
+		var list = [];
+		
+		var defs = this.metadata.get('entityDefs.' + entityName + '.fields') || {};		
+		Object.keys(defs).forEach(function (field) {
+			this.getAttributes(defs[field]['type'], field).forEach(function (attr) {
+				list.push(attr);
+			});					
+		}, this);
+		return list;
 	},
 
 	getActualAttributes: function (fieldType, fieldName) {

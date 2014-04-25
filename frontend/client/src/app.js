@@ -113,7 +113,8 @@ _.extend(Espo.App.prototype, {
 		this._initAuth();
 		var onAuth = function () {
 			this.metadata.load(function () {
-				this.fieldManager.defs = this.metadata.get('fields');	
+				this.fieldManager.defs = this.metadata.get('fields');
+				this.fieldManager.metadata = this.metadata;
 				
 				this.settings.defs = this.metadata.get('entityDefs.Settings');
 				this.user.defs = this.metadata.get('entityDefs.User');
