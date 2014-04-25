@@ -65,7 +65,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		},
 		
 		enableWysiwygMode: function () {
-			this.$element.summernote({
+			this.$summernote = this.$element.summernote({
 				height: 250,
 				onblur: function () {
 					this.model.set(this.name, this.$element.code());

@@ -33,10 +33,21 @@ Espo.define('Views.EmailTemplate.Record.Detail', 'Views.Record.Detail', function
 			if (fieldView) {
 				this.listenTo(fieldView, 'insert-field', function (o) {					
 					var tag = '{' + o.entityType + '.' + o.field + '}';
+					
 					$body = this.$el.find('[name="body"]');
 					
-					console.log($body);
-					$body.val(tag);
+					if (this.model.get('isHtml')) {
+						var code = $body.summernote().code();
+						code += tag;
+						$body.summernote().code(code);
+					} else {
+						var text = $body.val();
+						text += tag;
+						$body.val(text);
+					}
+					
+					var bodyView = this.getFieldView('body');
+					
 					
 				}.bind(this));
 			};
