@@ -25,13 +25,25 @@ Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
 			
 		template: 'stream.notes.post',
 		
+		messageName: 'post',
+		
 		setup: function () {		
-			if (this.model.get('message')) {
-				this.createField('message');
+			if (this.model.get('post')) {
+				this.createField('post');
 			}			
 			if ((this.model.get('attachmentsIds') || []).length) {
 				this.createField('attachments', 'attachmentMultiple');
+				
+				if (!this.model.get('post')) {
+					this.messageName = 'attach';					
+					if (!this.isUserStream) {
+						this.messageName += 'This';	
+					}
+				}
 			}
+			
+			
+			this.createMessage();
 		},		
 	});
 });

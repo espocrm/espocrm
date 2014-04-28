@@ -27,15 +27,12 @@ Espo.define('Views.Stream.Notes.Create', 'Views.Stream.Note', function (Dep) {
 		
 		assigned: false,
 		
+		messageName: 'create',
+		
 		data: function () {
-			return _.extend({				
-				assignedUserId: this.assignedUserId,
-				assignedUserName: this.assignedUserName,
-				statusField: this.statusField,
-				statusValue: this.statusValue,
-				statusStyle: this.statusStyle,
+			return _.extend({
 				statusText: this.statusText,
-				assignedToYou: this.assignedToYou
+				statusStyle: this.statusStyle
 			}, Dep.prototype.data.call(this));
 		},
 		
@@ -46,20 +43,30 @@ Espo.define('Views.Stream.Notes.Create', 'Views.Stream.Note', function (Dep) {
 				this.assignedUserId = data.assignedUserId || null;
 				this.assignedUserName = data.assignedUserName || null;
 				
-				if (this.isUserStream) {
-					if (this.assignedUserId == this.getUser().id) {
-						this.assignedToYou = true;
+				this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + this.assignedUserName + '</a>';
+				
+				if (this.assignedUserId) {
+					this.messageName = 'createAssigned';
+					if (!this.isUserStream) {
+						this.messageName += 'This';	
 					}
 				}
+				
+				if (this.isUserStream) {
+					if (this.assignedUserId == this.getUser().id) {
+						this.messageData['assignee'] = this.translate('you');
+					}
+				}				
 				
 				if (data.statusField) {
 					var statusField = this.statusField = data.statusField;
 					var statusValue = data.statusValue;			
 					this.statusStyle = data.statusStyle || 'default';						
 					this.statusText = this.getLanguage().translateOption(statusValue, statusField, this.model.get('parentType'));
-				}
-				
-			}			
+				}				
+			}
+			
+			this.createMessage();			
 		},		
 	});
 });

@@ -25,6 +25,8 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
 
 		template: 'stream.notes.create-related',
 		
+		messageName: 'createRelated',
+		
 		data: function () {
 			return _.extend({				
 				entityType: this.entityType,
@@ -44,7 +46,12 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
 				this.entityName = data.entityName || null;
 				this.action = data.action || null;
 				
-			}			
+				this.messageData['relatedEntityType'] = this.translate(this.entityType, 'scopeNames').toLowerCase();
+				this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
+			}
+			
+			
+			this.createMessage();			
 		},		
 	});
 });

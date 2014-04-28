@@ -19,37 +19,43 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Stream.Notes.Assign', 'Views.Stream.Note', function (Dep) {
+Espo.define('Views.Stream.Message', 'View', function (Dep) {
 
 	return Dep.extend({
-
-		template: 'stream.notes.assign',
-		
-		messageName: 'assign',
-		
-		data: function () {
-			return _.extend({
-			}, Dep.prototype.data.call(this));
-		},
-		
+	
 		setup: function () {
-			var data = JSON.parse(this.model.get('data'));			
+			var template = this.options.messageTemplate; 
+			var data = this.options.messageData;
 			
-			this.assignedUserId = data.assignedUserId || null;
-			this.assignedUserName = data.assignedUserName || null;
-			
-			this.messageData['assignee'] = '<a href="#User/view/' + data.assignedUserId + '">' + data.assignedUserName + '</a>';
-			
-			
-			if (this.isUserStream) {
-				if (this.assignedUserId == this.getUser().id) {
-					this.messageData['assignee'] = this.translate('you');
+			for (var key in data) {
+				var value = data[key];
+				
+				if (value.indexOf('field:') === 0) {
+					var field = value.substr(6);
+					this.createField(key, field);
+					
+					template = template.replace('{' + key +'}', '{{{' + key +'}}}');				
+				} else {
+					template = template.replace('{' + key +'}', value);
 				}
 			}
 			
-			this.createMessage();	
+			this._template = template;		
+		},
+	
+		createField: function (key, name, type, params) {			
+			type = type || this.model.getFieldType(name) || 'base';		
+			this.createView(key, this.getFieldManager().getViewName(type), {
+				model: this.model,
+				defs: {
+					name: name,
+					params: params || {}
+				},
+				mode: 'list'
+			});
 		},
 		
+
 	});
 });
 

@@ -20,14 +20,12 @@
 	
 	
 	<div class="">
-		<span class="text-muted">{{{createdBy}}} {{#if message}}{{translate 'posted' category='stream'}}{{else}}{{#if attachments}}{{translate 'attached' category='stream'}}{{/if}}{{/if}}
-		{{#if isUserStream}} {{translate 'on' category='stream'}} {{parentTypeString}} {{{parent}}}{{/if}}
-		</span>
+		<span class="text-muted message">{{{message}}}</span>
 	</div>
 	
-	{{#if message}}
+	{{#if post}}
 	<div class="">
-		<span class="cell cell-message">{{{message}}}</span>
+		<span class="cell cell-post">{{{post}}}</span>
 	</div>
 	{{/if}}
 	

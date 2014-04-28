@@ -23,23 +23,39 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 
 	return Dep.extend({
 	
+		messageName: null,
+		
+		messageTemplate: null,
+		
+		messageData: null,
+	
 		data: function () {
 			return {
 				isUserStream: this.isUserStream,
-				parentTypeString: this.translate(this.model.get('parentType'), 'scopeNames').toLowerCase(),
 				acl: this.options.acl,
 				onlyContent: this.options.onlyContent
 			};
 		},
 	
 		init: function () {
-			this.createField('createdBy');
 			this.createField('createdAt');			
 			this.isUserStream = this.options.isUserStream;
 			
 			if (this.isUserStream) {
 				this.createField('parent');
 			}
+			
+			if (this.messageName) {
+				if (!this.isUserStream) {
+					this.messageName += 'This';	
+				}
+			}
+			
+			this.messageData = {
+				'user': 'field:createdBy',
+				'entity': 'field:parent',
+				'entityType': this.translate(this.model.get('parentType'), 'scopeNames').toLowerCase()
+			};			
 		},
 		
 		createField: function (name, type, params) {			
@@ -52,7 +68,23 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 				},
 				mode: 'list'
 			});
+			
 		},
+		
+		
+		createMessage: function () {
+			if (!this.messageTemplate) {
+				this.messageTemplate = this.translate(this.messageName, 'streamMessages') || '';
+			}
+			
+			this.createView('message', 'Stream.Message', {
+				messageTemplate: this.messageTemplate,
+				el: this.options.el + ' .message',
+				model: this.model,
+				messageData: this.messageData			
+			});
+		},
+		
 
 	});
 });

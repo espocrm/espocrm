@@ -25,24 +25,28 @@ Espo.define('Views.Stream.Notes.Status', 'Views.Stream.Note', function (Dep) {
 
 		template: 'stream.notes.status',
 		
+		messageName: 'status',
+		
 		data: function () {
 			return _.extend({
 				style: this.style,
 				statusText: this.statusText,
-				parentType: this.model.get('parentType'),
-				field: this.field
 			}, Dep.prototype.data.call(this));
 		},
 				
 		setup: function () {
 			var data = JSON.parse(this.model.get('data'));
 			
-			var field = this.field = data.field;
-			var value = data.value;
+			var field = data.field;
+			var value = data.value;			
 			
 			this.style = data.style || 'default';
 			
 			this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
+			
+			this.messageData['field'] = this.translate(field, 'fields', this.model.name).toLowerCase();
+			
+			this.createMessage();
 		},
 		
 	});

@@ -95,7 +95,9 @@
 		"Dashlet Options": "Dashlet Options",
 		"Full Form": "Full Form",
 		"Insert": "Insert",
-		"Person": "Person"
+		"Person": "Person",
+		"You": "You",
+		"you": "you"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
@@ -144,17 +146,26 @@
 	"dashlets": {
 		"Stream": "Stream"		
 	},
-	"stream": {
-		"this": "this",
-		"on": "on",
-		"to": "to",
-		"you": "you",
-		"updated": "updated",
-		"assigned": "assigned",
-		"posted": "posted",
-		"attached": "attached",
-		"has been received": "has been received",
-		"linked to": "linked to"		
+	"streamMessages": {
+		"create": "{user} created {entityType} {entity}",		
+		"createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
+		"assign": "{user} assigned {entityType} {entity} to {assignee}",
+		"post": "{user} posted on {entityType} {entity}",
+		"attach": "{user} attached on {entityType} {entity}",
+		"status": "{user} updated {field} on {entityType} {entity}",
+		"update": "{user} updated {entityType} {entity}",
+		"createRelated": "{user} created {relatedEntityType} {relatedEntity} linked to {entityType} {entity}",
+		"email": "{entity} has been received for {entityType} {entity}",
+		
+		"createThis": "{user} created this {entityType}",		
+		"createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
+		"assignThis": "{user} assigned this {entityType} to {assignee}",
+		"postThis": "{user} posted",
+		"attachThis": "{user} attached",
+		"statusThis": "{user} updated {field}",
+		"updateThis": "{user} updated this {entityType}",
+		"createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} linked to this {entityType}",
+		"emailThis": "{entity} has been received"
 	},
 	"lists": {
 		"monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

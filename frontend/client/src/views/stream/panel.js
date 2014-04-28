@@ -163,7 +163,7 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 					this.disablePostingMode();
 				}, this);
 				
-				model.set('message', message);
+				model.set('post', message);
 				model.set('attachmentsIds', _.clone(this.seed.get('attachmentsIds')));
 				model.set('parentId', this.model.id);
 				model.set('parentType', this.model.name);

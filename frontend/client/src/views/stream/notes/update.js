@@ -25,6 +25,8 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 
 		template: 'stream.notes.update',
 		
+		messageName: 'update',
+		
 		data: function () {
 			return _.extend({
 				fieldsArr: this.fieldsArr,
@@ -49,13 +51,14 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 			
 			var fields = data.fields;
 			
-			this.wait(true);
+			this.createMessage();
+			
+			this.wait(true);			
 			this.getModelFactory().create(this.model.get('parentType'), function (model) {
 				var modelWas = model;
 				var modelBecame = model.clone();
 				
-				data.attributes = data.attributes || {};
-				
+				data.attributes = data.attributes || {};				
 				
 				modelWas.set(data.attributes.was);
 				modelBecame.set(data.attributes.became);				
@@ -72,7 +75,7 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 						},
 						mode: 'list'
 					});
-						this.createView(field + 'Became', this.getFieldManager().getViewName(type), {
+					this.createView(field + 'Became', this.getFieldManager().getViewName(type), {
 						model: modelBecame,
 						readOnly: true,
 						defs: {
@@ -87,9 +90,10 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 						became: field + 'Became'						
 					});
 									
-				}, this);
-			
+				}, this);			
+				
 				this.wait(false);				
+								
 			}, this);			
 		},
 		
