@@ -196,6 +196,7 @@ class Sender
 		if ($email->get('isHtml')) {
 			$bodyPart = new MimePart($email->get('body'));
 			$bodyPart->type = 'text/html';
+			$bodyPart->charset = 'utf-8';
 		} else {			
 			if ($email->get('bodyPlain')) {
 				$bodyPart = new MimePart($email->get('bodyPlain'));
@@ -203,6 +204,7 @@ class Sender
 				$bodyPart = new MimePart($email->get('body'));
 			}
 			$bodyPart->type = 'text/plain';
+			$bodyPart->charset = 'utf-8';
 		}
 
 		$parts[] = $bodyPart;
