@@ -235,7 +235,9 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				viewRender: function (view, el) {
 					var mode = view.name;
 					var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
-					this.trigger('view', date.split(' ')[0], mode);
+					
+					var m = moment(this.$calendar.fullCalendar('getDate'));
+					this.trigger('view', m.format('YYYY-MM-DD'), mode);
 				}.bind(this),
 				events: function (from, to, callback) {					
 					var fromServer = this.getDateTime().fromIso(from);
