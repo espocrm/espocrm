@@ -14,7 +14,7 @@
 				</ul>
 			{{/if}}
 		</div>
-		<h4 class="panel-title">{{translate label scope=../scope}}</h4>
+		<h4 class="panel-title">{{translate label scope=../../scope}}</h4>
 	</div>
 	{{/if}}
 	<div class="panel-body panel-body-{{toDom name}}">

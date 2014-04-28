@@ -15,6 +15,7 @@
 	"links": {
 	},
 	"labels": {
-		"Create Prospect": "Create Prospect"
+		"Create Prospect": "Create Prospect",
+		"Convert to Lead": "Convert to Lead"
 	}
 }

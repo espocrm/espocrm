@@ -4,7 +4,12 @@
 		"Users": "Users",
 		"Email": "Email",
 		"Data": "Data",
-		"Customization": "Customization",		
+		"Customization": "Customization",
+		"Available Fields": "Available Fields",
+		"Layout": "Layout",
+		"Enabled": "Enabled",
+		"Disabled": "Disabled",
+		"Add Panel": "Add Panel",		
 		"Add Field": "Add Field",
 		"Settings": "Settings",
 		"Scheduled Jobs": "Scheduled Jobs",
@@ -78,7 +83,8 @@
 		"upgradeDone": "Your EspoCRM has been upgraded to version <strong>{version}</strong>. Refresh your browser window.",
 		"upgradeBackup": "We recommend you to make backup of your EspoCRM files and data before upgrade.",
 		"thousandSeparatorEqualsDecimalMark": "Thousand separator can not be same as decimal mark",
-		"userHasNoEmailAddress": "User has not email address."
+		"userHasNoEmailAddress": "User has not email address.",
+		"selectEntityType": "Select entity type in the left menu."
 	},
 	"descriptions": {
 		"settings": "System settings of application.",

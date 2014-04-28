@@ -55,7 +55,7 @@ Espo.define('Views.Stream.Notes.Create', 'Views.Stream.Note', function (Dep) {
 				if (data.statusField) {
 					var statusField = this.statusField = data.statusField;
 					var statusValue = data.statusValue;			
-					this.statusStyle = data.statusStyle || 'default';			
+					this.statusStyle = data.statusStyle || 'default';						
 					this.statusText = this.getLanguage().translateOption(statusValue, statusField, this.model.get('parentType'));
 				}
 				

@@ -143,7 +143,7 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
 
 		renderDefaultPage: function () {
 			$('#fields-header').html('').hide();
-			$('#fields-content').html('Select entity type in the left menu.');
+			$('#fields-content').html(this.translate('selectEntityType', 'messages', 'Admin'));
 		},
 
 		renderFieldsHeader: function () {

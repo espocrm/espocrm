@@ -309,7 +309,7 @@ class Stream extends \Espo\Core\Services\Base
 					$style = $this->statusDefs[$entityName]['style'][$value];
 				}			
 				$data['statusValue'] = $value;
-				$data['statusField'] = $value;
+				$data['statusField'] = $field;
 				$data['statusStyle'] = $style; 
 			}
 		}
