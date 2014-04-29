@@ -89,7 +89,7 @@ class Base
 			$where = array();
 
 			foreach	($params['where'] as $item) {
-				if ($item['type'] == 'boolFilters' && is_array($item['value'])) {
+				if ($item['type'] == 'boolFilters' && !empty($item['value']) && is_array($item['value'])) {
 					foreach ($item['value'] as $filter) {
 						$p = $this->getBoolFilterWhere($filter);
 						if (!empty($p)) {
