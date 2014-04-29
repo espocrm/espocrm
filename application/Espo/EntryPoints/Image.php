@@ -26,12 +26,13 @@ use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
 
-class Download extends \Espo\Core\EntryPoints\Base
+class Image extends \Espo\Core\EntryPoints\Base
 {
-	public static $authRequired = true;
+	public static $authRequired = false;
 	
 	public function run()
-	{	
+	{
+	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
@@ -54,15 +55,19 @@ class Download extends \Espo\Core\EntryPoints\Base
 		
 		if (!file_exists($fileName)) {
 			throw new NotFound();
-		}		
+		}
 		
-		header('Content-Description: File Transfer');
+		if (!$attachment->get('global')) {
+			throw new Forbidden();
+		}	
+		
+
+		
 		if ($attachment->get('type')) {
 			header('Content-Type: ' . $attachment->get('type'));
 		}
-		header('Content-Disposition: attachment; filename=' . $attachment->get('name'));
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate');
+
+		
 		header('Pragma: public');
 		header('Content-Length: ' . filesize($fileName));
 		ob_clean();
