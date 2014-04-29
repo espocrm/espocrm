@@ -10,7 +10,7 @@
 		"port": "Port",
 		"monitoredFolders": "Monitored Folders",
 		"trashFolder": "Trash Folder",
-		
+		"ssl": "SSL",		
 		"createCase": "Create Case",
 		"reply": "Reply",
 		"caseDistribution": "Case Distribution",

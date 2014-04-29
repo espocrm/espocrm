@@ -17,6 +17,9 @@
             "default": "143",
             "required": true
         },
+        "ssl": {
+            "type": "bool"
+        },
         "username": {
             "type": "varchar",
             "required": true
@@ -32,7 +35,7 @@
         "trashFolder": {
             "type": "varchar",
             "required": true,
-            "default": "INBOX.Trash"            
+            "default": "INBOX.Trash"        
         },
         "assignToUser": {
             "type": "link"

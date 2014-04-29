@@ -19,16 +19,16 @@
 		"label":"IMAP",
 		"rows":[
 			[
-				{"name":"host"},{"name":"username"}
+				{"name":"host"},{"name":"ssl"}
 			],
 			[
-				{"name":"port"},{"name":"password"}
+				{"name":"port"},false
 			],
 			[
-				{"name":"monitoredFolders"}
+				{"name":"monitoredFolders"},{"name":"username"}
 			],
 			[
-				{"name":"trashFolder"},false
+				{"name":"trashFolder"},{"name":"password"}
 			]
 		]
 	},

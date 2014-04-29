@@ -62,12 +62,18 @@ class InboundEmail extends \Espo\Services\Record
 			throw new Error();
 		}
 		
-		$storage = new \Zend\Mail\Storage\Imap(array(
+		$imapParams = array(
 			'host' => $inboundEmail->get('host'),
 			'port' => $inboundEmail->get('port'),
 			'user' => $inboundEmail->get('username'),
 			'password' => $inboundEmail->get('password'),
-		));
+		);
+		
+		if ($inboundEmail->get('ssl')) {
+			$imapParams['ssl'] = 'SSL';
+		}
+		
+		$storage = new \Zend\Mail\Storage\Imap($imapParams);
 		
 		if (empty($storage)) {
 			throw new Error("Could not connect to IMAP of Inbound Email {$inboundEmail->id}.");
