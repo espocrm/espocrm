@@ -28,11 +28,10 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Download extends \Espo\Core\EntryPoints\Base
 {
-	public static $authRequired = true;
+	public static $authRequired = false;
 	
 	public function run()
-	{
-	
+	{	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
@@ -55,7 +54,13 @@ class Download extends \Espo\Core\EntryPoints\Base
 		
 		if (!file_exists($fileName)) {
 			throw new NotFound();
-		}			
+		}
+		
+		if (!$attachment->get('global')) {
+			if ($this->getUser()->id == 'system') {
+				throw new Forbidden();
+			}
+		}		
 		
 		header('Content-Description: File Transfer');
 		if ($attachment->get('type')) {

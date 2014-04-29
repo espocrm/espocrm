@@ -26,6 +26,10 @@
         "contents": {
             "type": "text",
             "notStorable": true
+        },
+        "global": {
+        	"type": "bool",
+        	"default": false
         }
     },
     "links": {
