@@ -220,7 +220,7 @@ class Record extends \Espo\Core\Services\Base
 				}
 			} else if ($data[$key] instanceof \stdClass) {
 				$propertyList = get_object_vars($data[$key]);
-				foreach ($propertyList as $property) {
+				foreach ($propertyList as $property => $value) {
 					$data[$key]->$property = $this->filterInputField($property, $data[$key]->$property);			
 				}
 			} else {
@@ -262,7 +262,7 @@ class Record extends \Espo\Core\Services\Base
 	
 	public function updateEntity($id, $data)
 	{			
-		unset($data['deleted']);
+		unset($data['deleted']);		
 		
 		$this->filterInput($data);
 		
@@ -271,6 +271,8 @@ class Record extends \Espo\Core\Services\Base
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
+		
+
 				
 		$entity->set($data);
 		
