@@ -214,19 +214,20 @@ class Manager
 	 * @param string | array $path
 	 * @param string $content JSON string
 	 * @param bool $isJSON
+	 * @param array $mergeOptions
 	 *
 	 * @return bool
 	 */
-	public function mergeContents($path, $content, $isJSON = false)
+	public function mergeContents($path, $content, $isJSON = false, $mergeOptions = null)
 	{
 		$fileContent = $this->getContents($path);
 
 		$savedDataArray = Utils\Json::getArrayData($fileContent);
 		$newDataArray = Utils\Json::getArrayData($content);
 
-		$data= Utils\Util::merge($savedDataArray, $newDataArray);
+		$data = Utils\Util::merge($savedDataArray, $newDataArray, $mergeOptions);
 		if ($isJSON) {
-			$data= Utils\Json::encode($data, JSON_PRETTY_PRINT);
+			$data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
 		}
 
 		return $this->putContents($path, $data);
@@ -241,7 +242,7 @@ class Manager
 	 *
 	 * @return bool
 	 */
-	public function mergeContentsPHP($path, $content, $onlyFirstLevel= false)
+	public function mergeContentsPHP($path, $content, $onlyFirstLevel = false, $mergeOptions = null)
 	{
 		$fileContent = $this->getContents($path);
 
@@ -250,12 +251,12 @@ class Manager
 
 		if ($onlyFirstLevel) {
 			foreach($newDataArray as $key => $val) {
-				$setVal= is_array($val) ? array() : '';
-				$savedDataArray[$key]= $setVal;
+				$setVal = is_array($val) ? array() : '';
+				$savedDataArray[$key] = $setVal;
 			}
 		}
 
-		$data= Utils\Util::merge($savedDataArray, $newDataArray);
+		$data = Utils\Util::merge($savedDataArray, $newDataArray, $mergeOptions);
 
 		return $this->putContentsPHP($path, $data);
 	}

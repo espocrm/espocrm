@@ -118,14 +118,16 @@ class Util
 	 *                     	'level1' => array(
 	 *                     		'level2' => array(
 	 *                     	 		'level3' => array(
-	 *                     		  		'key' => 'value',
+	 *                     		  		'key1' => 'value',
+	 *                     		  		'key2' => 'value',
 	 *                     	 	   	),
 	 *                     	 	),
 	 *                     	),
 	 *                     )
-	 * @return array
+	 * @param $rewriteKeyName string  - Rewrite key name
+	 * @return array	 *
 	 */
-	public static function merge($array, $mainArray, $rewriteLevel = null)
+	public static function merge($array, $mainArray, $rewriteLevel = null, $rewriteKeyName = null)
 	{
 		if (is_array($array) && !is_array($mainArray)) {
 			return $array;
@@ -135,22 +137,41 @@ class Util
 			return array();
 		}
 
+		if (is_array($rewriteLevel)) {
+			if (isset($rewriteLevel[1])) {
+				$rewriteKeyName = $rewriteLevel[1];
+			}
+			if (isset($rewriteLevel[0])) {
+				$rewriteLevel = $rewriteLevel[0];
+			}
+		}
+
 		foreach($mainArray as $mainKey => $mainValue) {
 
 			$found = false;
 			foreach($array as $key => $value) {
 
-				if ((string)$mainKey == (string)$key){
+				if ((string)$mainKey == (string)$key) {
 
 					$found = true;
-					if (is_array($mainValue) || is_array($value)){
+					if (is_array($mainValue) || is_array($value)) {
 
-						if (!isset($rewriteLevel) || $rewriteLevel != 1) {
-							$array[$mainKey] = static::merge((array) $value, (array) $mainValue, --$rewriteLevel);
+						$rowRewriteLevel = $rewriteLevel;
+
+						/** check the $rewriteKeyName */
+						if (isset($rowRewriteLevel) && $rowRewriteLevel == 1 && isset($rewriteKeyName)) {
+							$rewriteKeyName = is_array($rewriteKeyName) ? $rewriteKeyName : (array) $rewriteKeyName;
+
+							if (!in_array((string)$key, $rewriteKeyName)) {
+								$rowRewriteLevel = null;
+							}
+						} /** END: check the $rewriteKeyName */
+
+						if (!isset($rowRewriteLevel) || $rowRewriteLevel != 1) {
+							$array[$mainKey] = static::merge((array) $value, (array) $mainValue, --$rowRewriteLevel, $rewriteKeyName);
 							continue;
 						}
 
-						/* merge only 1st level*/
 						$mergeValue = array('mergeLevel' => (array) $value);
 						$mergeMainValue = array('mergeLevel' => (array) $mainValue);
 						$mergeRes = array_merge($mergeValue, $mergeMainValue);
@@ -158,20 +179,19 @@ class Util
 						continue;
 					}
 
-					//merge logic
-					if (!is_numeric($mainKey)){
+					/** merge logic */
+					if (!is_numeric($mainKey)) {
 						$array[$mainKey] = $mainValue;
 					}
 					elseif (!in_array($mainValue, $array)) {
 						$array[] = $mainValue;
-					}
-					//END: merge ligic
+					} /** END: merge logic */
 
 					break;
 				}
 			}
-			// add an item if key not found
-			if (!$found){
+			/** add an item if key not found */
+			if (!$found) {
 				$array[$mainKey] = $mainValue;
 			}
 
