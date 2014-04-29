@@ -782,7 +782,7 @@ abstract class Mapper implements IMapper
 				continue;
 			}
 			
-			$setArr[] = $this->toDb($field) . " = " . $this->quote($value);
+			$setArr[] = "`" . $this->toDb($field) . "` = " . $this->quote($value);
 		}
 		
 		if (count($setArr) == 0) {

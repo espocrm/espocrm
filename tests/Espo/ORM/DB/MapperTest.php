@@ -304,7 +304,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testUpdate()
 	{
-		$query = "UPDATE `post` SET name = 'test' WHERE post.id = '1' AND post.deleted = '0'";
+		$query = "UPDATE `post` SET `name` = 'test' WHERE post.id = '1' AND post.deleted = '0'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -317,7 +317,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testRemoveRelationHasMany()
 	{
-		$query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.id = '100'";
+		$query = "UPDATE `comment` SET `post_id` = NULL WHERE comment.deleted = '0' AND comment.id = '100'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -327,7 +327,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testRemoveAllHasMany()
 	{
-		$query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.post_id = '1'";
+		$query = "UPDATE `comment` SET `post_id` = NULL WHERE comment.deleted = '0' AND comment.post_id = '1'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -337,7 +337,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testRemoveRelationManyMany()
 	{
-		$query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
+		$query = "UPDATE `post_tag` SET `deleted` = 1 WHERE post_id = '1' AND tag_id = '100'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -347,7 +347,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testRemoveAllManyMany()
 	{
-		$query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1'";
+		$query = "UPDATE `post_tag` SET `deleted` = 1 WHERE post_id = '1'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -357,7 +357,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testRemoveRelationManyManyWithCondition()
 	{
-		$query = "UPDATE `entity_team` SET deleted = 1 WHERE entity_id = '1' AND team_id = '100' AND entity_type = 'Account'";
+		$query = "UPDATE `entity_team` SET `deleted` = 1 WHERE entity_id = '1' AND team_id = '100' AND entity_type = 'Account'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -367,7 +367,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testRemoveAllManyManyWithCondition()
 	{
-		$query = "UPDATE `entity_team` SET deleted = 1 WHERE entity_id = '1' AND entity_type = 'Account'";
+		$query = "UPDATE `entity_team` SET `deleted` = 1 WHERE entity_id = '1' AND entity_type = 'Account'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
@@ -377,7 +377,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testUnrelate()
 	{
-		$query = "UPDATE `post_tag` SET deleted = 1 WHERE post_id = '1' AND tag_id = '100'";
+		$query = "UPDATE `post_tag` SET `deleted` = 1 WHERE post_id = '1' AND tag_id = '100'";
 		$return = true;
 		$this->mockQuery($query, $return);
 
