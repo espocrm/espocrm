@@ -102,8 +102,10 @@
 		}		
 		
 		if (this.removeOnClose) {
-			this.$el.on('hidden.bs.modal', function () {
-				this.remove();
+			this.$el.on('hidden.bs.modal', function (e) {
+				if (this.$el.get(0) == e.target) {
+					this.remove();
+				}
 			}.bind(this));
 		}
 	}	
