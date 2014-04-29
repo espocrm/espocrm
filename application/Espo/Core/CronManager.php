@@ -147,7 +147,7 @@ class CronManager
 				}
 			} catch (\Exception $e) {
 				$isSuccess = false;
-				$GLOBALS['log']->info('Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
+				$GLOBALS['log']->error('Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
 			}
 
 			$status = $isSuccess ? 'Success' : 'Failed';
