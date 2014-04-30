@@ -169,6 +169,94 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertEquals($result, Util::merge($basicArr, $advArr, 1));
+		$this->assertEquals($result, Util::merge($basicArr, $advArr, array(1)));
+	}
+
+
+	public function testMergeLevel1WithMergeKeyName()
+	{
+		$basicArr = array(
+			'useCache' => 111,
+			'useCache1' => 111,
+			'sub' =>  array (
+				'subV' => '1111',
+				'subV1' => '1111',
+				'subO' => array(
+					'subOV' => '11111',
+					'subOV1' => '11111',
+					'subOT' => array(
+						'subOTT' => '11111',
+						'subOT1' => '11111',
+					),
+				),
+			),
+		);
+
+		$advArr = array(
+			'useCache' => 222,
+			'useCache2' => 222,
+			'sub' =>  array (
+				'subV' => '222222',
+				'subV2' => '222222',
+				'subO' => array(
+					'subOV' => '22222',
+					'subOV2' => '22222',
+					'subOT' => array(
+						'subOTT' => '22222',
+						'subOT2' => '22222',
+					),
+				),
+			),
+		);
+
+		$result = array (
+		  'useCache' => 222,
+		  'useCache1' => 111,
+		  'sub' =>
+		  array (
+			'subV' => '222222',
+			'subV1' => '1111',
+			'subO' =>
+			array (
+			  'subOV' => '22222',
+			  'subOV1' => '11111',
+			  'subOT' =>
+			  array (
+				'subOTT' => '22222',
+				'subOT1' => '11111',
+				'subOT2' => '22222',
+			  ),
+			  'subOV2' => '22222',
+			),
+			'subV2' => '222222',
+		  ),
+		  'useCache2' => 222,
+		);
+
+		$this->assertEquals($result, Util::merge($basicArr, $advArr, 1, 'useCache'));
+		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(1, 'useCache')) );
+
+		$result = array (
+		  'useCache' => 222,
+		  'useCache1' => 111,
+		  'sub' =>
+		  array (
+			'subV' => '222222',
+			'subV2' => '222222',
+			'subO' => array(
+				'subOV' => '22222',
+				'subOV2' => '22222',
+				'subOT' => array(
+					'subOTT' => '22222',
+					'subOT2' => '22222',
+				),
+			),
+		  ),
+		  'useCache2' => 222,
+		);
+
+		$this->assertEquals($result, Util::merge($basicArr, $advArr, 1, 'sub'));
+		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(1, 'sub')) );
 	}
 
 	public function testMergeLevel2()
@@ -212,25 +300,116 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		  'useCache1' => 111,
 		  'sub' =>
 		  array (
-		    'subV' => '222222',
-		    'subV1' => '1111',
-		    'subO' =>
-		    array (
-		      'subOV' => '22222',
-		      'subOV2' => '22222',
-		      'subOT' =>
-		      array (
-		        'subOTT' => '22222',
-		        'subOT2' => '22222',
-		      ),
-		    ),
-		    'subV2' => '222222',
+			'subV' => '222222',
+			'subV1' => '1111',
+			'subO' =>
+			array (
+			  'subOV' => '22222',
+			  'subOV2' => '22222',
+			  'subOT' =>
+			  array (
+				'subOTT' => '22222',
+				'subOT2' => '22222',
+			  ),
+			),
+			'subV2' => '222222',
 		  ),
 		  'useCache2' => 222,
 		);
 
 		$this->assertEquals($result, Util::merge($basicArr, $advArr, 2));
+		$this->assertEquals($result, Util::merge($basicArr, $advArr, array(2)));
 	}
+
+	public function testMergeLevel2WithMergeKeyName()
+	{
+		$basicArr = array(
+			'useCache' => 111,
+			'useCache1' => 111,
+			'sub' =>  array (
+				'subV' => '1111',
+				'subV1' => '1111',
+				'subO' => array(
+					'subOV' => '11111',
+					'subOV1' => '11111',
+					'subOT' => array(
+						'subOTT' => '11111',
+						'subOT1' => '11111',
+					),
+				),
+			),
+		);
+
+		$advArr = array(
+			'useCache' => 222,
+			'useCache2' => 222,
+			'sub' =>  array (
+				'subV' => '222222',
+				'subV2' => '222222',
+				'subO' => array(
+					'subOV' => '22222',
+					'subOV2' => '22222',
+					'subOT' => array(
+						'subOTT' => '22222',
+						'subOT2' => '22222',
+					),
+				),
+			),
+		);
+
+		$result = array (
+		  'useCache' => 222,
+		  'useCache1' => 111,
+		  'sub' =>
+		  array (
+			'subV' => '222222',
+			'subV1' => '1111',
+			'subO' =>
+			array (
+			  'subOV' => '22222',
+			  'subOV1' => '11111',
+			  'subOT' =>
+			  array (
+				'subOTT' => '22222',
+				'subOT1' => '11111',
+				'subOT2' => '22222',
+			  ),
+			  'subOV2' => '22222',
+			),
+			'subV2' => '222222',
+		  ),
+		  'useCache2' => 222,
+		);
+
+		$this->assertEquals($result, Util::merge($basicArr, $advArr, 2, 'subOV'));
+		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(2, 'subOV')) );
+
+		$result = array (
+		  'useCache' => 222,
+		  'useCache1' => 111,
+		  'sub' =>
+		  array (
+			'subV' => '222222',
+			'subV1' => '1111',
+			'subO' =>
+			array (
+			  'subOV' => '22222',
+			  'subOV2' => '22222',
+			  'subOT' =>
+			  array (
+				'subOTT' => '22222',
+				'subOT2' => '22222',
+			  ),
+			),
+			'subV2' => '222222',
+		  ),
+		  'useCache2' => 222,
+		);
+
+		$this->assertEquals($result, Util::merge($basicArr, $advArr, 2, 'subO'));
+		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(2, 'subO')) );
+	}
+
 
 	public function testMergeLevel3()
 	{
@@ -273,20 +452,20 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		  'useCache1' => 111,
 		  'sub' =>
 		  array (
-		    'subV' => '222222',
-		    'subV1' => '1111',
-		    'subO' =>
-		    array (
-		      'subOV' => '22222',
-		      'subOV1' => '11111',
-		      'subOT' =>
-		      array (
-		        'subOTT' => '22222',
-		        'subOT2' => '22222',
-		      ),
-		      'subOV2' => '22222',
-		    ),
-		    'subV2' => '222222',
+			'subV' => '222222',
+			'subV1' => '1111',
+			'subO' =>
+			array (
+			  'subOV' => '22222',
+			  'subOV1' => '11111',
+			  'subOT' =>
+			  array (
+				'subOTT' => '22222',
+				'subOT2' => '22222',
+			  ),
+			  'subOV2' => '22222',
+			),
+			'subV2' => '222222',
 		  ),
 		  'useCache2' => 222,
 		);
@@ -335,21 +514,21 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		  'useCache1' => 111,
 		  'sub' =>
 		  array (
-		    'subV' => '222222',
-		    'subV1' => '1111',
-		    'subO' =>
-		    array (
-		      'subOV' => '22222',
-		      'subOV1' => '11111',
-		      'subOT' =>
-		      array (
-		        'subOTT' => '22222',
-		        'subOT1' => '11111',
-		        'subOT2' => '22222',
-		      ),
-		      'subOV2' => '22222',
-		    ),
-		    'subV2' => '222222',
+			'subV' => '222222',
+			'subV1' => '1111',
+			'subO' =>
+			array (
+			  'subOV' => '22222',
+			  'subOV1' => '11111',
+			  'subOT' =>
+			  array (
+				'subOTT' => '22222',
+				'subOT1' => '11111',
+				'subOT2' => '22222',
+			  ),
+			  'subOV2' => '22222',
+			),
+			'subV2' => '222222',
 		  ),
 		  'useCache2' => 222,
 		);
