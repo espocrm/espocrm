@@ -124,8 +124,9 @@ class Util
 	 *                     	 	),
 	 *                     	),
 	 *                     )
-	 * @param $rewriteKeyName string  - Rewrite key name
-	 * @return array	 *
+	 * @param $rewriteKeyName string  - Rewrite key name. It is ignored if $rewriteLevel is NULL.
+	 *
+	 * @return array
 	 */
 	public static function merge($array, $mainArray, $rewriteLevel = null, $rewriteKeyName = null)
 	{
