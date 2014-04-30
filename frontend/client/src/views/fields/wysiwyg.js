@@ -57,6 +57,12 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		afterRender: function () {
 			Dep.prototype.afterRender.call(this);	
 			
+			var language = this.getSettings().get('language');
+			
+			if (!(language in $.summernote.lang)) {
+				$.summernote.lang[language] = this.getLanguage().translate('summernote', 'sets');
+			}
+			
 			if (this.mode == 'edit') {
 				if (this.model.get('isHtml')) {
 					this.enableWysiwygMode();
@@ -70,6 +76,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 				/*onblur: function (e) {
 					//this.model.set(this.name, this.$element.code());
 				}.bind(this),*/
+				lang: this.getSettings().get('language'),
 				onImageUpload: function (files, editor, welEditable) {
 					var file = files[0];
 					this.notify('Uploading...');					
