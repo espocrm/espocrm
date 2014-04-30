@@ -39,8 +39,8 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 					this.post();
 				} else if (e.keyCode == 9) {
 					$text = $(e.currentTarget)
-					if ($text.val() == '') {					
-						this.$el.find('.buttons-panel').addClass('hide');
+					if ($text.val() == '') {
+						this.disablePostingMode();				
 					}
 				}
 			},
@@ -61,10 +61,8 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 			this.$el.find('.buttons-panel').removeClass('hide');			
 			
 			if (!this.postingMode) {
-				$('body').on('click.stream-panel', function (e) {
-					var $element = $(e.toElement);
-					if (!$.contains(this.$el.get(0), e.toElement)) {					
-											
+				$('body').on('click.stream-panel', function (e) {					
+					if (!$.contains(this.$el.get(0), e.target)) {											
 						if (this.$textarea.val() == '') {
 							var attachmentsIds = this.seed.get('attachmentsIds');
 							if (!attachmentsIds.length) {
