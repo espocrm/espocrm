@@ -28,6 +28,8 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
 {
 	protected $fileManager;
 
+	protected $maxErrorMessageLength = 5000;
+
 	public function __construct($url, $level = Logger::DEBUG, $bubble = true)
 	{
 		parent::__construct($url, $level, $bubble);
@@ -50,7 +52,7 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
 		$this->errorMessage = null;
 
 		set_error_handler(array($this, 'customErrorHandler'));
-		$this->getFileManager()->appendContents($this->url, (string) $record['formatted']);
+		$this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
 		restore_error_handler();
 
 		if (isset($this->errorMessage)) {
@@ -61,6 +63,24 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
 	private function customErrorHandler($code, $msg)
 	{
 		$this->errorMessage = $msg;
+	}
+
+	/**
+	 * Cut the error message depends on maxErrorMessageLength
+	 *
+	 * @param  array  $record
+	 * @return string
+	 */
+	protected function pruneMessage(array $record)
+	{
+		$message = (string) $record['message'];
+
+		if (strlen($message) > $this->maxErrorMessageLength) {
+			$record['message'] = substr($message, 0, $this->maxErrorMessageLength) . '...';
+			$record['formatted'] = $this->getFormatter()->format($record);
+		}
+
+		return (string) $record['formatted'];
 	}
 
 }
