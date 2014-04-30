@@ -29,7 +29,7 @@ Espo.define('Views.About', 'View', function (Dep) {
 		
 		data: function () {
 			return {			
-				version: this.getSettings().get('version')
+				version: this.getConfig().get('version')
 			};
 		}
 

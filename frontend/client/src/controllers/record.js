@@ -56,7 +56,7 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 				var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
 				searchManager.loadStored();
 				collection.where = searchManager.getWhere();				
-				collection.maxSize = this.getSettings().get('recordsPerPage') || collection.maxSize;
+				collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
 				this.main(this.getViewName('list'), {
 					scope: this.name,

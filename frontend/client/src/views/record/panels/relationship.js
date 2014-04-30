@@ -79,7 +79,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 
 			this.wait(true);
 			this.getCollectionFactory().create(this.scope, function (collection) {			
-				collection.maxSize = this.getSettings().get('recordsPerPageSmall') || 5;
+				collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 			
 				collection.url = collection.urlRoot = url;
 				if (sortBy) {

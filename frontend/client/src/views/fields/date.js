@@ -88,7 +88,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					todayHighlight: true,
 				};
 				
-				var language = this.getSettings().get('language');
+				var language = this.getConfig().get('language');
 				
 				if (!(language in $.fn.datepicker.dates)) {
 					$.fn.datepicker.dates[language] = {

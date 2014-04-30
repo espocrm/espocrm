@@ -58,7 +58,7 @@ _.extend(Espo.Controller.prototype, {
 	
 	initialize: function () {},
 	
-	getSettings: function () {
+	getConfig: function () {
 		return this._settings;
 	},
 	

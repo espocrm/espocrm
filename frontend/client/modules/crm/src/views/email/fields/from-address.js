@@ -38,8 +38,8 @@ Espo.define('Crm:Views.Email.Fields.FromAddress', 'Views.Fields.Base', function 
 				this.list.push(this.getUser().get('emailAddress'));
 			}
 			
-			if (this.getSettings().get('outboundEmailIsShared') && this.getSettings().get('outboundEmailFromAddress')) {
-				this.list.push(this.getSettings().get('outboundEmailFromAddress'));
+			if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
+				this.list.push(this.getConfig().get('outboundEmailFromAddress'));
 			}
 		},
 	});

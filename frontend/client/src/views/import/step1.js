@@ -62,7 +62,7 @@ Espo.define('Views.Import.Step1', 'View', function (Dep) {
 		data: function () {
 			return {
 				entityList: this.getEntityList(),
-				currencyList: this.getSettings().get('currencyList'),
+				currencyList: this.getConfig().get('currencyList'),
 			};
 		},
 		

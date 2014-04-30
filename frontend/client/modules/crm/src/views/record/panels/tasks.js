@@ -119,7 +119,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 				collection.where = this.where;
 				collection.sortBy = this.sortBy;
 				collection.asc = this.asc;
-				collection.maxSize = this.getSettings().get('recordsPerPageSmall') || 5;
+				collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
 				this.listenToOnce(this.collection, 'sync', function () {
 					this.createView('list', 'Record.ListExpanded', {

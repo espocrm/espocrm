@@ -39,15 +39,15 @@ Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
 			if (this.getPreferences().has('decimalMark')) {
 				this.decimalMark = this.getPreferences().get('decimalMark') 
 			} else {
-				if (this.getSettings().has('decimalMark')) {
-					this.decimalMark = this.getSettings().get('decimalMark') 
+				if (this.getConfig().has('decimalMark')) {
+					this.decimalMark = this.getConfig().get('decimalMark') 
 				}
 			}				
 			if (this.getPreferences().has('thousandSeparator')) {
 				this.thousandSeparator = this.getPreferences().get('thousandSeparator') 
 			} else {
-				if (this.getSettings().has('thousandSeparator')) {
-					this.thousandSeparator = this.getSettings().get('thousandSeparator') 
+				if (this.getConfig().has('thousandSeparator')) {
+					this.thousandSeparator = this.getConfig().get('thousandSeparator') 
 				}
 			}
 		},

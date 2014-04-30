@@ -27,7 +27,7 @@ Espo.define('Controllers.Preferences', 'Controllers.Record', function (Dep) {
 		
 		getModel: function (callback) {		
 			var model = new Espo['Models.Preferences']();
-			model.settings = this.getSettings();
+			model.settings = this.getConfig();
 			model.defs = this.getMetadata().get('entityDefs.Preferences');			
 			callback.call(this, model);
 		},	

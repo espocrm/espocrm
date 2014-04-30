@@ -69,7 +69,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 				}
 			}.bind(this));
 
-			this.tabs = this.getSettings().get('tabList').filter(function (scope) {
+			this.tabs = this.getConfig().get('tabList').filter(function (scope) {
 				if (this.getMetadata().get('scopes.' + scope + '.acl')) {
 					return this.getAcl().check(scope);
 				}
@@ -77,7 +77,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 			}, this);
 						
 
-			this.quickCreateList = this.getSettings().get('quickCreateList').filter(function (scope) {
+			this.quickCreateList = this.getConfig().get('quickCreateList').filter(function (scope) {
 				if (this.getMetadata().get('scopes.' + scope + '.acl')) {
 					return this.getAcl().check(scope, 'edit');
 				}

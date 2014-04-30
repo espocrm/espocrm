@@ -57,7 +57,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		afterRender: function () {
 			Dep.prototype.afterRender.call(this);	
 			
-			var language = this.getSettings().get('language');
+			var language = this.getConfig().get('language');
 			
 			if (!(language in $.summernote.lang)) {
 				$.summernote.lang[language] = this.getLanguage().translate('summernote', 'sets');
@@ -76,7 +76,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 				/*onblur: function (e) {
 					//this.model.set(this.name, this.$element.code());
 				}.bind(this),*/
-				lang: this.getSettings().get('language'),
+				lang: this.getConfig().get('language'),
 				onImageUpload: function (files, editor, welEditable) {
 					var file = files[0];
 					this.notify('Uploading...');					
@@ -95,7 +95,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 								attachment.set('global', true);
 								attachment.set('size', file.size);
 								attachment.once('sync', function () {
-									var url = this.getSettings().get('siteUrl') + '?entryPoint=image&id=' + attachment.id;
+									var url = this.getConfig().get('siteUrl') + '?entryPoint=image&id=' + attachment.id;
 									editor.insertImage(welEditable, url);
 									this.notify(false);
 								}, this);						

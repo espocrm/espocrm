@@ -102,7 +102,7 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 			
 				this.collection = collection;
 				collection.url = this.model.name + '/' + this.model.id + '/stream';
-				collection.maxSize = this.getSettings().get('recordsPerPageSmall') || 5;
+				collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 			
 				callback();				
 			}, this);

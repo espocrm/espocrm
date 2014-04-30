@@ -43,7 +43,7 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
 			Dep.prototype.setup.call(this);
 			this.currencyFieldName = this.name + 'Currency';
 			
-			var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getSettings().get('defaultCurrency');
+			var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getConfig().get('defaultCurrency');
 		
 			this.listenTo(this.model, 'change:' + this.currencyFieldName, function () {
 				this.currencyValue = this.model.get(this.currencyFieldName);
@@ -56,7 +56,7 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
 		},
 		
 		updateCurrency: function () {
-			this.currencyList = this.getSettings().get('currencyList') || ['USD', 'EUR'];	
+			this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];	
 			var currencyOptions = '';
 			this.currencyList.forEach(function (code) {
 				currencyOptions += '<option value="' + code + '"' + ((this.currencyValue == code) ? ' selected' : '') + '>' + code + '</option>';

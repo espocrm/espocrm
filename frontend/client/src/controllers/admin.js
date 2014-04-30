@@ -52,8 +52,8 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 		},	
 		
 		getSettingsModel: function () {
-			var model = this.getSettings().clone();
-			model.defs = this.getSettings().defs;
+			var model = this.getConfig().clone();
+			model.defs = this.getConfig().defs;
 		
 			return model;
 		},

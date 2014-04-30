@@ -60,7 +60,7 @@
 			}
 		},
 
-		getSettings: function () {
+		getConfig: function () {
 			if (this._helper) {
 				return this._helper.settings;
 			}
@@ -133,7 +133,7 @@
 		},
 
 		updatePageTitle: function () {
-			var title = this.getSettings().get('applicationTitle') || 'EspoCRM';
+			var title = this.getConfig().get('applicationTitle') || 'EspoCRM';
 			this.setPageTitle(title);
 		},
 

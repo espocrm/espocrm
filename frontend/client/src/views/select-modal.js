@@ -91,7 +91,7 @@ Espo.define('Views.SelectModal', 'Views.Modal', function (Dep) {
 			Espo.require('SearchManager', function (SearchManager) {									
 				this.getCollectionFactory().create(this.scope, function (collection) {
 						
-					collection.maxSize = this.getSettings().get('recordsPerPageSmall') || 5;
+					collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 					
 					var searchManager = new SearchManager(collection, 'listSelect', this.getStorage(), this.getDateTime());							
 					this.createView('search', 'Record.Search', {
