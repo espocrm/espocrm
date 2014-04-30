@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,27 +19,41 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('Crm:Views.InboundEmail.Modals.SelectFolder', 'Views.Modal', function (Dep) {
 
-class InboundEmail extends \Espo\Core\Controllers\Record
-{
-	protected function checkGlobalAccess()
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
-	}
+	return Dep.extend({
 	
-	public function actionGetFolders($params, $data, $request)
-	{
-		return $this->getRecordService()->getFolders(array(
-			'host' => $request->get('host'),
-			'port' => $request->get('port'),
-			'ssl' => $request->get('ssl'),
-			'username' => $request->get('username'),
-			'password' => $request->get('password'),
-		));
+		cssName: 'select-folder-modal',
+		
+		template: 'crm:inbound-email.modals.select-folder',
+		
+		data: function () {
+			return {
+				folders: this.options.folders,
+			};
+		},
+		
+		events: {
+			'click button[data-action="select"]': function (e) {
+				var value = $(e.currentTarget).data('value');
+				this.trigger('select', value);
+			},
+		},
+		
+		setup: function () {
+					
+			this.buttons = [
+				{
+					name: 'cancel',
+					label: 'Cancel',
+					onClick: function (dialog) {
+						dialog.close();
+					}
+				} 
+			];			
 
-	}
+		},
 
-}
+	});
+});
+

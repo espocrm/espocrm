@@ -46,12 +46,37 @@ class InboundEmail extends \Espo\Services\Record
 	
 	protected function findFolder($storage, $path)
 	{
-		$arr = explode('.', $path);
+		$arr = explode('/', $path);
 		$pointer = $storage->getFolders();
 		foreach ($arr as $folderName) {
 			$pointer = $pointer->$folderName;
 		}
 		return $pointer;
+	}
+	
+	public function getFolders($params)
+	{		
+		
+		$imapParams = array(
+			'host' => $params['host'],
+			'port' => $params['port'],
+			'user' => $params['username'],
+			'password' => $params['password'],
+		);
+		
+		if (!empty($params['ssl'])) {
+			$imapParams['ssl'] = 'SSL';
+		}	
+		
+		$foldersArr = array();	
+	
+		$storage = new \Zend\Mail\Storage\Imap($imapParams);	
+		
+		$folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
+		foreach ($folders as $name => $folder) {		
+			$foldersArr[] =  $folder->getGlobalName();
+		}
+		return $foldersArr;
 	}
 	
 	public function fetchFromMailServer($id)
@@ -74,10 +99,6 @@ class InboundEmail extends \Espo\Services\Record
 		}
 		
 		$storage = new \Zend\Mail\Storage\Imap($imapParams);
-		
-		if (empty($storage)) {
-			throw new Error("Could not connect to IMAP of Inbound Email {$inboundEmail->id}.");
-		}
 		
 		$trash = null;
 		$trashFolder = $inboundEmail->get('trashFolder');

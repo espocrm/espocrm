@@ -30,12 +30,13 @@
         "monitoredFolders": {
             "type": "varchar",
             "required": true,
-            "default": "INBOX"
+            "default": "INBOX",
+            "view": "Crm:InboundEmail.Fields.Folders"
         },
         "trashFolder": {
             "type": "varchar",
             "required": true,
-            "default": "INBOX.Trash"        
+            "view": "Crm:InboundEmail.Fields.Folder"
         },
         "assignToUser": {
             "type": "link"

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,27 +19,22 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('Crm:Views.InboundEmail.Fields.Folders', 'Crm:Views.InboundEmail.Fields.Folder', function (Dep) {
 
-class InboundEmail extends \Espo\Core\Controllers\Record
-{
-	protected function checkGlobalAccess()
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
-	}
-	
-	public function actionGetFolders($params, $data, $request)
-	{
-		return $this->getRecordService()->getFolders(array(
-			'host' => $request->get('host'),
-			'port' => $request->get('port'),
-			'ssl' => $request->get('ssl'),
-			'username' => $request->get('username'),
-			'password' => $request->get('password'),
-		));
-
-	}
-
-}
+	return Dep.extend({		
+		
+		addFolder: function (folder) {			
+			var value = this.$element.val();
+			
+			var folders = [];			
+			if (value != '') {
+				folders = value.split(',');
+			}
+			
+			if (!~folders.indexOf(folder)) {
+				folders.push(folder);	
+			}
+			this.$element.val(folders.join(','));
+		},
+	});	
+});
