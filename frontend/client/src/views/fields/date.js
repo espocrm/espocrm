@@ -86,7 +86,29 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					weekStart: this.getDateTime().weekStart,
 					autoclose: true,
 					todayHighlight: true,
-				};					
+				};
+				
+				var language = this.getSettings().get('language');
+				
+				if (!(language in $.fn.datepicker.dates)) {
+					$.fn.datepicker.dates[language] = {
+						days: this.translate('dayNames', 'lists'),
+						daysShort: this.translate('dayNamesShort', 'lists'),
+						daysMin: this.translate('dayNamesMin', 'lists'),
+						months: this.translate('monthNames', 'lists'),
+						monthsShort: this.translate('monthNamesShort', 'lists'),
+						today: this.translate('Today'),
+						clear: this.translate('Clear'),
+					};
+				}
+			
+				var options = {
+					format: this.getDateTime().dateFormat.toLowerCase(),
+					weekStart: this.getDateTime().weekStart,
+					autoclose: true,
+					todayHighlight: true,
+					language: language
+				};			
 				
 				this.$element.datepicker(options);
 				
