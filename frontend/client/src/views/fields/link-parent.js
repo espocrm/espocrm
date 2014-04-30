@@ -75,7 +75,7 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 			if (this.mode != 'list') {
 				this.addActionHandler('selectLink', function () {
 					Espo.Ui.notify('Loading...');
-					this.createView('dialog', 'SelectModal', {scope: this.foreignScope}, function (dialog) {						
+					this.createView('dialog', 'Modals.SelectRecords', {scope: this.foreignScope}, function (dialog) {						
 						dialog.render();
 						Espo.Ui.notify(false);
 						dialog.once('select', function (model) {

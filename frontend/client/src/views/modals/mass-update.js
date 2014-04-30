@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.MassUpdate', 'Views.Modal', function (Dep) {
+Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Views.MassUpdate', 'Views.Modal', function (Dep) {
 
 		header: false,
 
-		template: 'mass-update',
+		template: 'modals.mass-update',
 
 		data: function () {
 			return {

@@ -167,7 +167,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
 			this.notify('Loading...');
 			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'EditModal', {
+				this.createView('quickCreate', 'Modals.Edit', {
 					scope: scope,
 					relate: {
 						model: this.model,
@@ -191,7 +191,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			var self = this;
 
 			this.notify('Loading...');
-			this.createView('dialog', 'SelectModal', {
+			this.createView('dialog', 'Modals.SelectRecords', {
 				scope: scope,
 				multiple: true,
 				createButton: false,

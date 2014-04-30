@@ -186,7 +186,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 
 			this.notify('Loading...');
 			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'EditModal', {
+				this.createView('quickCreate', 'Modals.Edit', {
 					scope: scope,
 					relate: {
 						model: this.model,
@@ -220,7 +220,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 
 			this.notify('Loading...');
 			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'ComposeEmail', {
+				this.createView('quickCreate', 'Modals.ComposeEmail', {
 					relate: relate,
 					attributes: {
 						status: 'Draft',

@@ -130,7 +130,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 
 			this.notify('Loading...');
 			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'EditModal', {
+				this.createView('quickCreate', 'Modals.Edit', {
 					scope: scope,
 					relate: relate,
 					attributes: {

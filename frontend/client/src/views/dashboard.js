@@ -29,7 +29,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
 		
 		events: {
 			'click button.add-dashlet': function () {
-				this.createView('addDashlet', 'AddDashlet', {}, function (view) {
+				this.createView('addDashlet', 'Modals.AddDashlet', {}, function (view) {
 					view.render();
 				});
 			},

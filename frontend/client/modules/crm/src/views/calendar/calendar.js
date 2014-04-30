@@ -211,7 +211,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 										
 					
 					this.notify('Loading...');
-					this.createView('quickEdit', 'Crm:Calendar.Edit', {
+					this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
 						attributes: {
 							dateStart: dateStart,
 							dateEnd: dateEnd,
@@ -224,7 +224,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				}.bind(this),
 				eventClick: function (event) {
 					this.notify('Loading...');
-					this.createView('quickEdit', 'Crm:Calendar.Edit', {
+					this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
 						scope: event.scope,
 						id: event.recordId
 					}, function (view) {

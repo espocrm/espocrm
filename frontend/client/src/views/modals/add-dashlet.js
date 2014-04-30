@@ -19,34 +19,31 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.DuplicateModal', 'Views.Modal', function (Dep) {
+
+Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
 
-		cssName: 'duplicate-modal',
+		cssName: 'add-dashlet',
 
-		header: false,
-
-		template: 'duplicate-modal',
+		template: 'modals.add-dashlet',
 
 		data: function () {
 			return {
-				scope: this.scope,
-				duplicates: this.duplicates
+				dashletList: this.dashletList,
 			};
+		},
+
+		events: {
+			'click button.add': function (e) {
+				var name = $(e.currentTarget).data('name');
+				this.getParentView().addDashlet(name);					
+				this.close();
+			},
 		},
 
 		setup: function () {
 			this.buttons = [
-				{
-					name: 'save',
-					label: 'Save',
-					style: 'danger',
-					onClick: function (dialog) {						
-						this.trigger('save');
-						dialog.close();						
-					}.bind(this),
-				},
 				{
 					name: 'cancel',
 					label: 'Cancel',
@@ -55,10 +52,12 @@ Espo.define('Views.DuplicateModal', 'Views.Modal', function (Dep) {
 					}
 				}
 			];
-			this.scope = this.options.scope;
-			this.duplicates = this.options.duplicates;
+			
+			this.header = this.translate('Add Dashlet');
+			
+			this.dashletList = Object.keys(this.getMetadata().get('dashlets') || {});				
 		},
-
 	});
 });
+
 

@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Calendar.Edit', 'Views.EditModal', function (Dep) {
+Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep) {
 
 	return Dep.extend({
 
-		template: 'crm:calendar.edit',
+		template: 'crm:calendar.modals.edit',
 
 		scopeList: [
 			'Meeting',

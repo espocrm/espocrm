@@ -210,7 +210,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
 					this.notify('Loading...');
 					var ids = this.checkedList;
-					this.createView('massUpdate', 'MassUpdate', {
+					this.createView('massUpdate', 'Modals.MassUpdate', {
 						scope: this.scope,
 						ids: ids,
 						where: this.collection.where
@@ -666,7 +666,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		
 		quickEdit: function (id) {
 			this.notify('Loading...');
-			this.createView('quickEdit', 'EditModal', {
+			this.createView('quickEdit', 'Modals.Edit', {
 				scope: this.scope,
 				id: id
 			}, function (view) {

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.EditModal', 'Views.Modal', function (Dep) {
+Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Views.EditModal', 'Views.Modal', function (Dep) {
 
 		header: false,
 
-		template: 'edit-modal',
+		template: 'modals.edit',
 		
 		saveButton: true,
 		

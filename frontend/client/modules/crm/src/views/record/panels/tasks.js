@@ -146,7 +146,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
 			this.notify('Loading...');
 			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'EditModal', {
+				this.createView('quickCreate', 'Modals.Edit', {
 					scope: scope,
 					relate: {
 						model: this.model,

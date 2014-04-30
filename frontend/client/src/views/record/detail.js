@@ -485,7 +485,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		},
 		
 		showDuplicate: function (duplicates) {
-			this.createView('duplicate', 'DuplicateModal', {
+			this.createView('duplicate', 'Modals.Duplicate', {
 				scope: this.scope,
 				duplicates: duplicates,
 			}, function (view) {

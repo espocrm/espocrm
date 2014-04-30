@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.SelectModal', 'Views.Modal', function (Dep) {
+Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
 	
@@ -29,7 +29,7 @@ Espo.define('Views.SelectModal', 'Views.Modal', function (Dep) {
 		
 		header: false,
 		
-		template: 'select-modal',
+		template: 'modals.select-records',
 		
 		createButton: true,
 		
@@ -129,7 +129,7 @@ Espo.define('Views.SelectModal', 'Views.Modal', function (Dep) {
 			var self = this;
 			
 			this.notify('Loading...');
-			this.createView('quickCreate', 'EditModal', {
+			this.createView('quickCreate', 'Modals.Edit', {
 				scope: this.scope,
 				fullFormButton: false,
 			}, function (view) {

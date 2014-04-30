@@ -51,7 +51,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 				e.preventDefault();
 				var scope = $(e.currentTarget).data('name');
 				this.notify('Loading...');
-				this.createView('quickCreate', 'EditModal', {scope: scope}, function (view) {
+				this.createView('quickCreate', 'Modals.Edit', {scope: scope}, function (view) {
 					view.once('after:render', function () {
 						this.notify(false);
 					});

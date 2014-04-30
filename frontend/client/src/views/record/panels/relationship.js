@@ -132,7 +132,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 
 		actionEditRelated: function (id) {
 			this.notify('Loading...');
-			this.createView('quickEdit', 'EditModal', {
+			this.createView('quickEdit', 'Modals.Edit', {
 				scope: this.collection.get(id).name,
 				id: id
 			}, function (view) {
