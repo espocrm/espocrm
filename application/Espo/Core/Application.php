@@ -113,7 +113,7 @@ class Application
 			try {
 				$entryPointManager->run($entryPoint);
 			} catch (\Exception $e) {
-				$container->get('output')->processError($e->getMessage(), $e->getCode());
+				$container->get('output')->processError($e->getMessage(), $e->getCode(), true);
 			}
 		});
 
