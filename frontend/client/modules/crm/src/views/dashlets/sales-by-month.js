@@ -87,7 +87,7 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 		
 		drow: function () {
 			var self = this;
-			Flotr.draw(this.$container.get(0), this.chartData, {
+			this.flotr.draw(this.$container.get(0), this.chartData, {
 				shadowSize: false,
 				bars: {
 					show: true,

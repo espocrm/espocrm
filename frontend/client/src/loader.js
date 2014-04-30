@@ -26,6 +26,8 @@
 	Espo.Loader = function (cache) {
 		this.cache = cache || null;
 		this._loadCallbacks = {};
+		
+		this.pathsBeingLoaded = {};
 	}
 
 	_.extend(Espo.Loader.prototype, {
@@ -135,54 +137,143 @@
 			}
 			this._loadCallbacks[name].push(callback);			
 		},
+		
 
-		load: function (name, callback, error) {
+		
+		dataLoaded: {},
+		
+		libUrls: {
+			'Flotr': 'client/modules/crm/lib/flotr2.min.js'
+		},
+		
+		loadResource: function (name, callback) {
+		
+		},
+		
+		
 
-			if (!name || name == '') {
-				throw new Error("Can not load empty class name");
-			}
-
-			var c = this._getClass(name);
+		load: function (name, callback, error) {		
+			var dataType, type, path, fetchObject;
 			
-			if (c) {
-				callback(c);
-				return;
-			}
-
-			if (this.cache) {
-				var script = this.cache.get('script', name);
-				if (script) {					
-					this._execute(script);
-
-					var c = this._getClass(name);
-					if (c) {
-						callback(c);						
+			var realName = name;	
+						
+			
+			if (name.indexOf('lib!') === 0) {
+				
+				dataType = 'script';
+				type = 'lib';				
+										
+				realName = name.substr(4);				
+				path = realName;
+				
+				if (realName in this.libUrls) {
+					path = this.libUrls[realName];
+				}
+				
+				fetchObject = function (name) {
+					if (name in root) {
+						return root[name];
 					}
-					this._addLoadCallback(name, callback);
+				}
+				
+			} else if (name.indexOf('res!') === 0) {
+				dataType = 'text';
+				type = 'res';
+			
+				realName = name.substr(4);				
+				path = realName;			
+			} else {
+				dataType = 'script';			
+				type = 'class';
+				
+				if (!name || name == '') {
+					throw new Error("Can not load empty class name");
+				}
+
+				var c = this._getClass(name);
+			
+				if (c) {
+					callback(c);
+					return;
+				}
+
+				path = this._nameToPath(name);				
+			}
+			
+			if (name in this.dataLoaded) {
+				callback(this.dataLoaded[name]);
+				return;
+			} 
+			
+			if (this.cache) {
+				var cached = this.cache.get(type, name);
+				if (cached) {	
+					if (dataType == 'script') {
+						this._execute(cached);
+					}
+					if (type == 'class') {
+						var c = this._getClass(name);
+						if (c) {
+							callback(c);
+							return;						
+						}
+						this._addLoadCallback(name, callback);
+					} else {
+						var d = cached;
+						if (typeof fetchObject == 'function') {
+							d = fetchObject(realName, cached);
+						}
+						this.dataLoaded[name] = d;
+						callback(d);
+					}
+					
 					return;
 				}
 			}
-
-			var path = this._nameToPath(name);
+			
+			
+			
+			if (path in this.pathsBeingLoaded) {
+				this._addLoadCallback(name, callback);
+				return;
+			}
+			this.pathsBeingLoaded[path] = true;
+			
+			if (type == 'res') {
+				console.log(path);
+			}
+			
 
 			$.ajax({
 				type: 'GET',
 				cache: false,
-				dataType: 'text',
+				dataType: dataType,
 				local: true,
 				url: path,
-				success: function (script) {
+				success: function (response) {
 					if (this.cache) {
-						this.cache.set('script', name, script);
+						this.cache.set(type, name, response);
 					}
 
-					this._addLoadCallback(name, callback);					
-					this._execute(script);
+					this._addLoadCallback(name, callback);
+					
+					if (dataType == 'script') {					
+						this._execute(response);
+					}
 
 					// TODO remove this and use define for all classes
-					var c = this._getClass(name);
-					if (c && typeof c === 'function') {
-						this._executeLoadCallback(name, c);
+					if (type == 'class') {
+						var c = this._getClass(name);
+						if (c && typeof c === 'function') {
+							this._executeLoadCallback(name, c);
+						}
+					} else {
+						var d = response;
+						if (typeof fetchObject == 'function') {
+							d = fetchObject(realName, response);
+						}
+						this.dataLoaded[name] = d;						
+						callback(d);					
 					}
 					return;
 				}.bind(this),
@@ -194,6 +285,7 @@
 				}
 			});
 		},
+		
 		
 		loadLib: function (url, callback) {
 			if (this.cache) {

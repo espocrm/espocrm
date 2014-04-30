@@ -139,7 +139,7 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 		
 		drow: function () {
 			var self = this;
-			Flotr.draw(this.$container.get(0), this.chartData, {
+			this.flotr.draw(this.$container.get(0), this.chartData, {
 				colors: this.colors,
 				shadowSize: false,
 				lines: {

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Dashlets.Abstract.Chart', 'Views.Dashlets.Abstract.Base', function (Dep) {
+Espo.define('Crm:Views.Dashlets.Abstract.Chart', ['Views.Dashlets.Abstract.Base','lib!Flotr'], function (Dep, Flotr) {
 
 	return Dep.extend({
 	
@@ -34,14 +34,7 @@ Espo.define('Crm:Views.Dashlets.Abstract.Chart', 'Views.Dashlets.Abstract.Base',
 		init: function () {
 			Dep.prototype.init.call(this);
 			
-			if (!('Flotr' in window)) {
-				this.addReadyCondition(function () {
-					return ('Flotr' in window);
-				});
-				Espo.loadLib('client/modules/crm/lib/flotr2.min.js', function () {
-					this.tryReady();
-				}.bind(this));
-			}
+			this.flotr = Flotr;			
 			
 			if (this.getPreferences().has('decimalMark')) {
 				this.decimalMark = this.getPreferences().get('decimalMark') 

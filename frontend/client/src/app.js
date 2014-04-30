@@ -251,6 +251,8 @@ _.extend(Espo.App.prototype, {
 		this._viewLoader = function (viewName, callback) {
 			this.loader.load(Espo.Utils.composeViewClassName(viewName), callback);
 		}.bind(this);
+		
+		var self = this;
 
 		this._viewFactory = new Bull.Factory({
 			useCache: this.useCache,
@@ -288,6 +290,12 @@ _.extend(Espo.App.prototype, {
 					}
 					return path;
 				},
+				loaders: {
+					'template': function (name, callback) {
+						var path = this.getFilePath('template', name);
+						self.loader.load('res!'	+ path, callback);				
+					}
+				} 
 			}
 		});
 	},

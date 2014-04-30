@@ -79,7 +79,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 		
 		drow: function () {
 			var self = this;
-			Flotr.draw(this.$container.get(0), this.chartData, {
+			this.flotr.draw(this.$container.get(0), this.chartData, {
 				colors: this.colors,
 				shadowSize: false,
 				bars: {
