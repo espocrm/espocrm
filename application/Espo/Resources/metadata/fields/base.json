@@ -1,4 +1,10 @@
 {
+   "params":[
+      {
+         "name":"required",
+         "type":"bool"
+      }
+   ],
    "search":{
       "basic":false,
       "advanced":false
