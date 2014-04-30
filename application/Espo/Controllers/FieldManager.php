@@ -28,7 +28,7 @@ use \Espo\Core\Exceptions\Error,
 
 class FieldManager extends \Espo\Core\Controllers\Base
 {
-	protected function checkGlobalAccess()
+	protected function checkControllerAccess()
 	{
 		if (!$this->getUser()->isAdmin()) {
 			throw new Forbidden();

@@ -24,7 +24,7 @@ namespace Espo\Modules\Crm\Controllers;
 
 class InboundEmail extends \Espo\Core\Controllers\Record
 {
-	protected function checkGlobalAccess()
+	protected function checkControllerAccess()
 	{
 		if (!$this->getUser()->isAdmin()) {
 			throw new Forbidden();

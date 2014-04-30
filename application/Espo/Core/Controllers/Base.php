@@ -46,10 +46,10 @@ abstract class Base
 			$this->name = $name;
     	}
     	
-    	$this->checkGlobalAccess();
+    	$this->checkControllerAccess();
 	}
 	
-	protected function checkGlobalAccess()
+	protected function checkControllerAccess()
 	{
 		return;
 	}
