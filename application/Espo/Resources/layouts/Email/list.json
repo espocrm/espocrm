@@ -1,0 +1,6 @@
+[
+	{"name":"name","width":30,"link":true},
+	{"name":"dateSent"},
+	{"name":"from"},
+	{"name":"status"}
+]
