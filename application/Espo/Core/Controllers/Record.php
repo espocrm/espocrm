@@ -29,6 +29,7 @@ use \Espo\Core\Utils\Util;
 
 class Record extends Base
 {
+	const MAX_SIZE_LIMIT = 200;
 	
 	public static $defaultAction = 'list';	
 	
@@ -108,6 +109,10 @@ class Record extends Base
 		$asc = $request->get('asc') === 'true';
 		$sortBy = $request->get('sortBy');
 		$q = $request->get('q');
+		
+		if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
+			throw new Forbidden();
+		}
 
 		$result = $this->getRecordService()->findEntities(array(
 			'where' => $where,
@@ -134,7 +139,11 @@ class Record extends Base
 		$maxSize = $request->get('maxSize');
 		$asc = $request->get('asc') === 'true';
 		$sortBy = $request->get('sortBy');
-		$q = $request->get('q');	
+		$q = $request->get('q');
+		
+		if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
+			throw new Forbidden();
+		}	
 
 		$result = $this->getRecordService()->findLinkedEntities($id, $link, array(
 			'where' => $where,
