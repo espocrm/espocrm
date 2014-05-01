@@ -32,7 +32,7 @@
 		"detail": "Detail",
 		"listSmall": "List (Small)",
 		"detailSmall": "Detail (Small)",
-		"filtersAdvanced": "Search Filters",
+		"filters": "Search Filters",
 		"massUpdate": "Mass Update",
 		"relationships": "Relationships"
 	},

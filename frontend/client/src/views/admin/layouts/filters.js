@@ -83,7 +83,11 @@ Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function 
 		
 		checkFieldType: function (type) {
 			var params = this.getFieldManager().getSearchParams(type) || {};
-			return params.basic;
+			return params.advanced;
+		},
+		
+		validate: function () {
+			return true;
 		},					
 	});
 });

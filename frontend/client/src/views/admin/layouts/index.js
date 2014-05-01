@@ -27,7 +27,7 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
 		scopeList: null,
 
-		typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filtersAdvanced', 'massUpdate', 'relationships'],
+		typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships'],
 
 		scope: null,
 
