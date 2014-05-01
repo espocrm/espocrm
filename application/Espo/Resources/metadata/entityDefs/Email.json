@@ -16,7 +16,13 @@
             "type": "varchar",
             "db": false,
             "required": true
-        },        
+        }, 
+        "fromEmailAddress": {
+            "type": "link"
+        },
+        "toEmailAddresses": {
+            "type": "linkMultiple"
+        }, 
         "to": {
             "type": "varchar",
             "db": false,

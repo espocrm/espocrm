@@ -12,7 +12,9 @@
 		"body": "Body",
 		"subject": "Subject",
 		"attachments": "Attachments",
-		"selectTemplate": "Select Template"
+		"selectTemplate": "Select Template",
+		"fromEmailAddress": "Email From",
+		"toEmailAddresses": "Email To"
 	},
 	"links": {
 	},

@@ -212,6 +212,11 @@ class Acl
 			'edit' => 'own',
 			'delete' => 'own',					
 		);
+		$this->data['EmailAddress'] = array(
+			'read' => 'all',
+			'edit' => 'no',
+			'delete' => 'no',					
+		);
 	}
 
 	private function merge($tables)
