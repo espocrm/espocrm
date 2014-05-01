@@ -39,6 +39,8 @@
 		godClass: Espo,
 
 		_loadCallbacks: null,
+		
+		libsConfigUrl: 'client/cfg/libs.json',
 
 		_getClass: function (name) {			
 			if (name in this.godClass) {
@@ -138,41 +140,39 @@
 			this._loadCallbacks[name].push(callback);			
 		},
 		
-
-		
 		dataLoaded: {},
 		
 		libUrls: {
 			'Flotr': 'client/modules/crm/lib/flotr2.min.js'
 		},
 		
-		loadResource: function (name, callback) {
-		
-		},
-		
-		
-
 		load: function (name, callback, error) {		
-			var dataType, type, path, fetchObject;
+			var dataType, type, path, fetchObject;			
+			var realName = name;
 			
-			var realName = name;	
-						
-			
-			if (name.indexOf('lib!') === 0) {
-				
+			if (name.indexOf('lib!') === 0) {				
 				dataType = 'script';
 				type = 'lib';				
 										
 				realName = name.substr(4);				
 				path = realName;
 				
-				if (realName in this.libUrls) {
-					path = this.libUrls[realName];
+				var exportsTo = 'window';
+				var exportsAs = realName;
+				
+				if (realName in this.libsConfig) {
+					path = this.libsConfig[realName].path || path;
+					exportsTo = this.libsConfig[realName].exportsTo || exportsTo;
+					exportsAs = this.libsConfig[realName].exportsAs || exportsAs;
 				}
 				
-				fetchObject = function (name) {
-					if (name in root) {
-						return root[name];
+				fetchObject = function (name, d) {					
+					var from = Espo.Libs;
+					if (exportsTo == 'window') {
+						from = root;
+					}
+					if (exportsAs in from) {
+						return from[exportsAs];
 					}
 				}
 				
@@ -190,8 +190,7 @@
 					throw new Error("Can not load empty class name");
 				}
 
-				var c = this._getClass(name);
-			
+				var c = this._getClass(name);			
 				if (c) {
 					callback(c);
 					return;
@@ -229,20 +228,13 @@
 					
 					return;
 				}
-			}
-			
-			
+			}			
 			
 			if (path in this.pathsBeingLoaded) {
 				this._addLoadCallback(name, callback);
 				return;
 			}
-			this.pathsBeingLoaded[path] = true;
-			
-			if (type == 'res') {
-				console.log(path);
-			}
-			
+			this.pathsBeingLoaded[path] = true;			
 
 			$.ajax({
 				type: 'GET',
@@ -260,9 +252,9 @@
 					if (dataType == 'script') {					
 						this._execute(response);
 					}
-
-					// TODO remove this and use define for all classes
+					
 					if (type == 'class') {
+						// TODO remove this and use define for all classes
 						var c = this._getClass(name);
 						if (c && typeof c === 'function') {
 							this._executeLoadCallback(name, c);
@@ -272,8 +264,8 @@
 						if (typeof fetchObject == 'function') {
 							d = fetchObject(realName, response);
 						}
-						this.dataLoaded[name] = d;						
-						callback(d);					
+						this.dataLoaded[name] = d;	
+						this._executeLoadCallback(name, d);
 					}
 					return;
 				}.bind(this),
@@ -315,6 +307,18 @@
 			});
 			
 		},
+		
+		loadLibsConfig: function (callback) {
+			$.ajax({
+				url: this.libsConfigUrl,
+				dataType: 'json',
+				local: true,
+				success: function (data) {
+					this.libsConfig = data;
+					callback();
+				}.bind(this)
+			});
+		}
 	});
 
 	Espo.loader = new Espo.Loader();

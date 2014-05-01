@@ -70,7 +70,17 @@ Espo.App = function (options, callback) {
 	this._initBaseController();
 
 	this._preLoader = new Espo.PreLoader(this.cache, this._viewFactory);
-	this._preLoad(callback);
+	
+	var countLoaded = 0;
+	var manageCallback = function () {
+		countLoaded++;
+		if (countLoaded == 2) {
+			callback.call(this, this);
+		}
+	}.bind(this);
+	
+	this.loader.loadLibsConfig(manageCallback);
+	this._preLoad(manageCallback);
 }
 
 _.extend(Espo.App.prototype, {
@@ -253,46 +263,50 @@ _.extend(Espo.App.prototype, {
 		}.bind(this);
 		
 		var self = this;
+		
+	
+		var getResourceInnerPath = function (type, name) {		
+			switch (type) {
+				case 'template':
+					return 'res/templates/' + name.split('.').join('/') + '.tpl';
+				case 'layoutTemplate':
+					return 'res/layout-types/' + name + '.tpl';					
+				case 'layout':
+					return 'res/layouts/' + name + '.json';
+					
+			}
+		};
+		
+		var getResourcePath = function (type, name) {
+			var path;
+			if (name.indexOf(':') != -1) {
+				var arr = name.split(':');
+				name = arr[1];
+				var mod = arr[0];
+				if (mod == 'custom') {
+					path = 'client/custom/' + getResourceInnerPath(type, name);
+				} else {
+					path = 'client/modules/' + mod + '/' + getResourceInnerPath(type, name);
+				}
+			} else {
+				path = 'client/' + getResourceInnerPath(type, name);
+			}
+			return path;
+		};
 
 		this._viewFactory = new Bull.Factory({
-			useCache: this.useCache,
+			useCache: false,
 			defaultViewName: 'Base',
 			helper: helper,
-			customCacher: this.cache,
 			viewLoader: this._viewLoader,
 			resources: {
-				paths: {
-					layoutTemplate: 'res/layout-types',
-					layout: 'res/layouts',
-					template: 'res/templates',
-				},
-				normalize: {
-					template: function (name) {
-						return name.split('.').join('/');
-					},
-					layout: function (name) {
-						return name.split('.').join('/');
-					},
-				},
-				path: function (type, name) {
-					var path;
-					if (name.indexOf(':') != -1) {
-						var arr = name.split(':');
-						name = arr[1];
-						var mod = arr[0];
-						if (mod == 'custom') {
-							path = 'client/custom/' + this.getFilePath(type, name);
-						} else {
-							path = 'client/modules/' + mod + '/' + this.getFilePath(type, name);
-						}
-					} else {
-						path = 'client/' + this.getFilePath(type, name);
-					}
-					return path;
-				},
 				loaders: {
-					'template': function (name, callback) {
-						var path = this.getFilePath('template', name);
+					'template': function (name, callback) {						
+						var path = getResourcePath('template', name);
+						self.loader.load('res!'	+ path, callback);				
+					},
+					'layoutTemplate': function (name, callback) {						
+						var path = getResourcePath('layoutTemplate', name);
 						self.loader.load('res!'	+ path, callback);				
 					}
 				} 

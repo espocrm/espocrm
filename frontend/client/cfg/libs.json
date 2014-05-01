@@ -1,0 +1,7 @@
+{
+	"Flotr": {
+		"path": "client/lib/flotr2.min.js",
+		"exportsTo": "window",
+		"exportsAs": "Flotr"		
+	}
+}
