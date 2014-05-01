@@ -675,7 +675,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				});
 				view.render();
 				view.once('after:save', function () {
-					this.collection.fetch();
+					this.collection.get(id).fetch();
 				}, this);
 			}.bind(this));
 		},
@@ -691,9 +691,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				this.collection.remove(model);
 				this.notify('Removing...');			
 				model.destroy({
-					success: function () {
+					success: function () {						
 						self.notify('Removed', 'success');
-						self.collection.fetch();
+						self.$el.find('tr[data-id="' + id + '"]').remove();
 					},
 					error: function () {
 						self.notify('Error occured', 'error');
