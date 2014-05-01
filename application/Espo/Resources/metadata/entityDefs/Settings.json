@@ -103,12 +103,10 @@
         },
         "tabList": {
             "type": "array",
-            "default": ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect", "Email"],
             "translation": "Global.scopeNamesPlural"
         },
         "quickCreateList": {
             "type": "array",
-            "default": ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"],
             "translation": "Global.scopeNames"
         },
         "language": {

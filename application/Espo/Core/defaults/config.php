@@ -131,6 +131,8 @@ return array (
 	'smtpPassword',
 	'cron',
   ),
+  "tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect", "Email"),
+  "quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"),
   'isInstalled' => false,
 );
 
