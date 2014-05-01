@@ -35,7 +35,8 @@
         	"db": false
         },
         "fromEmailAddress": {
-            "type": "link"
+            "type": "link",
+            "view": "Email.Fields.FromEmailAddress"
         },
         "toEmailAddresses": {
             "type": "linkMultiple"
@@ -58,7 +59,8 @@
         "status": {
             "type": "enum",
             "options": ["Draft", "Sending", "Sent", "Archived"],
-            "readOnly": true
+            "readOnly": true,
+            "default": "Archived"
         },
         "attachments": {
             "type": "linkMultiple",

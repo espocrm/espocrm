@@ -13,8 +13,8 @@
 		"subject": "Subject",
 		"attachments": "Attachments",
 		"selectTemplate": "Select Template",
-		"fromEmailAddress": "Email From",
-		"toEmailAddresses": "Email To",
+		"fromEmailAddress": "From Address",
+		"toEmailAddresses": "To Address",
 		"emailAddress": "Email Address"
 	},
 	"links": {
@@ -24,5 +24,9 @@
 		"Sending": "Sending",
 		"Sent": "Sent",
 		"Archived": "Archived"
+	},
+	"labels": {
+		"Create Email": "Archive Email",
+		"Compose Email": "Compose"
 	}
 }

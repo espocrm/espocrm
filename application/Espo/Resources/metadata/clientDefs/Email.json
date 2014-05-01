@@ -1,3 +1,18 @@
 {
-	"controller": "Controllers.Record"
+	"controller": "Controllers.Record",
+	"views":{
+		"list":"Email.List"
+	},
+	"menu": {
+		"list": {
+			"buttons": [
+				{
+					"label": "Compose",
+					"action": "composeEmail",
+					"style": "danger",
+					"acl": "edit"
+				}
+			]
+		}
+	}
 }

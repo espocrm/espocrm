@@ -1,6 +1,6 @@
 [
+	"emailAddress",
 	"dateSent",
 	"parent",
-	"body",
-	"emailAddress"
+	"body"	
 ]

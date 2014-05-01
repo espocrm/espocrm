@@ -52,7 +52,6 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		
 		mailTo: function (emailAddress) {
 			this.notify('Loading...');
-			this.getModelFactory().create('Email', function (model) {
 				this.createView('quickCreate', 'Modals.ComposeEmail', {
 					attributes: {
 						status: 'Draft',
@@ -62,7 +61,6 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 					view.render();
 					view.notify(false);
 				});
-			}.bind(this));
 		},
 		
 		fetch: function () {
