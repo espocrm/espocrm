@@ -10,6 +10,7 @@
          "type":"int"
       }
    ],
+   "notCreatable": true,
    "search":{
       "basic":true,
       "advanced":true
