@@ -213,7 +213,7 @@ class Acl
 			'delete' => 'own',					
 		);
 		$this->data['EmailAddress'] = array(
-			'read' => 'all',
+			'read' => 'no',
 			'edit' => 'no',
 			'delete' => 'no',					
 		);

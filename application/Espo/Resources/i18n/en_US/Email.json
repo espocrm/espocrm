@@ -14,7 +14,8 @@
 		"attachments": "Attachments",
 		"selectTemplate": "Select Template",
 		"fromEmailAddress": "Email From",
-		"toEmailAddresses": "Email To"
+		"toEmailAddresses": "Email To",
+		"emailAddress": "Email Address"
 	},
 	"links": {
 	},

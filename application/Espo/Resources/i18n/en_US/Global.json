@@ -6,7 +6,6 @@
 		"Role": "Role",
 		"EmailTemplate": "Email Template",
 		"OutboundEmail": "Outbound Email",
-		"EmailAddress": "Email Address",
 		"ScheduledJob": "Scheduled Job"
 	},
 	"scopeNamesPlural": {
@@ -16,8 +15,7 @@
 		"Role": "Roles",
 		"EmailTemplate": "Email Templates",
 		"OutboundEmail": "Outbound Emails",
-		"ScheduledJob": "Scheduled Jobs",
-		"EmailAddress": "Email Addresses"
+		"ScheduledJob": "Scheduled Jobs"
 	},
 	"labels": {
 		"Merge": "Merge",

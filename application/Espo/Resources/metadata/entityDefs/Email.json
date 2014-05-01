@@ -16,13 +16,7 @@
             "type": "varchar",
             "db": false,
             "required": true
-        }, 
-        "fromEmailAddress": {
-            "type": "link"
         },
-        "toEmailAddresses": {
-            "type": "linkMultiple"
-        }, 
         "to": {
             "type": "varchar",
             "db": false,
@@ -35,6 +29,19 @@
         "bcc": {
             "type": "varchar",
             "db": false
+        },
+        "emailAddress": {
+        	"type": "base",
+        	"db": false
+        },
+        "fromEmailAddress": {
+            "type": "link"
+        },
+        "toEmailAddresses": {
+            "type": "linkMultiple"
+        },
+        "ccEmailAddresses": {
+            "type": "linkMultiple"
         },
         "bodyPlain": {
             "type": "text",

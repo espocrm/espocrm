@@ -2,6 +2,5 @@
 	"dateSent",
 	"parent",
 	"body",
-	"fromEmailAddress",
-	"toEmailAddresses"
+	"emailAddress"
 ]

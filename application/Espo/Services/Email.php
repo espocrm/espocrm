@@ -115,5 +115,62 @@ class Email extends Record
 		}
 		return $entity;
 	}
+	
+	public function findEntities($params)
+	{
+		$searchByEmailAddress = false;
+		if (!empty($params['where']) && is_array($params['where'])) {
+			foreach ($params['where'] as $i => $p) {
+				if ($p['field'] == 'emailAddress') {
+					$searchByEmailAddress = true;				
+					$emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
+						'lower' => strtolower($p['value'])
+					))->findOne();
+					unset($params['where'][$i]);					
+					$emailAddressId = null;
+					if ($emailAddress) {
+						$emailAddressId = $emailAddress->id;
+					}
+				}
+		
+			}
+		}
+		
+		$selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
+		
+		if ($searchByEmailAddress) {
+			if ($emailAddressId) {
+				$pdo = $this->getEntityManager()->getPDO();
+		
+				$selectParams['customJoin'] = "
+					LEFT JOIN email_email_address 
+						ON 
+						email_email_address.email_id = email.id AND 
+						email_email_address.deleted = 0
+				";
+				$selectParams['customWhere'] = " 
+					AND
+					(
+						email.from_email_address_id = ".$pdo->quote($emailAddressId)." OR 
+						email_email_address.email_address_id = ".$pdo->quote($emailAddressId)."
+					)
+				";
+			} else {
+				$selectParams['customWhere'] = ' AND 0';
+			}
+		
+		}		
+		
+		$collection = $this->getRepository()->find($selectParams);	
+		
+		foreach ($collection as $e) {
+			$this->loadParentNameFields($e);
+		}
+		
+    	return array(
+    		'total' => $this->getRepository()->count($selectParams),
+    		'collection' => $collection,
+    	);
+	}
 }
 
