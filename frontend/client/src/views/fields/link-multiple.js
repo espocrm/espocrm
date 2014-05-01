@@ -72,7 +72,10 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 			if (this.mode != 'list') {
 				this.addActionHandler('selectLink', function () {
 					self.notify('Loading...');
-					this.createView('dialog', 'Modals.SelectRecords', {scope: this.foreignScope}, function (dialog) {
+					this.createView('dialog', 'Modals.SelectRecords', {
+							scope: this.foreignScope,
+							createButton: this.mode != 'search'
+						}, function (dialog) {
 						dialog.render();
 						self.notify(false);
 						dialog.once('select', function (model) {
