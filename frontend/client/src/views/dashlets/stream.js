@@ -39,21 +39,8 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
 			},
 		}),	
 		
-		actionRefresh: function () {
-			var maxSize = this.collection.maxSize;
-			var offset = this.collection.offset;
-			
-			var collection = this.collection;
-			
-			collection.offset = 0;
-			collection.maxSize = this.collection.length;
-			
-			this.collection.fetch({
-				success: function () {
-					collection.offset = offset;
-					collection.maxSize = maxSize;	
-				},
-			});
+		actionRefresh: function () {			
+			this.collection.fetchNew();
 		},		
 		
 		afterRender: function () {
@@ -77,6 +64,8 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
 				
 			}, this);
 		},
+		
+
 	});
 });
 

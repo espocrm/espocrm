@@ -347,8 +347,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 						item.action.call(this, e);
 					}.bind(this);
 				}.bind(this));
-			}			
-		
+			}
 
 			this.listenTo(this.collection, 'sync', function () {
 				if (this.noRebuild) {					

@@ -110,6 +110,9 @@ class Record extends Base
 		$sortBy = $request->get('sortBy');
 		$q = $request->get('q');
 		
+		if (empty($maxSize)) {
+			$maxSize = self::MAX_SIZE_LIMIT;
+		}
 		if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
 			throw new Forbidden();
 		}
@@ -141,6 +144,9 @@ class Record extends Base
 		$sortBy = $request->get('sortBy');
 		$q = $request->get('q');
 		
+		if (empty($maxSize)) {
+			$maxSize = self::MAX_SIZE_LIMIT;
+		}
 		if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
 			throw new Forbidden();
 		}	

@@ -182,6 +182,12 @@ class Stream extends \Espo\Core\Services\Base
 					subscription.user_id = '" . $this->getUser()->id . "'
 			"
 		);
+		
+		if (!empty($params['after'])) {
+			$where = array();
+			$where['createdAt>'] = $params['after'];
+			$selectParams['where'] = $where;
+		}
 	
 		$collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
 		
@@ -199,7 +205,8 @@ class Stream extends \Espo\Core\Services\Base
 				}
 			}			
 		}
-				
+		
+		unset($where['createdAt>']);	
 		$count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
     	
     	return array(
@@ -228,6 +235,10 @@ class Stream extends \Espo\Core\Services\Base
 			'parentId' => $id
 		);
 		
+		if (!empty($params['after'])) {
+			$where['createdAt>'] = $params['after'];
+		}
+		
 		$collection = $this->getEntityManager()->getRepository('Note')->find(array(
 			'whereClause' => $where,
 			'offset' => $params['offset'],
@@ -242,6 +253,7 @@ class Stream extends \Espo\Core\Services\Base
 			}
 		}
 		
+		unset($where['createdAt>']);
 		$count = $this->getEntityManager()->getRepository('Note')->count(array(
 			'whereClause' => $where,
 		));

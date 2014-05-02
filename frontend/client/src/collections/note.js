@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,45 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-
-namespace Espo\Controllers;
-
-use \Espo\Core\Exceptions\Error;
-
-class Stream extends \Espo\Core\Controllers\Base
-{
-	const MAX_SIZE_LIMIT = 400;
+Espo.define('Collections.Note', 'Collection', function (Dep) {
 	
-	public static $defaultAction = 'list';
-
-    public function actionList($params, $data, $request)
-	{
-		$scope = $params['scope'];
-		$id = $params['id'];
-		
-		$offset = intval($request->get('offset'));
-		$maxSize = intval($request->get('maxSize'));
-		$after = $request->get('after');
-		
-		$service = $this->getService('Stream');
-		
-		if (empty($maxSize)) {
-			$maxSize = self::MAX_SIZE_LIMIT;
-		}
-		if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
-			throw new Forbidden();
-		}		
-		
-		$result = $service->find($scope, $id, array(
-			'offset' => $offset,
-			'maxSize' => $maxSize,
-			'after' => $after,
-		));
-		
-		return array(
-			'total' => $result['total'],
-			'list' => $result['collection']->toArray()
-		);
-	}
-}
-
+	return Dep.extend({
+	
+		fetchNew: function (options) {
+			var options = options || {};
+			options.data = options.data || {};
+			
+			if (this.length) {
+				options.data.after = this.models[0].get('createdAt');
+				options.remove = false;
+				options.at = 0;
+			}
+			
+			
+			
+			this.fetch(options);	
+		},
+				
+	});
+	
+});

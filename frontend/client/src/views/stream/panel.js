@@ -114,9 +114,9 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 		
 			var collection = this.collection;
 			
-			this.listenTo(this.model, 'sync', function () {
-				collection.fetch();
-			});
+			this.listenTo(this.model, 'sync', function () {				
+				collection.fetchNew();				
+			}.bind(this));
 			
 			this.listenToOnce(collection, 'sync', function () {
 				this.createView('list', 'Stream.List', {
@@ -155,7 +155,7 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 								
 				model.once('sync', function () {					
 					this.notify('Posted', 'success');
-					this.collection.fetch();
+					this.collection.fetchNew();
 					
 					this.$textarea.prop('disabled', false);
 					this.disablePostingMode();
