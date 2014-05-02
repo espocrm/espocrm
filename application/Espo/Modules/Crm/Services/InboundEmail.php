@@ -25,6 +25,8 @@ namespace Espo\Modules\Crm\Services;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
+use \Zend\Mime\Mime as Mime;
+
 class InboundEmail extends \Espo\Services\Record
 {
 	
@@ -188,7 +190,7 @@ class InboundEmail extends \Espo\Services\Record
 				$email->set('dateSent', $dateSent);
 			}
 	
-			if ($message->isMultipart()) {
+			if ($message->isMultipart()) {				
 				foreach (new \RecursiveIteratorIterator($message) as $part) {
 					$this->importPartDataToEmail($email, $part);
 				}			
@@ -323,19 +325,34 @@ class InboundEmail extends \Espo\Services\Record
 		return $case;		
 	}
 	
+	protected function getContentFromPart($part)
+	{
+		if ($part instanceof \Zend\Mime\Part) {
+			$content = $part->getRawContent();
+			if (strtolower($part->charset) != 'utf-8') {
+				$content = mb_convert_encoding($content, 'utf-8', $part->charset);
+			}
+		} else {
+			$content = $part->getContent();
+		}
+		return $content;
+	}
+	
 	protected function importPartDataToEmail(\Espo\Entities\Email $email, $part)
 	{		
 		try {
 			$type = strtok($part->contentType, ';');
 			switch ($type) {
 				case 'text/plain':
+					$content = $this->getContentFromPart($part);					
 					if (!$email->get('body')) {				
-						$email->set('body', $part->getContent());
+						$email->set('body', $content);
 					}
-					$email->set('bodyPlain', $part->getContent());
+					$email->set('bodyPlain', $content);
 					break;
-				case 'text/html': 
-					$email->set('body', $part->getContent());
+				case 'text/html':					
+					$content = $this->getContentFromPart($part);
+					$email->set('body', $content);
 					$email->set('isHtml', true);
 					break;
 				default:	

@@ -24,13 +24,13 @@ namespace Espo\Core\Mail;
 
 use \Espo\Entities\Email;
 
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-use Zend\Mime\Mime as Mime;
+use \Zend\Mime\Message as MimeMessage;
+use \Zend\Mime\Part as MimePart;
+use \Zend\Mime\Mime as Mime;
 
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
+use \Zend\Mail\Message;
+use \Zend\Mail\Transport\Smtp as SmtpTransport;
+use \Zend\Mail\Transport\SmtpOptions;
 
 use \Espo\Core\Exceptions\Error;
 
