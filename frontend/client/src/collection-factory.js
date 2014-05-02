@@ -37,17 +37,19 @@ _.extend(Espo.CollectionFactory.prototype, {
 			
 			var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
 			var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
+			
+			var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
 
-			var collectionClass = Espo.Collection;
-
-			var collection = new collectionClass(null, {
-				name: name,
-				asc: asc,
-				sortBy: sortBy
-			});
-			collection.model = seed;
-			collection._user = this.modelFactory.user;
-			callback.call(context, collection);
+			Espo.loader.load(className, function (collectionClass) {
+				var collection = new collectionClass(null, {
+					name: name,
+					asc: asc,
+					sortBy: sortBy
+				});
+				collection.model = seed;
+				collection._user = this.modelFactory.user;
+				callback.call(context, collection);
+			}.bind(this));
 		}.bind(this));
 	}
 });

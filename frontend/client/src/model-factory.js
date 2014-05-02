@@ -53,16 +53,18 @@
 				callback(this.seeds[name]);
 				return;
 			}
+			
+			var className = this.metadata.get('clientDefs.' + name + '.model') || 'Model';
 				
-			var modelClass = Espo.Model;
-				
-			this.seeds[name] = modelClass.extend({
-				name: name,
-				defs: this.metadata.get('entityDefs.' + name, {}),
-				dateTime: this.dateTime,
-				_user: this.user
-			});
-			callback(this.seeds[name]);
+			Espo.loader.load(className, function (modelClass) {
+				this.seeds[name] = modelClass.extend({
+					name: name,
+					defs: this.metadata.get('entityDefs.' + name, {}),
+					dateTime: this.dateTime,
+					_user: this.user
+				});
+				callback(this.seeds[name]);
+			}.bind(this));
 		},
 	});
 	
