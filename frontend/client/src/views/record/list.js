@@ -634,6 +634,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			var initialCount = collection.length;
 				
 			var success = function () {
+				this.notify(false);
 				$showMore.addClass('hide');
 				
 				var temp = collection.models[initialCount - 1];				
@@ -693,6 +694,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 					success: function () {						
 						self.notify('Removed', 'success');
 						self.$el.find('tr[data-id="' + id + '"]').remove();
+						self.collection.total--;
 					},
 					error: function () {
 						self.notify('Error occured', 'error');

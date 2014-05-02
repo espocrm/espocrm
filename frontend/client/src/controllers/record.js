@@ -93,6 +93,7 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 			} else {
 				this.getModel(function (model) {
 					model.id = id;
+					
 					this.showLoadingNotification();
 					model.once('sync', function () {
 						createView(model);

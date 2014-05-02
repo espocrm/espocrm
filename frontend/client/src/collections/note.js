@@ -30,9 +30,8 @@ Espo.define('Collections.Note', 'Collection', function (Dep) {
 				options.data.after = this.models[0].get('createdAt');
 				options.remove = false;
 				options.at = 0;
+				options.maxSize = null;
 			}
-			
-			
 			
 			this.fetch(options);	
 		},
