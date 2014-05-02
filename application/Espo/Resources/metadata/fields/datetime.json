@@ -22,7 +22,7 @@
       "basic":false,
       "advanced":false
    },
-   "database":{
+   "fieldDefs":{
       "notNull":false
    }
 }

@@ -17,7 +17,7 @@
       "advanced":true
    },
    "notCreatable": true,
-   "database":{
+   "fieldDefs":{
       "skip":true
    }
 }

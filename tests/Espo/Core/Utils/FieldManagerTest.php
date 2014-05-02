@@ -65,7 +65,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->objects['metadata']
-			->expects($this->once())
+			->expects($this->exactly(3))
 			->method('get')
 			->will($this->returnValue($data));
 
@@ -81,7 +81,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->objects['metadata']
-			->expects($this->once())
+			->expects($this->exactly(3))
 			->method('get')
 			->will($this->returnValue($data));
 
@@ -131,7 +131,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 				),
 			),
 		);
-		$this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array($input1, $input2)));
+		$this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array($input1, $input2, 'CustomEntity')));
 	}
 
 	public function testDeleteTestFile()

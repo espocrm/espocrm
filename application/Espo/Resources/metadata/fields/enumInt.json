@@ -1,5 +1,5 @@
 {
-   "params":[    
+   "params":[
       {
          "name":"options",
          "type":"array"
@@ -14,7 +14,7 @@
       "advanced":true
    },
    "notCreatable": true,
-   "database":{
+   "fieldDefs":{
       "type":"int"
    }
 }

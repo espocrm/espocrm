@@ -19,7 +19,7 @@
       "advanced":false
    },
    "notCreatable": true,
-   "database":{
+   "fieldDefs":{
       "type":"json_array"
    }
 }

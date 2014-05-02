@@ -18,7 +18,7 @@
       "advanced":true
    },
    "notCreatable": true,
-   "database":{
+   "fieldDefs":{
       "notStorable":true
    }
 }

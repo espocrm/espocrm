@@ -6,9 +6,9 @@
       "basic":false,
       "advanced":true
    },
-   "database":{
+   "fieldDefs":{
       "type":"int",
       "autoincrement":true,
-	  "unique":true
+      "unique":true
    }
 }

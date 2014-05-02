@@ -28,7 +28,7 @@
       "basic":false,
       "advanced":true
    },
-   "database":{
+   "fieldDefs":{
       "type":"float"
    }
 }

@@ -29,6 +29,7 @@ class Converter
 {
 	private $metadata;
 	private $fileManager;
+	private $metadataUtils;
 
 	private $relationManager;
 
@@ -82,6 +83,8 @@ class Converter
 		$this->fileManager = $fileManager; //need to featue with ormHooks. Ex. isFollowed field
 
 		$this->relationManager = new RelationManager($this->metadata);
+
+		$this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
 	}
 
 
@@ -99,6 +102,12 @@ class Converter
 	{
 		return $this->relationManager;
 	}
+
+	protected function getMetadataUtils()
+	{
+		return $this->metadataUtils;
+	}
+
 
 
 	public function process()
@@ -227,7 +236,7 @@ class Converter
 	 *
 	 * @return array
 	 */
-	protected function convertFields($entityName, $entityMeta)
+	protected function convertFields($entityName, &$entityMeta)
 	{
 		$outputMeta = array(
 			'id' => array(
@@ -242,9 +251,8 @@ class Converter
 
 		foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
 
-			//check if "fields" option exists in $fieldMeta
-			$fieldParams['type'] = isset($fieldParams['type']) ? $fieldParams['type'] : '';
-			$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+			/** check if "fields" option exists in $fieldMeta */
+			$fieldTypeMeta = $this->getMetadataUtils()->getFieldDefsByType($fieldParams);
 
 			if (isset($fieldTypeMeta['fields']) && is_array($fieldTypeMeta['fields'])) {
 
@@ -253,7 +261,7 @@ class Converter
 					$subField = $this->convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta);
 
 					if (!isset($outputMeta[ $subField['naming'] ])) {
-						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params']);
+						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params'], $fieldTypeMeta);
 						if ($subFieldDefs !== false) {
 							$outputMeta[ $subField['naming'] ] = $subFieldDefs; //push fieldDefs to the main array
 						}
@@ -261,9 +269,17 @@ class Converter
 				}
 
 			} else {
-				$fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams);
+				$fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
 				if ($fieldDefs !== false) {
 					$outputMeta[$fieldName] = $fieldDefs; //push fieldDefs to the main array
+				}
+			}
+
+			/** check and set the linkDefs from 'fields' metadata */
+			if (isset($fieldTypeMeta['linkDefs'])) {
+				$linkDefs = $this->getMetadataUtils()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMeta['linkDefs']);
+				if (isset($linkDefs)) {
+					$entityMeta['links'] = Util::merge( array($fieldName => $linkDefs), $entityMeta['links'] );
 				}
 			}
 		}
@@ -280,53 +296,40 @@ class Converter
 
 
 
-	protected function convertField($entityName, $fieldName, array $fieldParams)
+	protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta)
 	{
-		//set default type if exists
+		/** set default type if exists */
 		if (!isset($fieldParams['type']) || empty($fieldParams['type'])) {
 			$GLOBALS['log']->warning('Field type does not exist for '.$entityName.':'.$fieldName.'. Use default type ['.$this->defaultFieldType.']');
 			$fieldParams['type'] = $this->defaultFieldType;
-		} //END: set default type if exists
+		} /** END: set default type if exists */
 
-		if (isset($fieldParams['dbType'])) {
-			$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['dbType']);
-		} else {
-			$fieldTypeMeta = $this->getMetadata()->get('fields.'.$fieldParams['type']);
+		/** merge fieldDefs option from field definition */
+		if (isset($fieldTypeMeta['fieldDefs'])) {
+			$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['fieldDefs']);
 		}
 
-		//check if need to skip this field into database metadata
-		if (isset($fieldTypeMeta['database']['skip']) && $fieldTypeMeta['database']['skip'] === true) {
+		/** check if need to skip this field in ORM metadata */
+		if (isset($fieldParams['skip']) && $fieldParams['skip'] === true) {
 			return false;
 		}
 
-		//merge database options from field definition
-		if (isset($fieldTypeMeta['database'])) {
-			$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['database']);
-		}
-
-		//if defined 'notNull => false' and 'required => true', then remove 'notNull'
+		/** if defined 'notNull => false' and 'required => true', then remove 'notNull' */
 		if (isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) && $fieldParams['required']) {
 			unset($fieldParams['notNull']);
-		} //END
-
+		}
 
 		$fieldDefs = $this->getInitValues($fieldParams);
 
-		//check if field need to be saved in database
-		//TODO change entytyDefs from db:false to notStorable:true
-		if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) || (isset($fieldTypeMeta['database']['notStorable']) && !$fieldTypeMeta['database']['notStorable'] === true) ) {
+		/** check if the field need to be saved in database	*/
+		if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) ) {
 			$fieldDefs['notStorable'] = true;
-		} //END: check if field need to be saved in database
+		}
 
-		//merge database options from field definition
-		/*if (isset($fieldTypeMeta['database'])) {
-			$fieldDefs = Util::merge($fieldDefs, $fieldTypeMeta['database']);
-		}*/
-
-		//check and set a field length
+		/** check and set the field length */
 		if (!isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
 			$fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
-		} //END: check and set a field length
+		}
 
 		return $fieldDefs;
 	}
@@ -337,14 +340,14 @@ class Converter
 
 		$subField['params'] = $this->getInitValues($fieldParams);
 
-		if (isset($fieldTypeMeta['database'])) {
-			$subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['database']);
+		if (isset($fieldTypeMeta['fieldDefs'])) {
+			$subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['fieldDefs']);
 		}
 
 		//if empty field name, then use the main field
 		if (trim($subFieldName) == '') {
 
-			if (!isset($fieldTypeMeta['database'])) {
+			if (!isset($fieldTypeMeta['fieldDefs'])) {
 				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
 			}
 
@@ -370,8 +373,6 @@ class Converter
 		return $subField;
 	}
 
-
-
 	protected function convertLinks($entityName, $entityMeta, array $entityDefs)
 	{
 		if (!isset($entityMeta['links'])) {
@@ -384,7 +385,6 @@ class Converter
 			$linkEntityName = $this->getRelationManager()->getLinkEntityName($entityName, $linkParams);
 
 			$currentType = $linkParams['type'];
-			$parentType = '';
 
 			$foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$linkEntityName]);
 
@@ -408,7 +408,6 @@ class Converter
 		return $relationships;
 	}
 
-
 	/**
 	* Get foreign Link
 	*
@@ -429,8 +428,6 @@ class Converter
 
 		return false;
 	}
-
-
 
 	protected function getInitValues(array $fieldParams)
 	{
