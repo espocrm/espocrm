@@ -39,6 +39,15 @@
 
 			Backbone.Model.prototype.initialize.call(this);
 		},
+		
+		url: function () {
+			var url = Backbone.Model.prototype.url.call(this);
+			return url;
+		},
+		
+		isNew: function () {
+			return !this.id;
+		},
 
 		setDefs: function (defs) {
 			this.defs = defs || {};

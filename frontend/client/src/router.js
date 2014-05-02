@@ -64,7 +64,7 @@
 		},
 
 		_parseOptionsParams: function (string) {
-			if (typeof string === 'undefined') {
+			if (!string) {
 				return {};
 			}
 
@@ -86,12 +86,12 @@
 		},
 
 		record: function (controller, action, id, options) {
-			var options = this._parseOptionsParams(options);
-			options.id = id;
+			var options = this._parseOptionsParams(options);			
+			options.id = id;			
 			this.dispatch(controller, action, options);
 		},
 
-		view: function (controller, id, options) {
+		view: function (controller, id, options) {			
 			this.record(controller, 'view', id, options);
 		},
 
