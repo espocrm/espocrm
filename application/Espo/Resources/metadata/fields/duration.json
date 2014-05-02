@@ -1,6 +1,6 @@
 {
    "notCreatable": true,
-   "database":{
+   "fieldDefs":{
       "type":"int"
    }
 }

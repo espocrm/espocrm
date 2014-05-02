@@ -4,7 +4,7 @@
          "name":"required",
          "type":"bool",
          "default":false
-      },      
+      },
       {
          "name":"options",
          "type":"array"
@@ -18,7 +18,7 @@
       "basic":false,
       "advanced":true
    },
-   "database":{
+   "fieldDefs":{
       "type":"varchar"
    }
 }

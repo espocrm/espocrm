@@ -30,6 +30,8 @@ class FieldManager
 
 	private $language;
 
+	private $metadataUtils;
+
 	protected $metadataType = 'entityDefs';
 
 	protected $customOptionName = 'isCustom';
@@ -39,6 +41,8 @@ class FieldManager
 	{
 		$this->metadata = $metadata;
 		$this->language = $language;
+
+		$this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
 	}
 
 	protected function getMetadata()
@@ -49,6 +53,11 @@ class FieldManager
 	protected function getLanguage()
 	{
 		return $this->language;
+	}
+
+	protected function getMetadataUtils()
+	{
+		return $this->metadataUtils;
 	}
 
 
@@ -95,7 +104,10 @@ class FieldManager
 			throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
 		}
 
-		$unsets = 'fields.'.$name;
+		$unsets = array(
+			'fields.'.$name,
+			'links.'.$name,
+		);
 		$res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
 
 		$this->deleteLabel($name, $scope);
@@ -105,7 +117,7 @@ class FieldManager
 
 	protected function setEntityDefs($name, $fieldDef, $scope)
 	{
-		$fieldDef = $this->normalizeDefs($name, $fieldDef);
+		$fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
 
 		$data = Json::encode($fieldDef);
 		$res = $this->getMetadata()->set($data, $this->metadataType, $scope);
@@ -128,17 +140,28 @@ class FieldManager
 		return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
 	}
 
+	protected function getLinkDef($name, $scope)
+	{
+		return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.links.'.$name);
+	}
+
 	/**
 	 * Add all needed block for a field defenition
 	 *
 	 * @param string $fieldName
 	 * @param array $fieldDef
+	 * @param string $scope
 	 * @return array
 	 */
-	protected function normalizeDefs($fieldName, array $fieldDef)
+	protected function normalizeDefs($fieldName, array $fieldDef, $scope)
 	{
 		if (isset($fieldDef['name'])) {
 			unset($fieldDef['name']);
+		}
+
+		if (isset($fieldDef['linkDefs'])) {
+			$linkDefs = $fieldDef['linkDefs'];
+			unset($fieldDef['linkDefs']);
 		}
 
 		foreach ($fieldDef as $defName => $defValue) {
@@ -147,11 +170,27 @@ class FieldManager
 			}
 		}
 
-		return array(
+		$metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
+		if (isset($metaFieldDef)) {
+			$fieldDef = Util::merge($metaFieldDef, $fieldDef);
+		}
+
+		$defs = array(
 			'fields' => array(
 				$fieldName => $fieldDef,
 			),
 		);
+
+		/** Save links for a field. */
+		$metaLinkDef = $this->getMetadataUtils()->getLinkDefsInFieldMeta($scope, $fieldDef);
+		if (isset($linkDefs) || isset($metaLinkDef)) {
+			$linkDefs = Util::merge((array) $metaLinkDef, (array) $linkDefs);
+			$defs['links'] = array(
+				$fieldName => $linkDefs,
+			);
+		}
+
+		return $defs;
 	}
 
 	protected function isCore($name, $scope)
@@ -163,6 +202,5 @@ class FieldManager
 
 		return false;
 	}
-
 
 }

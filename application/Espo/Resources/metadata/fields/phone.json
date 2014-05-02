@@ -19,7 +19,7 @@
       "basic":true,
       "advanced":true
    },
-   "database":{
+   "fieldDefs":{
       "type":"varchar"
    }
 }

@@ -1,0 +1,11 @@
+{
+   "notCreatable": true,
+   "fieldDefs": {
+      "type": "linkMultiple"
+   },
+   "linkDefs": {
+      "type": "hasChildren",
+      "entity": "Attachment",
+      "foreign": "parent"
+   }
+}
