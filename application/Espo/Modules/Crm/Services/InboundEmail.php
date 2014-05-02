@@ -330,10 +330,27 @@ class InboundEmail extends \Espo\Services\Record
 		if ($part instanceof \Zend\Mime\Part) {
 			$content = $part->getRawContent();
 			if (strtolower($part->charset) != 'utf-8') {
-				$content = mb_convert_encoding($content, 'utf-8', $part->charset);
+				$content = mb_convert_encoding($content, 'UTF-8', $part->charset);
 			}
 		} else {
 			$content = $part->getContent();
+			
+			$charset = 'UTF-8';			
+			$ctHeader = $part->getHeader('Content-Type');
+			if ($ctHeader) {
+				$charset = strtoupper($ctHeader->getParameter('charset'));
+			}
+			
+			if ($charset !== 'UTF-8') {
+				$content = mb_convert_encoding($content, 'UTF-8', $charset);
+			}
+			
+			$cteHeader = $part->getHeader('Content-Transfer-Encoding');
+			if ($cteHeader) {				
+				if ($cteHeader->getTransferEncoding() == 'quoted-printable') {					
+					$content = quoted_printable_decode($content);
+				}
+			}			
 		}
 		return $content;
 	}
@@ -357,6 +374,7 @@ class InboundEmail extends \Espo\Services\Record
 					break;
 				default:	
 					if (isset($part->ContentDisposition)) {
+						echo "1" . "\n";
 						if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
 							$fileName = $m[1];
 							$attachment = $this->getEntityManager()->getEntity('Attachment');
