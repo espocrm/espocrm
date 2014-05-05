@@ -59,6 +59,7 @@ module.exports = function (grunt) {
 					'frontend/client/lib/bootstrap.min.js',
 					'frontend/client/lib/bootstrap-datepicker.js',
 					'frontend/client/lib/bull.min.js',
+					'frontend/client/lib/flotr2.min.js',
 					'frontend/client/src/namespace.js',
 					'frontend/client/src/exceptions.js',
 					'frontend/client/src/app.js',
