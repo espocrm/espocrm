@@ -345,6 +345,16 @@ class InboundEmail extends \Espo\Services\Record
 		} else {
 			$content = $part->getContent();
 			
+			$encoding = null;
+			$cteHeader = $part->getHeader('Content-Transfer-Encoding');
+			if ($cteHeader) {
+				$encoding = strtolower($cteHeader->getTransferEncoding());
+			}
+			
+			if ($encoding == 'base64') {
+				$content = base64_decode($content);
+			}
+			
 			$charset = 'UTF-8';			
 			$ctHeader = $part->getHeader('Content-Type');
 			if ($ctHeader) {
@@ -369,6 +379,8 @@ class InboundEmail extends \Espo\Services\Record
 	{		
 		try {
 			$type = strtok($part->contentType, ';');
+			$encoding = null;
+			
 			switch ($type) {
 				case 'text/plain':
 					$content = $this->getContentFromPart($part);					
@@ -377,23 +389,18 @@ class InboundEmail extends \Espo\Services\Record
 					}
 					$email->set('bodyPlain', $content);
 					break;
-				case 'text/html':					
+				case 'text/html':		
 					$content = $this->getContentFromPart($part);
 					$email->set('body', $content);
 					$email->set('isHtml', true);
 					break;
-				default:					
-					$content = $part->getContent();
-					
+				default:			
+					$content = $part->getContent();					
 					$disposition = null;
-					$encoding = null;
-					$fileName = null;
-					$contentId = null;
 					
-					$cteHeader = $part->getHeader('Content-Transfer-Encoding');
-					if ($cteHeader) {
-						$encoding = strtolower($cteHeader->getTransferEncoding());
-					}
+					$fileName = null;
+					$contentId = null;					
+
 							
 					if (isset($part->ContentDisposition)) {				
 						if (strpos($part->ContentDisposition, 'attachment') === 0) {
