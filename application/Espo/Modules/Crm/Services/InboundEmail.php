@@ -130,11 +130,11 @@ class InboundEmail extends \Espo\Services\Record
 				$this->importMessage($inboundEmail, $message);				
 			}
 			
-			/*while ($storage->countMessages()) {
+			while ($storage->countMessages()) {
 				if ($trash) {
 					$storage->moveMessage(1, $trash);
 				}
-			}*/
+			}
 		}	
 	}
 	
