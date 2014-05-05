@@ -92,7 +92,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 								attachment.set('global', true);
 								attachment.set('size', file.size);
 								attachment.once('sync', function () {
-									var url = this.getConfig().get('siteUrl') + '?entryPoint=attachment&id=' + attachment.id;
+									var url = '?entryPoint=attachment&id=' + attachment.id;
 									editor.insertImage(welEditable, url);
 									this.notify(false);
 								}, this);						
