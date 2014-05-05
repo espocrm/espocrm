@@ -130,11 +130,11 @@ class InboundEmail extends \Espo\Services\Record
 				$this->importMessage($inboundEmail, $message);				
 			}
 			
-			while ($storage->countMessages()) {
+			/*while ($storage->countMessages()) {
 				if ($trash) {
 					$storage->moveMessage(1, $trash);
 				}
-			}
+			}*/
 		}	
 	}
 	
@@ -189,13 +189,23 @@ class InboundEmail extends \Espo\Services\Record
 				$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
 				$email->set('dateSent', $dateSent);
 			}
+			
+			$inlineIds = array();
 	
 			if ($message->isMultipart()) {				
 				foreach (new \RecursiveIteratorIterator($message) as $part) {
-					$this->importPartDataToEmail($email, $part);
+					$this->importPartDataToEmail($email, $part, $inlineIds);
 				}			
 			} else {
-				$this->importPartDataToEmail($email, $message);
+				$this->importPartDataToEmail($email, $message, $inlineIds);
+			}
+			
+			$body = $email->get('body');
+			if (!empty($body)) {
+				foreach ($inlineIds as $cid => $attachmentId) {
+					$body = str_replace('cid:' . $cid, '?entryPoint=attachment&id=' . $attachmentId, $body);
+				}
+				$email->set('body', $body);
 			}
 
 			$this->getEntityManager()->saveEntity($email);		
@@ -355,7 +365,7 @@ class InboundEmail extends \Espo\Services\Record
 		return $content;
 	}
 	
-	protected function importPartDataToEmail(\Espo\Entities\Email $email, $part)
+	protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array())
 	{		
 		try {
 			$type = strtok($part->contentType, ';');
@@ -372,25 +382,52 @@ class InboundEmail extends \Espo\Services\Record
 					$email->set('body', $content);
 					$email->set('isHtml', true);
 					break;
-				default:	
-					if (isset($part->ContentDisposition)) {
-						echo "1" . "\n";
-						if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
-							$fileName = $m[1];
-							$attachment = $this->getEntityManager()->getEntity('Attachment');
-							$attachment->set('name', $fileName);							
-							$attachment->set('type', $type);
+				default:					
+					$content = $part->getContent();
+					
+					$disposition = null;
+					$encoding = null;
+					$fileName = null;
+					$contentId = null;
+					
+					$cteHeader = $part->getHeader('Content-Transfer-Encoding');
+					if ($cteHeader) {
+						$encoding = strtolower($cteHeader->getTransferEncoding());
+					}
 							
-							$this->getEntityManager()->saveEntity($attachment);
-												
-							$path = 'data/upload/' . $attachment->id;						
-							$content = base64_decode($part->getContent());
-							$this->getFileManager()->putContents($path, $content);
-							$attachmentsIds = $email->get('attachmentsIds');
-							$attachmentsIds[] = $attachment->id;
-							$email->set('attachmentsIds', $attachmentsIds);
+					if (isset($part->ContentDisposition)) {				
+						if (strpos($part->ContentDisposition, 'attachment') === 0) {
+							if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
+								$fileName = $m[1];
+								$disposition = 'attachment';
+							}							
+						} else if (strpos($part->ContentDisposition, 'inline') === 0) {
+							$contentId = trim($part->contentID, '<>');
+							$fileName = $contentId;
+							$disposition = 'inline';
 						}
 					}
+					
+					$attachment = $this->getEntityManager()->getEntity('Attachment');
+					$attachment->set('name', $fileName);							
+					$attachment->set('type', $type);
+							
+					$this->getEntityManager()->saveEntity($attachment);
+												
+					$path = 'data/upload/' . $attachment->id;
+							
+					if ($encoding == 'base64') {
+						$content = base64_decode($content);
+					}
+					$this->getFileManager()->putContents($path, $content);
+					
+					if ($disposition == 'attachment') {
+						$attachmentsIds = $email->get('attachmentsIds');
+						$attachmentsIds[] = $attachment->id;
+						$email->set('attachmentsIds', $attachmentsIds);	
+					} else if ($disposition == 'inline') {
+						$inlineIds[$contentId] = $attachment->id;
+					}		
 			}
 		} catch (\Exception $e){
 			// TODO log	

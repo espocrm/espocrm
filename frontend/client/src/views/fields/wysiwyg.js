@@ -73,9 +73,6 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		enableWysiwygMode: function () {
 			this.$summernote = this.$element.summernote({
 				height: 250,
-				/*onblur: function (e) {
-					//this.model.set(this.name, this.$element.code());
-				}.bind(this),*/
 				lang: this.getConfig().get('language'),
 				onImageUpload: function (files, editor, welEditable) {
 					var file = files[0];
@@ -95,7 +92,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 								attachment.set('global', true);
 								attachment.set('size', file.size);
 								attachment.once('sync', function () {
-									var url = this.getConfig().get('siteUrl') + '?entryPoint=image&id=' + attachment.id;
+									var url = this.getConfig().get('siteUrl') + '?entryPoint=attachment&id=' + attachment.id;
 									editor.insertImage(welEditable, url);
 									this.notify(false);
 								}, this);						

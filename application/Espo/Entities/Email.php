@@ -45,5 +45,37 @@ class Email extends \Espo\Core\ORM\Entity
 			}
 		}
 	}
+	
+	public function getBodyForSending()
+	{
+		$body = $this->get('body');
+		if (!empty($body)) {
+			$attachmentList = $this->getInlineAttachments();
+			foreach ($attachmentList as $attachment) {
+				$body = str_replace("?entryPoint=attachment&amp;id={$attachment->id}", "cid:{$attachment->id}", $body);
+			}
+		}
+		return $body;
+	}
+	
+	public function getInlineAttachments()
+	{
+		$attachmentList = array();
+		$body = $this->get('body');
+		if (!empty($body)) {
+			if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $body, $matches)) {	
+				if (!empty($matches[1]) && is_array($matches[1])) {		
+					foreach($matches[1] as $id) {
+						$attachment = $this->entityManager->getEntity('Attachment', $id);
+						if ($attachment) {
+							$attachmentList[] = $attachment;
+						}
+					}
+				}
+			}
+			
+		}
+		return $attachmentList;
+	}
 }
 

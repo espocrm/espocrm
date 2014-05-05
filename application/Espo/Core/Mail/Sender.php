@@ -194,7 +194,7 @@ class Sender
 		
 
 		if ($email->get('isHtml')) {
-			$bodyPart = new MimePart($email->get('body'));
+			$bodyPart = new MimePart($email->getBodyForSending());
 			$bodyPart->type = 'text/html';
 			$bodyPart->charset = 'utf-8';
 		} else {			
@@ -217,6 +217,21 @@ class Sender
 				$attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
 				$attachment->encoding = Mime::ENCODING_BASE64;
 				$attachment->filename = $a->get('name');
+				if ($a->get('type')) {
+					$attachment->type = $a->get('type');
+				}
+				$parts[] = $attachment;
+			}
+		}
+		
+		$aCollection = $email->getInlineAttachments();
+		if (!empty($aCollection)) {
+			foreach ($aCollection as $a) {
+				$fileName = 'data/upload/' . $a->id;
+				$attachment = new MimePart(file_get_contents($fileName));
+				$attachment->disposition = Mime::DISPOSITION_INLINE;
+				$attachment->encoding = Mime::ENCODING_BASE64;
+				$attachment->id = $a->id;
 				if ($a->get('type')) {
 					$attachment->type = $a->get('type');
 				}
