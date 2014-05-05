@@ -58,8 +58,7 @@ module.exports = function (grunt) {
 					'frontend/client/lib/jquery.autocomplete.js',
 					'frontend/client/lib/bootstrap.min.js',
 					'frontend/client/lib/bootstrap-datepicker.js',
-					'frontend/client/lib/bull.min.js',
-					'frontend/client/lib/flotr2.min.js',
+					'frontend/client/lib/bull.min.js',					
 					'frontend/client/src/namespace.js',
 					'frontend/client/src/exceptions.js',
 					'frontend/client/src/app.js',
@@ -116,9 +115,13 @@ module.exports = function (grunt) {
 				src: 'frontend/html/reset.html',
 				dest: 'build/tmp/reset.html'
 			},				
-			frontendLib: {
+			frontendLibSummernote: {	
 				src: 'frontend/client/lib/summernote.min.js',
-				dest: 'build/tmp/client/lib/summernote.min.js'			
+				dest: 'build/tmp/client/lib/summernote.min.js'		
+			},
+			frontendLibFlotr2: {
+				src: 'frontend/client/lib/flotr2.min.js',
+				dest: 'build/tmp/client/lib/flotr2.min.js'		
 			},
 			backend: {
 				expand: true,
@@ -199,7 +202,8 @@ module.exports = function (grunt) {
 		'uglify',
 		'copy:frontendFolders',
 		'copy:frontendHtml',
-		'copy:frontendLib',
+		'copy:frontendLibSummernote',
+		'copy:frontendLibFlotr2',
 		'copy:backend',
 		'replace',
 		'copy:final',
