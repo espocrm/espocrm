@@ -16,7 +16,8 @@
         "scheduling": {
         	"type": "varchar",
             "required": true,
-            "view": "ScheduledJob.Fields.Scheduling"    	
+            "view": "ScheduledJob.Fields.Scheduling",
+            "default": "* * * * *"   	
 		},
         "lastRun": {
             "type": "datetime",

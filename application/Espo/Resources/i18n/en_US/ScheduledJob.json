@@ -3,7 +3,7 @@
 		"name": "Name",
 		"status": "Status",
 		"job": "Job",
-		"scheduling": "Scheduling"
+		"scheduling": "Scheduling (crontab notation)"
 	},
 	"links": {
 		"log": "Log"
