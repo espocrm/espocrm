@@ -55,6 +55,8 @@ class Email extends \Espo\Core\ORM\Entity
 				$body = str_replace("?entryPoint=attachment&amp;id={$attachment->id}", "cid:{$attachment->id}", $body);
 			}
 		}
+		$body = str_replace("<table class=\"table table-bordered\">", "<table class=\"table table-bordered\" width=\"100%\">", $body);
+		
 		return $body;
 	}
 	
