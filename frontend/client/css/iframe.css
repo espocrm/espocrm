@@ -2,6 +2,9 @@ body, table {
 	font-size: 14px;
 	font-family: 'Open Sans';
 	color: #333;
+}
+
+body{
 	margin: 0;
 }
 
