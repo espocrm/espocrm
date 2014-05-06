@@ -184,6 +184,10 @@
 		hasField: function (field) {
 			return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
 		},
+		
+		isEditable: function () {
+			return true;
+		},
 	});
 
 }).call(this, Espo, _, Backbone);

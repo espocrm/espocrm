@@ -94,6 +94,11 @@ _.extend(Espo.Acl.prototype, {
 	},
 	
 	checkModel: function (model, action) {
+		if (action == 'edit') {
+			if (!model.isEditable()) {
+				return false;
+			}
+		}
 		if (this.user.isAdmin()) {
 			return true;
 		}

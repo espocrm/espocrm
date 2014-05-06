@@ -348,11 +348,10 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			
 			if (!this.getAcl().checkModel(this.model, 'edit')) {
 				this.readOnly = true;
-			}	
-
-			if (!this.getUser().isAdmin()) {
-				this.manageAccess();
 			}
+
+
+			this.manageAccess();
 			
 			this.attributes = this.model.getClonedAttributes();
 
