@@ -73,22 +73,14 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 				var iframe = this.$el.find('iframe').get(0);				
 				var document = iframe.contentWindow.document;
 				
+				
+				var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>'
+				
 				document.open('text/html', 'replace');				
 				var body = this.model.get('body');
-				
-				body = '<style>@font-face {' +
-					 'font-family: Open Sans;' +
-					 'src: url(\'client/fonts/open-sans-regular.eot?\') format(\'eot\'),' +
-						  'url(\'client/fonts/open-sans-regular.woff\') format(\'woff\'),' +
-						  'url(\'client/fonts/open-sans-regular.ttf\')  format(\'truetype\'),' +
-						  'url(\'client/fonts/open-sans-regular.svg#svgFontName\') format(\'svg\');' +
-					'}' +
-					'body {font-size: 14px;}' +					
-					'</style>' + body;
-				
-				
+				body += link;
+								
 				document.write(body);				
-				document.body.style.fontFamily = 'Open Sans';
 				
 				document.close();
 				iframe.style.height = document.body.scrollHeight + 'px';
