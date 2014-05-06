@@ -203,7 +203,7 @@ class InboundEmail extends \Espo\Services\Record
 			$body = $email->get('body');
 			if (!empty($body)) {
 				foreach ($inlineIds as $cid => $attachmentId) {
-					$body = str_replace('cid:' . $cid, '?entryPoint=attachment&id=' . $attachmentId, $body);
+					$body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
 				}
 				$email->set('body', $body);
 			}
