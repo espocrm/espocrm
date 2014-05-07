@@ -220,7 +220,7 @@ class InboundEmail extends \Espo\Services\Record
 						$email->set('parentType', 'Case');
 						$email->set('parentId', $case->id);
 						$this->getEntityManager()->saveEntity($email);
-						$this->getServiceFactory()->create('Stream')->noteEmail($case, $email);
+						$this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
 					}
 				} else {
 					$params = array(

@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Stream.Notes.Email', 'Views.Stream.Note', function (Dep) {
+Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (Dep) {
 
 	return Dep.extend({
 
-		template: 'stream.notes.email',
+		template: 'stream.notes.email-received',
 		
 		data: function () {
 			return _.extend({

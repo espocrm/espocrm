@@ -110,11 +110,16 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					language: language
 				};			
 				
-				this.$element.datepicker(options);
+				var datePicker = this.$element.datepicker(options).on('show', function (e) {
+					$('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
+				}.bind(this));
+				
 				
 				if (this.mode == 'search') {
 					var elAdd = this.$el.find('input[name="' + this.name + '-additional"]');
-					elAdd.datepicker(options);
+					elAdd.datepicker(options).on('show', function (e) {
+						$('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
+					}.bind(this));
 					elAdd.parent().find('button').click(function (e) {
 						elAdd.datepicker('show');
 					});

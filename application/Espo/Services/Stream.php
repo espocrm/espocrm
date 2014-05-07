@@ -272,13 +272,13 @@ class Stream extends \Espo\Core\Services\Base
 		}
 	}
 	
-	public function noteEmail(Entity $entity, Entity $email)
+	public function noteEmailReceived(Entity $entity, Entity $email)
 	{
 		$entityName = $entity->getEntityName();
 		
 		$note = $this->getEntityManager()->getEntity('Note');
 		
-		$note->set('type', 'Email');
+		$note->set('type', 'EmailReceived');
 		$note->set('parentId', $entity->id);
 		$note->set('parentType', $entityName);
 		
