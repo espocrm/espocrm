@@ -133,7 +133,7 @@ class Application
     {
     	$config = $this->getContainer()->get('config');
 
-    	if (file_exists($config->get('configPath')) && $config->get('isInstalled')) {
+    	if (file_exists($config->getConfigPath()) && $config->get('isInstalled')) {
     		return true;
     	}
 

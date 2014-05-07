@@ -66,13 +66,20 @@ class Installer
 	public function __construct()
 	{
 		$this->app = new \Espo\Core\Application();
-		$this->writableList[] = $this->app->getContainer()->get('config')->get('configPath');
 
 		$user = $this->getEntityManager()->getEntity('User');
 		$this->app->getContainer()->setUser($user);
 
 		require_once('install/core/SystemHelper.php');
 		$this->systemHelper = new SystemHelper();
+
+		$configPath = $this->getConfig()->getConfigPath();
+		$this->writableList[] = $configPath;
+
+		if (!file_exists($configPath)) {
+			$configData = $this->getConfig()->getDefaults();
+			$this->getConfig()->set($configData);
+		}
 	}
 
 	protected function getContainer()
@@ -83,6 +90,11 @@ class Installer
 	protected function getEntityManager()
 	{
 		return $this->getContainer()->get('entityManager');
+	}
+
+	protected function getConfig()
+	{
+		return $this->app->getContainer()->get('config');
 	}
 
 	protected function getSystemHelper()
@@ -191,9 +203,13 @@ class Installer
 
 	public function setPreferences($preferences)
 	{
-		$currencyList = $this->app->getContainer()->get('config')->get('currencyList');
+		$currencyList = $this->getConfig()->get('currencyList');
 		if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
+
 			$preferences['currencyList'] = array($preferences['defaultCurrency']);
+
+			$preferences['currency'] = $this->getConfig()->get('currency');
+			$preferences['currency']['base'] = $preferences['defaultCurrency'];
 		}
 
 		$res = $this->saveConfig($preferences);

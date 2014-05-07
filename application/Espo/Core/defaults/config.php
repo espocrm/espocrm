@@ -21,13 +21,13 @@
  ************************************************************************/
 
 return array (
-	'configPath' => 'data/config.php',
-	'cachePath' => 'data/cache',
-
 	'database' =>
 	array (
 		'driver' => 'pdo_mysql',
 		'host' => 'localhost',
+		'dbname' => '',
+		'user' => '',
+		'password' => '',
 	),
 	'useCache' => true,
 	'recordsPerPage' => 20,
@@ -44,6 +44,12 @@ return array (
 	array (
 	),
 	'defaultCurrency' => 'USD',
+	'currency' =>
+	array(
+		'base' => 'USD',
+		'rate' => array(
+		),
+	),
 	'outboundEmailIsShared' => true,
 	'outboundEmailFromName' => 'EspoCRM',
 	'outboundEmailFromAddress' => '',
@@ -60,9 +66,9 @@ return array (
 	'logger' =>
 	array (
 		'path' => 'data/logs/espo.log',
-		'level' => 'ERROR', /*DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY*/
-		'isRotate' => true, /*rotate every day every logs files*/
-		'maxRotateFiles' => 30, /*max number of rotate files*/
+		'level' => 'ERROR', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
+		'isRotate' => true, /** rotate log files every day */
+		'maxRotateFiles' => 30, /** max number of rotate files */
 	),
 	'defaultPermissions' =>
 	array (
@@ -72,16 +78,9 @@ return array (
 		'group' => '',
 	),
 	'cron' => array(
-		'maxJobNumber' => 15, /*Max number of jobs per one execution*/
-		'jobPeriod' => 7800, /*Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35*/
-		'minExecutionTime' => 50, /*to avoid too frequency execution*/
-	),
-	'currency' =>
-	array(
-		'base' => 'USD',
-		'rate' => array(
-			'EUR' => 1.37,
-		),
+		'maxJobNumber' => 15, /** Max number of jobs per one execution */
+		'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
+		'minExecutionTime' => 50, /** to avoid too frequency execution **/
 	),
 	'globalSearchEntityList' =>
 	array (
@@ -91,6 +90,8 @@ return array (
 		3 => 'Prospect',
 		4 => 'Opportunity',
 	),
+	"tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect", "Email"),
+	"quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"),
 	'crud' => array(
 		'get' => 'read',
 		'post' => 'create',
@@ -116,7 +117,6 @@ return array (
 		'isInstalled',
 		'defaultPermissions',
 		'systemUser',
-		'rewriteOptions',
 	),
 	'adminItems' =>
 	array (
@@ -132,14 +132,6 @@ return array (
 		'smtpPassword',
 		'cron',
 	),
-	'rewriteOptions' =>
-	array (
-		'tabList',
-		'quickCreateList',
-		'globalSearchEntityList',
-	),
-	"tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect", "Email"),
-	"quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"),
 	'isInstalled' => false,
 );
 
