@@ -26,6 +26,9 @@ class DataManager
 {
 	private $container;
 
+	private $cachePath = 'data/cache';
+
+
 	public function __construct(Container $container)
 	{
 		$this->container = $container;
@@ -59,9 +62,7 @@ class DataManager
 	 */
 	public function clearCache()
 	{
-		$cacheDir = $this->getContainer()->get('config')->get('cachePath');
-
-		$result = $this->getContainer()->get('fileManager')->removeInDir($cacheDir);
+		$result = $this->getContainer()->get('fileManager')->removeInDir($this->cachePath);
 
 		if ($result === false) {
 			throw new Exceptions\Error("Error while clearing cache");

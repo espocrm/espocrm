@@ -32,6 +32,8 @@ class Config
 	 */
 	private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
 
+	protected $configPath = 'data/config.php';
+
 	/**
 	 * Array of admin items
 	 *
@@ -62,6 +64,11 @@ class Config
 		return $this->fileManager;
 	}
 
+	public function getConfigPath()
+	{
+		return $this->configPath;
+	}
+
 	/**
 	 * Get an option from config
 	 *
@@ -85,7 +92,6 @@ class Config
 		return $lastBranch;
 	}
 
-
 	/**
 	 * Set an option to the config
 	 *
@@ -95,15 +101,11 @@ class Config
 	 */
 	public function set($name, $value = '')
 	{
-		if (is_array($name)) {
-			return $this->setArray($name);
+		if (!is_array($name)) {
+			$name = array($name => $value);
 		}
 
-		$content = array($name => $value);
-		$status = $this->getFileManager()->mergeContentsPHP($this->get('configPath'), $content, true);
-		$this->loadConfig(true);
-
-		return $status;
+		return $this->setArray($name);
 	}
 
 
@@ -119,10 +121,15 @@ class Config
 			return false;
 		}
 
-		$status = $this->getFileManager()->mergeContentsPHP($this->get('configPath'), $values, true);
+		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, true);
 		$this->loadConfig(true);
 
-		return $status;
+		return $result;
+	}
+
+	public function getDefaults()
+	{
+		return $this->getFileManager()->getContents($this->defaultConfigPath);
 	}
 
 	/**
@@ -136,20 +143,9 @@ class Config
 			return $this->configData;
 		}
 
-		$defaultConfig = $this->getFileManager()->getContents($this->defaultConfigPath);
+		$configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
 
-		$config = $this->getFileManager()->getContents($defaultConfig['configPath']);
-		if (empty($config)) {
-			$config = array();
-		}
-
-		if (!empty($defaultConfig['rewriteOptions'])) {
-			$this->configData =  Util::merge((array) $defaultConfig, (array) $config, 1, $defaultConfig['rewriteOptions']);
-		} else {
-			$this->configData =  Util::merge((array) $defaultConfig, (array) $config);
-		}
-
-		$this->adminItems = $this->getRestrictItems();
+		$this->configData = $this->getFileManager()->getContents($configPath);
 
 		return $this->configData;
 	}
@@ -161,7 +157,7 @@ class Config
 	 * @param $isAdmin
 	 * @return array
 	 */
-	public function getData($isAdmin=false)
+	public function getData($isAdmin = false)
 	{
 		$configData = $this->loadConfig();
 
@@ -182,7 +178,7 @@ class Config
 	 * @param $isAdmin
 	 * @return bool
 	 */
-	public function setData($data, $isAdmin=false)
+	public function setData($data, $isAdmin = false)
 	{
 		$restrictItems = $this->getRestrictItems($isAdmin);
 
@@ -224,7 +220,7 @@ class Config
 	 * @param $isAdmin
 	 * @return bool
 	 */
-	protected function isAllowed($name, $isAdmin=false)
+	protected function isAllowed($name, $isAdmin = false)
 	{
 		if (in_array($name, $this->getRestrictItems($isAdmin))) {
 			return false;

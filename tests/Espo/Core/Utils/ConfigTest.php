@@ -8,19 +8,19 @@ use tests\ReflectionHelper;
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
 	protected $object;
-	
+
 	protected $objects;
 
-	protected $defaultConfigPath = 'tests/testData/Utils/Config/defaultConfig.php';
+	protected $configPath = 'tests/testData/Utils/Config/config.php';
 
     protected function setUp()
-    {   
-		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();						
+    {
+		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
         $this->object = new \Espo\Core\Utils\Config($this->objects['fileManager']);
 
-        $this->reflection = new ReflectionHelper($this->object); 
-        $this->reflection->setProperty('defaultConfigPath', $this->defaultConfigPath);
+        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection->setProperty('configPath', $this->configPath);
     }
 
     protected function tearDown()
@@ -30,7 +30,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 
     function testLoadConfig()
-	{		
+	{
 		$this->assertArrayHasKey('database', $this->reflection->invokeMethod('loadConfig', array()));
 
 		$this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('loadConfig', array()));
@@ -39,7 +39,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     function testGet()
 	{
 		$result = array(
-			'driver' => 'mysqli',
+			'driver' => 'pdo_mysql',
 		    'host' => 'localhost',
 		    'dbname' => 'espocrm',
 		    'user' => 'root',
@@ -47,14 +47,16 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		);
 		$this->assertEquals($result, $this->object->get('database'));
 
-		$result = 'mysqli';
+		$result = 'pdo_mysql';
 		$this->assertEquals($result, $this->object->get('database.driver'));
 
 
-		$result = 'MM/DD/YYYY';
+		$result = 'YYYY-MM-DD';
 		$this->assertEquals($result, $this->object->get('dateFormat'));
+
+		$this->assertTrue($this->object->get('isInstalled'));
 	}
-	
+
 
     function testSet()
 	{
@@ -69,12 +71,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 	function testSetArray()
 	{
-		$this->reflection->setProperty('defaultConfigPath', 'tests/testData/Utils/Config/defaultConfigArray.php');
-
 		$values = array(
 			'testOption' => 'Test',
-			'testOption2' => 'Test2',			
-		);        
+			'testOption2' => 'Test2',
+		);
 
         $this->assertTrue($this->object->set($values));
         $this->assertEquals('Test', $this->object->get('testOption'));
@@ -84,8 +84,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         	'testOption' => 'Another Wrong Value',
         );
         $this->assertTrue($this->object->set($wrongArray));
-
-        $this->reflection->setProperty('defaultConfigPath', $this->defaultConfigPath);
 	}
 
 }
