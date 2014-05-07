@@ -92,19 +92,24 @@ class Notification extends \Espo\Core\Services\Base
 		$count = $this->getEntityManager()->getRepository('Notification')->count($searchParams);
 		
 		$ids = array();
-		foreach ($collection as $entity) {
+		foreach ($collection as $k => $entity) {
 			$ids[] = $entity->id;
 			$data = json_decode($entity->get('data'));
 			switch ($entity->get('type')) {
 				case 'Note':				
 					$note = $this->getEntityManager()->getEntity('Note', $data->noteId);
-					if ($note->get('parentId') && $note->get('parentType')) {
-						$parent = $this->getEntityManager()->getEntity($note->get('parentType'), $note->get('parentId'));
-						if ($parent) {
-							$note->set('parentName', $parent->get('name'));
+					if ($note) {
+						if ($note->get('parentId') && $note->get('parentType')) {
+							$parent = $this->getEntityManager()->getEntity($note->get('parentType'), $note->get('parentId'));
+							if ($parent) {
+								$note->set('parentName', $parent->get('name'));
+							}
 						}
+						$entity->set('data', $note->toArray());
+					} else {
+						unset($collection[$k]);
+						$this->getEntityManager()->removeEntity($entity);
 					}
-					$entity->set('data', $note->toArray());
 					break;
 			}
 		}		
