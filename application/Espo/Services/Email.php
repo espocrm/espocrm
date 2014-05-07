@@ -121,7 +121,7 @@ class Email extends Record
 		$searchByEmailAddress = false;
 		if (!empty($params['where']) && is_array($params['where'])) {
 			foreach ($params['where'] as $i => $p) {
-				if ($p['field'] == 'emailAddress') {
+				if (!empty($p['field']) && $p['field'] == 'emailAddress') {
 					$searchByEmailAddress = true;				
 					$emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
 						'lower' => strtolower($p['value'])
