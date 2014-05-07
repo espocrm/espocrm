@@ -82,7 +82,11 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 				}, this);
 			} else {
 				t = this.translate(this.name, 'options', this.model.name);
-			}						
+			}
+			
+			this.listenTo(this.model, 'change:' + this.name, function () {
+				this.selected = this.model.get(this.name);
+			}, this);					
 			
 
 			this.translatedOptions = null;			
@@ -106,32 +110,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 			this.$list = this.$el.find('.list-group');
 			var $select = this.$select = this.$el.find('.select');
 			
-			if (this.params.options) {				
-				/*var options = [];				
-				for (var i in this.translatedOptions) {
-					options.push(this.translatedOptions[i]);
-				}								
-				this.params.options.forEach(function (item) {
-					if (!(item in this.translatedOptions)) {
-						options.push(item);
-					}
-				}, this);
-							
-				$select.autocomplete({
-					lookup: options,
-					minChars: 0,
-			        lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-			            return suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0;
-			        },
-			        formatResult: function (suggestion) {
-			        	return suggestion.value;
-			        },
-					onSelect: function (s) {
-						this.addValue(s.value);
-						$select.val('');
-					}.bind(this)
-				});*/
-			} else {
+			if (!this.params.options) {				
 				$select.on('keypress', function (e) {
 					if (e.keyCode == 13) {
 						var value = $select.val();
