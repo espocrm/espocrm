@@ -82,8 +82,6 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 				el: '#notifications-panel',				
 			}, function (view) {
 				view.render();
-				this.$icon.removeClass('warning');
-				this.$badge.attr('title', '');
 			}.bind(this));
 			
 			$document = $(document);			
