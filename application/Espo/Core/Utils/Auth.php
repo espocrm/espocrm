@@ -33,11 +33,12 @@ class Auth
 		$this->container = $container;
 	}
 	
-	public function useNoAuth()
+	public function useNoAuth($isAdmin = false)
 	{
-		$entityManager = $this->container->get('entityManager');		
+		$entityManager = $this->container->get('entityManager');	
 		
-		$user = $entityManager->getRepository('User')->get('system');		
+		$user = $entityManager->getRepository('User')->get('system');
+		$user->set('isAdmin', $isAdmin);		
 		if (!$user) {
 			throw new Error('System user is not found');			
 		}

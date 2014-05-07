@@ -123,7 +123,7 @@ class Application
     public function runCron()
     {
     	$auth = $this->getAuth();
-    	$auth->useNoAuth();
+    	$auth->useNoAuth(true);
 
     	$cronManager = new \Espo\Core\CronManager($this->container);
 		$cronManager->run();
