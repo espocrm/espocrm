@@ -143,7 +143,12 @@ class Config
 			$config = array();
 		}
 
-		$this->configData =  Util::merge((array) $defaultConfig, (array) $config);
+		if (!empty($defaultConfig['rewriteOptions'])) {
+			$this->configData =  Util::merge((array) $defaultConfig, (array) $config, 1, $defaultConfig['rewriteOptions']);
+		} else {
+			$this->configData =  Util::merge((array) $defaultConfig, (array) $config);
+		}
+
 		$this->adminItems = $this->getRestrictItems();
 
 		return $this->configData;

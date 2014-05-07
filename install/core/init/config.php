@@ -18,28 +18,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 return array(
-	'tabList' => 
-	array (
-		'Account',
-		'Contact',
-		'Lead',
-		'Prospect',
-		'Opportunity',
-		'Calendar',
-		'Meeting',
-		'Call',
-		'Task',
-		'Case',
-	),
-	'quickCreateList' => 
-	array (
-		'Contact',
-		'Lead',
-		'Meeting',
-		'Call',
-		'Task',
-	),
+
 );
