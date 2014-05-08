@@ -261,13 +261,12 @@ class Converter
 					$subField = $this->convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta);
 
 					if (!isset($outputMeta[ $subField['naming'] ])) {
-						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params'], $fieldTypeMeta);
+						$subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params']);
 						if ($subFieldDefs !== false) {
 							$outputMeta[ $subField['naming'] ] = $subFieldDefs; //push fieldDefs to the main array
 						}
 					}
 				}
-
 			} else {
 				$fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
 				if ($fieldDefs !== false) {
@@ -296,7 +295,7 @@ class Converter
 
 
 
-	protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta)
+	protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta = null)
 	{
 		/** set default type if exists */
 		if (!isset($fieldParams['type']) || empty($fieldParams['type'])) {
@@ -305,6 +304,10 @@ class Converter
 		} /** END: set default type if exists */
 
 		/** merge fieldDefs option from field definition */
+		if (!isset($fieldTypeMeta)) {
+			$fieldTypeMeta = $this->getMetadataUtils()->getFieldDefsByType($fieldParams);
+		}
+
 		if (isset($fieldTypeMeta['fieldDefs'])) {
 			$fieldParams = Util::merge($fieldParams, $fieldTypeMeta['fieldDefs']);
 		}
