@@ -346,8 +346,9 @@ class InboundEmail extends \Espo\Services\Record
 			$content = $part->getContent();
 			
 			$encoding = null;
-			$cteHeader = $part->getHeader('Content-Transfer-Encoding');
-			if ($cteHeader) {
+			
+			if (isset($part->contentTransferEncoding)) {
+				$cteHeader = $part->getHeader('Content-Transfer-Encoding');
 				$encoding = strtolower($cteHeader->getTransferEncoding());
 			}
 			
@@ -356,17 +357,21 @@ class InboundEmail extends \Espo\Services\Record
 			}
 			
 			$charset = 'UTF-8';			
-			$ctHeader = $part->getHeader('Content-Type');
-			if ($ctHeader) {
-				$charset = strtoupper($ctHeader->getParameter('charset'));
+			
+			if (isset($part->contentType)) {
+				$ctHeader = $part->getHeader('Content-Type');
+				$charsetParamValue = $ctHeader->getParameter('charset');
+				if (!empty($charsetParamValue)) {
+					$charset = strtoupper($charsetParamValue);
+				}
 			}
 			
 			if ($charset !== 'UTF-8') {
 				$content = mb_convert_encoding($content, 'UTF-8', $charset);
-			}
+			}			
 			
-			$cteHeader = $part->getHeader('Content-Transfer-Encoding');
-			if ($cteHeader) {				
+			if (isset($part->contentTransferEncoding)) {
+				$cteHeader = $part->getHeader('Content-Transfer-Encoding');			
 				if ($cteHeader->getTransferEncoding() == 'quoted-printable') {					
 					$content = quoted_printable_decode($content);
 				}
@@ -382,25 +387,24 @@ class InboundEmail extends \Espo\Services\Record
 			$encoding = null;
 			
 			switch ($type) {
-				case 'text/plain':
-					$content = $this->getContentFromPart($part);					
+				case 'text/plain':					
+					$content = $this->getContentFromPart($part);				
 					if (!$email->get('body')) {				
 						$email->set('body', $content);
 					}
 					$email->set('bodyPlain', $content);
 					break;
-				case 'text/html':		
+				case 'text/html':
 					$content = $this->getContentFromPart($part);
 					$email->set('body', $content);
 					$email->set('isHtml', true);
 					break;
-				default:			
+				default:
 					$content = $part->getContent();					
 					$disposition = null;
 					
 					$fileName = null;
-					$contentId = null;					
-
+					$contentId = null;
 							
 					if (isset($part->ContentDisposition)) {				
 						if (strpos($part->ContentDisposition, 'attachment') === 0) {
@@ -412,7 +416,11 @@ class InboundEmail extends \Espo\Services\Record
 							$contentId = trim($part->contentID, '<>');
 							$fileName = $contentId;
 							$disposition = 'inline';
-						}
+						}						
+					}
+					
+					if (isset($part->contentTransferEncoding)) {
+						$encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
 					}
 					
 					$attachment = $this->getEntityManager()->getEntity('Attachment');

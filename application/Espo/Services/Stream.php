@@ -186,7 +186,7 @@ class Stream extends \Espo\Core\Services\Base
 		if (!empty($params['after'])) {
 			$where = array();
 			$where['createdAt>'] = $params['after'];
-			$selectParams['where'] = $where;
+			$selectParams['whereClause'] = $where;
 		}
 	
 		$collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
@@ -206,7 +206,7 @@ class Stream extends \Espo\Core\Services\Base
 			}			
 		}
 		
-		unset($where['createdAt>']);	
+		unset($selectParams['whereClause']['createdAt>']);	
 		$count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
     	
     	return array(
