@@ -752,11 +752,8 @@ abstract class Mapper implements IMapper
 		foreach ($dataArr as $field => $value) {
 			$fieldArr[] = $this->toDb($field);
 			
-			$type = $entity->fields[$field]['type'];
-			
-			if ($entity->getFetched($field) === $value) {
-				continue;
-			}			
+			$type = $entity->fields[$field]['type'];			
+		
 								
 			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
 				$value = json_encode($value);
