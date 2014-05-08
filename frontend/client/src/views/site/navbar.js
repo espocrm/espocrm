@@ -124,6 +124,8 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 					$one.insertAfter($tabs.children().eq(count - 2));
 				}
 			};
+			
+			var moreWidth = $('#nav-more-tabs-dropdown').width();
 
 			var updateWidth = function () {
 				var documentWidth = $(window.document).width();
@@ -138,7 +140,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 					return;
 				}
 
-				var maxWidth = self.$el.width() - 612;
+				var maxWidth = self.$el.width() - 590 - moreWidth;
 
 				var width = $tabs.width();
 				while (width > maxWidth) {
