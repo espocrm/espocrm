@@ -27,6 +27,6 @@
 	},
 	"labels": {
 		"Create Email": "Archive Email",
-		"Compose Email": "Compose"
+		"Compose": "Compose"
 	}
 }
