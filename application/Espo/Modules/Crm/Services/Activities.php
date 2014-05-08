@@ -361,7 +361,7 @@ class Activities extends \Espo\Core\Services\Base
 		$sql = "
 			SELECT 'Meeting' AS scope, meeting.id AS id, meeting.name AS name, meeting.date_start AS dateStart, meeting.date_end AS dateEnd, meeting.status AS status 
 			FROM `meeting`
-			JOIN meeting_user ON meeting_user.meeting_id = meeting.id
+			JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0
 			WHERE 
 				meeting.deleted = 0 AND
 				meeting.date_start >= ".$pdo->quote($from)." AND
@@ -370,7 +370,7 @@ class Activities extends \Espo\Core\Services\Base
 			UNION
 			SELECT 'Call' AS scope, call.id AS id, call.name AS name, call.date_start AS dateStart, call.date_end AS dateEnd, call.status AS status 
 			FROM `call`
-			JOIN call_user ON call_user.call_id = call.id
+			JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0
 			WHERE 
 				call.deleted = 0 AND
 				call.date_start >= ".$pdo->quote($from)." AND
