@@ -750,7 +750,18 @@ abstract class Mapper implements IMapper
 		$fieldArr = array();
 		$valArr = array();
 		foreach ($dataArr as $field => $value) {
-			$fieldArr[] = $this->toDb($field);			
+			$fieldArr[] = $this->toDb($field);
+			
+			$type = $entity->fields[$field]['type'];
+			
+			if ($entity->getFetched($field) === $value) {
+				continue;
+			}			
+								
+			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
+				$value = json_encode($value);
+			}
+						
 			$valArr[] = $this->quote($value);			
 		}		
 		$fieldsPart = "`" . implode("`, `", $fieldArr) . "`";
@@ -773,18 +784,23 @@ abstract class Mapper implements IMapper
 		foreach ($dataArr as $field => $value) {
 			if ($field == 'id') {
 				continue;
-			}						
-			if ($entity->fields[$field]['type'] == IEntity::FOREIGN) {
-				continue;
 			}
+			$type = $entity->fields[$field]['type'];
+								
+			if ($type == IEntity::FOREIGN) {
+				continue;
+			} 
 			
 			if ($entity->getFetched($field) === $value) {
 				continue;
 			}
 			
+			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
+				$value = json_encode($value);
+			}
+			
 			$setArr[] = "`" . $this->toDb($field) . "` = " . $this->quote($value);
 		}
-		
 		if (count($setArr) == 0) {
 			return $entity->id;
 		}

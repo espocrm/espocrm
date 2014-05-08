@@ -32,6 +32,7 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 				defs: this.defs,
 				params: this.params,
 				type: this.type,
+				fieldList: this.fieldList,
 			};
 		},
 		
@@ -107,6 +108,9 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 				}, this);			
 								
 				this.params.forEach(function (o) {
+					if (o.hidden) {
+						return;
+					}
 					this.createFieldView(o.type, o.name);
 				}, this);
 				

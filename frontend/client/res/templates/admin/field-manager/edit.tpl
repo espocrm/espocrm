@@ -19,10 +19,12 @@
 		</div>
 		
 		{{#each params}}
-		<div class="cell cell-{{name}} form-group">
-			<label class="control-label">{{translate name scope='Admin' category='fields'}}</label>
-			<div class="field field-{{name}}">{{{var name ../this}}}</div>
-		</div>
+			{{#unless hidden}}
+			<div class="cell cell-{{../name}} form-group">
+				<label class="control-label">{{translate ../name scope='Admin' category='fields'}}</label>
+				<div class="field field-{{../name}}">{{{var ../name ../../this}}}</div>
+			</div>
+			{{/unless}}
 		{{/each}}
 	</div>
 </div>

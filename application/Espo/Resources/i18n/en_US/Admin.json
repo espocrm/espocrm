@@ -38,6 +38,7 @@
 	},
 	"fieldTypes": {
 		"address": "Address",
+		"array": "Array",
 		"foreign": "Foreign",
 		"duration": "Duration",
 		"password": "Password",

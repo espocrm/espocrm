@@ -11,15 +11,16 @@
       },
       {
          "name":"translation",
-         "type":"varchar"
+         "type":"varchar",
+         "hidden": true
       }
    ],
    "search":{
       "basic":false,
       "advanced":false
    },
-   "notCreatable": true,
+   "notCreatable": false,
    "fieldDefs":{
-      "type":"json_array"
+      "type":"jsonArray"
    }
 }

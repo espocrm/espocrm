@@ -103,7 +103,10 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 				this.translatedOptions = translatedOptions;
 			}			
 			
-			this.selected = _.clone(this.model.get(this.name) || []);				
+			this.selected = _.clone(this.model.get(this.name) || []);
+			if (Object.prototype.toString.call(this.selected) !== '[object Array]')	{
+				this.selected = [];	
+			}
 		},
 		
 		afterRender: function () {

@@ -38,6 +38,7 @@ interface IEntity
 	const FOREIGN_TYPE = 'foreignType';
 	const DATE = 'date';
 	const DATETIME = 'datetime';
+	const JSON_ARRAY = 'jsonArray';
 	
 	const MANY_MANY = 'manyMany';
 	const HAS_MANY = 'hasMany';

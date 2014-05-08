@@ -189,6 +189,12 @@ abstract class Entity implements IEntity
 						case self::FLOAT:
 							$value = floatval($value);
 							break;
+						case self::JSON_ARRAY:
+							$value = is_string($value) ? json_decode($value) : $value;
+							if (!is_array($value)) {
+								$value = null;
+							}
+							break;
 						default:
 							break;
 					}
