@@ -24,11 +24,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="form-group col-sm-6">
-		<button type="button" class="btn btn-default" data-action="refresh">
-			<span class="glyphicon glyphicon-refresh"></span>&nbsp;{{translate 'Refresh'}}
-		</button>
-		
+	<div class="form-group col-sm-6">		
 
 		<div class="btn-group">
 			<button type="button" class="btn btn-default" data-action="reset">

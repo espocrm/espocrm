@@ -67,7 +67,7 @@
 <div id="layout" class="row">
 	<div class="col-sm-5">
 		<div class="well">
-			<header>Enabled</header>
+			<header>{{translate 'Enabled' scope='Admin'}}</header>
 			<ul class="enabled connected">
 				{{#each layout}}
 					<li draggable="true" {{#each ../dataAttributes}}data-{{this}}="{{prop ../this this}}" {{/each}}>
@@ -84,7 +84,7 @@
 	</div>
 	<div class="col-sm-5">
 		<div class="well">
-			<header>Disabled</header>
+			<header>{{translate 'Disabled' scope='Admin'}}</header>
 			<ul class="disabled connected">
 				{{#each disabledFields}}
 					<li draggable="true" data-name="{{name}}">
