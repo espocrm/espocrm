@@ -10,7 +10,7 @@
 
 <div class="panel panel-default upload">
 	<div class="panel-heading">
-		<h4 class="panel-title">{{translate 'Select uprade package' scope='Admin'}}</h4>
+		<h4 class="panel-title">{{translate 'selectUpgradePackage' scope='Admin' category="messages"}}</h4>
 	</div>	
 	<div class="panel-body">
 		<div>

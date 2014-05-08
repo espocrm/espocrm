@@ -32,5 +32,11 @@
 			"0": "Sunday",
 			"1": "Monday"
 		}
+	},
+	"labels": {
+		"System": "System",
+		"Locale": "Locale",
+		"SMTP": "SMTP",
+		"Configuration": "Configuration"
 	}
 }

@@ -85,7 +85,8 @@
 		"upgradeBackup": "We recommend you to make backup of your EspoCRM files and data before upgrade.",
 		"thousandSeparatorEqualsDecimalMark": "Thousand separator can not be same as decimal mark",
 		"userHasNoEmailAddress": "User has not email address.",
-		"selectEntityType": "Select entity type in the left menu."
+		"selectEntityType": "Select entity type in the left menu.",
+		"selectUpgradePackage": "Select uprade package"
 	},
 	"descriptions": {
 		"settings": "System settings of application.",

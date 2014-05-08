@@ -32,6 +32,9 @@
 		}
 	},
 	"labels": {
-		"Create InboundEmail": "Create Inbound Email"
+		"Create InboundEmail": "Create Inbound Email",
+		"IMAP": "IMAP",
+		"Actions": "Actions",
+		"Main": "Main"		
 	}
 }
