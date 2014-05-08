@@ -1,5 +1,7 @@
 {
 	"labels": {
+		"Enabled": "Enabled",
+		"Disabled": "Disabled",
 		"System": "System",
 		"Users": "Users",
 		"Email": "Email",
