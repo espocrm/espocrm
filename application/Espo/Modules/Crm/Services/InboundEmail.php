@@ -294,6 +294,8 @@ class InboundEmail extends \Espo\Services\Record
 			$caseDistribution = $params['caseDistribution'];
 		}
 		
+		$case->set('status', 'Assigned');
+		
 		switch ($caseDistribution) {
 			case 'Round-Robin':
 				if ($teamId) {
