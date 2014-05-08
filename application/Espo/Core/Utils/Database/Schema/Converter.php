@@ -274,7 +274,7 @@ class Converter
 
 		switch ($fieldParams['type']) {
 			case 'array':
-			case 'json_array':
+			case 'jsonArray':
 				$dbFieldParams['default'] = ''; //for db type TEXT can't be defined a default value
 				break;
 
