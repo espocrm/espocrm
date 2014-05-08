@@ -229,7 +229,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		},		
 
 		delete: function () {
-			if (confirm(this.getLanguage().translate("Are you sure you want to delete the record"))) {
+			if (confirm(this.getLanguage().translate("Are you sure you?"))) {
 				this.trigger('before:delete');
 				this.trigger('delete');
 
