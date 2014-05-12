@@ -403,15 +403,16 @@ _.extend(Espo.App.prototype, {
 		$(document).ajaxError(function (event, xhr, options) {
 			if (xhr.errorIsHandled) {
 				return;
-			}
-			switch (xhr.status) {
+			}			
+			switch (xhr.status) {				
 				case 0:
 					if (xhr.statusText == 'timeout') {
 						Espo.Ui.error(self.language.translate('Timeout'));
 					}
 					break;
 				case 200:
-					Espo.Ui.error(self.language.translate('Bad server response'));					
+					Espo.Ui.error(self.language.translate('Bad server response'));			
+					console.error('Bad server response: ' + xhr.responseText);									
 					break;
 				case 401:
 					if (!options.login) {
@@ -431,10 +432,15 @@ _.extend(Espo.App.prototype, {
 						self.baseController.error404();
 					} else {
 						Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
-					}
+					}	
 					break;
 				default:
 					Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
+			}
+			
+			var statusReason = xhr.getResponseHeader('X-Status-Reason');
+			if (statusReason) {				
+				console.error('Server side error: ' + statusReason);
 			}
 		});
 	},
