@@ -71,8 +71,10 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 			var smtpSecurityField = this.getFieldView('smtpSecurity');
 			this.listenTo(smtpSecurityField, 'change', function () {
 				var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
-				if (['SSL', 'TLS'].indexOf(smtpSecurity) != -1) {
+				if (smtpSecurity == 'SSL') {
 					this.model.set('smtpPort', '465');
+				} else if (smtpSecurity == 'TLS') {
+					this.model.set('smtpPort', '587');
 				} else {
 					this.model.set('smtpPort', '25');
 				}			
