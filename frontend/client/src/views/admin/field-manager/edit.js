@@ -155,6 +155,15 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 				this.getMetadata().data['entityDefs'][this.scope]['fields'][this.model.get('name')] = this.model.toJSON();
 				this.getMetadata().storeToCache();
 				this.notify('Saved', 'success');
+				
+				var data = this.getLanguage().data;
+				if (this.scope in data) {
+					if (!('fields' in data[this.scope])) {
+						data[this.scope]['fields'] = {};
+					}
+					data[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
+				}
+				
 				this.getRouter().navigate('#Admin/fieldManager/scope=' + this.scope + '&field=' + this.model.get('name'), {trigger: true});
 			}.bind(this));
 			
