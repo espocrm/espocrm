@@ -1,6 +1,7 @@
 {
   "name": "espocrm",
-  "version": "1.0-rc4",
+  "version": "1.0.0",
+  "espoVersion": "1.0-rc4",
   "description": "",
   "main": "index.php",
   "repository": "",
@@ -15,6 +16,7 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-cssmin": "~0.6.2",
     "grunt-contrib-less": "~0.7.0",
-    "grunt-mkdir": "~0.1.1"
+    "grunt-mkdir": "~0.1.1",
+    "grunt-contrib-compress": "~0.8.0"
   }
 }

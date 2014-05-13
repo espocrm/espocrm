@@ -146,7 +146,7 @@ module.exports = function (grunt) {
 				dot: true,
 				src: '**',
 				cwd: 'build/tmp',
-				dest: 'build/EspoCRM-<%= pkg.version %>/',
+				dest: 'build/EspoCRM-<%= pkg.espoVersion %>/',
 			},
 		},
 		replace: {
@@ -171,7 +171,7 @@ module.exports = function (grunt) {
 					patterns: [
 						{
 							match: 'version',
-							replacement: '<%= pkg.version %>'
+							replacement: '<%= pkg.espoVersion %>'
 						}
 					]
 				},
@@ -183,6 +183,17 @@ module.exports = function (grunt) {
 				]
 			}
 		},
+		compress: {
+			final: {
+				options: {
+					archive: 'build/EspoCRM-<%= pkg.espoVersion %>.zip',
+					mode: 'zip'
+				},
+				src: ['**'],
+				cwd: 'build/EspoCRM-<%= pkg.espoVersion %>',
+				dest: 'EspoCRM-<%= pkg.espoVersion %>'
+			}
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
@@ -192,6 +203,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-replace');
+	grunt.loadNpmTasks('grunt-contrib-compress');
 
 	grunt.registerTask('default', [
 		'clean:start',
@@ -202,12 +214,11 @@ module.exports = function (grunt) {
 		'copy:frontendFolders',
 		'copy:frontendHtml',
 		'copy:frontendLib',
-		//'copy:frontendLibSummernote',
-		//'copy:frontendLibFlotr2',
 		'copy:backend',
 		'replace',
 		'copy:final',
 		'clean:final',
+		'compress',
 	]);		
 
 };
