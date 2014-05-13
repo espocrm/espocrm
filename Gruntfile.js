@@ -122,14 +122,6 @@ module.exports = function (grunt) {
 				src: '**',
 				dest: 'build/tmp/client/lib/',
 			},			
-			/*frontendLibSummernote: {	
-				src: 'frontend/client/lib/summernote.min.js',
-				dest: 'build/tmp/client/lib/summernote.min.js'		
-			},
-			frontendLibFlotr2: {
-				src: 'frontend/client/lib/flotr2.min.js',
-				dest: 'build/tmp/client/lib/flotr2.min.js'		
-			},*/
 			backend: {
 				expand: true,
 				dot: true,
