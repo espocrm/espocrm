@@ -114,15 +114,22 @@ module.exports = function (grunt) {
 			frontendHtml: {
 				src: 'frontend/html/reset.html',
 				dest: 'build/tmp/reset.html'
-			},				
-			frontendLibSummernote: {	
+			},
+			frontendLib: {
+				expand: true,
+				dot: true,
+				cwd: 'frontend/client/lib',
+				src: '**',
+				dest: 'build/tmp/client/lib/',
+			},			
+			/*frontendLibSummernote: {	
 				src: 'frontend/client/lib/summernote.min.js',
 				dest: 'build/tmp/client/lib/summernote.min.js'		
 			},
 			frontendLibFlotr2: {
 				src: 'frontend/client/lib/flotr2.min.js',
 				dest: 'build/tmp/client/lib/flotr2.min.js'		
-			},
+			},*/
 			backend: {
 				expand: true,
 				dot: true,
@@ -202,8 +209,9 @@ module.exports = function (grunt) {
 		'uglify',
 		'copy:frontendFolders',
 		'copy:frontendHtml',
-		'copy:frontendLibSummernote',
-		'copy:frontendLibFlotr2',
+		'copy:frontendLib',
+		//'copy:frontendLibSummernote',
+		//'copy:frontendLibFlotr2',
 		'copy:backend',
 		'replace',
 		'copy:final',
