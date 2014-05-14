@@ -230,7 +230,7 @@ class Language
 				$i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
 
 				if ($i18nName != $this->defaultLanguage) {
-					$i18nData = Util::merge($this->fullData[$this->defaultLanguage], $i18nData, 3);
+					$i18nData = Util::merge($this->fullData[$this->defaultLanguage], $i18nData);
 				}
 				$result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
 			}
