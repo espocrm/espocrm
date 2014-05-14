@@ -55,12 +55,19 @@ class Preferences extends \Espo\Core\Controllers\Base
 	public function actionUpdate($params, $data)
 	{
 		$userId = $params['id'];
-		$this->handleUserAccess($userId);		
+		$this->handleUserAccess($userId);
+		
+		$user = $this->getEntityManager()->getEntity('User', $userId);		
 
 		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);
+		
 		if ($entity) {
 			$entity->set($data);
 			$this->getEntityManager()->saveEntity($entity);
+			
+			$entity->set('smtpEmailAddress', $user->get('emailAddress'));			
+			$entity->set('name', $user->get('name'));
+			
 			return $entity->toArray();		
 		}
 		throw new Error();
