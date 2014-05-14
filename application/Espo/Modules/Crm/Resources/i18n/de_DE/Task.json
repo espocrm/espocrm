@@ -1,0 +1,31 @@
+{
+	"fields": {
+		"name": "Name",
+		"parent": "Bezieht sich auf",
+		"status": "Status",
+		"dateStart": "Startdatum",
+		"dateEnd": "Fällig am",
+		"priority": "Priorität",
+		"description": "Beschreibung",
+		"isOverdue": "Ist überfällig"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Not Started": "Nicht begonnen",
+			"Started": "In Bearbeitung",
+			"Completed": "Abgeschlossen",
+			"Canceled": "Storniert"
+		},
+		"priority" : {
+			"Low": "Niedrig",
+			"Normal": "Normal",
+			"High": "Hoch",
+			"Urgent": "Dringend"
+		}
+	},
+	"labels": {
+		"Create Task": "Neue Aufgabe"
+	}
+}

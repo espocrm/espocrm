@@ -1,0 +1,22 @@
+{
+	"fields": {
+		"name": "Name",
+		"emailAddress": "E-Mail",
+		"title": "Funktion",
+		"account": "Firma",
+		"phone": "Telefon",
+		"phoneOffice": "Phone (Office)",
+		"fax": "Fax",
+		"accountType": "Firmentyp",
+		"doNotCall": "Nicht anrufen",
+		"address": "Adresse",
+		"description": "Beschreibung"	
+	},
+	"links": {
+		"opportunities": "Verkaufschancen",
+		"cases": "Fälle"
+	},
+	"labels": {
+		"Create Contact": "Neuer Kontakt"
+	}
+}

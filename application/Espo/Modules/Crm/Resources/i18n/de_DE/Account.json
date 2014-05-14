@@ -1,0 +1,40 @@
+{
+	"fields": {
+		"name": "Name",
+		"emailAddress": "E-Mail",
+		"website": "Webseite",
+		"phone": "Telefon",
+		"fax": "Fax",
+		"billingAddress": "Rechnungsadresse",
+		"shippingAddress": "Lieferadresse",
+		"description": "Beschreibung",
+		"sicCode": "WKN Nummer",
+		"industry": "Branche",
+		"type": "Typ"		
+	},
+	"links": {
+		"contacts": "Kontakte",
+		"opportunities": "Verkaufschancen",
+		"cases": "Fälle"
+	},
+	"options": {
+		"type": {
+			"Customer": "Kunde",
+			"Investor": "Investor",
+			"Partner": "Partner",
+			"Reseller": "Wiederverkäufer"
+		},
+		"industry": {
+			"Apparel": "Bekleidungsindustrie",
+			"Banking": "Bankwesen",
+			"Computer Software": "Computer Software",
+			"Education": "Bildungswesen",
+			"Electronics": "Elektronik",
+			"Finance": "Finanzsektor",
+			"Insurance": "Versicherung"
+		}
+	},
+	"labels": {
+		"Create Account": "Neue Firma"
+	}
+}

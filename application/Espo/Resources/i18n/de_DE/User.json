@@ -1,0 +1,21 @@
+{
+	"fields": {
+		"name": "Name",
+		"userName": "Benutzername",
+		"title": "Funktion",
+		"isAdmin": "Ist Admin",
+		"defaultTeam": "Standard Team:",
+		"emailAddress": "E-Mail",
+		"phone": "Telefon",
+		"roles": "Rollen",
+		"password": "Passwort",
+		"passwordConfirm": "Passwort bestätigen"
+	},
+	"links": {
+		"teams": "Teams",
+		"roles": "Rollen"
+	},
+	"labels": {
+		"Create User": "Neuer Benutzer"
+	}
+}

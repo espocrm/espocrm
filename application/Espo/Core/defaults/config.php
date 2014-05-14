@@ -60,7 +60,8 @@ return array (
 	'smtpUsername' => '',
 	'smtpPassword' => '',
 	'languageList' => array(
-	'en_US',
+		'en_US',
+		'de_DE',
 	),
 	'language' => 'en_US',
 	'logger' =>

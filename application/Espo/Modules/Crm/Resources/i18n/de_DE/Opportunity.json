@@ -1,0 +1,43 @@
+{
+	"fields": {
+		"name": "Name",
+		"account": "Firma",
+		"stage": "Verkaufsphase",
+		"amount": "Betrag",
+		"probability": "Wahrscheinlichkeit (%)",
+		"leadSource": "Quelle",
+		"doNotCall": "Nicht anrufen",
+		"closeDate": "Abschlussdatum",
+		"description": "Beschreibung"
+	},
+	"links": {
+		"contacts": "Kontakte"
+	},
+	"options": {
+		"stage": {
+			"Prospecting": "Prospecting",
+			"Qualification": "Qualifikation",
+			"Needs Analysis": "Bedarfserhebung",
+			"Value Proposition": "Richtangebot",
+			"Id. Decision Makers": "id. Entscheider",
+			"Perception Analysis": "Analyse Sichtweise",
+			"Proposal/Price Quote": "Preisangebot",
+			"Negotiation/Review": "Verhandlung/Überarbeitung",
+			"Closed Won": "Gewonnen",
+			"Closed Lost": "Verloren" 
+		},
+		"leadSource": {
+			"Call": "Anruf",
+			"Email": "E-Mail",
+			"Existing Customer": "Bestehender Kunde",
+			"Partner": "Partner",
+			"Public Relations": "Public Relations",
+			"Web Site": "Web Seite",
+			"Campaign": "Kampagne",
+			"Other": "Andere"
+		}
+	},
+	"labels": {
+		"Create Opportunity": "Neue Verkaufschance"
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"fields": {
+		"name": "Name",
+		"status": "Status",
+		"isHtml": "Ist HTML",
+		"body": "Inhalt",
+		"subject": "Betreff",
+		"attachments": "Anhänge",
+		"insertField": ""
+	},
+	"links": {
+	},
+	"labels": {
+		"Create EmailTemplate": "Neue E-Mail Vorlage"
+	}
+}

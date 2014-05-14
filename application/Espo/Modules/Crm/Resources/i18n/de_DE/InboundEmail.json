@@ -1,0 +1,40 @@
+{
+	"fields": {
+		"name": "Name",
+		"team": "Team",
+		"status": "Status",
+		"assignToUser": "Mit Benutzer verknüpfen",
+		"host": "Host",
+		"username": "Benutzername",
+		"password": "Passwort",
+		"port": "Port",
+		"monitoredFolders": "Überwachter Ordner",
+		"trashFolder": "Papierkorb Ordner",
+		"ssl": "SSL",		
+		"createCase": "Neuer Fall",
+		"reply": "Antworten",
+		"caseDistribution": "Fall Verteilung",
+		"replyEmailTemplate": "Vorlage E-Mail Antwort",
+		"replyFromAddress": "Von Adresse antworten",
+		"replyFromName": "Von Name antworten"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Active": "Aktiv",
+			"Inactive": "Inaktiv"
+		},
+		"caseDistribution": {
+			"Direct-Assignment": "Direkte Zuordnung",
+			"Round-Robin": "Umlauf-Verfahren",
+			"Least-Busy": "geringste Auslastung"
+		}
+	},
+	"labels": {
+		"Create InboundEmail": "Eingehende E-Mail erstellen",
+		"IMAP": "IMAP",
+		"Actions": "Aktionen",
+		"Main": "Wichtig"		
+	}
+}

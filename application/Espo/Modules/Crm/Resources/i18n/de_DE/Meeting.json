@@ -1,0 +1,29 @@
+{
+	"fields": {
+		"name": "Name",
+		"parent": "Bezieht sich auf",
+		"status": "Status",
+		"dateStart": "Startdatum",
+		"dateEnd": "Enddatum",
+		"duration": "Dauer",
+		"description": "Beschreibung",
+		"users": "Benutzer",
+		"contacts": "Kontakte",
+		"leads": "Interessenten"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Planned": "Geplant",
+			"Held": "Durchgeführt",
+			"Not Held": "Nicht durchgeführt"
+		}
+	},
+	"labels": {
+		"Create Meeting": "Neues Meeting",
+		"Set Held": "Auf Gehalten setzen",
+		"Set Not Held": "Auf nicht gehalten setzen",
+		"Send Invitations": "Einladungen versenden"
+	}
+}

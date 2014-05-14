@@ -1,0 +1,21 @@
+{
+	"fields": {
+		"name": "Name",
+		"emailAddress": "E-Mail",
+		"title": "Funktion",
+		"website": "Webseite",
+		"accountName": "Firmenname",
+		"phone": "Telefon",
+		"phoneOffice": "Phone (Office)",
+		"fax": "Fax",
+		"doNotCall": "Nicht anrufen",
+		"address": "Adresse",
+		"description": "Beschreibung"
+	},
+	"links": {
+	},
+	"labels": {
+		"Create Prospect": "Neuer Zielkontakt",
+		"Convert to Lead": "Zu Interessent umwandeln"
+	}
+}
