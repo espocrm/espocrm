@@ -102,8 +102,8 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 		},
 
 		renderDefaultPage: function () {
-			$("#layout-header").html("").hide();
-			$("#layout-content").html("Select needed layout in the left menu and edit it.");
+			$("#layout-header").html('').hide();
+			$("#layout-content").html(this.translate('selectLayout', 'messages', 'Admin'));
 		},
 
 		renderLayoutHeader: function () {

@@ -88,7 +88,8 @@
 		"thousandSeparatorEqualsDecimalMark": "Thousand separator can not be same as decimal mark",
 		"userHasNoEmailAddress": "User has not email address.",
 		"selectEntityType": "Select entity type in the left menu.",
-		"selectUpgradePackage": "Select uprade package"
+		"selectUpgradePackage": "Select uprade package",
+		"selectLayout": "Select needed layout in the left menu and edit it."
 	},
 	"descriptions": {
 		"settings": "System settings of application.",
