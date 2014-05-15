@@ -144,7 +144,7 @@ return array (
     10 => 'cron',
   ),
   'isInstalled' => true,
-  'cacheTimestamp' => 1399456816,
+  'cacheTimestamp' => 1400160414,
   'testOption' => 'Another Wrong Value',
   'testOption2' => 'Test2',
 );

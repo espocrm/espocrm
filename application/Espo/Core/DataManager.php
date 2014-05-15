@@ -121,9 +121,7 @@ class DataManager
 	 */
 	public function updateCacheTimestamp()
 	{
-		$config = $this->getContainer()->get('config');
-
-		return $config->set('cacheTimestamp', time());
+		return $this->getContainer()->get('config')->updateCacheTimestamp();
 	}
 
 
