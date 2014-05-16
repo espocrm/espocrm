@@ -35,7 +35,7 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
 		optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
 			'displayRecords': {
 				type: 'enumInt',
-				options: [3,4,5,6,7,10,15],							
+				options: [3,4,5,10,15],							
 			},
 		}),	
 		
