@@ -39,6 +39,10 @@ class Email extends \Espo\Core\Utils\Database\Orm\Base
 				        ),
 				        'orderBy' => 'email_address.name {direction}',
 					),
+					$field['name'] .'Data' => array(
+						'type' => 'text',
+						'notStorable' => true
+					),
 				),
 				'relations' => array(
 					$field['name'].'es' => array(

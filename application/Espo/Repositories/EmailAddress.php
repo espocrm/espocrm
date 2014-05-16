@@ -58,5 +58,36 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 		}
 		return $ids;
 	}
+	
+	public function getEmailAddressData(Entity $entity)
+	{
+		$data = array();
+		
+		$pdo = $this->getEntityManager()->getPDO();		
+		$sql = "
+			SELECT email_address.name, email_address.invalid, email_address.opt_out AS optOut, entity_email_address.primary 
+			FROM entity_email_address
+			JOIN email_address ON email_address.id = entity_email_address.email_address_id AND email_address.deleted = 0
+			WHERE 
+			entity_email_address.entity_id = ".$pdo->quote($entity->id)." AND 
+			entity_email_address.entity_type = ".$pdo->quote($entity->getEntityName())." AND 
+			entity_email_address.deleted = 0
+			ORDER BY entity_email_address.primary DESC
+		";
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		if ($rows = $sth->fetchAll()) {
+			foreach ($rows as $row) {
+				$obj = new \StdClass();
+				$obj->emailAddress = $row['name'];
+				$obj->primary = ($row['primary'] == '1') ? true : false;
+				$obj->optOut = ($row['optOut'] == '1') ? true : false;
+				$obj->invalid = ($row['invalid'] == '1') ? true : false;				
+				$data[] = $obj;
+			}
+		}
+		
+		return $data;
+	}
 }
 
