@@ -650,6 +650,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 							rowsReady++;
 							if (rowsReady == rowCount) {			
 								final();
+							}
+							if (view.options.el) {
+								view.setElement(view.options.el);
 							}													
 						}.bind(this));
 					});						
