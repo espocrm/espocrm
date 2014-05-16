@@ -89,5 +89,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 		
 		return $data;
 	}
+	
+	public function getByAddress($address)
+	{
+		return $this->where(array('lower' => strtolower($address)))->findOne();
+	}
 }
 
