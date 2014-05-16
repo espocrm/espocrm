@@ -180,7 +180,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 	protected function handleEmailAddressSave(Entity $entity)
 	{
 		if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {
-			$email = $entity->get('emailAddress');
+			$email = trim($entity->get('emailAddress'));
 			$pdo = $this->getPDO();
 
 			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress');
