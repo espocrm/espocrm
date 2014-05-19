@@ -29,7 +29,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		
 		detailTemplate: 'fields.email.detail',
 		
-		listTemplate: 'fields.email.detail',
+		listTemplate: 'fields.email.list',
 		
 		validations: ['required', 'emailData'],		
 	
