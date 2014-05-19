@@ -106,20 +106,12 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				var $input = $(e.currentTarget);
 				if ($input.val() == '') {
 					var $block = $input.closest('div.email-address-block');
-					
-					changePrimary = false;
-					if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
-						changePrimary = true;
-					}					
-					$block.remove();
-					
-					if (changePrimary) {
-						this.$el.find('button[data-property-type="primary"]').first().addClass('active');
-					}
+					this.removeEmailAddressBlock($block);
 				}
 				
 				this.fetchEmailAddressData();
 			},
+
 			'click [data-action="addEmailAddress"]': function () {
 				var data = this.model.get(this.dataFieldName) || [];
 				
@@ -135,6 +127,19 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				this.model.set(data, {silent: true});
 				this.render();
 			},
+			
+		},
+		
+		removeEmailAddressBlock: function ($block) {					
+			var changePrimary = false;
+			if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
+				changePrimary = true;
+			}					
+			$block.remove();
+			
+			if (changePrimary) {
+				this.$el.find('button[data-property-type="primary"]').first().addClass('active');
+			}
 		},
 		
 		mailTo: function (emailAddress) {
@@ -154,13 +159,6 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			this.dataFieldName = this.name + 'Data';
 		},
 		
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			
-			if (this.mode == 'edit') {
-				
-			}
-		},
 		
 		fetchEmailAddressData: function (dontUpdate) {
 			var data = [];
