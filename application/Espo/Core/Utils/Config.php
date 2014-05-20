@@ -34,6 +34,8 @@ class Config
 
 	protected $configPath = 'data/config.php';
 
+	private $cacheTimestamp = 'cacheTimestamp';
+
 	/**
 	 * Array of admin items
 	 *
@@ -121,6 +123,10 @@ class Config
 			return false;
 		}
 
+		if (!isset($values[$this->cacheTimestamp])) {
+			$values = array_merge($this->updateCacheTimestamp(true), $values);
+		}
+
 		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, true);
 		$this->loadConfig(true);
 
@@ -190,6 +196,25 @@ class Config
 		}
 
 		return $this->setArray($values);
+	}
+
+	/**
+	 * Update cache timestamp
+	 *
+	 * @param $onlyValue - If need to return just timestamp array
+	 * @return bool | array
+	 */
+	public function updateCacheTimestamp($onlyValue = false)
+	{
+		$timestamp = array(
+			$this->cacheTimestamp => time(),
+		);
+
+		if ($onlyValue) {
+			return $timestamp;
+		}
+
+		return $this->set($timestamp);
 	}
 
 	/**

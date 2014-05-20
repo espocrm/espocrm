@@ -43,8 +43,6 @@ class Settings extends \Espo\Core\Controllers\Base
         	throw new Error('Cannot save settings');
         }
 
-        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
-
         return $this->getConfig()->getData($this->getUser()->isAdmin());
 	}
 }
