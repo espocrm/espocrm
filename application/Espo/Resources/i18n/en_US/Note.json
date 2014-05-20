@@ -1,6 +1,6 @@
 {
 	"fields": {
-		"message": "Text",
+		"post": "Post",
 		"attachments": "Attachments"
 	}
 }

@@ -3,7 +3,7 @@
 		"label":"",
 		"rows": [
 			[
-				{"name":"message"}
+				{"name":"post"}
 			],
 			[
 				{"name":"attachments","type": "attachmentMultiple"}
