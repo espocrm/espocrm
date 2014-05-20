@@ -4,10 +4,6 @@
          "name":"required",
          "type":"bool",
          "default":false
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
       }
    ],
    "notCreatable": true,

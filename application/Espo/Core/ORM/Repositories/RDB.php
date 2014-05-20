@@ -178,50 +178,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 	}
 
 	protected function handleEmailAddressSave(Entity $entity)
-	{
-		if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {
-			$email = $entity->get('emailAddress');
-			$pdo = $this->getPDO();
-
-			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress');
-
-			if (!empty($email)) {
-				if ($email != $entity->getFetched('emailAddress')) {
-
-					$emailAddressNew = $emailAddressRepository->where(array('lower' => strtolower($email)))->findOne();
-					$isNewEmailAddress = false;
-					if (!$emailAddressNew) {
-						$emailAddressNew = $emailAddressRepository->get();
-						$emailAddressNew->set('name', $email);
-						$emailAddressRepository->save($emailAddressNew);
-						$isNewEmailAddress = true;
-					}
-
-					$emailOld = $entity->getFetched('emailAddress');
-					if (!empty($emailOld)) {
-						$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();
-						$this->unrelate($entity, 'emailAddresses', $emailAddressOld);
-					}
-					$this->relate($entity, 'emailAddresses', $emailAddressNew);
-
-					$query = "
-						UPDATE entity_email_address
-						SET `primary` = 1
-						WHERE
-							entity_id = ".$pdo->quote($entity->id)." AND
-							entity_type = ".$pdo->quote($this->entityName)." AND
-							email_address_id = ".$pdo->quote($emailAddressNew->id)."
-					";
-					$sth = $pdo->prepare($query);
-					$sth->execute();
-				}
-			} else {
-				$emailOld = $entity->getFetched('emailAddress');
-				if (!empty($emailOld)) {
-					$emailAddressOld = $emailAddressRepository->where(array('lower' => strtolower($emailOld)))->findOne();
-					$this->unrelate($entity, 'emailAddresses', $emailAddressOld);
-				}
-			}
+	{		
+		if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {		
+			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
 		}
 	}
 
