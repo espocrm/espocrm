@@ -283,7 +283,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 				case 'image/png':
 				case 'image/jpeg':
 				case 'image/gif':
-					preview = '<img src="?entryPoint=image&size=medium&id=' + id + '">'; 
+					preview = '<a href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
 			}						
 			return preview;
 		},
