@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,33 +19,12 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Core\Utils\Database\Orm\Relations;
+Espo.define('Views.Stream.Fields.AttachmentMultiple', 'Views.Fields.AttachmentMultiple', function (Dep) {
 
-class EmailEmailAddress extends \Espo\Core\Utils\Database\Orm\Relations\HasMany
-{
-
-	public function load($params, $foreignParams)
-	{
-
-		$parentRelation = parent::load($params, $foreignParams);
-
-		$relation = array(
-			$params['entityName'] => array (				
-				'relations' => array(
-                	$params['link']['name'] => array(						
-						'midKeys' => array(
-							lcfirst($params['entityName']).'Id',
-							lcfirst($foreignParams['entityName']).'Id',
-						),
-					),
-				),
-			),
-		);
-
+	return Dep.extend({
+	
+		showPreviews: true,
 		
-		$relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
-
-		return $relation;
-	}
-
-}
+	});
+	
+});

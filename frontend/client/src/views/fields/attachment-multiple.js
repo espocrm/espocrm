@@ -39,6 +39,8 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 
 		foreignScope: null,
 		
+		showPreviews: false,
+		
 		events: {
 			'click a.remove-attachment': function (e) {
 				var $div = $(e.currentTarget).parent();
@@ -70,12 +72,17 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 
 		setup: function () {
 			this.nameHashName = this.name + 'Names';
+			this.typeHashName = this.name + 'Types';
 			this.idsName = this.name + 'Ids';
 			this.foreignScope = 'Attachment';
 
 			var self = this;
 			
 			this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
+			
+			if ('showPreviews' in this.params) {
+				this.showPreviews = this.params.showPreviews;
+			}
 			
 			this.listenTo(this.model, 'change:' + this.nameHashName, function () {
 				this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
@@ -107,41 +114,69 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 			arr.splice(i, 1);
 			this.model.set(this.idsName, arr);
 			
-			var hash = _.clone(this.model.get(this.nameHashName) || {});
-			delete hash[id];
-			this.model.set(this.nameHashName, hash);
+			var nameHash = _.clone(this.model.get(this.nameHashName) || {});
+			delete nameHash[id];
+			this.model.set(this.nameHashName, nameHash);
+			
+			var typeHash = _.clone(this.model.get(this.typeHashName) || {});
+			delete typeHash[id];
+			this.model.set(this.typeHashName, typeHash);
 		},
 		
 		clearIds: function () {
 			this.model.set(this.idsName, []);
-			this.model.set(this.nameHashName, {})
+			this.model.set(this.nameHashName, {});
+			this.model.set(this.typeHashName, {})
 		},
 		
 		pushAttachment: function (attachment) {
 			var arr = _.clone(this.model.get(this.idsName));
 			
 			arr.push(attachment.id);
-			this.model.set(this.idsName, arr)
+			this.model.set(this.idsName, arr);
 			
-			var hash = _.clone(this.model.get(this.nameHashName) || {});
-			hash[attachment.id] = attachment.get('name');
-			this.model.set(this.nameHashName, hash);
+			var typeHash = _.clone(this.model.get(this.typeHashName) || {});
+			typeHash[attachment.id] = attachment.get('type');
+			this.model.set(this.typeHashName, typeHash);
+			
+			var nameHash = _.clone(this.model.get(this.nameHashName) || {});
+			nameHash[attachment.id] = attachment.get('name');
+			this.model.set(this.nameHashName, nameHash);
 		},
 		
-		addAttachmentBox: function (name, id) {
+		getPreview: function (name, type, id) {
+			var preview = name;
+			
+			switch (type) {
+				case 'image/png':
+				case 'image/jpeg':
+				case 'image/gif':
+					preview = '<img src="?entryPoint=image&size=small&id=' + id + '" title="' + name + '">'; 
+			}
+			
+			return preview;
+		},
+		
+		addAttachmentBox: function (name, type, id) {
+			console.log(name, type, id);
 			$attachments = this.$attachments;
-			var self = this;
+			var self = this;			
 				
 			var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="glyphicon glyphicon-remove"></span></a>';
 
+			var preview = name;			
+			if (this.showPreviews && id) {
+				preview = this.getPreview(name, type, id);
+			}
+			
 			var $att = $('<div>').css('display', 'inline-block')
 			                     .css('width', '300px')
 			                     .addClass('gray-box')
-			                     .append($('<span>' + name + '</span>'))
+			                     .append($('<span class="preview">' + preview + '</span>').css('width', '270px'))
 			                     .append(removeLink);
 				
 			var $container = $('<div>').append($att);					
-			$attachments.append($container);			
+			$attachments.append($container);		
 				
 			if (!id) {
 				var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');				
@@ -170,7 +205,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 				
 				fileList.forEach(function (file) {
 					
-					var $att = this.addAttachmentBox(file.name);					
+					var $att = this.addAttachmentBox(file.name, file.type);					
 					
 					$att.find('.remove-attachment').on('click.uploading', function () {
 						canceledList.push(attachment.cid);
@@ -196,7 +231,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 								if (canceledList.indexOf(attachment.cid) === -1) {
 									$att.trigger('ready');							
 									this.pushAttachment(attachment);
-									$att.attr('data-id', attachment.id);
+									$att.attr('data-id', attachment.id);									
 									uploadedCount++;			
 									if (uploadedCount == totalCount) {								
 										afterAttachmentsUploaded.call(this);
@@ -221,11 +256,14 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 				
 				var ids = this.model.get(this.idsName) || [];
 				
-				var hash = this.model.get(this.nameHashName);
+				var hameHash = this.model.get(this.nameHashName);
+				var typeHash = this.model.get(this.typeHashName) || {};
+				
 				ids.forEach(function (id) {					
-					if (hash) {
-						var name = hash[id];
-						this.addAttachmentBox(name, id);
+					if (hameHash) {
+						var name = hameHash[id];
+						var type = typeHash[id] || null;
+						this.addAttachmentBox(name, type, id);
 					}
 				}, this);			
 			}

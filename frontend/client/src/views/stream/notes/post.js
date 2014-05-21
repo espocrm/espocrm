@@ -32,7 +32,7 @@ Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
 				this.createField('post');
 			}			
 			if ((this.model.get('attachmentsIds') || []).length) {
-				this.createField('attachments', 'attachmentMultiple');
+				this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
 				
 				if (!this.model.get('post')) {
 					this.messageName = 'attach';					

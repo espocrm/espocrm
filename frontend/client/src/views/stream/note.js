@@ -58,9 +58,9 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 			};			
 		},
 		
-		createField: function (name, type, params) {			
+		createField: function (name, type, params, view) {			
 			type = type || this.model.getFieldType(name) || 'base';		
-			this.createView(name, this.getFieldManager().getViewName(type), {
+			this.createView(name, view || this.getFieldManager().getViewName(type), {
 				model: this.model,
 				defs: {
 					name: name,

@@ -25,18 +25,34 @@ namespace Espo\EntryPoints;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Error;
 
 class Image extends \Espo\Core\EntryPoints\Base
 {
-	public static $authRequired = false;
+	public static $authRequired = true;
+	
+	protected $allowedFileTypes = array(
+		'image/jpeg',
+		'image/png',
+		'image/gif',
+	);
+	
+	protected $imageSizes = array(
+		'xsmall' => array(64, 64),	
+		'small' => array(128, 128),	
+		'medium' => array(256, 256),
+		'large' => array(512, 512),
+		'xlarge' => array(1024, 1024),
+	);
 	
 	public function run()
-	{
-	
+	{	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
 		}
+		
+		$size = $_GET['size'];
 		
 		$attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 		
@@ -53,26 +69,68 @@ class Image extends \Espo\Core\EntryPoints\Base
 		
 		$fileName = "data/upload/{$attachment->id}";
 		
+		$fileType = $attachment->get('type');
+		
 		if (!file_exists($fileName)) {
 			throw new NotFound();
 		}
 		
-		if (!$attachment->get('global')) {
-			throw new Forbidden();
-		}	
+		if (!in_array($fileType, $this->allowedFileTypes)) {
+			throw new Error();
+		}
 		
-
-		
-		if ($attachment->get('type')) {
-			header('Content-Type: ' . $attachment->get('type'));
+		if (!empty($size)) {
+			if (!empty($this->imageSizes[$size])) {			
+				// TODO cache thumbs				
+				list($originalWidth, $originalHeight) = getimagesize($fileName);
+				list($width, $height) = $this->imageSizes[$size];
+				
+				if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth > $originalHeight)) {
+					$targetWidth = $width;
+					$targetHeight = $originalHeight * ($width / $originalWidth);
+				} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
+					$targetHeight = $height;
+					$targetWidth = $originalWidth * ($height / $targetHeight);
+				} else {
+					$targetWidth = $originalWidth;
+					$targetHeight = $originalHeight;					
+				}
+				
+				$targetImage = imagecreatetruecolor($targetWidth, $targetHeight);				
+				switch ($fileType) {
+					case 'image/jpeg':
+						$sourceImage = imagecreatefromjpeg($fileName);
+						break;
+					case 'image/png':
+						$sourceImage = imagecreatefrompng($fileName);
+						break;
+					case 'image/gif':
+						$sourceImage = imagecreatefromgif($fileName);
+						break;					
+				}
+				imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);			
+			} else {
+				throw new Error();
+			}		
 		}
 
 		
+		if (!empty($fileType)) {
+			header('Content-Type: ' . $fileType);
+		}		
 		header('Pragma: public');
-		header('Content-Length: ' . filesize($fileName));
-		ob_clean();
-		flush();
-		readfile($fileName);
+
+		if (!empty($targetImage)) {
+			ob_clean();
+			flush();
+			imagejpeg($targetImage);
+			imagedestroy($targetImage);
+		} else {
+			header('Content-Length: ' . filesize($fileName));
+			ob_clean();
+			flush();
+			readfile($fileName);
+		}
 		exit;		
 	}	
 }
