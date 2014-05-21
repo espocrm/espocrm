@@ -41,6 +41,12 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 		
 		showPreviews: false,
 		
+		previewTypeList: [
+			'image/jpeg',
+			'image/png',
+			'image/gif',
+		],
+		
 		events: {
 			'click a.remove-attachment': function (e) {
 				var $div = $(e.currentTarget).parent();
@@ -144,7 +150,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 			this.model.set(this.nameHashName, nameHash);
 		},
 		
-		getPreview: function (name, type, id) {
+		getEditPreview: function (name, type, id) {
 			var preview = name;
 			
 			switch (type) {
@@ -166,7 +172,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 
 			var preview = name;			
 			if (this.showPreviews && id) {
-				preview = this.getPreview(name, type, id);
+				preview = this.getEditPreview(name, type, id);
 			}
 			
 			var $att = $('<div>').css('display', 'inline-block')
@@ -269,16 +275,38 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 			}
 			
 		},
+		
+		getDetailPreview: function (name, type, id) {
+			var preview = name;
+			
+			switch (type) {
+				case 'image/png':
+				case 'image/jpeg':
+				case 'image/gif':
+					preview = '<img src="?entryPoint=image&size=medium&id=' + id + '">'; 
+			}						
+			return preview;
+		},
 
 		getValueForDisplay: function () {
 			var nameHash = this.nameHash;
-			var string = '';
+			var typeHash = this.model.get(this.typeHashName) || {};
+			
+			var previews = [];			
 			var names = [];
 			for (var id in nameHash) {
-				var line = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + nameHash[id] + '</a>';
+				var type = typeHash[id] || false;
+				var name = nameHash[id];
+				if (this.showPreviews && ~this.previewTypeList.indexOf(type)) {
+					previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
+					continue;
+				}
+				var line = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a>';
 				names.push(line);
 			}
-			return names.join(', ');
+			var string = previews.join('') + names.join(', ');			
+			
+			return string;
 		},
 
 		validateRequired: function () {

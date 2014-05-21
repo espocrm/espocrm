@@ -6,7 +6,7 @@
 				{"name":"post"}
 			],
 			[
-				{"name":"attachments","type": "attachmentMultiple"}
+				{"name":"attachments"}
 			]
 		]
 	}
