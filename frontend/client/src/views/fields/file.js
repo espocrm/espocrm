@@ -33,6 +33,8 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 		
 		showPreviews: false,
 		
+		accept: false,
+		
 		events: {
 			'click a.remove-attachment': function (e) {
 				var $div = $(e.currentTarget).parent();
@@ -61,7 +63,8 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 
 		data: function () {
 			return _.extend({
-				id: this.model.get(this.idName)
+				id: this.model.get(this.idName),
+				acceptAttribue: this.acceptAttribue
 			}, Dep.prototype.data.call(this));
 		},
 		
@@ -84,6 +87,15 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 			if ('showPreviews' in this.params) {
 				this.showPreviews = this.params.showPreviews;
 			}
+			
+			if ('accept' in this.params) {
+				this.accept = this.params.accept;
+			}
+			
+			if (this.accept) {
+				this.acceptAttribue = this.accept.join('|');
+			}
+			 
 		},
 		
 		afterRender: function () {
