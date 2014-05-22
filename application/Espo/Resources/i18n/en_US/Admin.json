@@ -110,5 +110,12 @@
 		"layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
 		"fieldManager": "Create new fields or customize existing ones.",
 		"userInterface": "Configure UI."
+	},
+	"options": {
+		"previewSize": {
+			"x-small": "X-Small",
+			"small": "Small",
+			"medium": "Medium"
+		}
 	}
 }
