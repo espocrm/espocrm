@@ -63,6 +63,17 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 
 				$file.replaceWith($file.clone(true));
 			},
+			'click a[data-action="showImagePreview"]': function (e) {
+				
+				var id = $(e.currentTarget).data('id');
+				this.createView('preview', 'Modals.ImagePreview', {
+					id: id,
+					model: this.model,
+					name: this.nameHash[id]
+				}, function (view) {
+					view.render();
+				});
+			},
 		},
 
 		data: function () {
@@ -164,7 +175,6 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 		},
 		
 		addAttachmentBox: function (name, type, id) {
-			console.log(name, type, id);
 			$attachments = this.$attachments;
 			var self = this;			
 				
@@ -256,7 +266,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 		
 		},
 		
-		afterRender: function () {			
+		afterRender: function () {	
 			if (this.mode == 'edit') {			
 				this.$attachments = this.$el.find('div.attachments');
 				
@@ -283,7 +293,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 				case 'image/png':
 				case 'image/jpeg':
 				case 'image/gif':
-					preview = '<a href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
+					preview = '<a data-action="showImagePreview" data-id="' + id + '" href="javascript:"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
 			}						
 			return preview;
 		},

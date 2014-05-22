@@ -42,7 +42,8 @@ class Image extends \Espo\Core\EntryPoints\Base
 		'small' => array(128, 128),	
 		'medium' => array(256, 256),
 		'large' => array(512, 512),
-		'xlarge' => array(1024, 1024),
+		'xlarge' => array(864, 864),
+		'xxlarge' => array(1024, 1024),
 	);
 	
 	public function run()
@@ -67,11 +68,11 @@ class Image extends \Espo\Core\EntryPoints\Base
 			}
 		}
 		
-		$fileName = "data/upload/{$attachment->id}";
+		$filePath = "data/upload/{$attachment->id}";
 		
 		$fileType = $attachment->get('type');
 		
-		if (!file_exists($fileName)) {
+		if (!file_exists($filePath)) {
 			throw new NotFound();
 		}
 		
@@ -80,58 +81,76 @@ class Image extends \Espo\Core\EntryPoints\Base
 		}
 		
 		if (!empty($size)) {
-			if (!empty($this->imageSizes[$size])) {			
-				// TODO cache thumbs				
-				list($originalWidth, $originalHeight) = getimagesize($fileName);
-				list($width, $height) = $this->imageSizes[$size];
+			if (!empty($this->imageSizes[$size])) {
+				$thumbFilePath = "data/upload/thumbs/{$attachment->id}_{$size}";
 				
-				if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth > $originalHeight)) {
-					$targetWidth = $width;
-					$targetHeight = $originalHeight * ($width / $originalWidth);
-				} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
-					$targetHeight = $height;
-					$targetWidth = $originalWidth * ($height / $targetHeight);
-				} else {
-					$targetWidth = $originalWidth;
-					$targetHeight = $originalHeight;					
-				}
-				
-				$targetImage = imagecreatetruecolor($targetWidth, $targetHeight);				
-				switch ($fileType) {
-					case 'image/jpeg':
-						$sourceImage = imagecreatefromjpeg($fileName);
-						break;
-					case 'image/png':
-						$sourceImage = imagecreatefrompng($fileName);
-						break;
-					case 'image/gif':
-						$sourceImage = imagecreatefromgif($fileName);
-						break;					
-				}
-				imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);			
+				if (!file_exists($thumbFilePath)) {
+					$targetImage = $this->getThumbImage($filePath, $fileType, $size);					
+					ob_start();	
+					imagejpeg($targetImage);
+					$contents = ob_get_contents();
+					ob_end_clean();
+					imagedestroy($targetImage);								
+					$this->getContainer()->get('fileManager')->putContents($thumbFilePath, $contents);					
+				}				
+				$filePath = $thumbFilePath;								
+		
 			} else {
 				throw new Error();
 			}		
 		}
-
 		
+		if (!empty($size)) {			
+			$fileName = $attachment->id . '_' . $size . '.jpg';
+		} else {
+			$fileName = $attachment->get('name');
+		}	
+		header('Content-Disposition:inline;filename="'.$fileName.'"');		
 		if (!empty($fileType)) {
 			header('Content-Type: ' . $fileType);
 		}		
 		header('Pragma: public');
-
-		if (!empty($targetImage)) {
-			ob_clean();
-			flush();
-			imagejpeg($targetImage);
-			imagedestroy($targetImage);
-		} else {
-			header('Content-Length: ' . filesize($fileName));
-			ob_clean();
-			flush();
-			readfile($fileName);
+		$fileSize = filesize($filePath);		
+		if ($fileSize) {
+			header('Content-Length: ' . $fileSize);
 		}
+		ob_clean();
+		flush();
+		readfile($filePath);
 		exit;		
-	}	
+	}
+	
+	protected function getThumbImage($filePath, $fileType, $size)
+	{
+		list($originalWidth, $originalHeight) = getimagesize($filePath);
+		list($width, $height) = $this->imageSizes[$size];
+		
+		if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth > $originalHeight)) {
+			$targetWidth = $width;
+			$targetHeight = $originalHeight * ($width / $originalWidth);
+		} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
+			$targetHeight = $height;
+			$targetWidth = $originalWidth * ($height / $targetHeight);
+		} else {
+			$targetWidth = $originalWidth;
+			$targetHeight = $originalHeight;					
+		}
+				
+		$targetImage = imagecreatetruecolor($targetWidth, $targetHeight);				
+		switch ($fileType) {
+			case 'image/jpeg':
+				$sourceImage = imagecreatefromjpeg($filePath);
+				break;
+			case 'image/png':
+				$sourceImage = imagecreatefrompng($filePath);
+				break;
+			case 'image/gif':
+				$sourceImage = imagecreatefromgif($filePath);
+				break;					
+		}
+		imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
+		
+		return $targetImage;
+	}
 }
 

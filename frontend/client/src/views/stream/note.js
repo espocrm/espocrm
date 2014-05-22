@@ -66,6 +66,7 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 					name: name,
 					params: params || {}
 				},
+				el: this.options.el + ' .cell-' + name,
 				mode: 'list'
 			});
 			
