@@ -282,8 +282,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 						this.addAttachmentBox(name, type, id);
 					}
 				}, this);			
-			}
-			
+			}			
 		},
 		
 		getDetailPreview: function (name, type, id) {
@@ -299,24 +298,26 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 		},
 
 		getValueForDisplay: function () {
-			var nameHash = this.nameHash;
-			var typeHash = this.model.get(this.typeHashName) || {};
+			if (this.mode == 'detail' || this.mode == 'list') {
+				var nameHash = this.nameHash;
+				var typeHash = this.model.get(this.typeHashName) || {};
 			
-			var previews = [];			
-			var names = [];
-			for (var id in nameHash) {
-				var type = typeHash[id] || false;
-				var name = nameHash[id];
-				if (this.showPreviews && ~this.previewTypeList.indexOf(type)) {
-					previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
-					continue;
+				var previews = [];			
+				var names = [];
+				for (var id in nameHash) {
+					var type = typeHash[id] || false;
+					var name = nameHash[id];
+					if (this.showPreviews && ~this.previewTypeList.indexOf(type)) {
+						previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
+						continue;
+					}
+					var line = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a>';
+					names.push(line);
 				}
-				var line = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a>';
-				names.push(line);
-			}
-			var string = previews.join('') + names.join(', ');			
+				var string = previews.join('') + names.join(', ');			
 			
-			return string;
+				return string;
+			}
 		},
 
 		validateRequired: function () {
