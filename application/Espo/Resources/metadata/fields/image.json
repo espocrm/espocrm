@@ -1,0 +1,32 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"previewSize",
+         "type":"enum",
+         "default":"small",
+         "options": ["x-small", "small", "medium"]
+      }
+   ],
+   "actualFields":[
+      "id"
+   ],
+   "notActualFields":[
+      "name"
+   ],
+   "fieldDefs":{
+      "skip":true
+   },
+   "search":{
+      "basic":false,
+      "advanced":false
+   },
+   "linkDefs": {
+      "type": "belongsTo",
+      "entity": "Attachment"
+   }
+}

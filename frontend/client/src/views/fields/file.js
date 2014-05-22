@@ -31,9 +31,19 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 
 		editTemplate: 'fields.file.edit',
 		
-		showPreviews: false,
+		showPreview: false,
 		
 		accept: false,
+		
+		previewTypeList: [
+			'image/jpeg',
+			'image/png',
+			'image/gif',
+		],
+		
+		defaultType: false,
+		
+		previewSize: 'small',
 		
 		events: {
 			'click a.remove-attachment': function (e) {
@@ -59,6 +69,18 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 					view.render();
 				});
 			},
+			'click a[data-action="showImagePreview"]': function (e) {
+				e.preventDefault();
+							
+				var id = this.model.get(this.idName);
+				this.createView('preview', 'Modals.ImagePreview', {
+					id: id,
+					model: this.model,
+					name: this.model.get(this.nameName)
+				}, function (view) {
+					view.render();
+				});
+			},
 		},
 
 		data: function () {
@@ -72,7 +94,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 			if (this.params.required || this.model.isRequired(this.name)) {
 				if (this.model.get(this.idName) == null) {
 					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-					this.showValidationMessage(msg, '.attachment-button');
+					this.showValidationMessage(msg, '.attachment-button label');
 					return true;
 				}
 			}
@@ -84,8 +106,8 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 			this.typeName = this.name + 'Type';
 			this.foreignScope = 'Attachment';
 			
-			if ('showPreviews' in this.params) {
-				this.showPreviews = this.params.showPreviews;
+			if ('showPreview' in this.params) {
+				this.showPreview = this.params.showPreview;
 			}
 			
 			if ('accept' in this.params) {
@@ -103,7 +125,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 				this.$attachment = this.$el.find('div.attachment');
 
 				var name = this.model.get(this.nameName);
-				var type = this.model.get(this.typeName);
+				var type = this.model.get(this.typeName) || this.defaultType;
 				var id = this.model.get(this.idName);
 				if (id) {
 					this.addAttachmentBox(name, type, id);
@@ -118,7 +140,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 				case 'image/png':
 				case 'image/jpeg':
 				case 'image/gif':
-					preview = '<a data-action="showImagePreview" data-id="' + id + '" href="javascript:"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
+					preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
 			}						
 			return preview;
 		},
@@ -139,7 +161,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 		getValueForDisplay: function () {
 			if (this.mode == 'detail' || this.mode == 'list') {
 				var name = this.model.get(this.nameName);
-				var type = this.model.get(this.typeName) || false;
+				var type = this.model.get(this.typeName) || this.defaultType;
 				var id = this.model.get(this.idName);
 				
 				if (!id) {
@@ -148,7 +170,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 			
 				var string = '';
 				
-				if (this.showPreviews && ~this.previewTypeList.indexOf(type)) {
+				if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
 					string = '<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>';
 				} else {
 					string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a>';
@@ -181,7 +203,6 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 			var o = {};			
 			o[this.idName] = attachment.id;
 			o[this.nameName] = attachment.get('name');
-			console.log(o);	
 			this.model.set(o);
 		},
 
@@ -231,7 +252,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 			var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="glyphicon glyphicon-remove"></span></a>';
 
 			var preview = name;			
-			if (this.showPreviews && id) {
+			if (this.showPreview && id) {
 				preview = this.getEditPreview(name, type, id);
 			}
 			

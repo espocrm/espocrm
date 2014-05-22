@@ -38,12 +38,12 @@ class Image extends \Espo\Core\EntryPoints\Base
 	);
 	
 	protected $imageSizes = array(
-		'xsmall' => array(64, 64),	
+		'x-small' => array(64, 64),	
 		'small' => array(128, 128),	
 		'medium' => array(256, 256),
 		'large' => array(512, 512),
-		'xlarge' => array(864, 864),
-		'xxlarge' => array(1024, 1024),
+		'x-large' => array(864, 864),
+		'xx-large' => array(1024, 1024),
 	);
 	
 	public function run()

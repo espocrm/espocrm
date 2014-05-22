@@ -63,7 +63,9 @@
 		"phone": "Phone",
 		"text": "Text",
 		"url": "Url",
-		"varchar": "Varchar"				
+		"varchar": "Varchar",
+		"file": "File",
+		"image": "Image"				
 	},
 	"fields": {
 		"type": "Type",
@@ -79,7 +81,8 @@
 		"field": "Field",
 		"min": "Min",
 		"max": "Max",
-		"translation": "Translation"		
+		"translation": "Translation",
+		"previewSize": "Preview Size"				
 	},
 	"messages": {
 		"upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

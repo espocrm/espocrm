@@ -63,7 +63,8 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 
 				$file.replaceWith($file.clone(true));
 			},
-			'click a[data-action="showImagePreview"]': function (e) {
+			'click a[data-action="showImagePreview"]': function (e) {			
+				e.preventDefault();
 				
 				var id = $(e.currentTarget).data('id');
 				this.createView('preview', 'Modals.ImagePreview', {
@@ -292,7 +293,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 				case 'image/png':
 				case 'image/jpeg':
 				case 'image/gif':
-					preview = '<a data-action="showImagePreview" data-id="' + id + '" href="javascript:"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
+					preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
 			}						
 			return preview;
 		},
