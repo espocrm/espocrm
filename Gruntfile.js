@@ -129,7 +129,7 @@ module.exports = function (grunt) {
 					'api/**',
 					'application/**',
 					'custom/**',
-					'data',
+					'data/.data',
 					'install/**',
 					'vendor/**',
 					'bootstrap.php',
@@ -218,7 +218,7 @@ module.exports = function (grunt) {
 		'replace',
 		'copy:final',
 		'clean:final',
-		'compress',
+		//'compress',
 	]);		
 
 };
