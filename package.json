@@ -1,7 +1,7 @@
 {
   "name": "espocrm",
   "version": "1.0.0",
-  "espoVersion": "1.0",
+  "espoVersion": "1.0.1",
   "description": "",
   "main": "index.php",
   "repository": "",
