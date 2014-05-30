@@ -50,14 +50,16 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
 							name: 'password',
 							type: 'password',
 							params: {
-								required: self.isNew
+								required: self.isNew,
+								readyToChange: true
 							} 
 						}],
 						[{
 							name: 'passwordConfirm',
 							type: 'password',
 							params: {
-								required: self.isNew
+								required: self.isNew,
+								readyToChange: true
 							} 
 						}]
 					],

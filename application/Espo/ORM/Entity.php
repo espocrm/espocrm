@@ -245,7 +245,9 @@ abstract class Entity implements IEntity
 			if ($field == 'id') {
 				continue;
 			}
-			$arr[$field] = $this->get($field);
+			if ($this->has($field)) {
+				$arr[$field] = $this->get($field);
+			}
 
 		}		
 		return $arr;

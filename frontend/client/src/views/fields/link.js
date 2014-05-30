@@ -164,7 +164,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
 		fetch: function () {
 			var data = {};
-			data[this.nameName] = this.$el.find('[name="'+this.nameName+'"]').val();
+			data[this.nameName] = this.$el.find('[name="'+this.nameName+'"]').val() || null;
 			data[this.idName] = this.$el.find('[name="'+this.idName+'"]').val() || null;
 			
 			return data;

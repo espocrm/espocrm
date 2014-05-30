@@ -36,5 +36,8 @@
 		"IMAP": "IMAP",
 		"Actions": "Actions",
 		"Main": "Main"		
+	},
+	"messages": {
+		"couldNotConnectToImap": "Could not connect to IMAP server"
 	}
 }

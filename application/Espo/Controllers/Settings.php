@@ -23,12 +23,27 @@
 namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 
 class Settings extends \Espo\Core\Controllers\Base
 {
-    public function actionRead($params, $data)
+	protected function getConfigData()
 	{
-		return $this->getConfig()->getData($this->getUser()->isAdmin());
+		$data = $this->getConfig()->getData($this->getUser()->isAdmin());
+		
+		$fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
+		
+		foreach ($fieldDefs as $field => $d) {
+			if ($d['type'] == 'password') {
+				unset($data[$field]);
+			}
+		}
+		return $data;
+	}
+	
+	public function actionRead($params, $data)
+	{
+		return $this->getConfigData();
 	}
 
 	public function actionUpdate($params, $data)
@@ -37,12 +52,16 @@ class Settings extends \Espo\Core\Controllers\Base
 	}
 
 	public function actionPatch($params, $data)
-	{
-       	$result = $this->getConfig()->setData($data, $this->getUser()->isAdmin());
-        if ($result === false) {
-        	throw new Error('Cannot save settings');
-        }
+	{	   
+		if (!$this->getUser()->isAdmin()) {
+			throw new Forbidden();
+		}
+		
+		$result = $this->getConfig()->setData($data, $this->getUser()->isAdmin());
+		if ($result === false) {
+			throw new Error('Cannot save settings');
+		}
 
-        return $this->getConfig()->getData($this->getUser()->isAdmin());
+		return $this->getConfigData();
 	}
 }
