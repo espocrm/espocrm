@@ -33,10 +33,14 @@ Espo.define('Views.Fields.Password', 'Views.Fields.Base', function (Dep) {
 		
 		events: {
 			'click [data-action="change"]': function (e) {
-				$(e.currentTarget).addClass('hidden');
-				this.$element.removeClass('hidden');
-				this.changing = true;	
+				this.changePassword();
 			},
+		},
+		
+		changePassword: function () {
+			this.$el.find('[data-action="change"]').addClass('hidden');
+			this.$element.removeClass('hidden');
+			this.changing = true;
 		},
 		
 		data: function () {
@@ -57,7 +61,12 @@ Espo.define('Views.Fields.Password', 'Views.Fields.Base', function (Dep) {
 		
 		afterRender: function () {
 			Dep.prototype.afterRender.call(this);
+						
 			this.changing = false;
+			
+			if (this.params.readyToChange) {
+				this.changePassword();
+			}			
 		},
 		
 		fetch: function () {
