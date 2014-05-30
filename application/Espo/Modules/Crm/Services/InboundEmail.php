@@ -123,7 +123,7 @@ class InboundEmail extends \Espo\Services\Record
 	
 	public function fetchFromMailServer($id)
 	{
-		$inboundEmail = $this->getEntity($id);
+		$inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
 		
 		if ($inboundEmail->get('status') != 'Active') {
 			throw new Error();
