@@ -104,7 +104,8 @@
 		"First Name": "First Name",
 		"Last Name": "Last Name",
 		"You": "You",
-		"you": "you"
+		"you": "you",
+		"change": "change"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",

@@ -258,8 +258,6 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 					this.model.set(attributes, {ui: true});	
 				});
 			}
-			
-
 		},
 
 		afterRender: function () {

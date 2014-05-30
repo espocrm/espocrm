@@ -30,6 +30,38 @@ use \Zend\Mime\Mime as Mime;
 class InboundEmail extends \Espo\Services\Record
 {
 	
+	public function createEntity($data)
+	{
+		$entity = parent::createEntity($data);
+		$entity->clear('password');
+		return $entity;	
+	}
+	
+	public function getEntity($id = null)
+	{
+		$entity = parent::getEntity($id);
+		$entity->clear('password');
+		return $entity;
+	}
+	
+	public function updateEntity($id, $data)
+	{
+		$entity = parent::updateEntity($id, $data);
+		$entity->clear('password');
+		return $entity;
+	}
+	
+	public function findEntities($params)
+	{	
+		$result = parent::findEntities($params);
+		
+		foreach ($result['collection'] as $entity) {
+			$entity->clear('password');
+		}
+		return $result;
+	}
+	
+	
 	protected function init()
 	{
 		$this->dependencies[] = 'fileManager';
@@ -58,12 +90,20 @@ class InboundEmail extends \Espo\Services\Record
 	
 	public function getFolders($params)
 	{		
+		$password = $params['password'];
+		
+		if (!empty($params['id'])) {
+			$entity = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+			if ($entity) {
+				$password = $entity->get('password');
+			}
+		}		
 		
 		$imapParams = array(
 			'host' => $params['host'],
 			'port' => $params['port'],
 			'user' => $params['username'],
-			'password' => $params['password'],
+			'password' => $password,
 		);
 		
 		if (!empty($params['ssl'])) {

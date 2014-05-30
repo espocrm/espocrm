@@ -31,18 +31,29 @@ Espo.define('Crm:Views.InboundEmail.Fields.Folder', 'Views.Fields.Base', functio
 				
 				this.notify('Please wait...');
 				
+				var data = {
+					host: this.model.get('host'),
+					port: this.model.get('port'),
+					ssl: this.model.get('ssl'),
+					username: this.model.get('username'),
+				};
+				
+				if (this.model.has('password')) {
+					data.password = this.model.get('password'); 
+				} else {				
+					if (!this.model.isNew()) { 
+						data.id = this.model.id;
+					}
+				}
+				
+				
 				$.ajax({
 					type: 'GET',
 					url: 'InboundEmail/action/getFolders',
-					data: {
-						host: this.model.get('host'),
-						port: this.model.get('port'),
-						ssl: this.model.get('ssl'),
-						username: this.model.get('username'),
-						password: this.model.get('password'),
-					},
-					error: function () {
+					data: data,
+					error: function (xhr) {
 						Espo.Ui.error(self.translate('couldNotConnectToImap', 'messages', 'InboundEmail'));
+						xhr.errorIsHandled = true;
 					},
 				}).done(function (folders) {
 					this.createView('modal', 'Crm:InboundEmail.Modals.SelectFolder', {

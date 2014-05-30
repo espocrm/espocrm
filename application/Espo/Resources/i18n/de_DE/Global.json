@@ -103,7 +103,8 @@
 		"First Name": "Vorname",
 		"Last Name": "Nachname",
 		"You": "Sie",
-		"you": "Sie"
+		"you": "Sie",
+		"change": "ändern"
 	},
 	"messages": {
 		"notModified": "Sie haben den Datensatz nicht geändert",
