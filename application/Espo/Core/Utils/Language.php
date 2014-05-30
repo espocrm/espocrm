@@ -142,6 +142,8 @@ class Language
 
 		if (is_array($translated) && isset($requiredOptions)) {
 
+			$translated = array_intersect_key($translated, array_flip($requiredOptions));
+
 			$optionKeys = array_keys($translated);
 			foreach ($requiredOptions as $option) {
 				if (!in_array($option, $optionKeys)) {
