@@ -181,7 +181,7 @@ class Schema
 	/*
 	 * Rebuild database schema
 	 */
-	public function rebuild($entityList = array())
+	public function rebuild($entityList = null)
 	{
 		if ($this->getConverter()->process() === false) {
 			return false;
