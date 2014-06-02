@@ -4,7 +4,7 @@
 		"account": "Account",
 		"stage": "Stage",
 		"amount": "Amount",
-		"probability": "Probability",
+		"probability": "Probability, %",
 		"leadSource": "Lead Source",
 		"doNotCall": "Do Not Call",
 		"closeDate": "Close Date",
