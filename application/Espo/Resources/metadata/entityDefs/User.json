@@ -42,6 +42,10 @@
             "type": "phone",
             "maxLength": 50
         },
+        "token": {
+            "type": "varchar",
+            "notStorable": true
+        },
         "defaultTeam": {
             "type": "link"
         },

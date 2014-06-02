@@ -272,8 +272,7 @@ _.extend(Espo.App.prototype, {
 				case 'layoutTemplate':
 					return 'res/layout-types/' + name + '.tpl';					
 				case 'layout':
-					return 'res/layouts/' + name + '.json';
-					
+					return 'res/layouts/' + name + '.json';					
 			}
 		};
 		
@@ -318,7 +317,7 @@ _.extend(Espo.App.prototype, {
 		this.auth = this.storage.get('user', 'auth') || null;
 
 		this.baseController.on('login', function (data) {
-			this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.password);								
+			this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);								
 			this.storage.set('user', 'auth', this.auth);
 			this.storage.set('user', 'user', data.user);			
 			this.storage.set('user', 'preferences', data.preferences);
@@ -336,6 +335,20 @@ _.extend(Espo.App.prototype, {
 	},
 	
 	logout: function () {
+	
+		if (this.auth) {
+			var arr = Base64.decode(this.auth).split(':');		
+			if (arr.length > 1) {		
+				$.ajax({
+					url: 'App/action/destroyAuthToken',
+					type: 'POST',
+					data: JSON.stringify({
+						token: arr[1]
+					})
+				});
+			}
+		}
+	
 		this.auth = null;
 		this.user.clear();
 		this.preferences.clear();
@@ -348,8 +361,8 @@ _.extend(Espo.App.prototype, {
 		this.language.clearCache();
 
         xhr = new XMLHttpRequest;
-        xhr.open("GET", this.url + "/", !1, 'logout', 'logout');        
-        xhr.send("");
+        xhr.open('GET', this.url + '/', !1, 'logout', 'logout');        
+        xhr.send('');
         xhr.abort();
 	},
 

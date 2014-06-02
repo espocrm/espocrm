@@ -79,7 +79,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
 						this.trigger('login', {
 							auth: {
 								userName: userName,
-								password: password
+								token: data.token
 							},
 							user: data.user,
 							preferences: data.preferences,
