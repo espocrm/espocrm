@@ -31,4 +31,9 @@ class JsonArray extends \Doctrine\DBAL\Types\JsonArrayType
 		return self::JSON_ARRAY;
 	}
 
+	public static function getDbTypeName()
+	{
+		return 'TEXT';
+	}
+
 }
