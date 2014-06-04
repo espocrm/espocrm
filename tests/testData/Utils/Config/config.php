@@ -101,23 +101,8 @@ return array (
     7 => 'Case',
     8 => 'Prospect',
   ),
-  'crud' => 
-  array (
-    'get' => 'read',
-    'post' => 'create',
-    'put' => 'update',
-    'patch' => 'patch',
-    'delete' => 'delete',
-  ),
-  'systemUser' => 
-  array (
-    'id' => 'system',
-    'userName' => 'system',
-    'firstName' => '',
-    'lastName' => 'System',
-  ),
   'isInstalled' => true,
-  'cacheTimestamp' => 1401873639,
+  'cacheTimestamp' => 1401876283,
   'testOption' => 'Another Wrong Value',
   'testOption2' => 'Test2',
 );
