@@ -32,6 +32,8 @@ class Config
 	 */
 	private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
 
+	private $systemConfigPath = 'application/Espo/Core/defaults/systemConfig.php';
+
 	protected $configPath = 'data/config.php';
 
 	private $cacheTimestamp = 'cacheTimestamp';
@@ -152,6 +154,9 @@ class Config
 		$configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
 
 		$this->configData = $this->getFileManager()->getContents($configPath);
+
+		$systemConfig = $this->getFileManager()->getContents($this->systemConfigPath);
+		$this->configData = Util::merge($systemConfig, $this->configData);
 
 		return $this->configData;
 	}
