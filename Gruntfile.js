@@ -134,6 +134,7 @@ module.exports = function (grunt) {
 					'vendor/**',
 					'bootstrap.php',
 					'cron.php',
+					'rebuild.php',
 					'index.php',
 					'LICENSE.txt',
 					'.htaccess',
