@@ -33,10 +33,10 @@ if (!empty($res['errors'])) {
 if (!empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQUEST['dbUserName'])) {
 	$connect = false;
 
-	$dbName = $_REQUEST['dbName'];
-	$hostName = $_REQUEST['hostName'];
-	$dbUserName = $_REQUEST['dbUserName'];
-	$dbUserPass = $_REQUEST['dbUserPass'];
+	$dbName = trim($_REQUEST['dbName']);
+	$hostName = trim($_REQUEST['hostName']);
+	$dbUserName = trim($_REQUEST['dbUserName']);
+	$dbUserPass = trim($_REQUEST['dbUserPass']);
 	$dbDriver = (!empty($_REQUEST['dbDriver']))? $_REQUEST['dbDriver'] : 'pdo_mysql';
 
 	$res = $systemHelper->checkDbConnection($hostName, $dbUserName, $dbUserPass, $dbName, $dbDriver);

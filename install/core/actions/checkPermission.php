@@ -23,14 +23,23 @@
 ob_start();
 $result = array('success' => true, 'errorMsg' => '');
 
-if (!$installer->isWritable()) {
+if (!$installer->checkPermission()) {
 	$result['success'] = false;
-	$urls = $installer->getLastWritableError();
- 	foreach ($urls as &$url) {
-		$url = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$url;
- 	}
-	$result['errorMsg'] = $langs['messages']['Permission denied to files'].':<br>'.implode('<br>', $urls);
-	$result['errorFixInstruction'] = $systemHelper->getPermissionCommands('', array('644', '755'));
+	$error = $installer->getLastPermissionError();
+	$urls = array_keys($error);
+	$group = array();
+	foreach($error as $folder => $permission) {
+		$group[implode('-', $permission)][] = $folder;
+	}
+	$instruction = '';
+	$instructionSU = '';
+	foreach($group as $permission => $folders) {
+		$instruction .= $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission)) . ";<br>";
+		$instructionSU .= "&nbsp;&nbsp;" . $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission), true) . ";<br>";
+	}
+	$result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>/'.implode('<br>/', $urls).'</pre>';
+	$result['errorFixInstruction'] = str_replace( '"{C}"' , $instruction, $langs['messages']['permissionInstruction']) . "<br>" .
+										str_replace( '{CSU}' , $instructionSU, $langs['messages']['operationNotPermitted']);
 }
 
 ob_clean();

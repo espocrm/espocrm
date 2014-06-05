@@ -29,17 +29,23 @@ class Manager
 {
 	private $permission;
 
-	public function __construct(array $params = null)
+	public function __construct(\Espo\Core\Utils\Config $config = null)
 	{
-		$this->permission = new Permission($params);
+		$params = null;
+		if (isset($config)) {
+			$params = array(
+				'defaultPermissions' => $config->get('defaultPermissions'),
+				'permissionMap' => $config->get('permissionMap'),
+			);
+		}
+
+		$this->permission = new Permission($this, $params);
 	}
 
 	public function getPermissionUtils()
 	{
 		return $this->permission;
 	}
-
-
 
 	/**
 	 * Get a list of files in specified directory
@@ -173,7 +179,12 @@ class Manager
 			throw new Error('Permission denied in '. $path);
 		}
 
-		return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
+		$res = (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
+		if ($res && function_exists('opcache_invalidate')) {
+			opcache_invalidate($fullPath);
+		}
+
+		return $res;
 	}
 
 	/**

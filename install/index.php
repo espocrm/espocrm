@@ -77,7 +77,7 @@ $ignore = array('desc', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDri
 if (!empty($_REQUEST)) {
 	foreach ($_REQUEST as $key => $val) {
 		if (!in_array($val, $ignore))
-		$_SESSION['install'][$key] = $val;
+		$_SESSION['install'][$key] = trim($val);
 	}
 }
 

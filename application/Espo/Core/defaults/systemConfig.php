@@ -28,6 +28,28 @@ return array (
 		'user' => '',
 		'group' => '',
 	),
+
+	'permissionMap' => array(
+
+		/** array('0664', '0775') */
+		'writable' => array(
+			'data',
+			'custom',
+		),
+
+		/** array('0644', '0755') */
+		'readable' => array(
+			'api',
+			'application',
+			'client',
+			'vendor',
+			'index.php',
+			'cron.php',
+			'rebuild.php',
+			'main.html',
+			'reset.html',
+		),
+	),
 	'cron' => array(
 		'maxJobNumber' => 15, /** Max number of jobs per one execution */
 		'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
@@ -58,6 +80,8 @@ return array (
 		'isInstalled',
 		'defaultPermissions',
 		'systemUser',
+		'permissionMap',
+		'permissionRules',
 	),
 	'adminItems' =>
 	array (

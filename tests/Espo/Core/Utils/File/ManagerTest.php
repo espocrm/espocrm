@@ -17,16 +17,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-    	$this->object = new \Espo\Core\Utils\File\Manager(
-			array(
-				'defaultPermissions' => array (
-				    'dir' => '0775',
-				    'file' => '0664',
-				    'user' => '',
-				    'group' => '',
-			  ),
-			)
-		);
+    	$this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+
+    	$this->object = new \Espo\Core\Utils\File\Manager();
 
 		$this->reflection = new ReflectionHelper($this->object);
     }

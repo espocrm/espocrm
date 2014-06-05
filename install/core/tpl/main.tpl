@@ -5,7 +5,7 @@
 	<div class="panel-body">
 		<div id="msg-box" class="alert hide"></div>
 		<div class="row">
-			<div class=" col-md-13">
+			<div class=" col-md-12">
 				<div align="center">
 				<div class="content-img">
 					<img class="devices" src="img/devices.png" alt="EspoCRM">

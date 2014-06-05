@@ -15,12 +15,17 @@
 		}
 		</style>
 	</head>
-	<body>
-		<div class="col-md-offset-1 col-md-10">
-			<div class="panel panel-default">
-				{include file="header.tpl"}
-				{include file="$tplName"}
+	<body class='install-body'>
+		<header id="header"></header>
+		<div class="container content">
+			<div class="col-md-offset-1 col-md-10">
+				<div class="panel panel-default">
+					{include file="header.tpl"}
+					{include file="$tplName"}
+				</div>
 			</div>
 		</div>
+		<footer class="container">{include file="footer.tpl"}</footer>
 	</body>
+	
 </html>
