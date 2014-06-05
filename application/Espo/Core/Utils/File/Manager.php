@@ -176,10 +176,15 @@ class Manager
 		$fullPath = $this->concatPaths($path); //todo remove after changing the params
 
 		if ($this->checkCreateFile($fullPath) === false) {
-			throw new Error('Permission denied in '. $fullPath);
+			throw new Error('Permission denied in '. $path);
 		}
 
-		return (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
+		$res = (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
+		if ($res && function_exists('opcache_invalidate')) {
+			opcache_invalidate($fullPath);
+		}
+
+		return $res;
 	}
 
 	/**
