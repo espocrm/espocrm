@@ -29,7 +29,7 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
 
 		template: 'modals.image-preview',
 		
-		size: 'xlarge',
+		size: 'x-large',
 
 		data: function () {
 			return {
