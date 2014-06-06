@@ -110,8 +110,6 @@ class Permission
 		return $this->permissionRules;
 	}
 
-
-
 	/**
 	 * Set default permission
 	 *
@@ -367,7 +365,7 @@ class Permission
 	 *
 	 * @return bool
 	 */
-	protected function chmodReal($filename,  $mode)
+	protected function chmodReal($filename, $mode)
 	{
 		try {
 			$result = chmod($filename, $mode);
@@ -458,17 +456,24 @@ class Permission
 	 *
 	 * @return  bool
 	 */
-	public function setMapPermission()
+	public function setMapPermission($mode = null)
 	{
 		$this->permissionError = array();
 		$this->permissionErrorRules = array();
 
 		$params = $this->getParams();
 
+		$permissionRules = $this->permissionRules;
+		if (isset($mode)) {
+			foreach ($permissionRules as &$value) {
+				$value = $mode;
+			}
+		}
+
 		$result = true;
 		foreach ($params['permissionMap'] as $type => $items) {
 
-			$permission = $this->permissionRules[$type];
+			$permission = $permissionRules[$type];
 
 			foreach ($items as $item) {
 

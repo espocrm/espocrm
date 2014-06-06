@@ -22,6 +22,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Exceptions\Error;
+
 class UpgradeManager extends Upgrades\Base
 {
 	protected $packagePath = 'data/upload/upgrades';
@@ -30,6 +32,29 @@ class UpgradeManager extends Upgrades\Base
 		'before' => 'BeforeUpgrade',
 		'after' => 'AfterUpgrade',
 	);
+
+	/**
+	 * Main upgrade process
+	 *
+	 * @param  string $upgradeId Upgrade ID, gotten in upload stage
+	 * @return bool
+	 */
+	public function run($upgradeId)
+	{
+		/** set writable permission for espo */
+		$permissionRes = $this->getFileManager()->getPermissionUtils()->setMapPermission(array('0664', '0775'));
+		if (!$permissionRes) {
+			throw new Error( 'Permission denied for the following items: /'. implode(', /', $this->getFileManager()->getPermissionUtils()->getLastError()) );
+		}
+
+		parent::run($upgradeId);
+
+		/** return the previous permission */
+		$permissionRes = $this->getFileManager()->getPermissionUtils()->setMapPermission();
+		if (!$permissionRes) {
+			throw new Error( 'Permission denied for the following items: '. implode(', ', $this->getFileManager()->getPermissionUtils()->getLastError()) );
+		}
+	}
 
 
 
