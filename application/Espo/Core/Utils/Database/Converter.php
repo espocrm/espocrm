@@ -70,7 +70,7 @@ class Converter
 	}
 
 
-	public function getSchemaFromMetadata($entityList = array())
+	public function getSchemaFromMetadata($entityList = null)
 	{
 		$ormMeta = $this->getMetadata()->getOrmMetadata();
 		$entityDefs = $this->getMetadata()->get('entityDefs');

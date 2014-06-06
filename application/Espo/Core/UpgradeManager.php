@@ -22,6 +22,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Exceptions\Error;
+
 class UpgradeManager extends Upgrades\Base
 {
 	protected $packagePath = 'data/upload/upgrades';
@@ -30,7 +32,5 @@ class UpgradeManager extends Upgrades\Base
 		'before' => 'BeforeUpgrade',
 		'after' => 'AfterUpgrade',
 	);
-
-
 
 }

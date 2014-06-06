@@ -13,6 +13,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 	protected $configPath = 'tests/testData/Utils/Config/config.php';
 
+	protected $systemConfigPath = 'tests/testData/Utils/Config/systemConfig.php';
+
     protected function setUp()
     {
 		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
@@ -20,7 +22,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->object = new \Espo\Core\Utils\Config($this->objects['fileManager']);
 
         $this->reflection = new ReflectionHelper($this->object);
+
         $this->reflection->setProperty('configPath', $this->configPath);
+        $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
     }
 
     protected function tearDown()
@@ -29,14 +33,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    function testLoadConfig()
+    public function testLoadConfig()
 	{
 		$this->assertArrayHasKey('database', $this->reflection->invokeMethod('loadConfig', array()));
 
 		$this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('loadConfig', array()));
 	}
 
-    function testGet()
+    public function testGet()
 	{
 		$result = array(
 			'driver' => 'pdo_mysql',
@@ -58,7 +62,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-    function testSet()
+    public function testSet()
 	{
         $setKey= 'testOption';
 		$setValue= 'Test';
@@ -69,7 +73,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->object->set($setKey, 'Another Wrong Value'));
 	}
 
-	function testSetArray()
+	public function testSetArray()
 	{
 		$values = array(
 			'testOption' => 'Test',
@@ -84,6 +88,18 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         	'testOption' => 'Another Wrong Value',
         );
         $this->assertTrue($this->object->set($wrongArray));
+	}
+
+	public function testSystemConfigMerge()
+	{
+		$configDataWithoutSystem = $this->objects['fileManager']->getContents($this->configPath);
+		$this->assertArrayNotHasKey('systemItems', $configDataWithoutSystem);
+		$this->assertArrayNotHasKey('adminItems', $configDataWithoutSystem);
+
+		$configData = $this->reflection->invokeMethod('loadConfig', array());
+
+		$this->assertArrayHasKey('systemItems', $configData);
+		$this->assertArrayHasKey('adminItems', $configData);
 	}
 
 }

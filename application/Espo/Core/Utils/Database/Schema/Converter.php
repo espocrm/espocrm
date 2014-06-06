@@ -84,7 +84,7 @@ class Converter
 	}
 
 
-	public function process(array $ormMeta, $entityDefs, $entityList = array())
+	public function process(array $ormMeta, $entityDefs, $entityList = null)
 	{
 		$GLOBALS['log']->debug('Schema\Converter - Start: building schema');
 
@@ -97,7 +97,7 @@ class Converter
 			unset($ormMeta['unset']);
 		} //END: unset some keys in orm
 
-		if (!empty($entityList)) {
+		if (isset($entityList)) {
 			$entityList = is_string($entityList) ? (array) $entityList : $entityList;
 
 			$dependentEntities = $this->getDependentEntities($entityList, $ormMeta);
@@ -202,7 +202,6 @@ class Converter
 			}
 		}
 		//END: check and create columns/tables for relations
-
 
 		$GLOBALS['log']->debug('Schema\Converter - End: building schema');
 

@@ -31,11 +31,9 @@ class Installer
 
 	protected $isAuth = false;
 
-	protected $writableList = array(
-		'data',
-	);
+	protected $permissionMap;
 
-	protected $writableListError;
+	protected $permissionError;
 
 	/**
 	 * Ajax Urls, pairs: url:directory (if bad permission)
@@ -44,7 +42,6 @@ class Installer
 	 */
 	protected $ajaxUrls = array(
 		'api/v1/Settings' => 'api',
-		'api/v1' => 'api',
 		'client/res/templates/login.tpl' => 'client/res/templates',
 	);
 
@@ -74,7 +71,8 @@ class Installer
 		$this->systemHelper = new SystemHelper();
 
 		$configPath = $this->getConfig()->getConfigPath();
-		$this->writableList[] = $configPath;
+		$this->permissionMap = $this->getConfig()->get('permissionMap');
+		$this->permissionMap['writable'][] = $configPath;
 
 		if (!file_exists($configPath)) {
 			$configData = $this->getConfig()->getDefaults();
@@ -102,6 +100,11 @@ class Installer
 		return $this->systemHelper;
 	}
 
+	protected function getFileManager()
+	{
+		return $this->app->getContainer()->get('fileManager');
+	}
+
 
 	protected function auth()
 	{
@@ -118,12 +121,6 @@ class Installer
 	public function isInstalled()
 	{
 		return $this->app->isInstalled();
-	}
-
-
-	public function getLastWritableError()
-	{
-		return $this->writableListError;
 	}
 
 	protected function getLanguage()
@@ -174,6 +171,10 @@ class Installer
 
 		$data = array_merge($data, $initData);
 		$result = $this->saveConfig($data);
+
+		/*if ($result) {
+			$this->app = new \Espo\Core\Application();
+		}*/
 
 		return $result;
 	}
@@ -316,30 +317,14 @@ class Installer
 		return false;
 	}
 
-	public function isWritable()
+	public function checkPermission()
 	{
-		$this->writableListError = array();
+		return $this->getFileManager()->getPermissionUtils()->setMapPermission();
+	}
 
-		$fileManager = $this->app->getContainer()->get('fileManager');
-
-		$result = true;
-		foreach ($this->writableList as $item) {
-
-			if (!file_exists($item)) {
-				$item = $fileManager->getDirName($item);
-			}
-
-			if (file_exists($item) && !is_writable($item)) {
-
-				$fileManager->getPermissionUtils()->setDefaultPermissions($item);
-				if (!is_writable($item)) {
-					$result = false;
-					$this->writableListError[] = $item;
-				}
-			}
-		}
-
-		return $result;
+	public function getLastPermissionError()
+	{
+		return $this->getFileManager()->getPermissionUtils()->getLastErrorRules();
 	}
 
 	public function getAjaxUrls()
@@ -350,7 +335,7 @@ class Installer
 	public function fixAjaxPermission($url = null)
 	{
 		$permission = array(0644, 0755);
-		$fileManager = $this->app->getContainer()->get('fileManager');
+		$fileManager = $this->getFileManager();
 
 		$result = false;
 		if (!isset($url)) {
@@ -409,10 +394,10 @@ class Installer
 	protected function translateSetting($name, array $settingDefs)
 	{
 		if (isset($settingDefs['options'])) {
-			$optionLabel = $this->getLanguage()->translate($name, 'options', 'Settings');
+			$optionLabel = $this->getLanguage()->translate($name, 'options', 'Settings', $settingDefs['options']);
 
 			if ($optionLabel == $name) {
-				$optionLabel = $this->getLanguage()->translate($name, 'options', 'Global');
+				$optionLabel = $this->getLanguage()->translate($name, 'options', 'Global', $settingDefs['options']);
 			}
 
 			if ($optionLabel == $name) {

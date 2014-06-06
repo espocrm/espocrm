@@ -53,16 +53,9 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 		
 		selectFile: function (file) {
 			var fileReader = new FileReader();
-			fileReader.onload = function (e) {
-				if (file.type == 'application/zip') {							
-					this.packageContents = e.target.result;
-					this.$el.find('button[data-action="upload"]').removeClass('disabled');
-				} else {
-					this.packageContents = null;
-					this.showError('File type should be \'application/zip\'');
-				}
-				
-
+			fileReader.onload = function (e) {					
+				this.packageContents = e.target.result;
+				this.$el.find('button[data-action="upload"]').removeClass('disabled');
 			}.bind(this);
 			fileReader.readAsDataURL(file);
 		},

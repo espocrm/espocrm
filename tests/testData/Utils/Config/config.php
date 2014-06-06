@@ -101,50 +101,8 @@ return array (
     7 => 'Case',
     8 => 'Prospect',
   ),
-  'crud' => 
-  array (
-    'get' => 'read',
-    'post' => 'create',
-    'put' => 'update',
-    'patch' => 'patch',
-    'delete' => 'delete',
-  ),
-  'systemUser' => 
-  array (
-    'id' => 'system',
-    'userName' => 'system',
-    'firstName' => '',
-    'lastName' => 'System',
-  ),
-  'systemItems' => 
-  array (
-    0 => 'systemItems',
-    1 => 'adminItems',
-    2 => 'configPath',
-    3 => 'cachePath',
-    4 => 'database',
-    5 => 'crud',
-    6 => 'logger',
-    7 => 'isInstalled',
-    8 => 'defaultPermissions',
-    9 => 'systemUser',
-  ),
-  'adminItems' => 
-  array (
-    0 => 'devMode',
-    1 => 'outboundEmailIsShared',
-    2 => 'outboundEmailFromName',
-    3 => 'outboundEmailFromAddress',
-    4 => 'smtpServer',
-    5 => 'smtpPort',
-    6 => 'smtpAuth',
-    7 => 'smtpSecurity',
-    8 => 'smtpUsername',
-    9 => 'smtpPassword',
-    10 => 'cron',
-  ),
   'isInstalled' => true,
-  'cacheTimestamp' => 1400160414,
+  'cacheTimestamp' => 1401978369,
   'testOption' => 'Another Wrong Value',
   'testOption2' => 'Test2',
 );

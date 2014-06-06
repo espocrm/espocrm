@@ -25,18 +25,35 @@ namespace Espo\EntryPoints;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Error;
 
 class Image extends \Espo\Core\EntryPoints\Base
 {
-	public static $authRequired = false;
+	public static $authRequired = true;
+	
+	protected $allowedFileTypes = array(
+		'image/jpeg',
+		'image/png',
+		'image/gif',
+	);
+	
+	protected $imageSizes = array(
+		'x-small' => array(64, 64),	
+		'small' => array(128, 128),	
+		'medium' => array(256, 256),
+		'large' => array(512, 512),
+		'x-large' => array(864, 864),
+		'xx-large' => array(1024, 1024),
+	);
 	
 	public function run()
-	{
-	
+	{	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
 		}
+		
+		$size = $_GET['size'];
 		
 		$attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 		
@@ -51,29 +68,89 @@ class Image extends \Espo\Core\EntryPoints\Base
 			}
 		}
 		
-		$fileName = "data/upload/{$attachment->id}";
+		$filePath = "data/upload/{$attachment->id}";
 		
-		if (!file_exists($fileName)) {
+		$fileType = $attachment->get('type');
+		
+		if (!file_exists($filePath)) {
 			throw new NotFound();
 		}
 		
-		if (!$attachment->get('global')) {
-			throw new Forbidden();
-		}	
-		
-
-		
-		if ($attachment->get('type')) {
-			header('Content-Type: ' . $attachment->get('type'));
+		if (!in_array($fileType, $this->allowedFileTypes)) {
+			throw new Error();
 		}
-
 		
+		if (!empty($size)) {
+			if (!empty($this->imageSizes[$size])) {
+				$thumbFilePath = "data/upload/thumbs/{$attachment->id}_{$size}";
+				
+				if (!file_exists($thumbFilePath)) {
+					$targetImage = $this->getThumbImage($filePath, $fileType, $size);					
+					ob_start();	
+					imagejpeg($targetImage);
+					$contents = ob_get_contents();
+					ob_end_clean();
+					imagedestroy($targetImage);								
+					$this->getContainer()->get('fileManager')->putContents($thumbFilePath, $contents);					
+				}				
+				$filePath = $thumbFilePath;								
+		
+			} else {
+				throw new Error();
+			}		
+		}
+		
+		if (!empty($size)) {			
+			$fileName = $attachment->id . '_' . $size . '.jpg';
+		} else {
+			$fileName = $attachment->get('name');
+		}	
+		header('Content-Disposition:inline;filename="'.$fileName.'"');		
+		if (!empty($fileType)) {
+			header('Content-Type: ' . $fileType);
+		}		
 		header('Pragma: public');
-		header('Content-Length: ' . filesize($fileName));
+		$fileSize = filesize($filePath);		
+		if ($fileSize) {
+			header('Content-Length: ' . $fileSize);
+		}
 		ob_clean();
 		flush();
-		readfile($fileName);
+		readfile($filePath);
 		exit;		
-	}	
+	}
+	
+	protected function getThumbImage($filePath, $fileType, $size)
+	{
+		list($originalWidth, $originalHeight) = getimagesize($filePath);
+		list($width, $height) = $this->imageSizes[$size];
+		
+		if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth > $originalHeight)) {
+			$targetWidth = $width;
+			$targetHeight = $originalHeight * ($width / $originalWidth);
+		} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
+			$targetHeight = $height;
+			$targetWidth = $originalWidth * ($height / $targetHeight);
+		} else {
+			$targetWidth = $originalWidth;
+			$targetHeight = $originalHeight;					
+		}
+				
+		$targetImage = imagecreatetruecolor($targetWidth, $targetHeight);				
+		switch ($fileType) {
+			case 'image/jpeg':
+				$sourceImage = imagecreatefromjpeg($filePath);
+				break;
+			case 'image/png':
+				$sourceImage = imagecreatefrompng($filePath);
+				break;
+			case 'image/gif':
+				$sourceImage = imagecreatefromgif($filePath);
+				break;					
+		}
+		imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
+		
+		return $targetImage;
+	}
 }
 

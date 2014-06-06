@@ -43,6 +43,9 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 			'click button[data-action="create"]': function () {
 				this.create();
 			},
+			'click .list a': function (e) {
+				e.preventDefault();
+			}
 		},
 		
 		setup: function () {

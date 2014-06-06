@@ -42,7 +42,7 @@ var InstallScript = function(opt) {
 	if (typeof(opt.serverType) !== 'undefined') {
 		this.serverType = opt.serverType;
 	}
-	
+
 	if (typeof(opt.OS) !== 'undefined') {
 		this.OS = opt.OS;
 	}
@@ -57,7 +57,7 @@ var InstallScript = function(opt) {
 			'break': true,
 		},
 		{
-			'action': 'checkWritable',
+			'action': 'checkPermission',
 			'break': true,
 		},
 		{
@@ -72,10 +72,7 @@ var InstallScript = function(opt) {
 			'action': 'createUser',
 			'break': true,
 		},
-		{
-			'action': 'checkAjaxPermission',
-			'break': true,
-		}
+		
 	];
 	this.checkIndex = 0;
 	this.checkError = false;
@@ -267,7 +264,7 @@ InstallScript.prototype.step5 = function() {
 		})
 
 	})
-	
+
 	$('.field-smtpAuth').find('input[type="checkbox"]').change( function(e){
 		if ($(this).is(':checked')) {
 			$('.cell-smtpPassword').removeClass('hide');
@@ -282,7 +279,7 @@ InstallScript.prototype.step5 = function() {
 	});
 	$('[name="smtpSecurity"]').change( function(e){
 		if ($(this).val() == '') {
-			$('[name="smtpPort"]').val('25');			
+			$('[name="smtpPort"]').val('25');
 		}
 		else {
 			$('[name="smtpPort"]').val('465');
@@ -416,7 +413,7 @@ InstallScript.prototype.checkSett = function(opt) {
 
 InstallScript.prototype.validate = function() {
 	this.hideMsg();
-	
+
 	var valid = true;
 	var elem = null;
 	var fieldRequired = [];
@@ -450,14 +447,14 @@ InstallScript.prototype.validate = function() {
 			}
 		}
 	}
-	
+
 	// decimal and group sep
 	$('[name="thousandSeparator"]').parent().parent().removeClass('has-error');
-	if (typeof(this.systemSettings.thousandSeparator) !== 'undefined' 
-		&& typeof(this.systemSettings.decimalMark) !== 'undefined' 
+	if (typeof(this.systemSettings.thousandSeparator) !== 'undefined'
+		&& typeof(this.systemSettings.decimalMark) !== 'undefined'
 		&& this.systemSettings.thousandSeparator == this.systemSettings.decimalMark
 		&& valid) {
-		
+
 		$('[name="thousandSeparator"]').parent().parent().addClass('has-error');
 		$('[name="decimalMark"]').parent().parent().addClass('has-error');
 		msg = this.getLang('Thousand Separator and Decimal Mark equal', 'messages');
@@ -552,13 +549,9 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	var currIndex = this.checkIndex;
 	var checkAction = this.checkActions[currIndex].action;
 	this.checkIndex++;
-	
+
 	if (checkAction == 'checkModRewrite') {
 		this.checkModRewrite();
-		return;
-	}
-	if (checkAction == 'checkAjaxPermission') {
-		this.checkAjaxPermission();
 		return;
 	}
 	if (checkAction == 'applySett') {
@@ -604,25 +597,11 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	})
 }
 
-InstallScript.prototype.checkAjaxPermission = function() {
-	var self = this;
-
-	this.ajaxUrlFinished = 0;
-	this.ajaxUrlPermRes = true;
-	this.ajaxUrlPermMsgs = [];
-	this.ajaxUrlPermInstructions = [];
-
-	var len = this.ajaxUrls.length;
-	for (var count = 0; count < len; count++) {
-		var url = this.ajaxUrls[count];
-		this.checkAjaxPermUrl(url);
-	}
-}
 
 InstallScript.prototype.checkModRewrite = function() {
 	var self = this;
 	this.modRewriteUrl;
-	
+
 	var urlAjax = '..'+this.modRewriteUrl;;
 	var realJqXHR = $.ajax({
 		url: urlAjax,
@@ -635,83 +614,17 @@ InstallScript.prototype.checkModRewrite = function() {
 		if (status == '200' || status == '401') {
 			var data = {'success': 1};
 		}
-		
+
 		self.callbackModRewrite(data);
-		
+
 	})
-}
-
-InstallScript.prototype.checkAjaxPermUrl = function(url) {
-	var self = this;
-
-	var urlAjax = '../'+url;
-	var realJqXHR = $.ajax({
-		url: urlAjax,
-		type: "GET",
-	})
-	.always(function(data, textStatus, jqXHR){
-		var status = jqXHR.status || realJqXHR.status || 404;
-		status += '';
-		if (status == '200' || status == '401') {
-			var data = {'success': 1};
-			self.callbackAjaxPerm(data);
-		}
-		else {
-			var data = {};
-			data.action = 'fixAjaxPermission';
-			data.url = url;
-			$.ajax({
-				url: "index.php",
-				type: "POST",
-				data: data,
-				dataType: 'json',
-			})
-			.done(function(ajaxData){
-				self.callbackAjaxPerm(ajaxData);
-			})
-			.fail(function(){
-
-				var ajaxData = {
-					'success': false,
-					'errorMsg': ['Ajax failed']+': '+url,
-				}
-				self.callbackAjaxPerm(ajaxData);
-			})
-		}
-	})
-}
-
-InstallScript.prototype.callbackAjaxPerm = function(data) {
-	this.ajaxUrlFinished++;
-	if (typeof(data.success) != 'undefined' && !data.success) {
-		this.ajaxUrlPermRes = false;
-		this.ajaxUrlPermMsgs.push(data.errorMsg);
-		if (typeof(data.errorFixInstruction) != 'undefined') {
-			this.ajaxUrlPermInstructions.push(data.errorFixInstruction);
-		}
-	}
-
-	if (this.ajaxUrlFinished == this.ajaxUrls.length) {
-		// all urls was checked
-		var ajaxData = {
-			'success': this.ajaxUrlPermRes
-		}
-		if (!this.ajaxUrlPermRes) {
-			var errorMsg = this.getLang('Permission denied', 'messages') + ' ( ' + this.ajaxUrlPermMsgs.join(', ') + ' ) .';
-			if (this.ajaxUrlPermInstructions.length > 0) {
-				errorMsg += '<br>' + this.getLang('permissionInstruction', 'messages').replace('"{C}"', this.ajaxUrlPermInstructions.join('<br>'));
-			}
-			ajaxData.errorMsg = errorMsg;
-		}
-		this.checkAction(ajaxData);
-	}
 }
 
 InstallScript.prototype.callbackModRewrite = function(data) {
 	var ajaxData = {
 		'success': true,
 	}
-	
+
 	if (typeof(data.success) != 'undefined' && data.success) {
 		this.checkAction(ajaxData);
 		return;
@@ -741,6 +654,7 @@ InstallScript.prototype.callbackChecking = function(data) {
 	}
 	else {
 		var desc = (typeof(data.errorMsg))? data.errorMsg : '';
+		desc += (typeof(data.errorFixInstruction) != 'undefined')? data.errorFixInstruction : '';
 		if (this.reChecking) {
 			this.showMsg({msg: desc, error: true});
 			$("#re-check").removeAttr('disabled');

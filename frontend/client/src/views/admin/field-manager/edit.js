@@ -85,13 +85,25 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 					this.type = model.getFieldType(this.field);
 					this.defs = model.defs.fields[this.field];
 				}
-					
-				this.params = this.getFieldManager().getParams(this.type);
 				
-				this.model.set(this.defs);							
+				
+					
+				this.params = this.getFieldManager().getParams(this.type) || [];
+				
+				this.params.forEach(function (o) {
+					this.model.defs.fields[o.name] = o;
+				}, this);				
+				
+				this.model.set(this.defs);	
+							
+				if (this.isNew) {
+					this.model.populateDefaults();
+				}	
 				
 				this.createFieldView('varchar', 'name', !this.isNew);
 				this.createFieldView('varchar', 'label');
+				
+
 				
 				this.getView('name').on('change', function (m) {
 					var name = this.model.get('name');
@@ -111,7 +123,7 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 					if (o.hidden) {
 						return;
 					}
-					this.createFieldView(o.type, o.name);
+					this.createFieldView(o.type, o.name, null, o);
 				}, this);
 				
 			
@@ -120,12 +132,13 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
 			 
 		},
 		
-		createFieldView: function (type, name, readOnly) {
+		createFieldView: function (type, name, readOnly, params) {
 			this.createView(name, this.getFieldManager().getViewName(type), {
 				model: this.model,
 				el: this.options.el + ' .field-' + name,
 				defs: {
 					name: name,
+					params: params
 				},
 				mode: readOnly ? 'detail' : 'edit',
 				readOnly: readOnly,

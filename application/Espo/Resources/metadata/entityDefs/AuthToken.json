@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "token": {
+            "type": "varchar",
+            "maxLength": "36"
+        },
+        "hash": {
+            "type": "varchar",
+            "maxLength": "36",
+            "index": true
+        },
+        "userId": {
+            "type": "varchar",
+            "maxLength": "36"
+        },
+        "ipAddress": {
+        	"type": "varchar",
+        	"maxLength": "36"
+        },
+        "lastAccess": {
+            "type": "datetime"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    }
+}

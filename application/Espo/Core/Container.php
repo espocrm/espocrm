@@ -76,9 +76,7 @@ class Container
 	private function loadFileManager()
     {
     	return new \Espo\Core\Utils\File\Manager(
-			array(
-				'defaultPermissions' => $this->get('config')->get('defaultPermissions'),
-			)
+			$this->get('config')
 		);
     }
 

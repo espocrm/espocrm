@@ -15,7 +15,9 @@ select[name="user-lang"] {
 	text-align: left ;
 }
 
-
+.install-body {
+	padding-top: 30px;
+}
 .btn-panel {
 	margin-top: 20px;
 }

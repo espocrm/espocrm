@@ -121,6 +121,7 @@ class Record extends \Espo\Core\Services\Base
 			$this->loadLinkMultipleFields($entity);			
 			$this->loadParentNameFields($entity);
 			$this->loadIsFollowed($entity);
+			$this->loadEmailAddressField($entity);
 			
 			if (!$this->getAcl()->check($entity, 'read')) {
 				throw new Forbidden();
@@ -170,6 +171,15 @@ class Record extends \Espo\Core\Services\Base
 					}
 				}
 			}
+		}
+	}
+	
+	protected function loadEmailAddressField(Entity $entity)
+	{
+		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());		
+		if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
+			$dataFieldName = 'emailAddressData';
+			$entity->set($dataFieldName, $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity));
 		}
 	}
 	

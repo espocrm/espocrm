@@ -30,7 +30,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 
 	public function testCreateExistingField()
 	{
-		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+		$this->setExpectedException('\Espo\Core\Exceptions\Conflict');
 
 		$data = array(
 			"type" => "varchar",

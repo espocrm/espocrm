@@ -24,6 +24,7 @@ namespace Espo\Modules\Crm\Services;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\ORM\Entity;
 
 class Prospect extends \Espo\Services\Record
 {	

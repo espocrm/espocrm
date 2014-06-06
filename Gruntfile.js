@@ -134,6 +134,7 @@ module.exports = function (grunt) {
 					'vendor/**',
 					'bootstrap.php',
 					'cron.php',
+					'rebuild.php',
 					'index.php',
 					'LICENSE.txt',
 					'.htaccess',
@@ -146,7 +147,7 @@ module.exports = function (grunt) {
 				dot: true,
 				src: '**',
 				cwd: 'build/tmp',
-				dest: 'build/EspoCRM-<%= pkg.espoVersion %>/',
+				dest: 'build/EspoCRM-<%= pkg.version %>/',
 			},
 		},
 		replace: {
@@ -171,7 +172,7 @@ module.exports = function (grunt) {
 					patterns: [
 						{
 							match: 'version',
-							replacement: '<%= pkg.espoVersion %>'
+							replacement: '<%= pkg.version %>'
 						}
 					]
 				},
@@ -186,12 +187,12 @@ module.exports = function (grunt) {
 		compress: {
 			final: {
 				options: {
-					archive: 'build/EspoCRM-<%= pkg.espoVersion %>.zip',
+					archive: 'build/EspoCRM-<%= pkg.version %>.zip',
 					mode: 'zip'
 				},
 				src: ['**'],
-				cwd: 'build/EspoCRM-<%= pkg.espoVersion %>',
-				dest: 'EspoCRM-<%= pkg.espoVersion %>'
+				cwd: 'build/EspoCRM-<%= pkg.version %>',
+				dest: 'EspoCRM-<%= pkg.version %>'
 			}
 		}
 	});

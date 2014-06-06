@@ -32,7 +32,7 @@
 
 .table thead > tr > th {
     border-bottom: 1px solid @table-border-color;
-} 
+}
 
 .form-group {
   margin-bottom: 12px;
@@ -47,7 +47,7 @@
 }
 
 label {
-  margin-bottom: 3px; 
+  margin-bottom: 3px;
 }
 
 .table {
@@ -84,7 +84,7 @@ table.table > thead th {
 }
 
  .cell > label {
-	color: @gray-light; 
+	color: @gray-light;
 }
 
  .cell label {
@@ -145,7 +145,7 @@ ul.dropdown-menu > li.checkbox {
 
 .page-header h3 {
 	margin-top: 0px;
-	margin-bottom: 8px;	
+	margin-bottom: 8px;
 }
 
 .list-buttons-container > div {
@@ -178,7 +178,7 @@ ul.dropdown-menu > li.checkbox {
 
 .field .row {
 	margin-left: -5px !important;
-	margin-right: -5px !important;	
+	margin-right: -5px !important;
 }
 
 .field .row > div {
@@ -270,7 +270,7 @@ select[multiple].input-sm {
 
 .list-expanded > .show-more {
 	padding: 0px;
-	margin-top: -1px;	
+	margin-top: -1px;
 }
 
 .list-expanded > li.show-more > .btn {
@@ -290,7 +290,7 @@ select[multiple].input-sm {
 }
 
 .panel-body > .list-container:first-child > .list-expanded:first-child {
-	margin-top: -15px;	
+	margin-top: -15px;
 }
 .panel-body > .list-container:last-child > .list-expanded:last-child {
 	margin-bottom: -15px;
@@ -339,7 +339,7 @@ select[multiple].input-sm {
 	table-layout: fixed;
 }
 
-.list > table td, table.list th { 
+.list > table td, table.list th {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -381,7 +381,7 @@ td.cell-buttons > .btn-group {
 }
 
 .panel {
-	border-width: 2px;	
+	border-width: 2px;
 }
 
 .panel-heading > .btn-group > .btn {
@@ -404,8 +404,23 @@ td.cell-buttons > .btn-group {
 
 .gray-box {
 	background-color: @gray-lighter;
-	margin: 0 5px 3px 0;	
-	padding: 3px 3px 3px 5px;	
+	margin: 0 5px 3px 0;
+	padding: 3px 3px 3px 5px;
+}
+
+.gray-box .preview {
+	overflow: hidden;
+	display: inline-block;
+}
+
+.attachment-preview {
+	display: inline-block;
+	margin: 3px 6px 3px 0;
+}
+
+.field > .attachment-preview {
+	display: block;
+	overflow: hidden;
 }
 
 .stick-sub {
@@ -470,7 +485,7 @@ html, body {
 body > .content {
 	height: auto;
 	min-height: 100%;
-	padding-bottom: 35px;	
+	padding-bottom: 35px;
 }
 
 body > footer {
@@ -482,12 +497,15 @@ body > footer {
 }
 
 body > footer > p {
-	padding: 6px 0; 
+	padding: 6px 0;
 }
-body > footer > p, 
-body > footer > p a, 
-body > footer > p a:hover, 
-body > footer > p a:active, 
+body > footer > p.credit {
+	margin: 0;
+}
+body > footer > p,
+body > footer > p a,
+body > footer > p a:hover,
+body > footer > p a:active,
 body > footer > p a:visited {
 	color: @gray;
 }

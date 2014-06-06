@@ -37,6 +37,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 
 	protected $writableDir = 'data';
 
+	protected $combineOperator = '&&';
+
 
 	public function initWritable()
 	{
@@ -127,35 +129,52 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $this->modRewriteUrl;
 	}
 
-	public function getChmodCommand($path, $permissions = array('755'), $isSudo = false, $isFile = null)
+	public function getChmodCommand($path, $permissions = array('755'), $isSudo = false, $isFile = null, $isCd = true)
 	{
-		$path = $this->getFullPath($path);
+		//$path = $this->getFullPath($path);
+
+		$path = empty($path) ? '*' : $path;
+		if (is_array($path)) {
+			$path = implode(' ', $path);
+		}
 
 		$sudoStr = $isSudo ? 'sudo ' : '';
+
+		$cd = $isCd ? $this->getCd(true) : '';
 
 		if (is_string($permissions)) {
 			$permissions = (array) $permissions;
 		}
 
 		if (!isset($isFile) && count($permissions) == 1) {
-			return $sudoStr.'chmod -R '.$permissions[0].' '.$path;
+			return $cd.$sudoStr.'chmod -R '.$permissions[0].' '.$path;
 		}
 
 		$bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
 
 		$commands = array();
+
+		if ($isCd) {
+			$commands[] = $this->getCd();
+		}
+
 		$commands[] = $sudoStr.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
 		$commands[] = $sudoStr.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
 
 		if (count($permissions) >= 2) {
-			return implode('; ', $commands);
+			return implode(' ' . $this->combineOperator . ' ', $commands);
 		}
 
 		return $isFile ? $commands[0] : $commands[1];
 	}
 
-	public function getChownCommand($path, $isSudo = false)
+	public function getChownCommand($path, $isSudo = false, $isCd = true)
 	{
+		$path = empty($path) ? '*' : $path;
+		if (is_array($path)) {
+			$path = implode(' ', $path);
+		}
+
 		$owner = posix_getuid();
 		$group = posix_getegid();
 
@@ -165,11 +184,25 @@ class SystemHelper extends \Espo\Core\Utils\System
 			return null;
 		}
 
-		return $sudoStr.'chown -R '.$owner.':'.$group.' '.$this->getFullPath($path);
+		$cd = '';
+		if ($isCd) {
+			$cd = $this->getCd(true);
+		}
+
+		//$path = $this->getFullPath($path;
+		return $cd.$sudoStr.'chown -R '.$owner.':'.$group.' '.$path;
 	}
 
 	public function getFullPath($path)
 	{
+		if (is_array($path)) {
+			$pathList = array();
+			foreach ($path as $pathItem) {
+				$pathList[] = $this->getFullPath($pathItem);
+			}
+			return $pathList;
+		}
+
 		if (!empty($path)) {
 			$path = DIRECTORY_SEPARATOR . $path;
 		}
@@ -196,12 +229,23 @@ class SystemHelper extends \Espo\Core\Utils\System
 		$commands = array();
 		$commands[] = $this->getChmodCommand($chmodPath, $permissions, $isSudo, $isFile);
 
-		$chown = $this->getChownCommand($chownPath, $isSudo);
+		$chown = $this->getChownCommand($chownPath, $isSudo, false);
 		if (isset($chown)) {
 			$commands[] = $chown;
 		}
 
-		return implode('; ', $commands);
+		return implode(' ' . $this->combineOperator . ' ', $commands);
+	}
+
+	protected function getCd($isCombineOperator = false)
+	{
+		$cd = 'cd '.$this->getRootDir();
+
+		if ($isCombineOperator) {
+			$cd .= ' '.$this->combineOperator.' ';
+		}
+
+		return $cd;
 	}
 
 }

@@ -22,7 +22,8 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Error,
+	\Espo\Core\Exceptions\Conflict;
 
 class FieldManager
 {
@@ -74,7 +75,7 @@ class FieldManager
 	{
 		$existingField = $this->getFieldDef($name, $scope);
 		if (isset($existingField)) {
-			throw new Error('Field ['.$name.'] exists in '.$scope);
+			throw new Conflict('Field ['.$name.'] exists in '.$scope);
 		}
 
 		return $this->update($name, $fieldDef, $scope);

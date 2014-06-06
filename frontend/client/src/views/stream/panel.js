@@ -121,20 +121,20 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 			this.listenToOnce(collection, 'sync', function () {
 				this.createView('list', 'Stream.List', {
 					el: this.options.el + ' > .list-container',
-					collection: collection
+					collection: collection,
 				}, function (view) {
 					view.render();										
 				});
 			}.bind(this));
 			collection.fetch();
 			
-			this.createView('attachments', 'Fields.AttachmentMultiple', {
+			this.createView('attachments', 'Stream.Fields.AttachmentMultiple', {
 				model: this.seed,
 				mode: 'edit',
 				el: this.options.el + ' div.attachments-container',
 				defs: {
 					name: 'attachments',
-				},										
+				},																
 			}, function (view) {
 				view.render();
 			});

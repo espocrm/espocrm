@@ -13,7 +13,8 @@
             "type": "linkParent"
         },
         "attachments": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "Stream.Fields.AttachmentMultiple"
         },
         "createdAt": {
             "type": "datetime",
@@ -44,6 +45,7 @@
         "attachments": {
             "type": "hasChildren",
             "entity": "Attachment",
+            "relationName": "NoteAttachments",
             "foreign": "parent"
         },
         "parent": {

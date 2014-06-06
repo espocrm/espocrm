@@ -193,7 +193,7 @@ class Stream extends \Espo\Core\Services\Base
 		
 		foreach ($collection as $e) {
 			if ($e->get('type') == 'Post') {
-				$e->loadLinkMultipleField('attachments');
+				$e->loadAttachments();
 			}
 		}
 		
@@ -249,7 +249,7 @@ class Stream extends \Espo\Core\Services\Base
 		
 		foreach ($collection as $e) {
 			if ($e->get('type') == 'Post') {
-				$e->loadLinkMultipleField('attachments');
+				$e->loadAttachments();
 			}
 		}
 		

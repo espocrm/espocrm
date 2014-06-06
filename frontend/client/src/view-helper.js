@@ -155,7 +155,7 @@
 			Handlebars.registerHelper('options', function (list, value, options) {
 				value = value || false;
 				list = list || {};
-				var html = "";
+				var html = '';
 				var isArray = (Object.prototype.toString.call(list) === '[object Array]');
 
 				var multiple = (Object.prototype.toString.call(value) === '[object Array]');
@@ -187,7 +187,7 @@
 				};
 
 				for (var key in list) {
-					var keyVal = isArray ? list[key] : type;
+					var keyVal = list[key];
 					html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + translate(list[key]) + "</option>"
 				}
 				return new Handlebars.SafeString(html);

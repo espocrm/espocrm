@@ -44,7 +44,7 @@ class DataManager
 	 *
 	 * @return bool
 	 */
-	public function rebuild($entityList = array())
+	public function rebuild($entityList = null)
 	{
 		$result = $this->clearCache();
 
@@ -78,7 +78,7 @@ class DataManager
 	 *
 	 * @return bool
 	 */
-	public function rebuildDatabase($entityList = array())
+	public function rebuildDatabase($entityList = null)
 	{
 		try {
 			$result = $this->getContainer()->get('schema')->rebuild($entityList);
