@@ -394,10 +394,10 @@ class Installer
 	protected function translateSetting($name, array $settingDefs)
 	{
 		if (isset($settingDefs['options'])) {
-			$optionLabel = $this->getLanguage()->translate($name, 'options', 'Settings');
+			$optionLabel = $this->getLanguage()->translate($name, 'options', 'Settings', $settingDefs['options']);
 
 			if ($optionLabel == $name) {
-				$optionLabel = $this->getLanguage()->translate($name, 'options', 'Global');
+				$optionLabel = $this->getLanguage()->translate($name, 'options', 'Global', $settingDefs['options']);
 			}
 
 			if ($optionLabel == $name) {
