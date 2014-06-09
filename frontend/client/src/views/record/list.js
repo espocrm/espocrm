@@ -26,11 +26,13 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		template: 'record.list',
 
 		/**
-		 * @param {String} Type of the list. Can be 'list', 'related-list', 'dashlet-list'.
+		 * @param {String} Type of the list. Can be 'list', 'listSmall'.
 		 */
 		type: 'list',
 
 		name: 'list',
+		
+		presentationType: 'table',
 
 		/**
 		 * @param {Bool} If true checkboxes will be shown.
@@ -545,7 +547,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			
 			this.rows.push(key);
 			this.getInternalLayout(function (internalLayout) {
-				if (this.type == 'list' && Object.prototype.toString.call(internalLayout) === '[object Array]') {
+				if (this.presentationType == 'table' && Object.prototype.toString.call(internalLayout) === '[object Array]') {
 					internalLayout.forEach(function (item) {
 						item.el = this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
 					}, this);
