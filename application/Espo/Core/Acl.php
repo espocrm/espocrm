@@ -54,6 +54,8 @@ class Acl
 		
 		if ($config && $config->get('useCache') && file_exists($this->cacheFile)) {
 			$cached = include $this->cacheFile;
+			$this->data = $cached;
+			$this->initSolid();
 		} else {
 			$this->load();
 			$this->initSolid();
@@ -61,7 +63,6 @@ class Acl
 				$this->buildCache();
 			}
 		}
-
 
 	}
 	
