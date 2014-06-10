@@ -130,7 +130,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 			$targetHeight = $originalHeight * ($width / $originalWidth);
 		} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
 			$targetHeight = $height;
-			$targetWidth = $originalWidth * ($height / $targetHeight);
+			$targetWidth = $originalWidth * ($height / $originalHeight);
 		} else {
 			$targetWidth = $originalWidth;
 			$targetHeight = $originalHeight;					
