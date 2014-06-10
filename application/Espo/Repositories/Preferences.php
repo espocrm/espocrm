@@ -36,7 +36,6 @@ class Preferences extends \Espo\Core\ORM\Repository
 		'defaultCurrency',
 		'dateFormat',
 		'timeFormat',		
-		'currencyList',
 		'decimalMark',
 		'thousandSeparator',
 		'weekStart',
