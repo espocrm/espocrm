@@ -1,0 +1,32 @@
+{
+	"fields": {
+		"name": "Asunto",
+		"parent": "Padre",
+		"status": "Estado",
+		"dateSent": "Enviado",
+		"from": "De",
+		"to": "a",
+		"cc": "CC",
+		"bcc": "BCC",
+		"isHtml": "Es Html",
+		"body": "Cuerpo",
+		"subject": "Asunto",
+		"attachments": "Adjuntos",
+		"selectTemplate": "Seleccione una Plantilla",
+		"fromEmailAddress": "De la dirección",
+		"toEmailAddresses": "a la Dirección",
+		"emailAddress": "Correo Electrónico"
+	},
+	"links": {
+	},
+	"options": {
+		"Draft": "Borrador",
+		"Sending": "Enviando",
+		"Sent": "Enviado",
+		"Archived": "Archivado"
+	},
+	"labels": {
+		"Create Email": "Archivar Correo",
+		"Compose": "Componer"
+	}
+}

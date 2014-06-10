@@ -1,0 +1,16 @@
+{
+	"fields": {
+		"name": "Nombre",
+		"status": "Estado",
+		"isHtml": "Es Html",
+		"body": "Cuerpo",
+		"subject": "Asunto",
+		"attachments": "Adjuntos",
+		"insertField": ""
+	},
+	"links": {
+	},
+	"labels": {
+		"Create EmailTemplate": "Crear Plantilla de Correo"
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"fields": {
+		"name": "Nombre",
+		"parent": "Padre",
+		"status": "Estado",
+		"dateStart": "Fecha de Comienzo",
+		"dateEnd": "Fecha de Finalización",
+		"direction": "Dirección",
+		"duration": "Duración",
+		"description": "Descripción",
+		"users": "Usuarios",
+		"contacts": "Contactos",
+		"leads": "Potenciales"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Planned": "Planeada",
+			"Held": "Celebrada",
+			"Not Held": "Sin Celebrar"
+		},
+		"direction": {
+			"Outbound": "Saliente",
+			"Inbound": "Entrante"
+		}
+	},
+	"labels": {
+		"Create Call": "Crear Llamada",
+		"Set Held": "Establecer Celebrada",
+		"Set Not Held": "Establecer no Celebrada",
+		"Send Invitations": "Enviar Invitaciones"		
+	}
+}

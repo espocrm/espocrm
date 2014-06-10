@@ -63,6 +63,7 @@ return array (
 	'languageList' => array(
 		'en_US',
 		'de_DE',
+		'es_ES',
 	),
 	'language' => 'en_US',
 	'logger' =>

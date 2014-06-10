@@ -1,0 +1,79 @@
+{
+	"scopeNames": {
+		"Account": "Cuenta",
+		"Contact": "Contacto",
+		"Lead": "Potenciales",
+		"Prospect": "Prospecto",
+		"Opportunity": "Opportunidad",
+		"Meeting": "Reunión",
+		"Calendar": "Calendario",
+		"Call": "Llamada",
+		"Task": "Tarea",
+		"Case": "Caso",
+		"InboundEmail": "Correo Entrante"
+	},
+	"scopeNamesPlural": {
+		"Account": "Cuentas",
+		"Contact": "Contactos",
+		"Lead": "Potenciales",
+		"Prospect": "Prospectos",
+		"Opportunity": "Oportunidades",
+		"Meeting": "Reuniones",
+		"Calendar": "Calendario",
+		"Call": "Llamadas",
+		"Task": "Tareas",
+		"Case": "Casos",
+		"InboundEmail": "Correos Entrantes"
+	},
+	"dashlets": {
+		"Leads": "Mis potenciales",
+		"Opportunities": "Mis Opportunidades",
+		"Tasks": "Mis Tareas",
+		"Cases": "Mis Casos",
+		"Calendar": "Calendario",
+		"OpportunitiesByStage": "Oportunidades por Etapa",
+		"OpportunitiesByLeadSource": "Oportunidades de origen de cliente potencial",
+		"SalesByMonth": "Ventas por Mes",
+		"SalesPipeline": "Canalización de ventas"	
+	},
+	"labels": {
+		"Create InboundEmail": "Crear Correo Entrante",
+		"Activities": "Actividades",
+		"History": "Historia",
+		"Attendees": "Los asistentes",
+		"Schedule Meeting": "Reunión Programada",
+		"Schedule Call": "Llamada Programada",
+		"Compose Email": "Componer Correo",
+		"Log Meeting": "Log de Reunión",
+		"Log Call": "Log de Llamada",
+		"Archive Email": "Archivar Correo",
+		"Create Task": "Crear Tarea",
+		"Tasks": "Tareas"		
+	},
+	"fields": {
+		"billingAddressCity": "Ciudad",
+		"billingAddressCountry": "país",
+		"billingAddressPostalCode": "Código Postal",
+		"billingAddressState": "Estado/Distrito",
+		"billingAddressStreet": "Calle",
+		"addressCity": "Ciudad",
+		"addressStreet": "Calle",
+		"addressCountry": "país",
+		"addressState": "Estado/Distrito",
+		"addressPostalCode": "Código Postal",		
+		"shippingAddressCity": "City (Shipping)",
+		"shippingAddressStreet": "Street (Shipping)",
+		"shippingAddressCountry": "Country (Shipping)",
+		"shippingAddressState": "State (Shipping)",
+		"shippingAddressPostalCode": "Postal Code (Shipping)"
+	},
+	"links": {
+		"contacts": "Contactos",
+		"opportunities": "Oportunidades",
+		"leads": "Potenciales",		
+		"meetings": "Reuniones",
+		"calls": "Llamadas",
+		"tasks": "Tareas",
+		"emails": "Correos"
+	}
+}
