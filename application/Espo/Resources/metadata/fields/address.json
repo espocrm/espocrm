@@ -8,7 +8,9 @@
    ],
    "fields":{
       "street":{
-         "type":"varchar"
+		  "type": "text",
+		  "maxLength": 255,
+		  "dbType": "varchar"
       },
       "city":{
          "type":"varchar"
@@ -24,7 +26,7 @@
       }
    },
    "mergable":false,
-   "notCreatable": true,
+   "notCreatable": false,
    "search":{
       "basic":false,
       "advanced":true
