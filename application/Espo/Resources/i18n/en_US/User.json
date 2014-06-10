@@ -16,6 +16,12 @@
 		"roles": "Roles"
 	},
 	"labels": {
-		"Create User": "Create User"
+		"Create User": "Create User",
+		"Generate": "Generate"
+	},
+	"messages": {
+		"passwordWillBeSent": "Password will be sent to user's email address.",
+		"accountInfoEmailSubject": "Account info",
+		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}"
 	}
 }

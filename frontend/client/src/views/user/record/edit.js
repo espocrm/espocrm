@@ -53,6 +53,10 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
 								required: self.isNew,
 								readyToChange: true
 							} 
+						},{
+							name: 'generatePassword',
+							view: 'User.Fields.GeneratePassword',
+							customLabel: ''
 						}],
 						[{
 							name: 'passwordConfirm',
@@ -61,6 +65,10 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
 								required: self.isNew,
 								readyToChange: true
 							} 
+						},{
+							name: 'passwordInfo',
+							customLabel: '',
+							customCode: '{{translate "passwordWillBeSent" scope="User" category="messages"}}'
 						}]
 					],
 				});

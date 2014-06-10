@@ -1,1 +1,11 @@
-[{"label":"Overview","rows":[[{"name":"userName"},{"name":"isAdmin"}],[{"name":"name"},{"name":"title"}],[{"name":"defaultTeam"}],[{"name":"emailAddress"},{"name":"phone"}]]}]
+[
+	{
+		"label":"Overview",
+		"rows":[
+			[{"name":"userName"},{"name":"isAdmin"}],
+			[{"name":"name"},{"name":"title"}],
+			[{"name":"defaultTeam"}],
+			[{"name":"emailAddress"},{"name":"phone"}]
+		]
+	}
+]
