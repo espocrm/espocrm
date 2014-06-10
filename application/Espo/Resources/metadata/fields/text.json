@@ -8,6 +8,10 @@
       {
          "name":"default",
          "type":"text"
+      },
+      {
+         "name":"maxLength",
+         "type":"int"
       }
    ],
    "search":{
