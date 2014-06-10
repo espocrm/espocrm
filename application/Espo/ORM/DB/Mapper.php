@@ -282,27 +282,7 @@ abstract class Mapper implements IMapper
 		if (!$totalCount) {
 			$selectPart = $this->getSelect($relEntity);
 			$joinsPart = $this->getBelongsToJoins($relEntity);			
-			$orderPart = $this->getOrder($relEntity, $orderBy, $order);
-			
-			if (!empty($joins) && is_array($joins)) {
-				$joinsRelated = $this->getJoins($relEntity, $joins, false, $joinConditions);
-				if (!empty($joinsRelated)) {
-					if (!empty($joinsPart)) {
-						$joinsPart .= ' ';
-					}
-					$joinsPart .= $joinsRelated;
-				}
-			}
-		
-			if (!empty($leftJoins) && is_array($leftJoins)) {
-				$joinsRelated = $this->getJoins($relEntity, $leftJoins, true, $joinConditions);
-				if (!empty($joinsRelated)) {
-					if (!empty($joinsPart)) {
-						$joinsPart .= ' ';
-					}
-					$joinsPart .= $joinsRelated;
-				}
-			}		
+			$orderPart = $this->getOrder($relEntity, $orderBy, $order);		
 		
 		} else {
 			$selectPart = $this->getAggregationSelect($relEntity, 'COUNT', 'id');
@@ -310,6 +290,26 @@ abstract class Mapper implements IMapper
 			$orderPart = '';	
 			$offset = null;
 			$limit = null;
+		}
+		
+		if (!empty($joins) && is_array($joins)) {
+			$joinsRelated = $this->getJoins($relEntity, $joins, false, $joinConditions);
+			if (!empty($joinsRelated)) {
+				if (!empty($joinsPart)) {
+					$joinsPart .= ' ';
+				}
+				$joinsPart .= $joinsRelated;
+			}
+		}
+		
+		if (!empty($leftJoins) && is_array($leftJoins)) {
+			$joinsRelated = $this->getJoins($relEntity, $leftJoins, true, $joinConditions);
+			if (!empty($joinsRelated)) {
+				if (!empty($joinsPart)) {
+					$joinsPart .= ' ';
+				}
+				$joinsPart .= $joinsRelated;
+			}
 		}
 		
 		$relType = $relOpt['type'];
