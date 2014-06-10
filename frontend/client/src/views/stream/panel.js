@@ -168,7 +168,11 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 				model.set('type', 'Post');
 								
 				this.notify('Posting...');
-				model.save();
+				model.save(null, {
+					error: function () {
+						this.$textarea.prop('disabled', false);	
+					}.bind(this)
+				});
 			}.bind(this));
 		},
 		

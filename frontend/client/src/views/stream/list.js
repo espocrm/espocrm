@@ -35,7 +35,7 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
 			this.createView(key, viewName, {
 				model: model,
 				acl: {
-					edit: this.getUser().isAdmin() || model.get('createdById') == this.getUser().id
+					edit: this.getAcl().checkModel(model)// this.getUser().isAdmin() || model.get('createdById') == this.getUser().id
 				},
 				isUserStream: this.options.isUserStream,
 				optionsToPass: ['acl'],
