@@ -25,7 +25,9 @@
 		"recordsPerPage": "Records Per Page",
 		"recordsPerPageSmall": "Records Per Page (Small)",		
 		"tabList": "Tab List",
-		"quickCreateList": "Quick Create List"
+		"quickCreateList": "Quick Create List",
+		
+		"exportDelimiter": "Export Delimiter"
 	},
 	"options": {
 		"weekStart": {

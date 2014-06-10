@@ -40,7 +40,8 @@ class Preferences extends \Espo\Core\ORM\Repository
 		'thousandSeparator',
 		'weekStart',
 		'timeZone',
-		'language'
+		'language',
+		'exportDelimiter'
 	);
 	
 	protected $data = array();

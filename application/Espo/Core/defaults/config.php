@@ -40,6 +40,7 @@ return array (
 	'weekStart' => 0,
 	'thousandSeparator' => ',',
 	'decimalMark' => '.',
+	'exportDelimiter' => ',',
 	'currencyList' =>
 	array (
 	),

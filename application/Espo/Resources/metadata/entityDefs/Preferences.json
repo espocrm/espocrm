@@ -74,6 +74,12 @@
         "language": {
             "type": "enum",
             "default": "en_US"            
+        },
+        "exportDelimiter": {
+            "type": "varchar",
+            "default": ",",
+            "required": true,
+            "maxLength": 1
         }
     }
 }

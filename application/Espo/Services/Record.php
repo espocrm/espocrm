@@ -42,6 +42,7 @@ class Record extends \Espo\Core\Services\Base
 		'serviceFactory',
 		'fileManager',
 		'selectManagerFactory',
+		'preferences'
 	);
 	
 	protected $entityName;
@@ -102,6 +103,11 @@ class Record extends \Espo\Core\Services\Base
 	protected function getConfig()
 	{
 		return $this->injections['config'];
+	}
+	
+	protected function getPreferences()
+	{
+		return $this->injections['preferences'];
 	}
 	
 	protected function getMetadata()
@@ -531,12 +537,17 @@ class Record extends \Espo\Core\Services\Base
 				$row[$field] = $entity->get($field);
 			}
 			$arr[] = $row;
+		}		
+		
+		$delimiter = $this->getPreferences()->get('exportDelimiter');
+		if (empty($delimiter)) {
+			$delimiter = ',';
 		}
 		
 		$fp = fopen('php://temp', 'w');		
-		fputcsv($fp, array_keys($arr[0]));
+		fputcsv($fp, array_keys($arr[0]), $delimiter);
 		foreach ($arr as $row) {
-			fputcsv($fp, $row);
+			fputcsv($fp, $row, $delimiter);
 		}
 		rewind($fp);
 		$csv = stream_get_contents($fp);
