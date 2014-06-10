@@ -269,7 +269,7 @@ class Base
 		return $part;
 	}
 
-	protected function getBoolFilterWhere($filterName, $entityName)
+	protected function getBoolFilterWhere($filterName)
 	{
 		$method = 'getBoolFilterWhere' . ucfirst($filterName);
 		if (method_exists($this, $method)) {
