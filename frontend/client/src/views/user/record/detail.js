@@ -71,6 +71,13 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 			}, function (view) {
 				view.render();
 				this.notify(false);
+				
+				this.listenToOnce(view, 'changed', function () {
+					setTimeout(function () {				
+						this.getBaseController().logout();
+					}.bind(this), 2000);
+				}, this);
+				
 			}.bind(this));
 		},
 		
@@ -93,7 +100,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 					model: this.model,
 				}, function (view) {
 					this.notify(false);
-					view.render();					
+					view.render();									
 				}.bind(this));
 			}.bind(this));
 			

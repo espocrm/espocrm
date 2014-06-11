@@ -105,13 +105,9 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
 					this.$el.find('button[data-name="change"]').removeClass('disabled');
 				}.bind(this)			
 			}).done(function () {				
-				Espo.Ui.success(this.translate('passwordChanged', 'messages', 'User'));
-				
-				setTimeout(function () {				
-					this.getBaseController().logout();
-					this.close();
-				}.bind(this), 2000);
-				
+				Espo.Ui.success(this.translate('passwordChanged', 'messages', 'User'));				
+				this.trigger('changed');
+				this.close();
 			}.bind(this));			
 		},
 
