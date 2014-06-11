@@ -87,7 +87,18 @@ class Image extends \Espo\Core\EntryPoints\Base
 				if (!file_exists($thumbFilePath)) {
 					$targetImage = $this->getThumbImage($filePath, $fileType, $size);					
 					ob_start();	
-					imagejpeg($targetImage);
+					
+					switch ($fileType) {
+						case 'image/jpeg':
+							imagejpeg($targetImage);
+							break;
+						case 'image/png':
+							imagepng($targetImage);
+							break;
+						case 'image/gif':
+							imagegif($targetImage);
+							break;					
+					}
 					$contents = ob_get_contents();
 					ob_end_clean();
 					imagedestroy($targetImage);								
@@ -140,15 +151,22 @@ class Image extends \Espo\Core\EntryPoints\Base
 		switch ($fileType) {
 			case 'image/jpeg':
 				$sourceImage = imagecreatefromjpeg($filePath);
+				imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
 				break;
 			case 'image/png':
 				$sourceImage = imagecreatefrompng($filePath);
+				imagealphablending($targetImage, false);
+				imagesavealpha($targetImage, true);
+				$transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+				imagefilledrectangle($targetImage, 0, 0, $targetWidth, $targetHeight, $transparent);
+				imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
 				break;
 			case 'image/gif':
 				$sourceImage = imagecreatefromgif($filePath);
+				imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
 				break;					
 		}
-		imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
+		
 		
 		return $targetImage;
 	}
