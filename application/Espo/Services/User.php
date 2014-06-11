@@ -71,24 +71,7 @@ class User extends Record
 	    	$entity->clear('password');
 	    }
 	    return $result;	    
-	}
-	
-	protected function createDefaultPreferences(\Espo\Entities\User $user)
-	{
-		$preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);		
-		$config = $this->getConfig();
-		$defaults = array(
-			'timeZone' => $config->get('timeZone'),
-			'language' => $config->get('language'),
-			'dateFormat' => $config->get('dateFormat'),
-			'timeFormat' => $config->get('timeFormat'),
-			'weekStart' => $config->get('weekStart'),
-			'thousandSeparator' => $config->get('thousandSeparator'),
-			'decimalMark' => $config->get('decimalMark'),
-		);
-		$preferences->set($defaults);		
-		$this->getEntityManager()->saveEntity($preferences);
-	}
+	}	
 	
 	public function changePassword($userId, $password)
 	{
@@ -121,7 +104,6 @@ class User extends Record
 			$data['password'] = $this->hashPassword($data['password']);
 		}
 		$user = parent::createEntity($data);		
-		$this->createDefaultPreferences($user);
 		
 		if (!is_null($newPassword)) {
 			$this->sendPassword($user, $newPassword);
