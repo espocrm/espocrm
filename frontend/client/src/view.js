@@ -131,6 +131,12 @@
 				return this._helper.fieldManager;
 			}
 		},
+		
+		getBaseController: function () {
+			if (this._helper) {
+				return this._helper.baseController;
+			}
+		},
 
 		updatePageTitle: function () {
 			var title = this.getConfig().get('applicationTitle') || 'EspoCRM';

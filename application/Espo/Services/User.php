@@ -23,6 +23,8 @@
 namespace Espo\Services;
 
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\NotFound;
 
 class User extends Record
 {	
@@ -87,13 +89,36 @@ class User extends Record
 		$preferences->set($defaults);		
 		$this->getEntityManager()->saveEntity($preferences);
 	}
+	
+	public function changePassword($userId, $password)
+	{
+		$user = $this->getEntityManager()->getEntity('User', $userId);
+		if (!$user) {
+			throw new NotFound();
+		}
+		
+		if (empty($password)) {
+			throw new Error('Password can\'t be empty.');
+		}
+		
+		$user->set('password', $this->hashPassword($password));
+		
+		$this->getEntityManager()->saveEntity($user);
+		
+		return true;
+	}
+	
+	protected function hashPassword($password)
+	{
+		return md5($password);
+	}
 		
 	public function createEntity($data)
 	{
 		$newPassword = null;		
 		if (array_key_exists('password', $data)) {
 			$newPassword = $data['password'];
-			$data['password'] = md5($data['password']);
+			$data['password'] = $this->hashPassword($data['password']);
 		}
 		$user = parent::createEntity($data);		
 		$this->createDefaultPreferences($user);
@@ -113,7 +138,7 @@ class User extends Record
 		$newPassword = null;
 		if (array_key_exists('password', $data)) {
 			$newPassword = $data['password'];
-			$data['password'] = md5($data['password']);
+			$data['password'] = $this->hashPassword($data['password']);
 		}
 		$user = parent::updateEntity($id, $data);
 		

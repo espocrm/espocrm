@@ -46,6 +46,14 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 						style: 'default'
 					});
 				}
+				
+				if (this.model.id == this.getUser().id) {
+					this.buttons.push({
+						name: 'changePassword',
+						label: 'Change Password',
+						style: 'default'
+					});
+				}
 			}
 			
 			if (this.model.id == this.getUser().id) {
@@ -53,6 +61,17 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 					this.getUser().set(this.model.toJSON());				
 				}.bind(this));
 			}
+		},
+		
+		actionChangePassword: function () {			
+			this.notify('Loading...');
+			
+			this.createView('changePassword', 'Modals.ChangePassword', {
+				userId: this.model.id
+			}, function (view) {
+				view.render();
+				this.notify(false);
+			}.bind(this));
 		},
 		
 		actionPreferences: function () {

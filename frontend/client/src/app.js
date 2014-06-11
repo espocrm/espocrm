@@ -182,6 +182,7 @@ _.extend(Espo.App.prototype, {
 
 	_initBaseController: function () {
 		this.baseController = new Espo['Controllers.Base']({}, this._getControllerInjection());
+		this._viewHelper.baseController = this.baseController;
 	},
 
 	_getControllerInjection: function () {

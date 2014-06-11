@@ -48,4 +48,10 @@ class User extends \Espo\Core\Controllers\Record
 		
 		return $acl->toArray();					
 	}
+	
+	public function actionChangeOwnPassword($params, $data)
+	{
+		return $this->getService('User')->changePassword($this->getUser()->id, $data['password']);
+	}
 }
+
