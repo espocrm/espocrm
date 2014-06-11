@@ -431,7 +431,9 @@ _.extend(Espo.App.prototype, {
 				case 401:
 					if (!options.login) {
 						Espo.Ui.error(self.language.translate('Auth error'));
-						self.logout();
+						if (self.auth) {
+							self.logout();
+						}
 					}
 					break;
 				case 403:

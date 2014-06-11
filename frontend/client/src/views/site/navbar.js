@@ -70,7 +70,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 		},
 
 		setup: function () {
-			this.getRouter().on('routed', function (e) {
+			this.getRouter().on('routed', function (e) {				
 				if (e.controller) {
 					this.selectTab(e.controller);
 				} else {
