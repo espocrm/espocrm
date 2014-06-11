@@ -154,6 +154,15 @@ class Language
 
 		return $translated;
 	}
+	
+	public function translateOption($value, $field, $scope)
+	{
+		$options = $this->get($scope. '.options.' . $field);		
+		if (array_key_exists($value, $options)) {
+			return $options[$value];
+		}
+		return $value;
+	}
 
 
 	public function get($key = null, $returns = null)
