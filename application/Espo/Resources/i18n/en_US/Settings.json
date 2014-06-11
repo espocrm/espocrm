@@ -11,6 +11,8 @@
 		"currencyList": "Currency List",
 		"language": "Language",
 		
+		"companyLogo": "Company Logo",
+		
 		"smtpServer": "Server",
 		"smtpPort": "Port",
 		"smtpAuth": "Auth",

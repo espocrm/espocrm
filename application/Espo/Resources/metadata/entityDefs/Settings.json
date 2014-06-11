@@ -119,6 +119,9 @@
             "default": ",",
             "required": true,
             "maxLength": 1
+        },
+        "companyLogo": {
+            "type": "image"
         }
     }
 }

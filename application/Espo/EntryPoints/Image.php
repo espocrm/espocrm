@@ -37,7 +37,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 		'image/gif',
 	);
 	
-	protected $imageSizes = array(
+	protected $imageSizes = array(		
 		'x-small' => array(64, 64),	
 		'small' => array(128, 128),	
 		'medium' => array(256, 256),
@@ -46,15 +46,24 @@ class Image extends \Espo\Core\EntryPoints\Base
 		'xx-large' => array(1024, 1024),
 	);
 	
+	
 	public function run()
 	{	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
-		}
+		}	
+			
+		$size = null;		
+		if (!empty($_GET['size'])) {
+			$size = $_GET['size'];
+		} 
 		
-		$size = $_GET['size'];
-		
+		$this->show($id, $size);
+	}
+	
+	protected function show($id, $size)
+	{
 		$attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 		
 		if (!$attachment) {
@@ -128,7 +137,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 		ob_clean();
 		flush();
 		readfile($filePath);
-		exit;		
+		exit;
 	}
 	
 	protected function getThumbImage($filePath, $fileType, $size)

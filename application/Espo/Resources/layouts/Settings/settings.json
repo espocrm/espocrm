@@ -2,7 +2,7 @@
 	{
 		"label": "System",
 		"rows": [
-			[{"name": "useCache"}]			
+			[{"name": "useCache"},{"name": "companyLogo"}]			
 		]
 	},
 	{

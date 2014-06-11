@@ -1,7 +1,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 
 	<div class="navbar-header">
-		<a class="navbar-brand" href="#"><img src="client/img/logo.png"></a>
+		<a class="navbar-brand" href="#"><img src="{{logoSrc}}"></a>
 		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
 		  	<span class="icon-bar"></span>
 		 	<span class="icon-bar"></span>

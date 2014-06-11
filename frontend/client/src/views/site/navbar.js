@@ -36,6 +36,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 				enableQuickCreate: this.quickCreateList.length > 0,
 				userName: this.getUser().get('name'),
 				userId: this.getUser().id,
+				logoSrc: this.getLogoSrc()
 			};
 		},
 
@@ -58,6 +59,14 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 					view.render();
 				});
 			},
+		},
+		
+		getLogoSrc: function () {
+			var companyLogoId = this.getConfig().get('companyLogoId');
+			if (!companyLogoId) {
+				return 'client/img/logo.png';
+			}
+			return '?entryPoint=LogoImage&size=small-logo';
 		},
 
 		setup: function () {

@@ -43,6 +43,20 @@ Espo.define('Views.Login', 'View', function (Dep) {
 			},	
 		},
 		
+		data: function () {
+			return {
+				logoSrc: this.getLogoSrc()
+			};
+		},
+		
+		getLogoSrc: function () {
+			var companyLogoId = this.getConfig().get('companyLogoId');
+			if (!companyLogoId) {
+				return 'client/img/logo.png';
+			}
+			return '?entryPoint=LogoImage&size=small-logo';
+		},
+		
 		login: function () {
 				var userName = $("#field-userName").val();
 				var password = $("#field-password").val();
