@@ -24,6 +24,17 @@ session_start();
 
 require_once('../bootstrap.php');
 
+
+// temp save all settings
+$ignore = array('desc', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
+
+if (!empty($_REQUEST)) {
+	foreach ($_REQUEST as $key => $val) {
+		if (!in_array($val, $ignore))
+		$_SESSION['install'][$key] = trim($val);
+	}
+}
+
 // get user selected language
 $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
 $langFileName = 'core/i18n/'.$userLang.'/install.json';
@@ -71,15 +82,6 @@ else {
 
 $smarty->caching = false;
 $smarty->setTemplateDir('install/core/tpl');
-
-// temp save all settings
-$ignore = array('desc', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
-if (!empty($_REQUEST)) {
-	foreach ($_REQUEST as $key => $val) {
-		if (!in_array($val, $ignore))
-		$_SESSION['install'][$key] = trim($val);
-	}
-}
 
 $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
