@@ -145,16 +145,17 @@ class Image extends \Espo\Core\EntryPoints\Base
 		list($originalWidth, $originalHeight) = getimagesize($filePath);
 		list($width, $height) = $this->imageSizes[$size];
 		
-		if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth > $originalHeight)) {
+		if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth < $originalHeight)) {
 			$targetWidth = $width;
 			$targetHeight = $originalHeight * ($width / $originalWidth);
-		} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
+		} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight < $originalWidth)) {
 			$targetHeight = $height;
 			$targetWidth = $originalWidth * ($height / $originalHeight);
 		} else {
 			$targetWidth = $originalWidth;
 			$targetHeight = $originalHeight;					
 		}
+		
 				
 		$targetImage = imagecreatetruecolor($targetWidth, $targetHeight);				
 		switch ($fileType) {
