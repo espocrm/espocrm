@@ -255,7 +255,7 @@ abstract class Base
 			return;
 		}
 
-		$beforeInstallScript = Util::concatPath( array($upgradePath, $this->paths['scripts'], $scriptName) );
+		$beforeInstallScript = Util::concatPath( array($upgradePath, $this->paths['scripts'], $scriptName) ) . '.php';
 
 		if (file_exists($beforeInstallScript)) {
 			require_once($beforeInstallScript);
