@@ -27,6 +27,7 @@ $result = array('success' => true, 'errorMsg' => '');
 $data = array(
 	'driver' => 'pdo_mysql',
 	'host' => $_SESSION['install']['host-name'],
+	'port' => $_SESSION['install']['port'],
 	'dbname' => $_SESSION['install']['db-name'],
 	'user' => $_SESSION['install']['db-user-name'],
 	'password' => $_SESSION['install']['db-user-password'],

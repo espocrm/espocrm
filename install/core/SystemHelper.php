@@ -234,7 +234,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 			$commands[] = $chown;
 		}
 
-		return implode(' ' . $this->combineOperator . ' ', $commands);
+		return implode(' ' . $this->combineOperator . ' ', $commands).';';
 	}
 
 	protected function getCd($isCombineOperator = false)

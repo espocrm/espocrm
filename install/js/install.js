@@ -31,10 +31,6 @@ var InstallScript = function(opt) {
 		this.langs = opt.langs;
 	}
 
-	if (typeof(opt.ajaxUrls) !== 'undefined') {
-		this.ajaxUrls = opt.ajaxUrls;
-	}
-
 	if (typeof(opt.modRewriteUrl) !== 'undefined') {
 		this.modRewriteUrl = opt.modRewriteUrl;
 	}
@@ -72,7 +68,7 @@ var InstallScript = function(opt) {
 			'action': 'createUser',
 			'break': true,
 		},
-		
+
 	];
 	this.checkIndex = 0;
 	this.checkError = false;

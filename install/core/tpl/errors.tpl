@@ -23,7 +23,6 @@
 		var opt = {
 			action: 'errors',
 			langs: {$langsJs},
-			ajaxUrls: {$ajaxUrls},
 			modRewriteUrl: '{$modRewriteUrl}',
 			serverType: '{$serverType}',
 			OS: '{$OS}'

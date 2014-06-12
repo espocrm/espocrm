@@ -25,6 +25,7 @@ return array (
 	array (
 		'driver' => 'pdo_mysql',
 		'host' => 'localhost',
+		'port' => '',
 		'dbname' => '',
 		'user' => '',
 		'password' => '',

@@ -24,6 +24,7 @@ $fields = array(
 	'db-name' => array(),
 	'host-name' => array(
 		'default' => (isset($langs['labels']['localhost']))? $langs['labels']['localhost'] : '',),
+	'port' => array(),
 	'db-user-name' => array(),
 	'db-user-password' => array(),
 	'db-driver' => array()

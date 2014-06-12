@@ -46,3 +46,24 @@ select[name="user-lang"] {
 	min-height: 50px;
 }
 
+.host-name-c {
+	width: 65%;
+	float: left;
+}
+
+.port-c {
+	width: 30%;
+	float: right;
+}
+
+.semicolon-sign-c {
+	text-align: center;
+	width: 4%;
+	float: left;
+	
+}
+
+.semicolon-sign {
+	margin-top: 5px;
+}
+

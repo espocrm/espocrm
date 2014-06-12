@@ -10,9 +10,21 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<label class="field-label-website control-label">{$langs['fields']['Host Name']} *</label>
-						<div class="field field-website">
-							<input type="text" value="{$fields['host-name'].value}" name="host-name" class="main-element form-control">
+						<div class="host-name-c cell">
+							<label class="field-label-website control-label">{$langs['fields']['Host Name']} *</label>
+							<div class="field field-website">
+								<input type="text" value="{$fields['host-name'].value}" name="host-name" class="main-element form-control">
+							</div>
+						</div>
+						<div class="semicolon-sign-c cell">
+							<label class="field-label-website control-label">&nbsp;</label>
+							<div class="semicolon-sign">:</div>
+						</div>
+						<div class="port-c cell">
+							<label class="field-label-website control-label">{$langs['fields']['Port']}</label>
+							<div class="field field-website">
+								<input type="text" value="{$fields['port'].value}" name="port" class="main-element form-control">
+							</div>
 						</div>
 					</div>
 				</div>

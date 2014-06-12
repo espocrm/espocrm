@@ -98,8 +98,6 @@ switch ($action) {
 
 	case 'step3':
 	case 'errors':
-    	$ajaxUrls = $installer->getAjaxUrls();
-		$smarty->assign("ajaxUrls", json_encode($ajaxUrls));
 		$modRewriteUrl = $systemHelper->getModRewriteUrl();
 		$smarty->assign("modRewriteUrl", $modRewriteUrl);
 		$serverType = $systemHelper->getServerType();
