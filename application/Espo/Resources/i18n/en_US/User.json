@@ -7,15 +7,26 @@
 		"defaultTeam": "Default Team",
 		"emailAddress": "Email",
 		"phone": "Phone",
-		"roles": "Roles",
+		"roles": "Roles",		
 		"password": "Password",
-		"passwordConfirm": "Confirm Password"
+		"passwordConfirm": "Confirm Password",
+		"newPassword": "New Password"
 	},
 	"links": {
 		"teams": "Teams",
 		"roles": "Roles"
 	},
 	"labels": {
-		"Create User": "Create User"
+		"Create User": "Create User",
+		"Generate": "Generate",
+		"Access": "Access",
+		"Preferences": "Preferences",
+		"Change Password": "Change Password"
+	},
+	"messages": {
+		"passwordWillBeSent": "Password will be sent to user's email address.",
+		"accountInfoEmailSubject": "Account info",
+		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+		"passwordChanged": "Password has been changed"
 	}
 }

@@ -11,6 +11,8 @@
 		"currencyList": "Currency List",
 		"language": "Language",
 		
+		"companyLogo": "Company Logo",
+		
 		"smtpServer": "Server",
 		"smtpPort": "Port",
 		"smtpAuth": "Auth",
@@ -25,7 +27,9 @@
 		"recordsPerPage": "Records Per Page",
 		"recordsPerPageSmall": "Records Per Page (Small)",		
 		"tabList": "Tab List",
-		"quickCreateList": "Quick Create List"
+		"quickCreateList": "Quick Create List",
+		
+		"exportDelimiter": "Export Delimiter"
 	},
 	"options": {
 		"weekStart": {

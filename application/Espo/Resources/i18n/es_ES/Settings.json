@@ -1,0 +1,44 @@
+{
+	"fields": {
+		"useCache": "Usar Cache",
+		"dateFormat": "Formato de fecha",
+		"timeFormat": "Formato de tiempo",
+		"timeZone": "Zona Horaria",
+		"weekStart": "Primer día de la semana",
+		"thousandSeparator": "Separador de miles",
+		"decimalMark": "Separador decimal",
+		"defaultCurrency": "Moneda por Defecto",
+		"currencyList": "Lista de Moneda",
+		"language": "Lenguaje",
+		
+		"smtpServer": "Servidor",
+		"smtpPort": "Puerto",
+		"smtpAuth": "Autenticación",
+		"smtpSecurity": "Securidad",
+		"smtpUsername": "Nombre de Usuario",
+		"emailAddress": "Correo electrónico",
+		"smtpPassword": "Contraseña",
+		"outboundEmailFromName": "De Nombre",
+		"outboundEmailFromAddress": "De la dirección",
+		"outboundEmailIsShared": "Es Compartido",
+		
+		"recordsPerPage": "Registros por Página",
+		"recordsPerPageSmall": "Records Per Page (Small)",		
+		"tabList": "Lista Pestaña",
+		"quickCreateList": "Crear Lista Rápido",
+		
+		"exportDelimiter": "Export Delimiter"
+	},
+	"options": {
+		"weekStart": {
+			"0": "Domingo",
+			"1": "Lunes"
+		}
+	},
+	"labels": {
+		"System": "Sistema",
+		"Locale": "Localización",
+		"SMTP": "SMTP",
+		"Configuration": "Configuración"
+	}
+}

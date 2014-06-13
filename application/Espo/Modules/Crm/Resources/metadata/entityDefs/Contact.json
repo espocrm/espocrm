@@ -47,7 +47,9 @@
             "type": "address"
         },
         "addressStreet": {
-            "type": "varchar"
+            "type": "text",
+            "maxLength": 255,
+            "dbType": "varchar"
         },
         "addressCity": {
             "type": "varchar"

@@ -2,9 +2,10 @@
 	{
 		"label": "System",
 		"rows": [
-			[{"name": "useCache"}]			
+			[{"name": "useCache"},{"name": "companyLogo"}]			
 		]
-	},{
+	},
+	{
 		"label": "Locale",
 		"rows": [
 			[{"name": "dateFormat"}, {"name": "timeZone"}],

@@ -17,7 +17,9 @@
 		"smtpUsername": "Username",
 		"emailAddress": "Email",
 		"smtpPassword": "Password",
-		"smtpEmailAddress": "Email Address"
+		"smtpEmailAddress": "Email Address",
+		
+		"exportDelimiter": "Export Delimiter"
 	},
 	"links": {
 	},

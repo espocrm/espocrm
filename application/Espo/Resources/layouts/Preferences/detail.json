@@ -22,5 +22,11 @@
 			[{"name": "smtpUsername"}],
 			[{"name": "smtpPassword"}]
 		]
+	},
+	{
+		"label": "Misc",
+		"rows": [
+			[{"name": "exportDelimiter"}]
+		]
 	}
 ]

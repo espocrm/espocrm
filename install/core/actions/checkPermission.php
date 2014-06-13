@@ -34,8 +34,8 @@ if (!$installer->checkPermission()) {
 	$instruction = '';
 	$instructionSU = '';
 	foreach($group as $permission => $folders) {
-		$instruction .= $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission)) . ";<br>";
-		$instructionSU .= "&nbsp;&nbsp;" . $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission), true) . ";<br>";
+		$instruction .= $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission)) . "<br>";
+		$instructionSU .= "&nbsp;&nbsp;" . $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission), true) . "<br>";
 	}
 	$result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>/'.implode('<br>/', $urls).'</pre>';
 	$result['errorFixInstruction'] = str_replace( '"{C}"' , $instruction, $langs['messages']['permissionInstruction']) . "<br>" .

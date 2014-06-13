@@ -218,6 +218,11 @@ class Acl
 			'edit' => 'no',
 			'delete' => 'no',					
 		);
+		$this->data['Note'] = array(
+			'read' => 'all',
+			'edit' => 'own',
+			'delete' => 'own',					
+		);
 	}
 
 	private function merge($tables)

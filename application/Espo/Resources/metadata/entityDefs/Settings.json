@@ -113,6 +113,15 @@
             "type": "enum",
             "options": ["en_US"],
             "default": "en_US"            
+        },
+        "exportDelimiter": {
+            "type": "varchar",
+            "default": ",",
+            "required": true,
+            "maxLength": 1
+        },
+        "companyLogo": {
+            "type": "image"
         }
     }
 }

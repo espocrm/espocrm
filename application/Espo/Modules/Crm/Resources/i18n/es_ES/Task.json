@@ -1,0 +1,31 @@
+{
+	"fields": {
+		"name": "Nombre",
+		"parent": "Padre",
+		"status": "Estado",
+		"dateStart": "Fecha de Comienzo",
+		"dateEnd": "Fecha de vencimiento",
+		"priority": "Prioridad",
+		"description": "Descripción",
+		"isOverdue": "Atrasado"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Not Started": "Sin Empezar",
+			"Started": "Comenzado",
+			"Completed": "Completado",
+			"Canceled": "Cancelado"
+		},
+		"priority" : {
+			"Low": "Baja",
+			"Normal": "Normal",
+			"High": "Alta",
+			"Urgent": "Urgente"
+		}
+	},
+	"labels": {
+		"Create Task": "Crear Tarea"
+	}
+}

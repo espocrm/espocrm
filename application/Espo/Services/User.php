@@ -23,9 +23,27 @@
 namespace Espo\Services;
 
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\NotFound;
 
 class User extends Record
 {	
+	protected function init()
+	{
+		$this->dependencies[] = 'mailSender';
+		$this->dependencies[] = 'language';
+	}
+	
+	protected function getMailSender()
+	{
+		return $this->injections['mailSender'];
+	}
+	
+	protected function getLanguage()
+	{
+		return $this->injections['language'];
+	}
+	
 	public function getEntity($id)
 	{		
 		if ($id == 'system') {
@@ -53,32 +71,44 @@ class User extends Record
 	    	$entity->clear('password');
 	    }
 	    return $result;	    
+	}	
+	
+	public function changePassword($userId, $password)
+	{
+		$user = $this->getEntityManager()->getEntity('User', $userId);
+		if (!$user) {
+			throw new NotFound();
+		}
+		
+		if (empty($password)) {
+			throw new Error('Password can\'t be empty.');
+		}
+		
+		$user->set('password', $this->hashPassword($password));
+		
+		$this->getEntityManager()->saveEntity($user);
+		
+		return true;
 	}
 	
-	protected function createDefaultPreferences(\Espo\Entities\User $user)
+	protected function hashPassword($password)
 	{
-		$preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);		
-		$config = $this->getConfig();
-		$defaults = array(
-			'timeZone' => $config->get('timeZone'),
-			'language' => $config->get('language'),
-			'dateFormat' => $config->get('dateFormat'),
-			'timeFormat' => $config->get('timeFormat'),
-			'weekStart' => $config->get('weekStart'),
-			'thousandSeparator' => $config->get('thousandSeparator'),
-			'decimalMark' => $config->get('decimalMark'),
-		);
-		$preferences->set($defaults);		
-		$this->getEntityManager()->saveEntity($preferences);
+		return md5($password);
 	}
 		
 	public function createEntity($data)
 	{
+		$newPassword = null;		
 		if (array_key_exists('password', $data)) {
-			$data['password'] = md5($data['password']);
+			$newPassword = $data['password'];
+			$data['password'] = $this->hashPassword($data['password']);
 		}
 		$user = parent::createEntity($data);		
-		$this->createDefaultPreferences($user);		
+		
+		if (!is_null($newPassword)) {
+			$this->sendPassword($user, $newPassword);
+		}
+			
 		return $user;			
 	}
 	
@@ -87,10 +117,48 @@ class User extends Record
 		if ($id == 'system') {
 			throw new Forbidden();
 		}
+		$newPassword = null;
 		if (array_key_exists('password', $data)) {
-			$data['password'] = md5($data['password']);
+			$newPassword = $data['password'];
+			$data['password'] = $this->hashPassword($data['password']);
 		}
-		return parent::updateEntity($id, $data);		
+		$user = parent::updateEntity($id, $data);
+		
+		if (!is_null($newPassword)) {
+			$this->sendPassword($user, $newPassword);
+		}
+		
+		return $user;
+	}
+	
+	protected function sendPassword(Entity $user, $password)
+	{
+		// TODO use cron job
+		
+		$emailAddress = $user->get('emailAddress');
+		
+		if (empty($emailAddress)) {
+			return;
+		}
+		
+		$email = $this->getEntityManager()->getEntity('Email');
+		
+		
+		$subject = $this->getLanguage()->translate('accountInfoEmailSubject', 'messages', 'User');
+		$body = $this->getLanguage()->translate('accountInfoEmailBody', 'messages', 'User');
+		
+		$body = str_replace('{userName}', $user->get('userName'), $body);
+		$body = str_replace('{password}', $password, $body);
+		$body = str_replace('{siteUrl}', $this->getConfig()->get('siteUrl'), $body);
+		
+		$email->set(array(
+			'subject' => $subject,
+			'body' => $body,
+			'isHtml' => false,
+			'to' => $emailAddress
+		));
+		
+		$this->getMailSender()->send($email);
 	}
 	
 	public function deleteEntity($id)

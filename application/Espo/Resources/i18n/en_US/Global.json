@@ -18,6 +18,7 @@
 		"ScheduledJob": "Scheduled Jobs"
 	},
 	"labels": {
+		"Misc": "Misc",
 		"Merge": "Merge",
 		"None": "None",
 		"by": "by",

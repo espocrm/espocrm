@@ -182,6 +182,7 @@ _.extend(Espo.App.prototype, {
 
 	_initBaseController: function () {
 		this.baseController = new Espo['Controllers.Base']({}, this._getControllerInjection());
+		this._viewHelper.baseController = this.baseController;
 	},
 
 	_getControllerInjection: function () {
@@ -430,7 +431,9 @@ _.extend(Espo.App.prototype, {
 				case 401:
 					if (!options.login) {
 						Espo.Ui.error(self.language.translate('Auth error'));
-						self.logout();
+						if (self.auth) {
+							self.logout();
+						}
 					}
 					break;
 				case 403:

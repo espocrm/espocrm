@@ -25,6 +25,7 @@ return array (
 	array (
 		'driver' => 'pdo_mysql',
 		'host' => 'localhost',
+		'port' => '',
 		'dbname' => '',
 		'user' => '',
 		'password' => '',
@@ -40,6 +41,7 @@ return array (
 	'weekStart' => 0,
 	'thousandSeparator' => ',',
 	'decimalMark' => '.',
+	'exportDelimiter' => ',',
 	'currencyList' =>
 	array (
 	),
@@ -62,6 +64,7 @@ return array (
 	'languageList' => array(
 		'en_US',
 		'de_DE',
+		'es_ES',
 	),
 	'language' => 'en_US',
 	'logger' =>

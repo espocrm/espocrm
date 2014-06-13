@@ -51,6 +51,20 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
 				this.$state = this.$el.find('[name="' + this.stateField + '"]');
 				this.$city = this.$el.find('[name="' + this.cityField + '"]');
 				this.$country = this.$el.find('[name="' + this.countryField + '"]');
+				
+				this.$street.on('input', function (e) {				
+					var numberOfLines = e.currentTarget.value.split('\n').length;
+					var numberOfRows = this.$street.prop('rows');
+				
+					if (numberOfRows < numberOfLines) {
+						this.$street.prop('rows', numberOfLines);
+					} else if (numberOfRows > numberOfLines) {
+						this.$street.prop('rows', numberOfLines);
+					}
+				}.bind(this));
+				
+				var numberOfLines = this.$street.val().split('\n').length;
+				this.$street.prop('rows', numberOfLines);
 			}
 		},
 		

@@ -80,9 +80,9 @@ _.extend(Espo.LayoutManager.prototype, {
 					this.cache.set('app-layout', key, layout);
 				}
 			}.bind(this),
-			error: function () {
-				throw new Error('Could not load layout ' + controller + '#' + type);
-			},
+			/*error: function () {
+				console.error('Could not load layout ' + controller + '#' + type);
+			},*/
 		});			
 	},		
 	

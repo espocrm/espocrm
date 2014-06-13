@@ -35,17 +35,6 @@ class Installer
 
 	protected $permissionError;
 
-	/**
-	 * Ajax Urls, pairs: url:directory (if bad permission)
-	 *
-	 * @var array
-	 */
-	protected $ajaxUrls = array(
-		'api/v1/Settings' => 'api',
-		'client/res/templates/login.tpl' => 'client/res/templates',
-	);
-
-
 	protected $settingList = array(
 		'dateFormat',
 		'timeFormat',
@@ -57,7 +46,6 @@ class Installer
 		'smtpSecurity',
 		'language',
 	);
-
 
 
 	public function __construct()
@@ -171,10 +159,6 @@ class Installer
 
 		$data = array_merge($data, $initData);
 		$result = $this->saveConfig($data);
-
-		/*if ($result) {
-			$this->app = new \Espo\Core\Application();
-		}*/
 
 		return $result;
 	}
@@ -325,32 +309,6 @@ class Installer
 	public function getLastPermissionError()
 	{
 		return $this->getFileManager()->getPermissionUtils()->getLastErrorRules();
-	}
-
-	public function getAjaxUrls()
-	{
-		return array_keys($this->ajaxUrls);
-	}
-
-	public function fixAjaxPermission($url = null)
-	{
-		$permission = array(0644, 0755);
-		$fileManager = $this->getFileManager();
-
-		$result = false;
-		if (!isset($url)) {
-			$uniqueList = array_unique($this->ajaxUrls);
-			foreach ($uniqueList as $url => $path) {
-				$result = $fileManager->getPermissionUtils()->chmod($path, $permission, true);
-			}
-		} else {
-			if (isset($this->ajaxUrls[$url])) {
-				$path = $this->ajaxUrls[$url];
-				$result = $fileManager->getPermissionUtils()->chmod($path, $permission, true);
-			}
-		}
-
-		return $result;
 	}
 
 	public function setSuccess()

@@ -37,7 +37,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 		'image/gif',
 	);
 	
-	protected $imageSizes = array(
+	protected $imageSizes = array(		
 		'x-small' => array(64, 64),	
 		'small' => array(128, 128),	
 		'medium' => array(256, 256),
@@ -46,15 +46,24 @@ class Image extends \Espo\Core\EntryPoints\Base
 		'xx-large' => array(1024, 1024),
 	);
 	
+	
 	public function run()
 	{	
 		$id = $_GET['id'];
 		if (empty($id)) {
 			throw new BadRequest();
-		}
+		}	
+			
+		$size = null;		
+		if (!empty($_GET['size'])) {
+			$size = $_GET['size'];
+		} 
 		
-		$size = $_GET['size'];
-		
+		$this->show($id, $size);
+	}
+	
+	protected function show($id, $size)
+	{
 		$attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 		
 		if (!$attachment) {
@@ -87,7 +96,18 @@ class Image extends \Espo\Core\EntryPoints\Base
 				if (!file_exists($thumbFilePath)) {
 					$targetImage = $this->getThumbImage($filePath, $fileType, $size);					
 					ob_start();	
-					imagejpeg($targetImage);
+					
+					switch ($fileType) {
+						case 'image/jpeg':
+							imagejpeg($targetImage);
+							break;
+						case 'image/png':
+							imagepng($targetImage);
+							break;
+						case 'image/gif':
+							imagegif($targetImage);
+							break;					
+					}
 					$contents = ob_get_contents();
 					ob_end_clean();
 					imagedestroy($targetImage);								
@@ -117,7 +137,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 		ob_clean();
 		flush();
 		readfile($filePath);
-		exit;		
+		exit;
 	}
 	
 	protected function getThumbImage($filePath, $fileType, $size)
@@ -125,30 +145,48 @@ class Image extends \Espo\Core\EntryPoints\Base
 		list($originalWidth, $originalHeight) = getimagesize($filePath);
 		list($width, $height) = $this->imageSizes[$size];
 		
-		if ($originalWidth > $width && ($originalHeight <= $height || $originalWidth > $originalHeight)) {
-			$targetWidth = $width;
-			$targetHeight = $originalHeight * ($width / $originalWidth);
-		} else if ($originalHeight > $height && ($originalWidth <= $width || $originalHeight > $originalWidth)) {
-			$targetHeight = $height;
-			$targetWidth = $originalWidth * ($height / $originalHeight);
-		} else {
+	
+		if ($originalWidth <= $width && $originalHeight <= $height) {
 			$targetWidth = $originalWidth;
-			$targetHeight = $originalHeight;					
-		}
+			$targetHeight = $originalHeight;	
+		} else {
+			if ($originalWidth > $originalHeight) {
+				$targetWidth = $width;
+				$targetHeight = $originalHeight / ($originalWidth / $width);				
+				if ($targetHeight > $height) {
+					$targetHeight = $height;
+					$targetWidth = $originalWidth / ($originalHeight / $height);
+				}
+			} else {
+				$targetHeight = $height;
+				$targetWidth = $originalWidth / ($originalHeight / $height);
+				if ($targetWidth > $width) {
+					$targetWidth = $width;
+					$targetHeight = $originalHeight / ($originalWidth / $width);
+				}
+			}
+		}		
 				
 		$targetImage = imagecreatetruecolor($targetWidth, $targetHeight);				
 		switch ($fileType) {
 			case 'image/jpeg':
 				$sourceImage = imagecreatefromjpeg($filePath);
+				imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
 				break;
 			case 'image/png':
 				$sourceImage = imagecreatefrompng($filePath);
+				imagealphablending($targetImage, false);
+				imagesavealpha($targetImage, true);
+				$transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+				imagefilledrectangle($targetImage, 0, 0, $targetWidth, $targetHeight, $transparent);
+				imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
 				break;
 			case 'image/gif':
 				$sourceImage = imagecreatefromgif($filePath);
+				imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
 				break;					
 		}
-		imagecopyresized($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);	
+		
 		
 		return $targetImage;
 	}

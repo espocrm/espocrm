@@ -47,6 +47,9 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 			var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
 			var containerSelector = this.containerSelector = '#' + id;
 			
+			this.options = this.options || {};
+			this.options.el = this.containerSelector;
+			
 			this.on('render', function () {			
 				$(containerSelector).remove();
 				$('<div />').css('display', 'none').attr('id', id).appendTo('body');

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -18,21 +17,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/
+ ************************************************************************/ 
+Espo.define('Views.User.Fields.GeneratePassword', 'Views.Fields.Base', function (Dep) {
 
-ob_start();
-$result = array('success' => false, 'errors' => array());
-
-if (!empty($_REQUEST['url'])) {
-	if ($installer->fixAjaxPermission($_REQUEST['url'])) {
-		$result['success'] = true;
-	}
-	else {
-		$result['success'] = false;
-		$result['errorMsg'] = $_REQUEST['url'];
-		$result['errorFixInstruction'] = $systemHelper->getPermissionCommands('', array('644', '755'));
-	}
-}
-
-ob_clean();
-echo json_encode($result);
+	return Dep.extend({
+	
+		_template: '<button type="button" class="btn" data-action="generatePassword">{{translate \'Generate\' scope=\'User\'}}</button>',
+	
+		events: {
+			'click [data-action="generatePassword"]': function () {
+				var password = Math.random().toString(36).slice(-8);				
+				$('input[name="password"]').val(password);
+				$('input[name="passwordConfirm"]').val(password);
+			}
+		},
+		
+		fetch: function () {
+			return {};
+		},
+		
+	});
+	
+});

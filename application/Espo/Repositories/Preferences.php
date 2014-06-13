@@ -29,6 +29,19 @@ class Preferences extends \Espo\Core\ORM\Repository
 	protected $dependencies = array(
 		'fileManager',
 		'metadata',
+		'config',
+	);
+	
+	protected $defaultAttributesFromSettings = array(
+		'defaultCurrency',
+		'dateFormat',
+		'timeFormat',		
+		'decimalMark',
+		'thousandSeparator',
+		'weekStart',
+		'timeZone',
+		'language',
+		'exportDelimiter'
 	);
 	
 	protected $data = array();
@@ -43,6 +56,11 @@ class Preferences extends \Espo\Core\ORM\Repository
 	protected function getMetadata()
 	{
 		return $this->getInjection('metadata');
+	}
+	
+	protected function getConfig()
+	{
+		return $this->getInjection('config');
 	}
 	
 	protected function getFilePath($id)
@@ -69,6 +87,10 @@ class Preferences extends \Espo\Core\ORM\Repository
 							$defaults[$field] = $d['default'];							
 						}						
 					}
+					foreach ($this->defaultAttributesFromSettings as $attr) {
+						$defaults[$attr] = $this->getConfig()->get($attr);
+					}
+					
 					$this->data[$id] = $defaults;
 				}			
 			}

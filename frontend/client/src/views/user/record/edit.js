@@ -43,32 +43,43 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
 				
 				var layout = _.clone(simpleLayout);
 				
-				layout.push({
-					label: 'Password',
-					rows: [
-						[{
-							name: 'password',
-							type: 'password',
-							params: {
-								required: self.isNew,
-								readyToChange: true
-							} 
-						}],
-						[{
-							name: 'passwordConfirm',
-							type: 'password',
-							params: {
-								required: self.isNew,
-								readyToChange: true
-							} 
-						}]
-					],
-				});
+				if (this.type == 'edit') {				
+					layout.push({
+						label: 'Password',
+						rows: [
+							[{
+								name: 'password',
+								type: 'password',
+								params: {
+									required: self.isNew,
+									readyToChange: true
+								} 
+							},{
+								name: 'generatePassword',
+								view: 'User.Fields.GeneratePassword',
+								customLabel: ''
+							}],
+							[{
+								name: 'passwordConfirm',
+								type: 'password',
+								params: {
+									required: self.isNew,
+									readyToChange: true
+								} 
+							},{
+								name: 'passwordInfo',
+								customLabel: '',
+								customCode: '{{translate "passwordWillBeSent" scope="User" category="messages"}}'
+							}]
+						],
+					});
+				}
 				
 				var gridLayout = {
 					type: 'record',
 					layout: this.convertDetailLayout(layout),
 				};
+
 				callback(gridLayout);
 			}.bind(this));
 		},

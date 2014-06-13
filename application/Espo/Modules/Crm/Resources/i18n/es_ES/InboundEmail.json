@@ -1,0 +1,43 @@
+{
+	"fields": {
+		"name": "Nombre",
+		"team": "Equipo",
+		"status": "Estado",
+		"assignToUser": "Asignado a Usuario",
+		"host": "Host",
+		"username": "Nombre de Usuario",
+		"password": "Contraseña",
+		"port": "Puerto",
+		"monitoredFolders": "Carpetas supervisadas",
+		"trashFolder": "Carpeta Basura",
+		"ssl": "SSL",		
+		"createCase": "Crear Caso",
+		"reply": "Responder",
+		"caseDistribution": "Caso Distribución",
+		"replyEmailTemplate": "Responder De Plantilla",
+		"replyFromAddress": "Responder De Dirección",
+		"replyFromName": "Responder De Nombre"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Active": "Activo",
+			"Inactive": "Inactivo"
+		},
+		"caseDistribution": {
+			"Direct-Assignment": "Asignación-Directa",
+			"Round-Robin": "Round-Robin",
+			"Least-Busy": "Least-Busy"
+		}
+	},
+	"labels": {
+		"Create InboundEmail": "Crear Correo Entrante",
+		"IMAP": "IMAP",
+		"Actions": "Acciones",
+		"Main": "Principal"		
+	},
+	"messages": {
+		"couldNotConnectToImap": "No se pudo conectar con el servidor IMAP"
+	}
+}

@@ -37,5 +37,20 @@ class Note extends Record
 		}		
 		return $entity;
 	}
+	
+	public function createEntity($data)
+	{
+		if (!empty($data['parentType']) && !empty($data['parentId'])) {
+			$entity = $this->getEntityManager()->getEntity($data['parentType'], $data['parentId']);
+			if ($entity) {
+				if (!$this->getAcl()->check($entity, 'read')) {
+					throw new Forbidden();
+				}
+			}
+		}
+		
+		
+		return parent::createEntity($data);
+	}
 }
 

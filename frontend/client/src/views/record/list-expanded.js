@@ -33,6 +33,8 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 		
 		_internalLayoutType: 'list-row-expanded',
 		
+		presentationType: 'expanded',
+		
 		pagination: false,
 
 		header: false,
