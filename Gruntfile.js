@@ -150,6 +150,27 @@ module.exports = function (grunt) {
 				dest: 'build/EspoCRM-<%= pkg.version %>/',
 			},
 		},
+		chmod: {
+			options: {
+				mode: '755'
+			},
+			php: {			
+				options: {
+					mode: '644'
+				},
+				src: [
+					'build/EspoCRM-<%= pkg.version %>/**/*.php',
+					'build/EspoCRM-<%= pkg.version %>/**/*.json',
+					'build/EspoCRM-<%= pkg.version %>/**/*.config',
+					'build/EspoCRM-<%= pkg.version %>/**/.htaccess',					
+					'build/EspoCRM-<%= pkg.version %>/client/**/*.js',
+					'build/EspoCRM-<%= pkg.version %>/client/**/*.css',
+					'build/EspoCRM-<%= pkg.version %>/client/**/*.tpl',
+					'build/EspoCRM-<%= pkg.version %>/**/*.html',
+					'build/EspoCRM-<%= pkg.version %>/**/*.txt',
+				]
+			}
+		},
 		replace: {
 			timestamp: {
 				options: {
@@ -205,6 +226,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-replace');
 	grunt.loadNpmTasks('grunt-contrib-compress');
+	grunt.loadNpmTasks('grunt-chmod');
 
 	grunt.registerTask('default', [
 		'clean:start',
@@ -218,8 +240,8 @@ module.exports = function (grunt) {
 		'copy:backend',
 		'replace',
 		'copy:final',
+		'chmod',
 		'clean:final',
-		//'compress',
 	]);		
 
 };
