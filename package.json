@@ -1,6 +1,6 @@
 {
   "name": "espocrm",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "",
   "main": "index.php",
   "repository": "",
@@ -8,7 +8,7 @@
   "license": "GPL",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-replace": "~0.5.1",
     "grunt-contrib-concat": "~0.3.0",
@@ -16,6 +16,7 @@
     "grunt-contrib-cssmin": "~0.6.2",
     "grunt-contrib-less": "~0.7.0",
     "grunt-mkdir": "~0.1.1",
-    "grunt-contrib-compress": "~0.8.0"
+    "grunt-contrib-compress": "~0.8.0",
+    "grunt-chmod": "~1.0.3"
   }
 }
