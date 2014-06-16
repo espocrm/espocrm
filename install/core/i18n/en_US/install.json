@@ -64,7 +64,7 @@
 		"The PHP extension was not found...": "The <b>{extName}<\/b> PHP extension was not found...",
 		"All Settings correct": "All Settings are correct",
 		"Failed to connect to database": "Failed to connect to database",
-		"PHP version:": "PHP version:",
+		"PHP version": "PHP version",
 		"You must agree to the license agreement": "You must agree to the license agreement",
 		"Passwords do not match": "Passwords do not match",
 		"Enable mod_rewrite in Apache server": "Enable mod_rewrite in Apache server",
