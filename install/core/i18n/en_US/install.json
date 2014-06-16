@@ -27,7 +27,7 @@
 		"Test settings": "Test Connection"
 	},
 	"fields": {
-		"Choose your language:": "Choose your language:",
+		"Choose your language": "Choose your language",
 		"Database Name": "Database Name",
 		"Host Name": "Host Name",
 		"Port": "Port",
