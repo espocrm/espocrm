@@ -30,9 +30,9 @@ class Settings extends \Espo\Core\Controllers\Base
 	protected function getConfigData()
 	{
 		$data = $this->getConfig()->getData($this->getUser()->isAdmin());
-		
+
 		$fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
-		
+
 		foreach ($fieldDefs as $field => $d) {
 			if ($d['type'] == 'password') {
 				unset($data[$field]);
@@ -40,7 +40,7 @@ class Settings extends \Espo\Core\Controllers\Base
 		}
 		return $data;
 	}
-	
+
 	public function actionRead($params, $data)
 	{
 		return $this->getConfigData();
@@ -52,12 +52,13 @@ class Settings extends \Espo\Core\Controllers\Base
 	}
 
 	public function actionPatch($params, $data)
-	{	   
+	{
 		if (!$this->getUser()->isAdmin()) {
 			throw new Forbidden();
 		}
-		
-		$result = $this->getConfig()->setData($data, $this->getUser()->isAdmin());
+
+		$this->getConfig()->setData($data, $this->getUser()->isAdmin());
+		$result = $this->getConfig()->save();
 		if ($result === false) {
 			throw new Error('Cannot save settings');
 		}
