@@ -375,6 +375,9 @@ abstract class Base
 		$manifest = $this->getManifest();
 
 		$res = $this->getConfig()->set('version', $manifest['version']);
+		if (method_exists($this->getConfig(), 'save')) {
+			$res = $this->getConfig()->save();
+		}
 		$res &= $this->getContainer()->get('dataManager')->rebuild();
 
 		return $res;

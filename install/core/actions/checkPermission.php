@@ -31,11 +31,17 @@ if (!$installer->checkPermission()) {
 	foreach($error as $folder => $permission) {
 		$group[implode('-', $permission)][] = $folder;
 	}
+	ksort($group);
 	$instruction = '';
 	$instructionSU = '';
+	$changeOwner = true;
 	foreach($group as $permission => $folders) {
-		$instruction .= $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission)) . "<br>";
-		$instructionSU .= "&nbsp;&nbsp;" . $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission), true) . "<br>";
+		if ($permission == '0644-0755') $folders = '';
+		$instruction .= $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission), false, null, $changeOwner) . "<br>";
+		$instructionSU .= "&nbsp;&nbsp;" . $systemHelper->getPermissionCommands(array($folders, ''), explode('-', $permission), true, null, $changeOwner) . "<br>";
+		if ($changeOwner) {
+			$changeOwner = false;
+		}
 	}
 	$result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>/'.implode('<br>/', $urls).'</pre>';
 	$result['errorFixInstruction'] = str_replace( '"{C}"' , $instruction, $langs['messages']['permissionInstruction']) . "<br>" .

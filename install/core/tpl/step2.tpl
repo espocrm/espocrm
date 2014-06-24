@@ -10,55 +10,23 @@
 			<div class=" col-md-6">
 				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
-						<div class="host-name-c cell">
 							<label class="field-label-website control-label">{$langs['fields']['Host Name']} *</label>
 							<div class="field field-website">
 								<input type="text" value="{$fields['host-name'].value}" name="host-name" class="main-element form-control">
 							</div>
-						</div>
-						<div class="semicolon-sign-c cell">
-							<label class="field-label-website control-label">&nbsp;</label>
-							<div class="semicolon-sign">:</div>
-						</div>
-						<div class="port-c cell">
-							<label class="field-label-website control-label">{$langs['fields']['Port']}</label>
-							<div class="field field-website">
-								<input type="text" value="{$fields['port'].value}" name="port" class="main-element form-control">
-							</div>
-						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="row">
-			<div class=" col-md-6">
-				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Database Name']} *</label>
 						<div class="field field-website">
 							<input type="text" value="{$fields['db-name'].value}" name="db-name" class="main-element form-control">
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-			
-		<div class="row">
-			<div class=" col-md-6">
-				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Database User Name']} *</label>
 						<div class="field field-website">
 							<input type="text" value="{$fields['db-user-name'].value}" name="db-user-name" class="main-element form-control">
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class=" col-md-6">
-				<div class="row">
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Database User Password']}</label>
 						<div class="field field-website">
@@ -67,12 +35,31 @@
 					</div>
 				</div>
 			</div>
+			<div class=" col-md-6">
+				<div class="row">
+					<div class="cell cell-website col-sm-12 form-group">
+								<div class="label-description">
+									{$langs['labels']['Database Settings Description']}
+								</div>
+					</div>
+				</div>
+			</div>
 		</div>
+		
+		
+	
 	</form>
-			
-	<div class="btn-panel">
-		<button class="btn btn-default" type="button" id="test-connection">{$langs['labels']['Test settings']}</button>
-	</div>
+	<div class="row">
+			<div class=" col-md-6">
+				<div class="row">
+					<div class="cell cell-website col-sm-12 form-group">		
+						<div class="btn-panel">
+							<button class="btn btn-default" type="button" id="test-connection">{$langs['labels']['Test settings']}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 </div>		
 		
 <footer class="modal-footer">

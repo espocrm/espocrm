@@ -76,13 +76,13 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $result;
 	}
 
-	public function checkDbConnection($hostName, $dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql')
+	public function checkDbConnection($hostName, $port ,$dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql')
 	{
 		$result['success'] = true;
 
 		switch ($dbDriver) {
 			case 'mysqli':
-				$mysqli = new mysqli($hostName, $dbUserName, $dbUserPass, $dbName);
+				$mysqli = (empty($port)) ? new mysqli($hostName, $dbUserName, $dbUserPass, $dbName) : new mysqli($hostName, $dbUserName, $dbUserPass, $dbName, $port);
 				if (!$mysqli->connect_errno) {
 					$mysqli->close();
 				}
@@ -95,7 +95,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 
 			case 'pdo_mysql':
 				try {
-					$dbh = new PDO("mysql:host={$hostName};dbname={$dbName}", $dbUserName, $dbUserPass);
+					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port};" : '') . "dbname={$dbName}";
+					$dbh = new PDO($dsn, $dbUserName, $dbUserPass);
 					$dbh = null;
 				} catch (PDOException $e) {
 
@@ -129,48 +130,9 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $this->modRewriteUrl;
 	}
 
-	public function getChmodCommand($path, $permissions = array('755'), $isSudo = false, $isFile = null, $isCd = true)
-	{
-		//$path = $this->getFullPath($path);
-
-		$path = empty($path) ? '*' : $path;
-		if (is_array($path)) {
-			$path = implode(' ', $path);
-		}
-
-		$sudoStr = $isSudo ? 'sudo ' : '';
-
-		$cd = $isCd ? $this->getCd(true) : '';
-
-		if (is_string($permissions)) {
-			$permissions = (array) $permissions;
-		}
-
-		if (!isset($isFile) && count($permissions) == 1) {
-			return $cd.$sudoStr.'chmod -R '.$permissions[0].' '.$path;
-		}
-
-		$bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
-
-		$commands = array();
-
-		if ($isCd) {
-			$commands[] = $this->getCd();
-		}
-
-		$commands[] = $sudoStr.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
-		$commands[] = $sudoStr.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
-
-		if (count($permissions) >= 2) {
-			return implode(' ' . $this->combineOperator . ' ', $commands);
-		}
-
-		return $isFile ? $commands[0] : $commands[1];
-	}
-
 	public function getChownCommand($path, $isSudo = false, $isCd = true)
 	{
-		$path = empty($path) ? '*' : $path;
+		$path = empty($path) ? '.' : $path;
 		if (is_array($path)) {
 			$path = implode(' ', $path);
 		}
@@ -191,6 +153,46 @@ class SystemHelper extends \Espo\Core\Utils\System
 
 		//$path = $this->getFullPath($path;
 		return $cd.$sudoStr.'chown -R '.$owner.':'.$group.' '.$path;
+	}
+
+
+	public function getChmodCommand($path, $permissions = array('755'), $isSudo = false, $isFile = null, $isCd = true)
+	{
+		//$path = $this->getFullPath($path);
+
+		$path = empty($path) ? '.' : $path;
+		if (is_array($path)) {
+			$path = implode(' ', $path);
+		}
+
+		$sudoStr = $isSudo ? 'sudo ' : '';
+
+		$cd = $isCd ? $this->getCd(true) : '';
+
+		if (is_string($permissions)) {
+			$permissions = (array) $permissions;
+		}
+
+		if (!isset($isFile) && count($permissions) == 1) {
+			return $cd.'find '.$path.' -type d -exec ' . $sudoStr . 'chmod '.$permissions[0].' {} +';
+		}
+
+		$bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
+
+		$commands = array();
+
+		if ($isCd) {
+			$commands[] = $this->getCd();
+		}
+
+		$commands[] = 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';//.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
+		$commands[] = 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';//.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
+
+		if (count($permissions) >= 2) {
+			return implode(' ' . $this->combineOperator . ' ', $commands);
+		}
+
+		return $isFile ? $commands[0] : $commands[1];
 	}
 
 	public function getFullPath($path)
@@ -219,7 +221,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 	 * @param  bool  $isFile
 	 * @return string
 	 */
-	public function getPermissionCommands($path, $permissions = array('644', '755'), $isSudo = false, $isFile = null)
+	public function getPermissionCommands($path, $permissions = array('644', '755'), $isSudo = false, $isFile = null, $changeOwner = true)
 	{
 		if (is_string($path)) {
 			$path = array_fill(0, 2, $path);
@@ -229,11 +231,12 @@ class SystemHelper extends \Espo\Core\Utils\System
 		$commands = array();
 		$commands[] = $this->getChmodCommand($chmodPath, $permissions, $isSudo, $isFile);
 
-		$chown = $this->getChownCommand($chownPath, $isSudo, false);
-		if (isset($chown)) {
-			$commands[] = $chown;
+		if ($changeOwner) {
+			$chown = $this->getChownCommand($chownPath, $isSudo, false);
+			if (isset($chown)) {
+				$commands[] = $chown;
+			}
 		}
-
 		return implode(' ' . $this->combineOperator . ' ', $commands).';';
 	}
 
