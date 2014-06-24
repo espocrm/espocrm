@@ -34,12 +34,15 @@ if (!empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQ
 	$connect = false;
 
 	$dbName = trim($_REQUEST['dbName']);
-	$hostName = trim($_REQUEST['hostName']);
+	if (strpos($_REQUEST['hostName'],':') === false) {
+		$_REQUEST['hostName'] .= ":";
+	}
+	list($hostName, $port) = explode(':', trim($_REQUEST['hostName']));
 	$dbUserName = trim($_REQUEST['dbUserName']);
 	$dbUserPass = trim($_REQUEST['dbUserPass']);
 	$dbDriver = (!empty($_REQUEST['dbDriver']))? $_REQUEST['dbDriver'] : 'pdo_mysql';
 
-	$res = $systemHelper->checkDbConnection($hostName, $dbUserName, $dbUserPass, $dbName, $dbDriver);
+	$res = $systemHelper->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver);
 	$result['success'] &= $res['success'];
 	if (!empty($res['errors'])) {
 		$result['errors'] = array_merge($result['errors'], $res['errors']);
