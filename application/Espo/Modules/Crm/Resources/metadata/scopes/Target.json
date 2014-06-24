@@ -1,9 +1,9 @@
 {
-	"entity": true,
-	"layouts": true,
-	"tab": true,
-	"acl": true,
+	"entity": false,
+	"layouts": false,
+	"tab": false,
+	"acl": false,
 	"module": "Crm",
-	"customizable": true,
-	"importable": true
+	"customizable": false,
+	"importable": false
 }
