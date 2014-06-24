@@ -363,7 +363,7 @@ InstallScript.prototype.checkSett = function(opt) {
 			if (typeof(data.errors)) {
 				var errors = data.errors;
 				if (typeof(errors.phpVersion) !== 'undefined') {
-					msg += self.getLang('Supported php version >=', 'messages')+' '+errors.phpVersion+rowDelim;
+					msg += self.getLang('phpVersion', 'messages').replace('{minVersion}', errors.phpVersion) + rowDelim;
 				}
 
 				if (typeof(errors.exts) !== 'undefined') {
