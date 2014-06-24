@@ -1,7 +1,7 @@
 {
    "controller": "Controllers.Record",
    "views":{
-      "detail":"Crm:Prospect.Detail"
+      "detail":"Crm:Target.Detail"
    },
    "menu":{
       "detail":{

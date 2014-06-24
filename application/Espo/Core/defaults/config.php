@@ -79,11 +79,10 @@ return array (
 		0 => 'Account',
 		1 => 'Contact',
 		2 => 'Lead',
-		3 => 'Prospect',
-		4 => 'Opportunity',
+		3 => 'Opportunity',
 	),
-	"tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect", "Email"),
-	"quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"),
+	"tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email"),
+	"quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"),
 	'isInstalled' => false,
 );
 

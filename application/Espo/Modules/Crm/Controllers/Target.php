@@ -20,41 +20,26 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\Controllers;
 
 use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\ORM\Entity;
-
-class Prospect extends \Espo\Services\Record
-{	
-	protected function getDuplicateWhereClause(Entity $entity)
-	{
-		return array(
-			'firstName' => $entity->get('firstName'),
-			'lastName' => $entity->get('lastName'),
-		);
-	}
+use \Espo\Core\Exceptions\BadRequest;
 	
-	public function convert($id)
-	{
-    	$entityManager = $this->getEntityManager();    	
-    	$prospect = $this->getEntity($id);
-    	
-    	if (!$this->getAcl()->check($prospect, 'delete')) {
-    		throw new Forbidden();
-    	}
-    	if (!$this->getAcl()->check('Lead', 'read')) {
-    		throw new Forbidden();
-    	} 	
-    	
-    	$lead = $entityManager->getEntity('Lead');    	
-    	$lead->set($prospect->toArray());		
+class Target extends \Espo\Core\Controllers\Record
+{
+	
+	public function actionConvert($params, $data)
+	{	
 		
-		$entityManager->removeEntity($prospect);
-    	$entityManager->saveEntity($lead);
-
-    	return $lead;
+		if (empty($data['id'])) {
+    		throw new BadRequest();
+		}
+		$entity = $this->getRecordService()->convert($data['id']);
+		
+		if (!empty($entity)) {
+			return $entity->toArray();
+		}
+		throw new Error();		
 	}
-}
 
+}

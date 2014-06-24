@@ -15,7 +15,7 @@
 	"links": {
 	},
 	"labels": {
-		"Create Prospect": "Neuer Zielkontakt",
+		"Create Target": "Neuer Zielkontakt",
 		"Convert to Lead": "Zu Interessent umwandeln"
 	}
 }

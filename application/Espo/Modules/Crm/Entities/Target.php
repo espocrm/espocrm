@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,28 +20,10 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Prospect.Detail', 'Views.Detail', function (Dep) {
+namespace Espo\Modules\Crm\Entities;
 
-	return Dep.extend({
-
-		actionConvertToLead: function () {			
-			var id = this.model.id;
-			var self = this;
-			
-			if (confirm(this.translate('Are you sure?'))) {
-				self.notify('Please wait...');
-				$.ajax({
-					url: 'Prospect/action/convert',
-					data: JSON.stringify({id: id}),
-					type: 'POST',
-					success: function (data) {
-						self.getRouter().navigate('#Lead/view/' + data.id, {trigger: true});
-						self.notify('Converted', 'success');
-					}
-				});
-			}
-		},
-
-	});
-});
+class Target extends \Espo\Core\Entities\Person
+{
+	
+}
 
