@@ -36,7 +36,7 @@ Espo.define('Views.Admin.AuthToken.List', 'Views.List', function (Dep) {
 		},
 
 		updatePageTitle: function () {
-			this.setPageTitle(this.getLanguage().translate(this.collection.name, 'scopeNamesPlural'));
+			this.setPageTitle(this.getLanguage().translate('Auth Tokens', 'labels', 'Administration'));
 		},
 	});
 });
