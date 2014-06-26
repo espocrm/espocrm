@@ -37,6 +37,7 @@
 
 		load: function (callback, sync) {
 			var sync = (typeof sync == 'undefined') ? false: sync;
+			this.off('sync');
 			this.once('sync', callback);
 			if (!this.loadFromCache()) {				
 				this.fetch(sync);
