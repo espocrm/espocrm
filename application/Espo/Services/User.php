@@ -34,6 +34,8 @@ class User extends Record
 		$this->dependencies[] = 'language';
 	}
 	
+	protected $internalFields = array('password');
+	
 	protected function getMailSender()
 	{
 		return $this->injections['mailSender'];
@@ -51,7 +53,6 @@ class User extends Record
 		}
 		
 		$entity = parent::getEntity($id);
-	    $entity->clear('password');	 
 	    return $entity;	    
 	}
 	
@@ -67,9 +68,6 @@ class User extends Record
 		);
 		
 		$result = parent::findEntities($params);
-	    foreach ($result['collection'] as $entity) {
-	    	$entity->clear('password');
-	    }
 	    return $result;	    
 	}	
 	
@@ -132,9 +130,7 @@ class User extends Record
 	}
 	
 	protected function sendPassword(Entity $user, $password)
-	{
-		// TODO use cron job
-		
+	{		
 		$emailAddress = $user->get('emailAddress');
 		
 		if (empty($emailAddress)) {

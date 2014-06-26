@@ -49,7 +49,9 @@ class Record extends \Espo\Core\Services\Base
 	
 	private $streamService;
 	
-	protected $notFilteringFields = array();
+	protected $notFilteringFields = array(); // TODO maybe remove it
+	
+	protected $internalFields = array();
 	
 	public function __construct()
 	{
@@ -119,6 +121,23 @@ class Record extends \Espo\Core\Services\Base
 	{		
 		return $this->getEntityManager()->getRepository($this->entityName);
 	}
+	
+	protected function getRecordService($name)
+	{    	
+    	if ($this->getServiceFactory()->checkExists($name)) {
+    		$service = $this->getServiceFactory()->create($name);
+    	} else {
+    		$service = $this->getServiceFactory()->create('Record');
+    		$service->setEntityName($name);
+    	}		
+		
+		return $service;
+	}
+	
+	protected function prepareEntity($entity)
+	{
+	
+	}
 
 	public function getEntity($id = null)
 	{
@@ -132,6 +151,9 @@ class Record extends \Espo\Core\Services\Base
 			if (!$this->getAcl()->check($entity, 'read')) {
 				throw new Forbidden();
 			}
+		}
+		if (!empty($entity)) {
+			$this->prepareEntityForOutput($entity);
 		}
 		return $entity;
 	}
@@ -323,6 +345,7 @@ class Record extends \Espo\Core\Services\Base
 		
 		foreach ($collection as $e) {
 			$this->loadParentNameFields($e);
+			$this->prepareEntityForOutput($e);
 		}
 		
     	return array(
@@ -344,10 +367,13 @@ class Record extends \Espo\Core\Services\Base
 		}
     	    	
 		$selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
-		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);		
+		
+		$recordService = $this->getRecordService($foreignEntityName);
 		
 		foreach ($collection as $e) {
 			$this->loadParentNameFields($e);
+			$recordService->prepareEntityForOutput($e);
 		}
 		
     	return array(
@@ -567,6 +593,13 @@ class Record extends \Espo\Core\Services\Base
 			return $attachment->id;
 		}			
 		throw new Error();
+    }
+    
+    public function prepareEntityForOutput($entity)
+    {
+    	foreach ($this->internalFields as $field) {
+    		$entity->clear($field);
+    	}
     }
 }
 
