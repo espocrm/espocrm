@@ -233,7 +233,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 				this.trigger('before:delete');
 				this.trigger('delete');
 
-				this.notify('Deleting...');
+				this.notify('Removing...');
 
 				var self = this;
 				this.model.destroy({
@@ -242,7 +242,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 						self.notify('Error occured!', 'error');
 					},
 					success: function () {
-						self.notify('Deleted!', 'success');
+						self.notify('Removed', 'success');
 						self.trigger('after:delete');
 						self.exit('delete');
 					},
