@@ -60,7 +60,7 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 		afterRender: function () {
 			this.notify('Loading...');	
 			
-			var listViewName = this.getMetadata().get('clientDefs.' + this.name + '.recordViews.list') || 'Record.List';
+			var listViewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 			
 			this.listenToOnce(this.collection, 'sync', function () {				
 				this.createView('list', listViewName, {

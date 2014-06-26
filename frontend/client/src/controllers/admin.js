@@ -90,6 +90,21 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 			model.fetch();
 		},
 		
+		authTokens: function () {			
+			this.collectionFactory.create('AuthToken', function (collection) {
+				var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+				searchManager.loadStored();
+				collection.where = searchManager.getWhere();				
+				collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+
+				this.main('Admin.AuthToken.List', {
+					scope: 'AuthToken',
+					collection: collection,
+					searchManager: searchManager,
+				});		
+			}, this);
+		},
+		
 		userInterface: function () {
 			var model = this.getSettingsModel();						
 			

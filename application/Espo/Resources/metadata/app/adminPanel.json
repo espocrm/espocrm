@@ -46,6 +46,11 @@
             "url":"#Role",
             "label":"Roles",
             "description":"roles"
+         },
+         {
+            "url":"#Admin/authTokens",
+            "label":"Auth Tokens",
+            "description":"authTokens"
          }
       ]
    },
