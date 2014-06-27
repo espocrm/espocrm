@@ -22,27 +22,30 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Utils\Config;
+use \Espo\Core\ORM\EntityManager;
 
-class Espo extends Base
-{	
+abstract class Base 
+{
+	private $config;
 	
-	public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
+	private $entityManager;
+	
+	public function __construct(Config $config, EntityManager $entityManager)
 	{
-		if ($authToken) {
-			$hash = $authToken->get('hash');
-		} else {
-			$hash = md5($password);
-		}
-		
-		$user = $this->getEntityManager()->getRepository('User')->findOne(array(
-			'whereClause' => array(
-				'userName' => $username,
-				'password' => $hash
-			),
-		));
-		
-		return $user;
+		$this->config = $config;
+		$this->entityManager = $entityManager;
 	}
+	
+	protected function getConfig()
+	{
+		return $this->config;
+	}
+	
+	protected function getEntityManager()
+	{
+		return $this->entityManager;
+	}
+	
 }
 
