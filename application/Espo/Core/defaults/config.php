@@ -74,6 +74,7 @@ return array (
 		'isRotate' => true, /** rotate log files every day */
 		'maxRotateFiles' => 30, /** max number of rotate files */
 	),
+	'authenticationMethod' => 'Espo',
 	'globalSearchEntityList' =>
 	array (
 		0 => 'Account',

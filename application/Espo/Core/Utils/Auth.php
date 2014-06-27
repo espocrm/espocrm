@@ -28,9 +28,22 @@ class Auth
 {
 	protected $container;
 	
+	protected $authentication;
+	
+	protected $config;
+	
+	protected $entityManager;
+	
 	public function __construct(\Espo\Core\Container $container)
 	{
 		$this->container = $container;
+		
+		$this->entityManager = $this->container->get('entityManager');		
+		$this->config = $this->container->get('config');
+		
+		$authenticationMethod = $this->config->get('authenticationMethod', 'Espo');		
+		$authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;				
+		$this->authentication = new $authenticationClassName($this->config, $this->entityManager); 
 	}
 	
 	public function useNoAuth($isAdmin = false)
@@ -49,24 +62,14 @@ class Auth
 	
 	public function login($username, $password)
 	{
-		$GLOBALS['log']->debug('AUTH: Try to authenticate');
+		$GLOBALS['log']->debug('AUTH: Try to authenticate');		
 		
-		$hash = md5($password);
-		
-		$entityManager = $this->container->get('entityManager');
+		$entityManager = $this->entityManager;
 		
 		$authToken = $entityManager->getRepository('AuthToken')->where(array('token' => $password))->findOne();
-		if ($authToken) {
-			$hash = $authToken->get('hash');
-		}
-		
-		$user = $entityManager->getRepository('User')->findOne(array(
-			'whereClause' => array(
-				'userName' => $username,
-				'password' => $hash
-			),
-		));
-		
+
+		$user = $this->authentication->login($username, $password, $authToken);
+
 		if ($user) {
 			$entityManager->setUser($user);
 			$this->container->setUser($user);
