@@ -59,6 +59,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
 			var self = this;
 			
+			this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []); 
+			
 			this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};			
 			if (this.mode == 'search') {
 				this.nameHash = _.clone(this.searchParams.nameHash) || {};
@@ -85,7 +87,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				});
 
 				this.events['click a[data-action="clearLink"]'] = function (e) {
-					var id = $(e.currentTarget).data('id').toString();
+					var id = $(e.currentTarget).data('id').toString();					
 					this.deleteLink(id);
 				};
 			}
@@ -134,42 +136,40 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				this.once('remove', function () {
 					$element.autocomplete('dispose');
 				}, this);
+				
+				
+				this.ids.forEach(function (id) {
+					this.addLinkHtml(id, this.nameHash[id]);
+				}, this);
 			}
 		},
 
-		deleteLink: function (id) {
+		deleteLink: function (id) {	
 			this.$el.find('.link-' + id).remove();
-			var idsEl = this.$el.find('.ids');
-			var ids = idsEl.val().split(',');
-			
-			var index = ids.indexOf(id);
+					
+			var index = this.ids.indexOf(id);
 			if (index > -1) {
-				ids.splice(index, 1);
+				this.ids.splice(index, 1);
 			}
-			idsEl.val(ids.join(','));				 
 			delete this.nameHash[id];
 			this.trigger('change');
 		},
 
 		addLink: function (id, name) {
-			var idsEl = this.$el.find('.ids');
-			var value = idsEl.val();
-			var ids = [];
-			if (value != '') {
-				ids = value.split(',');
-			}
-			
-			if (ids.indexOf(id) == -1) {
+			if (!~this.ids.indexOf(id)) {
+				this.ids.push(id);
 				this.nameHash[id] = name;
-				ids.push(id);
-				idsEl.val(ids.join(','));
-				var conteiner = this.$el.find('.link-container');
-				var el = $('<div />').addClass('link-' + id).addClass('list-group-item');
-				el.html(name + '&nbsp');
-				el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
-				conteiner.append(el);
+				this.addLinkHtml(id, name);
 			}
 			this.trigger('change');
+		},
+		
+		addLinkHtml: function (id, name) {
+			var conteiner = this.$el.find('.link-container');
+			var el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+			el.html(name + '&nbsp');
+			el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
+			conteiner.append(el);
 		},
 
 		getValueForDisplay: function () {
@@ -194,12 +194,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
 		fetch: function () {
 			var data = {};
-			var value = this.$el.find('[name="' + this.idsName + '"]').val();
-			if (value != '') {
-				data[this.idsName] = value.split(',').sort();
-			} else {
-				data[this.idsName] = [];
-			}
+			data[this.idsName] = this.ids;		
 			data[this.nameHashName] = this.nameHash;
 
 			return data;
