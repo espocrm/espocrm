@@ -61,15 +61,16 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
 			var self = this;
 			
-			this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []); 
-			
-			this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};			
+			this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+			this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
+						
 			if (this.mode == 'search') {
-				this.nameHash = _.clone(this.searchParams.nameHash) || {};
+				this.nameHash = Espo.Utils.clone(this.searchParams.nameHash) || {};
 			}			
 			
 			this.listenTo(this.model, 'change:' + this.idsName, function () {
-				this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};			
+				this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+				this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});						
 			}.bind(this));
 			
 
