@@ -76,7 +76,9 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 					label: 'Select',
 					onClick: function (dialog) {
 						var list = this.getView('list').getSelected();
-						this.trigger('select', list)
+						if (list.length) {
+							this.trigger('select', list);
+						}
 						dialog.close();
 					}.bind(this),
 				});
