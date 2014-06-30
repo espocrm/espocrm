@@ -48,6 +48,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 				foreignScope: this.foreignScope,
 			}, Dep.prototype.data.call(this));
 		},
+		
+		getSelectFilters: function () {},
 
 		setup: function () {
 			this.nameName = this.name + 'Name';
@@ -61,7 +63,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 					this.notify('Loading...');
 					this.createView('dialog', 'Modals.SelectRecords', {
 							scope: this.foreignScope,
-							createButton: this.mode != 'search'
+							createButton: this.mode != 'search',
+							filters: this.getSelectFilters()
 						}, function (dialog) {
 						dialog.render();
 						self.notify(false);

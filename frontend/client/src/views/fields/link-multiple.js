@@ -50,7 +50,9 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				nameHash: this.model.get(this.nameHashName),
 				foreignScope: this.foreignScope,
 			}, Dep.prototype.data.call(this));
-		},		
+		},
+		
+		getSelectFilters: function () {},	
 
 		setup: function () {
 			this.nameHashName = this.name + 'Names';
@@ -76,7 +78,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 					self.notify('Loading...');
 					this.createView('dialog', 'Modals.SelectRecords', {
 							scope: this.foreignScope,
-							createButton: this.mode != 'search'
+							createButton: this.mode != 'search',
+							filters: this.getSelectFilters()
 						}, function (dialog) {
 						dialog.render();
 						self.notify(false);
