@@ -71,6 +71,12 @@
             "link": "account",
             "field": "type"
         },
+        "opportunityRole": {
+        	"type": "enum",
+        	"notStorable": true,
+        	"disabled": true,
+        	"options": ["", "Decision Maker", "Evaluator", "Influencer"]
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

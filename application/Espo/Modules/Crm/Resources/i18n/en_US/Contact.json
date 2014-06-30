@@ -10,6 +10,7 @@
 		"accountType": "Account Type",
 		"doNotCall": "Do Not Call",
 		"address": "Address",
+		"opportunityRole": "Opportunity Role",
 		"description": "Description"	
 	},
 	"links": {

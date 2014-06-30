@@ -170,7 +170,8 @@ class Converter
 					$helperClass = new $className($this->metadata);
 					$fieldResult = $helperClass->load(
 						array('name' => $entityName, 'params' => $entityParams),
-						array('name' => $fieldName, 'params' => $fieldParams)
+						array('name' => $fieldName, 'params' => $fieldParams),
+						$this->metadata
 					);
 					if (isset($fieldResult['unset'])) {
 						$meta = Util::unsetInArray($meta, $fieldResult['unset']);

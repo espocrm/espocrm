@@ -148,6 +148,10 @@ class Record extends \Espo\Core\Services\Base
 			$this->loadIsFollowed($entity);
 			$this->loadEmailAddressField($entity);
 			
+			if ($entity->getEntityName() == 'Opportunity') {
+				$contactsColumns = $entity->get('contactsColumns');
+			}
+			
 			if (!$this->getAcl()->check($entity, 'read')) {
 				throw new Forbidden();
 			}
@@ -180,7 +184,11 @@ class Record extends \Espo\Core\Services\Base
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
 			if ($defs['type'] == 'linkMultiple') {
-				$entity->loadLinkMultipleField($field);	
+				$columns = null;
+				if (!empty($defs['columns'])) {
+					$columns = $defs['columns'];
+				}							
+				$entity->loadLinkMultipleField($field, $columns);	
 			}
 		}
 	}

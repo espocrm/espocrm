@@ -394,6 +394,12 @@ abstract class Mapper implements IMapper
 				}
 
 				$dataArr = array();
+				
+				if (!empty($params['additionalColumns']) && is_array($params['additionalColumns'])) {
+					foreach ($params['additionalColumns'] as $column => $field) {
+						$selectPart .= ", `" . $this->toDb($relOpt['relationName']) . "`." . $this->toDb($column) . " AS `{$field}`";
+					}
+				}
 			
 				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart . $MMJoinPart, $wherePart, $orderPart, $offset, $limit);
 

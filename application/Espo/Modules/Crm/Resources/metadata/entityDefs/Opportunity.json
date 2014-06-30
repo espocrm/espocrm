@@ -14,7 +14,11 @@
             "required": true
         },
         "contacts": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "Fields.LinkMultipleWithRole",
+            "columns": {
+            	"role": "opportunityRole"
+            }
         },
         "stage": {
             "type": "enum",
@@ -90,7 +94,13 @@
         "contacts": {
             "type": "hasMany",
             "entity": "Contact",
-            "foreign": "opportunities"
+            "foreign": "opportunities",
+			"additionalColumns": {
+				"role": {
+					"type": "varchar",
+		    		"len": 50
+				}
+			}
         },
         "meetings": {
             "type": "hasChildren",

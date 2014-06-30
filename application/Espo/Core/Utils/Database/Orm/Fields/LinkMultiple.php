@@ -25,27 +25,40 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 class LinkMultiple extends \Espo\Core\Utils\Database\Orm\Base
 {
 
-	public function load($entity, $field)
+	public function load($entity, $field, $metadata)
 	{
-        return array(
-			$entity['name'] => array (
+        $fieldName = $field['name'];        
+        $entityName = $entity['name'];
+        
+        $data = array(
+			$entityName => array (
 	           	'fields' => array(
-	               	$field['name'].'Ids' => array(
+	               	$fieldName.'Ids' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
-					$field['name'].'Names' => array(
+					$fieldName.'Names' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
 				),
 			),
             'unset' => array(
-                $entity['name'] => array(
-                    'fields.'.$field['name'],
+                $entityName => array(
+                    'fields.'.$fieldName,
                 ),
             ),
-		);
+		);		
+
+		$columns = $metadata->get("entityDefs.{$entityName}.fields.{$fieldName}.columns"); 		
+		if (!empty($columns)) {
+			$data[$entityName]['fields'][$fieldName . 'Columns'] = array(
+				'type' => 'varchar',
+				'notStorable' => true,
+			);
+		}
+        
+        return $data;
 	}
 
 
