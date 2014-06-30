@@ -152,6 +152,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 		},
 		
 		relatedAttributeMap: {},
+		
+		selectRelatedFilters: {},
 
 		actionCreateRelated: function (data) {
 			var self = this;
@@ -189,12 +191,23 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			var scope = this.model.defs['links'][link].entity;
 			
 			var self = this;
+			
+			var attributes = {};
+			
+			var filters = this.selectRelatedFilters[link] || null;
+			
+			for (var filterName in filters) {	
+				if (typeof filters[filterName] == 'function') {
+					filters[filterName] = filters[filterName].call(this);
+				}			
+			}			
 
 			this.notify('Loading...');
 			this.createView('dialog', 'Modals.SelectRecords', {
 				scope: scope,
 				multiple: true,
 				createButton: false,
+				filters: filters,
 			}, function (dialog) {
 				dialog.render();
 				this.notify(false);

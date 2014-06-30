@@ -116,6 +116,10 @@
 			return this.data;
 		},
 		
+		setAdvanced: function (advanced) {
+			this.data.advanced = advanced;
+		},
+		
 		set: function (data) {
 			this.data = data;
 			if (this.storage) {
