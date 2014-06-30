@@ -24,6 +24,35 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 	return Dep.extend({
 
 		type: 'linkMultipleWithRole',
+		
+		setup: function () {
+			Dep.prototype.setup.call(this);
+			
+			this.columnsName = this.name + 'Columns';			
+			this.columns = Espo.Utils.clone(this.model.get(this.columnsName) || {}); 
+			
+			this.listenTo(this.model, 'change:' + this.idsName, function () {
+				this.columns = Espo.Utils.clone(this.model.get(this.columnsName) || {}); 					
+			}.bind(this));
+		},
+		
+		getValueForDisplay: function () {
+			var nameHash = this.nameHash;
+			var string = '';
+			var names = [];
+			
+			var roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.role');			
+			
+			for (var id in nameHash) {
+				var role = (this.columns[id] || {}).role || '';
+				var roleHtml = '';
+				if (role != '') {
+					roleHtml = '<span class="text-muted small">(' + this.getLanguage().translateOption(role, roleField, this.foreignScope) + ')</span>';
+				}
+				names.push('<a href="#' + this.foreignScope + '/view/' + id + '">' + nameHash[id] + '</a> ' + roleHtml);
+			}
+			return '<div>' + names.join('</div><div>') + '</div>';
+		},
 
 	});
 });
