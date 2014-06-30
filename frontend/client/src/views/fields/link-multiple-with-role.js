@@ -34,6 +34,10 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			this.listenTo(this.model, 'change:' + this.idsName, function () {
 				this.columns = Espo.Utils.clone(this.model.get(this.columnsName) || {}); 					
 			}.bind(this));
+			
+			this.roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.role');
+			
+			this.roleList = this.getMetadata().get('entityDefs.' + this.foreignScope + '.fields.' + this.roleField + '.options');
 		},
 		
 		getValueForDisplay: function () {
@@ -41,17 +45,51 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			var string = '';
 			var names = [];
 			
-			var roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.role');			
 			
 			for (var id in nameHash) {
 				var role = (this.columns[id] || {}).role || '';
 				var roleHtml = '';
 				if (role != '') {
-					roleHtml = '<span class="text-muted small">(' + this.getLanguage().translateOption(role, roleField, this.foreignScope) + ')</span>';
+					roleHtml = '<span class="text-muted small">(' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + ')</span>';
 				}
 				names.push('<a href="#' + this.foreignScope + '/view/' + id + '">' + nameHash[id] + '</a> ' + roleHtml);
 			}
 			return '<div>' + names.join('</div><div>') + '</div>';
+		},
+		
+		addLinkHtml: function (id, name) {		
+			var $conteiner = this.$el.find('.link-container');
+			var $el = $('<div class="form-inline">').addClass('link-' + id).addClass('list-group-item');
+			
+			var nameHtml = '<span class="">' + name + '&nbsp;' + '</div>';
+			
+			
+			var removeHtml = '<a href="javascript:" class="" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>';
+		
+			var $select = $('<select class="role form-control input-sm">');
+			this.roleList.forEach(function (role) {
+				var selectedHtml = (role == (this.columns[id] || {}).role) ? 'selected': '';
+				option = '<option value="'+role+'" '+selectedHtml+'>' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + '</option>';
+				$select.append(option);
+			}, this);
+						
+			
+			$contentContainer = $('<div class="pull-left" style="display: inline-block;">');
+			
+			$contentContainer.append(nameHtml);	
+			
+			$el.append($contentContainer);			
+			
+			$right = $('<div class="pull-right" style="display: inline-block;">');			
+			$right.append($select);
+			$right.append(removeHtml);
+			
+						
+			$el.append($right)
+			
+			$el.append('<br style="clear: both;" />');
+			
+			$conteiner.append($el);
 		},
 
 	});
