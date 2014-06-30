@@ -27,6 +27,8 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
 		
 		editable: false,
 		
+		ignoreList: [],
+		
 		setup: function () {
 			Dep.prototype.setup.call(this);
 			
@@ -37,7 +39,7 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
 				
 					var allFields = [];
 					for (var field in model.defs.fields) {
-						if (!model.getFieldParam(field, 'readOnly')) {
+						if (!model.getFieldParam(field, 'readOnly') && this.isFieldEnabled(model, field)) {
 							allFields.push(field);
 						}
 					}
@@ -84,6 +86,13 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
 		validate: function () {
 			return true;
 		},
+		
+		isFieldEnabled: function (model, name) {
+			if (this.ignoreList.indexOf(name) != -1) {
+				return false;
+			}
+			return !model.getFieldParam(name, 'disabled');
+		}
 				
 	});
 });
