@@ -13,6 +13,9 @@
             "type": "link",
             "required": true
         },
+        "contacts": {
+            "type": "linkMultiple"
+        },
         "stage": {
             "type": "enum",
             "options": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis", "Proposal/Price Quote", "Negotiation/Review", "Closed Won", "Closed Lost"],
