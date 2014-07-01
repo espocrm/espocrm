@@ -4,5 +4,7 @@ RedirectMatch 403 \.config$
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
+RewriteRule .* - [E=HTTP_ESPO_CGI_AUTH:%{HTTP:Authorization}]
+
 RewriteRule reset/?$ reset.html [QSA,L]
 </IfModule>
