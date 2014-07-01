@@ -36,7 +36,9 @@ Espo.define('Views.Search.Filter', 'View', function (Dep) {
 			var name = this.name = this.options.name;				
 			var type = this.model.getFieldType(name);
 			
-			this.createView('field', 'Fields.' + Espo.Utils.upperCaseFirst(type), {
+			var viewName = this.model.getFieldParam(name, 'view') || 'Fields.' + Espo.Utils.upperCaseFirst(type);
+			
+			this.createView('field', viewName, {
 				mode: 'search',
 				model: this.model,
 				el: this.options.el + ' .field',
