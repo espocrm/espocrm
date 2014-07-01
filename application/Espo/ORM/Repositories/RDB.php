@@ -204,13 +204,16 @@ class RDB extends \Espo\ORM\Repository
 		return $this->getMapper()->countRelated($entity, $relationName, $params);
 	}
 	
-	public function relate(Entity $entity, $relationName, $foreign)
+	public function relate(Entity $entity, $relationName, $foreign, $data)
 	{
+		if ($data instanceof \stdClass) {
+			$data = get_object_vars($data);
+		}
 		if ($foreign instanceof Entity) {
-			return $this->getMapper()->relate($entity, $relationName, $foreign);
+			return $this->getMapper()->relate($entity, $relationName, $foreign, $data);
 		}
 		if (is_string($foreign)) {
-			return $this->getMapper()->addRelation($entity, $relationName, $foreign);
+			return $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $data);
 		}
 		return false;
 	}

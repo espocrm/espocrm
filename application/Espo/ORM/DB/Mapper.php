@@ -508,9 +508,9 @@ abstract class Mapper implements IMapper
 		return $this->selectRelated($entity, $relationName, $params, true);
 	}
 	
-	public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo)
+	public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo, $data = null)
 	{
-		$this->addRelation($entityFrom, $relationName, null, $entityTo);
+		$this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
 	}
 	
 	public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo)
@@ -541,9 +541,9 @@ abstract class Mapper implements IMapper
 				$setArr = array();				
 				foreach ($columnData as $column => $value) {
 					$setArr[] = $this->toDb($column) . " = " . $this->pdo->quote($value);
-				}
-				
+				}				
 				$setPart = implode(', ', $setArr);
+				
 				$wherePart =
 					$this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
 					AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0
@@ -563,7 +563,7 @@ abstract class Mapper implements IMapper
 		}	
 	}
 	
-	public function addRelation(IEntity $entity, $relationName, $id = null, $relEntity = null)
+	public function addRelation(IEntity $entity, $relationName, $id = null, $relEntity = null, $data = null)
 	{
 		if (!is_null($relEntity)) {
 			$id = $relEntity->id;
@@ -652,6 +652,13 @@ abstract class Mapper implements IMapper
 								$fieldsPart .= ", " . $this->toDb($f);
 								$valuesPart .= ", " . $this->pdo->quote($v);
 							}					
+						}						
+						
+						if (!empty($data) && is_array($data)) {
+							foreach ($data as $column => $columnValue) {
+								$fieldsPart .= ", " . $this->toDb($column);
+								$valuesPart .= ", " . $this->pdo->quote($columnValue);
+							}
 						}
 						
 						$sql = $this->composeInsertQuery($relTable, $fieldsPart, $valuesPart);
@@ -661,6 +668,15 @@ abstract class Mapper implements IMapper
 						}					
 					} else {
 						$setPart = 'deleted = 0';
+						
+						if (!empty($data) && is_array($data)) {
+							$setArr = array();				
+							foreach ($data as $column => $value) {
+								$setArr[] = $this->toDb($column) . " = " . $this->pdo->quote($value);
+							}				
+							$setPart .= ', ' . implode(', ', $setArr);
+						}
+						
 						$wherePart =
 							$this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
 							AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id) . "

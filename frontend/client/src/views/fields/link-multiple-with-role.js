@@ -26,8 +26,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		type: 'linkMultipleWithRole',
 		
 		setup: function () {
-			Dep.prototype.setup.call(this);
-			
+			Dep.prototype.setup.call(this);			
 			
 			this.columnsName = this.name + 'Columns';			
 			this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
@@ -62,20 +61,31 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			return '<div>' + names.join('</div><div>') + '</div>';
 		},
 		
+		deleteLink: function (id) {	
+			this.$el.find('.link-' + id).remove();
+					
+			var index = this.ids.indexOf(id);
+			if (index > -1) {
+				this.ids.splice(index, 1);
+			}
+			delete this.nameHash[id];
+			delete this.columns[id];
+			this.trigger('change');
+		},
+
+		addLink: function (id, name) {
+			if (!~this.ids.indexOf(id)) {
+				this.ids.push(id);
+				this.nameHash[id] = name;
+				this.columns[id] = {role: null};
+				this.addLinkHtml(id, name);
+			}
+			this.trigger('change');
+		},
+		
 		afterRender: function () {
 			Dep.prototype.afterRender.call(this);
-			
-			if (this.mode == 'edit') {
-				this.$el.find('select.role').on('change', function (e) {
-					var $target = $(e.currentTarget);
-					var value = $target.val();
-					var id = $target.data('id');
-					this.columns[id] = this.columns[id] || {};
-					this.columns[id].role = value;
-					
-					this.trigger('change');
-				}.bind(this));
-			}
+
 		},
 		
 		addLinkHtml: function (id, name) {		
@@ -111,10 +121,22 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			$el.append('<br style="clear: both;" />');
 			
 			$conteiner.append($el);
+			
+			if (this.mode == 'edit') {
+				$select.on('change', function (e) {
+					var $target = $(e.currentTarget);
+					var value = $target.val();
+					var id = $target.data('id');
+					this.columns[id] = this.columns[id] || {};
+					this.columns[id].role = value;
+					this.trigger('change');
+				}.bind(this));
+			}
+			
 		},
 		
 		fetch: function () {
-			var data = Dep.prototype.fetch.call(this);			
+			var data = Dep.prototype.fetch.call(this);
 			data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
 			return data;
 		},
