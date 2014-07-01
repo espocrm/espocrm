@@ -26,16 +26,6 @@
 			"Negotiation/Review": "Negotiation/Review",
 			"Closed Won": "Closed Won",
 			"Closed Lost": "Closed Lost" 
-		},
-		"leadSource": {
-			"Call": "Call",
-			"Email": "Email",
-			"Existing Customer": "Existing Customer",
-			"Partner": "Partner",
-			"Public Relations": "Public Relations",
-			"Web Site": "Web Site",
-			"Campaign": "Campaign",
-			"Other": "Other"
 		}
 	},
 	"labels": {
