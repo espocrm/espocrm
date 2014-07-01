@@ -123,7 +123,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 		
 		rebuild: function (options) {
 			var master = this.get('master');		
-			Espo.Ui.notify(master.translate('Please wait'));
+			Espo.Ui.notify(master.translate('Please wait...'));
 			this.getRouter().navigate('#Admin');	
 			$.ajax({
 				url: 'Admin/rebuild',
@@ -136,7 +136,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 		
 		clearCache: function (options) {
 			var master = this.get('master');		
-			Espo.Ui.notify(master.translate('Please wait'));
+			Espo.Ui.notify(master.translate('Please wait...'));
 			this.getRouter().navigate('#Admin');			
 			$.ajax({
 				url: 'Admin/clearCache',
