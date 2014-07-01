@@ -6,6 +6,9 @@
          "default":false
       }
    ],
+   "notActualFields":[
+      "Data"
+   ],
    "notCreatable": true,
    "search":{
       "basic":true,
