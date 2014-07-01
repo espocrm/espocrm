@@ -385,7 +385,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			
 			var attrsBefore = this.model.getClonedAttributes();
 			
-			data = _.extend(_.clone(attrsBefore), data);			
+			data = _.extend(Espo.Utils.cloneDeep(attrsBefore), data);			
 						
 			var attrs = false;
 			if (model.isNew()) {

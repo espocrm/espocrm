@@ -57,6 +57,7 @@
 		getClonedAttributes: function () {
 			var attributes = {};
 			for (var name in this.attributes) {
+				// TODO maybe use cloneDeep method ???
 				attributes[name] = Espo.Utils.clone(this.attributes[name]);
 			}
 			return attributes;

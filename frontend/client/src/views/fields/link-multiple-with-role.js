@@ -30,10 +30,10 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			
 			
 			this.columnsName = this.name + 'Columns';			
-			this.columns = Espo.Utils.clone(this.model.get(this.columnsName) || {});
+			this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
 			
 			this.listenTo(this.model, 'change:' + this.columnsName, function () {
-				this.columns = Espo.Utils.clone(this.model.get(this.columnsName) || {}); 					
+				this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {}); 					
 			}.bind(this));
 			
 			this.roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.role');			
@@ -115,7 +115,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		
 		fetch: function () {
 			var data = Dep.prototype.fetch.call(this);			
-			data[this.columnsName] = this.columns;
+			data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
 			return data;
 		},
 
