@@ -231,7 +231,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 			}
 
 			if (this.mode == 'edit' || this.mode == 'detail') {
-				this.attributeList = this.getFieldManager().getAttributes(this.fieldType, this.name);
+				this.attributeList = this.getAttributeList();
 				
 				this.listenTo(this.model, 'change', function (model, options) {				
 					if (this.isRendered) {				
@@ -274,6 +274,10 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 		setup: function () {},
 
 		setupSearch: function () {},
+		
+		getAttributeList: function () {
+			return this.getFieldManager().getAttributes(this.fieldType, this.name);
+		},
 
 		inlineEditSave: function () {			
 			
