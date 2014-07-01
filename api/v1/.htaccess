@@ -6,5 +6,7 @@ RewriteEngine On
 #
 # RewriteBase /
 
+RewriteRule .* - [E=HTTP_ESPO_CGI_AUTH:%{HTTP:Authorization}]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]

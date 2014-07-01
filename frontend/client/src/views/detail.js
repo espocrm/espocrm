@@ -151,7 +151,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			}				
 		},
 		
-		relatedAttributeList: {},
+		relatedAttributeMap: {},
 
 		actionCreateRelated: function (data) {
 			var self = this;
