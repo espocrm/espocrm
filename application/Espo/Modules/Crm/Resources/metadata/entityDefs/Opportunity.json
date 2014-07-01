@@ -34,7 +34,7 @@
         },
         "leadSource": {
             "type": "enum",
-            "options": ["Other", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign"]
+            "view": "Crm:Opportunity.Fields.LeadSource"
         },
         "closeDate": {
             "type": "date",
