@@ -5,8 +5,8 @@
 			[{"name":"name"},{"name":"account"}],
 			[{"name":"stage"},{"name":"amount"}],
 			[{"name":"probability"},{"name":"leadSource"}],
-			[{"name":"closeDate"},false],
-			[{"name":"description"},{"name":"contacts"}]
+			[{"name":"contacts"},{"name":"closeDate"}],
+			[{"name":"description"},false]
 		]
 	}
 ]
