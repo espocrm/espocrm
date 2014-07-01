@@ -518,6 +518,51 @@ abstract class Mapper implements IMapper
 		$this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
 	}
 	
+	public function updateRelation(IEntity $entity, $relationName, $id = null, array $columnData)
+	{		
+		if (empty($id) || empty($relationName)) {
+			return false;
+		}		
+		
+		$relOpt = $entity->relations[$relationName];
+		$keySet = $this->getKeys($entity, $relationName);
+		
+		$relType = $relOpt['type'];
+		
+		
+		switch ($relType) {
+			case IEntity::MANY_MANY:
+				$relTable = $this->toDb($relOpt['relationName']);
+				$key = $keySet['key'];
+				$foreignKey = $keySet['foreignKey'];
+				$nearKey = $keySet['nearKey'];
+				$distantKey = $keySet['distantKey'];
+				
+				$setArr = array();				
+				foreach ($columnData as $column => $value) {
+					$setArr[] = $this->toDb($column) . " = " . $this->pdo->quote($value);
+				}
+				
+				$setPart = implode(', ', $setArr);
+				$wherePart =
+					$this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
+					AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0
+					";
+							
+				if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+					foreach ($relOpt['conditions'] as $f => $v) {
+						$wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
+					}					
+				}
+											
+				$sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
+				
+				if ($this->pdo->query($sql)) {
+					return true;
+				}
+		}	
+	}
+	
 	public function addRelation(IEntity $entity, $relationName, $id = null, $relEntity = null)
 	{
 		if (!is_null($relEntity)) {

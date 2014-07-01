@@ -195,21 +195,59 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
 						$existingIds = array();
-						foreach ($entity->get($name) as $foreignEntity) {
+						$toUpdateIds = array();
+						$existingColumnsData = new \stdClass();
+						
+						$defs = array();
+						$columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".fields.{$name}.columns");
+						if (!empty($columns)) {	
+							$columnData = $entity->get($name . 'Columns');
+							$defs['additionalColumns'] = $columns;
+
+						}		
+			
+						foreach ($entity->get($name, $defs) as $foreignEntity) {
 							$existingIds[] = $foreignEntity->id;
+							if (!empty($columns)) {	
+								$data = new \stdClass();
+								foreach ($columns as $columnName => $columnField) {
+									$foreignId = $foreignEntity->id;
+									$data->$columnName = $foreignEntity->get($columnField);
+								}								
+								$existingColumnsData->$foreignId = $data;
+							}	
+													
 						}
 						foreach ($existingIds as $id) {
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
+							} else {
+								if (!empty($columns)) {	
+									foreach ($columns as $columnName => $columnField) {
+										if ($columnData->$id->$columnName != $existingColumnsData->$id->$columnName) {
+											$toUpdateIds[] = $id;
+										}
+									}
+								}
 							}
 						}
 						foreach ($specifiedIds as $id) {
 							if (!in_array($id, $existingIds)) {
-								$this->relate($entity, $name, $id);
+								$data = null;
+								if (!empty($columns)) {	
+									$data = $columnData->$id;
+								}
+								$this->relate($entity, $name, $id, $data);
 							}
 						}
 						foreach ($toRemoveIds as $id) {
 							$this->unrelate($entity, $name, $id);
+						}
+						if (!empty($columns)) {	
+							foreach ($toUpdateIds as $id) {
+								$data = $columnData->$id;
+								$this->updateRelation($entity, $name, $id, $data);
+							}
 						}
 					}
 				}

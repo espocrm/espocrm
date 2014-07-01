@@ -229,6 +229,23 @@ class RDB extends \Espo\ORM\Repository
 		return false;
 	}
 	
+	public function updateRelation(Entity $entity, $relationName, $foreign, $data)
+	{
+		if ($data instanceof \stdClass) {
+			$data = get_object_vars($data);
+		}
+		if ($foreign instanceof Entity) {
+			$id = $foreign->id;
+		} else {
+			$id = $foreign;
+		}
+		if (is_string($foreign)) {
+			return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
+		}
+		return false;
+	}
+	
+	
 	public function getAll()
 	{
 		$this->reset();		
