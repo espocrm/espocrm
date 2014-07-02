@@ -149,7 +149,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			},
 
 			'click [data-action="addEmailAddress"]': function () {			
-				var data = this.fetchEmailAddressData();				
+				var data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());				
 		
 				o = {
 					emailAddress: '',

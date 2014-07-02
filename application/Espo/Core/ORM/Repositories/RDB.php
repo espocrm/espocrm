@@ -195,6 +195,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		$entity->set($restoreData);
 
 		$this->handleEmailAddressSave($entity);
+		$this->handlePhoneNumberSave($entity);
 		$this->handleSpecifiedRelations($entity);
 
 		return $result;
@@ -204,6 +205,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 	{		
 		if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {		
 			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
+		}
+	}
+	
+	protected function handlePhoneNumberSave(Entity $entity)
+	{		
+		if ($entity->hasRelation('phoneNumbers') && $entity->hasField('phoneNumber')) {		
+			$emailAddressRepository = $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
 		}
 	}
 

@@ -142,11 +142,8 @@ class Record extends \Espo\Core\Services\Base
 	public function getEntity($id = null)
 	{
 		$entity = $this->getRepository()->get($id);		
-		if (!empty($entity) && !empty($id)) {		
-			$this->loadLinkMultipleFields($entity);			
-			$this->loadParentNameFields($entity);
-			$this->loadIsFollowed($entity);
-			$this->loadEmailAddressField($entity);
+		if (!empty($entity) && !empty($id)) {
+			$this->loadAdditionalFields($entity);			
 			
 			if ($entity->getEntityName() == 'Opportunity') {
 				$contactsColumns = $entity->get('contactsColumns');
@@ -210,12 +207,30 @@ class Record extends \Espo\Core\Services\Base
 		}
 	}
 	
+	protected function loadAdditionalFields($entity)
+	{
+		$this->loadLinkMultipleFields($entity);			
+		$this->loadParentNameFields($entity);
+		$this->loadIsFollowed($entity);
+		$this->loadEmailAddressField($entity);
+		$this->loadPhoneNumberField($entity);
+	}
+	
 	protected function loadEmailAddressField(Entity $entity)
 	{
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());		
 		if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
 			$dataFieldName = 'emailAddressData';
 			$entity->set($dataFieldName, $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity));
+		}
+	}
+	
+	protected function loadPhoneNumberField(Entity $entity)
+	{
+		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());		
+		if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
+			$dataFieldName = 'phoneNumberData';
+			$entity->set($dataFieldName, $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity));
 		}
 	}
 	

@@ -2,7 +2,7 @@
 	{{#each phoneNumberData}}
 		<div>
 			<a href="tel:{{phoneNumber}}" data-phone-number="{{phoneNumber}}" data-action="dial">{{phoneNumber}}</a>
-			<span class="text-muted text-small"></span>
+			<span class="text-muted small">({{translateOption type scope=../../scope field=../../name}})</span>
 		</div>
 	{{/each}}
 {{else}}

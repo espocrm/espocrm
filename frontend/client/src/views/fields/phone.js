@@ -118,7 +118,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 			},
 
 			'click [data-action="addPhoneNumber"]': function () {			
-				var data = this.fetchPhoneNumberData();				
+				var data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());				
 		
 				o = {
 					phoneNumber: '',
