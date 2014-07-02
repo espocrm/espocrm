@@ -176,7 +176,7 @@ class Manager
 		$fullPath = $this->concatPaths($path); //todo remove after changing the params
 
 		if ($this->checkCreateFile($fullPath) === false) {
-			throw new Error('Permission denied in '. $path);
+			throw new Error('Permission denied in '. $fullPath);
 		}
 
 		$res = (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);

@@ -166,7 +166,7 @@ class FieldManager
 		}
 
 		foreach ($fieldDef as $defName => $defValue) {
-			if (!isset($defValue)) {
+			if (!isset($defValue) || (is_string($defValue) && $defValue == '') ) {
 				unset($fieldDef[$defName]);
 			}
 		}
