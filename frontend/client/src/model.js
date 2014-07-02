@@ -58,7 +58,7 @@
 			var attributes = {};
 			for (var name in this.attributes) {
 				// TODO maybe use cloneDeep method ???
-				attributes[name] = Espo.Utils.clone(this.attributes[name]);
+				attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
 			}
 			return attributes;
 		},
