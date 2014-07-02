@@ -28,20 +28,12 @@
         "emailAddress": {
             "type": "email"
         },
-        "phone": {
+        "phoneNumber": {
             "type": "phone",
-            "maxLength": 50
-        },
-        "fax": {
-            "type": "phone",
-            "maxLength": 50
+            "options": ["Mobile", "Office", "Home", "Fax", "Other"]
         },
         "doNotCall": {
             "type": "bool"
-        },
-        "phoneOffice": {
-            "type": "phone",
-            "maxLength": 50
         },
         "address": {
             "type": "address"

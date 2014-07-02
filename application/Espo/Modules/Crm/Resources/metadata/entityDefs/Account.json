@@ -10,11 +10,9 @@
         "emailAddress": {
             "type": "email"
         },
-        "phone": {
-            "type": "phone"
-        },
-        "fax": {
-            "type": "phone"
+        "phoneNumber": {
+            "type": "phone",
+            "options": ["Office", "Fax", "Other"]
         },
         "type": {
             "type": "enum",

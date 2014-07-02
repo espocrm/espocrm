@@ -9,7 +9,7 @@
 				{"name":"emailAddress"}
 			],
 			[
-				{"name":"phone"}
+				{"name":"phoneNumber"}
 			],
 			[
 				{"name":"status"}

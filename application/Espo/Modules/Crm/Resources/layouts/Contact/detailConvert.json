@@ -1,1 +1,12 @@
-[{"label":"Overview","rows":[[{"name":"name"}],[{"name":"emailAddress"},{"name":"phone"}],[{"name":"title"},{"name":"doNotCall"}],[{"name":"address"},false],[{"name":"description"},false]]}]
+[
+	{
+		"label":"Overview",
+		"rows": [
+			[{"name":"name"}],
+			[{"name":"emailAddress"},{"name":"phoneNumber"}],
+			[{"name":"title"},{"name":"doNotCall"}],
+			[{"name":"address"},false],
+			[{"name":"description"},false]
+		]
+	}
+]

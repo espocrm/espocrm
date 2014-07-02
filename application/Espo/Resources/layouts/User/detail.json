@@ -5,7 +5,7 @@
 			[{"name":"userName"},{"name":"isAdmin"}],
 			[{"name":"name"},{"name":"title"}],
 			[{"name":"defaultTeam"}],
-			[{"name":"emailAddress"},{"name":"phone"}]
+			[{"name":"emailAddress"},{"name":"phoneNumber"}]
 		]
 	}
 ]

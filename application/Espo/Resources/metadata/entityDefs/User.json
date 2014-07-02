@@ -39,9 +39,9 @@
             "type": "email",
             "required": false
         },
-        "phone": {
+        "phoneNumber": {
             "type": "phone",
-            "maxLength": 50
+            "options": ["Mobile", "Office", "Home", "Fax", "Other"]
         },
         "token": {
             "type": "varchar",

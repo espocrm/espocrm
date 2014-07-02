@@ -5,9 +5,7 @@
 		"title": "Title",
 		"website": "Website",
 		"accountName": "Account Name",
-		"phone": "Phone",
-		"phoneOffice": "Phone (Office)",
-		"fax": "Fax",
+		"phoneNumber": "Phone",
 		"doNotCall": "Do Not Call",
 		"address": "Address",
 		"description": "Description"

@@ -6,7 +6,7 @@
 		"isAdmin": "Is Admin",
 		"defaultTeam": "Default Team",
 		"emailAddress": "Email",
-		"phone": "Phone",
+		"phoneNumber": "Phone",
 		"roles": "Roles",		
 		"password": "Password",
 		"passwordConfirm": "Confirm Password",

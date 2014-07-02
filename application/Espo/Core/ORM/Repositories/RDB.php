@@ -62,6 +62,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 	protected function handleSelectParams(&$params, $entityName = false)
 	{
 		$this->handleEmailAddressParams($params, $entityName);
+		$this->handlePhoneNumberParams($params, $entityName);
 	}
 
 	protected function handleEmailAddressParams(&$params, $entityName = false)
@@ -81,11 +82,33 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 			if (empty($params['joinConditions'])) {
 				$params['joinConditions'] = array();
 			}
-			$params['leftJoins'] = array('emailAddresses');
-			$params['joinConditions'] = array(
-				'emailAddresses' => array(
-					'primary' => 1
-				)
+			$params['leftJoins'][] = 'emailAddresses';
+			$params['joinConditions']['emailAddresses'] = array(
+				'primary' => 1
+			);
+		}
+	}
+	
+	protected function handlePhoneNumberParams(&$params, $entityName = false)
+	{
+		if (empty($entityName)) {
+			$entityName = $this->entityName;
+		}
+
+		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
+		if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
+			if (empty($params['leftJoins'])) {
+				$params['leftJoins'] = array();
+			}
+			if (empty($params['whereClause'])) {
+				$params['whereClause'] = array();
+			}
+			if (empty($params['joinConditions'])) {
+				$params['joinConditions'] = array();
+			}
+			$params['leftJoins'][] = 'phoneNumbers';
+			$params['joinConditions']['phoneNumbers'] = array(
+				'primary' => 1
 			);
 		}
 	}

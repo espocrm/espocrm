@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 36
+        },
+        "type": {
+            "type": "enum"
+        }
+    },
+    "links": {
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

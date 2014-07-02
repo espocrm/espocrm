@@ -6,20 +6,20 @@
          "default":false
       },
       {
-         "name":"default",
-         "type":"varchar"
-      },
-      {
-         "name":"maxLength",
-         "type":"int",
-         "defalut":50
+         "name":"options",
+         "type":"array",         
+         "options": ["Mobile", "Office", "Home", "Fax", "Other"]
       }
    ],
+   "notActualFields":[
+      "data"
+   ],
+   "notCreatable": true,
    "search":{
       "basic":true,
       "advanced":true
    },
    "fieldDefs":{
-      "type":"varchar"
+      "notStorable":true
    }
 }
