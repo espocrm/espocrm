@@ -46,11 +46,11 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 		data: function () {
 			var phoneNumberData;
 			if (this.mode == 'edit') {						
-				phoneNumberData = Espo.Utils.clone(this.model.get(this.dataFieldName));
+				phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 	
 				if (this.model.isNew()) {
 					if (!this.defaultType) {
-						this.defaultType = (this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.options') || [''])[0];
+						this.defaultType = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
 					}			
 					if (!phoneNumberData || !phoneNumberData.length) {
 		 				phoneNumberData = [{
@@ -150,7 +150,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 			this.dataFieldName = this.name + 'Data';
 			
 			if (this.mode == 'detail' || this.mode == 'edit') {
-				this.listenTo(this.model, 'change:' + this.dataFieldName, function () {
+				this.listenTo(this.model, 'change:' + this.dataFieldName, function () {				
 					this.render();
 				}, this);
 			}

@@ -1,1 +1,1 @@
-<a href="javascript:" data-email-address="{{value}}" data-action="mailTo">{{value}}</a>
+<a href="tel:{{value}}" data-phone-number="{{value}}" data-action="dial">{{value}}</a>

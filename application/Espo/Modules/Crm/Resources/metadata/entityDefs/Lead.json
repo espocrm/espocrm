@@ -69,7 +69,8 @@
         },
         "phoneNumber": {
             "type": "phone",
-            "options": ["Mobile", "Office", "Home", "Fax", "Other"]
+            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+            "defaultType": "Mobile"
         },
         "doNotCall": {
             "type": "bool"

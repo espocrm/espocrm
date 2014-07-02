@@ -6,9 +6,14 @@
          "default":false
       },
       {
-         "name":"options",
+         "name":"typeList",
          "type":"array",         
-         "options": ["Mobile", "Office", "Home", "Fax", "Other"]
+         "options": ["Mobile", "Office", "Home", "Fax", "Other"]         
+      },
+      {
+         "name":"defaultType",
+         "type":"varchar",
+         "default": "Mobile"
       }
    ],
    "notActualFields":[

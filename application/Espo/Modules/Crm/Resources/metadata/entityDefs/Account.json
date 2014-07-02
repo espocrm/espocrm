@@ -12,7 +12,8 @@
         },
         "phoneNumber": {
             "type": "phone",
-            "options": ["Office", "Fax", "Other"]
+            "typeList": ["Office", "Fax", "Other"],
+            "defaultType": "Office"
         },
         "type": {
             "type": "enum",
