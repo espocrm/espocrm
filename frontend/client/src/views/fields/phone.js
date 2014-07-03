@@ -130,10 +130,11 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 				
 				this.model.set(this.dataFieldName, data, {silent: true});
 				this.render();				
-
-				this.managePrimaryButton();
-			},
-			
+			},			
+		},
+		
+		afterRender: function () {
+			this.managePrimaryButton();
 		},
 		
 		removePhoneNumberBlock: function ($block) {					

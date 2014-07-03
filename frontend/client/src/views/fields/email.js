@@ -161,9 +161,8 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				data.push(o);				
 				
 				this.model.set(this.dataFieldName, data, {silent: true});
-				this.render();
+				this.render();				
 				
-				this.managePrimaryButton();
 			},
 			
 		},
@@ -179,6 +178,10 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				this.$el.find('button[data-property-type="primary"]').first().addClass('active').children().removeClass('text-muted');
 			}
 			
+			this.managePrimaryButton();
+		},
+		
+		afterRender: function () {
 			this.managePrimaryButton();
 		},
 		
@@ -236,6 +239,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			
 			return data;
 		},
+
 		
 		fetch: function () {
 			var data = {};	
