@@ -126,10 +126,12 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 					type: false
 				};
 				
-				data.push(o);				
+				data.push(o);			
 				
 				this.model.set(this.dataFieldName, data, {silent: true});
-				this.render();
+				this.render();				
+
+				this.managePrimaryButton();
 			},
 			
 		},
@@ -143,6 +145,17 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 			
 			if (changePrimary) {
 				this.$el.find('button[data-property-type="primary"]').first().addClass('active').children().removeClass('text-muted');
+			}
+			
+			this.managePrimaryButton();
+		},
+		
+		managePrimaryButton: function () {
+			var $primary = this.$el.find('button[data-property-type="primary"]');
+			if ($primary.size() > 1) {
+				$primary.removeClass('hidden');
+			} else {
+				$primary.addClass('hidden');
 			}
 		},
 		
