@@ -20,7 +20,8 @@
         },
         "title": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 50,
+            "notStorable": true
         },
         "description": {
             "type": "text"
@@ -58,6 +59,13 @@
         },
         "account": {
             "type": "link"
+        },
+        "accounts": {
+            "type": "linkMultiple",
+            "view": "Crm:Contact.Fields.Accounts",
+            "columns": {
+            	"role": "contactRole"
+            }
         },
         "accountType": {
             "type": "foreign",
@@ -114,8 +122,18 @@
         },
         "account": {
             "type": "belongsTo",
-            "jointTable": true,
             "entity": "Account"
+        },
+        "accounts": {
+            "type": "hasMany",
+            "entity": "Account",
+            "foreign": "contacts",
+			"additionalColumns": {
+				"role": {
+					"type": "varchar",
+		    		"len": 50
+				}
+			}
         },
         "opportunities": {
             "type": "hasMany",

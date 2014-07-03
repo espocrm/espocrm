@@ -70,7 +70,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 			
 			this.listenTo(this.model, 'change:' + this.idsName, function () {
 				this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
-				this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});						
+				this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
 			}.bind(this));
 			
 
@@ -97,8 +97,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 			}
 		},
 		
-		afterRender: function () {
-	
+		afterRender: function () {	
 			if (this.mode == 'edit' || this.mode == 'search') {			
 				this.$element = this.$el.find('input.main-element');				
 				

@@ -27,6 +27,11 @@
             "type": "varchar",
             "maxLength": 40
         },
+        "contactRole": {
+        	"type": "varchar",
+        	"notStorable": true,
+        	"disabled": true
+        },
         "billingAddress": {
             "type": "address"
         },
@@ -115,7 +120,7 @@
         "contacts": {
             "type": "hasMany",
             "entity": "Contact",
-            "foreign": "account"
+            "foreign": "accounts"
         },
         "opportunities": {
             "type": "hasMany",

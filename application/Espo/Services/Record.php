@@ -184,7 +184,7 @@ class Record extends \Espo\Core\Services\Base
 				$columns = null;
 				if (!empty($defs['columns'])) {
 					$columns = $defs['columns'];
-				}							
+				}						
 				$entity->loadLinkMultipleField($field, $columns);	
 			}
 		}

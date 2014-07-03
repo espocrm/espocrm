@@ -4,12 +4,13 @@
 		"emailAddress": "Email",
 		"title": "Title",
 		"account": "Account",
+		"accounts": "Accounts",
 		"phoneNumber": "Phone",
 		"accountType": "Account Type",
 		"doNotCall": "Do Not Call",
 		"address": "Address",
 		"opportunityRole": "Opportunity Role",
-		"description": "Description"	
+		"description": "Description"
 	},
 	"links": {
 		"opportunities": "Opportunities",

@@ -9,7 +9,8 @@
 		"description": "Description",
 		"sicCode": "Sic Code",
 		"industry": "Industry",
-		"type": "Type"		
+		"type": "Type",
+		"contactRole": "Contact Role"
 	},
 	"links": {
 		"contacts": "Contacts",
