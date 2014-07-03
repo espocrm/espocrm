@@ -233,8 +233,8 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 			if (this.mode == 'edit' || this.mode == 'detail') {
 				this.attributeList = this.getAttributeList();
 				
-				this.listenTo(this.model, 'change', function (model, options) {				
-					if (this.isRendered) {				
+				this.listenTo(this.model, 'change', function (model, options) {	
+					if (this.isRendered() || this.isBeingRendered()) {				
 						if (options.ui) {
 							return;
 						}														
@@ -244,10 +244,15 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 							if (model.hasChanged(attribute)) {							
 								changed = true;
 							}
-						});					
+						});	
+	
 						if (changed) {
 							if (this.isRendered()) {
 								this.render();
+							} else if (this.isBeingRendered()) {
+								setTimeout(function () {
+									this.render();
+								}.bind(this), 5);
 							}
 						}
 					}
