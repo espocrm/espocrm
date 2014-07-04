@@ -217,16 +217,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		fetchSearch: function () {
-			var values = [];
-			var value = this.$el.find('[name="' + this.idsName + '"]').val();
-			
-			if (!value) {
-				return false;
-			}
-			
-			if (value != '') {
-				values = value.split(',');
-			}
+			var	values = this.ids || [];
 			
 			var data = {
 				type: 'linkedWith',

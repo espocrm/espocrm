@@ -53,6 +53,8 @@ class Record extends \Espo\Core\Services\Base
 	
 	protected $internalFields = array();
 	
+	protected $linkSelectParams = array();
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -390,6 +392,11 @@ class Record extends \Espo\Core\Services\Base
 		}
     	    	
 		$selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+		
+		if (array_key_exists($link, $this->linkSelectParams)) {
+			$selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
+		}
+		
 		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);		
 		
 		$recordService = $this->getRecordService($foreignEntityName);

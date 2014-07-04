@@ -30,7 +30,9 @@ Espo.define('Crm:Views.Account.Detail', 'Views.Detail', function (Dep) {
 				'billingAddressStreet': 'addressStreet',
 				'billingAddressPostalCode': 'addressPostalCode',
 				'billingAddressState': 'addressState',
-				'billingAddressCountry': 'addressCountry'
+				'billingAddressCountry': 'addressCountry',
+				'id': 'accountId',
+				'name': 'accountName'
 			},
 		},
 		

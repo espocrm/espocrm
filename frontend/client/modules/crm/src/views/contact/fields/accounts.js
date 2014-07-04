@@ -97,7 +97,11 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 			this.managePrimaryButton();
 		},
 		
-		addLinkHtml: function (id, name) {			
+		addLinkHtml: function (id, name) {
+			if (this.mode == 'search') {
+				return Dep.prototype.addLinkHtml.call(this, id, name);
+			}
+				
 			$el = Dep.prototype.addLinkHtml.call(this, id, name);
 			
 			var isPrimary = (id == this.primaryId); 

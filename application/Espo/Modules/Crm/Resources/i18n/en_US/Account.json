@@ -10,7 +10,7 @@
 		"sicCode": "Sic Code",
 		"industry": "Industry",
 		"type": "Type",
-		"contactRole": "Contact Role"
+		"contactRole": "Role"
 	},
 	"links": {
 		"contacts": "Contacts",

@@ -99,6 +99,9 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		},
 		
 		addLinkHtml: function (id, name) {
+			if (this.mode == 'search') {
+				return Dep.prototype.addLinkHtml.call(this, id, name);
+			}
 			var $conteiner = this.$el.find('.link-container');
 			var $el = $('<div class="form-inline list-group-item link-with-role">').addClass('link-' + id);
 			

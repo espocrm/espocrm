@@ -67,6 +67,11 @@
             	"role": "contactRole"
             }
         },
+        "accountRole": {
+        	"type": "varchar",
+        	"notStorable": true,
+        	"disabled": true
+        },
         "accountType": {
             "type": "foreign",
             "link": "account",

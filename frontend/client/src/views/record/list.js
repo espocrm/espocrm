@@ -384,7 +384,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			for (var i in this.listLayout) {
 				var item = {
 					name: this.listLayout[i].name,
-					sortable: ('sortable' in this.listLayout[i]) ? this.listLayout[i].sortable : true,
+					sortable: !(this.listLayout[i].notSortable || false),
 					width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false
 				};
 				if (item.sortable) {
