@@ -302,6 +302,10 @@ abstract class Mapper implements IMapper
 			}
 		}
 		
+		if (!empty($customJoin)) {
+			$joinsPart .= ' ' . $customJoin . ' ';
+		}
+		
 		if (!empty($leftJoins) && is_array($leftJoins)) {
 			$joinsRelated = $this->getJoins($relEntity, $leftJoins, true, $joinConditions);
 			if (!empty($joinsRelated)) {

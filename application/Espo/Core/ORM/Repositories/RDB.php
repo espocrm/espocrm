@@ -59,17 +59,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		return $this->getInjection('metadata');
 	}
 
-	protected function handleSelectParams(&$params, $entityName = false)
+	public function handleSelectParams(&$params)
 	{
-		$this->handleEmailAddressParams($params, $entityName);
-		$this->handlePhoneNumberParams($params, $entityName);
+		$this->handleEmailAddressParams($params);
+		$this->handlePhoneNumberParams($params);
 	}
 
-	protected function handleEmailAddressParams(&$params, $entityName = false)
+	protected function handleEmailAddressParams(&$params)
 	{
-		if (empty($entityName)) {
-			$entityName = $this->entityName;
-		}
+		$entityName = $this->entityName;		
 
 		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
 		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
@@ -89,11 +87,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		}
 	}
 	
-	protected function handlePhoneNumberParams(&$params, $entityName = false)
+	protected function handlePhoneNumberParams(&$params)
 	{
-		if (empty($entityName)) {
-			$entityName = $this->entityName;
-		}
+		$entityName = $this->entityName;		
 
 		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
 		if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {

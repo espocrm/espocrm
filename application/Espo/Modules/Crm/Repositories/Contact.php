@@ -26,9 +26,9 @@ use Espo\ORM\Entity;
 
 class Contact extends \Espo\Core\ORM\Repositories\RDB
 {	
-	protected function handleSelectParams(&$params, $entityName = false)
+	public function handleSelectParams(&$params)
 	{
-		parent::handleSelectParams($params, $entityName);
+		parent::handleSelectParams($params);		
 		
 		if (empty($params['customJoin'])) {
 			$params['customJoin'] = '';	

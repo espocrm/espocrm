@@ -66,7 +66,7 @@ class RDB extends \Espo\ORM\Repository
 		return $this->mapper;
 	}		
 	
-	protected function handleSelectParams(&$params)
+	public function handleSelectParams(&$params)
 	{
 	}
 	
@@ -182,8 +182,8 @@ class RDB extends \Espo\ORM\Repository
 	
 	public function findRelated(Entity $entity, $relationName, array $params = array())
 	{
-		$entityName = $entity->relations[$relationName]['entity'];
-		$this->handleSelectParams($params, $entityName);		
+		$entityName = $entity->relations[$relationName]['entity'];		
+		$this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);		
 		
 		$result = $this->getMapper()->selectRelated($entity, $relationName, $params);		
 
@@ -199,7 +199,7 @@ class RDB extends \Espo\ORM\Repository
 	public function countRelated(Entity $entity, $relationName, array $params = array())
 	{		
 		$entityName = $entity->relations[$relationName]['entity'];
-		$this->handleSelectParams($params, $entityName);
+		$this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
 		
 		return $this->getMapper()->countRelated($entity, $relationName, $params);
 	}
