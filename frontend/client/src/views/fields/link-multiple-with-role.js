@@ -28,14 +28,14 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		roleType: 'enum',
 		
 		setup: function () {
-			Dep.prototype.setup.call(this);			
+			Dep.prototype.setup.call(this);
 			
 			this.columnsName = this.name + 'Columns';			
 			this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
 			
 			this.listenTo(this.model, 'change:' + this.columnsName, function () {
 				this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {}); 					
-			}.bind(this));
+			}, this);
 			
 			this.roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.role');
 			
@@ -50,24 +50,30 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			return list;
 		},
 		
-		getValueForDisplay: function () {
-			var nameHash = this.nameHash;
-			var string = '';
-			var names = [];	
+		getDetailLinkHtml: function (id, name) {			
+			name = name || this.nameHash[id];
 			
-			for (var id in nameHash) {
-				var role = (this.columns[id] || {}).role || '';
-				var roleHtml = '';
-				if (role != '') {
-					roleHtml = '<span class="text-muted small"> &#187; ' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + '</span>';
-				}
-				names.push('<a href="#' + this.foreignScope + '/view/' + id + '">' + nameHash[id] + '</a> ' + roleHtml);
+			var role = (this.columns[id] || {}).role || '';
+			var roleHtml = '';
+			if (role != '') {
+				roleHtml = '<span class="text-muted small"> &#187; ' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + '</span>';
 			}
-			return '<div>' + names.join('</div><div>') + '</div>';
+			var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
+			return lineHtml;
+		},
+		
+		getValueForDisplay: function () {			
+			var names = [];		
+			this.ids.forEach(function (id) {
+				var lineHtml = this.getDetailLinkHtml(id);
+
+				names.push(lineHtml);
+			}, this);
+			return names.join('');
 		},
 		
 		deleteLink: function (id) {	
-			this.$el.find('.link-' + id).remove();
+			this.deleteLinkHtml(id);
 					
 			var index = this.ids.indexOf(id);
 			if (index > -1) {
@@ -92,11 +98,11 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			Dep.prototype.afterRender.call(this);
 		},
 		
-		addLinkHtml: function (id, name) {		
+		addLinkHtml: function (id, name) {
 			var $conteiner = this.$el.find('.link-container');
-			var $el = $('<div class="form-inline">').addClass('link-' + id).addClass('list-group-item');
+			var $el = $('<div class="form-inline list-group-item link-with-role">').addClass('link-' + id);
 			
-			var nameHtml = '<span>' + name + '&nbsp;' + '</div>';
+			var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
 	
 			var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>';
 		
@@ -116,7 +122,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 				$role = $('<input class="role form-control input-sm" maxlength="50" placeholder="'+label+'" data-id="'+id+'" value="' + (roleValue || '') + '">');
 			}			
 			
-			$contentContainer = $('<div class="">').css({
+			$contentContainer = $('<div class="pull-left">').css({
 				'width': '50%',
 				'display': 'inline-block'
 			});
@@ -125,7 +131,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			
 			$el.append($contentContainer);			
 			
-			$right = $('<div class="">').css({
+			$right = $('<div>').css({
 				'width': '50%',
 				'display': 'inline-block',
 				'vertical-align': 'top'
@@ -150,7 +156,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 					this.trigger('change');
 				}.bind(this));
 			}
-			
+			return $el;			
 		},
 		
 		fetch: function () {

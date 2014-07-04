@@ -140,22 +140,27 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 					$element.autocomplete('dispose');
 				}, this);
 				
-				
-				this.ids.forEach(function (id) {
-					this.addLinkHtml(id, this.nameHash[id]);
-				}, this);
+								
+				this.renderLinks();
+
 			}
 		},
+		
+		renderLinks: function () {				
+			this.ids.forEach(function (id) {
+				this.addLinkHtml(id, this.nameHash[id]);
+			}, this);
+		},
 
-		deleteLink: function (id) {	
-			this.$el.find('.link-' + id).remove();
+		deleteLink: function (id) {			
+			this.deleteLinkHtml(id);
 					
 			var index = this.ids.indexOf(id);
 			if (index > -1) {
 				this.ids.splice(index, 1);
 			}
 			delete this.nameHash[id];
-			this.trigger('change');
+			this.trigger('change');		
 		},
 
 		addLink: function (id, name) {
@@ -167,21 +172,29 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 			this.trigger('change');
 		},
 		
+		deleteLinkHtml: function (id) {
+			this.$el.find('.link-' + id).remove();
+		},		
+		
 		addLinkHtml: function (id, name) {
 			var conteiner = this.$el.find('.link-container');
-			var el = $('<div />').addClass('link-' + id).addClass('list-group-item');
-			el.html(name + '&nbsp');
-			el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
-			conteiner.append(el);
+			var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+			$el.html(name + '&nbsp');
+			$el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
+			conteiner.append($el);
+			
+			return $el;
+		},
+		
+		getDetailLinkHtml: function (id) {
+			return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.nameHash[id] + '</a>';
 		},
 
 		getValueForDisplay: function () {
-			var nameHash = this.nameHash;
-			var string = '';
 			var names = [];
-			for (var id in nameHash) {
-				names.push('<a href="#' + this.foreignScope + '/view/' + id + '">' + nameHash[id] + '</a>');
-			}
+			this.ids.forEach(function (id) {
+				names.push(this.getDetailLinkHtml(id));
+			}, this);
 			return names.join(', ');
 		},
 
