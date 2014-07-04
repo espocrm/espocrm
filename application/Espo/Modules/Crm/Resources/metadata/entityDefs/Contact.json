@@ -21,7 +21,9 @@
         "title": {
             "type": "varchar",
             "maxLength": 50,
-            "notStorable": true
+            "notStorable": true,
+            "select": "accountContact.role",
+            "orderBy": "accountContact.role {direction}"
         },
         "description": {
             "type": "text"

@@ -69,6 +69,9 @@ class Converter
 				'default' => '{0}',
 		   ),
 		),
+		'select' => 'select',
+		'orderBy' => 'orderBy',
+		'where' => 'where',
 	);
 
 	protected $idParams = array(
