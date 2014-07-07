@@ -128,12 +128,9 @@ class Application
     	$cronManager = new \Espo\Core\CronManager($this->container);
 		$cronManager->run();
     }
-    
+
     public function runRebuild()
     {
-    	$auth = $this->getAuth();
-    	$auth->useNoAuth(true);
-
     	$dataManager = $this->getContainer()->get('dataManager');
 		$dataManager->rebuild();
     }
