@@ -192,6 +192,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				$primary.removeClass('hidden');
 				$remove.removeClass('hidden');
 			} else {
+				$primary.addClass('hidden');
 				$remove.addClass('hidden');				
 			}
 		},
