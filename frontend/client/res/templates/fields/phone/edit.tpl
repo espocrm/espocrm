@@ -10,7 +10,7 @@
 			<button class="btn btn-default phone-property{{#if primary}} active{{/if}} hidden" type="button" tabindex="-1" data-action="switchPhoneProperty" data-property-type="primary" data-toggle="tooltip" data-placement="top" title="{{translate 'Primary' scope='PhoneNumber'}}">
 				<span class="glyphicon glyphicon-star{{#unless primary}} text-muted{{/unless}}"></span>
 			</button>
-			<button class="btn btn-link" style="margin-left: 5px;" type="button" tabindex="-1" data-action="removePhoneNumber" data-property-type="invalid" data-toggle="tooltip" data-placement="top" title="{{translate 'Remove'}}">
+			<button class="btn btn-link hidden" style="margin-left: 5px;" type="button" tabindex="-1" data-action="removePhoneNumber" data-property-type="invalid" data-toggle="tooltip" data-placement="top" title="{{translate 'Remove'}}">
 				<span class="glyphicon glyphicon-remove"></span>
 			</button>
 		</span>

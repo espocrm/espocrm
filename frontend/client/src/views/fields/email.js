@@ -178,19 +178,21 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				this.$el.find('button[data-property-type="primary"]').first().addClass('active').children().removeClass('text-muted');
 			}
 			
-			this.managePrimaryButton();
+			this.manageButtonsVisibility();
 		},
 		
 		afterRender: function () {
-			this.managePrimaryButton();
+			this.manageButtonsVisibility();
 		},
 		
-		managePrimaryButton: function () {
+		manageButtonsVisibility: function () {
 			var $primary = this.$el.find('button[data-property-type="primary"]');
+			var $remove = this.$el.find('button[data-action="removeEmailAddress"]');
 			if ($primary.size() > 1) {
 				$primary.removeClass('hidden');
+				$remove.removeClass('hidden');
 			} else {
-				$primary.addClass('hidden');
+				$remove.addClass('hidden');				
 			}
 		},
 		
