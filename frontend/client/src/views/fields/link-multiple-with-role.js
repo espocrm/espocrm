@@ -114,7 +114,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			var roleValue = (this.columns[id] || {}).role;
 			
 			if (this.roleType == 'enum') {			
-				$role = $('<select class="role form-control input-sm" data-id="'+id+'">');
+				$role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
 				this.roleList.forEach(function (role) {
 					var selectedHtml = (role == roleValue) ? 'selected': '';
 					option = '<option value="'+role+'" '+selectedHtml+'>' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + '</option>';
@@ -122,25 +122,28 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 				}, this);
 			} else {
 				var label = this.translate(this.roleField, 'fields', this.foreignScope);
-				$role = $('<input class="role form-control input-sm" maxlength="50" placeholder="'+label+'" data-id="'+id+'" value="' + (roleValue || '') + '">');
+				$role = $('<input class="role form-control input-sm pull-right" maxlength="50" placeholder="'+label+'" data-id="'+id+'" value="' + (roleValue || '') + '">');
 			}			
 			
-			$contentContainer = $('<div class="pull-left">').css({
-				'width': '50%',
+			$left = $('<div class="pull-left">').css({
+				'width': '92%',
 				'display': 'inline-block'
 			});
 			
-			$contentContainer.append(nameHtml);	
+			$left.append($role);
 			
-			$el.append($contentContainer);			
+			$left.append(nameHtml);	
+			
+			$el.append($left);			
 			
 			$right = $('<div>').css({
-				'width': '50%',
+				'width': '8%',
 				'display': 'inline-block',
 				'vertical-align': 'top'
 			});
 			
-			$right.append($role);
+			
+			
 			$right.append(removeHtml);			
 						
 			$el.append($right)

@@ -110,7 +110,7 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 			var title = this.translate('Primary');
 			
 			var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
-			$el.children().first().prepend($primary);
+			$primary.insertAfter($el.children().first().children().first());
 			this.managePrimaryButton();		
 		},
 		
