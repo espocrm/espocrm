@@ -3,8 +3,7 @@
 		"label": "",
 		"rows": [
 			[{"name":"name"}],
-			[{"name":"account"}],
-			[{"name":"title"}],
+			[{"name":"accounts"}],
 			[{"name":"emailAddress"}],
 			[{"name":"phoneNumber"}]
 		]
