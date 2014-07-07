@@ -121,7 +121,7 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entities": [],
+            "entityList": [],
             "foreign": "emails"
         },
         "fromEmailAddress": {

@@ -129,24 +129,37 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 			}						
 
 			this.notify('Loading...');
-			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'Modals.Edit', {
-					scope: scope,
-					relate: relate,
-					attributes: {
-						dateSent: this.getDateTime().getNow(15),
-						status: 'Archived',
-						from: this.model.get('emailAddress'),
-						to: this.getUser().get('emailAddress')
-					},
-				}, function (view) {
-					view.render();
-					view.notify(false);
-					view.once('after:save', function () {
-						self.collection.fetch();
-					});
+			
+			var attributes = {
+				dateSent: this.getDateTime().getNow(15),
+				status: 'Archived',
+				from: this.model.get('emailAddress'),
+				to: this.getUser().get('emailAddress')
+			};
+				
+			if (this.model.name == 'Contact') {
+				if (this.model.get('accountId')) {
+					attributes.parentType = 'Account',
+					attributes.parentId = this.model.get('accountId');
+					attributes.parentName = this.model.get('accountName');
+				}
+			} else if (this.model.name == 'Lead') {
+				attributes.parentType = 'Lead',
+				attributes.parentId = this.model.id
+				attributes.parentName = this.model.get('name');
+			}
+
+			this.createView('quickCreate', 'Modals.Edit', {
+				scope: scope,
+				relate: relate,
+				attributes: attributes
+			}, function (view) {
+				view.render();
+				view.notify(false);
+				view.once('after:save', function () {
+					self.collection.fetch();
 				});
-			}.bind(this));
+			});
 		},
 	});
 });

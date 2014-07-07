@@ -37,6 +37,10 @@
         "parent": {
             "type": "linkParent"
         },
+        "account": {
+            "type": "link",
+            "disabled": true
+        },
         "users": {
             "type": "linkMultiple",
             "disabled": true
@@ -74,6 +78,10 @@
         }
     },
     "links": {
+        "account": {
+            "type": "belongsTo",
+            "entity": "Account"
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
@@ -129,7 +137,7 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entities": ["Account", "Opportunity", "Case"],
+            "entityList": ["Account", "Lead", "Opportunity", "Case"],
             "foreign": "meetings"
         }
     },

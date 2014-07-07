@@ -153,13 +153,14 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
 
 			if (!notValid) {
 				this.$el.find('[data-action="convert"]').addClass('disabled');
+				this.notify('Please wait...');
 				$.ajax({
 					url: 'Lead/action/convert',
 					data: JSON.stringify(data),
 					type: 'POST',
 					success: function () {
 						self.getRouter().navigate('#Lead/view/' + self.model.id, {trigger: true});
-						self.notify('Converted');
+						self.notify('Converted', 'success');
 					},
 					error: function () {
 						self.$el.find('[data-action="convert"]').removeClass('disabled');
