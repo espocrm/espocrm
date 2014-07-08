@@ -79,8 +79,6 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		sideView: 'Record.DetailSide',
 
 		bottomView: 'Record.DetailBottom',
-
-		_form: null,
 		
 		editModeEnabled: true,
 		
@@ -248,13 +246,6 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 					},
 				});
 			}
-		},
-
-		getForm: function () {
-			if (this._form === null) {
-				this._form = $("#form-" + this.id).get()[0];
-			}
-			return this._form;
 		},
 
 		hideField: function (name) {

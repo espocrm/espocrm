@@ -7,22 +7,22 @@
 		</div>
 	{{/if}}	
 
-	<form id="form-{{id}}">
-		<div class="row">
-			{{#if isWide}}
-			<div class="col-md-12">
-			{{else}}			
-			<div class="{{#unless isSmall}} col-md-8{{else}} col-md-7{{/unless}}">
-			{{/if}}
-				<div class="record">{{{record}}}</div>
-				<div class="extra">{{{extra}}}</div>
-				<div class="bottom">{{{bottom}}}</div>
-			</div>
-			<div class="side{{#unless isSmall}} col-md-4{{else}} col-md-5{{/unless}}">
-			{{{side}}}
-			</div>				
+
+	<div class="row">
+		{{#if isWide}}
+		<div class="col-md-12">
+		{{else}}			
+		<div class="{{#unless isSmall}} col-md-8{{else}} col-md-7{{/unless}}">
+		{{/if}}
+			<div class="record">{{{record}}}</div>
+			<div class="extra">{{{extra}}}</div>
+			<div class="bottom">{{{bottom}}}</div>
 		</div>
-	</form>
+		<div class="side{{#unless isSmall}} col-md-4{{else}} col-md-5{{/unless}}">
+		{{{side}}}
+		</div>				
+	</div>
+
 	
 	{{#if buttonsBottom}}
 		<div class="button-container record-buttons">
