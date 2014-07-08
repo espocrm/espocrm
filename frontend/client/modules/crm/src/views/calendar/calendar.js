@@ -42,9 +42,9 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 		slotMinutes: 30,
 
 		titleFormat: {
-			month: 'MMMM yyyy',
-			week: 'MMM dd[ yyyy]{ -[ MMM] dd yyyy}',
-			day: 'dddd, MMM dd, yyyy'
+			month: 'MMMM YYYY',
+			week: 'MMMM D, YYYY',
+			day: 'dddd, MMMM D, YYYY'
 		},
 
 		data: function () {
@@ -95,12 +95,13 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 			this.slotMinutes = this.options.slotMinutes || this.slotMinutes;				
 		},
 
-		updateDate: function () {
+		updateDate: function () {			
 			if (!this.header) {
 				return;
 			}				
 			var view = this.$calendar.fullCalendar('getView');
 			var today = new Date();
+			
 			if (view.start <= today && today < view.end) {
 				this.$el.find('button[data-action="today"]').addClass('active');
 			} else {
@@ -115,12 +116,14 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 			};
 
 			var viewName = map[view.name] || view.name
-			var title = $.fullCalendar.formatDates(view.start, view.end, this.titleFormat[viewName], {
-				monthNames: this.translate('monthNames', 'lists'),
-				monthNamesShort: this.translate('monthNamesShort', 'lists'),
-				dayNames: this.translate('dayNames', 'lists'),
-				dayNamesShort: this.translate('dayNamesShort', 'lists'),
-			});
+			
+			var title;
+		
+			if (viewName == 'week') {
+				title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
+			} else {
+				title = view.intervalStart.format(this.titleFormat[viewName]);
+			}
 			this.$el.find('.date-title h4').text(title);
 		},
 
@@ -137,10 +140,10 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				event[attr] = o[attr];
 			});
 			if (o.dateStart) {
-				event.start = this.getDateTime().toIso(o.dateStart);
+				event.start = this.getDateTime().toMoment(o.dateStart);
 			}
 			if (o.dateEnd) {
-				event.end = this.getDateTime().toIso(o.dateEnd);
+				event.end = this.getDateTime().toMoment(o.dateEnd);
 			}
 			if (!event.start || !event.end) {
 				event.allDay = true;
@@ -155,7 +158,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				} else {
 					event.allDay = false;
 					if (end - start < 1800000) {
-						var m = this.getDateTime().toMoment(event.start).add('minutes', 30);
+						var m = event.start.add('minutes', 30);
 						event.end = m.format();
 					}											
 				}
@@ -174,10 +177,10 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 			return events;
 		},
 		
-		convertTime: function (iso) {
+		convertTime: function (d) {
 			var format = this.getDateTime().internalDateTimeFormat;
 			var timeZone = this.getDateTime().timeZone;
-			var string = moment(iso).format(format);
+			var string = d.format(format);
 			
 			var m;
 			if (timeZone) {	
@@ -207,8 +210,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				firstDay: this.getPreferences().get('weekStart'),
 				select: function (start, end, allDay) {					
 					var dateStart = this.convertTime(start);
-					var dateEnd = this.convertTime(end);
-										
+					var dateEnd = this.convertTime(end);										
 					
 					this.notify('Loading...');
 					this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
@@ -239,16 +241,17 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 					var m = moment(this.$calendar.fullCalendar('getDate'));
 					this.trigger('view', m.format('YYYY-MM-DD'), mode);
 				}.bind(this),
-				events: function (from, to, callback) {					
+				events: function (from, to, timezone, callback) {					
 					var fromServer = this.getDateTime().fromIso(from);
 					var toServer = this.getDateTime().fromIso(to);
 					
 					this.fetchEvents(fromServer, toServer, callback);
 				}.bind(this),
-				eventDrop: function (event, dayDelta, minuteDelta, allDay) {
-				
+				eventDrop: function (event, delta, callback) {	
+		
 					var dateStart = this.convertTime(event.start) || null;
-					var dateEnd = this.convertTime(event.end) || null;
+					var dateEnd = this.convertTime(event.end) || null;					
+					
 					var attributes = {};
 					if (!event.dateStart && event.dateEnd) {
 						attributes.dateEnd = dateStart;
@@ -262,22 +265,19 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 							attributes.dateEnd = dateEnd;
 							event.dateEnd = dateEnd;
 						}
-					}						
-				
-					if (!allDay) {
-						if (!(event.dateStart && event.dateEnd)) {
+					}				
+
+					if (!(event.dateStart && event.dateEnd)) {
+						event.allDay = true;
+					} else {
+						var start = new Date(event.start);
+						var end = new Date(event.end);
+						if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
 							event.allDay = true;
-						} else {
-							var start = new Date(event.start);
-							var end = new Date(event.end);
-							if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
-								event.allDay = true;
-							}
 						}
-						if (event.allDay) {
-							this.$calendar.fullCalendar('renderEvent', event);
-						}
-					}												
+					}
+
+					this.$calendar.fullCalendar('renderEvent', event);								
 					
 					this.notify('Saving...');
 					this.getModelFactory().create(event.scope, function (model) {
@@ -286,7 +286,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 						}.bind(this));
 						model.id = event.recordId;
 						model.save(attributes, {patch: true});
-					}.bind(this));											
+					}, this);											
 				}.bind(this),
 				eventResize: function (event) {
 					var attributes = {
@@ -304,21 +304,18 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				allDayText: '',
 				firstHour: 8,
 				columnFormat: {
-					week: 'ddd dd',
-					day: 'ddd dd',
+					week: 'ddd DD',
+					day: 'ddd DD',
 				},
-				monthNames: this.translate('monthNames', 'lists'),
+				/*monthNames: this.translate('monthNames', 'lists'),
 				monthNamesShort: this.translate('monthNamesShort', 'lists'),
 				dayNames: this.translate('dayNames', 'lists'),
-				dayNamesShort: this.translate('dayNamesShort', 'lists'),
+				dayNamesShort: this.translate('dayNamesShort', 'lists'),*/
 				weekNumberTitle: '',
 			};
 
-			if (this.date) {
-				var dateArr = this.date.split('-');
-				options.year = dateArr[0];
-				options.month = dateArr[1] - 1;
-				options.date = dateArr[2];
+			if (this.date) {				
+				options.defaultDate = moment.utc(this.date); 
 			}
 
 			setTimeout(function () {
@@ -356,10 +353,6 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				}
 				this.$calendar.fullCalendar('updateEvent', event);
 			}.bind(this));
-		},
-		
-		removeModel: function (model) {
-			this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
 		},
 
 	});

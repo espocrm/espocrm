@@ -49,14 +49,6 @@ _.extend(Espo.DateTime.prototype, {
 		return this.dateFormat + ' ' + this.timeFormat;
 	},
 
-	/*fromTimestamp: function (ts) {
-		var m = moment.unix(ts);
-		if (this.timeZone) {
-			m = moment.tz(m, this.timeZone).utc();
-		}
-		return m.format(this.internalDateTimeFormat);
-	},*/
-
 	fromDisplayDate: function (string) {
 		if (!string) {
 			return null;
@@ -170,6 +162,17 @@ _.extend(Espo.DateTime.prototype, {
 				this.timeZone = null;
 			}	
 		}, this);
+	},
+	
+	setLanguage: function (language) {
+		moment.lang('en', {
+			months: language.translate('monthNames', 'lists'),
+			monthsShort: language.translate('monthNamesShort', 'lists'),
+			weekdays: language.translate('dayNames', 'lists'), 
+			weekdaysShort: language.translate('dayNamesShort', 'lists'),
+			weekdaysMin: language.translate('dayNamesMin', 'lists'),
+		});
+		moment.lang('en');
 	},
 });
 

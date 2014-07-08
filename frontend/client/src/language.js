@@ -112,6 +112,7 @@ _.extend(Espo.Language.prototype, {
 			}
 		});
 	},
+	
 }, Backbone.Events);
 
 
