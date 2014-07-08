@@ -521,6 +521,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			for (var p in simplifiedLayout) {
 				var panel = {};
 				panel.label = simplifiedLayout[p].label || null;
+				panel.name = simplifiedLayout[p].name || null;
 				panel.rows = [];
 				for (var i in simplifiedLayout[p].rows) {
 					var row = [];
