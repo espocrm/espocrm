@@ -208,6 +208,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				ignoreTimezone: true,
 				height: this.options.height || null,
 				firstDay: this.getPreferences().get('weekStart'),
+				slotEventOverlap: true,
 				select: function (start, end, allDay) {					
 					var dateStart = this.convertTime(start);
 					var dateEnd = this.convertTime(end);										
@@ -247,8 +248,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 					
 					this.fetchEvents(fromServer, toServer, callback);
 				}.bind(this),
-				eventDrop: function (event, delta, callback) {	
-		
+				eventDrop: function (event, delta, callback) {		
 					var dateStart = this.convertTime(event.start) || null;
 					var dateEnd = this.convertTime(event.end) || null;					
 					
@@ -307,10 +307,6 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 					week: 'ddd DD',
 					day: 'ddd DD',
 				},
-				/*monthNames: this.translate('monthNames', 'lists'),
-				monthNamesShort: this.translate('monthNamesShort', 'lists'),
-				dayNames: this.translate('dayNames', 'lists'),
-				dayNamesShort: this.translate('dayNamesShort', 'lists'),*/
 				weekNumberTitle: '',
 			};
 
