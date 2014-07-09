@@ -1,0 +1,22 @@
+{
+	"fields": {
+		"name": "İsim",
+		"emailAddress": "Eposta",
+		"title": "Başlık",
+		"account": "Hesap",
+		"phone": "Telefon",
+		"phoneOffice": "Phone (Office)",
+		"fax": "Faks",
+		"accountType": "Hesap Türü",
+		"doNotCall": "Arama Yapma",
+		"address": "Adres",
+		"description": "açıklama"	
+	},
+	"links": {
+		"opportunities": "Fırsatlar",
+		"cases": "Dosyalar"
+	},
+	"labels": {
+		"Create Contact": "Bağlantı Oluştur"
+	}
+}

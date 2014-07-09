@@ -1,0 +1,16 @@
+{
+	"fields": {
+		"name": "İsim",
+		"status": "Durum",
+		"isHtml": "Html olarak gönder",
+		"body": "Mesaj",
+		"subject": "Konu",
+		"attachments": "Dosya Ekle",
+		"insertField": ""
+	},
+	"links": {
+	},
+	"labels": {
+		"Create EmailTemplate": "Eposta Şablonu Oluştur"
+	}
+}

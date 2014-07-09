@@ -1,0 +1,79 @@
+{
+	"scopeNames": {
+		"Account": "Hesap",
+		"Contact": "Bağlantı",
+		"Lead": "Müşteri Adayı",
+		"Prospect": "Beklenti",
+		"Opportunity": "Fırsat",
+		"Meeting": "Toplantı",
+		"Calendar": "Takvim",
+		"Call": "Arama",
+		"Task": "Görev",
+		"Case": "Dosya",
+		"InboundEmail": "Gelen Eposta"
+	},
+	"scopeNamesPlural": {
+		"Account": "Hesaplar",
+		"Contact": "Bağlantılar",
+		"Lead": "Müşteri Adayları",
+		"Prospect": "Beklentiler",
+		"Opportunity": "Fırsatlar",
+		"Meeting": "Toplantılar",
+		"Calendar": "Takvim",
+		"Call": "Aramalar",
+		"Task": "Görevler",
+		"Case": "Dosyalar",
+		"InboundEmail": "Gelen Epostalar"
+	},
+	"dashlets": {
+		"Leads": "Müşteri Adaylarım",
+		"Opportunities": "Fırsatlarım",
+		"Tasks": "Görevleri",
+		"Cases": "Dosyalarım",
+		"Calendar": "Takvim",
+		"OpportunitiesByStage": "Aşamaya Göre Fırstalar",
+		"OpportunitiesByLeadSource": "Aday Müşterilere Göre Fırsatlar",
+		"SalesByMonth": "Aylık Satışlar",
+		"SalesPipeline": "Satış Öngörüleri"	
+	},
+	"labels": {
+		"Create InboundEmail": "Gelen Eposta Oluştur",
+		"Activities": "Aktiviteler",
+		"History": "Geçmiş",
+		"Attendees": "Katılımcılar",
+		"Schedule Meeting": "Toplantı Ayarla",
+		"Schedule Call": "Arama Ayarla",
+		"Compose Email": "Eposta Gönder",
+		"Log Meeting": "Günlük Toplantı",
+		"Log Call": "Günlük Arama",
+		"Archive Email": "Epostayı Arşivle",
+		"Create Task": "Görev Oluştur",
+		"Tasks": "Görevler"		
+	},
+	"fields": {
+		"billingAddressCity": "Şehir",
+		"billingAddressCountry": "Ülke",
+		"billingAddressPostalCode": "Posta Kodu",
+		"billingAddressState": "Semt",
+		"billingAddressStreet": "Sokak",
+		"addressCity": "Şehir",
+		"addressStreet": "Sokak",
+		"addressCountry": "Ülke",
+		"addressState": "Semt",
+		"addressPostalCode": "Posta Kodu",		
+		"shippingAddressCity": "City (Shipping)",
+		"shippingAddressStreet": "Street (Shipping)",
+		"shippingAddressCountry": "Country (Shipping)",
+		"shippingAddressState": "State (Shipping)",
+		"shippingAddressPostalCode": "Postal Code (Shipping)"
+	},
+	"links": {
+		"contacts": "Bağlantılar",
+		"opportunities": "Fırsatlar",
+		"leads": "Müşteri Adayları",		
+		"meetings": "Toplantılar",
+		"calls": "Aramalar",
+		"tasks": "Görevler",
+		"emails": "Epostalar"
+	}
+}

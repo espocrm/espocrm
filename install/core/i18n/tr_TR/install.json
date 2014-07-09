@@ -1,0 +1,110 @@
+{
+	"labels": {
+		"Main page title": "EspoCRM e Hoşgeldiniz",
+		"Main page header": "",
+		"Start page title": "Lisans Sözleşmesi",
+		"Step1 page title": "Lisans Sözleşmesi",
+		"License Agreement": "Lisans Sözleşmesi",
+		"I accept the agreement": "Sözleşmeyi kabul ediyorum",
+		"Step2 page title": "Veritabanı Yapılandırması",
+		"Step3 page title": "Administrator Setup",
+		"Step4 page title": "Sistem Ayarları",
+		"Step5 page title": "Giden epostalar için SMTP ayarları",
+		"Errors page title": "Hatalar",
+		"Finish page title": "Yükleme tamamlandı",
+		"Congratulation! Welcome to EspoCRM!": "Tebrikler! EspoCRM başarıyla yüklendi.",
+		"admin": "Yçnetici",
+		"localhost": "localhost",
+		"port": "3306",
+		"Locale": "Yerel",
+		"Outbound Email Configuration": "Giden Eposta Yapılandırması",
+		"SMTP": "SMTP",
+		"Start": "Başla",
+		"Back": "Geri",
+		"Next": "Sonraki",
+		"Go to EspoCRM": "EspoCRM sayfama git",
+		"Re-check": "Tekrar Kontrol Et",
+		"Test settings": "Bağlantıyı Kontrol Et"
+	},
+	"fields": {
+		"Choose your language: ": "Dili seçin:",
+		"Database Name": "Veritabanı adı:",
+		"Host Name": "Sunucu Adı",
+		"Port": "Bağlantı Noktası",
+		"Database User Name": "Veritabanı Kullanıcı Adı",
+		"Database User Password": "Veritabanı Şifresi",
+		"Database driver": "Veritabanı sürücüsü",
+		"User Name": "Kullanıcı Adı",
+		"Password": "Şifre",
+		"Confirm Password": "Şifrenizi Doğrulayın",
+		"From Address": "Gönderen Adresi",
+		"From Name": "Kimden",
+		"Is Shared": "Paylaşıldı",
+		"Date Format": "Tarih Biçimi",
+		"Time Format": "Saat Biçimi",
+		"Time Zone": "Zaman Dilimi",
+		"First Day of Week": "Hafta Başlangıç Günü",
+		"Thousand Separator": "Binlik Ayraç",
+		"Decimal Mark": "Ondalık Ayraç",
+		"Default Currency": "Varsayılan Para Birimi",
+		"Currency List": "para Birimi Listesi",
+		"Language": "Dil",
+		"smtpServer": "Sunucu",
+		"smtpPort": "Bağlantı Noktası",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Güvenlik",
+		"smtpUsername": "Kullanıcı Adı",
+		"emailAddress": "Eposta",
+		"smtpPassword": "Şifre"
+	},
+	"messages": {
+		"Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}<\/b><\/pre>\n\tOperation not permitted? Try this one: {CSU}",
+		"Some errors occurred!": "Bazı hatalar oluştu!",
+		"Supported php version >=": "Desteklenen Php Sürümü >=",
+		"The PHP extension was not found...": "<b>{extName}<\/b> PHP eklentisi bulunamadı...",
+		"All Settings correct": "Tüm ayarlar doğru",
+		"Failed to connect to database": "Veritabanına bağlanma başarısız oldu",
+		"PHP version: ": "PHP sürümü:",
+		"You must agree to the license agreement": "Lisans sözleşmesini kabul etmelisiniz",
+		"Passwords do not match": "Şifreler eşleşmiyor",
+		"Enable mod_rewrite in Apache server": "Mod_rewrite ı Apache sunucusunda etkinleştirin",
+		"checkWritable error": "checkWritable hatası",
+		"applySett error": "applySett hatası",
+		"buildDatabse error": "buildDatabse hatası",
+		"createUser error": "createUser hatası",
+		"checkAjaxPermission error": "checkAjaxPermission hatası",
+		"Ajax failed": "Ajax çalışmıyor",
+		"Cannot create user": "Kullanıcı oluşturulamıyor",
+		"Permission denied": "Erişim izni reddedildi",
+		"permissionInstruction": "<br>Bunu şu Terminal içinde çalıştırın:<pre><b>\"{C}\"<\/b><\/pre>",
+		"operationNotPermitted" : "Operation not permitted? Try this: <br>{CSU}",
+		"Permission denied to": "Erişim izni reddedildi",
+		"Can not save settings": "Ayarlar kayıt edilemiyor",
+		"Cannot save preferences": "Özellikler kayıt edilemiyor",
+		"Thousand Separator and Decimal Mark equal": "Binlik ayraç ve ondalık ayraç aynı olamaz",
+		"1049": "Bilinmeyen veritabanı",
+		"2005": "Bilinmeyen MySQL sunucusu",
+		"1045": "Kullanıcı için giriş engellendi"
+	},
+	"options": {
+		"db driver": {
+			"mysqli": "MySQLi",
+			"pdo_mysql": "PDO MySQL"
+		},
+		"modRewriteInstruction": {
+			"apache": {
+				"linux": "<br><br>To enable .htaccess support add/edit the Server configuration settings inside your &#60;VirtualHost&#62; section (httpd.conf):<pre>&#60;Directory \/PATH_TO_ESPO\/&#62;\n <b>AllowOverride All<\/b>\n&#60;\/Directory&#62;<\/pre>\n Afterwards run this command in a Terminal:<pre><b>service apache2 restart<\/b><\/pre><br>To enable \"mod_rewrite\" run those commands in a Terminal:<pre><b>a2enmod rewrite <br>service apache2 restart<\/b><\/pre>",
+				"windows": "<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules\/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.\n<\/pre>"
+			},
+			"microsoft-iis": {
+				"windows": ""
+			}
+		},
+		"modRewriteHelp": {
+			"apache": "API Error: EspoCRM API unavailable.<br> Possible problems: disabled \"mod_rewrite\" in Apache server or .htaccess support.",
+			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation \/api\/v1\/ {\n    if (!-e $request_filename){\n        rewrite ^\/api\/v1\/(.*)$ \/api\/v1\/index.php last; break;\n    }\n}\n\nlocation \/ {\n    rewrite reset\/?$ reset.html break;\n}<\/pre>",
+			"microsoft-iis": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled \"URL Rewrite\". Please check and enable \"URL Rewrite\" Module in IIS server",
+			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
+		}
+	}
+}
