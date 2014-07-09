@@ -31,6 +31,8 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
 	protected $objects;
 
+	protected $fileManager;
+
 	protected function setUp()
 	{
 		$this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
@@ -53,11 +55,21 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		$this->reflection = new ReflectionHelper($this->object);
 
 		$this->reflection->setProperty('upgradeId', 'ngkdf54n566n45');
+
+		$upgradePath = $this->reflection->invokeMethod('getUpgradePath', array());
+		$manifestName = $this->reflection->getProperty('manifestName');
+		$filename = $upgradePath . '/' .$manifestName;
+
+		$this->fileManager = new \Espo\Core\Utils\File\Manager();
+		$this->fileManager->putContents($filename, '');
 	}
 
 	protected function tearDown()
 	{
 		$this->object = NULL;
+
+		$upgradePath = $this->reflection->invokeMethod('getUpgradePath', array());
+		$this->fileManager->removeInDir($upgradePath, true);
 	}
 
 	public function testCreateUpgradeIdWithExists()
