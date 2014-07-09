@@ -68,7 +68,9 @@ _.extend(Espo.FieldManager.prototype, {
 		var defs = this.metadata.get('entityDefs.' + entityName + '.fields') || {};		
 		Object.keys(defs).forEach(function (field) {
 			this.getAttributes(defs[field]['type'], field).forEach(function (attr) {
-				list.push(attr);
+				if (!~list.indexOf(attr)) {
+					list.push(attr);				
+				}
 			});					
 		}, this);
 		return list;
