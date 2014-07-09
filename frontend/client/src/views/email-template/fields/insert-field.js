@@ -52,6 +52,9 @@ Espo.define('Views.EmailTemplate.Fields.InsertField', 'Views.Fields.Base', funct
 				var entityFields = {};				
 				entityList.forEach(function (scope) {
 					entityFields[scope] = this.getFieldManager().getEntityAttributes(scope);
+					if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {
+						entityFields[scope].unshift('name');
+					};
 				}, this);
 				
 				entityFields['Person'] = ['name', 'firstName', 'lastName', 'salutationName', 'emailAddress', 'assignedUserName'];

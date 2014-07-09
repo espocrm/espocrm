@@ -70,9 +70,14 @@ class EmailTemplate extends Record
 				if ($row = $sth->fetch()) {
 					if (!empty($row['entity_id'])) {
 						$entity = $this->getEntityManager()->getEntity($row['entity_type'], $row['entity_id']);
-						if (!empty($entity::$person)) {
-							$entityList['Person'] = $entity;
-						}
+						if ($entity) {
+							if (!empty($entity::$person)) {
+								$entityList['Person'] = $entity;
+							}
+							if (empty($entityList[$entity->getEntityName()])) {
+								$entityList[$entity->getEntityName()] = $entity;
+							}
+						}						
 					}
 				}
 			}
