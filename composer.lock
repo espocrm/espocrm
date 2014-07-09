@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "e82d736b3d4541acfbc6241b3e040067",
+    "hash": "47bc2d2cb4a245965c961a08febd5761",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -710,6 +711,48 @@
                 "zf2"
             ],
             "time": "2013-06-12 19:48:13"
+        },
+        {
+            "name": "zendframework/zend-ldap",
+            "version": "2.2.5",
+            "target-dir": "Zend/Ldap",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendLdap.git",
+                "reference": "08374f18a58e6d705dd76a0091947da74fbb1ab0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendLdap/zipball/08374f18a58e6d705dd76a0091947da74fbb1ab0",
+                "reference": "08374f18a58e6d705dd76a0091947da74fbb1ab0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Ldap\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "provides support for LDAP operations including but not limited to binding, searching and modifying entries in an LDAP directory",
+            "keywords": [
+                "ldap",
+                "zf2"
+            ],
+            "time": "2013-10-26 10:00:05"
         },
         {
             "name": "zendframework/zend-loader",
@@ -1447,17 +1490,9 @@
             "time": "2014-01-07 13:28:54"
         }
     ],
-    "aliases": [
-
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "stability-flags": [],
+    "platform": [],
+    "platform-dev": []
 }

@@ -18,34 +18,43 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication;
 
 use \Espo\Core\Utils\Config;
 use \Espo\Core\ORM\EntityManager;
+use \Espo\Core\Utils\Auth;
 
-abstract class Base 
+abstract class Base
 {
 	private $config;
-	
+
 	private $entityManager;
-	
-	public function __construct(Config $config, EntityManager $entityManager)
+
+	private $auth;
+
+	public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
 	{
 		$this->config = $config;
 		$this->entityManager = $entityManager;
+		$this->auth = $auth;
 	}
-	
+
 	protected function getConfig()
 	{
 		return $this->config;
 	}
-	
+
 	protected function getEntityManager()
 	{
 		return $this->entityManager;
 	}
-	
+
+	protected function getAuth()
+	{
+		return $this->auth;
+	}
+
 }
 
