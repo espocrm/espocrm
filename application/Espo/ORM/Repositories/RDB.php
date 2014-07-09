@@ -89,9 +89,11 @@ class RDB extends \Espo\ORM\Repository
 	protected function getNewEntity()
 	{
 		$entity = $this->entityFactory->create($this->entityName);
-		$entity->setIsNew(true);
-		$entity->populateDefaults();
-		return $entity;	
+		if ($entity) {
+			$entity->setIsNew(true);
+			$entity->populateDefaults();
+			return $entity;
+		}
 	}
 	
 	protected function getEntityById($id)
@@ -100,9 +102,11 @@ class RDB extends \Espo\ORM\Repository
 		$this->handleSelectParams($params);
 		
 		$entity = $this->entityFactory->create($this->entityName);
-		if ($this->getMapper()->selectById($entity, $id, $params)) {
-			$entity->setAsFetched();
-			return $entity;
+		if ($entity) {
+			if ($this->getMapper()->selectById($entity, $id, $params)) {
+				$entity->setAsFetched();
+				return $entity;
+			}
 		}
 		return null;
 	}

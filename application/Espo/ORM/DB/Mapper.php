@@ -264,6 +264,10 @@ abstract class Mapper implements IMapper
 		
 		$relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];		
 		$relEntity = $this->entityFactory->create($relEntityName);
+		
+		if (!$relEntity) {
+			return null;
+		}
 
 		$whereClause = array();
 		if (array_key_exists('whereClause', $params)) {
@@ -588,7 +592,10 @@ abstract class Mapper implements IMapper
 		$className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
 		
 		if (is_null($relEntity)) {
-			$relEntity = $this->entityFactory->create($className);		
+			$relEntity = $this->entityFactory->create($className);
+			if (!$relEntity) {
+				return null;
+			}
 			$relEntity->id = $id;
 		}
 		
@@ -726,6 +733,9 @@ abstract class Mapper implements IMapper
 		
 		if (is_null($relEntity)) {
 			$relEntity = $this->entityFactory->create($className);
+			if (!$relEntity) {
+				return null;
+			}
 			$relEntity->id = $id;
 		}
 		

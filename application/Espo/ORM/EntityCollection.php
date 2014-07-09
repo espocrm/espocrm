@@ -141,9 +141,11 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 	protected function buildEntityFromArray(array $dataArray)
 	{
 		$entity = $this->entityFactory->create($this->entityName);
-		$entity->set($dataArray);
-		$entity->setAsFetched();		
-		return $entity;
+		if ($entity) {
+			$entity->set($dataArray);
+			$entity->setAsFetched();		
+			return $entity;
+		}
 	}
 
 	public function getEntityName()
