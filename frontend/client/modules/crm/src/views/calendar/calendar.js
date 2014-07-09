@@ -352,6 +352,10 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				this.$calendar.fullCalendar('updateEvent', event);
 			}.bind(this));
 		},
+		
+		removeModel: function (model) {
+			this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
+		}
 
 	});
 });

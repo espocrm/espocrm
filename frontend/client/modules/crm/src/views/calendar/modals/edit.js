@@ -84,7 +84,7 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
 							$buttons.addClass('disabled');		
 							model.destroy({
 								success: function () {
-									this.trigger('after:remove', model);
+									this.trigger('after:destroy', model);
 									dialog.close();
 								}.bind(this),
 								error: function () {
@@ -105,7 +105,7 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
 				}
 			}.bind(this));
 			
-			this.once('after:remove', function (model) {
+			this.once('after:destroy', function (model) {
 				var parentView = this.getParentView();
 				parentView.removeModel.call(parentView, model);				
 			}.bind(this));
