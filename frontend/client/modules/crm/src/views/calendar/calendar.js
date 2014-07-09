@@ -210,6 +210,7 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				firstDay: this.getPreferences().get('weekStart'),
 				slotEventOverlap: true,
 				snapDuration: 15 * 60 * 1000,
+				timezone: this.getDateTime().timeZone,
 				select: function (start, end, allDay) {					
 					var dateStart = this.convertTime(start);
 					var dateEnd = this.convertTime(end);										
