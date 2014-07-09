@@ -96,6 +96,8 @@ return array (
 		'smtpUsername',
 		'smtpPassword',
 		'cron',
+		'authenticationMethod',
+		'ldap',
 	),
 	'isInstalled' => false,
 );

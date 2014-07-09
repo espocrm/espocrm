@@ -202,10 +202,11 @@ class ClassLoader
      * Registers a set of PSR-4 directories for a given namespace,
      * replacing any others previously set for this namespace.
      *
-     * @param string       $prefix  The prefix/namespace, with trailing '\\'
-     * @param array|string $paths   The PSR-4 base directories
+     * @param string       $prefix The prefix/namespace, with trailing '\\'
+     * @param array|string $paths  The PSR-4 base directories
      */
-    public function setPsr4($prefix, $paths) {
+    public function setPsr4($prefix, $paths)
+    {
         if (!$prefix) {
             $this->fallbackDirsPsr4 = (array) $paths;
         } else {
@@ -291,8 +292,25 @@ class ClassLoader
             return $this->classMap[$class];
         }
 
+        $file = $this->findFileWithExtension($class, '.php');
+
+        // Search for Hack files if we are running on HHVM
+        if ($file === null && defined('HHVM_VERSION')) {
+            $file = $this->findFileWithExtension($class, '.hh');
+        }
+
+        if ($file === null) {
+            // Remember that this class does not exist.
+            return $this->classMap[$class] = false;
+        }
+
+        return $file;
+    }
+
+    private function findFileWithExtension($class, $ext)
+    {
         // PSR-4 lookup
-        $logicalPathPsr4 = strtr($class, '\\', DIRECTORY_SEPARATOR) . '.php';
+        $logicalPathPsr4 = strtr($class, '\\', DIRECTORY_SEPARATOR) . $ext;
 
         $first = $class[0];
         if (isset($this->prefixLengthsPsr4[$first])) {
@@ -321,7 +339,7 @@ class ClassLoader
                 . strtr(substr($logicalPathPsr4, $pos + 1), '_', DIRECTORY_SEPARATOR);
         } else {
             // PEAR-like class name
-            $logicalPathPsr0 = strtr($class, '_', DIRECTORY_SEPARATOR) . '.php';
+            $logicalPathPsr0 = strtr($class, '_', DIRECTORY_SEPARATOR) . $ext;
         }
 
         if (isset($this->prefixesPsr0[$first])) {
@@ -347,9 +365,6 @@ class ClassLoader
         if ($this->useIncludePath && $file = stream_resolve_include_path($logicalPathPsr0)) {
             return $file;
         }
-
-        // Remember that this class does not exist.
-        return $this->classMap[$class] = false;
     }
 }
 

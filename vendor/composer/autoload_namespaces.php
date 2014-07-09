@@ -14,6 +14,7 @@ return array(
     'Zend\\Math\\' => array($vendorDir . '/zendframework/zend-math'),
     'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail'),
     'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader'),
+    'Zend\\Ldap\\' => array($vendorDir . '/zendframework/zend-ldap'),
     'Zend\\Crypt\\' => array($vendorDir . '/zendframework/zend-crypt'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Slim' => array($vendorDir . '/slim/slim'),

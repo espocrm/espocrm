@@ -102,7 +102,7 @@ return array (
     8 => 'Prospect',
   ),
   'isInstalled' => true,
-  'cacheTimestamp' => 1401978369,
+  'cacheTimestamp' => 1404901977,
   'testOption' => 'Another Wrong Value',
   'testOption2' => 'Test2',
 );
