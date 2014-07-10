@@ -62,14 +62,16 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			return lineHtml;
 		},
 		
-		getValueForDisplay: function () {			
-			var names = [];		
-			this.ids.forEach(function (id) {
-				var lineHtml = this.getDetailLinkHtml(id);
+		getValueForDisplay: function () {
+			if (this.mode == 'detail' || this.mode == 'list') {		
+				var names = [];		
+				this.ids.forEach(function (id) {
+					var lineHtml = this.getDetailLinkHtml(id);
 
-				names.push(lineHtml);
-			}, this);
-			return names.join('');
+					names.push(lineHtml);
+				}, this);
+				return names.join('');
+			}
 		},
 		
 		deleteLink: function (id) {	

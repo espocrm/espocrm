@@ -191,11 +191,13 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 		},
 
 		getValueForDisplay: function () {
-			var names = [];
-			this.ids.forEach(function (id) {
-				names.push(this.getDetailLinkHtml(id));
-			}, this);
-			return names.join(', ');
+			if (this.mode == 'detail' || this.mode == 'list') {
+				var names = [];
+				this.ids.forEach(function (id) {
+					names.push(this.getDetailLinkHtml(id));
+				}, this);
+				return names.join(', ');
+			}
 		},
 
 		validateRequired: function () {

@@ -62,9 +62,14 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 			}.bind(this));
 		},
 		
-		setPrimaryId: function (id) {		
+		setPrimaryId: function (id) {
 			this.primaryId = id;
-			this.primaryName = this.nameHash[id];
+			if (id) {
+				this.primaryName = this.nameHash[id];
+			} else {
+				this.primaryName = null;
+			}
+			
 			this.trigger('change');
 		},
 		
@@ -79,17 +84,26 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 			}, this);
 		},
 		
-		getValueForDisplay: function () {			
-			var names = [];
-			if (this.primaryId) {
-				names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
-			}		
-			this.ids.forEach(function (id) {
-				if (id != this.primaryId) {
-					names.push(this.getDetailLinkHtml(id));
-				}
-			}, this);
-			return names.join('');
+		getValueForDisplay: function () {
+			if (this.mode == 'detail' || this.mode == 'list') {
+				var names = [];
+				if (this.primaryId) {
+					names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
+				}		
+				this.ids.forEach(function (id) {
+					if (id != this.primaryId) {
+						names.push(this.getDetailLinkHtml(id));
+					}
+				}, this);
+				return names.join('');
+			}
+		},
+		
+		deleteLink: function (id) {
+			if (id == this.primaryId) {
+				this.setPrimaryId(null);
+			}
+			Dep.prototype.deleteLink.call(this, id);
 		},
 		
 		deleteLinkHtml: function (id) {
@@ -131,8 +145,7 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 				if ($first.size()) {
 					$first.addClass('active').children().removeClass('text-muted');
 					this.setPrimaryId($first.data('id'));
-				}
-				
+				}				
 			}
 		},
 		
