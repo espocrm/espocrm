@@ -125,7 +125,7 @@
         },
         "authenticationMethod": {
         	"type": "enum",
-        	"options": ["Espo", "LDAP", "SAML"],
+        	"options": ["Espo", "LDAP"],
         	"default": "Espo"
         },
         "ldapHost": {
