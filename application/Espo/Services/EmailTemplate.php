@@ -67,7 +67,7 @@ class EmailTemplate extends Record
 				";
 				$sth = $pdo->prepare($sql);
 				$sth->execute();				
-				if ($row = $sth->fetch()) {
+				while ($row = $sth->fetch()) {
 					if (!empty($row['entity_id'])) {
 						$entity = $this->getEntityManager()->getEntity($row['entity_type'], $row['entity_id']);
 						if ($entity) {
@@ -77,8 +77,10 @@ class EmailTemplate extends Record
 							if (empty($entityList[$entity->getEntityName()])) {
 								$entityList[$entity->getEntityName()] = $entity;
 							}
-						}						
-					}
+							break;							
+						}
+											
+					} 
 				}
 			}
 		}
