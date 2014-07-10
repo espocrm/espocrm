@@ -86,6 +86,8 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		
 		isWide: false,
 		
+		dependencyDefs: {},
+		
 		events: {
 			'click .button-container button': function (e) {
 				var $target = $(e.currentTarget);
@@ -350,7 +352,24 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			this.listenTo(this.model, 'sync', function () {
 				this.attributes = this.model.getClonedAttributes();
 			}.bind(this));
-		},		
+			
+			
+			this._initDependancy();
+		},	
+		
+		_initDependancy: function () {		
+			this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
+				
+			Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+				this.listenTo(this.model, 'change:' + attr, function () {
+					this._handleDependencyAttribute(attr);
+				}, this);				
+			}, this);
+			
+			this.on('after:render', function () {
+				this._handleDependencyAttributes();
+			}, this);
+		},	
 		
 		validate: function () {
 			var notValid = false;
@@ -642,6 +661,70 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			}
 			this.getRouter().navigate(url, {trigger: true});
 		},
+		
+		_handleDependencyAttributes: function () {
+			Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+				this._handleDependencyAttribute(attr);				
+			}, this);
+		},
+		
+		_handleDependencyAttribute: function (attr) {
+			var data = this.dependencyDefs[attr];
+			var value = this.model.get(attr);
+			if (value in (data.map || {})) {
+				(data.map[value] || []).forEach(function (item) {
+					this._doDependencyAction(item);
+				}, this);
+			} else {
+				if ('default' in data) {
+					(data.default || []).forEach(function (item) {
+						this._doDependencyAction(item);
+					}, this);
+				}
+			}
+		},
+		
+		_doDependencyAction: function (data) {
+			var action = data.action;		
+			
+			var methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
+			if (methodName in this && typeof this.methodName == 'function') {
+				this.methodName(data);
+				return;
+			}
+			
+			var fields = data.fields || [];
+			
+			switch (action) {
+				case 'hide':
+					fields.forEach(function (field) {
+						this.hideField(field);
+					}, this);
+					break;
+				case 'show':
+					fields.forEach(function (field) {
+						this.showField(field);
+					}, this);
+					break;
+				case 'setRequired':
+					fields.forEach(function (field) {
+						var fieldView = this.getFieldView(field);
+						if (fieldView) {
+							fieldView.setRequired();
+						}
+					}, this);
+					break;
+				case 'setNotRequired':
+					fields.forEach(function (field) {
+						var fieldView = this.getFieldView(field);
+						if (fieldView) {
+							fieldView.setRequired();
+						}
+					}, this);
+					break;								
+			}
+		},
+		
 	});
 
 });

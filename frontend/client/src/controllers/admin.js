@@ -121,6 +121,22 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 			model.fetch();
 		},
 		
+		authentication: function () {
+			var model = this.getSettingsModel();						
+			
+			model.once('sync', function () {
+				model.id = '1';
+				this.main('Edit', {
+					model: model,
+					views: {
+						header: {template: 'admin.settings.header-authentication'},
+						body: {view: 'Admin.Authentication'},
+					},
+				});
+			}, this);				
+			model.fetch();
+		},
+		
 		rebuild: function (options) {
 			var master = this.get('master');		
 			Espo.Ui.notify(master.translate('Please wait...'));
