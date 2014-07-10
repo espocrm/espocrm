@@ -29,7 +29,24 @@
 		"tabList": "Tab List",
 		"quickCreateList": "Quick Create List",
 		
-		"exportDelimiter": "Export Delimiter"
+		"exportDelimiter": "Export Delimiter",
+		
+		"authenticationMethod": "Authentication Method",
+		"ldapHost": "Host",
+		"ldapPort": "Port",
+		"ldapAuth": "Auth",
+		"ldapUsername": "Username",
+		"ldapPassword": "Password",
+		"ldapBindRequiresDn": "Bind Requires Dn",
+		"ldapBaseDn": "Base Dn",
+		"ldapAccountCanonicalForm": "Account Canonical Form",
+		"ldapAccountDomainName": "Account Domain Name",
+		"ldapTryUsernameSplit": "Try Username Split",
+		"ldapCreateEspoUser": "Create User in EspoCRM",
+		"ldapSecurity": "Security",
+		"ldapUserLoginFilter": "User Login Filter",
+		"ldapAccountDomainNameShort": "Account Domain Name Short",
+		"ldapOptReferrals": "Opt Referrals"
 	},
 	"options": {
 		"weekStart": {

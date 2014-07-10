@@ -8,6 +8,11 @@
             "description":"settings"
          },
          {
+            "url":"#Admin/authentication",
+            "label":"Authentication",
+            "description":"authentication"
+         },
+         {
             "url":"#ScheduledJob",
             "label":"Scheduled Jobs",
             "description":"scheduledJob"

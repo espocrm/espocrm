@@ -28,7 +28,8 @@
 		"Layout Manager": "Layout Manager",
 		"Field Manager": "Field Manager",
 		"User Interface": "User Interface",
-		"Auth Tokens": "Auth Tokens"
+		"Auth Tokens": "Auth Tokens",
+		"Authentication": "Authentication"
 	},
 	"layouts": {
 		"list": "List",
@@ -111,7 +112,8 @@
 		"layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
 		"fieldManager": "Create new fields or customize existing ones.",
 		"userInterface": "Configure UI.",
-		"authTokens": "Active auth sessions. IP address and last access date."
+		"authTokens": "Active auth sessions. IP address and last access date.",
+		"authentication": "Authentication setttings."
 	},
 	"options": {
 		"previewSize": {

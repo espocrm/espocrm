@@ -122,6 +122,67 @@
         },
         "companyLogo": {
             "type": "image"
+        },
+        "authenticationMethod": {
+        	"type": "enum",
+        	"options": ["Espo", "LDAP", "SAML"],
+        	"default": "Espo"
+        },
+        "ldapHost": {
+        	"type": "varchar",
+        	"required": true
+        },
+        "ldapPort": {
+        	"type": "int",
+        	"max": 9999,
+        	"min": 0,
+        	"default": 389
+        },
+        "ldapSecurity": {
+        	"type": "enum",
+        	"options": ["", "SSL", "TLS"]
+        },
+        "ldapAuth": {
+        	"type": "bool"
+        },
+        "ldapUsername": {
+        	"type": "varchar",
+        	"required": true
+        },
+        "ldapPassword": {
+        	"type": "varchar"
+        },
+        "ldapBindRequiresDn": {
+        	"type": "bool"
+        },
+        "ldapBaseDn": {
+        	"type": "varchar"
+        },
+        "ldapUserLoginFilter": {
+        	"type": "varchar"
+        },
+        "ldapAccountCanonicalForm": {
+        	"type": "enum",
+        	"options": ["Dn", "Username", "Backslash", "Principal"]
+        },
+        "ldapAccountDomainName": {
+        	"type": "varchar"
+        },
+        "ldapAccountDomainNameShort": {
+        	"type": "varchar"
+        },
+        "ldapAccountFilterFormat": {
+        	"type": "varchar"
+        },
+        "ldapTryUsernameSplit": {
+        	"type": "bool"
+        },
+        "ldapOptReferrals": {
+        	"type": "bool"
+        },
+        "ldapCreateEspoUser": {
+        	"type": "bool",
+        	"default": true
         }
     }
 }
