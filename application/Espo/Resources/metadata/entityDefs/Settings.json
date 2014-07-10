@@ -150,7 +150,7 @@
         	"required": true
         },
         "ldapPassword": {
-        	"type": "varchar"
+        	"type": "password"
         },
         "ldapBindRequiresDn": {
         	"type": "bool"
