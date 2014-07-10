@@ -78,7 +78,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			if (this.mode == 'edit') {						
 				emailAddressData = Espo.Utils.clone(this.model.get(this.dataFieldName));
 	
-				if (this.model.isNew()) {			
+				if (this.model.isNew() || !this.model.get(this.name)) {			
 					if (!emailAddressData || !emailAddressData.length) {
 		 				emailAddressData = [{
 							emailAddress: '',

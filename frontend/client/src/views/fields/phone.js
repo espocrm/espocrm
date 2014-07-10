@@ -48,7 +48,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 			if (this.mode == 'edit') {						
 				phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 	
-				if (this.model.isNew()) {
+				if (this.model.isNew() || !this.model.get(this.name)) {
 					if (!this.defaultType) {
 						this.defaultType = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
 					}			
