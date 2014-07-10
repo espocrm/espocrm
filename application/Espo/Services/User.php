@@ -26,6 +26,8 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
 
+use \Espo\ORM\Entity;
+
 class User extends Record
 {	
 	protected function init()
