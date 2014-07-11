@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "name": "Nome",
+        "userName": "Usuário",
+        "title": "Título",
+        "isAdmin": "Administrador",
+        "defaultTeam": "Time Padrão",
+        "emailAddress": "E-mail",
+        "phone": "Telefone",
+        "roles": "Regras",
+        "password": "Senha",
+        "passwordConfirm": "Confirmação da Senha",
+        "newPassword": "Novo Password"
+    },
+    "links": {
+        "teams": "Times",
+        "roles": "Regras"
+    },
+    "labels": {
+        "Create User": "Criar Usuário",
+        "Generate": "Gerar",
+        "Access": "Acesso",
+        "Preferences": "Preferências",
+        "Change Password": "Trocar Senha"
+    },
+    "messages": {
+        "passwordWillBeSent": "A senha será enviada para o email do usuário.",
+        "accountInfoEmailSubject": "Informações da Conta",
+        "accountInfoEmailBody": "Informações da sua conta:\n\nUsuário: {userName}\nSenha: {password}\n\n{siteUrl}",
+        "passwordChanged": "A senha foi atualizada"
+    }
+}

@@ -1,0 +1,79 @@
+{
+    "scopeNames": {
+        "Account": "Conta",
+        "Contact": "Contato",
+        "Lead": "Lead",
+        "Prospect": "Prospecto",
+        "Opportunity": "Oportunidade",
+        "Meeting": "Reunião",
+        "Calendar": "Calendário",
+        "Call": "Ligação",
+        "Task": "Tarefa",
+        "Case": "Atendimento",
+        "InboundEmail": "E-mail de Entrada"
+    },
+    "scopeNamesPlural": {
+        "Account": "Contas",
+        "Contact": "Contatos",
+        "Lead": "Leads",
+        "Prospect": "Prospectos",
+        "Opportunity": "Oportunidades",
+        "Meeting": "Reuniões",
+        "Calendar": "Calendário",
+        "Call": "Ligações",
+        "Task": "Tarefas",
+        "Case": "Atendimentos",
+        "InboundEmail": "E-mails de Entrada"
+    },
+    "dashlets": {
+        "Leads": "Meus Leads",
+        "Opportunities": "Minhas Oportunidades",
+        "Tasks": "Minhas Tarefas",
+        "Cases": "Meus Atendimentos",
+        "Calendar": "Calendário",
+        "OpportunitiesByStage": "Oportunidades por Estágio",
+        "OpportunitiesByLeadSource": "Oportunities por Origem do Lead",
+        "SalesByMonth": "Vendas Por Mês",
+        "SalesPipeline": "Funil de Vendas"
+    },
+    "labels": {
+        "Create InboundEmail": "Criar E-mail de Entrada",
+        "Activities": "Atividades",
+        "History": "Histórico",
+        "Attendees": "participantes",
+        "Schedule Meeting": "Agendar Reunião",
+        "Schedule Call": "Agendar Ligação",
+        "Compose Email": "Compor E-mail",
+        "Log Meeting": "Logar Reunião",
+        "Log Call": "Logar Ligação",
+        "Archive Email": "Arquivar E-mail",
+        "Create Task": "Criar Tarefa",
+        "Tasks": "Tarefas"
+    },
+    "fields": {
+        "billingAddressCity": "Cidade",
+        "billingAddressCountry": "País",
+        "billingAddressPostalCode": "CEP",
+        "billingAddressState": "Estado",
+        "billingAddressStreet": "Endereço",
+        "addressCity": "Cidade",
+        "addressStreet": "Logradouro",
+        "addressCountry": "País",
+        "addressState": "Estado",
+        "addressPostalCode": "CEP",
+        "shippingAddressCity": "Cidade (Envio)",
+        "shippingAddressStreet": "Logradouro (Envio)",
+        "shippingAddressCountry": "País (Envio)",
+        "shippingAddressState": "Estado (Envio)",
+        "shippingAddressPostalCode": "CEP (Envio)"
+    },
+    "links": {
+        "contacts": "Contatos",
+        "opportunities": "Oportunidades",
+        "leads": "Leads",
+        "meetings": "Reuniões",
+        "calls": "Ligações",
+        "tasks": "Tarefas",
+        "emails": "E-mails"
+    }
+}

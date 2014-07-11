@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "name": "Nome",
+        "roles": "Regras"
+    },
+    "links": {
+        "users": "Usuários",
+        "teams": "Times"
+    },
+    "labels": {
+        "Access": "Acesso",
+        "Create Role": "Criar Regra"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "indefinido",
+            "enabled": "habilitado",
+            "disabled": "desabilitado"
+        },
+        "levelList": {
+            "all": "tudo",
+            "team": "time",
+            "own": "proprio",
+            "no": "nenhum"
+        }
+    },
+    "actions": {
+        "read": "Ler",
+        "edit": "Editar",
+        "delete": "Excluir"
+    }
+}

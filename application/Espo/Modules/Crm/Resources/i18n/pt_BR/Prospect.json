@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "name": "Nome",
+        "emailAddress": "E-mail",
+        "title": "Cargo",
+        "website": "Website",
+        "accountName": "Conta",
+        "phone": "Telefone",
+        "phoneOffice": "Telefone (Comercial)",
+        "fax": "Fax",
+        "doNotCall": "Não Ligar",
+        "address": "Endereço",
+        "description": "Descrição"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Prospect": "Criar Prospecto",
+        "Convert to Lead": "Converter para Lead"
+    }
+}

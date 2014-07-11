@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "name": "Nome",
+        "status": "Status",
+        "isHtml": "Html",
+        "body": "Conteúdo",
+        "subject": "Assunto",
+        "attachments": "Anexos",
+        "insertField": ""
+    },
+    "links": {
+    },
+    "labels": {
+        "Create EmailTemplate": "Criar Template de E-mail"
+    }
+}
