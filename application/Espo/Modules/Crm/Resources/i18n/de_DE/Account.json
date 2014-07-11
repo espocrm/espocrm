@@ -3,14 +3,14 @@
 		"name": "Name",
 		"emailAddress": "E-Mail",
 		"website": "Webseite",
-		"phone": "Telefon",
-		"fax": "Fax",
+		"phoneNumber": "Telefon",
 		"billingAddress": "Rechnungsadresse",
 		"shippingAddress": "Lieferadresse",
 		"description": "Beschreibung",
 		"sicCode": "WKN Nummer",
 		"industry": "Branche",
-		"type": "Typ"		
+		"type": "Typ",
+		"contactRole": "Rolle"
 	},
 	"links": {
 		"contacts": "Kontakte",

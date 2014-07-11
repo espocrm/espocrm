@@ -4,13 +4,14 @@
 		"emailAddress": "E-Mail",
 		"title": "Funktion",
 		"account": "Firma",
-		"phone": "Telefon",
-		"phoneOffice": "Phone (Office)",
-		"fax": "Fax",
+		"accounts": "Firmen",
+		"phoneNumber": "Telefon",
 		"accountType": "Firmentyp",
 		"doNotCall": "Nicht anrufen",
 		"address": "Adresse",
-		"description": "Beschreibung"	
+		"opportunityRole": "Opportunity Role",
+		"accountRole": "Rolle",
+		"description": "Beschreibung"
 	},
 	"links": {
 		"opportunities": "Verkaufschancen",
@@ -18,5 +19,13 @@
 	},
 	"labels": {
 		"Create Contact": "Neuer Kontakt"
+	},
+	"options": {
+		"opportunityRole": {
+			"": "--None--",
+			"Decision Maker": "Decision Maker",
+			"Evaluator": "Evaluator",
+			"Influencer": "Influencer"
+		}
 	}
 }

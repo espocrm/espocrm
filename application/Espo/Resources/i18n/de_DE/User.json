@@ -6,16 +6,27 @@
 		"isAdmin": "Ist Admin",
 		"defaultTeam": "Standard Team:",
 		"emailAddress": "E-Mail",
-		"phone": "Telefon",
-		"roles": "Rollen",
+		"phoneNumber": "Telefon",
+		"roles": "Rollen",		
 		"password": "Passwort",
-		"passwordConfirm": "Passwort bestätigen"
+		"passwordConfirm": "Passwort bestätigen",
+		"newPassword": "Neues Passwort"
 	},
 	"links": {
 		"teams": "Teams",
 		"roles": "Rollen"
 	},
 	"labels": {
-		"Create User": "Neuer Benutzer"
+		"Create User": "Neuer Benutzer",
+		"Generate": "Erzeugen",
+		"Access": "Zugang",
+		"Preferences": "Benutzereinstellungen",
+		"Change Password": "Passwort ändern"
+	},
+	"messages": {
+		"passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
+		"accountInfoEmailSubject": "Kontoinformation",
+		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+		"passwordChanged": "Das Passwort wurde geändert"
 	}
 }

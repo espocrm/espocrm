@@ -27,7 +27,9 @@
 		"Import": "Import",
 		"Layout Manager": "Layouts anpassen",
 		"Field Manager": "Felder anpassen",
-		"User Interface": "Benutzeroberfläche"
+		"User Interface": "Benutzeroberfläche",
+		"Auth Tokens": "Auth Tokens",
+		"Authentication": "Authentication"
 	},
 	"layouts": {
 		"list": "Liste",
@@ -63,7 +65,9 @@
 		"phone": "Telefon",
 		"text": "Textbox",
 		"url": "URL",
-		"varchar": "Text (max. 255)"				
+		"varchar": "Text (max. 255)",
+		"file": "Datei",
+		"image": "Bild"				
 	},
 	"fields": {
 		"type": "Typ",
@@ -79,16 +83,18 @@
 		"field": "Feld",
 		"min": "Min",
 		"max": "Max",
-		"translation": "Übersetzung"		
+		"translation": "Übersetzung",
+		"previewSize": "Vorschau Größe"				
 	},
 	"messages": {
 		"upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann eine Weile dauern.",
-		"upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert. Bitte aktualisieren Sie Ihren Browser.",
+		"upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert.  Bitte aktualisieren Sie Ihren Browser.",
 		"upgradeBackup": "Wir empfehlen, vor der Aktualisierung von EspoCRM Verzeichnis sowie Datenbank zu sichern.",
 		"thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen kann nicht gleich dem Dezimaltrennzeichen sein",
 		"userHasNoEmailAddress": "Der Benutzer hat keine E-Mail-Adresse.",
 		"selectEntityType": "Modul links auswählen",
-		"selectUpgradePackage": "Select uprade package"
+		"selectUpgradePackage": "Aktualisierungspaket auswählen",
+		"selectLayout": "Layout zum Editieren links auswählen"
 	},
 	"descriptions": {
 		"settings": "Systemeinstellungen der Applikation.",
@@ -105,6 +111,16 @@
 		"import": "Datenimport aus CSV Datei.",
 		"layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
 		"fieldManager": "Neue Felder erstellen oder bestehende anpassen.",
-		"userInterface": "Benutzeroberfläche anpassen."
+		"userInterface": "Benutzeroberfläche anpassen.",
+		"authTokens": "Active auth sessions. IP address and last access date.",
+		"authentication": "Authentication setttings."
+	},
+	"options": {
+		"previewSize": {
+			"x-small": "X-Small",
+			"small": "Small",
+			"medium": "Medium",
+			"large": "Large"
+		}
 	}
 }

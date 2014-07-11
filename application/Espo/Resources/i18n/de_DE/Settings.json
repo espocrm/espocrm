@@ -11,6 +11,8 @@
 		"currencyList": "Währungsliste",
 		"language": "Sprache",
 		
+		"companyLogo": "Firmenlogo",
+		
 		"smtpServer": "Server",
 		"smtpPort": "Port",
 		"smtpAuth": "Autorisierung",
@@ -25,7 +27,26 @@
 		"recordsPerPage": "Datensätze pro Seite",
 		"recordsPerPageSmall": "Records Per Page (Small)",		
 		"tabList": "Reiter Liste",
-		"quickCreateList": "Liste Schnellerstellung"
+		"quickCreateList": "Liste Schnellerstellung",
+		
+		"exportDelimiter": "Export Trennzeichen",
+		
+		"authenticationMethod": "Authentication Method",
+		"ldapHost": "Host",
+		"ldapPort": "Port",
+		"ldapAuth": "Autorisierung",
+		"ldapUsername": "Benutzername",
+		"ldapPassword": "Passwort",
+		"ldapBindRequiresDn": "Bind Requires Dn",
+		"ldapBaseDn": "Base Dn",
+		"ldapAccountCanonicalForm": "Account Canonical Form",
+		"ldapAccountDomainName": "Account Domain Name",
+		"ldapTryUsernameSplit": "Try Username Split",
+		"ldapCreateEspoUser": "Create User in EspoCRM",
+		"ldapSecurity": "Sicherheit",
+		"ldapUserLoginFilter": "User Login Filter",
+		"ldapAccountDomainNameShort": "Account Domain Name Short",
+		"ldapOptReferrals": "Opt Referrals"
 	},
 	"options": {
 		"weekStart": {
@@ -37,6 +58,6 @@
 		"System": "System",
 		"Locale": "Lokale Einstellungen",
 		"SMTP": "SMTP",
-		"Configuration": "Configuration"
+		"Configuration": "Konfiguration"
 	}
 }

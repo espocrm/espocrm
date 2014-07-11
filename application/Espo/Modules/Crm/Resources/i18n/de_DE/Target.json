@@ -5,9 +5,7 @@
 		"title": "Funktion",
 		"website": "Webseite",
 		"accountName": "Firmenname",
-		"phone": "Telefon",
-		"phoneOffice": "Phone (Office)",
-		"fax": "Fax",
+		"phoneNumber": "Telefon",
 		"doNotCall": "Nicht anrufen",
 		"address": "Adresse",
 		"description": "Beschreibung"
@@ -15,7 +13,7 @@
 	"links": {
 	},
 	"labels": {
-		"Create Target": "Neuer Zielkontakt",
+		"Create Target": "Create Target",
 		"Convert to Lead": "Zu Interessent umwandeln"
 	}
 }

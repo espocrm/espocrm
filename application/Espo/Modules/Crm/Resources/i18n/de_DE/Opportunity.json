@@ -8,6 +8,7 @@
 		"leadSource": "Quelle",
 		"doNotCall": "Nicht anrufen",
 		"closeDate": "Abschlussdatum",
+		"contacts": "Kontakte",
 		"description": "Beschreibung"
 	},
 	"links": {
@@ -19,22 +20,12 @@
 			"Qualification": "Qualifikation",
 			"Needs Analysis": "Bedarfserhebung",
 			"Value Proposition": "Richtangebot",
-			"Id. Decision Makers": "id. Entscheider",
+			"Id. Decision Makers": "Entscheider ident.",
 			"Perception Analysis": "Analyse Sichtweise",
 			"Proposal/Price Quote": "Preisangebot",
 			"Negotiation/Review": "Verhandlung/Überarbeitung",
 			"Closed Won": "Gewonnen",
 			"Closed Lost": "Verloren" 
-		},
-		"leadSource": {
-			"Call": "Anruf",
-			"Email": "E-Mail",
-			"Existing Customer": "Bestehender Kunde",
-			"Partner": "Partner",
-			"Public Relations": "Public Relations",
-			"Web Site": "Web Seite",
-			"Campaign": "Kampagne",
-			"Other": "Andere"
 		}
 	},
 	"labels": {
