@@ -20,68 +20,12 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication\Ldap;
+namespace Espo\Core\Utils\Authentication\LDAP;
 
-class Ldap extends \Zend\Ldap\Ldap
+class LDAP extends \Zend\Ldap\Ldap
 {
 	protected $usernameAttribute = 'cn';
 
-	protected $espoOptions = array();
-
-	/**
-	 * Permitted Espo Options
-	 *
-	 * @var array
-	 */
-	protected $permittedEspoOptions = array(
-		/** Default Options (Zend LDAP):
-		'host' => null,
-		'port' => 0,
-		'useSsl' => false,
-		'username' => null,
-		'password' => null,
-		'bindRequiresDn' => false,
-		'baseDn' => null,
-		'accountCanonicalForm' => null,
-		'accountDomainName' => null,
-		'accountDomainNameShort' => null,
-		'accountFilterFormat' => null,
-		'allowEmptyPassword' => false,
-		'useStartTls' => false,
-		'optReferrals' => false,
-		'tryUsernameSplit' => true,
-		'networkTimeout' => null,*/
-
-		/** Espo Options */
-		'createEspoUser' => false,
-	);
-
-
-	public function setOptions($options)
-	{
-		$espoOptionList = array_keys($this->permittedEspoOptions);
-
-		$this->espoOptions = array_intersect_key($options, array_flip($espoOptionList));
-		$options = array_diff_key($options, array_flip($espoOptionList));
-
-		return parent::setOptions($options);
-	}
-
-	/**
-	 * Get Espo Options
-	 *
-	 * @param  string $name
-	 * @param  mixed $returns
-	 * @return mixed
-	 */
-	public function getEspoOption($name, $returns = null)
-	{
-		if (isset($this->espoOptions[$name])) {
-			return $this->espoOptions[$name];
-		}
-
-		return $returns;
-	}
 
 	/**
 	 * Get DN depends on options, ex. "cn=test,ou=People,dc=maxcrc,dc=com"
@@ -116,5 +60,64 @@ class Ldap extends \Zend\Ldap\Ldap
 		}
 
 		return parent::getAccountDn($acctname);
+	}
+
+	/**
+	 * Search a user using userLoginFilter
+	 *
+	 * @param  string $filter
+	 * @param  string $basedn
+	 * @param  int $scope
+	 * @param  array  $attributes
+	 * @return array
+	 */
+	public function searchByLoginFilter($filter, $basedn = null, $scope = self::SEARCH_SCOPE_SUB, array $attributes = array())
+	{
+		$filter = $this->getLoginFilter($filter);
+
+		$result = $this->search($filter, $basedn, $scope, $attributes);
+
+		if ($result->count() > 0) {
+			return $result->getFirst();
+		}
+
+		throw new \Zend\Ldap\Exception\LdapException($this, 'searching: ' . $filter);
+	}
+
+	/**
+	 * Get login filter in LDAP format
+	 *
+	 * @param  string $filter
+	 * @return string
+	 */
+	protected function getLoginFilter($filter)
+	{
+		$baseFilter = '(objectClass=*)';
+
+		if (!empty($filter)) {
+			$baseFilter = '(&' . $baseFilter . $this->convertToFilterFormat($filter). ')';
+		}
+
+		return $baseFilter;
+	}
+
+	/**
+	 * Check and convert filter item in LDAP format
+	 *
+	 * @param  string $filter [description]
+	 * @return string
+	 */
+	protected function convertToFilterFormat($filter)
+	{
+		$filter = trim($filter);
+		if (substr($filter, 0, 1) != '(') {
+			$filter = '(' . $filter;
+		}
+
+		if (substr($filter, -1) != ')') {
+			$filter = $filter . ')';
+		}
+
+		return $filter;
 	}
 }

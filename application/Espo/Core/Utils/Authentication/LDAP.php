@@ -22,10 +22,17 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error,
+	Espo\Core\Utils\Config,
+	Espo\Core\ORM\EntityManager,
+	Espo\Core\Utils\Auth;
 
-class Ldap extends Base
+class LDAP extends Base
 {
+	private $utils;
+
+	private $zendLdap;
+
 	/**
 	 * Espo => LDAP name
 	 *
@@ -39,6 +46,24 @@ class Ldap extends Base
 		'emailAddress' => 'mail',
 		'phoneNumber' => 'telephonenumber',
 	);
+
+	public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
+	{
+		parent::__construct($config, $entityManager, $auth);
+
+		$this->zendLdap = new LDAP\LDAP();
+		$this->utils = new LDAP\Utils($config);
+	}
+
+	protected function getZendLdap()
+	{
+		return $this->zendLdap;
+	}
+
+	protected function getUtils()
+	{
+		return $this->utils;
+	}
 
 
 	/**
@@ -55,16 +80,28 @@ class Ldap extends Base
 			return $this->loginByToken($username, $authToken);
 		}
 
-		$options = $this->getConfig()->get('ldap');
-		$ldap = new Ldap\Ldap($options);
+		$options = $this->getUtils()->getZendOptions();
+
+		$ldap = $this->getZendLdap();
+		$ldap = $ldap->setOptions($options);
 
 		try {
 			$ldap->bind($username, $password);
-			$ldapUsername = $ldap->getCanonicalAccountName($username);
+
+			$dn = $ldap->getDn($username);
+
+			$loginFilter = $this->getUtils()->getOption('userLoginFilter');
+			$userData = $ldap->searchByLoginFilter($loginFilter, $dn, 3);
 
 		} catch (\Zend\Ldap\Exception\LdapException $zle) {
-			$GLOBALS['log']->info('LDAP Authentication: ' . $zle->getMessage());
-			return null;
+
+			$admin = $this->adminLogin($username, $password);
+			if (!isset($admin)) {
+				$GLOBALS['log']->info('LDAP Authentication: ' . $zle->getMessage());
+				return null;
+			}
+
+			$GLOBALS['log']->info('LDAP Authentication: Administrator login by username ['.$username.']');
 		}
 
 		$user = $this->getEntityManager()->getRepository('User')->findOne(array(
@@ -73,13 +110,9 @@ class Ldap extends Base
 			),
 		));
 
-		$isCreateUser = $ldap->getEspoOption('createEspoUser');
+		$isCreateUser = $this->getUtils()->getOption('createEspoUser');
 		if (!isset($user) && $isCreateUser) {
-
 			$this->getAuth()->useNoAuth(); /** Required to fix Acl "isFetched()" error */
-
-			$dn = $ldap->getDn($username);
-			$userData = $ldap->getEntry($dn);
 			$user = $this->createUser($userData);
 		}
 
@@ -118,6 +151,28 @@ class Ldap extends Base
 	}
 
 	/**
+	 * Login user with administrator rights
+	 *
+	 * @param  string $username
+	 * @param  string $password
+	 * @return \Espo\Entities\User | null
+	 */
+	protected function adminLogin($username, $password)
+	{
+		$hash = md5($password);
+
+		$user = $this->getEntityManager()->getRepository('User')->findOne(array(
+			'whereClause' => array(
+				'userName' => $username,
+				'password' => $hash,
+				'isAdmin' => 1
+			),
+		));
+
+		return $user;
+	}
+
+	/**
 	 * Create Espo user with data gets from LDAP server
 	 *
 	 * @param  array $userData LDAP entity data
@@ -139,6 +194,8 @@ class Ldap extends Base
 
 		return $user;
 	}
+
+
 
 }
 
