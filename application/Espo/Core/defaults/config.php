@@ -65,7 +65,9 @@ return array (
 		'en_US',
 		'es_ES',
 		'de_DE',
-		'tr_TR',		
+		'tr_TR',
+		'ro_RO',
+		'pt_BR'		
 	),
 	'language' => 'en_US',
 	'logger' =>
