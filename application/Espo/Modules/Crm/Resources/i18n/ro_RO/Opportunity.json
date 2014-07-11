@@ -1,0 +1,34 @@
+{
+	"fields": {
+		"name": "Nume",
+		"account": "Cont",
+		"stage": "Stadiu",
+		"amount": "Suma",
+		"probability": "Probabilitate, %",
+		"leadSource": "Sursa Lead",
+		"doNotCall": "Nu sunati",
+		"closeDate": "Data Inchiderii",
+		"contacts": "Contacte",
+		"description": "Descriere"
+	},
+	"links": {
+		"contacts": "Contacte"
+	},
+	"options": {
+		"stage": {
+			"Prospecting": "Prospectare",
+			"Qualification": "Calificari",
+			"Needs Analysis": "Necesita Analiza",
+			"Value Proposition": "Valoare Propunere",
+			"Id. Decision Makers": "Id. Factori de Decizie",
+			"Perception Analysis": "Analiza Perceptiei",
+			"Proposal/Price Quote": "Propunere/Oferta Pret",
+			"Negotiation/Review": "Negociere/Revizuire",
+			"Closed Won": "Inchide ca Castigat",
+			"Closed Lost": "Inchide ca Pierdut" 
+		}
+	},
+	"labels": {
+		"Create Opportunity": "Creare Oportunitate"
+	}
+}

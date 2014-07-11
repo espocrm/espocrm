@@ -1,0 +1,46 @@
+{
+	"labels": {
+		"Converted To": "Convertit la",
+		"Create Lead": "Creare Lead",
+		"Convert": "Converteste"
+	},
+	"fields": {
+		"name": "Nume",
+		"emailAddress": "Email",
+		"title": "Titlu",
+		"website": "Site Web",
+		"phoneNumber": "Telefon",
+		"accountName": "Nume Cont",
+		"doNotCall": "Nu sunati",
+		"address": "Adresa",
+		"status": "Status",
+		"source": "Sursa",
+		"opportunityAmount": "Suma Oportunitate",
+		"description": "Descriere",
+		"createdAccount": "Cont",
+		"createdContact": "Contact",
+		"createdOpportunity": "Oportunitate"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"New": "Nou",
+			"Assigned": "Alocat",
+			"In Process": "In Proces",
+			"Converted": "Convertit",
+			"Recycled": "Reciclat",
+			"Dead": "Inactiv"
+		},
+		"source": {
+			"Call": "Apel",
+			"Email": "Email",
+			"Existing Customer": "Client Existent",
+			"Partner": "Partener",
+			"Public Relations": "Relatii Publice",
+			"Web Site": "Site Web",
+			"Campaign": "Campanie",
+			"Other": "Altele"
+		}
+	}
+}

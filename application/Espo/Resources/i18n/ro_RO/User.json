@@ -1,0 +1,32 @@
+{
+	"fields": {
+		"name": "Nume",
+		"userName": "Nume Utilizator",
+		"title": "Titlu",
+		"isAdmin": "Este Admin",
+		"defaultTeam": "Echipa Initiala",
+		"emailAddress": "Email",
+		"phoneNumber": "Telefon",
+		"roles": "Roluri",		
+		"password": "Parola",
+		"passwordConfirm": "Confirmare Parola",
+		"newPassword": "Parola Noua"
+	},
+	"links": {
+		"teams": "Echipe",
+		"roles": "Roluri"
+	},
+	"labels": {
+		"Create User": "Creare Utilizator",
+		"Generate": "Generare",
+		"Access": "Acces",
+		"Preferences": "Preferinte",
+		"Change Password": "Schimbare Parola"
+	},
+	"messages": {
+		"passwordWillBeSent": "Parola va fi trimisa in email-ul utilizatorului.",
+		"accountInfoEmailSubject": "Informatii cont",
+		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+		"passwordChanged": "Parola a fost schimbata"
+	}
+}
