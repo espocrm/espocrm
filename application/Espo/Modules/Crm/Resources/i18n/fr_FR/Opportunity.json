@@ -1,0 +1,34 @@
+{
+	"fields": {
+		"name": "Nom",
+		"account": "Compte",
+		"stage": "Etage",
+		"amount": "Montant",
+		"probability": "Probabilité, %",
+		"leadSource": "Lead Source",
+		"doNotCall": "Ne Pas Appeler",
+		"closeDate": "Date de fermeture",
+		"contacts": "Contacts",
+		"description": "Description"
+	},
+	"links": {
+		"contacts": "Contacts"
+	},
+	"options": {
+		"stage": {
+			"Prospecting": "En Prospection",
+			"Qualification": "Qualification",
+			"Needs Analysis": "Analyse des besoins",
+			"Value Proposition": "Montant de la Proposition",
+			"Id. Decision Makers": "Id. Décisionnaire",
+			"Perception Analysis": "Analyse de la perception",
+			"Proposal/Price Quote": "Proposition/Devis",
+			"Negotiation/Review": "Négociation/avis",
+			"Closed Won": "Closed Won",
+			"Closed Lost": "Closed Lost" 
+		}
+	},
+	"labels": {
+		"Create Opportunity": "Créer un Challenge"
+	}
+}

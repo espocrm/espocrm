@@ -1,0 +1,12 @@
+{
+	"fields": {
+		"name": "Nom",
+		"roles": "Rôles"
+	},
+	"links": {
+		"users": "Utilisateurs"
+	},
+	"labels": {
+		"Create Team": "Créer une Equipe"
+	}
+}
