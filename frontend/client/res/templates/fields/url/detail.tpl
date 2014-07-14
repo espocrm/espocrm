@@ -1,1 +1,1 @@
-<a href="{{value}}">{{value}}</a>
+<a href="{{url}}">{{value}}</a>
