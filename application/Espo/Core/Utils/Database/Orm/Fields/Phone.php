@@ -18,34 +18,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class Phone extends \Espo\Core\Utils\Database\Orm\Base
 {
-
-	public function load($entity, $field)
+	protected function load($fieldName, $entityName)
 	{
-        return array(
-			$entity['name'] => array(
-			   	'fields' => array(
-                	$field['name'] => array(
+		return array(
+			$entityName => array(
+				'fields' => array(
+					$fieldName => array(
 						'select' => 'phone_number.name',
-				        'where' =>
-				        array (
-				          'LIKE' => 'phone_number.name LIKE \'{text}\'',
-				          '=' => 'phone_number.name = \'{text}\'',
-				        ),
-				        'orderBy' => 'phone_number.name {direction}',
+						'where' =>
+						array (
+						  'LIKE' => 'phone_number.name LIKE \'{text}\'',
+						  '=' => 'phone_number.name = \'{text}\'',
+						),
+						'orderBy' => 'phone_number.name {direction}',
 					),
-					$field['name'] .'Data' => array(
+					$fieldName .'Data' => array(
 						'type' => 'text',
 						'notStorable' => true
 					),
 				),
 				'relations' => array(
-					$field['name'].'s' => array(
+					$fieldName.'s' => array(
 						'type' => 'manyMany',
 						'entity' => 'PhoneNumber',
 						'relationName' => 'entityPhoneNumber',
@@ -54,16 +53,16 @@ class Phone extends \Espo\Core\Utils\Database\Orm\Base
 							'phone_number_id',
 						),
 						'conditions' => array(
-							'entityType' => $entity['name'],
+							'entityType' => $entityName,
 						),
 						'additionalColumns' => array(
-                            'entityType' => array(
+							'entityType' => array(
 								'type' => 'varchar',
-        						'len' => 100,
+								'len' => 100,
 							),
 							'primary' => array(
 								'type' => 'bool',
-        						'default' => false,
+								'default' => false,
 							),
 						),
 					),

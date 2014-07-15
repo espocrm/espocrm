@@ -18,45 +18,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
 use Espo\Core\Utils\Util;
 
-class ManyMany extends \Espo\Core\Utils\Database\Orm\Base
+class ManyMany extends Base
 {
-
 	protected $allowParams = array(
 		'relationName',
 		'conditions',
 		'additionalColumns',
 	);
 
-	public function load($params, $foreignParams)
+	protected function load($linkName, $entityName)
 	{
+		$foreignEntityName = $this->getForeignEntityName();
+
 		return array(
-			$params['entityName'] => array(
+			$entityName => array(
 				'fields' => array(
-	               	$params['link']['name'].'Ids' => array(
+	               	$linkName.'Ids' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
-					$params['link']['name'].'Names' => array(
+					$linkName.'Names' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
 				),
 				'relations' => array(
-					$params['link']['name'] => array(
+					$linkName => array(
 						'type' => 'manyMany',
-						'entity' => $params['targetEntity'],
-						'relationName' => $this->getJoinTable($params['entityName'], $foreignParams['entityName']),
+						'entity' => $foreignEntityName,
+						'relationName' => $this->getJoinTable($entityName, $foreignEntityName),
 						'key' => 'id', //todo specify 'key'
 						'foreignKey' => 'id', //todo specify 'foreignKey'
 						'midKeys' => array(
-							lcfirst($params['entityName']).'Id',
-							lcfirst($foreignParams['entityName']).'Id',
+							lcfirst($entityName).'Id',
+							lcfirst($foreignEntityName).'Id',
 						),
 					),
 				),

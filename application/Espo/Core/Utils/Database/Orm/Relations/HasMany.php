@@ -18,11 +18,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class HasMany extends \Espo\Core\Utils\Database\Orm\Base
+class HasMany extends Base
 {
 	protected $allowParams = array(
 		'relationName',
@@ -30,32 +30,35 @@ class HasMany extends \Espo\Core\Utils\Database\Orm\Base
 		'additionalColumns',
 	);
 
-	public function load($params, $foreignParams)
+	protected function load($linkName, $entityName)
 	{
-		$relationType = isset($params['link']['params']['relationName']) ? 'manyMany' : 'hasMany';
+		$linkParams = $this->getLinkParams();
+		$foreignLinkName = $this->getForeignLinkName();
+		$foreignEntityName = $this->getForeignEntityName();
+
+		$relationType = isset($linkParams['relationName']) ? 'manyMany' : 'hasMany';
 
 		$relation = array(
-			$params['entityName'] => array (
+			$entityName => array (
 				'fields' => array(
-	               	$params['link']['name'].'Ids' => array(
+	               	$linkName.'Ids' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
-					$params['link']['name'].'Names' => array(
+					$linkName.'Names' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
 				),
 				'relations' => array(
-                	$params['link']['name'] => array(
-						//'type' => 'hasMany',
+                	$linkName => array(
 						'type' => $relationType,
-						'entity' => $params['targetEntity'],
-						'foreignKey' => lcfirst($foreignParams['link']['name'].'Id'), //???: 'foreignKey' => $params['link']['name'].'Id',						
+						'entity' => $foreignEntityName,
+						'foreignKey' => lcfirst($foreignLinkName.'Id'),
 					),
 				),
 			),
-		);	
+		);
 
         return $relation;
 	}

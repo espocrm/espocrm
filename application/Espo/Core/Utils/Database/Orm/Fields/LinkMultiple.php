@@ -18,22 +18,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class LinkMultiple extends \Espo\Core\Utils\Database\Orm\Base
 {
-
-	public function load($entity, $field, $metadata)
+	protected function load($fieldName, $entityName)
 	{
-        $fieldName = $field['name'];        
-        $entityName = $entity['name'];
-        
-        $data = array(
+		$data = array(
 			$entityName => array (
-	           	'fields' => array(
-	               	$fieldName.'Ids' => array(
+				'fields' => array(
+					$fieldName.'Ids' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
@@ -43,22 +39,22 @@ class LinkMultiple extends \Espo\Core\Utils\Database\Orm\Base
 					),
 				),
 			),
-            'unset' => array(
-                $entityName => array(
-                    'fields.'.$fieldName,
-                ),
-            ),
-		);		
+			'unset' => array(
+				$entityName => array(
+					'fields.'.$fieldName,
+				),
+			),
+		);
 
-		$columns = $metadata->get("entityDefs.{$entityName}.fields.{$fieldName}.columns"); 		
+		$columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
 		if (!empty($columns)) {
 			$data[$entityName]['fields'][$fieldName . 'Columns'] = array(
 				'type' => 'varchar',
 				'notStorable' => true,
 			);
 		}
-        
-        return $data;
+
+		return $data;
 	}
 
 

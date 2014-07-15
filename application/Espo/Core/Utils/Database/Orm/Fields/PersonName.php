@@ -26,11 +26,10 @@ use Espo\Core\Utils\Util;
 
 class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 {
-
-	public function load($entity, $field)
+	protected function load($fieldName, $entityName)
 	{
-		$foreignField = $this->getForeignField($field['name'], $entity['name']);
-		$tableName = Util::toUnderScore($entity['name']);
+		$foreignField = $this->getForeignField($fieldName, $entityName);
+		$tableName = Util::toUnderScore($entityName);
 
 		$fullList = array(); //contains empty string (" ") like delimiter
 		$fullListReverse = array(); //reverse of $fullList
@@ -38,9 +37,9 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 		$like = array();
 		$equal = array();
 
-		foreach($foreignField as $fieldName) {
+		foreach($foreignField as $foreignFieldName) {
 
-			$fieldNameTrimmed = trim($fieldName);
+			$fieldNameTrimmed = trim($foreignFieldName);
 			if (!empty($fieldNameTrimmed)) {
 				$columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
 
@@ -48,16 +47,16 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 				$like[] = $columnName." LIKE '{text}'";
 				$equal[] = $columnName." = '{text}'";
 			} else {
-				$fullList[] = "'".$fieldName."'";
+				$fullList[] = "'".$foreignFieldName."'";
 			}
 		}
 
 		$fullListReverse = array_reverse($fullList);
 
 		return array(
-			$entity['name'] => array (
+			$entityName => array (
 				'fields' => array(
-					$field['name'] => array(
+					$fieldName => array(
 						'type' => 'varchar',
 						'select' => $this->getSelect($fullList),
 						'where' => array(

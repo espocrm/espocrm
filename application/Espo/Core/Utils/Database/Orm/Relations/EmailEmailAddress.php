@@ -18,32 +18,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class EmailEmailAddress extends \Espo\Core\Utils\Database\Orm\Relations\HasMany
+class EmailEmailAddress extends HasMany
 {
-
-	public function load($params, $foreignParams)
+	protected function load($linkName, $entityName)
 	{
+		$parentRelation = parent::load($linkName, $entityName);
 
-		$parentRelation = parent::load($params, $foreignParams);
+		$foreignEntityName = $this->getForeignEntityName();
 
 		$relation = array(
-			$params['entityName'] => array (				
+			$entityName => array (
 				'relations' => array(
-                	$params['link']['name'] => array(						
+                	$linkName => array(
 						'midKeys' => array(
-							lcfirst($params['entityName']).'Id',
-							lcfirst($foreignParams['entityName']).'Id',
+							lcfirst($entityName).'Id',
+							lcfirst($foreignEntityName).'Id',
 						),
 					),
 				),
 			),
 		);
 
-		
 		$relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
 
 		return $relation;
