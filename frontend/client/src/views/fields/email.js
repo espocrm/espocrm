@@ -31,6 +31,8 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		
 		listTemplate: 'fields.email.list',
 		
+		searchTemplate: 'fields.email.search',
+		
 		validations: ['required', 'emailData'],		
 	
 		validateEmail: function () {
@@ -261,10 +263,10 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		fetchSearch: function () {
 			var value = this.$element.val() || null;
 			if (value) {
-				value += '%';
 				var data = {
 					type: 'like',
-					value: value,
+					value: value + '%',
+					valueText: value
 				};
 				return data;
 			}

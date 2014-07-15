@@ -31,6 +31,8 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 		
 		listTemplate: 'fields.phone.list',
 		
+		searchTemplate: 'fields.phone.search',
+		
 		validations: ['required'],
 		
 		validateRequired: function () {
@@ -212,10 +214,10 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 		fetchSearch: function () {
 			var value = this.$element.val() || null;
 			if (value) {
-				value += '%';
 				var data = {
 					type: 'like',
-					value: value,
+					value: value + '%',
+					valueText: value
 				};
 				return data;
 			}
