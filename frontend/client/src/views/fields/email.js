@@ -182,6 +182,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		afterRender: function () {
+			Dep.prototype.afterRender.call(this);
 			this.manageButtonsVisibility();
 		},
 		

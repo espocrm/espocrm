@@ -134,6 +134,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		afterRender: function () {
+			Dep.prototype.afterRender.call(this);
 			this.manageButtonsVisibility();
 		},
 		
