@@ -33,8 +33,22 @@ class Email extends \Espo\Core\Utils\Database\Orm\Base
 						'select' => 'email_address.name',
 						'where' =>
 						array (
-						  'LIKE' => 'email_address.name LIKE \'{text}\'',
-						  '=' => 'email_address.name = \'{text}\'',
+							'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+								SELECT entity_id 
+								FROM entity_email_address
+								JOIN email_address ON email_address.id = entity_email_address.email_address_id
+								WHERE 
+									entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
+									email_address.deleted = 0 AND email_address.name LIKE '{text}'          		
+							)",
+							'=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+								SELECT entity_id 
+								FROM entity_email_address
+								JOIN email_address ON email_address.id = entity_email_address.email_address_id
+								WHERE 
+									entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
+									email_address.deleted = 0 AND email_address.name = '{text}'          		
+							)"
 						),
 						'orderBy' => 'email_address.name {direction}',
 					),
