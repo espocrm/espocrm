@@ -4,6 +4,6 @@
 		<select name="{{currencyFieldName}}" class="form-control">
 			{{{currencyOptions}}}
 		</select>
-	</div>
+	</span>
 </div>
 

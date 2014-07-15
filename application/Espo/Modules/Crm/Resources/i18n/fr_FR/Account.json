@@ -1,0 +1,40 @@
+{
+	"fields": {
+		"name": "Nom",
+		"emailAddress": "Email",
+		"website": "Site Web",
+		"phoneNumber": "Téléphone",
+		"billingAddress": "Adresse de Facturation",
+		"shippingAddress": "Adresse de Livraison",
+		"description": "Description",
+		"sicCode": "Code SIC",
+		"industry": "Industrie",
+		"type": "Type",
+		"contactRole": "Rôle"
+	},
+	"links": {
+		"contacts": "Contacts",
+		"opportunities": "Opportunités",
+		"cases": "Tickets"
+	},
+	"options": {
+		"type": {
+			"Customer": "Clients",
+			"Investor": "Investisseur",
+			"Partner": "Partenaire",
+			"Reseller": "Revendeur"
+		},
+		"industry": {
+			"Apparel": "Vêtements",
+			"Banking": "Banque",
+			"Computer Software": "Logiciel Informatique",
+			"Education": "Education",
+			"Electronics": "Electronique",
+			"Finance": "Finance",
+			"Insurance": "Assurance"
+		}
+	},
+	"labels": {
+		"Create Account": "Nouveau Compte"
+	}
+}

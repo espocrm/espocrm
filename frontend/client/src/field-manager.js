@@ -132,8 +132,8 @@ _.extend(Espo.FieldManager.prototype, {
 
 	getViewName: function (fieldType) {
 		if (fieldType in this.defs) {
-			if ('module' in this.defs[fieldType]) {
-				return this.defs[fieldType].module + ':Fields.' + Espo.Utils.upperCaseFirst(fieldType);
+			if ('view' in this.defs[fieldType]) {
+				return this.defs[fieldType].view;
 			}
 		}
 		return 'Fields.' + Espo.Utils.upperCaseFirst(fieldType);
