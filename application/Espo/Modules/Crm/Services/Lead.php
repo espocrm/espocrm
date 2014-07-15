@@ -30,8 +30,15 @@ class Lead extends \Espo\Services\Record
 	protected function getDuplicateWhereClause(Entity $entity)
 	{
 		return array(
-			'firstName' => $entity->get('firstName'),
-			'lastName' => $entity->get('lastName'),
+			'OR' => array(
+				array(
+					'firstName' => $entity->get('firstName'),
+					'lastName' => $entity->get('lastName'),
+				),
+				array(
+					'emailAddress' => $entity->get('emailAddress'),
+				),
+			),
 		);
 	}
 	
