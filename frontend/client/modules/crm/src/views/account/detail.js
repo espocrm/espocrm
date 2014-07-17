@@ -25,7 +25,6 @@ Espo.define('Crm:Views.Account.Detail', 'Views.Detail', function (Dep) {
 	
 		relatedAttributeMap: {
 			'contacts': {
-				'phone': 'phone',
 				'billingAddressCity': 'addressCity',
 				'billingAddressStreet': 'addressStreet',
 				'billingAddressPostalCode': 'addressPostalCode',
