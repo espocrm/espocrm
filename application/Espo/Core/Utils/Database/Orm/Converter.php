@@ -33,6 +33,8 @@ class Converter
 
 	private $relationManager;
 
+	private $entityDefs;
+
 	protected $defaultFieldType = 'varchar';
 	protected $defaultNaming = 'postfix';
 
@@ -69,6 +71,9 @@ class Converter
 				'default' => '{0}',
 		   ),
 		),
+		'select' => 'select',
+		'orderBy' => 'orderBy',
+		'where' => 'where',
 	);
 
 	protected $idParams = array(
@@ -85,12 +90,19 @@ class Converter
 		$this->relationManager = new RelationManager($this->metadata);
 
 		$this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
+
+		$this->entityDefs = $this->getMetadata()->get('entityDefs');
 	}
 
 
 	protected function getMetadata()
 	{
 		return $this->metadata;
+	}
+
+	protected function getEntityDefs()
+	{
+		return $this->entityDefs;
 	}
 
 	protected function getFileManager()
@@ -108,11 +120,9 @@ class Converter
 		return $this->metadataUtils;
 	}
 
-
-
 	public function process()
 	{
-		$entityDefs = $this->getMetadata()->get('entityDefs');
+		$entityDefs = $this->getEntityDefs();
 
 		$ormMeta = array();
 		foreach($entityDefs as $entityName => $entityMeta) {
@@ -122,7 +132,7 @@ class Converter
 				continue;
 			}
 
-			$ormMeta = Util::merge($ormMeta, $this->convertEntity($entityName, $entityMeta, $entityDefs));
+			$ormMeta = Util::merge($ormMeta, $this->convertEntity($entityName, $entityMeta));
 		}
 
 		$ormMeta = $this->afterProcess($ormMeta);
@@ -130,10 +140,7 @@ class Converter
 		return $ormMeta;
 	}
 
-
-
-	//convertToDatabaseFormat
-	protected function convertEntity($entityName, $entityMeta, $entityDefs)
+	protected function convertEntity($entityName, $entityMeta)
 	{
 		$ormMeta = array();
 		$ormMeta[$entityName] = array(
@@ -145,18 +152,19 @@ class Converter
 
 		$ormMeta[$entityName]['fields'] = $this->convertFields($entityName, $entityMeta);
 
-		$convertedLinks = $this->convertLinks($entityName, $entityMeta, $entityDefs);
+		$convertedLinks = $this->convertLinks($entityName, $entityMeta, $ormMeta);
 
 		$ormMeta = Util::merge($ormMeta, $convertedLinks);
 
 		return $ormMeta;
 	}
 
-
-	public function afterProcess(array $meta)
+	public function afterProcess(array $ormMeta)
 	{
+		$entityDefs = $this->getEntityDefs();
+
 		//load custom field definitions and customCodes
-		foreach($meta as $entityName => &$entityParams) {
+		foreach($ormMeta as $entityName => &$entityParams) {
 			foreach($entityParams['fields'] as $fieldName => $fieldParams) {
 
 				//load custom field definitions
@@ -167,17 +175,14 @@ class Converter
 				}
 
 				if (class_exists($className) && method_exists($className, 'load')) {
-					$helperClass = new $className($this->metadata);
-					$fieldResult = $helperClass->load(
-						array('name' => $entityName, 'params' => $entityParams),
-						array('name' => $fieldName, 'params' => $fieldParams)
-					);
+					$helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
+					$fieldResult = $helperClass->process( $fieldName, $entityName );
 					if (isset($fieldResult['unset'])) {
-						$meta = Util::unsetInArray($meta, $fieldResult['unset']);
+						$ormMeta = Util::unsetInArray($ormMeta, $fieldResult['unset']);
 						unset($fieldResult['unset']);
 					}
 
-					$meta = Util::merge($meta, $fieldResult);
+					$ormMeta = Util::merge($ormMeta, $fieldResult);
 				} //END: load custom field definitions
 
 
@@ -196,7 +201,7 @@ class Converter
 			}
 		}
 
-		foreach($meta as $entityName => &$entityParams) {
+		foreach($ormMeta as $entityName => &$entityParams) {
 			foreach($entityParams['fields'] as $fieldName => &$fieldParams) {
 
 				switch ($fieldParams['type']) {
@@ -224,9 +229,8 @@ class Converter
 
 		}
 
-		return $meta;
+		return $ormMeta;
 	}
-
 
 	/**
 	 * Metadata conversion from Espo format into Doctrine
@@ -292,8 +296,6 @@ class Converter
 
 		return $outputMeta;
 	}
-
-
 
 	protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta = null)
 	{
@@ -376,60 +378,25 @@ class Converter
 		return $subField;
 	}
 
-	protected function convertLinks($entityName, $entityMeta, array $entityDefs)
+	protected function convertLinks($entityName, $entityMeta, $ormMeta)
 	{
 		if (!isset($entityMeta['links'])) {
 			return array();
 		}
 
+		$entityDefs = $this->getEntityDefs();
+
 		$relationships = array();
 		foreach($entityMeta['links'] as $linkName => $linkParams) {
 
-			$linkEntityName = $this->getRelationManager()->getLinkEntityName($entityName, $linkParams);
+			$convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityName, $ormMeta);
 
-			$currentType = $linkParams['type'];
-
-			$foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$linkEntityName]);
-
-			$method = $currentType;
-			if ($foreignLink !== false) {
-				$method .= '-'.$foreignLink['params']['type'];
-			}
-			$method = Util::toCamelCase($method);
-
-			if ( $this->getRelationManager()->isRelationExists($method) ) {  //ex. hasManyHasMany
-				$convertedLink = $this->getRelationManager()->process($method, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
-			} else { //ex. hasMany
-				$convertedLink = $this->getRelationManager()->process($currentType, $entityName, array('name'=>$linkName, 'params'=>$linkParams), $foreignLink);
-			}
-
-			if ($convertedLink !== false) {
+			if (isset($convertedLink)) {
 				$relationships = Util::merge($convertedLink, $relationships);
 			}
 		}
 
 		return $relationships;
-	}
-
-	/**
-	* Get foreign Link
-	*
-	* @param string $parentLinkName
-	* @param array $parentLinkParams
-	* @param array $currentEntityDefs
-	*
-	* @return array - in format array('name', 'params')
-	*/
-	protected function getForeignLink($parentLinkName, $parentLinkParams, $currentEntityDefs)
-	{
-		if (isset($parentLinkParams['foreign']) && isset($currentEntityDefs['links'][$parentLinkParams['foreign']])) {
-			return array(
-				'name' => $parentLinkParams['foreign'],
-				'params' => $currentEntityDefs['links'][$parentLinkParams['foreign']],
-			);
-		}
-
-		return false;
 	}
 
 	protected function getInitValues(array $fieldParams)

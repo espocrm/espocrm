@@ -3,14 +3,14 @@
 		"name": "Name",
 		"emailAddress": "Email",
 		"website": "Website",
-		"phone": "Phone",
-		"fax": "Fax",
+		"phoneNumber": "Phone",
 		"billingAddress": "Billing Address",
 		"shippingAddress": "Shipping Address",
 		"description": "Description",
 		"sicCode": "Sic Code",
 		"industry": "Industry",
-		"type": "Type"		
+		"type": "Type",
+		"contactRole": "Role"
 	},
 	"links": {
 		"contacts": "Contacts",

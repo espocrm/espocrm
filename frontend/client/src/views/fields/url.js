@@ -27,7 +27,24 @@ Espo.define('Views.Fields.Url', 'Views.Fields.Varchar', function (Dep) {
 		
 		listTemplate: 'fields.url.detail',
 		
-		detailTemplate: 'fields.url.detail',										
+		detailTemplate: 'fields.url.detail',
+		
+		data: function () {
+			return _.extend({
+				url: this.getUrl()
+			}, Dep.prototype.data.call(this));
+		},
+		
+		getUrl: function () {
+			var url = this.model.get(this.name);
+			if (url && url != '') {			
+				if (!(url.indexOf('http://') === 0) && !(url.indexOf('https://') === 0)) {
+					url = 'http://' + url;
+				}
+				return url;
+			}
+			return url;
+		},									
 
 	});
 });

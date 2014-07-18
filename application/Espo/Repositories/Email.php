@@ -61,6 +61,24 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 		$this->prepareAddressess($entity, 'bcc');
 		
 		parent::beforeSave($entity);
+		
+		$parentId = $entity->get('parentId');
+		$parentType = $entity->get('parentType');
+		if (!empty($parentId) || !empty($parentType)) {
+			$parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+			if (!empty($parent)) {
+				if ($parent->getEntityName() == 'Account') {
+					$accountId = $parent->id;
+				} else if ($parent->has('accountId')) {
+					$accountId = $parent->get('accountId');
+				}
+				if (!empty($accountId)) {
+					$entity->set('accountId', $accountId);
+				}
+			}
+		} else {		
+			// TODO find account by from address
+		}
 	}
 	
 	protected function beforeRemove(Entity $entity)

@@ -53,7 +53,9 @@ class Config
 	 * @access private
 	 * @var array
 	 */
-	private $configData;
+	private $data;
+
+	private $changedData = array();
 
 	private $fileManager;
 
@@ -109,28 +111,25 @@ class Config
 			$name = array($name => $value);
 		}
 
-		return $this->setArray($name);
+		foreach ($name as $key => $value) {
+			$this->data[$key] = $value;
+			$this->changedData[$key] = $value;
+		}
 	}
 
-
-	/**
-	 * Set options from array
-	 *
-	 * @param array $values
-	 * @return bool
-	 */
-	protected function setArray($values)
+	public function save()
 	{
-		if (!is_array($values)) {
-			return false;
-		}
+		$values = $this->changedData;
 
 		if (!isset($values[$this->cacheTimestamp])) {
 			$values = array_merge($this->updateCacheTimestamp(true), $values);
 		}
 
 		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, true);
-		$this->loadConfig(true);
+		if ($result) {
+			$this->changedData = array();
+			$this->loadConfig(true);
+		}
 
 		return $result;
 	}
@@ -147,18 +146,18 @@ class Config
 	 */
 	protected function loadConfig($reload = false)
 	{
-		if (!$reload && isset($this->configData) && !empty($this->configData)) {
-			return $this->configData;
+		if (!$reload && isset($this->data) && !empty($this->data)) {
+			return $this->data;
 		}
 
 		$configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
 
-		$this->configData = $this->getFileManager()->getContents($configPath);
+		$this->data = $this->getFileManager()->getContents($configPath);
 
 		$systemConfig = $this->getFileManager()->getContents($this->systemConfigPath);
-		$this->configData = Util::merge($systemConfig, $this->configData);
+		$this->data = Util::merge($systemConfig, $this->data);
 
-		return $this->configData;
+		return $this->data;
 	}
 
 
@@ -170,9 +169,9 @@ class Config
 	 */
 	public function getData($isAdmin = false)
 	{
-		$configData = $this->loadConfig();
+		$data = $this->loadConfig();
 
-		$restrictedConfig = $configData;
+		$restrictedConfig = $data;
 		foreach($this->getRestrictItems($isAdmin) as $name) {
 			if (isset($restrictedConfig[$name])) {
 				unset($restrictedConfig[$name]);
@@ -200,7 +199,7 @@ class Config
 			}
 		}
 
-		return $this->setArray($values);
+		return $this->set($values);
 	}
 
 	/**
@@ -229,14 +228,14 @@ class Config
 	 */
 	protected function getRestrictItems($onlySystemItems = false)
 	{
-		$configData = $this->loadConfig();
+		$data = $this->loadConfig();
 
 		if ($onlySystemItems) {
-			return $configData['systemItems'];
+			return $data['systemItems'];
 		}
 
 		if (empty($this->adminItems)) {
-			$this->adminItems= Util::merge($configData['systemItems'], $configData['adminItems']);
+			$this->adminItems= Util::merge($data['systemItems'], $data['adminItems']);
 		}
 
 		return $this->adminItems;

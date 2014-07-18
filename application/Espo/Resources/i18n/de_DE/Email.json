@@ -4,7 +4,7 @@
 		"parent": "Bezieht sich auf",
 		"status": "Status",
 		"dateSent": "Sendedatum",
-		"from": "Von",
+		"from": "Von ",
 		"to": "An",
 		"cc": "CC",
 		"bcc": "BCC",

@@ -59,16 +59,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		return $this->getInjection('metadata');
 	}
 
-	protected function handleSelectParams(&$params, $entityName = false)
+	public function handleSelectParams(&$params)
 	{
-		$this->handleEmailAddressParams($params, $entityName);
+		$this->handleEmailAddressParams($params);
+		$this->handlePhoneNumberParams($params);
 	}
 
-	protected function handleEmailAddressParams(&$params, $entityName = false)
+	protected function handleEmailAddressParams(&$params)
 	{
-		if (empty($entityName)) {
-			$entityName = $this->entityName;
-		}
+		$entityName = $this->entityName;		
 
 		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
 		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
@@ -81,11 +80,31 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 			if (empty($params['joinConditions'])) {
 				$params['joinConditions'] = array();
 			}
-			$params['leftJoins'] = array('emailAddresses');
-			$params['joinConditions'] = array(
-				'emailAddresses' => array(
-					'primary' => 1
-				)
+			$params['leftJoins'][] = 'emailAddresses';
+			$params['joinConditions']['emailAddresses'] = array(
+				'primary' => 1
+			);
+		}
+	}
+	
+	protected function handlePhoneNumberParams(&$params)
+	{
+		$entityName = $this->entityName;		
+
+		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
+		if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
+			if (empty($params['leftJoins'])) {
+				$params['leftJoins'] = array();
+			}
+			if (empty($params['whereClause'])) {
+				$params['whereClause'] = array();
+			}
+			if (empty($params['joinConditions'])) {
+				$params['joinConditions'] = array();
+			}
+			$params['leftJoins'][] = 'phoneNumbers';
+			$params['joinConditions']['phoneNumbers'] = array(
+				'primary' => 1
 			);
 		}
 	}
@@ -172,6 +191,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		$entity->set($restoreData);
 
 		$this->handleEmailAddressSave($entity);
+		$this->handlePhoneNumberSave($entity);
 		$this->handleSpecifiedRelations($entity);
 
 		return $result;
@@ -181,6 +201,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 	{		
 		if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {		
 			$emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
+		}
+	}
+	
+	protected function handlePhoneNumberSave(Entity $entity)
+	{		
+		if ($entity->hasRelation('phoneNumbers') && $entity->hasField('phoneNumber')) {		
+			$emailAddressRepository = $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
 		}
 	}
 
@@ -195,21 +222,59 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 					if (is_array($specifiedIds)) {
 						$toRemoveIds = array();
 						$existingIds = array();
-						foreach ($entity->get($name) as $foreignEntity) {
+						$toUpdateIds = array();
+						$existingColumnsData = new \stdClass();
+						
+						$defs = array();
+						$columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".fields.{$name}.columns");
+						if (!empty($columns)) {	
+							$columnData = $entity->get($name . 'Columns');
+							$defs['additionalColumns'] = $columns;
+
+						}		
+			
+						foreach ($entity->get($name, $defs) as $foreignEntity) {
 							$existingIds[] = $foreignEntity->id;
+							if (!empty($columns)) {	
+								$data = new \stdClass();
+								foreach ($columns as $columnName => $columnField) {
+									$foreignId = $foreignEntity->id;
+									$data->$columnName = $foreignEntity->get($columnField);
+								}								
+								$existingColumnsData->$foreignId = $data;
+							}	
+													
 						}
 						foreach ($existingIds as $id) {
 							if (!in_array($id, $specifiedIds)) {
 								$toRemoveIds[] = $id;
+							} else {
+								if (!empty($columns)) {	
+									foreach ($columns as $columnName => $columnField) {
+										if ($columnData->$id->$columnName != $existingColumnsData->$id->$columnName) {
+											$toUpdateIds[] = $id;
+										}
+									}
+								}
 							}
 						}
 						foreach ($specifiedIds as $id) {
 							if (!in_array($id, $existingIds)) {
-								$this->relate($entity, $name, $id);
+								$data = null;
+								if (!empty($columns)) {	
+									$data = $columnData->$id;
+								}
+								$this->relate($entity, $name, $id, $data);
 							}
 						}
 						foreach ($toRemoveIds as $id) {
 							$this->unrelate($entity, $name, $id);
+						}
+						if (!empty($columns)) {	
+							foreach ($toUpdateIds as $id) {
+								$data = $columnData->$id;
+								$this->updateRelation($entity, $name, $id, $data);
+							}
 						}
 					}
 				}

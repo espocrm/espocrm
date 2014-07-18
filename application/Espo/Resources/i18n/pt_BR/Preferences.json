@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "dateFormat": "Formato da Data",
+        "timeFormat": "Formato da Hora",
+        "timeZone": "Time Zone",
+        "weekStart": "Primeiro dia da Semana",
+        "thousandSeparator": "Separador de milhar",
+        "decimalMark": "Separador decimal",
+        "defaultCurrency": "Moeda Padrão",
+        "currencyList": "Moedas Disponíveis",
+        "language": "Idioma",
+
+        "smtpServer": "Servidor",
+        "smtpPort": "Porta",
+        "smtpAuth": "Autenticação",
+        "smtpSecurity": "Segurança",
+        "smtpUsername": "Usuário",
+        "emailAddress": "E-mail",
+        "smtpPassword": "Senha",
+        "smtpEmailAddress": "Endereço de E-mail",
+
+        "exportDelimiter": "Delimitador de Exportação"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Domingo",
+            "1": "Segunda"
+        }
+    }
+}

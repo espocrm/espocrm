@@ -81,6 +81,9 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 			});
 			
 			this.once('remove', function () {
+				if (this.dialog) {
+					this.dialog.close();
+				}
 				$(containerSelector).remove();
 			});
 		},

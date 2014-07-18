@@ -18,33 +18,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class HasChildren extends \Espo\Core\Utils\Database\Orm\Base
+class HasChildren extends Base
 {
-
-	public function load($params, $foreignParams)
+	protected function load($linkName, $entityName)
 	{
+		$foreignLinkName = $this->getForeignLinkName();
+		$foreignEntityName = $this->getForeignEntityName();
+
 		return array(
-			$params['entityName'] => array (
+			$entityName => array (
 				'fields' => array(
-	               	$params['link']['name'].'Ids' => array(
+	               	$linkName.'Ids' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
-					$params['link']['name'].'Names' => array(
+					$linkName.'Names' => array(
 						'type' => 'varchar',
 						'notStorable' => true,
 					),
 				),
 				'relations' => array(
-                	$params['link']['name'] => array(
+                	$linkName => array(
 						'type' => 'hasChildren',
-						'entity' => $params['targetEntity'],
-						'foreignKey' => $foreignParams['link']['name'].'Id', //???: 'foreignKey' => $params['link']['name'].'Id',
-						'foreignType' => $foreignParams['link']['name'].'Type', //???: 'foreignKey' => $params['link']['name'].'Id',
+						'entity' => $foreignEntityName,
+						'foreignKey' => $foreignLinkName.'Id',
+						'foreignType' => $foreignLinkName.'Type',
 					),
 				),
 			),

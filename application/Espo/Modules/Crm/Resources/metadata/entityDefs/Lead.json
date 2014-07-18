@@ -67,17 +67,10 @@
         "emailAddress": {
             "type": "email"
         },
-        "phone": {
+        "phoneNumber": {
             "type": "phone",
-            "maxLength": 50
-        },
-        "fax": {
-            "type": "phone",
-            "maxLength": 50
-        },
-        "phoneOffice": {
-            "type": "phone",
-            "maxLength": 50
+            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+            "defaultType": "Mobile"
         },
         "doNotCall": {
             "type": "bool"
@@ -180,32 +173,18 @@
     },
     "convertFields": {
         "Contact": {
-            "name": "name",
-            "title": "title",
-            "emailAddress": "emailAddress",
-            "phone": "phone",
-            "address": "address",
-            "assignedUser": "assignedUser",
-            "teams": "teams"
         },
         "Account": {
             "name": "accountName",
-            "website": "website",
-            "emailAddress": "emailAddress",
-            "phone": "phoneOffice",
             "billingAddressStreet": "addressStreet",
             "billingAddressCity": "addressCity",
             "billingAddressState": "addressState",
             "billingAddressPostalCode": "addressPostalCode",
-            "billingAddressCountry": "addressCountry",
-            "assignedUser": "assignedUser",
-            "teams": "teams"
+            "billingAddressCountry": "addressCountry"
         },
         "Opportunity": {
             "amount": "opportunityAmount",
-            "leadSource": "source",
-            "assignedUser": "assignedUser",
-            "teams": "teams"
+            "leadSource": "source"
         }
     },
     "collection": {

@@ -373,6 +373,7 @@ _.extend(Espo.App.prototype, {
 		if (this.auth !== null) {
 		
 			this.language.load(null, true);
+			this.dateTime.setLanguage(this.language);
 		
 			var userData = options.user || this.storage.get('user', 'user') || null;
 			var preferencesData = options.preferences || this.storage.get('user', 'preferences') || null;

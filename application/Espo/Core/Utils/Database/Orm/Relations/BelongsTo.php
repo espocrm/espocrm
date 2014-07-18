@@ -18,39 +18,39 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class BelongsTo extends \Espo\Core\Utils\Database\Orm\Base
+class BelongsTo extends Base
 {
-
-	public function load($params, $foreignParams)
+	protected function load($linkName, $entityName)
 	{
+		$foreignEntityName = $this->getForeignEntityName();
+
 		return array (
-			$params['entityName'] => array (
+			$entityName => array (
 				'fields' => array(
-					$params['link']['name'].'Name' => array(
+					$linkName.'Name' => array(
 						'type' => 'foreign',
-						'relation' => $params['link']['name'],
-						'foreign' => $this->getForeignField('name', $foreignParams['entityName']),
+						'relation' => $linkName,
+						'foreign' => $this->getForeignField('name', $foreignEntityName),
 					),
-					$params['link']['name'].'Id' => array(
+					$linkName.'Id' => array(
 						'type' => 'foreignId',
 						'index' => true,
 					),
 				),
 				'relations' => array(
-                	$params['link']['name'] => array(
+                	$linkName => array(
 						'type' => 'belongsTo',
-						'entity' => $params['targetEntity'],
-						'key' => $params['link']['name'].'Id',
+						'entity' => $foreignEntityName,
+						'key' => $linkName.'Id',
 						'foreignKey' => 'id', //????
 					),
 				),
 			),
 		);
 	}
-
 
 }

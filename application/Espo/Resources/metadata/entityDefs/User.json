@@ -13,7 +13,8 @@
             "type": "personName"
         },
 		"password": {
-            "type": "password"
+            "type": "password",
+            "internal": true
         },
         "salutationName": {
             "type": "enum",
@@ -38,9 +39,10 @@
             "type": "email",
             "required": false
         },
-        "phone": {
+        "phoneNumber": {
             "type": "phone",
-            "maxLength": 50
+            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+            "defaultType": "Mobile"
         },
         "token": {
             "type": "varchar",

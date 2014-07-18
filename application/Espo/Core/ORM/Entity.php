@@ -24,19 +24,39 @@ namespace Espo\Core\ORM;
 
 class Entity extends \Espo\ORM\Entity
 {
-	public function loadLinkMultipleField($field)
+	public function loadLinkMultipleField($field, $columns = null)
 	{
 		if ($this->hasRelation($field) && $this->hasField($field . 'Ids')) {
-			$collection = $this->get($field);
+		
+			$defs = array();
+			if (!empty($columns)) {
+				$defs['additionalColumns'] = $columns;
+			}
+		
+			$collection = $this->get($field, $defs);
 			$ids = array();
-			$names = new \stdClass();		
+			$names = new \stdClass();
+			if (!empty($columns)) {
+				$columnsData = new \stdClass();
+			}
+			
 			foreach ($collection as $e) {
 				$id = $e->id;
 				$ids[] = $id;
 				$names->$id = $e->get('name');
+				if (!empty($columns)) {
+					$columnsData->$id = new \stdClass();
+					foreach ($columns as $column => $f) {				
+						$columnsData->$id->$column = $e->get($f);
+					}
+				}
 			}			
 			$this->set($field . 'Ids', $ids);
 			$this->set($field . 'Names', $names);
+			if (!empty($columns)) {
+				$this->set($field . 'Columns', $columnsData);
+			}
+			
 		}
 	}
 }

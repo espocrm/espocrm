@@ -44,49 +44,82 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			}
 		},
 		
+		addUnfollowButtonToMenu: function () {
+			this.menu.buttons.unshift({
+				name: 'unfollow',
+				label: 'Followed',
+				style: 'success',
+				action: 'unfollow'
+			});
+			
+			var index = -1;
+			this.menu.buttons.forEach(function (data, i) {
+				if (data.name == 'follow') {
+					var index = i;
+					return;
+				}
+			}, this);
+			if (~index) {
+				this.menu.buttons.splice(index, 1);
+			}			
+		},
+		
+		addFollowButtonToMenu: function () {
+			this.menu.buttons.unshift({
+				name: 'follow',
+				label: 'Follow',
+				style: 'default',
+				icon: 'glyphicon glyphicon-share-alt',
+				action: 'follow'
+			});
+			
+			var index = -1;
+			this.menu.buttons.forEach(function (data, i) {
+				if (data.name == 'unfollow') {
+					var index = i;
+					return;
+				}
+			}, this);
+			if (~index) {
+				this.menu.buttons.splice(index, 1);
+			}
+		},
+		
 		setup: function () {
 			Dep.prototype.setup.call(this);
 			
-			if (this.model.has('isFollowed')) {
-				if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
+			if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
+				if (this.model.has('isFollowed')) {				
 					if (this.model.get('isFollowed')) {
-						this.menu.buttons.unshift({
-							name: 'unfollow',
-							label: 'Followed',
-							style: 'success',
-							action: 'unfollow'
-						});
+						this.addUnfollowButtonToMenu();
 					} else {
-						this.menu.buttons.unshift({
-							name: 'follow',
-							label: 'Follow',
-							style: 'default',
-							icon: 'glyphicon glyphicon-share-alt',
-							action: 'follow'
-						});
+						this.addFollowButtonToMenu();
 					}
-				}
-			} else {
-				this.once('after:render', function () {
-					var proceed = function () {
-						if (this.model.has('isFollowed')) {
+				} else {
+					this.once('after:render', function () {					
+						var proceed = function () {						
 							if (this.model.get('isFollowed')) {
 								this.addUnfollowButton();
+								this.addUnfollowButtonToMenu();
 							} else {
 								this.addFollowButton();
-							}					
-						}
-					}.bind(this);
+								this.addFollowButtonToMenu();
 					
-					if (this.model.has('isFollowed')) {
-						proceed();
-					} else {
-						this.listenToOnce(this.model, 'sync', function () {
+							}
+						}.bind(this);
+					
+						if (this.model.has('isFollowed')) {
 							proceed();
-						}.bind(this));
-					}
+						} else {
+							this.listenToOnce(this.model, 'sync', function () {
+								if (this.model.has('isFollowed')) {
+									proceed();
+								}
+							}.bind(this));
+						}
 
-				}, this);
+					}, this);
+				}
 			}			
 		},
 		
@@ -152,6 +185,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 		},
 		
 		relatedAttributeMap: {},
+		
+		selectRelatedFilters: {},
 
 		actionCreateRelated: function (data) {
 			var self = this;
@@ -189,12 +224,23 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 			var scope = this.model.defs['links'][link].entity;
 			
 			var self = this;
+			
+			var attributes = {};
+			
+			var filters = this.selectRelatedFilters[link] || null;
+			
+			for (var filterName in filters) {	
+				if (typeof filters[filterName] == 'function') {
+					filters[filterName] = filters[filterName].call(this);
+				}			
+			}			
 
 			this.notify('Loading...');
 			this.createView('dialog', 'Modals.SelectRecords', {
 				scope: scope,
 				multiple: true,
 				createButton: false,
+				filters: filters,
 			}, function (dialog) {
 				dialog.render();
 				this.notify(false);

@@ -25,12 +25,13 @@ Espo.define('Crm:Views.Account.Detail', 'Views.Detail', function (Dep) {
 	
 		relatedAttributeMap: {
 			'contacts': {
-				'phone': 'phone',
 				'billingAddressCity': 'addressCity',
 				'billingAddressStreet': 'addressStreet',
 				'billingAddressPostalCode': 'addressPostalCode',
 				'billingAddressState': 'addressState',
-				'billingAddressCountry': 'addressCountry'
+				'billingAddressCountry': 'addressCountry',
+				'id': 'accountId',
+				'name': 'accountName'
 			},
 		},
 		

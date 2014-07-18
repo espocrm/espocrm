@@ -1,0 +1,9 @@
+{
+	"fields": {
+		"user": "Utilizator",
+		"ipAddress": "Adresa IP",
+		"lastAccess": "Data ultimei accesari",
+		"createdAt": "Data conectarii"
+
+	}
+}

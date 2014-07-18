@@ -49,7 +49,11 @@ class Record extends \Espo\Core\Services\Base
 	
 	private $streamService;
 	
-	protected $notFilteringFields = array();
+	protected $notFilteringFields = array(); // TODO maybe remove it
+	
+	protected $internalFields = array();
+	
+	protected $linkSelectParams = array();
 	
 	public function __construct()
 	{
@@ -119,19 +123,40 @@ class Record extends \Espo\Core\Services\Base
 	{		
 		return $this->getEntityManager()->getRepository($this->entityName);
 	}
+	
+	protected function getRecordService($name)
+	{    	
+    	if ($this->getServiceFactory()->checkExists($name)) {
+    		$service = $this->getServiceFactory()->create($name);
+    	} else {
+    		$service = $this->getServiceFactory()->create('Record');
+    		$service->setEntityName($name);
+    	}		
+		
+		return $service;
+	}
+	
+	protected function prepareEntity($entity)
+	{
+	
+	}
 
 	public function getEntity($id = null)
 	{
 		$entity = $this->getRepository()->get($id);		
-		if (!empty($entity) && !empty($id)) {		
-			$this->loadLinkMultipleFields($entity);			
-			$this->loadParentNameFields($entity);
-			$this->loadIsFollowed($entity);
-			$this->loadEmailAddressField($entity);
+		if (!empty($entity) && !empty($id)) {
+			$this->loadAdditionalFields($entity);			
+			
+			if ($entity->getEntityName() == 'Opportunity') {
+				$contactsColumns = $entity->get('contactsColumns');
+			}
 			
 			if (!$this->getAcl()->check($entity, 'read')) {
 				throw new Forbidden();
 			}
+		}
+		if (!empty($entity)) {
+			$this->prepareEntityForOutput($entity);
 		}
 		return $entity;
 	}
@@ -158,7 +183,11 @@ class Record extends \Espo\Core\Services\Base
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
 			if ($defs['type'] == 'linkMultiple') {
-				$entity->loadLinkMultipleField($field);	
+				$columns = null;
+				if (!empty($defs['columns'])) {
+					$columns = $defs['columns'];
+				}						
+				$entity->loadLinkMultipleField($field, $columns);	
 			}
 		}
 	}
@@ -180,12 +209,30 @@ class Record extends \Espo\Core\Services\Base
 		}
 	}
 	
+	protected function loadAdditionalFields($entity)
+	{
+		$this->loadLinkMultipleFields($entity);			
+		$this->loadParentNameFields($entity);
+		$this->loadIsFollowed($entity);
+		$this->loadEmailAddressField($entity);
+		$this->loadPhoneNumberField($entity);
+	}
+	
 	protected function loadEmailAddressField(Entity $entity)
 	{
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());		
 		if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
 			$dataFieldName = 'emailAddressData';
 			$entity->set($dataFieldName, $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity));
+		}
+	}
+	
+	protected function loadPhoneNumberField(Entity $entity)
+	{
+		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());		
+		if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
+			$dataFieldName = 'phoneNumberData';
+			$entity->set($dataFieldName, $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity));
 		}
 	}
 	
@@ -323,6 +370,7 @@ class Record extends \Espo\Core\Services\Base
 		
 		foreach ($collection as $e) {
 			$this->loadParentNameFields($e);
+			$this->prepareEntityForOutput($e);
 		}
 		
     	return array(
@@ -344,10 +392,18 @@ class Record extends \Espo\Core\Services\Base
 		}
     	    	
 		$selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
-		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+		
+		if (array_key_exists($link, $this->linkSelectParams)) {
+			$selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
+		}
+		
+		$collection = $this->getRepository()->findRelated($entity, $link, $selectParams);		
+		
+		$recordService = $this->getRecordService($foreignEntityName);
 		
 		foreach ($collection as $e) {
 			$this->loadParentNameFields($e);
+			$recordService->prepareEntityForOutput($e);
 		}
 		
     	return array(
@@ -567,6 +623,13 @@ class Record extends \Espo\Core\Services\Base
 			return $attachment->id;
 		}			
 		throw new Error();
+    }
+    
+    public function prepareEntityForOutput($entity)
+    {
+    	foreach ($this->internalFields as $field) {
+    		$entity->clear($field);
+    	}
     }
 }
 

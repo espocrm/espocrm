@@ -31,6 +31,8 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
 		},
 		
 		editable: true,
+		
+		ignoreList: [],
 	
 		setup: function () {
 			Dep.prototype.setup.call(this);
@@ -55,7 +57,8 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
 		readDataFromLayout: function (model, layout) {
 			var allFields = [];
 			for (var field in model.defs.fields) {
-				if (this.checkFieldType(model.getFieldParam(field, 'type'))) {
+				if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
+				
 					allFields.push(field);
 				}
 			}			
@@ -108,6 +111,14 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
 			}
 			return true;
 		},
+		
+		isFieldEnabled: function (model, name) {
+			if (this.ignoreList.indexOf(name) != -1) {
+				return false;
+			}
+			return !model.getFieldParam(name, 'disabled');
+		}
+		
 	});
 });
 

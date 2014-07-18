@@ -31,6 +31,8 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		
 		listTemplate: 'fields.email.list',
 		
+		searchTemplate: 'fields.email.search',
+		
 		validations: ['required', 'emailData'],		
 	
 		validateEmail: function () {
@@ -78,7 +80,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			if (this.mode == 'edit') {						
 				emailAddressData = Espo.Utils.clone(this.model.get(this.dataFieldName));
 	
-				if (this.model.isNew()) {			
+				if (this.model.isNew() || !this.model.get(this.name)) {			
 					if (!emailAddressData || !emailAddressData.length) {
 		 				emailAddressData = [{
 							emailAddress: '',
@@ -149,7 +151,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			},
 
 			'click [data-action="addEmailAddress"]': function () {			
-				var data = this.fetchEmailAddressData();				
+				var data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());				
 		
 				o = {
 					emailAddress: '',
@@ -161,7 +163,8 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				data.push(o);				
 				
 				this.model.set(this.dataFieldName, data, {silent: true});
-				this.render();
+				this.render();				
+				
 			},
 			
 		},
@@ -175,6 +178,25 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			
 			if (changePrimary) {
 				this.$el.find('button[data-property-type="primary"]').first().addClass('active').children().removeClass('text-muted');
+			}
+			
+			this.manageButtonsVisibility();
+		},
+		
+		afterRender: function () {
+			Dep.prototype.afterRender.call(this);
+			this.manageButtonsVisibility();
+		},
+		
+		manageButtonsVisibility: function () {
+			var $primary = this.$el.find('button[data-property-type="primary"]');
+			var $remove = this.$el.find('button[data-action="removeEmailAddress"]');
+			if ($primary.size() > 1) {
+				$primary.removeClass('hidden');
+				$remove.removeClass('hidden');
+			} else {
+				$primary.addClass('hidden');
+				$remove.addClass('hidden');				
 			}
 		},
 		
@@ -223,6 +245,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			
 			return data;
 		},
+
 		
 		fetch: function () {
 			var data = {};	
@@ -240,10 +263,10 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 		fetchSearch: function () {
 			var value = this.$element.val() || null;
 			if (value) {
-				value += '%';
 				var data = {
 					type: 'like',
-					value: value,
+					value: value + '%',
+					valueText: value
 				};
 				return data;
 			}

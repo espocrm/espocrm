@@ -1,0 +1,38 @@
+{
+	"fields": {
+		"name": "Nume",
+		"number": "Numar",
+		"status": "Status",
+		"account": "Cont",
+		"contact": "Contact",
+		"priority": "Prioritate",
+		"type": "Tip",
+		"description": "Descriere"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"New": "Nou",
+			"Assigned": "Alocat",
+			"Pending": "In asteptare",
+			"Closed": "Inchis",
+			"Rejected": "Respins",
+			"Duplicate": "Duplicat"
+		},
+		"priority" : {
+			"Low": "Scazut",
+			"Normal": "Normal",
+			"High": "Inalt",
+			"Urgent": "Urgent"
+		},
+		"type": {
+			"Question": "Intrebare",
+			"Incident": "Incident",
+			"Problem": "Problema"
+		}
+	},
+	"labels": {
+		"Create Case": "Creare Caz"
+	}
+}

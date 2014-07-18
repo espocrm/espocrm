@@ -40,7 +40,7 @@
 						<a href="javascript:" class="sort" data-name="{{this.name}}">{{translate this.name scope=../../../collection.name category='fields'}}</a>
 						{{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}								
 					{{else}}
-						{{this.name}}
+						{{translate this.name scope=../../../collection.name category='fields'}}
 					{{/if}}
 				</th>
 				{{/each}}

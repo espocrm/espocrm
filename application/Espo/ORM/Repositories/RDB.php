@@ -66,7 +66,7 @@ class RDB extends \Espo\ORM\Repository
 		return $this->mapper;
 	}		
 	
-	protected function handleSelectParams(&$params)
+	public function handleSelectParams(&$params)
 	{
 	}
 	
@@ -89,9 +89,11 @@ class RDB extends \Espo\ORM\Repository
 	protected function getNewEntity()
 	{
 		$entity = $this->entityFactory->create($this->entityName);
-		$entity->setIsNew(true);
-		$entity->populateDefaults();
-		return $entity;	
+		if ($entity) {
+			$entity->setIsNew(true);
+			$entity->populateDefaults();
+			return $entity;
+		}
 	}
 	
 	protected function getEntityById($id)
@@ -100,9 +102,11 @@ class RDB extends \Espo\ORM\Repository
 		$this->handleSelectParams($params);
 		
 		$entity = $this->entityFactory->create($this->entityName);
-		if ($this->getMapper()->selectById($entity, $id, $params)) {
-			$entity->setAsFetched();
-			return $entity;
+		if ($entity) {
+			if ($this->getMapper()->selectById($entity, $id, $params)) {
+				$entity->setAsFetched();
+				return $entity;
+			}
 		}
 		return null;
 	}
@@ -182,8 +186,8 @@ class RDB extends \Espo\ORM\Repository
 	
 	public function findRelated(Entity $entity, $relationName, array $params = array())
 	{
-		$entityName = $entity->relations[$relationName]['entity'];
-		$this->handleSelectParams($params, $entityName);		
+		$entityName = $entity->relations[$relationName]['entity'];		
+		$this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);		
 		
 		$result = $this->getMapper()->selectRelated($entity, $relationName, $params);		
 
@@ -199,18 +203,21 @@ class RDB extends \Espo\ORM\Repository
 	public function countRelated(Entity $entity, $relationName, array $params = array())
 	{		
 		$entityName = $entity->relations[$relationName]['entity'];
-		$this->handleSelectParams($params, $entityName);
+		$this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
 		
 		return $this->getMapper()->countRelated($entity, $relationName, $params);
 	}
 	
-	public function relate(Entity $entity, $relationName, $foreign)
+	public function relate(Entity $entity, $relationName, $foreign, $data)
 	{
+		if ($data instanceof \stdClass) {
+			$data = get_object_vars($data);
+		}
 		if ($foreign instanceof Entity) {
-			return $this->getMapper()->relate($entity, $relationName, $foreign);
+			return $this->getMapper()->relate($entity, $relationName, $foreign, $data);
 		}
 		if (is_string($foreign)) {
-			return $this->getMapper()->addRelation($entity, $relationName, $foreign);
+			return $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $data);
 		}
 		return false;
 	}
@@ -228,6 +235,23 @@ class RDB extends \Espo\ORM\Repository
 		}
 		return false;
 	}
+	
+	public function updateRelation(Entity $entity, $relationName, $foreign, $data)
+	{
+		if ($data instanceof \stdClass) {
+			$data = get_object_vars($data);
+		}
+		if ($foreign instanceof Entity) {
+			$id = $foreign->id;
+		} else {
+			$id = $foreign;
+		}
+		if (is_string($foreign)) {
+			return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
+		}
+		return false;
+	}
+	
 	
 	public function getAll()
 	{

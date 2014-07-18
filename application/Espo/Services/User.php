@@ -26,6 +26,8 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
 
+use \Espo\ORM\Entity;
+
 class User extends Record
 {	
 	protected function init()
@@ -33,6 +35,8 @@ class User extends Record
 		$this->dependencies[] = 'mailSender';
 		$this->dependencies[] = 'language';
 	}
+	
+	protected $internalFields = array('password');
 	
 	protected function getMailSender()
 	{
@@ -51,7 +55,6 @@ class User extends Record
 		}
 		
 		$entity = parent::getEntity($id);
-	    $entity->clear('password');	 
 	    return $entity;	    
 	}
 	
@@ -67,9 +70,6 @@ class User extends Record
 		);
 		
 		$result = parent::findEntities($params);
-	    foreach ($result['collection'] as $entity) {
-	    	$entity->clear('password');
-	    }
 	    return $result;	    
 	}	
 	
@@ -132,9 +132,7 @@ class User extends Record
 	}
 	
 	protected function sendPassword(Entity $user, $password)
-	{
-		// TODO use cron job
-		
+	{		
 		$emailAddress = $user->get('emailAddress');
 		
 		if (empty($emailAddress)) {

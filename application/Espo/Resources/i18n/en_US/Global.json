@@ -31,6 +31,7 @@
 		"Loading...": "Loading...",
 		"Uploading...": "Uploading...",
 		"Sending...": "Sending...",
+		"Removed": "Removed",
 		"Posted": "Posted",
 		"Linked": "Linked",	
 		"Unlinked": "Unlinked",
@@ -107,7 +108,8 @@
 		"Original": "Original",
 		"You": "You",
 		"you": "you",
-		"change": "change"
+		"change": "change",
+		"Primary": "Primary"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",

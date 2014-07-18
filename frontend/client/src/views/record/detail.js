@@ -79,14 +79,14 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		sideView: 'Record.DetailSide',
 
 		bottomView: 'Record.DetailBottom',
-
-		_form: null,
 		
 		editModeEnabled: true,
 		
 		readOnly: false,		
 		
 		isWide: false,
+		
+		dependencyDefs: {},
 		
 		events: {
 			'click .button-container button': function (e) {
@@ -233,7 +233,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 				this.trigger('before:delete');
 				this.trigger('delete');
 
-				this.notify('Deleting...');
+				this.notify('Removing...');
 
 				var self = this;
 				this.model.destroy({
@@ -242,19 +242,12 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 						self.notify('Error occured!', 'error');
 					},
 					success: function () {
-						self.notify('Deleted!', 'success');
+						self.notify('Removed', 'success');
 						self.trigger('after:delete');
 						self.exit('delete');
 					},
 				});
 			}
-		},
-
-		getForm: function () {
-			if (this._form === null) {
-				this._form = $("#form-" + this.id).get()[0];
-			}
-			return this._form;
 		},
 
 		hideField: function (name) {
@@ -359,7 +352,24 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			this.listenTo(this.model, 'sync', function () {
 				this.attributes = this.model.getClonedAttributes();
 			}.bind(this));
-		},		
+			
+			
+			this._initDependancy();
+		},	
+		
+		_initDependancy: function () {		
+			this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
+				
+			Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+				this.listenTo(this.model, 'change:' + attr, function () {
+					this._handleDependencyAttribute(attr);
+				}, this);				
+			}, this);
+			
+			this.on('after:render', function () {
+				this._handleDependencyAttributes();
+			}, this);
+		},	
 		
 		validate: function () {
 			var notValid = false;
@@ -385,7 +395,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			
 			var attrsBefore = this.model.getClonedAttributes();
 			
-			data = _.extend(_.clone(attrsBefore), data);			
+			data = _.extend(Espo.Utils.cloneDeep(attrsBefore), data);			
 						
 			var attrs = false;
 			if (model.isNew()) {
@@ -530,6 +540,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			for (var p in simplifiedLayout) {
 				var panel = {};
 				panel.label = simplifiedLayout[p].label || null;
+				panel.name = simplifiedLayout[p].name || null;
 				panel.rows = [];
 				for (var i in simplifiedLayout[p].rows) {
 					var row = [];
@@ -650,6 +661,70 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			}
 			this.getRouter().navigate(url, {trigger: true});
 		},
+		
+		_handleDependencyAttributes: function () {
+			Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+				this._handleDependencyAttribute(attr);				
+			}, this);
+		},
+		
+		_handleDependencyAttribute: function (attr) {
+			var data = this.dependencyDefs[attr];
+			var value = this.model.get(attr);
+			if (value in (data.map || {})) {
+				(data.map[value] || []).forEach(function (item) {
+					this._doDependencyAction(item);
+				}, this);
+			} else {
+				if ('default' in data) {
+					(data.default || []).forEach(function (item) {
+						this._doDependencyAction(item);
+					}, this);
+				}
+			}
+		},
+		
+		_doDependencyAction: function (data) {
+			var action = data.action;		
+			
+			var methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
+			if (methodName in this && typeof this.methodName == 'function') {
+				this.methodName(data);
+				return;
+			}
+			
+			var fields = data.fields || [];
+			
+			switch (action) {
+				case 'hide':
+					fields.forEach(function (field) {
+						this.hideField(field);
+					}, this);
+					break;
+				case 'show':
+					fields.forEach(function (field) {
+						this.showField(field);
+					}, this);
+					break;
+				case 'setRequired':
+					fields.forEach(function (field) {
+						var fieldView = this.getFieldView(field);
+						if (fieldView) {
+							fieldView.setRequired();
+						}
+					}, this);
+					break;
+				case 'setNotRequired':
+					fields.forEach(function (field) {
+						var fieldView = this.getFieldView(field);
+						if (fieldView) {
+							fieldView.setRequired();
+						}
+					}, this);
+					break;								
+			}
+		},
+		
 	});
 
 });

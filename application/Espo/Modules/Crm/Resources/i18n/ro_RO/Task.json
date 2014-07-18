@@ -1,0 +1,31 @@
+{
+	"fields": {
+		"name": "Nume",
+		"parent": "Parinte",
+		"status": "Status",
+		"dateStart": "Data inceput",
+		"dateEnd": "Data scadenta",
+		"priority": "Prioritate",
+		"description": "Descriere",
+		"isOverdue": "Este Restant"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Not Started": "Ne inceput",
+			"Started": "Inceput",
+			"Completed": "Completat",
+			"Canceled": "Anulat"
+		},
+		"priority" : {
+			"Low": "Scazut",
+			"Normal": "Normal",
+			"High": "Inalt",
+			"Urgent": "Urgent"
+		}
+	},
+	"labels": {
+		"Create Task": "Creaza Activitate"
+	}
+}

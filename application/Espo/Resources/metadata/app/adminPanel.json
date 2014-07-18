@@ -8,6 +8,11 @@
             "description":"settings"
          },
          {
+            "url":"#Admin/authentication",
+            "label":"Authentication",
+            "description":"authentication"
+         },
+         {
             "url":"#ScheduledJob",
             "label":"Scheduled Jobs",
             "description":"scheduledJob"
@@ -46,6 +51,11 @@
             "url":"#Role",
             "label":"Roles",
             "description":"roles"
+         },
+         {
+            "url":"#Admin/authTokens",
+            "label":"Auth Tokens",
+            "description":"authTokens"
          }
       ]
    },

@@ -56,15 +56,44 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
 				}.bind(this));
 			},
 		},
+		
+		disableButtons: function () {
+		
+		},
 
 		setup: function () {
-			if (!this.options.id && !this.options.scope) {
-				this.options.scope = this.scopeList[0];
+			if (!this.options.id && !this.options.scope) {			
+				this.options.scope = this.getConfig().get('calendarDefaultEntity', this.scopeList[0]);
 			}
 			Dep.prototype.setup.call(this);
 			
 			if (!this.id) {
 				this.header = this.translate('Create', 'labels', 'Calendar');
+			}
+			
+			if (this.id) {			
+				this.buttons.splice(1, 0, {
+					name: 'remove',
+					text: this.translate('Remove'),
+					style: 'danger',
+					onClick: function (dialog) {									
+						var model = this.getView('edit').model;
+											
+						if (confirm(this.translate('Are you sure?'))) {	
+							var $buttons = dialog.$el.find('.modal-footer button');		
+							$buttons.addClass('disabled');		
+							model.destroy({
+								success: function () {
+									this.trigger('after:destroy', model);
+									dialog.close();
+								}.bind(this),
+								error: function () {
+									$buttons.removeClass('disabled');
+								},
+							});
+						}
+					}.bind(this)
+				});
 			}
 			
 			this.once('after:save', function (model) {
@@ -74,6 +103,11 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
 				} else {
 					parentView.updateModel.call(parentView, model);
 				}
+			}.bind(this));
+			
+			this.once('after:destroy', function (model) {
+				var parentView = this.getParentView();
+				parentView.removeModel.call(parentView, model);				
 			}.bind(this));
 		},
 	});

@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "name": "Nome",
+        "status": "Status",
+        "job": "Tarefa",
+        "scheduling": "Agendando (notação do crontab)"
+    },
+    "links": {
+        "log": "Log"
+    },
+    "labels": {
+        "Create ScheduledJob": "Agendar Tarefa"
+    },
+    "options": {
+        "job": {
+            "CheckInboundEmails": "Checar Emails Recebidos",
+            "Cleanup": "Limpar"
+        },
+        "cronSetup": {
+            "linux": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do Espo:",
+            "mac": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do Espo:",
+            "windows": "Nota: Crie um arquivo em lote pcom os seguintes comandos para executar as tarefas agendadas do Espo no agendador de tarefas do Windows:",
+            "default": "Nota: Adicione este comando Cron Job (Tarefa agendada):"
+        },
+        "status": {
+            "Active": "Ativo",
+            "Inactive": "Inativo"
+        }
+    }
+}

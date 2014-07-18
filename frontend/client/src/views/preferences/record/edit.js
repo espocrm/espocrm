@@ -37,6 +37,25 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 			}			
 		],
 		
+		dependencyDefs: {
+			'smtpAuth': {
+				map: {
+					true: [
+						{
+							action: 'show',
+							fields: ['smtpUsername', 'smtpPassword']
+						}
+					]
+				},
+				default: [
+					{
+						action: 'hide',
+						fields: ['smtpUsername', 'smtpPassword']
+					}
+				]
+			}
+		},
+		
 		setup: function () {
 			Dep.prototype.setup.call(this);
 			
@@ -49,24 +68,7 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 		},
 		
 		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			
-			if (!this.model.get('smtpAuth')) {
-				this.hideField('smtpUsername');
-				this.hideField('smtpPassword');	
-			}
-			
-			var smtpAuthField = this.getFieldView('smtpAuth');
-			this.listenTo(smtpAuthField, 'change', function () {
-				var smtpAuth = smtpAuthField.fetch()['smtpAuth'];					
-				if (smtpAuth) {
-					this.showField('smtpUsername');
-					this.showField('smtpPassword');
-				} else {
-					this.hideField('smtpUsername');
-					this.hideField('smtpPassword');
-				}
-			}.bind(this));
+			Dep.prototype.afterRender.call(this);			
 			
 			var smtpSecurityField = this.getFieldView('smtpSecurity');
 			this.listenTo(smtpSecurityField, 'change', function () {

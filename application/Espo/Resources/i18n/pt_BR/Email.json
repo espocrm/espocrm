@@ -1,0 +1,32 @@
+{
+	"fields": {
+		"name": "Assunto",
+		"parent": "Origem",
+		"status": "Status",
+		"dateSent": "Data do envio",
+		"from": "De",
+		"to": "Para",
+		"cc": "CC",
+		"bcc": "BCC",
+		"isHtml": "Html",
+		"body": "Corpo",
+		"subject": "Assunto",
+		"attachments": "Anexos",
+		"selectTemplate": "Escolher Template",
+		"fromEmailAddress": "E-mail do rementente",
+		"toEmailAddresses": "E-mail do destinatário",
+		"emailAddress": "Endereço de E-mail"
+	},
+	"links": {
+	},
+	"options": {
+		"Draft": "Rascunho",
+		"Sending": "Enviando",
+		"Sent": "Enviado",
+		"Archived": "Arquivado"
+	},
+	"labels": {
+		"Create Email": "Criar e-mail",
+		"Compose": "Compor"
+	}
+}

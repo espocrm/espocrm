@@ -1,0 +1,21 @@
+{
+	"fields": {
+		"name": "İsim",
+		"emailAddress": "Eposta",
+		"title": "Başlık",
+		"website": "Website",
+		"accountName": "Hesap Adı",
+		"phone": "Telefon",
+		"phoneOffice": "Phone (Office)",
+		"fax": "Faks",
+		"doNotCall": "Arama Yapma",
+		"address": "Adres",
+		"description": "açıklama"
+	},
+	"links": {
+	},
+	"labels": {
+		"Create Prospect": "Beklenti Oluştur",
+		"Convert to Lead": "Müşteri Adayına Dönüştür"
+	}
+}

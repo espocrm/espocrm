@@ -13,6 +13,13 @@
             "type": "link",
             "required": true
         },
+        "contacts": {
+            "type": "linkMultiple",
+            "view": "Crm:Opportunity.Fields.Contacts",
+            "columns": {
+            	"role": "opportunityRole"
+            }
+        },
         "stage": {
             "type": "enum",
             "options": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis", "Proposal/Price Quote", "Negotiation/Review", "Closed Won", "Closed Lost"],
@@ -27,7 +34,7 @@
         },
         "leadSource": {
             "type": "enum",
-            "options": ["Other", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign"]
+            "view": "Crm:Opportunity.Fields.LeadSource"
         },
         "closeDate": {
             "type": "date",
@@ -87,7 +94,13 @@
         "contacts": {
             "type": "hasMany",
             "entity": "Contact",
-            "foreign": "opportunities"
+            "foreign": "opportunities",
+			"additionalColumns": {
+				"role": {
+					"type": "varchar",
+		    		"len": 50
+				}
+			}
         },
         "meetings": {
             "type": "hasChildren",

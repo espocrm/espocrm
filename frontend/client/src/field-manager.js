@@ -68,7 +68,9 @@ _.extend(Espo.FieldManager.prototype, {
 		var defs = this.metadata.get('entityDefs.' + entityName + '.fields') || {};		
 		Object.keys(defs).forEach(function (field) {
 			this.getAttributes(defs[field]['type'], field).forEach(function (attr) {
-				list.push(attr);
+				if (!~list.indexOf(attr)) {
+					list.push(attr);				
+				}
 			});					
 		}, this);
 		return list;
@@ -130,8 +132,8 @@ _.extend(Espo.FieldManager.prototype, {
 
 	getViewName: function (fieldType) {
 		if (fieldType in this.defs) {
-			if ('module' in this.defs[fieldType]) {
-				return this.defs[fieldType].module + ':Fields.' + Espo.Utils.upperCaseFirst(fieldType);
+			if ('view' in this.defs[fieldType]) {
+				return this.defs[fieldType].view;
 			}
 		}
 		return 'Fields.' + Espo.Utils.upperCaseFirst(fieldType);

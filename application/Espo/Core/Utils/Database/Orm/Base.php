@@ -26,18 +26,21 @@ use Espo\Core\Utils\Util;
 
 class Base
 {
+	private $itemName = null;
+
+	private $entityName = null;
+
 	private $metadata;
 
-	private $params;
+	private $ormEntityDefs;
 
-	private $foreignParams;
+	private $entityDefs;
 
-	protected $allowParams = array();
-
-
-	public function __construct(\Espo\Core\Utils\Metadata $metadata)
+	public function __construct(\Espo\Core\Utils\Metadata $metadata, array $ormEntityDefs, array $entityDefs)
 	{
 		$this->metadata = $metadata;
+		$this->ormEntityDefs = $ormEntityDefs;
+		$this->entityDefs = $entityDefs;
 	}
 
 	protected function getMetadata()
@@ -45,80 +48,197 @@ class Base
 		return $this->metadata;
 	}
 
-	protected function getParams()
+	protected function getOrmEntityDefs()
 	{
-		return $this->params;
+		return $this->ormEntityDefs;
 	}
 
-	protected function getForeignParams()
+	protected function getEntityDefs()
 	{
-		return $this->foreignParams;
+		return $this->entityDefs;
 	}
 
-	protected function setParams(array $params)
+	/**
+	 * Set current Field name OR Link name
+	 *
+	 * @param void
+	 */
+	protected function setItemName($itemName)
 	{
-		$this->params = $params;
+		$this->itemName = $itemName;
 	}
 
-	protected function setForeignParams(array $foreignParams)
+	/**
+	 * Get current Field name
+	 *
+	 * @return string
+	 */
+	protected function getFieldName()
 	{
-		$this->foreignParams = $foreignParams;
+		return $this->itemName;
 	}
 
-
-	public function process($params, $foreignParams)
+	/**
+	 * Get current Link name
+	 *
+	 * @return string
+	 */
+	protected function getLinkName()
 	{
-		$this->setParams($params);
-		$this->setForeignParams($foreignParams);
-
-		$loads = $this->load($params, $foreignParams);
-
-		$loads = $this->mergeAllowedParams($loads);
-
-		return $loads;
+		return $this->itemName;
 	}
 
-	private function mergeAllowedParams($loads)
+	/**
+	 * Set current Entity Name
+	 *
+	 * @param void
+	 */
+	protected function setEntityName($entityName)
 	{
-		$params = $this->getParams();
+		$this->entityName = $entityName;
+	}
 
-		if (!empty($this->allowParams)) {
-			$linkParams = &$loads[$params['entityName']] ['relations'] [$params['link']['name']];
+	/**
+	 * Get current Entity Name
+	 *
+	 * @return string
+	 */
+	protected function getEntityName()
+	{
+		return $this->entityName;
+	}
 
-			foreach ($this->allowParams as $name) {
-
-				$additionalParrams = $this->getAllowedAdditionalParams($name);
-
-				if (isset($additionalParrams) && !isset($linkParams[$name])) {
-					$linkParams[$name] = $additionalParrams;
-				}
+	protected function setMethods(array $keyValueList)
+	{
+		foreach ($keyValueList as $key => $value) {
+			$methodName = 'set' . ucfirst($key);
+			if (method_exists($this, $methodName)) {
+				$this->$methodName($value);
 			}
 		}
-
-		return $loads;
 	}
 
-	private function getAllowedAdditionalParams($allowedItemName)
+	/**
+	 * Start process Orm converting for fields/relations
+	 *
+	 * @param  string $itemName    Field name OR Link name
+	 * @param  string $entityName
+	 * @return array
+	 */
+	public function process($itemName, $entityName)
 	{
-		$params = $this->getParams();
-		$foreignParams = $this->getForeignParams();
+		$inputs = array(
+			'itemName' => $itemName,
+			'entityName' => $entityName,
+		);
+		$this->setMethods($inputs);
 
-		$linkParams = isset($params['link']['params'][$allowedItemName]) ? $params['link']['params'][$allowedItemName] : null;
-		$foreignLinkParams = isset($foreignParams['link']['params'][$allowedItemName]) ? $foreignParams['link']['params'][$allowedItemName] : null;
+		$convertedDefs = $this->load($itemName, $entityName);
 
-		$additionalParrams = null;
+		$inputs = $this->setArrayValue(null, $inputs);
+		$this->setMethods($inputs);
 
-		if (isset($linkParams) && isset($foreignLinkParams)) {
-			$additionalParrams = Util::merge($linkParams, $foreignLinkParams);
-		} else if (isset($linkParams)) {
-			$additionalParrams = $linkParams;
-		} else if (isset($foreignLinkParams)) {
-			$additionalParrams = $foreignLinkParams;
+		return $convertedDefs;
+	}
+
+	/**
+	 * Get Entity Defs by type (entity/orm)
+	 *
+	 * @param  boolean $isOrmEntityDefs
+	 * @return array
+	 */
+	protected function getDefs($isOrmEntityDefs = false)
+	{
+		$entityDefs = $isOrmEntityDefs ? $this->getOrmEntityDefs() : $this->getEntityDefs();
+
+		return $entityDefs;
+	}
+
+	/**
+	 * Get entity params by name
+	 *
+	 * @param  string $entityName
+	 * @param  bool $isOrmEntityDefs
+	 * @param  mixed $returns
+	 * @return mixed
+	 */
+	protected function getEntityParams($entityName = null, $isOrmEntityDefs = false, $returns = null)
+	{
+		if (!isset($entityName)) {
+			$entityName = $this->getEntityName();
 		}
 
-		return $additionalParrams;
+		$entityDefs = $this->getDefs($isOrmEntityDefs);
+
+		if (isset($entityDefs[$entityName])) {
+			return $entityDefs[$entityName];
+		}
+
+		return $returns;
 	}
 
+	/**
+	 * Get field params by name for a specified entity
+	 *
+	 * @param  string $fieldName
+	 * @param  string $entityName
+	 * @param  bool $isOrmEntityDefs
+	 * @param  mixed $returns
+	 * @return mixed
+	 */
+	protected function getFieldParams($fieldName = null, $entityName = null, $isOrmEntityDefs = false, $returns = null)
+	{
+		if (!isset($fieldName)) {
+			$fieldName = $this->getFieldName();
+		}
+		if (!isset($entityName)) {
+			$entityName = $this->getEntityName();
+		}
+
+		$entityDefs = $this->getDefs($isOrmEntityDefs);
+
+		if (isset($entityDefs[$entityName]) && isset($entityDefs[$entityName]['fields'][$fieldName])) {
+			return $entityDefs[$entityName]['fields'][$fieldName];
+		}
+
+		return $returns;
+	}
+
+	/**
+	 * Get relation params by name for a specified entity
+	 *
+	 * @param  string $linkName
+	 * @param  string $entityName
+	 * @param  bool $isOrmEntityDefs
+	 * @param  mixed $returns
+	 * @return mixed
+	 */
+	protected function getLinkParams($linkName = null, $entityName = null, $isOrmEntityDefs = false, $returns = null)
+	{
+		if (!isset($linkName)) {
+			$linkName = $this->getLinkName();
+		}
+		if (!isset($entityName)) {
+			$entityName = $this->getEntityName();
+		}
+
+		$entityDefs = $this->getDefs($isOrmEntityDefs);
+		$relationKeyName = $isOrmEntityDefs ? 'relations' : 'links';
+
+		if (isset($entityDefs[$entityName]) && isset($entityDefs[$entityName][$relationKeyName][$linkName])) {
+			return $entityDefs[$entityName][$relationKeyName][$linkName];
+		}
+
+		return $returns;
+	}
+
+	/**
+	 * Get Foreign field
+	 *
+	 * @param  string $name
+	 * @param  string $entityName
+	 * @return string
+	 */
 	protected function getForeignField($name, $entityName)
 	{
 		$foreignField = $this->getMetadata()->get('entityDefs.'.$entityName.'.fields.'.$name);
@@ -141,6 +261,19 @@ class Base
 		return $name;
 	}
 
+	/**
+	 * Set a value for all elements of array. So, in result all elements will have the same values
+	 *
+	 * @param string $value
+	 * @param array  $array
+	 */
+	protected function setArrayValue($inputValue, array $array)
+	{
+		foreach ($array as &$value) {
+			$value = $inputValue;
+		}
 
+		return $array;
+	}
 
 }

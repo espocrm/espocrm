@@ -30,6 +30,22 @@ Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
 			},
 		},
 		
+		selectRelatedFilters: {
+			'contacts': {
+				'account': function () {
+					if (this.model.get('accountId')) {
+						return {
+							field: 'accountId',
+							type: 'equals',
+							value: this.model.get('accountId'),
+							valueName: this.model.get('accountName')
+						};
+					}
+				},
+				
+			},
+		},
+		
 	});
 });
 

@@ -1,0 +1,12 @@
+{
+	"fields": {
+		"name": "Nume",
+		"roles": "Roluri"
+	},
+	"links": {
+		"users": "Utilizatori"
+	},
+	"labels": {
+		"Create Team": "Creare Echipa"
+	}
+}

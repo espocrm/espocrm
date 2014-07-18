@@ -1,0 +1,43 @@
+{
+    "fields": {
+        "name": "Nome",
+        "account": "Conta",
+        "stage": "Estágio",
+        "amount": "Valor",
+        "probability": "Probabilidade, %",
+        "leadSource": "Lead de Origem",
+        "doNotCall": "Não ligar",
+        "closeDate": "Data para Fechamento",
+        "description": "Descrição"
+    },
+    "links": {
+        "contacts": "Contatos"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Prospectando",
+            "Qualification": "Qualificação",
+            "Needs Analysis": "Necessita de Análise",
+            "Value Proposition": "Proposta de Valor",
+            "Id. Decision Makers": "Identificação dos Decisores",
+            "Perception Analysis": "Análise da Percepção",
+            "Proposal/Price Quote": "Proposta/Cotação",
+            "Negotiation/Review": "Negociação/Revisão",
+            "Closed Won": "Ganha",
+            "Closed Lost": "Perdida"
+        },
+        "leadSource": {
+            "Call": "Ligação",
+            "Email": "E-mail",
+            "Existing Customer": "Cliente Existente",
+            "Partner": "Parceiro",
+            "Public Relations": "Relacionamento",
+            "Web Site": "Website",
+            "Campaign": "Campanha",
+            "Other": "Outros"
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Create Opportunity"
+    }
+}

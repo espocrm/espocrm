@@ -108,7 +108,7 @@ class Base
 						$where[] = $part;
 					}
 				} else {
-					if ($item['type'] == 'linkedWith') {
+					if ($item['type'] == 'linkedWith' && !empty($item['value'])) {
 						$linkedWith[$item['field']] = $item['value'];
 					}
 				}

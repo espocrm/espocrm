@@ -1,6 +1,6 @@
 <% _.each(layout, function (panel, columnNumber) { %>
 
-	<div class="panel panel-default">
+	<div class="panel panel-default"<% if (panel.name) print(' data-panel-name="'+panel.name+'"') %>>
 		{{#if "<%= panel.label %>"}}
 		<div class="panel-heading"><h4 class="panel-title"><%= "{{translate \"" + panel.label + "\" scope=\""+model.name+"\"}}" %></h4></div>
 		{{/if}}

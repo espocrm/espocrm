@@ -65,6 +65,7 @@ class Installer
 		if (!file_exists($configPath)) {
 			$configData = $this->getConfig()->getDefaults();
 			$this->getConfig()->set($configData);
+			$this->getConfig()->save();
 		}
 	}
 
@@ -167,7 +168,8 @@ class Installer
 	{
 		$config = $this->app->getContainer()->get('config');
 
-		$result = $config->set($data);
+		$config->set($data);
+		$result = $config->save();
 
 		return $result;
 	}
@@ -314,7 +316,8 @@ class Installer
 	public function setSuccess()
 	{
 		$config = $this->app->getContainer()->get('config');
-		$result = $config->set('isInstalled', true);
+		$config->set('isInstalled', true);
+		$result = $config->save();
 
 		return $result;
 	}

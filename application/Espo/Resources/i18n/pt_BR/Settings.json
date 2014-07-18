@@ -1,0 +1,46 @@
+{
+    "fields": {
+        "useCache": "Usar Cache",
+        "dateFormat": "Formato da Data",
+        "timeFormat": "Formato da Hora",
+        "timeZone": "Time Zone",
+        "weekStart": "Primeiro dia da Semana",
+        "thousandSeparator": "Separador de Milhar",
+        "decimalMark": "Deparador Decimal",
+        "defaultCurrency": "Moeda Padrão",
+        "currencyList": "Moedas Disponíveis",
+        "language": "Idioma",
+
+        "companyLogo": "Logo da Empresa",
+
+        "smtpServer": "Servidor",
+        "smtpPort": "Porta",
+        "smtpAuth": "Autenticação",
+        "smtpSecurity": "Segurança",
+        "smtpUsername": "Usuário",
+        "emailAddress": "E-mail",
+        "smtpPassword": "Senha",
+        "outboundEmailFromName": "Nome do rementente",
+        "outboundEmailFromAddress": "E-mail do rementente",
+        "outboundEmailIsShared": "Compartilhado",
+
+        "recordsPerPage": "Registros por Página",
+        "recordsPerPageSmall": "Registros por Página (Menor)",
+        "tabList": "Lista de abas",
+        "quickCreateList": "Lista de Criação Rápida",
+
+        "exportDelimiter": "Delimitador de exportação"
+    },
+    "options": {
+        "weekStart": {
+            "0": "Domingo",
+            "1": "Segunda"
+        }
+    },
+    "labels": {
+        "System": "Sistema",
+        "Locale": "Idioma",
+        "SMTP": "SMTP",
+        "Configuration": "Configuração"
+    }
+}

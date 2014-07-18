@@ -1,0 +1,32 @@
+{
+	"fields": {
+		"name": "İsim",
+		"userName": "Kullanıcı Adı",
+		"title": "Başlık",
+		"isAdmin": "Yönetici",
+		"defaultTeam": "Varsayılan Takım",
+		"emailAddress": "Eposta",
+		"phone": "Telefon",
+		"roles": "Görevler",		
+		"password": "Şifre",
+		"passwordConfirm": "Şifreyi Doğrulayın",
+		"newPassword": "New Password"
+	},
+	"links": {
+		"teams": "Takımlar",
+		"roles": "Görevler"
+	},
+	"labels": {
+		"Create User": "Kullanıcı Oluştur",
+		"Generate": "Generate",
+		"Access": "Giriş",
+		"Preferences": "Seçenekler",
+		"Change Password": "Change Password"
+	},
+	"messages": {
+		"passwordWillBeSent": "Password will be sent to user's email address.",
+		"accountInfoEmailSubject": "Account info",
+		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+		"passwordChanged": "Password has been changed"
+	}
+}

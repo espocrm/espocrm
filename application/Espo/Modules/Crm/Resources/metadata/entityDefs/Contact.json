@@ -18,9 +18,21 @@
             "required": true,
             "default":""
         },
+        "accountId": {
+            "where": {
+            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = '{text}')"
+            }
+        },
         "title": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 50,
+            "notStorable": true,
+            "select": "accountContact.role",
+            "orderBy": "accountContact.role {direction}",
+            "where": {
+            	"LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE '{text}')",
+            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = '{text}')"
+            }
         },
         "description": {
             "type": "text"
@@ -28,20 +40,13 @@
         "emailAddress": {
             "type": "email"
         },
-        "phone": {
+        "phoneNumber": {
             "type": "phone",
-            "maxLength": 50
-        },
-        "fax": {
-            "type": "phone",
-            "maxLength": 50
+            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+            "defaultType": "Mobile"
         },
         "doNotCall": {
             "type": "bool"
-        },
-        "phoneOffice": {
-            "type": "phone",
-            "maxLength": 50
         },
         "address": {
             "type": "address"
@@ -66,10 +71,28 @@
         "account": {
             "type": "link"
         },
+        "accounts": {
+            "type": "linkMultiple",
+            "view": "Crm:Contact.Fields.Accounts",
+            "columns": {
+            	"role": "contactRole"
+            }
+        },
+        "accountRole": {
+        	"type": "varchar",
+        	"notStorable": true,
+        	"disabled": true
+        },
         "accountType": {
             "type": "foreign",
             "link": "account",
             "field": "type"
+        },
+        "opportunityRole": {
+        	"type": "enum",
+        	"notStorable": true,
+        	"disabled": true,
+        	"options": ["", "Decision Maker", "Evaluator", "Influencer"]
         },
         "createdAt": {
             "type": "datetime",
@@ -115,8 +138,18 @@
         },
         "account": {
             "type": "belongsTo",
-            "jointTable": true,
             "entity": "Account"
+        },
+        "accounts": {
+            "type": "hasMany",
+            "entity": "Account",
+            "foreign": "contacts",
+			"additionalColumns": {
+				"role": {
+					"type": "varchar",
+		    		"len": 50
+				}
+			}
         },
         "opportunities": {
             "type": "hasMany",

@@ -50,7 +50,9 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				nameHash: this.model.get(this.nameHashName),
 				foreignScope: this.foreignScope,
 			}, Dep.prototype.data.call(this));
-		},		
+		},
+		
+		getSelectFilters: function () {},	
 
 		setup: function () {
 			this.nameHashName = this.name + 'Names';
@@ -59,13 +61,16 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
 			var self = this;
 			
-			this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};			
+			this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+			this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
+						
 			if (this.mode == 'search') {
-				this.nameHash = _.clone(this.searchParams.nameHash) || {};
+				this.nameHash = Espo.Utils.clone(this.searchParams.nameHash) || {};
 			}			
 			
 			this.listenTo(this.model, 'change:' + this.idsName, function () {
-				this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};			
+				this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+				this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
 			}.bind(this));
 			
 
@@ -74,7 +79,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 					self.notify('Loading...');
 					this.createView('dialog', 'Modals.SelectRecords', {
 							scope: this.foreignScope,
-							createButton: this.mode != 'search'
+							createButton: this.mode != 'search',
+							filters: this.getSelectFilters()
 						}, function (dialog) {
 						dialog.render();
 						self.notify(false);
@@ -85,14 +91,13 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				});
 
 				this.events['click a[data-action="clearLink"]'] = function (e) {
-					var id = $(e.currentTarget).data('id').toString();
+					var id = $(e.currentTarget).data('id').toString();					
 					this.deleteLink(id);
 				};
 			}
 		},
 		
-		afterRender: function () {
-	
+		afterRender: function () {	
 			if (this.mode == 'edit' || this.mode == 'search') {			
 				this.$element = this.$el.find('input.main-element');				
 				
@@ -134,52 +139,65 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				this.once('remove', function () {
 					$element.autocomplete('dispose');
 				}, this);
+				
+								
+				this.renderLinks();
+
 			}
 		},
+		
+		renderLinks: function () {				
+			this.ids.forEach(function (id) {
+				this.addLinkHtml(id, this.nameHash[id]);
+			}, this);
+		},
 
-		deleteLink: function (id) {
-			this.$el.find('.link-' + id).remove();
-			var idsEl = this.$el.find('.ids');
-			var ids = idsEl.val().split(',');
-			
-			var index = ids.indexOf(id);
+		deleteLink: function (id) {			
+			this.deleteLinkHtml(id);
+					
+			var index = this.ids.indexOf(id);
 			if (index > -1) {
-				ids.splice(index, 1);
+				this.ids.splice(index, 1);
 			}
-			idsEl.val(ids.join(','));				 
 			delete this.nameHash[id];
-			this.trigger('change');
+			this.trigger('change');		
 		},
 
 		addLink: function (id, name) {
-			var idsEl = this.$el.find('.ids');
-			var value = idsEl.val();
-			var ids = [];
-			if (value != '') {
-				ids = value.split(',');
-			}
-			
-			if (ids.indexOf(id) == -1) {
+			if (!~this.ids.indexOf(id)) {
+				this.ids.push(id);
 				this.nameHash[id] = name;
-				ids.push(id);
-				idsEl.val(ids.join(','));
-				var conteiner = this.$el.find('.link-container');
-				var el = $('<div />').addClass('link-' + id).addClass('list-group-item');
-				el.html(name);
-				el.append('<a href="javascript:" class="pull-right" data-id="'+id+'" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
-				conteiner.append(el);
+				this.addLinkHtml(id, name);
 			}
 			this.trigger('change');
 		},
+		
+		deleteLinkHtml: function (id) {
+			this.$el.find('.link-' + id).remove();
+		},		
+		
+		addLinkHtml: function (id, name) {
+			var conteiner = this.$el.find('.link-container');
+			var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+			$el.html(name + '&nbsp');
+			$el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
+			conteiner.append($el);
+			
+			return $el;
+		},
+		
+		getDetailLinkHtml: function (id) {
+			return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.nameHash[id] + '</a>';
+		},
 
 		getValueForDisplay: function () {
-			var nameHash = this.nameHash;
-			var string = '';
-			var names = [];
-			for (var id in nameHash) {
-				names.push('<a href="#' + this.foreignScope + '/view/' + id + '">' + nameHash[id] + '</a>');
+			if (this.mode == 'detail' || this.mode == 'list') {
+				var names = [];
+				this.ids.forEach(function (id) {
+					names.push(this.getDetailLinkHtml(id));
+				}, this);
+				return names.join(', ');
 			}
-			return names.join(', ');
 		},
 
 		validateRequired: function () {
@@ -194,28 +212,14 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
 		fetch: function () {
 			var data = {};
-			var value = this.$el.find('[name="' + this.idsName + '"]').val();
-			if (value != '') {
-				data[this.idsName] = value.split(',').sort();
-			} else {
-				data[this.idsName] = [];
-			}
+			data[this.idsName] = this.ids;		
 			data[this.nameHashName] = this.nameHash;
 
 			return data;
 		},
 		
 		fetchSearch: function () {
-			var values = [];
-			var value = this.$el.find('[name="' + this.idsName + '"]').val();
-			
-			if (!value) {
-				return false;
-			}
-			
-			if (value != '') {
-				values = value.split(',');
-			}
+			var	values = this.ids || [];
 			
 			var data = {
 				type: 'linkedWith',

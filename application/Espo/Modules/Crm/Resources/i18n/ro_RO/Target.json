@@ -1,0 +1,19 @@
+{
+	"fields": {
+		"name": "Nume",
+		"emailAddress": "Email",
+		"title": "Titlu",
+		"website": "Site Web",
+		"accountName": "Nume Cont",
+		"phoneNumber": "Telefon",
+		"doNotCall": "Nu sunati",
+		"address": "Adresa",
+		"description": "Descriere"
+	},
+	"links": {
+	},
+	"labels": {
+		"Create Target": "Creare Tinta",
+		"Convert to Lead": "Converteste la Lead"
+	}
+}

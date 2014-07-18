@@ -141,7 +141,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		actions: [
 			{
 				name: 'delete',
-				label: 'Delete',
+				label: 'Remove',
 				action: function (e) {
 					if (!this.getAcl().check(this.scope, 'delete')) {
 						this.notify('Access denied', 'error');
@@ -155,7 +155,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
 					if (confirm(this.translate('Are you sure?'))) {
 						// TODO mass delete
-						this.notify('Deleting...');
+						this.notify('Removing...');
 						for (var i in this.checkedList) {
 							var id = this.checkedList[i];
 							var model = this.collection.get(id);
@@ -320,7 +320,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			}
 
 			this.scope = this.collection.name || null;
-			this.events = _.clone(this.events);
+			this.events = Espo.Utils.clone(this.events);
+			this.actions = Espo.Utils.clone(this.actions);
 
 			if (this.selectable) {
 				this.events['click .list a.link'] = function (e) {
@@ -343,7 +344,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				this.actions = [];
 			}
 
-			if (this.checkboxes) {
+			if (this.checkboxes) {				
 				this.actions.forEach(function (item) {
 					this.events['click .actions a[data-action="' + item.name + '"]'] = function (e) {
 						item.action.call(this, e);
@@ -383,7 +384,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			for (var i in this.listLayout) {
 				var item = {
 					name: this.listLayout[i].name,
-					sortable: ('sortable' in this.listLayout[i]) ? this.listLayout[i].sortable : true,
+					sortable: !(this.listLayout[i].notSortable || false),
 					width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false
 				};
 				if (item.sortable) {

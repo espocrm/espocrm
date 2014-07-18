@@ -27,6 +27,8 @@ Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function 
 		
 		editable: false,
 		
+		ignoreList: [],
+		
 		setup: function () {
 			Dep.prototype.setup.call(this);
 			
@@ -37,7 +39,7 @@ Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function 
 				
 					var allFields = [];
 					for (var field in model.defs.fields) {
-						if (this.checkFieldType(model.getFieldParam(field, 'type'))) {
+						if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
 							allFields.push(field);
 						}							
 					}
@@ -88,7 +90,15 @@ Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function 
 		
 		validate: function () {
 			return true;
-		},					
+		},
+		
+		isFieldEnabled: function (model, name) {
+			if (this.ignoreList.indexOf(name) != -1) {
+				return false;
+			}
+			return !model.getFieldParam(name, 'disabled');
+		}
+						
 	});
 });
 

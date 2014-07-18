@@ -18,34 +18,47 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class Email extends \Espo\Core\Utils\Database\Orm\Base
 {
-
-	public function load($entity, $field)
+	protected function load($fieldName, $entityName)
 	{
-        return array(
-			$entity['name'] => array(
-			   	'fields' => array(
-                	$field['name'] => array(
+		return array(
+			$entityName => array(
+				'fields' => array(
+					$fieldName => array(
 						'select' => 'email_address.name',
-				        'where' =>
-				        array (
-				          'LIKE' => 'email_address.name LIKE \'{text}\'',
-				          '=' => 'email_address.name = \'{text}\'',
-				        ),
-				        'orderBy' => 'email_address.name {direction}',
+						'where' =>
+						array (
+							'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+								SELECT entity_id 
+								FROM entity_email_address
+								JOIN email_address ON email_address.id = entity_email_address.email_address_id
+								WHERE 
+									entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
+									email_address.deleted = 0 AND email_address.name LIKE '{text}'          		
+							)",
+							'=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+								SELECT entity_id 
+								FROM entity_email_address
+								JOIN email_address ON email_address.id = entity_email_address.email_address_id
+								WHERE 
+									entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
+									email_address.deleted = 0 AND email_address.name = '{text}'          		
+							)"
+						),
+						'orderBy' => 'email_address.name {direction}',
 					),
-					$field['name'] .'Data' => array(
+					$fieldName .'Data' => array(
 						'type' => 'text',
 						'notStorable' => true
 					),
 				),
 				'relations' => array(
-					$field['name'].'es' => array(
+					$fieldName.'es' => array(
 						'type' => 'manyMany',
 						'entity' => 'EmailAddress',
 						'relationName' => 'entityEmailAddress',
@@ -54,16 +67,16 @@ class Email extends \Espo\Core\Utils\Database\Orm\Base
 							'email_address_id',
 						),
 						'conditions' => array(
-							'entityType' => $entity['name'],
+							'entityType' => $entityName,
 						),
 						'additionalColumns' => array(
-                            'entityType' => array(
+							'entityType' => array(
 								'type' => 'varchar',
-        						'len' => 100,
+								'len' => 100,
 							),
 							'primary' => array(
 								'type' => 'bool',
-        						'default' => false,
+								'default' => false,
 							),
 						),
 					),

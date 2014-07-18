@@ -90,6 +90,21 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 			model.fetch();
 		},
 		
+		authTokens: function () {			
+			this.collectionFactory.create('AuthToken', function (collection) {
+				var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+				searchManager.loadStored();
+				collection.where = searchManager.getWhere();				
+				collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+
+				this.main('Admin.AuthToken.List', {
+					scope: 'AuthToken',
+					collection: collection,
+					searchManager: searchManager,
+				});		
+			}, this);
+		},
+		
 		userInterface: function () {
 			var model = this.getSettingsModel();						
 			
@@ -106,9 +121,25 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 			model.fetch();
 		},
 		
+		authentication: function () {
+			var model = this.getSettingsModel();						
+			
+			model.once('sync', function () {
+				model.id = '1';
+				this.main('Edit', {
+					model: model,
+					views: {
+						header: {template: 'admin.settings.header-authentication'},
+						body: {view: 'Admin.Authentication'},
+					},
+				});
+			}, this);				
+			model.fetch();
+		},
+		
 		rebuild: function (options) {
 			var master = this.get('master');		
-			Espo.Ui.notify(master.translate('Please wait'));
+			Espo.Ui.notify(master.translate('Please wait...'));
 			this.getRouter().navigate('#Admin');	
 			$.ajax({
 				url: 'Admin/rebuild',
@@ -121,7 +152,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 		
 		clearCache: function (options) {
 			var master = this.get('master');		
-			Espo.Ui.notify(master.translate('Please wait'));
+			Espo.Ui.notify(master.translate('Please wait...'));
 			this.getRouter().navigate('#Admin');			
 			$.ajax({
 				url: 'Admin/clearCache',

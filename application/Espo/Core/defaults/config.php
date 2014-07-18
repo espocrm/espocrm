@@ -62,9 +62,13 @@ return array (
 	'smtpUsername' => '',
 	'smtpPassword' => '',
 	'languageList' => array(
-		'en_US',
+		'en_US',		
 		'de_DE',
 		'es_ES',
+		'fr_FR',
+		'tr_TR',
+		'ro_RO',
+		'pt_BR'		
 	),
 	'language' => 'en_US',
 	'logger' =>
@@ -74,16 +78,17 @@ return array (
 		'isRotate' => true, /** rotate log files every day */
 		'maxRotateFiles' => 30, /** max number of rotate files */
 	),
+	'authenticationMethod' => 'Espo',
 	'globalSearchEntityList' =>
 	array (
 		0 => 'Account',
 		1 => 'Contact',
 		2 => 'Lead',
-		3 => 'Prospect',
-		4 => 'Opportunity',
+		3 => 'Opportunity',
 	),
-	"tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Prospect", "Email"),
-	"quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Prospect"),
+	"tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email"),
+	"quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"),
+	'calendarDefaultEntity' => 'Meeting',
 	'isInstalled' => false,
 );
 

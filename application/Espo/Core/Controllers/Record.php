@@ -38,13 +38,17 @@ class Record extends Base
 		return $this->getContainer()->get('entityManager');
 	}
 	
-	protected function getRecordService()
+	protected function getRecordService($name = null)
 	{
-    	if ($this->getServiceFactory()->checkExists($this->name)) {
-    		$service = $this->getServiceFactory()->create($this->name);
+    	if (empty($name)) {
+    		$name = $this->name;
+    	}
+    	
+    	if ($this->getServiceFactory()->checkExists($name)) {
+    		$service = $this->getServiceFactory()->create($name);
     	} else {
     		$service = $this->getServiceFactory()->create('Record');
-    		$service->setEntityName($this->name);
+    		$service->setEntityName($name);
     	}		
 		
 		return $service;

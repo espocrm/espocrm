@@ -185,24 +185,42 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 			var foreignLink = this.model.defs['links'][link].foreign;
 
 			this.notify('Loading...');
-			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'Modals.Edit', {
-					scope: scope,
-					relate: {
-						model: this.model,
-						link: foreignLink,
-					},
-					attributes: {
-						status: data.status
-					},
-				}, function (view) {
-					view.render();
-					view.notify(false);
-					view.once('after:save', function () {
-						self.collection.fetch();
-					});
+									
+			var attributes = {
+				status: data.status
+			};
+				
+			if (this.model.name == 'Contact') {
+				if (this.model.get('accountId')) {
+					attributes.parentType = 'Account',
+					attributes.parentId = this.model.get('accountId');
+					attributes.parentName = this.model.get('accountName');
+				}
+			} else if (this.model.name == 'Lead') {
+				attributes.parentType = 'Lead',
+				attributes.parentId = this.model.id
+				attributes.parentName = this.model.get('name');
+			}
+			
+			if (this.model.name != 'Account' && this.model.has('contactsIds')) {
+				attributes.contactsIds = this.model.get('contactsIds');
+				attributes.contactsNames = this.model.get('contactsNames');
+			}
+			
+			this.createView('quickCreate', 'Modals.Edit', {
+				scope: scope,
+				relate: {
+					model: this.model,
+					link: foreignLink,
+				},
+				attributes: attributes,
+			}, function (view) {
+				view.render();
+				view.notify(false);
+				view.once('after:save', function () {
+					self.collection.fetch();
 				});
-			}.bind(this));
+			});
 		},
 		
 		actionComposeEmail: function () {
@@ -219,21 +237,35 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 			}						
 
 			this.notify('Loading...');
-			this.getModelFactory().create(scope, function (model) {
-				this.createView('quickCreate', 'Modals.ComposeEmail', {
-					relate: relate,
-					attributes: {
-						status: 'Draft',
-						to: this.model.get('emailAddress')
-					},
-				}, function (view) {
-					view.render();
-					view.notify(false);
-					view.once('after:save', function () {
-						self.collection.fetch();
-					});
+			
+									
+			var attributes = {
+				status: 'Draft',
+				to: this.model.get('emailAddress')
+			};
+			
+			if (this.model.name == 'Contact') {
+				if (this.model.get('accountId')) {
+					attributes.parentType = 'Account',
+					attributes.parentId = this.model.get('accountId');
+					attributes.parentName = this.model.get('accountName');
+				}
+			} else if (this.model.name == 'Lead') {
+				attributes.parentType = 'Lead',
+				attributes.parentId = this.model.id
+				attributes.parentName = this.model.get('name');
+			}
+
+			this.createView('quickCreate', 'Modals.ComposeEmail', {
+				relate: relate,
+				attributes: attributes 
+			}, function (view) {
+				view.render();
+				view.notify(false);
+				view.once('after:save', function () {
+					self.collection.fetch();
 				});
-			}.bind(this));
+			});
 		},
 	});
 });

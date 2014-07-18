@@ -56,6 +56,13 @@ select[name="user-lang"] {
 	float: right;
 }
 
+.label-description {
+	line-height: 24px;
+	height: 33px;
+	display: table-cell;
+	vertical-align: middle;
+	padding: 14px 0 5px;
+}
 .semicolon-sign-c {
 	text-align: center;
 	width: 4%;

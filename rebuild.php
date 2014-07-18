@@ -7,7 +7,7 @@ if (substr($sapiName, 0, 3) != 'cli') {
 }
 
 include "bootstrap.php";
-	
+
 $app = new \Espo\Core\Application();
 $app->runRebuild();
 

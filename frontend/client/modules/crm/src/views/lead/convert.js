@@ -76,9 +76,20 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
 				}
 			}
 			var i = 0;
+			
+			var attributeList = this.getFieldManager().getEntityAttributes(this.model.name);			
+			var ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];			
+			
 			scopes.forEach(function (scope) {
 				this.getModelFactory().create(scope, function (model) {
 					model.populateDefaults();
+					
+					this.getFieldManager().getEntityAttributes(model.name).forEach(function (attr) {
+						if (~attributeList.indexOf(attr) && !~ignoreAttributeList.indexOf(attr)) {
+							model.set(attr, this.model.get(attr), {silent: true}); 
+						}
+					}, this);
+									
 					for (var field in this.model.defs.convertFields[scope]) {
 						var leadField = this.model.defs.convertFields[scope][field];
 						var leadAttrs = this.getFieldManager().getAttributes(this.model.getFieldParam(leadField, 'type'), leadField);
@@ -103,11 +114,12 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
 							this.notify(false);
 						}
 					}.bind(this));
-				}.bind(this));
-			}.bind(this));
+				}, this);
+			}, this);
 		},
 
-		convert: function () {
+		convert: function () {			
+			
 			var scopes = [];
 
 			this.scopes.forEach(function (scope) {
@@ -137,15 +149,21 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
 			scopes.forEach(function (scope) {
 				data.records[scope] = self.getView(scope).model.attributes;
 			});
+			
 
 			if (!notValid) {
+				this.$el.find('[data-action="convert"]').addClass('disabled');
+				this.notify('Please wait...');
 				$.ajax({
 					url: 'Lead/action/convert',
 					data: JSON.stringify(data),
 					type: 'POST',
 					success: function () {
 						self.getRouter().navigate('#Lead/view/' + self.model.id, {trigger: true});
-						self.notify('Converted');
+						self.notify('Converted', 'success');
+					},
+					error: function () {
+						self.$el.find('[data-action="convert"]').removeClass('disabled');
 					}
 				});
 			} else {

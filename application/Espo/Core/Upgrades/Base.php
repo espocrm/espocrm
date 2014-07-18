@@ -316,7 +316,13 @@ abstract class Base
 	{
 		if (!isset($this->data['manifest'])) {
 			$upgradePath = $this->getUpgradePath();
-			$manifestJson = $this->getFileManager()->getContents(array($upgradePath, $this->manifestName));
+
+			$manifestPath = Util::concatPath($upgradePath, $this->manifestName);
+			if (!file_exists($manifestPath)) {
+				throw new Error('It\'s not an uprgade package.');
+			}
+
+			$manifestJson = $this->getFileManager()->getContents($manifestPath);
 			$this->data['manifest'] = Json::decode($manifestJson, true);
 
 			if (!$this->data['manifest']) {
@@ -375,6 +381,9 @@ abstract class Base
 		$manifest = $this->getManifest();
 
 		$res = $this->getConfig()->set('version', $manifest['version']);
+		if (method_exists($this->getConfig(), 'save')) {
+			$res = $this->getConfig()->save();
+		}
 		$res &= $this->getContainer()->get('dataManager')->rebuild();
 
 		return $res;

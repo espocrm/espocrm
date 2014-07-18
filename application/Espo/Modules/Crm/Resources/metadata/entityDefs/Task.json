@@ -81,7 +81,7 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entities": ["Account", "Contact", "Lead", "Opportunity", "Case"],
+            "entityList": ["Account", "Contact", "Lead", "Opportunity", "Case"],
             "foreign": "tasks"
         }
     },

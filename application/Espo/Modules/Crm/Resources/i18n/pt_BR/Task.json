@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Name",
+        "parent": "Relação",
+        "status": "Status",
+        "dateStart": "Data de Início",
+        "dateEnd": "Até a Data",
+        "priority": "Prioridade",
+        "description": "Descrição",
+        "isOverdue": "Atrasada"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Not Started": "Não Iniciada",
+            "Started": "Iniciada",
+            "Completed": "Completa",
+            "Canceled": "Cancelada"
+        },
+        "priority": {
+            "Low": "Baixa",
+            "Normal": "Normal",
+            "High": "Alta",
+            "Urgent": "Urgente"
+        }
+    },
+    "labels": {
+        "Create Task": "Criar Tarefa"
+    }
+}

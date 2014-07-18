@@ -27,7 +27,9 @@
 		"Import": "Import",
 		"Layout Manager": "Layout Manager",
 		"Field Manager": "Field Manager",
-		"User Interface": "User Interface"
+		"User Interface": "User Interface",
+		"Auth Tokens": "Auth Tokens",
+		"Authentication": "Authentication"
 	},
 	"layouts": {
 		"list": "List",
@@ -109,7 +111,9 @@
 		"import": "Import data from CSV file.",
 		"layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
 		"fieldManager": "Create new fields or customize existing ones.",
-		"userInterface": "Configure UI."
+		"userInterface": "Configure UI.",
+		"authTokens": "Active auth sessions. IP address and last access date.",
+		"authentication": "Authentication setttings."
 	},
 	"options": {
 		"previewSize": {

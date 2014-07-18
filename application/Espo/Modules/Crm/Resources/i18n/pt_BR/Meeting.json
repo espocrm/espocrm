@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Nome",
+        "parent": "Relação",
+        "status": "Status",
+        "dateStart": "Data de Início",
+        "dateEnd": "Data final",
+        "duration": "Duração",
+        "description": "Descrição",
+        "users": "Usuários",
+        "contacts": "Contatos",
+        "leads": "Leads"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planejada",
+            "Held": "Realizada",
+            "Not Held": "Não Realizada"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Criar Reunião",
+        "Set Held": "Marcar como realizada",
+        "Set Not Held": "Marcar como não realizada",
+        "Send Invitations": "Enviar Convites"
+    }
+}

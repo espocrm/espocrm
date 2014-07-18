@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "name": "Nome",
+        "parent": "Relação",
+        "status": "Status",
+        "dateStart": "Data de Início",
+        "dateEnd": "Data Final",
+        "direction": "Direção",
+        "duration": "Duração",
+        "description": "Descrição",
+        "users": "Usuários",
+        "contacts": "Contatos",
+        "leads": "Leads"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planejado",
+            "Held": "Realizada",
+            "Not Held": "Não Realizada"
+        },
+        "direction": {
+            "Outbound": "Saída",
+            "Inbound": "Entrada"
+        }
+    },
+    "labels": {
+        "Create Call": "Criar Ligação",
+        "Set Held": "Marcar como realizada",
+        "Set Not Held": "Marcar como não realizada",
+        "Send Invitations": "Enviar Convites"
+    }
+}

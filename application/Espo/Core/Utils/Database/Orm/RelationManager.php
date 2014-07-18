@@ -28,10 +28,14 @@ class RelationManager
 {
 	private $metadata;
 
+	private $entityDefs;
+
 
 	public function __construct(\Espo\Core\Utils\Metadata $metadata)
 	{
 		$this->metadata = $metadata;
+
+		$this->entityDefs = $this->getMetadata()->get('entityDefs');
 	}
 
 	protected function getMetadata()
@@ -39,14 +43,15 @@ class RelationManager
 		return $this->metadata;
 	}
 
-
-	public function getLinkEntityName($entityName, $link)
+	protected function getEntityDefs()
 	{
-		if (isset($link['params'])) {
-			return isset($link['params']['entity']) ? $link['params']['entity'] : $entityName;
-		}
+		return $this->entityDefs;
+	}
 
-		return isset($link['entity']) ? $link['entity'] : $entityName;
+
+	public function getLinkEntityName($entityName, $linkParams)
+	{
+		return isset($linkParams['entity']) ? $linkParams['entity'] : $entityName;
 	}
 
 	public function isRelationExists($relationName)
@@ -81,33 +86,58 @@ class RelationManager
 		return method_exists($className, 'load');
 	}
 
-	public function process($method, $entityName, $link, $foreignLink = array())
+	/**
+	* Get foreign Link
+	*
+	* @param string $parentLinkName
+	* @param array $parentLinkParams
+	* @param array $currentEntityDefs
+	*
+	* @return array - in format array('name', 'params')
+	*/
+	private function getForeignLink($parentLinkName, $parentLinkParams, $currentEntityDefs)
 	{
-		$params = array();
-		$params['entityName'] = $entityName;
-		$params['link'] = $link;
+		if (isset($parentLinkParams['foreign']) && isset($currentEntityDefs['links'][$parentLinkParams['foreign']])) {
+			return array(
+				'name' => $parentLinkParams['foreign'],
+				'params' => $currentEntityDefs['links'][$parentLinkParams['foreign']],
+			);
+		}
 
-		$foreignParams = array();
-		$foreignParams['entityName'] = $this->getLinkEntityName($entityName, $link);
-		$foreignParams['link'] = $foreignLink;
+		return false;
+	}
 
-		$params['targetEntity'] = $foreignParams['entityName'];
-		$foreignParams['targetEntity'] = $params['entityName'];
+	public function convert($linkName, $linkParams, $entityName, $ormMeta)
+	{
+		$entityDefs = $this->getEntityDefs();
+
+		$foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
+		$foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
+
+		$currentType = $linkParams['type'];
+
+		$method = $currentType;
+		if ($foreignLink !== false) {
+			$method .= '-'.$foreignLink['params']['type'];
+		}
+		$method = Util::toCamelCase($method);
+
+		$relationName = $this->isRelationExists($method) ? $method /*hasManyHasMany*/ : $currentType /*hasMany*/;
 
 		//relationDefs defined in separate file
-		if (isset($link['params']['relationName']) && $this->isMethodExists($link['params']['relationName'])) {
-			$className = $this->getRelationClass($link['params']['relationName']);
-		} else if ($this->isMethodExists($method)) {
-			$className = $this->getRelationClass($method);
+		if (isset($linkParams['relationName']) && $this->isMethodExists($linkParams['relationName'])) {
+			$className = $this->getRelationClass($linkParams['relationName']);
+		} else if ($this->isMethodExists($relationName)) {
+			$className = $this->getRelationClass($relationName);
 		}
 
 		if (isset($className) && $className !== false) {
-			$helperClass = new $className($this->metadata);
-			return $helperClass->process($params, $foreignParams);
+			$helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
+			return $helperClass->process($linkName, $entityName, $foreignLink['name'], $foreignEntityName);
 		}
 		//END: relationDefs defined in separate file
 
-		return false;
+		return null;
 	}
 
 }

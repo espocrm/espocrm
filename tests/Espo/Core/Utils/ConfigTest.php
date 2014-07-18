@@ -67,10 +67,12 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $setKey= 'testOption';
 		$setValue= 'Test';
 
-        $this->assertTrue($this->object->set($setKey, $setValue));
+		$this->object->set($setKey, $setValue);
+        $this->assertTrue($this->object->save());
         $this->assertEquals($setValue, $this->object->get($setKey));
 
-        $this->assertTrue($this->object->set($setKey, 'Another Wrong Value'));
+        $this->object->set($setKey, 'Another Wrong Value');
+        $this->assertTrue($this->object->save());
 	}
 
 	public function testSetArray()
@@ -80,14 +82,16 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 			'testOption2' => 'Test2',
 		);
 
-        $this->assertTrue($this->object->set($values));
+		$this->object->set($values);
+        $this->assertTrue($this->object->save());
         $this->assertEquals('Test', $this->object->get('testOption'));
         $this->assertEquals('Test2', $this->object->get('testOption2'));
 
         $wrongArray = array(
         	'testOption' => 'Another Wrong Value',
         );
-        $this->assertTrue($this->object->set($wrongArray));
+        $this->object->set($wrongArray);
+        $this->assertTrue($this->object->save());
 	}
 
 	public function testSystemConfigMerge()

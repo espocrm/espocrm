@@ -1,0 +1,32 @@
+{
+	"fields": {
+		"name": "Nom",
+		"userName": "Nom d'utilisateur",
+		"title": "Titre",
+		"isAdmin": "Est Admin",
+		"defaultTeam": "Equipe Standard",
+		"emailAddress": "Email",
+		"phoneNumber": "Téléphone",
+		"roles": "Rôles",		
+		"password": "Mot de Passe",
+		"passwordConfirm": "Confirmer le Mot de Passe",
+		"newPassword": "Nouveau Mot de Passe"
+	},
+	"links": {
+		"teams": "Equipes",
+		"roles": "Rôles"
+	},
+	"labels": {
+		"Create User": "Créer un Utilisateur",
+		"Generate": "Générer",
+		"Access": "Accès",
+		"Preferences": "Préférences",
+		"Change Password": "Changer le Mot de Passe"
+	},
+	"messages": {
+		"passwordWillBeSent": "Le Mot de Passe sera envoyé à l'adresse email de l'utilisateur",
+		"accountInfoEmailSubject": "Information du compte",
+		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+		"passwordChanged": "Mot de passe changé"
+	}
+}

@@ -30,8 +30,15 @@ class Lead extends \Espo\Services\Record
 	protected function getDuplicateWhereClause(Entity $entity)
 	{
 		return array(
-			'firstName' => $entity->get('firstName'),
-			'lastName' => $entity->get('lastName'),
+			'OR' => array(
+				array(
+					'firstName' => $entity->get('firstName'),
+					'lastName' => $entity->get('lastName'),
+				),
+				array(
+					'emailAddress' => $entity->get('emailAddress'),
+				),
+			),
 		);
 	}
 	
@@ -46,8 +53,7 @@ class Lead extends \Espo\Services\Record
     	$entityManager = $this->getEntityManager();
 
 
-    	if (!empty($recordsData->Account)) {
-    	
+    	if (!empty($recordsData->Account)) {    	
     		$account = $entityManager->getEntity('Account');
     		$account->set(get_object_vars($recordsData->Account));
     		$entityManager->saveEntity($account);
@@ -82,9 +88,16 @@ class Lead extends \Espo\Services\Record
     		foreach ($meetings as $meeting) {
     			if (!empty($contact)) {
     				$entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
-    			}
+    			}    			
+    			
     			if (!empty($opportunity)) {
-    				$entityManager->getRepository('Opportunity')->relate($opportunity, 'meetings', $meeting);
+    				$meeting->set('parentId', $opportunity->id);
+    				$meeting->set('parentType', 'Opportunity');
+    				$entityManager->saveEntity($meeting);
+    			} else if (!empty($account)) {
+    				$meeting->set('parentId', $account->id);
+    				$meeting->set('parentType', 'Account');
+    				$entityManager->saveEntity($meeting);
     			}
     		}
     	}
@@ -94,7 +107,13 @@ class Lead extends \Espo\Services\Record
     				$entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
     			}
     			if (!empty($opportunity)) {
-    				$entityManager->getRepository('Opportunity')->relate($opportunity, 'calls', $call);
+    				$call->set('parentId', $opportunity->id);
+    				$call->set('parentType', 'Opportunity');
+    				$entityManager->saveEntity($call);
+    			} else if (!empty($account)) {
+    				$call->set('parentId', $account->id);
+    				$call->set('parentType', 'Account');
+    				$entityManager->saveEntity($call);
     			}
     		}
     	} 

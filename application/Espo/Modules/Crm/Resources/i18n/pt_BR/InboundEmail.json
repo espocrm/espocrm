@@ -1,0 +1,43 @@
+{
+    "fields": {
+        "name": "Nome",
+        "team": "Time",
+        "status": "Status",
+        "assignToUser": "Atribuído a",
+        "host": "Host",
+        "username": "Usuário",
+        "password": "Senha",
+        "port": "Porta",
+        "monitoredFolders": "Pastas Monitoradas",
+        "trashFolder": "Pasta da Lixeira",
+        "ssl": "SSL",
+        "createCase": "Criar Atendimento",
+        "reply": "Responder",
+        "caseDistribution": "Distribuição do Atendimento",
+        "replyEmailTemplate": "Template do E-mail de Resposta",
+        "replyFromAddress": "E-mail de Resposta (From)",
+        "replyFromName": "Nome de Resposta (FromName)"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Ativo",
+            "Inactive": "Inativo"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Atribuição Direta",
+            "Round-Robin": "Rodízio",
+            "Least-Busy": "Menos Ocupado"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Criar E-mail de Entrada",
+        "IMAP": "IMAP",
+        "Actions": "Ações",
+        "Main": "Principal"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Não foi possível conectar ao servidor IMAP"
+    }
+}

@@ -48,7 +48,9 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 			}
 		},
 		
-		setup: function () {
+		setup: function () {		
+			this.filters = this.options.filters || {};
+		
 			if ('multiple' in this.options) {
 				this.multiple = this.options.multiple;
 			}
@@ -74,7 +76,9 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 					label: 'Select',
 					onClick: function (dialog) {
 						var list = this.getView('list').getSelected();
-						this.trigger('select', list)
+						if (list.length) {
+							this.trigger('select', list);
+						}
 						dialog.close();
 					}.bind(this),
 				});
@@ -96,7 +100,10 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 						
 					collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 					
-					var searchManager = new SearchManager(collection, 'listSelect', this.getStorage(), this.getDateTime());							
+					var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());					
+					searchManager.setAdvanced(this.filters);
+					collection.where = searchManager.getWhere();
+												
 					this.createView('search', 'Record.Search', {
 						collection: collection,
 						el: this.containerSelector + ' .search-container',

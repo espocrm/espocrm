@@ -14,8 +14,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<footer class="modal-footer">
 		<div class="cell cell-website pull-left" align="left">
 			<label class="field-label-website control-label">{$langs['fields']['Choose your language']}:</label>
 			<div class="field field-website">
@@ -30,6 +28,9 @@
 				</select>
 			</div>
 		</div>
+	</div>
+	<footer class="modal-footer">
+		
 		<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Start']}</button>
 	</footer>
 </form>
@@ -43,3 +44,4 @@
 	})
 	{/literal}
 </script>
+

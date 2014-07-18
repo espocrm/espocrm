@@ -72,6 +72,17 @@
 			}
 			return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
 		},
+		
+		cloneDeep: function (data) {
+			data = Espo.Utils.clone(data);
+			
+			if (Espo.Utils.isObject(data) || _.isArray(data)) {				
+				for (var i in data) {
+					data[i] = this.cloneDeep(data[i]);
+				}					
+			} 
+			return data;
+		},
 
 		/**
 		 * Compose class name.

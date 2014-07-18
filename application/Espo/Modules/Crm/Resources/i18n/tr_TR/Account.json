@@ -1,0 +1,40 @@
+{
+	"fields": {
+		"name": "İsim",
+		"emailAddress": "Eposta",
+		"website": "Website",
+		"phone": "Telefon",
+		"fax": "Faks",
+		"billingAddress": "Fatura Adresi",
+		"shippingAddress": "Teslimat Adresi",
+		"description": "açıklama",
+		"sicCode": "Firma Kodu",
+		"industry": "Sektör",
+		"type": "Tür"		
+	},
+	"links": {
+		"contacts": "Bağlantılar",
+		"opportunities": "Fırsatlar",
+		"cases": "Dosyalar"
+	},
+	"options": {
+		"type": {
+			"Customer": "Müşteri",
+			"Investor": "Yatırımcı",
+			"Partner": "Ortak",
+			"Reseller": "Satıcı"
+		},
+		"industry": {
+			"Apparel": "Konfeksiyon",
+			"Banking": "Bankacılık",
+			"Computer Software": "Bilgisayar Yazılımı",
+			"Education": "Eğitim",
+			"Electronics": "Elektronik",
+			"Finance": "Finans",
+			"Insurance": "Sigortacılık"
+		}
+	},
+	"labels": {
+		"Create Account": "Hesap Oluştur"
+	}
+}
