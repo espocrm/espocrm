@@ -25,5 +25,9 @@
 		"Set Held": "Set Held",
 		"Set Not Held": "Set Not Held",
 		"Send Invitations": "Send Invitations"
+	},
+	"presetFilters": {
+		"planned": "Planned",
+		"held": "Held"
 	}
 }

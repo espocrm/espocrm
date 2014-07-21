@@ -1,3 +1,23 @@
 {
-	"controller": "Controllers.Record"
+   "controller": "Controllers.Record",
+   "presetFilters": [
+      {
+         "name":"active",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Not Started", "Started"]
+            }
+         }
+      },
+      {
+         "name":"completed",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Completed"]
+            }
+         }
+      }
+   ]
 }

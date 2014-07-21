@@ -34,5 +34,9 @@
 	},
 	"labels": {
 		"Create Case": "Create Case"
+	},
+	"presetFilters": {
+		"open": "Open",
+		"closed": "Closed"
 	}
 }

@@ -24,5 +24,16 @@
             "view":"Crm:Record.Panels.Tasks"
          }
       ]
-   }
+   },
+   "presetFilters": [
+      {
+         "name":"active",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["New", "Assigned", "In Process"]
+            }
+         }
+      }  
+   ]
 }

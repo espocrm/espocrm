@@ -42,5 +42,8 @@
 			"Campaign": "Campaign",
 			"Other": "Other"
 		}
+	},
+	"presetFilters": {
+		"active": "Active"
 	}
 }

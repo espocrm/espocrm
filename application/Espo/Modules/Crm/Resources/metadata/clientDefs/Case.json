@@ -22,5 +22,25 @@
             "view":"Crm:Record.Panels.Tasks"
          }
       ]
-   }
+   },
+   "presetFilters": [
+      {
+         "name":"open",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["New", "Assigned", "Pending"]
+            }
+         }
+      },
+      {
+         "name":"closed",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Closed"]
+            }
+         }
+      }
+   ]
 }

@@ -114,6 +114,6 @@
     "collection": {
     	"sortBy": "number",
     	"asc": false,
-    	"boolFilters": ["onlyMy", "open"]
+    	"boolFilters": ["onlyMy"]
     }
 }

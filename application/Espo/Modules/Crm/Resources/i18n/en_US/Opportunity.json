@@ -30,5 +30,9 @@
 	},
 	"labels": {
 		"Create Opportunity": "Create Opportunity"
+	},
+	"presetFilters": {
+		"open": "Open",
+		"won": "Won"
 	}
 }

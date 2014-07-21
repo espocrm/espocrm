@@ -34,5 +34,25 @@
             }
          }
       ]
-   }
+   },
+   "presetFilters": [
+      {
+         "name":"planned",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Planned"]
+            }
+         }
+      },
+      {
+         "name":"held",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Held"]
+            }
+         }
+      }
+   ]
 }
