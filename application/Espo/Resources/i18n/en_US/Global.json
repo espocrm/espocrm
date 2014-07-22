@@ -109,7 +109,8 @@
 		"You": "You",
 		"you": "you",
 		"change": "change",
-		"Primary": "Primary"
+		"Primary": "Primary",
+		"Save Filters": "Save Filters"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",

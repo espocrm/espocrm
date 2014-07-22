@@ -28,5 +28,9 @@
 	"labels": {
 		"Create Email": "Archive Email",
 		"Compose": "Compose"
+	},
+	"presetFilters": {
+		"sent": "Sent",
+		"archived": "Archived"
 	}
 }
