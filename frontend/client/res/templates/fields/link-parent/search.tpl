@@ -1,4 +1,4 @@
-<select class="form-control" name="{{typeName}}">
+<select class="form-control input-sm" name="{{typeName}}">
 	{{options foreignScopeList searchParams.valueType category='scopeNames'}}
 </select>
 <div class="input-group">

@@ -3,16 +3,15 @@
 	<div class="form-group col-sm-6">
 		<div class="input-group">
 			{{#if leftDropdown}}
-			<div class="input-group-btn">
-				
+			<div class="input-group-btn">				
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu pull-left basic-filter-menu">				
 					{{#if presetFilters.length}}
-						<li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPresetFilter">{{translate 'All'}}</a></li>
+						<li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset">{{translate 'All'}}</a></li>
 						{{#each ../presetFilters}}
-						<li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPresetFilter">{{translate name category='presetFilters' scope=../../../scope}}</a></li>
+						<li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../../scope}}{{/if}}</a></li>
 						{{/each}}
 						<li class="divider"></li>
 					{{/if}}					
@@ -48,7 +47,7 @@
 	</div>
 </div>
 
-<div class="advanced-filters-bar" style="margin-bottom: 10px;"></div>
+<div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
 <div class="row advanced-filters hidden">
 {{#each filterList}}
 	<div class="filter {{this}} col-sm-4 col-md-3">
