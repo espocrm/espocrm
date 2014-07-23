@@ -53,6 +53,15 @@
                "value": ["Held"]
             }
          }
+      },
+      {
+         "name":"todays",
+         "data": {
+            "dateStart": {
+               "type": "today",
+               "dateTime": true
+            }
+         }
       }
    ]
 }

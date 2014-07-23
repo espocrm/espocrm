@@ -29,7 +29,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 
 		validations: ['required', 'datetime', 'after', 'before'],
 		
-		searchTypeOptions: ['on', 'after', 'before', 'between'],
+		searchTypeOptions: ['on', 'after', 'before', 'between', 'today', 'past', 'future'],
 
 		timeFormatMap: {
 			'HH:mm': 'H:i',
@@ -139,37 +139,13 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 			}
 		},
 		
-		fetchSearch: function () {
-			var value = this.parseDate(this.$element.val());
-
-			var type = this.$el.find('[name="'+this.name+'-type"]').val();
-			var data;
+		fetchSearch: function () {		
+			var data = Dep.prototype.fetchSearch.call(this);
 			
-			if (!value) {
-				return false;
+			if (data) {
+				data.dateTime = true;
 			}
-			
-			if (type != 'between') {
-				data = {
-					type: type,
-					value: value,
-					value1: value,
-					dateTime: true,
-				};
-			} else {
-				var valueTo = this.parseDate(this.$el.find('[name="' + this.name + '-additional"]').val());
-				if (!valueTo) {
-					return false;
-				}
-				data = {
-					type: type,
-					value: [value, valueTo],
-					value1: value,
-					value2: valueTo,
-					dateTime: true,							
-				};
-			}
-			return data;				
+			return data;
 		},
 		
 	});

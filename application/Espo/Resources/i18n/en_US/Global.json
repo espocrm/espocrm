@@ -273,7 +273,10 @@
 			"notOn": "Not On",
 			"after": "After",
 			"before": "Before",
-			"between": "Between"
+			"between": "Between",
+			"today": "Today",
+			"past": "Past",
+			"future": "Future"
 		},
 		"intSearchRanges": {
 			"equals": "Equals",

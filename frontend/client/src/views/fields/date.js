@@ -31,7 +31,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		
 		validations: ['required', 'date', 'after', 'before'],
 		
-		searchTypeOptions: ['on', 'notOn', 'after', 'before', 'between'],
+		searchTypeOptions: ['on', 'notOn', 'after', 'before', 'between', 'today', 'past', 'future'],
 		
 		setup: function () {
 			Dep.prototype.setup.call(this);
@@ -40,19 +40,14 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		setupSearch: function () {
 			this.searchParams.typeOptions = this.searchTypeOptions;
 			this.events = _.extend({
-				'change select.search-type': function (e) {
-					var additional = this.$el.find('.additional');
-					if ($(e.currentTarget).val() == 'between') {
-						additional.removeClass('hide');
-					} else {
-						additional.addClass('hide');
-					}
+				'change select.search-type': function (e) {				
+					var type = $(e.currentTarget).val();
+					this.handleSearchType(type);
 				},
-			}, this.events || {});
+			}, this.events || {});		
 			
-			
-			this.searchParams.value1 = this.getDateTime().toDisplayDate(this.searchParams.value1);
-			this.searchParams.value2 = this.getDateTime().toDisplayDate(this.searchParams.value2);
+			this.searchParams.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
+			this.searchParams.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
 		},
 		
 		getValueForDisplay: function () {
@@ -110,7 +105,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					language: language
 				};			
 				
-				var datePicker = this.$element.datepicker(options).on('show', function (e) {
+				var $datePicker = this.$element.datepicker(options).on('show', function (e) {
 					$('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
 				}.bind(this));
 				
@@ -127,7 +122,23 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 				
 				this.$element.parent().find('button').click(function (e) {
 					this.$element.datepicker('show');
-				}.bind(this));					
+				}.bind(this));
+				
+				var $searchType = this.$el.find('select.search-type');				
+				this.handleSearchType($searchType.val());				
+			}
+		},
+		
+		handleSearchType: function (type) {
+			if (~['today', 'past', 'future'].indexOf(type)) {
+				this.$el.find('div.primary').addClass('hidden');
+				this.$el.find('div.additional').addClass('hidden');
+			} else if (type == 'between') {
+				this.$el.find('div.primary').removeClass('hidden');
+				this.$el.find('div.additional').removeClass('hidden');
+			} else {
+				this.$el.find('div.primary').removeClass('hidden');
+				this.$el.find('div.additional').addClass('hidden');
 			}
 		},
 		
@@ -151,17 +162,10 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 			var type = this.$el.find('[name="'+this.name+'-type"]').val();
 			var data;
 			
-			if (!value) {
-				return false;
-			}
-			
-			if (type != 'between') {
-				data = {
-					type: type,
-					value: value,
-					value1: value									
-				};
-			} else {
+			if (type == 'between') {
+				if (!value) {
+					return false;
+				}	
 				var valueTo = this.parseDate(this.$el.find('[name="' + this.name + '-additional"]').val());
 				if (!valueTo) {
 					return false;
@@ -169,8 +173,21 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 				data = {
 					type: type,
 					value: [value, valueTo],
-					value1: value,
-					value2: valueTo								
+					dateValue: value,
+					dateValueTo: valueTo								
+				};
+			} else if (~['today', 'past', 'future'].indexOf(type)) {
+				data = {
+					type: type							
+				};
+			} else {
+				if (!value) {
+					return false;
+				}
+				data = {
+					type: type,
+					value: value,
+					dateValue: value									
 				};
 			}
 			return data;				

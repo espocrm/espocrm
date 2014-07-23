@@ -18,6 +18,28 @@
                "value": ["Completed"]
             }
          }
+      },
+      {
+         "name":"todays",
+         "data": {
+            "dateEnd": {
+               "type": "today",
+               "dateTime": true
+            }
+         }
+      },
+      {
+         "name":"overdue",
+         "data": {
+            "dateEnd": {
+               "type": "past",
+               "dateTime": true
+            },
+            "status": {
+               "type": "in",
+               "value": ["Not Started", "Started"]
+            }
+         }
       }
    ]
 }

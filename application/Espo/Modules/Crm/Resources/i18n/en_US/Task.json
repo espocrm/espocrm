@@ -30,6 +30,8 @@
 	},
 	"presetFilters": {
 		"active": "Active",
-		"completed": "Completed"
+		"completed": "Completed",
+		"todays": "Today's",
+		"overdue": "Overdue"
 	}
 }

@@ -28,6 +28,7 @@
 	},
 	"presetFilters": {
 		"planned": "Planned",
-		"held": "Held"
+		"held": "Held",
+		"todays": "Today's"
 	}
 }
