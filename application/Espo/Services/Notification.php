@@ -61,10 +61,10 @@ class Notification extends \Espo\Core\Services\Base
 		$this->getEntityManager()->saveEntity($notification);		
 	}
 	
-	public function notifyAboutNoteFromJob($data, $noteId)
+	public function notifyAboutNoteFromJob($data)
 	{
-		$userIdList = $data->userIdList;
-		$noteId = $data->noteId;
+		$userIdList = $data['userIdList'];
+		$noteId = $data['noteId'];
 		
 		foreach ($userIdList as $userId) {
 			$this->notifyAboutNote($userId, $noteId);
