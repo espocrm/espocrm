@@ -84,6 +84,13 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 		createFilters: function (callback) {			
 			var i = 0;
 			var count = Object.keys(this.advanced).length;
+			
+			if (count == 0) {					
+				if (typeof callback === 'function') {
+					callback();
+				}
+			}
+			
 			for (var field in this.advanced) {
 				this.createFilter(field, this.advanced[field], function () {
 					i++;
