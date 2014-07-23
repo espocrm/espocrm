@@ -350,7 +350,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
 			name = name || '';
 			
-			this.$el.find('ul.basic-filter-menu a.preset[data-name="'+name+'"]').append('<span class="glyphicon glyphicon-ok pull-right"></span>');
+			this.$el.find('ul.basic-filter-menu a.preset[data-name="'+name+'"]').prepend('<span class="glyphicon glyphicon-ok pull-right"></span>');
 		},
 
 		search: function () {
