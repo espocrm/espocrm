@@ -212,7 +212,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 		},
 		
 		resetFilters: function () {
-			this.removeFilter();
+			this.removeFilters();
 				
 			this.presetName = null;
 
