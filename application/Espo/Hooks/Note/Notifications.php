@@ -53,10 +53,24 @@ class Notifications extends \Espo\Core\Hooks\Base
 					WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
 				$sth = $pdo->prepare($sql);
 				$sth->execute();
+				$userIdList = array();
 				while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
 					if ($this->getUser()->id != $row['userId']) {
-						$this->getNotificationService()->notifyAboutNote($row['userId'], $entity->id);
+						$userIdList[] = $row['userId'];
 					}
+				}
+				if (!empty($userIdList)) {
+					$job = $this->getEntityManager()->getEntity('Job');
+					$job->set(array(
+						'serviceName' => 'Notification',
+						'method' => 'notifyAboutNoteFromJob',
+						'data' => json_encode(array(
+							'userIdList' => $userIdList,
+							'noteId' => $entity->id
+						)),
+						'executeTime' => date('Y-m-d H:i:s'),
+					));
+					$this->getEntityManager()->saveEntity($job);
 				}
 			}
 		}
