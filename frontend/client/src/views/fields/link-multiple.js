@@ -66,6 +66,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 						
 			if (this.mode == 'search') {
 				this.nameHash = Espo.Utils.clone(this.searchParams.nameHash) || {};
+				this.ids = Espo.Utils.clone(this.searchParams.value) || [];
 			}			
 			
 			this.listenTo(this.model, 'change:' + this.idsName, function () {

@@ -171,8 +171,11 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 				
 				this.managePresetFilters();
 				
-				this.createFilters();
+				this.createFilters(function () {
+					this.render();
+				}.bind(this));
 				this.updateCollection();
+				
 	
 			},
 			'click .advanced-filters-bar a[data-action="showFiltersPanel"]': function (e) {
