@@ -182,8 +182,10 @@ class Record extends Base
 	}
 	
 	public function actionExport($params, $data, $request)
-	{
-		// TODO move to service
+	{		
+		if ($this->getConfig()->get('disableExport') && !$this->getUser()->isAdmin()) {
+			throw new Forbidden();
+		}
 		
 		if (!$this->getAcl()->check($this->name, 'read')) {
 			throw new Forbidden();

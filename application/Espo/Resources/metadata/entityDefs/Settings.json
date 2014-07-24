@@ -183,6 +183,10 @@
         "ldapCreateEspoUser": {
         	"type": "bool",
         	"default": true
-        }
+        },
+        "disableExport": {
+        	"type": "bool",
+        	"default": false
+     	}
     }
 }

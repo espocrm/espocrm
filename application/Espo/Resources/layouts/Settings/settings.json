@@ -2,7 +2,8 @@
 	{
 		"label": "System",
 		"rows": [
-			[{"name": "useCache"},{"name": "companyLogo"}]			
+			[{"name": "useCache"},{"name": "companyLogo"}],
+			[{"name": "disableExport"}]		
 		]
 	},
 	{

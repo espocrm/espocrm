@@ -230,28 +230,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 						}, this);
 					}.bind(this));
 				},
-			},
-			{
-				name: 'export',
-				label: 'Export',
-				action: function (e) {
-					var ids = this.checkedList;
-					var where = this.collection.where;
-					
-					$.ajax({
-						url: this.scope + '/action/export',
-						type: 'GET',
-						data: {
-							ids: ids || null,
-							where: (ids.length == 0) ? where : null,
-						},
-						success: function (data) {
-							if ('id' in data) {
-								window.location = '?entryPoint=download&id=' + data.id;
-							}
-						},
-					});
-				},
 			}
 		],
 
@@ -313,6 +291,25 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				this.$el.find("a.sort").addClass('disabled');
 			}
 		},
+		
+		export: function () {
+			var ids = this.checkedList;
+			var where = this.collection.where;
+					
+			$.ajax({
+				url: this.scope + '/action/export',
+				type: 'GET',
+				data: {
+					ids: ids || null,
+					where: (ids.length == 0) ? where : null,
+				},
+				success: function (data) {
+					if ('id' in data) {
+						window.location = '?entryPoint=download&id=' + data.id;
+					}
+				},
+			});
+		},
 
 		setup: function () {
 			if (typeof this.collection === 'undefined') {
@@ -338,6 +335,16 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 						}
 					}
 				};
+			}
+			
+			if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
+				this.actions.push({
+					name: 'export',
+					label: 'Export',
+					action: function (e) {				
+						this.export();
+					}.bind(this)
+				});
 			}
 
 			if (this.options.actions === false) {
