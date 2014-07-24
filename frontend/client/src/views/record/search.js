@@ -181,8 +181,6 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 					this.render();
 				}.bind(this));
 				this.updateCollection();
-				
-	
 			},
 			'click .advanced-filters-bar a[data-action="showFiltersPanel"]': function (e) {
 				this.$advancedFiltersPanel.removeClass('hidden');
@@ -208,6 +206,10 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 					this.removePreset(id);
 				}
 			},
+			'change .search-row ul.basic-filter-menu input[data-role="boolFilterCheckbox"]': function (e) {
+				e.stopPropagation();
+				this.search();
+			}
 		},
 		
 		removeFilters: function () {
@@ -306,9 +308,9 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 		},
 
 		afterRender: function () {
-			this.$el.find('ul.basic-filter-menu li.checkbox').click(function (e) {
+			/*this.$el.find('ul.basic-filter-menu li.checkbox').on('click', function (e) {				
 				e.stopPropagation();
-			});
+			}.bind(this));*/
 			this.updateAddFilterButton();
 			
 			this.$advancedFiltersBar = this.$el.find('.advanced-filters-bar');
