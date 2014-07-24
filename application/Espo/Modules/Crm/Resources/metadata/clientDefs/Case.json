@@ -26,6 +26,7 @@
    "presetFilters": [
       {
          "name":"open",
+         "style": "primary",
          "data": {
             "status": {
                "type": "in",
@@ -35,6 +36,7 @@
       },
       {
          "name":"closed",
+         "style": "success",
          "data": {
             "status": {
                "type": "in",

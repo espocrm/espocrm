@@ -3,6 +3,7 @@
    "presetFilters": [
       {
          "name":"active",
+         "style": "primary",
          "data": {
             "status": {
                "type": "in",
@@ -12,6 +13,7 @@
       },
       {
          "name":"completed",
+         "style": "success",
          "data": {
             "status": {
                "type": "in",
@@ -30,6 +32,7 @@
       },
       {
          "name":"overdue",
+         "style": "danger",
          "data": {
             "dateEnd": {
                "type": "past",

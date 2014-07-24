@@ -25,6 +25,7 @@
    "presetFilters": [
       {
          "name":"open",
+         "style": "primary",
          "data": {
             "stage": {
                "type": "in",
@@ -34,6 +35,7 @@
       },
       {
          "name":"won",
+         "style": "success",
          "data": {
             "stage": {
                "type": "in",

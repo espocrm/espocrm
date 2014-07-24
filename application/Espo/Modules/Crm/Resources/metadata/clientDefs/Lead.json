@@ -28,6 +28,7 @@
    "presetFilters": [
       {
          "name":"active",
+         "style": "primary",
          "data": {
             "status": {
                "type": "in",

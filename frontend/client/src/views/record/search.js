@@ -329,16 +329,19 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 				this.$advancedFiltersPanel.addClass('hidden');
 								
 				var label = null;
+				var style = null;
 				var id = null;
 				this.presetFilters.forEach(function (item) {
 					if (item.name == this.presetName) {
 						label = item.label || false;
+						style = item.style || 'default';
 						id = item.id;
 						return;
 					}
 				}, this);			
-				label = label || this.translate(this.presetName, 'presetFilters', this.scope);
-				var barContentHtml = '<a href="javascript:" class="label label-default" data-action="showFiltersPanel">' + label + '</a>';
+				label = label || this.translate(this.presetName, 'presetFilters', this.scope);				
+				
+				var barContentHtml = '<a href="javascript:" class="label label-'+style+'" data-action="showFiltersPanel">' + label + '</a>';
 				if (id) {
 					barContentHtml += ' <a href="javascript:" title="'+this.translate('Remove')+'" class="small" data-action="removePreset" data-id="'+id+'"><span class="glyphicon glyphicon-remove"></span></a>';
 				}

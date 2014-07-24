@@ -38,6 +38,7 @@
    "presetFilters": [
       {
          "name":"planned",
+         "style": "primary",
          "data": {
             "status": {
                "type": "in",
@@ -47,6 +48,7 @@
       },
       {
          "name":"held",
+         "style": "success",
          "data": {
             "status": {
                "type": "in",
