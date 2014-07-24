@@ -108,6 +108,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 						collection: collection,
 						el: this.containerSelector + ' .search-container',
 						searchManager: searchManager,
+						disableSavePreset: true,
 					});
 					
 					this.listenToOnce(collection, 'sync', function () {					

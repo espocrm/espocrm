@@ -38,6 +38,8 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 		advanced: null,
 
 		bool: null,
+		
+		disableSavePreset: false,
 
 		data: function () {
 			return {
@@ -56,6 +58,10 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 		setup: function () {
 			this.scope = this.collection.name;
 			this.searchManager = this.options.searchManager;
+			
+			if ('disableSavePreset' in this.options) {
+				this.disableSavePreset = this.options.disableSavePreset;
+			}
 
 			this.addReadyCondition(function () {
 				return this.fields != null && this.moreFields != null;
@@ -335,16 +341,20 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 					barContentHtml += ' <a href="javascript:" title="'+this.translate('Remove')+'" class="small" data-action="removePreset" data-id="'+id+'"><span class="glyphicon glyphicon-remove"></span></a>';
 				}
 				
-				this.$advancedFiltersBar.html(barContentHtml);		
+				this.$advancedFiltersBar.removeClass('hidden').html(barContentHtml);		
 			} else {
 				this.$advancedFiltersPanel.removeClass('hidden');				
 				
-				if (Object.keys(this.advanced).length !== 0) {
-					var btnHtml = '<a href="javascript:" class="small" data-action="savePreset">' + this.translate('Save Filters') + '</a>';
-					this.$advancedFiltersBar.html(btnHtml);	
+				if (Object.keys(this.advanced).length !== 0) {					
+					if (!this.disableSavePreset) {					
+						var barHtml = '<a href="javascript:" class="small" data-action="savePreset">' + this.translate('Save Filters') + '</a>';
+						this.$advancedFiltersBar.removeClass('hidden').html(barHtml);	
+					} else {
+						this.$advancedFiltersBar.addClass('hidden').empty();
+					}					
 					return;
 				} else {
-					this.$advancedFiltersBar.empty();	
+					this.$advancedFiltersBar.addClass('hidden').empty();	
 				}				
 			}
 
