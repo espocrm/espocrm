@@ -81,7 +81,7 @@ Espo.define('Views.Import.Step1', 'View', function (Dep) {
 		
 		afterRender: function () {
 			this.setupFormData();
-			if (this.formData.fileContents) {
+			if (this.getParentView().fileContents) {
 				this.setFileIsLoaded();
 				this.preview();
 			}
