@@ -72,7 +72,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 					scrollDefaultNow: true,
 					timeFormat: this.timeFormatMap[this.getDateTime().timeFormat]
 				});
-				$time.parent().find('button').click(function () {
+				$time.parent().find('button.time-picker-btn').on('click', function () {
 					$time.timepicker('show');
 				});
 				

@@ -111,16 +111,16 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 				
 				
 				if (this.mode == 'search') {
-					var elAdd = this.$el.find('input[name="' + this.name + '-additional"]');
-					elAdd.datepicker(options).on('show', function (e) {
+					var $elAdd = this.$el.find('input[name="' + this.name + '-additional"]');
+					$elAdd.datepicker(options).on('show', function (e) {
 						$('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
 					}.bind(this));
-					elAdd.parent().find('button').click(function (e) {
-						elAdd.datepicker('show');
+					$elAdd.parent().find('button.date-picker-btn').on('click', function (e) {
+						$elAdd.datepicker('show');
 					});
 				}
 				
-				this.$element.parent().find('button').click(function (e) {
+				this.$element.parent().find('button.date-picker-btn').on('click', function (e) {
 					this.$element.datepicker('show');
 				}.bind(this));
 				
