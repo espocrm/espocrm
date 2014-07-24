@@ -56,7 +56,12 @@ class EntityManager extends \Espo\ORM\EntityManager
 	public function getUser()
 	{
 		return $this->user;
-	}	
+	}
+	
+	public function getEspoMetadata()
+	{
+		return $this->espoMetadata;
+	}		
 
 	public function setEspoMetadata($espoMetadata)
 	{

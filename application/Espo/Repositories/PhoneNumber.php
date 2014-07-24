@@ -271,7 +271,11 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 						$isNewPhoneNumber = false;
 						if (!$phoneNumberNew) {
 							$phoneNumberNew = $this->get();
-							$phoneNumberNew->set('name', $phone);
+							$phoneNumberNew->set('name', $phone);							
+							$defaultType = $this->getEntityManager()->getEspoMetadata()->get('entityDefs.' .  $entity->getEntityName() . '.fields.phoneNumber.defaultType');
+							
+							$phoneNumberNew->set('type', $defaultType);
+							
 							$this->save($phoneNumberNew);
 							$isNewPhoneNumber = true;
 						}
