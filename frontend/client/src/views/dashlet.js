@@ -56,6 +56,7 @@ Espo.define('Views.Dashlet', 'View', function (Dep) {
 
 			var bodySelector = '#dashlet-' + this.id + ' .dashlet-body';
 			var module = this.getMetadata().get('dashlets.' + this.name + '.module');
+			
 			this.createView('body', Espo.Utils.composeClassName(module, this.name, 'Dashlets'), {el: bodySelector, id: this.id});
 		},
 		

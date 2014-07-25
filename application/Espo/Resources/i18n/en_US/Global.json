@@ -113,7 +113,8 @@
 		"Save Filters": "Save Filters",
 		"Administration": "Administration",
 		"Run Import": "Run Import",
-		"Duplicate": "Duplicate"
+		"Duplicate": "Duplicate",
+		"Notifications": "Notifications"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
