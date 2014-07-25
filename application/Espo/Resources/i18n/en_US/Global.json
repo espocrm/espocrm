@@ -112,7 +112,8 @@
 		"Primary": "Primary",
 		"Save Filters": "Save Filters",
 		"Administration": "Administration",
-		"Run Import": "Run Import"
+		"Run Import": "Run Import",
+		"Duplicate": "Duplicate"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
