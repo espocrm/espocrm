@@ -21,5 +21,27 @@
             "view":"Crm:Record.Panels.Tasks"
          }
       ]
-   }
+   },
+   "presetFilters": [
+      {
+         "name":"open",
+         "style": "primary",
+         "data": {
+            "stage": {
+               "type": "in",
+               "value": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis","Proposal/Price Quote","Negotiation/Review"]
+            }
+         }
+      },
+      {
+         "name":"won",
+         "style": "success",
+         "data": {
+            "stage": {
+               "type": "in",
+               "value": ["Closed Won"]
+            }
+         }
+      }
+   ]
 }

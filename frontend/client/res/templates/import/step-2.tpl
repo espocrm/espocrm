@@ -31,5 +31,5 @@
 	
 	<div style="padding-bottom: 10px;" class="clearfix">
 		<button class="btn btn-default pull-left" data-action="back">{{translate 'Back'}}</button>
-		<button class="btn btn-primary pull-right" data-action="next">{{translate 'Next'}}</button>
+		<button class="btn btn-danger pull-right" data-action="next">{{translate 'Run Import'}}</button>
 	</div>

@@ -269,7 +269,20 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 					});
 				}.bind(this));
 			}.bind(this));
-		}
+		},
+		
+		actionDuplicate: function () {
+			var attributes = Espo.Utils.cloneDeep(this.model.attributes);
+			delete attributes.id;
+			
+			var url = '#' + this.scope + '/create';
+
+			this.getRouter().dispatch(this.scope, 'create', {
+				attributes: attributes,
+			});
+			this.getRouter().navigate(url, {trigger: false});			
+		},		
+		
 	});
 });
 

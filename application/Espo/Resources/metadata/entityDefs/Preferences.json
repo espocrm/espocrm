@@ -41,6 +41,9 @@
         "dashletOptions": {
         	"type": "text"
         },
+        "presetFilters": {
+        	"type": "text"        	
+        },
         "smtpEmailAddress": {
             "type": "varchar",
             "readOnly": true,

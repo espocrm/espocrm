@@ -138,33 +138,54 @@
 			var where = {
 				field: field
 			};
-			if (value) {			
-				switch (type) {
-					case 'on':
-						where.type = 'between';					
-						var from = this.dateTime.toMoment(value).format(this.dateTime.internalDateTimeFormat);						
-						var to = this.dateTime.toMoment(value).add('days', 1).format(this.dateTime.internalDateTimeFormat);
-						where.value = [from, to];
-						break;
-					case 'before':
-						where.type = 'before';					
-						where.value = this.dateTime.toMoment(value).format(this.dateTime.internalDateTimeFormat);
-						break;
-					case 'after':
-						where.type = 'after';					
-						where.value = this.dateTime.toMoment(value).format(this.dateTime.internalDateTimeFormat);
-						break;
-					case 'between':
-						where.type = 'between';	
-						if (value[0] && value[1]) {
-							var from = this.dateTime.toMoment(value[0]).format(this.dateTime.internalDateTimeFormat);
-							var to = this.dateTime.toMoment(value[1]).format(this.dateTime.internalDateTimeFormat);
-							where.value = [from, to];
-						}
-						break;
-						
-				}
+			if (!value && !~['today', 'past', 'future'].indexOf(type)) {
+				return null;
 			}
+					
+			switch (type) {
+				case 'today':
+					where.type = 'between';
+					var start = this.dateTime.getNowMoment().startOf('day').utc();
+														
+					var from = start.format(this.dateTime.internalDateTimeFormat);						
+					var to = start.add('days', 1).format(this.dateTime.internalDateTimeFormat);
+					where.value = [from, to];
+					break;
+				case 'past':
+					where.type = 'before';
+					where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
+					break;
+				case 'future':
+					where.type = 'after';
+					where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
+					break;
+				case 'on':
+					where.type = 'between';
+					var start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
+					
+					var from = start.format(this.dateTime.internalDateTimeFormat);
+					var to = start.add('days', 1).format(this.dateTime.internalDateTimeFormat);
+									
+					where.value = [from, to];
+					break;
+				case 'before':
+					where.type = 'before';					
+					where.value = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+					break;
+				case 'after':
+					where.type = 'after';					
+					where.value = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+					break;
+				case 'between':
+					where.type = 'between';	
+					if (value[0] && value[1]) {
+						var from = moment(value[0], this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+						var to = moment(value[1], this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+						where.value = [from, to];
+					}
+					break;						
+			}
+			
 			return where;
 		},
 	});

@@ -22,24 +22,16 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Task extends \Espo\Core\SelectManagers\Base
+class Call extends \Espo\Core\SelectManagers\Base
 {
-	protected function getBoolFilterWhereActive()
-	{
-		return array(
-			'type' => 'notIn',
-			'field' => 'status',
-			'value' => array('Completed', 'Canceled'),
-		);
-	}
 	
-	protected function getBoolFilterWhereInactive()
-	{
+	protected function getBoolFilterWhereOnlyMy()
+	{		
 		return array(
-			'type' => 'in',
-			'field' => 'status',
-			'value' => array('Completed', 'Canceled'),
+			'type' => 'linkedWith',
+			'field' => 'users',
+			'value' => array($this->user->id)
 		);
 	}
-
 }
+

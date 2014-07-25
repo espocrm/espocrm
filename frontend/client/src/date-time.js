@@ -60,8 +60,7 @@ _.extend(Espo.DateTime.prototype, {
 		return m.format(this.internalDateFormat);
 	},
 
-	toDisplayDate: function (string) {
-		
+	toDisplayDate: function (string) {		
 		if (!string || (typeof string != 'string')) {
 			return '';
 		}
@@ -96,6 +95,14 @@ _.extend(Espo.DateTime.prototype, {
 			return '';
 		}
 		return this.toMoment(string).format(this.getDateTimeFormat());
+	},
+	
+	getNowMoment: function () {
+		var m = moment();
+		if (this.timeZone) {
+			m = m.tz(this.timeZone);
+		}
+		return m;
 	},
 
 	toMoment: function (string) {

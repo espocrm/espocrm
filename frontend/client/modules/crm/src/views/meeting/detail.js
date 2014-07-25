@@ -69,31 +69,31 @@ Espo.define('Crm:Views.Meeting.Detail', 'Views.Detail', function (Dep) {
 		},
 		
 		actionSetHeld: function () {
-			if (confirm(this.translate('Are you sure?'))) {
 				this.model.save({
 					status: 'Held'
 				}, {
 					patch: true,
 					success: function () {
-						this.notify('Saved as Held', 'success');
+						Espo.Ui.success(this.translate('Saved as Held', 'labels', 'Meeting'));
 						this.$el.find('button[data-action="sendInvitations"]').remove();
+						this.$el.find('a[data-action="setHeld"]').remove();
+						this.$el.find('a[data-action="setNotHeld"]').remove();
 					}.bind(this),
 				});
-			}
 		},
 		
 		actionSetNotHeld: function () {
-			if (confirm(this.translate('Are you sure?'))) {
 				this.model.save({
 					status: 'Not Held'
 				}, {
 					patch: true,
 					success: function () {
-						this.notify('Saved as Not Held', 'success');
+						Espo.Ui.success(this.translate('Saved as Not Held', 'labels', 'Meeting'));
 						this.$el.find('button[data-action="sendInvitations"]').remove();
+						this.$el.find('a[data-action="setHeld"]').remove();
+						this.$el.find('a[data-action="setNotHeld"]').remove();
 					}.bind(this),
 				});
-			}
 		},
 
 	});

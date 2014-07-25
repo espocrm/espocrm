@@ -255,6 +255,15 @@ class Base
 				case 'isFalse':
 					$part[$item['field'] . '='] = false;
 					break;
+				case 'today':
+					$part[$item['field'] . '='] = date('Y-m-d');
+					break;
+				case 'past':
+					$part[$item['field'] . '<'] = date('Y-m-d');
+					break;
+				case 'future':
+					$part[$item['field'] . '>'] = date('Y-m-d');
+					break;
 				case 'between':
 					if (is_array($item['value'])) {
 						$part['AND'] = array(

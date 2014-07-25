@@ -1,19 +1,39 @@
 {
-	"controller": "Controllers.Record",
-	"model": "Models.Email",
-	"views":{
-		"list":"Email.List"
-	},
-	"menu": {
-		"list": {
-			"buttons": [
-				{
-					"label": "Compose",
-					"action": "composeEmail",
-					"style": "danger",
-					"acl": "edit"
-				}
-			]
-		}
-	}
+   "controller": "Controllers.Record",
+   "model": "Models.Email",
+   "views":{
+      "list":"Email.List"
+   },
+   "menu": {
+      "list": {
+         "buttons": [
+            {
+               "label": "Compose",
+               "action": "composeEmail",
+               "style": "danger",
+               "acl": "edit"
+            }
+         ]
+      }
+   },
+   "presetFilters": [
+      {
+         "name":"archived",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Archived"]
+            }
+         }
+      },
+      {
+         "name":"sent",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Sent"]
+            }
+         }
+      }
+   ]
 }

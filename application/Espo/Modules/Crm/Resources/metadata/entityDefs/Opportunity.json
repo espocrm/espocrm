@@ -126,6 +126,6 @@
     "collection": {
     	"sortBy": "createdAt",
     	"asc": false,
-    	"boolFilters": ["onlyMy", "open"]
+    	"boolFilters": ["onlyMy"]
     }
 }

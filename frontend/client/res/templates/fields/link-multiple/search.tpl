@@ -1,10 +1,4 @@
 <div class="link-container list-group">
-{{#each searchParams.nameHash}}
-	<div class="link-{{@key}} list-group-item">
-		{{this}}
-		<a href="javascript:" class="pull-right" data-id="{{@key}}" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>
-	</div>
-{{/each}}
 </div>
 
 <div class="input-group add-team">

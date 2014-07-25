@@ -27,5 +27,11 @@
 	},
 	"labels": {
 		"Create Task": "Create Task"
+	},
+	"presetFilters": {
+		"active": "Active",
+		"completed": "Completed",
+		"todays": "Today's",
+		"overdue": "Overdue"
 	}
 }

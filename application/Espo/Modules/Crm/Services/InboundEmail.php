@@ -313,7 +313,6 @@ class InboundEmail extends \Espo\Services\Record
 		$case = $this->getEntityManager()->getEntity('Case');		
 		$case->populateDefaults();		
 		$case->set('name', $email->get('name'));
-		$case->set('description', $email->get('bodyPlain'));
 		
 		$userId = $this->getUser()->id;
 		if (!empty($params['userId'])) {

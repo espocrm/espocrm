@@ -22,15 +22,16 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Opportunity extends \Espo\Core\SelectManagers\Base
+class Meeting extends \Espo\Core\SelectManagers\Base
 {
-	protected function getBoolFilterWhereOpen()
-	{
+	
+	protected function getBoolFilterWhereOnlyMy()
+	{		
 		return array(
-			'type' => 'notIn',
-			'field' => 'stage',
-			'value' => array('Closed Won', 'Closed Lost'),
+			'type' => 'linkedWith',
+			'field' => 'users',
+			'value' => array($this->user->id)
 		);
 	}
-
 }
+

@@ -69,31 +69,31 @@
 		},
 		
 		actionSetHeld: function () {
-			if (confirm(this.translate('Are you sure?'))) {
-				this.model.save({
-					status: 'Held'
-				}, {
-					patch: true,
-					success: function () {
-						this.notify('Saved as Held', 'success');
-						this.$el.find('button[data-action="sendInvitations"]').remove();
-					}.bind(this),
-				});
-			}
+			this.model.save({
+				status: 'Held'
+			}, {
+				patch: true,
+				success: function () {
+					this.notify('Saved as Held', 'success');
+					this.$el.find('button[data-action="sendInvitations"]').remove();
+					this.$el.find('a[data-action="setHeld"]').remove();
+					this.$el.find('a[data-action="setNotHeld"]').remove();
+				}.bind(this),
+			});
 		},
 		
 		actionSetNotHeld: function () {
-			if (confirm(this.translate('Are you sure?'))) {
-				this.model.save({
-					status: 'Not Held'
-				}, {
-					patch: true,
-					success: function () {
-						this.notify('Saved as Not Held', 'success');
-						this.$el.find('button[data-action="sendInvitations"]').remove();
-					}.bind(this),
-				});
-			}
+			this.model.save({
+				status: 'Not Held'
+			}, {
+				patch: true,
+				success: function () {
+					this.notify('Saved as Not Held', 'success');
+					this.$el.find('button[data-action="sendInvitations"]').remove();
+					this.$el.find('a[data-action="setHeld"]').remove();
+					this.$el.find('a[data-action="setNotHeld"]').remove();
+				}.bind(this),
+			});
 		},
 
 	});

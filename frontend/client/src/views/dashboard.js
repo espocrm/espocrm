@@ -153,7 +153,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
 			$('#dashlets').children().first().prepend('<div id="dashlet-container-' + id + '"></div>');
 			
 			this.getView('dashlets').createView('dashlet-' + id, 'Dashlet', {
-				name: name,
+				label: name,
 				id: id,
 				el: '#dashlet-container-' + id
 			}, function (view) {

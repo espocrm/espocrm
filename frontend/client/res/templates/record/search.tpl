@@ -2,16 +2,22 @@
 <div class="row search-row">
 	<div class="form-group col-sm-6">
 		<div class="input-group">
-			{{#if boolFilters}}
-			<div class="input-group-btn">
-				
+			{{#if leftDropdown}}
+			<div class="input-group-btn">				
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 					<span class="caret"></span>
 				</button>
-				<ul class="dropdown-menu pull-left basic-filter-menu">					
+				<ul class="dropdown-menu pull-left basic-filter-menu">				
+					{{#if presetFilters.length}}
+						<li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset">{{translate 'All'}}</a></li>
+						{{#each ../presetFilters}}
+						<li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../../scope}}{{/if}}</a></li>
+						{{/each}}
+						<li class="divider"></li>
+					{{/if}}					
 					
 					{{#each boolFilters}}
-						<li class="checkbox"><label><input type="checkbox" name="{{this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../scope category='boolFilters'}}</label></li>
+						<li class="checkbox"><label><input type="checkbox" data-role="boolFilterCheckbox" name="{{this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../scope category='boolFilters'}}</label></li>
 					{{/each}}
 				</ul>				
 			</div>
@@ -24,8 +30,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="form-group col-sm-6">		
-
+	<div class="form-group col-sm-6">
 		<div class="btn-group">
 			<button type="button" class="btn btn-default" data-action="reset">
 				<span class="glyphicon glyphicon-repeat"></span>&nbsp;{{translate 'Reset'}}
@@ -42,8 +47,8 @@
 	</div>
 </div>
 
-
-<div class="row advanced-filters">
+<div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
+<div class="row advanced-filters hidden">
 {{#each filterList}}
 	<div class="filter {{this}} col-sm-4 col-md-3">
 		{{{var this ../this}}}
