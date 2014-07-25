@@ -154,6 +154,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
 			
 			this.getView('dashlets').createView('dashlet-' + id, 'Dashlet', {
 				label: name,
+				name: name,
 				id: id,
 				el: '#dashlet-container-' + id
 			}, function (view) {
