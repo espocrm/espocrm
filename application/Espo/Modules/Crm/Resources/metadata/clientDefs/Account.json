@@ -29,5 +29,6 @@
          ],
          "layout":"listForAccount"
       }
-   }
+   },
+   "boolFilters": ["onlyMy"]
 }
