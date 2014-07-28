@@ -4,6 +4,8 @@ if (process.argv.length < 3) {
 	throw new Error("No 'version from' passed");
 }
 
+var acceptedVersionName = process.argv[3] || versionFrom;
+
 var path = require('path');
 var fs = require('fs');
 var sys = require('sys')
@@ -16,7 +18,7 @@ var buildRelPath = 'build/EspoCRM-' + version;
 var buildPath = currentPath + '/' + buildRelPath;
 var diffFilePath = currentPath + '/build/diff';
 
-var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + versionFrom + '-to-' + version;
+var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
 
 
 var exec = require('child_process').exec;
@@ -64,21 +66,40 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 		});
 		
 		var d = new Date();
-		var date = d.getFullYear().toString() + '-' + (d.getMonth() + 1).toString() + '-' + (d.getDate()).toString();
 		
-		var manifest = {
-			"name": "EspoCRM Upgrade "+versionFrom+" to "+version,
-			"version": version,
-			"acceptableVersions": [
-				versionFrom
-			],
-			"releaseDate": date,
-			"author": "EspoCRM",			
-			"description": "",
-			"delete": deletedFileList
-		}
+		var dateN = ((d.getMonth() + 1).toString());
+		dateN = dateN.length == 1 ? '0' + dateN : dateN;
 		
-		fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
+		var date = d.getFullYear().toString() + '-' + dateN + '-' + (d.getDate()).toString();
+		
+		execute('git tag', function (stdout) {			
+			var versionList = [];
+			var occured = false;
+			tagList = stdout.split('\n').forEach(function (tag) {
+				if (tag == versionFrom) {
+					occured = true;
+				}
+				if (!tag || tag == version) {
+					return;
+				}
+				if (occured) {
+					versionList.push(tag);
+				}
+			});
+		
+			var manifest = {
+				"name": "EspoCRM Upgrade "+acceptedVersionName+" to "+version,
+				"version": version,
+				"acceptableVersions": versionList,
+				"releaseDate": date,
+				"author": "EspoCRM",			
+				"description": "",
+				"delete": deletedFileList
+			}
+		
+			fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
+		
+		});
 		
 		fs.unlinkSync(diffFilePath)
 	
