@@ -5,8 +5,5 @@
          "type":"bool"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   }
+   "filter": true
 }

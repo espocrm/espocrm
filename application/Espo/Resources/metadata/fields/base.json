@@ -5,10 +5,7 @@
          "type":"bool"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":false
-   },
+   "filter": false,
    "notCreatable": true,
    "fieldDefs":{
       "notStorable":true

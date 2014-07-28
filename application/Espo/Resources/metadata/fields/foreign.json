@@ -9,10 +9,7 @@
          "type":"varchar"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":false
-   },
+   "filter": false,
    "notCreatable": true,
    "fieldDefs":{
       "skip":true

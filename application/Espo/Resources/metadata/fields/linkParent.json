@@ -13,10 +13,7 @@
    "notActualFields":[
       "name"
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   },
+   "filter": true,
    "notCreatable": true,
    "fieldDefs":{
       "notStorable":true

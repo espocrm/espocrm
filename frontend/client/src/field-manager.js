@@ -30,25 +30,22 @@ _.extend(Espo.FieldManager.prototype, {
 	
 	metadata: null,
 
-	getSearchParams: function (fieldType) {
-		if (fieldType in this.defs) {
-			var res = this.defs[fieldType].search || {};
-			if (!('basic' in res)) {
-				res.basic = true;
-			}
-			if (!('advanced' in res)) {
-				res.advanced = true;
-			}
-			return res;
-		}
-		return false;
-	},
-
 	getParams: function (fieldType) {
 		if (fieldType in this.defs) {
 			return this.defs[fieldType].params || [];
 		}
 		return [];
+	},
+	
+	checkFilter: function (fieldType) {
+		if (fieldType in this.defs) {
+			if ('filter' in this.defs[fieldType]) {
+				return this.defs[fieldType].filter;
+			} else {
+				return false;
+			}
+		}
+		return false;
 	},
 	
 	isMergable: function (fieldType) {
