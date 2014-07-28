@@ -16,7 +16,7 @@ var buildRelPath = 'build/EspoCRM-' + version;
 var buildPath = currentPath + '/' + buildRelPath;
 var diffFilePath = currentPath + '/build/diff';
 
-var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + versionFrom + '-' + version;
+var upgradePath = currentPath + '/build/EspoCRM-upgrade-' + versionFrom + '-to-' + version;
 
 
 var exec = require('child_process').exec;
