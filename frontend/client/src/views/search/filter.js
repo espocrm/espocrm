@@ -36,17 +36,19 @@ Espo.define('Views.Search.Filter', 'View', function (Dep) {
 			var name = this.name = this.options.name;				
 			var type = this.model.getFieldType(name);
 			
-			var viewName = this.model.getFieldParam(name, 'view') || 'Fields.' + Espo.Utils.upperCaseFirst(type);
+			if (type) {			
+				var viewName = this.model.getFieldParam(name, 'view') || 'Fields.' + Espo.Utils.upperCaseFirst(type);
 			
-			this.createView('field', viewName, {
-				mode: 'search',
-				model: this.model,
-				el: this.options.el + ' .field',
-				defs: {
-					name: name,						
-				},
-				searchParams: this.options.params,
-			});
+				this.createView('field', viewName, {
+					mode: 'search',
+					model: this.model,
+					el: this.options.el + ' .field',
+					defs: {
+						name: name,						
+					},
+					searchParams: this.options.params,
+				});
+			}
 		},
 	});	
 });
