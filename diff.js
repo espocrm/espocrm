@@ -36,6 +36,7 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 	if (!fs.existsSync(upgradePath + '/files')) {
 		fs.mkdirSync(upgradePath + '/files');
 	}
+	process.chdir(buildPath);
 	
 	var fileList = [];
 	
@@ -62,7 +63,7 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 			deletedFileList.push(file.replace('frontend/', ''));
 		});	
 		
-		process.chdir(buildPath);
+		
 		execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files ' , function (stdout) {
 	
 		});
