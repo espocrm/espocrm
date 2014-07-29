@@ -24,10 +24,7 @@
          "disabled": true
       }
    },
-   "search":{
-      "basic":false,
-      "advanced":true
-   },
+   "filter": true,
    "fieldDefs":{
       "type":"float"
    }

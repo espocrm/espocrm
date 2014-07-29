@@ -27,8 +27,5 @@
    },
    "mergable":false,
    "notCreatable": false,
-   "search":{
-      "basic":false,
-      "advanced":true
-   }
+   "filter": true
 }

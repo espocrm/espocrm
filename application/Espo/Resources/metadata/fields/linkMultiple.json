@@ -13,8 +13,5 @@
       "names"
    ],
    "notCreatable": true,
-   "search":{
-      "basic":false,
-      "advanced":true
-   }
+   "filter": true
 }

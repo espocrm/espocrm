@@ -21,5 +21,6 @@
             "view":"Crm:Record.Panels.Tasks"
          }
       ]
-   }
+   },
+	"boolFilters": ["onlyMy"]
 }

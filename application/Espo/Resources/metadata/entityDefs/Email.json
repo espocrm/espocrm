@@ -173,7 +173,6 @@
     },
     "collection": {
     	"sortBy": "dateSent",
-    	"asc": false,
-    	"boolFilters": ["onlyMy"]
+    	"asc": false    	
     }
 }

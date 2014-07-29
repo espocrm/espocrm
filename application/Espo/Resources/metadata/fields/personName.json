@@ -18,10 +18,7 @@
    "naming":"prefix",
    "mergable":false,
    "notCreatable": true,
-   "search":{
-      "basic":true,
-      "advanced":true
-   },
+   "filter": true,
    "fieldDefs":{
       "default":""
    }

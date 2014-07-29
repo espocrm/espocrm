@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,37 +20,27 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Search.Filter', 'View', function (Dep) {
+namespace Espo\Modules\Crm\SelectManagers;
 
-	return Dep.extend({
-
-		template: 'search.filter',
-		
-		data: function () {
-			return {
-				name: this.name,
-				scope: this.model.name
-			};
-		},			
-		
-		setup: function () {
-			var name = this.name = this.options.name;				
-			var type = this.model.getFieldType(name);
-			
-			if (type) {			
-				var viewName = this.model.getFieldParam(name, 'view') || 'Fields.' + Espo.Utils.upperCaseFirst(type);
-			
-				this.createView('field', viewName, {
-					mode: 'search',
-					model: this.model,
-					el: this.options.el + ' .field',
-					defs: {
-						name: name,						
-					},
-					searchParams: this.options.params,
-				});
-			}
-		},
-	});	
-});
+class Task extends \Espo\Core\SelectManagers\Base
+{
+	
+	protected function getBoolFilterWhereActive()
+	{		
+		return array(
+			'type' => 'notIn',
+			'field' => 'status',
+			'value' => array('Completed', 'Canceled')
+		);
+	}
+	
+	protected function getBoolFilterWhereInactive()
+	{		
+		return array(
+			'type' => 'in',
+			'field' => 'status',
+			'value' => array('Completed', 'Canceled')
+		);
+	}
+}
 

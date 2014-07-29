@@ -14,10 +14,7 @@
          "type":"varchar"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   },
+   "filter": true,
    "fieldDefs":{
       "type":"varchar"
    }
