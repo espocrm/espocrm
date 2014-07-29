@@ -28,7 +28,7 @@
 		this.dateTime = dateTime;
 		
 		this.data = this.default = defaultData || {
-			filter: '',			
+			textFilter: '',			
 			bool: {},
 			basic: {name: true},
 			advanced: {},
@@ -39,25 +39,14 @@
 	
 		data: null,
 		
-		getWhere: function () {
+		getWhere: function () {		
+			var where = [];			
 		
-			var where = [];
-			
-			if (this.data.filter != '' && this.data.basic) {			
-				var o = {
-					type: 'or',
-					value: [],
-				};			
-				for (var field in this.data.basic) {
-					if (this.data.basic[field]) {
-						o.value.push({
-							field: field,
-							type: 'like',
-							value: this.data.filter + '%'
-						});
-					}
-				};				
-				where.push(o);
+			if (this.data.textFilter && this.data.textFilter != '') {
+				where.push({
+					type: 'textFilter',
+					value: this.data.textFilter
+				});
 			}
 						
 			if (this.data.bool) {
@@ -70,7 +59,9 @@
 						o.value.push(name);
 					}
 				}
-				where.push(o);				
+				if (o.value.length) {
+					where.push(o);
+				}		
 			}
 			
 			if (this.data.advanced) {

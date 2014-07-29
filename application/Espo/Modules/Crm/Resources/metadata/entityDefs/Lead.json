@@ -189,7 +189,6 @@
     },
     "collection": {
     	"sortBy": "createdAt",
-    	"asc": false,
-    	"boolFilters": ["onlyMy"]
+    	"asc": false
     }
 }
