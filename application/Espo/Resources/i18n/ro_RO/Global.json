@@ -109,7 +109,12 @@
 		"You": "Tu",
 		"you": "tu",
 		"change": "schimba",
-		"Primary": "Primar"
+		"Primary": "Primar",
+		"Save Filters": "Save Filters",
+		"Administration": "Administration",
+		"Run Import": "Run Import",
+		"Duplicate": "Duplicat",
+		"Notifications": "Notifications"
 	},
 	"messages": {
 		"notModified": "Nu ai modificat inregistrarea",
@@ -271,7 +276,10 @@
 			"notOn": "Oprit",
 			"after": "Dupa",
 			"before": "Inainte",
-			"between": "Intre"
+			"between": "Intre",
+			"today": "Astazi",
+			"past": "Past",
+			"future": "Future"
 		},
 		"intSearchRanges": {
 			"equals": "Egal",
@@ -289,6 +297,13 @@
 			"2": "2 minute",
 			"5": "5 minute",
 			"10": "10 minute"
+		},
+		"phoneNumber": {
+			"Mobile": "Mobile",
+			"Office": "Office",
+			"Fax": "Fax",
+			"Home": "Home",
+			"Other": "Altele"
 		}
 	},
 	"sets": {

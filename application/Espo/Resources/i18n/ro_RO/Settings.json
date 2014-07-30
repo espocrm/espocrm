@@ -46,7 +46,8 @@
 		"ldapSecurity": "Securitate",
 		"ldapUserLoginFilter": "User Login Filter",
 		"ldapAccountDomainNameShort": "Account Domain Name Short",
-		"ldapOptReferrals": "Opt Referrals"
+		"ldapOptReferrals": "Opt Referrals",
+		"disableExport": "Disable Export (only admin is allowed)"
 	},
 	"options": {
 		"weekStart": {

@@ -30,5 +30,10 @@
 		"Set Held": "Setare detinere",
 		"Set Not Held": "Setare nedetinere",
 		"Send Invitations": "Trimite invitatii"		
+	},
+	"presetFilters": {
+		"planned": "Planificat",
+		"held": "Detinut",
+		"todays": "Today's"
 	}
 }

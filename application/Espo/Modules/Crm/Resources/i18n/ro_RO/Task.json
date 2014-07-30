@@ -27,5 +27,11 @@
 	},
 	"labels": {
 		"Create Task": "Creaza Activitate"
+	},
+	"presetFilters": {
+		"active": "Activ",
+		"completed": "Completat",
+		"todays": "Today's",
+		"overdue": "Overdue"
 	}
 }

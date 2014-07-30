@@ -30,5 +30,9 @@
 	},
 	"labels": {
 		"Create Opportunity": "Creare Oportunitate"
+	},
+	"presetFilters": {
+		"open": "Deschide",
+		"won": "Won"
 	}
 }
