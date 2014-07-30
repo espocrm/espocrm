@@ -57,8 +57,8 @@
 	{{#if showMoreEnabled}}	
 	<div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
 		<a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore">
-			{{#if showTotalCount}}
-			<div class="pull-right text-muted">{{totalCount}}</div>
+			{{#if showCount}}
+			<div class="pull-right text-muted more-count">{{moreCount}}</div>
 			{{/if}}
 			<span>{{translate 'Show more'}}</span>		
 		</a>
