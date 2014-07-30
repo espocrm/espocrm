@@ -1,0 +1,19 @@
+{
+	"fields": {
+		"name": "Tên",
+		"emailAddress": "Email",
+		"title": "Tiêu đề",
+		"website": "Website",
+		"accountName": "Tên tài khoản",
+		"phoneNumber": "Điện thoại",
+		"doNotCall": "Không gọi",
+		"address": "Địa chỉ",
+		"description": "Mô tả"
+	},
+	"links": {
+	},
+	"labels": {
+		"Create Target": "Tạo mục tiêu",
+		"Convert to Lead": "Chuyển đổi thành chỉ dẫn"
+	}
+}
