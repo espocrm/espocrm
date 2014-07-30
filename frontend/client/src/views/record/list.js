@@ -51,6 +51,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		_internalLayoutType: 'list-row',
 		
 		listContainerEl: '.list > table > tbody',
+		
+		showTotalCount: true,
 
 		events: {
 			'click a.link': function (e) {
@@ -266,11 +268,14 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				paginationBottom: paginationBottom,
 				showMoreActive: this.collection.total > this.collection.length,
 				showMoreEnabled: this.showMore,
-				checkboxes: this.checkboxes,
+				showTotalCount: this.showTotalCount,
+				totalCount: this.collection.total,
+				
+				checkboxes: this.checkboxes,				
 				actions: this._getActions(),
 				rows: this.rows,
 				topBar: paginationTop || this.checkboxes,
-				bottomBar: paginationBottom,
+				bottomBar: paginationBottom,				
 			};
 		},
 
@@ -335,6 +340,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 						}
 					}
 				};
+			}
+			
+			if ('showTotalCount' in this.options) {
+				this.showTotalCount = this.options.showTotalCount;
 			}
 			
 			if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {

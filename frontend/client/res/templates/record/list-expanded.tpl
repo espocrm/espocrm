@@ -31,7 +31,12 @@
 	{{#unless paginationEnabled}}
 	{{#if showMoreEnabled}}
 	<div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
-		<a type="button" href="javascript:" class="btn btn-default btn-block"  data-action="showMore">{{translate 'Show more'}}</a>
+		<a type="button" href="javascript:" class="btn btn-default btn-block"  data-action="showMore">
+			{{#if showTotalCount}}
+			<div class="pull-right text-muted">{{totalCount}}</div>
+			{{/if}}
+			<span>{{translate 'Show more'}}</span>		
+		</a>
 	</div>
 	{{/if}}
 	{{/unless}}
