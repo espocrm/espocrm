@@ -34,6 +34,19 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 		setup: function () {
 			this.params.rows = this.params.rows || 4; 
 		},
+		
+		fetchSearch: function () {
+			var value = this.$element.val();
+			if (value) {
+				var data = {
+					type: 'like',
+					value: '%' + value + '%',
+					valueText: value
+				};
+				return data;
+			}
+			return false;				
+		},
 
 	});
 });
