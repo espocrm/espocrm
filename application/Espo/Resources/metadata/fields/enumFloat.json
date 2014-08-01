@@ -9,10 +9,7 @@
          "type":"float"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   },
+   "filter": true,
    "notCreatable": true,
    "fieldDefs":{
       "type":"float"

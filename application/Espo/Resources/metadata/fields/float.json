@@ -18,10 +18,7 @@
          "type":"float"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   },
+   "filter": true,
    "fieldDefs":{
       "notNull":false
    }

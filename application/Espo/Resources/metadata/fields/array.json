@@ -15,10 +15,7 @@
          "hidden": true
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":false
-   },
+   "filter": false,
    "notCreatable": false,
    "fieldDefs":{
       "type":"jsonArray"

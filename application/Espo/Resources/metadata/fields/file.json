@@ -15,10 +15,7 @@
    "fieldDefs":{
       "skip":true
    },
-   "search":{
-      "basic":false,
-      "advanced":false
-   },
+   "filter": false,
    "linkDefs": {
       "type": "belongsTo",
       "entity": "Attachment"

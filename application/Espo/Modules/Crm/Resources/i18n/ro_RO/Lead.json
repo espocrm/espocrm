@@ -42,5 +42,8 @@
 			"Campaign": "Campanie",
 			"Other": "Altele"
 		}
+	},
+	"presetFilters": {
+		"active": "Activ"
 	}
 }

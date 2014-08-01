@@ -148,7 +148,6 @@
     },
     "collection": {
     	"sortBy": "dateStart",
-    	"asc": false,
-    	"boolFilters": ["onlyMy"]
+    	"asc": false
     }
 }

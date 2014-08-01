@@ -82,6 +82,11 @@ class Base
 			}
 		}
     }
+    
+    protected function getTextFilterFields()
+    {
+    	return $this->metadata->get("entityDefs.{$this->entityName}.collection.textFilterFields", array('name'));
+    }
 
     protected function where($params, &$result)
     {
@@ -95,6 +100,18 @@ class Base
 						if (!empty($p)) {
 							$params['where'][] = $p;
 						}
+					}
+				} else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
+					if (!empty($item['value'])) {
+						if (empty($result['whereClause'])) {
+							$result['whereClause'] = array();
+						}
+						$fieldList = $this->getTextFilterFields();
+						$d = array();
+						foreach ($fieldList as $field) {
+							$d[$field . '*'] = $item['value'] . '%';
+						}
+						$where['OR'] = $d;				
 					}
 				}
 			}

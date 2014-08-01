@@ -24,6 +24,13 @@
 		"Create Meeting": "Creare Intalnire",
 		"Set Held": "Setare detinere",
 		"Set Not Held": "Setare nedetinere",
-		"Send Invitations": "Trimite invitatii"
+		"Send Invitations": "Trimite invitatii",
+		"Saved as Held": "Saved as Held",
+		"Saved as Not Held": "Saved as Not Held"
+	},
+	"presetFilters": {
+		"planned": "Planificat",
+		"held": "Detinut",
+		"todays": "Today's"
 	}
 }

@@ -297,6 +297,13 @@
 			"2": "2 minutes",
 			"5": "5 minutes",
 			"10": "10 minutes"
+		},
+		"phoneNumber": {
+			"Mobile": "Mobile",
+			"Office": "Office",
+			"Fax": "Fax",
+			"Home": "Home",
+			"Other": "Other"
 		}
 	},
 	"sets": {

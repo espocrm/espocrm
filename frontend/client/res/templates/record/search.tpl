@@ -7,7 +7,7 @@
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 					<span class="caret"></span>
 				</button>
-				<ul class="dropdown-menu pull-left basic-filter-menu">				
+				<ul class="dropdown-menu pull-left filter-menu">				
 					{{#if presetFilters.length}}
 						<li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset">{{translate 'All'}}</a></li>
 						{{#each ../presetFilters}}
@@ -22,7 +22,7 @@
 				</ul>				
 			</div>
 			{{/if}}
-			<input type="text" class="form-control filter" name="filter" value="{{filter}}">
+			<input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}">
 			<div class="input-group-btn">
 				<button type="button" class="btn btn-primary search btn-icon" data-action="search">
 					<span class="glyphicon glyphicon-search"></span>

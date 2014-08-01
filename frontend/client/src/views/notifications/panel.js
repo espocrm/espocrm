@@ -39,6 +39,7 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
 				this.createView('list', 'Record.ListExpanded', {
 					el: this.options.el + ' .list-container',
 					collection: this.collection,
+					showCount: false,
 					listLayout: {
 						rows: [
 							[

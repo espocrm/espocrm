@@ -9,10 +9,7 @@
          "type":"int"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   },
+   "filter": true,
    "notCreatable": true,
    "fieldDefs":{
       "type":"int"

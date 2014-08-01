@@ -51,6 +51,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		_internalLayoutType: 'list-row',
 		
 		listContainerEl: '.list > table > tbody',
+		
+		showCount: true,
 
 		events: {
 			'click a.link': function (e) {
@@ -266,11 +268,14 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				paginationBottom: paginationBottom,
 				showMoreActive: this.collection.total > this.collection.length,
 				showMoreEnabled: this.showMore,
-				checkboxes: this.checkboxes,
+				showCount: this.showCount,
+				moreCount: this.collection.total - this.collection.length,
+				
+				checkboxes: this.checkboxes,				
 				actions: this._getActions(),
 				rows: this.rows,
 				topBar: paginationTop || this.checkboxes,
-				bottomBar: paginationBottom,
+				bottomBar: paginationBottom,				
 			};
 		},
 
@@ -335,6 +340,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 						}
 					}
 				};
+			}
+			
+			if ('showCount' in this.options) {
+				this.showCount = this.options.showCount;
 			}
 			
 			if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
@@ -635,9 +644,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			var final = function () {
 				$showMore.parent().append($showMore);
 				if (collection.total > collection.length) {
-					$showMore.removeClass('hide');
+					this.$el.find('.more-count').text(collection.total - this.collection.length);
+					$showMore.removeClass('hide');					
 				}
-				$showMore.children('a').removeClass('disabled');
+				$showMore.children('a').removeClass('disabled');				
+								
 				this.notify(false);
 			}.bind(this);
 			

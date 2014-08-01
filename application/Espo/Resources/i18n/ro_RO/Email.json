@@ -28,5 +28,9 @@
 	"labels": {
 		"Create Email": "Arhiveaza Email",
 		"Compose": "Compune"
+	},
+	"presetFilters": {
+		"sent": "Trimis",
+		"archived": "Arhivat"
 	}
 }

@@ -155,7 +155,6 @@
     },
     "collection": {
     	"sortBy": "name",
-    	"asc": true,
-    	"boolFilters": ["onlyMy"]
+    	"asc": true
     }
 }

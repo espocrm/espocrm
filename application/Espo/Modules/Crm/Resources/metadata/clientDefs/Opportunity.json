@@ -43,5 +43,6 @@
             }
          }
       }
-   ]
+   ],
+	"boolFilters": ["onlyMy"]
 }

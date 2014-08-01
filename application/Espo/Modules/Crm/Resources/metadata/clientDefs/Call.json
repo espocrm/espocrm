@@ -76,5 +76,6 @@
 				}
 			}
 		}
-	]
+	],
+	"boolFilters": ["onlyMy"]
 }

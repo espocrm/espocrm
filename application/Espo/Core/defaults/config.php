@@ -68,7 +68,8 @@ return array (
 		'fr_FR',
 		'tr_TR',
 		'ro_RO',
-		'pt_BR'		
+		'pt_BR',
+		'vi_VN'
 	),
 	'language' => 'en_US',
 	'logger' =>

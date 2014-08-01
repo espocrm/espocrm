@@ -17,7 +17,7 @@
 		"Contact": "Contacte",
 		"Lead": "Lead-uri",
 		"Target": "Tinte",
-		"Opportunity": "Opportunitati",
+		"Opportunity": "Oportunitati",
 		"Meeting": "Intalniri",
 		"Calendar": "Calendar",
 		"Call": "Apeluri",
@@ -69,7 +69,7 @@
 	},
 	"links": {
 		"contacts": "Contacte",
-		"opportunities": "Opportunitati",
+		"opportunities": "Oportunitati",
 		"leads": "Lead-uri",		
 		"meetings": "Intalniri",
 		"calls": "Apeluri",

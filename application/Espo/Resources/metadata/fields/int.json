@@ -18,8 +18,5 @@
          "type":"int"
       }
    ],
-   "search":{
-      "basic":false,
-      "advanced":true
-   }
+   "filter": true
 }
