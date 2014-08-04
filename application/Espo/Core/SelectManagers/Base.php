@@ -176,7 +176,7 @@ class Base
     		}
     		$result['whereClause']['assignedUserId'] = $this->user->id;
     	}
-    	if ($this->acl->checkReadOnlyTeam($this->entityName)) {
+    	if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityName)) {
     		if (!array_key_exists('whereClause', $result)) {
     			$result['whereClause'] = array();
     		}
