@@ -54,7 +54,13 @@ class Notification extends \Espo\Core\Controllers\Base
 	public function actionNotReadCount()
 	{
 		$userId = $this->getUser()->id;
-		return $this->getService('Notification')->getNotReadCount($userId);	
+		return $this->getService('Notification')->getNotReadCount($userId);
+	}
+	
+	public function actionMarkAllRead($params, $data, $request)
+	{
+		$userId = $this->getUser()->id;
+		return $this->getService('Notification')->markAllRead($userId);
 	}
 }
 

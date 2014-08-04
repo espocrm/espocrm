@@ -49,14 +49,22 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 			this.checkUpdates();
 		},
 		
+		showNotRead: function (count) {
+			this.$icon.addClass('warning');
+			this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
+		},
+		
+		hideNotRead: function () {
+			this.$icon.removeClass('warning');
+			this.$badge.attr('title', '');
+		},
+		
 		checkUpdates: function () {			
 			$.ajax('Notification/action/notReadCount').done(function (count) {
 				if (count) {
-					this.$icon.addClass('warning');
-					this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
+					this.showNotRead(count);
 				} else {
-					this.$icon.removeClass('warning');
-					this.$badge.attr('title', '');
+					this.hideNotRead();
 				}
 			}.bind(this));
 		
@@ -82,6 +90,9 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 				el: '#notifications-panel',				
 			}, function (view) {
 				view.render();
+				this.listenTo(view, 'all-read', function () {
+					this.hideNotRead();
+				}, this);
 			}.bind(this));
 			
 			$document = $(document);			

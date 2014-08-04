@@ -114,7 +114,8 @@
 		"Administration": "Administration",
 		"Run Import": "Run Import",
 		"Duplicate": "Duplicate",
-		"Notifications": "Notifications"
+		"Notifications": "Notifications",
+		"Mark all read": "Mark all read"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
