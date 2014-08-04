@@ -433,7 +433,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
 			for (var i in listLayout) {
 				var col = listLayout[i];
-				var type = col.type || model.getFieldType(col.name) || 'base';				
+				var type = col.type || model.getFieldType(col.name) || 'base';
+				if (!col.name) {
+					continue;
+				}				
 				var item = {
 					name: col.name,
 					view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),					
