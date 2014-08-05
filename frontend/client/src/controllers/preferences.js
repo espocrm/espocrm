@@ -33,12 +33,7 @@ Espo.define('Controllers.Preferences', 'Controllers.Record', function (Dep) {
 		},	
 	
 		checkAccess: function (action) {
-			if (this.getUser().isAdmin()) {
-				return true;
-			}				
-			if (action != 'own') {
-				return false;
-			}				
+			return true;			
 		},
 	
 		own: function () {
