@@ -92,6 +92,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 				view.render();
 				this.listenTo(view, 'all-read', function () {
 					this.hideNotRead();
+					this.$el.find('.badge-circle-warning').remove();
 				}, this);
 			}.bind(this));
 			
