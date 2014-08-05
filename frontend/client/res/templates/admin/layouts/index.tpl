@@ -13,7 +13,7 @@
 						<ul class="list-unstyled">
 						{{#each ../typeList}}
 							<li>
-								<button style="display: block;" class="layout-link btn btn-link" data-type="{{this}}" data-scope="{{../this}}">{{translate this scope='Admin' category='layouts'}}</button>			
+								<button style="display: block;" class="layout-link btn btn-link" data-type="{{./this}}" data-scope="{{.././this}}">{{translate this scope='Admin' category='layouts'}}</button>			
 							</li>
 						{{/each}}
 						</ul>

@@ -6,7 +6,7 @@
 		<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">{{translate 'Select Field'}} <span class="caret"></span></button>
 		<ul class="dropdown-menu pull-left filter-list">
 		{{#each ../fields}}
-			<li><a href="javascript:" data-name="{{this}}" data-action="add-field">{{translate this scope=../../scope category='fields'}}</a></li>
+			<li><a href="javascript:" data-name="{{./this}}" data-action="add-field">{{translate this scope=../../scope category='fields'}}</a></li>
 		{{/each}}
 		</ul>
 	</div>

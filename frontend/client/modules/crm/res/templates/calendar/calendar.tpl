@@ -17,7 +17,7 @@
 	<div class="col-sm-4">
 		<div class="btn-group pull-right">
 			{{#each ../modeList}}
-			<button class="btn btn-default{{#ifEqual this ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{this}}">{{translate this scope='Calendar' category='modes'}}</button>
+			<button class="btn btn-default{{#ifEqual this ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{./this}}">{{translate this scope='Calendar' category='modes'}}</button>
 			{{/each}}
 		</div>
 	</div>

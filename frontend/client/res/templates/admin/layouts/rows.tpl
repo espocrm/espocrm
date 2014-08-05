@@ -70,7 +70,7 @@
 			<header>{{translate 'Enabled' scope='Admin'}}</header>
 			<ul class="enabled connected">
 				{{#each layout}}
-					<li draggable="true" {{#each ../dataAttributes}}data-{{this}}="{{prop ../this this}}" {{/each}}>
+					<li draggable="true" {{#each ../dataAttributes}}data-{{./this}}="{{prop ../this this}}" {{/each}}>
 						<div class="left">
 							<label>{{label}}</label>
 						</div>
@@ -107,10 +107,10 @@
 				<div class="form-group">
 					<label>{{translate this}}</label>
 					{{#ifPropEquals ../../dataAttributesDefs this 'text'}}
-						<input type="text" name="{{../this}}" value="" size="8" maxlength="8" class="form-control input-small">
+						<input type="text" name="{{.././this}}" value="" size="8" maxlength="8" class="form-control input-small">
 					{{/ifPropEquals}}						
 					{{#ifPropEquals ../../dataAttributesDefs this 'bool'}}						
-						<select name="{{../this}}" class="form-control input-small">
+						<select name="{{.././this}}" class="form-control input-small">
 							<option value="">no</option>
 							<option value="true">yes</option>
 						</select>

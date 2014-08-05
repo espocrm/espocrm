@@ -4,7 +4,7 @@
 	<div id="scopes-menu" class="col-sm-3">
 	<ul class="list-group">
 	{{#each scopeList}}		
-		<li class="list-group-item"><a href="javascript:" class="scope-link" data-scope="{{this}}">{{translate this category='scopeNamesPlural'}}</a></li>		
+		<li class="list-group-item"><a href="javascript:" class="scope-link" data-scope="{{./this}}">{{translate this category='scopeNamesPlural'}}</a></li>		
 	{{/each}}
 	</ul>
 	</div>

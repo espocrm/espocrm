@@ -13,7 +13,7 @@
 					</button>
 					<ul class="dropdown-menu">
 						{{#each actions}}
-						<li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" data-panel="{{../../name}}" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{this}}"{{/each}}>{{translate label scope=../scope}}</a></li>
+						<li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" data-panel="{{../../name}}" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../scope}}</a></li>
 						{{/each}}
 					</ul>
 				{{/if}}

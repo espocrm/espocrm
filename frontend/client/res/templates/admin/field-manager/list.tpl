@@ -3,7 +3,7 @@
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{translate 'Add Field' scope='Admin'}} <span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			{{#each typeList}}
-				<li><a href="javascript:" data-action="addField" data-scope="{{../scope}}" data-type="{{this}}">{{translate this category='fieldTypes' scope='Admin'}}</a></li>
+				<li><a href="javascript:" data-action="addField" data-scope="{{../scope}}" data-type="{{./this}}">{{translate this category='fieldTypes' scope='Admin'}}</a></li>
 			{{/each}}
 		</ul>
 	</div>

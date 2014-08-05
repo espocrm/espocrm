@@ -4,8 +4,8 @@
 <ul class="list-group">
 {{#each optionList}}
 	<li class="list-group-item clearfix">
-		{{#if ../translatedOptions}}{{prop ../../translatedOptions this}}{{else}}{{this}}{{/if}}
-		<button class="btn btn-default pull-right" data-value="{{this}}" data-action="add">{{translate 'Add'}}</button>
+		{{#if ../translatedOptions}}{{prop ../../translatedOptions this}}{{else}}{{./this}}{{/if}}
+		<button class="btn btn-default pull-right" data-value="{{./this}}" data-action="add">{{translate 'Add'}}</button>
 	</li>
 {{/each}}
 </ul>

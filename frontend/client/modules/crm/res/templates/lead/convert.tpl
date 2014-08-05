@@ -8,7 +8,7 @@
 
 {{#each scopes}}
 <div>
-	<label><h4><input type="checkbox" class="check-scope" data-scope="{{this}}"> {{translate this category='scopeNames'}}</h4></label>
+	<label><h4><input type="checkbox" class="check-scope" data-scope="{{./this}}"> {{translate this category='scopeNames'}}</h4></label>
 	<div class="edit-container-{{toDom this}} hide">
 	{{{var this ../this}}}
 	</div>

@@ -2,7 +2,7 @@
 <div class="scope-switcher">
 {{#each scopeList}}
 	<label>
-		<input type="radio" name="scope"{{#ifEqual this ../scope}} checked{{/ifEqual}} value="{{this}}">		
+		<input type="radio" name="scope"{{#ifEqual this ../scope}} checked{{/ifEqual}} value="{{./this}}">		
 		{{translate this category='scopeNames'}}
 	</label>&nbsp;
 {{/each}}
