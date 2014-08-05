@@ -610,7 +610,17 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 
 		build: function (callback) {
 			this.waitForView('record');
+
 			var self = this;
+			
+			if (this.sideView) {
+				this.createView('side', this.sideView, {
+					model: this.model,
+					el: '#' + this.id + ' .side',
+					readOnly: this.readOnly
+				});
+			}
+			
 			this.getGridLayout(function (layout) {
 				this.createView('record', 'Base', {
 					model: this.model,
@@ -623,14 +633,6 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 				}, callback);
 			}.bind(this));
 
-
-			if (this.sideView) {
-				this.createView('side', this.sideView, {
-					model: this.model,
-					el: '#' + this.id + ' .side',
-					readOnly: this.readOnly
-				});
-			}
 
 			if (this.bottomView) {
 				this.once('after:render', function () {
