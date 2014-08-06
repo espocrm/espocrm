@@ -31,9 +31,6 @@ class EmailNotification extends \Espo\Core\Services\Base
 {	
 	protected function init()
 	{
-		$this->dependencies[] = 'config';
-		$this->dependencies[] = 'entityManager';
-		$this->dependencies[] = 'user';
 		$this->dependencies[] = 'metadata';
 		$this->dependencies[] = 'mailSender';
 		$this->dependencies[] = 'language';
@@ -42,21 +39,6 @@ class EmailNotification extends \Espo\Core\Services\Base
 	protected function getMailSender()
 	{
 		return $this->getInjection('mailSender');
-	}
-
-	protected function getEntityManager()
-	{
-		return $this->getInjection('entityManager');
-	}
-	
-	protected function getConfig()
-	{
-		return $this->getInjection('config');
-	}
-
-	protected function getUser()
-	{
-		return $this->getInjection('user');
 	}	
 	
 	protected function getMetadata()

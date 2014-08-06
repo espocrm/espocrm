@@ -73,11 +73,6 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$this->entityName = $entityName;
 	}
-
-	protected function getEntityManager()
-	{
-		return $this->injections['entityManager'];
-	}
 	
 	protected function getServiceFactory()
 	{
@@ -88,11 +83,6 @@ class Record extends \Espo\Core\Services\Base
 	{
 		return $this->injections['selectManagerFactory'];
 	}
-
-	protected function getUser()
-	{
-		return $this->injections['user'];
-	}
 	
 	protected function getAcl()
 	{
@@ -102,12 +92,7 @@ class Record extends \Espo\Core\Services\Base
 	protected function getFileManager()
 	{
 		return $this->injections['fileManager'];
-	}
-	
-	protected function getConfig()
-	{
-		return $this->injections['config'];
-	}
+	}	
 	
 	protected function getPreferences()
 	{
