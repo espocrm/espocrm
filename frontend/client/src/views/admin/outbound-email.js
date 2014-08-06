@@ -25,25 +25,51 @@ Espo.define('Views.Admin.OutboundEmail', 'Views.Settings.Record.Edit', function 
 		
 		layoutName: 'outboundEmail',
 		
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			
-			if (!this.model.get('smtpAuth')) {
-				this.hideField('smtpUsername');
-				this.hideField('smtpPassword');	
+		dependencyDefs: {
+			'assignmentEmailNotifications': {
+				map: {
+					true: [
+						{
+							action: 'show',
+							fields: ['assignmentEmailNotificationsEntityList']
+						}
+					]
+				},
+				default: [
+					{
+						action: 'hide',
+						fields: ['assignmentEmailNotificationsEntityList']
+					}
+				]
+			},
+			'smtpAuth': {
+				map: {
+					true: [
+						{
+							action: 'show',
+							fields: ['smtpUsername', 'smtpPassword']
+						}
+					]
+				},
+				default: [
+					{
+						action: 'hide',
+						fields: ['smtpUsername', 'smtpPassword']
+					}
+				]
 			}
-			
-			var smtpAuthField = this.getFieldView('smtpAuth');
-			this.listenTo(smtpAuthField, 'change', function () {
-				var smtpAuth = smtpAuthField.fetch()['smtpAuth'];					
-				if (smtpAuth) {
-					this.showField('smtpUsername');
-					this.showField('smtpPassword');
-				} else {
-					this.hideField('smtpUsername');
-					this.hideField('smtpPassword');
-				}
-			}.bind(this));
+		},	
+		
+		setup: function () {
+			Dep.prototype.setup.call(this);				
+		
+			this.model.defs.fields.assignmentEmailNotificationsEntityList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
+				return this.getMetadata().get('scopes.' + scope + '.tab') && this.getMetadata().get('scopes.' + scope + '.entity');
+			}, this);
+		},
+		
+		afterRender: function () {
+			Dep.prototype.afterRender.call(this);			
 			
 			var smtpSecurityField = this.getFieldView('smtpSecurity');
 			this.listenTo(smtpSecurityField, 'change', function () {

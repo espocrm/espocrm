@@ -19,7 +19,9 @@
 		"smtpPassword": "Password",
 		"smtpEmailAddress": "Email Address",
 		
-		"exportDelimiter": "Export Delimiter"
+		"exportDelimiter": "Export Delimiter",
+		
+		"receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment"
 	},
 	"links": {
 	},
@@ -28,5 +30,8 @@
 			"0": "Sunday",
 			"1": "Monday"
 		}
+	},
+	"labels": {
+		"Notifications": "Notifications"
 	}
 }

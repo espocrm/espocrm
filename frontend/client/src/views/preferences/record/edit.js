@@ -65,10 +65,15 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 					this.getPreferences().trigger('update');
 				}, this);
 			}
+
 		},
 		
 		afterRender: function () {
-			Dep.prototype.afterRender.call(this);			
+			Dep.prototype.afterRender.call(this);
+			
+			if (!this.getConfig().get('assignmentEmailNotifications')) {
+				this.hideField('receiveAssignmentEmailNotifications');
+			}			
 			
 			var smtpSecurityField = this.getFieldView('smtpSecurity');
 			this.listenTo(smtpSecurityField, 'change', function () {

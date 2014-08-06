@@ -28,5 +28,11 @@
 		"rows": [
 			[{"name": "exportDelimiter"}]
 		]
+	},
+	{
+		"label": "Notifications",
+		"rows": [
+			[{"name": "receiveAssignmentEmailNotifications"}]
+		]
 	}
 ]
