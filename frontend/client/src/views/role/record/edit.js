@@ -23,7 +23,7 @@ Espo.define('Views.Role.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
 	return Dep.extend({
 	
-		sideView: null,
+		sideView: 'Role.Record.DetailSide',
 
 		events: _.extend({
 			'change select[data-type="access"]': function (e) {
