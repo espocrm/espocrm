@@ -48,7 +48,7 @@
 		},
 		
 		actionSendInvitations: function () {
-			if (confirm(this.translate('Are you sure?'))) {
+			if (confirm(this.translate('confirmation', 'messages'))) {
 				this.$el.find('button[data-action="sendInvitations"]').addClass('disabled');
 				this.notify('Sending...');
 				$.ajax({

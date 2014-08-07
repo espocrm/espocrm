@@ -37,7 +37,7 @@ Espo.define('Views.Admin.FieldManager.List', 'View', function (Dep) {
 			'click [data-action="removeField"]': function (e) {
 				var field = $(e.currentTarget).data('name');
 				
-				if (confirm(this.translate('Are you sure?'))) {
+				if (confirm(this.translate('confirmation', 'messages'))) {
 					this.notify('Removing...');
 					$.ajax({
 						url: 'Admin/fieldManager/' + this.scope + '/' + field,

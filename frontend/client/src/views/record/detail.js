@@ -53,7 +53,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			},
 			{
 				name: 'delete',
-				label: 'Delete',
+				label: 'Remove',
 				style: 'danger',
 			},
 		],
@@ -229,7 +229,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		},		
 
 		delete: function () {
-			if (confirm(this.getLanguage().translate("Are you sure you?"))) {
+			if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
 				this.trigger('before:delete');
 				this.trigger('delete');
 

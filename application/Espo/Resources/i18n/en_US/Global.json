@@ -133,7 +133,11 @@
 		"fieldShouldBeGreater": "{field} should be greater then {value}",
 		"fieldBadPasswordConfirm": "{field} confirmed improperly",
 		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-		"assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you\n\n{recordUrl}"
+		"assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you\n\n{recordUrl}",
+		"confirmation": "Are you sure?",
+		"removeRecordConfirmation": "Are you sure you want to remove the record?",
+		"unlinkRecordConfirmation": "Are you sure you want to unlink relationship?",
+		"removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records"
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",

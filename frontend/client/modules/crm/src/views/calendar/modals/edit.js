@@ -79,7 +79,7 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
 					onClick: function (dialog) {									
 						var model = this.getView('edit').model;
 											
-						if (confirm(this.translate('Are you sure?'))) {	
+						if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {	
 							var $buttons = dialog.$el.find('.modal-footer button');		
 							$buttons.addClass('disabled');		
 							model.destroy({

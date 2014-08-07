@@ -155,7 +155,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
 					var self = this;
 
-					if (confirm(this.translate('Are you sure?'))) {
+					if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
 						// TODO mass delete
 						this.notify('Removing...');
 						for (var i in this.checkedList) {
@@ -714,7 +714,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				return false;
 			}
 			var self = this;
-			if (confirm(this.translate('Are you sure?'))) {
+			if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
 				this.collection.remove(model);
 				this.notify('Removing...');			
 				model.destroy({
