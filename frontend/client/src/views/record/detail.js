@@ -53,7 +53,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 			},
 			{
 				name: 'delete',
-				label: 'Remove',
+				label: 'Delete',
 				style: 'danger',
 			},
 		],
