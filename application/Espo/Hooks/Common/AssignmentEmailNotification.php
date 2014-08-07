@@ -36,7 +36,7 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
 		) {		
 		
 			$userId = $entity->get('assignedUserId');
-			if (!empty($userId) && $userId != $this->getUser()->id && $userId != $entity->getFetched('assignedUserId')) {
+			if (!empty($userId) && $userId != $this->getUser()->id && $entity->isFieldChanged('assignedUserId')) {
 				$job = $this->getEntityManager()->getEntity('Job');
 				$job->set(array(
 					'serviceName' => 'EmailNotification',
