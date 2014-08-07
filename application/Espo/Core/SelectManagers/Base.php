@@ -180,14 +180,19 @@ class Base
     		if (!array_key_exists('whereClause', $result)) {
     			$result['whereClause'] = array();
     		}
+    		$result['distinct'] = true;
     		if (!array_key_exists('joins', $result)) {
     			$result['joins'] = array();
     		}
     		if (!in_array('teams', $result['joins'])) {
-    			$result['joins'][] = 'teams';
+    			$result['leftJoins'][] = 'teams';
     		}
 
-    		$result['whereClause']['Team.id'] = $this->user->get('teamsIds');
+			$result['whereClause']['OR'] = array(
+				'Team.id' => $this->user->get('teamsIds'),
+				'assignedUserId' => $this->user->id
+			);
+    		//$result['whereClause']['Team.id'] = $this->user->get('teamsIds');
     	}
     }
 
