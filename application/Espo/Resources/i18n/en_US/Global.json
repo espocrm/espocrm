@@ -137,7 +137,7 @@
 		"confirmation": "Are you sure?",
 		"removeRecordConfirmation": "Are you sure you want to remove the record?",
 		"unlinkRecordConfirmation": "Are you sure you want to unlink relationship?",
-		"removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records"
+		"removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?"
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",
