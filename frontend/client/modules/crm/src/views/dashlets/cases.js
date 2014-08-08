@@ -29,6 +29,8 @@ Espo.define('Crm:Views.Dashlets.Cases', 'Views.Dashlets.Abstract.RecordList', fu
 		scope: 'Case',
 
 		defaultOptions: {
+			sortBy: 'number',
+			asc: false,
 			displayRecords: 5,
 			columnLayout: [
 				{

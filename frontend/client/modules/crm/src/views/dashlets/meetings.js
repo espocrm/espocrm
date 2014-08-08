@@ -28,6 +28,8 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
 		scope: 'Meeting',
 
 		defaultOptions: {
+			sortBy: 'createdAt',
+			asc: false,
 			displayRecords: 5,
 			columnLayout: [
 				{
