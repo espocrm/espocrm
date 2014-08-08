@@ -74,7 +74,7 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 			
 			if (this.mode != 'list') {
 				this.addActionHandler('selectLink', function () {
-					Espo.Ui.notify('Loading...');
+					this.notify('Loading...');
 					this.createView('dialog', 'Modals.SelectRecords', {
 							scope: this.foreignScope,
 							createButton: this.mode != 'search'
@@ -84,12 +84,14 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 						dialog.once('select', function (model) {
 							self.$elementName.val(model.get('name'));
 							self.$elementId.val(model.get('id'));
+							self.trigger('change');
 						});
 					});
 				});					
 				this.addActionHandler('clearLink', function () {
 					this.$elementName.val('');
-					this.$elementId.val('');						
+					this.$elementId.val('');
+					this.trigger('change');					
 				});
 				
 				this.events['change select[name="' + this.typeName + '"]'] = function (e) {

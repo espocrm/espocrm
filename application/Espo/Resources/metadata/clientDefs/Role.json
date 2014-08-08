@@ -11,5 +11,8 @@
       "teams":{
          "create":false
       }
-   }
+   },
+  "views": {
+    "list": "Role.List"  	
+  }
 }

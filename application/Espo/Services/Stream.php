@@ -63,20 +63,11 @@ class Stream extends \Espo\Core\Services\Base
 	
 	protected $dependencies = array(
 		'entityManager',
+		'config',
 		'user',
 		'metadata',
 		'acl'
 	);
-
-	protected function getEntityManager()
-	{
-		return $this->injections['entityManager'];
-	}
-
-	protected function getUser()
-	{
-		return $this->injections['user'];
-	}
 	
 	protected function getAcl()
 	{

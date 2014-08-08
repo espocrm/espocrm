@@ -123,7 +123,8 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
 			var scopes = [];
 
 			this.scopes.forEach(function (scope) {
-				if (this.$el.find('input[data-scope="' + scope + '"]').get(0).checked) {
+				var el = this.$el.find('input[data-scope="' + scope + '"]').get(0);
+				if (el && el.checked) {
 					scopes.push(scope);
 				}
 			}.bind(this));

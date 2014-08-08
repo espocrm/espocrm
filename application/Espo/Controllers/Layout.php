@@ -25,6 +25,7 @@ namespace Espo\Controllers;
 use Espo\Core\Utils as Utils;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 
 class Layout extends \Espo\Core\Controllers\Base
 {
@@ -39,6 +40,10 @@ class Layout extends \Espo\Core\Controllers\Base
 
 	public function actionUpdate($params, $data)
 	{
+        if (!$this->getUser()->isAdmin()) {
+        	throw new Forbidden();
+        }
+        
         $result = $this->getContainer()->get('layout')->set($data, $params['scope'], $params['name']);
 
 		if ($result === false) {

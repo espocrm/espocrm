@@ -25,6 +25,17 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
 
 		template: 'notifications.panel',
 		
+		events: {
+			'click [data-action="markAllNotificationsRead"]': function () {
+				$.ajax({				
+					url: 'Notification/action/markAllRead',
+					type: 'POST'
+				}).done(function (count) {
+					this.trigger('all-read');
+				}.bind(this));
+			},
+		},
+		
 		setup: function () {
 			this.wait(true);
 			this.getCollectionFactory().create('Notification', function (collection) {

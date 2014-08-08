@@ -81,7 +81,7 @@ Espo.define('Views.Import.Step1', 'View', function (Dep) {
 		
 		afterRender: function () {
 			this.setupFormData();
-			if (this.getParentView().fileContents) {
+			if (this.getParentView() && this.getParentView().fileContents) {
 				this.setFileIsLoaded();
 				this.preview();
 			}
@@ -148,7 +148,7 @@ Espo.define('Views.Import.Step1', 'View', function (Dep) {
 		},
 		
 		setFileIsLoaded: function () {
-			$('button[data-action="next"]').removeClass('hidden');
+			this.$el.find('button[data-action="next"]').removeClass('hidden');
 		},
 		
 		preview: function () {	

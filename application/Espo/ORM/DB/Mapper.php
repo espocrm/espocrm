@@ -1098,7 +1098,9 @@ abstract class Mapper implements IMapper
 						if ($operator == '<>') {
 							$oppose = 'NOT';
 						}
+						if (!empty($valArr)) {
 						$whereParts[] = $leftPart . " {$oppose} IN " . "(" . implode(',', $valArr) . ")";
+						}
 					}				
 				}				
 			} else {

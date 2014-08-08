@@ -70,10 +70,13 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 		
 		var d = new Date();
 		
-		var dateN = ((d.getMonth() + 1).toString());
+		var monthN = ((d.getMonth() + 1).toString());
+		monthN = monthN.length == 1 ? '0' + monthN : monthN;
+		
+		var dateN = d.getDate().toString();
 		dateN = dateN.length == 1 ? '0' + dateN : dateN;
 		
-		var date = d.getFullYear().toString() + '-' + dateN + '-' + (d.getDate()).toString();
+		var date = d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
 		
 		execute('git tag', function (stdout) {			
 			var versionList = [];

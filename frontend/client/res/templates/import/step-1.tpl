@@ -8,7 +8,7 @@
 						<label class="control-label">{{translate 'Entity Type' scope='Import'}}</label>
 						<select id="import-entity-type" class="form-control">				
 							{{#each entityList}}
-							<option value="{{this}}" {{#ifEqual this ../entityType}}selected{{/ifEqual}}>{{translate this category='scopeNamesPlural'}}</option>
+							<option value="{{./this}}" {{#ifEqual this ../entityType}}selected{{/ifEqual}}>{{translate this category='scopeNamesPlural'}}</option>
 							{{/each}}
 						</select>
 					</div>
@@ -103,7 +103,7 @@
 						<label class="control-label">{{translate 'Currency' scope='Import'}}</label>
 						<select class="form-control" id="import-currency">
 							{{#each currencyList}}
-							<option value="{{this}}">{{this}}</option>
+							<option value="{{./this}}">{{./this}}</option>
 							{{/each}}
 						</select>
 					</div>

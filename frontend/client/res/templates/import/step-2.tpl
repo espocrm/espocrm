@@ -19,7 +19,7 @@
 					</button>
 					<ul class="dropdown-menu pull-left">
 					{{#each fieldList}}
-						<li><a href="javascript:" data-action="addField" data-name="{{this}}">{{translate this scope=../scope category='fields'}}</a></li>
+						<li><a href="javascript:" data-action="addField" data-name="{{./this}}">{{translate this scope=../scope category='fields'}}</a></li>
 					{{/each}}
 					</ul>
 				</div>

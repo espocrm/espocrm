@@ -25,6 +25,16 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 		viewMap: null,
 
 		defaultAction: 'list',
+		
+		checkAccess: function (action) {
+			if (this.getUser().isAdmin()) {
+				return true;
+			}
+			if (this.getAcl().check(this.name, action)) {
+				return true;
+			}
+			return false;
+		},
 
 		initialize: function () {
 			this.viewMap = this.viewMap || {};

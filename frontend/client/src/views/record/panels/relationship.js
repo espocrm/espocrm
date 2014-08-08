@@ -148,7 +148,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 
 		actionUnlinkRelated: function (id) {
 			var self = this;
-			if (confirm(this.translate('Are you sure?'))) {
+			if (confirm(this.translate('unlinkRecordConfirmation', 'messages'))) {
 				var model = this.collection.get(id);
 				self.notify('Unlinking...');
 				$.ajax({
@@ -171,7 +171,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 		
 		actionRemoveRelated: function (id) {
 			var self = this;
-			if (confirm(this.translate('Are you sure?'))) {
+			if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
 				var model = this.collection.get(id);
 				self.notify('Removing...');
 				model.destroy({

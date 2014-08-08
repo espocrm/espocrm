@@ -116,27 +116,34 @@ _.extend(Espo.Controller.prototype, {
 	},		
 	
 	checkAccess: function (action) {
-		if (this.getUser().isAdmin()) {
-			return true;
+		return true;
+	},
+	
+	handleAccessGlobal: function () {
+		if (!this.checkAccessGlobal()) {
+			throw new Espo.Exceptions.AccessDenied("Denied access to action '" + this.name + "#" + action + "'");
 		}
-		if (this.getAcl().check(this.name, action)) {
-			return true;
-		}
-		return false;
 	},		
+	
+	checkAccessGlobal: function () {
+		return true;
+	},
 	
 	handleCheckAccess: function (action) {
 		if (!this.checkAccess(action)) {
-			throw new Espo.Exceptions.AccessDenied("Acl has denied access to action '" + this.name + "#" + action + "'");
+			throw new Espo.Exceptions.AccessDenied("Denied access to action '" + this.name + "#" + action + "'");
 		}
 	},
 	
 	doAction: function (action, options) {
+		this.handleAccessGlobal();
+		
 		action = action || this.defaultAction;			
 		var method = action;
 		if (!(method in this)) {
 			throw new Espo.Exceptions.NotFound("Action '" + this.name + "#" + action + "' is not found");
-		}
+		}		
+		
 		var preMethod = 'before' + Espo.Utils.upperCaseFirst(method);
 		var postMethod = 'after' + Espo.Utils.upperCaseFirst(method);
 		

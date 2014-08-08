@@ -62,7 +62,8 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
 		createField: function (field, readOnly) {
 			var type = this.model.getFieldType(field) || 'base';
-			this.createView(field, 'Fields.' + Espo.Utils.upperCaseFirst(type), {
+			var viewName = this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+			this.createView(field, viewName, {
 				model: this.model,
 				el: this.options.el + ' .field-' + field,
 				defs: {

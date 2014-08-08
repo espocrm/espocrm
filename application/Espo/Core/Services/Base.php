@@ -26,7 +26,11 @@ use \Espo\Core\Interfaces\Injectable;
 
 abstract class Base implements Injectable
 {
-	protected $dependencies = array();
+	protected $dependencies = array(
+		'config',
+		'entityManager',
+		'user',
+	);
 	
 	protected $injections = array();
 	
@@ -52,6 +56,21 @@ abstract class Base implements Injectable
 	public function getDependencyList()
 	{
 		return $this->dependencies;
+	}
+	
+	protected function getEntityManager()
+	{
+		return $this->getInjection('entityManager');
+	}
+	
+	protected function getConfig()
+	{
+		return $this->getInjection('config');
+	}
+
+	protected function getUser()
+	{
+		return $this->getInjection('user');
 	}
 }
 

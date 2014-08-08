@@ -17,7 +17,7 @@
 					{{/if}}					
 					
 					{{#each boolFilters}}
-						<li class="checkbox"><label><input type="checkbox" data-role="boolFilterCheckbox" name="{{this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../scope category='boolFilters'}}</label></li>
+						<li class="checkbox"><label><input type="checkbox" data-role="boolFilterCheckbox" name="{{./this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../scope category='boolFilters'}}</label></li>
 					{{/each}}
 				</ul>				
 			</div>
@@ -50,7 +50,7 @@
 <div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
 <div class="row advanced-filters hidden">
 {{#each filterList}}
-	<div class="filter {{this}} col-sm-4 col-md-3">
+	<div class="filter {{./this}} col-sm-4 col-md-3">
 		{{{var this ../this}}}
 	</div>
 {{/each}}

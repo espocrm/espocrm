@@ -33,7 +33,7 @@
 				<ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
 					<li class="dropdown-header">{{translate 'Create'}}</li>
 					{{#each quickCreateList}}
-					<li><a href="#{{this}}/create" data-name="{{this}}" data-action="quick-create">{{translate this category='scopeNames'}}</a></li>
+					<li><a href="#{{./this}}/create" data-name="{{./this}}" data-action="quick-create">{{translate this category='scopeNames'}}</a></li>
 					{{/each}}								
 				</ul>
 			</li>

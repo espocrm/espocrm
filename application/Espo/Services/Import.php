@@ -64,20 +64,10 @@ class Import extends \Espo\Core\Services\Base
 	{
 		return $this->injections['selectManagerFactory'];
 	}
-
-	protected function getEntityManager()
-	{
-		return $this->injections['entityManager'];
-	}
 	
 	protected function getFileManager()
 	{
 		return $this->injections['fileManager'];
-	}
-
-	protected function getUser()
-	{
-		return $this->injections['user'];
 	}
 	
 	protected function getAcl()
@@ -89,11 +79,6 @@ class Import extends \Espo\Core\Services\Base
 	{
 		return $this->injections['metadata'];
 	}
-	
-	protected function getConfig()
-	{
-		return $this->injections['config'];
-	}	
 	
 	protected function getServiceFactory()
 	{

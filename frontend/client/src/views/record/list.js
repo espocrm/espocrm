@@ -155,7 +155,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
 					var self = this;
 
-					if (confirm(this.translate('Are you sure?'))) {
+					if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
 						// TODO mass delete
 						this.notify('Removing...');
 						for (var i in this.checkedList) {
@@ -433,7 +433,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
 			for (var i in listLayout) {
 				var col = listLayout[i];
-				var type = col.type || model.getFieldType(col.name) || 'base';				
+				var type = col.type || model.getFieldType(col.name) || 'base';
+				if (!col.name) {
+					continue;
+				}				
 				var item = {
 					name: col.name,
 					view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),					
@@ -711,7 +714,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				return false;
 			}
 			var self = this;
-			if (confirm(this.translate('Are you sure?'))) {
+			if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
 				this.collection.remove(model);
 				this.notify('Removing...');			
 				model.destroy({

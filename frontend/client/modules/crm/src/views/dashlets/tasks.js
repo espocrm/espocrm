@@ -28,6 +28,8 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
 		scope: 'Task',
 
 		defaultOptions: {
+			sortBy: 'createdAt',
+			asc: false,
 			displayRecords: 5,
 			columnLayout: [
 				{

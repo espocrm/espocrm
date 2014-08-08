@@ -114,7 +114,8 @@
 		"Administration": "Administration",
 		"Run Import": "Run Import",
 		"Duplicate": "Duplicate",
-		"Notifications": "Notifications"
+		"Notifications": "Notifications",
+		"Mark all read": "Mark all read"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
@@ -130,7 +131,13 @@
 		"fieldShouldBeBetween": "{field} should be between {min} and {max}",
 		"fieldShouldBeLess": "{field} should be less then {value}",
 		"fieldShouldBeGreater": "{field} should be greater then {value}",
-		"fieldBadPasswordConfirm": "{field} confirmed improperly"
+		"fieldBadPasswordConfirm": "{field} confirmed improperly",
+		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
+		"assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you\n\n{recordUrl}",
+		"confirmation": "Are you sure?",
+		"removeRecordConfirmation": "Are you sure you want to remove the record?",
+		"unlinkRecordConfirmation": "Are you sure you want to unlink relationship?",
+		"removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?"
 	},
 	"boolFilters": {
 		"onlyMy": "Only My",

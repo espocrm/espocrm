@@ -20,14 +20,14 @@
  ************************************************************************/ 
 Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 	
-	return Dep.extend({	
+	return Dep.extend({
 	
-		checkAccess: function () {
+		checkAccessGlobal: function () {
 			if (this.getUser().isAdmin()) {
 				return true;
 			}
 			return false;
-		},			
+		},
 		
 		index: function () {		
 			this.main('Admin.Index', null);
@@ -36,7 +36,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 		layouts: function (options) {
 			var scope = options.scope || null;
 			var type = options.type || null;		
-
+		
 			this.main('Admin.Layouts.Index', {scope: scope, type: type});
 		},
 		
@@ -49,7 +49,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 		
 		upgrade: function (options) {
 			this.main('Admin.Upgrade.Index');
-		},	
+		},
 		
 		getSettingsModel: function () {
 			var model = this.getConfig().clone();

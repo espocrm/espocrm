@@ -229,7 +229,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		},		
 
 		delete: function () {
-			if (confirm(this.getLanguage().translate("Are you sure you?"))) {
+			if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
 				this.trigger('before:delete');
 				this.trigger('delete');
 
@@ -547,6 +547,10 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 
 					for (var j in simplifiedLayout[p].rows[i]) {
 						var cellDefs = simplifiedLayout[p].rows[i][j];
+						
+						if (!cellDefs.name) {
+							continue;
+						}
 
 						if (cellDefs == false) {
 							row.push(false);
@@ -606,7 +610,17 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 
 		build: function (callback) {
 			this.waitForView('record');
+
 			var self = this;
+			
+			if (this.sideView) {
+				this.createView('side', this.sideView, {
+					model: this.model,
+					el: '#' + this.id + ' .side',
+					readOnly: this.readOnly
+				});
+			}
+			
 			this.getGridLayout(function (layout) {
 				this.createView('record', 'Base', {
 					model: this.model,
@@ -619,14 +633,6 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 				}, callback);
 			}.bind(this));
 
-
-			if (this.sideView) {
-				this.createView('side', this.sideView, {
-					model: this.model,
-					el: '#' + this.id + ' .side',
-					readOnly: this.readOnly
-				});
-			}
 
 			if (this.bottomView) {
 				this.once('after:render', function () {

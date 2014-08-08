@@ -28,6 +28,8 @@ Espo.define('Crm:Views.Dashlets.Opportunities', 'Views.Dashlets.Abstract.RecordL
 		scope: 'Opportunity',
 
 		defaultOptions: {
+			sortBy: 'createdAt',
+			asc: false,
 			displayRecords: 5,
 			columnLayout: [
 				{

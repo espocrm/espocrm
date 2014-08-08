@@ -47,7 +47,8 @@
         },
         "contacts": {
             "type": "linkMultiple",
-            "disabled": true
+            "disabled": true,
+            "view": "Crm:Meeting.Fields.Contacts"
         },
         "leads": {
             "type": "linkMultiple",

@@ -27,7 +27,7 @@ Espo.define('Crm:Views.Target.Detail', 'Views.Detail', function (Dep) {
 			var id = this.model.id;
 			var self = this;
 			
-			if (confirm(this.translate('Are you sure?'))) {
+			if (confirm(this.translate('confirmation', 'messages'))) {
 				self.notify('Please wait...');
 				$.ajax({
 					url: 'Target/action/convert',

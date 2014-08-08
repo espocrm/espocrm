@@ -28,8 +28,7 @@ use \Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 class GlobalSearch extends \Espo\Core\Services\Base
-{
-	
+{	
 	protected $dependencies = array(
 		'entityManager',
 		'user',
@@ -48,11 +47,6 @@ class GlobalSearch extends \Espo\Core\Services\Base
 	{
 		return $this->injections['entityManager'];
 	}
-
-	protected function getUser()
-	{
-		return $this->injections['user'];
-	}
 	
 	protected function getAcl()
 	{
@@ -62,12 +56,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
 	protected function getMetadata()
 	{
 		return $this->injections['metadata'];
-	}
-	
-	protected function getConfig()
-	{
-		return $this->injections['config'];
-	}
+	}	
 	
 	public function find($query, $offset)
 	{

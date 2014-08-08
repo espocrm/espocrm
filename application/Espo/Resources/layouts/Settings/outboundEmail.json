@@ -14,5 +14,11 @@
 			[{"name": "outboundEmailFromName"}, {"name": "outboundEmailFromAddress"}],
 			[{"name": "outboundEmailIsShared"}]
 		]
+	},
+	{
+		"label": "Notifications",
+		"rows": [
+			[{"name": "assignmentEmailNotifications"}, {"name": "assignmentEmailNotificationsEntityList"}]
+		]
 	}
 ]

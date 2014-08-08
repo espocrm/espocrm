@@ -84,6 +84,14 @@ class Notification extends \Espo\Core\Services\Base
 		))->count();
 	}
 	
+	public function markAllRead($userId)
+	{		
+		$pdo = $this->getEntityManager()->getPDO();
+		$sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
+		$pdo->prepare($sql)->execute();
+		return true;
+	}
+	
 	public function getList($userId, array $params = array())
 	{		
 		$searchParams = array();

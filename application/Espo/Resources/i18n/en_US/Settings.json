@@ -47,7 +47,9 @@
 		"ldapUserLoginFilter": "User Login Filter",
 		"ldapAccountDomainNameShort": "Account Domain Name Short",
 		"ldapOptReferrals": "Opt Referrals",
-		"disableExport": "Disable Export (only admin is allowed)"
+		"disableExport": "Disable Export (only admin is allowed)",
+		"assignmentEmailNotifications": "Send Email Notifications upon Assignment",
+		"assignmentEmailNotificationsEntityList": "Entities to Notify About"
 	},
 	"options": {
 		"weekStart": {
@@ -59,6 +61,7 @@
 		"System": "System",
 		"Locale": "Locale",
 		"SMTP": "SMTP",
-		"Configuration": "Configuration"
+		"Configuration": "Configuration",
+		"Notifications": "Notifications"
 	}
 }

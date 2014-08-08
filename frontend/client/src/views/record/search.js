@@ -200,7 +200,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 			},
 			'click .advanced-filters-bar a[data-action="removePreset"]': function (e) {
 				var id = $(e.currentTarget).data('id');
-				if (confirm(this.translate('Are you sure?'))) {
+				if (confirm(this.translate('confirmation', 'messages'))) {
 					this.removePreset(id);
 				}
 			},
