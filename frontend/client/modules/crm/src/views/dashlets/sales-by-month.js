@@ -78,8 +78,8 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 		},	
 					
 		setup: function () {
-			this.currency = 'USD';
-			this.currencySymbol = '$';			
+			this.currency = this.getConfig().get('defaultCurrency');
+			this.currencySymbol = '';			
 		
 			this.colorGood = '#5ABD37';
 			this.colorBad = '#5ABD37';			
@@ -109,7 +109,7 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 						if (value == 0) {
 							return '';
 						}
-						return self.currencySymbol + self.formatNumber(value);
+						return self.formatNumber(value) + ' ' + self.currency;
 					},					
 				},
 				xaxis: {
@@ -128,7 +128,7 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 					track: true,
 					relative: true,
 					trackFormatter: function (obj) {
-						return self.currencySymbol + self.formatNumber(obj.y);
+						return self.formatNumber(obj.y) + ' ' + self.currency;
 					},
 				},
 			});

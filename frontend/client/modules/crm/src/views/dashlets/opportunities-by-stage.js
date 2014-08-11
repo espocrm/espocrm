@@ -73,8 +73,8 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 		},			
 					
 		setup: function () {
-			this.currency = 'USD';
-			this.currencySymbol = '$';
+			this.currency = this.getConfig().get('defaultCurrency');
+			this.currencySymbol = '';
 		},
 		
 		drow: function () {
@@ -101,14 +101,14 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 				xaxis: {
 					min: 0,
 					tickFormatter: function (value) {
-						return self.currencySymbol + self.formatNumber(value);
+						return self.formatNumber(value) + ' ' + self.currency;
 					},
 				},
 				mouse: {
 					track: true,
 					relative: true,
 					trackFormatter: function (obj) {
-						return self.currencySymbol + self.formatNumber(obj.x);
+						return self.formatNumber(obj.x) + ' ' + self.currency;
 					},
 				},
 				legend: {
