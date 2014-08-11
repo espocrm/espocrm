@@ -112,6 +112,11 @@ class Config
 		}
 
 		foreach ($name as $key => $value) {
+
+			if (is_object($value)) {
+				$value = (array) $value;
+			}
+
 			$this->data[$key] = $value;
 			$this->changedData[$key] = $value;
 		}
