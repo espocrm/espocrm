@@ -1,10 +1,23 @@
 DirectoryIndex index.php index.html
 
-RedirectMatch 403 \.config$
+# PROTECTED DIRECTORIES
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule (?i)(data|api) - [F]
+</IfModule>
+RedirectMatch 403 (?i)/data/config\.php$
+RedirectMatch 403 (?i)/data/logs
+RedirectMatch 403 (?i)/data/cache
+RedirectMatch 403 (?i)/data/upload
+RedirectMatch 403 (?i)/application
+RedirectMatch 403 (?i)/custom
+RedirectMatch 403 (?i)/vendor
+#END PROTECTED DIRECTORIES
 
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteRule .* - [E=HTTP_ESPO_CGI_AUTH:%{HTTP:Authorization}]
+  RewriteEngine On
+  RewriteRule .* - [E=HTTP_ESPO_CGI_AUTH:%{HTTP:Authorization}]
 
-RewriteRule reset/?$ reset.html [QSA,L]
+  RewriteRule reset/?$ reset.html [QSA,L]
 </IfModule>

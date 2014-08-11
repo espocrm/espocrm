@@ -194,9 +194,7 @@ class Installer
 		if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
 
 			$preferences['currencyList'] = array($preferences['defaultCurrency']);
-
-			$preferences['currency'] = $this->getConfig()->get('currency');
-			$preferences['currency']['base'] = $preferences['defaultCurrency'];
+			$preferences['baseCurrency'] = $preferences['defaultCurrency'];
 		}
 
 		$res = $this->saveConfig($preferences);
