@@ -30,7 +30,7 @@ Espo.define('Crm:Views.InboundEmail.Record.Detail', 'Views.Record.Detail', funct
 		
 		handleDistributionField: function () {
 			var handleRequirement = function (model) {
-				if (['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
+				if (model.get('createCase') && ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
 					this.getFieldView('team').setRequired();
 				} else {
 					this.getFieldView('team').setNotRequired();

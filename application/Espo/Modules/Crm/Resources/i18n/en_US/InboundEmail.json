@@ -16,6 +16,7 @@
 		"caseDistribution": "Case Distribution",
 		"replyEmailTemplate": "Reply Email Template",
 		"replyFromAddress": "Reply From Address",
+		"replyToAddress": "Reply To Address",
 		"replyFromName": "Reply From Name"
 	},
 	"links": {
