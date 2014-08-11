@@ -177,19 +177,14 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 			}.bind(this));			
 			this.collection.fetch();
 		},
-
-		actionCreateActivity: function (data) {
-			var self = this;
-			var link = data.link;
-			var scope = this.model.defs['links'][link].entity;
-			var foreignLink = this.model.defs['links'][link].foreign;
-
-			this.notify('Loading...');
-									
+		
+		getCreateActivityAttributes: function (data, callback) {
+			data = data || {};
+			
 			var attributes = {
 				status: data.status
 			};
-				
+			
 			if (this.model.name == 'Contact') {
 				if (this.model.get('accountId')) {
 					attributes.parentType = 'Account',
@@ -201,26 +196,48 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 				attributes.parentId = this.model.id
 				attributes.parentName = this.model.get('name');
 			}
-			
 			if (this.model.name != 'Account' && this.model.has('contactsIds')) {
 				attributes.contactsIds = this.model.get('contactsIds');
 				attributes.contactsNames = this.model.get('contactsNames');
 			}
 			
-			this.createView('quickCreate', 'Modals.Edit', {
-				scope: scope,
-				relate: {
-					model: this.model,
-					link: foreignLink,
-				},
-				attributes: attributes,
-			}, function (view) {
-				view.render();
-				view.notify(false);
-				view.once('after:save', function () {
-					self.collection.fetch();
+			callback.call(this, attributes);
+		},
+
+		actionCreateActivity: function (data) {
+			var self = this;
+			var link = data.link;
+			var scope = this.model.defs['links'][link].entity;
+			var foreignLink = this.model.defs['links'][link].foreign;
+
+			this.notify('Loading...');
+			
+			this.getCreateActivityAttributes(data, function (attributes) {			
+				this.createView('quickCreate', 'Modals.Edit', {
+					scope: scope,
+					relate: {
+						model: this.model,
+						link: foreignLink,
+					},
+					attributes: attributes,
+				}, function (view) {
+					view.render();
+					view.notify(false);
+					view.once('after:save', function () {
+						self.collection.fetch();
+					});
 				});
-			});
+			});				
+
+		},
+		
+		getComposeEmailAttributes: function (data, callback) {
+			data = data || {};
+			var attributes = {
+				status: 'Draft',
+				to: this.model.get('emailAddress')
+			};
+			callback.call(this, attributes);
 		},
 		
 		actionComposeEmail: function () {
@@ -238,34 +255,31 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 
 			this.notify('Loading...');
 			
-									
-			var attributes = {
-				status: 'Draft',
-				to: this.model.get('emailAddress')
-			};
-			
-			if (this.model.name == 'Contact') {
-				if (this.model.get('accountId')) {
-					attributes.parentType = 'Account',
-					attributes.parentId = this.model.get('accountId');
-					attributes.parentName = this.model.get('accountName');
+			this.getComposeEmailAttributes(null, function (attributes) {
+				if (this.model.name == 'Contact') {
+					if (this.model.get('accountId')) {
+						attributes.parentType = 'Account',
+						attributes.parentId = this.model.get('accountId');
+						attributes.parentName = this.model.get('accountName');
+					}
+				} else if (this.model.name == 'Lead') {
+					attributes.parentType = 'Lead',
+					attributes.parentId = this.model.id
+					attributes.parentName = this.model.get('name');
 				}
-			} else if (this.model.name == 'Lead') {
-				attributes.parentType = 'Lead',
-				attributes.parentId = this.model.id
-				attributes.parentName = this.model.get('name');
-			}
 
-			this.createView('quickCreate', 'Modals.ComposeEmail', {
-				relate: relate,
-				attributes: attributes 
-			}, function (view) {
-				view.render();
-				view.notify(false);
-				view.once('after:save', function () {
-					self.collection.fetch();
+				this.createView('quickCreate', 'Modals.ComposeEmail', {
+					relate: relate,
+					attributes: attributes 
+				}, function (view) {
+					view.render();
+					view.notify(false);
+					view.once('after:save', function () {
+						self.collection.fetch();
+					});
 				});
-			});
+			});			
+
 		},
 	});
 });

@@ -64,26 +64,30 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 			}
 			
 			if (this.mode == 'edit') {
-				if (this.model.get('isHtml')) {
+				if (this.model.has('isHtml') && this.model.get('isHtml')) {
 					this.enableWysiwygMode();
 				}
 			}
 			
 			if (this.mode == 'detail') {
-				var iframe = this.$el.find('iframe').get(0);				
-				var document = iframe.contentWindow.document;
+				if (this.model.has('isHtml') && this.model.get('isHtml')) {
+					this.$el.find('iframe').removeClass('hidden');
+					var iframe = this.$el.find('iframe').get(0);				
+					var document = iframe.contentWindow.document;				
 				
+					var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>'
 				
-				var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>'
-				
-				document.open('text/html', 'replace');				
-				var body = this.model.get('body');
-				body += link;
+					document.open('text/html', 'replace');				
+					var body = this.model.get('body');
+					body += link;
 								
-				document.write(body);				
+					document.write(body);				
 				
-				document.close();
-				iframe.style.height = document.body.scrollHeight + 'px';
+					document.close();
+					iframe.style.height = document.body.scrollHeight + 'px';
+				} else {
+					this.$el.find('.plain').removeClass('hidden');
+				}
 			}
 		},
 		
@@ -138,7 +142,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		
 		fetch: function () {
 			var data = {};
-			if (this.model.get('isHtml')) {
+			if (this.model.has('isHtml') && this.model.get('isHtml')) {
 				data[this.name] = this.$element.code();
 			} else {
 				data[this.name] = this.$element.val();	

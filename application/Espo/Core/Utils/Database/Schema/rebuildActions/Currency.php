@@ -18,24 +18,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
-	
-	public function afterRebuild()
-	{	 
-		$currencyConfig = $this->getConfig()->get('currency');	
-		$currencyConfig['rate'][ $currencyConfig['base'] ] = '1.00';	
 
-		$pdo = $this->getEntityManager()->getPDO();	
+	public function afterRebuild()
+	{
+		$defaultCurrency = $this->getConfig()->get('defaultCurrency');
+
+		$baseCurrency = $this->getConfig()->get('baseCurrency');
+		$currencyRates = $this->getConfig()->get('currencyRates');
+
+		if ($defaultCurrency != $baseCurrency) {
+			$currencyRates = $this->exchangeRates($baseCurrency, $defaultCurrency, $currencyRates);
+		}
+
+		$currencyRates[$defaultCurrency] = '1.00';
+
+		$pdo = $this->getEntityManager()->getPDO();
 
 		$sql = "TRUNCATE `currency`";
 		$pdo->prepare($sql)->execute();
 
-		foreach ($currencyConfig['rate'] as $currencyName => $rate) {
+		foreach ($currencyRates as $currencyName => $rate) {
 
 			$sql = "
 				INSERT INTO `currency`
@@ -43,9 +51,34 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 				VALUES
 				(".$pdo->quote($currencyName) . ", " . $pdo->quote($rate) . ")
 			";
-			$pdo->prepare($sql)->execute();			
-		}					
-	}	
-	
+			$pdo->prepare($sql)->execute();
+		}
+	}
+
+	/**
+	 * Calculate exchange rates if defaultCurrency doesn't equals baseCurrency
+	 *
+	 * @param  string $baseCurrency
+	 * @param  string $defaultCurrency
+	 * @param  array $currencyRates   [description]
+	 * @return array  - List of new currency rates
+	 */
+	protected function exchangeRates($baseCurrency, $defaultCurrency, array $currencyRates)
+	{
+		$precision = 5;
+		$defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], $precision);
+
+		$exchangedRates = array();
+		$exchangedRates[$baseCurrency] = $defaultCurrencyRate;
+
+		unset($currencyRates[$baseCurrency], $currencyRates[$defaultCurrency]);
+
+		foreach ($currencyRates as $currencyName => $rate) {
+			$exchangedRates[$currencyName] = round($rate * $defaultCurrencyRate, $precision);
+		}
+
+		return $exchangedRates;
+	}
+
 }
 

@@ -548,12 +548,12 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 					for (var j in simplifiedLayout[p].rows[i]) {
 						var cellDefs = simplifiedLayout[p].rows[i][j];
 						
-						if (!cellDefs.name) {
-							continue;
-						}
-
 						if (cellDefs == false) {
 							row.push(false);
+							continue;
+						}
+						
+						if (!cellDefs.name) {
 							continue;
 						}
 

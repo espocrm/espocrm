@@ -124,23 +124,25 @@ class Sender
 		return $this;
 	}
 
-	public function send(Email $email)
+	public function send(Email $email, $params = array())
 	{
 		$message = new Message();
 
 		$config = $this->config;
+		
+		$params = $this->params + $params;
 
 		if ($email->get('from')) {
 			$fromName = null;
-			if (!empty($this->params['fromName'])) {
-				$fromName = $this->params['fromName'];
+			if (!empty($params['fromName'])) {
+				$fromName = $params['fromName'];
 			} else {
 				$fromName = $config->get('outboundEmailFromName');
 			}
 			$message->addFrom(trim($email->get('from')), $fromName);
 		} else {
-			if (!empty($this->params['fromAddress'])) {
-				$fromAddress = $this->params['fromAddress'];
+			if (!empty($params['fromAddress'])) {
+				$fromAddress = $params['fromAddress'];
 			} else {
 				if (!$config->get('outboundEmailFromAddress')) {
 					throw new Error('outboundEmailFromAddress is not specified in config.');
@@ -148,13 +150,21 @@ class Sender
 				$fromAddress = $config->get('outboundEmailFromAddress');
 			}
 
-			if (!empty($this->params['fromName'])) {
-				$fromName = $this->params['fromName'];
+			if (!empty($params['fromName'])) {
+				$fromName = $params['fromName'];
 			} else {
 				$fromName = $config->get('outboundEmailFromName');
 			}
 
 			$message->addFrom($fromAddress, $fromName);
+		}
+		
+		if (!empty($params['replyToAddress'])) {
+			$replyToName = null;
+			if (!empty($params['replyToName'])) {
+				$replyToName = $params['replyToName'];
+			}
+			$message->setReplyTo($params['replyToAddress'], $replyToName);
 		}
 
 		$value = $email->get('to');
