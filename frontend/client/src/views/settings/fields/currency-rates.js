@@ -18,18 +18,48 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-
-Espo.define('Views.Admin.Settings', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('Views.Settings.Fields.CurrencyRates', 'Views.Fields.Base', function (Dep) {
 
 	return Dep.extend({
+	
+		editTemplate: 'settings.fields.currency-rates.edit',		
 		
-		layoutName: 'settings',
-
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-
+		data: function () {
+			var baseCurrency = this.model.get('baseCurrency');
+			var currencyRates = this.model.get('currencyRates') || {};
+			
+			var rateValues = {};
+			this.model.get('currencyList').forEach(function (currency) {
+				if (currency != baseCurrency) {
+					rateValues[currency] = currencyRates[currency] || 1.00;
+				}
+			}, this);
+			
+			return {
+				rateValues: rateValues
+			};
 		},
-
+	
+		setup: function () {
+		},
+		
+		fetch: function () {
+			var data = {};
+			var currencyRates = {};
+			
+			var baseCurrency = this.model.get('baseCurrency');
+			
+			this.model.get('currencyList').forEach(function (currency) {
+				if (currency != baseCurrency) {
+					currencyRates[currency] = parseFloat(this.$el.find('input[data-currency="'+currency+'"]').val() || 1);
+				}
+			}, this);
+			
+			data[this.name] = currencyRates;
+			
+			return data;
+		},
+		
 	});
+	
 });
-

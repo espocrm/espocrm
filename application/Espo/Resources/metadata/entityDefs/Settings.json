@@ -61,6 +61,15 @@
             "default": "USD",
             "required": true
         },
+        "baseCurrency": {
+            "type": "enum",
+            "default": "USD",
+            "required": true
+        },
+        "currencyRates": {
+        	"type": "base",
+        	"view": "Settings.Fields.CurrencyRates"
+        },
         "outboundEmailIsShared": {
             "type": "bool",
             "default": false

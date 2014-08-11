@@ -18,6 +18,11 @@
             "description":"scheduledJob"
          },
          {
+            "url":"#Admin/currency",
+            "label":"Currency",
+            "description":"currency"
+         },
+         {
             "url":"#Admin/upgrade",
             "label":"Upgrade",
             "description":"upgrade"

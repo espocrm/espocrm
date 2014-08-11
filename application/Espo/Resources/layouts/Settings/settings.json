@@ -12,7 +12,6 @@
 			[{"name": "dateFormat"}, {"name": "timeZone"}],
 			[{"name": "timeFormat"}, {"name": "weekStart"}],		
 			[{"name": "thousandSeparator"}, {"name": "decimalMark"}],
-			[{"name": "defaultCurrency"}, {"name": "currencyList"}],
 			[{"name": "language"}]
 		]
 	}

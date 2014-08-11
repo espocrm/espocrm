@@ -90,6 +90,22 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 			model.fetch();
 		},
 		
+		currency: function () {		
+			var model = this.getSettingsModel();						
+			
+			model.once('sync', function () {
+				model.id = '1';
+				this.main('Edit', {
+					model: model,
+					views: {
+						header: {template: 'admin.settings.header-currency'},
+						body: {view: 'Admin.Currency'},
+					},
+				});
+			}, this);				
+			model.fetch();
+		},
+		
 		authTokens: function () {			
 			this.collectionFactory.create('AuthToken', function (collection) {
 				var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());

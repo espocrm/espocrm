@@ -8,6 +8,10 @@
 		"thousandSeparator": "Thousand Separator",
 		"decimalMark": "Decimal Mark",
 		"defaultCurrency": "Default Currency",
+		"baseCurrency": "Base Currency",
+		"baseCurrency": "Base Currency",
+		"currencyRates": "Rate Values",
+		
 		"currencyList": "Currency List",
 		"language": "Language",
 		
@@ -62,6 +66,8 @@
 		"Locale": "Locale",
 		"SMTP": "SMTP",
 		"Configuration": "Configuration",
-		"Notifications": "Notifications"
+		"Notifications": "Notifications",
+		"Currency Settings": "Currency Settings",
+		"Currency Rtes": "Currency Rates"
 	}
 }

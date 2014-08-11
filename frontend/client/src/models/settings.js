@@ -27,6 +27,10 @@ Espo.define('Models.Settings', 'ModelOffline', function (Dep) {
 		getDefaultCurrencyOptions: function () {
 			return this.get('currencyList') || [];
 		},
+		
+		getBaseCurrencyOptions: function () {
+			return this.get('currencyList') || [];
+		},
 
 	});
 
