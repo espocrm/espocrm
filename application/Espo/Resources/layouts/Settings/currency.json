@@ -8,8 +8,7 @@
 	{
 		"label": "Currency Rates",
 		"rows": [
-			[{"name": "baseCurrency"}],
-			[{"name": "currencyRates"}]
+			[{"name": "baseCurrency"}, {"name": "currencyRates"}]
 		]
 	}
 ]
