@@ -28,7 +28,7 @@
 						"fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName", "replyToAddress"]
 					}, {
 						"action": "setRequired",
-						"fields": ["replyToAddress"]
+						"fields": ["replyToAddress", "replyEmailTemplate"]
 					}
 				]
 			},
@@ -38,7 +38,7 @@
 					"fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName", "replyToAddress"]
 				}, {
 					"action": "setNotRequired",
-					"fields": ["replyToAddress"]
+					"fields": ["replyToAddress", "replyEmailTemplate"]
 				}				
 			]
 		}
