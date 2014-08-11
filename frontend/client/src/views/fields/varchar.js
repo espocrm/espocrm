@@ -32,7 +32,7 @@ Espo.define('Views.Fields.Varchar', 'Views.Fields.Base', function (Dep) {
 			if (value) {
 				var data = {
 					type: 'like',
-					value: value + '%',
+					value: '%' + value + '%',
 					valueText: value
 				};
 				return data;
