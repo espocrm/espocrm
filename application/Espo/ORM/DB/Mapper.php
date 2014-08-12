@@ -1061,7 +1061,7 @@ abstract class Mapper implements IMapper
 					$fieldDefs = $entity->fields[$field];
 					
 					if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operator])) {
-						$whereParts[] = str_replace('{text}', $value, $fieldDefs['where'][$operator]);
+						$whereParts[] = str_replace('{value}', $this->pdo->quote($value), $fieldDefs['where'][$operator]);
 					} else {					
 						if ($fieldDefs['type'] == IEntity::FOREIGN) {
 							$leftPart = '';

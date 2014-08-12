@@ -16,6 +16,7 @@
 		"status": "Status",
 		"source": "Source",
 		"opportunityAmount": "Opportunity Amount",
+		"opportunityAmountConverted": "Opportunity Amount (converted)",
 		"description": "Description",
 		"createdAccount": "Account",
 		"createdContact": "Contact",

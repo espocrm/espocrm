@@ -39,7 +39,7 @@ class Phone extends \Espo\Core\Utils\Database\Orm\Base
 								JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
 								WHERE 
 									entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-									phone_number.deleted = 0 AND phone_number.name LIKE '{text}'          		
+									phone_number.deleted = 0 AND phone_number.name LIKE {value}          		
 							)",
 							'=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
 								SELECT entity_id 
@@ -47,7 +47,7 @@ class Phone extends \Espo\Core\Utils\Database\Orm\Base
 								JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
 								WHERE 
 									entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-									phone_number.deleted = 0 AND phone_number.name = '{text}'          		
+									phone_number.deleted = 0 AND phone_number.name = {value}          		
 							)"
 						),
 						'orderBy' => 'phone_number.name {direction}',

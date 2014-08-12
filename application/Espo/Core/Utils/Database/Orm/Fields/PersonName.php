@@ -44,8 +44,8 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 				$columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
 
 				$fullList[] = $fieldList[] = $columnName;
-				$like[] = $columnName." LIKE '{text}'";
-				$equal[] = $columnName." = '{text}'";
+				$like[] = $columnName." LIKE {value}";
+				$equal[] = $columnName." = {value}";
 			} else {
 				$fullList[] = "'".$foreignFieldName."'";
 			}
@@ -60,8 +60,8 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 						'type' => 'varchar',
 						'select' => $this->getSelect($fullList),
 						'where' => array(
-							'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE '{text}' OR CONCAT(".implode(", ", $fullListReverse).") LIKE '{text}')",
-							'=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = '{text}' OR CONCAT(".implode(", ", $fullListReverse).") = '{text}')",
+							'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE {value} OR CONCAT(".implode(", ", $fullListReverse).") LIKE {value})",
+							'=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = {value} OR CONCAT(".implode(", ", $fullListReverse).") = {value})",
 						),
 						'orderBy' => implode(", ", array_map(function ($item) {return $item . ' {direction}';}, $fieldList)),
 					),
