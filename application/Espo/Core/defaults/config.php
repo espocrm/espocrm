@@ -63,6 +63,7 @@ return array (
 		'de_DE',
 		'es_ES',
 		'fr_FR',
+		'nl_NL',
 		'tr_TR',
 		'ro_RO',
 		'pt_BR',

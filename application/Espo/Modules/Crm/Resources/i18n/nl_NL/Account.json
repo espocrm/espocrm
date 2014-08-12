@@ -1,0 +1,40 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"emailAdres": "Email",
+		"website": "Website",
+		"phoneNummer": "Telefoon",
+		"billingAdres": "Factuur Adres",
+		"shippingAdres": "Bezoek adres",
+		"description": "Beschrijving",
+		"sicCode": "Sic Code",
+		"industry": "Industrie",
+		"type": "Type",
+		"contactVoorwaarde": "Voorwaarde"
+	},
+	"links": {
+		"contacts": "Contactpersoon",
+		"opportunities": "Kansen",
+		"cases": "Zaaks"
+	},
+	"options": {
+		"type": {
+			"Klant": "Klant",
+			"Investeerder": "Investeerder",
+			"Partner": "Partner",
+			"Reseller": "Reseller"
+		},
+		"industry": {
+			"Apparel": "Apparel",
+			"Banking": "Banking",
+			"Computer Software": "Computer Software",
+			"Educatie": "Educatie",
+			"Electronica": "Electronica",
+			"Finance": "Finance",
+			"Verzekeringen": "Verzekeringen"
+		}
+	},
+	"labels": {
+		"Maak Relatie": "Maak Relatie"
+	}
+}

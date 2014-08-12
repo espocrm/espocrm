@@ -1,0 +1,32 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"userRecord Naam": "Gebruikers Naam",
+		"title": "Titel",
+		"isAdmin": "Is Admin",
+		"defaultTeam": "Voorkeur Team",
+		"emailAdres": "Email",
+		"phoneNummer": "Telefoon",
+		"roles": "Regels",		
+		"password": "Wachtwoord",
+		"passwordConfirm": "Bevestig Wachtwoord",
+		"newWachtwoord": "Nieuw Wachtwoord"
+	},
+	"links": {
+		"teams": "Groepen",
+		"roles": "Regels"
+	},
+	"labels": {
+		"Maak Gebruiker": "Gebruiker Aanmaken",
+		"Genereer": "Genereer",
+		"Rechten": "Rechten",
+		"Voorkeuren": "Voorkeuren",
+		"Change Wachtwoord": "Wachtwoord Aanpassen"
+	},
+	"messages": {
+		"passwordWillBeVerstuur": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
+		"accountInfoEmailOpderwerp": "Gebruiker Informatie",
+		"accountInfoEmailInhoud": "Uw gebruikers informatie:\n\nGebruikername: {userRecord Naam}\nWachtwoord: {password}\n\n{siteUrl}",
+		"passwordChanged": "Het wachtwoord is aangepast"
+	}
+}

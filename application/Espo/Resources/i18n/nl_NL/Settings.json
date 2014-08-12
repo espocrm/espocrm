@@ -1,0 +1,73 @@
+{
+	"fields": {
+		"useCache": "Gebruik Cache",
+		"dateFormat": "Datum Notatie",
+		"timeFormat": "Tijd Notatie",
+		"timeZone": "Tijd Zone",
+		"weekStart": "Eerste dag van de Week",
+		"thousandSeparator": "Duizendtal scheidingsteken",
+		"decimalMark": "Decimaal Scheidingsteken",
+		"defaultValuta": "Voorkeur Valuta",
+		"baseValuta": "Base Valuta",
+		"baseValuta": "Base Valuta",
+		"currencyRates": "Rate Values",
+		
+		"currencyNaaron": "Valuta Lijst",
+		"language": "Taal",
+		
+		"companyLogo": "Firma logo",
+		
+		"smtpServer": "Server",
+		"smtpPoort": "Poort",
+		"smtpAuthenticatie": "Authenticatieenticatie",
+		"smtpVeiligheid": "Veiligheid",
+		"smtpGebruikername": "Gebruikersnaam",
+		"emailAdres": "Email",
+		"smtpWachtwoord": "Wachtwoord",
+		"outboundEmailVanRecord Naam": "Naam van",
+		"outboundEmailVanAdres": "Van Adres",
+		"outboundEmailIsShared": "Is Gedeeld",
+		
+		"recordsPerPage": "Velden per pagina",
+		"recordsPerPageSmallemaal": "Velden per pagina (Smallemaal)",		
+		"tabNaaron": "Tab lijst",
+		"quickMaakNaaron": "Snel gemaakte lijst",
+		
+		"exportDelimiter": "Scheidingsteken Exporteer",
+		
+		"authenticationMethod": "Authenticatieenticatie Methode",
+		"ldapHost": "Host",
+		"ldapPoort": "Poort",
+		"ldapAuthenticatie": "Authenticatieenticatie",
+		"ldapGebruikername": "Gebruikersnaam",
+		"ldapWachtwoord": "Wachtwoord",
+		"ldapBindRequiresDn": "Bind heeft Dn Nodig",
+		"ldapBaseDn": "Base Dn",
+		"ldapRelatieCaneenicalForm": "Standaard Formulier Gebruiker",
+		"ldapRelatieDomainRecord Naam": "Contact Domein Naam",
+		"ldapTryGebruikernameSplit": "Probeer gesplitste Gebruikersnaam",
+		"ldapMaakEspoGebruiker": "Gebruiker aanmaken in EspoCRM",
+		"ldapVeiligheid": "Veiligheid",
+		"ldapGebruikerLoginFilter": "Gebruikers Login Filter",
+		"ldapRelatieDomainRecord NaamShort": "Korte Contact Domein Naam",
+		"ldapOptReferrals": "Opt Referentie",
+		"disableExporteer": "Disable Exporteer (only admin is allemaalowed)",
+		"assignmentEmailNotificaties": "Send Email Notificaties upon Assignment",
+		"assignmentEmailNotificatiesEntityNaaron": "Entities to Notify Over"
+	},
+	"options": {
+		"weekStart": {
+			"0": "Zondag",
+			"1": "Maandag"
+		}
+	},
+	"labels": {
+		"Systeem": "Systeem",
+		"Lokaal": "Lokaal",
+		"SMTP": "SMTP",
+		"Configuratie": "Configuratie",
+		"Notificaties": "Notificaties",
+		"Valuta Instellingen": "Valuta Instellingen",
+		"Valuta Rtes": "Valuta Rates"
+	}
+}

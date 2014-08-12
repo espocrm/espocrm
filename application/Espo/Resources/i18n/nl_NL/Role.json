@@ -1,0 +1,35 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"roles": "Regels"
+	},
+	"links": {
+		"users": "Gebruikers",
+		"teams": "Groepen"
+	},
+	"labels": {
+		"Rechten": "Rechten",
+		"Maak Voorwaarde": "Maak Voorwaarde"
+	},
+	"options": {
+		"accessNaaron": {
+			"niet-actief": "niet-actief",
+			"ingeschakeld": "ingeschakeld",
+			"uitgeschakeld": "uitgeschakeld"
+		},
+		"levelNaaron": {
+			"allemaal": "allemaalemaal",
+			"team": "team",
+			"eigen": "eigen",
+			"nee": "nee"
+		}
+	},
+	"actions": {
+		"read": "Lees",
+		"edit": "Aanpassen",
+		"delete": "Verwijder"
+	},
+	"messages": {
+		"Pas aansNaClearCache": "Alles Pas aans in an access control will be applied after cache will be cleared."
+	}
+}

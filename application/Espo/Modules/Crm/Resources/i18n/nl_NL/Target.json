@@ -1,0 +1,19 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"emailAdres": "Email",
+		"title": "Titel",
+		"website": "Website",
+		"accountRecord Naam": "Relatie Naam",
+		"phoneNummer": "Telefoon",
+		"doNotOproepemaal": "Niet Bellen",
+		"address": "Adres",
+		"description": "Beschrijving"
+	},
+	"links": {
+	},
+	"labels": {
+		"Maak Doel": "Maak Doel",
+		"Vertaald to Lead": "Omgezet naar Lead"
+	}
+}

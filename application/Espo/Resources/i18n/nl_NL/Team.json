@@ -1,0 +1,12 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"roles": "Regels"
+	},
+	"links": {
+		"users": "Gebruikers"
+	},
+	"labels": {
+		"Maak Team": "Maak een Team"
+	}
+}

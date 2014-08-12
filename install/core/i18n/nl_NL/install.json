@@ -1,0 +1,111 @@
+{
+	"labels": {
+		"Hoofd page title": "Welkom bij EspoCRM",
+		"Hoofd page header": "",
+		"Start page title": "Licentie Overeenkomst",
+		"Step1 page title": "Licentie Overeenkomst",
+		"Licentie Overeenkomst": "Licentie Overeenkomst",
+		"Ik accepteer de overeenkomst": "Ik accepteer de overeenkomst",
+		"Step2 page title": "Database configuratie",
+		"Step3 page title": "Administrator Setup",
+		"Step4 page title": "Systeem instellingen",
+		"Step5 page title": "SMTP instellingen voor uitgaande emails",
+		"Fouts page title": "Fouten",
+		"Finish page title": "Installemaalatie is compleet",
+		"Congratulation! Welkom bij EspoCRM!": "Proficiat! EspoCRM heeft u succesvol geinstallemaaleerd.",
+		"admin": "admin",
+		"localhost": "localhost",
+		"port": "3306",
+		"Lokaal": "Lokaal",
+		"Uitgaande Email Configuratie": "Uitgaande Email Configuratie",
+		"SMTP": "SMTP",
+		"Start": "Start",
+		"Terug": "Terug",
+		"Volgende": "Volgende",
+		"Ga naar EspoCRM": "Ga naar EspoCRM",
+		"Re-check": "Re-check",
+		"Test settings": "Test Verbinding",
+		"Database Instellingen Beschrijving": "Enter ur MySQL database connection information (hostname, username and password). U can specify the server port for hostname like localhost:3306."
+	},
+	"fields": {
+		"Choose ur language": "Kies uw taal",
+		"Database Record Naam": "Database Naam",
+		"Host Record Naam": "Host Naam",
+		"Poort": "Poort",
+		"Database Gebruiker Record Naam": "Database Gebruikers Naam",
+		"Database Gebruiker Wachtwoord": "Database Gebruikers Wachtwoord",
+		"Database driver": "Database driver",
+		"Gebruiker Record Naam": "Gebruikers Naam",
+		"Wachtwoord": "Wachtwoord",
+		"Confirm Wachtwoord": "Bevestig uw Wachtwoord",
+		"Van Adres": "Van Adres",
+		"Van Record Naam": "Naam van",
+		"Is Gedeeld": "Is Gedeeld",
+		"Datum Format": "Datum Notatie",
+		"Tijd Notatie": "Tijd Notatie",
+		"Tijd Zone": "Tijd Zone",
+		"Eerste dag van de Week": "Eerste dag van de Week",
+		"Duizendtal scheidingsteken": "Duizendtal scheidingsteken",
+		"Decimaal Scheidingsteken": "Decimaal Scheidingsteken",
+		"Voorkeur Valuta": "Voorkeur Valuta",
+		"Valuta Naaron": "Valuta Lijst",
+		"Taal": "Taal",
+		"smtpServer": "Server",
+		"smtpPoort": "Poort",
+		"smtpAuthenticatie": "Authenticatieenticatie",
+		"smtpVeiligheid": "Veiligheid",
+		"smtpGebruikername": "Gebruikersnaam",
+		"emailAdres": "Email",
+		"smtpWachtwoord": "Wachtwoord"
+	},
+	"messages": {
+		"Bad init Permission": "Geen Rechten for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre>\n\tOperation neet permitted? Try this one: {CSU}",
+		"Er zijn fouten gevonden!": "Er zijn fouten gevonden!",
+		"phpVersion": "Uw PHP versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar PHP {minVersion}",
+		"The PHP extension was neet found...": "De <b>{extRecord Naam}</b> PHP extensie was niet gevonden...",
+		"Alles Instellingen correct": "Allese Instellingen zijn juist",
+		"Kan geen verbinding maken met de database": "Kan geen verbinding maken met de database",
+		"PHP versie": "PHP versie",
+		"U must agree to the license agreement": "U moet instemmen met de licentie voorwaarden",
+		"Wachtwoords do neet match": "Wachtwoorden stemmen niet overeen",
+		"Activeer mod_rewrite in Apache server": "Activeer mod_rewrite in Apache server",
+		"Controleer schrijf fout": "Controleer schrijf fout",
+		"Instellings fout": "Instellings fout",
+		"Database maken fout": "Database maken fout",
+		"maakGebruiker error": "Fout in aanmaken gebruiker",
+		"Ajax Permissie fout": "Ajax Permissie fout",
+		"Ajax weigerd": "Ajax weigerd",
+		"Canneet maak user": "Kan gebruiker niet maken",
+		"Geen Rechten": "Geen Rechten",
+		"permissionInstruction": "<br>Start dit in een Terminal venster<pre><b>\"{C}\"</b></pre>",
+		"operationNotPermitted" : "Operation neet permitted? Try this: <br>{CSU}",
+		"Geen Rechten to": "Geen Rechten",
+		"Can neet save settings": "Kan instellingen niet opslaan",
+		"Canneet save preferences": "Kan voorkeuren niet opslaan",
+		"Duizendtal scheidingsteken and Decimaal Scheidingsteken equal": "Het Duizendtal scheidingsteken mag niet gelijk zijn aan het Honderd tal",
+		"1049": "Opbekende database",
+		"2005": "Opbekende MySQL server host",
+		"1045": "Geen rechten voor de gebruiker"
+	},
+	"options": {
+		"db driver": {
+			"mysqli": "MySQLi",
+			"pdo_mysql": "PDO MySQL"
+		},
+		"modRewriteInstruction": {
+			"apache": {
+				"linux": "<br><br>Naar enable .htaccess support add/edit the Server configuration settings inside ur &#60;VirtualHost&#62; section (httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62;\n <b>AllesowOverride Alles</b>\n&#60;/Directory&#62;</pre>\n Nawards run this command in a Terminal:<pre><b>service apache2 restart</b></pre><br>Naar enable \"mod_rewrite\" run those commands in a Terminal:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
+				"windows": "<br> <pre>1. Find the httpd.conf file (usuallemaaly u will find it in a folder callemaaled conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleNaaron is uncommented then find and make sure that the line ToevoegenModule mod_rewrite.c is neet commented out.\n</pre>"
+			},
+			"microsoft-iis": {
+				"windows": ""
+			}
+		},
+		"modRewriteHelp": {
+			"apache": "API Fout: EspoCRM API niet beschikbaar.<br> Mogelijke Oorzaak: uitgeschakeld \"mod_rewrite\" in Apache server of .htaccess ondersteuning.",
+			"nginx": "API Fout: EspoCRM API unavailable.<br> Toevoegen this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation /api/v1/ {\n    if (!-e $request_filename){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}</pre>",
+			"microsoft-iis": "API Fout: EspoCRM API niet beschikbaar.<br> Mogelijk probleem: uitgeschakeld \"URL Rewrite\". Controleer en activeer \"URL Rewrite\" Module in IIS server",
+			"default": "API Fout: EspoCRM API unavailable.<br> Possible problem: uitgeschakeld Rewrite Module. Please check and enable Rewrite Module in ur server (e.g. mod_rewrite in Apache) and .htaccess support."
+		}
+	}
+}
