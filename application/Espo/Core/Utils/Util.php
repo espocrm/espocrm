@@ -359,11 +359,17 @@ class Util
 				if (!empty($unsetSett)){
 					$keyItems = explode('.', $unsetSett);
 					$currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
+
+					$lastKey = array_pop($keyItems);
 					foreach($keyItems as $keyItem){
 						$currVal .= "['{$keyItem}']";
 					}
 
-					$currVal = "if (isset({$currVal})) unset({$currVal});";
+					$unsetElem = $currVal . "['{$lastKey}']";
+					$currVal = "
+						if (isset({$unsetElem}) || array_key_exists({$lastKey}, {$currVal})) {
+							unset({$unsetElem});
+						} ";
 					eval($currVal);
 				}
 			}
