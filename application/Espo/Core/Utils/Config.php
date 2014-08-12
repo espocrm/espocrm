@@ -56,6 +56,7 @@ class Config
 	private $data;
 
 	private $changedData = array();
+	private $removeData = array();
 
 	private $fileManager;
 
@@ -122,6 +123,23 @@ class Config
 		}
 	}
 
+	/**
+	 * Remove an option in config
+	 *
+	 * @param  string $name
+	 * @return bool | null - null if an option doesn't exist
+	 */
+	public function remove($name)
+	{
+		if (array_key_exists($name, $this->data)) {
+			unset($this->data[$name]);
+			$this->removeData[] = $name;
+			return true;
+		}
+
+		return null;
+	}
+
 	public function save()
 	{
 		$values = $this->changedData;
@@ -130,9 +148,12 @@ class Config
 			$values = array_merge($this->updateCacheTimestamp(true), $values);
 		}
 
-		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, true);
+		$removeData = empty($this->removeData) ? null : $this->removeData;
+
+		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, 1, $removeData);
 		if ($result) {
 			$this->changedData = array();
+			$this->removeData = array();
 			$this->loadConfig(true);
 		}
 

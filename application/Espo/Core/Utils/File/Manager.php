@@ -225,20 +225,31 @@ class Manager
 	 * @param string | array $path
 	 * @param string $content JSON string
 	 * @param bool $isJSON
-	 * @param array $mergeOptions
+	 * @param string | array $mergeOptions
+	 * @param string | array $removeOptions - List of unset keys from content
+	 * @param bool $isReturn - Is result to be returned or stored
 	 *
-	 * @return bool
+	 * @return bool | array
 	 */
-	public function mergeContents($path, $content, $isJSON = false, $mergeOptions = null)
+	public function mergeContents($path, $content, $isJSON = false, $mergeOptions = null, $removeOptions = null, $isReturn = false)
 	{
 		$fileContent = $this->getContents($path);
 
 		$savedDataArray = Utils\Json::getArrayData($fileContent);
 		$newDataArray = Utils\Json::getArrayData($content);
 
+		if (isset($removeOptions)) {
+			$savedDataArray = Utils\Util::unsetInArray($savedDataArray, $removeOptions);
+			$newDataArray = Utils\Util::unsetInArray($newDataArray, $removeOptions);
+		}
+
 		$data = Utils\Util::merge($savedDataArray, $newDataArray, $mergeOptions);
 		if ($isJSON) {
 			$data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
+		}
+
+		if ($isReturn) {
+			return $data;
 		}
 
 		return $this->putContents($path, $data);
@@ -248,26 +259,14 @@ class Manager
 	 * Merge PHP content and save it to a file
 	 *
 	 * @param string | array $path
-	 * @param string $content
-	 * @param bool $onlyFirstLevel - Merge only first level. Ex. current: array('test'=>array('item1', 'item2')).  $content= array('test'=>array('item1'),). Result will be array('test'=>array('item1')).
-	 *
+	 * @param string $content JSON string
+	 * @param string | array $mergeOptions
+	 * @param string | array $removeOptions - List of unset keys from content
 	 * @return bool
 	 */
-	public function mergeContentsPHP($path, $content, $onlyFirstLevel = false, $mergeOptions = null)
+	public function mergeContentsPHP($path, $content, $mergeOptions = null, $removeOptions = null)
 	{
-		$fileContent = $this->getContents($path);
-
-		$savedDataArray = Utils\Json::getArrayData($fileContent);
-		$newDataArray = Utils\Json::getArrayData($content);
-
-		if ($onlyFirstLevel) {
-			foreach($newDataArray as $key => $val) {
-				$setVal = is_array($val) ? array() : '';
-				$savedDataArray[$key] = $setVal;
-			}
-		}
-
-		$data = Utils\Util::merge($savedDataArray, $newDataArray, $mergeOptions);
+		$data = $this->mergeContents($path, $content, false, $mergeOptions, $removeOptions, true);
 
 		return $this->putContentsPHP($path, $data);
 	}
