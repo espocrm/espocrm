@@ -62,10 +62,11 @@ Espo.define('Views.Edit', 'Views.Main', function (Dep) {
 			if (this.model.isNew()) {
 				html += this.getLanguage().translate('create');
 			} else {
+				var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 				if (this.options.noHeaderLinks) {
-					html += this.model.get('name');
+					html += name;
 				} else {
-					html += '<a href="#' + this.model.name + '/view/' + this.model.id + '">' + this.model.get('name') + '</a>';
+					html += '<a href="#' + this.model.name + '/view/' + this.model.id + '">' + name + '</a>';
 				}
 			}
 			return html;

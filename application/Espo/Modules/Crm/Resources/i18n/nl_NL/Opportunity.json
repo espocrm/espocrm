@@ -1,0 +1,39 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"account": "Relatie",
+		"stage": "Status",
+		"amount": "Aantal",
+		"probability": "Naar waarschijnlijkheid, %",
+		"leadBron": "Lead Bron",
+		"doNotOproepemaal": "Niet Bellen",
+		"closeDatum": "Datum gesloten",
+		"contacts": "Contactpersoon",
+		"description": "Beschrijving",
+		"amountVertaalded": "Aantal (converted)"
+	},
+	"links": {
+		"contacts": "Contactpersoon"
+	},
+	"options": {
+		"stage": {
+			"Prospecting": "Prospecting",
+			"Kwalificeren": "Kwalificeren",
+			"Benodigde Analyse": "Beneedigde Analyse",
+			"Waarde Schatting": "Waarde Schatting",
+			"Id. Beslissers": "Id. Beslissiers",
+			"Perceptie Analyse": "Perceptie Analyse",
+			"Proposal/Price Aanhaling": "Prijs/Voorstel",
+			"Onderhandeling/Herziening": "Opderhandeling/Herziening",
+			"Gesloten Gewonnen": "Gesloten Gewonnen",
+			"Gesloten Lost": "Gesloten Verloren" 
+		}
+	},
+	"labels": {
+		"Maak Kans": "Grote Uitdaging"
+	},
+	"presetFilters": {
+		"open": "Open",
+		"won": "Gewonnen"
+	}
+}

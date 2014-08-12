@@ -1,0 +1,36 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"parent": "Bovenliggende item",
+		"status": "Status",
+		"dateStart": "Start Datum",
+		"dateEnd": "Eind Datum",
+		"duration": "Gedurende",
+		"description": "Beschrijving",
+		"users": "Gebruikers",
+		"contacts": "Contactpersoon",
+		"leads": "Leads"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Plannen": "Plannen",
+			"Volgen": "Volgen",
+			"Not Volgen": "Niet volgen"
+		}
+	},
+	"labels": {
+		"Maak Vergadering": "Plan Vergadering",
+		"Set Volgen": "Vasthouden",
+		"Set Not Volgen": "Niet Vasthouden",
+		"Uitnodiging versturen": "Uitneediging versturen",
+		"Opgeslagen as Volgen": "Opslaan Bewaren",
+		"Opgeslagen as Not Volgen": "Opslaan niet Bewaren"
+	},
+	"presetFilters": {
+		"planned": "Plannen",
+		"held": "Volgen",
+		"todays": "Vandaag"
+	}
+}

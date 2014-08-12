@@ -1,0 +1,50 @@
+{
+	"labels": {
+		"Vertaalded Naar": "Vertaald naar",
+		"Maak Lead": "Grote Lead",
+		"Vertaald": "Vertaald"
+	},
+	"fields": {
+		"name": "Record Naam",
+		"emailAdres": "Email",
+		"title": "Titel",
+		"website": "Website",
+		"phoneNummer": "Telefoon",
+		"accountRecord Naam": "Relatie Naam",
+		"doNotOproepemaal": "Niet Bellen",
+		"address": "Adres",
+		"status": "Status",
+		"source": "Bron",
+		"opportunityAantal": "Aantal uitdagingen",
+		"opportunityAantalVertaalded": "Kans Aantal (converted)",
+		"description": "Beschrijving",
+		"maakdRelatie": "Relatie",
+		"maakdContact": "Contact",
+		"maakdKans": "Kans"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Nieuw": "Nieuw",
+			"Toegewezen": "Naaregewezen",
+			"In Behandeling": "In Behandeling",
+			"Vertaalded": "Vertaald",
+			"Opnieuw verwerkt": "Opnieuw verwerkt",
+			"Dood": "Dood"
+		},
+		"source": {
+			"Oproepemaal": "Oproep",
+			"Email": "Email",
+			"Existing Klant": "Bestaande Klant",
+			"Partner": "Partner",
+			"Public Relations": "Public Relations",
+			"Web Pagina": "Web Pagina",
+			"Campagne": "Campagne",
+			"Ander": "Ander"
+		}
+	},
+	"presetFilters": {
+		"active": "Active"
+	}
+}

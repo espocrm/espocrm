@@ -1,0 +1,37 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"parent": "Bovenliggende item",
+		"status": "Status",
+		"dateStart": "Start Datum",
+		"dateEnd": "Vervaldatum",
+		"priority": "Prioriteit",
+		"description": "Beschrijving",
+		"isLaat": "Te Laat"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Niet Gestart": "Niet Gestart",
+			"Gestart": "Gestart",
+			"Beeindigd": "Beeindigd",
+			"Annulerened": "Geannuleerd"
+		},
+		"priority" : {
+			"Laag": "Laag",
+			"Normaal": "Normaal",
+			"Hoog": "Hoog",
+			"Urgent": "Urgent"
+		}
+	},
+	"labels": {
+		"Maak Taak": "Maak een Taak"
+	},
+	"presetFilters": {
+		"active": "Active",
+		"completed": "Beeindigd",
+		"todays": "Vandaag",
+		"overdue": "Laat"
+	}
+}

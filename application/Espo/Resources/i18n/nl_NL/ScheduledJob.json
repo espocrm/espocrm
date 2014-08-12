@@ -1,0 +1,30 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"status": "Status",
+		"job": "Opdracht",
+		"scheduling": "Scheduling (crontab neetation)"
+	},
+	"links": {
+		"log": "Log"
+	},
+	"labels": {
+		"Maak ScheduledOpdracht": "Maak Geplande Opdracht"
+	},
+	"options": {
+		"job": {
+			"CheckBinnenkomendeEmails": "Controleer Binnenkomende Emails",
+			"Cleanup": "Opschonen"
+		},
+		"cronSetup": {
+			"linux": "Note: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+			"mac": "Note: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+			"windows": "Note: Maak een batch file met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
+			"default": "Note: Toevoegen this command to Cron Opdracht (Scheduled Taak):"
+		},
+		"status": {
+			"Active": "Active",
+			"Inactive": "Inactive"
+		}
+	}
+}

@@ -1,0 +1,81 @@
+{
+	"scopeRecord Naams": {
+		"Relatie": "Relatie",
+		"Contact": "Contact",
+		"Lead": "Lead",
+		"Doel": "Doel",
+		"Kans": "Kans",
+		"Vergadering": "Vergadering",
+		"Kalender": "Kalender",
+		"Oproepemaal": "Oproep",
+		"Taak": "Taak",
+		"Zaak": "Zaak",
+		"BinnenkomendeEmail": "Binnenkomende Email"
+	},
+	"scopeRecord NaamsPlural": {
+		"Relatie": "Relaties",
+		"Contact": "Contactpersoon",
+		"Lead": "Leads",
+		"Doel": "Doel",
+		"Kans": "Kansen",
+		"Vergadering": "Afspraken",
+		"Kalender": "Kalender",
+		"Oproepemaal": "Tel.gesprekken",
+		"Taak": "Taken",
+		"Zaak": "Zaaks",
+		"BinnenkomendeEmail": "Inkomende Emails"
+	},
+	"dashlets": {
+		"Leads": "Mijn Leads",
+		"Kansen": "Mijn Kansen",
+		"Taaks": "Mijn Taken",
+		"Zaaks": "Mijn Zaken",
+		"Kalender": "Kalender",
+		"Oproepemaals": "Mijn Tel.gesprekken",
+		"Vergaderings": "Mijn Afspraken",
+		"KansenByStatus": "Status van Kansen",
+		"KansenByLeadBron": "Kans van Lead bron",
+		"SalesByMaand": "Verkopen per maand",
+		"SalesPipeline": "Verkoop mogelijkheden"	
+	},
+	"labels": {
+		"Maak BinnenkomendeEmail": "Instellen Email Gebruiker",
+		"Activiteiten": "Activiteiten",
+		"Historie": "Historie",
+		"Genodigden": "Geneedigden",
+		"Schedule Vergadering": "Plan Afspraak",
+		"Schedule Oproepemaal": "Geplande Oproep",
+		"Maak Email": "Maak een Email",
+		"Log Vergadering": "Leg afspraak vast",
+		"Log Oproepemaal": "Leg tel.afspraak vast",
+		"Archiveer Email": "Archiveer Email",
+		"Maak Taak": "Maak een Taak",
+		"Taaks": "Taken"		
+	},
+	"fields": {
+		"billingAdresPlaats": "Plaats",
+		"billingAdresLand": "Land",
+		"billingAdresPlaatsalCode": "Plaatscode",
+		"billingAdresDeelstaat": "Deelstaat",
+		"billingAdresStraat": "Straat",
+		"addressPlaats": "Plaats",
+		"addressStraat": "Straat",
+		"addressLand": "Land",
+		"addressDeelstaat": "Deelstaat",
+		"addressPlaatsalCode": "Plaatscode",		
+		"shippingAdresPlaats": "Plaats (Shipping)",
+		"shippingAdresStraat": "Straat (Shipping)",
+		"shippingAdresLand": "Land (Shipping)",
+		"shippingAdresDeelstaat": "Deelstaat (Shipping)",
+		"shippingAdresPlaatsalCode": "Plaatscode (Shipping)"
+	},
+	"links": {
+		"contacts": "Contactpersoon",
+		"opportunities": "Kansen",
+		"leads": "Leads",		
+		"meetings": "Afspraken",
+		"callemaals": "Tel.gesprekken",
+		"tasks": "Taken",
+		"emails": "Emails"
+	}
+}

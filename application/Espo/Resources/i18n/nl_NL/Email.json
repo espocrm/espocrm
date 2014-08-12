@@ -1,0 +1,36 @@
+{
+	"fields": {
+		"name": "Opderwerp",
+		"parent": "Bovenliggende item",
+		"status": "Status",
+		"dateVerstuur": "Datum verzonden",
+		"from": "Van",
+		"to": "Naar",
+		"cc": "CC",
+		"bcc": "BCC",
+		"isHtml": "Is Html",
+		"body": "Inhoud",
+		"subject": "Opderwerp",
+		"attachments": "Bijlagen",
+		"selectTemplate": "Selecteereer Template",
+		"fromEmailAdres": "Van Adres",
+		"toEmailAdreses": "Naar Adres",
+		"emailAdres": "Email Adres"
+	},
+	"links": {
+	},
+	"options": {
+		"Tijdelijk": "Tijdelijk",
+		"Verzenden": "Verzenden",
+		"Verstuur": "Verstuur",
+		"Archiveren": "Archiveren"
+	},
+	"labels": {
+		"Maak Email": "Archiveer Email",
+		"Maak": "Maak"
+	},
+	"presetFilters": {
+		"sent": "Verstuur",
+		"archived": "Archiveren"
+	}
+}

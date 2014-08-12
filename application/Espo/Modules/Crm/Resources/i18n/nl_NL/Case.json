@@ -1,0 +1,42 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"number": "Nummer",
+		"status": "Status",
+		"account": "Relatie",
+		"contact": "Contact",
+		"priority": "Prioriteit",
+		"type": "Type",
+		"description": "Beschrijving"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Nieuw": "Nieuw",
+			"Toegewezen": "Naaregewezen",
+			"Pending": "Pending",
+			"Gesloten": "Gesloten",
+			"Geweigerd": "Geweigerd",
+			"Dupliceer": "Dupliceer"
+		},
+		"priority" : {
+			"Laag": "Laag",
+			"Normaal": "Normaal",
+			"Hoog": "Hoog",
+			"Urgent": "Urgent"
+		},
+		"type": {
+			"Vraag": "Vraag",
+			"Incident": "Incident",
+			"Probleem": "Probleem"
+		}
+	},
+	"labels": {
+		"Maak Zaak": "Maak Zaak"
+	},
+	"presetFilters": {
+		"open": "Open",
+		"closed": "Gesloten"
+	}
+}
