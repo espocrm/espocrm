@@ -1,7 +1,7 @@
 {
 	"labels": {
-		"Primair": "Primair",
+		"Primary": "Primair",
 		"Opted Out": "Opted Out",
-		"Opjuist": "Opjuist"
+		"Invalid": "Onjuist"
 	}
 }

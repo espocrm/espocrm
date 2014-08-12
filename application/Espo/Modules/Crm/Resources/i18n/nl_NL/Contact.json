@@ -1,31 +1,31 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"emailAdres": "Email",
+		"emailAddress": "Email",
 		"title": "Titel",
 		"account": "Relatie",
 		"accounts": "Relaties",
-		"phoneNummer": "Telefoon",
+		"phoneNumber": "Telefoon",
 		"accountType": "Relatie Type",
-		"doNotOproepemaal": "Niet Bellen",
+		"doNotCall": "Niet Bellen",
 		"address": "Adres",
-		"opportunityVoorwaarde": "Kans Voorwaarde",
-		"accountVoorwaarde": "Voorwaarde",
+		"opportunityRole": "Opportunity Role",
+		"accountRole": "Voorwaarde",
 		"description": "Beschrijving"
 	},
 	"links": {
 		"opportunities": "Kansen",
-		"cases": "Zaaks"
+		"cases": "Cases"
 	},
 	"labels": {
-		"Maak Contact": "Maak Contact"
+		"Create Contact": "Maak Contact"
 	},
 	"options": {
-		"opportunityVoorwaarde": {
+		"opportunityRole": {
 			"": "--Geen--",
-			"Beslisser": "Beslisser",
+			"Decision Maker": "Beslisser",
 			"Evaluator": "Evaluator",
-			"Beinvloeder": "Beinvloeder"
+			"Influencer": "Beinvloeder"
 		}
 	}
 }

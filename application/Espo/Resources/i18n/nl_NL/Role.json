@@ -8,20 +8,20 @@
 		"teams": "Groepen"
 	},
 	"labels": {
-		"Rechten": "Rechten",
-		"Maak Voorwaarde": "Maak Voorwaarde"
+		"Access": "Rechten",
+		"Create Role": "Maak Voorwaarde"
 	},
 	"options": {
-		"accessNaaron": {
-			"niet-actief": "niet-actief",
-			"ingeschakeld": "ingeschakeld",
-			"uitgeschakeld": "uitgeschakeld"
+		"accessList": {
+			"not-set": "niet-actief",
+			"enabled": "ingeschakeld",
+			"disabled": "uitgeschakeld"
 		},
-		"levelNaaron": {
-			"allemaal": "allemaalemaal",
+		"levelList": {
+			"all": "allemaal",
 			"team": "team",
-			"eigen": "eigen",
-			"nee": "nee"
+			"own": "eigen",
+			"no": "nee"
 		}
 	},
 	"actions": {
@@ -30,6 +30,6 @@
 		"delete": "Verwijder"
 	},
 	"messages": {
-		"Pas aansNaClearCache": "Alles Pas aans in an access control will be applied after cache will be cleared."
+		"changesAfterClearCache": "All changes in an access control will be applied after cache will be cleared."
 	}
 }

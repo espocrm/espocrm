@@ -3,7 +3,7 @@
 		"name": "Record Naam",
 		"team": "Team",
 		"status": "Status",
-		"assignNaarGebruiker": "Naaregewezen aan gebruiker",
+		"assignToUser": "Toegewezen aan gebruiker",
 		"host": "Host",
 		"username": "Gebruikersnaam",
 		"password": "Wachtwoord",
@@ -11,13 +11,13 @@
 		"monitoredFolders": "Gecontroleerde Folders",
 		"trashFolder": "Prullenbak Folder",
 		"ssl": "SSL",		
-		"maakZaak": "Maak Zaak",
+		"createCase": "Maak Case",
 		"reply": "Antw.",
 		"caseDistribution": "Zaak Verdelen",
 		"replyEmailTemplate": "Antw. Email Template",
-		"replyVanAdres": "Antw. van Adres",
-		"replyNaarAdres": "Antw. Naar Adres",
-		"replyVanRecord Naam": "Antw. van Naam"
+		"replyFromAddress": "Antw. van Adres",
+		"replyToAddress": "Reply To Address",
+		"replyFromName": "Antw. van Naam"
 	},
 	"links": {
 	},
@@ -27,18 +27,18 @@
 			"Inactive": "Inactive"
 		},
 		"caseDistribution": {
-			"Directe-Toewijzing": "Directe-Naarewijzing",
+			"Direct-Assignment": "Directe-Toewijzing",
 			"Round-Robin": "Round-Robin",
-			"Minst-Bezet": "Minst-Bezet"
+			"Least-Busy": "Minst-Bezet"
 		}
 	},
 	"labels": {
-		"Maak BinnenkomendeEmail": "Instellen Email Gebruiker",
+		"Create InboundEmail": "Instellen Email Gebruiker",
 		"IMAP": "IMAP",
-		"Acties": "Acties",
-		"Hoofd": "Hoofd"		
+		"Actions": "Acties",
+		"Main": "Hoofd"		
 	},
 	"messages": {
-		"couldNotConnectNaarImap": "Kan geen verbinding maken met IMAP server"
+		"couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
 	}
 }

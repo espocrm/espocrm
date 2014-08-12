@@ -1,32 +1,32 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"userRecord Naam": "Gebruikers Naam",
+		"userName": "Gebruikers Naam",
 		"title": "Titel",
 		"isAdmin": "Is Admin",
 		"defaultTeam": "Voorkeur Team",
-		"emailAdres": "Email",
-		"phoneNummer": "Telefoon",
+		"emailAddress": "Email",
+		"phoneNumber": "Telefoon",
 		"roles": "Regels",		
 		"password": "Wachtwoord",
 		"passwordConfirm": "Bevestig Wachtwoord",
-		"newWachtwoord": "Nieuw Wachtwoord"
+		"newPassword": "Nieuw Wachtwoord"
 	},
 	"links": {
 		"teams": "Groepen",
 		"roles": "Regels"
 	},
 	"labels": {
-		"Maak Gebruiker": "Gebruiker Aanmaken",
-		"Genereer": "Genereer",
-		"Rechten": "Rechten",
-		"Voorkeuren": "Voorkeuren",
-		"Change Wachtwoord": "Wachtwoord Aanpassen"
+		"Create User": "Gebruiker Aanmaken",
+		"Generate": "Genereer",
+		"Access": "Rechten",
+		"Preferences": "Voorkeuren",
+		"Change Password": "Wachtwoord Aanpassen"
 	},
 	"messages": {
-		"passwordWillBeVerstuur": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
-		"accountInfoEmailOpderwerp": "Gebruiker Informatie",
-		"accountInfoEmailInhoud": "Uw gebruikers informatie:\n\nGebruikername: {userRecord Naam}\nWachtwoord: {password}\n\n{siteUrl}",
+		"passwordWillBeSent": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
+		"accountInfoEmailSubject": "Gebruiker Informatie",
+		"accountInfoEmailBody": "Uw gebruikers informatie:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
 		"passwordChanged": "Het wachtwoord is aangepast"
 	}
 }

@@ -7,26 +7,26 @@
 		"dateEnd": "Vervaldatum",
 		"priority": "Prioriteit",
 		"description": "Beschrijving",
-		"isLaat": "Te Laat"
+		"isOverdue": "Te Laat"
 	},
 	"links": {
 	},
 	"options": {
 		"status": {
-			"Niet Gestart": "Niet Gestart",
-			"Gestart": "Gestart",
-			"Beeindigd": "Beeindigd",
-			"Annulerened": "Geannuleerd"
+			"Not Started": "Niet Gestart",
+			"Started": "Gestart",
+			"Completed": "Beeindigd",
+			"Canceled": "Geannuleerd"
 		},
 		"priority" : {
-			"Laag": "Laag",
-			"Normaal": "Normaal",
-			"Hoog": "Hoog",
+			"Low": "Laag",
+			"Normal": "Normaal",
+			"High": "Hoog",
 			"Urgent": "Urgent"
 		}
 	},
 	"labels": {
-		"Maak Taak": "Maak een Taak"
+		"Create Task": "Maak een Taak"
 	},
 	"presetFilters": {
 		"active": "Active",

@@ -4,10 +4,10 @@
 		"week": "Week",
 		"day": "Dag",
 		"agendaWeek": "Week",
-		"agendaDag": "Dag"
+		"agendaDay": "Dag"
 	},
 	"labels": {
-		"Naarday": "Vandaag",
-		"Maak": "Maak"
+		"Today": "Vandaag",
+		"Create": "Maak"
 	}
 }

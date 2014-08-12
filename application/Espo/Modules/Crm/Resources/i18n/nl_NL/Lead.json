@@ -1,47 +1,47 @@
 {
 	"labels": {
-		"Vertaalded Naar": "Vertaald naar",
-		"Maak Lead": "Grote Lead",
-		"Vertaald": "Vertaald"
+		"Converted To": "Vertaald naar",
+		"Create Lead": "Grote Lead",
+		"Convert": "Vertaald"
 	},
 	"fields": {
 		"name": "Record Naam",
-		"emailAdres": "Email",
+		"emailAddress": "Email",
 		"title": "Titel",
 		"website": "Website",
-		"phoneNummer": "Telefoon",
-		"accountRecord Naam": "Relatie Naam",
-		"doNotOproepemaal": "Niet Bellen",
+		"phoneNumber": "Telefoon",
+		"accountName": "Relatie Naam",
+		"doNotCall": "Niet Bellen",
 		"address": "Adres",
 		"status": "Status",
 		"source": "Bron",
-		"opportunityAantal": "Aantal uitdagingen",
-		"opportunityAantalVertaalded": "Kans Aantal (converted)",
+		"opportunityAmount": "Aantal uitdagingen",
+		"opportunityAmountConverted": "Opportunity Amount (converted)",
 		"description": "Beschrijving",
-		"maakdRelatie": "Relatie",
-		"maakdContact": "Contact",
-		"maakdKans": "Kans"
+		"createdAccount": "Relatie",
+		"createdContact": "Contact",
+		"createdOpportunity": "Kans"
 	},
 	"links": {
 	},
 	"options": {
 		"status": {
-			"Nieuw": "Nieuw",
-			"Toegewezen": "Naaregewezen",
-			"In Behandeling": "In Behandeling",
-			"Vertaalded": "Vertaald",
-			"Opnieuw verwerkt": "Opnieuw verwerkt",
-			"Dood": "Dood"
+			"New": "Nieuw",
+			"Assigned": "Toegewezen",
+			"In Process": "In Behandeling",
+			"Converted": "Vertaald",
+			"Recycled": "Opnieuw verwerkt",
+			"Dead": "Dood"
 		},
 		"source": {
-			"Oproepemaal": "Oproep",
+			"Call": "Oproep",
 			"Email": "Email",
-			"Existing Klant": "Bestaande Klant",
+			"Existing Customer": "Bestaande Klant",
 			"Partner": "Partner",
 			"Public Relations": "Public Relations",
-			"Web Pagina": "Web Pagina",
-			"Campagne": "Campagne",
-			"Ander": "Ander"
+			"Web Site": "Web Pagina",
+			"Campaign": "Campagne",
+			"Other": "Ander"
 		}
 	},
 	"presetFilters": {

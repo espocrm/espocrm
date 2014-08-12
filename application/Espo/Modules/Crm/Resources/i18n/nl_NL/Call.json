@@ -16,20 +16,20 @@
 	},
 	"options": {
 		"status": {
-			"Plannen": "Plannen",
-			"Volgen": "Volgen",
-			"Not Volgen": "Niet volgen"
+			"Planned": "Plannen",
+			"Held": "Volgen",
+			"Not Held": "Niet volgen"
 		},
 		"direction": {
-			"Uitgaande": "Uitgaande",
-			"Binnenkomende": "Binnenkomende"
+			"Outbound": "Uitgaande",
+			"Inbound": "Binnenkomende"
 		}
 	},
 	"labels": {
-		"Maak Oproepemaal": "Maak Oproepemaal",
-		"Set Volgen": "Vasthouden",
-		"Set Not Volgen": "Niet Vasthouden",
-		"Uitnodiging versturen": "Uitneediging versturen"		
+		"Create Call": "Maak Call",
+		"Set Held": "Vasthouden",
+		"Set Not Held": "Niet Vasthouden",
+		"Send Invitations": "Uitnodiging versturen"		
 	},
 	"presetFilters": {
 		"planned": "Plannen",

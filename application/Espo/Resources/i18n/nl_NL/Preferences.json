@@ -6,22 +6,22 @@
 		"weekStart": "Eerste dag van de Week",
 		"thousandSeparator": "Duizendtal scheidingsteken",
 		"decimalMark": "Decimaal Scheidingsteken",
-		"defaultValuta": "Voorkeur Valuta",
-		"currencyNaaron": "Valuta Lijst",
+		"defaultCurrency": "Voorkeur Valuta",
+		"currencyList": "Valuta Lijst",
 		"language": "Taal",
 		
 		"smtpServer": "Server",
-		"smtpPoort": "Poort",
-		"smtpAuthenticatie": "Authenticatieenticatie",
-		"smtpVeiligheid": "Veiligheid",
-		"smtpGebruikername": "Gebruikersnaam",
-		"emailAdres": "Email",
-		"smtpWachtwoord": "Wachtwoord",
-		"smtpEmailAdres": "Email Adres",
+		"smtpPort": "Poort",
+		"smtpAuth": "Authenticatie",
+		"smtpSecurity": "Veiligheid",
+		"smtpUsername": "Gebruikersnaam",
+		"emailAddress": "Email",
+		"smtpPassword": "Wachtwoord",
+		"smtpEmailAddress": "Email Adres",
 		
-		"exportDelimiter": "Scheidingsteken Exporteer",
+		"exportDelimiter": "Scheidingsteken Export",
 		
-		"receiveAssignmentEmailNotificaties": "Receive Email Notificaties upon Assignment"
+		"receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment"
 	},
 	"links": {
 	},
@@ -32,6 +32,6 @@
 		}
 	},
 	"labels": {
-		"Notificaties": "Notificaties"
+		"Notifications": "Notificaties"
 	}
 }

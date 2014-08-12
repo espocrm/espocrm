@@ -5,12 +5,12 @@
 		"stage": "Status",
 		"amount": "Aantal",
 		"probability": "Naar waarschijnlijkheid, %",
-		"leadBron": "Lead Bron",
-		"doNotOproepemaal": "Niet Bellen",
-		"closeDatum": "Datum gesloten",
+		"leadSource": "Lead Bron",
+		"doNotCall": "Niet Bellen",
+		"closeDate": "Datum gesloten",
 		"contacts": "Contactpersoon",
 		"description": "Beschrijving",
-		"amountVertaalded": "Aantal (converted)"
+		"amountConverted": "Amount (converted)"
 	},
 	"links": {
 		"contacts": "Contactpersoon"
@@ -18,19 +18,19 @@
 	"options": {
 		"stage": {
 			"Prospecting": "Prospecting",
-			"Kwalificeren": "Kwalificeren",
-			"Benodigde Analyse": "Beneedigde Analyse",
-			"Waarde Schatting": "Waarde Schatting",
-			"Id. Beslissers": "Id. Beslissiers",
-			"Perceptie Analyse": "Perceptie Analyse",
-			"Proposal/Price Aanhaling": "Prijs/Voorstel",
-			"Onderhandeling/Herziening": "Opderhandeling/Herziening",
-			"Gesloten Gewonnen": "Gesloten Gewonnen",
-			"Gesloten Lost": "Gesloten Verloren" 
+			"Qualification": "Kwalificeren",
+			"Needs Analysis": "Benodigde Analyse",
+			"Value Proposition": "Waarde Schatting",
+			"Id. Decision Makers": "Id. Beslissiers",
+			"Perception Analysis": "Perceptie Analyse",
+			"Proposal/Price Quote": "Prijs/Voorstel",
+			"Negotiation/Review": "Onderhandeling/Herziening",
+			"Closed Won": "Gesloten Gewonnen",
+			"Closed Lost": "Gesloten Verloren" 
 		}
 	},
 	"labels": {
-		"Maak Kans": "Grote Uitdaging"
+		"Create Opportunity": "Grote Uitdaging"
 	},
 	"presetFilters": {
 		"open": "Open",

@@ -4,13 +4,13 @@
 		"status": "Status",
 		"isHtml": "Is Html",
 		"body": "Inhoud",
-		"subject": "Opderwerp",
+		"subject": "Onderwerp",
 		"attachments": "Bijlagen",
-		"insertVeld": ""
+		"insertField": ""
 	},
 	"links": {
 	},
 	"labels": {
-		"Maak EmailTemplate": "Maak Email Template"
+		"Create EmailTemplate": "Maak Email Template"
 	}
 }

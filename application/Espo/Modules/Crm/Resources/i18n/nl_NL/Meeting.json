@@ -15,18 +15,18 @@
 	},
 	"options": {
 		"status": {
-			"Plannen": "Plannen",
-			"Volgen": "Volgen",
-			"Not Volgen": "Niet volgen"
+			"Planned": "Plannen",
+			"Held": "Volgen",
+			"Not Held": "Niet volgen"
 		}
 	},
 	"labels": {
-		"Maak Vergadering": "Plan Vergadering",
-		"Set Volgen": "Vasthouden",
-		"Set Not Volgen": "Niet Vasthouden",
-		"Uitnodiging versturen": "Uitneediging versturen",
-		"Opgeslagen as Volgen": "Opslaan Bewaren",
-		"Opgeslagen as Not Volgen": "Opslaan niet Bewaren"
+		"Create Meeting": "Plan Vergadering",
+		"Set Held": "Vasthouden",
+		"Set Not Held": "Niet Vasthouden",
+		"Send Invitations": "Uitnodiging versturen",
+		"Saved as Held": "Opslaan Bewaren",
+		"Saved as Not Held": "Opslaan niet Bewaren"
 	},
 	"presetFilters": {
 		"planned": "Plannen",

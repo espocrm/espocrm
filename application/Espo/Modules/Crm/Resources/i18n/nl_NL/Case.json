@@ -13,27 +13,27 @@
 	},
 	"options": {
 		"status": {
-			"Nieuw": "Nieuw",
-			"Toegewezen": "Naaregewezen",
+			"New": "Nieuw",
+			"Assigned": "Toegewezen",
 			"Pending": "Pending",
-			"Gesloten": "Gesloten",
-			"Geweigerd": "Geweigerd",
-			"Dupliceer": "Dupliceer"
+			"Closed": "Gesloten",
+			"Rejected": "Geweigerd",
+			"Duplicate": "Dupliceer"
 		},
 		"priority" : {
-			"Laag": "Laag",
-			"Normaal": "Normaal",
-			"Hoog": "Hoog",
+			"Low": "Laag",
+			"Normal": "Normaal",
+			"High": "Hoog",
 			"Urgent": "Urgent"
 		},
 		"type": {
-			"Vraag": "Vraag",
+			"Question": "Vraag",
 			"Incident": "Incident",
-			"Probleem": "Probleem"
+			"Problem": "Probleem"
 		}
 	},
 	"labels": {
-		"Maak Zaak": "Maak Zaak"
+		"Create Case": "Maak Case"
 	},
 	"presetFilters": {
 		"open": "Open",
