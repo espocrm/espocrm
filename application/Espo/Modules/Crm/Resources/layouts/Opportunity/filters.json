@@ -1,1 +1,10 @@
-["teams","assignedUser","stage","probability","account","amount","closeDate","leadSource"]
+[
+	"teams",
+	"assignedUser",
+	"stage",
+	"probability",
+	"account",
+	"amountConverted",
+	"closeDate",
+	"leadSource"
+]
