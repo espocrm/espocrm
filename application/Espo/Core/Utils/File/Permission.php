@@ -480,10 +480,11 @@ class Permission
 				if (file_exists($item)) {
 
 					try {
-						$res = $this->chmod($item, $permission, true);
+						$this->chmod($item, $permission, true);
 					} catch (\Exception $e) {
-						$res = false;
 					}
+
+					$res = is_readable($item);
 
 					/** check is wtitable */
 					if ($type == 'writable') {
