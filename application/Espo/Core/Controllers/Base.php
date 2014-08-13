@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Controllers;
 
@@ -29,15 +29,21 @@ use \Espo\Core\Utils\Util;
 abstract class Base
 {
 	protected $name;
-	
+
 	private $container;
-	
+
+	private $requestMethod;
+
 	public static $defaultAction = 'index';
 
-	public function __construct(Container $container)
+	public function __construct(Container $container, $requestMethod = null)
 	{
 		$this->container = $container;
-		
+
+		if (isset($requestMethod)) {
+			$this->setRequestMethod($requestMethod);
+		}
+
 		if (empty($this->name)) {
 			$name = get_class($this);
 			if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
@@ -45,40 +51,55 @@ abstract class Base
 			}
 			$this->name = $name;
     	}
-    	
+
     	$this->checkControllerAccess();
 	}
-	
+
 	protected function checkControllerAccess()
 	{
 		return;
 	}
-	
+
 	protected function getContainer()
 	{
 		return $this->container;
 	}
-	
+
+	/**
+	 * Get request method name (Uppercase)
+	 *
+	 * @return string
+	 */
+	protected function getRequestMethod()
+	{
+		return $this->requestMethod;
+	}
+
+	protected function setRequestMethod($requestMethod)
+	{
+		$this->requestMethod = strtoupper($requestMethod);
+	}
+
 	protected function getUser()
 	{
 		return $this->container->get('user');
 	}
-	
+
 	protected function getAcl()
 	{
 		return $this->container->get('acl');
 	}
-	
+
 	protected function getConfig()
 	{
 		return $this->container->get('config');
 	}
-	
+
 	protected function getPreferences()
 	{
 		return $this->container->get('preferences');
 	}
-	
+
 	protected function getMetadata()
 	{
 		return $this->container->get('metadata');
@@ -88,7 +109,7 @@ abstract class Base
 	{
 		return $this->container->get('serviceFactory');
 	}
-	
+
 	protected function getService($name)
 	{
 		return $this->getServiceFactory()->create($name);
