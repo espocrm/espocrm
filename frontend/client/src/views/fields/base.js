@@ -205,7 +205,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 			
 			if ((this.mode == 'detail' || this.mode == 'edit') && this.model.getFieldParam(this.name, 'tooltip')) {
 				this.once('after:render', function () {
-					var $a = $('<a href="javascript:"><span class="glyphicon glyphicon-info-sign"></span></a>');
+					var $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
 					this.getLabelElement().append($a);
 					$a.popover({
 						placement: 'bottom',
