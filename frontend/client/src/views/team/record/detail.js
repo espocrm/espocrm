@@ -18,27 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-
-Espo.define('Views.Admin.AuthToken.Record.List', 'Views.Record.List', function (Dep) {
+	
+Espo.define('Views.Team.Record.Detail', 'Views.Record.Detail', function (Dep) {		
 
 	return Dep.extend({
 	
-		rowActionsView: 'Admin.AuthToken.Record.RowActions.Remove',
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);
+		sideView: 'Team.Record.DetailSide',
 			
-			var actions = [];
-			
-			this.actions.forEach(function (item) {
-				if (item.name == 'delete') {
-					actions.push(item);
-				}
-			}, this);
-			
-			this.actions = actions;
-		},
-
-	});
+	});		
+	
 });
 

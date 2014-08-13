@@ -18,12 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
-Espo.define('Views.Team.Edit', 'Views.Record.Edit', function (Dep) {		
+
+
+Espo.define('Views.Team.Record.EditSide', 'Views.Record.EditSide', function (Dep) {		
 
 	return Dep.extend({
 	
-		sideView: 'Team.EditSide',
+		panels: [
+			{
+				name: 'default',
+				label: false,
+				view: 'Record.Panels.Side',
+				options: {
+					fields: ['roles'],
+					mode: 'edit',
+				}					
+			}				
+		],
 			
 	});		
 	

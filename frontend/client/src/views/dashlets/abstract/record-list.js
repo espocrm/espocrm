@@ -62,7 +62,7 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
 						el: this.$el.selector + ' .list-container',
 						pagination: this.getOption('pagination') ? 'bottom' : false,
 						type: 'listDashlet',
-						rowButtons: false,
+						rowActionsView: false,
 						checkboxes: false,
 						showMore: true,
 						listLayout: this.getOption(this.layoutType + 'Layout')

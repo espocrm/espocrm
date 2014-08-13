@@ -1,11 +1,12 @@
 {
    "relationshipPanels":{
       "users":{
-         "create":false
+         "create":false,
+         "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
       }
    },
    "recordViews":{
-      "detail":"Team.Detail",
-      "edit":"Team.Edit"
+      "detail":"Team.Record.Detail",
+      "edit":"Team.Record.Edit"
    }   
 }

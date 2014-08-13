@@ -18,19 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-
-Espo.define('Views.Admin.AuthToken.Record.ListButtons.Remove', 'View', function (Dep) {
+	
+Espo.define('Views.Record.RowActions.RelationshipNoUnlink', 'Views.Record.RowActions.Relationship', function (Dep) {
 
 	return Dep.extend({
-	
-		_template: '<a href="javascript:" data-action="quickRemove" data-id="{{id}}">{{translate "Remove"}}</a>',
-		
-		data: function () {
-			return {
-				id: this.model.id
-			};
-		}
 
+		getActions: function () {
+			if (this.options.acl.edit) {
+				return [
+					{
+						action: 'editRelated',
+						label: 'Edit',
+						data: {
+							id: this.model.id
+						}					
+					},
+					{
+						action: 'removeRelated',
+						label: 'Remove',
+						data: {
+							id: this.model.id
+						}					
+					}
+				];
+			}
+		},
+				
 	});
+
 });
 

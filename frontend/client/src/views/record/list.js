@@ -44,7 +44,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		*/
 		selectable: false,
 
-		rowButtons: 'Record.ListButtons.Default',
+		rowActionsView: 'Record.RowActions.Default',
 
 		scope: null,
 
@@ -286,7 +286,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			this.pagination = _.isUndefined(this.options.pagination) ? this.pagination : this.options.pagination;
 			this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
 			this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
-			this.rowButtons = _.isUndefined(this.options.rowButtons) ? this.rowButtons : this.options.rowButtons;
+			this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
 			this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore; 
 		},
 
@@ -411,7 +411,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				}
 				defs.push(item);
 			};
-			if (this.rowButtons) {
+			if (this.rowActionsView) {
 				defs.push({
 					width: '7%',
 				});
@@ -456,8 +456,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				}
 				layout.push(item);
 			}
-			if (this.rowButtons) {
-				layout.push(this.getRowButtonsDefs());
+			if (this.rowActionsView) {
+				layout.push(this.getRowActionsDefs());
 			}
 			return layout;
 		},
@@ -496,10 +496,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				}
 		},
 
-		getRowButtonsDefs: function () {
+		getRowActionsDefs: function () {
 			return {
 				name: 'buttons',
-				view: this.rowButtons,
+				view: this.rowActionsView,
 				options: {
 					defs: {
 						params: {

@@ -167,7 +167,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 					el: this.$el.selector + ' > .list-container',
 					pagination: false,
 					type: 'listRelationship',
-					rowButtons: 'Record.ListButtons.RelationshipLess',
+					rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
 					checkboxes: false,
 					collection: this.collection,
 					listLayout: this.listLayout,
