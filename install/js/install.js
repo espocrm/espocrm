@@ -274,12 +274,16 @@ InstallScript.prototype.step5 = function() {
 		}
 	});
 	$('[name="smtpSecurity"]').change( function(e){
-		if ($(this).val() == '') {
-			$('[name="smtpPort"]').val('25');
+
+		var smtpPorts = {
+			"": "25",
+			"SSL": "465",
+			"TLS": "587"
 		}
-		else {
-			$('[name="smtpPort"]').val('465');
-		}
+
+		var portVal = $(this).val();
+
+		$('[name="smtpPort"]').val(smtpPorts[portVal]);
 	});
 }
 
