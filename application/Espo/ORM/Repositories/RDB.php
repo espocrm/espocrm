@@ -161,6 +161,11 @@ class RDB extends \Espo\ORM\Repository
 		}
 		return $result;
 	}
+	
+	public function deleteFromDb($id)
+	{
+		return $this->getMapper()->deleteFromDb($this->entityName, $id);
+	}
 
 	public function find(array $params = array())
 	{	

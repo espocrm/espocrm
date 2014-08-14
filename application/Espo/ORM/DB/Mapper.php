@@ -895,6 +895,17 @@ abstract class Mapper implements IMapper
 		return false;
 	}
 	
+	public function deleteFromDb($entityName, $id)
+	{
+		if (!empty($entityName) && !empty($id)) {
+			$table = $this->toDb($entityName);
+			$sql = "DELETE FROM `{$table}` WHERE id = " . $this->quote($id);
+			if ($this->pdo->query($sql)) {
+				return true;
+			}
+		}
+	}
+	
 	public function delete(IEntity $entity)
 	{
 		$entity->set('deleted', true);
@@ -1321,7 +1332,7 @@ abstract class Mapper implements IMapper
 		$sql = "UPDATE `{$table}` SET {$set} WHERE {$where}";
 		
 		return $sql;
-	}
+	}	
 	
 	abstract protected function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null);
 	

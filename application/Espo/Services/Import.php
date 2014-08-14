@@ -150,11 +150,8 @@ class Import extends \Espo\Core\Services\Base
 		$ids = array();
 		if (!empty($scope) && !empty($idsToRemove)) {
 			foreach ($idsToRemove as $id) {
-				$entity = $this->getEntityManager()->getEntity($scope, $id);
-				if ($entity) { 
-					if ($this->getEntityManager()->removeEntity($entity)) {
-						$ids[] = $id;	
-					}
+				if ($this->getEntityManager()->getRepository($scope)->deleteFromDb($id)) {
+					$ids[] = $id;
 				}
 			}
 		}
