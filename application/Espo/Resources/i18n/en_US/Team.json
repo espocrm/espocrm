@@ -6,7 +6,7 @@
 	"links": {
 		"users": "Users"
 	},
-	"tooltipls": {
+	"tooltips": {
 		"roles": "All users from this team will get access settings from selected roles."
 	},
 	"labels": {

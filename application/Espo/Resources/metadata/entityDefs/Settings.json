@@ -16,7 +16,8 @@
             "minValue": 1,
             "maxValue": 100,
             "default": 10,
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "timeZone": {
             "type": "enum",

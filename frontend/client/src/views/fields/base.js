@@ -206,11 +206,13 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 			if ((this.mode == 'detail' || this.mode == 'edit') && this.model.getFieldParam(this.name, 'tooltip')) {
 				this.once('after:render', function () {
 					var $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
+					var $label = this.getLabelElement();
+					$label.append(' ');
 					this.getLabelElement().append($a);
 					$a.popover({
 						placement: 'bottom',
 						container: 'body',
-						content: this.translate(this.name, 'tooltipls', this.model.name),
+						content: this.translate(this.name, 'tooltips', this.model.name),
 						trigger: 'click focus',
 					}).on('shown.bs.popover', function () {
 						$('body').one('click', function () {

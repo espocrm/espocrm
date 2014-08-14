@@ -19,7 +19,7 @@
 		"replyToAddress": "Reply To Address",
 		"replyFromName": "Reply From Name"
 	},
-	"tooltipls": {
+	"tooltips": {
 		"reply": "Notify email senders that their emails has been received.",
 		"createCase": "Automatically create case from incoming emails.",
 		"replyToAddress": "Specify email address of this mailbox to make response come here.",

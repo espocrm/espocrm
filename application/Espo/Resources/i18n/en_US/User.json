@@ -23,7 +23,7 @@
 		"Preferences": "Preferences",
 		"Change Password": "Change Password"
 	},
-	"tooltipls": {
+	"tooltips": {
 		"defaultTeam": "All records created by this user will be related to this team by default."
 	},
 	"messages": {

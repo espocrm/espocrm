@@ -61,6 +61,9 @@
 			"1": "Monday"
 		}
 	},
+	"tooltips": {
+		"recordsPerPageSmall": "Count of records in relatinship panels."
+	},
 	"labels": {
 		"System": "System",
 		"Locale": "Locale",
