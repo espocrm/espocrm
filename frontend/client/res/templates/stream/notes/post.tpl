@@ -30,7 +30,7 @@
 	{{/if}}
 	
 	{{#if attachments}}
-	<div>		
+	<div class="stream-attachments-container">		
 		<span class="cell cell-attachments">{{{attachments}}}</span>
 	</div>
 	{{/if}}
