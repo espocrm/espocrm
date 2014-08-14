@@ -48,7 +48,7 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 		
 		getValueForDisplay: function () {
 			var text = this.model.get(this.name);
-			if ((this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
+			if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
 				if (text.length > this.detailMaxLength) {
 					text = text.substr(0, this.detailMaxLength) + ' ...\n[#see-more-text]';
 				}
