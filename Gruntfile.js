@@ -242,7 +242,7 @@ module.exports = function (grunt) {
 		'copy:frontendLib',
 		'copy:backend',
 		'replace',
-		'clean:js'
+		'clean:js',
 		'copy:final',
 		'chmod',
 		'clean:final',
