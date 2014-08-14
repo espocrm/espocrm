@@ -242,10 +242,13 @@ class Import extends \Espo\Core\Services\Base
 
 		foreach ($fields as $i => $field) {
 			if (!empty($field)) {
+				$value = $row[$i];
 				if ($field == 'id') {
+					if ($params['action'] == 'create') {
+						$entity->id = $value;
+					}
 					continue;
-				}								
-				$value = $row[$i];			
+				}			
 				if (array_key_exists($field, $fieldsDefs)) {
 					if ($value !== '') {
 						$type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");
