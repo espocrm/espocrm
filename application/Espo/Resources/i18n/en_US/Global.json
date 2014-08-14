@@ -115,7 +115,8 @@
 		"Run Import": "Run Import",
 		"Duplicate": "Duplicate",
 		"Notifications": "Notifications",
-		"Mark all read": "Mark all read"
+		"Mark all read": "Mark all read",
+		"See More": "See More"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",
