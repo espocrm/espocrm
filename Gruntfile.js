@@ -44,8 +44,6 @@ module.exports = function (grunt) {
 					'client/src/models/preferences.js',
 					'client/src/controllers/base.js',
 					'client/src/view.js',
-					'client/src/views/base.js',
-					'client/src/views/login.js',
 	];
 	
 	grunt.initConfig({
@@ -66,7 +64,7 @@ module.exports = function (grunt) {
 			start: ['build/*'],
 			final: ['build/tmp'],
 			js: jsFilesToMinify.map(function (item) {
-				return 'build/EspoCRM-<%= pkg.version %>/' + item;
+				return 'build/tmp/' + item;
 			})
 		},
 		less: {
