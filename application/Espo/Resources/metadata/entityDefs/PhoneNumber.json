@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "maxLength": 36
+            "maxLength": 36,
+            "index": true
         },
         "type": {
             "type": "enum"

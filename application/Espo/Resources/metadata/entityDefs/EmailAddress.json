@@ -6,7 +6,8 @@
         },
         "lower": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "index": true
         },
         "invalid": {
             "type": "bool"
