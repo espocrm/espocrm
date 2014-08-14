@@ -19,12 +19,12 @@
 	{{/unless}}
 	
 	
-	<div class="">
+	<div>
 		<span class="text-muted message">{{{message}}}</span>
 	</div>
 	
 	{{#if post}}
-	<div class="">
+	<div class="stream-post-container">
 		<span class="cell cell-post">{{{post}}}</span>
 	</div>
 	{{/if}}
