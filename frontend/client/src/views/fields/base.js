@@ -202,6 +202,23 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 					this.getLabelElement().append(' *');
 				}, this);
 			}
+			
+			if ((this.mode == 'detail' || this.mode == 'edit') && this.model.getFieldParam(this.name, 'tooltip')) {
+				this.once('after:render', function () {
+					var $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
+					this.getLabelElement().append($a);
+					$a.popover({
+						placement: 'bottom',
+						container: 'body',
+						content: this.translate(this.name, 'tooltipls', this.model.name),
+						trigger: 'click focus',
+					}).on('shown.bs.popover', function () {
+						$('body').one('click', function () {
+							$a.popover('hide');
+						});
+					});
+				}, this);
+			}
 
 			if (this.mode == 'detail') {
 				var self = this;
@@ -426,7 +443,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 		},
 
 		validateRequired: function () {
-			if (this.params.required || this.model.isRequired(this.name)) {
+			if (this.isRequired()) {
 				if (this.model.get(this.name) === '') {
 					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
 					this.showValidationMessage(msg);

@@ -39,21 +39,26 @@
             "view": "Crm:InboundEmail.Fields.Folder"
         },
         "assignToUser": {
-            "type": "link"
+            "type": "link",
+            "tooltip": true
         },
         "team": {
-            "type": "link"
+            "type": "link",
+            "tooltip": true
         },
         "createCase": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "caseDistribution": {
             "type": "enum",
             "options": ["Direct-Assignment", "Round-Robin", "Least-Busy"],
-            "default": "Direct-Assignment"
+            "default": "Direct-Assignment",
+            "tooltip": true
         },
         "reply": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "replyEmailTemplate": {
             "type": "link"
@@ -62,7 +67,8 @@
             "type": "varchar"
         },
         "replyToAddress": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "replyFromName": {
             "type": "varchar"

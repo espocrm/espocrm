@@ -5,7 +5,8 @@
             "maxLength": 100
         },
         "roles": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         }
     },
     "links": {
