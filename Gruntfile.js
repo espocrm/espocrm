@@ -63,9 +63,6 @@ module.exports = function (grunt) {
 		clean: {
 			start: ['build/*'],
 			final: ['build/tmp'],
-			js: jsFilesToMinify.map(function (item) {
-				return 'build/tmp/' + item;
-			})
 		},
 		less: {
 			bootstrap: {
@@ -240,7 +237,6 @@ module.exports = function (grunt) {
 		'copy:frontendLib',
 		'copy:backend',
 		'replace',
-		'clean:js',
 		'copy:final',
 		'chmod',
 		'clean:final',
