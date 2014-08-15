@@ -38,7 +38,7 @@ if (!empty($_REQUEST)) {
 // get user selected language
 $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
 
-require_once 'core/language.php';
+require_once 'core/Language.php';
 $language = new Language();
 $langs = $language->get($userLang);
 //END: get user selected language
