@@ -6,8 +6,7 @@
         "userName": {
             "type": "varchar",
             "maxLength": 50,
-            "required": true,
-            "unique": true
+            "required": true
         },
         "name": {
             "type": "personName"
