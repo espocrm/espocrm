@@ -76,7 +76,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $result;
 	}
 
-	public function checkDbConnection($hostName, $port ,$dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql')
+	public function checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql', $isCreateDatabase = true)
 	{
 		$result['success'] = true;
 
@@ -104,6 +104,28 @@ class SystemHelper extends \Espo\Core\Utils\System
 					$result['errors']['dbConnect']['errorMsg'] = $e->getMessage();
 					$result['success'] = false;
 				}
+
+				/** try to create a database */
+				if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049') {
+
+					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port}" : '');
+					$pdo = new PDO($dsn, $dbUserName, $dbUserPass);
+
+					$isCreated = true;
+					try {
+						$pdo->query("CREATE DATABASE IF NOT EXISTS `$dbName`");
+					} catch (PDOException $e) {
+						$isCreated = false;
+					}
+
+					if ($isCreated) {
+						return $this->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver, false);
+					}
+				}
+				/** END: try to create a database */
+
+
+
 				break;
 		}
 
@@ -185,8 +207,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 			$commands[] = $this->getCd();
 		}
 
-		$commands[] = 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';
-		$commands[] = 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';
+		$commands[] = 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';//.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
+		$commands[] = 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';//.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
 
 		if (count($permissions) >= 2) {
 			return implode(' ' . $this->combineOperator . ' ', $commands);
