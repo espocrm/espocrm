@@ -276,7 +276,8 @@ class Converter
 			case 'array':
 			case 'jsonArray':
 			case 'text':
-				$dbFieldParams['default'] = ''; //for db type TEXT can't be defined a default value
+			case 'longtext':
+				unset($dbFieldParams['default']); //for db type TEXT can't be defined a default value
 				break;
 
 			case 'bool':

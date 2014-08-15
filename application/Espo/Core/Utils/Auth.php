@@ -51,10 +51,11 @@ class Auth
 		$entityManager = $this->container->get('entityManager');
 
 		$user = $entityManager->getRepository('User')->get('system');
-		$user->set('isAdmin', $isAdmin);
 		if (!$user) {
 			throw new Error('System user is not found');
 		}
+
+		$user->set('isAdmin', $isAdmin);
 
 		$entityManager->setUser($user);
 		$this->container->setUser($user);
