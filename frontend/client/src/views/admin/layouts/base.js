@@ -71,7 +71,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
 			}
 							
 			this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
-				this.notify('Saved!', 'success', 1000);
+				this.notify('Saved', 'success', 2000);
 				
 				if (typeof callback == 'function') {
 					callback();
