@@ -8,6 +8,10 @@
 		"thousandSeparator": "Thousand Separator",
 		"decimalMark": "Decimal Mark",
 		"defaultCurrency": "Default Currency",
+		"baseCurrency": "Base Currency",
+		"baseCurrency": "Base Currency",
+		"currencyRates": "Rate Values",
+		
 		"currencyList": "Currency List",
 		"language": "Language",
 		
@@ -57,11 +61,16 @@
 			"1": "Monday"
 		}
 	},
+	"tooltips": {
+		"recordsPerPageSmall": "Count of records in relatinship panels."
+	},
 	"labels": {
 		"System": "System",
 		"Locale": "Locale",
 		"SMTP": "SMTP",
 		"Configuration": "Configuration",
-		"Notifications": "Notifications"
+		"Notifications": "Notifications",
+		"Currency Settings": "Currency Settings",
+		"Currency Rtes": "Currency Rates"
 	}
 }

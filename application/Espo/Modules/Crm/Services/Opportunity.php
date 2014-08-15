@@ -42,7 +42,7 @@ class Opportunity extends \Espo\Services\Record
 				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
 				opportunity.close_date < ".$pdo->quote($dateTo)." AND
 				opportunity.stage <> 'Closed Lost'
-			GROUP BY opportunity.lead_source
+			GROUP BY opportunity.stage
 			ORDER BY FIELD(opportunity.stage, 'Prospecting', 'Qualification', 'Needs Analysis', 'Value Proposition', 'Id. Decision Makers', 'Perception Analysis', 'Proposal/Price Quote', 'Negotiation/Review', 'Closed Won')		
 		";
 		

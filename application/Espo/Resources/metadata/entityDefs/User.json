@@ -6,8 +6,7 @@
         "userName": {
             "type": "varchar",
             "maxLength": 50,
-            "required": true,
-            "unique": true
+            "required": true
         },
         "name": {
             "type": "personName"
@@ -49,7 +48,8 @@
             "notStorable": true
         },
         "defaultTeam": {
-            "type": "link"
+            "type": "link",
+            "tooltip": true
         },
         "teams": {
             "type": "linkMultiple"

@@ -63,8 +63,8 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
 		},
 				
 		setup: function () {
-			this.currency = 'USD';
-			this.currencySymbol = '$';
+			this.currency = this.getConfig().get('defaultCurrency');
+			this.currencySymbol = '';
 		},	
 		
 		drow: function () {
@@ -97,7 +97,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
 					track: true,
 					relative: true,
 					trackFormatter: function (obj) {
-						return self.currencySymbol + self.formatNumber(obj.y);							
+						return self.formatNumber(obj.y) + ' ' + self.currency;							
 					},
 				},
 				legend: {

@@ -29,7 +29,8 @@
 		"Field Manager": "Field Manager",
 		"User Interface": "User Interface",
 		"Auth Tokens": "Auth Tokens",
-		"Authentication": "Authentication"
+		"Authentication": "Authentication",
+		"Currency": "Currency"
 	},
 	"layouts": {
 		"list": "List",
@@ -113,7 +114,8 @@
 		"fieldManager": "Create new fields or customize existing ones.",
 		"userInterface": "Configure UI.",
 		"authTokens": "Active auth sessions. IP address and last access date.",
-		"authentication": "Authentication settings."
+		"authentication": "Authentication settings.",
+		"currency": "Currency settings and rates."
 	},
 	"options": {
 		"previewSize": {

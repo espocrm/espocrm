@@ -46,11 +46,8 @@ return array (
 	array (
 	),
 	'defaultCurrency' => 'USD',
-	'currency' =>
-	array(
-		'base' => 'USD',
-		'rate' => array(
-		),
+	'baseCurrency' => 'USD',
+	'currencyRates' => array(
 	),
 	'outboundEmailIsShared' => true,
 	'outboundEmailFromName' => 'EspoCRM',
@@ -62,10 +59,11 @@ return array (
 	'smtpUsername' => '',
 	'smtpPassword' => '',
 	'languageList' => array(
-		'en_US',		
+		'en_US',
 		'de_DE',
 		'es_ES',
 		'fr_FR',
+		'nl_NL',
 		'tr_TR',
 		'ro_RO',
 		'pt_BR',

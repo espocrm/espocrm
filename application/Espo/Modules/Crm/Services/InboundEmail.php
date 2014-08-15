@@ -519,9 +519,14 @@ class InboundEmail extends \Espo\Services\Record
 				
 				$replyData = $emailTemplateService->parse($replyEmailTemplateId, array('entityHash' => $entityHash), true);
 				
+				$subject = $replyData['subject'];
+				if ($case) {
+					$subject = '[#' . $case->get('number'). '] ' . $subject;
+				}
+				
 				$reply = $this->getEntityManager()->getEntity('Email');
 				$reply->set('to', $email->get('from'));
-				$reply->set('subject', $replyData['subject']);
+				$reply->set('subject', $subject);
 				$reply->set('body', $replyData['body']);
 				$reply->set('isHtml', $replyData['isHtml']);
 				$reply->set('attachmentsIds', $replyData['attachmentsIds']);
@@ -536,8 +541,10 @@ class InboundEmail extends \Espo\Services\Record
 				if ($inboundEmail->get('replyFromName')) {
 					$senderParams['fromName'] = $inboundEmail->get('replyFromName');
 				}
-				$sender->setParams($senderParams);				
-				$sender->send($reply);
+				if ($inboundEmail->get('replyToAddress')) {
+					$senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
+				}		
+				$sender->send($reply, $senderParams);
 				
 				foreach ($reply->get('attachments') as $attachment) {
 					$this->getEntityManager()->removeEntity($attachment);

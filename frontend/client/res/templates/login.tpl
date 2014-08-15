@@ -1,7 +1,7 @@
 <div class="container content">
 	<div class="col-md-4 col-md-offset-4">	
 	<div id="login" class="panel panel-default">
-		<div class="panel-heading" style="background-color: #4A6492; padding: 3px 10px;">
+		<div class="panel-heading">
 			<img src="{{logoSrc}}"></img>
 		</div>
 		<div class="panel-body">

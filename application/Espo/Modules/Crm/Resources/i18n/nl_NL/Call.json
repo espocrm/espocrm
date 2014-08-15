@@ -1,0 +1,39 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"parent": "Bovenliggende item",
+		"status": "Status",
+		"dateStart": "Start Datum",
+		"dateEnd": "Eind Datum",
+		"direction": "Richting",
+		"duration": "Gedurende",
+		"description": "Beschrijving",
+		"users": "Gebruikers",
+		"contacts": "Contactpersoon",
+		"leads": "Leads"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Planned": "Plannen",
+			"Held": "Volgen",
+			"Not Held": "Niet volgen"
+		},
+		"direction": {
+			"Outbound": "Uitgaande",
+			"Inbound": "Binnenkomende"
+		}
+	},
+	"labels": {
+		"Create Call": "Maak Call",
+		"Set Held": "Vasthouden",
+		"Set Not Held": "Niet Vasthouden",
+		"Send Invitations": "Uitnodiging versturen"		
+	},
+	"presetFilters": {
+		"planned": "Plannen",
+		"held": "Volgen",
+		"todays": "Vandaag"
+	}
+}

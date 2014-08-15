@@ -13,6 +13,7 @@
 		"Errors page title": "Fehler",
 		"Finish page title": "Die Installation ist abgeschlossen",
 		"Congratulation! Welcome to EspoCRM!": "Gratulation! EspoCRM wurde erfolgreich installiert.",
+		"Installation Guide": "Installationsanleitung",
 		"admin": "admin",
 		"localhost": "localhost",
 		"port": "3306",
@@ -103,7 +104,7 @@
 		},
 		"modRewriteHelp": {
 			"apache": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"mod_rewrite\" des Apache Servers oder des .htaccess Supports.",
-			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation /api/v1/ {\n    if (!-e $request_filename){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}</pre>",
+			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to your Nginx Host Config (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
 			"microsoft-iis": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"URL Rewrite\". Bitte überprüfen und aktivieren Sie das \"URL Rewrite\" Modul im IIS Server.",
 			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
 		}

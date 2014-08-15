@@ -20,7 +20,7 @@
         },
         "accountId": {
             "where": {
-            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = '{text}')"
+            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})"
             }
         },
         "title": {
@@ -30,8 +30,8 @@
             "select": "accountContact.role",
             "orderBy": "accountContact.role {direction}",
             "where": {
-            	"LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE '{text}')",
-            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = '{text}')"
+            	"LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE {value})",
+            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
             }
         },
         "description": {

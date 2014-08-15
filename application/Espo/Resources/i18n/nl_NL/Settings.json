@@ -1,0 +1,73 @@
+{
+	"fields": {
+		"useCache": "Gebruik Cache",
+		"dateFormat": "Datum Notatie",
+		"timeFormat": "Tijd Notatie",
+		"timeZone": "Tijd Zone",
+		"weekStart": "Eerste dag van de Week",
+		"thousandSeparator": "Duizendtal scheidingsteken",
+		"decimalMark": "Decimaal Scheidingsteken",
+		"defaultCurrency": "Voorkeur Valuta",
+		"baseCurrency": "Base Currency",
+		"baseCurrency": "Base Currency",
+		"currencyRates": "Rate Values",
+		
+		"currencyList": "Valuta Lijst",
+		"language": "Taal",
+		
+		"companyLogo": "Firma logo",
+		
+		"smtpServer": "Server",
+		"smtpPort": "Poort",
+		"smtpAuth": "Authenticatie",
+		"smtpSecurity": "Veiligheid",
+		"smtpUsername": "Gebruikersnaam",
+		"emailAddress": "Email",
+		"smtpPassword": "Wachtwoord",
+		"outboundEmailFromName": "Naam van",
+		"outboundEmailFromAddress": "Van Adres",
+		"outboundEmailIsShared": "Is Gedeeld",
+		
+		"recordsPerPage": "Velden per pagina",
+		"recordsPerPageSmall": "Records Per Page (Small)",		
+		"tabList": "Tab lijst",
+		"quickCreateList": "Snel gemaakte lijst",
+		
+		"exportDelimiter": "Scheidingsteken Export",
+		
+		"authenticationMethod": "Authentication Methode",
+		"ldapHost": "Host",
+		"ldapPort": "Poort",
+		"ldapAuth": "Authenticatie",
+		"ldapUsername": "Gebruikersnaam",
+		"ldapPassword": "Wachtwoord",
+		"ldapBindRequiresDn": "Bind heeft Dn Nodig",
+		"ldapBaseDn": "Base Dn",
+		"ldapAccountCanonicalForm": "Standaard Formulier Gebruiker",
+		"ldapAccountDomainName": "Contact Domein Naam",
+		"ldapTryUsernameSplit": "Probeer gesplitste Gebruikersnaam",
+		"ldapCreateEspoUser": "Gebruiker aanmaken in EspoCRM",
+		"ldapSecurity": "Veiligheid",
+		"ldapUserLoginFilter": "Gebruikers Login Filter",
+		"ldapAccountDomainNameShort": "Korte Contact Domein Naam",
+		"ldapOptReferrals": "Opt Referentie",
+		"disableExport": "Disable Export (only admin is allowed)",
+		"assignmentEmailNotifications": "Send Email Notifications upon Assignment",
+		"assignmentEmailNotificationsEntityList": "Entities to Notify About"
+	},
+	"options": {
+		"weekStart": {
+			"0": "Zondag",
+			"1": "Maandag"
+		}
+	},
+	"labels": {
+		"System": "Systeem",
+		"Locale": "Lokaal",
+		"SMTP": "SMTP",
+		"Configuration": "Configuratie",
+		"Notifications": "Notificaties",
+		"Currency Settings": "Currency Settings",
+		"Currency Rtes": "Currency Rates"
+	}
+}

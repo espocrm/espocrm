@@ -115,21 +115,8 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 			scope: false,
 		},
 		
-		actionArchiveEmail: function (data) {
-			var self = this;
-			var link = 'emails';
-			var scope = 'Email';
-			
-			var relate = null;				
-			if ('emails' in this.model.defs['links']) {				
-				relate = {
-					model: this.model,
-					link: this.model.defs['links']['emails'].foreign
-				};
-			}						
-
-			this.notify('Loading...');
-			
+		getArchiveEmailAttributes: function (data, callback) {
+			data = data || {};
 			var attributes = {
 				dateSent: this.getDateTime().getNow(15),
 				status: 'Archived',
@@ -148,18 +135,39 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 				attributes.parentId = this.model.id
 				attributes.parentName = this.model.get('name');
 			}
+			callback.call(this, attributes);
+		},
+		
+		actionArchiveEmail: function (data) {
+			var self = this;
+			var link = 'emails';
+			var scope = 'Email';
+			
+			var relate = null;				
+			if ('emails' in this.model.defs['links']) {				
+				relate = {
+					model: this.model,
+					link: this.model.defs['links']['emails'].foreign
+				};
+			}						
 
-			this.createView('quickCreate', 'Modals.Edit', {
-				scope: scope,
-				relate: relate,
-				attributes: attributes
-			}, function (view) {
-				view.render();
-				view.notify(false);
-				view.once('after:save', function () {
-					self.collection.fetch();
+			this.notify('Loading...');
+			
+			this.getArchiveEmailAttributes(data, function (attributes) {
+				this.createView('quickCreate', 'Modals.Edit', {
+					scope: scope,
+					relate: relate,
+					attributes: attributes
+				}, function (view) {
+					view.render();
+					view.notify(false);
+					view.once('after:save', function () {
+						self.collection.fetch();
+					});
 				});
 			});
+
+
 		},
 	});
 });

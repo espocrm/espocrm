@@ -1,1 +1,7 @@
-["status","source","opportunityAmount","teams","address"]
+[
+	"status",
+	"source",
+	"opportunityAmountConverted",
+	"teams",
+	"address"
+]

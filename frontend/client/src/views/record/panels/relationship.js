@@ -25,7 +25,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 
 		template: 'record.panels.relationship',
 		
-		rowButtonsView: 'Record.ListButtons.Relationship',
+		rowActionsView: 'Record.RowActions.Relationship',
 
 		setup: function () {
 			this.link = this.panelName;				
@@ -97,7 +97,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
 							type: type,
 							listLayout: listLayout,
 							checkboxes: false,
-							rowButtons: this.defs.readOnly ? false : (this.defs.rowButtons || this.rowButtonsView),
+							rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
 							el: this.options.el + ' .list-container',
 						}, function (view) {
 							view.render();

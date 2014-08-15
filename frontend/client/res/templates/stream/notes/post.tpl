@@ -19,18 +19,18 @@
 	{{/unless}}
 	
 	
-	<div class="">
+	<div>
 		<span class="text-muted message">{{{message}}}</span>
 	</div>
 	
 	{{#if post}}
-	<div class="">
+	<div class="stream-post-container">
 		<span class="cell cell-post">{{{post}}}</span>
 	</div>
 	{{/if}}
 	
 	{{#if attachments}}
-	<div>		
+	<div class="stream-attachments-container">		
 		<span class="cell cell-attachments">{{{attachments}}}</span>
 	</div>
 	{{/if}}

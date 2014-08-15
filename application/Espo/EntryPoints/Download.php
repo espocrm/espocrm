@@ -30,6 +30,10 @@ class Download extends \Espo\Core\EntryPoints\Base
 {
 	public static $authRequired = true;
 	
+	protected $fileTypesToShowInline = array(
+		'application/pdf',
+	);
+	
 	public function run()
 	{	
 		$id = $_GET['id'];
@@ -54,13 +58,21 @@ class Download extends \Espo\Core\EntryPoints\Base
 		
 		if (!file_exists($fileName)) {
 			throw new NotFound();
-		}		
+		}
+		
+		$type = $attachment->get('type');
+		
+		$disposition = 'attachment';
+		if (in_array($type, $this->fileTypesToShowInline)) {
+			$disposition = 'inline';
+		}
+			
 		
 		header('Content-Description: File Transfer');
-		if ($attachment->get('type')) {
-			header('Content-Type: ' . $attachment->get('type'));
+		if ($type) {
+			header('Content-Type: ' . $type);
 		}
-		header('Content-Disposition: attachment; filename=' . $attachment->get('name'));
+		header('Content-Disposition: ' . $disposition . '; filename=' . $attachment->get('name'));
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');

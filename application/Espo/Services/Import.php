@@ -149,13 +149,14 @@ class Import extends \Espo\Core\Services\Base
 	{
 		$ids = array();
 		if (!empty($scope) && !empty($idsToRemove)) {
-			foreach ($idsToRemove as $id) {
+			foreach ($idsToRemove as $id) {				
 				$entity = $this->getEntityManager()->getEntity($scope, $id);
 				if ($entity) { 
 					if ($this->getEntityManager()->removeEntity($entity)) {
 						$ids[] = $id;	
 					}
 				}
+				$this->getEntityManager()->getRepository($scope)->deleteFromDb($id);
 			}
 		}
 		return $ids;		
@@ -242,10 +243,13 @@ class Import extends \Espo\Core\Services\Base
 
 		foreach ($fields as $i => $field) {
 			if (!empty($field)) {
+				$value = $row[$i];
 				if ($field == 'id') {
+					if ($params['action'] == 'create') {
+						$entity->id = $value;
+					}
 					continue;
-				}								
-				$value = $row[$i];			
+				}			
 				if (array_key_exists($field, $fieldsDefs)) {
 					if ($value !== '') {
 						$type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");

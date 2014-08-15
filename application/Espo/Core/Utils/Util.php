@@ -125,10 +125,13 @@ class Util
 	 *                     	),
 	 *                     )
 	 * @param $rewriteKeyName string  - Rewrite key name. It is ignored if $rewriteLevel is NULL.
+	 * @param $rewriteArrays bool  - Rewrite single arrays. Examples:
+	 *                             TRUE: array is [0, 1, 2], main array is [3, 4, 5], Result is [3, 4, 5].
+	 *                             FALSE: array is [0, 1, 2], main array is [3, 4, 5], Result is [0, 1, 2, 3, 4, 5].
 	 *
 	 * @return array
 	 */
-	public static function merge($array, $mainArray, $rewriteLevel = null, $rewriteKeyName = null)
+	public static function merge($array, $mainArray, $rewriteLevel = null, $rewriteKeyName = null, $rewriteArrays = false)
 	{
 		if (is_array($array) && !is_array($mainArray)) {
 			return $array;
@@ -169,7 +172,7 @@ class Util
 						} /** END: check the $rewriteKeyName */
 
 						if (!isset($rowRewriteLevel) || $rowRewriteLevel != 1) {
-							$array[$mainKey] = static::merge((array) $value, (array) $mainValue, --$rowRewriteLevel, $rewriteKeyName);
+							$array[$mainKey] = static::merge((array) $value, (array) $mainValue, --$rowRewriteLevel, $rewriteKeyName, $rewriteArrays);
 							continue;
 						}
 
@@ -185,7 +188,11 @@ class Util
 						$array[$mainKey] = $mainValue;
 					}
 					elseif (!in_array($mainValue, $array)) {
-						$array[] = $mainValue;
+						if ($rewriteArrays) {
+							$array[$mainKey] = $mainValue;
+						} else {
+							$array[] = $mainValue;
+						}
 					} /** END: merge logic */
 
 					break;
@@ -359,11 +366,17 @@ class Util
 				if (!empty($unsetSett)){
 					$keyItems = explode('.', $unsetSett);
 					$currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
+
+					$lastKey = array_pop($keyItems);
 					foreach($keyItems as $keyItem){
 						$currVal .= "['{$keyItem}']";
 					}
 
-					$currVal = "if (isset({$currVal})) unset({$currVal});";
+					$unsetElem = $currVal . "['{$lastKey}']";
+					$currVal = "
+						if (isset({$unsetElem}) || array_key_exists({$lastKey}, {$currVal})) {
+							unset({$unsetElem});
+						} ";
 					eval($currVal);
 				}
 			}

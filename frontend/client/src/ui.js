@@ -108,14 +108,32 @@
 				}
 			}.bind(this));
 		}
+		
+		this.$el.on('show.bs.modal', function (event) {
+			var idx = $('.modal:visible').length;
+			$(this).css('z-index', 1040 + (10 * idx));
+		});
+		this.$el.on('shown.bs.modal', function (event) {
+			var idx = ($('.modal:visible').length) - 1;
+			$('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
+			$('.modal-backdrop').not('.stacked').addClass('stacked');
+		});
+		this.$el.on('hidden.bs.modal', function (event) {	
+			if ($('.modal:visible').length > 0) {
+				setTimeout(function() {
+					$(document.body).addClass('modal-open');
+				}, 0);
+			}
+		});	
+
 	}	
 	Dialog.prototype.show = function () {		
 		this.$el.modal({
 		 	backdrop: this.backdrop,
 		});
 		
-		this.$el.css('z-index', 1200);
-		$('.modal-backdrop').css('z-index', 1100);		
+		/*this.$el.css('z-index', 1200);
+		$('.modal-backdrop').css('z-index', 1100);*/		
 	};	
 	Dialog.prototype.close = function () {		
 		this.$el.modal('hide');

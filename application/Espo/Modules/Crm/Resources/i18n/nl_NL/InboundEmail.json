@@ -1,0 +1,44 @@
+{
+	"fields": {
+		"name": "Record Naam",
+		"team": "Team",
+		"status": "Status",
+		"assignToUser": "Toegewezen aan gebruiker",
+		"host": "Host",
+		"username": "Gebruikersnaam",
+		"password": "Wachtwoord",
+		"port": "Poort",
+		"monitoredFolders": "Gecontroleerde Folders",
+		"trashFolder": "Prullenbak Folder",
+		"ssl": "SSL",		
+		"createCase": "Maak Case",
+		"reply": "Antw.",
+		"caseDistribution": "Zaak Verdelen",
+		"replyEmailTemplate": "Antw. Email Template",
+		"replyFromAddress": "Antw. van Adres",
+		"replyToAddress": "Reply To Address",
+		"replyFromName": "Antw. van Naam"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Active": "Active",
+			"Inactive": "Inactive"
+		},
+		"caseDistribution": {
+			"Direct-Assignment": "Directe-Toewijzing",
+			"Round-Robin": "Round-Robin",
+			"Least-Busy": "Minst-Bezet"
+		}
+	},
+	"labels": {
+		"Create InboundEmail": "Instellen Email Gebruiker",
+		"IMAP": "IMAP",
+		"Actions": "Acties",
+		"Main": "Hoofd"		
+	},
+	"messages": {
+		"couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
+	}
+}

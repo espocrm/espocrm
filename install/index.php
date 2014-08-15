@@ -37,14 +37,11 @@ if (!empty($_REQUEST)) {
 
 // get user selected language
 $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
-$langFileName = 'core/i18n/'.$userLang.'/install.json';
-$langs = array();
-if (file_exists('install/'.$langFileName)) {
-	$langs = file_get_contents('install/'.$langFileName);
-} else {
-	$langs = file_get_contents('install/core/i18n/en_US/install.json');
-}
-$langs = json_decode($langs, true);
+
+require_once 'core/Language.php';
+$language = new Language();
+$langs = $language->get($userLang);
+//END: get user selected language
 
 require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();

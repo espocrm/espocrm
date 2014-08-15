@@ -13,6 +13,7 @@
 		"Errors page title": "Erori",
 		"Finish page title": "Instalare finalizata",
 		"Congratulation! Welcome to EspoCRM!": "Felicitari! EspoCRM a fost instalat cu succes.",
+		"Installation Guide": "Instrucțiuni de instalare",
 		"admin": "admin",
 		"localhost": "localhost",
 		"port": "3306",
@@ -103,7 +104,7 @@
 		},
 		"modRewriteHelp": {
 			"apache": "Eroare API: API-ul EspoCRM nu este valabil.<br> Probleme posibile: este dezactivat \"mod_rewrite\" in server-ul Apache, sau in .htaccess.",
-			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation /api/v1/ {\n    if (!-e $request_filename){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}</pre>",
+			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to your Nginx Host Config (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
 			"microsoft-iis": "Eroare API: API-ul EspoCRM nu este valabil.<br> Probleme posibile: este dezactivat \"URL Rewrite\". Verificati si activati modulul \"URL Rewrite\" in server-ul IIS",
 			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
 		}

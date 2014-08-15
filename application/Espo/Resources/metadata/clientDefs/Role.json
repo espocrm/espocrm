@@ -6,10 +6,12 @@
    },
    "relationshipPanels":{
       "users":{
-         "create":false
+         "create":false,
+         "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
       },
       "teams":{
-         "create":false
+         "create":false,
+         "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
       }
    },
   "views": {

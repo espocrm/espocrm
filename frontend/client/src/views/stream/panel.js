@@ -45,7 +45,7 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 				}
 			},
 			'input textarea.note': function (e) {
-				var $text = $(e.currentTarget);						
+				var $text = $(e.currentTarget);
 				var numberOfLines = e.currentTarget.value.split("\n").length;
 				var numberOfRows = $text.prop('rows');
 				
@@ -139,6 +139,10 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 				view.render();
 			});
 		},
+		
+		afterPost: function () {
+			this.$el.find('textarea.note').prop('rows', 1);
+		},
 
 		post: function () {		
 			this.$textarea.prop('disabled', true);
@@ -159,6 +163,7 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 					
 					this.$textarea.prop('disabled', false);
 					this.disablePostingMode();
+					this.afterPost();
 				}, this);
 				
 				model.set('post', message);

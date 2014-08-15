@@ -23,7 +23,7 @@ Espo.define('Views.Admin.AuthToken.Record.List', 'Views.Record.List', function (
 
 	return Dep.extend({
 	
-		rowButtons: 'Admin.AuthToken.Record.ListButtons.Remove',
+		rowActionsView: 'Admin.AuthToken.Record.RowActions.Remove',
 		
 		setup: function () {
 			Dep.prototype.setup.call(this);

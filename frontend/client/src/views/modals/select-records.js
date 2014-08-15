@@ -118,7 +118,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 							selectable: true,							
 							checkboxes: this.multiple,
 							actions: false,
-							rowButtons: false,
+							rowActionsView: false,
 							type: 'listSmall',
 							searchManager: searchManager,				
 						}, function (list) {

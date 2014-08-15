@@ -28,7 +28,6 @@
 		"Views.Modals.Edit",
 		"Views.Record.Edit",
 		"Views.Record.List",
-		"Views.Record.ListButtons.Relationship",
 		"Views.Record.Search",
 		"Views.Site.Header",
 		"Views.Site.Master",

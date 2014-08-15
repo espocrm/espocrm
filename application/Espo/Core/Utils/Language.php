@@ -154,10 +154,10 @@ class Language
 
 		return $translated;
 	}
-	
+
 	public function translateOption($value, $field, $scope)
 	{
-		$options = $this->get($scope. '.options.' . $field);		
+		$options = $this->get($scope. '.options.' . $field);
 		if (array_key_exists($value, $options)) {
 			return $options[$value];
 		}
@@ -241,7 +241,7 @@ class Language
 				$i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
 
 				if ($i18nName != $this->defaultLanguage) {
-					$i18nData = Util::merge($this->fullData[$this->defaultLanguage], $i18nData);
+					$i18nData = Util::merge($this->fullData[$this->defaultLanguage], $i18nData, null, null, true);
 				}
 				$result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
 			}

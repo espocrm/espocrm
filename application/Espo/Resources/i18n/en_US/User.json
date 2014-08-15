@@ -23,6 +23,9 @@
 		"Preferences": "Preferences",
 		"Change Password": "Change Password"
 	},
+	"tooltips": {
+		"defaultTeam": "All records created by this user will be related to this team by default."
+	},
 	"messages": {
 		"passwordWillBeSent": "Password will be sent to user's email address.",
 		"accountInfoEmailSubject": "Account info",

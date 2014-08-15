@@ -1,6 +1,46 @@
 {
-   "recordViews":{
-      "detail":"Crm:InboundEmail.Record.Detail",
-      "edit":"Crm:InboundEmail.Record.Edit"
-   }
+	"recordViews":{
+		"detail":"Crm:InboundEmail.Record.Detail",
+		"edit":"Crm:InboundEmail.Record.Edit"
+	},
+	"formDependency": {
+		"createCase": {
+			"map": {
+				"true" : [
+					{
+						"action": "show",
+						"fields": ["caseDistribution"]
+					}
+				]
+			},
+			"default": [
+				{
+					"action": "hide",
+					"fields": ["caseDistribution"]
+				}
+			]
+		},
+		"reply": {
+			"map": {
+				"true" : [
+					{
+						"action": "show",
+						"fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName", "replyToAddress"]
+					}, {
+						"action": "setRequired",
+						"fields": ["replyEmailTemplate"]
+					}
+				]
+			},
+			"default": [
+				{
+					"action": "hide",
+					"fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName", "replyToAddress"]
+				}, {
+					"action": "setNotRequired",
+					"fields": ["replyEmailTemplate"]
+				}				
+			]
+		}
+	}
 }

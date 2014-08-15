@@ -78,7 +78,7 @@ class ControllerManager
 			throw new NotFound("Controller '$controllerName' is not found");
 		}
 
-		$controller = new $controllerClassName($this->container);
+		$controller = new $controllerClassName($this->container, $request->getMethod());
 
 		if ($actionName == 'index') {
 			$actionName = $controllerClassName::$defaultAction;

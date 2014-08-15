@@ -29,7 +29,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
 		selectable: false,
 
-		rowButtons: false,			
+		rowActionsView: false,			
 		
 		_internalLayoutType: 'list-row-expanded',
 		
@@ -102,8 +102,8 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 					};
 				}	
 			} else {			
-				if (this.rowButtons) {
-					layout.right = this.getRowButtonsDefs();
+				if (this.rowActionsView) {
+					layout.right = this.getRowActionsDefs();
 				}
 			}
 			return layout;

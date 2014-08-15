@@ -270,7 +270,7 @@ abstract class Entity implements IEntity
 	
 	public function isFieldChanged($fieldName)
 	{
-		return $this->get($fieldName) != $this->getFetched($fieldName);
+		return $this->has($fieldName) && ($this->get($fieldName) != $this->getFetched($fieldName));
 	}
 	
 	public function getFetched($fieldName)

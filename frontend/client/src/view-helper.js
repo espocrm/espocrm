@@ -139,6 +139,7 @@
 				text = text.replace(self.urlRegex, function (url) {  
 					return '<a href="' + url + '">' + url + '</a>';  
 				});
+				text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
 				return new Handlebars.SafeString(text);
 			});
 
