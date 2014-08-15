@@ -76,7 +76,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $result;
 	}
 
-	public function checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql', $isCreateDatabase = true)
+	public function checkDbConnection($hostName, $port ,$dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql')
 	{
 		$result['success'] = true;
 
@@ -104,28 +104,6 @@ class SystemHelper extends \Espo\Core\Utils\System
 					$result['errors']['dbConnect']['errorMsg'] = $e->getMessage();
 					$result['success'] = false;
 				}
-
-				/** try to create a database */
-				if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049') {
-
-					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port}" : '');
-					$pdo = new PDO($dsn, $dbUserName, $dbUserPass);
-
-					$isCreated = true;
-					try {
-						$pdo->query("CREATE DATABASE IF NOT EXISTS `$dbName`");
-					} catch (PDOException $e) {
-						$isCreated = false;
-					}
-
-					if ($isCreated) {
-						return $this->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver, false);
-					}
-				}
-				/** END: try to create a database */
-
-
-
 				break;
 		}
 
@@ -207,8 +185,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 			$commands[] = $this->getCd();
 		}
 
-		$commands[] = 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';//.'chmod '.$bufPerm[0].' $(find '.$path.' -type f)';
-		$commands[] = 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';//.'chmod '.$bufPerm[1].' $(find '.$path.' -type d)';
+		$commands[] = 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';
+		$commands[] = 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';
 
 		if (count($permissions) >= 2) {
 			return implode(' ' . $this->combineOperator . ' ', $commands);
@@ -271,6 +249,21 @@ class SystemHelper extends \Espo\Core\Utils\System
 		}
 
 		return $cd;
+	}
+
+	public function getRewriteRules()
+	{
+		$serverType = $this->getServerType();
+
+		$rules = array(
+			'nginx' => "location /api/v1/ {\n    if (!-e " . '$request_filename' . "){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}\n\nlocation /(data|api) {\n    if (-e " . '$request_filename' . "){\n        return 403;\n    }\n}\n\nlocation /data/logs {\n    return 403;\n}\nlocation /data/config.php$ {\n    return 403;\n}\nlocation /data/cache {\n    return 403;\n}\nlocation /data/upload {\n    return 403;\n}\nlocation /application {\n    return 403;\n}\nlocation /custom {\n    return 403;\n}\nlocation /vendor {\n    return 403;\n}",
+		);
+
+		if (isset($rules[$serverType])) {
+			return $rules[$serverType];
+		}
+
+		return '';
 	}
 
 }
