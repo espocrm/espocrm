@@ -148,7 +148,7 @@ class Installer
 	 */
 	public function saveData($database, $language)
 	{
-		$initData = include('install/core/afterInstall/config.php');
+		$initData = include('install/core/init/config.php');
 
 		$siteUrl = $this->getSystemHelper()->getBaseUrl();
 
@@ -194,7 +194,9 @@ class Installer
 		if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
 
 			$preferences['currencyList'] = array($preferences['defaultCurrency']);
-			$preferences['baseCurrency'] = $preferences['defaultCurrency'];
+
+			$preferences['currency'] = $this->getConfig()->get('currency');
+			$preferences['currency']['base'] = $preferences['defaultCurrency'];
 		}
 
 		$res = $this->saveConfig($preferences);
@@ -208,7 +210,7 @@ class Installer
 
 	protected function createRecords()
 	{
-		$records = include('install/core/afterInstall/records.php');
+		$records = include('install/core/init/records.php');
 
 		$result = true;
 		foreach ($records as $entityName => $recordList) {
@@ -269,6 +271,8 @@ class Installer
 
 		$result = $this->createRecord('User', $user);
 
+		$result &= $this->createRecords();
+
 		return $result;
 	}
 
@@ -311,16 +315,9 @@ class Installer
 
 	public function setSuccess()
 	{
-		$this->auth();
-
-		/** afterInstall scripts */
-		$result = $this->createRecords();
-		$result &= $this->executeQueries();
-		/** END: afterInstall scripts */
-
 		$config = $this->app->getContainer()->get('config');
 		$config->set('isInstalled', true);
-		$result &= $config->save();
+		$result = $config->save();
 
 		return $result;
 	}
@@ -380,22 +377,6 @@ class Installer
 	public function getCronMessage()
 	{
 		return $this->getContainer()->get('scheduledJob')->getSetupMessage();
-	}
-
-	protected function executeQueries()
-	{
-		$queries = include('install/core/afterInstall/queries.php');
-
-		$pdo = $this->getEntityManager()->getPDO();
-
-		$result = true;
-
-		foreach ($queries as $query) {
-			$sth = $pdo->prepare($query);
-			$result =& $sth->execute();
-		}
-
-		return $result;
 	}
 
 

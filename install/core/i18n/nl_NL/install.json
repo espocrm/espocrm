@@ -104,7 +104,7 @@
 		},
 		"modRewriteHelp": {
 			"apache": "API Error: EspoCRM API niet beschikbaar.<br> Mogelijke Oorzaak: disabled \"mod_rewrite\" in Apache server of .htaccess ondersteuning.",
-			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to Nginx Host Config (inside \"server\" block):<br>\n<pre>\nlocation /api/v1/ {\n    if (!-e $request_filename){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}</pre>",
+			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to your Nginx Host Config (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
 			"microsoft-iis": "API Error: EspoCRM API niet beschikbaar.<br> Mogelijk probleem: disabled \"URL Rewrite\". Controleer en activeer \"URL Rewrite\" Module in IIS server",
 			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
 		}
