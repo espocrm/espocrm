@@ -13,6 +13,7 @@
 		"Errors page title": "Fehler",
 		"Finish page title": "Die Installation ist abgeschlossen",
 		"Congratulation! Welcome to EspoCRM!": "Gratulation! EspoCRM wurde erfolgreich installiert.",
+		"Installation Guide": "Installationsanleitung",
 		"admin": "admin",
 		"localhost": "localhost",
 		"port": "3306",

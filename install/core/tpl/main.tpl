@@ -28,9 +28,13 @@
 				</select>
 			</div>
 		</div>
+		<div class="cell cell-website pull-right" align="right">
+			<a target="_blank" href="http://blog.espocrm.com/administration/how-to-install-espocrm/" style="font-weight:bold;">{$langs['labels']['Installation Guide']}</a>
+		</div>
+
 	</div>
 	<footer class="modal-footer">
-		
+
 		<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Start']}</button>
 	</footer>
 </form>
