@@ -36,10 +36,14 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 		seeMoreText: false,
 		
 		events: {
-			'click a[data-action="seeMoreText"]': function (e) {				
+			'click a[data-action="seeMoreText"]': function (e) {		
 				this.seeMoreText = true;
 				this.render();
 			}
+		},
+		
+		afterRender: function () {
+			Dep.prototype.afterRender.call(this);
 		},
 		
 		setup: function () {
