@@ -650,7 +650,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 					this.$el.find('.more-count').text(collection.total - this.collection.length);
 					$showMore.removeClass('hide');					
 				}
-				$showMore.children('a').removeClass('disabled');				
+				$showMore.children('a').removeClass('disabled');			
 								
 				this.notify(false);
 			}.bind(this);
@@ -673,8 +673,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 							$list.append(html);								
 							rowsReady++;
 							if (rowsReady == rowCount) {			
-								final();
+								final();								
 							}
+							view._afterRender();
 							if (view.options.el) {
 								view.setElement(view.options.el);
 							}													
