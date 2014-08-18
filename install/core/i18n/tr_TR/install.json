@@ -28,7 +28,7 @@
 		"Test settings": "Bağlantıyı Kontrol Et"
 	},
 	"fields": {
-		"Choose your language: ": "Dili seçin:",
+		"Choose your language": "Dili seçin",
 		"Database Name": "Veritabanı adı:",
 		"Host Name": "Sunucu Adı",
 		"Port": "Bağlantı Noktası",
