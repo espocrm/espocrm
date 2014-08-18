@@ -109,6 +109,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 				var $block = $input.closest('div.phone-number-block');
 				
 				if ($input.val() == '') {
+					console.log('e');
 					if ($block.parent().children().size() == 1) {
 						$block.find('input.phone-number').val('');
 					} else {				
@@ -117,6 +118,12 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 				}
 				
 				this.fetchToModel();
+				
+				this.manageAddButton();
+			},
+			
+			'keypress input.phone-number': function (e) {
+				this.manageAddButton();
 			},
 
 			'click [data-action="addPhoneNumber"]': function () {			
@@ -138,6 +145,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 		afterRender: function () {
 			Dep.prototype.afterRender.call(this);
 			this.manageButtonsVisibility();
+			this.manageAddButton();
 		},
 		
 		removePhoneNumberBlock: function ($block) {					
@@ -152,6 +160,23 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 			}
 			
 			this.manageButtonsVisibility();
+			this.manageAddButton();
+		},
+		
+		manageAddButton: function () {
+			var $input = this.$el.find('input.phone-number');
+			c = 0;
+			$input.each(function (i, input) {
+				if (input.value != '') {
+					c++;
+				}
+			});
+			
+			if (c == $input.size()) {
+				this.$el.find('[data-action="addPhoneNumber"]').removeClass('disabled');
+			} else {
+				this.$el.find('[data-action="addPhoneNumber"]').addClass('disabled');
+			}
 		},
 		
 		manageButtonsVisibility: function () {

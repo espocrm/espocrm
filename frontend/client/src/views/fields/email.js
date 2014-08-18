@@ -148,6 +148,12 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 				}
 				
 				this.fetchToModel();
+				
+				this.manageAddButton();
+			},
+			
+			'keypress input.email-address': function (e) {
+				this.manageAddButton();
 			},
 
 			'click [data-action="addEmailAddress"]': function () {			
@@ -181,11 +187,29 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 			}
 			
 			this.manageButtonsVisibility();
+			this.manageAddButton();
 		},
 		
 		afterRender: function () {
 			Dep.prototype.afterRender.call(this);
 			this.manageButtonsVisibility();
+			this.manageAddButton();
+		},
+		
+		manageAddButton: function () {
+			var $input = this.$el.find('input.email-address');
+			c = 0;
+			$input.each(function (i, input) {
+				if (input.value != '') {
+					c++;
+				}
+			});
+			
+			if (c == $input.size()) {
+				this.$el.find('[data-action="addEmailAddress"]').removeClass('disabled');
+			} else {
+				this.$el.find('[data-action="addEmailAddress"]').addClass('disabled');
+			}
 		},
 		
 		manageButtonsVisibility: function () {
