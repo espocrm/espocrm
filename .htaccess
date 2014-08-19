@@ -1,3 +1,7 @@
+<ifModule mod_headers.c>
+  Header always set Access-Control-Allow-Methods "POST, GET, PUT, PATCH, DELETE"
+</ifModule>
+
 DirectoryIndex index.php index.html
 
 # PROTECTED DIRECTORIES

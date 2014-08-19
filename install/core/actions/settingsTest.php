@@ -30,7 +30,7 @@ if (!empty($res['errors'])) {
 	$result['errors'] = array_merge($result['errors'], $res['errors']);
 }
 
-if (!empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQUEST['dbUserName'])) {
+if ($result['success'] && !empty($_REQUEST['dbName']) && !empty($_REQUEST['hostName']) && !empty($_REQUEST['dbUserName'])) {
 	$connect = false;
 
 	$dbName = trim($_REQUEST['dbName']);
