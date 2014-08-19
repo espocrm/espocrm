@@ -40,7 +40,7 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
 		}),	
 		
 		actionRefresh: function () {			
-			this.collection.fetchNew();
+			this.getView('list').showNewRecords();
 		},		
 		
 		afterRender: function () {
