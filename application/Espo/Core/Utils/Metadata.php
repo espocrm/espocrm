@@ -142,13 +142,13 @@ class Metadata
 	* Get Metadata
 	*
 	* @param string $key
-	* @param mixed $return
+	* @param mixed $default
 	*
 	* @return array
 	*/
-	public function get($key = null, $returns = null)
+	public function get($key = null, $default = null)
 	{
-		return Util::getValueByKey($this->getData(), $key, $returns);
+		return Util::getValueByKey($this->getData(), $key, $default);
 	}
 
 

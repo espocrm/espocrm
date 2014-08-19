@@ -22,43 +22,10 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Utils,
-	Espo\Core\Utils\Log\Monolog\Handler;
 
-class Log implements Loader
+interface Loader
 {
-	private $container;
+	public function load();
 
-	public function __construct(\Espo\Core\Container $container)
-	{
-		$this->container = $container;
-	}
-
-	protected function getContainer()
-	{
-    	return $this->container;
-	}
-
-	public function load()
-	{
-		$logConfig = $this->getContainer()->get('config')->get('logger');
-
-		$log = new Utils\Log('Espo');
-
-		$levelCode = $log->getLevelCode($logConfig['level']);
-
-		if ($logConfig['isRotate']) {
-			$handler = new Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
-		} else {
-			$handler = new Handler\StreamHandler($logConfig['path'], $levelCode);
-		}
-		$log->pushHandler($handler);
-
-		$errorHandler = new \Monolog\ErrorHandler($log);
-		$errorHandler->registerExceptionHandler(null, false);
-		$errorHandler->registerErrorHandler(array(), false);
-
-		return $log;
-	}
 }
 

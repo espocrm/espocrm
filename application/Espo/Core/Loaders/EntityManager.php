@@ -25,7 +25,7 @@ namespace Espo\Core\Loaders;
 use Doctrine\ORM\Tools\Setup,
     Espo\Core\Doctrine\ORM\Mapping\Driver\EspoPHPDriver;
 
-class EntityManager
+class EntityManager implements Loader
 {
 	private $container;
 

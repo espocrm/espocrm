@@ -408,10 +408,10 @@ class Util
 	 *
 	 * @param  array $array
 	 * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
-	 * @param  mixed $returns
+	 * @param  mixed $default
 	 * @return mixed
 	 */
-	public static function getValueByKey(array $array, $key = null, $returns = null)
+	public static function getValueByKey(array $array, $key = null, $default = null)
 	{
 		if (!isset($key) || empty($key)) {
 			return $array;
@@ -424,7 +424,7 @@ class Util
 			if (isset($lastItem[$keyName]) && is_array($lastItem)) {
 				$lastItem = $lastItem[$keyName];
 			} else {
-				return $returns;
+				return $default;
 			}
 		}
 
