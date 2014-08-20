@@ -238,6 +238,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 							url: 'Attachment/action/upload',
 							data: e.target.result,
 							contentType: 'multipart/encrypted',
+							timeout: 0,
 						}).done(function (data) {
 								
 							attachment.id = data.attachmentId;							
