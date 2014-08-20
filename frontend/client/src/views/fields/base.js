@@ -227,6 +227,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 				
 				if (!this.readOnly && this.editableInline) {					
 					var initInlineEdit = function () {
+
 						var $cell = this.getCellElement();
 						var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hide"><span class="glyphicon glyphicon-pencil"></span></a>');
 						
@@ -244,6 +245,9 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 
 						$cell.on('mouseenter', function (e) {
 							e.stopPropagation();
+							if (!self.enabled) {
+								return;
+							}
 							if (self.mode == 'detail') {
 								$editLink.removeClass('hide');
 							}
