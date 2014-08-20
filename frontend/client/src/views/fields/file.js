@@ -226,6 +226,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 						url: 'Attachment/action/upload',
 						data: e.target.result,
 						contentType: 'multipart/encrypted',
+						timeout: 0,
 					}).done(function (data) {
 						attachment.id = data.attachmentId;							
 						attachment.set('name', file.name);
