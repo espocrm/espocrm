@@ -27,7 +27,7 @@
 		this.type = type || 'list';
 		this.dateTime = dateTime;
 		
-		this.data = this.default = defaultData || {
+		this.data = this.defaultData = defaultData || {
 			textFilter: '',			
 			bool: {},
 			basic: {name: true},
@@ -99,7 +99,7 @@
 		},		
 		
 		loadStored: function () {
-			this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.default);			
+			this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.defaultData);			
 			return this;
 		},
 		
@@ -119,7 +119,7 @@
 		},
 		
 		reset: function () {
-			this.data = _.clone(this.default);
+			this.data = _.clone(this.defaultData);
 			if (this.storage) {
 				this.storage.clear(this.type + 'Search', this.scope);
 			}
