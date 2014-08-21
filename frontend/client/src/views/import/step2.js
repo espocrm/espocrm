@@ -289,6 +289,7 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 				url: 'Import/action/uploadFile',
 				contentType: 'text/csv',
 				data: this.getParentView().fileContents,
+				timeout: 0,
 				success: function (data) {
 					if (data.attachmentId) {						
 						this.runImport(data.attachmentId);
