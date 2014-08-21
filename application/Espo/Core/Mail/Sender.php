@@ -201,23 +201,21 @@ class Sender
 
 		$body = new MimeMessage;
 		$parts = array();
-		
+	
 
+		$bodyPart = new MimePart($email->getBodyPlainForSending());			
+		$bodyPart->type = 'text/plain';
+		$bodyPart->charset = 'utf-8';
+		$parts[] = $bodyPart;
+
+		
 		if ($email->get('isHtml')) {
 			$bodyPart = new MimePart($email->getBodyForSending());
 			$bodyPart->type = 'text/html';
 			$bodyPart->charset = 'utf-8';
-		} else {			
-			if ($email->get('bodyPlain')) {
-				$bodyPart = new MimePart($email->get('bodyPlain'));
-			} else {
-				$bodyPart = new MimePart($email->get('body'));
-			}
-			$bodyPart->type = 'text/plain';
-			$bodyPart->charset = 'utf-8';
+			$parts[] = $bodyPart;
 		}
-
-		$parts[] = $bodyPart;
+		
 
 		$aCollection = $email->get('attachments');
 		if (!empty($aCollection)) {
@@ -251,6 +249,10 @@ class Sender
 
 		$body->setParts($parts);
 		$message->setBody($body);
+		
+		if ($email->get('isHtml')) {
+			$message->getHeaders()->get('content-type')->setType('multipart/alternative');
+		}
 
 		try {
 			$this->transport->send($message);

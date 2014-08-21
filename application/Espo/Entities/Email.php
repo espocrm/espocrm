@@ -46,6 +46,21 @@ class Email extends \Espo\Core\ORM\Entity
 		}
 	}
 	
+	public function getBodyPlainForSending()
+	{
+		$bodyPlain = $this->get('bodyPlain');		
+		if (!empty($bodyPlain)) {
+			return $bodyPlain;
+		}
+
+		$body = $this->get('body');
+		
+		$breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+		$body = str_ireplace($breaks, "\r\n", $body);
+		$body = strip_tags($body);
+		return $body;
+	}
+	
 	public function getBodyForSending()
 	{
 		$body = $this->get('body');
@@ -55,6 +70,7 @@ class Email extends \Espo\Core\ORM\Entity
 				$body = str_replace("?entryPoint=attachment&amp;id={$attachment->id}", "cid:{$attachment->id}", $body);
 			}
 		}
+		
 		$body = str_replace("<table class=\"table table-bordered\">", "<table class=\"table table-bordered\" width=\"100%\">", $body);
 		
 		return $body;

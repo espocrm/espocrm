@@ -71,7 +71,8 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 			$.ajax({
 				url: 'Admin/action/uploadUpgradePackage',
 				type: 'POST',
-				contentType: 'application/zip',				
+				contentType: 'application/zip',
+				timeout: 0,			
 				data: this.packageContents,
 				error: function (xhr, t, e) {			
 					this.showError(xhr.getResponseHeader('X-Status-Reason'));
