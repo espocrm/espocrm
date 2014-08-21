@@ -24,6 +24,13 @@
 		"Create Meeting": "Neues Meeting",
 		"Set Held": "Auf Gehalten setzen",
 		"Set Not Held": "Auf nicht gehalten setzen",
-		"Send Invitations": "Einladungen versenden"
+		"Send Invitations": "Einladungen versenden",
+		"Saved as Held": "Gespeichert als durchgeführt",
+		"Saved as Not Held": "Gespeichert als nicht durchgeführt"
+	},
+	"presetFilters": {
+		"planned": "Geplant",
+		"held": "Durchgeführt",
+		"todays": "Heutige"
 	}
 }

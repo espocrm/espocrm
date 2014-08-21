@@ -13,7 +13,7 @@
 		"Errors page title": "Fehler",
 		"Finish page title": "Die Installation ist abgeschlossen",
 		"Congratulation! Welcome to EspoCRM!": "Gratulation! EspoCRM wurde erfolgreich installiert.",
-		"Installation Guide": "Installationsanleitung",
+		"Installation Guide": "Installationshandbuch",
 		"admin": "admin",
 		"localhost": "localhost",
 		"port": "3306",
@@ -26,7 +26,7 @@
 		"Go to EspoCRM": "Zu EspoCRM",
 		"Re-check": "Überprüfung wiederholen",
 		"Test settings": "Verbindung überprüfen",
-		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306."
+		"Database Settings Description": "Geben Sie die Verbindungsinformationen für Ihre MySQL Datebank ein (Hostname, Benutzername und Passwort). Sie können den Serverport z.B. so definieren: localhost:3306"
 	},
 	"fields": {
 		"Choose your language": "Wählen Sie Ihre Sprache",
@@ -60,13 +60,13 @@
 		"smtpPassword": "Passwort"
 	},
 	"messages": {
-		"Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre>\n\tOperation not permitted? Try this one: {CSU}",
+		"Bad init Permission": "Zugriff verweigert für Verzeichnis \"{*}\". Bitte setzen Sie 775 für \"{*}\" oder führen Sie dieses Kommando in einem Terminal Fenster aus <pre><b>{C}<\/b><\/pre> Operation nicht erlaubt? Versuchen Sie das: {CSU}",
 		"Some errors occurred!": "Es sind Fehler passiert!",
-		"phpVersion": "Your PHP version is not supported by EspoCRM, please update to PHP {minVersion} at least",
-		"The PHP extension was not found...": "PHP Error: Extension <b>{extName}</b> is not found.",
+		"phpVersion": "Ihre PHP Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf {minVersion}",
+		"The PHP extension was not found...": "Die <b>{extName}<\/b> PHP Erweiterung wurde nicht gefunden...",
 		"All Settings correct": "Alle Einstellungen sind korrekt",
 		"Failed to connect to database": "Konnte nicht zur Datenbank verbinden",
-		"PHP version": "PHP version",
+		"PHP version": "PHP Version",
 		"You must agree to the license agreement": "Sie müssen der Lizenzvereinbarung zustimmen",
 		"Passwords do not match": "Die Passwörter stimmen nicht überein",
 		"Enable mod_rewrite in Apache server": "Aktivieren Sie mod_rewrite am Apache Server",
@@ -78,8 +78,8 @@
 		"Ajax failed": "Ajax fehlgeschlagen",
 		"Cannot create user": "Kann Benutzer nicht erstellen",
 		"Permission denied": "Zugriff verweigert",
-		"permissionInstruction": "<br>Run this in Terminal<pre><b>\"{C}\"</b></pre>",
-		"operationNotPermitted" : "Operation not permitted? Try this: <br>{CSU}",
+		"permissionInstruction": "<br>Führen Sie das in einem Terminal Fenster aus<pre><b>\"{C}\"<\/b><\/pre>",
+		"operationNotPermitted" : "Operation nicht gestattet? Versuchen Sie das: <br>{CSU}",
 		"Permission denied to": "Zugriff verweigert",
 		"Can not save settings": "Kann Einstellungen nicht speichern",
 		"Cannot save preferences": "Kann Benutzereinstellungen nicht speichern",
@@ -95,8 +95,8 @@
 		},
 		"modRewriteInstruction": {
 			"apache": {
-				"linux": "<br><br>To enable .htaccess support add/edit the Server configuration settings inside your &#60;VirtualHost&#62; section (httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62;\n <b>AllowOverride All</b>\n&#60;/Directory&#62;</pre>\n Afterwards run this command in a Terminal:<pre><b>service apache2 restart</b></pre><br>To enable \"mod_rewrite\" run those commands in a Terminal:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
-				"windows": "<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.\n</pre>"
+				"linux": "<br><br>Für die .htaccess Unterstützung ändern\/ergänzen Sie die Server Einstellungen innerhalb der &#60;VirtualHost&#62; Sektion (httpd.conf):<pre>&#60;Directory \/PATH_TO_ESPO\/&#62; <b>AllowOverride All<\/b> &#60;\/Directory&#62;<\/pre>Dann führen Sie dieses Kommando in einem Terminalfenster aus:<pre><b>service apache2 restart<\/b><\/pre><br>Um \"mod_rewrite\" zu aktivieren führen Sie diese Kommandos in einem Terminalfenster aus:<pre><b>a2enmod rewrite <br>service apache2 restart<\/b><\/pre>",
+				"windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br> 2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile LoadModule rewrite_module modules\/mod_rewrite.so (entfernen Sie das # Zeichen vom Anfang der Zeile)<br> 3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c. <\/pre>"
 			},
 			"microsoft-iis": {
 				"windows": ""
@@ -104,9 +104,9 @@
 		},
 		"modRewriteHelp": {
 			"apache": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"mod_rewrite\" des Apache Servers oder des .htaccess Supports.",
-			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to your Nginx Host Config (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
+			"nginx": "API Error: EspoCRM API nicht verfügbar.<br>Fügen Sie diesen Code zu Nginx Host Config (innerhalb des \"server\" Blocks) hinzu:<br> <pre> {0} <\/pre>",
 			"microsoft-iis": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"URL Rewrite\". Bitte überprüfen und aktivieren Sie das \"URL Rewrite\" Modul im IIS Server.",
-			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
+			"default": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes Rewrite Modul. Bitte überprüfen und aktivieren Sie das Rewrite Modul (z.B. mod_rewrite im Apache Server) und die .htaccess Unterstützung."
 		}
 	}
 }

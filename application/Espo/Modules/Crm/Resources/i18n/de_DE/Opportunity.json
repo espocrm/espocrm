@@ -9,7 +9,8 @@
 		"doNotCall": "Nicht anrufen",
 		"closeDate": "Abschlussdatum",
 		"contacts": "Kontakte",
-		"description": "Beschreibung"
+		"description": "Beschreibung",
+		"amountConverted": "Betrag (konvertiert)"
 	},
 	"links": {
 		"contacts": "Kontakte"
@@ -23,12 +24,16 @@
 			"Id. Decision Makers": "Entscheider ident.",
 			"Perception Analysis": "Analyse Sichtweise",
 			"Proposal/Price Quote": "Preisangebot",
-			"Negotiation/Review": "Verhandlung/Überarbeitung",
+			"Negotiation/Review": "Verhandlung\/Überarbeitung",
 			"Closed Won": "Gewonnen",
 			"Closed Lost": "Verloren" 
 		}
 	},
 	"labels": {
 		"Create Opportunity": "Neue Verkaufschance"
+	},
+	"presetFilters": {
+		"open": "Offen",
+		"won": "Gewonnen"
 	}
 }

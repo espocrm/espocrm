@@ -30,5 +30,10 @@
 		"Set Held": "Auf Gehalten setzen",
 		"Set Not Held": "Auf nicht gehalten setzen",
 		"Send Invitations": "Einladungen versenden"		
+	},
+	"presetFilters": {
+		"planned": "Geplant",
+		"held": "Durchgeführt",
+		"todays": "Heutige"
 	}
 }

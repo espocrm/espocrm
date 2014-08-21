@@ -16,7 +16,16 @@
 		"caseDistribution": "Fall Verteilung",
 		"replyEmailTemplate": "Vorlage E-Mail Antwort",
 		"replyFromAddress": "Von Adresse antworten",
+		"replyToAddress": "Antwort an Adresse",
 		"replyFromName": "Von Name antworten"
+	},
+	"tooltips": {
+		"reply": "Absender informieren dass die E-Mail empfangen wurde.",
+		"createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
+		"replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an, um Antworten hier zu empfangen.",
+		"caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
+		"assignToUser": "Benutzer E-Mails\/Fälle werden zugewiesen an",
+		"team": "Team E-Mails\/Fälle werden verknüpft mit"
 	},
 	"links": {
 	},

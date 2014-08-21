@@ -23,10 +23,13 @@
 		"Preferences": "Benutzereinstellungen",
 		"Change Password": "Passwort ändern"
 	},
+	"tooltips": {
+		"defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet."
+	},
 	"messages": {
 		"passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
 		"accountInfoEmailSubject": "Kontoinformation",
-		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+		"accountInfoEmailBody": "Ihre Kontoinformation: Benutzername: {userName} - Passwort: {password} {siteUrl}",
 		"passwordChanged": "Das Passwort wurde geändert"
 	}
 }

@@ -19,7 +19,9 @@
 		"smtpPassword": "Passwort",
 		"smtpEmailAddress": "E-Mail Adresse",
 		
-		"exportDelimiter": "Export Trennzeichen"
+		"exportDelimiter": "Export Trennzeichen",
+		
+		"receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten"
 	},
 	"links": {
 	},
@@ -28,5 +30,8 @@
 			"0": "Sonntag",
 			"1": "Montag"
 		}
+	},
+	"labels": {
+		"Notifications": "Benachrichtigungen"
 	}
 }
