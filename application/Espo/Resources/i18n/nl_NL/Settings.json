@@ -1,12 +1,12 @@
 {
 	"fields": {
 		"useCache": "Gebruik Cache",
-		"dateFormat": "Datum Notatie",
-		"timeFormat": "Tijd Notatie",
+		"dateFormat": "Datum notatie",
+		"timeFormat": "Tijdnotatie",
 		"timeZone": "Tijd Zone",
 		"weekStart": "Eerste dag van de Week",
 		"thousandSeparator": "Duizendtal scheidingsteken",
-		"decimalMark": "Decimaal Scheidingsteken",
+		"decimalMark": "Duizendtal scheidingsteken",
 		"defaultCurrency": "Voorkeur Valuta",
 		"baseCurrency": "Base Currency",
 		"baseCurrency": "Base Currency",
@@ -60,6 +60,9 @@
 			"0": "Zondag",
 			"1": "Maandag"
 		}
+	},
+	"tooltips": {
+		"recordsPerPageSmall": "Count of records in relatinship panels."
 	},
 	"labels": {
 		"System": "Systeem",

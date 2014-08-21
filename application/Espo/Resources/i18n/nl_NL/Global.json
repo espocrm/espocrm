@@ -115,7 +115,8 @@
 		"Run Import": "Start Import",
 		"Duplicate": "Dupliceer",
 		"Notifications": "Notificaties",
-		"Mark all read": "Mark all read"
+		"Mark all read": "Mark all read",
+		"See more": "See more"
 	},
 	"messages": {
 		"notModified": "U heeft het veld niet aangepast",
@@ -181,8 +182,8 @@
 		"createRelated": "{user} maakte {relatedEntityType} {relatedEntity} gekoppeld aan {entityType} {entity}",
 		"emailReceived": "{entity} is ontvangen voor {entityType} {entity}",
 		
-		"createThis": "{user} maakte deze {entityType}",		
-		"createAssignedThis": "{user} maakte deze {entityType} toegewezen aan {assignee}",
+		"createThis": "{user} maakte dit {entityType}",		
+		"createAssignedThis": "{user} maakte dit {entityType} toegewezen aan {assignee}",
 		"assignThis": "{user} wees dit {entityType} toe aan {assignee}",
 		"postThis": "{user} gepost",
 		"attachThis": "{user} toegevoegd",
