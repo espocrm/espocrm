@@ -5,6 +5,9 @@
       "list":"Email.List",
       "detail":"Email.Detail"
    },
+   "recordViews":{
+      "list":"Email.Record.List"
+   },
    "menu": {
       "list": {
          "buttons": [
