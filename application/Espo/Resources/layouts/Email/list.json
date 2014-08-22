@@ -1,6 +1,7 @@
 [
-	{"name":"name","width":30,"link":true},
-	{"name":"dateSent"},
-	{"name":"fromEmailAddress"},
-	{"name":"status"}
+	{"name":"name","width":30,"link":true,"notSortable": true},	
+	{"name":"fromEmailAddress","notSortable": true},
+	{"name":"status","notSortable": true, "width":10},
+	{"name":"parent","notSortable": true},
+	{"name":"dateSent","view": "Fields.DatetimeShort", "notSortable": true, "width":10}
 ]
