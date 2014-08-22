@@ -186,7 +186,7 @@ class Email extends Record
 		
 		if (!empty($id)) {
 			$email = $this->getEntityManager()->getEntity('Email', $id);
-			if ($email) {
+			if ($email && $this->getAcl()->check($email, 'read')) {
 				$email->loadLinkMultipleField('attachments');
 				$attachmentsIds = $email->get('attachmentsIds');
 				
