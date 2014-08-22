@@ -39,9 +39,9 @@ Espo.define('Views.Fields.DatetimeShort', 'Views.Fields.Datetime', function (Dep
 				}				
 				
 				if (d.format('YYYY') == now.format('YYYY')) {
-					string = d.format('MMM DD');
+					string = d.format('MMM D');
 				} else {
-					string = d.format('MMM DD, YY');
+					string = d.format('MMM D, YY');
 				}
 				
 				
