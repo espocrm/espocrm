@@ -2,7 +2,8 @@
    "controller": "Controllers.Record",
    "model": "Models.Email",
    "views":{
-      "list":"Email.List"
+      "list":"Email.List",
+      "detail":"Email.Detail"
    },
    "menu": {
       "list": {
@@ -16,9 +17,32 @@
          ],
          "dropdown": [
          	{
-               "label": "Create Email",
+               "label": "Archive Email",
                "link": "#Email/create",
                "acl": "edit"
+         	}
+         ]
+      },
+      "detail": {
+         "buttons": [
+            {
+               "label": "Reply",
+               "action": "reply",
+               "style": "default",
+               "icon": "glyphicon glyphicon-arrow-left",
+               "acl": "read"
+            }
+         ],
+         "dropdown": [
+         	{
+               "label": "Reply to All",
+               "action": "replyToAll",
+               "acl": "read"
+         	},
+         	{
+               "label": "Forward",
+               "action": "forward",
+               "acl": "read"
          	}
          ]
       }
