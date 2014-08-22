@@ -30,7 +30,6 @@
 		this.data = this.defaultData = defaultData || {
 			textFilter: '',			
 			bool: {},
-			basic: {name: true},
 			advanced: {},
 		};
 	};
