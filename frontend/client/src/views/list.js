@@ -38,14 +38,18 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 			}
 		},
 		
-		searchPanel: true,
+		searchPanel: true,		
+		
+		searchManager: true,
 
 		setup: function () {
-			if (this.searchPanel) {
+			this.setupSearchManager();
+		
+			if (this.searchPanel) {			
 				this.createView('search', 'Record.Search', {
 					collection: this.collection,
 					el: '#main > .search-container',
-					searchManager: this.options.searchManager,
+					searchManager: this.searchManager,
 				});
 			}	
 
@@ -55,6 +59,21 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 				style: 'primary',
 				acl: 'edit'
 			});			
+		},
+		
+		getSearchDefaultData: function () {
+			return null;
+		},
+		
+		setupSearchManager: function () {
+			var collection = this.collection;
+		
+			var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+			searchManager.loadStored();
+			collection.where = searchManager.getWhere();				
+			collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+				
+			this.searchManager = searchManager;
 		},
 
 		afterRender: function () {

@@ -33,7 +33,15 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
 				view.render();
 				view.notify(false);
 			});
-		}
+		},
+		
+		getSearchDefaultData: function () {
+			return {
+				bool: {
+					'onlyMy': true
+				}
+			};
+		},
 		
 	});
 });

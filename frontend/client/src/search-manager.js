@@ -32,11 +32,25 @@
 			bool: {},
 			advanced: {},
 		};
+		
+		this.sanitizeData();
 	};
 	
 	_.extend(Espo.SearchManager.prototype, {
 	
 		data: null,
+		
+		sanitizeData: function () {
+			if (!('advanced' in this.data)) {
+				this.data.advanced = {};
+			}
+			if (!('bool' in this.data)) {
+				this.data.bool = {};
+			}
+			if (!('textFilter' in this.data)) {
+				this.data.textFilter = '';
+			}		
+		},
 		
 		getWhere: function () {		
 			var where = [];			
@@ -98,7 +112,8 @@
 		},		
 		
 		loadStored: function () {
-			this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.defaultData);			
+			this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.defaultData);
+			this.sanitizeData();			
 			return this;
 		},
 		
