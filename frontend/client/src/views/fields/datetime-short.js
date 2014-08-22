@@ -26,26 +26,28 @@ Espo.define('Views.Fields.DatetimeShort', 'Views.Fields.Datetime', function (Dep
 		getValueForDisplay: function () {
 		
 			if (this.mode == 'list' || this.mode == 'detail') {
-				var value = this.model.get(this.name);
-				var string;
+				var value = this.model.get(this.name);				
+				if (value) {
+					var string;
 				
-				var d = this.getDateTime().toMoment(value);
+					var d = this.getDateTime().toMoment(value);
 				
-				var now = moment().tz(this.getDateTime().timeZone);
+					var now = moment().tz(this.getDateTime().timeZone);
 				
-				if (d.unix() > now.clone().startOf('day').unix() && d.unix() < now.clone().add('days', 1).startOf('day').unix()) {
-					string = d.format(this.getDateTime().timeFormat);
+					if (d.unix() > now.clone().startOf('day').unix() && d.unix() < now.clone().add('days', 1).startOf('day').unix()) {
+						string = d.format(this.getDateTime().timeFormat);
+						return string;
+					}				
+				
+					if (d.format('YYYY') == now.format('YYYY')) {
+						string = d.format('MMM D');
+					} else {
+						string = d.format('MMM D, YY');
+					}
+				
+				
 					return string;
-				}				
-				
-				if (d.format('YYYY') == now.format('YYYY')) {
-					string = d.format('MMM D');
-				} else {
-					string = d.format('MMM D, YY');
 				}
-				
-				
-				return string;
 			}
 			
 			return Dep.prototype.getValueForDisplay.call(this);
