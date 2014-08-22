@@ -34,11 +34,15 @@ class Acl
 
 	private $levelList = array('all', 'team', 'own', 'no');
 	
-	private $fileManager;
+	protected $fileManager;
+	
+	protected $metadata;
 
-	public function __construct(\Espo\Entities\User $user, $config = null, $fileManager = null)
+	public function __construct(\Espo\Entities\User $user, $config = null, $fileManager = null, $metadata = null)
 	{
-		$this->user = $user;		
+		$this->user = $user;
+		
+		$this->metadata = $metadata;		
 		
 		if (!$this->user->isFetched()) {
 			throw new Error();
@@ -197,32 +201,11 @@ class Acl
 	
 	private function initSolid()
 	{
-		$this->data['User'] = array(
-			'read' => 'all',
-			'edit' => 'no',
-			'delete' => 'no',					
-		);
-		$this->data['Team'] = array(
-			'read' => 'all',
-			'edit' => 'no',
-			'delete' => 'no',					
-		);
-		$this->data['Role'] = false;
-		$this->data['Note'] = array(
-			'read' => 'own',
-			'edit' => 'own',
-			'delete' => 'own',					
-		);
-		$this->data['EmailAddress'] = array(
-			'read' => 'no',
-			'edit' => 'no',
-			'delete' => 'no',					
-		);
-		$this->data['Note'] = array(
-			'read' => 'all',
-			'edit' => 'own',
-			'delete' => 'own',					
-		);
+		$data = $this->metadata->get('app.acl.solid', array());
+		
+		foreach ($data as $entityName => $item) {
+			$this->data[$entityName] = $item;
+		}
 	}
 
 	private function merge($tables)

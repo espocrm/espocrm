@@ -1,0 +1,25 @@
+{
+	"solid": {
+		"User": {
+			"read": "all",
+			"edit": "no",
+			"delete": "no"
+		},
+		"Team": {
+			"read": "all",
+			"edit": "no",
+			"delete": "no"
+		},
+		"Note": {
+			"read": "all",
+			"edit": "own",
+			"delete": "own"
+		},
+		"EmailAddress": {
+			"read": "no",
+			"edit": "no",
+			"delete": "no"
+		},
+		"Role": false
+	}
+}

@@ -166,7 +166,8 @@ class Container
 		return new $className(
 			$this->get('user'),
 			$this->get('config'),
-			$this->get('fileManager')
+			$this->get('fileManager'),
+			$this->get('metadata')
 		);
 	}
 
