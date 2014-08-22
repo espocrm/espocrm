@@ -232,6 +232,10 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 						attachment.set('name', file.name);
 						attachment.set('type', file.type || 'text/plain');
 						attachment.set('size', file.size);
+						attachment.set('role', 'Attachment');
+						attachment.set('parentType', this.model.name);
+						attachment.set('parentId', this.model.id);
+						
 						attachment.once('sync', function () {
 							if (!isCanceled) {
 								$att.trigger('ready');							

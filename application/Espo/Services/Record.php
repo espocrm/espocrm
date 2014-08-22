@@ -598,6 +598,7 @@ class Record extends \Espo\Core\Services\Base
 		
 		$attachment = $this->getEntityManager()->getEntity('Attachment');
 		$attachment->set('name', $fileName);
+		$attachment->set('role', 'Export File');
 		$attachment->set('type', 'text/csv');
 		
 		$this->getEntityManager()->saveEntity($attachment);

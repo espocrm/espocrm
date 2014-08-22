@@ -467,6 +467,7 @@ class InboundEmail extends \Espo\Services\Record
 					$attachment = $this->getEntityManager()->getEntity('Attachment');
 					$attachment->set('name', $fileName);							
 					$attachment->set('type', $type);
+					$attachment->set('role', 'Inline Attachment');
 							
 					$this->getEntityManager()->saveEntity($attachment);
 												

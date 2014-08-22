@@ -244,6 +244,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 							attachment.id = data.attachmentId;							
 							attachment.set('name', file.name);
 							attachment.set('type', file.type || 'text/plain');
+							attachment.set('role', 'Attachment');
 							attachment.set('size', file.size);
 							attachment.once('sync', function () {
 								if (canceledList.indexOf(attachment.cid) === -1) {

@@ -110,6 +110,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 								attachment.id = data.attachmentId;							
 								attachment.set('name', file.name);
 								attachment.set('type', file.type);
+								attachment.set('role', 'Inline Attachment');
 								attachment.set('global', true);
 								attachment.set('size', file.size);
 								attachment.once('sync', function () {

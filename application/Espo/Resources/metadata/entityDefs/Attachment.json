@@ -27,6 +27,10 @@
             "type": "text",
             "notStorable": true
         },
+        "role": {
+            "type": "varchar",
+            "maxLength": 36
+        },
         "global": {
         	"type": "bool",
         	"default": false
