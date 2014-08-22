@@ -13,6 +13,13 @@
                "style": "danger",
                "acl": "edit"
             }
+         ],
+         "dropdown": [
+         	{
+               "label": "Create Email",
+               "link": "#Email/create",
+               "acl": "edit"
+         	}
          ]
       }
    },

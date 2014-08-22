@@ -41,6 +41,8 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 		searchPanel: true,		
 		
 		searchManager: true,
+		
+		createButton: true,
 
 		setup: function () {
 			this.setupSearchManager();
@@ -53,12 +55,14 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 				});
 			}	
 
-			this.menu.buttons.unshift({
-				link: '#' + this.scope + '/create',
-				label: 'Create ' +  this.scope,
-				style: 'primary',
-				acl: 'edit'
-			});			
+			if (this.createButton) {
+				this.menu.buttons.unshift({
+					link: '#' + this.scope + '/create',
+					label: 'Create ' +  this.scope,
+					style: 'primary',
+					acl: 'edit'
+				});
+			}			
 		},
 		
 		getSearchDefaultData: function () {

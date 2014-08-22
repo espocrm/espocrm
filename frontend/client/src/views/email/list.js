@@ -22,6 +22,8 @@
 Espo.define('Views.Email.List', 'Views.List', function (Dep) {
 
 	return Dep.extend({
+	
+		createButton: false,
 
 		actionComposeEmail: function () {
 			this.notify('Loading...');
