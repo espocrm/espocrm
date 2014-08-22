@@ -126,18 +126,34 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
 				attributes['parentType'] = this.model.get('parentType');
 			}
 			
-			this.addForwardBodyAttrbutes(attributes);			
+			this.addForwardBodyAttrbutes(attributes);
 			
 			this.notify('Loading...');
-			this.createView('quickCreate', 'Modals.ComposeEmail', {
-				attributes: attributes,
-			}, function (view) {
-				view.render(function () {
-					view.getView('edit').hideField('selectTemplate');
-				});
+			
+			$.ajax({
+				url: 'Email/action/getCopiedAttachments',
+				type: 'GET',
+				data: {
+					id: this.model.id
+				}
+			}).done(function (data) {				
+				attributes['attachmentsIds'] = data.ids;
+				attributes['attachmentsNames'] = data.names;				
+			
+				this.notify('Loading...');
+				this.createView('quickCreate', 'Modals.ComposeEmail', {
+					attributes: attributes,
+				}, function (view) {
+					view.render(function () {
+						view.getView('edit').hideField('selectTemplate');
+					});
 				
-				view.notify(false);
-			});
+					view.notify(false);
+				});
+			
+			}.bind(this));			
+			
+
 		},
 		
 		

@@ -33,6 +33,12 @@ class Email extends Record
 	{
 		$this->dependencies[] = 'mailSender';
 		$this->dependencies[] = 'preferences';
+		$this->dependencies[] = 'fileManager';
+	}
+	
+	protected function getFileManager()
+	{
+		return $this->getInjection('fileManager');
 	}
 
 	protected function getMailSender()
@@ -171,6 +177,46 @@ class Email extends Record
     		'total' => $this->getRepository()->count($selectParams),
     		'collection' => $collection,
     	);
+	}
+	
+	public function getCopiedAttachments($id)
+	{
+		$ids = array();		
+		$names = new \stdClass();
+		
+		if (!empty($id)) {
+			$email = $this->getEntityManager()->getEntity('Email', $id);
+			if ($email) {
+				$email->loadLinkMultipleField('attachments');
+				$attachmentsIds = $email->get('attachmentsIds');
+				
+				foreach ($attachmentsIds as $attachmentId) {
+					$source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+					if ($source) {				
+						$attachment = $this->getEntityManager()->getEntity('Attachment');
+						$attachment->set('role', 'Attachment');
+						$attachment->set('type', $source->get('type'));
+						$attachment->set('size', $source->get('size'));
+						$attachment->set('global', $source->get('global'));
+						$attachment->set('name', $source->get('name'));
+						
+						$this->getEntityManager()->saveEntity($attachment);
+						
+						$contents = $this->getFileManager()->getContents('data/upload/' . $source->id);
+						if (!empty($contents)) {
+							$this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+							$ids[] = $attachment->id;
+							$names->{$attachment->id} = $attachment->get('name');
+						}
+					}
+				}			
+			}
+		}
+		
+		return array(
+			'ids' => $ids,
+			'names' => $names
+		);
 	}
 }
 
