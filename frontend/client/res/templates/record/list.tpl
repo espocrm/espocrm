@@ -35,7 +35,7 @@
 				<th width="5%"><input type="checkbox" class="selectAll"></th>
 				{{/if}}
 				{{#each headerDefs}}
-				<th {{#if width}} width="{{width}}%"{{/if}}> 
+				<th {{#if width}} width="{{width}}%"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}> 
 					{{#if this.sortable}}
 						<a href="javascript:" class="sort" data-name="{{this.name}}">{{translate this.name scope=../../../collection.name category='fields'}}</a>
 						{{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}								

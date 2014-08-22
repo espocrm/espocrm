@@ -419,10 +419,12 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			var defs = [];
 
 			for (var i in this.listLayout) {
+				
 				var item = {
 					name: this.listLayout[i].name,
 					sortable: !(this.listLayout[i].notSortable || false),
-					width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false
+					width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false,
+					align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false
 				};
 				if (item.sortable) {
 					item.sorted = this.collection.sortBy === this.listLayout[i].name;
@@ -457,14 +459,15 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				var type = col.type || model.getFieldType(col.name) || 'base';
 				if (!col.name) {
 					continue;
-				}				
+				}
+
 				var item = {
 					name: col.name,
 					view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),					
 					options: {
 						defs: {
 							name: col.name,
-							params: col.params || {}
+							params: col.params || {},							
 						},
 						mode: 'list'
 					}
@@ -472,8 +475,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				if (col.link) {
 					item.options.mode = 'listLink';
 				}
-				if ('sortable' in col) {
-					item.options.defs.sortable = col.sortable;
+				if (col.align) {
+					item.options.defs.params.align = col.align;
 				}
 				layout.push(item);
 			}

@@ -3,5 +3,5 @@
 	{"name":"fromEmailAddress","notSortable": true},
 	{"name":"status","notSortable": true, "width":10},
 	{"name":"parent","notSortable": true},
-	{"name":"dateSent","view": "Fields.DatetimeShort", "notSortable": true, "width":10}
+	{"name":"dateSent","view": "Fields.DatetimeShort", "notSortable": true, "width":10, "align": "right"}
 ]
