@@ -15,20 +15,42 @@
         "from": {
             "type": "varchar",
             "db": false,
-            "required": true
+            "required": true,
+            "view": "Email.Fields.FromAddressVarchar"
         },
         "to": {
             "type": "varchar",
             "db": false,
-            "required": true
+            "required": true,
+            "view": "Email.Fields.EmailAddressVarchar"
         },
         "cc": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "view": "Email.Fields.EmailAddressVarchar"
         },
         "bcc": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "view": "Email.Fields.EmailAddressVarchar"
+        },
+        "nameHash": {
+        	"type": "text",
+        	"notStorable": true,
+        	"readOlny": true,
+        	"disabled": true
+        },
+        "typeHash": {
+        	"type": "text",
+        	"notStorable": true,
+        	"readOlny": true,
+        	"disabled": true
+        },
+        "idHash": {
+        	"type": "text",
+        	"notStorable": true,
+        	"readOlny": true,
+        	"disabled": true
         },
         "emailAddress": {
         	"type": "base",

@@ -5,7 +5,7 @@
 			[
 				{
 					"name":"from",
-					"view": "Crm:Email.Fields.FromAddress"
+					"view": "Email.Fields.ComposeFromAddress"
 				},
 				{"name":"cc"}			
 			],

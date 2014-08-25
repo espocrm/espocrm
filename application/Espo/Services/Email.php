@@ -97,7 +97,7 @@ class Email extends Record
 				foreach ($names as $id => $address) {
 					$arr[] = $address;
 				}
-				$entity->set('to', implode('; ', $arr));
+				$entity->set('to', implode(';', $arr));
 			}
 
 			$names = $entity->get('ccEmailAddressesNames');
@@ -106,7 +106,7 @@ class Email extends Record
 				foreach ($names as $id => $address) {
 					$arr[] = $address;
 				}
-				$entity->set('cc', implode('; ', $arr));
+				$entity->set('cc', implode(';', $arr));
 			}
 
 			$names = $entity->get('bccEmailAddressesNames');
@@ -115,11 +115,51 @@ class Email extends Record
 				foreach ($names as $id => $address) {
 					$arr[] = $address;
 				}
-				$entity->set('bcc', implode('; ', $arr));
+				$entity->set('bcc', implode(';', $arr));
 			}
+			
+			$this->loadNameHash($entity);
 
 		}
 		return $entity;
+	}
+	
+	public function loadNameHash(Entity $entity)
+	{
+		$addressList = array();
+		if ($entity->get('from')) {
+			$addressList[] = $entity->get('from');
+		}
+		
+		$arr = explode(';', $entity->get('to'));
+		foreach ($arr as $address) {
+			if (!in_array($address, $addressList)) {
+				$addressList[] = $address;
+			}
+		}
+		
+		$arr = explode(';', $entity->get('cc'));
+		foreach ($arr as $address) {
+			if (!in_array($address, $addressList)) {
+				$addressList[] = $address;
+			}
+		}
+		
+		$nameHash = array();
+		$typeHash = array();
+		$idHash = array();
+		foreach ($addressList as $address) {
+			$p = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($address);
+			if ($p) {
+				$nameHash[$address] = $p->get('name');
+				$typeHash[$address] = $p->getEntityName();
+				$idHash[$address] = $p->id;
+			}
+		}
+		
+		$entity->set('nameHash', $nameHash);
+		$entity->set('typeHash', $typeHash);
+		$entity->set('idHash', $idHash);
 	}
 	
 	public function findEntities($params)

@@ -95,6 +95,29 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 		return $this->where(array('lower' => strtolower($address)))->findOne();
 	}
 	
+	public function getEntityByAddress($address)
+	{
+		$pdo = $this->getEntityManager()->getPDO();		
+		$sql = "
+			SELECT entity_email_address.entity_type AS 'entityType', entity_email_address.entity_id AS 'entityId'
+			FROM entity_email_address
+			JOIN email_address ON email_address.id = entity_email_address.email_address_id AND email_address.deleted = 0
+			WHERE 
+				email_address.lower = ".$pdo->quote(strtolower($address))." AND
+				entity_email_address.deleted = 0
+			ORDER BY entity_email_address.primary DESC
+		";
+
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		if ($row = $sth->fetch()) {
+			if (!empty($row['entityType']) && !empty($row['entityId'])) {
+				$entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+				return $entity;
+			}
+		}
+	}
+	
 	public function storeEntityEmailAddress(Entity $entity)
 	{
 			$email = trim($entity->get('emailAddress'));
