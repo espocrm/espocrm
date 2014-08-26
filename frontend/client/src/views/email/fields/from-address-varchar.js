@@ -58,7 +58,11 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
 			return Dep.prototype.getValueForDisplay.call(this);
 		},
 		
-		getDetailAddressHtml: function (address) {						
+		getDetailAddressHtml: function (address) {	
+			if (!address) {
+				return '';
+			}
+							
 			var name = this.nameHash[address] || null;
 			var entityType = this.typeHash[address] || null;
 			var id = this.idHash[address] || null;			
