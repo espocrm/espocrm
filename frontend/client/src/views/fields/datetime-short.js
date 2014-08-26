@@ -30,9 +30,9 @@ Espo.define('Views.Fields.DatetimeShort', 'Views.Fields.Datetime', function (Dep
 				if (value) {
 					var string;
 				
-					var d = this.getDateTime().toMoment(value);
-				
-					var now = moment().tz(this.getDateTime().timeZone);
+					var d = this.getDateTime().toMoment(value);				
+					
+					var now = moment().tz(this.getDateTime().timeZone || 'UTC');
 				
 					if (d.unix() > now.clone().startOf('day').unix() && d.unix() < now.clone().add('days', 1).startOf('day').unix()) {
 						string = d.format(this.getDateTime().timeFormat);
