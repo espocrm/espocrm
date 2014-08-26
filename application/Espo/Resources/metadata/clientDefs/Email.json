@@ -9,7 +9,7 @@
       "list":"Email.Record.List",
       "detail":"Email.Record.Detail",
       "edit":"Email.Record.Edit",
-      "editQuick":"Email.Record.Edit"
+      "editQuick":"Email.Record.EditQuick"
    },
    "menu": {
       "list": {

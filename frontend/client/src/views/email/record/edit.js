@@ -25,8 +25,9 @@ Espo.define('Views.Email.Record.Edit', ['Views.Record.Edit', 'Views.Email.Record
 	
 		init: function () {
 			Dep.prototype.init.call(this);
+
 			
-			Detail.prototype.layoutNameConfigure.call(this);
+			Detail.prototype.layoutNameConfigure.call(this);			
 			
 		},
 		

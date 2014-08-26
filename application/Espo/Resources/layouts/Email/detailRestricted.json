@@ -7,7 +7,7 @@
 			[{"name":"parent"}, {"name":"cc", "readOnly": true}],
 			[{"name":"name","fullWidth":true, "readOnly": true}],
 			[{"name":"body","fullWidth":true, "readOnly": true}],
-			[{"name":"attachments", "readOnly": true},{"name":"isHtml", "readOnly": true}]
+			[{"name":"attachments", "readOnly": true}]
 		]
 	}
 ]
