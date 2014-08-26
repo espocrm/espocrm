@@ -1,7 +1,8 @@
 {
 	"recordViews":{
 		"detail":"Crm:InboundEmail.Record.Detail",
-		"edit":"Crm:InboundEmail.Record.Edit"
+		"edit":"Crm:InboundEmail.Record.Edit",
+		"list":"Crm:InboundEmail.Record.List"
 	},
 	"formDependency": {
 		"createCase": {

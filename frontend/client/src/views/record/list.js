@@ -161,6 +161,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		massUpdateAction: true,
 		
 		exportAction: true,
+		
+		allowQuickEdit: true,
 
 		/**
 		 * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
@@ -717,19 +719,23 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		},
 		
 		quickEdit: function (id) {
-			this.notify('Loading...');
-			this.createView('quickEdit', 'Modals.Edit', {
-				scope: this.scope,
-				id: id
-			}, function (view) {
-				view.once('after:render', function () {
-					Espo.Ui.notify(false);
-				});
-				view.render();
-				view.once('after:save', function () {
-					this.collection.get(id).fetch();
-				}, this);
-			}.bind(this));
+			if (this.allowQuickEdit) {
+				this.notify('Loading...');
+				this.createView('quickEdit', 'Modals.Edit', {
+					scope: this.scope,
+					id: id
+				}, function (view) {
+					view.once('after:render', function () {
+						Espo.Ui.notify(false);
+					});
+					view.render();
+					view.once('after:save', function () {
+						this.collection.get(id).fetch();
+					}, this);
+				}.bind(this));
+			} else {
+				this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: true});
+			}
 		},
 		
 		quickRemove: function (id) {

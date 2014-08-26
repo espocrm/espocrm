@@ -2,6 +2,7 @@
    "recordViews":{
       "detail":"User.Record.Detail",
       "edit":"User.Record.Edit",
-      "editQuick":"User.Record.Edit"
+      "editQuick":"User.Record.Edit",
+      "list":"User.Record.List"
    }
 }

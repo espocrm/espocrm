@@ -2,7 +2,8 @@
    "recordViews":{
       "detail":"Role.Record.Detail",
       "edit":"Role.Record.Edit",
-      "editQuick":"Role.Record.Edit"
+      "editQuick":"Role.Record.Edit",
+      "list":"Role.Record.List"
    },
    "relationshipPanels":{
       "users":{
