@@ -33,20 +33,21 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
 			this.initAddressList();			
 			this.listenTo(this.model, 'change:' + this.name, function () {
 				this.initAddressList();
-			}, this);
-			
-			this.listenTo(this.model, 'change:nameHash', function () {
-				this.render();
-			}, this);
+			}, this);			
+
 		},
 		
-		initAddressList: function () {
-		
+		initAddressList: function () {		
 			this.typeHash = this.model.get('typeHash') || {};
 			this.idHash = this.model.get('idHash') || {};
 			
-			_.extend(this.nameHash, this.model.get('nameHash') || {});
-			
+			_.extend(this.nameHash, this.model.get('nameHash') || {});			
+		},
+		
+		getAttributeList: function () {
+			var list = Dep.prototype.getAttributeList.call(this);
+			list.push('nameHash');
+			return list;
 		},
 		
 		getValueForDisplay: function () {			
@@ -57,7 +58,7 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
 			return Dep.prototype.getValueForDisplay.call(this);
 		},
 		
-		getDetailAddressHtml: function (address) {
+		getDetailAddressHtml: function (address) {						
 			var name = this.nameHash[address] || null;
 			var entityType = this.typeHash[address] || null;
 			var id = this.idHash[address] || null;			

@@ -30,8 +30,7 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
 			'click a[data-action="clearAddress"]': function (e) {
 				var address = $(e.currentTarget).data('address').toString();
 				this.deleteAddress(address);
-			},
-			
+			},			
 			'keyup input': function (e) {
 				if (e.keyCode == 188 || e.keyCode == 186) {
 					var $input = $(e.currentTarget);
@@ -43,32 +42,31 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
 					}
 															
 				}
-			},
-			
+			},			
 			'change input': function (e) {
 				var $input = $(e.currentTarget);
 				var address = $input.val().replace(',','').replace(';','').trim();
 				if (~address.indexOf('@')) {
 					this.addAddress(address, '');
 					$input.val('');
-				}
-				
+				}				
 			},
+		},
+		
+		getAttributeList: function () {
+			var list = Dep.prototype.getAttributeList.call(this);
+			list.push('nameHash');
+			return list;
 		},
 		
 		setup: function () {
 			Dep.prototype.setup.call(this);
 			
-			this.nameHash = {};			
-
+			this.nameHash = {};
 			
 			this.initAddressList();			
 			this.listenTo(this.model, 'change:' + this.name, function () {
 				this.initAddressList();
-			}, this);
-			
-			this.listenTo(this.model, 'change:nameHash', function () {
-				this.render();
 			}, this);
 		},
 		

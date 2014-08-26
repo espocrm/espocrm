@@ -151,8 +151,7 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
 					view.notify(false);
 				});
 			
-			}.bind(this));			
-			
+			}.bind(this));
 
 		},
 		

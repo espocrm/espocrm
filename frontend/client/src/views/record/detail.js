@@ -301,6 +301,8 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 		init: function () {
 			this.scope = this.model.name;
 			
+			this.layoutName = this.options.layoutName || this.layoutName;
+			
 			this.type = this.options.type || this.type;
 			this.buttons = this.options.buttons || this.buttons;
 			this.buttons = _.clone(this.buttons);
@@ -560,6 +562,12 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 						var type = cellDefs.type || this.model.getFieldType(cellDefs.name) || 'base';					
 						var viewName = cellDefs.view || this.model.getFieldParam(cellDefs.name, 'view') || this.getFieldManager().getViewName(type);
 
+						
+						var readOnly = this.readOnly;						
+						if (!readOnly) {
+							readOnly = cellDefs.readOnly || false;
+						}
+						
 						var cell = {
 							name: cellDefs.name,
 							view: viewName,
@@ -572,7 +580,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 									params: cellDefs.params || {}
 								},
 								mode: this.fieldsMode,
-								readOnly: this.readOnly
+								readOnly: readOnly
 							}
 						};
 
@@ -599,7 +607,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 				return;
 			}
 
-			this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
+			this._helper.layoutManager.get(this.model.name, this.layoutName, function (simpleLayout) {
 				this.gridLayout = {
 					type: 'record',
 					layout: this.convertDetailLayout(simpleLayout),

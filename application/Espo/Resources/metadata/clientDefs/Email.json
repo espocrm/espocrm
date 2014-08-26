@@ -6,7 +6,10 @@
       "detail":"Email.Detail"
    },
    "recordViews":{
-      "list":"Email.Record.List"
+      "list":"Email.Record.List",
+      "detail":"Email.Record.Detail",
+      "edit":"Email.Record.Edit",
+      "editQuick":"Email.Record.Edit"
    },
    "menu": {
       "list": {
