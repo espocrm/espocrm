@@ -283,9 +283,9 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 							if (this.isRendered()) {
 								this.render();
 							} else if (this.isBeingRendered()) {
-								setTimeout(function () {
+								this.once('after:render', function () {
 									this.render();
-								}.bind(this), 5);
+								}, this);
 							}
 						}
 					}
