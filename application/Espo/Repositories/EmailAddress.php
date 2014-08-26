@@ -105,15 +105,17 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 			WHERE 
 				email_address.lower = ".$pdo->quote(strtolower($address))." AND
 				entity_email_address.deleted = 0
-			ORDER BY entity_email_address.primary DESC
+			ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
 		";
 
 		$sth = $pdo->prepare($sql);
 		$sth->execute();
-		if ($row = $sth->fetch()) {
+		while ($row = $sth->fetch()) {
 			if (!empty($row['entityType']) && !empty($row['entityId'])) {
 				$entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
-				return $entity;
+				if ($entity) {
+					return $entity;
+				}
 			}
 		}
 	}

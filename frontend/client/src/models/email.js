@@ -22,15 +22,6 @@ Espo.define('Models.Email', 'Model', function (Dep) {
 	
 	return Dep.extend({	
 
-		isEditable: function () {
-			if (!this.isNew()) {
-				if (this.get('status') == 'Sent') {
-					return false;
-				}
-			}
-			return true;
-		},
-
 	});
 
 });

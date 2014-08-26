@@ -39,6 +39,7 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
 					if (~address.indexOf('@')) {
 						this.addAddress(address, '');
 						$input.val('');
+						
 					}
 															
 				}
@@ -82,6 +83,9 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
 			this.idHash = this.model.get('idHash') || {};
 			
 			_.extend(this.nameHash, this.model.get('nameHash') || {});
+			this.nameHash = _.clone(this.nameHash);
+			this.typeHash = _.clone(this.typeHash);
+			this.idHash = _.clone(this.idHash);
 			
 		},
 		
@@ -134,6 +138,7 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
 				this.addressList.push(address);
 				this.nameHash[address] = name;
 				this.addAddressHtml(address, name);
+				this.trigger('change');
 			}
 		},
 		
