@@ -28,6 +28,45 @@ use \Espo\Core\Exceptions\Error;
 
 class EmailAddress extends Record
 {
+	private function findInAddressBookByEntityType($where, $limit, $entityType, &$result)
+	{
+		$service = $this->getServiceFactory()->create($entityType);
+		
+		$r = $service->findEntities(array(
+			'where' => $where,
+			'maxSize' => $limit,
+			'sortBy' => 'name'
+		));		
+		
+		foreach ($r['collection'] as $entity) {
+			$entity->loadLinkMultipleField('emailAddress');
+			
+			$emailAddress = $entity->get('emailAddress');
+			
+			$result[] = array(
+				'emailAddress' => $emailAddress,
+				'name' => $entity->get('name'),
+				'entityType' => $entityType
+			);
+			
+
+			$c = $service->getEntity($entity->id);
+			$emailAddressData = $c->get('emailAddressData');
+			foreach ($emailAddressData as $d) {
+				if ($emailAddress != $d->emailAddress) {
+					$emailAddress = $d->emailAddress;
+					$result[] = array(
+						'emailAddress' => $emailAddress,
+						'name' => $entity->get('name'),
+						'entityType' => $entityType
+					);
+					break;
+				}
+			}
+		}	
+	}
+	
+	
 	public function searchInAddressBook($query, $limit)
 	{
 		$result = array();		
@@ -55,71 +94,9 @@ class EmailAddress extends Record
 			)
 		);
 		
-		$contactService = $this->getServiceFactory()->create('Contact');
-		
-		$r = $contactService->findEntities(array(
-			'where' => $where,
-			'maxSize' => $limit,
-			'sortBy' => 'name'
-		));		
-		
-		foreach ($r['collection'] as $contact) {
-			$contact->loadLinkMultipleField('emailAddress');
-			
-			$emailAddress = $contact->get('emailAddress');
-			
-			$result[] = array(
-				'emailAddress' => $emailAddress,
-				'name' => $contact->get('name'),
-				'entityType' => 'Contact'
-			);
-			
-
-			$c = $contactService->getEntity($contact->id);
-			$emailAddressData = $c->get('emailAddressData');
-			foreach ($emailAddressData as $d) {
-				if ($emailAddress != $d->emailAddress) {
-					$emailAddress = $d->emailAddress;
-					$result[] = array(
-						'emailAddress' => $emailAddress,
-						'name' => $contact->get('name'),
-						'entityType' => 'Contact'
-					);
-				}
-			}
-		}
-		
-		$leadService = $this->getServiceFactory()->create('Lead');
-		
-		$r = $leadService->findEntities(array(
-			'where' => $where,
-			'maxSize' => $limit,
-			'sortBy' => 'name'
-		));
-		foreach ($r['collection'] as $lead) {
-			$lead->loadLinkMultipleField('emailAddress');
-			
-			$emailAddress = $lead->get('emailAddress');
-			
-			$result[] = array(
-				'emailAddress' => $emailAddress,
-				'name' => $lead->get('name'),
-				'entityType' => 'Lead'
-			);			
-
-			$c = $leadService->getEntity($lead->id);
-			$emailAddressData = $c->get('emailAddressData');
-			foreach ($emailAddressData as $d) {
-				if ($emailAddress != $d->emailAddress) {
-					$result[] = array(
-						'emailAddress' => $emailAddress,
-						'name' => $lead->get('name'),
-						'entityType' => 'Lead'
-					);
-					break;
-				}
-			}
-		}
+		$this->findInAddressBookByEntityType($where, $limit, 'Contact', &$result);
+		$this->findInAddressBookByEntityType($where, $limit, 'Lead', &$result);
+		$this->findInAddressBookByEntityType($where, $limit, 'User', &$result);		
 		
 		$final = array();
 		
