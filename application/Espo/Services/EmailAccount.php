@@ -74,7 +74,7 @@ class EmailAccount extends Record
 			throw new Error();
 		}
 		
-		$importer = \Espo\Core\Mail\Importer($this->getEntityManager());
+		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager());
 		
 		$user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
 		

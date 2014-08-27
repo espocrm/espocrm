@@ -123,7 +123,7 @@ class InboundEmail extends \Espo\Services\Record
 			throw new Error();
 		}
 		
-		$importer = \Espo\Core\Mail\Importer($this->getEntityManager());
+		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager());
 		
 		$teamId = $inboundEmail->get('teamId');
 		$userId = $this->getUser()->id;		
