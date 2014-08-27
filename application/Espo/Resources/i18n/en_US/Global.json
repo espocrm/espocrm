@@ -5,6 +5,7 @@
 		"Team": "Team",
 		"Role": "Role",
 		"EmailTemplate": "Email Template",
+		"EmailAccount": "Email Account",
 		"OutboundEmail": "Outbound Email",
 		"ScheduledJob": "Scheduled Job"
 	},
@@ -14,6 +15,7 @@
 		"Team": "Teams",
 		"Role": "Roles",
 		"EmailTemplate": "Email Templates",
+		"EmailAccount": "Email Accounts",
 		"OutboundEmail": "Outbound Emails",
 		"ScheduledJob": "Scheduled Jobs"
 	},

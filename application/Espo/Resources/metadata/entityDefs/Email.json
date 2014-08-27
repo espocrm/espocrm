@@ -52,6 +52,17 @@
         	"readOlny": true,
         	"disabled": true
         },
+        "messageId": {
+        	"type": "varchar",
+        	"maxLength": 36,
+        	"readOlny": true
+        },
+        "messageIdInternal": {
+        	"type": "varchar",
+        	"maxLength": 36,
+        	"readOlny": true,
+        	"index": true
+        },
         "emailAddress": {
         	"type": "base",
         	"db": false

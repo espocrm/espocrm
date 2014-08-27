@@ -1,0 +1,75 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Active", "Inactive"]
+        },
+        "host": {
+            "type": "varchar",
+            "required": true
+        },
+        "port": {
+            "type": "varchar",
+            "default": "143",
+            "required": true
+        },
+        "ssl": {
+            "type": "bool"
+        },
+        "username": {
+            "type": "varchar",
+            "required": true
+        },
+        "password": {
+            "type": "password"
+        },
+        "monitoredFolders": {
+            "type": "varchar",
+            "required": true,
+            "default": "INBOX",
+            "view": "EmailAccount.Fields.Folders"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+    	"sortBy": "name",
+    	"asc": true
+    }
+}

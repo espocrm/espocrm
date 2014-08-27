@@ -1,0 +1,6 @@
+{
+	"controller": "Controllers.Record",
+	"recordViews":{
+		"list":"EmailAccount.Record.List"
+	}
+}

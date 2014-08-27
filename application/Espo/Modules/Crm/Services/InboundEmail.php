@@ -22,32 +22,32 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use \Espo\ORM\Entity;
+
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
 use \Zend\Mime\Mime as Mime;
 
 class InboundEmail extends \Espo\Services\Record
-{
+{	
+	protected $internalFields = array('password');
 	
 	public function createEntity($data)
 	{
 		$entity = parent::createEntity($data);
-		$entity->clear('password');
 		return $entity;	
 	}
 	
 	public function getEntity($id = null)
 	{
 		$entity = parent::getEntity($id);
-		$entity->clear('password');
 		return $entity;
 	}
 	
 	public function updateEntity($id, $data)
 	{
 		$entity = parent::updateEntity($id, $data);
-		$entity->clear('password');
 		return $entity;
 	}
 	
@@ -55,9 +55,6 @@ class InboundEmail extends \Espo\Services\Record
 	{	
 		$result = parent::findEntities($params);
 		
-		foreach ($result['collection'] as $entity) {
-			$entity->clear('password');
-		}
 		return $result;
 	}
 	
@@ -121,9 +118,8 @@ class InboundEmail extends \Espo\Services\Record
 		return $foldersArr;
 	}
 	
-	public function fetchFromMailServer($id)
+	public function fetchFromMailServer(Entity $inboundEmail)
 	{
-		$inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
 		
 		if ($inboundEmail->get('status') != 'Active') {
 			throw new Error();

@@ -24,6 +24,12 @@ Espo.define('Views.Role.Record.List', 'Views.Record.List', function (Dep) {
 	return Dep.extend({
 	
 		allowQuickEdit: false,
+		
+		massUpdateAction: false,
+		
+		mergeAction: false,
+		
+		exportAction: false,
 			
 	});		
 	

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -18,16 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
-Espo.define('Views.User.Record.List', 'Views.Record.List', function (Dep) {		
 
-	return Dep.extend({
-	
-		allowQuickEdit: false,
-		
-		mergeAction: false,
-			
-	});		
-	
-});
+namespace Espo\SelectManagers;
+
+class EmailAccount extends \Espo\Core\SelectManagers\Base
+{	
+    protected function access(&$result)
+    {
+    	if (!array_key_exists('whereClause', $result)) {
+    		$result['whereClause'] = array();
+    	}
+    	$result['whereClause']['assignedUserId'] = $this->user->id;
+    }
+    
+}
 

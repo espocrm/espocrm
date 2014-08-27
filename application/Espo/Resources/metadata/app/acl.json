@@ -20,6 +20,11 @@
 			"edit": "no",
 			"delete": "no"
 		},
+		"EmailAccount": {
+			"read": "own",
+			"edit": "own",
+			"delete": "own"
+		},
 		"Role": false
 	}
 }

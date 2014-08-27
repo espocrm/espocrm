@@ -26,6 +26,10 @@
                "label": "Archive Email",
                "link": "#Email/create",
                "acl": "edit"
+         	},
+         	{
+               "label": "Email Accounts",
+               "link": "#EmailAccount"
          	}
          ]
       },

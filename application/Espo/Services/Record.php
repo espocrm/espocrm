@@ -53,6 +53,8 @@ class Record extends \Espo\Core\Services\Base
 	
 	protected $internalFields = array();
 	
+	protected $readOnlyFields = array();
+	
 	protected $linkSelectParams = array();
 	
 	public function __construct()
@@ -248,7 +250,7 @@ class Record extends \Espo\Core\Services\Base
 	}
 	
 	protected function filterInputField($field, $value)
-	{
+	{		
 		if (in_array($field, $this->notFilteringFields)) {
 			return $value;
 		}
@@ -261,6 +263,10 @@ class Record extends \Espo\Core\Services\Base
 	
 	protected function filterInput(&$data)
 	{		
+		foreach ($this->readOnlyFields as $field) {
+			unset($data[$field]);
+		}
+		
 		foreach ($data as $key => $value) {
 			if (is_array($data[$key])) {
 				foreach ($data[$key] as $i => $v) {
