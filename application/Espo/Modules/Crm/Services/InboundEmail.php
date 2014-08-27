@@ -183,7 +183,7 @@ class InboundEmail extends \Espo\Services\Record
 					}
 				}
 				
-				if ($k == self::PORTION - 1) {
+				if ($k == self::PORTION_LIMIT - 1) {
 					break;
 				}
 				$k++;						

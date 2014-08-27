@@ -54,12 +54,12 @@
         },
         "messageId": {
         	"type": "varchar",
-        	"maxLength": 36,
+        	"maxLength": 255,
         	"readOlny": true
         },
         "messageIdInternal": {
         	"type": "varchar",
-        	"maxLength": 36,
+        	"maxLength": 300,
         	"readOlny": true,
         	"index": true
         },

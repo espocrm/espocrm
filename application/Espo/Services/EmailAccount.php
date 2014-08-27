@@ -133,9 +133,9 @@ class EmailAccount extends Record
 
 			$ids = $storage->getIdsFromUID();
 			
-			print_r($ids);
+			$k = 0;
 	
-			foreach ($ids as $k => $id) {
+			foreach ($ids as $i => $id) {
 				$message = $storage->getMessage($id);												
 				
 				$importer->importMessage($message, $userId, array($teamId));
@@ -144,19 +144,18 @@ class EmailAccount extends Record
 					$lastUID = $storage->getUniqueId($id);
 					$lastDate = $message->date;
 				}
-				if ($k == self::PORTION - 1) {
+				
+				if ($k == self::PORTION_LIMIT - 1) {
 					break;
 				}
+				$k++;
 			}		
 									
 			$fetchData['lastUID'][$folder] = $lastUID;
 			$fetchData['lastDate'][$folder] = $lastDate;
 			
 			$emailAccount->set('fetchData', json_encode($fetchData));
-			$this->getEntityManager()->saveEntity($emailAccount);
-			
-			print_r($fetchData);
-			
+			$this->getEntityManager()->saveEntity($emailAccount);			
 		}
 		
 		return true;		

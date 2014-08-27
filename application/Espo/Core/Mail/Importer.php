@@ -18,7 +18,7 @@ class Importer
 		return $this->entityManager;
 	}
 	
-	protected function importMessage($message, $userId, $teamsIds = array())
+	public function importMessage($message, $userId, $teamsIds = array())
 	{
 		try {
 			$email = $this->getEntityManager()->getEntity('Email');
@@ -82,9 +82,9 @@ class Importer
 	
 	protected function checkIsDuplicate($email)
 	{
-		if ($email->has('messageIdInternal')) {
+		if ($email->get('messageIdInternal')) {
 			$duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
-				'messageIdInternal' => $email->has('messageIdInternal')
+				'messageIdInternal' => $email->get('messageIdInternal')
 			))->findOne();
 			if ($duplicate) {
 				return true;
