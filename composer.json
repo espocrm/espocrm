@@ -6,8 +6,7 @@
 		"zendframework/zend-validator": "2.*",
         "zendframework/zend-mail": "2.*",
 		"zendframework/zend-ldap": "2.*",
-		"monolog/monolog": "1.*",
-		"tedivm/fetch": "0.5.*"
+		"monolog/monolog": "1.*"
     },
     "autoload": {
         "psr-0": {

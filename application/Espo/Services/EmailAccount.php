@@ -27,15 +27,11 @@ use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
-
-use \Zend\Mime\Mime as Mime;
-
 class EmailAccount extends Record
-{
-	
+{	
 	protected $internalFields = array('password');
 	
-	protected $readOnlyFields = array('assignedUserId');
+	protected $readOnlyFields = array('assignedUserId', 'fetchData');
 	
 	public function getFolders($params)
 	{		
@@ -71,9 +67,28 @@ class EmailAccount extends Record
 	}
 	
 	public function fetchFromMailServer(Entity $emailAccount)
-	{		
+	{
 		if ($emailAccount->get('status') != 'Active') {
 			throw new Error();
+		}
+		
+		$importer = \Espo\Core\Mail\Importer($this->getEntityManager());
+		
+		$user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
+		
+		if (!$user) {
+			throw new Error();
+		}
+		
+		$userId = $user->id;
+		$teamId = $user->get('defaultTeam');
+		
+		$fetchData = json_decode($emailAccount->get('fetchData'), true);
+		if (empty($fetchData)) {
+			$fetchData = array();
+		}
+		if (!array_key_exists('lastUIDs', $fetchData)) {
+			$fetchData['lastUIDs'] = array();
 		}
 		
 		$imapParams = array(
@@ -87,7 +102,48 @@ class EmailAccount extends Record
 			$imapParams['ssl'] = 'SSL';
 		}
 		
+		$storage = new \Espo\Core\Mail\Storage\Imap($imapParams);		
+		
+		$monitoredFolders = $emailAccount->get('monitoredFolders');		
+		if (empty($monitoredFolders)) {
+			throw new Error();		
+		}
+		
+		$monitoredFoldersArr = explode(',', $monitoredFolders);				
+		foreach ($monitoredFoldersArr as $folder) {
+			$folder = trim($folder);
+			
+			$storage->selectFolder($folder);
+			
+			$lastUID = 0;
+			if (!empty($fetchData['lastUIDs'][$folder])) {
+				$lastUID = $fetchData['lastUIDs'][$folder];
+			}
+
+			$ids = $storage->getIdsFromUID();
+			
+			print_r($ids); 
+			
+			foreach ($ids as $k => $id) {
+				$message = $storage->getMessage($id);												
+				
+				$importer->importMessage($message, $userId, array($teamId));
+								
+				if ($k == count($ids) - 1) {
+					$lastUID = $storage->getUniqueId($id);
+				}
+			}		
+									
+			$fetchData['lastUIDs'][$folder] = $lastUID;
+			
+			print_r($fetchData);
+			
+		}		
 	}
+	
+
+	
+
 
 }
 

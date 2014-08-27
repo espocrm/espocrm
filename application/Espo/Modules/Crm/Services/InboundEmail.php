@@ -27,8 +27,6 @@ use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
-use \Zend\Mime\Mime as Mime;
-
 class InboundEmail extends \Espo\Services\Record
 {	
 	protected $internalFields = array('password');
@@ -57,7 +55,6 @@ class InboundEmail extends \Espo\Services\Record
 		
 		return $result;
 	}
-	
 	
 	protected function init()
 	{
@@ -119,10 +116,17 @@ class InboundEmail extends \Espo\Services\Record
 	}
 	
 	public function fetchFromMailServer(Entity $inboundEmail)
-	{
-		
+	{		
 		if ($inboundEmail->get('status') != 'Active') {
 			throw new Error();
+		}
+		
+		$importer = \Espo\Core\Mail\Importer($this->getEntityManager());
+		
+		$teamId = $inboundEmail->get('teamId');
+		$userId = $this->getUser()->id;		
+		if ($inboundEmail->get('assignToUserId')) {
+			$userId = $inboundEmail->get('assignToUserId');
 		}
 		
 		$imapParams = array(
@@ -160,10 +164,21 @@ class InboundEmail extends \Espo\Services\Record
 			$path = trim($path);			
 			
 			$folder = $this->findFolder($storage, $path);			
-			$storage->selectFolder($folder);
+			$storage->selectFolder($folder);			 
 			
 			foreach ($storage as $number => $message) {
-				$this->importMessage($inboundEmail, $message);				
+				$email = $this->importMessage($message, $userId, array($teamId));
+				
+				if ($email) {
+					if ($inboundEmail->get('createCase')) {
+						$this->createCase($inboundEmail, $email);
+					} else {
+						if ($inboundEmail->get('reply')) {
+							$user = $this->getEntityManager()->getEntity('User', $userId);
+							$this->autoReply($inboundEmail, $email, $user);
+						}
+					}
+				}						
 			}
 			
 			while ($storage->countMessages()) {
@@ -174,116 +189,31 @@ class InboundEmail extends \Espo\Services\Record
 		}	
 	}
 	
-	protected function getAddressListFromMessage($message, $type)
+	protected function createCase($inboundEmail, $email)
 	{
-		$addressList = array();
-		if (isset($message->$type)) {
-			
-			$list = $message->getHeader($type)->getAddressList();
-			foreach ($list as $address) {
-				$addressList[] = $address->getEmail();
+		if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
+			$caseNumber = $m[1];
+			$case = $this->getEntityManager()->getRepository('Case')->where(array(
+				'number' => $caseNumber
+			))->findOne();
+			if ($case) {
+				$email->set('parentType', 'Case');
+				$email->set('parentId', $case->id);
+				$this->getEntityManager()->saveEntity($email);
+				$this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+			}
+		} else {
+			$params = array(
+				'caseDistribution' => $inboundEmail->get('caseDistribution'),
+				'teamId' => $inboundEmail->get('teamId'),
+				'userId' => $inboundEmail->get('assignToUserId'),
+			);
+			$case = $this->emailToCase($email, $params);
+			$user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+			if ($inboundEmail->get('reply')) {
+				$this->autoReply($inboundEmail, $email, $case, $user);
 			}
 		}
-		return $addressList;
-	}
-	
-	protected function importMessage($inboundEmail, $message)
-	{
-		$result = false;
-		
-		try {
-			$email = $this->getEntityManager()->getEntity('Email');
-			if ($inboundEmail->get('teamId')) {
-				$email->set('teamsIds', array($inboundEmail->get('teamId')));
-			}
-			
-			$email->set('isHtml', false);		
-			$email->set('name', $message->subject);
-			$email->set('attachmentsIds', array());
-			
-			$userId = $this->getUser()->id;		
-			if ($inboundEmail->get('assignToUserId')) {
-				$userId = $inboundEmail->get('assignToUserId');
-			}
-			$email->set('assignedUserId', $userId);			
-		
-			$fromArr = $this->getAddressListFromMessage($message, 'from');
-			
-			if (isset($message->from)) {
-				$email->set('fromName', $message->from);
-			}
-			
-			$email->set('from', $fromArr[0]);
-			$email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));		
-			$email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
-			$email->set('bcc', implode(';', $this->getAddressListFromMessage($message, 'bcc')));
-		
-			$email->set('status', 'Archived');
-
-			$dt = new \DateTime($message->date);
-			if ($dt) {
-				$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
-				$email->set('dateSent', $dateSent);
-			}
-			
-			$inlineIds = array();
-	
-			if ($message->isMultipart()) {				
-				foreach (new \RecursiveIteratorIterator($message) as $part) {
-					$this->importPartDataToEmail($email, $part, $inlineIds);
-				}			
-			} else {
-				$this->importPartDataToEmail($email, $message, $inlineIds);
-			}
-			
-			$body = $email->get('body');
-			if (!empty($body)) {
-				foreach ($inlineIds as $cid => $attachmentId) {
-					$body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
-				}
-				$email->set('body', $body);
-			}
-
-			$this->getEntityManager()->saveEntity($email);		
-
-			if ($inboundEmail->get('createCase')) {
-				if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
-					$caseNumber = $m[1];
-					$case = $this->getEntityManager()->getRepository('Case')->where(array(
-						'number' => $caseNumber
-					))->findOne();
-					if ($case) {
-						$email->set('parentType', 'Case');
-						$email->set('parentId', $case->id);
-						$this->getEntityManager()->saveEntity($email);
-						$this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
-					}
-				} else {
-					$params = array(
-						'caseDistribution' => $inboundEmail->get('caseDistribution'),
-						'teamId' => $inboundEmail->get('teamId'),
-						'userId' => $inboundEmail->get('assignToUserId'),
-					);
-					$case = $this->emailToCase($email, $params);
-					$user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
-					if ($inboundEmail->get('reply')) {
-						$this->autoReply($inboundEmail, $email, $case, $user);
-					}
-				}
-			} else {
-				if ($inboundEmail->get('reply')) {
-					$user = $this->getEntityManager()->getEntity('User', $userId);
-					$this->autoReply($inboundEmail, $email, $user);
-				}
-			}
-			
-			$result = true;
-			
-		} catch (\Exception $e){
-			// TODO log			
-		}
-		
-		return $result;
 	}
 	
 	protected function assignRoundRobin($case, $team)
@@ -369,124 +299,10 @@ class InboundEmail extends \Espo\Services\Record
 		$this->getEntityManager()->saveEntity($email);
 		
 		$case = $this->getEntityManager()->getEntity('Case', $case->id);			
+		
 		return $case;		
 	}
-	
-	protected function getContentFromPart($part)
-	{
-		if ($part instanceof \Zend\Mime\Part) {
-			$content = $part->getRawContent();
-			if (strtolower($part->charset) != 'utf-8') {
-				$content = mb_convert_encoding($content, 'UTF-8', $part->charset);
-			}
-		} else {
-			$content = $part->getContent();
-			
-			$encoding = null;
-			
-			if (isset($part->contentTransferEncoding)) {
-				$cteHeader = $part->getHeader('Content-Transfer-Encoding');
-				$encoding = strtolower($cteHeader->getTransferEncoding());
-			}
-			
-			if ($encoding == 'base64') {
-				$content = base64_decode($content);
-			}
-			
-			$charset = 'UTF-8';			
-			
-			if (isset($part->contentType)) {
-				$ctHeader = $part->getHeader('Content-Type');
-				$charsetParamValue = $ctHeader->getParameter('charset');
-				if (!empty($charsetParamValue)) {
-					$charset = strtoupper($charsetParamValue);
-				}
-			}
-			
-			if ($charset !== 'UTF-8') {
-				$content = mb_convert_encoding($content, 'UTF-8', $charset);
-			}			
-			
-			if (isset($part->contentTransferEncoding)) {
-				$cteHeader = $part->getHeader('Content-Transfer-Encoding');			
-				if ($cteHeader->getTransferEncoding() == 'quoted-printable') {					
-					$content = quoted_printable_decode($content);
-				}
-			}			
-		}
-		return $content;
-	}
-	
-	protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array())
-	{		
-		try {
-			$type = strtok($part->contentType, ';');
-			$encoding = null;
-			
-			switch ($type) {
-				case 'text/plain':					
-					$content = $this->getContentFromPart($part);				
-					if (!$email->get('body')) {				
-						$email->set('body', $content);
-					}
-					$email->set('bodyPlain', $content);
-					break;
-				case 'text/html':
-					$content = $this->getContentFromPart($part);
-					$email->set('body', $content);
-					$email->set('isHtml', true);
-					break;
-				default:
-					$content = $part->getContent();					
-					$disposition = null;
-					
-					$fileName = null;
-					$contentId = null;
-							
-					if (isset($part->ContentDisposition)) {				
-						if (strpos($part->ContentDisposition, 'attachment') === 0) {
-							if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
-								$fileName = $m[1];
-								$disposition = 'attachment';
-							}							
-						} else if (strpos($part->ContentDisposition, 'inline') === 0) {
-							$contentId = trim($part->contentID, '<>');
-							$fileName = $contentId;
-							$disposition = 'inline';
-						}						
-					}
-					
-					if (isset($part->contentTransferEncoding)) {
-						$encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
-					}
-					
-					$attachment = $this->getEntityManager()->getEntity('Attachment');
-					$attachment->set('name', $fileName);							
-					$attachment->set('type', $type);
-					$attachment->set('role', 'Inline Attachment');
-							
-					$this->getEntityManager()->saveEntity($attachment);
-												
-					$path = 'data/upload/' . $attachment->id;
-							
-					if ($encoding == 'base64') {
-						$content = base64_decode($content);
-					}
-					$this->getFileManager()->putContents($path, $content);
-					
-					if ($disposition == 'attachment') {
-						$attachmentsIds = $email->get('attachmentsIds');
-						$attachmentsIds[] = $attachment->id;
-						$email->set('attachmentsIds', $attachmentsIds);	
-					} else if ($disposition == 'inline') {
-						$inlineIds[$contentId] = $attachment->id;
-					}		
-			}
-		} catch (\Exception $e){
-			// TODO log	
-		}		
-	}
-	
+		
 	protected function autoReply($inboundEmail, $email, $case = null, $user = null)
 	{	
 		try {
@@ -548,11 +364,11 @@ class InboundEmail extends \Espo\Services\Record
 				}
 				
 				$this->getEntityManager()->removeEntity($reply);
+				
+				return true;
 			}		
 			
-		} catch (\Exception $e){
-			// TODO log	
-		}
+		} catch (\Exception $e) {}
 	}	
 }
 
