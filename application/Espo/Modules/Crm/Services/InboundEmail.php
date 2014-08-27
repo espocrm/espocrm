@@ -170,7 +170,7 @@ class InboundEmail extends \Espo\Services\Record
 			
 			$k = 0;			
 			foreach ($storage as $number => $message) {
-				$email = $this->importMessage($message, $userId, array($teamId));
+				$email = $importer->importMessage($message, $userId, array($teamId));
 				
 				if ($email) {
 					if ($inboundEmail->get('createCase')) {
