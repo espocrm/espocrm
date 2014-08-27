@@ -68,6 +68,8 @@ class Preferences extends \Espo\Core\Controllers\Base
 			$entity->set('smtpEmailAddress', $user->get('emailAddress'));			
 			$entity->set('name', $user->get('name'));
 			
+			$entity->clear('smtpPassword');
+			
 			return $entity->toArray();		
 		}
 		throw new Error();
@@ -83,6 +85,9 @@ class Preferences extends \Espo\Core\Controllers\Base
 		
 		$entity->set('smtpEmailAddress', $user->get('emailAddress'));
 		$entity->set('name', $user->get('name'));
+		
+		$entity->clear('smtpPassword');
+		
 		if ($entity) {
 			return $entity->toArray();		
 		}
