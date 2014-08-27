@@ -33,6 +33,8 @@ class EmailAccount extends Record
 	
 	protected $readOnlyFields = array('assignedUserId', 'fetchData');
 	
+	const PORTION_LIMIT = 10;
+	
 	public function getFolders($params)
 	{		
 		$password = $params['password'];
@@ -87,8 +89,11 @@ class EmailAccount extends Record
 		if (empty($fetchData)) {
 			$fetchData = array();
 		}
-		if (!array_key_exists('lastUIDs', $fetchData)) {
-			$fetchData['lastUIDs'] = array();
+		if (!array_key_exists('lastUID', $fetchData)) {
+			$fetchData['lastUID'] = array();
+		}
+		if (!array_key_exists('lastUID', $fetchData)) {
+			$fetchData['lastDate'] = array();
 		}
 		
 		$imapParams = array(
@@ -115,15 +120,21 @@ class EmailAccount extends Record
 			
 			$storage->selectFolder($folder);
 			
+			// TODO fetch from last date
+			
 			$lastUID = 0;
-			if (!empty($fetchData['lastUIDs'][$folder])) {
-				$lastUID = $fetchData['lastUIDs'][$folder];
+			$lastDate = 0;
+			if (!empty($fetchData['lastUID'][$folder])) {
+				$lastUID = $fetchData['lastUID'][$folder];
+			}
+			if (!empty($fetchData['lastDate'][$folder])) {
+				$lastDate = $fetchData['lastDate'][$folder];
 			}
 
 			$ids = $storage->getIdsFromUID();
 			
-			print_r($ids); 
-			
+			print_r($ids);
+	
 			foreach ($ids as $k => $id) {
 				$message = $storage->getMessage($id);												
 				
@@ -131,19 +142,25 @@ class EmailAccount extends Record
 								
 				if ($k == count($ids) - 1) {
 					$lastUID = $storage->getUniqueId($id);
+					$lastDate = $message->date;
+				}
+				if ($k == self::PORTION - 1) {
+					break;
 				}
 			}		
 									
-			$fetchData['lastUIDs'][$folder] = $lastUID;
+			$fetchData['lastUID'][$folder] = $lastUID;
+			$fetchData['lastDate'][$folder] = $lastDate;
+			
+			$emailAccount->set('fetchData', json_encode($fetchData));
+			$this->getEntityManager()->saveEntity($emailAccount);
 			
 			print_r($fetchData);
 			
-		}		
+		}
+		
+		return true;		
 	}
-	
-
-	
-
 
 }
 

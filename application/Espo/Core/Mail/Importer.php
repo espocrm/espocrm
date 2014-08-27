@@ -111,6 +111,8 @@ class Importer
 			$type = strtok($part->contentType, ';');
 			$encoding = null;
 			
+			// TODO do not import if size exceeds limit
+			
 			switch ($type) {
 				case 'text/plain':					
 					$content = $this->getContentFromPart($part);				
@@ -160,6 +162,7 @@ class Importer
 					if ($encoding == 'base64') {
 						$content = base64_decode($content);
 					}
+					// TODO store size
 					$this->getFileManager()->putContents($path, $content);
 					
 					if ($disposition == 'attachment') {

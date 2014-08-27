@@ -31,6 +31,8 @@ class InboundEmail extends \Espo\Services\Record
 {	
 	protected $internalFields = array('password');
 	
+	const PORTION_LIMIT = 20;
+	
 	public function createEntity($data)
 	{
 		$entity = parent::createEntity($data);
@@ -166,6 +168,7 @@ class InboundEmail extends \Espo\Services\Record
 			$folder = $this->findFolder($storage, $path);			
 			$storage->selectFolder($folder);			 
 			
+			$k = 0;			
 			foreach ($storage as $number => $message) {
 				$email = $this->importMessage($message, $userId, array($teamId));
 				
@@ -178,15 +181,22 @@ class InboundEmail extends \Espo\Services\Record
 							$this->autoReply($inboundEmail, $email, $user);
 						}
 					}
-				}						
+				}
+				
+				if ($k == self::PORTION - 1) {
+					break;
+				}
+				$k++;						
 			}
 			
-			while ($storage->countMessages()) {
-				if ($trash) {
+			if ($trash) {
+				while ($k) {				
 					$storage->moveMessage(1, $trash);
+					$k--;
 				}
 			}
-		}	
+		}
+		return true;
 	}
 	
 	protected function createCase($inboundEmail, $email)
