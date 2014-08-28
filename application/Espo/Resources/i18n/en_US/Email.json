@@ -15,7 +15,8 @@
 		"selectTemplate": "Select Template",
 		"fromEmailAddress": "From Address",
 		"toEmailAddresses": "To Address",
-		"emailAddress": "Email Address"
+		"emailAddress": "Email Address",
+		"deliveryDate": "Delivery Date"
 	},
 	"links": {
 	},

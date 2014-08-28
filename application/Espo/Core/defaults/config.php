@@ -91,6 +91,7 @@ return array (
 	'disableExport' => false,
 	'assignmentEmailNotifications' => false,
 	'assignmentEmailNotificationsEntityList' => array('Lead', 'Opportunity', 'Task', 'Case'),
+	'emailMessageMaxSize' => 10,
 	'isInstalled' => false,
 );
 

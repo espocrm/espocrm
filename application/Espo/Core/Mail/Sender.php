@@ -256,6 +256,12 @@ class Sender
 
 		try {
 			$this->transport->send($message);
+			
+			$headers = $message->getHeaders();
+			if ($headers->has('messageId')) {			
+				$email->set('messageId', $headers->get('messageId')->getId());
+			}
+
 			$email->set('status', 'Sent');
 			$email->set('dateSent', date("Y-m-d H:i:s"));
 		} catch (\Exception $e) {

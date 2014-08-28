@@ -35,6 +35,16 @@ class EmailAccount extends Record
 	
 	const PORTION_LIMIT = 10;
 	
+	protected function init()
+	{
+		$this->dependencies[] = 'fileManager';
+	}
+	
+	protected function getFileManager()
+	{
+		return $this->injections['fileManager'];
+	}
+	
 	public function getFolders($params)
 	{		
 		$password = $params['password'];
@@ -74,7 +84,9 @@ class EmailAccount extends Record
 			throw new Error();
 		}
 		
-		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager());
+		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager());
+		
+		$maxSize = $this->getConfig()->get('emailMessageMaxSize');
 		
 		$user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
 		
@@ -83,11 +95,11 @@ class EmailAccount extends Record
 		}
 		
 		$userId = $user->id;
-		$teamId = $user->get('defaultTeam');
-		
+		$teamId = $user->get('defaultTeam');		
+	
 		$fetchData = json_decode($emailAccount->get('fetchData'), true);
 		if (empty($fetchData)) {
-			$fetchData = array();
+			$fetchData = array();			
 		}
 		if (!array_key_exists('lastUID', $fetchData)) {
 			$fetchData['lastUID'] = array();
@@ -107,7 +119,7 @@ class EmailAccount extends Record
 			$imapParams['ssl'] = 'SSL';
 		}
 		
-		$storage = new \Espo\Core\Mail\Storage\Imap($imapParams);		
+		$storage = new \Espo\Core\Mail\Storage\Imap($imapParams);
 		
 		$monitoredFolders = $emailAccount->get('monitoredFolders');		
 		if (empty($monitoredFolders)) {
@@ -116,11 +128,8 @@ class EmailAccount extends Record
 		
 		$monitoredFoldersArr = explode(',', $monitoredFolders);				
 		foreach ($monitoredFoldersArr as $folder) {
-			$folder = trim($folder);
-			
+			$folder = trim($folder);			
 			$storage->selectFolder($folder);
-			
-			// TODO fetch from last date
 			
 			$lastUID = 0;
 			$lastDate = 0;
@@ -131,26 +140,58 @@ class EmailAccount extends Record
 				$lastDate = $fetchData['lastDate'][$folder];
 			}
 
-			$ids = $storage->getIdsFromUID();
+			if (!empty($lastUID)) {
+				$ids = $storage->getIdsFromUID($lastUID);
+			} else {
+				$dt = new \DateTime($emailAccount->get('fetchSince'));
+				if ($dt) {
+					$ids = $storage->getIdsFromDate($dt->format('d-M-Y'));
+				} else {
+					return false;
+				}
+			}
 			
-			$k = 0;
-	
-			foreach ($ids as $i => $id) {
-				$message = $storage->getMessage($id);												
+			if ((count($ids) == 1) && !empty($lastUID)) {
+				if ($storage->getUniqueId($ids[0]) == $lastUID) {
+					continue;
+				}
+			}
+			
+			$k = 0;	
+			foreach ($ids as $i => $id) {			
+				if ($k == count($ids) - 1) {
+					$lastUID = $storage->getUniqueId($id);
+				}
+								
+				if ($maxSize) {
+					if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
+						continue;
+					}
+				}
+			
+				$message = $storage->getMessage($id);
 				
-				$importer->importMessage($message, $userId, array($teamId));
+				$email = $importer->importMessage($message, $userId, array($teamId));
 								
 				if ($k == count($ids) - 1) {
 					$lastUID = $storage->getUniqueId($id);
-					$lastDate = $message->date;
+					
+					if ($message) {
+						$dt = new \DateTime($message->date);
+						if ($dt) {
+							$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
+							$lastDate = $dateSent;
+						}
+					}
 				}
 				
 				if ($k == self::PORTION_LIMIT - 1) {
+					$lastUID = $storage->getUniqueId($id);
 					break;
 				}
 				$k++;
 			}		
-									
+			
 			$fetchData['lastUID'][$folder] = $lastUID;
 			$fetchData['lastDate'][$folder] = $lastDate;
 			

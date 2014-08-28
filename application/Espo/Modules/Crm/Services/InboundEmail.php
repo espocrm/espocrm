@@ -72,17 +72,7 @@ class InboundEmail extends \Espo\Services\Record
 	protected function getMailSender()
 	{
 		return $this->injections['mailSender'];
-	}
-	
-	protected function findFolder($storage, $path)
-	{
-		$arr = explode('/', $path);
-		$pointer = $storage->getFolders();
-		foreach ($arr as $folderName) {
-			$pointer = $pointer->$folderName;
-		}
-		return $pointer;
-	}
+	}	
 	
 	public function getFolders($params)
 	{		
@@ -123,12 +113,25 @@ class InboundEmail extends \Espo\Services\Record
 			throw new Error();
 		}
 		
-		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager());
+		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager());
+		
+		$maxSize = $this->getConfig()->get('emailMessageMaxSize');
 		
 		$teamId = $inboundEmail->get('teamId');
 		$userId = $this->getUser()->id;		
 		if ($inboundEmail->get('assignToUserId')) {
 			$userId = $inboundEmail->get('assignToUserId');
+		}
+		
+		$fetchData = json_decode($inboundEmail->get('fetchData'), true);
+		if (empty($fetchData)) {
+			$fetchData = array();			
+		}
+		if (!array_key_exists('lastUID', $fetchData)) {
+			$fetchData['lastUID'] = array();
+		}
+		if (!array_key_exists('lastUID', $fetchData)) {
+			$fetchData['lastDate'] = array();
 		}
 		
 		$imapParams = array(
@@ -142,18 +145,7 @@ class InboundEmail extends \Espo\Services\Record
 			$imapParams['ssl'] = 'SSL';
 		}
 		
-		$storage = new \Zend\Mail\Storage\Imap($imapParams);
-		
-		$trash = null;
-		$trashFolder = $inboundEmail->get('trashFolder');
-		if (empty($trashFolder)) {
-			$trashFolder = 'INBOX.Trash';
-		}
-		try {
-			$trash = $this->findFolder($storage, $trashFolder);
-		} catch (\Exception $e) {
-			throw new Error("No trash folder '{$trashFolder}' found for Inbound Email {$id}");
-		}
+		$storage = new \Espo\Core\Mail\Storage\Imap($imapParams);
 		
 		$monitoredFolders = $inboundEmail->get('monitoredFolders');
 		if (empty($monitoredFolders)) {
@@ -161,15 +153,41 @@ class InboundEmail extends \Espo\Services\Record
 		}
 		
 		$monitoredFoldersArr = explode(',', $monitoredFolders);				
-		foreach ($monitoredFoldersArr as $path) {
-			$toRemove = array();
-			$path = trim($path);			
+		foreach ($monitoredFoldersArr as $folder) {
+			$folder = trim($folder);		
+			$storage->selectFolder($folder);
 			
-			$folder = $this->findFolder($storage, $path);			
-			$storage->selectFolder($folder);			 
+			$lastUID = 0;
+			$lastDate = 0;
+			if (!empty($fetchData['lastUID'][$folder])) {
+				$lastUID = $fetchData['lastUID'][$folder];
+			}
+			if (!empty($fetchData['lastDate'][$folder])) {
+				$lastDate = $fetchData['lastDate'][$folder];
+			}
+
+			$ids = $storage->getIdsFromUID($lastUID);
 			
-			$k = 0;			
-			foreach ($storage as $number => $message) {
+			if ((count($ids) == 1) && !empty($lastUID)) {
+				if ($storage->getUniqueId($ids[0]) == $lastUID) {
+					continue;
+				}
+			}
+			
+			$k = 0;	
+			foreach ($ids as $i => $id) {
+				if ($k == count($ids) - 1) {
+					$lastUID = $storage->getUniqueId($id);
+				}
+				
+				if ($maxSize) {
+					if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
+						continue;
+					}
+				}
+				
+				$message = $storage->getMessage($id);
+			
 				$email = $importer->importMessage($message, $userId, array($teamId));
 				
 				if ($email) {
@@ -183,19 +201,30 @@ class InboundEmail extends \Espo\Services\Record
 					}
 				}
 				
+				if ($k == count($ids) - 1) {
+					if ($message) {
+						$dt = new \DateTime($message->date);
+						if ($dt) {
+							$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
+							$lastDate = $dateSent;
+						}
+					}
+				}
+				
 				if ($k == self::PORTION_LIMIT - 1) {
+					$lastUID = $storage->getUniqueId($id);
 					break;
 				}
 				$k++;						
 			}
 			
-			if ($trash) {
-				while ($k) {				
-					$storage->moveMessage(1, $trash);
-					$k--;
-				}
-			}
+			$fetchData['lastUID'][$folder] = $lastUID;
+			$fetchData['lastDate'][$folder] = $lastDate;
+			
+			$inboundEmail->set('fetchData', json_encode($fetchData));
+			$this->getEntityManager()->saveEntity($inboundEmail);
 		}
+		
 		return true;
 	}
 	

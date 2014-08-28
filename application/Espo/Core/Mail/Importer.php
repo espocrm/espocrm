@@ -8,14 +8,22 @@ class Importer
 {	
 	private $entityManager;
 	
-	public function __construct($entityManager)
+	private $fileManager;
+	
+	public function __construct($entityManager, $fileManager)
 	{
 		$this->entityManager = $entityManager;
+		$this->fileManager = $fileManager;
 	}
 	
 	protected function getEntityManager()
 	{
 		return $this->entityManager;
+	}
+	
+	protected function getFileManager()
+	{
+		return $this->fileManager;
 	}
 	
 	public function importMessage($message, $userId, $teamsIds = array())
@@ -49,10 +57,19 @@ class Importer
 				return false;
 			}			
 
-			$dt = new \DateTime($message->date);
-			if ($dt) {
-				$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
-				$email->set('dateSent', $dateSent);
+			if (isset($message->date)) {
+				$dt = new \DateTime($message->date);
+				if ($dt) {
+					$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
+					$email->set('dateSent', $dateSent);
+				}
+			}
+			if (isset($message->deliveryDate)) {
+				$dt = new \DateTime($message->deliveryDate);
+				if ($dt) {
+					$deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
+					$email->set('deliveryDate', $deliveryDate);
+				}
 			}
 			
 			$inlineIds = array();
@@ -111,8 +128,6 @@ class Importer
 			$type = strtok($part->contentType, ';');
 			$encoding = null;
 			
-			// TODO do not import if size exceeds limit
-			
 			switch ($type) {
 				case 'text/plain':					
 					$content = $this->getContentFromPart($part);				
@@ -153,17 +168,23 @@ class Importer
 					$attachment = $this->getEntityManager()->getEntity('Attachment');
 					$attachment->set('name', $fileName);							
 					$attachment->set('type', $type);
-					$attachment->set('role', 'Inline Attachment');
-							
-					$this->getEntityManager()->saveEntity($attachment);
-												
-					$path = 'data/upload/' . $attachment->id;
-							
+					
+					if ($disposition == 'inline') {
+						$attachment->set('role', 'Inline Attachment');
+					} else {
+						$attachment->set('role', 'Attachment');
+					}
+					
 					if ($encoding == 'base64') {
 						$content = base64_decode($content);
 					}
-					// TODO store size
-					$this->getFileManager()->putContents($path, $content);
+					
+					$attachment->set('size', strlen($content));
+							
+					$this->getEntityManager()->saveEntity($attachment);
+												
+					$path = 'data/upload/' . $attachment->id;					
+					$this->getFileManager()->putContents($path, $content);					
 					
 					if ($disposition == 'attachment') {
 						$attachmentsIds = $email->get('attachmentsIds');
@@ -173,9 +194,7 @@ class Importer
 						$inlineIds[$contentId] = $attachment->id;
 					}		
 			}
-		} catch (\Exception $e){
-			// TODO log	
-		}		
+		} catch (\Exception $e) {}		
 	}
 	
 	protected function getContentFromPart($part)

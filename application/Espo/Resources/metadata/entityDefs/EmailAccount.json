@@ -33,8 +33,13 @@
             "default": "INBOX",
             "view": "EmailAccount.Fields.Folders"
         },
+        "fetchSince": {
+        	"type": "date",
+        	"required": true
+        },
         "fetchData": {
-        	"type": "text"
+        	"type": "text",
+            "readOnly": true
         },
         "createdAt": {
             "type": "datetime",

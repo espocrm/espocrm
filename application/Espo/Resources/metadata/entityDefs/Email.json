@@ -105,6 +105,10 @@
         "dateSent": {
             "type": "datetime"
         },
+        "deliveryDate": {
+            "type": "datetime",
+            "readOnly": true
+        },        
         "createdAt": {
             "type": "datetime",
             "readOnly": true
