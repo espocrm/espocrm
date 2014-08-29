@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Services;
 
@@ -32,6 +32,70 @@ class Opportunity extends \Espo\Services\Record
 	public function reportSalesPipeline($dateFrom, $dateTo)
 	{
 		$pdo = $this->getEntityManager()->getPDO();
+
+		$options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
+
+		$sql = "
+			SELECT opportunity.stage AS `stage`, SUM(opportunity.amount * currency.rate) as `amount`
+			FROM opportunity
+			JOIN currency ON currency.id = opportunity.amount_currency
+			WHERE
+				opportunity.deleted = 0 AND
+				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
+				opportunity.close_date < ".$pdo->quote($dateTo)." AND
+				opportunity.stage <> 'Closed Lost'
+			GROUP BY opportunity.stage
+			ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')
+		";
+
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+
+		$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row['stage']] = floatval($row['amount']);
+		}
+
+		return $result;
+	}
+
+	public function reportByLeadSource($dateFrom, $dateTo)
+	{
+		$pdo = $this->getEntityManager()->getPDO();
+
+		$sql = "
+			SELECT opportunity.lead_source AS `leadSource`, SUM(opportunity.amount * currency.rate * opportunity.probability / 100) as `amount`
+			FROM opportunity
+			JOIN currency ON currency.id = opportunity.amount_currency
+			WHERE
+				opportunity.deleted = 0 AND
+				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
+				opportunity.close_date < ".$pdo->quote($dateTo)." AND
+				opportunity.stage <> 'Closed Lost' AND
+				opportunity.lead_source <> ''
+			GROUP BY opportunity.lead_source
+		";
+
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+
+		$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row['leadSource']] = floatval($row['amount']);
+		}
+
+		return $result;
+	}
+	
+	public function reportByStage($dateFrom, $dateTo)
+	{
+		$pdo = $this->getEntityManager()->getPDO();
+		
+		$options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
 		
 		$sql = "
 			SELECT opportunity.stage AS `stage`, SUM(opportunity.amount * currency.rate) as `amount`
@@ -43,7 +107,7 @@ class Opportunity extends \Espo\Services\Record
 				opportunity.close_date < ".$pdo->quote($dateTo)." AND
 				opportunity.stage <> 'Closed Lost'
 			GROUP BY opportunity.stage
-			ORDER BY FIELD(opportunity.stage, 'Prospecting', 'Qualification', 'Needs Analysis', 'Value Proposition', 'Id. Decision Makers', 'Perception Analysis', 'Proposal/Price Quote', 'Negotiation/Review', 'Closed Won')		
+			ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')		
 		";
 		
 		$sth = $pdo->prepare($sql);
@@ -54,6 +118,37 @@ class Opportunity extends \Espo\Services\Record
 		$result = array();
 		foreach ($rows as $row) {
 			$result[$row['stage']] = floatval($row['amount']);
+		}	
+				
+		return $result;
+	}
+	
+	public function reportSalesByMonth($dateFrom, $dateTo)
+	{
+		$pdo = $this->getEntityManager()->getPDO();
+		
+		$sql = "
+			SELECT DATE_FORMAT(opportunity.close_date, '%Y-%m') AS `month`, SUM(opportunity.amount * currency.rate) as `amount`
+			FROM opportunity
+			JOIN currency ON currency.id = opportunity.amount_currency
+			WHERE 
+				opportunity.deleted = 0 AND
+				opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
+				opportunity.close_date < ".$pdo->quote($dateTo)." AND
+				opportunity.stage = 'Closed Won'
+			
+			GROUP BY DATE_FORMAT(opportunity.close_date, '%Y-%m')
+			ORDER BY opportunity.close_date						
+		";
+		
+		$sth = $pdo->prepare($sql);
+		$sth->execute();
+		
+		$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row['month']] = floatval($row['amount']);
 		}	
 				
 		return $result;
