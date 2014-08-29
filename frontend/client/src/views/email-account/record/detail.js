@@ -19,21 +19,28 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Record.Edit', ['Views.Record.Edit', 'Crm:Views.InboundEmail.Record.Detail'], function (Dep, Detail) {
+Espo.define('Views.EmailAccount.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
 	return Dep.extend({
 
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			Detail.prototype.handleDistributionField.call(this);
-
-		},
-
 		afterRender: function () {
-			Dep.prototype.afterRender.call(this);			
-			Detail.prototype.initSslFieldListening.call(this);
+			Dep.prototype.afterRender.call(this);
+			this.initSslFieldListening();
 		},
+
+		initSslFieldListening: function () {
+			var sslField = this.getFieldView('ssl');
+			this.listenTo(sslField, 'change', function () {
+				var ssl = sslField.fetch()['ssl'];
+				if (ssl) {
+					this.model.set('port', '993');
+				} else {
+					this.model.set('port', '143');
+				}
+			}, this);
+		}
 
 	});
+
 });
 
