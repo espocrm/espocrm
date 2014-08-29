@@ -47,7 +47,7 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 		setup: function () {
 			this.setupSearchManager();
 		
-			if (this.searchPanel) {			
+			if (this.searchPanel && !this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {			
 				this.createView('search', 'Record.Search', {
 					collection: this.collection,
 					el: '#main > .search-container',

@@ -3,5 +3,6 @@
 	"dateSent",
 	"status",
 	"parent",
-	"body"	
+	"body",
+	"teams"
 ]

@@ -210,6 +210,7 @@
     },
     "collection": {
     	"sortBy": "dateSent",
-    	"asc": false    	
+    	"asc": false,
+    	"textFilterFields": ["name", "body", "bodyPlain"]  	
     }
 }

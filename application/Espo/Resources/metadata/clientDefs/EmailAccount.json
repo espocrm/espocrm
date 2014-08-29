@@ -4,5 +4,6 @@
 		"list":"EmailAccount.Record.List",
 		"detail": "EmailAccount.Record.Detail",
 		"edit": "EmailAccount.Record.Edit"
-	}
+	},
+	"disableSearchPanel": true
 }
