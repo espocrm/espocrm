@@ -145,6 +145,11 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 				
 				this.showLoadingNotification();
 				model.once('sync', function () {
+
+					if (options.attributes) {
+						model.set(options.attributes)
+					}
+					
 					this.main(this.getViewName('edit'), {
 						scope: this.name,
 						model: model,

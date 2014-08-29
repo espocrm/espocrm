@@ -83,11 +83,11 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 						var router = this.getRouter();							
 						if (!this.id) {
 							url = '#' + this.scope + '/create';
-							var attributes = this.getView('edit').fetch();
-														
-							var model = this.getView('edit').model;
 							
-							attributes = _.extend(_.clone(model.attributes), attributes);
+							var attributes = this.getView('edit').fetch();														
+							var model = this.getView('edit').model;							
+							attributes = _.extend(attributes, model.getClonedAttributes());
+							
 							setTimeout(function () {
 								router.dispatch(this.scope, 'create', {
 									attributes: attributes,
@@ -97,9 +97,15 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 								router.navigate(url, {trigger: false});
 							}.bind(this), 10);
 						} else {
-							url = '#' + this.scope + '/edit/' + this.id;							
+							url = '#' + this.scope + '/edit/' + this.id;
+							
+							var attributes = this.getView('edit').fetch();														
+							var model = this.getView('edit').model;							
+							attributes = _.extend(attributes, model.getClonedAttributes());							
+							
 							setTimeout(function () {
 								router.dispatch(this.scope, 'edit', {
+									attributes: attributes,
 									returnUrl: Backbone.history.fragment,
 									id: this.id
 								});
