@@ -28,7 +28,8 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 		data: function () {
 			return {
 				integration: this.integration,
-				dataFieldList: this.dataFieldList
+				dataFieldList: this.dataFieldList,
+				helpText: this.helpText
 			};
 		},
 		
@@ -43,6 +44,11 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 		
 		setup: function () {
 			this.integration = this.options.integration;
+			
+			this.helpText = false;
+			if (this.getLanguage().get(this.integration, 'help', 'Integration') != this.integration) {
+				this.helpText = this.translate(this.integration, 'help', 'Integration');
+			}
 			
 			this.fieldList = [];
 			
