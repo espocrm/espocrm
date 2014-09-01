@@ -11,7 +11,7 @@
 		</div>	
 		{{#each dataFieldList}}
 			<div class="cell cell-{{this}} form-group">
-				<label class="control-label">{{translate this scope='Integration' category='fields'}}</label>
+				<label class="control-label field-label-{{./this}}">{{translate this scope='Integration' category='fields'}}</label>
 				<div class="field field-{{this}}">{{{var this ../this}}}</div>
 			</div>
 		{{/each}}

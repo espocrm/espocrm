@@ -92,6 +92,44 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 			 
 		},
 		
+		hideField: function (name) {
+			this.$el.find('label.field-label-' + name).addClass('hide');
+			this.$el.find('div.field-' + name).addClass('hide');
+			var view = this.getView(name);
+			if (view) {
+				view.enabled = false;
+			}
+		},
+		
+		showField: function (name) {
+			this.$el.find('label.field-label-' + name).removeClass('hide');
+			this.$el.find('div.field-' + name).removeClass('hide');
+			var view = this.getView(name);
+			if (view) {
+				view.enabled = true;
+			}
+		},
+		
+		afterRender: function () {
+			if (!this.model.get('enabled')) {
+				this.dataFieldList.forEach(function (name) {
+					this.hideField(name);
+				}, this);
+			}
+			
+			this.listenTo(this.model, 'change:enabled', function () {
+				if (this.model.get('enabled')) {
+					this.dataFieldList.forEach(function (name) {
+						this.showField(name);
+					}, this);
+				} else {
+					this.dataFieldList.forEach(function (name) {
+						this.hideField(name);
+					}, this);
+				}
+			}, this);
+		},
+		
 		createFieldView: function (type, name, readOnly, params) {
 			this.createView(name, this.getFieldManager().getViewName(type), {
 				model: this.model,
