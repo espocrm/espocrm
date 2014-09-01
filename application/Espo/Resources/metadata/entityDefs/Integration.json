@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "data": {
+            "type": "text"
+        },
+        "enabled": {
+            "type": "bool"
+        }
+    }
+}

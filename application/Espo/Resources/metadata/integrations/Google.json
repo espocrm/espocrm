@@ -1,0 +1,22 @@
+{
+	"fields": {
+		"clientId": {
+			"type": "varchar",
+			"maxLength": 255,
+			"required": true
+		},
+		"clientSecret": {
+			"type": "varchar",
+			"maxLength": 255,
+			"required": true
+		}
+	},
+	"params": {
+		"url": "https://accounts.google.com/o/oauth2/auth",
+		"scope": "profile calendar contacts"
+	},
+	"allowUserAccounts": true,
+	"authMethod": "OAuth2",
+	"adminView": "Integrations.Google.Admin",
+	"userView": "Integrations.Google.User"
+}

@@ -30,7 +30,8 @@
 		"User Interface": "User Interface",
 		"Auth Tokens": "Auth Tokens",
 		"Authentication": "Authentication",
-		"Currency": "Currency"
+		"Currency": "Currency",
+		"Integrations": "Integrations"
 	},
 	"layouts": {
 		"list": "List",

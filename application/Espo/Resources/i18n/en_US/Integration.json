@@ -1,0 +1,10 @@
+{
+	"fields": {
+		"enabled": "Enabled",
+		"clientId": "Client ID",
+		"clientSecret": "Client Secret"
+	},
+	"messages": {
+		"selectIntegration": "Select an integration in menu."
+	}
+}
