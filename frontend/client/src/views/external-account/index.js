@@ -19,55 +19,63 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.Integrations.Index', 'View', function (Dep) {
+Espo.define('Views.ExternalAccount.Index', 'View', function (Dep) {
 
 	return Dep.extend({
 
-		template: 'admin.integrations.index',
-
-		integrationList: null,
-
-		integration: null,
+		template: 'external-account.index',
 
 		data: function () {
 			return {
-				integrationList: this.integrationList,
-				integration: this.integration,
+				externalAccountList: this.externalAccountList,
+				id: this.id,
+				externalAccountListCount: this.externalAccountList.length
 			};
 		},
 
 		events: {
-			'click #integrations-menu a.integration-link': function (e) {
-				var name = $(e.currentTarget).data('name');
-				this.openIntegration(name);
+			'click #external-account-menu a.external-account-link': function (e) {
+				var id = $(e.currentTarget).data('id') + '__' + this.userId;
+				this.openExternalAccount(id);
 			},
 		},
 
 		setup: function () {			
-			this.integrationList = Object.keys(this.getMetadata().get('integrations') || {});;
-
-			this.integration = this.options.integration || null;
+			this.externalAccountList = this.collection.toJSON();
+			
+			this.userId = this.getUser().id;
+			this.id = this.options.id || null;			
+			if (this.id) {
+				this.userId = this.id.split('__')[1];
+			}
 			
 			this.on('after:render', function () {				
 				this.renderHeader();				
-				if (!this.integration) {
+				if (!this.id) {
 					this.renderDefaultPage();
 				} else {
-					this.openIntegration(this.integration);
+					this.openExternalAccount(this.id);
 				}				
 			});			
 		},
 
-		openIntegration: function (integration) {
-			this.integration = integration;
+		openExternalAccount: function (id) {
+			this.id = id;
 			
-			this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
+			var integration = this.integration = id.split('__')[0];
+			this.userId = id.split('__')[1];
 			
-			var viewName = 'Admin.Integrations.' + this.getMetadata().get('integrations.' + integration + '.authMethod');
+			this.getRouter().navigate('#ExternalAccount/edit/' + id, {trigger: false});
+			
+			var viewName = 
+					this.getMetadata().get('integrations.' + integration + '.userView') || 
+					'ExternalAccount.' + this.getMetadata().get('integrations.' + integration + '.authMethod');	
+
 			this.notify('Loading...');			
 			this.createView('content', viewName, {
-				el: '#integration-content',
-				integration: integration,
+				el: '#external-account-content',
+				id: id,
+				integration: integration
 			}, function (view) {
 				this.renderHeader();
 				view.render();
@@ -77,20 +85,20 @@ Espo.define('Views.Admin.Integrations.Index', 'View', function (Dep) {
 		},		
 
 		renderDefaultPage: function () {
-			$('#integration-header').html('').hide();
-			$('#integration-content').html(this.translate('selectIntegration', 'messages', 'Integration'));
+			$('#external-account-header').html('').hide();
+			$('#external-account-content').html('');
 		},
 
 		renderHeader: function () {
-			if (!this.integration) {
-				$('#integration-header').html('');
+			if (!this.id) {
+				$('#external-account-header').html('');
 				return;
 			}
-			$('#integration-header').show().html(this.integration);
+			$('#external-account-header').show().html(this.integration);
 		},
 
 		updatePageTitle: function () {
-			this.setPageTitle(this.getLanguage().translate('Integrations', 'labels', 'Admin'));
+			this.setPageTitle(this.translate('ExternalAccount', 'scopeNamesPlural'));
 		},
 	});
 });

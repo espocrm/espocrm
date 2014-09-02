@@ -13,10 +13,8 @@
 	},
 	"params": {
 		"url": "https://accounts.google.com/o/oauth2/auth",
-		"scope": "profile calendar contacts"
+		"scope": "https://www.googleapis.com/auth/calendar"
 	},
 	"allowUserAccounts": true,
-	"authMethod": "OAuth2",
-	"adminView": "Integrations.Google.Admin",
-	"userView": "Integrations.Google.User"
+	"authMethod": "OAuth2"
 }

@@ -19,35 +19,43 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
+Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 	
 	return Dep.extend({
 	
-		template: 'admin.integrations.edit',
+		template: 'external-account.oauth2',
+		
+		events: {
+
+		},
 		
 		data: function () {
 			return {
 				integration: this.integration,
-				dataFieldList: this.dataFieldList,
 				helpText: this.helpText
 			};
 		},
 		
 		events: {
 			'click button[data-action="cancel"]': function () {
-				this.getRouter().navigate('#Admin/integrations', {trigger: true});
+				this.getRouter().navigate('#ExternalAccount', {trigger: true});
 			},
 			'click button[data-action="save"]': function () {
 				this.save();
 			},
+			'click [data-action="connect"]': function () {
+				this.connect();
+			}
 		},
 		
 		setup: function () {
 			this.integration = this.options.integration;
-			
+			this.id = this.options.id;
+							
+		
 			this.helpText = false;
-			if (this.getLanguage().has(this.integration, 'help', 'Integration')) {
-				this.helpText = this.translate(this.integration, 'help', 'Integration');
+			if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
+				this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
 			}
 			
 			this.fieldList = [];
@@ -55,9 +63,9 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 			this.dataFieldList = [];		
 			
 			this.model = new Espo.Model();
-			this.model.id = this.integration;
-			this.model.name = 'Integration';
-			this.model.urlRoot = 'Integration';
+			this.model.id = this.id;
+			this.model.name = 'ExternalAccount';
+			this.model.urlRoot = 'ExternalAccount';
 			
 			this.model.defs = {
 				fields: {
@@ -68,24 +76,22 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 				}
 			};			
 			
-			this.wait(true);
-			
-			var fields = this.fields = this.getMetadata().get('integrations.' + this.integration + '.fields');
-
-			Object.keys(this.fields).forEach(function (name) {
-				this.model.defs.fields[name] = this.fields[name];
-				this.dataFieldList.push(name);
-			}, this);
+			this.wait(true);			
 				
 			this.model.populateDefaults();
 			
 			this.listenToOnce(this.model, 'sync', function () {
 				this.createFieldView('bool', 'enabled');
-				Object.keys(this.fields).forEach(function (name) {
-					this.createFieldView(this.fields[name]['type'], name, null, this.fields[name]);
-				}, this);
 				
-				this.wait(false);
+				$.ajax({
+					url: 'ExternalAccount/action/getOAuthCredentials?id=' + this.id,
+					dataType: 'json'
+				}).done(function (respose) {
+					this.clientId = respose.clientId;
+					this.redirectUri = respose.redirectUri;
+					this.wait(false);
+				}.bind(this));
+				
 			}, this);
 			
 			this.model.fetch();			 
@@ -111,20 +117,14 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 		
 		afterRender: function () {
 			if (!this.model.get('enabled')) {
-				this.dataFieldList.forEach(function (name) {
-					this.hideField(name);
-				}, this);
+				this.$el.find('.data-panel').addClass('hidden');
 			}
 			
 			this.listenTo(this.model, 'change:enabled', function () {
 				if (this.model.get('enabled')) {
-					this.dataFieldList.forEach(function (name) {
-						this.showField(name);
-					}, this);
+					this.$el.find('.data-panel').removeClass('hidden');
 				} else {
-					this.dataFieldList.forEach(function (name) {
-						this.hideField(name);
-					}, this);
+					this.$el.find('.data-panel').addClass('hidden');
 				}
 			}, this);
 		},
@@ -167,6 +167,75 @@ Espo.define('Views.Admin.Integrations.Edit', 'View', function (Dep) {
 			
 			this.notify('Saving...');
 			this.model.save();
+		},
+		
+		popup: function (options, callback) {
+			options.windowName = options.windowName ||  'ConnectWithOAuth';
+			options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
+			options.callback = options.callback || function(){ window.location.reload(); };
+			
+			var self = this;
+			
+			var path = options.path;
+			
+			var arr = [];
+			var params = (options.params || {});
+			for (var name in params) {
+				if (params[name]) {
+					arr.push(name + '=' + encodeURI(params[name]));
+				}
+			}
+			path += '?' + arr.join('&');
+			
+			var parseUrl = function (str) {
+				var accessToken = false;
+				var expires = false;
+				
+				str = str.substr(str.indexOf('#') + 1, str.length);
+				str.split('&').forEach(function (part) {
+					var arr = part.split('=');
+					var name = decodeURI(arr[0]);
+					var value = decodeURI(arr[1] || '');
+					
+					if (name == 'access_token') {
+						accessToken = value;
+					}
+					if (name == 'expires') {
+						expires = value;
+					}
+				}, this);
+				if (accessToken) {
+					return {
+						accessToken: accessToken,
+						expires: expires
+					}
+				}
+			}
+			
+			popup = window.open(path, options.windowName, options.windowOptions);
+			interval = window.setInterval(function () {
+				if (popup.closed) {
+					window.clearInterval(interval);
+				} else {
+					var res = parseUrl(popup.location.href.toString());				
+					callback.call(self, res.accessToken, res.expires);
+					popup.close();
+				}
+			}, 500);
+		},
+		
+		connect: function () {
+			this.popup({
+				path: this.getMetadata().get('integrations.' + this.integration + '.params.url'),
+				params: {
+					client_id: this.clientId,
+					redirect_uri: this.redirectUri,
+					scope: this.getMetadata().get('integrations.' + this.integration + '.params.scope'),
+					response_type: 'token'
+				}		
+			}, function (accessToken, expires) {
+				
+			});
 		},
 		
 	});

@@ -7,7 +7,8 @@
 		"EmailTemplate": "Email Template",
 		"EmailAccount": "Email Account",
 		"OutboundEmail": "Outbound Email",
-		"ScheduledJob": "Scheduled Job"
+		"ScheduledJob": "Scheduled Job",
+		"ExternalAccount": "External Account"
 	},
 	"scopeNamesPlural": {
 		"Email": "Emails",
@@ -17,7 +18,8 @@
 		"EmailTemplate": "Email Templates",
 		"EmailAccount": "Email Accounts",
 		"OutboundEmail": "Outbound Emails",
-		"ScheduledJob": "Scheduled Jobs"
+		"ScheduledJob": "Scheduled Jobs",
+		"ExternalAccount": "External Accounts"
 	},
 	"labels": {
 		"Misc": "Misc",

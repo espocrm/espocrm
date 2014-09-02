@@ -15,6 +15,12 @@
 				<div class="field field-{{this}}">{{{var this ../this}}}</div>
 			</div>
 		{{/each}}
+		<div class="cell cell-enabled form-group">
+			<label class="control-label field-label-redirectUri">{{translate 'redirectUri' scope='Integration' category='fields'}}</label>
+			<div class="field field-enabled">
+				<input type="text" class="form-control" readonly value="{{redirectUri}}">
+			</div>
+		</div>	
 	</div>
 	<div class="col-sm-6">
 		{{#if helpText}}

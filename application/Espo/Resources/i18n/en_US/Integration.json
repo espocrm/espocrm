@@ -2,7 +2,8 @@
 	"fields": {
 		"enabled": "Enabled",
 		"clientId": "Client ID",
-		"clientSecret": "Client Secret"
+		"clientSecret": "Client Secret",
+		"redirectUri": "Redirect URI"
 	},
 	"messages": {
 		"selectIntegration": "Select an integration in menu."
