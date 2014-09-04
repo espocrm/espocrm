@@ -69,26 +69,29 @@ class Stream extends \Espo\Core\Hooks\Base
 	{
 		$linkDefs = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".links", array());
 			
+		$scopeNotifiedList = array();
 		foreach ($linkDefs as $link => $defs) {
 			if ($defs['type'] == 'belongsTo') {
 				$foreign = $defs['foreign'];
 				$scope = $defs['entity'];
 				$entityId = $entity->get($link . 'Id');
 				if (!empty($scope) && !empty($entityId)) {
-					if (!$this->isLinkObservableInStream($scope, $foreign)) {
+					if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
 						continue;
 					}
 					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+					$scopeNotifiedList[] = $scope;
 				}
 			} else if ($defs['type'] == 'belongsToParent') {		
 				$foreign = $defs['foreign'];
 				$scope = $entity->get($link . 'Type');
 				$entityId = $entity->get($link . 'Id');
 				if (!empty($scope) && !empty($entityId)) {
-					if (!$this->isLinkObservableInStream($scope, $foreign)) {
+					if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
 						continue;
 					}
 					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+					$scopeNotifiedList[] = $scope;
 					
 				}
 			} else if ($defs['type'] == 'hasMany') {		
@@ -96,11 +99,12 @@ class Stream extends \Espo\Core\Hooks\Base
 				$scope = $defs['entity'];
 				$entityIds = $entity->get($link . 'Ids');
 				if (!empty($scope) && is_array($entityIds) && !empty($entityIds)) {
-					if (!$this->isLinkObservableInStream($scope, $foreign)) {
+					if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
 						continue;
 					}
 					$entityId = $entityIds[0];
-					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);					
+					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+					$scopeNotifiedList[] = $scope;					
 				}
 			}
 		}
