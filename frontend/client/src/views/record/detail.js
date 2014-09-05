@@ -201,7 +201,8 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
 				if (!fieldView.readOnly) {
 					if (fieldView.mode == 'edit') {
 						fieldView.fetchToModel();
-						fieldView.inlineEditClose(true);
+						fieldView.removeInlineEditLinks();
+						//fieldView.inlineEditClose(true);
 					}			
 					fieldView.setMode('edit');
 					fieldView.render();
