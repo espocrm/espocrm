@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Cron;
 
@@ -46,22 +46,22 @@ class Service
 		$serviceName = $job['service_name'];
 
 		if (!$this->getServiceFactory()->checkExists($serviceName)) {
-			throw new NotFound(); 										
+			throw new NotFound();
 		}
 
-		$service = $this->getServiceFactory()->create($serviceName);	
-		$serviceMethod = $job['method'];	
+		$service = $this->getServiceFactory()->create($serviceName);
+		$serviceMethod = $job['method'];
 
 		if (!method_exists($service, $serviceMethod)) {
-			throw new NotFound();					
-		}	
+			throw new NotFound();
+		}
 
 		$data = $job['data'];
 		if (Json::isJSON($data)) {
 			$data = Json::decode($data, true);
 		}
 
-		$service->$serviceMethod($data);		
+		$service->$serviceMethod($data);
 	}
 
 }
