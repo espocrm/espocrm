@@ -94,9 +94,9 @@ class EmailAddress extends Record
 			)
 		);
 		
-		$this->findInAddressBookByEntityType($where, $limit, 'Contact', &$result);
-		$this->findInAddressBookByEntityType($where, $limit, 'Lead', &$result);
-		$this->findInAddressBookByEntityType($where, $limit, 'User', &$result);		
+		$this->findInAddressBookByEntityType($where, $limit, 'Contact', $result);
+		$this->findInAddressBookByEntityType($where, $limit, 'Lead', $result);
+		$this->findInAddressBookByEntityType($where, $limit, 'User', $result);		
 		
 		$final = array();
 		
