@@ -44,13 +44,31 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
 			return data;
 		},
 		
-		afterRender: function () {
-			if (this.mode == 'edit') {
+		afterRender: function () {	
+			var self = this;
+					
+			if (this.mode == 'edit') {			
 				this.$street = this.$el.find('[name="' + this.streetField + '"]');
 				this.$postalCode = this.$el.find('[name="' + this.postalCodeField + '"]');
 				this.$state = this.$el.find('[name="' + this.stateField + '"]');
 				this.$city = this.$el.find('[name="' + this.cityField + '"]');
 				this.$country = this.$el.find('[name="' + this.countryField + '"]');
+				
+				this.$street.on('change', function () {
+					self.trigger('change');
+				});
+				this.$postalCode.on('change', function () {
+					self.trigger('change');
+				});
+				this.$state.on('change', function () {
+					self.trigger('change');
+				});
+				this.$city.on('change', function () {
+					self.trigger('change');
+				});
+				this.$country.on('change', function () {
+					self.trigger('change');
+				});
 				
 				this.$street.on('input', function (e) {				
 					var numberOfLines = e.currentTarget.value.split('\n').length;

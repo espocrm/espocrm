@@ -53,7 +53,8 @@
             "type": "varchar"
         },
         "shippingAddress": {
-            "type": "address"
+            "type": "address",
+            "view": "Crm:Account.Fields.ShippingAddress"
         },
         "shippingAddressStreet": {
             "type": "text",

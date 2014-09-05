@@ -35,6 +35,7 @@
 		}
 	},
 	"labels": {
-		"Create Account": "Create Account"
+		"Create Account": "Create Account",
+		"Copy Billing": "Copy Billing"
 	}
 }
