@@ -58,7 +58,7 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
 		setup: function () {
 			this.scopeList = [];				
-			var scopesAll = Object.keys(this.getMetadata().get('scopes'));;
+			var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort();
 			scopesAll.forEach(function (scope) {
 				if (this.getMetadata().get('scopes.' + scope + '.entity') &&
 				    this.getMetadata().get('scopes.' + scope + '.layouts')) {

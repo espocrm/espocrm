@@ -59,7 +59,7 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
 
 		setup: function () {
 			this.scopeList = [];				
-			var scopesAll = Object.keys(this.getMetadata().get('scopes'));;
+			var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort();
 			scopesAll.forEach(function (scope) {
 				if (this.getMetadata().get('scopes.' + scope + '.entity')) {
 					if (this.getMetadata().get('scopes.' + scope + '.customizable')) {
