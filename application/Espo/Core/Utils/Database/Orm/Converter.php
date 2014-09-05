@@ -57,6 +57,7 @@ class Converter
 		'len' => 'len',
 		'notNull' => 'notNull',
 		'autoincrement' => 'autoincrement',
+		'entity' => 'entity',
 		'notStorable' => 'notStorable',
 		'link' => 'relation',
 		'field' => 'foreign',  //todo change "foreign" to "field"
