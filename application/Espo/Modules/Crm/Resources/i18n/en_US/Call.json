@@ -23,6 +23,11 @@
 		"direction": {
 			"Outbound": "Outbound",
 			"Inbound": "Inbound"
+		},
+		"acceptanceStatus": {
+			"None": "None",
+			"Accepted": "Accepted",
+			"Declined": "Declined"
 		}
 	},
 	"labels": {

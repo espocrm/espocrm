@@ -94,6 +94,11 @@
         	"disabled": true,
         	"options": ["", "Decision Maker", "Evaluator", "Influencer"]
         },
+        "acceptanceStatus": {
+        	"type": "varchar",
+        	"notStorable": true,
+        	"disabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

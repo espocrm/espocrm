@@ -46,18 +46,35 @@
             "type": "link",
             "disabled": true
         },
+        "acceptanceStatus": {
+        	"type": "enum",
+        	"notStorable": true,
+        	"disabled": true,
+        	"options": ["None", "Accepted", "Declined"]
+        },
         "users": {
             "type": "linkMultiple",
-            "disabled": true
+            "disabled": true,
+            "view": "Crm:Meeting.Fields.Attendees",
+            "columns": {
+            	"status": "acceptanceStatus"
+            }
         },
         "contacts": {
             "type": "linkMultiple",
             "disabled": true,
-            "view": "Crm:Meeting.Fields.Contacts"
+            "view": "Crm:Meeting.Fields.Contacts",
+            "columns": {
+            	"status": "acceptanceStatus"
+            }
         },
         "leads": {
             "type": "linkMultiple",
-            "disabled": true
+            "disabled": true,
+            "view": "Crm:Meeting.Fields.Attendees",
+            "columns": {
+            	"status": "acceptanceStatus"
+            }
         },
         "createdAt": {
             "type": "datetime",

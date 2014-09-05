@@ -27,6 +27,10 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		
 		roleType: 'enum',
 		
+		columnName: 'role',
+		
+		roleFieldIsForeign: true,
+		
 		setup: function () {
 			Dep.prototype.setup.call(this);
 			
@@ -37,10 +41,16 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 				this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {}); 					
 			}, this);
 			
-			this.roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.role');
+			this.roleField = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.' + this.columnName);
+			
+			if (this.roleFieldIsForeign) {
+				this.roleFieldScope = this.foreignScope;
+			} else {
+				this.roleFieldScope = this.model.name;
+			}
 			
 			if (this.roleType == 'enum') {			
-				this.roleList = this.getMetadata().get('entityDefs.' + this.foreignScope + '.fields.' + this.roleField + '.options');
+				this.roleList = this.getMetadata().get('entityDefs.' + this.roleFieldScope + '.fields.' + this.roleField + '.options');
 			}			
 		},
 		
@@ -53,10 +63,10 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		getDetailLinkHtml: function (id, name) {			
 			name = name || this.nameHash[id];
 			
-			var role = (this.columns[id] || {}).role || '';
+			var role = (this.columns[id] || {})[this.columnName] || '';
 			var roleHtml = '';
 			if (role != '') {
-				roleHtml = '<span class="text-muted small"> &#187; ' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + '</span>';
+				roleHtml = '<span class="text-muted small"> &#187; ' + this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) + '</span>';
 			}
 			var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
 			return lineHtml;
@@ -90,7 +100,8 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 			if (!~this.ids.indexOf(id)) {
 				this.ids.push(id);
 				this.nameHash[id] = name;
-				this.columns[id] = {role: null};
+				this.columns[id] = {};
+				this.columns[id][this.columnName] = null;
 				this.addLinkHtml(id, name);
 			}
 			this.trigger('change');
@@ -113,17 +124,17 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 		
 			var $role;
 			
-			var roleValue = (this.columns[id] || {}).role;
+			var roleValue = (this.columns[id] || {})[this.columnName];
 			
 			if (this.roleType == 'enum') {			
 				$role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
 				this.roleList.forEach(function (role) {
 					var selectedHtml = (role == roleValue) ? 'selected': '';
-					option = '<option value="'+role+'" '+selectedHtml+'>' + this.getLanguage().translateOption(role, this.roleField, this.foreignScope) + '</option>';
+					option = '<option value="'+role+'" '+selectedHtml+'>' + this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) + '</option>';
 					$role.append(option);
 				}, this);
 			} else {
-				var label = this.translate(this.roleField, 'fields', this.foreignScope);
+				var label = this.translate(this.roleField, 'fields', this.roleFieldScope);
 				$role = $('<input class="role form-control input-sm pull-right" maxlength="50" placeholder="'+label+'" data-id="'+id+'" value="' + (roleValue || '') + '">');
 			}			
 			
@@ -142,9 +153,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 				'width': '8%',
 				'display': 'inline-block',
 				'vertical-align': 'top'
-			});
-			
-			
+			});			
 			
 			$right.append(removeHtml);			
 						
@@ -160,7 +169,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 					var value = $target.val();
 					var id = $target.data('id');
 					this.columns[id] = this.columns[id] || {};
-					this.columns[id].role = value;
+					this.columns[id][this.columnName] = value;
 					this.trigger('change');
 				}.bind(this));
 			}

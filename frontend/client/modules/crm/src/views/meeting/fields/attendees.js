@@ -19,22 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Meeting.Fields.Contacts', 'Crm:Views.Meeting.Fields.Attendees', function (Dep) {
+Espo.define('Crm:Views.Meeting.Fields.Attendees', 'Views.Fields.LinkMultipleWithRole', function (Dep) {
 
 	return Dep.extend({
 	
-		getSelectFilters: function () {
-			if (this.model.get('parentType') == 'Account' && this.model.get('parentId')) {
-				return {
-					'account': {
-						type: 'equals',
-						field: 'accountId',
-						value: this.model.get('parentId'),
-						valueName: this.model.get('parentName'),
-					}
-				};				
-			}
-		},
+		columnName: 'status',
+		
+		roleFieldIsForeign: false,
+	
 	});
 
 });
