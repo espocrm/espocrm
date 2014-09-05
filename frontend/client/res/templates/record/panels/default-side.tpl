@@ -16,7 +16,7 @@
 		<label class="control-label">{{translate 'Created'}}</label>
 		<div class="field">
 		
-			<span class="field-createdAt">{{{createdAt}}}</span> {{translate 'by'}} <span class="field-createdBy">{{{createdBy}}}</span>		
+			<span class="field-createdAt">{{{createdAt}}}</span> <span class="text-muted">&raquo;</span> <span class="field-createdBy">{{{createdBy}}}</span>		
 		</div>
 	</div>
 	{{/ifAttrNotEmpty}}
@@ -25,7 +25,7 @@
 	<div class="cell form-group col-sm-6 col-md-12">
 		<label class="control-label">{{translate 'Modified'}}</label>
 		<div class="field">		
-			<span class="field-modifiedAt">{{{modifiedAt}}}</span> {{translate 'by'}} <span class="field-modifiedBy">{{{modifiedBy}}}</span>		
+			<span class="field-modifiedAt">{{{modifiedAt}}}</span> <span class="text-muted">&raquo;</span> <span class="field-modifiedBy">{{{modifiedBy}}}</span>		
 		</div>
 	</div>
 	{{/ifAttrNotEmpty}}

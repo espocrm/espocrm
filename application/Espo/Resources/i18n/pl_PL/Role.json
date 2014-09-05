@@ -1,0 +1,35 @@
+{
+	"fields": {
+		"name": "Imię",
+		"roles": "Rola"
+	},
+	"links": {
+		"users": "Użytkownik",
+		"teams": "Zespoły"
+	},
+	"labels": {
+		"Access": "Dostęp",
+		"Create Role": "Utwórz Role "
+	},
+	"options": {
+		"accessList": {
+			"not-set": "nie ustawiony",
+			"enabled": "włączony",
+			"disabled": "wyłączony"
+		},
+		"levelList": {
+			"all": "wszystko",
+			"team": "zespół",
+			"own": "własny",
+			"no": "nie"
+		}
+	},
+	"actions": {
+		"read": "Przeczytany",
+		"edit": "Edytuj",
+		"delete": "Usuń"
+	},
+	"messages": {
+		"changesAfterClearCache": "Wszystkie zmiany w dostępie zostaną aktywowany w momencie wyczyszczenia pamięci."
+	}
+}

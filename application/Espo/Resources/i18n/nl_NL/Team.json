@@ -6,6 +6,9 @@
 	"links": {
 		"users": "Gebruikers"
 	},
+	"tooltips": {
+		"roles": "All users from this team will get access settings from selected roles."
+	},
 	"labels": {
 		"Create Team": "Maak een Team"
 	}

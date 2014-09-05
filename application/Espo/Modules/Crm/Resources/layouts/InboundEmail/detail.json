@@ -22,13 +22,10 @@
 				{"name":"host"},{"name":"ssl"}
 			],
 			[
-				{"name":"port"},false
+				{"name":"port"},{"name":"username"}
 			],
 			[
-				{"name":"monitoredFolders"},{"name":"username"}
-			],
-			[
-				{"name":"trashFolder"},{"name":"password"}
+				{"name":"monitoredFolders"},{"name":"password"}
 			]
 		]
 	},

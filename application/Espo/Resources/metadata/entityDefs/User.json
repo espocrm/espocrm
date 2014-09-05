@@ -51,6 +51,11 @@
             "type": "link",
             "tooltip": true
         },
+        "acceptanceStatus": {
+        	"type": "varchar",
+        	"notStorable": true,
+        	"disabled": true
+        },
         "teams": {
             "type": "linkMultiple"
         },

@@ -15,7 +15,8 @@
 		"selectTemplate": "Select Template",
 		"fromEmailAddress": "From Address",
 		"toEmailAddresses": "To Address",
-		"emailAddress": "Email Address"
+		"emailAddress": "Email Address",
+		"deliveryDate": "Delivery Date"
 	},
 	"links": {
 	},
@@ -27,7 +28,14 @@
 	},
 	"labels": {
 		"Create Email": "Archive Email",
-		"Compose": "Compose"
+		"Archive Email": "Archive Email",
+		"Compose": "Compose",
+		"Reply": "Reply",
+		"Reply to All": "Reply to All",
+		"Forward": "Forward",
+		"Original message": "Original message",
+		"Forwarded message": "Forwarded message",
+		"Email Accounts": "Email Accounts"
 	},
 	"presetFilters": {
 		"sent": "Sent",

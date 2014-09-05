@@ -1,0 +1,40 @@
+{
+	"fields": {
+		"name": "Imię",
+		"emailAddress": "E-mail",
+		"website": "Strona Internetowa",
+		"phoneNumber": "Telefon",
+		"billingAddress": "Adres Firmy",
+		"shippingAddress": "Adres Dostawy",
+		"description": "Opis ",
+		"sicCode": "PKD",
+		"industry": "Branża",
+		"type": "Rodzaj",
+		"contactRole": "Rola"
+	},
+	"links": {
+		"contacts": "Kontakty",
+		"opportunities": "Szanse Sprzedaży",
+		"cases": "Zlecenia"
+	},
+	"options": {
+		"type": {
+			"Customer": "Klient",
+			"Investor": "Inwestor",
+			"Partner": "Partner",
+			"Reseller": "Sprzedawca"
+		},
+		"industry": {
+			"Apparel": "Odzież",
+			"Banking": "Bankowość",
+			"Computer Software": "Oprogramowanie Komputerowe",
+			"Education": "Edukacja",
+			"Electronics": "Elektronika",
+			"Finance": "Finanse",
+			"Insurance": "Ubezpieczenia"
+		}
+	},
+	"labels": {
+		"Create Account": "Utwórz Konto"
+	}
+}

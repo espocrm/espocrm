@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Meeting.Fields.Contacts', 'Views.Fields.LinkMultiple', function (Dep) {
+Espo.define('Crm:Views.Meeting.Fields.Contacts', 'Crm:Views.Meeting.Fields.Attendees', function (Dep) {
 
 	return Dep.extend({
 	

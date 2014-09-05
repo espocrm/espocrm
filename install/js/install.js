@@ -374,7 +374,7 @@ InstallScript.prototype.checkSett = function(opt) {
 					var exts = errors.exts;
 					var len = exts.length;
 					for (var index = 0; index < len; index++) {
-						var temp = self.getLang('The {extName} PHP extension was not found...', 'messages');
+						var temp = self.getLang('The PHP extension was not found...', 'messages');
 						temp = temp.replace('{extName}', exts[index]);
 						msg += temp+rowDelim;
 					}

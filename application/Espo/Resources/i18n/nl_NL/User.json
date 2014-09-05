@@ -23,6 +23,9 @@
 		"Preferences": "Voorkeuren",
 		"Change Password": "Wachtwoord Aanpassen"
 	},
+	"tooltips": {
+		"defaultTeam": "All records created by this user will be related to this team by default."
+	},
 	"messages": {
 		"passwordWillBeSent": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
 		"accountInfoEmailSubject": "Gebruiker Informatie",

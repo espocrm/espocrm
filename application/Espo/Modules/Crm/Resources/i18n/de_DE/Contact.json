@@ -9,7 +9,7 @@
 		"accountType": "Firmentyp",
 		"doNotCall": "Nicht anrufen",
 		"address": "Adresse",
-		"opportunityRole": "Opportunity Role",
+		"opportunityRole": "Verkaufschance Rolle",
 		"accountRole": "Rolle",
 		"description": "Beschreibung"
 	},
@@ -22,10 +22,10 @@
 	},
 	"options": {
 		"opportunityRole": {
-			"": "--None--",
-			"Decision Maker": "Decision Maker",
-			"Evaluator": "Evaluator",
-			"Influencer": "Influencer"
+			"": "--Kein(e)--",
+			"Decision Maker": "Entscheider",
+			"Evaluator": "Vorentscheider",
+			"Influencer": "Einflussreiche Person"
 		}
 	}
 }

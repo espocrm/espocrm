@@ -116,6 +116,11 @@
             "type": "link",
             "required": true
         },
+        "acceptanceStatus": {
+        	"type": "varchar",
+        	"notStorable": true,
+        	"disabled": true
+        },
         "teams": {
             "type": "linkMultiple"
         },

@@ -18,30 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-Espo.define('Crm:Views.Email.Fields.FromAddress', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({
-	
-		editTemplate: 'crm:email.fields.from-address.edit',
+Espo.define('Views.EmailAccount.Record.Edit', ['Views.Record.Edit', 'Views.EmailAccount.Record.Detail'], function (Dep, Detail) {
+
+	return Dep.extend({	
 		
-		data: function () {
-			return _.extend({
-				list: this.list,
-			}, Dep.prototype.data.call(this));
-		},
-
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			this.list = [];
+		afterRender: function () {
+			Dep.prototype.afterRender.call(this);			
 			
-			if (this.getUser().get('emailAddress')) {
-				this.list.push(this.getUser().get('emailAddress'));
-			}
-			
-			if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
-				this.list.push(this.getConfig().get('outboundEmailFromAddress'));
-			}
+			Detail.prototype.initSslFieldListening.call(this);										
 		},
+		
 	});
-
+	
 });
+

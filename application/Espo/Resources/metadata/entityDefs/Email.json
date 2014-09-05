@@ -15,20 +15,53 @@
         "from": {
             "type": "varchar",
             "db": false,
-            "required": true
+            "required": true,
+            "view": "Email.Fields.FromAddressVarchar"
         },
         "to": {
             "type": "varchar",
             "db": false,
-            "required": true
+            "required": true,
+            "view": "Email.Fields.EmailAddressVarchar"
         },
         "cc": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "view": "Email.Fields.EmailAddressVarchar"
         },
         "bcc": {
             "type": "varchar",
-            "db": false
+            "db": false,
+            "view": "Email.Fields.EmailAddressVarchar"
+        },
+        "nameHash": {
+        	"type": "text",
+        	"notStorable": true,
+        	"readOlny": true,
+        	"disabled": true
+        },
+        "typeHash": {
+        	"type": "text",
+        	"notStorable": true,
+        	"readOlny": true,
+        	"disabled": true
+        },
+        "idHash": {
+        	"type": "text",
+        	"notStorable": true,
+        	"readOlny": true,
+        	"disabled": true
+        },
+        "messageId": {
+        	"type": "varchar",
+        	"maxLength": 255,
+        	"readOlny": true
+        },
+        "messageIdInternal": {
+        	"type": "varchar",
+        	"maxLength": 300,
+        	"readOlny": true,
+        	"index": true
         },
         "emailAddress": {
         	"type": "base",
@@ -72,6 +105,10 @@
         "dateSent": {
             "type": "datetime"
         },
+        "deliveryDate": {
+            "type": "datetime",
+            "readOnly": true
+        },        
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -173,6 +210,7 @@
     },
     "collection": {
     	"sortBy": "dateSent",
-    	"asc": false    	
+    	"asc": false,
+    	"textFilterFields": ["name", "body", "bodyPlain"]  	
     }
 }

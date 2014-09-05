@@ -23,7 +23,7 @@
 	var Dialog = function (options) {
 		options = options || {};
 		
-		this.class = 'dialog';
+		this.className = 'dialog';
 		this.backdrop = 'static';
 		this.closeButton = true;
 		this.header = false;
@@ -36,7 +36,7 @@
 		this.container = 'body'
 		this.onRemove = function () {};
 		
-		var params = ['class', 'backdrop', 'closeButton', 'header', 'body', 'width', 'height', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
+		var params = ['className', 'backdrop', 'closeButton', 'header', 'body', 'width', 'height', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
 		params.forEach(function (param) {
 			if (param in options) {
 				this[param] = options[param];
@@ -66,7 +66,7 @@
 		this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>'
 		
 		$('<div />').attr('id', this.id)
-		  .attr('class', this.class + ' modal')
+		  .attr('class', this.className + ' modal')
 		  .attr('role', 'dialog')
 		  .attr('tabindex', '-1')
 		  .html(this.contents)

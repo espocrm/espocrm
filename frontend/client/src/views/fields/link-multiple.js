@@ -79,14 +79,17 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 				this.addActionHandler('selectLink', function () {
 					self.notify('Loading...');
 					this.createView('dialog', 'Modals.SelectRecords', {
-							scope: this.foreignScope,
-							createButton: this.mode != 'search',
-							filters: this.getSelectFilters()
-						}, function (dialog) {
+						scope: this.foreignScope,
+						createButton: this.mode != 'search',
+						filters: this.getSelectFilters(),
+						multiple: true
+					}, function (dialog) {
 						dialog.render();
 						self.notify(false);
-						dialog.once('select', function (model) {
-							self.addLink(model.id, model.get('name'));
+						dialog.once('select', function (models) {
+							models.forEach(function (model) {							
+								self.addLink(model.id, model.get('name'));
+							});
 						});
 					});
 				});

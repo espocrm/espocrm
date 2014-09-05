@@ -1,7 +1,7 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"parent": "Bovenliggende item",
+		"parent": "Behorende bij",
 		"status": "Status",
 		"dateStart": "Start Datum",
 		"dateEnd": "Vervaldatum",

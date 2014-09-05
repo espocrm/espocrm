@@ -1,0 +1,29 @@
+{
+	"fields": {
+		"name": "Name",
+		"status": "Status",
+		"host": "Host",
+		"username": "Username",
+		"password": "Password",
+		"port": "Port",
+		"monitoredFolders": "Monitored Folders",
+		"ssl": "SSL",
+		"fetchSince": "Fetch Since"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Active": "Active",
+			"Inactive": "Inactive"
+		}
+	},
+	"labels": {
+		"Create EmailAccount": "Create Email Account",
+		"IMAP": "IMAP",
+		"Main": "Main"		
+	},
+	"messages": {
+		"couldNotConnectToImap": "Could not connect to IMAP server"
+	}
+}

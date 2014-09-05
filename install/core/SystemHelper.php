@@ -30,6 +30,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 		'exts' => array(
 			'json',
 			'mcrypt',
+			'pdo_mysql',
 		),
 	);
 

@@ -2,10 +2,9 @@
 	{
 		"label":"",
 		"rows":[
-			[{"name":"status"},false],
-			[{"name":"dateSent"}, {"name":"parent"}],
-			[{"name":"from"},{"name":"cc"}],
-			[{"name":"to"},{"name":"bcc"}],
+			[{"name":"status"},{"name":"from"}],
+			[{"name":"dateSent"}, {"name":"to"}],
+			[{"name":"parent"}, {"name":"cc"}],
 			[{"name":"name","fullWidth":true}],
 			[{"name":"body","fullWidth":true}],
 			[{"name":"attachments"},{"name":"isHtml"}]

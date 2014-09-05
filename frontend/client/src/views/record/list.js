@@ -140,100 +140,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			},
 		},
 
-		actions: [
-			{
-				name: 'delete',
-				label: 'Remove',
-				action: function (e) {
-					if (!this.getAcl().check(this.scope, 'delete')) {
-						this.notify('Access denied', 'error');
-						return false;
-					}
-
-					var count = this.checkedList.length;
-					var deletedCount = 0;
-
-					var self = this;
-
-					if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
-						// TODO mass delete
-						this.notify('Removing...');
-						for (var i in this.checkedList) {
-							var id = this.checkedList[i];
-							var model = this.collection.get(id);
-
-							this.collection.remove(model);
-							this.$el.find('tr[data-id="'+id+'"]').remove();
-
-							model.once('sync', function (model) {
-								deletedCount ++;
-								if (deletedCount == count) {
-									Espo.Ui.notify(false);
-								}
-							}, this);
-							model.destroy({
-								error: function () {
-									self.notify('Error occured', 'error');
-								},
-							});
-						}
-						this.checkedList = [];
-					}
-				},
-			},
-			{
-				name: 'merge',
-				label: 'Merge',
-				action: function (e) {
-					if (!this.getAcl().check(this.scope, 'edit')) {
-						this.notify('Access denied', 'error');
-						return false;
-					}
-
-					if (this.checkedList.length < 2) {
-						this.notify('Select 2 or more records', 'error');
-						return;
-					}
-					if (this.checkedList.length > 4) {
-						this.notify('Select not more than 4 records', 'error');
-						return;
-					}
-					this.checkedList.sort();
-					var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
-					this.getRouter().navigate(url, {trigger: true});
-				}
-			},
-			{
-				name: 'massUpdate',
-				label: 'Mass Update',
-				action: function (e) {
-					if (!this.getAcl().check(this.scope, 'edit')) {
-						this.notify('Access denied', 'error');
-						return false;
-					}
-
-					this.notify('Loading...');
-					var ids = this.checkedList;
-					this.createView('massUpdate', 'Modals.MassUpdate', {
-						scope: this.scope,
-						ids: ids,
-						where: this.collection.where
-					}, function (view) {
-						view.render();
-						view.notify(false);
-						view.once('after:update', function () {
-							view.close();
-							this.listenToOnce(this.collection, 'sync', function () {
-								ids.forEach(function (id) {
-									this.checkRecord(id);
-								}, this);
-							}.bind(this));
-							this.collection.fetch();
-						}, this);
-					}.bind(this));
-				},
-			}
-		],
+		actions: [],
 
 		/**
 		 * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
@@ -246,6 +153,16 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		header: true,
 		
 		showMore: true,
+		
+		removeAction: true,
+		
+		mergeAction: true,
+		
+		massUpdateAction: true,
+		
+		exportAction: true,
+		
+		allowQuickEdit: true,
 
 		/**
 		 * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
@@ -324,6 +241,110 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			this.scope = this.collection.name || null;
 			this.events = Espo.Utils.clone(this.events);
 			this.actions = Espo.Utils.clone(this.actions);
+			
+			if (this.checkboxes) {
+			
+				if (this.removeAction) {
+					this.actions.push({
+						name: 'remove',
+						label: 'Remove',
+						action: function (e) {
+							if (!this.getAcl().check(this.scope, 'delete')) {
+								this.notify('Access denied', 'error');
+								return false;
+							}
+
+							var count = this.checkedList.length;
+							var deletedCount = 0;
+
+							var self = this;
+
+							if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
+								// TODO mass delete
+								this.notify('Removing...');
+								for (var i in this.checkedList) {
+									var id = this.checkedList[i];
+									var model = this.collection.get(id);
+
+									this.collection.remove(model);
+									this.$el.find('tr[data-id="'+id+'"]').remove();
+
+									model.once('sync', function (model) {
+										deletedCount ++;
+										if (deletedCount == count) {
+											Espo.Ui.notify(false);
+										}
+									}, this);
+									model.destroy({
+										error: function () {
+											self.notify('Error occured', 'error');
+										},
+									});
+								}
+								this.checkedList = [];
+							}
+						}
+					});
+				}
+			
+				if (this.mergeAction) {
+					this.actions.push({
+						name: 'merge',
+						label: 'Merge',
+						action: function (e) {
+							if (!this.getAcl().check(this.scope, 'edit')) {
+								this.notify('Access denied', 'error');
+								return false;
+							}
+
+							if (this.checkedList.length < 2) {
+								this.notify('Select 2 or more records', 'error');
+								return;
+							}
+							if (this.checkedList.length > 4) {
+								this.notify('Select not more than 4 records', 'error');
+								return;
+							}
+							this.checkedList.sort();
+							var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
+							this.getRouter().navigate(url, {trigger: true});
+						}
+					});
+				}			
+			
+				if (this.massUpdateAction) {
+					this.actions.push({
+						name: 'massUpdate',
+						label: 'Mass Update',
+						action: function (e) {
+							if (!this.getAcl().check(this.scope, 'edit')) {
+								this.notify('Access denied', 'error');
+								return false;
+							}
+
+							this.notify('Loading...');
+							var ids = this.checkedList;
+							this.createView('massUpdate', 'Modals.MassUpdate', {
+								scope: this.scope,
+								ids: ids,
+								where: this.collection.where
+							}, function (view) {
+								view.render();
+								view.notify(false);
+								view.once('after:update', function () {
+									view.close();
+									this.listenToOnce(this.collection, 'sync', function () {
+										ids.forEach(function (id) {
+											this.checkRecord(id);
+										}, this);
+									}.bind(this));
+									this.collection.fetch();
+								}, this);
+							}.bind(this));
+						}
+					});
+				}
+			}
 
 			if (this.selectable) {
 				this.events['click .list a.link'] = function (e) {
@@ -346,21 +367,23 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				this.showCount = this.options.showCount;
 			}
 			
-			if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
-				this.actions.push({
-					name: 'export',
-					label: 'Export',
-					action: function (e) {				
-						this.export();
-					}.bind(this)
-				});
+			if (this.exportAction) {
+				if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
+					this.actions.push({
+						name: 'export',
+						label: 'Export',
+						action: function (e) {				
+							this.export();
+						}.bind(this)
+					});
+				}
 			}
 
 			if (this.options.actions === false) {
 				this.actions = [];
 			}
 
-			if (this.checkboxes) {				
+			if (this.checkboxes) {
 				this.actions.forEach(function (item) {
 					this.events['click .actions a[data-action="' + item.name + '"]'] = function (e) {
 						item.action.call(this, e);
@@ -398,10 +421,12 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 			var defs = [];
 
 			for (var i in this.listLayout) {
+				
 				var item = {
 					name: this.listLayout[i].name,
 					sortable: !(this.listLayout[i].notSortable || false),
-					width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false
+					width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false,
+					align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false
 				};
 				if (item.sortable) {
 					item.sorted = this.collection.sortBy === this.listLayout[i].name;
@@ -436,14 +461,15 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				var type = col.type || model.getFieldType(col.name) || 'base';
 				if (!col.name) {
 					continue;
-				}				
+				}
+
 				var item = {
 					name: col.name,
 					view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),					
 					options: {
 						defs: {
 							name: col.name,
-							params: col.params || {}
+							params: col.params || {},							
 						},
 						mode: 'list'
 					}
@@ -451,8 +477,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 				if (col.link) {
 					item.options.mode = 'listLink';
 				}
-				if ('sortable' in col) {
-					item.options.defs.sortable = col.sortable;
+				if (col.align) {
+					item.options.defs.params.align = col.align;
 				}
 				layout.push(item);
 			}
@@ -693,19 +719,23 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 		},
 		
 		quickEdit: function (id) {
-			this.notify('Loading...');
-			this.createView('quickEdit', 'Modals.Edit', {
-				scope: this.scope,
-				id: id
-			}, function (view) {
-				view.once('after:render', function () {
-					Espo.Ui.notify(false);
-				});
-				view.render();
-				view.once('after:save', function () {
-					this.collection.get(id).fetch();
-				}, this);
-			}.bind(this));
+			if (this.allowQuickEdit) {
+				this.notify('Loading...');
+				this.createView('quickEdit', 'Modals.Edit', {
+					scope: this.scope,
+					id: id
+				}, function (view) {
+					view.once('after:render', function () {
+						Espo.Ui.notify(false);
+					});
+					view.render();
+					view.once('after:save', function () {
+						this.collection.get(id).fetch();
+					}, this);
+				}.bind(this));
+			} else {
+				this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: true});
+			}
 		},
 		
 		quickRemove: function (id) {

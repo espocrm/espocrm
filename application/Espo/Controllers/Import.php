@@ -44,7 +44,8 @@ class Import extends \Espo\Core\Controllers\Base
 		$contents = $data;
 		
 		$attachment = $this->getEntityManager()->getEntity('Attachment');
-		$attachment->set('type', 'text/csv');		
+		$attachment->set('type', 'text/csv');
+		$attachment->set('role', 'Import File');		
 		$this->getEntityManager()->saveEntity($attachment);
 		
 		$this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);

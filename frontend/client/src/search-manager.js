@@ -27,17 +27,30 @@
 		this.type = type || 'list';
 		this.dateTime = dateTime;
 		
-		this.data = this.default = defaultData || {
+		this.data = this.defaultData = defaultData || {
 			textFilter: '',			
 			bool: {},
-			basic: {name: true},
 			advanced: {},
 		};
+		
+		this.sanitizeData();
 	};
 	
 	_.extend(Espo.SearchManager.prototype, {
 	
 		data: null,
+		
+		sanitizeData: function () {
+			if (!('advanced' in this.data)) {
+				this.data.advanced = {};
+			}
+			if (!('bool' in this.data)) {
+				this.data.bool = {};
+			}
+			if (!('textFilter' in this.data)) {
+				this.data.textFilter = '';
+			}		
+		},
 		
 		getWhere: function () {		
 			var where = [];			
@@ -99,7 +112,8 @@
 		},		
 		
 		loadStored: function () {
-			this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.default);			
+			this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.defaultData);
+			this.sanitizeData();			
 			return this;
 		},
 		
@@ -119,7 +133,7 @@
 		},
 		
 		reset: function () {
-			this.data = _.clone(this.default);
+			this.data = _.clone(this.defaultData);
 			if (this.storage) {
 				this.storage.clear(this.type + 'Search', this.scope);
 			}

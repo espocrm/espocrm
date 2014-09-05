@@ -25,7 +25,8 @@ Espo.define('Views.Email.Record.Compose', 'Views.Record.Edit', function (Dep) {
 		
 		isWide: true,
 		
-		sideView: false,		
+		sideView: false,
+			
 	
 	});
 	

@@ -33,6 +33,12 @@ class Email extends Record
 	{
 		$this->dependencies[] = 'mailSender';
 		$this->dependencies[] = 'preferences';
+		$this->dependencies[] = 'fileManager';
+	}
+	
+	protected function getFileManager()
+	{
+		return $this->getInjection('fileManager');
 	}
 
 	protected function getMailSender()
@@ -91,7 +97,7 @@ class Email extends Record
 				foreach ($names as $id => $address) {
 					$arr[] = $address;
 				}
-				$entity->set('to', implode('; ', $arr));
+				$entity->set('to', implode(';', $arr));
 			}
 
 			$names = $entity->get('ccEmailAddressesNames');
@@ -100,7 +106,7 @@ class Email extends Record
 				foreach ($names as $id => $address) {
 					$arr[] = $address;
 				}
-				$entity->set('cc', implode('; ', $arr));
+				$entity->set('cc', implode(';', $arr));
 			}
 
 			$names = $entity->get('bccEmailAddressesNames');
@@ -109,11 +115,51 @@ class Email extends Record
 				foreach ($names as $id => $address) {
 					$arr[] = $address;
 				}
-				$entity->set('bcc', implode('; ', $arr));
+				$entity->set('bcc', implode(';', $arr));
 			}
+			
+			$this->loadNameHash($entity);
 
 		}
 		return $entity;
+	}
+	
+	public function loadNameHash(Entity $entity)
+	{
+		$addressList = array();
+		if ($entity->get('from')) {
+			$addressList[] = $entity->get('from');
+		}
+		
+		$arr = explode(';', $entity->get('to'));
+		foreach ($arr as $address) {
+			if (!in_array($address, $addressList)) {
+				$addressList[] = $address;
+			}
+		}
+		
+		$arr = explode(';', $entity->get('cc'));
+		foreach ($arr as $address) {
+			if (!in_array($address, $addressList)) {
+				$addressList[] = $address;
+			}
+		}
+		
+		$nameHash = array();
+		$typeHash = array();
+		$idHash = array();
+		foreach ($addressList as $address) {
+			$p = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($address);
+			if ($p) {
+				$nameHash[$address] = $p->get('name');
+				$typeHash[$address] = $p->getEntityName();
+				$idHash[$address] = $p->id;
+			}
+		}
+		
+		$entity->set('nameHash', $nameHash);
+		$entity->set('typeHash', $typeHash);
+		$entity->set('idHash', $idHash);
 	}
 	
 	public function findEntities($params)
@@ -171,6 +217,46 @@ class Email extends Record
     		'total' => $this->getRepository()->count($selectParams),
     		'collection' => $collection,
     	);
+	}
+	
+	public function getCopiedAttachments($id)
+	{
+		$ids = array();		
+		$names = new \stdClass();
+		
+		if (!empty($id)) {
+			$email = $this->getEntityManager()->getEntity('Email', $id);
+			if ($email && $this->getAcl()->check($email, 'read')) {
+				$email->loadLinkMultipleField('attachments');
+				$attachmentsIds = $email->get('attachmentsIds');
+				
+				foreach ($attachmentsIds as $attachmentId) {
+					$source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+					if ($source) {				
+						$attachment = $this->getEntityManager()->getEntity('Attachment');
+						$attachment->set('role', 'Attachment');
+						$attachment->set('type', $source->get('type'));
+						$attachment->set('size', $source->get('size'));
+						$attachment->set('global', $source->get('global'));
+						$attachment->set('name', $source->get('name'));
+						
+						$this->getEntityManager()->saveEntity($attachment);
+						
+						$contents = $this->getFileManager()->getContents('data/upload/' . $source->id);
+						if (!empty($contents)) {
+							$this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+							$ids[] = $attachment->id;
+							$names->{$attachment->id} = $attachment->get('name');
+						}
+					}
+				}			
+			}
+		}
+		
+		return array(
+			'ids' => $ids,
+			'names' => $names
+		);
 	}
 }
 

@@ -28,7 +28,8 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 {
 	protected function load($fieldName, $entityName)
 	{
-		$foreignField = $this->getForeignField($fieldName, $entityName);
+		$foreignField = array('first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName));
+		
 		$tableName = Util::toUnderScore($entityName);
 
 		$fullList = array(); //contains empty string (" ") like delimiter

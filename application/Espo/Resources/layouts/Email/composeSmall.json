@@ -5,22 +5,24 @@
 			[
 				{
 					"name":"from",
-					"view": "Crm:Email.Fields.FromAddress"
+					"view": "Email.Fields.ComposeFromAddress"
 				},
 				{"name":"cc"}			
 			],
 			[
 				{"name":"to"},
 				{"name":"bcc"}
-			],
-			[{"name":"name","fullWidth":true}],
+			],			
 			[
-				false,
+				{
+					"name": "parent"
+				},
 				{
 					"name":"selectTemplate",
 					"view":"Email.Fields.SelectTemplate" 
 				}
 			],
+			[{"name":"name","fullWidth":true}],
 			[{"name":"body","fullWidth":true}],
 			[{"name":"attachments"},{"name":"isHtml"}]
 		]

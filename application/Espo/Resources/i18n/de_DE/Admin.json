@@ -29,13 +29,14 @@
 		"Field Manager": "Felder anpassen",
 		"User Interface": "Benutzeroberfläche",
 		"Auth Tokens": "Auth Tokens",
-		"Authentication": "Authentication"
+		"Authentication": "Authentifizierung:",
+		"Currency": "Währung"
 	},
 	"layouts": {
 		"list": "Liste",
 		"detail": "Detail",
-		"listSmall": "List (Small)",
-		"detailSmall": "Detail (Small)",
+		"listSmall": "Liste (Klein)",
+		"detailSmall": "Detail (Klein)",
 		"filters": "Suchfilter",
 		"massUpdate": "Massenänderung",
 		"relationships": "Beziehungen"
@@ -51,7 +52,7 @@
 		"bool": "Bool",
 		"currency": "Währung",
 		"date": "Datum",
-		"datetime": "Datum/Zeit",
+		"datetime": "Datum\/Zeit",
 		"email": "E-Mail",
 		"enum": "Einfachauswahl",
 		"enumInt": "Einfachauswahl Ganzzahlwerte",
@@ -76,9 +77,9 @@
 		"required": "Erforderlich",
 		"default": "Standard",
 		"maxLength": "Maximallänge",
-		"options": "Options (raw values, not translated)",
-		"after": "After (field)",
-		"before": "Before (field)",
+		"options": "Optionen (Datenbank Werte, nicht übersetzt)",
+		"after": "Nach (Feld)",
+		"before": "Vor (Feld)",
 		"link": "Link",
 		"field": "Feld",
 		"min": "Min",
@@ -87,8 +88,8 @@
 		"previewSize": "Vorschau Größe"				
 	},
 	"messages": {
-		"upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann eine Weile dauern.",
-		"upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert.  Bitte aktualisieren Sie Ihren Browser.",
+		"upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}<\/strong> aktualisiert. Dies kann eine Weile dauern.",
+		"upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}<\/strong> aktualisiert. Bitte aktualisieren Sie Ihren Browser.",
 		"upgradeBackup": "Wir empfehlen, vor der Aktualisierung von EspoCRM Verzeichnis sowie Datenbank zu sichern.",
 		"thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen kann nicht gleich dem Dezimaltrennzeichen sein",
 		"userHasNoEmailAddress": "Der Benutzer hat keine E-Mail-Adresse.",
@@ -109,11 +110,12 @@
 		"inboundEmails": "IMAP Gruppen E-Mail Konten. E-Mail Import und E-Mail für Fälle.",
 		"emailTemplates": "Vorlagen für ausgehende E-Mails.",
 		"import": "Datenimport aus CSV Datei.",
-		"layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
+		"layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
 		"fieldManager": "Neue Felder erstellen oder bestehende anpassen.",
 		"userInterface": "Benutzeroberfläche anpassen.",
-		"authTokens": "Active auth sessions. IP address and last access date.",
-		"authentication": "Authentication setttings."
+		"authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum",
+		"authentication": "Authentifizierungs Einstellungen.",
+		"currency": "Währungseinstellungen und Kurse"
 	},
 	"options": {
 		"previewSize": {

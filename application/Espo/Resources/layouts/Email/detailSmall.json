@@ -3,6 +3,7 @@
 		"label":"",
 		"rows":[
 			[{"name":"dateSent"}],
+			[{"name":"parent"}],
 			[{"name":"from"}],
 			[{"name":"to"}],
 			[{"name":"name"}],			

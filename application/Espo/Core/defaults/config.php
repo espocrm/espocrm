@@ -66,6 +66,7 @@ return array (
 		'nl_NL',
 		'tr_TR',
 		'ro_RO',
+		'pl_PL',
 		'pt_BR',
 		'vi_VN'
 	),
@@ -91,6 +92,7 @@ return array (
 	'disableExport' => false,
 	'assignmentEmailNotifications' => false,
 	'assignmentEmailNotificationsEntityList' => array('Lead', 'Opportunity', 'Task', 'Case'),
+	'emailMessageMaxSize' => 10,
 	'isInstalled' => false,
 );
 

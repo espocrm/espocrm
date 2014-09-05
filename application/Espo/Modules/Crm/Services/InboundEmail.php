@@ -22,32 +22,32 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use \Espo\ORM\Entity;
+
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
-use \Zend\Mime\Mime as Mime;
-
 class InboundEmail extends \Espo\Services\Record
-{
+{	
+	protected $internalFields = array('password');
+	
+	const PORTION_LIMIT = 20;
 	
 	public function createEntity($data)
 	{
 		$entity = parent::createEntity($data);
-		$entity->clear('password');
 		return $entity;	
 	}
 	
 	public function getEntity($id = null)
 	{
 		$entity = parent::getEntity($id);
-		$entity->clear('password');
 		return $entity;
 	}
 	
 	public function updateEntity($id, $data)
 	{
 		$entity = parent::updateEntity($id, $data);
-		$entity->clear('password');
 		return $entity;
 	}
 	
@@ -55,12 +55,8 @@ class InboundEmail extends \Espo\Services\Record
 	{	
 		$result = parent::findEntities($params);
 		
-		foreach ($result['collection'] as $entity) {
-			$entity->clear('password');
-		}
 		return $result;
 	}
-	
 	
 	protected function init()
 	{
@@ -76,17 +72,7 @@ class InboundEmail extends \Espo\Services\Record
 	protected function getMailSender()
 	{
 		return $this->injections['mailSender'];
-	}
-	
-	protected function findFolder($storage, $path)
-	{
-		$arr = explode('/', $path);
-		$pointer = $storage->getFolders();
-		foreach ($arr as $folderName) {
-			$pointer = $pointer->$folderName;
-		}
-		return $pointer;
-	}
+	}	
 	
 	public function getFolders($params)
 	{		
@@ -121,12 +107,31 @@ class InboundEmail extends \Espo\Services\Record
 		return $foldersArr;
 	}
 	
-	public function fetchFromMailServer($id)
-	{
-		$inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
-		
+	public function fetchFromMailServer(Entity $inboundEmail)
+	{		
 		if ($inboundEmail->get('status') != 'Active') {
 			throw new Error();
+		}
+		
+		$importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager());
+		
+		$maxSize = $this->getConfig()->get('emailMessageMaxSize');
+		
+		$teamId = $inboundEmail->get('teamId');
+		$userId = $this->getUser()->id;		
+		if ($inboundEmail->get('assignToUserId')) {
+			$userId = $inboundEmail->get('assignToUserId');
+		}
+		
+		$fetchData = json_decode($inboundEmail->get('fetchData'), true);
+		if (empty($fetchData)) {
+			$fetchData = array();			
+		}
+		if (!array_key_exists('lastUID', $fetchData)) {
+			$fetchData['lastUID'] = array();
+		}
+		if (!array_key_exists('lastUID', $fetchData)) {
+			$fetchData['lastDate'] = array();
 		}
 		
 		$imapParams = array(
@@ -140,18 +145,7 @@ class InboundEmail extends \Espo\Services\Record
 			$imapParams['ssl'] = 'SSL';
 		}
 		
-		$storage = new \Zend\Mail\Storage\Imap($imapParams);
-		
-		$trash = null;
-		$trashFolder = $inboundEmail->get('trashFolder');
-		if (empty($trashFolder)) {
-			$trashFolder = 'INBOX.Trash';
-		}
-		try {
-			$trash = $this->findFolder($storage, $trashFolder);
-		} catch (\Exception $e) {
-			throw new Error("No trash folder '{$trashFolder}' found for Inbound Email {$id}");
-		}
+		$storage = new \Espo\Core\Mail\Storage\Imap($imapParams);
 		
 		$monitoredFolders = $inboundEmail->get('monitoredFolders');
 		if (empty($monitoredFolders)) {
@@ -159,135 +153,106 @@ class InboundEmail extends \Espo\Services\Record
 		}
 		
 		$monitoredFoldersArr = explode(',', $monitoredFolders);				
-		foreach ($monitoredFoldersArr as $path) {
-			$toRemove = array();
-			$path = trim($path);			
-			
-			$folder = $this->findFolder($storage, $path);			
+		foreach ($monitoredFoldersArr as $folder) {
+			$folder = trim($folder);		
 			$storage->selectFolder($folder);
 			
-			foreach ($storage as $number => $message) {
-				$this->importMessage($inboundEmail, $message);				
+			$lastUID = 0;
+			$lastDate = 0;
+			if (!empty($fetchData['lastUID'][$folder])) {
+				$lastUID = $fetchData['lastUID'][$folder];
 			}
+			if (!empty($fetchData['lastDate'][$folder])) {
+				$lastDate = $fetchData['lastDate'][$folder];
+			}
+
+			$ids = $storage->getIdsFromUID($lastUID);
 			
-			while ($storage->countMessages()) {
-				if ($trash) {
-					$storage->moveMessage(1, $trash);
+			if ((count($ids) == 1) && !empty($lastUID)) {
+				if ($storage->getUniqueId($ids[0]) == $lastUID) {
+					continue;
 				}
 			}
-		}	
-	}
-	
-	protected function getAddressListFromMessage($message, $type)
-	{
-		$addressList = array();
-		if (isset($message->$type)) {
 			
-			$list = $message->getHeader($type)->getAddressList();
-			foreach ($list as $address) {
-				$addressList[] = $address->getEmail();
-			}
-		}
-		return $addressList;
-	}
-	
-	protected function importMessage($inboundEmail, $message)
-	{
-		$result = false;
-		
-		try {
-			$email = $this->getEntityManager()->getEntity('Email');
-			if ($inboundEmail->get('teamId')) {
-				$email->set('teamsIds', array($inboundEmail->get('teamId')));
-			}
-			
-			$email->set('isHtml', false);		
-			$email->set('name', $message->subject);
-			$email->set('attachmentsIds', array());
-			
-			$userId = $this->getUser()->id;		
-			if ($inboundEmail->get('assignToUserId')) {
-				$userId = $inboundEmail->get('assignToUserId');
-			}
-			$email->set('assignedUserId', $userId);			
-		
-			$fromArr = $this->getAddressListFromMessage($message, 'from');
-			
-			if (isset($message->from)) {
-				$email->set('fromName', $message->from);
-			}
-			
-			$email->set('from', $fromArr[0]);
-			$email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));		
-			$email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
-			$email->set('bcc', implode(';', $this->getAddressListFromMessage($message, 'bcc')));
-		
-			$email->set('status', 'Archived');
-
-			$dt = new \DateTime($message->date);
-			if ($dt) {
-				$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
-				$email->set('dateSent', $dateSent);
-			}
-			
-			$inlineIds = array();
-	
-			if ($message->isMultipart()) {				
-				foreach (new \RecursiveIteratorIterator($message) as $part) {
-					$this->importPartDataToEmail($email, $part, $inlineIds);
-				}			
-			} else {
-				$this->importPartDataToEmail($email, $message, $inlineIds);
-			}
-			
-			$body = $email->get('body');
-			if (!empty($body)) {
-				foreach ($inlineIds as $cid => $attachmentId) {
-					$body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
+			$k = 0;	
+			foreach ($ids as $i => $id) {
+				if ($k == count($ids) - 1) {
+					$lastUID = $storage->getUniqueId($id);
 				}
-				$email->set('body', $body);
-			}
-
-			$this->getEntityManager()->saveEntity($email);		
-
-			if ($inboundEmail->get('createCase')) {
-				if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
-					$caseNumber = $m[1];
-					$case = $this->getEntityManager()->getRepository('Case')->where(array(
-						'number' => $caseNumber
-					))->findOne();
-					if ($case) {
-						$email->set('parentType', 'Case');
-						$email->set('parentId', $case->id);
-						$this->getEntityManager()->saveEntity($email);
-						$this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
-					}
-				} else {
-					$params = array(
-						'caseDistribution' => $inboundEmail->get('caseDistribution'),
-						'teamId' => $inboundEmail->get('teamId'),
-						'userId' => $inboundEmail->get('assignToUserId'),
-					);
-					$case = $this->emailToCase($email, $params);
-					$user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
-					if ($inboundEmail->get('reply')) {
-						$this->autoReply($inboundEmail, $email, $case, $user);
+				
+				if ($maxSize) {
+					if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
+						continue;
 					}
 				}
-			} else {
-				if ($inboundEmail->get('reply')) {
-					$user = $this->getEntityManager()->getEntity('User', $userId);
-					$this->autoReply($inboundEmail, $email, $user);
+				
+				$message = $storage->getMessage($id);
+			
+				$email = $importer->importMessage($message, $userId, array($teamId));
+				
+				if ($email) {
+					if ($inboundEmail->get('createCase')) {
+						$this->createCase($inboundEmail, $email);
+					} else {
+						if ($inboundEmail->get('reply')) {
+							$user = $this->getEntityManager()->getEntity('User', $userId);
+							$this->autoReply($inboundEmail, $email, $user);
+						}
+					}
 				}
+				
+				if ($k == count($ids) - 1) {
+					if ($message) {
+						$dt = new \DateTime($message->date);
+						if ($dt) {
+							$dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');		
+							$lastDate = $dateSent;
+						}
+					}
+				}
+				
+				if ($k == self::PORTION_LIMIT - 1) {
+					$lastUID = $storage->getUniqueId($id);
+					break;
+				}
+				$k++;						
 			}
 			
-			$result = true;
+			$fetchData['lastUID'][$folder] = $lastUID;
+			$fetchData['lastDate'][$folder] = $lastDate;
 			
-		} catch (\Exception $e){
-			// TODO log			
+			$inboundEmail->set('fetchData', json_encode($fetchData));
+			$this->getEntityManager()->saveEntity($inboundEmail);
 		}
 		
-		return $result;
+		return true;
+	}
+	
+	protected function createCase($inboundEmail, $email)
+	{
+		if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
+			$caseNumber = $m[1];
+			$case = $this->getEntityManager()->getRepository('Case')->where(array(
+				'number' => $caseNumber
+			))->findOne();
+			if ($case) {
+				$email->set('parentType', 'Case');
+				$email->set('parentId', $case->id);
+				$this->getEntityManager()->saveEntity($email);
+				$this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+			}
+		} else {
+			$params = array(
+				'caseDistribution' => $inboundEmail->get('caseDistribution'),
+				'teamId' => $inboundEmail->get('teamId'),
+				'userId' => $inboundEmail->get('assignToUserId'),
+			);
+			$case = $this->emailToCase($email, $params);
+			$user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+			if ($inboundEmail->get('reply')) {
+				$this->autoReply($inboundEmail, $email, $case, $user);
+			}
+		}
 	}
 	
 	protected function assignRoundRobin($case, $team)
@@ -373,123 +338,10 @@ class InboundEmail extends \Espo\Services\Record
 		$this->getEntityManager()->saveEntity($email);
 		
 		$case = $this->getEntityManager()->getEntity('Case', $case->id);			
+		
 		return $case;		
 	}
-	
-	protected function getContentFromPart($part)
-	{
-		if ($part instanceof \Zend\Mime\Part) {
-			$content = $part->getRawContent();
-			if (strtolower($part->charset) != 'utf-8') {
-				$content = mb_convert_encoding($content, 'UTF-8', $part->charset);
-			}
-		} else {
-			$content = $part->getContent();
-			
-			$encoding = null;
-			
-			if (isset($part->contentTransferEncoding)) {
-				$cteHeader = $part->getHeader('Content-Transfer-Encoding');
-				$encoding = strtolower($cteHeader->getTransferEncoding());
-			}
-			
-			if ($encoding == 'base64') {
-				$content = base64_decode($content);
-			}
-			
-			$charset = 'UTF-8';			
-			
-			if (isset($part->contentType)) {
-				$ctHeader = $part->getHeader('Content-Type');
-				$charsetParamValue = $ctHeader->getParameter('charset');
-				if (!empty($charsetParamValue)) {
-					$charset = strtoupper($charsetParamValue);
-				}
-			}
-			
-			if ($charset !== 'UTF-8') {
-				$content = mb_convert_encoding($content, 'UTF-8', $charset);
-			}			
-			
-			if (isset($part->contentTransferEncoding)) {
-				$cteHeader = $part->getHeader('Content-Transfer-Encoding');			
-				if ($cteHeader->getTransferEncoding() == 'quoted-printable') {					
-					$content = quoted_printable_decode($content);
-				}
-			}			
-		}
-		return $content;
-	}
-	
-	protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array())
-	{		
-		try {
-			$type = strtok($part->contentType, ';');
-			$encoding = null;
-			
-			switch ($type) {
-				case 'text/plain':					
-					$content = $this->getContentFromPart($part);				
-					if (!$email->get('body')) {				
-						$email->set('body', $content);
-					}
-					$email->set('bodyPlain', $content);
-					break;
-				case 'text/html':
-					$content = $this->getContentFromPart($part);
-					$email->set('body', $content);
-					$email->set('isHtml', true);
-					break;
-				default:
-					$content = $part->getContent();					
-					$disposition = null;
-					
-					$fileName = null;
-					$contentId = null;
-							
-					if (isset($part->ContentDisposition)) {				
-						if (strpos($part->ContentDisposition, 'attachment') === 0) {
-							if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
-								$fileName = $m[1];
-								$disposition = 'attachment';
-							}							
-						} else if (strpos($part->ContentDisposition, 'inline') === 0) {
-							$contentId = trim($part->contentID, '<>');
-							$fileName = $contentId;
-							$disposition = 'inline';
-						}						
-					}
-					
-					if (isset($part->contentTransferEncoding)) {
-						$encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
-					}
-					
-					$attachment = $this->getEntityManager()->getEntity('Attachment');
-					$attachment->set('name', $fileName);							
-					$attachment->set('type', $type);
-							
-					$this->getEntityManager()->saveEntity($attachment);
-												
-					$path = 'data/upload/' . $attachment->id;
-							
-					if ($encoding == 'base64') {
-						$content = base64_decode($content);
-					}
-					$this->getFileManager()->putContents($path, $content);
-					
-					if ($disposition == 'attachment') {
-						$attachmentsIds = $email->get('attachmentsIds');
-						$attachmentsIds[] = $attachment->id;
-						$email->set('attachmentsIds', $attachmentsIds);	
-					} else if ($disposition == 'inline') {
-						$inlineIds[$contentId] = $attachment->id;
-					}		
-			}
-		} catch (\Exception $e){
-			// TODO log	
-		}		
-	}
-	
+		
 	protected function autoReply($inboundEmail, $email, $case = null, $user = null)
 	{	
 		try {
@@ -551,11 +403,11 @@ class InboundEmail extends \Espo\Services\Record
 				}
 				
 				$this->getEntityManager()->removeEntity($reply);
+				
+				return true;
 			}		
 			
-		} catch (\Exception $e){
-			// TODO log	
-		}
+		} catch (\Exception $e) {}
 	}	
 }
 

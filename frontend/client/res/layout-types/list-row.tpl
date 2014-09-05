@@ -5,8 +5,12 @@
 		if (defs.options && defs.options.defs && defs.options.defs.params) {
 			width = defs.options.defs.params.width || '';
 		}
+		var align = false;
+		if (defs.options && defs.options.defs && defs.options.defs.params) {
+			align = defs.options.defs.params.align || false;
+		}
 	%>
-	<td class="cell cell-<%= defs.name %>" <% if (width) print('width="'+width+'"'); %>>
+	<td class="cell cell-<%= defs.name %>" <% if (width) print(' width="'+width+'"'); if (align) print(' align="'+align+'"'); %>>
 	<%
 			var tag = 'tag' in defs ? defs.tag : false;
 			if (tag) {

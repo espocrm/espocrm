@@ -31,6 +31,16 @@ _.extend(Espo.Language.prototype, {
 	cache: null,
 	
 	url: 'I18n',
+	
+	has: function (name, category, scope) {
+		if (scope in this.data) {
+			if (category in this.data[scope]) {
+				if (name in this.data[scope][category]) {
+					return true;
+				}
+			}
+		}
+	},
 
 	get: function (scope, category, name) {
 		if (scope in this.data) {

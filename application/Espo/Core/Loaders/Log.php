@@ -25,7 +25,7 @@ namespace Espo\Core\Loaders;
 use Espo\Core\Utils,
 	Espo\Core\Utils\Log\Monolog\Handler;
 
-class Log
+class Log implements Loader
 {
 	private $container;
 

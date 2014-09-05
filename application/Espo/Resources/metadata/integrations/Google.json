@@ -1,0 +1,20 @@
+{
+	"fields": {
+		"clientId": {
+			"type": "varchar",
+			"maxLength": 255,
+			"required": true
+		},
+		"clientSecret": {
+			"type": "varchar",
+			"maxLength": 255,
+			"required": true
+		}
+	},
+	"params": {
+		"url": "https://accounts.google.com/o/oauth2/auth",
+		"scope": "https://www.googleapis.com/auth/calendar"
+	},
+	"allowUserAccounts": true,
+	"authMethod": "OAuth2"
+}

@@ -1,7 +1,7 @@
 {
 	"fields": {
 		"name": "Onderwerp",
-		"parent": "Bovenliggende item",
+		"parent": "Behorende bij",
 		"status": "Status",
 		"dateSent": "Datum verzonden",
 		"from": "Van",

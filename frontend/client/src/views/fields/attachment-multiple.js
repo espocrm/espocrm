@@ -238,11 +238,13 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 							url: 'Attachment/action/upload',
 							data: e.target.result,
 							contentType: 'multipart/encrypted',
+							timeout: 0,
 						}).done(function (data) {
 								
 							attachment.id = data.attachmentId;							
 							attachment.set('name', file.name);
 							attachment.set('type', file.type || 'text/plain');
+							attachment.set('role', 'Attachment');
 							attachment.set('size', file.size);
 							attachment.once('sync', function () {
 								if (canceledList.indexOf(attachment.cid) === -1) {

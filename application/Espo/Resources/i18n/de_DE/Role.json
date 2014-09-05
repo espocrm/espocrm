@@ -28,5 +28,8 @@
 		"read": "Lesen",
 		"edit": "Bearbeiten",
 		"delete": "Löschen"
+	},
+	"messages": {
+		"changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
 	}
 }

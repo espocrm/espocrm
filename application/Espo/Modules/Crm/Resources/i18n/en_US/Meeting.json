@@ -18,6 +18,11 @@
 			"Planned": "Planned",
 			"Held": "Held",
 			"Not Held": "Not Held"
+		},
+		"acceptanceStatus": {
+			"None": "None",
+			"Accepted": "Accepted",
+			"Declined": "Declined"
 		}
 	},
 	"labels": {

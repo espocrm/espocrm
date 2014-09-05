@@ -63,15 +63,11 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 
 		list: function (options) {						
 			this.getCollection(function (collection) {		
-				var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
-				searchManager.loadStored();
-				collection.where = searchManager.getWhere();				
-				collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+
 
 				this.main(this.getViewName('list'), {
 					scope: this.name,
 					collection: collection,
-					searchManager: searchManager,
 				});		
 			});
 		},
@@ -149,6 +145,11 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
 				
 				this.showLoadingNotification();
 				model.once('sync', function () {
+
+					if (options.attributes) {
+						model.set(options.attributes)
+					}
+					
 					this.main(this.getViewName('edit'), {
 						scope: this.name,
 						model: model,

@@ -34,6 +34,11 @@ class CronManager
 	private $jobService;
 	private $scheduledJobService;
 
+	const PENDING = 'Pending';
+	const RUNNING = 'Running';
+	const SUCCESS = 'Success';
+	const FAILED = 'Failed';
+
 	protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
 
 
@@ -128,13 +133,12 @@ class CronManager
 		//Check scheduled jobs and create related jobs
 		$this->createJobsFromScheduledJobs();
 
-
 		$pendingJobs = $this->getJobService()->getPendingJobs();
 
 		foreach ($pendingJobs as $job) {
 
 			$this->getJobService()->updateEntity($job['id'], array(
-				'status' => 'Running',
+				'status' => self::RUNNING,
 			));
 
 			$isSuccess = true;
@@ -150,7 +154,7 @@ class CronManager
 				$GLOBALS['log']->error('Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
 			}
 
-			$status = $isSuccess ? 'Success' : 'Failed';
+			$status = $isSuccess ? self::SUCCESS : self::FAILED;
 
 			$this->getJobService()->updateEntity($job['id'], array(
 				'status' => $status,
@@ -180,7 +184,6 @@ class CronManager
 			$cronExpression = \Cron\CronExpression::factory($scheduling);
 
 			try {
-				//$nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 				$prevDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
 			} catch (\Exception $e) {
 				$GLOBALS['log']->error('ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
@@ -197,7 +200,7 @@ class CronManager
 				//create a job
 				$data = array(
 					'name' => $scheduledJob['name'],
-					'status' => 'Pending',
+					'status' => self::PENDING,
 					'scheduledJobId' => $scheduledJob['id'],
 					'executeTime' => $prevDate,
 					'method' => $scheduledJob['job'],
