@@ -83,7 +83,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 						p.buttons = this.filterActions(view.getButtons());
 					}
 					if (p.label) {
-						 p.title = this.translate(p.label, 'labels', scope);				
+						p.title = this.translate(p.label, 'labels', scope);				
 					} else {
 						p.title = view.title;
 					}

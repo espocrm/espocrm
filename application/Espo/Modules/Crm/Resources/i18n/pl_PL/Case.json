@@ -1,0 +1,42 @@
+{
+	"fields": {
+		"name": "Imię",
+		"number": "Numer",
+		"status": "Status",
+		"account": "Konto",
+		"contact": "Kontakty",
+		"priority": "Pryjorytet",
+		"type": "Rodzaj",
+		"description": "Opis "
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"New": "Nowy",
+			"Assigned": "Przypisany",
+			"Pending": "Oczekuje",
+			"Closed": "Zamknięty",
+			"Rejected": "Odrzucony",
+			"Duplicate": "Powielony"
+		},
+		"priority" : {
+			"Low": "Niski",
+			"Normal": "Normalny",
+			"High": "Wysoki",
+			"Urgent": "Pilne"
+		},
+		"type": {
+			"Question": "Pytanie",
+			"Incident": "Zdarzenie",
+			"Problem": "Problem"
+		}
+	},
+	"labels": {
+		"Create Case": "Utwórz Sprawę"
+	},
+	"presetFilters": {
+		"open": "Otwórz",
+		"closed": "Zamknięty"
+	}
+}

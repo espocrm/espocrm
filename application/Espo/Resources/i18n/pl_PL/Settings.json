@@ -1,0 +1,76 @@
+{
+	"fields": {
+		"useCache": "Użyj pamięci podręcznej",
+		"dateFormat": "Format Daty",
+		"timeFormat": "Format Czasu",
+		"timeZone": "Strefa Czasowa",
+		"weekStart": "Pierwszy dzień tygodnia",
+		"thousandSeparator": "Separator Dziesiętny",
+		"decimalMark": "Znak rozdzielenia",
+		"defaultCurrency": "Domyślna Waluta",
+		"baseCurrency": "Podstawowa Waluta",
+		"baseCurrency": "Podstawowa Waluta",
+		"currencyRates": "Kurs Waluty",
+		
+		"currencyList": "Domyślana Lista",
+		"language": "Język",
+		
+		"companyLogo": "Logo Firmowe",
+		
+		"smtpServer": "Server",
+		"smtpPort": "Port",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Zabezpieczenia",
+		"smtpUsername": "Użytkownik",
+		"emailAddress": "E-mail",
+		"smtpPassword": "Hasło",
+		"outboundEmailFromName": "Od",
+		"outboundEmailFromAddress": "Z adresu",
+		"outboundEmailIsShared": "Jest Udostępniane",
+		
+		"recordsPerPage": "Wyników na stronę",
+		"recordsPerPageSmall": "Records Per Page (Small)",		
+		"tabList": "Lista ",
+		"quickCreateList": "Szybkie utworzenie listy",
+		
+		"exportDelimiter": "Znak rodzielenia eksportu",
+		
+		"authenticationMethod": "Metoda autentykcji",
+		"ldapHost": "Host",
+		"ldapPort": "Port",
+		"ldapAuth": "Auth",
+		"ldapUsername": "Użytkownik",
+		"ldapPassword": "Hasło",
+		"ldapBindRequiresDn": "Bind Requires Dn",
+		"ldapBaseDn": "Base Dn",
+		"ldapAccountCanonicalForm": "Account Canonical Form",
+		"ldapAccountDomainName": "Nazwa konta domeny",
+		"ldapTryUsernameSplit": "Spróbuj rodzielić nazwę użytkonika",
+		"ldapCreateEspoUser": "Utwórz uzytkonika w EspoCRM",
+		"ldapSecurity": "Zabezpieczenia",
+		"ldapUserLoginFilter": "Filtr użytkoników ",
+		"ldapAccountDomainNameShort": "Krótka nazwa konta domeny",
+		"ldapOptReferrals": "Opt Referrals",
+		"disableExport": "Disable Export (only admin is allowed)",
+		"assignmentEmailNotifications": "Wyślij powiadominie do użytkonika o przypisaniu",
+		"assignmentEmailNotificationsEntityList": "Entities to Notify About"
+	},
+	"options": {
+		"weekStart": {
+			"0": "Niedziela",
+			"1": "Poniedziałek"
+		}
+	},
+	"tooltips": {
+		"recordsPerPageSmall": "Policz wyniki w panelu relacji."
+	},
+	"labels": {
+		"System": "System",
+		"Locale": "Lokalne",
+		"SMTP": "SMTP",
+		"Configuration": "Konfiguracja",
+		"Notifications": "powiadomienia",
+		"Currency Settings": "Ustwienia Waluty",
+		"Currency Rtes": "Ustawienia Kursu"
+	}
+}

@@ -66,6 +66,7 @@ return array (
 		'nl_NL',
 		'tr_TR',
 		'ro_RO',
+		'pl_PL',
 		'pt_BR',
 		'vi_VN'
 	),
