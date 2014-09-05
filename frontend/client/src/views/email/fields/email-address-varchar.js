@@ -103,7 +103,7 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
 						return 'EmailAddress/action/searchInAddressBook?limit=5';
 					}.bind(this),
 					paramName: 'q',
-					minChars: 2,
+					minChars: 1,
 					autoSelectFirst: true,
 			       	formatResult: function (suggestion) {
 			        	return suggestion.name + ' &#60;' + suggestion.id + '&#62;';
