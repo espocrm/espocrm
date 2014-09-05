@@ -34,13 +34,13 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
 		accessList: ['not-set', 'enabled', 'disabled'],
 	
 		colors: {
-			all: '#00CC00',
+			all: '#6BC924',
 			team: '#999900',
 			own: '#CC9900',
-			no: '#FF0000',
+			no: '#F23333',
 		
-			enabled: '#00CC00',
-			disabled: '#FF0000',
+			enabled: '#6BC924',
+			disabled: '#F23333',
 			'not-set': '#A8A8A8',			
 		},
 	
@@ -108,7 +108,7 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
 			this.final = this.options.final || false;
 			
 			this.scopeList = [];				
-			var scopesAll = Object.keys(this.getMetadata().get('scopes'));
+			var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort();
 			scopesAll.forEach(function (scope) {
 				if (this.getMetadata().get('scopes.' + scope + '.acl')) {
 					this.scopeList.push(scope);
