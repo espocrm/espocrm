@@ -39,7 +39,6 @@
                "label": "Reply",
                "action": "reply",
                "style": "default",
-               "icon": "glyphicon glyphicon-arrow-left",
                "acl": "read"
             }
          ],

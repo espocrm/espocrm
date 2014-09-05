@@ -44,7 +44,7 @@ class User extends \Espo\Core\Controllers\Record
 			throw new NotFound();
 		}
 		
-		$acl = new \Espo\Core\Acl($user);
+		$acl = new \Espo\Core\Acl($user, $this->getConfig(), $this->getContainer()->get('fileManager'), $this->getMetadata());
 		
 		return $acl->toArray();					
 	}
