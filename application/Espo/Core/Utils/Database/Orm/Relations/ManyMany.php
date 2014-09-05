@@ -26,12 +26,6 @@ use Espo\Core\Utils\Util;
 
 class ManyMany extends Base
 {
-	protected $allowParams = array(
-		'relationName',
-		'conditions',
-		'additionalColumns',
-	);
-
 	protected function load($linkName, $entityName)
 	{
 		$foreignEntityName = $this->getForeignEntityName();

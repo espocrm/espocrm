@@ -24,12 +24,6 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class HasMany extends Base
 {
-	protected $allowParams = array(
-		'relationName',
-		'conditions',
-		'additionalColumns',
-	);
-
 	protected function load($linkName, $entityName)
 	{
 		$linkParams = $this->getLinkParams();

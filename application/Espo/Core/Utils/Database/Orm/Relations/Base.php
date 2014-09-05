@@ -31,7 +31,12 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 	protected $foreignLinkName = null;
 	protected $foreignEntityName = null;
 
-	protected $allowParams = array();
+	protected $allowedParams = array(
+		'relationName',
+		'conditions',
+		'additionalColumns',
+		'midKeys',
+	);
 
 	protected function getParams()
 	{
@@ -106,10 +111,10 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 		$linkName = $this->getLinkName();
 		$entityName = $this->getEntityName();
 
-		if (!empty($this->allowParams)) {
+		if (!empty($this->allowedParams)) {
 			$linkParams = &$loads[$entityName]['relations'][$linkName];
 
-			foreach ($this->allowParams as $name) {
+			foreach ($this->allowedParams as $name) {
 
 				$additionalParrams = $this->getAllowedAdditionalParams($name);
 
