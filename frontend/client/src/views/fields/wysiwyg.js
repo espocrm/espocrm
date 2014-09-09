@@ -64,13 +64,13 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 			}
 			
 			if (this.mode == 'edit') {
-				if (this.model.has('isHtml') && this.model.get('isHtml')) {
+				if (!this.model.has('isHtml') || this.model.get('isHtml')) {
 					this.enableWysiwygMode();
 				}
 			}
 			
 			if (this.mode == 'detail') {
-				if (this.model.has('isHtml') && this.model.get('isHtml')) {
+				if (!this.model.has('isHtml') || this.model.get('isHtml')) {
 					this.$el.find('iframe').removeClass('hidden');
 					var iframe = this.$el.find('iframe').get(0);				
 					var document = iframe.contentWindow.document;				
@@ -143,7 +143,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		
 		fetch: function () {
 			var data = {};
-			if (this.model.has('isHtml') && this.model.get('isHtml')) {
+			if (!this.model.has('isHtml') || this.model.get('isHtml')) {
 				data[this.name] = this.$element.code();
 			} else {
 				data[this.name] = this.$element.val();	
