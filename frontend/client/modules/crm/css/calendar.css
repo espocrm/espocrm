@@ -6,9 +6,26 @@
 	margin: 10px 0 0;
 }
 
-.fc-event-vert .fc-event-bg {
+
+
+
+.fc-time-grid-event .fc-bg {
+	opacity: 0;
+}
+
+.fc-state-default.fc-corner-left {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.fc-state-default.fc-corner-right {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.fc-event {
+	border-radius: 0;
 	background-color: none !important;
-	opacity: 0 !important;
 }
 
 .dashlet-body div.calendar {
@@ -17,6 +34,11 @@
 	margin-bottom: -15px;
 	margin-top: -15px;
 }
+
 .fc-event {
 	min-height: 19px;
+}
+
+.fc-day-grid-event .fc-time {
+	font-weight: normal;
 }
