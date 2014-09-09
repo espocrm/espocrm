@@ -117,8 +117,8 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 					tickFormatter: function (value) {
 						if (value % 1 == 0) {
 							var i = parseInt(value);
-							if (i in self.months) {
-								return self.months[i];
+							if (i in self.months) {								
+								return moment(self.months[i] + '-01').format('MMM YYYY');
 							}
 						}
 						return '';						
