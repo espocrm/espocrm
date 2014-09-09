@@ -140,11 +140,7 @@
 			this._loadCallbacks[name].push(callback);			
 		},
 		
-		dataLoaded: {},
-		
-		libUrls: {
-			'Flotr': 'client/modules/crm/lib/flotr2.min.js'
-		},
+		dataLoaded: {},		
 		
 		load: function (name, callback, error) {		
 			var dataType, type, path, fetchObject;			
@@ -167,9 +163,13 @@
 				}
 				
 				fetchObject = function (name, d) {					
-					var from = Espo.Libs;
+					var from = root;
 					if (exportsTo == 'window') {
 						from = root;
+					} else {
+						exportsTo.split('.').forEach(function (item) {
+							from = from[item];
+						});
 					}
 					if (exportsAs in from) {
 						return from[exportsAs];

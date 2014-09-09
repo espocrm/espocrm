@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
+Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], function (Dep, Summernote) {
 
 	return Dep.extend({	
 	
@@ -30,16 +30,7 @@ Espo.define('Views.Fields.Wysiwyg', 'Views.Fields.Text', function (Dep) {
 		editTemplate: 'fields.wysiwyg.edit',
 		
 		setup: function () {			
-			Dep.prototype.setup.call(this);
-			
-			if (!('summernote' in $)) {
-				this.addReadyCondition(function () {
-					return ('summernote' in $);
-				});
-				Espo.loadLib('client/lib/summernote.min.js', function () {
-					this.tryReady();
-				}.bind(this));
-			}
+			Dep.prototype.setup.call(this);			
 			
 			this.listenTo(this.model, 'change:isHtml', function (model) {						
 				if (!model.has('isHtml') || model.get('isHtml')) {

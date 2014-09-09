@@ -3,5 +3,10 @@
 		"path": "client/lib/flotr2.min.js",
 		"exportsTo": "window",
 		"exportsAs": "Flotr"		
+	},
+	"Summernote": {
+		"path": "client/lib/summernote.min.js",
+		"exportsTo": "$",
+		"exportsAs": "summernote"		
 	}
 }
