@@ -59,6 +59,8 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 				});
 			}
 			
+			this.stageList = [];
+			
 			var data = [];
 			var i = 0;
 			d.forEach(function (item) {
@@ -66,6 +68,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 					data: [[item.value, d.length - i]],
 					label: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
 				});
+				this.stageList.push(this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'));
 				i++;
 			}, this);
 			
@@ -107,6 +110,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 				mouse: {
 					track: true,
 					relative: true,
+					position: 's',
 					trackFormatter: function (obj) {
 						return self.formatNumber(obj.x) + ' ' + self.currency;
 					},
