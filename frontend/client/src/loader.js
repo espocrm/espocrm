@@ -28,6 +28,8 @@
 		this._loadCallbacks = {};
 		
 		this.pathsBeingLoaded = {};
+		
+		this.libsConfig = {};
 	}
 
 	_.extend(Espo.Loader.prototype, {
@@ -318,7 +320,11 @@
 					callback();
 				}.bind(this)
 			});
-		}
+		},
+		
+		addLibsConfig: function (data) {
+			this.libsConfig = _.extend(this.libsConfig, data);
+		},		
 	});
 
 	Espo.loader = new Espo.Loader();

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
+Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], function (Dep, FullCalendar) {
 	
 	return Dep.extend({
 
@@ -53,17 +53,6 @@ Espo.define('Crm:Views.Calendar.Calendar', 'View', function (Dep) {
 				modeList: this.modeList,
 				header: this.header,
 			};
-		},
-
-		init: function () {
-			if (!('fullCalendar' in $)) {
-				this.addReadyCondition(function () {
-					return ('fullCalendar' in $);
-				});
-				Espo.loadLib('client/modules/crm/lib/fullcalendar.min.js', function () {
-					this.tryReady();
-				}.bind(this));
-			}
 		},
 
 		events: {

@@ -74,12 +74,11 @@ Espo.App = function (options, callback) {
 	var countLoaded = 0;
 	var manageCallback = function () {
 		countLoaded++;
-		if (countLoaded == 2) {
+		if (countLoaded == 1) {
 			callback.call(this, this);
 		}
 	}.bind(this);
 	
-	this.loader.loadLibsConfig(manageCallback);
 	this._preLoad(manageCallback);
 }
 
@@ -128,7 +127,10 @@ _.extend(Espo.App.prototype, {
 				
 				this.settings.defs = this.metadata.get('entityDefs.Settings');
 				this.user.defs = this.metadata.get('entityDefs.User');
-				this.preferences.defs = this.metadata.get('entityDefs.Preferences');			
+				this.preferences.defs = this.metadata.get('entityDefs.Preferences');
+				
+
+				this.loader.addLibsConfig(this.metadata.get('app.jsLibs') || {});			
 										
 				this._initRouter();
 			}.bind(this));
