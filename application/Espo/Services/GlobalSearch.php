@@ -58,9 +58,11 @@ class GlobalSearch extends \Espo\Core\Services\Base
 		return $this->injections['metadata'];
 	}	
 	
-	public function find($query, $offset)
+	public function find($query, $offset, $maxSize)
 	{
 		$entityNameList = $this->getConfig()->get('globalSearchEntityList');
+		
+		$entityTypeCount = count($entityNameList);
 		
 		$list = array();
 		$count = 0;
@@ -78,8 +80,8 @@ class GlobalSearch extends \Espo\Core\Services\Base
 						'name*' => '%' . $query . '%',
 					)
 				),
-				'offset' => $offset,
-				'limit' => 5,
+				'offset' => round($offset / $entityTypeCount),
+				'limit' => round($maxSize / $entityTypeCount),
 				'orderBy' => 'createdAt',
 				'order' => 'DESC',
 			);

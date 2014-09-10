@@ -34,7 +34,7 @@ class GlobalSearch extends \Espo\Core\Controllers\Base
 		$offset = $request->get('offset');
 		$maxSize = $request->get('maxSize');		
 		
-		return $this->getService('GlobalSearch')->find($query, $offset);
+		return $this->getService('GlobalSearch')->find($query, $offset, $maxSize);
 	}
 }
 
