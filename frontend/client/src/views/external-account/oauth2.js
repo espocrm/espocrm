@@ -234,7 +234,14 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 					response_type: 'token'
 				}		
 			}, function (accessToken, expires) {
-				
+				if (accessToken) {
+					this.model.set('accessToken', accessToken);
+					this.model.set('expires', expires);					
+					this.model.save();
+					// TODO show Connected and Disconnect button
+				} else {
+					this.notify('Error occured', 'error');
+				}
 			});
 		},
 		
