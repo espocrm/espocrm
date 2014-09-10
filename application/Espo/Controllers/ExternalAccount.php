@@ -100,5 +100,26 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 		
 		return $entity->toArray();		
 	}
+	
+	public function actionAuthorizationCode($params, $data, $request)
+	{
+		if (!$request->isPost()) {
+			throw Error('Bad HTTP method type.');
+		}		
+		
+		$id = $data['id'];
+		$code = $data['code'];
+		
+		list($integration, $userId) = explode('__', $id);
+		
+		if (!$this->getUser()->isAdmin()) {
+			if ($this->getUser()->id != $userId) {
+				throw new Forbidden();
+			}
+		}
+		
+		$service = $this->getRecordService();		
+		return $service->authorizationCode($integration, $userId, $code);
+	}
 }
 

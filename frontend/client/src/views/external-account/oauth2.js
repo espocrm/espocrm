@@ -188,26 +188,21 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 			path += '?' + arr.join('&');
 			
 			var parseUrl = function (str) {
-				var accessToken = false;
-				var expires = false;
+				var code = null;
 				
-				str = str.substr(str.indexOf('#') + 1, str.length);
+				str = str.substr(str.indexOf('?') + 1, str.length);
 				str.split('&').forEach(function (part) {
 					var arr = part.split('=');
 					var name = decodeURI(arr[0]);
 					var value = decodeURI(arr[1] || '');
 					
-					if (name == 'access_token') {
-						accessToken = value;
-					}
-					if (name == 'expires') {
-						expires = value;
+					if (name == 'code') {
+						code = value;
 					}
 				}, this);
-				if (accessToken) {
+				if (code) {
 					return {
-						accessToken: accessToken,
-						expires: expires
+						code: code,
 					}
 				}
 			}
@@ -217,28 +212,41 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 				if (popup.closed) {
 					window.clearInterval(interval);
 				} else {
-					var res = parseUrl(popup.location.href.toString());				
-					callback.call(self, res.accessToken, res.expires);
-					popup.close();
+					var res = parseUrl(popup.location.href.toString());
+					if (res) {			
+						callback.call(self, res);
+						popup.close();
+						window.clearInterval(interval);
+					}
 				}
 			}, 500);
 		},
 		
 		connect: function () {
 			this.popup({
-				path: this.getMetadata().get('integrations.' + this.integration + '.params.url'),
+				path: this.getMetadata().get('integrations.' + this.integration + '.params.endpoint'),
 				params: {
 					client_id: this.clientId,
 					redirect_uri: this.redirectUri,
 					scope: this.getMetadata().get('integrations.' + this.integration + '.params.scope'),
-					response_type: 'token'
+					response_type: 'code',
+					access_type: 'offline'
 				}		
-			}, function (accessToken, expires) {
-				if (accessToken) {
-					this.model.set('accessToken', accessToken);
-					this.model.set('expires', expires);					
-					this.model.save();
-					// TODO show Connected and Disconnect button
+			}, function (res) {
+				if (res.code) {
+					$.ajax({
+						url: 'ExternalAccount/action/authorizationCode',
+						type: 'POST',
+						data: JSON.stringify({
+							'id': this.id,
+							'code': res.code
+						})
+					}).done(function () {
+					
+						// TODO show Connected and Disconnect button
+					
+					}.bind(this));
+					
 				} else {
 					this.notify('Error occured', 'error');
 				}

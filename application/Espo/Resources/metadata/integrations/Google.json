@@ -12,9 +12,11 @@
 		}
 	},
 	"params": {
-		"url": "https://accounts.google.com/o/oauth2/auth",
+		"endpoint": "https://accounts.google.com/o/oauth2/auth",
+		"tokenEndpoint": "https://accounts.google.com/o/oauth2/token",
 		"scope": "https://www.googleapis.com/auth/calendar"
 	},
 	"allowUserAccounts": true,
-	"authMethod": "OAuth2"
+	"authMethod": "OAuth2",
+	"clientClassName": "\\Espo\\Core\\ExternalAccount\\Clients\\Google"
 }
