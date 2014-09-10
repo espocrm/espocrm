@@ -52,7 +52,8 @@ Espo.define('Views.GlobalSearch.Panel', 'View', function (Dep) {
 				}, function (view) {
 					view.render();
 				});
-			}.bind(this));			
+			}.bind(this));
+			this.collection.maxLength = 10;			
 			this.collection.fetch();
 		
 		},		
