@@ -2,7 +2,7 @@
 	"labels": {
 		"Converted To": "Vertaald naar",
 		"Create Lead": "Grote Lead",
-		"Convert": "Vertaald"
+		"Convert": "Converteer"
 	},
 	"fields": {
 		"name": "Record Naam",
@@ -29,7 +29,7 @@
 			"New": "Nieuw",
 			"Assigned": "Toegewezen",
 			"In Process": "In Behandeling",
-			"Converted": "Vertaald",
+			"Converted": "Converteren",
 			"Recycled": "Opnieuw verwerkt",
 			"Dead": "Dood"
 		},
