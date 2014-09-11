@@ -66,10 +66,20 @@ abstract class OAuth2Abstract
 	
 	public function getAccessTokenFromAuthorizationCode($code)
 	{
-		return $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_AUTHORIZATION_CODE, array(
+		$r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_AUTHORIZATION_CODE, array(
 			'code' => $code,
 			'redirect_uri' => $this->getParam('redirectUri')
 		));
+		if ($r['code'] == '200') {
+			$data = array();
+			if (!empty($r['result'])) {
+				$data['accessToken'] = $r['result']['access_token'];
+				$data['tokenType'] = $r['result']['token_type'];
+				$data['refreshToken'] = $r['result']['refresh_token'];		
+			}
+			return $data;
+		}
+		return null;
 	}	
 }
 

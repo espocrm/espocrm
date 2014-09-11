@@ -8,9 +8,9 @@ class Client
 	const AUTH_TYPE_AUTHORIZATION_BASIC = 1;	
 	const AUTH_TYPE_FORM = 2;	
 	
-	const ACCESS_TOKEN_TYPE_URI = 'Uri';	
-	const ACCESS_TOKEN_TYPE_BEARER = 'Bearer';	
-	const ACCESS_TOKEN_TYPE_OAUTH = 'OAuth';		
+	const TOKEN_TYPE_URI = 'Uri';	
+	const TOKEN_TYPE_BEARER = 'Bearer';	
+	const TOKEN_TYPE_OAUTH = 'OAuth';		
 	
 	const CONTENT_TYPE_APPLICATION = 0;	
 	const CONTENT_TYPE_MULTIPART = 1;	
@@ -36,7 +36,7 @@ class Client
 	
 	protected $authType = self::AUTH_TYPE_URI;
 	
-	protected $accessTokenType = self::ACCESS_TOKEN_TYPE_URI;	
+	protected $tokenType = self::TOKEN_TYPE_URI;	
 	
 	protected $accessTokenSecret = null;
 	
@@ -88,9 +88,9 @@ class Client
 		$this->curlOptions = array_merge($this->curlOptions, $options);
 	}
 	
-	public function setAccessTokenType($accessTokenType)
+	public function setTokenType($tokenType)
 	{
-		$this->accessTokenType = $accessTokenType;
+		$this->tokenType = $tokenType;
 	}
 	
 	public function setAccessTokenSecret($accessTokenSecret)
@@ -101,14 +101,14 @@ class Client
 	public function fetch($url, $params = array(), $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = array(), $contentType = self::CONTENT_TYPE_MULTIPART)
 	{
 		if ($this->accessToken) {
-			switch ($this->accessTokenType) {
-				case self::ACCESS_TOKEN_TYPE_URI:
+			switch ($this->tokenType) {
+				case self::TOKEN_TYPE_URI:
 					$params[$this->accessTokenParamName] = $this->accessToken;
 					break;
-				case self::ACCESS_TOKEN_TYPE_BEARER:
+				case self::TOKEN_TYPE_BEARER:
 					$httpHeaders['Authorization'] = 'Bearer ' . $this->accessToken;
 					break;
-				case self::ACCESS_TOKEN_TYPE_OAUTH:
+				case self::TOKEN_TYPE_OAUTH:
 					$httpHeaders['Authorization'] = 'OAuth ' . $this->accessToken;
 					break;
 				default:

@@ -47,6 +47,18 @@ class Integration extends \Espo\Core\ORM\Entity
 		return null;
 	}
 	
+	public function clear($name)
+	{
+		parent::clear($name);
+		
+		$data = json_decode($this->get('data'), true);
+		if (empty($data)) {
+			$data = array();
+		}
+		unset($data[$name]);
+		$this->set('data', json_encode($data));	
+	}
+	
 	public function set($p1, $p2)
 	{
 		if (is_array($p1)) {

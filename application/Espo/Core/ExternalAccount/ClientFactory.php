@@ -63,6 +63,8 @@ class ClientFactory
 		
 		$oauth2Client = new \Espo\Core\ExternalAccount\OAuth2\Client();
 		
+		// TODO listen to client for token regresh
+		
 		$client = new $className($oauth2Client, array(
 			'endpoint' => $this->getMetadata()->get("integrations.{$integration}.params.endpoint"),
 			'tokenEndpoint' => $this->getMetadata()->get("integrations.{$integration}.params.tokenEndpoint"),
@@ -71,6 +73,7 @@ class ClientFactory
 			'redirectUri' => $redirectUri,
 			'accessToken' => $externalAccountEntity->get('accessToken'),
 			'refreshToken' => $externalAccountEntity->get('refreshToken'),
+			'tokenType' => $externalAccountEntity->get('tokenType'),
 		));
 		
 		return $client;

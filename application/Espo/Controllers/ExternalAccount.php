@@ -45,7 +45,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 		);
 	}
 	
-	public function actionGetOAuthCredentials($params, $data, $request)
+	public function actionGetOAuth2Credentials($params, $data, $request)
 	{
 		$id = $request->get('id');
 		list($integration, $userId) = explode('__', $id);

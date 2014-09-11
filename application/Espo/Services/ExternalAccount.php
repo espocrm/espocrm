@@ -51,16 +51,21 @@ class ExternalAccount extends Record
 	{
 		$entity = $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
 		
-
-		
 		$client = $this->getClient($integration, $userId);
 		if ($client instanceof \Espo\Core\ExternalAccount\Clients\OAuth2Abstract) {		
 			$result = $client->getAccessTokenFromAuthorizationCode($code);
-		
-			print_r($result);
-			die;
-			
-			return $result;
+			if (!empty($result) && !empty($result['accessToken'])) {				
+				$entity->clear('accessToken');
+				$entity->clear('refreshToken');
+				$entity->clear('tokenType');				
+				foreach ($result as $name => $value) {
+					$entity->set($name, $value);
+				}
+				$this->getEntityManager()->saveEntity($entity);
+				return true;
+			} else {
+				throw new Error("Could not get access token for {$integration}.");
+			}
 		} else {
 			throw new Error("Could not load client for {$integration}.");
 		}
