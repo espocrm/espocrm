@@ -319,7 +319,7 @@ abstract class Base
 
 			$manifestPath = Util::concatPath($upgradePath, $this->manifestName);
 			if (!file_exists($manifestPath)) {
-				throw new Error('It\'s not an uprgade package.');
+				throw new Error('It\'s not an upgrade package.');
 			}
 
 			$manifestJson = $this->getFileManager()->getContents($manifestPath);
