@@ -101,8 +101,8 @@ class Unifier
 		$dirName = $this->getFileManager()->getDirName($dirPath, false);
 		$defaultValues = $this->loadDefaultValues($dirName, $type);
 
-		$content= array();
-		$unsets= array();
+		$content = array();
+		$unsets = array();
 		foreach($fileList as $dirName => $fileName) {
 
 			if (is_array($fileName)) {  /*get content from files in a sub directory*/
@@ -125,7 +125,7 @@ class Unifier
 		}
 
 		//unset content
-		$content= Utils\Util::unsetInArray($content, $unsets);
+		$content = Utils\Util::unsetInArray($content, $unsets);
 		//END: unset content
 
 		return $content;
@@ -141,27 +141,16 @@ class Unifier
 	 */
 	protected function unifyGetContents($paths, $defaults)
 	{
-		$fileContent= $this->getFileManager()->getContents($paths);
-		$decoded= Utils\Json::getArrayData($fileContent);
+		$fileContent = $this->getFileManager()->getContents($paths);
 
-		if (empty($decoded) && !is_array($decoded)) {
-			$GLOBALS['log']->emergency('Syntax error or empty file - '.Utils\Util::concatPath($folderPath, $fileName));
-		} else {
-			//Default values
-			if (is_string($defaults) && !empty($defaults)) {
-				$defType= $defaults;
-				unset($defaults);
-				$name= $this->getFileManager()->getFileName($fileName, '.json');
+		$decoded = Utils\Json::getArrayData($fileContent, null);
 
-				$defaults= $this->loadDefaultValues($name, $defType);
-			}
-			$mergedValues= Utils\Util::merge($defaults, $decoded);
-			//END: Default values
-
-			return $mergedValues;
+		if (!isset($decoded)) {
+			$GLOBALS['log']->emergency('Syntax error in '.Utils\Util::concatPath($paths));
+			return array();
 		}
 
-		return array();
+		return $decoded;
 	}
 
 	/**
@@ -174,10 +163,10 @@ class Unifier
 	 */
 	protected function loadDefaultValues($name, $type='metadata')
 	{
-		$defaultPath= $this->params['defaultsPath'];
+		$defaultPath = $this->params['defaultsPath'];
 
-		$defaultValue= $this->getFileManager()->getContents( array($defaultPath, $type, $name.'.json') );
-		if ($defaultValue!==false) {
+		$defaultValue = $this->getFileManager()->getContents( array($defaultPath, $type, $name.'.json') );
+		if ($defaultValue !== false) {
 			//return default array
 			return Utils\Json::decode($defaultValue, true);
 		}

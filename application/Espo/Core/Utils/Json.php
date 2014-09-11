@@ -118,7 +118,7 @@ class Json
 	*
 	* @return array
 	*/
-	public static function getArrayData($data)
+	public static function getArrayData($data, $returns = array())
 	{
 		if (is_array($data)) {
 			return $data;
@@ -127,7 +127,7 @@ class Json
 			return static::decode($data, true);
 		}
 
-		return array();
+		return $returns;
 	}
 
 

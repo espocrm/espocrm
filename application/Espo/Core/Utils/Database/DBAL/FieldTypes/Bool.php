@@ -18,15 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\BooleanType;
 
-
-class Bool extends Type
+class Bool extends BooleanType
 {
 	const BOOL = 'bool';
 
@@ -39,27 +37,4 @@ class Bool extends Type
 	{
 		return 'TINYINT';
 	}
-
-
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        return $platform->getBooleanTypeDeclarationSQL($fieldDeclaration);
-    }
-
-
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        return $platform->convertBooleans($value);
-    }
-
-
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return (null === $value) ? null : (bool) $value;
-    }
-
-    public function getBindingType()
-    {
-        return \PDO::PARAM_BOOL;
-    }
 }

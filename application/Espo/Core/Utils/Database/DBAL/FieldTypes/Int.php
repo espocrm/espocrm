@@ -18,38 +18,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\IntegerType;
 
-
-class Int extends Type
+class Int extends IntegerType
 {
 	const INTtype = 'int';
-
 
     public function getName()
     {
         return self::INTtype;
-    }
-
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
-    }
-
-
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return (null === $value) ? null : (int) $value;
-    }
-
-    
-    public function getBindingType()
-    {
-        return \PDO::PARAM_INT;
     }
 }
