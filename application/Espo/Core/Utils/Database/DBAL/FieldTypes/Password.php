@@ -18,14 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\StringType;
 
-class Password extends Type
+class Password extends StringType
 {
     const PASSWORD = 'password';
 
@@ -38,23 +37,5 @@ class Password extends Type
 	{
 		return 'VARCHAR';
 	}
-
-    public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
-		//return "MD5";
-    }
-
-    /*public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return $value;
-    }
-
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        return $value;
-    } */
-
-
 }
 
