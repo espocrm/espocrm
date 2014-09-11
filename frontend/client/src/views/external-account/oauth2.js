@@ -84,7 +84,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 				this.createFieldView('bool', 'enabled');
 				
 				$.ajax({
-					url: 'ExternalAccount/action/getOAuth2Credentials?id=' + this.id,
+					url: 'ExternalAccount/action/getOAuth2Info?id=' + this.id,
 					dataType: 'json'
 				}).done(function (respose) {
 					this.clientId = respose.clientId;
@@ -213,7 +213,8 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 					window.clearInterval(interval);
 				} else {
 					var res = parseUrl(popup.location.href.toString());
-					if (res) {			
+					if (res) {
+						console.log('test');		
 						callback.call(self, res);
 						popup.close();
 						window.clearInterval(interval);
@@ -244,7 +245,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 						}),
 						dataType: 'json'
 					}).done(function (response) {
-						if (response) {
+						if (response === true) {
 							console.log('connected');
 						}
 						// TODO show Connected and Disconnect button

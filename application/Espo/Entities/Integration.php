@@ -80,6 +80,9 @@ class Integration extends \Espo\Core\ORM\Entity
 		if ($this->hasField($name)) {
 			$this->valuesContainer[$name] = $value;
 		} else {
+			if (!$this->get('enabled')) {
+				return;
+			}
 			$data = json_decode($this->get('data'), true);
 			if (empty($data)) {
 				$data = array();

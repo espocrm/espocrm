@@ -98,7 +98,7 @@ class Client
 		$this->accessTokenSecret = $accessTokenSecret;
 	}	
 	
-	public function fetch($url, $params = array(), $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = array(), $contentType = self::CONTENT_TYPE_MULTIPART)
+	public function request($url, $params = array(), $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = array(), $contentType = self::CONTENT_TYPE_MULTIPART)
 	{
 		if ($this->accessToken) {
 			switch ($this->tokenType) {
@@ -116,6 +116,7 @@ class Client
 					
 			}
 		}
+
 		return $this->execute($url, $params, $httpMethod, $httpHeaders, $contentType);
 	}
 	
@@ -141,7 +142,10 @@ class Client
 				$curlOptions[CURLOPT_NOBODY] = true;
 			case self::HTTP_METHOD_DELETE:
 			case self::HTTP_METHOD_GET:
-				$url .= '?' . http_build_query($parameters, null, '&');
+				if (strpos($url, '?') === false) {
+					$url .= '?';
+				}
+				$url .= http_build_query($params, null, '&');
 				break;
 			default:
 				break;
@@ -151,42 +155,51 @@ class Client
 		
 		$curlOptHttpHeader = array();
 		foreach ($httpHeaders as $key => $value) {
-			 $curlOptHttpHeader[] = "{$key}: {$parsed_urlvalue}";
+			 $curlOptHttpHeader[] = "{$key}: {$value}";
 		}
 		$curlOptions[CURLOPT_HTTPHEADER] = $curlOptHttpHeader;
 		
-		$curlResource = curl_init();
-		curl_setopt_array($curlResource, $curlOptions);
+		$ch = curl_init();
+		curl_setopt_array($ch, $curlOptions);
+		
+		curl_setopt($ch, CURLOPT_HEADER, 1);
 		
 		if (!empty($this->certificateFile)) {
-			curl_setopt($curlResource, CURLOPT_SSL_VERIFYPEER, true);
-			curl_setopt($curlResource, CURLOPT_SSL_VERIFYHOST, 2);
-			curl_setopt($curlResource, CURLOPT_CAINFO, $this->certificateFile);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($ch, CURLOPT_CAINFO, $this->certificateFile);
 		} else {
-			curl_setopt($curlResource, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($curlResource, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 		}
 		
 		if (!empty($this->curlOptions)) {
-			curl_setopt_array($curlResource, $this->curlOptions);
+			curl_setopt_array($ch, $this->curlOptions);
 		}
-		
 				
-		$result = curl_exec($curlResource);
-		$httpCode = curl_getinfo($curlResource, CURLINFO_HTTP_CODE);
-		$contentType = curl_getinfo($curlResource, CURLINFO_CONTENT_TYPE);
+		$response = curl_exec($ch);		
+		
+		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);		
+		$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		
+		$responceHeader = substr($response, 0, $headerSize);
+		$responceBody = substr($response, $headerSize);
+		
 		$resultArray = null;
-		if ($curlError = curl_error($curlResource)) {
+		
+		if ($curlError = curl_error($ch)) {
 			throw new \Exception($curlError);
 		} else {
-			$resultArray = json_decode($result, true);
+			$resultArray = json_decode($responceBody, true);
 		}
-		curl_close($curlResource);
+		curl_close($ch);
 		
 		return array(
-			'result' => (null !== $resultArray) ? $resultArray: $result,
-			'code' => $httpCode,
-			'contentType' => $contentType
+			'result' => (null !== $resultArray) ? $resultArray: $responceBody,
+			'code' => intval($httpCode),
+			'contentType' => $contentType,
+			'header' => $responceHeader,
 		);
     }
     

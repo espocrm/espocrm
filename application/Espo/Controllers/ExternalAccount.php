@@ -45,35 +45,33 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 		);
 	}
 	
-	public function actionGetOAuth2Credentials($params, $data, $request)
+	public function actionGetOAuth2Info($params, $data, $request)
 	{
 		$id = $request->get('id');
 		list($integration, $userId) = explode('__', $id);
 		
-		if (!$this->getUser()->isAdmin()) {
-			if ($this->getUser()->id != $userId) {
-				throw new Forbidden();
-			}
-		}
+
+		if ($this->getUser()->id != $userId) {
+			throw new Forbidden();
+		}		
 		
 		$entity = $this->getEntityManager()->getEntity('Integration', $integration);
 		if ($entity) {
 			return array(
 				'clientId' => $entity->get('clientId'),
-				'redirectUri' => $this->getConfig()->get('siteUrl') . '/oauthcallback'
+				'redirectUri' => $this->getConfig()->get('siteUrl') . '/oauthcallback',
+				'isConnected' => $this->getRecordService()->ping($integration, $userId)
 			);
 		}
 	}
 
 	public function actionRead($params, $data, $request)
 	{
-		list($integration, $userId) = explode('__', $params['id']);
-		
-		if (!$this->getUser()->isAdmin()) {
-			if ($this->getUser()->id != $userId) {
-				throw new Forbidden();
-			}
-		}
+		list($integration, $userId) = explode('__', $params['id']);		
+
+		if ($this->getUser()->id != $userId) {
+			throw new Forbidden();
+		}		
 		
 		$entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);		
 		return $entity->toArray();
@@ -88,11 +86,14 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 	{
 		list($integration, $userId) = explode('__', $params['id']);
 		
-		if (!$this->getUser()->isAdmin()) {
-			if ($this->getUser()->id != $userId) {
-				throw new Forbidden();
-			}
+
+		if ($this->getUser()->id != $userId) {
+			throw new Forbidden();
 		}
+		
+		if (isset($data['enabled']) && !$data['enabled']) {
+			$data['data'] = null;
+		}		
 		
 		$entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);
 		$entity->set($data);
@@ -104,18 +105,16 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 	public function actionAuthorizationCode($params, $data, $request)
 	{
 		if (!$request->isPost()) {
-			throw Error('Bad HTTP method type.');
+			throw new Error('Bad HTTP method type.');
 		}		
 		
 		$id = $data['id'];
 		$code = $data['code'];
 		
-		list($integration, $userId) = explode('__', $id);
-		
-		if (!$this->getUser()->isAdmin()) {
-			if ($this->getUser()->id != $userId) {
-				throw new Forbidden();
-			}
+		list($integration, $userId) = explode('__', $id);		
+
+		if ($this->getUser()->id != $userId) {
+			throw new Forbidden();
 		}
 		
 		$service = $this->getRecordService();		

@@ -43,13 +43,29 @@ class ExternalAccount extends Record
 			throw new Error("{$integration} is disabled.");
 		}
 		
-		$factory = new \Espo\Core\ExternalAccount\ClientFactory($this->getEntityManager(), $this->getMetadata(), $this->getConfig());		
+		$factory = new \Espo\Core\ExternalAccount\ClientManager($this->getEntityManager(), $this->getMetadata(), $this->getConfig());		
 		return $factory->create($integration, $id);
+	}
+	
+	public function getExternalAccountEntity($integration, $userId)
+	{
+		return $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
+	}
+	
+	public function ping($integration, $userId)
+	{
+		$entity = $this->getExternalAccountEntity($integration, $userId);
+		try {
+			$client = $this->getClient($integration, $userId);
+			if ($client) {
+				return $client->ping();
+			}
+		} catch (\Exception $e) {}
 	}
 	
 	public function authorizationCode($integration, $userId, $code)
 	{
-		$entity = $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
+		$entity = $this->getExternalAccountEntity($integration, $userId);
 		
 		$client = $this->getClient($integration, $userId);
 		if ($client instanceof \Espo\Core\ExternalAccount\Clients\OAuth2Abstract) {		

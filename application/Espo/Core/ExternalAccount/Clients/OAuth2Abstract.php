@@ -6,18 +6,21 @@ use \Espo\Core\Exceptions\Error;
 
 use \Espo\Core\ExternalAccount\OAuth2\Client;
 
-abstract class OAuth2Abstract
+abstract class OAuth2Abstract implements IClient
 {
 	protected $client = null;
+	
+	protected $manager = null;
 	
 	protected $paramList = array(
 		'endpoint',
 		'tokenEndpoint',
 		'clientId',
 		'clientSecret',
+		'tokenType',
 		'accessToken',
 		'refreshToken',
-		'redirectUri'
+		'redirectUri',
 	);
 	
 	protected $clientId = null;
@@ -30,11 +33,13 @@ abstract class OAuth2Abstract
 	
 	protected $redirectUri = null;
 	
-	public function __construct($client, array $params = array())
+	public function __construct($client, array $params = array(), $manager = null)
 	{
 		$this->client = $client;
 
 		$this->setParams($params);
+		
+		$this->manager = $manager;
 	}
 	
 	public function getParam($name)
@@ -55,12 +60,19 @@ abstract class OAuth2Abstract
 		}
 	}
 	
-	public function setParams($params)
+	public function setParams(array $params)
 	{
 		foreach ($this->paramList as $name) {
 			if (!empty($params[$name])) {
 				$this->setParam($name, $params[$name]);
 			}
+		}
+	}
+	
+	protected function afterTokenRefreshed($data)
+	{
+		if ($this->manager) {
+			$this->manager->storeAccessToken(spl_object_hash($this), $data);
 		}
 	}
 	
@@ -70,7 +82,9 @@ abstract class OAuth2Abstract
 			'code' => $code,
 			'redirect_uri' => $this->getParam('redirectUri')
 		));
-		if ($r['code'] == '200') {
+		
+		
+		if ($r['code'] == 200) {
 			$data = array();
 			if (!empty($r['result'])) {
 				$data['accessToken'] = $r['result']['access_token'];
@@ -80,6 +94,91 @@ abstract class OAuth2Abstract
 			return $data;
 		}
 		return null;
-	}	
+	}
+	
+	abstract protected function getPingUrl();
+	
+	public function ping()
+	{
+		if (empty($this->accessToken) || empty($this->clientId) || empty($this->clientSecret)) {
+			return false;
+		}
+		
+		$url = $this->getPingUrl();
+
+		try {
+			$this->request($url);
+			return true;
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
+	
+	public function request($url, $params = array(), $httpMethod = Client::HTTP_METHOD_GET, $allowRenew = true)
+	{
+		$r = $this->client->request($url, $params, $httpMethod);
+		
+		if ($r['code'] == 200) {
+			return $r['result'];
+		} else {
+			$handledData = $this->handleErrorResponse($r);
+			
+			if ($allowRenew && is_array($handledData)) {
+				if ($handledData['action'] == 'refreshToken') {
+					if ($this->refreshToken()) {				
+						return $this->request($url, $params, $httpMethod, false);						
+					}
+				} else if ($handledData['action'] == 'renew') {
+					return $this->request($url, $params, $httpMethod, false);	
+				}
+			}
+		}
+		
+		throw new Error("Error after requesting {$httpMethod} {$url}.");
+	}
+	
+	protected function refreshToken()
+	{
+		if (!empty($this->refreshToken)) {
+			$r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_REFRESH_TOKEN, array(
+				'refresh_token' => $this->refreshToken,
+			));
+			if ($r['code'] == 200) {
+				if (is_array($r['result'])) {
+					if (!empty($r['result']['access_token'])) {
+						$data = array();
+						$data['accessToken'] = $r['result']['access_token'];
+						$data['tokenType'] = $r['result']['token_type'];
+
+						$this->setParams($data);
+						$this->afterTokenRefreshed($data);
+						return true;
+					}
+				}
+			}
+		}
+	}
+	
+	protected function handleErrorResponse($r)
+	{
+		if ($r['code'] == 401 && !empty($r['result'])) {
+			$result = $r['result'];			
+			if (strpos($r['header'], 'error=invalid_token') !== false) {
+				return array(
+					'action' => 'refreshToken'
+				);
+			} else {
+				return array(
+					'action' => 'renew'
+				);
+			}
+		} else if ($r['code'] == 400 && !empty($r['result'])) {
+			if ($r['result']['error'] == 'invalid_token') {				
+				return array(
+					'action' => 'refreshToken'
+				);
+			}
+		}
+	}
 }
 

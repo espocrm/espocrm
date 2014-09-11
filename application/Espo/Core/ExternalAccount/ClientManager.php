@@ -6,11 +6,13 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
-class ClientFactory
+class ClientManager
 {
 	protected $entityManager;
 	
 	protected $metadata;
+	
+	protected $clientMap = array();
 	
 	public function __construct($entityManager, $metadata, $config)
 	{
@@ -33,6 +35,16 @@ class ClientFactory
 	{
 		return $this->config;
 	}
+	
+	public function storeAccessToken($hash, $data)
+	{
+		if (!empty($this->clientMap[$hash]) && !empty($this->clientMap[$hash]['externalAccountEntity'])) {
+			$externalAccountEntity = $this->clientMap[$hash]['externalAccountEntity'];
+			$externalAccountEntity->set('accessToken', $data['accessToken']);
+			$externalAccountEntity->set('tokenType', $data['tokenType']);
+			$this->getEntityManager()->saveEntity($externalAccountEntity);
+		}
+	} 
 	
 	public function create($integration, $userId)
 	{
@@ -61,10 +73,8 @@ class ClientFactory
 			return null;
 		}		
 		
-		$oauth2Client = new \Espo\Core\ExternalAccount\OAuth2\Client();
-		
-		// TODO listen to client for token regresh
-		
+		$oauth2Client = new \Espo\Core\ExternalAccount\OAuth2\Client();		
+				
 		$client = new $className($oauth2Client, array(
 			'endpoint' => $this->getMetadata()->get("integrations.{$integration}.params.endpoint"),
 			'tokenEndpoint' => $this->getMetadata()->get("integrations.{$integration}.params.tokenEndpoint"),
@@ -74,10 +84,22 @@ class ClientFactory
 			'accessToken' => $externalAccountEntity->get('accessToken'),
 			'refreshToken' => $externalAccountEntity->get('refreshToken'),
 			'tokenType' => $externalAccountEntity->get('tokenType'),
-		));
+		), $this);
 		
-		return $client;
+		$this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
 		
+		return $client;		
+	}
+	
+	protected function addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId)
+	{
+		$this->clientMap[spl_object_hash($client)] = array(
+			'client' => $client,
+			'userId' => $userId,
+			'integration' => $integrationEntity->id,
+			'integrationEntity' => $integrationEntity,
+			'externalAccountEntity' => $externalAccountEntity,
+		);
 	}
 }
 
