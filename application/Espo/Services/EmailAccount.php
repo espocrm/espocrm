@@ -78,6 +78,16 @@ class EmailAccount extends Record
 		return $foldersArr;
 	}
 	
+	public function createEntity($data)
+	{
+		$entity = parent::createEntity($data);
+		if ($entity) {
+			$entity->set('assignedUserId', $this->getUser()->id);
+			$this->getEntityManager()->saveEntity($entity);
+		}
+		return $entity;
+	}
+	
 	public function fetchFromMailServer(Entity $emailAccount)
 	{
 		if ($emailAccount->get('status') != 'Active') {
