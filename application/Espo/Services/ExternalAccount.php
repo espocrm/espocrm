@@ -66,6 +66,11 @@ class ExternalAccount extends Record
 	public function authorizationCode($integration, $userId, $code)
 	{
 		$entity = $this->getExternalAccountEntity($integration, $userId);
+		if (!$entity) {
+			throw new NotFound();
+		}
+		$entity->set('enabled', true);
+		$this->getEntityManager()->saveEntity($entity);
 		
 		$client = $this->getClient($integration, $userId);
 		if ($client instanceof \Espo\Core\ExternalAccount\Clients\OAuth2Abstract) {		

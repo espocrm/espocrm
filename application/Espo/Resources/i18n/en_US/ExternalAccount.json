@@ -1,6 +1,7 @@
 {
 	"labels": {
-		"Connect": "Connect"
+		"Connect": "Connect",
+		"Connected": "Connected"
 	},
 	"help": {
 	}

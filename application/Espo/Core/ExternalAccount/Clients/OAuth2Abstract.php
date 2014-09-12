@@ -118,7 +118,12 @@ abstract class OAuth2Abstract implements IClient
 	{
 		$r = $this->client->request($url, $params, $httpMethod);
 		
-		if ($r['code'] == 200) {
+		$code = null;
+		if (!empty($r['code'])) {
+			$code = $r['code'];
+		}		
+		
+		if ($code == 200) {
 			return $r['result'];
 		} else {
 			$handledData = $this->handleErrorResponse($r);
@@ -134,7 +139,7 @@ abstract class OAuth2Abstract implements IClient
 			}
 		}
 		
-		throw new Error("Error after requesting {$httpMethod} {$url}.");
+		throw new Error("Error after requesting {$httpMethod} {$url}.", $code);
 	}
 	
 	protected function refreshToken()

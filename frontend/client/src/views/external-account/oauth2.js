@@ -32,9 +32,12 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 		data: function () {
 			return {
 				integration: this.integration,
-				helpText: this.helpText
+				helpText: this.helpText,
+				isConnected: this.isConnected
 			};
 		},
+		
+		isConnected: false,
 		
 		events: {
 			'click button[data-action="cancel"]': function () {
@@ -88,8 +91,11 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 					dataType: 'json'
 				}).done(function (respose) {
 					this.clientId = respose.clientId;
-					this.redirectUri = respose.redirectUri;
-					this.wait(false);
+					this.redirectUri = respose.redirectUri;					
+					if (respose.isConnected) {	
+						this.isConnected = true;
+					}					
+					this.wait(false);					
 				}.bind(this));
 				
 			}, this);
@@ -163,6 +169,9 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 			
 			this.listenToOnce(this.model, 'sync', function () {	
 				this.notify('Saved', 'success');
+				if (!this.model.get('enabled')) {					
+					this.setNotConnected();
+				}
 			}, this);
 			
 			this.notify('Saving...');
@@ -213,8 +222,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 					window.clearInterval(interval);
 				} else {
 					var res = parseUrl(popup.location.href.toString());
-					if (res) {
-						console.log('test');		
+					if (res) {	
 						callback.call(self, res);
 						popup.close();
 						window.clearInterval(interval);
@@ -224,6 +232,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 		},
 		
 		connect: function () {
+			this.notify('Please wait...');			
 			this.popup({
 				path: this.getMetadata().get('integrations.' + this.integration + '.params.endpoint'),
 				params: {
@@ -236,6 +245,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 				}		
 			}, function (res) {
 				if (res.code) {
+					this.$el.find('[data-action="connect"]').addClass('disabled');
 					$.ajax({
 						url: 'ExternalAccount/action/authorizationCode',
 						type: 'POST',
@@ -243,19 +253,36 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 							'id': this.id,
 							'code': res.code
 						}),
-						dataType: 'json'
+						dataType: 'json',
+						error: function () {
+							this.$el.find('[data-action="connect"]').removeClass('disabled');
+						}.bind(this)						
 					}).done(function (response) {
+						this.notify(false);
 						if (response === true) {
-							console.log('connected');
+							this.setConneted();
+						} else {
+							this.setNotConneted();							
 						}
-						// TODO show Connected and Disconnect button
-					
+						this.$el.find('[data-action="connect"]').removeClass('disabled');				
 					}.bind(this));
 					
 				} else {
 					this.notify('Error occured', 'error');
 				}
 			});
+		},
+		
+		setConneted: function () {
+			this.isConnected = true;
+			this.$el.find('[data-action="connect"]').addClass('hidden');;
+			this.$el.find('.connected-label').removeClass('hidden');
+		},
+		
+		setNotConnected: function () {
+			this.isConnected = false;
+			this.$el.find('[data-action="connect"]').removeClass('hidden');;
+			this.$el.find('.connected-label').addClass('hidden');
 		},
 		
 	});
