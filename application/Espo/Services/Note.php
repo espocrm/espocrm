@@ -42,8 +42,7 @@ class Note extends Record
 	{
 		if (!empty($data['parentType']) && !empty($data['parentId'])) {
 			$entity = $this->getEntityManager()->getEntity($data['parentType'], $data['parentId']);
-			if ($entity) {
-				$entity->loadLinkMultipleField('teams');
+			if ($entity) {				
 				if (!$this->getAcl()->check($entity, 'read')) {
 					throw new Forbidden();
 				}
