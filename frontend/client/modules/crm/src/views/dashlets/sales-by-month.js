@@ -70,7 +70,7 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 			values.forEach(function (value, i) {
 				data.push({
 					data: [[i, value]],
-					color: (value >= mid) ? this.colorGood : this.colorBad
+					color: (value >= mid) ? this.successColor : this.colorBad
 				});
 			}, this);
 			
@@ -81,8 +81,7 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
 			this.currency = this.getConfig().get('defaultCurrency');
 			this.currencySymbol = '';			
 		
-			this.colorGood = '#5ABD37';
-			this.colorBad = '#5ABD37';			
+			this.colorBad = this.successColor;		
 		},			
 		
 		drow: function () {

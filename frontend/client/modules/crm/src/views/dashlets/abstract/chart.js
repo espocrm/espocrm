@@ -29,7 +29,9 @@ Espo.define('Crm:Views.Dashlets.Abstract.Chart', ['Views.Dashlets.Abstract.Base'
 		
 		thousandSeparator: ',',
 		
-		colors: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#5ABD37', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
+		colors: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
+		
+		successColor: '#5ABD37',
 		
 		init: function () {
 			Dep.prototype.init.call(this);
