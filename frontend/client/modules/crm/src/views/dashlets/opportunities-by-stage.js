@@ -103,8 +103,11 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 				},
 				xaxis: {
 					min: 0,
-					tickFormatter: function (value) {
-						return self.formatNumber(value) + ' ' + self.currency;
+					tickFormatter: function (value) {						
+						if (value != 0) {
+							return self.formatNumber(value) + ' ' + self.currency;
+						}
+						return '';
 					},
 				},
 				mouse: {
