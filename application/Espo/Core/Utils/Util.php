@@ -115,14 +115,14 @@ class Util
 	 * @param array $mainArray - chief array (priority is same as for array_merge())
 	 * @param array $rewriteLevel - Merge by rewrite level, level numering starts from 1. Ex.
 	 *                     array(
-	 *                     	'level1' => array(
-	 *                     		'level2' => array(
-	 *                     	 		'level3' => array(
-	 *                     		  		'key1' => 'value',
-	 *                     		  		'key2' => 'value',
-	 *                     	 	   	),
-	 *                     	 	),
-	 *                     	),
+	 *                      'level1' => array(
+	 *                          'level2' => array(
+	 *                              'level3' => array(
+	 *                                  'key1' => 'value',
+	 *                                  'key2' => 'value',
+	 *                              ),
+	 *                          ),
+	 *                      ),
 	 *                     )
 	 * @param $rewriteKeyName string  - Rewrite key name. It is ignored if $rewriteLevel is NULL.
 	 * @param $rewriteArrays bool  - Rewrite single arrays. Examples:
@@ -209,7 +209,7 @@ class Util
 	}
 
 	/**
- 	 * Get a full path of the file
+	 * Get a full path of the file
 	 *
 	 * @param string | array $folderPath - Folder path, Ex. myfolder
 	 * @param string $filePath - File path, Ex. file.json
@@ -343,19 +343,23 @@ class Util
 	 * @param array $content
 	 * @param string | array $unsets in format
 	 *   array(
-	 * 		'EntityName1' => array( 'unset1', 'unset2' ),
-	 * 		'EntityName2' => array( 'unset1', 'unset2' ),
+	 *      'EntityName1' => array( 'unset1', 'unset2' ),
+	 *      'EntityName2' => array( 'unset1', 'unset2' ),
 	 *  )
-	 * 	OR
-	 * 	array('EntityName1.unset1', 'EntityName1.unset2', .....)
-	 * 	OR
-	 * 	'EntityName1.unset1'
+	 *  OR
+	 *  array('EntityName1.unset1', 'EntityName1.unset2', .....)
+	 *  OR
+	 *  'EntityName1.unset1'
 	 *
 	 * @return array
 	 */
 	public static function unsetInArray(array $content, $unsets)
 	{
-		if (is_string($unsets))	{
+		if (empty($unsets)) {
+			return $content;
+		}
+
+		if (is_string($unsets)) {
 			$unsets = (array) $unsets;
 		}
 
@@ -373,10 +377,11 @@ class Util
 					}
 
 					$unsetElem = $currVal . "['{$lastKey}']";
+
 					$currVal = "
-						if (isset({$unsetElem}) || array_key_exists({$lastKey}, {$currVal})) {
-							unset({$unsetElem});
-						} ";
+					if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists({$lastKey}, {$currVal}) )) {
+						unset({$unsetElem});
+					} ";
 					eval($currVal);
 				}
 			}
@@ -429,6 +434,25 @@ class Util
 		}
 
 		return $lastItem;
+	}
+
+	/**
+	 * Check if two variables are equals
+	 *
+	 * @param  mixed  $var1
+	 * @param  mixed  $var2
+	 * @return boolean
+	 */
+	public static function isEquals($var1, $var2)
+	{
+		if (is_array($var1)) {
+			ksort($var1);
+		}
+		if (is_array($var2)) {
+			ksort($var2);
+		}
+
+		return ($var1 === $var2);
 	}
 
 }

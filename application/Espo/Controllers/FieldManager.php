@@ -70,7 +70,11 @@ class FieldManager extends \Espo\Core\Controllers\Base
 		$fieldManager = $this->getContainer()->get('fieldManager');
 		$fieldManager->update($params['name'], $data, $params['scope']);
 
-		$this->getContainer()->get('dataManager')->rebuild($params['scope']);
+		if ($fieldManager->isChanged()) {
+			$this->getContainer()->get('dataManager')->rebuild($params['scope']);
+		} else {
+			$this->getContainer()->get('dataManager')->clearCache();
+		}
 
 		return $fieldManager->read($params['name'], $params['scope']);
 	}
