@@ -70,7 +70,7 @@ class Acl
 
 	}
 	
-	public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null)
+	public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
 	{
 		if (array_key_exists($scope, $this->data)) {			
 			if ($this->data[$scope] === false) {
@@ -99,6 +99,9 @@ class Acl
 						if ($value === 'own' || $value === 'team') {
 							return true;
 						}
+					}
+					if ($inTeam === null && $entity) {
+						$inTeam = $this->checkInTeam($entity);
 					}
 			
 					if ($inTeam) {
@@ -130,7 +133,7 @@ class Acl
 		} else {
 			$entity = $subject;
 			$entityName = $entity->getEntityName();			
-			return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $this->checkInTeam($entity));
+			return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $inTeam, $entity);
 		}
 	}
 			
@@ -168,7 +171,20 @@ class Acl
 	public function checkInTeam($entity)
 	{
 		$userTeamIds = $this->user->get('teamsIds');
-		$teamIds = $entity->get('teamsIds');
+		
+		if (!$entity->hasRelation('teams') || !$entity->hasField('teamsIds')) {			
+			return false;
+		}
+		
+		if (!$entity->has('teamsIds')) {
+			$entity->loadLinkMultipleField('teams');
+		}
+				
+		$teamIds = $entity->get('teamsIds');		
+		
+		if (empty($teamIds)) {
+			return false;
+		}
 		
 		foreach ($userTeamIds as $id) {
 			if (in_array($id, $teamIds)) {

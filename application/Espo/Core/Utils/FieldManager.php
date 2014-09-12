@@ -33,6 +33,8 @@ class FieldManager
 
 	private $metadataUtils;
 
+	protected $isChanged = null;
+
 	protected $metadataType = 'entityDefs';
 
 	protected $customOptionName = 'isCustom';
@@ -60,7 +62,6 @@ class FieldManager
 	{
 		return $this->metadataUtils;
 	}
-
 
 	public function read($name, $scope)
 	{
@@ -91,10 +92,11 @@ class FieldManager
 		$res = true;
 		if (isset($fieldDef['label'])) {
 			$res &= $this->setLabel($name, $fieldDef['label'], $scope);
-			unset($fieldDef['label']);
 		}
 
-		$res &= $this->setEntityDefs($name, $fieldDef, $scope);
+		if ($this->isDefsChanged($name, $fieldDef, $scope)) {
+			$res &= $this->setEntityDefs($name, $fieldDef, $scope);
+		}
 
 		return (bool) $res;
 	}
@@ -109,6 +111,7 @@ class FieldManager
 			'fields.'.$name,
 			'links.'.$name,
 		);
+
 		$res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
 
 		$this->deleteLabel($name, $scope);
@@ -147,6 +150,42 @@ class FieldManager
 	}
 
 	/**
+	 * Prepare input fieldDefs, remove unnecessary fields
+	 *
+	 * @param string $fieldName
+	 * @param array $fieldDef
+	 * @param string $scope
+	 * @return array
+	 */
+	protected function prepareFieldDef($name, $fieldDef, $scope)
+	{
+		$unnecessaryFields = array(
+			'name',
+			'label',
+		);
+
+		foreach ($unnecessaryFields as $fieldName) {
+			if (isset($fieldDef[$fieldName])) {
+				unset($fieldDef[$fieldName]);
+			}
+		}
+
+		if (isset($fieldDef['linkDefs'])) {
+			$linkDefs = $fieldDef['linkDefs'];
+			unset($fieldDef['linkDefs']);
+		}
+
+		$currentOptionList = array_keys((array) $this->getFieldDef($name, $scope));
+		foreach ($fieldDef as $defName => $defValue) {
+			if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
+				unset($fieldDef[$defName]);
+			}
+		}
+
+		return $fieldDef;
+	}
+
+	/**
 	 * Add all needed block for a field defenition
 	 *
 	 * @param string $fieldName
@@ -156,20 +195,7 @@ class FieldManager
 	 */
 	protected function normalizeDefs($fieldName, array $fieldDef, $scope)
 	{
-		if (isset($fieldDef['name'])) {
-			unset($fieldDef['name']);
-		}
-
-		if (isset($fieldDef['linkDefs'])) {
-			$linkDefs = $fieldDef['linkDefs'];
-			unset($fieldDef['linkDefs']);
-		}
-
-		foreach ($fieldDef as $defName => $defValue) {
-			if (!isset($defValue) || (is_string($defValue) && $defValue == '') ) {
-				unset($fieldDef[$defName]);
-			}
-		}
+		$fieldDef = $this->prepareFieldDef($fieldName, $fieldDef, $scope);
 
 		$metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
 		if (isset($metaFieldDef)) {
@@ -194,6 +220,38 @@ class FieldManager
 		return $defs;
 	}
 
+	/**
+	 * Check if changed metadata defenition for a field except 'label'
+	 *
+	 * @return boolean
+	 */
+	protected function isDefsChanged($name, $fieldDef, $scope)
+	{
+		$fieldDef = $this->prepareFieldDef($name, $fieldDef, $scope);
+		$currentFieldDef = $this->getFieldDef($name, $scope);
+
+		$this->isChanged = Util::isEquals($fieldDef, $currentFieldDef) ? false : true;
+
+		return $this->isChanged;
+	}
+
+	/**
+	 * Only for update method
+	 *
+	 * @return boolean
+	 */
+	public function isChanged()
+	{
+		return $this->isChanged;
+	}
+
+	/**
+	 * Check if a field is core field
+	 *
+	 * @param  string  $name
+	 * @param  string  $scope
+	 * @return boolean
+	 */
 	protected function isCore($name, $scope)
 	{
 		$existingField = $this->getFieldDef($name, $scope);
