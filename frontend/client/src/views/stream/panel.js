@@ -147,7 +147,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 					return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
 				},
 				replace: function (mention) {
-					return '@' + mention.userName + ' ';
+					return '$1@' + mention.userName + '';
 				}
 			}]);
 			
