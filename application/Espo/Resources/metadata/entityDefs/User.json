@@ -95,6 +95,7 @@
     },
     "collection": {
     	"sortBy": "userName",
-    	"asc": true
+    	"asc": true,
+    	"textFilterFields": ["name", "userName"]
     }
 }

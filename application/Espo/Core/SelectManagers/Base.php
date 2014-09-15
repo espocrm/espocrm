@@ -39,7 +39,7 @@ class Base
 	protected $entityName;
 
 	protected $metadata;
-	
+
 	const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -84,7 +84,7 @@ class Base
 			}
 		}
     }
-    
+
     protected function getTextFilterFields()
     {
     	return $this->metadata->get("entityDefs.{$this->entityName}.collection.textFilterFields", array('name'));
@@ -111,9 +111,9 @@ class Base
 						$fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
 						$fieldList = $this->getTextFilterFields();
 						$d = array();
-						foreach ($fieldList as $field) {						
+						foreach ($fieldList as $field) {
 							if (
-								strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH 
+								strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
 								&&
 								!empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
 							) {
@@ -122,7 +122,7 @@ class Base
 								$d[$field . '*'] = $item['value'] . '%';
 							}
 						}
-						$where['OR'] = $d;				
+						$where['OR'] = $d;
 					}
 				}
 			}
@@ -174,7 +174,26 @@ class Base
 			if (empty($result['whereClause'])) {
 				$result['whereClause'] = array();
 			}
-			$result['whereClause']['name*'] = $params['q'] . '%';
+			
+			$fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
+
+			$value = $params['q'];
+
+			$fieldList = $this->getTextFilterFields();
+			$d = array();
+			foreach ($fieldList as $field) {
+				if (
+					strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+					&&
+					!empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+				) {
+					$d[$field . '*'] = '%' . $value . '%';
+				} else {
+					$d[$field . '*'] = $value . '%';
+				}
+			}
+
+			$result['whereClause']['OR'] = $d;
 		}
 	}
 
