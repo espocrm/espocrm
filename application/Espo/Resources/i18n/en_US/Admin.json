@@ -96,6 +96,7 @@
 		"userHasNoEmailAddress": "User has not email address.",
 		"selectEntityType": "Select entity type in the left menu.",
 		"selectUpgradePackage": "Select upgrade package",
+		"downloadUpgradePackage": "Download needed upgrade package(s) <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">here</a>.",
 		"selectLayout": "Select needed layout in the left menu and edit it."
 	},
 	"descriptions": {
