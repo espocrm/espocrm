@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (Dep) {
+Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
 
 	return Dep.extend({
 
@@ -128,6 +128,30 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 			}.bind(this));
 			collection.fetch();
 			
+			this.$textarea.textcomplete([{
+				match: /(^|\s)@(\w*)$/,
+				index: 2,
+				search: function (term, callback) {
+					if (term.length == 0) {
+						callback([]);
+						return;
+					}					
+					$.ajax({
+						url: 'User?orderBy=name&limit=7&q=' + term,
+					
+					}).done(function (data) {
+						callback(data.list)
+					});
+				},
+				template: function (mention) {
+					return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
+				},
+				replace: function (mention) {
+					return '@' + mention.userName + ' ';
+				}
+			}]);
+			
+			
 			this.createView('attachments', 'Stream.Fields.AttachmentMultiple', {
 				model: this.seed,
 				mode: 'edit',
@@ -184,6 +208,7 @@ Espo.define('Views.Stream.Panel', 'Views.Record.Panels.Relationship', function (
 		getButtons: function () {
 			return [];
 		},
+		
 	});
 });
 
