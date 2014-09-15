@@ -6,7 +6,9 @@
         "userName": {
             "type": "varchar",
             "maxLength": 50,
-            "required": true
+            "required": true,
+            "view": "User.Fields.UserName",
+            "tooltip": true
         },
         "name": {
             "type": "personName"
