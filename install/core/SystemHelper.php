@@ -279,7 +279,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 		$serverType = $this->getServerType();
 
 		$rules = array(
-			'nginx' => "location /api/v1/ {\n    if (!-e " . '$request_filename' . "){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}\n\nlocation /(data|api) {\n    if (-e " . '$request_filename' . "){\n        return 403;\n    }\n}\n\nlocation /data/logs {\n    return 403;\n}\nlocation /data/config.php$ {\n    return 403;\n}\nlocation /data/cache {\n    return 403;\n}\nlocation /data/upload {\n    return 403;\n}\nlocation /application {\n    return 403;\n}\nlocation /custom {\n    return 403;\n}\nlocation /vendor {\n    return 403;\n}",
+			'nginx' => "location /api/v1/ {\n    if (!-e " . '$request_filename' . "){\n        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;\n    }\n}\n\nlocation / {\n    rewrite reset/?$ reset.html break;\n}\n\nlocation ^~ (data|api)/ {\n    if (-e " . '$request_filename' . "){\n        return 403;\n    }\n}\n\nlocation ^~ /data/logs/ {\n    return 403;\n}\nlocation ^~ /data/config.php {\n    return 403;\n}\nlocation ^~ /data/cache/ {\n    return 403;\n}\nlocation ^~ /data/upload/ {\n    return 403;\n}\nlocation ^~ /application/ {\n    return 403;\n}\nlocation ^~ /custom/ {\n    return 403;\n}\nlocation ^~ /vendor/ {\n    return 403;\n}",
 		);
 
 		if (isset($rules[$serverType])) {
