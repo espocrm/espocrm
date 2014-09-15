@@ -143,7 +143,16 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 			var self = this;
 			
 			var colors = Espo.Utils.clone(this.colors);
-			colors[colors.length - 1] = this.successColor;
+			
+			this.chartData.forEach(function (item, i) {
+				if (i + 1 > colors.length) {
+					colors.push('#164');
+				}
+				if (this.chartData.length == i + 1) {
+					colors[i] = this.successColor;
+				}
+			}, this);
+			
 			
 			this.flotr.draw(this.$container.get(0), this.chartData, {
 				colors: colors,
