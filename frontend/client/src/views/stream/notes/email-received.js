@@ -33,7 +33,7 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
 		},
 		
 		setup: function () {
-			var data = JSON.parse(this.model.get('data'));			
+			var data = this.model.get('data');
 			this.emailId = data.emailId;
 			this.emailName = data.emailName;			
 		},

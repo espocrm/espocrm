@@ -39,7 +39,7 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
 		
 		setup: function () {
 			if (this.model.get('data')) {
-				var data = JSON.parse(this.model.get('data'));
+				var data = this.model.get('data');
 	
 				this.entityType = data.entityType || null;
 				this.entityId = data.entityId || null;

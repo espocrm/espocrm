@@ -835,13 +835,7 @@ abstract class Mapper implements IMapper
 
 			$type = $entity->fields[$field]['type'];
 
-			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
-				$value = json_encode($value);
-			}
-
-			if (is_bool($value)) {
-				$value = (int) $value;
-			}
+			$value = $this->prepareValueForInsert($type, $value);
 
 			$valArr[] = $this->quote($value);
 		}
@@ -875,14 +869,8 @@ abstract class Mapper implements IMapper
 			if ($entity->getFetched($field) === $value) {
 				continue;
 			}
-
-			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
-				$value = json_encode($value);
-			}
-
-			if (is_bool($value)) {
-				$value = (int) $value;
-			}
+			
+			$value = $this->prepareValueForInsert($type, $value);
 
 			$setArr[] = "`" . $this->toDb($field) . "` = " . $this->quote($value);
 		}
@@ -900,6 +888,19 @@ abstract class Mapper implements IMapper
 		}
 
 		return false;
+	}
+	
+	protected function prepareValueForInsert($type, $value) {
+		if ($type == IEntity::JSON_ARRAY && is_array($value)) {
+			$value = json_encode($value);
+		} else if ($type == IEntity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
+			$value = json_encode($value);
+		}
+
+		if (is_bool($value)) {
+			$value = (int) $value;
+		}
+		return $value;
 	}
 
 	public function deleteFromDb($entityName, $id)

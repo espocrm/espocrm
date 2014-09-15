@@ -47,7 +47,7 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 		},
 		
 		setup: function () {
-			var data = JSON.parse(this.model.get('data'));
+			var data = this.model.get('data');
 			
 			var fields = data.fields;
 			

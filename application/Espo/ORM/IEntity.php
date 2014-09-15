@@ -39,6 +39,7 @@ interface IEntity
 	const DATE = 'date';
 	const DATETIME = 'datetime';
 	const JSON_ARRAY = 'jsonArray';
+	const JSON_OBJECT = 'jsonObject';
 	
 	const MANY_MANY = 'manyMany';
 	const HAS_MANY = 'hasMany';

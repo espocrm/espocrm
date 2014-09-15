@@ -128,6 +128,8 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 			}.bind(this));
 			collection.fetch();
 			
+			var self = this;
+			
 			this.$textarea.textcomplete([{
 				match: /(^|\s)@(\w*)$/,
 				index: 2,
@@ -146,8 +148,8 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 				template: function (mention) {
 					return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
 				},
-				replace: function (mention) {
-					return '$1@' + mention.userName + '';
+				replace: function (o) {
+					return '$1@' + o.userName + '';
 				}
 			}]);
 			
@@ -168,13 +170,12 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 			this.$el.find('textarea.note').prop('rows', 1);
 		},
 
-		post: function () {		
+		post: function () {	
+			var message = this.$textarea.val();			
+			
 			this.$textarea.prop('disabled', true);
-		
-			var $text = this.$el.find('textarea.note');
 
-			this.getModelFactory().create('Note', function (model) {
-				var message = $text.val();
+			this.getModelFactory().create('Note', function (model) {				
 				if (message == '' && this.seed.get('attachmentsIds').length == 0) {
 					this.notify('Post cannot be empty', 'error');
 					this.$textarea.prop('disabled', false);

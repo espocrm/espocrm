@@ -195,6 +195,12 @@ abstract class Entity implements IEntity
 								$value = null;
 							}
 							break;
+						case self::JSON_OBJECT:
+							$value = is_string($value) ? json_decode($value) : $value;
+							if (!($value instanceof \stdClass)) {
+								$value = null;
+							}
+							break;
 						default:
 							break;
 					}

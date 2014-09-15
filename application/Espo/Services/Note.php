@@ -52,5 +52,6 @@ class Note extends Record
 		
 		return parent::createEntity($data);
 	}
+
 }
 
