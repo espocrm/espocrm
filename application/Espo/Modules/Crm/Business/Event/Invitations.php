@@ -79,6 +79,8 @@ class Invitations
 		$bodyTpl = file_get_contents($bodyTplFileName);
 
 		$subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee, $uid);
+		$subject = str_replace(array("\n", "\r"), '', $subject);
+		
 		$body = $this->parseInvitationTemplate($bodyTpl, $entity, $invitee, $uid);
 
 		$email->set('subject', $subject);
