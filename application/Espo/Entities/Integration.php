@@ -36,12 +36,12 @@ class Integration extends \Espo\Core\ORM\Entity
 			}
 		} else {
 			if ($this->get('data')) { 
-				$data = json_decode($this->get('data'), true);
+				$data = $this->get('data');
 			} else {
-				$data = array();
+				$data = new \stdClass();
 			}
-			if (isset($data[$name])) {
-				return $data[$name];
+			if (isset($data->$name)) {
+				return $data->$name;
 			}
 		}
 		return null;
@@ -51,12 +51,12 @@ class Integration extends \Espo\Core\ORM\Entity
 	{
 		parent::clear($name);
 		
-		$data = json_decode($this->get('data'), true);
+		$data = $this->get('data');
 		if (empty($data)) {
-			$data = array();
+			$data = new \stdClass();
 		}
-		unset($data[$name]);
-		$this->set('data', json_encode($data));	
+		unset($data->$name);
+		$this->set('data', $data);	
 	}
 	
 	public function set($p1, $p2)
@@ -83,12 +83,12 @@ class Integration extends \Espo\Core\ORM\Entity
 			if (!$this->get('enabled')) {
 				return;
 			}
-			$data = json_decode($this->get('data'), true);
+			$data = $this->get('data');
 			if (empty($data)) {
-				$data = array();
+				$data = new \stdClass();
 			}
-			$data[$name] = $value;
-			$this->set('data', json_encode($data));		
+			$data->$name = $value;
+			$this->set('data', $data);		
 		}
 	}
 	
@@ -100,7 +100,7 @@ class Integration extends \Espo\Core\ORM\Entity
 	
 		foreach ($arr as $field => $value) {			
 			if (is_string($field)) {
-				if (is_array($value)) {
+				if (is_array($value) || ($value instanceof \stdClass)) {
 					$value = json_encode($value);
 				}
 				
@@ -124,6 +124,12 @@ class Integration extends \Espo\Core\ORM\Entity
 							case self::JSON_ARRAY:
 								$value = is_string($value) ? json_decode($value) : $value;
 								if (!is_array($value)) {
+									$value = null;
+								}
+								break;
+							case self::JSON_OBJECT:
+								$value = is_string($value) ? json_decode($value) : $value;
+								if (!($value instanceof \stdClass) && !is_array($value)) {
 									$value = null;
 								}
 								break;
@@ -154,12 +160,14 @@ class Integration extends \Espo\Core\ORM\Entity
 			}
 		}
 		
-		$data = json_decode($this->get('data'), true);
+		$data = $this->get('data');
 		if (empty($data)) {
-			$data = array();
+			$data = new \stdClass();
 		}
+		
+		$dataArr = get_object_vars($data);
 
-		$arr = array_merge($arr, $data);		
+		$arr = array_merge($arr, $dataArr);		
 		return $arr;
 	}
 	
