@@ -82,10 +82,10 @@ class Notifications extends \Espo\Core\Hooks\Base
 					$job->set(array(
 						'serviceName' => 'Notification',
 						'method' => 'notifyAboutNoteFromJob',
-						'data' => json_encode(array(
+						'data' => array(
 							'userIdList' => $userIdList,
 							'noteId' => $entity->id
-						)),
+						),
 						'executeTime' => date('Y-m-d H:i:s'),
 					));
 					$this->getEntityManager()->saveEntity($job);
