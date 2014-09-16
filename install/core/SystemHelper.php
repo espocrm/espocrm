@@ -160,8 +160,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 			$path = implode(' ', $path);
 		}
 
-		$owner = posix_getuid();
-		$group = posix_getegid();
+		$owner = function_exists('posix_getuid') ? posix_getuid() : null;
+		$group = function_exists('posix_getegid') ? posix_getegid() : null;
 
 		$sudoStr = $isSudo ? 'sudo ' : '';
 

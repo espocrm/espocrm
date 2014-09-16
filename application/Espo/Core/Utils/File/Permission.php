@@ -420,7 +420,7 @@ class Permission
 
 		$owner = $defaultPermissions['user'];
 		if (empty($owner) && $usePosix) {
-			$owner = posix_getuid();
+			$owner = function_exists('posix_getuid') ? posix_getuid() : null;
 		}
 
 		if (empty($owner)) {
@@ -441,7 +441,7 @@ class Permission
 
 		$group = $defaultPermissions['group'];
 		if (empty($group) && $usePosix) {
-			$group = posix_getegid();
+			$group = function_exists('posix_getegid') ? posix_getegid() : null;
 		}
 
 		if (empty($group)) {
