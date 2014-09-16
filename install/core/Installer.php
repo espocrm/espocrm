@@ -94,6 +94,11 @@ class Installer
 		return $this->app->getContainer()->get('fileManager');
 	}
 
+	public function getVersion()
+	{
+		return $this->getConfig()->get('version');
+	}
+
 
 	protected function auth()
 	{

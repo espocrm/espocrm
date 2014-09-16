@@ -23,6 +23,7 @@ select[name="user-lang"] {
 }
 .panel-title {
 	text-align: center;
+	margin-left: 16.6667%;
 }
 
 .loading-icon {
@@ -67,10 +68,28 @@ select[name="user-lang"] {
 	text-align: center;
 	width: 4%;
 	float: left;
-	
+
 }
 
 .semicolon-sign {
 	margin-top: 5px;
 }
 
+.version {
+	font-size: 90%;
+	color: #999;
+}
+
+input[type=checkbox].btn-default {
+	margin: 0;
+}
+
+.cron-help {
+	margin: 20px;
+}
+
+.cron-help pre {
+	margin-top: 15px;
+    padding-top: 15px;
+    padding-bottom: 0;
+}

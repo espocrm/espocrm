@@ -80,6 +80,7 @@ else {
 $smarty->caching = false;
 $smarty->setTemplateDir('install/core/tpl');
 
+$smarty->assign("version", $installer->getVersion());
 $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
 
@@ -119,6 +120,7 @@ switch ($action) {
 $actionFile = $actionsDir.'/'.$action.'.php';
 $tplName = $action.'.tpl';
 $smarty->assign('tplName', $tplName);
+$smarty->assign('action', ucfirst($action));
 
 if (!empty($actionFile) && file_exists('install/'.$actionFile)) {
 	include $actionFile;

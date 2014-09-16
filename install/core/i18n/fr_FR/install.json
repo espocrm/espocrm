@@ -25,6 +25,7 @@
 		"Next": "Suivant",
 		"Go to EspoCRM": "Aller à EspoCRM",
 		"Re-check": "Revérifier",
+		"Version": "Version",
 		"Test settings": "Tester la Connexion",
 		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306."
 	},

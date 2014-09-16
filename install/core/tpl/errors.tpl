@@ -1,6 +1,3 @@
-<header class="panel-heading">
-	<h4 class="panel-title">{$langs['labels']['Errors page title']}</h4>
-</header>
 <div class="panel-body body">
 	<div id="msg-box" class="alert alert-danger">{$errors}</div>
 	<div class="loading-icon hide"></div>

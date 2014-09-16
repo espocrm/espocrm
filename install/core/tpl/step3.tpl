@@ -1,6 +1,3 @@
-<header class="panel-heading">
-	<h4 class="panel-title">{$langs['labels']['Step3 page title']}</h4>
-</header>
 <div class="panel-body body">
 	<div id="msg-box" class="alert hide"></div>
 	<div class="loading-icon hide"></div>
@@ -12,7 +9,7 @@
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['User Name']} *</label>
 						<div class="field field-website">
-							<input type="text" value="{$fields['user-name'].value}" name="user-name" class="main-element form-control">
+							<input type="text" value="{$fields['user-name'].value}" name="user-name" class="main-element form-control"  autocomplete="off">
 						</div>
 					</div>
 				</div>
@@ -21,7 +18,7 @@
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Password']} *</label>
 						<div class="field field-website">
-							<input type="password" value="{$fields['user-pass'].value}" name="user-pass" class="main-element form-control">
+							<input type="password" value="{$fields['user-pass'].value}" name="user-pass" class="main-element form-control"  autocomplete="off">
 						</div>
 					</div>
 				</div>
@@ -30,7 +27,7 @@
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Confirm Password']} *</label>
 						<div class="field field-website">
-							<input type="password" value="{$fields['user-confirm-pass'].value}" name="user-confirm-pass" class="main-element form-control">
+							<input type="password" value="{$fields['user-confirm-pass'].value}" name="user-confirm-pass" class="main-element form-control" autocomplete="off">
 						</div>
 					</div>
 				</div>

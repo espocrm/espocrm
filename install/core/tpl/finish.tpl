@@ -1,6 +1,3 @@
-<header class="panel-heading">
-	<h4 class="panel-title">{$langs['labels']['Finish page title']}</h4>
-</header>
 <div class="panel-body body">
 	<form id="nav">
 		<div class="row">
@@ -14,10 +11,12 @@
 </div>
 
 {if $cronHelp}
-&nbsp;{$cronTitle}
-<pre>
-{$cronHelp}
-</pre>
+<div class="cron-help">
+	&nbsp;{$cronTitle}
+	<pre>
+	{$cronHelp}
+	</pre>
+</div>
 {/if}
 <footer class="modal-footer">
 	<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Go to EspoCRM']}</button>
