@@ -1,7 +1,11 @@
 {
     "fields": {
         "data": {
-            "type": "text"
+            "type": "jsonObject"
+        },
+        "noteData": {
+            "type": "jsonObject",
+            "notStorable": true
         },
         "type": {
             "type": "varchar"

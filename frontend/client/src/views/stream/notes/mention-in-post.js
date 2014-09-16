@@ -19,37 +19,34 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Stream.Notes.Assign', 'Views.Stream.Note', function (Dep) {
+Espo.define('Views.Stream.Notes.MentionInPost', 'Views.Stream.Note', function (Dep) {
 
 	return Dep.extend({
-
-		template: 'stream.notes.assign',
+			
+		template: 'stream.notes.post',
 		
-		messageName: 'assign',
+		messageName: 'mentionInPost',
 		
-		data: function () {
-			return _.extend({
-			}, Dep.prototype.data.call(this));
-		},
-		
-		setup: function () {
+		setup: function () {		
+			if (this.model.get('post')) {
+				this.createField('post');
+			}			
+			if ((this.model.get('attachmentsIds') || []).length) {
+				this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+			}
+			
 			var data = this.model.get('data');
 			
-			this.assignedUserId = data.assignedUserId || null;
-			this.assignedUserName = data.assignedUserName || null;
-			
-			this.messageData['assignee'] = '<a href="#User/view/' + data.assignedUserId + '">' + data.assignedUserName + '</a>';
-			
+			this.messageData['mentioned'] = this.options.userId;
 			
 			if (this.isUserStream) {
-				if (this.assignedUserId == this.getUser().id) {
-					this.messageData['assignee'] = this.translate('you');
+				if (this.options.userId == this.getUser().id) {
+					this.messageData['mentioned'] = this.translate('you');
 				}
 			}
 			
-			this.createMessage();	
-		},
-		
+			this.createMessage();
+		},		
 	});
 });
 

@@ -185,6 +185,7 @@
 		"update": "{user} updated {entityType} {entity}",
 		"createRelated": "{user} created {relatedEntityType} {relatedEntity} linked to {entityType} {entity}",
 		"emailReceived": "{entity} has been received for {entityType} {entity}",
+		"mentionInPost": "{user} mentioned {mentioned} on {entityType} {entity}",
 		
 		"createThis": "{user} created this {entityType}",		
 		"createAssignedThis": "{user} created this {entityType} assigned to {assignee}",

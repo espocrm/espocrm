@@ -33,7 +33,11 @@ Espo.define('Views.Notifications.Field', 'Views.Fields.Base', function (Dep) {
 		setup: function () {
 			switch (this.model.get('type')) {
 				case 'Note':
-					this.processNote(this.model.get('data'));					
+					this.processNote(this.model.get('noteData'));
+					break;
+				case 'MentionInPost':
+					this.processMentionInPost(this.model.get('noteData'));
+					break;					
 			}
 		},
 		
@@ -49,8 +53,24 @@ Espo.define('Views.Notifications.Field', 'Views.Fields.Base', function (Dep) {
 					onlyContent: true,									
 				});
 				this.wait(false);
-			}.bind(this));			
-		}
+			}, this);			
+		},
+		
+		processMentionInPost: function (data) {			
+			this.wait(true);
+			this.getModelFactory().create('Note', function (model) {
+				model.set(data);		
+				var viewName = 'Stream.Notes.MentionInPost';
+				this.createView('notification', viewName, {
+					model: model,
+					userId: this.model.get('userId'),
+					isUserStream: true,
+					el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+					onlyContent: true,									
+				});
+				this.wait(false);
+			}, this);
+		},
 		
 	});
 });

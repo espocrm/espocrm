@@ -54,7 +54,7 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 			this.messageData = {
 				'user': 'field:createdBy',
 				'entity': 'field:parent',
-				'entityType': this.translate(this.model.get('parentType'), 'scopeNames').toLowerCase()
+				'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase()
 			};			
 		},
 		

@@ -50,12 +50,23 @@ class Notification extends \Espo\Core\Services\Base
 		return $this->injections['metadata'];
 	}
 	
+	public function notifyAboutMentionInPost($userId, $noteId)
+	{
+		$notification = $this->getEntityManager()->getEntity('Notification');		
+		$notification->set(array(
+			'type' => 'MentionInPost',
+			'data' => array('noteId' => $noteId),
+			'userId' => $userId
+		));
+		$this->getEntityManager()->saveEntity($notification);		
+	}
+	
 	public function notifyAboutNote($userId, $noteId)
 	{
 		$notification = $this->getEntityManager()->getEntity('Notification');		
 		$notification->set(array(
 			'type' => 'Note',
-			'data' => json_encode(array('noteId' => $noteId)),
+			'data' => array('noteId' => $noteId),
 			'userId' => $userId
 		));
 		$this->getEntityManager()->saveEntity($notification);		
@@ -113,9 +124,13 @@ class Notification extends \Espo\Core\Services\Base
 		$ids = array();
 		foreach ($collection as $k => $entity) {
 			$ids[] = $entity->id;
-			$data = json_decode($entity->get('data'));
+			$data = $entity->get('data');
+			if (empty($data)) {
+				continue;
+			}
 			switch ($entity->get('type')) {
-				case 'Note':				
+				case 'Note':
+				case 'MentionInPost':				
 					$note = $this->getEntityManager()->getEntity('Note', $data->noteId);
 					if ($note) {
 						if ($note->get('parentId') && $note->get('parentType')) {
@@ -124,9 +139,10 @@ class Notification extends \Espo\Core\Services\Base
 								$note->set('parentName', $parent->get('name'));
 							}
 						}
-						$entity->set('data', $note->toArray());
+						$entity->set('noteData', $note->toArray());
 					} else {
 						unset($collection[$k]);
+						$count--;
 						$this->getEntityManager()->removeEntity($entity);
 					}
 					break;

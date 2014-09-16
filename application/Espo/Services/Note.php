@@ -38,29 +38,6 @@ class Note extends Record
 		return $entity;
 	}
 	
-	protected function fetchMentionDataFromPost($post)
-	{
-		$data = new \stdClass();
-		
-		preg_match_all('/(@\w+)/', $post, $matches);
-		
-		$userList = array();
-		
-		if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
-			foreach ($matches[0] as $item) {
-				$userName = substr($item, 1);
-				$user = $this->getEntityManager()->getRepository('User')->where(array('userName' => $userName))->findOne();
-				if ($user) {
-					$userList[] = $user;
-				}
-			}
-		}
-		
-		
-
-		die;
-	}	
-	
 	public function createEntity($data)
 	{
 		if (!empty($data['parentType']) && !empty($data['parentId'])) {
@@ -71,20 +48,9 @@ class Note extends Record
 				}
 			}
 		}
-		$mentionData = $this->fetchMentionDataFromPost($data['post']);
-		
-		$entity = parent::createEntity($data);
 		
 		
-		return $entity;
-	}
-	
-	public function updateEntity($id, $data)
-	{
-		$entity = parent::updateEntity($id, $data);
-		
-		return $entity;
-		
+		return parent::createEntity($data);
 	}
 
 }
