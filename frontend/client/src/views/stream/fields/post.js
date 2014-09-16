@@ -19,34 +19,27 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Stream.Notes.MentionInPost', 'Views.Stream.Note', function (Dep) {
+Espo.define('Views.Stream.Fields.Post', 'Views.Fields.Text', function (Dep) {
 
 	return Dep.extend({
+	
+		getValueForDisplay: function () {
+			var text = Dep.prototype.getValueForDisplay.call(this);
 			
-		template: 'stream.notes.post',
-		
-		messageName: 'mentionInPost',
-		
-		setup: function () {		
-			if (this.model.get('post')) {
-				this.createField('post', null, null, 'Stream.Fields.Post');
-			}			
-			if ((this.model.get('attachmentsIds') || []).length) {
-				this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
-			}
-			
-			var data = this.model.get('data');
-			
-			this.messageData['mentioned'] = this.options.userId;
-			
-			if (this.isUserStream) {
-				if (this.options.userId == this.getUser().id) {
-					this.messageData['mentioned'] = this.translate('you');
-				}
-			}
-			
-			this.createMessage();
-		},		
-	});
-});
+			if (this.mode == 'detail' || this.mode == 'list') {
+				var mentionData = (this.model.get('data') || {}).mentions || {};
 
+				Object.keys(mentionData).sort(function (a, b) {
+					return a.length < b.length
+				}).forEach(function (item) {
+					var part = '[url=#User/view/'+mentionData[item].id+']' + mentionData[item].name + '[/url]'
+					text = text.replace(new RegExp(item, 'g'), part);
+				});
+			}
+						
+			return text;
+		},
+		
+	});
+	
+});
