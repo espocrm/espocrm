@@ -182,6 +182,9 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 					track: true,
 					relative: true,
 					trackFormatter: function (obj) {
+						if (obj.x >= self.chartData.length) {
+							return null;
+						}
 						return self.formatNumber(obj.y) + ' ' + self.currency;
 					},
 				},
