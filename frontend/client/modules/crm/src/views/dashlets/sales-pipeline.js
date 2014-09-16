@@ -181,6 +181,7 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 				mouse: {
 					track: true,
 					relative: true,
+					position: 'ne',
 					trackFormatter: function (obj) {
 						if (obj.x >= self.chartData.length) {
 							return null;
