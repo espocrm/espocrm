@@ -26,6 +26,8 @@ use Espo\ORM\Entity;
 
 class Mentions extends \Espo\Core\Hooks\Base
 {
+	public static $order = 9;
+	
 	protected $notificationService = null;
 	
 	protected function init()
@@ -65,7 +67,7 @@ class Mentions extends \Espo\Core\Hooks\Base
 						'userName' => $user->get('userName'),
 						'_scope' => $user->getEntityName()
 					);
-					$mentionData->$item = $m;
+					$mentionData->$item = (object) $m;
 					if (!in_array($item, $previousMentionList)) {
 						$this->notifyAboutMention($entity, $user);
 					}

@@ -28,6 +28,8 @@ class Notifications extends \Espo\Core\Hooks\Base
 {
 	protected $notificationService = null;
 	
+	public static $order = 14;
+	
 	protected function init()
 	{
 		$this->dependencies[] = 'serviceFactory';
@@ -38,6 +40,19 @@ class Notifications extends \Espo\Core\Hooks\Base
 		return $this->getInjection('serviceFactory');
 	}
 	
+	protected function getMentionedUserList($entity)
+	{
+		$mentionedUserList = array();
+		$data = $entity->get('data');
+		if (($data instanceof \stdClass) && ($data->mentions instanceof \stdClass)) {
+			$mentions = get_object_vars($data->mentions);
+			foreach ($mentions as $d) {
+				$mentionedUserList[] = $d->id;
+			}			
+		}
+		return $mentionedUserList;
+	}
+	
 	public function afterSave(Entity $entity)
 	{
 		if (!$entity->isFetched()) {
@@ -46,6 +61,9 @@ class Notifications extends \Espo\Core\Hooks\Base
 			$parentId = $entity->get('parentId');			
 		
 			if ($parentType && $parentId) {
+
+				$mentionedUserList = $this->getMentionedUserList($entity);
+			
 				$pdo = $this->getEntityManager()->getPDO();
 				$sql = "
 					SELECT user_id AS userId 
@@ -55,7 +73,7 @@ class Notifications extends \Espo\Core\Hooks\Base
 				$sth->execute();
 				$userIdList = array();
 				while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-					if ($this->getUser()->id != $row['userId']) {
+					if ($this->getUser()->id != $row['userId'] && !in_array($row['userId'], $mentionedUserList)) {
 						$userIdList[] = $row['userId'];
 					}
 				}
