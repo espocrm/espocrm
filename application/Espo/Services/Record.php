@@ -325,16 +325,12 @@ class Record extends \Espo\Core\Services\Base
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
-		
-
-				
+						
 		$entity->set($data);
 		
 		if (!$this->isValid($entity)) {
 			throw new BadRequest();
-		}
-		
-		$d = $entity->get('attachmentsIds');
+		}		
 		
 		if ($this->storeEntity($entity)) {
 			return $entity;
