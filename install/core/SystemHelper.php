@@ -26,6 +26,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 
 	protected $requirements = array(
 		'phpVersion' => '5.4',
+		'MySQLVersion' => '5.1',
 
 		'exts' => array(
 			'json',
@@ -34,7 +35,9 @@ class SystemHelper extends \Espo\Core\Utils\System
 		),
 	);
 
-	protected $modRewriteUrl = '/api/v1/Metadata';
+	protected $apiPath = '/api/v1';
+
+	protected $modRewriteUrl = '/Metadata';
 
 	protected $writableDir = 'data';
 
@@ -55,7 +58,6 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $this->writableDir;
 	}
 
-
 	public function checkRequirements()
 	{
 		$result['success'] = true;
@@ -75,6 +77,17 @@ class SystemHelper extends \Espo\Core\Utils\System
 		}
 
 		return $result;
+	}
+
+	protected function getMySQLVersion($pdoConnection)
+	{
+		$sth = $pdoConnection->prepare("SHOW VARIABLES LIKE 'version'");
+		$sth->execute();
+		$res = $sth->fetch(PDO::FETCH_NUM);
+
+		$version = empty($res[1]) ? null : $res[1];
+
+		return $version;
 	}
 
 	public function checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql', $isCreateDatabase = true)
@@ -98,7 +111,6 @@ class SystemHelper extends \Espo\Core\Utils\System
 				try {
 					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port};" : '') . "dbname={$dbName}";
 					$dbh = new PDO($dsn, $dbUserName, $dbUserPass);
-					$dbh = null;
 				} catch (PDOException $e) {
 
 					$result['errors']['dbConnect']['errorCode'] = $e->getCode();
@@ -106,9 +118,18 @@ class SystemHelper extends \Espo\Core\Utils\System
 					$result['success'] = false;
 				}
 
-				/** try to create a database */
-				if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049') {
+				/** Check MySQL Version */
+				if ($result['success']) {
+					$currentMySQLVersion = $this->getMySQLVersion($dbh);
+					if (isset($currentMySQLVersion) && version_compare($currentMySQLVersion, $this->requirements['MySQLVersion']) == -1) {
+						$result['errors']['MySQLVersion'] = $this->requirements['MySQLVersion'];
+						$result['success'] = false;
+					}
+				}
 
+				/** try to create a database */
+				if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049')
+				{
 					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port}" : '');
 					$pdo = new PDO($dsn, $dbUserName, $dbUserPass);
 
@@ -124,8 +145,6 @@ class SystemHelper extends \Espo\Core\Utils\System
 					}
 				}
 				/** END: try to create a database */
-
-
 
 				break;
 		}
@@ -148,9 +167,14 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $baseUrl;
 	}
 
+	public function getApiPath()
+	{
+		return $this->apiPath;
+	}
+
 	public function getModRewriteUrl()
 	{
-		return $this->modRewriteUrl;
+		return $this->apiPath . $this->modRewriteUrl;
 	}
 
 	public function getChownCommand($path, $isSudo = false, $isCd = true)

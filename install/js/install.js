@@ -35,6 +35,10 @@ var InstallScript = function(opt) {
 		this.modRewriteUrl = opt.modRewriteUrl;
 	}
 
+	if (typeof(opt.apiPath) !== 'undefined') {
+		this.apiPath = opt.apiPath.substr(1) + '/';
+	}
+
 	if (typeof(opt.serverType) !== 'undefined') {
 		this.serverType = opt.serverType;
 	}
@@ -369,6 +373,9 @@ InstallScript.prototype.checkSett = function(opt) {
 				if (typeof(errors.phpVersion) !== 'undefined') {
 					msg += self.getLang('phpVersion', 'messages').replace('{minVersion}', errors.phpVersion) + rowDelim;
 				}
+				if (typeof(errors.MySQLVersion) !== 'undefined') {
+					msg += self.getLang('MySQLVersion', 'messages').replace('{minVersion}', errors.MySQLVersion) + rowDelim;
+				}
 
 				if (typeof(errors.exts) !== 'undefined') {
 					var exts = errors.exts;
@@ -629,10 +636,12 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 		this.checkAction(ajaxData);
 		return;
 	}
+
 	ajaxData.success = false;
 	if (typeof(this.langs) !== 'undefined') {
 		ajaxData.errorMsg = (typeof(this.langs['options']['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteHelp'][this.serverType] : this.langs['options']['modRewriteHelp']['default'];
 		ajaxData.errorMsg += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
+		ajaxData.errorMsg = ajaxData.errorMsg.replace("{ESPO_PATH}", this.getEspoPath(true)).replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
 	}
 	var realCheckIndex = this.checkIndex - 1;
 	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'
@@ -666,10 +675,24 @@ InstallScript.prototype.callbackChecking = function(data) {
 	}
 }
 
+InstallScript.prototype.getEspoPath = function(onlyPath) {
+
+	onlyPath = typeof onlyPath !== 'undefined' ? onlyPath : false;
+
+	var location = window.location.href;
+	if (onlyPath) {
+		location = window.location.pathname;
+	}
+
+	location = location.replace(/install\/?/, '');
+
+	return location;
+}
+
 InstallScript.prototype.goToEspo = function() {
-	var loc = window.location.href;
-	loc = loc.replace(/install\/?/, '');
-	window.location.replace(loc);
+
+	var location = this.getEspoPath();
+	window.location.replace(location);
 }
 
 window.InstallScript = InstallScript;

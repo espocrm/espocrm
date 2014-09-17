@@ -98,6 +98,7 @@ switch ($action) {
 
 	case 'step3':
 	case 'errors':
+		$smarty->assign("apiPath", $systemHelper->getApiPath());
 		$modRewriteUrl = $systemHelper->getModRewriteUrl();
 		$smarty->assign("modRewriteUrl", $modRewriteUrl);
 		$serverType = $systemHelper->getServerType();
@@ -125,7 +126,6 @@ $smarty->assign('action', ucfirst($action));
 if (!empty($actionFile) && file_exists('install/'.$actionFile)) {
 	include $actionFile;
 }
-
 
 if (!empty($actionFile) && file_exists('install/core/tpl/'.$tplName)) {
 	ob_clean();

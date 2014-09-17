@@ -99,7 +99,6 @@ class Installer
 		return $this->getConfig()->get('version');
 	}
 
-
 	protected function auth()
 	{
 		if (!$this->isAuth) {

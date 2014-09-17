@@ -48,6 +48,7 @@
 			action: 'step3',
 			langs: {$langsJs},
 			modRewriteUrl: '{$modRewriteUrl}',
+			apiPath: '{$apiPath}',
 			serverType: '{$serverType}',
 			OS: '{$OS}'
 		}
