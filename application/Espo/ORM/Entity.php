@@ -94,7 +94,7 @@ abstract class Entity implements IEntity
 		$this->valuesContainer = array();
 	}
 	
-	protected function setValue($name, $value)
+	protected function _setValue($name, $value)
 	{
 		$this->valuesContainer[$name] = $value;
 	}	

@@ -15,7 +15,8 @@
 	},
 	"links": {
 		"accounts": "Accounts",
-		"opportunities": "Opportunities"
+		"opportunities": "Opportunities",
+		"contracts": "Contracts"
 	},
 	"options": {
 		"status": {

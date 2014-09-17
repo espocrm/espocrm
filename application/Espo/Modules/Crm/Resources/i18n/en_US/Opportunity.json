@@ -14,7 +14,8 @@
 	},
 	"links": {
 		"contacts": "Contacts",
-		"documents": "Documents"
+		"documents": "Documents",
+		"contracts": "Contracts"
 	},
 	"options": {
 		"stage": {

@@ -16,7 +16,8 @@
 		"contacts": "Contacts",
 		"opportunities": "Opportunities",
 		"cases": "Cases",
-		"documents": "Documents"
+		"documents": "Documents",
+		"contracts": "Contracts"
 	},
 	"options": {
 		"type": {

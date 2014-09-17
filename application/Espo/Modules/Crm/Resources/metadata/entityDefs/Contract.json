@@ -2,39 +2,46 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true,
-            "view": "Crm:Document.Fields.Name"
-        },
-        "file": {
-            "type": "file",
             "required": true
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Draft", "Expired", "Canceled"],
+            "options": ["Pending", "Active", "Closed", "Expired"],
             "view": "Fields.EnumStyled",
             "style": {
-            	"Canceled": "danger",
+            	"Active": "success",
             	"Expired": "danger"
             }
         },
-        "source": {
-        	"type": "enum",
-        	"options": ["Espo"],
-        	"default": "Espo"
+        "value": {
+            "type": "currency"
         },
-        "type": {
-            "type": "enum",
-            "options": ["", "Contract", "NDA", "EULA", "License Agreement"]
+        "startDate": {
+            "type": "date"
         },
-        "publishDate": {
-            "type": "date",
-            "required": true,
-            "default": "javascript: return this.dateTime.getToday();"
+        "endDate": {
+            "type": "date"
         },
-        "expirationDate": {
-            "type": "date",
-            "after": "publishDate"
+        "account": {
+            "type": "link",
+            "required": true
+        },
+        "opportunity": {
+            "type": "link",
+            "view": "Crm:Contract.Fields.Opportunity"
+        },
+        "customerSignedDate": {
+            "type": "date"
+        },
+        "companySignedDate": {
+            "type": "date"
+        },
+        "userSigned": {
+            "type": "link"
+        },
+        "contactSigned": {
+            "type": "link",
+            "view": "Crm:Contract.Fields.ContactSigned"
         },
         "description": {
             "type": "text"
@@ -64,21 +71,29 @@
         }
     },
     "links": {
-    	"accounts": {
-            "type": "hasMany",
+    	"account": {
+            "type": "belongsTo",
             "entity": "Account",
-            "foreign": "documents"
+            "foreign": "contracts"
     	},
-    	"opportunities": {
-            "type": "hasMany",
+    	"opportunity": {
+            "type": "belongsTo",
             "entity": "Opportunity",
-            "foreign": "documents"
+            "foreign": "contracts"
     	},
-    	"contracts": {
+    	"documents": {
             "type": "hasMany",
-            "entity": "Contract",
-            "foreign": "documents"
+            "entity": "Document",
+            "foreign": "contracts"
     	},
+        "userSigned": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "contactSigned": {
+            "type": "belongsTo",
+            "entity": "Contact"
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"

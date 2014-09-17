@@ -1,0 +1,13 @@
+[
+	{
+		"label": false,
+		"rows":[
+			[{"name":"name"}],
+			[{"name":"status"}],
+			[{"name":"account"}],
+			[{"name":"startDate"}],
+			[{"name":"endDate"}]
+		]
+	}
+]
+

@@ -138,6 +138,11 @@
             "entity": "Document",
             "foreign": "accounts"
         },
+        "contracts": {
+            "type": "hasMany",
+            "entity": "Contract",
+            "foreign": "account"
+        },
         "meetings": {
             "type": "hasChildren",
             "entity": "Meeting",

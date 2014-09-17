@@ -137,6 +137,11 @@
             "entity": "Email",
             "foreign": "parent"
         },
+        "contracts": {
+            "type": "hasMany",
+            "entity": "Contract",
+            "foreign": "opportunity"
+        },
         "documents": {
             "type": "hasMany",
             "entity": "Document",

@@ -1,0 +1,35 @@
+{
+	"labels": {
+		"Create Contract": "Create Contract",
+		"Details": "Details"
+	},
+	"fields": {
+		"name": "Name",
+		"status": "Status",
+		"value": "Value",		
+		"account": "Account",
+		"opportunity": "Opportunity",
+		"startDate": "Start Date",
+		"endDate": "End Date",
+		"customerSignedDate": "Customer Signed Date",
+		"companySignedDate": "Company Signed Date",
+		"contactSigned": "Signer (Contact)",
+		"userSigned": "Signer (User)",
+		"description": "Description"
+	},
+	"links": {
+		"documents": "Documents"
+	},
+	"options": {
+		"status": {
+			"Active": "Active",
+			"Pending": "Pending",
+			"Closed": "Closed",
+			"Expired": "Expired"
+		}
+	},
+	"presetFilters": {
+		"active": "Active",
+		"pending": "Pending"
+	}
+}

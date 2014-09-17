@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,34 +19,23 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Core\Entities;
+Espo.define('Crm:Views.Contract.Fields.ContactSigned', 'Views.Fields.Link', function (Dep) {
 
-class Person extends \Espo\Core\ORM\Entity
-{
-	public static $person = true;
+	return Dep.extend({	
 	
-	public function setLastName($value)
-	{
-		$this->_setValue('lastName', $value);
+		getSelectFilters: function () {
+			if (this.model.get('accountId')) {
+				return {
+					'account': {
+						type: 'equals',
+						field: 'accountId',
+						value: this.model.get('accountId'),
+						valueName: this.model.get('accountName'),
+					}
+				};				
+			}
+		},
 		
-		$firstName = $this->get('firstName');
-		if (empty($firstName)) {
-			$this->_setValue('name', $value);
-		} else {
-			$this->_setValue('name', $firstName . ' ' . $value);
-		}
-	}
-	
-	public function setFirstName($value)
-	{
-		$this->_setValue('firstName', $value);
-		
-		$lastName = $this->get('lastName');
-		if (empty($lastName)) {
-			$this->_setValue('name', $value);
-		} else {
-			$this->_setValue('name', $value . ' ' . $lastName);
-		}
-	}
-}
+	});
 
+});

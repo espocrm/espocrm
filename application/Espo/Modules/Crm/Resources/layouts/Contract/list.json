@@ -1,0 +1,8 @@
+[
+	{"name":"name","width":30,"link":true},
+	{"name":"account","width":20},
+	{"name":"status"},
+	{"name":"startDate"},
+	{"name":"endDate"},
+	{"name":"createdAt"}
+]
