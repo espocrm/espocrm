@@ -13,7 +13,8 @@
 		"amountConverted": "Amount (converted)"
 	},
 	"links": {
-		"contacts": "Contacts"
+		"contacts": "Contacts",
+		"documents": "Documents"
 	},
 	"options": {
 		"stage": {

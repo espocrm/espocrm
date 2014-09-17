@@ -15,7 +15,8 @@
 	"links": {
 		"contacts": "Contacts",
 		"opportunities": "Opportunities",
-		"cases": "Cases"
+		"cases": "Cases",
+		"documents": "Documents"
 	},
 	"options": {
 		"type": {

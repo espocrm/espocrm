@@ -136,6 +136,11 @@
             "type": "hasChildren",
             "entity": "Email",
             "foreign": "parent"
+        },
+        "documents": {
+            "type": "hasMany",
+            "entity": "Document",
+            "foreign": "opportunities"
         }
     },
     "collection": {
