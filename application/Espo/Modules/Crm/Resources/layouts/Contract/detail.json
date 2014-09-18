@@ -13,7 +13,7 @@
 			[{"name":"companySignedDate"}, {"name":"customerSignedDate"}],
 			[{"name":"userSigned"}, {"name":"contactSigned"}],
 			[{"name":"value"}, false],
-			[{"name":"description", "fullWidth": true}]
+			[{"name":"description"}, false]
 		]
 	}
 ]
