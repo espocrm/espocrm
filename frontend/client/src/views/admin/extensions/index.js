@@ -38,6 +38,24 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 			},
 			'click button[data-action="upload"]': function () {
 				this.upload();
+			},
+			'click [data-action="uninstall"]': function (e) {
+				var id = $(e.currentTarget).data('id');
+				
+				var self = this;
+				if (confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'))) {					
+					Espo.Ui.notify(this.translate('Uninstalling...', 'labels', 'Admin'));
+					
+					$.ajax({
+						url: 'Extension/action/uninstall',
+						type: 'POST',
+						data: JSON.stringify({
+							id: id
+						})
+					}).done(function () {
+						this.collection.fetch();
+					}.bind(this));
+				}
 			}
 		},
 		
@@ -103,7 +121,7 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 					view.once('run', function () {
 						view.close();
 						this.$el.find('.panel.upload').addClass('hidden');
-						this.run(data.id, data.version);
+						this.run(data.id, data.version, data.name);
 					}, this);
 				}.bind(this));			
 			}.bind(this)).error;
@@ -113,7 +131,7 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 			this.$el.find('.notify-text').html(text);	
 		},
 		
-		run: function (id, version) {			
+		run: function (id, version, name) {			
 			var msg = this.translate('Installing...', 'labels', 'Admin');
 			this.notify('Please wait...');
 			this.textNotification(msg);				
@@ -134,7 +152,8 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 					cache.clear();		
 				}
 				this.createView('popup', 'Admin.Extensions.Done', {
-					version: version
+					version: version,
+					name: name
 				}, function (view) {
 					this.notify(false);
 					view.render();					

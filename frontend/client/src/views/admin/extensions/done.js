@@ -19,55 +19,45 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.Upgrade.Ready', 'Views.Modal', function (Dep) {
+Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
 	
-		cssName: 'ready-modal',	
+		cssName: 'done-modal',	
 		
 		header: false,
 		
-		template: 'admin.upgrade.ready',
+		template: 'admin.extensions.done',
 		
 		createButton: true,
 		
 		data: function () {		
 			return {
-				version: this.upgradeData.version,
-				text: this.translate('upgradeVersion', 'messages', 'Admin').replace('{version}', this.upgradeData.version)
+				version: this.options.version,
+				name: this.options.name,
+				text: this.translate('extensionInstalled', 'messages', 'Admin').replace('{version}', this.options.version)
+				                                                               .replace('{name}', this.options.name)
 			};
 		},
 				
-		setup: function () {
-			
+		setup: function () {			
 			this.buttons = [
 				{
-					name: 'run',
-					label: this.translate('Run Upgrade', 'labels', 'Admin'),
-					style: 'danger',
+					name: 'close',
+					label: 'Close',
 					onClick: function (dialog) {
-						this.run();
+						setTimeout(function () {
+							this.getRouter().navigate('#Admin', {trigger: true});
+						}.bind(this), 500);
+						dialog.close();										
 					}.bind(this)
-				},
-				{
-					name: 'cancel',
-					label: 'Cancel',
-					onClick: function (dialog) {
-						dialog.close();
-					}
 				} 
 			];
-			
-			this.upgradeData = this.options.upgradeData;
 					
-			this.header = this.getLanguage().translate('Ready for upgrade', 'labels', 'Admin');				
+			this.header = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');			
 			
 		},
 		
-		run: function () {
-			this.trigger('run');
-			this.remove();
-		}	
 	});
 });
 

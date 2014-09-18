@@ -33,6 +33,51 @@ class Extension extends \Espo\Core\Controllers\Record
 			throw new Forbidden();
 		}
 	}
+	
+	public function actionUpload($params, $data, $request)
+	{
+		if (!$request->isPost()) {
+			throw new Forbidden();	
+		}
+		
+		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+
+		$id = $manager->upload($data);
+		$manifest = $manager->getManifest();
+
+		return array(
+			'id' => $id,
+			'version' => $manifest['version'],
+			'name' => $manifest['name'],
+			'description' => $manifest['description'],
+		);
+	}
+
+	public function actionInstall($params, $data, $request)
+	{
+		if (!$request->isPost()) {
+			throw new Forbidden();	
+		}
+		
+		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+
+		$manager->run($data['id']);
+
+		return true;
+	}
+	
+	public function actionUninstall($params, $data, $request)
+	{
+		if (!$request->isPost()) {
+			throw new Forbidden();	
+		}		
+		
+		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+
+		$manager->uninstall($data['id']);
+
+		return true;
+	}
 
 	public function actionCreate()
 	{

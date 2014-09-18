@@ -35,7 +35,15 @@
 		"Extensions": "Extensions",
 		"Upload": "Upload",
 		"Installing...": "Installing...",
-		"Upgrading...": "Upgrading..."
+		"Upgrading...": "Upgrading...",
+		"Upgraded successfully": "Upgraded successfully",
+		"Installed successfully": "Installed successfully",
+		"Ready for upgrade": "Ready for upgrade",
+		"Run Upgrade": "Run Upgrade",
+		"Install": "Install",
+		"Ready for installation": "Ready for installation",
+		"Uninstalling...": "Uninstalling...",
+		"Uninstalled": "Uninstalled"
 	},
 	"layouts": {
 		"list": "List",
@@ -102,7 +110,10 @@
 		"selectUpgradePackage": "Select upgrade package",
 		"downloadUpgradePackage": "Download needed upgrade package(s) <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">here</a>.",
 		"selectLayout": "Select needed layout in the left menu and edit it.",
-		"selectExtensionPackage": "Select extension package"
+		"selectExtensionPackage": "Select extension package",
+		"extensionInstalled": "Extension {name} {version} has been installed.",
+		"installExtension": "Extension {name} {version} is ready for an istallation.",
+		"uninstallConfirmation": "Are you really want to uninstall the extension?"
 	},
 	"descriptions": {
 		"settings": "System settings of application.",

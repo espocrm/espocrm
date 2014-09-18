@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.Upgrade.Ready', 'Views.Modal', function (Dep) {
+Espo.define('Views.Admin.Extensions.Ready', 'Views.Modal', function (Dep) {
 
 	return Dep.extend({
 	
@@ -27,14 +27,15 @@ Espo.define('Views.Admin.Upgrade.Ready', 'Views.Modal', function (Dep) {
 		
 		header: false,
 		
-		template: 'admin.upgrade.ready',
+		template: 'admin.extensions.ready',
 		
 		createButton: true,
 		
 		data: function () {		
 			return {
 				version: this.upgradeData.version,
-				text: this.translate('upgradeVersion', 'messages', 'Admin').replace('{version}', this.upgradeData.version)
+				text: this.translate('installExtension', 'messages', 'Admin').replace('{version}', this.upgradeData.version)
+				                                                             .replace('{name}', this.upgradeData.name)
 			};
 		},
 				
@@ -43,7 +44,7 @@ Espo.define('Views.Admin.Upgrade.Ready', 'Views.Modal', function (Dep) {
 			this.buttons = [
 				{
 					name: 'run',
-					label: this.translate('Run Upgrade', 'labels', 'Admin'),
+					text: this.translate('Install', 'labels', 'Admin'),
 					style: 'danger',
 					onClick: function (dialog) {
 						this.run();
@@ -60,7 +61,7 @@ Espo.define('Views.Admin.Upgrade.Ready', 'Views.Modal', function (Dep) {
 			
 			this.upgradeData = this.options.upgradeData;
 					
-			this.header = this.getLanguage().translate('Ready for upgrade', 'labels', 'Admin');				
+			this.header = this.getLanguage().translate('Ready for installation', 'labels', 'Admin');				
 			
 		},
 		
