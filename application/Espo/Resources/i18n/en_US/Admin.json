@@ -31,7 +31,11 @@
 		"Auth Tokens": "Auth Tokens",
 		"Authentication": "Authentication",
 		"Currency": "Currency",
-		"Integrations": "Integrations"
+		"Integrations": "Integrations",
+		"Extensions": "Extensions",
+		"Upload": "Upload",
+		"Installing...": "Installing...",
+		"Upgrading...": "Upgrading..."
 	},
 	"layouts": {
 		"list": "List",
@@ -97,7 +101,8 @@
 		"selectEntityType": "Select entity type in the left menu.",
 		"selectUpgradePackage": "Select upgrade package",
 		"downloadUpgradePackage": "Download needed upgrade package(s) <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">here</a>.",
-		"selectLayout": "Select needed layout in the left menu and edit it."
+		"selectLayout": "Select needed layout in the left menu and edit it.",
+		"selectExtensionPackage": "Select extension package"
 	},
 	"descriptions": {
 		"settings": "System settings of application.",
@@ -117,7 +122,8 @@
 		"userInterface": "Configure UI.",
 		"authTokens": "Active auth sessions. IP address and last access date.",
 		"authentication": "Authentication settings.",
-		"currency": "Currency settings and rates."
+		"currency": "Currency settings and rates.",
+		"extensions": "Install or uninstall extensions."
 	},
 	"options": {
 		"previewSize": {

@@ -111,6 +111,11 @@
             "url":"#Admin/userInterface",
             "label":"User Interface",
             "description":"userInterface"
+         },
+         {
+            "url":"#Admin/extensions",
+            "label":"Extensions",
+            "description":"extensions"
          }
       ]
    }

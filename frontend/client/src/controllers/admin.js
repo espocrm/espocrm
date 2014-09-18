@@ -159,6 +159,10 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
 			this.main('Admin.Integrations.Index', {integration: integration});
 		},
 		
+		extensions: function (options) {			
+			this.main('Admin.Extensions.Index');
+		},
+		
 		rebuild: function (options) {
 			var master = this.get('master');		
 			Espo.Ui.notify(master.translate('Please wait...'));

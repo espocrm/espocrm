@@ -8,7 +8,8 @@
 		"EmailAccount": "Email Account",
 		"OutboundEmail": "Outbound Email",
 		"ScheduledJob": "Scheduled Job",
-		"ExternalAccount": "External Account"
+		"ExternalAccount": "External Account",
+		"Extension": "Extension"
 	},
 	"scopeNamesPlural": {
 		"Email": "Emails",
@@ -19,7 +20,8 @@
 		"EmailAccount": "Email Accounts",
 		"OutboundEmail": "Outbound Emails",
 		"ScheduledJob": "Scheduled Jobs",
-		"ExternalAccount": "External Accounts"
+		"ExternalAccount": "External Accounts",
+		"Extension": "Extensions"
 	},
 	"labels": {
 		"Misc": "Misc",
