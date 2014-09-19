@@ -198,6 +198,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 			
 			var parseUrl = function (str) {
 				var code = null;
+				var error = null;
 				
 				str = str.substr(str.indexOf('?') + 1, str.length);
 				str.split('&').forEach(function (part) {
@@ -208,10 +209,17 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 					if (name == 'code') {
 						code = value;
 					}
+					if (name == 'error') {
+						error = value;
+					}
 				}, this);
 				if (code) {
 					return {
 						code: code,
+					}
+				} else if (error) {
+					return {
+						error: error,
 					}
 				}
 			}
@@ -244,6 +252,10 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 					approval_prompt: 'force'
 				}		
 			}, function (res) {
+				if (res.errror) {
+					this.notify(false);
+					return;
+				}
 				if (res.code) {
 					this.$el.find('[data-action="connect"]').addClass('disabled');
 					$.ajax({
