@@ -11,8 +11,7 @@
 		"Task": "Task",
 		"Case": "Case",
 		"InboundEmail": "Inbound Email",
-		"Document": "Document",
-		"Contract": "Contract"
+		"Document": "Document"
 	},
 	"scopeNamesPlural": {
 		"Account": "Accounts",
@@ -26,8 +25,7 @@
 		"Task": "Tasks",
 		"Case": "Cases",
 		"InboundEmail": "Inbound Emails",
-		"Document": "Documents",
-		"Contract": "Contracts"
+		"Document": "Documents"
 	},
 	"dashlets": {
 		"Leads": "My Leads",

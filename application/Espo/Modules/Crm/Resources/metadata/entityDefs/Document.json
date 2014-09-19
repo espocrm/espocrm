@@ -74,11 +74,6 @@
             "entity": "Opportunity",
             "foreign": "documents"
     	},
-    	"contracts": {
-            "type": "hasMany",
-            "entity": "Contract",
-            "foreign": "documents"
-    	},
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
