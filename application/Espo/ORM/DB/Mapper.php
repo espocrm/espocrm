@@ -864,9 +864,9 @@ abstract class Mapper implements IMapper
 
 			if ($type == IEntity::FOREIGN) {
 				continue;
-			}
+			}			
 
-			if ($entity->getFetched($field) === $value) {
+			if ($entity->getFetched($field) === $value && $type != IEntity::JSON_ARRAY && $type != IEntity::JSON_OBJECT) {
 				continue;
 			}
 			
