@@ -12,7 +12,7 @@
 		"Step5 page title": "Cài đặt SMTP cho email đi",
 		"Errors page title": "Lỗi",
 		"Finish page title": "Hoàn thành cài đặt",
-		"Congratulation! Welcome to EspoCRM!": "Xin chúc mừng bạn! EspoCRM đã được cài đặt thành công.",
+		"Congratulation! Welcome to EspoCRM": "Xin chúc mừng bạn! EspoCRM đã được cài đặt thành công.",
 		"Installation Guide": "Hướng dẫn cài đặt",
 		"admin": "admin",
 		"localhost": "localhost",
@@ -27,7 +27,12 @@
 		"Re-check": "Kiểm tra lại",
 		"Version": "Phiên bản",
 		"Test settings": "Kiểm tra kết nối",
-		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306."
+		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306.",
+		"phpVersion": "Phiên bản PHP",
+		"mysqlVersion": "Phiên bản MySQL",
+		"dbHostName": "Tên máy chủ",
+		"dbName": "Tên cơ sở dữ liệu",
+		"dbUserName": "Tên truy cập csdl"
 	},
 	"fields": {
 		"Choose your language": "Chọn ngôn ngữ",

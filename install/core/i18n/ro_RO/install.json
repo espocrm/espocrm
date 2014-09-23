@@ -12,7 +12,7 @@
 		"Step5 page title": "Setari SMTP pentru trimitere email-uri",
 		"Errors page title": "Erori",
 		"Finish page title": "Instalare finalizata",
-		"Congratulation! Welcome to EspoCRM!": "Felicitari! EspoCRM a fost instalat cu succes.",
+		"Congratulation! Welcome to EspoCRM": "Felicitari! EspoCRM a fost instalat cu succes.",
 		"Installation Guide": "Instrucțiuni de instalare",
 		"admin": "admin",
 		"localhost": "localhost",
@@ -27,7 +27,12 @@
 		"Re-check": "Re-verificare",
 		"Version": "Versiunea",
 		"Test settings": "Testare Conexiune",
-		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306."
+		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306.",
+		"phpVersion": "Versiune PHP",
+		"mysqlVersion": "Versiune MySQL",
+		"dbHostName": "Numele Server-ului",
+		"dbName": "Numele Bazei de Date",
+		"dbUserName": "Nume Utilizator Baza de Date"
 	},
 	"fields": {
 		"Choose your language": "Alege Limba",

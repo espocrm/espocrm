@@ -54,24 +54,24 @@ var InstallScript = function(opt) {
 	this.checkActions = [
 		{
 			'action': 'checkModRewrite',
-			'break': true,
+			'break': true
 		},
 		{
 			'action': 'checkPermission',
-			'break': true,
+			'break': true
 		},
 		{
 			'action': 'applySett',
-			'break': true,
+			'break': true
 		},
 		{
 			'action': 'buildDatabse',
-			'break': true,
-		},
+			'break': true
+		}/*,
 		{
 			'action': 'createUser',
-			'break': true,
-		},
+			'break': true
+		}*/
 
 	];
 	this.checkIndex = 0;
@@ -119,7 +119,7 @@ InstallScript.prototype.step1 = function() {
 InstallScript.prototype.step2 = function() {
 	var self = this;
 	var backAction = 'step1';
-	var nextAction = 'step3';
+	var nextAction = 'setupConfirmation';
 
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
@@ -159,9 +159,28 @@ InstallScript.prototype.step2 = function() {
 	})
 }
 
-InstallScript.prototype.step3 = function() {
+InstallScript.prototype.setupConfirmation = function() {
 	var self = this;
 	var backAction = 'step2';
+	var nextAction = 'step3';
+
+	$('#back').click(function(){
+
+		$(this).attr('disabled', 'disabled');
+		self.goTo(backAction);
+	})
+
+	$("#next").click(function(){
+
+		$(this).attr('disabled', 'disabled');
+		self.showLoading();
+		self.actionsChecking();
+	})
+}
+
+InstallScript.prototype.step3 = function() {
+	var self = this;
+	var backAction = '';
 	var nextAction = 'step4';
 
 	$('#back').click(function(){
@@ -179,8 +198,25 @@ InstallScript.prototype.step3 = function() {
 
 		self.checkPass({
 			success: function(){
-				self.showLoading();
-				self.actionsChecking();
+				var data = self.userSett;
+				data['user-name'] = self.userSett.name;
+				data['user-pass'] = self.userSett.pass;
+
+				data.action = 'createUser';
+				$.ajax({
+					url: "index.php",
+					type: "POST",
+					data: data,
+					dataType: 'json',
+				})
+				.done(function(ajaxData){
+					if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
+						self.goTo(nextAction);
+					} else {
+						$("#next").removeAttr('disabled');
+						self.showMsg({msg: self.getLang(ajaxData.errorMsg, 'messages'), error: true});
+					}
+				})
 			},
 			error: function(msg) {
 				$("#next").removeAttr('disabled');
@@ -391,6 +427,13 @@ InstallScript.prototype.checkSett = function(opt) {
 					msg += errors.modRewrite+rowDelim;
 				}
 
+				if (typeof(errors.mysqlSetting) !== 'undefined') {
+					var mysqlSettingErrorMess = self.getLang(errors.mysqlSetting.errorCode, 'messages');
+					mysqlSettingErrorMess = mysqlSettingErrorMess.replace('{NAME}', errors.mysqlSetting.name);
+					mysqlSettingErrorMess = mysqlSettingErrorMess.replace('{VALUE}', errors.mysqlSetting.value);
+					msg += mysqlSettingErrorMess + rowDelim;
+				}
+
 				if (typeof(errors.dbConnect) !== 'undefined') {
 					if (typeof(errors.dbConnect.errorCode) !== 'undefined') {
 						var temp = self.getLang(errors.dbConnect.errorCode, 'messages');
@@ -438,9 +481,8 @@ InstallScript.prototype.validate = function() {
 		case 'step5':
 			fieldRequired = ['smtpUsername'];
 			break;
-
-
 	}
+
 	var len = fieldRequired.length;
 	for (var index = 0; index < len; index++) {
 		elem = $('[name="'+fieldRequired[index]+'"]').filter(':visible');
@@ -553,6 +595,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		self.callbackChecking(dataMain);
 		return;
 	}
+
 	var currIndex = this.checkIndex;
 	var checkAction = this.checkActions[currIndex].action;
 	this.checkIndex++;
@@ -567,6 +610,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	}
 
 	data.action = checkAction;
+
 	$.ajax({
 		url: "index.php",
 		type: "POST",
@@ -609,7 +653,7 @@ InstallScript.prototype.checkModRewrite = function() {
 	var self = this;
 	this.modRewriteUrl;
 
-	var urlAjax = '..'+this.modRewriteUrl;;
+	var urlAjax = '..'+this.modRewriteUrl;
 	var realJqXHR = $.ajax({
 		url: urlAjax,
 		type: "GET",
@@ -623,7 +667,6 @@ InstallScript.prototype.checkModRewrite = function() {
 		}
 
 		self.callbackModRewrite(data);
-
 	})
 }
 
@@ -659,7 +702,7 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 InstallScript.prototype.callbackChecking = function(data) {
 	this.hideLoading();
 	if (typeof(data) != 'undefined' && data.success) {
-		this.goTo('step4');
+		this.goTo('step3');
 	}
 	else {
 		var desc = (typeof(data.errorMsg))? data.errorMsg : '';

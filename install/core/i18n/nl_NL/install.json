@@ -12,7 +12,7 @@
 		"Step5 page title": "SMTP instellingen voor uitgaande emails",
 		"Errors page title": "Fouten",
 		"Finish page title": "Installatie is compleet",
-		"Congratulation! Welcome to EspoCRM!": "Proficiat! EspoCRM heeft u succesvol geinstalleerd.",
+		"Congratulation! Welcome to EspoCRM": "Proficiat! EspoCRM heeft u succesvol geinstalleerd.",
 		"Installation Guide": "Installation Guide",
 		"admin": "admin",
 		"localhost": "localhost",
@@ -27,7 +27,12 @@
 		"Re-check": "Re-check",
 		"Version": "Versie",
 		"Test settings": "Test Verbinding",
-		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306."
+		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306.",
+		"phpVersion": "PHP versie",
+		"mysqlVersion": "MySQL versie",
+		"dbHostName": "Host Naam",
+		"dbName": "Database Naam",
+		"dbUserName": "Database Gebruikers Naam"
 	},
 	"fields": {
 		"Choose your language": "Kies uw taal",

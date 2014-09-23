@@ -11,7 +11,7 @@
 	</form>
 </div>
 <footer class="modal-footer">
-	<button class="btn btn-primary" type="button" id="re-check">{$langs['labels']['Re-check']}</button>
+	<button class="btn btn-warning" type="button" id="re-check">{$langs['labels']['Re-check']}</button>
 </footer>
 <script>
 	{literal}

@@ -12,7 +12,8 @@
 		"Step5 page title": "SMTP settings for outgoing emails",
 		"Errors page title": "Errors",
 		"Finish page title": "Installation is complete",
-		"Congratulation! Welcome to EspoCRM!": "Congratulation! EspoCRM has been successfully installed.",
+		"Congratulation! Welcome to EspoCRM": "Congratulation! EspoCRM has been successfully installed.",
+		"More Information": "For more information,<br>please visit our blog: {BLOG}<br>follow us on twitter: {TWITTER}<br><br>If you have any suggestions or questions, please ask on the forum:<br>{FORUM}",
 		"Installation Guide": "Installation Guide",
 		"admin": "admin",
 		"localhost": "localhost",
@@ -27,7 +28,18 @@
 		"Re-check": "Re-check",
 		"Version": "Version",
 		"Test settings": "Test Connection",
-		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306."
+		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306.",
+		"Install": "Install",
+		"SetupConfirmation page title": "Recommended Settings",
+		"PHP Configuration": "Recommended PHP settings",
+		"MySQL Configuration": "MySQL Configuration",
+		"Configuration Instructions": "Configuration Instructions",
+		"phpVersion": "PHP version",
+		"mysqlVersion": "MySQL version",
+		"dbHostName": "Host Name",
+		"dbName": "Database Name",
+		"dbUserName": "Database User Name",
+		"OK": "OK"
 	},
 	"fields": {
 		"Choose your language": "Choose your language",
@@ -78,7 +90,7 @@
 		"createUser error": "createUser error",
 		"checkAjaxPermission error": "checkAjaxPermission error",
 		"Ajax failed": "Ajax failed",
-		"Cannot create user": "Cannot create user",
+		"Cannot create user": "Cannot create a user",
 		"Permission denied": "Permission denied",
 		"permissionInstruction": "<br>Run this in Terminal<pre><b>\"{C}\"</b></pre>",
 		"operationNotPermitted" : "Operation not permitted? Try this: <br>{CSU}",
@@ -88,7 +100,10 @@
 		"Thousand Separator and Decimal Mark equal": "Thousand Separator and Decimal Mark cannot be equal",
 		"1049": "Unknown database",
 		"2005": "Unknown MySQL server host",
-		"1045": "Access denied for user"
+		"1045": "Access denied for user",
+		"extension": "{0} extension is missing",
+		"option": "Recommended value is {0}",
+		"mysqlSettingError": "EspoCRM requires the MySQL setting \"{NAME}\" to be set to {VALUE}"
 	},
 	"options": {
 		"db driver": {

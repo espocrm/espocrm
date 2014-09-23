@@ -37,7 +37,6 @@
 	</form>
 </div>
 <footer class="modal-footer">
-	<button class="btn btn-default" type="button" id="back">{$langs['labels']['Back']}</button>
 	<button class="btn btn-primary" type="button" id="next">{$langs['labels']['Next']}</button>
 </footer>
 <script>

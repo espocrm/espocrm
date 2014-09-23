@@ -24,18 +24,9 @@
 class SystemHelper extends \Espo\Core\Utils\System
 {
 
-	protected $requirements = array(
-		'phpVersion' => '5.4',
-		'MySQLVersion' => '5.1',
+	protected $requirements;
 
-		'exts' => array(
-			'json',
-			'mcrypt',
-			'pdo_mysql',
-		),
-	);
-
-	protected $apiPath = '/api/v1';
+	protected $apiPath;
 
 	protected $modRewriteUrl = '/Metadata';
 
@@ -43,6 +34,13 @@ class SystemHelper extends \Espo\Core\Utils\System
 
 	protected $combineOperator = '&&';
 
+	public function __construct()
+	{
+		$config = include('config.php');
+
+		$this->requirements = $config['requirements'];
+		$this->apiPath = $config['apiPath'];
+	}
 
 	public function initWritable()
 	{
@@ -66,10 +64,10 @@ class SystemHelper extends \Espo\Core\Utils\System
 				$result['errors']['phpVersion'] = $this->requirements['phpVersion'];
 				$result['success'] = false;
 			}
-			if (!empty($this->requirements['exts'])) {
-				foreach ($this->requirements['exts'] as $extName) {
+			if (!empty($this->requirements['phpRequires'])) {
+				foreach ($this->requirements['phpRequires'] as $extName) {
 					if (!extension_loaded($extName)) {
-						$result['errors']['exts'][] = $extName;
+						$result['errors']['phpRequires'][] = $extName;
 						$result['success'] = false;
 					}
 				}
@@ -79,9 +77,52 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $result;
 	}
 
-	protected function getMySQLVersion($pdoConnection)
+	public function getRecommendationList($type = 'php', $data = null)
 	{
-		$sth = $pdoConnection->prepare("SHOW VARIABLES LIKE 'version'");
+		$list = array();
+
+		if ($type == 'mysql') {
+			$pdoConn = $this->getPdoConnection($data['dbHostName'], $data['dbPort'], $data['dbUserName'], $data['dbUserPass'], $data['dbName']);
+		}
+
+		$currentVersion = ($type == 'php') ? PHP_VERSION : $this->getMysqlSetting('version', $pdoConn);
+		$list[$type . 'Version'] = array(
+			'current' => $currentVersion,
+			'required' => $this->requirements[$type . 'Version'],
+			'acceptable' => true,
+		);
+
+		$recommendations = array_merge($this->requirements[$type . 'Requires'], $this->requirements[$type . 'Recommendations']);
+
+		foreach ($recommendations as $name => $requiredValue) {
+
+			$isExtension = false;
+
+			if (is_int($name)) {
+				$name = $requiredValue;
+				$acceptable = extension_loaded($name);
+				$currentValue = $acceptable ? 'On' : 'Off';
+				$isExtension = true;
+
+			} else {
+				$currentValue = ($type == 'php') ? ini_get($name) : $this->getMysqlSetting($name, $pdoConn);
+				$acceptable = ( isset($currentValue) && $this->convertToBytes($currentValue) >= $this->convertToBytes($requiredValue) ) ? true : false;
+			}
+
+			$list[$name] = array(
+				'current' => $currentValue,
+				'required' => $requiredValue,
+				'acceptable' => $acceptable,
+				'isExtension' => $isExtension,
+			);
+		}
+
+		return $list;
+	}
+
+	protected function getMysqlSetting($name, \PDO $pdoConnection)
+	{
+		$sth = $pdoConnection->prepare("SHOW VARIABLES LIKE '" . $name . "'");
 		$sth->execute();
 		$res = $sth->fetch(PDO::FETCH_NUM);
 
@@ -90,66 +131,73 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $version;
 	}
 
-	public function checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver = 'pdo_mysql', $isCreateDatabase = true)
+	public function checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $isCreateDatabase = true)
 	{
 		$result['success'] = true;
 
-		switch ($dbDriver) {
-			case 'mysqli':
-				$mysqli = (empty($port)) ? new mysqli($hostName, $dbUserName, $dbUserPass, $dbName) : new mysqli($hostName, $dbUserName, $dbUserPass, $dbName, $port);
-				if (!$mysqli->connect_errno) {
-					$mysqli->close();
-				}
-				else {
-					$result['errors']['dbConnect']['errorCode'] = $mysqli->connect_errno;
-					$result['errors']['dbConnect']['errorMsg'] = $mysqli->connect_error;
-					$result['success'] = false;
-				}
-				break;
+		$dbh = $this->getPdoConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName);
 
-			case 'pdo_mysql':
-				try {
-					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port};" : '') . "dbname={$dbName}";
-					$dbh = new PDO($dsn, $dbUserName, $dbUserPass);
-				} catch (PDOException $e) {
-
-					$result['errors']['dbConnect']['errorCode'] = $e->getCode();
-					$result['errors']['dbConnect']['errorMsg'] = $e->getMessage();
-					$result['success'] = false;
-				}
-
-				/** Check MySQL Version */
-				if ($result['success']) {
-					$currentMySQLVersion = $this->getMySQLVersion($dbh);
-					if (isset($currentMySQLVersion) && version_compare($currentMySQLVersion, $this->requirements['MySQLVersion']) == -1) {
-						$result['errors']['MySQLVersion'] = $this->requirements['MySQLVersion'];
-						$result['success'] = false;
-					}
-				}
-
-				/** try to create a database */
-				if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049')
-				{
-					$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port}" : '');
-					$pdo = new PDO($dsn, $dbUserName, $dbUserPass);
-
-					$isCreated = true;
-					try {
-						$pdo->query("CREATE DATABASE IF NOT EXISTS `$dbName`");
-					} catch (PDOException $e) {
-						$isCreated = false;
-					}
-
-					if ($isCreated) {
-						return $this->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver, false);
-					}
-				}
-				/** END: try to create a database */
-
-				break;
+		if ($dbh instanceof \PDOException) {
+			$result['errors']['dbConnect']['errorCode'] = $dbh->getCode();
+			$result['errors']['dbConnect']['errorMsg'] = $dbh->getMessage();
+			$result['success'] = false;
 		}
 
+		/** Check MySQL settings */
+		if ($result['success']) {
+			$currentMysqlVersion = $this->getMysqlSetting('version', $dbh);
+			if (isset($currentMysqlVersion) && version_compare($currentMysqlVersion, $this->requirements['mysqlVersion']) == -1) {
+				$result['errors']['mysqlVersion'] = $this->requirements['mysqlVersion'];
+				$result['success'] = false;
+			}
+
+			/** Check required MySQL settings */
+			foreach ($this->requirements['mysqlRequires'] as $name => $requiredValue) {
+				$currentValue = $this->getMysqlSetting($name, $dbh);
+				$acceptable = ( isset($currentValue) && $this->convertToBytes($currentValue) >= $this->convertToBytes($requiredValue) ) ? true : false;
+				if (!$acceptable) {
+					$result['errors']['mysqlSetting'] = array(
+						'errorCode' => 'mysqlSettingError',
+						'name' => $name,
+						'value' => $requiredValue,
+					);
+					$result['success'] = false;
+				}
+			}
+		}
+
+		/** try to create a database */
+		if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049')
+		{
+			$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port}" : '');
+			$pdo = new PDO($dsn, $dbUserName, $dbUserPass);
+
+			$isCreated = true;
+			try {
+				$pdo->query("CREATE DATABASE IF NOT EXISTS `$dbName`");
+			} catch (PDOException $e) {
+				$isCreated = false;
+			}
+
+			if ($isCreated) {
+				return $this->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, false);
+			}
+		}
+		/** END: try to create a database */
+
 		return $result;
+	}
+
+	public function getPdoConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName)
+	{
+		try {
+			$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port};" : '') . "dbname={$dbName}";
+			$dbh = new PDO($dsn, $dbUserName, $dbUserPass);
+		} catch (PDOException $e) {
+			return $e;
+		}
+
+		return $dbh;
 	}
 
 	public function getBaseUrl()
@@ -311,6 +359,24 @@ class SystemHelper extends \Espo\Core\Utils\System
 		}
 
 		return '';
+	}
+
+	public function convertToBytes($value)
+	{
+		$value = trim($value);
+		$last = strtoupper(substr($value, -1));
+
+		switch ( $last )
+		{
+			case 'G':
+			$value = (int) $value * 1024;
+			case 'M':
+			$value = (int) $value * 1024;
+			case 'K':
+			$value = (int) $value * 1024;
+		}
+
+		return $value;
 	}
 
 }

@@ -93,3 +93,37 @@ input[type=checkbox].btn-default {
     padding-top: 15px;
     padding-bottom: 0;
 }
+
+.table {
+  border-bottom: 1px solid #e8eced;
+}
+
+.setup-confirmation {
+	padding: 8px;
+}
+
+.setup-confirmation .table > thead > tr > th, .setup-confirmation table td:first-child {
+	padding-left: 3%;
+}
+.setup-confirmation .cell-website {
+	margin-right: 10px;
+}
+
+.setup-confirmation .loading-icon {
+	margin-top: 10px;
+}
+
+span.remark {
+	color: #a94442;
+	font-weight: bold;
+}
+span.ok {
+	color: #87c956;
+}
+
+.more-information {
+	line-height: 1.5;
+	font-size: 16px;
+	margin-top: 100px;
+}
+

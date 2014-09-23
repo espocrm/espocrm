@@ -12,7 +12,7 @@
 		"Step5 page title": "SMTP Einstellungen für ausgehende E-Mails",
 		"Errors page title": "Fehler",
 		"Finish page title": "Die Installation ist abgeschlossen",
-		"Congratulation! Welcome to EspoCRM!": "Gratulation! EspoCRM wurde erfolgreich installiert.",
+		"Congratulation! Welcome to EspoCRM": "Gratulation! EspoCRM wurde erfolgreich installiert.",
 		"Installation Guide": "Installationshandbuch",
 		"admin": "admin",
 		"localhost": "localhost",
@@ -27,7 +27,12 @@
 		"Re-check": "Überprüfung wiederholen",
 		"Version": "Version",
 		"Test settings": "Verbindung überprüfen",
-		"Database Settings Description": "Geben Sie die Verbindungsinformationen für Ihre MySQL Datebank ein (Hostname, Benutzername und Passwort). Sie können den Serverport z.B. so definieren: localhost:3306"
+		"Database Settings Description": "Geben Sie die Verbindungsinformationen für Ihre MySQL Datebank ein (Hostname, Benutzername und Passwort). Sie können den Serverport z.B. so definieren: localhost:3306",
+		"phpVersion": "PHP version",
+		"mysqlVersion": "MySQL version",
+		"dbHostName": "Host Name",
+		"dbName": "Datenbank Name",
+		"dbUserName": "Datenbank Benutzername"
 	},
 	"fields": {
 		"Choose your language": "Wählen Sie Ihre Sprache",
