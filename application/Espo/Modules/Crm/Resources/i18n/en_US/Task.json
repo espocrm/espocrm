@@ -29,7 +29,7 @@
 		"Create Task": "Create Task"
 	},
 	"presetFilters": {
-		"active": "Active",
+		"actual": "Actual",
 		"completed": "Completed",
 		"todays": "Today's",
 		"overdue": "Overdue"
