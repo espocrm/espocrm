@@ -943,14 +943,14 @@ abstract class Mapper implements IMapper
 		return $entity;
 	}
 
-	protected function getAlias(IEntity $entity, $key)
+	protected function getAlias(IEntity $entity, $relationName)
 	{
 		if (!isset($this->aliasesCache[$entity->getEntityName()])) {
 			$this->aliasesCache[$entity->getEntityName()] = $this->getTableAliases($entity);
 		}
 
-		if (isset($this->aliasesCache[$entity->getEntityName()][$key])) {
-			return $this->aliasesCache[$entity->getEntityName()][$key];
+		if (isset($this->aliasesCache[$entity->getEntityName()][$relationName])) {
+			return $this->aliasesCache[$entity->getEntityName()][$relationName];
 		} else {
 			return false;
 		}
@@ -965,21 +965,21 @@ abstract class Mapper implements IMapper
 
 		foreach ($entity->relations as $name => $r) {
 			if ($r['type'] == IEntity::BELONGS_TO) {
-				$key = $r['key'];
 				$table = $this->toDb($r['entity']);
 
-				if (!array_key_exists($key, $aliases)) {
-					if (array_key_exists($table, $occuranceHash)) {
-						$occuranceHash[$table]++;
+
+				if (!array_key_exists($name, $aliases)) {
+					if (array_key_exists($name, $occuranceHash)) {
+						$occuranceHash[$name]++;
 					} else {
-						$occuranceHash[$table] = 0;
+						$occuranceHash[$name] = 0;
 					}
-					$suffix = '_f';
-					if ($occuranceHash[$table] > 0) {
-						$suffix .= '_' . $occuranceHash[$table];
+					$suffix = '';
+					if ($occuranceHash[$name] > 0) {
+						$suffix .= '_' . $occuranceHash[$name];
 					}
 
-					$aliases[$key] = $table . $suffix;
+					$aliases[$name] = $this->toDb($name) . $suffix;
 				}
 			}
 		}
@@ -1009,9 +1009,6 @@ abstract class Mapper implements IMapper
 					if (isset($f['relation'])) {
 						$relationName = $f['relation'];
 
-						$keySet = $this->getKeys($entity, $relationName);
-						$key = $keySet['key'];
-
 						$foreigh = $f['foreign'];
 
 						if (is_array($foreigh)) {
@@ -1019,12 +1016,12 @@ abstract class Mapper implements IMapper
 								if ($value == ' ') {
 									$foreigh[$i] = '\' \'';
 								} else {
-									$foreigh[$i] = $this->getAlias($entity, $key) . '.' . $this->toDb($value);
+									$foreigh[$i] = $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
 								}
 							}
 							$fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
 						} else {
-							$fieldPath = $this->getAlias($entity, $key) . '.' . $this->toDb($foreigh);
+							$fieldPath = $this->getAlias($entity, $relationName) . '.' . $this->toDb($foreigh);
 						}
 					}
 					break;
@@ -1087,10 +1084,8 @@ abstract class Mapper implements IMapper
 							if (isset($fieldDefs['relation'])) {
 								$relationName = $fieldDefs['relation'];
 								if (isset($entity->relations[$relationName])) {
-									$keySet = $this->getKeys($entity, $relationName);
-									$key = $keySet['key'];
 
-									$alias = $this->getAlias($entity, $key);
+									$alias = $this->getAlias($entity, $relationName);
 									if ($alias) {
 										$leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
 									}
@@ -1139,7 +1134,7 @@ abstract class Mapper implements IMapper
 				$key = $keySet['key'];
 				$foreignKey = $keySet['foreignKey'];
 
-				$alias = $this->getAlias($entity, $key);
+				$alias = $this->getAlias($entity, $relationName);
 
 				if ($alias) {
 					$joinsArr[] =
