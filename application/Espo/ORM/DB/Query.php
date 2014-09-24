@@ -163,13 +163,48 @@ class Query
 			}
 		}
 		
+		$groupByPart = null;
+		if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
+			$arr = array();
+			foreach ($params['groupBy'] as $field) {
+				$arr[] = $this->convertComplexExpression($field, $entity->getEntityName());
+			}
+			$groupByPart = implode(', ', $arr);
+		}
+		
 		if (empty($params['aggregation'])) {
-			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct']);
+			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
 		} else {
 			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
 		}		
 	}
 	
+	
+	protected function convertComplexExpression($field, $entityName = null)
+	{
+		$function = null;
+		$relName = null;			
+		
+		if (strpos($field, ':')) {
+			list($function, $field) = explode(':', $field); 
+		}
+		if (strpos($field, '.')) {
+			list($relName, $field) = explode('.', $field);
+		}
+				
+		$part = $this->toDb($field);
+		if ($relName) {
+			$part = $relName . '.' . $part;
+		} else {
+			if ($entityName) {
+				$part = $this->toDb($entityName) . '.' . $part;
+			}
+		}
+		if ($function) {
+			$part = strtoupper($function) . '(' . $part . ')';
+		}
+		return $part;
+	}
 	
 	protected function getSelect(IEntity $entity, $fields = null)
 	{
@@ -184,13 +219,14 @@ class Query
 		}
 		
 		foreach ($fieldList as $field) {
-			$fieldDefs = $entity->fields[$field];
-			
-			/*if ($specifiedList) {
-				if (!in_array($field, $fields)) {
-					continue;
-				}
-			}*/
+		
+			if (array_key_exists($field, $entity->fields)) {
+				$fieldDefs = $entity->fields[$field];
+			} else {
+				$part = $this->convertComplexExpression($field);
+				$arr[] = $part . ' AS `' . $field . '`';
+				continue;
+			}
 
 			if (!empty($fieldDefs['select'])) {
 				$fieldPath = $fieldDefs['select'];
@@ -586,7 +622,7 @@ class Query
 		return false;
 	}
 	
-	public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false)
+	public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false, $groupBy = null)
 	{
 		$sql = "SELECT";
 
@@ -603,9 +639,13 @@ class Query
 		if (!empty($where)) {
 			$sql .= " WHERE {$where}";
 		}
-
-		if (!empty($distinct)) {
-			$sql .= " GROUP BY `{$table}`.id";
+		
+		if (!empty($groupBy)) {
+			$sql .= " GROUP BY {$groupBy}";
+		} else {
+			if (!empty($distinct)) {
+				$sql .= " GROUP BY `{$table}`.id";
+			}
 		}
 
 		if (!empty($order)) {

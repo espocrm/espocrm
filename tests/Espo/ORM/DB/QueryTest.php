@@ -76,7 +76,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted` FROM `account` " .
 			"WHERE account.deleted = '0' ORDER BY account.name ASC LIMIT 10, 20";
 		
-		$this->assertEquals($sql, $expectedSql);
+		$this->assertEquals($expectedSql, $sql);
 	}
 	
 	public function testSelectWithBelongsToJoin()
@@ -90,7 +90,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0'";
 		
-		$this->assertEquals($sql, $expectedSql);
+		$this->assertEquals($expectedSql, $sql);
 	}
 	
 	public function testSelectWithSpecifiedColumns()
@@ -102,7 +102,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
 			"WHERE comment.deleted = '0'";
 		
-		$this->assertEquals($sql, $expectedSql);
+		$this->assertEquals($expectedSql, $sql);
 		
 		$sql = $this->query->createSelectQuery('Comment', array(
 			'select' => array('id', 'name', 'postName')
@@ -112,7 +112,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0'";
 		
-		$this->assertEquals($sql, $expectedSql);
+		$this->assertEquals($expectedSql, $sql);
 		
 		$sql = $this->query->createSelectQuery('Comment', array(
 			'select' => array('id', 'name', 'postName'),
@@ -123,7 +123,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0'";
 		
-		$this->assertEquals($sql, $expectedSql);
+		$this->assertEquals($expectedSql, $sql);
 		
 		$sql = $this->query->createSelectQuery('Comment', array(
 			'select' => array('id', 'name'),
@@ -134,24 +134,24 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0'";
 		
-		$this->assertEquals($sql, $expectedSql);
+		$this->assertEquals($expectedSql, $sql);
 	}
 	
-	/*public function testSelectWithSpecifiedFunction()
+	public function testSelectWithSpecifiedFunction()
 	{
 		$sql = $this->query->createSelectQuery('Comment', array(
-			'select' => array('id', 'name', 'postId', 'COUNT:id'),
+			'select' => array('id', 'postId', 'post.name', 'COUNT:id'),
 			'leftJoins' => array('post'),
 			'groupBy' => array('postId', 'post.name')
 		));		
 		$expectedSql = 
-			"SELECT comment.id AS `id`, comment.post_id AS `postId`, comment.name AS `name`, COUNT(id) AS `COUNT:id` FROM `comment` " .
+			"SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(id) AS `COUNT:id` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
 			"GROUP BY comment.post_id, post.name";
 		
-		$this->assertEquals($sql, $expectedSql);
-	}*/
+		$this->assertEquals($expectedSql, $sql);
+	}
 
 }
 
