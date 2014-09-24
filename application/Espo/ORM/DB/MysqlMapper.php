@@ -33,62 +33,10 @@ use PDO;
  */
 class MysqlMapper extends Mapper
 {
-	protected function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false)
-	{
-		$sql = "SELECT";
-
-		/*if (!empty($distinct)) {
-			$sql .= " DISTINCT";
-		}*/
-
-		$sql .= " {$select} FROM `{$table}`";
-
-		if (!empty($joins)) {
-			$sql .= " {$joins}";
-		}
-
-		if (!empty($where)) {
-			$sql .= " WHERE {$where}";
-		}
-
-		if (!empty($distinct)) {
-			$sql .= " GROUP BY `{$table}`.id";
-		}
-
-		if (!empty($order)) {
-			$sql .= " {$order}";
-		}
-
-		if (is_null($offset) && !is_null($limit)) {
-			$offset = 0;
-		}
-
-		if (!is_null($offset) && !is_null($limit)) {
-			$offset = intval($offset);
-			$limit = intval($limit);
-			$sql .= " LIMIT {$offset}, {$limit}";
-		}
-
-		return $sql;
-	}
-
 	protected function toDb($field)
 	{
-		if (array_key_exists($field, $this->fieldsMapCache)) {
-			return $this->fieldsMapCache[$field];
-
-		} else {
-			$field[0] = strtolower($field[0]);
-			$dbField = preg_replace_callback('/([A-Z])/', array($this, 'toDbConversion'), $field);
-
-			$this->fieldsMapCache[$field] = $dbField;
-			return $dbField;
-		}
+		return $this->query->toDb($field);
 	}
 
-	protected function toDbConversion($matches)
-	{
-		return "_" . strtolower($matches[1]);
-	}
 }
-?>
+

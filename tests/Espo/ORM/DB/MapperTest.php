@@ -1,6 +1,7 @@
 <?php
 
 use Espo\ORM\DB\MysqlMapper;
+use Espo\ORM\DB\Query;
 use Espo\ORM\EntityFactory;
 
 use Espo\Entities\Post;
@@ -31,6 +32,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 					$args = func_get_args();
 					return "'" . $args[0] . "'";
 				}));
+				
 
 		$this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
 		$this->entityFactory->expects($this->any())
@@ -41,7 +43,9 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		                 	 	return new $className();
 			                }));
 
-		$this->db = new MysqlMapper($this->pdo, $this->entityFactory);
+		$this->query = new Query($this->pdo, $this->entityFactory);
+		
+		$this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
 		$this->post = new \Espo\Entities\Post();
 		$this->comment = new \Espo\Entities\Comment();
 		$this->tag = new \Espo\Entities\Tag();
@@ -224,7 +228,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$query =
 			"SELECT note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
 			"FROM `note` ".
-			"WHERE note.deleted = '0' AND note.parent_id = '1' AND note.parent_type = 'Post'";
+			"WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
 				'id' => '1',
@@ -247,7 +251,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(created_by.salutation_name, created_by.first_name, ' ', created_by.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
 			"FROM `post` ".
 			"LEFT JOIN `user` AS `created_by` ON post.created_by_id = created_by.id " .
-			"WHERE post.deleted = '0' AND post.id = '1' ".
+			"WHERE post.id = '1' AND post.deleted = '0' ".
 			"LIMIT 0, 1";
 		$return = new MockDBResult(array(
 			array(
