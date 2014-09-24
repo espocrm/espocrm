@@ -177,13 +177,6 @@ abstract class Mapper implements IMapper
 		if (!$relEntity) {
 			return null;
 		}
-
-		foreach (self::$selectParamList as $k) {
-			$$k = array_key_exists($k, $params) ? $params[$k] : null;
-			if (is_null($$k) && isset($relOpt[$k])) {
-				$$k = $relOpt[$k];
-			}
-		}
 		
 		if ($totalCount) {
 			$params['aggregation'] = 'COUNT';

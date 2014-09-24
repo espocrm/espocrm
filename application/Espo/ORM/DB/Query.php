@@ -121,7 +121,14 @@ class Query
 			$selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
 		}
 		
-		$joinsPart = $this->getBelongsToJoins($entity, $params['select']);
+		if (empty($params['joins'])) {
+			$params['joins'] = array();
+		}		
+		if (empty($params['leftJoins'])) {
+			$params['leftJoins'] = array();
+		}		
+		
+		$joinsPart = $this->getBelongsToJoins($entity, $params['select'], $params['joins'] + $params['leftJoins']);
 		
 		$wherePart = $this->getWhere($entity, $whereClause);
 		
@@ -169,13 +176,21 @@ class Query
 		$select = "";
 		$arr = array();
 		$specifiedList = is_array($fields) ? true : false;
-
-		foreach ($entity->fields as $field => $fieldDefs) {
-			if ($specifiedList) {
+		
+		if (empty($fields)) {
+			$fieldList = array_keys($entity->fields);
+		} else {
+			$fieldList = $fields;
+		}
+		
+		foreach ($fieldList as $field) {
+			$fieldDefs = $entity->fields[$field];
+			
+			/*if ($specifiedList) {
 				if (!in_array($field, $fields)) {
 					continue;
 				}
-			}
+			}*/
 
 			if (!empty($fieldDefs['select'])) {
 				$fieldPath = $fieldDefs['select'];
@@ -194,7 +209,25 @@ class Query
 		return $select;
 	}
 	
-	protected function getBelongsToJoins(IEntity $entity, $select = null)
+	protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null)
+	{
+		if (empty($r)) {
+			$r = $entity->relations[$relationName];
+		}
+			
+		$keySet = $this->getKeys($entity, $relationName);
+		$key = $keySet['key'];
+		$foreignKey = $keySet['foreignKey'];
+		
+		$alias = $this->getAlias($entity, $relationName);
+		
+		if ($alias) {
+			return "JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
+				   $this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+		}
+	}
+	
+	protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array())
 	{
 		$joinsArr = array();
 		
@@ -209,24 +242,21 @@ class Query
 			}
 		}
 
-		foreach ($entity->relations as $relationName => $r) {
+		foreach ($entity->relations as $relationName => $r) {			
 			if ($r['type'] == IEntity::BELONGS_TO) {
+				if (in_array($relationName, $skipList)) {
+					continue;
+				}
+			
 				if (!empty($select)) {
 					if (!in_array($relationName, $relationsToJoin)) {
 						continue;
 					}
 				}
-			
-				$keySet = $this->getKeys($entity, $relationName);
-				$key = $keySet['key'];
-				$foreignKey = $keySet['foreignKey'];
 
-				$alias = $this->getAlias($entity, $relationName);
-
-				if ($alias) {
-					$joinsArr[] =
-						"LEFT JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
-						$this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+				$join = $this->getBelongsToJoin($entity, $relationName, $r);
+				if ($join) {
+					$joinsArr[] = 'LEFT ' . $join;						
 				}
 			}
 		}
@@ -547,6 +577,10 @@ class Query
 				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 
 			return $join;
+		}
+		
+		if ($relOpt['type'] == IEntity::BELONGS_TO) {
+			return $pre . $this->getBelongsToJoin($entity, $relationName);
 		}
 
 		return false;
