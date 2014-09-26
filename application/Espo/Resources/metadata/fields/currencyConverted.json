@@ -4,6 +4,6 @@
    "filter": true,
    "notCreatable": true,
    "fieldDefs":{
-      "notStorable":true
+      "skip": true
    }
 }
