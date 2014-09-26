@@ -18,15 +18,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\Core\Utils\Database\Orm\Fields;
 
-use Espo\ORM\Entity;
+use Espo\Core\Utils\Util;
 
-class Lead extends \Espo\Core\ORM\Repositories\RDB
-{	
-	
+class Currency extends \Espo\Core\Utils\Database\Orm\Base
+{
+	protected function load($fieldName, $entityName)
+	{
+		$converedFieldName = $fieldName . 'Converted';
+		
+		return array(
+			$entityName => array(
+				'fields' => array(					
+					$fieldName => array(
+						"type" => "float",
+						"orderBy" => $converedFieldName . " {direction}"							
+					),
+				),
+			),
+		);
+	}
 
 }
-

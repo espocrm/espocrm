@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,13 +19,10 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-namespace Espo\Modules\Crm\Repositories;
+Espo.define('Views.Fields.CurrencyConverted', 'Views.Fields.Float', function (Dep) {
 
-use Espo\ORM\Entity;
+	return Dep.extend({
 
-class Lead extends \Espo\Core\ORM\Repositories\RDB
-{	
-	
-
-}
+	});
+});
 

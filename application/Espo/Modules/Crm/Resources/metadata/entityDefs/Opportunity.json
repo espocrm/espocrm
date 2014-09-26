@@ -7,22 +7,11 @@
         "amount": {
             "type": "currency",
             "required": true,
-            "audited": true,
-            "orderBy": "amountConverted {direction}"
+            "audited": true
         },
         "amountConverted": {
-            "type": "float",
-            "notStorable": true,
-            "readOnly": true,
-            "select": "opportunity.amount * currency.rate",
-            "where": {
-            	"=": "opportunity.amount * currency.rate = {value}",
-            	">": "opportunity.amount * currency.rate > {value}",
-            	"<": "opportunity.amount * currency.rate < {value}",
-            	">=": "opportunity.amount * currency.rate >= {value}",
-            	"<=": "opportunity.amount * currency.rate <= {value}",
-            	"<>": "opportunity.amount * currency.rate <> {value}"
-            }          
+            "type": "currencyConverted",
+            "readOnly": true         
         },
         "account": {
             "type": "link",

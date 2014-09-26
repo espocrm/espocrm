@@ -16,16 +16,18 @@
    ],
    "actualFields":[
       "currency",
+      "converted",
       ""
    ],
    "fields":{
       "currency":{
          "type":"varchar",
          "disabled": true
+      },
+      "converted":{
+         "type":"currencyConverted",
+         "readOnly": true
       }
    },
-   "filter": true,
-   "fieldDefs":{
-      "type":"float"
-   }
+   "filter": true
 }
