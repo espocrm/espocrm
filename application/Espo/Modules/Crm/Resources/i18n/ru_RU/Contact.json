@@ -12,11 +12,9 @@
 		"opportunityRole": "Роль в возможности",
 		"accountRole": "Роль",
 		"description": "Описание",
-		"owner":"Пригласивший",
-		"status2":"Статус"
+		"owner":"Пригласивший"
 	},
 	"links": {
-		"opportunities2": "Сделки",
 		"orders": "Заказы",
 		"cases": "Обращения"
 	},
@@ -24,13 +22,6 @@
 		"Create Contact": "Создать контакт"
 	},
 	"options": {
-		"status2": {
-			"Warm": "Теплый",
-			"Guest": "Гость",
-			"BA": "БА",
-			"ABA": "АБА",
-			"VL": "ВЛ"
-		},
 		"opportunityRole": {
 			"": "--Нет--",
 			"Decision Maker": "Принимающий решение",
