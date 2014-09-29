@@ -6,7 +6,7 @@
         "isAdmin": "Administrador",
         "defaultTeam": "Time Padrão",
         "emailAddress": "E-mail",
-        "phone": "Telefone",
+        "phoneNumber": "Telefone",
         "roles": "Regras",
         "password": "Senha",
         "passwordConfirm": "Confirmação da Senha",
@@ -23,6 +23,9 @@
         "Preferences": "Preferências",
         "Change Password": "Trocar Senha"
     },
+	"tooltips": {
+		"defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão."
+	},
     "messages": {
         "passwordWillBeSent": "A senha será enviada para o email do usuário.",
         "accountInfoEmailSubject": "Informações da Conta",

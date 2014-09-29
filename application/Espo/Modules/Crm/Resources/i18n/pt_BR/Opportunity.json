@@ -7,8 +7,10 @@
         "probability": "Probabilidade, %",
         "leadSource": "Lead de Origem",
         "doNotCall": "Não ligar",
-        "closeDate": "Data para Fechamento",
-        "description": "Descrição"
+        "closeDate": "Data de Fechamento",
+		"contacts": "Contatos",
+        "description": "Descrição",
+		"amountConverted": "Valor (convertido)"
     },
     "links": {
         "contacts": "Contatos"
@@ -25,19 +27,13 @@
             "Negotiation/Review": "Negociação/Revisão",
             "Closed Won": "Ganha",
             "Closed Lost": "Perdida"
-        },
-        "leadSource": {
-            "Call": "Ligação",
-            "Email": "E-mail",
-            "Existing Customer": "Cliente Existente",
-            "Partner": "Parceiro",
-            "Public Relations": "Relacionamento",
-            "Web Site": "Website",
-            "Campaign": "Campanha",
-            "Other": "Outros"
         }
     },
     "labels": {
-        "Create Opportunity": "Create Opportunity"
-    }
+        "Create Opportunity": "Criar Oportunidade"
+    },
+	"presetFilters": {
+		"open": "Aberta",
+		"won": "Ganha"
+	}
 }

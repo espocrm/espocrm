@@ -18,12 +18,24 @@
             "Planned": "Planejada",
             "Held": "Realizada",
             "Not Held": "Não Realizada"
-        }
+        },
+		"acceptanceStatus": {
+			"None": "Nenhum",
+			"Accepted": "Aceita",
+			"Declined": "Rejeitada"
+		}
     },
     "labels": {
         "Create Meeting": "Criar Reunião",
         "Set Held": "Marcar como realizada",
         "Set Not Held": "Marcar como não realizada",
-        "Send Invitations": "Enviar Convites"
-    }
+        "Send Invitations": "Enviar convites",
+		"Saved as Held": "Salvo como realizada",
+		"Saved as Not Held": "Salvo como não realizada"
+	},
+	"presetFilters": {
+		"planned": "Planejada",
+		"held": "Realizada",
+		"todays": "Hoje"
+	}
 }

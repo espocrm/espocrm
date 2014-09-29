@@ -19,7 +19,9 @@
         "smtpPassword": "Senha",
         "smtpEmailAddress": "Endereço de E-mail",
 
-        "exportDelimiter": "Delimitador de Exportação"
+        "exportDelimiter": "Delimitador de Exportação",
+		
+		"receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado"
     },
     "links": {
     },
@@ -28,5 +30,8 @@
             "0": "Domingo",
             "1": "Segunda"
         }
-    }
+    },
+	"labels": {
+		"Notifications": "Notificações"
+	}
 }
