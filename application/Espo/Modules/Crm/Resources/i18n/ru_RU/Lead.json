@@ -1,0 +1,57 @@
+{
+	"labels": {
+		"Converted To": "Преобразован в",
+		"Create Lead": "Создать Лид",
+		"Convert": "Преобразовать"
+	},
+	"fields": {
+		"name": "Полное имя",
+		"emailAddress": "E-mail",
+		"title": "Должность",
+		"website": "Сайт",
+		"phoneNumber": "Телефон",
+		"accountName": "Название организации",
+		"doNotCall": "Не звонить",
+		"address": "Адрес",
+		"status": "Статус",
+		"source": "Источник",
+		"opportunityAmount": "Возможный доход",
+		"opportunityAmountConverted": "Возможный доход (конвертирован)",
+		"description": "Описание",
+		"createdAccount": "Созданная организация",
+		"createdContact": "Созданный контакт",
+		"createdOpportunity": "Созданная возможность"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"New": "Новый",
+			"Assigned": "Назначено",
+			"In Process": "В процессе",
+			"Converted": "Преобразовано",
+			"Recycled": "Восстановленный",
+			"Dead": "Мертв"
+		},
+		"source": {
+			"Call": "Звонок",
+			"Email": "E-mail",
+			"Partner": "Партнеры",
+			"Other": "Другое",
+			"friend": "подруга/друг",
+			"relative": "родственник",
+			"1happy": "1 happy",
+			"autopay": "автопей",
+			"vk": "вконтакт",
+			"wife": "жена/муж",
+			"BA": "ба/аба",
+			"mother": "мама/дочь",
+			"radio": "сарафанное радио",
+			"talk": "мое общение",
+			"magic": "волшебным образом"
+		}
+	},
+	"presetFilters": {
+		"active": "Только активные"
+	}
+}
