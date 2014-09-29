@@ -80,7 +80,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 		$defs = $metadata->get('entityDefs.' . $entityName);
 
 		foreach ($defs['fields'] as $field => $d) {
-			if ($d['type'] == 'currency') {
+			if (isset($d['type']) && $d['type'] == 'currency') {
 				if (empty($params['customJoin'])) {
 					$params['customJoin'] = '';	
 				}
