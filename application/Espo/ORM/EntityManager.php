@@ -79,7 +79,7 @@ class EntityManager
 		if (empty($this->mappers[$className])) {
 			// TODO use factory
 			
-			$query = new DB\Query($this->entityFactory);
+			$query = new DB\Query($this->getPDO(), $this->entityFactory);
 			$this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
 		}
 		return $this->mappers[$className];

@@ -169,7 +169,7 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
-			if ($defs['type'] == 'linkMultiple') {
+			if (isset($defs['type']) && $defs['type'] == 'linkMultiple') {
 				$columns = null;
 				if (!empty($defs['columns'])) {
 					$columns = $defs['columns'];
@@ -183,7 +183,7 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
-			if ($defs['type'] == 'linkParent') {								
+			if (isset($defs['type']) && $defs['type'] == 'linkParent') {
 				$id = $entity->get($field . 'Id');
 				$scope = $entity->get($field . 'Type');
 				
