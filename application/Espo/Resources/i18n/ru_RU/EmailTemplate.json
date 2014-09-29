@@ -1,0 +1,16 @@
+{
+	"fields": {
+		"name": "Имя",
+		"status": "Статус",
+		"isHtml": "Html",
+		"body": "Основная часть",
+		"subject": "Тема",
+		"attachments": "Вложения",
+		"insertField": "Вставить поле"
+	},
+	"links": {
+	},
+	"labels": {
+		"Create EmailTemplate": "Создать шаблон письма"
+	}
+}

@@ -1,0 +1,81 @@
+{
+	"scopeNames": {
+		"Account": "Организация",
+		"Contact": "Контакт",
+		"Lead": "Лид",
+		"Target": "Цель",
+		"Opportunity": "Возможность",
+		"Meeting": "Встреча",
+		"Calendar": "Календарь",
+		"Call": "Вызов",
+		"Task": "Задача",
+		"Case": "Обращение",
+		"InboundEmail": "Входящая почта"
+	},
+	"scopeNamesPlural": {
+		"Account": "Организации",
+		"Contact": "Контакты",
+		"Lead": "Лиды",
+		"Target": "Цели",
+		"Opportunity": "Возможности",
+		"Meeting": "Встречи",
+		"Calendar": "Календарь",
+		"Call": "Звонки",
+		"Task": "Задачи",
+		"Case": "Обращения",
+		"InboundEmail": "Входящие письма"
+	},
+	"dashlets": {
+		"Leads": "Мои Лиды",
+		"Opportunities": "Мои возможности",
+		"Tasks": "Мои задачи",
+		"Cases": "Мои обращения",
+		"Calendar": "Календарь",
+		"Calls": "Мои звонки",
+		"Meetings": "Мои встречи",
+		"OpportunitiesByStage": "Возможности в ожидании",
+		"OpportunitiesByLeadSource": "Возможности в разработке",
+		"SalesByMonth": "Продажи по месяцам",
+		"SalesPipeline": "Источники продаж"	
+	},
+	"labels": {
+		"Create InboundEmail": "Создать входящую почту",
+		"Activities": "Мероприятия",
+		"History": "История",
+		"Attendees": "Участники",
+		"Schedule Meeting": "Запланировать встречу",
+		"Schedule Call": "Запланировать звонок",
+		"Compose Email": "Создать e-mail",
+		"Log Meeting": "Записать встречу",
+		"Log Call": "Записать звонок",
+		"Archive Email": "Архив e-mail",
+		"Create Task": "Создать задачу",
+		"Tasks": "Задачи"		
+	},
+	"fields": {
+		"billingAddressCity": "Город",
+		"billingAddressCountry": "Страна",
+		"billingAddressPostalCode": "Почтовый код",
+		"billingAddressState": "Регион",
+		"billingAddressStreet": "Улица",
+		"addressCity": "Город",
+		"addressStreet": "Улица",
+		"addressCountry": "Страна",
+		"addressState": "Регион",
+		"addressPostalCode": "Почтовый код",		
+		"shippingAddressCity": "Город доставки",
+		"shippingAddressStreet": "Улица доставки",
+		"shippingAddressCountry": "Страна доставки",
+		"shippingAddressState": "Регион доставки",
+		"shippingAddressPostalCode": "Почтовый код доставки"
+	},
+	"links": {
+		"contacts": "Контакты",
+		"opportunities": "Возможности",
+		"leads": "Лиды",		
+		"meetings": "Встречи",
+		"calls": "Звонки",
+		"tasks": "Задачи",
+		"emails": "E-mail адреса"
+	}
+}
