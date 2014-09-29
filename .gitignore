@@ -2,6 +2,7 @@
 /data/cache/*
 /data/upload/*
 /data/preferences/*
+/data/.backup/*
 /data/config.php
 /custom
 /application/Espo/Resources/metadata/scopes/CustomTest.json

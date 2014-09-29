@@ -362,39 +362,66 @@ class Manager
 
 	/**
 	 * Copy files from one direcoty to another
+	 * Ex. $sourcePath = 'data/uploads/extensions/file.json', $destPath = 'data/uploads/backup', result will be data/uploads/backup/data/uploads/backup/file.json.
 	 *
 	 * @param  string  $sourcePath
 	 * @param  string  $destPath
 	 * @param  boolean $recursively
+	 * @param  array $fileList - list of files that should be copied
+	 * @param  boolean $copyOnlyFiles - copy only files, instead of full path with directories, Ex. $sourcePath = 'data/uploads/extensions/file.json', $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'
 	 * @return boolen
 	 */
-	public function copy($sourcePath, $destPath, $recursively = false)
+	public function copy($sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false)
 	{
 		$sourcePath = $this->concatPaths($sourcePath);
 		$destPath = $this->concatPaths($destPath);
 
-		if (is_file($sourcePath)) {
-			$fileList = (array) $sourcePath;
+		if (isset($fileList)) {
+			if (!empty($sourcePath)) {
+				foreach ($fileList as &$fileName) {
+					$fileName = $this->concatPaths(array($sourcePath, $fileName));
+				}
+			}
 		} else {
-			$fileList = $this->getFileList($sourcePath, $recursively, '', 'all', true);
+			$fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', 'all', true);
+		}
+
+		/** Check permission before copying */
+		$permissionDeniedList = array();
+		foreach ($fileList as $file) {
+
+			if ($copyOnlyFiles) {
+				$file = pathinfo($file, PATHINFO_BASENAME);
+			}
+
+			$destFile = $this->concatPaths(array($destPath, $file));
+
+			if ($this->checkCreateFile($destFile) === false) {
+				$permissionDeniedList[] = $destFile;
+			}
+		}
+		/** END */
+
+		if (!empty($permissionDeniedList)) {
+			$betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
+			throw new Error("Permission denied in <br>". implode(", <br>", $betterPermissionList));
 		}
 
 		$res = true;
 		foreach ($fileList as $file) {
 
-			$sourceFile = $this->concatPaths(array($sourcePath, $file));
-			$destFile = $this->concatPaths(array($destPath, $file));
-
-			if ($this->checkCreateFile($destFile) === false) {
-				throw new Error('Permission denied in '. $destFile);
+			if ($copyOnlyFiles) {
+				$file = pathinfo($file, PATHINFO_BASENAME);
 			}
+
+			$sourceFile = is_file($sourcePath) ? $sourcePath : $this->concatPaths(array($sourcePath, $file));
+			$destFile = $this->concatPaths(array($destPath, $file));
 
 			$res &= copy($sourceFile, $destFile);
 		}
 
 		return $res;
 	}
-
 
 	/**
 	 * Create a new file if not exists with all folders in the path.
@@ -565,7 +592,6 @@ class Manager
 
 		return $pathInfo['dirname'];
 	}
-
 
 	/**
 	 * Return content of PHP file

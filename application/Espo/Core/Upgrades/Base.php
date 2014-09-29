@@ -30,44 +30,23 @@ abstract class Base
 {
 	private $container;
 
-	private $zipUtil;
+	protected $name = null;
 
-	private $fileManager;
+	protected $params = array();
 
-	private $config;
+	const UPLOAD = 'upload';
 
-	protected $upgradeId = null;
+	const INSTALL = 'install';
 
-	protected $manifestName = 'manifest.json';
+	const UNINSTALL = 'uninstall';
 
-	protected $data;
-
-	protected $packagePath = null;
-
-	protected $packagePostfix = 'z';
-
-	protected $scriptNames = array(
-		'before' => 'Before',
-		'after' => 'After',
-	);
-
-	protected $paths = array(
-		'files' => 'files',
-		'scripts' => 'scripts',
-	);
-
+	const DELETE = 'delete';
 
 	public function __construct($container)
 	{
 		$this->container = $container;
 
-		$this->zipUtil = new \Espo\Core\Utils\File\ZipArchive($container->get('fileManager'));
-	}
-
-	public function __destruct()
-	{
-		$this->upgradeId = null;
-		$this->data = null;
+		$this->actionManager = new ActionManager($this->name, $container, $this->params);
 	}
 
 	protected function getContainer()
@@ -75,319 +54,41 @@ abstract class Base
 		return $this->container;
 	}
 
-	protected function getZipUtil()
+	protected function getActionManager()
 	{
-		return $this->zipUtil;
-	}
-
-	protected function getFileManager()
-	{
-		if (!isset($this->fileManager)) {
-			$this->fileManager = $this->getContainer()->get('fileManager');
-		}
-		return $this->fileManager;
-	}
-
-	protected function getConfig()
-	{
-		if (!isset($this->config)) {
-			$this->config = $this->getContainer()->get('config');
-		}
-		return $this->config;
-	}
-
-
-	/**
-	 * Upload an upgrade package
-	 *
-	 * @param  [type] $contents
-	 * @return string  ID of upgrade process
-	 */
-	public function upload($data)
-	{
-		$upgradeId = $this->createUpgradeId();
-
-		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: start upload the package.');
-
-		$upgradePath = $this->getUpgradePath();
-		$upgradePackagePath = $this->getUpgradePath(true);
-
-		if (!empty($data)) {
-			list($prefix, $contents) = explode(',', $data);
-			$contents = base64_decode($contents);
-		}
-
-		$res = $this->getFileManager()->putContents($upgradePackagePath, $contents);
-		if ($res === false) {
-			throw new Error('Could not upload the package.');
-		}
-
-		$res = $this->getZipUtil()->unzip($upgradePackagePath, $upgradePath);
-		if ($res === false) {
-			throw new Error('Unnable to unzip the file - '.$upgradePath.'.');
-		}
-
-		if (!$this->isAcceptable()) {
-			throw new Error("Your EspoCRM version doesn't match for this upgrade package.");
-		}
-
-		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: end upload the package.');
-
-		return $upgradeId;
-	}
-
-	/**
-	 * Main upgrade process
-	 *
-	 * @param  string $upgradeId Upgrade ID, gotten in upload stage
-	 * @return bool
-	 */
-	public function run($upgradeId)
-	{
-		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: start run.');
-
-		if (empty($upgradeId)) {
-			throw new Error('Upgrade ID was not specified.');
-		}
-
-		$this->setUpgradeId($upgradeId);
-
-		/* run before install script */
-		$this->runScript('before');
-
-		/* remove files defined in a manifest */
-		if (!$this->deleteFiles()) {
-			throw new Error('Permission denied to delete files.');
-		}
-
-		/* copy files from directory "Files" to EspoCRM files */
-		if (!$this->copyFiles()) {
-			throw new Error('Cannot copy files.');
-		}
-
-		if (!$this->systemRebuild()) {
-			throw new Error('Error occurred while EspoCRM rebuild.');
-		}
-
-		/* run before install script */
-		$this->runScript('after');
-
-		/* delete unziped files */
-		$this->deletePackageFiles();
-
-		$GLOBALS['log']->debug('Upgrade process ['.$upgradeId.']: end run.');
-	}
-
-
-	protected function createUpgradeId()
-	{
-		if (isset($this->upgradeId)) {
-			throw new Error('Another upgrade process is currently running.');
-		}
-
-		$this->upgradeId = uniqid();
-
-		return $this->upgradeId;
-	}
-
-	protected function getUpgradeId()
-	{
-		if (!isset($this->upgradeId)) {
-			throw new Error("Upgrade ID was not specified.");
-		}
-
-		return $this->upgradeId;
-	}
-
-	protected function setUpgradeId($upgradeId)
-	{
-		$this->upgradeId = $upgradeId;
-	}
-
-	/**
-	 * Check if version of upgrade is acceptable to current version of EspoCRM
-	 *
-	 * @param  string  $version
-	 * @return boolean
-	 */
-	protected function isAcceptable()
-	{
-		$manifest = $this->getManifest();
-		$version = $manifest['acceptableVersions'];
-
-		$currentVersion = $this->getConfig()->get('version');
-
-		if (is_string($version)) {
-			$version = (array) $version;
-		}
-
-		foreach ($version as $strVersion) {
-
-			$strVersion = trim($strVersion);
-
-			if ($strVersion == $currentVersion) {
-				return true;
-			}
-
-			$strVersion = str_replace('\\', '', $strVersion);
-			$strVersion = preg_quote($strVersion);
-			$strVersion = str_replace('\\*', '+', $strVersion);
-
-			if (preg_match('/^'.$strVersion.'/', $currentVersion)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Run scripts by type
-	 * @param  string $type Ex. "before", "after"
-	 * @return void
-	 */
-	protected function runScript($type)
-	{
-		$upgradePath = $this->getUpgradePath();
-
-		$scriptName = $this->scriptNames[$type];
-		if (!isset($scriptName)) {
-			return;
-		}
-
-		$beforeInstallScript = Util::concatPath( array($upgradePath, $this->paths['scripts'], $scriptName) ) . '.php';
-
-		if (file_exists($beforeInstallScript)) {
-			require_once($beforeInstallScript);
-			$script = new $scriptName();
-			$script->run($this->getContainer());
-		}
-	}
-
-	/**
-	 * Get upgrade path
-	 *
-	 * @param  string $upgradeId
-	 * @return string
-	 */
-	protected function getUpgradePath($isPackage = false)
-	{
-		$postfix = $isPackage ? $this->packagePostfix : '';
-
-		if (!isset($this->data['upgradePath'])) {
-			$upgradeId = $this->getUpgradeId();
-			$this->data['upgradePath'] = Util::concatPath($this->packagePath, $upgradeId);
-		}
-
-		return $this->data['upgradePath'] . $postfix;
-	}
-
-	/**
-	 * Delete files defined in a manifest
-	 *
-	 * @return boolen
-	 */
-	protected function deleteFiles()
-	{
-		$manifest = $this->getManifest();
-
-		if (!empty($manifest['delete'])) {
-			return $this->getFileManager()->remove($manifest['delete']);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Copy files from upgrade package
-	 *
-	 * @param  string $upgradeId
-	 * @return boolean
-	 */
-	protected function copyFiles()
-	{
-		$upgradePath = $this->getUpgradePath();
-		$filesPath = Util::concatPath($upgradePath, $this->paths['files']);
-
-		return $this->getFileManager()->copy($filesPath, '', true);
+		return $this->actionManager;
 	}
 
 	public function getManifest()
 	{
-		if (!isset($this->data['manifest'])) {
-			$upgradePath = $this->getUpgradePath();
-
-			$manifestPath = Util::concatPath($upgradePath, $this->manifestName);
-			if (!file_exists($manifestPath)) {
-				throw new Error('It\'s not an upgrade package.');
-			}
-
-			$manifestJson = $this->getFileManager()->getContents($manifestPath);
-			$this->data['manifest'] = Json::decode($manifestJson, true);
-
-			if (!$this->data['manifest']) {
-				throw new Error('Syntax error in manifest.json.');
-			}
-
-			if (!$this->checkManifest($this->data['manifest'])) {
-				throw new Error('Unsupported package.');
-			}
-		}
-
-		return $this->data['manifest'];
+		return $this->getActionManager()->getManifest();
 	}
 
-	/**
-	 * Check if the manifest is correct
-	 *
-	 * @param  array  $manifest
-	 * @return boolean
-	 */
-	protected function checkManifest(array $manifest)
+	public function upload($data)
 	{
-		$requiredFields = array(
-			'name',
-			'version',
-			'acceptableVersions',
-		);
+		$this->getActionManager()->setAction(self::UPLOAD);
 
-		foreach ($requiredFields as $fieldName) {
-			if (empty($manifest[$fieldName])) {
-				return false;
-			}
-		}
-
-		return true;
+		return $this->getActionManager()->run($data);
 	}
 
-	/**
-	 * Delete temporary package files
-	 *
-	 * @return boolean
-	 */
-	protected function deletePackageFiles()
+	public function install($processId)
 	{
-		$upgradePath = $this->getUpgradePath();
-		$upgradePackagePath = $this->getUpgradePath(true);
+		$this->getActionManager()->setAction(self::INSTALL);
 
-		$res = $this->getFileManager()->removeInDir($upgradePath, true);
-		$res &= $this->getFileManager()->removeFile($upgradePackagePath);
-
-		return $res;
+		return $this->getActionManager()->run($processId);
 	}
 
-	protected function systemRebuild()
+	public function uninstall($processId)
 	{
-		$manifest = $this->getManifest();
+		$this->getActionManager()->setAction(self::UNINSTALL);
 
-		$res = $this->getConfig()->set('version', $manifest['version']);
-		if (method_exists($this->getConfig(), 'save')) {
-			$res = $this->getConfig()->save();
-		}
-		$res &= $this->getContainer()->get('dataManager')->rebuild();
-
-		return $res;
+		return $this->getActionManager()->run($processId);
 	}
 
+	public function delete($processId)
+	{
+		$this->getActionManager()->setAction(self::DELETE);
 
+		return $this->getActionManager()->run($processId);
+	}
 }

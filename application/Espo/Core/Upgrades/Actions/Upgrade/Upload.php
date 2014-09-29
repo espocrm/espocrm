@@ -20,20 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Upgrades\Actions\Upgrade;
 
-use Espo\Core\Exceptions\Error;
-
-class UpgradeManager extends Upgrades\Base
+class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
 {
-	protected $name = 'Upgrade';
 
-	protected $params = array(
-		'packagePath' => 'data/upload/upgrades',
-
-		'scriptNames' => array(
-			'before' => 'BeforeUpgrade',
-			'after' => 'AfterUpgrade',
-		)
-	);
 }

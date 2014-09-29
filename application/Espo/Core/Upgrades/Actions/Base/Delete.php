@@ -20,20 +20,36 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Upgrades\Actions\Base;
 
-use Espo\Core\Exceptions\Error;
-
-class UpgradeManager extends Upgrades\Base
+class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
-	protected $name = 'Upgrade';
+	public function run($processId)
+	{
+		$GLOBALS['log']->debug('Delete package process ['.$processId.']: start run.');
 
-	protected $params = array(
-		'packagePath' => 'data/upload/upgrades',
+		if (empty($processId)) {
+			throw new Error('Delete package package ID was not specified.');
+		}
 
-		'scriptNames' => array(
-			'before' => 'BeforeUpgrade',
-			'after' => 'AfterUpgrade',
-		)
-	);
+		$this->setProcessId($processId);
+
+		$this->beforeRunAction();
+
+		/* delete a package */
+		$this->deletePackage();
+
+		$this->afterRunAction();
+
+		$GLOBALS['log']->debug('Delete package process ['.$processId.']: end run.');
+	}
+
+	protected function deletePackage()
+	{
+		$packageArchivePath = $this->getPath('packagePath', true);
+		$res = $this->getFileManager()->removeFile($packageArchivePath);
+
+		return $res;
+	}
+
 }

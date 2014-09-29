@@ -20,20 +20,43 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error;
 
-class UpgradeManager extends Upgrades\Base
+class Upload extends \Espo\Core\Upgrades\Actions\Base
 {
-	protected $name = 'Upgrade';
+	/**
+	 * Upload an upgrade/extension package
+	 *
+	 * @param  [type] $contents
+	 * @return string  ID of upgrade/extension process
+	 */
+	public function run($data)
+	{
+		$processId = $this->createProcessId();
 
-	protected $params = array(
-		'packagePath' => 'data/upload/upgrades',
+		$GLOBALS['log']->debug('Installation process ['.$processId.']: start upload the package.');
 
-		'scriptNames' => array(
-			'before' => 'BeforeUpgrade',
-			'after' => 'AfterUpgrade',
-		)
-	);
+		$packagePath = $this->getPath('packagePath');
+		$packageArchivePath = $this->getPath('packagePath', true);
+
+		if (!empty($data)) {
+			list($prefix, $contents) = explode(',', $data);
+			$contents = base64_decode($contents);
+		}
+
+		$res = $this->getFileManager()->putContents($packageArchivePath, $contents);
+		if ($res === false) {
+			throw new Error('Could not upload the package.');
+		}
+
+		$this->unzipArchive();
+
+		$this->isAcceptable();
+
+		$GLOBALS['log']->debug('Installation process ['.$processId.']: end upload the package.');
+
+		return $processId;
+	}
 }

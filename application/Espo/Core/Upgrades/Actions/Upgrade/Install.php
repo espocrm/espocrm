@@ -20,20 +20,33 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Upgrades\Actions\Upgrade;
 
-use Espo\Core\Exceptions\Error;
-
-class UpgradeManager extends Upgrades\Base
+class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
-	protected $name = 'Upgrade';
+	protected function systemRebuild()
+	{
+		$manifest = $this->getManifest();
 
-	protected $params = array(
-		'packagePath' => 'data/upload/upgrades',
+		$res = $this->getConfig()->set('version', $manifest['version']);
+		if (method_exists($this->getConfig(), 'save')) {
+			$res = $this->getConfig()->save();
+		}
+		$res &= parent::systemRebuild();
 
-		'scriptNames' => array(
-			'before' => 'BeforeUpgrade',
-			'after' => 'AfterUpgrade',
-		)
-	);
+		return $res;
+	}
+
+	/**
+	 * Delete temporary package files
+	 *
+	 * @return boolean
+	 */
+	protected function deletePackageFiles()
+	{
+		$res = parent::deletePackageFiles();
+		$res &= $this->deletePackageArchive();
+
+		return $res;
+	}
 }

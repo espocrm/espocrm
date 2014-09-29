@@ -33,13 +33,13 @@ class Extension extends \Espo\Core\Controllers\Record
 			throw new Forbidden();
 		}
 	}
-	
+
 	public function actionUpload($params, $data, $request)
 	{
 		if (!$request->isPost()) {
-			throw new Forbidden();	
+			throw new Forbidden();
 		}
-		
+
 		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
 		$id = $manager->upload($data);
@@ -56,25 +56,38 @@ class Extension extends \Espo\Core\Controllers\Record
 	public function actionInstall($params, $data, $request)
 	{
 		if (!$request->isPost()) {
-			throw new Forbidden();	
+			throw new Forbidden();
 		}
-		
+
 		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-		$manager->run($data['id']);
+		$manager->install($data['id']);
 
 		return true;
 	}
-	
+
 	public function actionUninstall($params, $data, $request)
 	{
 		if (!$request->isPost()) {
-			throw new Forbidden();	
-		}		
-		
+			throw new Forbidden();
+		}
+
 		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
 		$manager->uninstall($data['id']);
+
+		return true;
+	}
+
+	public function actionDeletePackage($params, $data, $request)
+	{
+		if (!$request->isPost()) {
+			throw new Forbidden();
+		}
+
+		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+
+		$manager->delete($data['id']);
 
 		return true;
 	}
@@ -98,30 +111,30 @@ class Extension extends \Espo\Core\Controllers\Record
 	{
 		throw new Forbidden();
 	}
-	
+
 	public function actionDelete()
 	{
 		throw new Forbidden();
 	}
-	
+
 	public function actionMassUpdate()
 	{
 		throw new Forbidden();
 	}
-	
+
 	public function actionMassDelete()
 	{
 		throw new Forbidden();
 	}
-	
+
 	public function actionCreateLink()
 	{
 		throw new Forbidden();
 	}
-	
+
 	public function actionRemoveLink()
 	{
 		throw new Forbidden();
-	}	
+	}
 }
 
