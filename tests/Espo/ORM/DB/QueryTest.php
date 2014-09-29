@@ -137,20 +137,82 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expectedSql, $sql);
 	}
 	
-	public function testSelectWithSpecifiedFunction()
+	public function testWithSpecifiedFunction()
 	{
 		$sql = $this->query->createSelectQuery('Comment', array(
 			'select' => array('id', 'postId', 'post.name', 'COUNT:id'),
 			'leftJoins' => array('post'),
 			'groupBy' => array('postId', 'post.name')
-		));		
+		));
 		$expectedSql = 
 			"SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(id) AS `COUNT:id` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
-			"GROUP BY comment.post_id, post.name";
-		
+			"GROUP BY comment.post_id, post.name";		
 		$this->assertEquals($expectedSql, $sql);
+		
+		
+		$sql = $this->query->createSelectQuery('Comment', array(
+			'select' => array('id', 'COUNT:id', 'YEAR:post.createdAt'),
+			'leftJoins' => array('post'),
+			'groupBy' => array('YEAR:post.createdAt')
+		));
+		$expectedSql = 
+			"SELECT comment.id AS `id`, COUNT(id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
+			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+			"WHERE comment.deleted = '0' " .
+			"GROUP BY YEAR(post.created_at)";		
+		$this->assertEquals($expectedSql, $sql);
+	}
+	
+	public function testOrderBy()
+	{
+		$sql = $this->query->createSelectQuery('Comment', array(
+			'select' => array('COUNT:id', 'YEAR:post.createdAt'),
+			'leftJoins' => array('post'),
+			'groupBy' => array('YEAR:post.createdAt'),
+			'orderBy' => 2
+		));
+		$expectedSql = 
+			"SELECT COUNT(id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
+			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+			"WHERE comment.deleted = '0' " .
+			"GROUP BY YEAR(post.created_at) ".
+			"ORDER BY 2 ASC";
+		$this->assertEquals($expectedSql, $sql);
+		
+		$sql = $this->query->createSelectQuery('Comment', array(
+			'select' => array('COUNT:id', 'post.name'),
+			'leftJoins' => array('post'),
+			'groupBy' => array('post.name'),
+			'orderBy' => 'LIST:post.name:Test,Hello',
+		));
+		
+		$expectedSql = 
+			"SELECT COUNT(id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
+			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+			"WHERE comment.deleted = '0' " .
+			"GROUP BY post.name ".
+			"ORDER BY FIELD(post.name, 'Test', 'Hello')";
+		$this->assertEquals($expectedSql, $sql);
+	}
+	
+	public function testForeign()
+	{
+		$sql = $this->query->createSelectQuery('Comment', array(
+			'select' => array('COUNT:comment.id', 'postId', 'postName'),
+			'leftJoins' => array('post'),
+			'groupBy' => array('postId'),
+			'whereClause' => array(
+				'post.createdById' => 'id_1'
+			),
+		));
+		$expectedSql = 
+			"SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` FROM `comment` " .
+			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+			"WHERE post.created_by_id = 'id_1' AND comment.deleted = '0' " .
+			"GROUP BY comment.post_id";		
+		$this->assertEquals($expectedSql, $sql);		
 	}
 
 }

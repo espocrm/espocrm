@@ -194,7 +194,7 @@ class Query
 				
 		$part = $this->toDb($field);
 		if ($relName) {
-			$part = $relName . '.' . $part;
+			$part = $this->toDb($relName) . '.' . $part;
 		} else {
 			if ($entityName) {
 				$part = $this->toDb($entityName) . '.' . $part;
@@ -305,6 +305,12 @@ class Query
 		$orderStr = "";
 
 		if (!is_null($orderBy)) {
+			if (strpos($orderBy, 'LIST:') === 0) {
+				list($l, $field, $list) = explode(':', $orderBy);				
+				$fieldPath = $this->getFieldPathForOrderBy($entity, $field);				
+				return "ORDER BY FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";				
+			}
+		
 			if (!is_null($order)) {
 				$order = strtoupper($order);
 				if (!in_array($order, array('ASC', 'DESC'))) {
@@ -313,23 +319,35 @@ class Query
 			} else {
 				$order = 'ASC';
 			}
-
-			$fieldDefs = $entity->fields[$orderBy];
-			if (!empty($fieldDefs['orderBy'])) {
+			
+			if (is_integer($orderBy)) {
+				return "ORDER BY {$orderBy} " . $order;
+			}
+			
+			if (!empty($entity->fields[$orderBy])) {
+				$fieldDefs = $entity->fields[$orderBy];
+			}
+			if (!empty($fieldDefs) && !empty($fieldDefs['orderBy'])) {
 				$orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
-				$orderStr .= "ORDER BY {$orderPart}";
-			} else {
-				$fieldPath = $this->getFieldPath($entity, $orderBy);
-				if ($fieldDefs['type'] == iEntity::FOREIGN) {
+				return "ORDER BY {$orderPart}";
+			} else {			
+				$fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
 
-				} else {
-
-				}
-				$orderStr .= "ORDER BY {$fieldPath} " . $order;
+				return "ORDER BY {$fieldPath} " . $order;
 			}
 		}
 
-		return $orderStr;
+	}
+	
+	protected function getFieldPathForOrderBy($entity, $orderBy)
+	{
+		if (strpos($orderBy, '.') !== false) {
+			list($alias, $field) = explode('.', $orderBy);					
+			$fieldPath = $this->toDb($alias) . '.' . $this->toDb($field);
+		} else {
+			$fieldPath = $this->getFieldPath($entity, $orderBy);
+		}
+		return $fieldPath;
 	}
 	
 	protected function getAggregationSelect(IEntity $entity, $aggregation, $aggregationBy, $distinct = false)
