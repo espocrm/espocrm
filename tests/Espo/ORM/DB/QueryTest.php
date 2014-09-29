@@ -195,6 +195,23 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			"GROUP BY post.name ".
 			"ORDER BY FIELD(post.name, 'Test', 'Hello')";
 		$this->assertEquals($expectedSql, $sql);
+		
+		$sql = $this->query->createSelectQuery('Comment', array(
+			'select' => array('COUNT:id', 'YEAR:post.createdAt', 'post.name'),
+			'leftJoins' => array('post'),
+			'groupBy' => array('YEAR:post.createdAt', 'post.name'),
+			'orderBy' => array(
+				array(2, 'DESC'),
+				array('LIST:post.name:Test,Hello')
+			)
+		));
+		$expectedSql = 
+			"SELECT COUNT(id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, post.name AS `post.name` FROM `comment` " .
+			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+			"WHERE comment.deleted = '0' " .
+			"GROUP BY YEAR(post.created_at), post.name ".
+			"ORDER BY 2 DESC, FIELD(post.name, 'Test', 'Hello')";
+		$this->assertEquals($expectedSql, $sql);		
 	}
 	
 	public function testForeign()

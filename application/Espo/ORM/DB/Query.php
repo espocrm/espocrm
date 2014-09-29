@@ -299,16 +299,30 @@ class Query
 
 		return implode(' ', $joinsArr);
 	}
-
-	protected function getOrder(IEntity $entity, $orderBy = null, $order = null)
-	{
-		$orderStr = "";
-
-		if (!is_null($orderBy)) {
+	
+	protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null) {
+		
+		if (!is_null($orderBy)) {		
+			if (is_array($orderBy)) {
+				$arr = array();
+				
+				foreach ($orderBy as $item) {
+					if (is_array($item)) {
+						$orderByInternal = $item[0];
+						$orderInternal = null;
+						if (!empty($item[1])) {
+							$orderInternal = $item[1]; 
+						}
+						$arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal);
+					}					
+				}
+				return implode(", ", $arr);				
+			}
+		
 			if (strpos($orderBy, 'LIST:') === 0) {
 				list($l, $field, $list) = explode(':', $orderBy);				
 				$fieldPath = $this->getFieldPathForOrderBy($entity, $field);				
-				return "ORDER BY FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";				
+				return "FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";				
 			}
 		
 			if (!is_null($order)) {
@@ -321,7 +335,7 @@ class Query
 			}
 			
 			if (is_integer($orderBy)) {
-				return "ORDER BY {$orderBy} " . $order;
+				return "{$orderBy} " . $order;
 			}
 			
 			if (!empty($entity->fields[$orderBy])) {
@@ -329,12 +343,20 @@ class Query
 			}
 			if (!empty($fieldDefs) && !empty($fieldDefs['orderBy'])) {
 				$orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
-				return "ORDER BY {$orderPart}";
+				return "{$orderPart}";
 			} else {			
 				$fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
 
-				return "ORDER BY {$fieldPath} " . $order;
+				return "{$fieldPath} " . $order;
 			}
+		}
+	}
+
+	protected function getOrder(IEntity $entity, $orderBy = null, $order = null)
+	{
+		$orderPart = $this->getOrderPart($entity, $orderBy, $order);
+		if ($orderPart) {
+			return "ORDER BY " . $orderPart;
 		}
 
 	}
