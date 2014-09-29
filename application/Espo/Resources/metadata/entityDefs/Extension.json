@@ -2,7 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true            
+            "required": true
         },
         "status": {
         	"type": "enum",
@@ -11,13 +11,17 @@
         "version": {
             "type": "varchar",
             "required": true,
-            "maxLength": 50          
+            "maxLength": 50
         },
         "fileList": {
-            "type": "jsonArray" 
-        }, 
+            "type": "jsonArray"
+        },
         "description": {
-            "type": "text"        
+            "type": "text"
+        },
+        "isInstalled": {
+            "type": "bool",
+            "default": false
         },
         "createdAt": {
             "type": "datetime",

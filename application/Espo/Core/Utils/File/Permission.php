@@ -535,6 +535,71 @@ class Permission
 		return $this->permissionErrorRules;
 	}
 
+	/**
+	 * Arrange permission file list
+	 * e.g. array('application/Espo/Controllers/Email.php', 'application/Espo/Controllers/Import.php'), result is array('application/Espo/Controllers')
+	 *
+	 * @param  array $fileList
+	 * @return array
+	 */
+	public function arrangePermissionList($fileList)
+	{
+		$betterList = array();
+		foreach ($fileList as $fileName) {
+
+			$pathInfo = pathinfo($fileName);
+			$dirname = $pathInfo['dirname'];
+
+			$currentPath = $fileName;
+			if ($this->getSearchCount($dirname, $fileList) > 1) {
+				$currentPath = $dirname;
+			}
+
+			if (!$this->isItemIncludes($currentPath, $betterList)) {
+				$betterList[] = $currentPath;
+			}
+		}
+
+		return $betterList;
+	}
+
+	/**
+	 * Get count of a search string in a array
+	 *
+	 * @param  string $search
+	 * @param  array  $array
+	 * @return bool
+	 */
+	protected function getSearchCount($search, array $array)
+	{
+		$search = $this->getPregQuote($search);
+
+		$number = 0;
+		foreach ($array as $value) {
+			if (preg_match('/^'.$search.'/', $value)) {
+				$number++;
+			}
+		}
+
+		return $number;
+	}
+
+	protected function isItemIncludes($item, $array)
+	{
+		foreach ($array as $value) {
+			$value = $this->getPregQuote($value);
+			if (preg_match('/^'.$value.'/', $item)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected function getPregQuote($string)
+	{
+		return preg_quote($string, '/-+=.');
+	}
 
 }
 

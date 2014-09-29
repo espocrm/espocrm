@@ -22,15 +22,20 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
-
 class ExtensionManager extends Upgrades\Base
 {
-	protected $packagePath = 'data/upload/extensions';
+	protected $name = 'Extension';
 
-	protected $scriptNames = array(
-		'before' => 'BeforeUpgrade',
-		'after' => 'AfterUpgrade',
+	protected $params = array(
+		'packagePath' => 'data/upload/extensions',
+
+		'backupPath' => 'data/.backup/extensions',
+
+		'scriptNames' => array(
+			'before' => 'BeforeInstall',
+			'after' => 'AfterInstall',
+			'beforeUninstall' => 'BeforeUninstall',
+			'afterUninstall' => 'AfterUninstall',
+		)
 	);
-
 }
