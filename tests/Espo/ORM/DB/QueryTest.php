@@ -153,15 +153,15 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		
 		
 		$sql = $this->query->createSelectQuery('Comment', array(
-			'select' => array('id', 'COUNT:id', 'YEAR:post.createdAt'),
+			'select' => array('id', 'COUNT:id', 'MONTH:post.createdAt'),
 			'leftJoins' => array('post'),
-			'groupBy' => array('YEAR:post.createdAt')
+			'groupBy' => array('MONTH:post.createdAt')
 		));
 		$expectedSql = 
-			"SELECT comment.id AS `id`, COUNT(id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
+			"SELECT comment.id AS `id`, COUNT(id) AS `COUNT:id`, DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
-			"GROUP BY YEAR(post.created_at)";		
+			"GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";		
 		$this->assertEquals($expectedSql, $sql);
 	}
 	

@@ -179,6 +179,17 @@ class Query
 		}		
 	}
 	
+	protected function getFunctionPart($function, $part)
+	{
+		switch ($function) {
+			case 'MONTH':
+				return "DATE_FORMAT({$part}, '%Y-%m')";
+			case 'DAY':
+				return "DATE_FORMAT({$part}, '%Y-%m-%d')";
+		}
+		return $function . '(' . $part . ')';
+	}
+	
 	
 	protected function convertComplexExpression($field, $entityName = null)
 	{
@@ -201,7 +212,7 @@ class Query
 			}
 		}
 		if ($function) {
-			$part = strtoupper($function) . '(' . $part . ')';
+			$part = $this->getFunctionPart(strtoupper($function), $part);
 		}
 		return $part;
 	}
