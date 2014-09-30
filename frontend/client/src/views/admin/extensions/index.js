@@ -62,7 +62,11 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 						type: 'POST',
 						data: JSON.stringify({
 							id: id
-						})
+						}),
+						error: function (xhr) {
+							var msg = xhr.getResponseHeader('X-Status-Reason');
+							this.showErrorNotification(this.translate('Error') + ': ' + msg);
+						}.bind(this)
 					}).done(function () {						
 						this.listenToOnce(this.collection, 'sync', function () {
 							 Espo.Ui.success(this.translate('uninstalled', 'messages', 'Extension').replace('{name}', name));
@@ -134,7 +138,7 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 				data: this.packageContents,
 				error: function (xhr, t, e) {			
 					this.showError(xhr.getResponseHeader('X-Status-Reason'));
-					this.notify(false);												
+					this.notify(false);
 				}.bind(this)
 			}).done(function (data) {
 				if (!data.id) {
