@@ -36,7 +36,7 @@ Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
 				version: this.options.version,
 				name: this.options.name,
 				text: this.translate('extensionInstalled', 'messages', 'Admin').replace('{version}', this.options.version)
-				                                                               .replace('{name}', this.options.name)
+																			   .replace('{name}', this.options.name)
 			};
 		},
 				

@@ -15,5 +15,7 @@
 	</div>
 </div>
 
+<p class="text-danger notify-text hidden"></p>
+
 <div class="list-container">{{{list}}}</div>
 

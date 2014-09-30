@@ -22,8 +22,8 @@
 Espo.define('Views.Extension.Record.List', 'Views.Record.List', function (Dep) {
 
 	return Dep.extend({
-	    
-	    rowActionsView: 'Extension.Record.RowActions',
+		
+		rowActionsView: 'Extension.Record.RowActions',
 		
 		checkboxes: false,
 		

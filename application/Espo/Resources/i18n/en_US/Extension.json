@@ -6,10 +6,10 @@
 		"isInstalled": "Installed"
 	},
 	"labels": {
-	    "Uninstall": "Uninstall",
-	    "Install": "Install"
+		"Uninstall": "Uninstall",
+		"Install": "Install"
 	},
 	"messages": {
-	    "uninstalled": "Extension {name} has been uninstalled"
+		"uninstalled": "Extension {name} has been uninstalled"
 	}
 }
