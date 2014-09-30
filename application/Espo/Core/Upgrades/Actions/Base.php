@@ -193,6 +193,10 @@ abstract class Base
 
 		/** check acceptable versions */
 		$version = $manifest['acceptableVersions'];
+		if (empty($version)) {
+			return true;
+		}
+
 		$currentVersion = $this->getConfig()->get('version');
 
 		if (is_string($version)) {
@@ -372,7 +376,6 @@ abstract class Base
 		$requiredFields = array(
 			'name',
 			'version',
-			'acceptableVersions',
 		);
 
 		foreach ($requiredFields as $fieldName) {
