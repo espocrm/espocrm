@@ -5,8 +5,8 @@
 You need to have nodejs installed.
 
 1. Change to the project's root directory.
-2. Install project dependencies with npm install.
-3. Run Grunt with grunt.
+2. Install project dependencies with `npm install`.
+3. Run Grunt with `grunt`.
 
 The build will be created in the `build` directory.
 
