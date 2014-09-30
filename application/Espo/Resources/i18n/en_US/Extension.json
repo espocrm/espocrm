@@ -8,5 +8,8 @@
 	"labels": {
 	    "Uninstall": "Uninstall",
 	    "Install": "Install"
-	}
+	},
+	"messages": {
+	    "uninstalled": "Extension {name} has been uninstalled"
+	},
 }

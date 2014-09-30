@@ -42,6 +42,8 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 			'click [data-action="uninstall"]': function (e) {
 				var id = $(e.currentTarget).data('id');
 				
+				var name = this.collection.get(id).get('name');
+				
 				var self = this;
 				if (confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'))) {					
 					Espo.Ui.notify(this.translate('Uninstalling...', 'labels', 'Admin'));
@@ -52,8 +54,12 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 						data: JSON.stringify({
 							id: id
 						})
-					}).done(function () {
+					}).done(function () {					    
+					    this.listenToOnce(this.collection, 'sync', function () {
+					         Espo.Ui.success(this.translate('uninstalled', 'messages', 'Extension').replace('{name}', name));
+					    }, this);
 						this.collection.fetch();
+						
 					}.bind(this));
 				}
 			}
