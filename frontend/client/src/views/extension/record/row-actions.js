@@ -19,42 +19,39 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
+Espo.define('Views.Extension.Record.RowActions', 'Views.Record.RowActions.Default', function (Dep) {
 
 	return Dep.extend({
-	
-		cssName: 'done-modal',	
-		
-		header: false,
-		
-		template: 'admin.extensions.done',
-		
-		createButton: true,
-		
-		data: function () {		
-			return {
-				version: this.options.version,
-				name: this.options.name,
-				text: this.translate('extensionInstalled', 'messages', 'Admin').replace('{version}', this.options.version)
-				                                                               .replace('{name}', this.options.name)
-			};
-		},
-				
-		setup: function () {			
-			this.buttons = [
-				{
-					name: 'close',
-					label: 'Close',
-					onClick: function (dialog) {
-						dialog.close();										
-					}.bind(this)
-				} 
-			];
-					
-			this.header = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');			
+	    
+		getActions: function () {
+			if (this.options.acl.edit) {
 			
+			    if (this.model.get('isInstalled')) {
+				    return [
+					    {
+						    action: 'uninstall',
+						    label: 'Uninstall',
+						    data: {
+							    id: this.model.id
+						    }					
+					    },
+
+				    ];
+			    } else {
+				    return [
+					    {
+						    action: 'quickRemove',
+						    label: 'Remove',
+						    data: {
+							    id: this.model.id
+						    }					
+					    }
+				    ];
+                }
+			}
 		},
-		
+	
 	});
+	
 });
 

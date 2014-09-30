@@ -4,10 +4,6 @@
             "type": "varchar",
             "required": true
         },
-        "status": {
-        	"type": "enum",
-        	"options": ["Enabled", "Disabled"]
-        },
         "version": {
             "type": "varchar",
             "required": true,

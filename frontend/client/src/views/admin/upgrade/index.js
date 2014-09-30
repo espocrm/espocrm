@@ -115,6 +115,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 					id: id
 				}),
 				error: function (xhr) {
+				    this.$el.find('.panel.upload').removeClass('hidden');
 					var msg = xhr.getResponseHeader('X-Status-Reason');
 					this.textNotification(this.translate('Error') + ': ' + msg);
 				}.bind(this)			

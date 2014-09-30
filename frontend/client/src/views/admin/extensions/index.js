@@ -71,6 +71,11 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 						collection: collection,
 						el: this.options.el + ' > .list-container',
 					});
+					if (collection.length == 0) {
+					    this.once('after:render', function () {
+					        this.$el.find('.list-container').addClass('hidden');
+					    }.bind(this));
+					}
 					this.wait(false);
 				});
 				
@@ -125,16 +130,13 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 					}, this);
 				}.bind(this));			
 			}.bind(this)).error;
-		},
-		
-		textNotification: function (text) {
-			this.$el.find('.notify-text').html(text);	
-		},
+		},		
 		
 		run: function (id, version, name) {			
 			var msg = this.translate('Installing...', 'labels', 'Admin');
 			this.notify('Please wait...');
-			this.textNotification(msg);				
+			
+			this.showError('');				
 			
 			$.ajax({
 				url: 'Extension/action/install',
@@ -143,8 +145,9 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 					id: id
 				}),
 				error: function (xhr) {
+				    this.$el.find('.panel.upload').removeClass('hidden');
 					var msg = xhr.getResponseHeader('X-Status-Reason');
-					this.textNotification(this.translate('Error') + ': ' + msg);
+					this.showError(this.translate('Error') + ': ' + msg);
 				}.bind(this)			
 			}).done(function () {
 				var cache = this.getCache();
@@ -155,6 +158,9 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
 					version: version,
 					name: name
 				}, function (view) {
+				    this.collection.fetch();
+				    this.$el.find('.list-container').removeClass('hidden');				    
+				    this.$el.find('.panel.upload').removeClass('hidden');
 					this.notify(false);
 					view.render();					
 				}.bind(this));
