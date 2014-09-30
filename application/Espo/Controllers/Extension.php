@@ -112,11 +112,6 @@ class Extension extends \Espo\Core\Controllers\Record
 		throw new Forbidden();
 	}
 
-	public function actionDelete()
-	{
-		throw new Forbidden();
-	}
-
 	public function actionMassUpdate()
 	{
 		throw new Forbidden();
