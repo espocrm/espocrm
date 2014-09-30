@@ -11,5 +11,5 @@
 	},
 	"messages": {
 	    "uninstalled": "Extension {name} has been uninstalled"
-	},
+	}
 }
