@@ -46,7 +46,7 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
 
 	protected function deletePackage()
 	{
-		$packageArchivePath = $this->getPath('packagePath', true);
+		$packageArchivePath = $this->getPackagePath(true);
 		$res = $this->getFileManager()->removeFile($packageArchivePath);
 
 		return $res;

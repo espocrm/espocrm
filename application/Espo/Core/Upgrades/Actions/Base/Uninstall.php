@@ -22,7 +22,8 @@
 
 namespace Espo\Core\Upgrades\Actions\Base;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error,
+	Espo\Core\Utils\Util;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
@@ -41,14 +42,18 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 		/* run before install script */
 		$this->runScript('beforeUninstall');
 
-		/* remove extension files, saved in fileList */
-		if (!$this->deleteFiles()) {
-			throw new Error('Permission denied to delete files.');
-		}
+		$backupPath = $this->getPath('backupPath');
+		if (file_exists($backupPath)) {
 
-		/* copy core files */
-		if (!$this->copyFiles()) {
-			throw new Error('Cannot copy files.');
+			/* remove extension files, saved in fileList */
+			if (!$this->deleteFiles()) {
+				throw new Error('Permission denied to delete files.');
+			}
+
+			/* copy core files */
+			if (!$this->copyFiles()) {
+				throw new Error('Cannot copy files.');
+			}
 		}
 
 		if (!$this->systemRebuild()) {
@@ -72,10 +77,25 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 		return $extensionEntity->get('fileList');
 	}
 
+	protected function restoreFiles()
+	{
+		$packagePath = $this->getPath('packagePath');
+		$filesPath = Util::concatPath($packagePath, self::FILES);
+
+		if (!file_exists($filesPath)) {
+			$this->unzipArchive($packagePath);
+		}
+
+		$res = $this->copy($filesPath, '', true);
+		$res &= $this->getFileManager()->removeInDir($packagePath, true);
+
+		return $res;
+	}
+
 	protected function copyFiles()
 	{
 		$backupPath = $this->getPath('backupPath');
-		$res = $this->getFileManager()->copy(array($backupPath, self::FILES), '', true);
+		$res = $this->copy(array($backupPath, self::FILES), '', true);
 
 		return $res;
 	}
@@ -86,10 +106,13 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 	 * @param  string $processId
 	 * @return string
 	 */
-	protected function getPath($name = 'packagePath', $isPackage = false)
+	protected function getPackagePath($isPackage = false)
 	{
-		$name = ($name == 'packagePath') ? 'backupPath' : $name;
-		return parent::getPath($name, $isPackage);
+		if ($isPackage) {
+			return $this->getPath('packagePath', $isPackage);
+		}
+
+		return $this->getPath('backupPath');
 	}
 
 	protected function deletePackageFiles()
@@ -98,6 +121,12 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 		$res = $this->getFileManager()->removeInDir($backupPath, true);
 
 		return $res;
+	}
+
+	protected function throwErrorAndRemovePackage($errorMessage = '')
+	{
+		$this->restoreFiles();
+		throw new Error($errorMessage);
 	}
 
 }

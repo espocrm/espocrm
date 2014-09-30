@@ -58,12 +58,6 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
 			throw new Error('Extension Entity not found.');
 		}
 		$this->setExtensionEntity($extensionEntity);
-
-		/** check if extension archive exsists */
-		$packageArchivePath = $this->getPath('packagePath', true);
-		if (!file_exists($packageArchivePath)) {
-			throw new Error('Extension Archive doesn\'t exist.');
-		}
 	}
 
 	protected function afterRunAction()

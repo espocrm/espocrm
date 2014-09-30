@@ -79,19 +79,6 @@ class Extension extends \Espo\Core\Controllers\Record
 		return true;
 	}
 
-	public function actionDeletePackage($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new Forbidden();
-		}
-
-		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
-		$manager->delete($data['id']);
-
-		return true;
-	}
-
 	public function actionCreate()
 	{
 		throw new Forbidden();
@@ -112,9 +99,13 @@ class Extension extends \Espo\Core\Controllers\Record
 		throw new Forbidden();
 	}
 
-	public function actionDelete()
+	public function actionDelete($params, $data, $request)
 	{
-		throw new Forbidden();
+		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+
+		$manager->delete($params['id']);
+
+		return true;
 	}
 
 	public function actionMassUpdate()

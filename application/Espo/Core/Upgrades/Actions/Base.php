@@ -59,16 +59,6 @@ abstract class Base
 	const SCRIPTS = 'scripts';
 
 	/**
-	 * Statuses of Extension Entity
-	 */
-	const DISABLED = 'Disabled';
-
-	/**
-	 * Statuses of Extension Entity
-	 */
-	const ENABLED = 'Enabled';
-
-	/**
 	 * Package types
 	 */
 	protected $packageTypes = array(
@@ -139,7 +129,7 @@ abstract class Base
 		return $this->entityManager;
 	}
 
-	protected function throwErrorWithDetelePackage($errorMessage = '')
+	protected function throwErrorAndRemovePackage($errorMessage = '')
 	{
 		$this->deletePackageFiles();
 		$this->deletePackageArchive();
@@ -220,7 +210,7 @@ abstract class Base
 			}
 		}
 
-		$this->throwErrorWithDetelePackage('Your EspoCRM version doesn\'t match for this installation package.');
+		$this->throwErrorAndRemovePackage('Your EspoCRM version doesn\'t match for this installation package.');
 	}
 
 	protected function checkPackageType()
@@ -232,11 +222,11 @@ abstract class Base
 		$manifestType = isset($manifest['type']) ? strtolower($manifest['type']) : $this->defaultPackageType;
 
 		if (!in_array($manifestType, $this->packageTypes)) {
-			$this->throwErrorWithDetelePackage('Unknown package type.');
+			$this->throwErrorAndRemovePackage('Unknown package type.');
 		}
 
 		if ($type != $manifestType) {
-			$this->throwErrorWithDetelePackage('Wrong package type. You cannot install '.$manifestType.' package via '.ucfirst($type).' Manager.');
+			$this->throwErrorAndRemovePackage('Wrong package type. You cannot install '.$manifestType.' package via '.ucfirst($type).' Manager.');
 		}
 
 		return true;
@@ -249,7 +239,7 @@ abstract class Base
 	 */
 	protected function runScript($type)
 	{
-		$packagePath = $this->getPath('packagePath');
+		$packagePath = $this->getPackagePath();
 		$scriptNames = $this->getParams('scriptNames');
 
 		$scriptName = $scriptNames[$type];
@@ -262,7 +252,12 @@ abstract class Base
 		if (file_exists($beforeInstallScript)) {
 			require_once($beforeInstallScript);
 			$script = new $scriptName();
-			$script->run($this->getContainer());
+
+			try {
+				$script->run($this->getContainer());
+			} catch (\Exception $e) {
+				$this->throwErrorAndRemovePackage($e->getMessage());
+			}
 		}
 	}
 
@@ -280,6 +275,11 @@ abstract class Base
 		$path = Util::concatPath($this->getParams($name), $processId);
 
 		return $path . $postfix;
+	}
+
+	protected function getPackagePath($isPackage = false)
+	{
+		return $this->getPath('packagePath', $isPackage);
 	}
 
 	/**
@@ -317,13 +317,24 @@ abstract class Base
 	protected function getCopyFileList()
 	{
 		if (!isset($this->data['fileList'])) {
-			$packagePath = $this->getPath('packagePath');
+			$packagePath = $this->getPackagePath();
 			$filesPath = Util::concatPath($packagePath, self::FILES);
 
 			$this->data['fileList'] = $this->getFileManager()->getFileList($filesPath, true, '', 'all', true);
 		}
 
 		return $this->data['fileList'];
+	}
+
+	protected function copy($sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false)
+	{
+		try {
+			$res = $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
+		} catch (\Exception $e) {
+			$this->throwErrorAndRemovePackage($e->getMessage());
+		}
+
+		return $res;
 	}
 
 	/**
@@ -334,31 +345,31 @@ abstract class Base
 	 */
 	protected function copyFiles()
 	{
-		$packagePath = $this->getPath('packagePath');
+		$packagePath = $this->getPackagePath();
 		$filesPath = Util::concatPath($packagePath, self::FILES);
 
-		return $this->getFileManager()->copy($filesPath, '', true);
+		return $this->copy($filesPath, '', true);
 	}
 
 	public function getManifest()
 	{
 		if (!isset($this->data['manifest'])) {
-			$packagePath = $this->getPath('packagePath');
+			$packagePath = $this->getPackagePath();
 
 			$manifestPath = Util::concatPath($packagePath, $this->manifestName);
 			if (!file_exists($manifestPath)) {
-				throw new Error('It\'s not an Installation package.');
+				$this->throwErrorAndRemovePackage('It\'s not an Installation package.');
 			}
 
 			$manifestJson = $this->getFileManager()->getContents($manifestPath);
 			$this->data['manifest'] = Json::decode($manifestJson, true);
 
 			if (!$this->data['manifest']) {
-				throw new Error('Syntax error in manifest.json.');
+				$this->throwErrorAndRemovePackage('Syntax error in manifest.json.');
 			}
 
 			if (!$this->checkManifest($this->data['manifest'])) {
-				throw new Error('Unsupported package.');
+				$this->throwErrorAndRemovePackage('Unsupported package.');
 			}
 		}
 
@@ -392,10 +403,14 @@ abstract class Base
 	 *
 	 * @return void
 	 */
-	protected function unzipArchive()
+	protected function unzipArchive($packagePath = null)
 	{
-		$packagePath = $this->getPath('packagePath');
-		$packageArchivePath = $this->getPath('packagePath', true);
+		$packagePath = isset($packagePath) ? $packagePath : $this->getPackagePath();
+		$packageArchivePath = $this->getPackagePath(true);
+
+		if (!file_exists($packageArchivePath)) {
+			throw new Error('Package Archive doesn\'t exist.');
+		}
 
 		$res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
 		if ($res === false) {
@@ -410,7 +425,7 @@ abstract class Base
 	 */
 	protected function deletePackageFiles()
 	{
-		$packagePath = $this->getPath('packagePath');
+		$packagePath = $this->getPackagePath();
 		$res = $this->getFileManager()->removeInDir($packagePath, true);
 
 		return $res;
@@ -423,7 +438,7 @@ abstract class Base
 	 */
 	protected function deletePackageArchive()
 	{
-		$packageArchive = $this->getPath('packagePath', true);
+		$packageArchive = $this->getPackagePath(true);
 		$res = $this->getFileManager()->removeFile($packageArchive);
 
 		return $res;

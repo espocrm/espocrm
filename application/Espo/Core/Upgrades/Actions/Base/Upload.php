@@ -38,8 +38,8 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
 
 		$GLOBALS['log']->debug('Installation process ['.$processId.']: start upload the package.');
 
-		$packagePath = $this->getPath('packagePath');
-		$packageArchivePath = $this->getPath('packagePath', true);
+		$packagePath = $this->getPackagePath();
+		$packageArchivePath = $this->getPackagePath(true);
 
 		if (!empty($data)) {
 			list($prefix, $contents) = explode(',', $data);
