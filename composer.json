@@ -1,21 +1,21 @@
 {
-    "require": {
-        "doctrine/dbal": "2.*",
+	"require": {
+		"doctrine/dbal": "2.*",
 		"slim/slim": "2.*",
 		"mtdowling/cron-expression": "1.0.*",
 		"zendframework/zend-validator": "2.*",
-        "zendframework/zend-mail": "2.*",
+		"zendframework/zend-mail": "2.*",
 		"zendframework/zend-ldap": "2.*",
 		"monolog/monolog": "1.*"
-    },
-    "autoload": {
-        "psr-0": {
-            "": "application/",
-            "tests": "",
-            "Espo\\Custom": "custom/"
-        }
-    },
+	},
+	"autoload": {
+		"psr-0": {
+			"": "application/",
+			"tests": "",
+			"Espo\\Custom": "custom/"
+		}
+	},
 	"require-dev": {
-        "phpunit/phpunit": "3.7.*"
-    }
+		"phpunit/phpunit": "3.7.*"
+	}
 }
