@@ -167,7 +167,7 @@ class Query
 		if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
 			$arr = array();
 			foreach ($params['groupBy'] as $field) {
-				$arr[] = $this->convertComplexExpression($field, $entity->getEntityName());
+				$arr[] = $this->convertComplexExpression($entity, $field, $entity->getEntityName());
 			}
 			$groupByPart = implode(', ', $arr);
 		}
@@ -191,7 +191,7 @@ class Query
 	}
 	
 	
-	protected function convertComplexExpression($field, $entityName = null)
+	protected function convertComplexExpression($entity, $field, $entityName = null)
 	{
 		$function = null;
 		$relName = null;			
@@ -207,8 +207,12 @@ class Query
 		if ($relName) {
 			$part = $this->toDb($relName) . '.' . $part;
 		} else {
-			if ($entityName) {
-				$part = $this->toDb($entityName) . '.' . $part;
+			if (!empty($entity->fields[$field]['select'])) {
+				$part = $entity->fields[$field]['select'];
+			} else {
+				if ($entityName) {
+					$part = $this->toDb($entityName) . '.' . $part;
+				}
 			}
 		}
 		if ($function) {
@@ -229,12 +233,11 @@ class Query
 			$fieldList = $fields;
 		}
 		
-		foreach ($fieldList as $field) {
-		
+		foreach ($fieldList as $field) {		
 			if (array_key_exists($field, $entity->fields)) {
 				$fieldDefs = $entity->fields[$field];
 			} else {
-				$part = $this->convertComplexExpression($field);
+				$part = $this->convertComplexExpression($entity, $field, $entity->getEntityName());
 				$arr[] = $part . ' AS `' . $field . '`';
 				continue;
 			}

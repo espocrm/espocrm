@@ -145,7 +145,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			'groupBy' => array('postId', 'post.name')
 		));
 		$expectedSql = 
-			"SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(id) AS `COUNT:id` FROM `comment` " .
+			"SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
 			"GROUP BY comment.post_id, post.name";		
@@ -158,7 +158,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			'groupBy' => array('MONTH:post.createdAt')
 		));
 		$expectedSql = 
-			"SELECT comment.id AS `id`, COUNT(id) AS `COUNT:id`, DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
+			"SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
 			"GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";		
@@ -174,7 +174,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			'orderBy' => 2
 		));
 		$expectedSql = 
-			"SELECT COUNT(id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
+			"SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
 			"GROUP BY YEAR(post.created_at) ".
@@ -189,7 +189,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		));
 		
 		$expectedSql = 
-			"SELECT COUNT(id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
+			"SELECT COUNT(comment.id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
 			"GROUP BY post.name ".
@@ -206,7 +206,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 			)
 		));
 		$expectedSql = 
-			"SELECT COUNT(id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, post.name AS `post.name` FROM `comment` " .
+			"SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, post.name AS `post.name` FROM `comment` " .
 			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
 			"WHERE comment.deleted = '0' " .
 			"GROUP BY YEAR(post.created_at), post.name ".
