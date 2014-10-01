@@ -7,11 +7,11 @@
 3. Install [composer](https://getcomposer.org/doc/00-intro.md).
 4. Run `composer install` if composer is installed globally or `php composer.phar install` if locally.
 
-Never update composer dependencies if you going to contribute code back.
+Never update composer dependencies if you are going to contribute code back.
 
 Now you can build. 
 
-If your repository is accessible via a web server then you can access to EspoCRM by url `http://URL/frontend` w/o making the build. You will need yo have proper data/config.php and existing database. 
+If your repository is accessible via a web server then you can run EspoCRM by url `http://PROJECT_URL/frontend` w/o making the build. You will need yo have proper data/config.php and existing database. 
 
 ### How to build
 
