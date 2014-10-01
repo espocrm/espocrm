@@ -1,6 +1,3 @@
-<header class="panel-heading">
-	<h4 class="panel-title">{$langs['labels']['Step2 page title']}</h4>
-</header>
 <div class="panel-body body">
 
 	<div id="msg-box" class="alert hide"></div>
@@ -24,13 +21,13 @@
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Database User Name']} *</label>
 						<div class="field field-website">
-							<input type="text" value="{$fields['db-user-name'].value}" name="db-user-name" class="main-element form-control">
+							<input type="text" value="{$fields['db-user-name'].value}" name="db-user-name" class="main-element form-control" autocomplete="off">
 						</div>
 					</div>
 					<div class="cell cell-website col-sm-12 form-group">
 						<label class="field-label-website control-label">{$langs['fields']['Database User Password']}</label>
 						<div class="field field-website">
-							<input type="password" value="{$fields['db-user-password'].value}" name="db-user-password" class="main-element form-control">
+							<input type="password" value="{$fields['db-user-password'].value}" name="db-user-password" class="main-element form-control" autocomplete="off">
 						</div>
 					</div>
 				</div>

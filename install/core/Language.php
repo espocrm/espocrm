@@ -7,6 +7,8 @@ class Language
 
 	private $systemHelper;
 
+	private $data = array();
+
 	public function __construct()
 	{
 		require_once 'SystemHelper.php';
@@ -20,6 +22,10 @@ class Language
 
 	public function get($language)
 	{
+		if (isset($this->data[$language])) {
+			return $this->data[$language];
+		}
+
 		if (empty($language)) {
 			$language = $this->defaultLanguage;
 		}
@@ -29,12 +35,49 @@ class Language
 			$langFileName = 'install/core/i18n/'.$this->defaultLanguage.'/install.json';
 		}
 
-		$i18n = file_get_contents($langFileName);
-		$i18n = json_decode($i18n, true);
+		$i18n = $this->getLangData($langFileName);
+
+		if ($language != $this->defaultLanguage) {
+			$i18n = $this->mergeWithDefaults($i18n);
+		}
 
 		$this->afterRetrieve($i18n);
 
-		return $i18n;
+		$this->data[$language] = $i18n;
+
+		return $this->data[$language];
+	}
+
+	/**
+	 * Merge current language with default one
+	 *
+	 * @param  array $data
+	 * @return array
+	 */
+	protected function mergeWithDefaults($data)
+	{
+		$defaultLangFile = 'install/core/i18n/'.$this->defaultLanguage.'/install.json';
+		$defaultData = $this->getLangData($defaultLangFile);
+
+		foreach ($data as $categoryName => &$labels) {
+			foreach ($defaultData[$categoryName] as $defaultLabelName => $defaultLabel) {
+				if (!isset($labels[$defaultLabelName])) {
+					$labels[$defaultLabelName] = $defaultLabel;
+				}
+			}
+		}
+
+		$data = array_merge($defaultData, $data);
+
+		return $data;
+	}
+
+	protected function getLangData($filePath)
+	{
+		$data = file_get_contents($filePath);
+		$data = json_decode($data, true);
+
+		return $data;
 	}
 
 	/**

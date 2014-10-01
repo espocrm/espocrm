@@ -35,6 +35,10 @@ var InstallScript = function(opt) {
 		this.modRewriteUrl = opt.modRewriteUrl;
 	}
 
+	if (typeof(opt.apiPath) !== 'undefined') {
+		this.apiPath = opt.apiPath.substr(1) + '/';
+	}
+
 	if (typeof(opt.serverType) !== 'undefined') {
 		this.serverType = opt.serverType;
 	}
@@ -50,24 +54,24 @@ var InstallScript = function(opt) {
 	this.checkActions = [
 		{
 			'action': 'checkModRewrite',
-			'break': true,
+			'break': true
 		},
 		{
 			'action': 'checkPermission',
-			'break': true,
+			'break': true
 		},
 		{
 			'action': 'applySett',
-			'break': true,
+			'break': true
 		},
 		{
 			'action': 'buildDatabse',
-			'break': true,
-		},
+			'break': true
+		}/*,
 		{
 			'action': 'createUser',
-			'break': true,
-		},
+			'break': true
+		}*/
 
 	];
 	this.checkIndex = 0;
@@ -115,7 +119,7 @@ InstallScript.prototype.step1 = function() {
 InstallScript.prototype.step2 = function() {
 	var self = this;
 	var backAction = 'step1';
-	var nextAction = 'step3';
+	var nextAction = 'setupConfirmation';
 
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
@@ -155,9 +159,28 @@ InstallScript.prototype.step2 = function() {
 	})
 }
 
-InstallScript.prototype.step3 = function() {
+InstallScript.prototype.setupConfirmation = function() {
 	var self = this;
 	var backAction = 'step2';
+	var nextAction = 'step3';
+
+	$('#back').click(function(){
+
+		$(this).attr('disabled', 'disabled');
+		self.goTo(backAction);
+	})
+
+	$("#next").click(function(){
+
+		$(this).attr('disabled', 'disabled');
+		self.showLoading();
+		self.actionsChecking();
+	})
+}
+
+InstallScript.prototype.step3 = function() {
+	var self = this;
+	var backAction = '';
 	var nextAction = 'step4';
 
 	$('#back').click(function(){
@@ -175,8 +198,25 @@ InstallScript.prototype.step3 = function() {
 
 		self.checkPass({
 			success: function(){
-				self.showLoading();
-				self.actionsChecking();
+				var data = self.userSett;
+				data['user-name'] = self.userSett.name;
+				data['user-pass'] = self.userSett.pass;
+
+				data.action = 'createUser';
+				$.ajax({
+					url: "index.php",
+					type: "POST",
+					data: data,
+					dataType: 'json',
+				})
+				.done(function(ajaxData){
+					if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
+						self.goTo(nextAction);
+					} else {
+						$("#next").removeAttr('disabled');
+						self.showMsg({msg: self.getLang(ajaxData.errorMsg, 'messages'), error: true});
+					}
+				})
 			},
 			error: function(msg) {
 				$("#next").removeAttr('disabled');
@@ -369,6 +409,9 @@ InstallScript.prototype.checkSett = function(opt) {
 				if (typeof(errors.phpVersion) !== 'undefined') {
 					msg += self.getLang('phpVersion', 'messages').replace('{minVersion}', errors.phpVersion) + rowDelim;
 				}
+				if (typeof(errors.MySQLVersion) !== 'undefined') {
+					msg += self.getLang('MySQLVersion', 'messages').replace('{minVersion}', errors.MySQLVersion) + rowDelim;
+				}
 
 				if (typeof(errors.exts) !== 'undefined') {
 					var exts = errors.exts;
@@ -382,6 +425,13 @@ InstallScript.prototype.checkSett = function(opt) {
 
 				if (typeof(errors.modRewrite) !== 'undefined') {
 					msg += errors.modRewrite+rowDelim;
+				}
+
+				if (typeof(errors.mysqlSetting) !== 'undefined') {
+					var mysqlSettingErrorMess = self.getLang(errors.mysqlSetting.errorCode, 'messages');
+					mysqlSettingErrorMess = mysqlSettingErrorMess.replace('{NAME}', errors.mysqlSetting.name);
+					mysqlSettingErrorMess = mysqlSettingErrorMess.replace('{VALUE}', errors.mysqlSetting.value);
+					msg += mysqlSettingErrorMess + rowDelim;
 				}
 
 				if (typeof(errors.dbConnect) !== 'undefined') {
@@ -431,9 +481,8 @@ InstallScript.prototype.validate = function() {
 		case 'step5':
 			fieldRequired = ['smtpUsername'];
 			break;
-
-
 	}
+
 	var len = fieldRequired.length;
 	for (var index = 0; index < len; index++) {
 		elem = $('[name="'+fieldRequired[index]+'"]').filter(':visible');
@@ -546,6 +595,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		self.callbackChecking(dataMain);
 		return;
 	}
+
 	var currIndex = this.checkIndex;
 	var checkAction = this.checkActions[currIndex].action;
 	this.checkIndex++;
@@ -560,6 +610,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	}
 
 	data.action = checkAction;
+
 	$.ajax({
 		url: "index.php",
 		type: "POST",
@@ -602,7 +653,7 @@ InstallScript.prototype.checkModRewrite = function() {
 	var self = this;
 	this.modRewriteUrl;
 
-	var urlAjax = '..'+this.modRewriteUrl;;
+	var urlAjax = '..'+this.modRewriteUrl;
 	var realJqXHR = $.ajax({
 		url: urlAjax,
 		type: "GET",
@@ -616,7 +667,6 @@ InstallScript.prototype.checkModRewrite = function() {
 		}
 
 		self.callbackModRewrite(data);
-
 	})
 }
 
@@ -629,10 +679,12 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 		this.checkAction(ajaxData);
 		return;
 	}
+
 	ajaxData.success = false;
 	if (typeof(this.langs) !== 'undefined') {
 		ajaxData.errorMsg = (typeof(this.langs['options']['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteHelp'][this.serverType] : this.langs['options']['modRewriteHelp']['default'];
 		ajaxData.errorMsg += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
+		ajaxData.errorMsg = ajaxData.errorMsg.replace("{ESPO_PATH}", this.getEspoPath(true)).replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
 	}
 	var realCheckIndex = this.checkIndex - 1;
 	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'
@@ -650,7 +702,7 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 InstallScript.prototype.callbackChecking = function(data) {
 	this.hideLoading();
 	if (typeof(data) != 'undefined' && data.success) {
-		this.goTo('step4');
+		this.goTo('step3');
 	}
 	else {
 		var desc = (typeof(data.errorMsg))? data.errorMsg : '';
@@ -666,10 +718,24 @@ InstallScript.prototype.callbackChecking = function(data) {
 	}
 }
 
+InstallScript.prototype.getEspoPath = function(onlyPath) {
+
+	onlyPath = typeof onlyPath !== 'undefined' ? onlyPath : false;
+
+	var location = window.location.href;
+	if (onlyPath) {
+		location = window.location.pathname;
+	}
+
+	location = location.replace(/install\/?/, '');
+
+	return location;
+}
+
 InstallScript.prototype.goToEspo = function() {
-	var loc = window.location.href;
-	loc = loc.replace(/install\/?/, '');
-	window.location.replace(loc);
+
+	var location = this.getEspoPath();
+	window.location.replace(location);
 }
 
 window.InstallScript = InstallScript;
