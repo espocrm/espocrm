@@ -58,12 +58,6 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 			throw new Error('Extension Entity not found.');
 		}
 		$this->setExtensionEntity($extensionEntity);
-
-		/** check if backup of the extension exsists */
-		$backupPath = $this->getPath('backupPath');
-		if (!file_exists($backupPath)) {
-			throw new Error('Backup files don\'t exist.');
-		}
 	}
 
 	protected function afterRunAction()
@@ -71,7 +65,6 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 		/** Set extension entity, isInstalled = false */
 		$extensionEntity = $this->getExtensionEntity();
 
-		$extensionEntity->set('status', self::DISABLED);
 		$extensionEntity->set('isInstalled', false);
 		$this->getEntityManager()->saveEntity($extensionEntity);
 	}

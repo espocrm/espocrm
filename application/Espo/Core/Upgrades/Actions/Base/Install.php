@@ -27,6 +27,13 @@ use Espo\Core\Exceptions\Error;
 class Install extends \Espo\Core\Upgrades\Actions\Base
 {
 	/**
+	 * Is copied extension files to Espo
+	 *
+	 * @var [type]
+	 */
+	protected $isCopied = null;
+
+	/**
 	 * Main installation process
 	 *
 	 * @param  string $processId Upgrade/Extension ID, gotten in upload stage
@@ -42,8 +49,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
 		$this->setProcessId($processId);
 
+		$this->isCopied = false;
+
 		/** check if an archive is unzipped, if no then unzip */
-		$packagePath = $this->getPath('packagePath');
+		$packagePath = $this->getPackagePath();
 		if (!file_exists($packagePath)) {
 			$this->unzipArchive();
 			$this->isAcceptable();
@@ -56,16 +65,17 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
 		/* remove files defined in a manifest */
 		if (!$this->deleteFiles()) {
-			throw new Error('Permission denied to delete files.');
+			$this->throwErrorAndRemovePackage('Permission denied to delete files.');
 		}
 
 		/* copy files from directory "Files" to EspoCRM files */
 		if (!$this->copyFiles()) {
-			throw new Error('Cannot copy files.');
+			$this->throwErrorAndRemovePackage('Cannot copy files.');
 		}
+		$this->isCopied = true;
 
 		if (!$this->systemRebuild()) {
-			throw new Error('Error occurred while EspoCRM rebuild.');
+			$this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
 		}
 
 		/* run before install script */
@@ -77,5 +87,26 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 		$this->deletePackageFiles();
 
 		$GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
+	}
+
+	protected function restoreFiles()
+	{
+		$backupPath = $this->getPath('backupPath');
+
+		$res = true;
+		if ($this->isCopied) {
+			$res &= $this->copy(array($backupPath, self::FILES), '', true);
+			$GLOBALS['log']->info('Restore: copy back');
+		}
+
+		$res &= $this->getFileManager()->removeInDir($backupPath, true);
+
+		return $res;
+	}
+
+	protected function throwErrorAndRemovePackage($errorMessage = '')
+	{
+		$this->restoreFiles();
+		parent::throwErrorAndRemovePackage($errorMessage);
 	}
 }

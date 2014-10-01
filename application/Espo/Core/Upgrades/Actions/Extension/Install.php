@@ -51,11 +51,24 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 		$fileList = $this->getCopyFileList();
 		$backupPath = $this->getPath('backupPath');
 
-		$res = $this->getFileManager()->copy('', array($backupPath, self::FILES), false, $fileList);
+		$res = $this->copy('', array($backupPath, self::FILES), false, $fileList);
 
 		/** copy scripts files */
-		$packagePath = $this->getPath('packagePath');
-		$res &= $this->getFileManager()->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
+		$packagePath = $this->getPackagePath();
+		$res &= $this->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
+
+		return $res;
+	}
+
+	protected function restoreFiles()
+	{
+		$res = true;
+		if ($this->isCopied) {
+			$extensionFileList = $this->getCopyFileList();
+			$res &= $this->getFileManager()->remove($extensionFileList);
+		}
+
+		$res &= parent::restoreFiles();
 
 		return $res;
 	}
@@ -125,7 +138,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 	protected function storeExtension()
 	{
 		$entityManager = $this->getEntityManager();
-		$extensionEntity = $entityManager->getEntity('Extension');
+
+		$extensionEntity = $entityManager->getEntity('Extension', $this->getProcessId());
+		if (!isset($extensionEntity)) {
+			$extensionEntity = $entityManager->getEntity('Extension');
+		}
 
 		$manifest = $this->getManifest();
 		$fileList = $this->getCopyFileList();
@@ -133,7 +150,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 		$data = array(
 			'id' => $this->getProcessId(),
 			'name' => $manifest['name'],
-			'status' => self::ENABLED,
 			'isInstalled' => true,
 			'version' => $manifest['version'],
 			'fileList' => $fileList,
@@ -157,9 +173,25 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 		if (isset($extensionEntity)) {
 			$comparedVersion = version_compare($manifest['version'], $extensionEntity->get('version'));
 			if ($comparedVersion <= 0) {
-				$this->throwErrorWithDetelePackage('You cannot install an older version of this extension.');
+				$this->throwErrorAndRemovePackage('You cannot install an older version of this extension.');
 			}
 		}
+	}
+
+	/**
+	 * Throw an exception and remove package files.
+	 * Redeclared to prevent of deleting a package of installed extension.
+	 *
+	 * @param  string $errorMessage [description]
+	 * @return [type]               [description]
+	 */
+	protected function throwErrorAndRemovePackage($errorMessage = '')
+	{
+		if (!$this->isNew()) {
+			throw new Error($errorMessage);
+		}
+
+		return parent::throwErrorAndRemovePackage($errorMessage);
 	}
 
 
