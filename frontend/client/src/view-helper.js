@@ -153,7 +153,6 @@
 				
 				text = text.replace(self.urlRegex, '$1($2)[$2]');
 				
-				console.log(text);
 				self.mdSearch.forEach(function (re, i) {
 					text = text.replace(re, self.mdReplace[i]);
 				});
