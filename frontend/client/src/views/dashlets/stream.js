@@ -28,6 +28,7 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
 		defaultOptions: {
 			displayRecords: 5,
 			autorefreshInterval: 0.5,
+			isDobleHeight: false
 		},
 		
 		_template: '<div class="list-container">{{{list}}}</div>',
@@ -35,7 +36,10 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
 		optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
 			'displayRecords': {
 				type: 'enumInt',
-				options: [3,4,5,10,15],							
+				options: [3,4,5,10,15]						
+			},
+			'isDobleHeight': {
+				type: 'bool',							
 			},
 		}),	
 		
