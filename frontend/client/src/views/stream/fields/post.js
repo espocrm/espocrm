@@ -32,7 +32,7 @@ Espo.define('Views.Stream.Fields.Post', 'Views.Fields.Text', function (Dep) {
 				Object.keys(mentionData).sort(function (a, b) {
 					return a.length < b.length
 				}).forEach(function (item) {
-					var part = '[url=#User/view/'+mentionData[item].id+']' + mentionData[item].name + '[/url]'
+					var part = '(' + mentionData[item].name + ')[#User/view/'+mentionData[item].id + ']';
 					text = text.replace(new RegExp(item, 'g'), part);
 				});
 			}
