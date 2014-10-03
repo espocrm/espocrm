@@ -40,7 +40,7 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
 				type: 'enumInt',
 				options: [3,4,5,10,15],							
 			},
-			'isDobleHeight': {
+			'isDoubleHeight': {
 				type: 'bool',							
 			}
 		}),			

@@ -36,7 +36,7 @@ Espo.define('Views.Dashlet', 'View', function (Dep) {
 				name: this.name,
 				id: this.id,
 				title: this.getOption('title'),
-				isDobleHeight: this.getOption('isDobleHeight')
+				isDoubleHeight: this.getOption('isDoubleHeight')
 			};
 		},
 

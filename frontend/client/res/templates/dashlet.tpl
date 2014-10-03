@@ -1,4 +1,4 @@
-<div id="dashlet-{{id}}" class="panel panel-default dashlet{{#if isDobleHeight}} double-height{{/if}}" data-name="{{name}}" data-id="{{id}}">
+<div id="dashlet-{{id}}" class="panel panel-default dashlet{{#if isDoubleHeight}} double-height{{/if}}" data-name="{{name}}" data-id="{{id}}">
 	<div class="panel-heading">
 		<div class="dropdown pull-right menu-container">
 			<button class="dropdown-toggle btn btn-link btn-sm menu-button" data-toggle="dropdown"><span class="caret"></span></button>
