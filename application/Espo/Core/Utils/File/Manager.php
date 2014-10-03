@@ -225,13 +225,12 @@ class Manager
 	 * @param string | array $path
 	 * @param string $content JSON string
 	 * @param bool $isJSON
-	 * @param string | array $mergeOptions
 	 * @param string | array $removeOptions - List of unset keys from content
 	 * @param bool $isReturn - Is result to be returned or stored
 	 *
 	 * @return bool | array
 	 */
-	public function mergeContents($path, $content, $isJSON = false, $mergeOptions = null, $removeOptions = null, $isReturn = false)
+	public function mergeContents($path, $content, $isJSON = false, $removeOptions = null, $isReturn = false)
 	{
 		$fileContent = $this->getContents($path);
 
@@ -243,7 +242,7 @@ class Manager
 			$newDataArray = Utils\Util::unsetInArray($newDataArray, $removeOptions);
 		}
 
-		$data = Utils\Util::merge($savedDataArray, $newDataArray, $mergeOptions);
+		$data = Utils\Util::merge($savedDataArray, $newDataArray);
 		if ($isJSON) {
 			$data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
 		}
@@ -260,13 +259,12 @@ class Manager
 	 *
 	 * @param string | array $path
 	 * @param string $content JSON string
-	 * @param string | array $mergeOptions
 	 * @param string | array $removeOptions - List of unset keys from content
 	 * @return bool
 	 */
-	public function mergeContentsPHP($path, $content, $mergeOptions = null, $removeOptions = null)
+	public function mergeContentsPHP($path, $content, $removeOptions = null)
 	{
-		$data = $this->mergeContents($path, $content, false, $mergeOptions, $removeOptions, true);
+		$data = $this->mergeContents($path, $content, false, $removeOptions, true);
 
 		return $this->putContentsPHP($path, $data);
 	}

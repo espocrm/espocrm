@@ -109,103 +109,47 @@ class Util
 	}
 
 	/**
-	 * Merge arrays (default PHP function is not suitable)
+	 * Merge arrays recursively (default PHP function is not suitable)
 	 *
-	 * @param array $array
-	 * @param array $mainArray - chief array (priority is same as for array_merge())
-	 * @param array $rewriteLevel - Merge by rewrite level, level numering starts from 1. Ex.
-	 *                     array(
-	 *                      'level1' => array(
-	 *                          'level2' => array(
-	 *                              'level3' => array(
-	 *                                  'key1' => 'value',
-	 *                                  'key2' => 'value',
-	 *                              ),
-	 *                          ),
-	 *                      ),
-	 *                     )
-	 * @param $rewriteKeyName string  - Rewrite key name. It is ignored if $rewriteLevel is NULL.
-	 * @param $rewriteArrays bool  - Rewrite single arrays. Examples:
-	 *                             TRUE: array is [0, 1, 2], main array is [3, 4, 5], Result is [3, 4, 5].
-	 *                             FALSE: array is [0, 1, 2], main array is [3, 4, 5], Result is [0, 1, 2, 3, 4, 5].
+	 * @param array $currentArray
+	 * @param array $newArray - chief array (priority is same as for array_merge())
 	 *
 	 * @return array
 	 */
-	public static function merge($array, $mainArray, $rewriteLevel = null, $rewriteKeyName = null, $rewriteArrays = false)
+	public static function merge($currentArray, $newArray)
 	{
-		if (is_array($array) && !is_array($mainArray)) {
-			return $array;
-		} else if (!is_array($array) && is_array($mainArray)) {
-			return $mainArray;
-		} else if (!is_array($array) && !is_array($mainArray)) {
+		$mergeIdentifier = '__APPEND__';
+
+		if (is_array($currentArray) && (!is_array($newArray) || empty($newArray))) {
+			return $currentArray;
+		} else if ((!is_array($currentArray) || empty($currentArray)) && is_array($newArray)) {
+			return $newArray;
+		} else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
 			return array();
 		}
 
-		if (is_array($rewriteLevel)) {
-			if (isset($rewriteLevel[1])) {
-				$rewriteKeyName = $rewriteLevel[1];
-			}
-			if (isset($rewriteLevel[0])) {
-				$rewriteLevel = $rewriteLevel[0];
-			}
-		}
+		/** add root items from currentArray */
+		foreach ($currentArray as $currentName => $currentValue) {
 
-		foreach($mainArray as $mainKey => $mainValue) {
+			if (!isset($newArray[$currentName])) {
 
-			$found = false;
-			foreach($array as $key => $value) {
+				$newArray[$currentName] = $currentValue;
 
-				if ((string)$mainKey == (string)$key) {
+			} else if (is_array($currentValue) && is_array($newArray[$currentName])) {
 
-					$found = true;
-					if (is_array($mainValue) || is_array($value)) {
-
-						$rowRewriteLevel = $rewriteLevel;
-
-						/** check the $rewriteKeyName */
-						if (isset($rowRewriteLevel) && $rowRewriteLevel == 1 && isset($rewriteKeyName)) {
-							$rewriteKeyName = is_array($rewriteKeyName) ? $rewriteKeyName : (array) $rewriteKeyName;
-
-							if (!in_array((string)$key, $rewriteKeyName)) {
-								$rowRewriteLevel = null;
-							}
-						} /** END: check the $rewriteKeyName */
-
-						if (!isset($rowRewriteLevel) || $rowRewriteLevel != 1) {
-							$array[$mainKey] = static::merge((array) $value, (array) $mainValue, --$rowRewriteLevel, $rewriteKeyName, $rewriteArrays);
-							continue;
-						}
-
-						$mergeValue = array('mergeLevel' => (array) $value);
-						$mergeMainValue = array('mergeLevel' => (array) $mainValue);
-						$mergeRes = array_merge($mergeValue, $mergeMainValue);
-						$array[$mainKey] = $mergeRes['mergeLevel'];
-						continue;
-					}
-
-					/** merge logic */
-					if (!is_numeric($mainKey)) {
-						$array[$mainKey] = $mainValue;
-					}
-					elseif (!in_array($mainValue, $array)) {
-						if ($rewriteArrays) {
-							$array[$mainKey] = $mainValue;
-						} else {
-							$array[] = $mainValue;
-						}
-					} /** END: merge logic */
-
-					break;
+				/** check __APPEND__ identifier */
+				$appendKey = array_search($mergeIdentifier, $newArray[$currentName], true);
+				if ($appendKey !== false) {
+					unset($newArray[$currentName][$appendKey]);
+					$newArray[$currentName] = array_merge($currentValue, $newArray[$currentName]);
+				} else {
+					$newArray[$currentName] = static::merge($currentValue, $newArray[$currentName]);
 				}
-			}
-			/** add an item if key not found */
-			if (!$found) {
-				$array[$mainKey] = $mainValue;
-			}
 
+			}
 		}
 
-		return $array;
+		return $newArray;
 	}
 
 	/**
@@ -239,7 +183,6 @@ class Util
 		return $folderPath . static::getSeparator() . $filePath;
 	}
 
-
 	/**
 	 * Convert array to object format recursively
 	 *
@@ -254,7 +197,6 @@ class Util
 			return $array; // Return an object
 		}
 	}
-
 
 	/**
 	 * Convert object to array format recursively
@@ -285,7 +227,6 @@ class Util
 		return $name;
 	}
 
-
 	/**
 	* Get Naming according to prefix or postfix type
 	*
@@ -305,7 +246,6 @@ class Util
 
 		return null;
 	}
-
 
 	/**
 	 * Replace $search in array recursively
@@ -390,7 +330,6 @@ class Util
 		return $content;
 	}
 
-
 	/**
 	 * Get class name from the file path
 	 *
@@ -406,7 +345,6 @@ class Util
 
 		return $className;
 	}
-
 
 	/**
 	 * Return values of defined $key.
@@ -446,15 +384,33 @@ class Util
 	public static function isEquals($var1, $var2)
 	{
 		if (is_array($var1)) {
-			ksort($var1);
+			static::ksortRecursive($var1);
 		}
 		if (is_array($var2)) {
-			ksort($var2);
+			static::ksortRecursive($var2);
 		}
 
 		return ($var1 === $var2);
 	}
 
+	/**
+	 * Sort array recursively
+	 * @param  array $array
+	 * @return bool
+	 */
+	public static function ksortRecursive(&$array)
+	{
+		if (!is_array($array)) {
+			return false;
+		}
+
+		ksort($array);
+		foreach ($array as $key => $value) {
+			static::ksortRecursive($array[$key]);
+		}
+
+		return true;
+	}
 }
 
 

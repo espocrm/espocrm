@@ -186,7 +186,7 @@ class Metadata
 	{
 		$data = false;
 		if (!file_exists($this->cacheFile) || $reload) {
-			$data = $this->getUnifier()->unify($this->name, $this->paths, true, 5, 'options');
+			$data = $this->getUnifier()->unify($this->name, $this->paths, true);
 
 			if ($data === false) {
 				$GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
@@ -246,7 +246,7 @@ class Metadata
 	{
 		$path = $this->paths['customPath'];
 
-		$result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true, array(3, 'options'));
+		$result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
 		if ($result === false) {
 			throw new Error("Error saving metadata. See log file for details.");
 		}
