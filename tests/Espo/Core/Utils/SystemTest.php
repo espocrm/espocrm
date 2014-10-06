@@ -32,6 +32,9 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
 		$_SERVER['SERVER_SOFTWARE'] = 'Microsoft-IIS/8.0';
 		$this->assertEquals( 'microsoft-iis', $this->object->getServerType());
+
+		$_SERVER['SERVER_SOFTWARE'] = 'apache/2.4.10 (win32) openssl/1.0.1i php';
+		$this->assertEquals( 'apache', $this->object->getServerType());
 	}
 
 
