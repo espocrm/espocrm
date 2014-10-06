@@ -11,7 +11,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 	protected $objects;
 
-	protected $configPath = 'tests/testData/Utils/Config/config.php';
+	protected $configPath = 'tests/testData/Utils/Config/cache/config.php';
 
 	protected $systemConfigPath = 'tests/testData/Utils/Config/systemConfig.php';
 
