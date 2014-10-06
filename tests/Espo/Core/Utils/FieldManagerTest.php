@@ -65,14 +65,14 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->objects['metadata']
-			->expects($this->exactly(3))
+			->expects($this->exactly(6))
 			->method('get')
 			->will($this->returnValue($data));
 
 		$this->assertTrue($this->object->update('name', $data, 'Account'));
 	}
 
-	public function testUpdateCustomField()
+	public function testUpdateCustomFieldIsNotChanged()
 	{
 		$data = array(
 			"type" => "varchar",
@@ -86,9 +86,37 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($data));
 
 		$this->objects['metadata']
+			->expects($this->never())
+			->method('set')
+			->will($this->returnValue(true));
+
+		$this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));
+	}
+
+	public function testUpdateCustomField()
+	{
+		$data = array(
+			"type" => "varchar",
+			"maxLength" => "50",
+			"isCustom" => true,
+		);
+
+		$this->objects['metadata']
+			->expects($this->exactly(6))
+			->method('get')
+			->will($this->returnValue($data));
+
+		$this->objects['metadata']
 			->expects($this->once())
 			->method('set')
 			->will($this->returnValue(true));
+
+		$data = array(
+			"type" => "varchar",
+			"maxLength" => "150",
+			"required" => true,
+			"isCustom" => true,
+		);
 
 		$this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));
 	}

@@ -35,7 +35,7 @@ class System
 
 		preg_match('/^(.*?)\//i', $serverSoft, $match);
 		if (empty($match[1])) {
-			preg_match('/^(.*?)\/?/i', $serverSoft, $match);
+			preg_match('/^(.*)\/?/i', $serverSoft, $match);
 		}
 		$serverName = strtolower( trim($match[1]) );
 

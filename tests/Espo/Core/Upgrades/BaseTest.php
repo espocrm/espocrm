@@ -80,7 +80,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( $upgradeId, $this->reflection->invokeMethod('getUpgradeId', array()) );
 	}
 
-
 	public function testCreateUpgradeId()
 	{
 		$upgradeId = $this->reflection->setProperty('upgradeId', null);
@@ -97,7 +96,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		$this->reflection->invokeMethod('getUpgradeId', array());
 	}
 
-
 	public function testGetManifestIncorrect()
 	{
 		$this->setExpectedException('\Espo\Core\Exceptions\Error');
@@ -113,7 +111,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
 		$this->reflection->invokeMethod('getManifest', array());
 	}
-
 
 	public function testGetManifest()
 	{
@@ -162,7 +159,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-
 	/**
 	 * @dataProvider acceptableDataFalse
 	 */
@@ -184,7 +180,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-
 	public function testGetUpgradePath()
 	{
 		$upgradeId = $this->reflection->invokeMethod('getUpgradeId', array());
@@ -195,12 +190,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		$postfix = $this->reflection->getProperty('packagePostfix');
 		$this->assertEquals( $upgradePath.$postfix, $this->reflection->invokeMethod('getUpgradePath', array(true)) );
 	}
-
-
-
-
-
-
 }
 
 ?>

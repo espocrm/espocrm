@@ -150,7 +150,7 @@ class Config
 
 		$removeData = empty($this->removeData) ? null : $this->removeData;
 
-		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, 1, $removeData);
+		$result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, $removeData);
 		if ($result) {
 			$this->changedData = array();
 			$this->removeData = array();

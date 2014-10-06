@@ -7,10 +7,22 @@
 						{$langs['labels']['Congratulation! Welcome to EspoCRM']}
 					</div>
 
+					<br>
+
+					<div class="likes">
+						<p>
+							{$langs['labels']['share']}
+						</p>
+						<br>
+
+						<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+						<div class="g-plusone" data-size="standard" data-count="true" data-href='http://www.espocrm.com'></div>
+					</div>
+
 					<div class="more-information">
-						{assign var="blogLink" value="<a target=\"_blank\" href=\"{$config['blog']}\">{$config['blog']}</a>"}
-						{assign var="twitterLink" value="<a target=\"_blank\" href=\"{$config['twitter']}\">{$config['twitter']}</a>"}
-						{assign var="forumLink" value="<a target=\"_blank\" href=\"{$config['forum']}\">{$config['forum']}</a>"}
+						{assign var="blogLink" value="<a target=\"_blank\" href=\"{$config['blog']}\">{$langs['labels']['blog']}</a>"}
+						{assign var="twitterLink" value="<a target=\"_blank\" href=\"{$config['twitter']}\">{$langs['labels']['twitter']}</a>"}
+						{assign var="forumLink" value="<a target=\"_blank\" href=\"{$config['forum']}\">{$langs['labels']['forum']}</a>"}
 
 						{assign var="message" value="{$langs['labels']['More Information']|replace:'{BLOG}':$blogLink}"}
 						{assign var="message" value="{$message|replace:'{TWITTER}':$twitterLink}"}
