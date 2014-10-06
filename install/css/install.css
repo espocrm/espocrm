@@ -124,6 +124,29 @@ span.ok {
 .more-information {
 	line-height: 1.5;
 	font-size: 16px;
-	margin-top: 100px;
+	margin-top: 70px;
+	text-align: left;
 }
+
+.likes {
+	border-left-color: #D7983B;
+	-moz-border-bottom-colors: none;
+    -moz-border-left-colors: #F1AF4E;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #eee;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px 1px 1px 5px;
+    margin: 20px 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.likes p {
+	color: #B56F08;
+	font-size: 15px;
+}
+
 
