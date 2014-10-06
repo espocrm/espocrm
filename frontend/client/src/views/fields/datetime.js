@@ -29,7 +29,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 
 		validations: ['required', 'datetime', 'after', 'before'],
 		
-		searchTypeOptions: ['on', 'after', 'before', 'between', 'today', 'past', 'future'],
+		searchTypeOptions: ['on', 'after', 'before', 'between', 'today', 'past', 'future', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear'],
 
 		timeFormatMap: {
 			'HH:mm': 'H:i',

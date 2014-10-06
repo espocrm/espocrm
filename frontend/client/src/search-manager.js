@@ -143,7 +143,7 @@
 			var where = {
 				field: field
 			};
-			if (!value && !~['today', 'past', 'future'].indexOf(type)) {
+			if (!value && ~['on', 'before', 'after'].indexOf(type)) {
 				return null;
 			}
 					
@@ -188,7 +188,9 @@
 						var to = moment(value[1], this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
 						where.value = [from, to];
 					}
-					break;						
+					break;
+				default:
+					where.type = type;						
 			}
 			
 			return where;

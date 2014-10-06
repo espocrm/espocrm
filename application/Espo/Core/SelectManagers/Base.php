@@ -316,6 +316,57 @@ class Base
 				case 'future':
 					$part[$item['field'] . '>'] = date('Y-m-d');
 					break;
+				case 'currentMonth':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+					);
+					break;
+				case 'lastMonth':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+					);
+					break;
+				case 'currentQuarter':
+					$dt = new \DateTime();
+					$quarter = ceil($dt->format('m') / 3);						
+					$dt->modify('first day of January this year');								
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+					);
+					break;
+				case 'lastQuarter':
+					$dt = new \DateTime();
+					$quarter = ceil($dt->format('m') / 3);					
+					$dt->modify('first day of January this year');					
+					$quarter--;
+					if ($quarter == 0) {
+						$quarter = 4;
+						$dt->sub('P1Y');
+					}						
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+					);
+					break;
+				case 'currentYear':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+					);
+					break;
+				case 'lastYear':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+					);
+					break;
 				case 'between':
 					if (is_array($item['value'])) {
 						$part['AND'] = array(

@@ -289,7 +289,13 @@
 			"between": "Between",
 			"today": "Today",
 			"past": "Past",
-			"future": "Future"
+			"future": "Future",
+			"currentMonth": "Current Month",
+			"lastMonth": "Last Month",
+			"currentQuarter": "Current Quarter",
+			"lastQuarter": "Last Quarter",
+			"currentYear": "Current Year",
+			"lastYear": "Last Year"
 		},
 		"intSearchRanges": {
 			"equals": "Equals",
