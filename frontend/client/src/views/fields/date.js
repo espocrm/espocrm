@@ -31,7 +31,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		
 		validations: ['required', 'date', 'after', 'before'],
 		
-		searchTypeOptions: ['on', 'notOn', 'after', 'before', 'between', 'today', 'past', 'future'],
+		searchTypeOptions: ['today', 'past', 'future', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'on', 'after', 'before', 'between'],
 		
 		setup: function () {
 			Dep.prototype.setup.call(this);
@@ -130,14 +130,14 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		handleSearchType: function (type) {
-			if (~['today', 'past', 'future'].indexOf(type)) {
-				this.$el.find('div.primary').addClass('hidden');
+			if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
+				this.$el.find('div.primary').removeClass('hidden');
 				this.$el.find('div.additional').addClass('hidden');
 			} else if (type == 'between') {
 				this.$el.find('div.primary').removeClass('hidden');
 				this.$el.find('div.additional').removeClass('hidden');
 			} else {
-				this.$el.find('div.primary').removeClass('hidden');
+				this.$el.find('div.primary').addClass('hidden');
 				this.$el.find('div.additional').addClass('hidden');
 			}
 		},
@@ -176,11 +176,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					dateValue: value,
 					dateValueTo: valueTo								
 				};
-			} else if (~['today', 'past', 'future'].indexOf(type)) {
-				data = {
-					type: type							
-				};
-			} else {
+			} else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
 				if (!value) {
 					return false;
 				}
@@ -188,6 +184,10 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					type: type,
 					value: value,
 					dateValue: value									
+				};
+			} else {
+				data = {
+					type: type							
 				};
 			}
 			return data;				
