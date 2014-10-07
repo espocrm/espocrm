@@ -60,12 +60,12 @@ class ActionManager
 		$this->currentAction = $action;
 	}
 
-	protected function getAction()
+	public function getAction()
 	{
 		return $this->currentAction;
 	}
 
-	protected function getParams()
+	public function getParams()
 	{
 		return $this->params;
 	}
@@ -91,10 +91,10 @@ class ActionManager
 			$class = '\Espo\Core\Upgrades\Actions\\' . ucfirst($managerName) . '\\' . ucfirst($actionName);
 
 			if (!class_exists($class)) {
-				throw new Error('Could not find class ['.$class.'].');
+				throw new Error('Could not find an action ['.ucfirst($actionName).'], class ['.$class.'].');
 			}
 
-			$this->objects[$managerName][$actionName] = new $class($this->container, $this->getParams());
+			$this->objects[$managerName][$actionName] = new $class($this->container, $this);
 		}
 
 		return $this->objects[$managerName][$actionName];

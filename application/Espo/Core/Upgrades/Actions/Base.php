@@ -30,6 +30,8 @@ abstract class Base
 {
 	private $container;
 
+	private $actionManager;
+
 	private $zipUtil;
 
 	private $fileManager;
@@ -40,7 +42,7 @@ abstract class Base
 
 	protected $data;
 
-	private $params = null;
+	protected $params = null;
 
 	protected $processId = null;
 
@@ -72,10 +74,11 @@ abstract class Base
 	protected $defaultPackageType = 'extension';
 
 
-	public function __construct($container, $params)
+	public function __construct(\Espo\Core\Container $container, \Espo\Core\Upgrades\ActionManager $actionManager)
 	{
 		$this->container = $container;
-		$this->params = $params;
+		$this->actionManager = $actionManager;
+		$this->params = $actionManager->getParams();
 
 		$this->zipUtil = new \Espo\Core\Utils\File\ZipArchive($container->get('fileManager'));
 	}
@@ -89,6 +92,11 @@ abstract class Base
 	protected function getContainer()
 	{
 		return $this->container;
+	}
+
+	protected function getActionManager()
+	{
+		return $this->actionManager;
 	}
 
 	protected function getParams($name = null)
@@ -174,7 +182,7 @@ abstract class Base
 		$res = $this->checkPackageType();
 		$res &= $this->checkVersions();
 
-		return $res;
+		return (bool) $res;
 	}
 
 	protected function checkVersions()
@@ -447,6 +455,23 @@ abstract class Base
 	protected function systemRebuild()
 	{
 		return $this->getContainer()->get('dataManager')->rebuild();
+	}
+
+	/**
+	 * Execute an action. For ex., execute uninstall action in install
+	 *
+	 * @param  [type] $actionName [description]
+	 * @param  [type] $data       [description]
+	 * @return [type]             [description]
+	 */
+	protected function executeAction($actionName, $data)
+	{
+		$currentAction = $this->getActionManager()->getAction();
+
+		$this->getActionManager()->setAction($actionName);
+		$this->getActionManager()->run($data);
+
+		$this->getActionManager()->setAction($currentAction);
 	}
 
 	protected function beforeRunAction()

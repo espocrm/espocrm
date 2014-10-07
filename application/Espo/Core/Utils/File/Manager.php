@@ -496,17 +496,21 @@ class Manager
 		$fileList = $this->getFileList($dirPath, false);
 
 		$result = true;
-		foreach ($fileList as $file) {
-			$fullPath = Utils\Util::concatPath($dirPath, $file);
-			if (is_dir($fullPath)) {
-				$result &= $this->removeInDir($fullPath, true);
-			} else {
-				$result &= unlink($fullPath);
+		if (is_array($fileList)) {
+			foreach ($fileList as $file) {
+				$fullPath = Utils\Util::concatPath($dirPath, $file);
+				if (is_dir($fullPath)) {
+					$result &= $this->removeInDir($fullPath, true);
+				} else if (file_exists($fullPath)) {
+					$result &= unlink($fullPath);
+				}
 			}
 		}
 
 		if ($removeWithDir) {
-			rmdir($dirPath);
+			if (file_exists($dirPath)) {
+				rmdir($dirPath);
+			}
 		}
 
 		return $result;

@@ -22,7 +22,8 @@
 
 namespace Espo\Core\Upgrades\Actions\Extension;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error,
+	Espo\Core\ExtensionManager;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
@@ -31,7 +32,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 	protected function beforeRunAction()
 	{
 		$this->findExtension();
-		$this->compareVersion();
+		if (!$this->isNew()) {
+			$this->compareVersion();
+			$this->uninstallExtension();
+			$this->deleteExtension();
+		}
 
 		$this->copyExistingFiles();
 	}
@@ -193,6 +198,32 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
 		return parent::throwErrorAndRemovePackage($errorMessage);
 	}
+
+	/**
+	 * If extension already installed, uninstall an old version
+	 *
+	 * @return void
+	 */
+	protected function uninstallExtension()
+	{
+		$extensionEntity = $this->getExtensionEntity();
+
+		$this->executeAction(ExtensionManager::UNINSTALL, $extensionEntity->get('id'));
+	}
+
+	/**
+	 * Delete extension package
+	 *
+	 * @return void
+	 */
+	protected function deleteExtension()
+	{
+		$extensionEntity = $this->getExtensionEntity();
+
+		$this->executeAction(ExtensionManager::DELETE, $extensionEntity->get('id'));
+	}
+
+
 
 
 }
