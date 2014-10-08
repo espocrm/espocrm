@@ -75,6 +75,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->object->save());
 	}
 
+	public function testSetNull()
+	{
+		$setKey= 'testOption';
+		$setValue= 'Test';
+
+		$this->object->set($setKey, $setValue);
+		$this->assertTrue($this->object->save());
+		$this->assertEquals($setValue, $this->object->get($setKey));
+
+		$this->object->set($setKey, null);
+		$this->assertTrue($this->object->save());
+		$this->assertNull($this->object->get($setKey));
+	}
+
 	public function testSetArray()
 	{
 		$values = array(
@@ -118,5 +132,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('systemItems', $configData);
 		$this->assertArrayHasKey('adminItems', $configData);
 	}
+
+
 
 }

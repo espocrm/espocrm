@@ -131,7 +131,7 @@ class Util
 		/** add root items from currentArray */
 		foreach ($currentArray as $currentName => $currentValue) {
 
-			if (!isset($newArray[$currentName])) {
+			if (!array_key_exists($currentName, $newArray)) {
 
 				$newArray[$currentName] = $currentValue;
 
