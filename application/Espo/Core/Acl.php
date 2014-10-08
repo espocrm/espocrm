@@ -24,6 +24,8 @@ namespace Espo\Core;
 
 use \Espo\Core\Exceptions\Error;
 
+use \Espo\ORM\Entity;
+
 class Acl
 {
 	private $data = array();
@@ -132,8 +134,10 @@ class Acl
 			return $this->checkScope($subject, $action, $isOwner, $inTeam);
 		} else {
 			$entity = $subject;
-			$entityName = $entity->getEntityName();			
-			return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $inTeam, $entity);
+			if ($entity instanceof Entity) {
+				$entityName = $entity->getEntityName();			
+				return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $inTeam, $entity);
+			}
 		}
 	}
 			
