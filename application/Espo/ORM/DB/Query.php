@@ -104,7 +104,7 @@ class Query
 		}
 		
 		if (empty($params['aggregation'])) {
-			$selectPart = $this->getSelect($entity, $params['select']);
+			$selectPart = $this->getSelect($entity, $params['select'], $params['distinct']);
 			$orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
 			
 			if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
@@ -179,7 +179,7 @@ class Query
 		}		
 	}
 	
-	protected function getFunctionPart($function, $part)
+	protected function getFunctionPart($function, $part, $entityName, $distinct = false)
 	{
 		switch ($function) {
 			case 'MONTH':
@@ -187,11 +187,19 @@ class Query
 			case 'DAY':
 				return "DATE_FORMAT({$part}, '%Y-%m-%d')";
 		}
+		if ($distinct) {
+			$idPart = $this->toDb($entityName) . ".id";
+			switch ($function) {
+				case 'SUM':
+				case 'COUNT':
+					return $function . "({$part}) * COUNT(DISTINCT {$idPart}) / COUNT({$idPart})";
+			}	
+		}
 		return $function . '(' . $part . ')';
 	}
 	
 	
-	protected function convertComplexExpression($entity, $field, $entityName = null)
+	protected function convertComplexExpression($entity, $field, $entityName = null, $distinct = false)
 	{
 		$function = null;
 		$relName = null;			
@@ -216,12 +224,12 @@ class Query
 			}
 		}
 		if ($function) {
-			$part = $this->getFunctionPart(strtoupper($function), $part);
+			$part = $this->getFunctionPart(strtoupper($function), $part, $entityName, $distinct);
 		}
 		return $part;
 	}
 	
-	protected function getSelect(IEntity $entity, $fields = null)
+	protected function getSelect(IEntity $entity, $fields = null, $distinct = false)
 	{
 		$select = "";
 		$arr = array();
@@ -237,7 +245,7 @@ class Query
 			if (array_key_exists($field, $entity->fields)) {
 				$fieldDefs = $entity->fields[$field];
 			} else {
-				$part = $this->convertComplexExpression($entity, $field, $entity->getEntityName());
+				$part = $this->convertComplexExpression($entity, $field, $entity->getEntityName(), $distinct);
 				$arr[] = $part . ' AS `' . $field . '`';
 				continue;
 			}
