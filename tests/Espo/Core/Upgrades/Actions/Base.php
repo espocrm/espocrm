@@ -20,9 +20,12 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace tests\Espo\Core\Upgrades;
+namespace tests\Espo\Core\Upgrades\Actions;
 
-class Base extends \Espo\Core\Upgrades\Base
+class Base extends \Espo\Core\Upgrades\Actions\Base
 {
-	protected $packagePath = 'tests/testData/Upgrades/data/upload/upgrades';
+	public function run($data)
+	{
+
+	}
 }
