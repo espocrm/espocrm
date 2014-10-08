@@ -72,7 +72,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 		
 		if ($attachment->get('parentId') && $attachment->get('parentType')) {
 			$parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));			
-			if (!$this->getAcl()->check($parent)) {
+			if ($parent && !$this->getAcl()->check($parent)) {
 				throw new Forbidden();
 			}
 		}
