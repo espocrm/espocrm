@@ -133,6 +133,10 @@ if (!empty($actionFile) && file_exists('install/'.$actionFile)) {
 }
 
 if (!empty($actionFile) && file_exists('install/core/tpl/'.$tplName)) {
+	/*check if EspoCRM is built*/
+	$isBuilt = file_exists('client/espo.min.js');
+	$smarty->assign('isBuilt', $isBuilt);
+
 	ob_clean();
 	$smarty->display('index.tpl');
 }

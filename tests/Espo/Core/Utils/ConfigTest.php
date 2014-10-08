@@ -11,13 +11,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 	protected $objects;
 
-	protected $configPath = 'tests/testData/Utils/Config/cache/config.php';
+	protected $defaultTestConfig = 'tests/testData/Utils/Config/config.php';
+
+	protected $configPath = 'tests/testData/cache/config.php';
 
 	protected $systemConfigPath = 'tests/testData/Utils/Config/systemConfig.php';
 
 	protected function setUp()
 	{
 		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+
+		/*copy defaultTestConfig file to cache*/
+		if (!file_exists($this->configPath)) {
+			copy($this->defaultTestConfig, $this->configPath);
+		}
 
 		$this->object = new \Espo\Core\Utils\Config($this->objects['fileManager']);
 
@@ -75,6 +82,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->object->save());
 	}
 
+	public function testSetNull()
+	{
+		$setKey= 'testOption';
+		$setValue= 'Test';
+
+		$this->object->set($setKey, $setValue);
+		$this->assertTrue($this->object->save());
+		$this->assertEquals($setValue, $this->object->get($setKey));
+
+		$this->object->set($setKey, null);
+		$this->assertTrue($this->object->save());
+		$this->assertNull($this->object->get($setKey));
+	}
+
 	public function testSetArray()
 	{
 		$values = array(
@@ -118,5 +139,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('systemItems', $configData);
 		$this->assertArrayHasKey('adminItems', $configData);
 	}
+
+
 
 }
