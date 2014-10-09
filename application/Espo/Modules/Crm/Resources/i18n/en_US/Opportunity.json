@@ -10,7 +10,8 @@
 		"closeDate": "Close Date",
 		"contacts": "Contacts",
 		"description": "Description",
-		"amountConverted": "Amount (converted)"
+		"amountConverted": "Amount (converted)",
+		"amountWeightedConverted": "Amount Weighted"
 	},
 	"links": {
 		"contacts": "Contacts",
