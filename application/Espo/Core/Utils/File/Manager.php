@@ -381,7 +381,7 @@ class Manager
 				}
 			}
 		} else {
-			$fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', 'all', true);
+			$fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', 'file', true);
 		}
 
 		/** Check permission before copying */
@@ -394,8 +394,12 @@ class Manager
 
 			$destFile = $this->concatPaths(array($destPath, $file));
 
+			$isFileExists = file_exists($destFile);
+
 			if ($this->checkCreateFile($destFile) === false) {
 				$permissionDeniedList[] = $destFile;
+			} else if (!$isFileExists) {
+				$this->removeFile($destFile);
 			}
 		}
 		/** END */
