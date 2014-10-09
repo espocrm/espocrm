@@ -53,7 +53,8 @@ class Currency extends \Espo\Core\Utils\Database\Orm\Base
 								"<=" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <= {value}",
 								"<>" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <> {value}"
 						),
-						'notStorable' => true						
+						'notStorable' => true,
+						'orderBy' => $converedFieldName . " {direction}"				
 					),
 				),
 			),

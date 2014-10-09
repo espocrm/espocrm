@@ -11,7 +11,23 @@
         },
         "amountConverted": {
             "type": "currencyConverted",
-            "readOnly": true         
+            "readOnly": true
+        },
+        "amountWeightedConverted": {
+            "type": "float",
+            "readOnly": true,
+            "notStorable": true,
+            "select": "opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100",
+            "where": {
+            	"=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
+            	"<": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
+            	">": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
+            	"<=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <= {value}",
+            	">=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) >= {value}",
+            	"<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
+            },
+            "orderBy": "amountWeightedConverted {direction}",
+            "view": "Fields.CurrencyConverted" 
         },
         "account": {
             "type": "link",
