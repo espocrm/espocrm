@@ -24,14 +24,21 @@ session_start();
 
 require_once('../bootstrap.php');
 
+//action
+$action = (!empty($_POST['action']))? $_POST['action'] : 'main';
+require_once('core/Utils.php');
+if (!Utils::isActionExists($action)) {
+	die('This page does not exist.');
+}
 
 // temp save all settings
-$ignore = array('desc', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
+$ignoredFields = array('installProcess', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
 
-if (!empty($_REQUEST)) {
-	foreach ($_REQUEST as $key => $val) {
-		if (!in_array($val, $ignore))
-		$_SESSION['install'][$key] = trim($val);
+if (!empty($_POST)) {
+	foreach ($_POST as $key => $val) {
+		if (!in_array($key, $ignoredFields)) {
+			$_SESSION['install'][$key] = trim($val);
+		}
 	}
 }
 
@@ -59,6 +66,7 @@ if (!$systemHelper->initWritable()) {
 require_once ('install/vendor/smarty/libs/Smarty.class.php');
 
 require_once 'core/Installer.php';
+require_once 'core/Utils.php';
 
 $smarty = new Smarty();
 $installer = new Installer();
@@ -85,11 +93,6 @@ $smarty->assign("langs", $langs);
 $smarty->assign("langsJs", json_encode($langs));
 
 // include actions and set tpl name
-$tplName = 'main.tpl';
-$actionsDir = 'core/actions';
-$actionFile = '';
-$action = (!empty($_REQUEST['action']))? $_REQUEST['action'] : 'main';
-
 switch ($action) {
 	case 'main':
 		$languageList = $installer->getLanguageList();
@@ -119,7 +122,7 @@ switch ($action) {
 		break;
 }
 
-$actionFile = $actionsDir.'/'.$action.'.php';
+$actionFile = 'core/actions/'.$action.'.php';
 $tplName = $action.'.tpl';
 $smarty->assign('tplName', $tplName);
 $smarty->assign('action', ucfirst($action));
@@ -128,7 +131,7 @@ $smarty->assign('action', ucfirst($action));
 $config = include('core/config.php');
 $smarty->assign('config', $config);
 
-if (!empty($actionFile) && file_exists('install/'.$actionFile)) {
+if (Utils::isActionExists($action)) {
 	include $actionFile;
 }
 

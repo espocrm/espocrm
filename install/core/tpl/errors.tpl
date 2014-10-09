@@ -27,6 +27,8 @@
 		}
 	{literal}
 		var installScript = new InstallScript(opt);
+		installScript.showLoading();
+		installScript.actionsChecking();
 	})
 	{/literal}
 </script>

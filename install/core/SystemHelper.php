@@ -122,6 +122,10 @@ class SystemHelper extends \Espo\Core\Utils\System
 
 	protected function getMysqlSetting($name, \PDO $pdoConnection)
 	{
+		if (!method_exists($pdoConnection, 'prepare')) {
+			return null;
+		}
+
 		$sth = $pdoConnection->prepare("SHOW VARIABLES LIKE '" . $name . "'");
 		$sth->execute();
 		$res = $sth->fetch(PDO::FETCH_NUM);

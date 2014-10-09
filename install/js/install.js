@@ -514,18 +514,12 @@ InstallScript.prototype.validate = function() {
 	return valid;
 }
 
-
 InstallScript.prototype.setForm = function(opt) {
 	var formId = opt.formId || 'nav';
 	var action = opt.action || 'main';
-	var desc = opt.desc || '';
 
 	var actionField = $('<input>', {'name': 'action', 'value': action, 'type': 'hidden'});
 	$('#'+formId).append(actionField);
-	var descField = $('<textarea>', {'name': 'desc', 'value': action, 'type': 'hidden'});
-	descField.val(desc);
-	descField.css('display', 'none');
-	$('#'+formId).append(descField);
 
 	$('#'+formId).attr('method', 'POST');
 }
@@ -648,7 +642,6 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	})
 }
 
-
 InstallScript.prototype.checkModRewrite = function() {
 	var self = this;
 	this.modRewriteUrl;
@@ -681,11 +674,8 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 	}
 
 	ajaxData.success = false;
-	if (typeof(this.langs) !== 'undefined') {
-		ajaxData.errorMsg = (typeof(this.langs['options']['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteHelp'][this.serverType] : this.langs['options']['modRewriteHelp']['default'];
-		ajaxData.errorMsg += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
-		ajaxData.errorMsg = ajaxData.errorMsg.replace("{ESPO_PATH}", this.getEspoPath(true)).replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
-	}
+	ajaxData.errorMsg = this.getModRewriteErrorMesssage();
+
 	var realCheckIndex = this.checkIndex - 1;
 	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'
 		&& typeof(this.checkActions[realCheckIndex].break) != 'undefined') {
@@ -705,14 +695,14 @@ InstallScript.prototype.callbackChecking = function(data) {
 		this.goTo('step3');
 	}
 	else {
-		var desc = (typeof(data.errorMsg))? data.errorMsg : '';
-		desc += (typeof(data.errorFixInstruction) != 'undefined')? data.errorFixInstruction : '';
+		var errorMsg = (typeof(data.errorMsg))? data.errorMsg : '';
+		errorMsg += (typeof(data.errorFixInstruction) != 'undefined')? data.errorFixInstruction : '';
 		if (this.reChecking) {
-			this.showMsg({msg: desc, error: true});
+			this.showMsg({msg: errorMsg, error: true});
 			$("#re-check").removeAttr('disabled');
 		}
 		else {
-			this.setForm({action: 'errors', desc: desc});
+			this.setForm({action: 'errors'});
 			$('#nav').submit();
 		}
 	}
@@ -730,6 +720,18 @@ InstallScript.prototype.getEspoPath = function(onlyPath) {
 	location = location.replace(/install\/?/, '');
 
 	return location;
+}
+
+InstallScript.prototype.getModRewriteErrorMesssage = function() {
+
+	var message = '';
+	if (typeof(this.langs) !== 'undefined') {
+		message = (typeof(this.langs['options']['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteHelp'][this.serverType] : this.langs['options']['modRewriteHelp']['default'];
+		message += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
+		message = message.replace("{ESPO_PATH}", this.getEspoPath(true)).replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
+	}
+
+	return message;
 }
 
 InstallScript.prototype.goToEspo = function() {
