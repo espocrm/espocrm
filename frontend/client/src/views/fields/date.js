@@ -51,13 +51,40 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		getValueForDisplay: function () {
-			var value = this.model.get(this.name);
+			var value = this.model.get(this.name);			
 			if (!value) {
 				if (this.mode == 'edit' || this.mode == 'search') {
 					return '';
 				}
 				return this.translate('None');
 			}
+			
+			if (this.mode == 'list' || this.mode == 'detail') {			
+				var d = this.getDateTime().toMoment(value);
+				var today = moment().tz(this.getDateTime().timeZone || 'UTC').startOf('day');				
+				var dt = today.clone();					
+					
+				var ranges = {
+					'today': [dt.unix(), dt.add('days', 1).unix()],
+					'tomorrow': [dt.unix(), dt.add('days', 1).unix()],
+					'yesterday': [dt.add('days', -3).unix(), dt.add('days', 1).unix()]
+				};
+					
+				if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
+					return this.translate('Today');
+				} else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
+					return this.translate('Tomorrow');
+				} else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
+					return this.translate('Yesterday');
+				} 
+					
+				if (d.format('YYYY') == today.format('YYYY')) {
+					return d.format('MMM D');
+				} else {
+					return d.format('MMM D, YYYY');
+				}
+			}
+			
 			return this.getDateTime().toDisplayDate(value);
 		},
 		

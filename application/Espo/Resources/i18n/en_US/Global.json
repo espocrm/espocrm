@@ -122,7 +122,10 @@
 		"Duplicate": "Duplicate",
 		"Notifications": "Notifications",
 		"Mark all read": "Mark all read",
-		"See more": "See more"
+		"See more": "See more",
+		"Today": "Today",
+		"Tomorrow": "Tomorrow",
+		"Yesterday": "Yesterday"
 	},
 	"messages": {
 		"notModified": "You have not modified the record",

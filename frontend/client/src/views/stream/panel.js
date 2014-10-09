@@ -118,7 +118,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 				collection.fetchNew();				
 			}.bind(this));
 			
-			this.listenToOnce(collection, 'sync', function () {
+			this.listenToOnce(collection, 'sync', function () {				
 				this.createView('list', 'Stream.List', {
 					el: this.options.el + ' > .list-container',
 					collection: collection,
