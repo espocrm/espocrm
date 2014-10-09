@@ -20,4 +20,27 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
+class Utils
+{
+	static public $actionPath = 'install/core/actions';
 
+	static public function isActionExists($actionName)
+	{
+		$actionPath = static::$actionPath;
+		$actionFileName = $actionName . '.php';
+		$actionRealPath = realpath($actionPath . '/' . $actionFileName);
+
+		$fileManager = new \Espo\Core\Utils\File\Manager();
+		$actionList = $fileManager->getFileList($actionPath);
+
+		foreach ($actionList as $fileName) {
+			$fileRealPath = realpath($actionPath . '/' . $fileName);
+
+			if ($fileRealPath === $actionRealPath) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+}
