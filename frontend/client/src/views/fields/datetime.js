@@ -78,9 +78,9 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 				} 
 					
 				if (d.format('YYYY') == now.format('YYYY')) {
-					return d.format('MMM D') + ' ' + d.format(this.getDateTime().timeFormat);
+					return d.format('MMM DD') + ' ' + d.format(this.getDateTime().timeFormat);
 				} else {
-					return d.format('MMM D, YYYY') + ' ' + d.format(this.getDateTime().timeFormat);
+					return d.format('MMM DD, YYYY') + ' ' + d.format(this.getDateTime().timeFormat);
 				}
 			}
 			

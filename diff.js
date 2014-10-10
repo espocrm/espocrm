@@ -95,6 +95,7 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 		
 			var manifest = {
 				"name": "EspoCRM Upgrade "+acceptedVersionName+" to "+version,
+				"type": "upgrade",
 				"version": version,
 				"acceptableVersions": versionList,
 				"releaseDate": date,
