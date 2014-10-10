@@ -142,7 +142,7 @@ class Util
 				if ($appendKey !== false) {
 					unset($newArray[$currentName][$appendKey]);
 					$newArray[$currentName] = array_merge($currentValue, $newArray[$currentName]);
-				} else {
+				} else if (!static::isSingleArray($newArray[$currentName])) {
 					$newArray[$currentName] = static::merge($currentValue, $newArray[$currentName]);
 				}
 
@@ -411,6 +411,18 @@ class Util
 
 		return true;
 	}
+
+	public static function isSingleArray(array $array)
+	{
+		foreach ($array as $key => $value) {
+			if (!is_int($key)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }
 
 

@@ -449,38 +449,137 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$result = array (
 		  'fields' =>
 		  array (
-		    'accountName' =>
-		    array (
-		      'type' => 'foreign',
-		      'relation' => 'account',
-		      'foreign' => 'name',
-		    ),
-		    'accountId' =>
-		    array (
-		      'type' => 'foreignId',
-		      'index' => true,
-		      'where' =>
-		      array (
-		        '=' => 'contact.id IN ({value})',
-		      ),
-		      'len' => 255,
-		    ),
-		    'deleted' =>
-		    array (
-		      'type' => 'bool',
-		      'default' => false,
-		      'trueValue' => true,
-		    ),
+			'accountName' =>
+			array (
+			  'type' => 'foreign',
+			  'relation' => 'account',
+			  'foreign' => 'name',
+			),
+			'accountId' =>
+			array (
+			  'type' => 'foreignId',
+			  'index' => true,
+			  'where' =>
+			  array (
+				'=' => 'contact.id IN ({value})',
+			  ),
+			  'len' => 255,
+			),
+			'deleted' =>
+			array (
+			  'type' => 'bool',
+			  'default' => false,
+			  'trueValue' => true,
+			),
 		  ),
 		  'relations' =>
 		  array (
-		    'createdBy' =>
-		    array (
-		      'type' => 'belongsTo',
-		      'entity' => 'User',
-		      'key' => 'createdById',
-		      'foreignKey' => 'id',
-		    ),
+			'createdBy' =>
+			array (
+			  'type' => 'belongsTo',
+			  'entity' => 'User',
+			  'key' => 'createdById',
+			  'foreignKey' => 'id',
+			),
+		  ),
+		);
+
+		$this->assertEquals($result, Util::merge($currentArray, $newArray));
+	}
+
+	public function testMergeWithFieldsDefs()
+	{
+		$currentArray = array (
+		  'fields' =>
+		  array (
+			'aaa1' =>
+			array (
+			  'type' => 'enum',
+			  'required' => false,
+			  'options' =>
+			  array (
+				0 => 'a1',
+				1 => 'a3',
+				2 => 'a3',
+			  ),
+			  'isCustom' => true,
+			),
+			'hfghgfh' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'hfghfgh',
+			),
+			'jghjghj' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'jghjghjhg',
+			),
+			'gdfgdfg' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'gdfgdfg',
+			  'maxLength' => 70,
+			),
+		  ),
+		);
+
+		$newArray = array (
+		  'fields' =>
+		  array (
+			'aaa1' =>
+			array (
+			  'type' => 'enum',
+			  'required' => false,
+			  'options' =>
+			  array (
+				0 => 'a1',
+			  ),
+			  'isCustom' => true,
+			),
+		  ),
+		);
+
+		$result = array (
+		  'fields' =>
+		  array (
+			'aaa1' =>
+			array (
+			  'type' => 'enum',
+			  'required' => false,
+			  'options' =>
+			  array (
+				0 => 'a1',
+			  ),
+			  'isCustom' => true,
+			),
+			'hfghgfh' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'hfghfgh',
+			),
+			'jghjghj' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'jghjghjhg',
+			),
+			'gdfgdfg' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'gdfgdfg',
+			  'maxLength' => 70,
+			),
 		  ),
 		);
 
