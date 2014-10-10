@@ -4,7 +4,7 @@ Download the latest release from our [website](http://www.espocrm.com).
 
 ### How to report bug
 
-Create an issue [here](https://github.com/espocrm/espocrm/issues) or post bug on our [forum](http://forum.espocrm.com/bug-reports?routestring=forum/bug-reports).
+Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/bug-reports?routestring=forum/bug-reports).
 
 ### How to get started (for developers)
 
