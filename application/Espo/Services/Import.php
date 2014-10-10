@@ -329,14 +329,17 @@ class Import extends \Espo\Core\Services\Base
 		
 		$a = $entity->toArray();
 		
-		if ($this->getEntityManager()->saveEntity($entity)) {
-			$result['id'] = $entity->id;
-			if (empty($id)) {
-				$result['imported'] = true;
-			} else {
-				$result['updated'] = true;
+		try {
+			if ($this->getEntityManager()->saveEntity($entity)) {
+				$result['id'] = $entity->id;
+				if (empty($id)) {
+					$result['imported'] = true;
+				} else {
+					$result['updated'] = true;
+				}
 			}
-		}
+		} catch (\Exception $e) {}
+		
 		return $result;
 	}
 	
