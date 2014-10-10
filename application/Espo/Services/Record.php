@@ -566,7 +566,7 @@ class Record extends \Espo\Core\Services\Base
 					if (empty($defs['notStorable'])) {
 						$fields[] = $field;	
 					} else {
-						if ($defs['type'] == 'email') {
+						if (in_array($defs['type'], array('email', 'phone'))) {
 							$fields[] = $field;
 						} else if ($defs['name'] == 'name') {
 							$fields[] = $field;
