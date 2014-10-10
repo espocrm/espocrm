@@ -26,11 +26,14 @@ use Espo\Core\Exceptions\Error;
 
 class UpgradeManager extends Upgrades\Base
 {
-	protected $packagePath = 'data/upload/upgrades';
+	protected $name = 'Upgrade';
 
-	protected $scriptNames = array(
-		'before' => 'BeforeUpgrade',
-		'after' => 'AfterUpgrade',
+	protected $params = array(
+		'packagePath' => 'data/upload/upgrades',
+
+		'scriptNames' => array(
+			'before' => 'BeforeUpgrade',
+			'after' => 'AfterUpgrade',
+		)
 	);
-
 }

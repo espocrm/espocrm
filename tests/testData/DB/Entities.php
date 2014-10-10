@@ -68,7 +68,7 @@ class Contact extends TEntity
 				'notStorable' => true,
 				'select' => "TRIM(CONCAT(contact.first_name, ' ', contact.last_name))",
 				'where' => array(
-					'LIKE' => "(contact.first_name LIKE '{text}' OR contact.last_name LIKE '{text}' OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE '{text}')",
+					'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
 				),
 				'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
 			),

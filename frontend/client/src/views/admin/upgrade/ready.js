@@ -43,7 +43,7 @@ Espo.define('Views.Admin.Upgrade.Ready', 'Views.Modal', function (Dep) {
 			this.buttons = [
 				{
 					name: 'run',
-					label: 'Run Upgrade',
+					label: this.translate('Run Upgrade', 'labels', 'Admin'),
 					style: 'danger',
 					onClick: function (dialog) {
 						this.run();

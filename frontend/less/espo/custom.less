@@ -416,6 +416,10 @@ select[multiple].input-sm {
 	overflow-x: hidden;
 }
 
+.panel.dashlet.double-height > .panel-body {
+	height: 642px;
+}
+
 .panel-heading > .btn-group {
 	top: -7px;
 	right: -11px;
@@ -609,11 +613,11 @@ body > footer > p a:visited {
 }
 
 .record > .panel {
-	margin-top: -1 * @line-height-computed - 1;
+	margin-top: -1 * @line-height-computed - 2;
 }
 
 .detail .bottom > .panel-stream:first-child {
-	margin-top: -1 * @line-height-computed - 1;
+	margin-top: -1 * @line-height-computed - 2;
 }
 
 .stream-post-container, .stream-attachments-container {
@@ -626,4 +630,13 @@ body > footer > p a:visited {
 
 .note-editable blockquote {
 	font-size: @font-size-base;
+}
+
+.legend-container table td {
+	padding: 2px 2px;
+	line-height: 1em;
+}
+
+.textcomplete-item a {
+	cursor: default;
 }

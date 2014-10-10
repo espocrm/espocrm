@@ -20,7 +20,7 @@
         "levelList": {
             "all": "tudo",
             "team": "time",
-            "own": "proprio",
+            "own": "próprio",
             "no": "nenhum"
         }
     },
@@ -28,5 +28,8 @@
         "read": "Ler",
         "edit": "Editar",
         "delete": "Excluir"
-    }
+    },
+	"messages": {
+		"changesAfterClearCache": "Todas as modificações no controle de acesso serão aplicadas após a limpeza do cache."
+	}
 }

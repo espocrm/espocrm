@@ -34,5 +34,9 @@
     },
     "labels": {
         "Create Case": "Criar Atendimento"
-    }
+    },
+	"presetFilters": {
+		"open": "Aberto",
+		"closed": "Fechado"
+	}
 }

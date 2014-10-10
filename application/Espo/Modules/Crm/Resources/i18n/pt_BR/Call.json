@@ -23,12 +23,22 @@
         "direction": {
             "Outbound": "Saída",
             "Inbound": "Entrada"
-        }
+        },
+		"acceptanceStatus": {
+			"None": "Nenhum",
+			"Accepted": "Aceita",
+			"Declined": "Rejeitada"
+		}
     },
     "labels": {
         "Create Call": "Criar Ligação",
         "Set Held": "Marcar como realizada",
         "Set Not Held": "Marcar como não realizada",
         "Send Invitations": "Enviar Convites"
-    }
+    },
+	"presetFilters": {
+		"planned": "Planejado",
+		"held": "Realizado",
+		"todays": "Hoje"
+	}
 }

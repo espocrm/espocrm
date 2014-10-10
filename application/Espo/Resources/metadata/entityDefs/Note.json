@@ -4,7 +4,7 @@
             "type": "text"
         },
         "data": {
-            "type": "text"
+            "type": "jsonObject"
         },
         "type": {
             "type": "varchar"

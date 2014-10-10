@@ -20,8 +20,4 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-$errors = array();
-if (!empty($_REQUEST['desc'])) {
-	$errors = str_replace('^^', '<br>', $_REQUEST['desc']);
-	$smarty->assign('errors', $errors);
-}
+

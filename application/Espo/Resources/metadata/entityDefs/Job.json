@@ -24,7 +24,7 @@
             "len":100
         },
         "data": {
-            "type": "text" 
+            "type": "jsonObject" 
         },        
         "scheduledJob": {
             "type": "link"

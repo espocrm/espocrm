@@ -1,0 +1,209 @@
+<?php
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014  Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: http://www.espocrm.com
+ *
+ * EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ ************************************************************************/
+
+namespace Espo\Core\ExternalAccount\Clients;
+
+use \Espo\Core\Exceptions\Error;
+
+use \Espo\Core\ExternalAccount\OAuth2\Client;
+
+abstract class OAuth2Abstract implements IClient
+{
+	protected $client = null;
+	
+	protected $manager = null;
+	
+	protected $paramList = array(
+		'endpoint',
+		'tokenEndpoint',
+		'clientId',
+		'clientSecret',
+		'tokenType',
+		'accessToken',
+		'refreshToken',
+		'redirectUri',
+	);
+	
+	protected $clientId = null;
+	
+	protected $clientSecret = null;
+	
+	protected $accessToken = null;
+	
+	protected $refreshToken = null;
+	
+	protected $redirectUri = null;
+	
+	public function __construct($client, array $params = array(), $manager = null)
+	{
+		$this->client = $client;
+
+		$this->setParams($params);
+		
+		$this->manager = $manager;
+	}
+	
+	public function getParam($name)
+	{
+		if (in_array($name, $this->paramList)) {
+			return $this->$name;
+		}
+	}
+	
+	public function setParam($name, $value)
+	{
+		if (in_array($name, $this->paramList)) {
+			$methodName = 'set' . ucfirst($name);
+			if (method_exists($this->client, $methodName)) {
+				$this->client->$methodName($value);
+			}
+			$this->$name = $value;
+		}
+	}
+	
+	public function setParams(array $params)
+	{
+		foreach ($this->paramList as $name) {
+			if (!empty($params[$name])) {
+				$this->setParam($name, $params[$name]);
+			}
+		}
+	}
+	
+	protected function afterTokenRefreshed($data)
+	{
+		if ($this->manager) {
+			$this->manager->storeAccessToken(spl_object_hash($this), $data);
+		}
+	}
+	
+	public function getAccessTokenFromAuthorizationCode($code)
+	{
+		$r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_AUTHORIZATION_CODE, array(
+			'code' => $code,
+			'redirect_uri' => $this->getParam('redirectUri')
+		));
+		
+		
+		if ($r['code'] == 200) {
+			$data = array();
+			if (!empty($r['result'])) {
+				$data['accessToken'] = $r['result']['access_token'];
+				$data['tokenType'] = $r['result']['token_type'];
+				$data['refreshToken'] = $r['result']['refresh_token'];		
+			}
+			return $data;
+		}
+		return null;
+	}
+	
+	abstract protected function getPingUrl();
+	
+	public function ping()
+	{
+		if (empty($this->accessToken) || empty($this->clientId) || empty($this->clientSecret)) {
+			return false;
+		}
+		
+		$url = $this->getPingUrl();
+
+		try {
+			$this->request($url);
+			return true;
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
+	
+	public function request($url, $params = array(), $httpMethod = Client::HTTP_METHOD_GET, $allowRenew = true)
+	{
+		$r = $this->client->request($url, $params, $httpMethod);
+		
+		$code = null;
+		if (!empty($r['code'])) {
+			$code = $r['code'];
+		}		
+		
+		if ($code == 200) {
+			return $r['result'];
+		} else {
+			$handledData = $this->handleErrorResponse($r);
+			
+			if ($allowRenew && is_array($handledData)) {
+				if ($handledData['action'] == 'refreshToken') {
+					if ($this->refreshToken()) {				
+						return $this->request($url, $params, $httpMethod, false);						
+					}
+				} else if ($handledData['action'] == 'renew') {
+					return $this->request($url, $params, $httpMethod, false);	
+				}
+			}
+		}
+		
+		throw new Error("Error after requesting {$httpMethod} {$url}.", $code);
+	}
+	
+	protected function refreshToken()
+	{
+		if (!empty($this->refreshToken)) {
+			$r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_REFRESH_TOKEN, array(
+				'refresh_token' => $this->refreshToken,
+			));
+			if ($r['code'] == 200) {
+				if (is_array($r['result'])) {
+					if (!empty($r['result']['access_token'])) {
+						$data = array();
+						$data['accessToken'] = $r['result']['access_token'];
+						$data['tokenType'] = $r['result']['token_type'];
+
+						$this->setParams($data);
+						$this->afterTokenRefreshed($data);
+						return true;
+					}
+				}
+			}
+		}
+	}
+	
+	protected function handleErrorResponse($r)
+	{
+		if ($r['code'] == 401 && !empty($r['result'])) {
+			$result = $r['result'];			
+			if (strpos($r['header'], 'error=invalid_token') !== false) {
+				return array(
+					'action' => 'refreshToken'
+				);
+			} else {
+				return array(
+					'action' => 'renew'
+				);
+			}
+		} else if ($r['code'] == 400 && !empty($r['result'])) {
+			if ($r['result']['error'] == 'invalid_token') {				
+				return array(
+					'action' => 'refreshToken'
+				);
+			}
+		}
+	}
+}
+

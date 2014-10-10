@@ -28,6 +28,7 @@ Espo.define('Views.Admin.Integrations.OAuth2', 'Views.Admin.Integrations.Edit', 
 		data: function () {
 		
 			return _.extend({
+				// TODO fetch from server
 				redirectUri: this.getConfig().get('siteUrl') + '/oauthcallback'
 			}, Dep.prototype.data.call(this));
 		},		

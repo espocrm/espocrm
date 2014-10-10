@@ -3,14 +3,14 @@
 		"name": "Nome",
 		"emailAddress": "E-mail",
 		"website": "Website",
-		"phone": "Telefone",
-		"fax": "Fax",
+		"phoneNumber": "Telefone",
 		"billingAddress": "Endereço de Cobrança",
 		"shippingAddress": "Endereço de Entrega",
 		"description": "Descrição",
-		"sicCode": "Código SIC",
+		"sicCode": "CNPJ",
 		"industry": "Indústria",
-		"type": "Tipo"		
+		"type": "Tipo",
+		"contactRole": "Regra"
 	},
 	"links": {
 		"contacts": "Contatos",
@@ -25,13 +25,13 @@
 			"Reseller": "Revendedor"
 		},
 		"industry": {
-			"Apparel": "Apparel",
-			"Banking": "Banking",
-			"Computer Software": "Computer Software",
-			"Education": "Education",
-			"Electronics": "Electronics",
-			"Finance": "Finance",
-			"Insurance": "Insurance"
+			"Apparel": "Vestuário",
+			"Banking": "Banco",
+			"Computer Software": "Software",
+			"Education": "Educação",
+			"Electronics": "Eletrônicos",
+			"Finance": "Finanças",
+			"Insurance": "Seguros"
 		}
 	},
 	"labels": {

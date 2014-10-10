@@ -10,7 +10,8 @@
 		"Call": "Call",
 		"Task": "Task",
 		"Case": "Case",
-		"InboundEmail": "Inbound Email"
+		"InboundEmail": "Inbound Email",
+		"Document": "Document"
 	},
 	"scopeNamesPlural": {
 		"Account": "Accounts",
@@ -23,7 +24,8 @@
 		"Call": "Calls",
 		"Task": "Tasks",
 		"Case": "Cases",
-		"InboundEmail": "Inbound Emails"
+		"InboundEmail": "Inbound Emails",
+		"Document": "Documents"
 	},
 	"dashlets": {
 		"Leads": "My Leads",

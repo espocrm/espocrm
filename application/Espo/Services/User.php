@@ -125,7 +125,9 @@ class User extends Record
 		$user = parent::updateEntity($id, $data);
 		
 		if (!is_null($newPassword)) {
-			$this->sendPassword($user, $newPassword);
+			try {
+				$this->sendPassword($user, $newPassword);
+			} catch (\Exception $e) {}
 		}
 		
 		return $user;
@@ -140,6 +142,10 @@ class User extends Record
 		}
 		
 		$email = $this->getEntityManager()->getEntity('Email');
+		
+		if (!$this->getConfig()->get('smtpServer')) {
+			return;
+		}
 		
 		
 		$subject = $this->getLanguage()->translate('accountInfoEmailSubject', 'messages', 'User');

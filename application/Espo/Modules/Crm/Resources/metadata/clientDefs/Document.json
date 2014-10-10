@@ -1,0 +1,26 @@
+{
+   "controller": "Controllers.Record",
+   "presetFilters": [
+      {
+         "name":"active",
+         "style": "primary",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Active"]
+            }
+         }
+      },
+      {
+         "name":"draft",
+         "style": "default",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Draft"]
+            }
+         }
+      }
+   ],
+   "boolFilters": ["onlyMy"]
+}

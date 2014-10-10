@@ -9,9 +9,9 @@
          "type":"varchar"
       }
    ],
-   "filter": false,
+   "filter": true,
    "notCreatable": true,
    "fieldDefs":{
-      "skip":true
+      "skip": false
    }
 }

@@ -1,13 +1,10 @@
-<header class="panel-heading">
-	<h4 class="panel-title">{$langs['labels']['Step1 page title']}</h4>
-</header>
 <div class="panel-body body">
 	<div id="msg-box" class="alert hide"></div>
 	<form id="nav">
 		<div class="row">
 			<div class=" col-md-12">
 				<div class="row">
-					<div class="cell cell-website col-sm-12 form-group">						
+					<div class="cell cell-website col-sm-12 form-group">
 						<div class="field field-website">
 							<textarea rows="16" class="license-field">{$license}</textarea>
 						</div>
@@ -20,7 +17,7 @@
 			<label class="point-lbl" for="license-agree">&nbsp;&nbsp;&nbsp;{$langs['labels']['I accept the agreement']}</label>
 		</div>
 	</form>
-		
+
 </div>
 <footer class="modal-footer">
 	<button class="btn btn-default" type="button" id="back">{$langs['labels']['Back']}</button>

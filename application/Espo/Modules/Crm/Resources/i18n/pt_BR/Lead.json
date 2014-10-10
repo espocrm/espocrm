@@ -9,15 +9,14 @@
         "emailAddress": "E-mail",
         "title": "Cargo",
         "website": "Website",
-        "phone": "Telefone",
-        "phoneOffice": "Telefone (Comercial)",
-        "fax": "Fax",
+        "phoneNumber": "Telefone",
         "accountName": "Conta",
         "doNotCall": "Não Ligar",
         "address": "Endereço",
         "status": "Status",
         "source": "Origem",
         "opportunityAmount": "Valor da Oportunidade",
+		"opportunityAmountConverted": "Valor da Oportunidade (convertido)",
         "description": "Descrição",
         "createdAccount": "Conta",
         "createdContact": "Contato",
@@ -44,5 +43,8 @@
             "Campaign": "Campanha",
             "Other": "Outro"
         }
-    }
+    },
+	"presetFilters": {
+		"active": "Ativo"
+	}
 }

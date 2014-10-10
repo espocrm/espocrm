@@ -6,6 +6,9 @@
     "links": {
         "users": "Usuários"
     },
+	"tooltips": {
+		"roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas."
+	},
     "labels": {
         "Create Team": "Criar Time"
     }

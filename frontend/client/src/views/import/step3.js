@@ -37,6 +37,10 @@ Espo.define('Views.Import.Step3', 'View', function (Dep) {
 			},
 		},
 		
+		afterRender: function () {
+			this.getRouter().navigate('#Import/results');
+		},
+		
 		setup: function () {
 			this.formData = this.options.formData;
 			this.scope = this.formData.entityType;

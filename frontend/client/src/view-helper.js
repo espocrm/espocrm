@@ -22,9 +22,24 @@
 (function (Espo, _, Handlebars) {
 
 	Espo.ViewHelper = function (options) {
-		this.urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
-		
+		this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
 		this._registerHandlebarsHelpers();
+		
+		this.mdSearch = [
+			/\("?(.*?)"?\)\[(.*?)\]/g,
+			/\&\#x60;(([\s\S]*?)\&\#x60;)/,
+			/(\*\*|__)(.*?)\1/,
+			/(\*|_)(.*?)\1/,
+			/\~\~(.*?)\~\~/
+		];
+		this.mdReplace = [
+			'<a href="$2">$1</a>',
+			'<code>$2</code>',
+			'<strong>$2</strong>',
+			'<em>$2</em>',
+			'<del>$1</del>',
+		];
+			
 	}
 
 	_.extend(Espo.ViewHelper.prototype, {
@@ -135,10 +150,15 @@
 			
 			Handlebars.registerHelper('complexText', function (text) {
 				text = Handlebars.Utils.escapeExpression(text || '');
-				text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-				text = text.replace(self.urlRegex, function (url) {  
-					return '<a href="' + url + '">' + url + '</a>';  
+				
+				text = text.replace(self.urlRegex, '$1($2)[$2]');
+				
+				self.mdSearch.forEach(function (re, i) {
+					text = text.replace(re, self.mdReplace[i]);
 				});
+				
+				text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+				
 				text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
 				return new Handlebars.SafeString(text);
 			});

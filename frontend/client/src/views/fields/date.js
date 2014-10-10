@@ -31,7 +31,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		
 		validations: ['required', 'date', 'after', 'before'],
 		
-		searchTypeOptions: ['on', 'notOn', 'after', 'before', 'between', 'today', 'past', 'future'],
+		searchTypeOptions: ['today', 'past', 'future', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'on', 'after', 'before', 'between'],
 		
 		setup: function () {
 			Dep.prototype.setup.call(this);
@@ -51,13 +51,40 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		getValueForDisplay: function () {
-			var value = this.model.get(this.name);
+			var value = this.model.get(this.name);			
 			if (!value) {
 				if (this.mode == 'edit' || this.mode == 'search') {
 					return '';
 				}
 				return this.translate('None');
 			}
+			
+			if (this.mode == 'list' || this.mode == 'detail') {			
+				var d = this.getDateTime().toMoment(value);
+				var today = moment().tz(this.getDateTime().timeZone || 'UTC').startOf('day');				
+				var dt = today.clone();					
+					
+				var ranges = {
+					'today': [dt.unix(), dt.add('days', 1).unix()],
+					'tomorrow': [dt.unix(), dt.add('days', 1).unix()],
+					'yesterday': [dt.add('days', -3).unix(), dt.add('days', 1).unix()]
+				};
+					
+				if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
+					return this.translate('Today');
+				} else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
+					return this.translate('Tomorrow');
+				} else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
+					return this.translate('Yesterday');
+				} 
+					
+				if (d.format('YYYY') == today.format('YYYY')) {
+					return d.format('MMM DD');
+				} else {
+					return d.format('MMM DD, YYYY');
+				}
+			}
+			
 			return this.getDateTime().toDisplayDate(value);
 		},
 		
@@ -130,14 +157,14 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 		},
 		
 		handleSearchType: function (type) {
-			if (~['today', 'past', 'future'].indexOf(type)) {
-				this.$el.find('div.primary').addClass('hidden');
+			if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
+				this.$el.find('div.primary').removeClass('hidden');
 				this.$el.find('div.additional').addClass('hidden');
 			} else if (type == 'between') {
 				this.$el.find('div.primary').removeClass('hidden');
 				this.$el.find('div.additional').removeClass('hidden');
 			} else {
-				this.$el.find('div.primary').removeClass('hidden');
+				this.$el.find('div.primary').addClass('hidden');
 				this.$el.find('div.additional').addClass('hidden');
 			}
 		},
@@ -176,11 +203,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					dateValue: value,
 					dateValueTo: valueTo								
 				};
-			} else if (~['today', 'past', 'future'].indexOf(type)) {
-				data = {
-					type: type							
-				};
-			} else {
+			} else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
 				if (!value) {
 					return false;
 				}
@@ -188,6 +211,10 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 					type: type,
 					value: value,
 					dateValue: value									
+				};
+			} else {
+				data = {
+					type: type							
 				};
 			}
 			return data;				

@@ -13,6 +13,14 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 	protected $reflection;
 
+	protected $cacheFile = 'tests/testData/cache/application/languages/{*}.php';
+
+	protected $paths = array(
+		'corePath' => 'tests/testData/Utils/I18n/Espo/Resources/i18n',
+		'modulePath' => 'tests/testData/Utils/I18n/Espo/Modules/{*}/Resources/i18n',
+		'customPath' => 'tests/testData/Utils/I18n/Espo/Custom/Resources/i18n',
+	);
+
     protected function setUp()
     {
 		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
@@ -30,12 +38,8 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->object = new \Espo\Core\Utils\Language($this->objects['fileManager'], $this->objects['config'], $this->objects['preferences']);
 
         $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('cacheFile', 'tests/testData/Utils/I18n/cache/application/languages/{*}.php');
-        $this->reflection->setProperty('paths', array(
-			'corePath' => 'tests/testData/Utils/I18n/Espo/Resources/i18n',
-			'modulePath' => 'tests/testData/Utils/I18n/Espo/Modules/{*}/Resources/i18n',
-			'customPath' => 'tests/testData/Utils/I18n/Espo/Custom/Resources/i18n',
-		) );
+        $this->reflection->setProperty('cacheFile', $this->cacheFile);
+        $this->reflection->setProperty('paths', $this->paths);
 		$this->reflection->setProperty('currentLanguage', 'en_US');
     }
 
@@ -59,11 +63,15 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetLangCacheFile()
 	{
-		$this->assertEquals('tests/testData/Utils/I18n/cache/application/languages/en_US.php', $this->reflection->invokeMethod('getLangCacheFile', array()) );
+		$cacheFile = $this->cacheFile;
+
+		$result = str_replace('{*}', 'en_US', $cacheFile);
+		$this->assertEquals($result, $this->reflection->invokeMethod('getLangCacheFile'));
 
 		$originalLang = $this->object->getLanguage();
 		$this->object->setLanguage('lang_TEST');
-		$this->assertEquals('tests/testData/Utils/I18n/cache/application/languages/lang_TEST.php', $this->reflection->invokeMethod('getLangCacheFile', array()) );
+		$result = str_replace('{*}', 'lang_TEST', $cacheFile);
+		$this->assertEquals($result, $this->reflection->invokeMethod('getLangCacheFile'));
 
 		$this->object->setLanguage($originalLang);
 	}

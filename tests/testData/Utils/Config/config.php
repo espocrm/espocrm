@@ -1,6 +1,10 @@
 <?php
 
 return array (
+  'cacheTimestamp' => 1412600573,
+  'removeOption' => 'Test',
+  'testOption' => 'Another Wrong Value',
+  'testOption2' => 'Test2',
   'database' => 
   array (
     'driver' => 'pdo_mysql',
@@ -102,9 +106,6 @@ return array (
     8 => 'Prospect',
   ),
   'isInstalled' => true,
-  'cacheTimestamp' => 1404901977,
-  'testOption' => 'Another Wrong Value',
-  'testOption2' => 'Test2',
 );
 
 ?>

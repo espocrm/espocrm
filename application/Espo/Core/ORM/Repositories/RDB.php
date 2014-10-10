@@ -26,6 +26,7 @@ use \Espo\ORM\EntityManager;
 use \Espo\ORM\EntityFactory;
 use \Espo\ORM\Entity;
 use \Espo\ORM\IEntity;
+use Espo\Core\Utils\Util;
 
 use \Espo\Core\Interfaces\Injectable;
 
@@ -63,11 +64,38 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 	{
 		$this->handleEmailAddressParams($params);
 		$this->handlePhoneNumberParams($params);
+		$this->handleCurrencyParams($params);
+	}
+	
+	protected function handleCurrencyParams(&$params)
+	{
+		$entityName = $this->entityName;
+		
+		$metadata = $this->getMetadata();
+		
+		if (!$metadata) {
+			return;
+		}
+		
+		$defs = $metadata->get('entityDefs.' . $entityName);
+
+		foreach ($defs['fields'] as $field => $d) {
+			if (isset($d['type']) && $d['type'] == 'currency') {
+				if (empty($params['customJoin'])) {
+					$params['customJoin'] = '';	
+				}
+				$alias = Util::toUnderScore($field) . "_currency_alias";
+				$params['customJoin'] .= " 
+					LEFT JOIN currency AS `{$alias}` ON {$alias}.id = ".Util::toUnderScore($entityName).".".Util::toUnderScore($field)."_currency
+				";
+			}
+		}
+
 	}
 
 	protected function handleEmailAddressParams(&$params)
 	{
-		$entityName = $this->entityName;		
+		$entityName = $this->entityName;
 
 		$defs = $this->getEntityManager()->getMetadata()->get($entityName);
 		if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {

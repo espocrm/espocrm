@@ -33,7 +33,7 @@ Espo.define('Views.Stream.Notes.Assign', 'Views.Stream.Note', function (Dep) {
 		},
 		
 		setup: function () {
-			var data = JSON.parse(this.model.get('data'));			
+			var data = this.model.get('data');
 			
 			this.assignedUserId = data.assignedUserId || null;
 			this.assignedUserName = data.assignedUserName || null;

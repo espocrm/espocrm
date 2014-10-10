@@ -28,7 +28,7 @@ Espo.define('Views.Stream.Message', 'View', function (Dep) {
 			var data = this.options.messageData;
 			
 			for (var key in data) {
-				var value = data[key];
+				var value = data[key] || '';
 				
 				if (value.indexOf('field:') === 0) {
 					var field = value.substr(6);

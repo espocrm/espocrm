@@ -94,7 +94,7 @@ abstract class Entity implements IEntity
 		$this->valuesContainer = array();
 	}
 	
-	protected function setValue($name, $value)
+	protected function _setValue($name, $value)
 	{
 		$this->valuesContainer[$name] = $value;
 	}	
@@ -192,6 +192,12 @@ abstract class Entity implements IEntity
 						case self::JSON_ARRAY:
 							$value = is_string($value) ? json_decode($value) : $value;
 							if (!is_array($value)) {
+								$value = null;
+							}
+							break;
+						case self::JSON_OBJECT:
+							$value = is_string($value) ? json_decode($value) : $value;
+							if (!($value instanceof \stdClass) && !is_array($value)) {
 								$value = null;
 							}
 							break;

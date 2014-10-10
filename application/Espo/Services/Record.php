@@ -169,7 +169,7 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
-			if ($defs['type'] == 'linkMultiple') {
+			if (isset($defs['type']) && $defs['type'] == 'linkMultiple') {
 				$columns = null;
 				if (!empty($defs['columns'])) {
 					$columns = $defs['columns'];
@@ -183,7 +183,7 @@ class Record extends \Espo\Core\Services\Base
 	{
 		$fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
 		foreach ($fieldDefs as $field => $defs) {
-			if ($defs['type'] == 'linkParent') {								
+			if (isset($defs['type']) && $defs['type'] == 'linkParent') {
 				$id = $entity->get($field . 'Id');
 				$scope = $entity->get($field . 'Type');
 				
@@ -325,16 +325,12 @@ class Record extends \Espo\Core\Services\Base
 		if (!$this->getAcl()->check($entity, 'edit')) {
 			throw new Forbidden();
 		}
-		
-
-				
+						
 		$entity->set($data);
 		
 		if (!$this->isValid($entity)) {
 			throw new BadRequest();
-		}
-		
-		$d = $entity->get('attachmentsIds');
+		}		
 		
 		if ($this->storeEntity($entity)) {
 			return $entity;
@@ -570,7 +566,7 @@ class Record extends \Espo\Core\Services\Base
 					if (empty($defs['notStorable'])) {
 						$fields[] = $field;	
 					} else {
-						if ($defs['type'] == 'email') {
+						if (in_array($defs['type'], array('email', 'phone'))) {
 							$fields[] = $field;
 						} else if ($defs['name'] == 'name') {
 							$fields[] = $field;

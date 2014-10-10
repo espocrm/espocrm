@@ -38,6 +38,8 @@ class EntityManager
 	protected $repositoryHash = array();
 
 	protected $params = array();
+	
+	protected $query;
 
 	public function __construct($params)
 	{
@@ -55,7 +57,6 @@ class EntityManager
 		}
 		$this->entityFactory = new $entityFactoryClassName($this, $this->metadata);
 
-
 		$repositoryFactoryClassName = '\\Espo\\ORM\\RepositoryFactory';
 		if (!empty($params['repositoryFactoryClassName'])) {
 			$repositoryFactoryClassName = $params['repositoryFactoryClassName'];
@@ -64,11 +65,21 @@ class EntityManager
 
 		$this->init();
 	}
+	
+	public function getQuery()
+	{
+		if (empty($this->query)) {
+			$this->query = new DB\Query($this->getPDO(), $this->entityFactory);
+		}
+		return $this->query;
+	}
 
 	public function getMapper($className)
 	{
 		if (empty($this->mappers[$className])) {
-			$this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory);
+			// TODO use factory
+			
+			$this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
 		}
 		return $this->mappers[$className];
 	}

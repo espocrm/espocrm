@@ -13,6 +13,10 @@
 		<h4 class="panel-title">{{translate 'selectUpgradePackage' scope='Admin' category="messages"}}</h4>
 	</div>	
 	<div class="panel-body">
+		
+		<p class="text-muted">
+			{{{translate 'downloadUpgradePackage' scope='Admin' category="messages"}}}
+		</p>
 		<div>
 			<input type="file" name="package" accept="application/zip">
 		</div>

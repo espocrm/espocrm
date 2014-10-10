@@ -1,6 +1,7 @@
 <?php
 
 use Espo\ORM\DB\MysqlMapper;
+use Espo\ORM\DB\Query;
 use Espo\ORM\EntityFactory;
 
 use Espo\Entities\Post;
@@ -31,6 +32,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 					$args = func_get_args();
 					return "'" . $args[0] . "'";
 				}));
+				
 
 		$this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
 		$this->entityFactory->expects($this->any())
@@ -41,7 +43,9 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		                 	 	return new $className();
 			                }));
 
-		$this->db = new MysqlMapper($this->pdo, $this->entityFactory);
+		$this->query = new Query($this->pdo, $this->entityFactory);
+		
+		$this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
 		$this->post = new \Espo\Entities\Post();
 		$this->comment = new \Espo\Entities\Comment();
 		$this->tag = new \Espo\Entities\Tag();
@@ -74,9 +78,9 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testSelectById()
 	{
 		$query =
-			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(user_f.salutation_name, user_f.first_name, ' ', user_f.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(created_by.salutation_name, created_by.first_name, ' ', created_by.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
 			"FROM `post` ".
-			"LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id " .
+			"LEFT JOIN `user` AS `created_by` ON post.created_by_id = created_by.id " .
 			"WHERE post.id = '1' AND post.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -94,9 +98,9 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testSelect()
 	{
 		$query =
-			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(user_f.salutation_name, user_f.first_name, ' ', user_f.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(created_by.salutation_name, created_by.first_name, ' ', created_by.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
 			"FROM `post` ".
-			"LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id " .
+			"LEFT JOIN `user` AS `created_by` ON post.created_by_id = created_by.id " .
 			"JOIN `post_tag` ON post.id = post_tag.post_id AND post_tag.deleted = '0' ".
 			"JOIN `tag` ON tag.id = post_tag.tag_id AND tag.deleted = '0' ".
 			"JOIN `comment` ON post.id = comment.post_id AND comment.deleted = '0' ".
@@ -174,9 +178,9 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testJoin()
 	{
 		$query =
-			"SELECT comment.id AS `id`, comment.post_id AS `postId`, post_f.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` ".
+			"SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` ".
 			"FROM `comment` ".
-			"LEFT JOIN `post` AS `post_f` ON comment.post_id = post_f.id ".
+			"LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
 			"WHERE comment.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
@@ -224,7 +228,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 		$query =
 			"SELECT note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
 			"FROM `note` ".
-			"WHERE note.deleted = '0' AND note.parent_id = '1' AND note.parent_type = 'Post'";
+			"WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = '0'";
 		$return = new MockDBResult(array(
 			array(
 				'id' => '1',
@@ -244,10 +248,10 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 	public function testSelectRelatedBelongsTo()
 	{
 		$query =
-			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(user_f.salutation_name, user_f.first_name, ' ', user_f.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+			"SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(created_by.salutation_name, created_by.first_name, ' ', created_by.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
 			"FROM `post` ".
-			"LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id " .
-			"WHERE post.deleted = '0' AND post.id = '1' ".
+			"LEFT JOIN `user` AS `created_by` ON post.created_by_id = created_by.id " .
+			"WHERE post.id = '1' AND post.deleted = '0' ".
 			"LIMIT 0, 1";
 		$return = new MockDBResult(array(
 			array(
@@ -394,7 +398,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
 	public function testMax()
 	{
-		$query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS `user_f` ON post.created_by_id = user_f.id";
+		$query = "SELECT MAX(post.id) AS AggregateValue FROM `post` LEFT JOIN `user` AS `created_by` ON post.created_by_id = created_by.id";
 		$return = new MockDBResult(array(
 			array (
 				'AggregateValue' => 10,

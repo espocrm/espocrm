@@ -5,8 +5,10 @@
         "Team": "Time",
         "Role": "Regra",
         "EmailTemplate": "Template de E-mail",
+		"EmailAccount": "Conta de e-mail",
         "OutboundEmail": "E-mail de Saída",
-        "ScheduledJob": "Atividade Agendada"
+        "ScheduledJob": "Tarefa Agendada",
+		"ExternalAccount": "Conta externa"
     },
     "scopeNamesPlural": {
         "Email": "E-mails",
@@ -14,8 +16,10 @@
         "Team": "Times",
         "Role": "Regras",
         "EmailTemplate": "Templates de E-mail",
+		"EmailAccount": "Contas de e-mail",
         "OutboundEmail": "E-mails de Saída",
-        "ScheduledJob": "Tarefas Agendadas"
+        "ScheduledJob": "Tarefas Agendadas",
+		"ExternalAccount": "Contas externas"
     },
     "labels": {
         "Misc": "Misc",
@@ -28,9 +32,10 @@
         "Not valid": "Inválido",
         "Please wait...": "Aguarde...",
         "Please wait": "Aguarde",
-        "Loading...": "carregando...",
+        "Loading...": "Carregando...",
         "Uploading...": "Enviando...",
         "Sending...": "Enviando...",
+        "Removed": "Removido",
         "Posted": "Postado",
         "Linked": "Relacionado",
         "Unlinked": "Relacionamento removido",
@@ -43,7 +48,7 @@
         "Removing...": "Removendo...",
         "Unlinking...": "Removendo relacionamento...",
         "Posting...": "Postando...",
-        "Username can not be empty!": "O usuário não pode estar vazio!",
+        "Username can not be empty!": "O nome de usuário não pode estar vazio!",
         "Cache is not enabled": "O cache não está habilitado",
         "Cache has been cleared": "Cache limpo",
         "Rebuild has been done": "Reconstrução concluída",
@@ -99,7 +104,7 @@
         "Stream": "Fluxo",
         "Show more": "Exibir mais",
         "Dashlet Options": "Opções do Dashlet",
-        "Full Form": "Formulári Completo",
+        "Full Form": "Formulário Completo",
         "Insert": "Inserir",
         "Person": "Pessoa",
         "First Name": "Nome",
@@ -107,7 +112,15 @@
         "Original": "Original",
         "You": "Você",
         "you": "você",
-        "change": "modificar"
+        "change": "modificar",
+        "Primary": "Primário",
+		"Save Filters": "Salvar Filtros",
+		"Administration": "Administração",
+		"Run Import": "Executar Importação",
+		"Duplicate": "Duplicar",
+		"Notifications": "Notificações",
+		"Mark all read": "Marcar tudo como lido",
+		"See more": "Ver mais"
     },
     "messages": {
         "notModified": "Você não modificou o registro",
@@ -123,12 +136,18 @@
         "fieldShouldBeBetween": "{field} deve estar entre {min} e {max}",
         "fieldShouldBeLess": "{field} deve ser menos que {value}",
         "fieldShouldBeGreater": "{field} deve ser maior que {value}",
-        "fieldBadPasswordConfirm": "{field} confirmado impropriamente"
+        "fieldBadPasswordConfirm": "{field} confirmado impropriamente",
+		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
+		"assignmentEmailNotificationBody": "{assignerUserName} designou {entityType} '{Entity.name}' para você\n\n{recordUrl}",
+		"confirmation": "Você tem certeza?",
+		"removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",
+		"unlinkRecordConfirmation": "Você gostaria mesmo de desfazer este relacionamento?",
+		"removeSelectedRecordsConfirmation": "Você gostaria mesmo de remover os registros selecionados?"
     },
     "boolFilters": {
-        "onlyMy": "Apenas meus",
-        "open": "Abertos",
-        "active": "Ativos"
+        "onlyMy": "Meus",
+        "open": "Aberto",
+        "active": "Ativo"
     },
     "fields": {
         "name": "Nome",
@@ -269,7 +288,10 @@
             "notOn": "Menos em",
             "after": "Anterior",
             "before": "Posterior",
-            "between": "Entre"
+            "between": "Entre",
+			"today": "Hoje",
+			"past": "Passado",
+			"future": "Futuro"
         },
         "intSearchRanges": {
             "equals": "Igual",
@@ -287,108 +309,113 @@
             "2": "2 minutos",
             "5": "5 minutos",
             "10": "10 minutos"
-        }
+        },
+		"phoneNumber": {
+			"Mobile": "Celular",
+			"Office": "Escritório",
+			"Fax": "Fax",
+			"Home": "Residencial",
+			"Other": "Outro"
+		}
     },
     "sets": {
         "summernote": {
             "NOTICE": "You can find translation here: https://github.com/HackerWins/summernote/tree/master/lang",
             "font": {
-                "bold": "Bold",
-                "italic": "Italic",
-                "underline": "Underline",
-                "strike": "Strike",
-                "clear": "Remove Font Style",
-                "height": "Line Height",
-                "name": "Font Family",
-                "size": "Font Size"
+                "bold": "Negrito",
+                "italic": "Itálico",
+                "underline": "Sublinhado",
+                "strikethrough": "Riscado",
+                "clear": "Remover estilo da fonte",
+                "height": "Altura da linha",
+                "size": "Tamanho da fonte"
             },
             "image": {
-                "image": "Picture",
-                "insert": "Insert Image",
+                "image": "Imagem",
+                "insert": "Inserir imagem",
                 "resizeFull": "Resize Full",
                 "resizeHalf": "Resize Half",
                 "resizeQuarter": "Resize Quarter",
                 "floatLeft": "Float Left",
                 "floatRight": "Float Right",
                 "floatNone": "Float None",
-                "dragImageHere": "Drag an image here",
-                "selectFromFiles": "Select from files",
-                "url": "Image URL",
-                "remove": "Remove Image"
+                "dragImageHere": "Arraste uma imagem para cá",
+                "selectFromFiles": "Selecione a partir dos arquivos",
+                "url": "URL da image"
             },
             "link": {
                 "link": "Link",
-                "insert": "Insert Link",
-                "unlink": "Unlink",
-                "edit": "Edit",
-                "textToDisplay": "Text to display",
-                "url": "To what URL should this link go?",
-                "openInNewWindow": "Open in new window"
+                "insert": "Inserir link",
+                "unlink": "Remover link",
+                "edit": "Editar",
+                "textToDisplay": "Texto para exibir",
+                "url": "Para qual URL esse link leva?",
+                "openInNewWindow": "Abrir em uma nova janela"
             },
             "video": {
-                "video": "Video",
-                "videoLink": "Video Link",
-                "insert": "Insert Video",
-                "url": "Video URL?",
-                "providers": "(YouTube, Vimeo, Vine, Instagram, or DailyMotion)"
+                "video": "Vídeo",
+                "videoLink": "Link para vídeo",
+                "insert": "Inserir vídeo",
+                "url": "URL do vídeo?",
+                "providers": "(YouTube, Vimeo, Vine, Instagram, DailyMotion, ou Youku)"
             },
             "table": {
-                "table": "Table"
+                "table": "Tabela"
             },
             "hr": {
-                "insert": "Insert Horizontal Rule"
+                "insert": "Inserir linha horizontal"
             },
             "style": {
-                "style": "Style",
+                "style": "Estilo",
                 "normal": "Normal",
-                "blockquote": "Quote",
-                "pre": "Code",
-                "h1": "Header 1",
-                "h2": "Header 2",
-                "h3": "Header 3",
-                "h4": "Header 4",
-                "h5": "Header 5",
-                "h6": "Header 6"
+                "blockquote": "Citação",
+                "pre": "Código",
+                "h1": "Título 1",
+                "h2": "Título 2",
+                "h3": "Título 3",
+                "h4": "Título 4",
+                "h5": "Título 5",
+                "h6": "Título 6"
             },
             "lists": {
-                "unordered": "Unordered list",
-                "ordered": "Ordered list"
+                "unordered": "Lista com marcadores",
+                "ordered": "Lista numerada"
             },
             "options": {
-                "help": "Help",
-                "fullscreen": "Full Screen",
-                "codeview": "Code View"
+                "help": "Ajuda",
+                "fullscreen": "Tela cheia",
+                "codeview": "Ver código-fonte"
             },
-            "paragraph": {
-                "paragraph": "Paragraph",
-                "outdent": "Outdent",
-                "indent": "Indent",
-                "left": "Align left",
-                "center": "Align center",
-                "right": "Align right",
-                "justify": "Justify full"
+            " paragraph": {
+                "paragraph": "Parágrafo",
+                "outdent": "Menor tabulação",
+                "indent": "Maior tabulação",
+                "left": "Alinhar à esquerda",
+                "center": "Alinhar ao centro",
+                "right": "Alinha à direita",
+                "justify": "Justificado"
             },
             "color": {
-                "recent": "Recent Color",
-                "more": "More Color",
-                "background": "BackColor",
-                "foreground": "FontColor",
-                "transparent": "Transparent",
-                "setTransparent": "Set transparent",
-                "reset": "Reset",
-                "resetToDefault": "Reset to default"
+                "recent": "Cor recente",
+                "more": "Mais cores",
+                "background": "Fundo",
+                "foreground": "Fonte",
+                "transparent": "Transparente",
+                "setTransparent": "Fundo transparente",
+                "reset": "Restaurar",
+                "resetToDefault": "Restaurar padrão"
             },
             "shortcut": {
-                "shortcuts": "Keyboard shortcuts",
-                "close": "Close",
-                "textFormatting": "Text formatting",
-                "action": "Action",
-                "paragraphFormatting": "Paragraph formatting",
-                "documentStyle": "Document Style"
+                "shortcuts": "Atalhos do teclado",
+                "close": "Fechar",
+                "textFormatting": "Formatação de texto",
+                "action": "Ação",
+                "paragraphFormatting": "Formatação de parágrafo",
+                "documentStyle": "Estilo de documento"
             },
             "history": {
-                "undo": "Undo",
-                "redo": "Redo"
+                "undo": "Desfazer",
+                "redo": "Refazer"
             }
         }
     }

@@ -24,7 +24,8 @@
 		"Change Password": "Change Password"
 	},
 	"tooltips": {
-		"defaultTeam": "All records created by this user will be related to this team by default."
+		"defaultTeam": "All records created by this user will be related to this team by default.",
+		"userName": "Letters a-z, numbers 0-9 and underscores are allowed."
 	},
 	"messages": {
 		"passwordWillBeSent": "Password will be sent to user's email address.",

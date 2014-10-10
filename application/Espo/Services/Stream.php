@@ -278,7 +278,7 @@ class Stream extends \Espo\Core\Services\Base
 		$data['emailId'] = $email->id;
 		$data['emailName'] = $email->get('name');	
 		
-		$note->set('data', json_encode($data));
+		$note->set('data', $data);
 						
 		$this->getEntityManager()->saveEntity($note);
 	}
@@ -317,7 +317,7 @@ class Stream extends \Espo\Core\Services\Base
 			}
 		}
 		
-		$note->set('data', json_encode($data));
+		$note->set('data', $data);
 		
 		$this->getEntityManager()->saveEntity($note);
 	}
@@ -330,12 +330,12 @@ class Stream extends \Espo\Core\Services\Base
 		$note->set('parentId', $id);
 		$note->set('parentType', $entityType);
 
-		$note->set('data', json_encode(array(
+		$note->set('data', array(
 			'action' => $action,
 			'entityType' => $entity->getEntityName(),
 			'entityId' => $entity->id,
 			'entityName' => $entity->get('name')
-		)));			
+		));			
 
 		$this->getEntityManager()->saveEntity($note);	
 	}
@@ -351,10 +351,10 @@ class Stream extends \Espo\Core\Services\Base
 		if (!$entity->has('assignedUserName')) {
 			$this->loadAssignedUserName($entity);
 		}
-		$note->set('data', json_encode(array(
+		$note->set('data', array(
 			'assignedUserId' => $entity->get('assignedUserId'),
 			'assignedUserName' => $entity->get('assignedUserName'),
-		)));			
+		));			
 
 		$this->getEntityManager()->saveEntity($note);
 	}
@@ -375,11 +375,11 @@ class Stream extends \Espo\Core\Services\Base
 			$style = $this->statusDefs[$entityName]['style'][$value];
 		}
 		
-		$note->set('data', json_encode(array(
+		$note->set('data', array(
 			'field' => $field,
 			'value' => $value,
 			'style' => $style,
-		)));
+		));
 		
 		$this->getEntityManager()->saveEntity($note);		
 	}
@@ -449,13 +449,13 @@ class Stream extends \Espo\Core\Services\Base
 			$note->set('parentId', $entity->id);
 			$note->set('parentType', $entity->getEntityName());
 
-			$note->set('data', json_encode(array(
+			$note->set('data', array(
 				'fields' => $updatedFields,
 				'attributes' => array(
 					'was' => $was,
 					'became' => $became,
 				)
-			)));			
+			));			
 
 			$this->getEntityManager()->saveEntity($note);
 		}

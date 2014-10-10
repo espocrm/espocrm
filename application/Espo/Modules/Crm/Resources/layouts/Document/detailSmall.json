@@ -1,0 +1,12 @@
+[
+	{
+		"label": false,
+		"rows": [
+			[{"name":"source"}],
+			[{"name":"file"}],
+			[{"name":"name"}],
+			[{"name":"type"}],			
+			[{"name":"status"}]
+		]
+	}
+]

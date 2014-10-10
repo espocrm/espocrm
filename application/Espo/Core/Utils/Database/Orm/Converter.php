@@ -164,8 +164,9 @@ class Converter
 	{
 		$entityDefs = $this->getEntityDefs();
 
+		$currentOrmMeta = $ormMeta;
 		//load custom field definitions and customCodes
-		foreach($ormMeta as $entityName => &$entityParams) {
+		foreach($currentOrmMeta as $entityName => $entityParams) {
 			foreach($entityParams['fields'] as $fieldName => $fieldParams) {
 
 				//load custom field definitions
@@ -184,15 +185,15 @@ class Converter
 					}
 
 					$ormMeta = Util::merge($ormMeta, $fieldResult);
-				} //END: load custom field definitions
 
+				} //END: load custom field definitions
 
 				//todo move to separate file
 				//add a field 'isFollowed' for scopes with 'stream => true'
 				$scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
 				if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
 					if (!isset($entityParams['fields']['isFollowed'])) {
-						$entityParams['fields']['isFollowed'] = array(
+						$ormMeta[$entityName]['fields']['isFollowed'] = array(
 							'type' => 'varchar',
 							'notStorable' => true,
 						);
@@ -302,7 +303,7 @@ class Converter
 	{
 		/** set default type if exists */
 		if (!isset($fieldParams['type']) || empty($fieldParams['type'])) {
-			$GLOBALS['log']->warning('Field type does not exist for '.$entityName.':'.$fieldName.'. Use default type ['.$this->defaultFieldType.']');
+			$GLOBALS['log']->debug('Field type does not exist for '.$entityName.':'.$fieldName.'. Use default type ['.$this->defaultFieldType.']');
 			$fieldParams['type'] = $this->defaultFieldType;
 		} /** END: set default type if exists */
 
@@ -353,18 +354,10 @@ class Converter
 		//if empty field name, then use the main field
 		if (trim($subFieldName) == '') {
 
-			if (!isset($fieldTypeMeta['fieldDefs'])) {
-				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
-			}
-
 			$subField['name'] = $fieldName;
 			$subField['naming'] = $fieldName;
 
 		} else {
-
-			if (!isset($fieldTypeMeta['fields'][$subFieldName])) {
-				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$subFieldName.'] using "actualFields". Main field ['.$fieldName.']');
-			}
 
 			$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
 

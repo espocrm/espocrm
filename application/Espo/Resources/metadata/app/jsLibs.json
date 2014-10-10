@@ -8,5 +8,11 @@
 		"path": "client/lib/summernote.min.js",
 		"exportsTo": "$",
 		"exportsAs": "summernote"		
+	}, 
+	"Textcomplete": {
+		"path": "client/lib/jquery.textcomplete.js",
+		"exportsTo": "$",
+		"exportsAs": "textcomplete"	
+	
 	}
 }

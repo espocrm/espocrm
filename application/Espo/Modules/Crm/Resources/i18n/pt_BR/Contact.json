@@ -4,12 +4,13 @@
         "emailAddress": "E-mail",
         "title": "Cargo",
         "account": "Conta",
-        "phone": "Telefone",
-        "phoneOffice": "Telefone (Comercial)",
-        "fax": "Fax",
-        "accountType": "Tipo de Conta",
+		"accounts": "Contas",
+        "phoneNumber": "Telefone",
+		"accountType": "Tipo de Conta",
         "doNotCall": "Não Ligar",
         "address": "Endereço",
+        "opportunityRole": "Regra de Oportunidade",
+		"accountRole": "Regra",
         "description": "Descrição"
     },
     "links": {
@@ -18,5 +19,13 @@
     },
     "labels": {
         "Create Contact": "Criar Contato"
-    }
+    },
+	"options": {
+		"opportunityRole": {
+			"": "--Nenhum--",
+			"Decision Maker": "Tomador de Decisão",
+			"Evaluator": "Avaliador",
+			"Influencer": "Influenciador"
+		}
+	}
 }

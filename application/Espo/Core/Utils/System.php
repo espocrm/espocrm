@@ -33,7 +33,7 @@ class System
 	{
 		$serverSoft = $_SERVER['SERVER_SOFTWARE'];
 
-		preg_match('/^(.*)\//i', $serverSoft, $match);
+		preg_match('/^(.*?)\//i', $serverSoft, $match);
 		if (empty($match[1])) {
 			preg_match('/^(.*)\/?/i', $serverSoft, $match);
 		}

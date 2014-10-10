@@ -26,18 +26,7 @@ use Espo\ORM\Entity;
 
 class Opportunity extends \Espo\Core\ORM\Repositories\RDB
 {	
-	public function handleSelectParams(&$params)
-	{
-		parent::handleSelectParams($params);		
-		
-		if (empty($params['customJoin'])) {
-			$params['customJoin'] = '';	
-		}
-		
-		$params['customJoin'] .= " 
-			LEFT JOIN currency ON currency.id = opportunity.amount_currency
-		";
-	}	
+
 
 }
 

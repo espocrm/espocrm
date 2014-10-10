@@ -1,7 +1,7 @@
 {
     "fields": {
         "data": {
-            "type": "text"
+            "type": "jsonObject"
         },
         "enabled": {
             "type": "bool"

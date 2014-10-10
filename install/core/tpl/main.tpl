@@ -1,16 +1,13 @@
-<header class="panel-heading">
-	<h4 class="panel-title">{$langs['labels']['Main page title']}</h4>
-</header>
 <form id="nav">
 	<div class="panel-body">
 		<div id="msg-box" class="alert hide"></div>
 		<div class="row">
-			<div class=" col-md-12">
+			<div class="col-md-12">
 				<div align="center">
-				<div class="content-img">
-					<img class="devices" src="img/devices.png" alt="EspoCRM">
-				</div>
-				{$langs['labels']['Main page header']}
+					<div class="content-img">
+						<img class="devices" src="img/devices.png" alt="EspoCRM">
+					</div>
+					{$langs['labels']['Main page header']}
 				</div>
 			</div>
 		</div>
@@ -34,8 +31,7 @@
 
 	</div>
 	<footer class="modal-footer">
-
-		<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Start']}</button>
+			<button class="btn btn-primary" type="button" id="start">{$langs['labels']['Start']}</button>
 	</footer>
 </form>
 <script>

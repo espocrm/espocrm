@@ -64,10 +64,14 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 			var data = [];
 			var i = 0;
 			d.forEach(function (item) {
-				data.push({
+				var o = {
 					data: [[item.value, d.length - i]],
 					label: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
-				});
+				}
+				if (item.stage == 'Closed Won') {
+					o.color = this.successColor;
+				}
+				data.push(o);
 				this.stageList.push(this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'));
 				i++;
 			}, this);
@@ -103,8 +107,11 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
 				},
 				xaxis: {
 					min: 0,
-					tickFormatter: function (value) {
-						return self.formatNumber(value) + ' ' + self.currency;
+					tickFormatter: function (value) {						
+						if (value != 0) {
+							return self.formatNumber(value) + ' ' + self.currency;
+						}
+						return '';
 					},
 				},
 				mouse: {

@@ -9,12 +9,12 @@
 			</div>
 			
 			<div style="margin-top: 10px;">
+				<a class="btn btn-link" href="#Import">{{translate 'Return to Import' scope='Import'}}</a>
+				<a class="btn btn-link" href="#{{scope}}">{{translate 'Show records' scope='Import'}}</a>
 				{{#if result.countCreated}}
 				<button class="btn btn-danger" data-action="revert">{{translate 'Revert' scope='Import'}}</button>
 				{{/if}}
 			</div>
 		</div>
 	</div>
-
-	
 

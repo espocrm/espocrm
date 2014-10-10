@@ -4,23 +4,21 @@ namespace tests\Espo\Core\Utils;
 
 use Espo\Core\Utils\Util;
 
-
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
-
-	function testGetSeparator()
+	public function testGetSeparator()
 	{
 		$this->assertEquals(DIRECTORY_SEPARATOR, Util::getSeparator());
 	}
 
-	function testToCamelCase()
+	public function testToCamelCase()
 	{
 	   $this->assertEquals('detail', Util::toCamelCase('detail'));
 	   $this->assertEquals('detailView', Util::toCamelCase('detail-view'));
 	   $this->assertEquals('myDetailView', Util::toCamelCase('my-detail-view'));
 	}
 
-	function testFromCamelCase()
+	public function testFromCamelCase()
 	{
 	   $this->assertEquals('detail', Util::fromCamelCase('detail'));
 	   $this->assertEquals('detail-view', Util::fromCamelCase('detailView'));
@@ -59,7 +57,6 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 			),
 		);
 		$this->assertEquals($result, Util::merge($array1, $array2Main));
-
 
 
 		$array1= array(
@@ -114,436 +111,482 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, Util::merge($array1, $array2Main));
 	}
 
-	public function testMergeLevel1()
+	public function testMergeWithAppend()
 	{
-		$basicArr = array(
-			'useCache' => 111,
-			'useCache1' => 111,
-			'sub' =>  array (
-				'subV' => '1111',
-				'subV1' => '1111',
-				'subO' => array(
-					'subOV' => '11111',
-					'subOV1' => '11111',
-					'subOT' => array(
-						'subOTT' => '11111',
-						'subOT1' => '11111',
-					),
-				),
-			),
-		);
-
-		$advArr = array(
-			'useCache' => 222,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
-					),
-				),
-			),
-		);
-
-		$result = array (
-			'useCache' => 222,
-			'useCache1' => 111,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
-					),
-				),
-			),
-		);
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 1));
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, array(1)));
-	}
-
-
-	public function testMergeLevel1WithMergeKeyName()
-	{
-		$basicArr = array(
-			'useCache' => 111,
-			'useCache1' => 111,
-			'sub' =>  array (
-				'subV' => '1111',
-				'subV1' => '1111',
-				'subO' => array(
-					'subOV' => '11111',
-					'subOV1' => '11111',
-					'subOT' => array(
-						'subOTT' => '11111',
-						'subOT1' => '11111',
-					),
-				),
-			),
-		);
-
-		$advArr = array(
-			'useCache' => 222,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
-					),
-				),
-			),
-		);
-
-		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
-		  array (
-			'subV' => '222222',
-			'subV1' => '1111',
-			'subO' =>
-			array (
-			  'subOV' => '22222',
-			  'subOV1' => '11111',
-			  'subOT' =>
+		$currentArray = array(
+			'entityDefs' =>
 			  array (
-				'subOTT' => '22222',
-				'subOT1' => '11111',
-				'subOT2' => '22222',
-			  ),
-			  'subOV2' => '22222',
-			),
-			'subV2' => '222222',
-		  ),
-		  'useCache2' => 222,
-		);
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 1, 'useCache'));
-		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(1, 'useCache')) );
-
-		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
-		  array (
-			'subV' => '222222',
-			'subV2' => '222222',
-			'subO' => array(
-				'subOV' => '22222',
-				'subOV2' => '22222',
-				'subOT' => array(
-					'subOTT' => '22222',
-					'subOT2' => '22222',
-				),
-			),
-		  ),
-		  'useCache2' => 222,
-		);
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 1, 'sub'));
-		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(1, 'sub')) );
-	}
-
-	public function testMergeLevel2()
-	{
-		$basicArr = array(
-			'useCache' => 111,
-			'useCache1' => 111,
-			'sub' =>  array (
-				'subV' => '1111',
-				'subV1' => '1111',
-				'subO' => array(
-					'subOV' => '11111',
-					'subOV1' => '11111',
-					'subOT' => array(
-						'subOTT' => '11111',
-						'subOT1' => '11111',
+				'Attachment' =>
+				array (
+				  'fields' =>
+				  array (
+					'name' =>
+					array (
+					  'type' => 'varchar',
+					  'required' => true,
 					),
-				),
-			),
-		);
-
-		$advArr = array(
-			'useCache' => 222,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
+					'type' =>
+					array (
+					  'type' => 'varchar',
+					  'maxLength' => 36,
 					),
+					'size' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["v1", "v2", "v3"],
+					),
+					'sizeInt' =>
+					array (
+					  'type' => 'enum',
+					  'value' => [0, 1, 2],
+					),
+					'merged' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["v1", "v2", "v3"],
+					),
+					'mergedInt' =>
+					array (
+					  'type' => 'enum',
+					  'value' => [0, 1, 2],
+					),
+				  ),
+				),
+				'Contact' =>
+				array (
+				  'fields' =>
+				  array (
+					'name' =>
+					array (
+					  'type' => 'varchar',
+					  'required' => true,
+					),
+					'type' =>
+					array (
+					  'type' => 'varchar',
+					  'maxLength' => 36,
+					),
+					'size' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["v1", "v2", "v3"],
+					),
+					'merged' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["v1", "v2", "v3"],
+					),
+				  ),
 				),
 			),
-		);
-
-		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
-		  array (
-			'subV' => '222222',
-			'subV1' => '1111',
-			'subO' =>
+		'MyCustom' =>
 			array (
-			  'subOV' => '22222',
-			  'subOV2' => '22222',
-			  'subOT' =>
+			  'fields' =>
 			  array (
-				'subOTT' => '22222',
-				'subOT2' => '22222',
+				'name' =>
+				array (
+				  'type' => 'varchar',
+				  'required' => true,
+				),
 			  ),
 			),
-			'subV2' => '222222',
-		  ),
-		  'useCache2' => 222,
 		);
 
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 2));
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, array(2)));
+		$newArray = array(
+			'entityDefs' =>
+			  array (
+				'Attachment' =>
+				array (
+				  'fields' =>
+				  array (
+					'name' =>
+					array (
+					  'type' => 'varchar',
+					  'required' => false,
+					  'NEW' => 'NEWVAL',
+					),
+					'type' =>
+					array (
+					  'type' => 'NETYPE',
+					),
+					'size' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["B1", "B2", "B3"],
+					),
+					'sizeInt' =>
+					array (
+					  'type' => 'enum',
+					  'value' => [5, 8, 9],
+					),
+					'merged' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["__APPEND__", "B1", "B2", "B3"],
+					),
+					'mergedInt' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ['__APPEND__', 5, 8, 9],
+					),
+				  ),
+				  'list' =>
+				  array (
+					'test' => 'Here',
+				  ),
+				),
+				'Contact' =>
+				array (
+				  'fields' =>
+				  array (
+					'name' =>
+					array (
+					  'type' => 'varchar',
+					  'required' => false,
+					  'NEW' => 'NEWVAL',
+					),
+					'type' =>
+					array (
+					  'type' => 'NEW',
+					  'maxLength' => 1000000,
+					),
+					'size' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["B1", "B2", "B3"],
+					),
+					'merged' =>
+					array (
+					  'type' => 'enum',
+					  'value' => ["__APPEND__", "B1", "B2", "B3"],
+					),
+				  ),
+				),
+			),
+		);
+
+
+		$result = array (
+		  'entityDefs' =>
+		  array (
+			'Attachment' =>
+			array (
+			  'fields' =>
+			  array (
+				'name' =>
+				array (
+				  'type' => 'varchar',
+				  'required' => false,
+				  'NEW' => 'NEWVAL',
+				),
+				'type' =>
+				array (
+				  'type' => 'NETYPE',
+				  'maxLength' => 36,
+				),
+				'size' =>
+				array (
+				  'type' => 'enum',
+				  'value' =>
+				  array (
+					0 => 'B1',
+					1 => 'B2',
+					2 => 'B3',
+				  ),
+				),
+				'sizeInt' =>
+				array (
+				  'type' => 'enum',
+				  'value' =>
+				  array (
+					0 => 5,
+					1 => 8,
+					2 => 9,
+				  ),
+				),
+				'merged' =>
+				array (
+				  'type' => 'enum',
+				  'value' =>
+				  array (
+					0 => 'v1',
+					1 => 'v2',
+					2 => 'v3',
+					3 => 'B1',
+					4 => 'B2',
+					5 => 'B3',
+				  ),
+				),
+				'mergedInt' =>
+				array (
+				  'type' => 'enum',
+				  'value' =>
+				  array (
+					0 => 0,
+					1 => 1,
+					2 => 2,
+					3 => 5,
+					4 => 8,
+					5 => 9,
+				  ),
+				),
+			  ),
+			  'list' =>
+			  array (
+				'test' => 'Here',
+			  ),
+			),
+			'Contact' =>
+			array (
+			  'fields' =>
+			  array (
+				'name' =>
+				array (
+				  'type' => 'varchar',
+				  'required' => false,
+				  'NEW' => 'NEWVAL',
+				),
+				'type' =>
+				array (
+				  'type' => 'NEW',
+				  'maxLength' => 1000000,
+				),
+				'size' =>
+				array (
+				  'type' => 'enum',
+				  'value' =>
+				  array (
+					0 => 'B1',
+					1 => 'B2',
+					2 => 'B3',
+				  ),
+				),
+				'merged' =>
+				array (
+				  'type' => 'enum',
+				  'value' =>
+				  array (
+					0 => 'v1',
+					1 => 'v2',
+					2 => 'v3',
+					3 => 'B1',
+					4 => 'B2',
+					5 => 'B3',
+				  ),
+				),
+			  ),
+			),
+		  ),
+		  'MyCustom' =>
+		  array (
+			'fields' =>
+			array (
+			  'name' =>
+			  array (
+				'type' => 'varchar',
+				'required' => true,
+			  ),
+			),
+		  ),
+		);
+
+		$this->assertEquals($result, Util::merge($currentArray, $newArray));
 	}
 
-	public function testMergeLevel2WithMergeKeyName()
+	public function testMergeWithBool()
 	{
-		$basicArr = array(
-			'useCache' => 111,
-			'useCache1' => 111,
-			'sub' =>  array (
-				'subV' => '1111',
-				'subV1' => '1111',
-				'subO' => array(
-					'subOV' => '11111',
-					'subOV1' => '11111',
-					'subOT' => array(
-						'subOTT' => '11111',
-						'subOT1' => '11111',
-					),
-				),
+		$currentArray = array (
+		  'fields' =>
+		  array (
+			'accountId' =>
+			array (
+			  'type' => 'varchar',
+			  'where' =>
+			  array (
+				'=' => 'contact.id IN ({value})',
+			  ),
+			  'len' => 255,
 			),
+			'deleted' =>
+			array (
+			  'type' => 'bool',
+			  'default' => false,
+			  'trueValue' => true,
+			),
+		  ),
+		  'relations' =>
+		  array (
+		  ),
 		);
 
-		$advArr = array(
-			'useCache' => 222,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
-					),
-				),
+		$newArray = array (
+		  'fields' =>
+		  array (
+			'accountName' =>
+			array (
+			  'type' => 'foreign',
+			  'relation' => 'account',
+			  'foreign' => 'name',
 			),
+			'accountId' =>
+			array (
+			  'type' => 'foreignId',
+			  'index' => true,
+			),
+		  ),
+		  'relations' =>
+		  array (
+			'createdBy' =>
+			array (
+			  'type' => 'belongsTo',
+			  'entity' => 'User',
+			  'key' => 'createdById',
+			  'foreignKey' => 'id',
+			),
+		  ),
 		);
 
 		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
+		  'fields' =>
 		  array (
-			'subV' => '222222',
-			'subV1' => '1111',
-			'subO' =>
+			'accountName' =>
 			array (
-			  'subOV' => '22222',
-			  'subOV1' => '11111',
-			  'subOT' =>
-			  array (
-				'subOTT' => '22222',
-				'subOT1' => '11111',
-				'subOT2' => '22222',
-			  ),
-			  'subOV2' => '22222',
+			  'type' => 'foreign',
+			  'relation' => 'account',
+			  'foreign' => 'name',
 			),
-			'subV2' => '222222',
+			'accountId' =>
+			array (
+			  'type' => 'foreignId',
+			  'index' => true,
+			  'where' =>
+			  array (
+				'=' => 'contact.id IN ({value})',
+			  ),
+			  'len' => 255,
+			),
+			'deleted' =>
+			array (
+			  'type' => 'bool',
+			  'default' => false,
+			  'trueValue' => true,
+			),
 		  ),
-		  'useCache2' => 222,
+		  'relations' =>
+		  array (
+			'createdBy' =>
+			array (
+			  'type' => 'belongsTo',
+			  'entity' => 'User',
+			  'key' => 'createdById',
+			  'foreignKey' => 'id',
+			),
+		  ),
 		);
 
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 2, 'subOV'));
-		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(2, 'subOV')) );
-
-		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
-		  array (
-			'subV' => '222222',
-			'subV1' => '1111',
-			'subO' =>
-			array (
-			  'subOV' => '22222',
-			  'subOV2' => '22222',
-			  'subOT' =>
-			  array (
-				'subOTT' => '22222',
-				'subOT2' => '22222',
-			  ),
-			),
-			'subV2' => '222222',
-		  ),
-		  'useCache2' => 222,
-		);
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 2, 'subO'));
-		$this->assertEquals( $result, Util::merge($basicArr, $advArr, array(2, 'subO')) );
+		$this->assertEquals($result, Util::merge($currentArray, $newArray));
 	}
 
-
-	public function testMergeLevel3()
+	public function testMergeWithFieldsDefs()
 	{
-		$basicArr = array(
-			'useCache' => 111,
-			'useCache1' => 111,
-			'sub' =>  array (
-				'subV' => '1111',
-				'subV1' => '1111',
-				'subO' => array(
-					'subOV' => '11111',
-					'subOV1' => '11111',
-					'subOT' => array(
-						'subOTT' => '11111',
-						'subOT1' => '11111',
-					),
-				),
+		$currentArray = array (
+		  'fields' =>
+		  array (
+			'aaa1' =>
+			array (
+			  'type' => 'enum',
+			  'required' => false,
+			  'options' =>
+			  array (
+				0 => 'a1',
+				1 => 'a3',
+				2 => 'a3',
+			  ),
+			  'isCustom' => true,
 			),
+			'hfghgfh' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'hfghfgh',
+			),
+			'jghjghj' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'jghjghjhg',
+			),
+			'gdfgdfg' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'gdfgdfg',
+			  'maxLength' => 70,
+			),
+		  ),
 		);
 
-		$advArr = array(
-			'useCache' => 222,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
-					),
-				),
+		$newArray = array (
+		  'fields' =>
+		  array (
+			'aaa1' =>
+			array (
+			  'type' => 'enum',
+			  'required' => false,
+			  'options' =>
+			  array (
+				0 => 'a1',
+			  ),
+			  'isCustom' => true,
 			),
+		  ),
 		);
 
 		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
+		  'fields' =>
 		  array (
-			'subV' => '222222',
-			'subV1' => '1111',
-			'subO' =>
+			'aaa1' =>
 			array (
-			  'subOV' => '22222',
-			  'subOV1' => '11111',
-			  'subOT' =>
+			  'type' => 'enum',
+			  'required' => false,
+			  'options' =>
 			  array (
-				'subOTT' => '22222',
-				'subOT2' => '22222',
+				0 => 'a1',
 			  ),
-			  'subOV2' => '22222',
+			  'isCustom' => true,
 			),
-			'subV2' => '222222',
+			'hfghgfh' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'hfghfgh',
+			),
+			'jghjghj' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'jghjghjhg',
+			),
+			'gdfgdfg' =>
+			array (
+			  'type' => 'varchar',
+			  'required' => false,
+			  'isCustom' => true,
+			  'default' => 'gdfgdfg',
+			  'maxLength' => 70,
+			),
 		  ),
-		  'useCache2' => 222,
 		);
 
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 3));
+		$this->assertEquals($result, Util::merge($currentArray, $newArray));
 	}
 
-	public function testMergeLevel4Plus()
-	{
-		$basicArr = array(
-			'useCache' => 111,
-			'useCache1' => 111,
-			'sub' =>  array (
-				'subV' => '1111',
-				'subV1' => '1111',
-				'subO' => array(
-					'subOV' => '11111',
-					'subOV1' => '11111',
-					'subOT' => array(
-						'subOTT' => '11111',
-						'subOT1' => '11111',
-					),
-				),
-			),
-		);
-
-		$advArr = array(
-			'useCache' => 222,
-			'useCache2' => 222,
-			'sub' =>  array (
-				'subV' => '222222',
-				'subV2' => '222222',
-				'subO' => array(
-					'subOV' => '22222',
-					'subOV2' => '22222',
-					'subOT' => array(
-						'subOTT' => '22222',
-						'subOT2' => '22222',
-					),
-				),
-			),
-		);
-
-		$result = array (
-		  'useCache' => 222,
-		  'useCache1' => 111,
-		  'sub' =>
-		  array (
-			'subV' => '222222',
-			'subV1' => '1111',
-			'subO' =>
-			array (
-			  'subOV' => '22222',
-			  'subOV1' => '11111',
-			  'subOT' =>
-			  array (
-				'subOTT' => '22222',
-				'subOT1' => '11111',
-				'subOT2' => '22222',
-			  ),
-			  'subOV2' => '22222',
-			),
-			'subV2' => '222222',
-		  ),
-		  'useCache2' => 222,
-		);
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 4));
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 5));
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr, 6));
-
-		$this->assertEquals($result, Util::merge($basicArr, $advArr));
-	}
-
-
-	function testToFormat()
+	public function testToFormat()
 	{
 	   $this->assertEquals('/Espo/Core/Utils', Util::toFormat('/Espo/Core/Utils', '/'));
 	   $this->assertEquals('\Espo\Core\Utils', Util::toFormat('/Espo/Core/Utils', '\\'));
@@ -552,7 +595,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	   $this->assertEquals('\Espo\Core\Utils', Util::toFormat('\Espo\Core\Utils', '\\'));
 	}
 
-	function testConcatPath()
+	public function testConcatPath()
 	{
 		$result= 'dir1/dir2/file1.json';
 		$this->assertEquals($result, Util::concatPath('dir1/dir2', 'file1.json'));
@@ -573,7 +616,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testArrayToObject()
+	public function testArrayToObject()
 	{
 		$testArr= array(
 			'useCache' => true,
@@ -599,7 +642,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testObjectToArray()
+	public function testObjectToArray()
 	{
 		$testObj= (object) array(
 			'useCache' => true,
@@ -624,7 +667,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($testResult, Util::objectToArray($testObj));
 	}
 
-	function testGetNaming()
+	public function testGetNaming()
 	{
 		$this->assertEquals('myPrefixMyName', Util::getNaming('myName', 'myPrefix', 'prefix'));
 
@@ -633,7 +676,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('myNameMyPostfix', Util::getNaming('my_name', 'my_postfix', 'postfix', '_'));
 	}
 
-	function testReplaceInArray()
+	public function testReplaceInArray()
 	{
 		$testArray = array(
 			'option' => array(
@@ -657,7 +700,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testGetClassName()
+	public function testGetClassName()
 	{
 		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload.php'));
 		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('custom/Espo/EntryPoints/Donwload.php'));
@@ -665,7 +708,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload'));
 	}
 
-	function testUnsetInArrayNotSingle()
+	public function testUnsetInArrayNotSingle()
 	{
 		$input = array(
 			'Account' => array(
@@ -700,7 +743,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, Util::unsetInArray($input, $unsets));
 	}
 
-	function testUnsetInArraySingle()
+	public function testUnsetInArraySingle()
 	{
 		$input = array(
 			'Account' => array(
@@ -734,7 +777,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testUnsetInArrayTogether()
+	public function testUnsetInArrayTogether()
 	{
 		$input = array(
 			'Account' => array(
@@ -771,7 +814,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	function testUnsetInArray()
+	public function testUnsetInArray()
 	{
 		$input = array(
 			'Account' => array(
@@ -826,7 +869,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result, Util::unsetInArray($input, $unsets));
 	}
 
-	function testGetValueByKey()
+	public function testGetValueByKey()
 	{
 		$inputArray = array(
 			'Account' => array(
@@ -858,41 +901,6 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.notExists', 'customReturns'));
 		$this->assertNotEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.useCache', 'customReturns'));
 	}
-
-
-
-	/*function testGetScopeModuleName()
-	{
-	   $this->assertEquals('Crm', $this->fixture->getScopeModuleName('Account'));
-	   $this->assertEquals('Crm', $this->fixture->getScopeModuleName('account'));
-	   $this->assertNotEquals('crm', $this->fixture->getScopeModuleName('account'));
-
-	   $this->assertEquals('', $this->fixture->getScopeModuleName('User'));
-	   $this->assertEquals('', $this->fixture->getScopeModuleName('user'));
-	   $this->assertNotEquals('Crm', $this->fixture->getScopeModuleName('User'));
-	}
-
-
-	function testGetScopePath()
-	{
-	   $this->assertEquals('Modules/Crm', $this->fixture->getScopePath('Account', '/'));
-	   $this->assertEquals('Modules\Crm', $this->fixture->getScopePath('Account', '\\'));
-	   $this->assertEquals('Modules\Crm', $this->fixture->getScopePath('account', '\\'));
-
-	   $this->assertEquals('Espo', $this->fixture->getScopePath('User', '/'));
-	   $this->assertEquals('Espo', $this->fixture->getScopePath('User', '\\'));
-	   $this->assertEquals('Espo', $this->fixture->getScopePath('user', '\\'));
-	}
-
-
-	function testGetScopes()
-	{
-	   $this->assertArrayHasKey('User', $this->fixture->getScopes() );
-	} */
-
-
-
-
 }
 
 ?>

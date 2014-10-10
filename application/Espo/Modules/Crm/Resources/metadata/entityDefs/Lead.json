@@ -39,22 +39,11 @@
         },
         "opportunityAmount": {
             "type": "currency",
-            "audited": true,
-            "orderBy": "opportunityAmountConverted {direction}"
+            "audited": true
         },
         "opportunityAmountConverted": {
-            "type": "float",
-            "notStorable": true,
-            "readOnly": true,
-            "select": "lead.opportunity_amount * currency.rate",
-            "where": {
-            	"=": "lead.opportunity_amount * currency.rate = {value}",
-            	">": "lead.opportunity_amount * currency.rate > {value}",
-            	"<": "lead.opportunity_amount * currency.rate < {value}",
-            	">=": "lead.opportunity_amount * currency.rate >= {value}",
-            	"<=": "lead.opportunity_amount * currency.rate <= {value}",
-            	"<>": "lead.opportunity_amount * currency.rate <> {value}"
-            }          
+            "type": "currencyConverted",
+            "readOnly": true          
         },
         "website": {
             "type": "url"

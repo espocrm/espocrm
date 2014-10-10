@@ -41,7 +41,7 @@ return array (
 	'weekStart' => 0,
 	'thousandSeparator' => ',',
 	'decimalMark' => '.',
-	'exportDelimiter' => ',',
+	'exportDelimiter' => ';',
 	'currencyList' =>
 	array (
 	),
@@ -66,6 +66,7 @@ return array (
 		'nl_NL',
 		'tr_TR',
 		'ro_RO',
+		'ru_RU',
 		'pl_PL',
 		'pt_BR',
 		'vi_VN'

@@ -40,9 +40,8 @@ if ($result['success'] && !empty($_REQUEST['dbName']) && !empty($_REQUEST['hostN
 	list($hostName, $port) = explode(':', trim($_REQUEST['hostName']));
 	$dbUserName = trim($_REQUEST['dbUserName']);
 	$dbUserPass = trim($_REQUEST['dbUserPass']);
-	$dbDriver = (!empty($_REQUEST['dbDriver']))? $_REQUEST['dbDriver'] : 'pdo_mysql';
 
-	$res = $systemHelper->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, $dbDriver);
+	$res = $systemHelper->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName);
 	$result['success'] &= $res['success'];
 	if (!empty($res['errors'])) {
 		$result['errors'] = array_merge($result['errors'], $res['errors']);

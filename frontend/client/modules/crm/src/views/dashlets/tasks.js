@@ -57,10 +57,7 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
 						{
 							name: 'name',
 							link: true,
-						},
-						{
-							name: 'isOverdue',
-						},
+						}
 					],
 					[
 						{

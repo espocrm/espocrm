@@ -37,8 +37,8 @@ Espo.define('Views.Stream.Notes.Create', 'Views.Stream.Note', function (Dep) {
 		},
 		
 		setup: function () {			
-			if (this.model.get('data')) {
-				var data = JSON.parse(this.model.get('data'));
+			if (this.model.get('data')) {			
+				var data = this.model.get('data');
 	
 				this.assignedUserId = data.assignedUserId || null;
 				this.assignedUserName = data.assignedUserName || null;

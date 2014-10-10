@@ -17,9 +17,9 @@
             "Cleanup": "Limpar"
         },
         "cronSetup": {
-            "linux": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do Espo:",
-            "mac": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do Espo:",
-            "windows": "Nota: Crie um arquivo em lote pcom os seguintes comandos para executar as tarefas agendadas do Espo no agendador de tarefas do Windows:",
+            "linux": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
+            "mac": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
+            "windows": "Nota: Crie um arquivo em lote com os seguintes comandos para executar as tarefas agendadas do EspoCRM no agendador de tarefas do Windows:",
             "default": "Nota: Adicione este comando Cron Job (Tarefa agendada):"
         },
         "status": {

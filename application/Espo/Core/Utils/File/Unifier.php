@@ -38,24 +38,21 @@ class Unifier
 		$this->fileManager = $fileManager;
 	}
 
-
 	protected function getFileManager()
 	{
 		return $this->fileManager;
 	}
 
-
 	/**
 	 * Unite file content to the file
 	 *
-	 * @param  [type]  $name        [description]
-	 * @param  [type]  $paths       [description]
+	 * @param  string  $name
+	 * @param  array  $paths
 	 * @param  boolean $recursively Note: only for first level of sub directory, other levels of sub directories will be ignored
-	 * @param  [type]  $mergeLevel  - merge level, see Espo\Core\Utils\Util::merge()
 	 *
 	 * @return array
 	 */
-	public function unify($name, $paths, $recursively = false, $mergeLevel = null, $mergeKeyName = null)
+	public function unify($name, $paths, $recursively = false)
 	{
 		$content = $this->unifySingle($paths['corePath'], $name, $recursively);
 
@@ -65,18 +62,16 @@ class Unifier
 
 			foreach ($dirList as $dirName) {
 				$curPath = str_replace('{*}', $dirName, $paths['modulePath']);
-				$content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $dirName), $mergeLevel, $mergeKeyName);
+				$content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $dirName));
 			}
 		}
 
 		if (!empty($paths['customPath'])) {
-			$content = Utils\Util::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively), $mergeLevel, $mergeKeyName);
+			$content = Utils\Util::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
 		}
 
 		return $content;
 	}
-
-
 
 	/**
 	 * Unite file content to the file for one directory [NOW ONLY FOR METADATA, NEED TO CHECK FOR LAYOUTS AND OTHERS]
@@ -161,7 +156,7 @@ class Unifier
 	 *
 	 * @return array
 	 */
-	protected function loadDefaultValues($name, $type='metadata')
+	protected function loadDefaultValues($name, $type = 'metadata')
 	{
 		$defaultPath = $this->params['defaultsPath'];
 

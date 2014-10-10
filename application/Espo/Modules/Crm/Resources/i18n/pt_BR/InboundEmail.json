@@ -15,9 +15,18 @@
         "reply": "Responder",
         "caseDistribution": "Distribuição do Atendimento",
         "replyEmailTemplate": "Template do E-mail de Resposta",
-        "replyFromAddress": "E-mail de Resposta (From)",
+		"replyFromAddress": "E-mail de Resposta (From)",
+		"replyToAddress": "Responder para o Endereço",
         "replyFromName": "Nome de Resposta (FromName)"
     },
+	"tooltips": {
+		"reply": "Notificar rementente que seus e-mails foram recebidos.",
+		"createCase": "Criar automaticamente um atendimento para os e-mais recebidos.",
+		"replyToAddress": "Especifique o endereço de e-mail desta caixa postal para que as respostas cheguem aqui.",
+		"caseDistribution": "Como os atendimentos serão distribuídos. Assinados diretamente ao usuário ou entregues ao time.",
+		"assignToUser": "Usuário responsável pelos e-mails/atendimentos.",
+		"team": "Time que será relacionado aos e-mails/atendimentos."
+	},
     "links": {
     },
     "options": {

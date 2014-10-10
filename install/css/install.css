@@ -23,6 +23,7 @@ select[name="user-lang"] {
 }
 .panel-title {
 	text-align: center;
+	margin-left: 16.6667%;
 }
 
 .loading-icon {
@@ -67,10 +68,85 @@ select[name="user-lang"] {
 	text-align: center;
 	width: 4%;
 	float: left;
-	
+
 }
 
 .semicolon-sign {
 	margin-top: 5px;
 }
+
+.version {
+	font-size: 90%;
+	color: #999;
+}
+
+input[type=checkbox].btn-default {
+	margin: 0;
+}
+
+.cron-help {
+	margin: 20px;
+}
+
+.cron-help pre {
+	margin-top: 15px;
+    padding-top: 15px;
+    padding-bottom: 0;
+}
+
+.table {
+  border-bottom: 1px solid #e8eced;
+}
+
+.setup-confirmation {
+	padding: 8px;
+}
+
+.setup-confirmation .table > thead > tr > th, .setup-confirmation table td:first-child {
+	padding-left: 3%;
+}
+.setup-confirmation .cell-website {
+	margin-right: 10px;
+}
+
+.setup-confirmation .loading-icon {
+	margin-top: 10px;
+}
+
+span.remark {
+	color: #a94442;
+	font-weight: bold;
+}
+span.ok {
+	color: #87c956;
+}
+
+.more-information {
+	line-height: 1.5;
+	font-size: 16px;
+	margin-top: 70px;
+	text-align: left;
+}
+
+.likes {
+	border-left-color: #D7983B;
+	-moz-border-bottom-colors: none;
+    -moz-border-left-colors: #F1AF4E;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #eee;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px 1px 1px 5px;
+    margin: 20px 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.likes p {
+	color: #B56F08;
+	font-size: 15px;
+}
+
 

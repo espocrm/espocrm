@@ -33,7 +33,7 @@ class Stream extends \Espo\Core\Controllers\Base
     public function actionList($params, $data, $request)
 	{
 		$scope = $params['scope'];
-		$id = $params['id'];
+		$id = isset($params['id']) ? $params['id'] : null;
 		
 		$offset = intval($request->get('offset'));
 		$maxSize = intval($request->get('maxSize'));

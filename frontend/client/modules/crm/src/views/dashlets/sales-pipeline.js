@@ -125,10 +125,12 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 				var item = data[i];
 				var value = item.value;
 				var nextValue = ((i + 1) < data.length) ? data[i + 1].value : value;
-				this.chartData.push({
+				var o = {
 					data: [[i, value], [i + 1, nextValue]],
 					label: item.stage
-				});
+				};				
+
+				this.chartData.push(o);
 			}
 			
 			this.maxY = 1000;
@@ -139,8 +141,21 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 		
 		drow: function () {
 			var self = this;
+			
+			var colors = Espo.Utils.clone(this.colors);
+			
+			this.chartData.forEach(function (item, i) {
+				if (i + 1 > colors.length) {
+					colors.push('#164');
+				}
+				if (this.chartData.length == i + 1) {
+					colors[i] = this.successColor;
+				}
+			}, this);
+			
+			
 			this.flotr.draw(this.$container.get(0), this.chartData, {
-				colors: this.colors,
+				colors: colors,
 				shadowSize: false,
 				lines: {
 					show: true,
@@ -166,7 +181,11 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
 				mouse: {
 					track: true,
 					relative: true,
+					position: 'ne',
 					trackFormatter: function (obj) {
+						if (obj.x >= self.chartData.length) {
+							return null;
+						}
 						return self.formatNumber(obj.y) + ' ' + self.currency;
 					},
 				},

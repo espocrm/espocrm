@@ -39,7 +39,7 @@ class Base
 	protected $entityName;
 
 	protected $metadata;
-	
+
 	const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -84,7 +84,7 @@ class Base
 			}
 		}
     }
-    
+
     protected function getTextFilterFields()
     {
     	return $this->metadata->get("entityDefs.{$this->entityName}.collection.textFilterFields", array('name'));
@@ -111,9 +111,9 @@ class Base
 						$fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
 						$fieldList = $this->getTextFilterFields();
 						$d = array();
-						foreach ($fieldList as $field) {						
+						foreach ($fieldList as $field) {
 							if (
-								strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH 
+								strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
 								&&
 								!empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
 							) {
@@ -122,7 +122,7 @@ class Base
 								$d[$field . '*'] = $item['value'] . '%';
 							}
 						}
-						$where['OR'] = $d;				
+						$where['OR'] = $d;
 					}
 				}
 			}
@@ -174,7 +174,26 @@ class Base
 			if (empty($result['whereClause'])) {
 				$result['whereClause'] = array();
 			}
-			$result['whereClause']['name*'] = $params['q'] . '%';
+			
+			$fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
+
+			$value = $params['q'];
+
+			$fieldList = $this->getTextFilterFields();
+			$d = array();
+			foreach ($fieldList as $field) {
+				if (
+					strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+					&&
+					!empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+				) {
+					$d[$field . '*'] = '%' . $value . '%';
+				} else {
+					$d[$field . '*'] = $value . '%';
+				}
+			}
+
+			$result['whereClause']['OR'] = $d;
 		}
 	}
 
@@ -296,6 +315,57 @@ class Base
 					break;
 				case 'future':
 					$part[$item['field'] . '>'] = date('Y-m-d');
+					break;
+				case 'currentMonth':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+					);
+					break;
+				case 'lastMonth':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+					);
+					break;
+				case 'currentQuarter':
+					$dt = new \DateTime();
+					$quarter = ceil($dt->format('m') / 3);						
+					$dt->modify('first day of January this year');								
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+					);
+					break;
+				case 'lastQuarter':
+					$dt = new \DateTime();
+					$quarter = ceil($dt->format('m') / 3);					
+					$dt->modify('first day of January this year');					
+					$quarter--;
+					if ($quarter == 0) {
+						$quarter = 4;
+						$dt->sub('P1Y');
+					}						
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+					);
+					break;
+				case 'currentYear':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+					);
+					break;
+				case 'lastYear':
+					$dt = new \DateTime();
+					$part['AND'] = array(
+						$item['field'] . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
+						$item['field'] . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+					);
 					break;
 				case 'between':
 					if (is_array($item['value'])) {

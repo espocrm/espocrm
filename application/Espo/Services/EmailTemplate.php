@@ -33,11 +33,17 @@ class EmailTemplate extends Record
 	protected function init()
 	{
 		$this->dependencies[] = 'fileManager';
+		$this->dependencies[] = 'dateTime';
 	}
 	
 	protected function getFileManager()
 	{
 		return $this->injections['fileManager'];
+	}
+	
+	protected function getDateTime()
+	{
+		return $this->injections['dateTime'];
 	}
 	
 	public function parse($id, array $params = array(), $copyAttachments = false)
@@ -147,7 +153,13 @@ class EmailTemplate extends Record
 	{		
 		$fields = array_keys($entity->getFields());
 		foreach ($fields as $field) {
-			$text = str_replace('{' . $type . '.' . $field . '}', $entity->get($field), $text);
+			$value = $entity->get($field);
+			if ($entity->fields[$field]['type'] == 'date') {
+				$value = $this->getDateTime()->convertSystemDateToGlobal($value);
+			} else if ($entity->fields[$field]['type'] == 'datetime') {
+				$value = $this->getDateTime()->convertSystemDateTimeToGlobal($value);
+			}
+			$text = str_replace('{' . $type . '.' . $field . '}', $value, $text);
 		}
 		return $text;
 	}

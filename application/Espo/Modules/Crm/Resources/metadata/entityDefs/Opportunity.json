@@ -7,22 +7,27 @@
         "amount": {
             "type": "currency",
             "required": true,
-            "audited": true,
-            "orderBy": "amountConverted {direction}"
+            "audited": true
         },
         "amountConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "amountWeightedConverted": {
             "type": "float",
-            "notStorable": true,
             "readOnly": true,
-            "select": "opportunity.amount * currency.rate",
+            "notStorable": true,
+            "select": "opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100",
             "where": {
-            	"=": "opportunity.amount * currency.rate = {value}",
-            	">": "opportunity.amount * currency.rate > {value}",
-            	"<": "opportunity.amount * currency.rate < {value}",
-            	">=": "opportunity.amount * currency.rate >= {value}",
-            	"<=": "opportunity.amount * currency.rate <= {value}",
-            	"<>": "opportunity.amount * currency.rate <> {value}"
-            }          
+            	"=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
+            	"<": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
+            	">": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
+            	"<=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <= {value}",
+            	">=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) >= {value}",
+            	"<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
+            },
+            "orderBy": "amountWeightedConverted {direction}",
+            "view": "Fields.CurrencyConverted" 
         },
         "account": {
             "type": "link",
@@ -136,6 +141,11 @@
             "type": "hasChildren",
             "entity": "Email",
             "foreign": "parent"
+        },
+        "documents": {
+            "type": "hasMany",
+            "entity": "Document",
+            "foreign": "opportunities"
         }
     },
     "collection": {

@@ -29,7 +29,7 @@ Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
 		
 		setup: function () {		
 			if (this.model.get('post')) {
-				this.createField('post');
+				this.createField('post', null, null, 'Stream.Fields.Post');				
 			}			
 			if ((this.model.get('attachmentsIds') || []).length) {
 				this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');

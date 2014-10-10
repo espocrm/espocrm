@@ -14,7 +14,7 @@
 			<div class="button-container">
 				<div class="btn-group">
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						{{translate 'Add Field'}}
+						{{translate 'Add Field' scope='Import'}}
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu pull-left">
@@ -30,6 +30,6 @@
 	</div>
 	
 	<div style="padding-bottom: 10px;" class="clearfix">
-		<button class="btn btn-default pull-left" data-action="back">{{translate 'Back'}}</button>
-		<button class="btn btn-danger pull-right" data-action="next">{{translate 'Run Import'}}</button>
+		<button class="btn btn-default pull-left" data-action="back">{{translate 'Back' scope='Import'}}</button>
+		<button class="btn btn-danger pull-right" data-action="next">{{translate 'Run Import' scope='Import'}}</button>
 	</div>

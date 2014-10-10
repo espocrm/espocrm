@@ -37,6 +37,8 @@ abstract class Mapper implements IMapper
 	public $pdo;
 
 	protected $entityFactroy;
+	
+	protected $query;
 
 	protected $fieldsMapCache = array();
 	protected $aliasesCache = array();
@@ -60,7 +62,6 @@ abstract class Mapper implements IMapper
 		'=' => '=',
 	);
 
-	// @todo whereClause ?
 	protected static $selectParamList = array(
 		'offset',
 		'limit',
@@ -74,8 +75,9 @@ abstract class Mapper implements IMapper
 		'joinConditions',
 	);
 
-	public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory) {
+	public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query $query) {
 		$this->pdo = $pdo;
+		$this->query = $query;
 		$this->entityFactory = $entityFactory;
 	}
 
@@ -88,7 +90,7 @@ abstract class Mapper implements IMapper
 		$params['whereClause']['id'] = $id;
 		$params['whereClause']['deleted'] = 0;
 
-		$sql = $this->createSelectQuery($entity, $params);
+		$sql = $this->query->createSelectQuery($entity->getEntityName(), $params);
 
 		$ps = $this->pdo->query($sql);
 
@@ -123,7 +125,7 @@ abstract class Mapper implements IMapper
 
 	public function select(IEntity $entity, $params = array())
 	{
-		$sql = $this->createSelectQuery($entity, $params);
+		$sql = $this->query->createSelectQuery($entity->getEntityName(), $params);
 
 		$dataArr = array();
 		$ps = $this->pdo->query($sql);
@@ -145,8 +147,11 @@ abstract class Mapper implements IMapper
 		if (empty($aggregation) || !isset($entity->fields[$aggregationBy])) {
 			return false;
 		}
+		
+		$params['aggregation'] = $aggregation;
+		$params['aggregationBy'] = $aggregationBy;
 
-		$sql = $this->createSelectQuery($entity, $params, $aggregation, $aggregationBy, $deleted);
+		$sql = $this->query->createSelectQuery($entity->getEntityName(), $params, $deleted);
 
 		$ps = $this->pdo->query($sql);
 
@@ -157,102 +162,6 @@ abstract class Mapper implements IMapper
 		}
 		return false;
 	}
-
-	protected function createSelectQuery(IEntity $entity, $params = array(), $aggregation = null, $aggregationBy = null, $deleted = false)
-	{
-		$whereClause = array();
-		if (array_key_exists('whereClause', $params)) {
-			$whereClause = $params['whereClause'];
-		}
-
-		if (!$deleted) {
-			$whereClause = $whereClause + array('deleted' => 0);
-		}
-
-		foreach (self::$selectParamList as $k) {
-			$$k = array_key_exists($k, $params) ? $params[$k] : null;
-		}
-
-		if (empty($aggregation)) {
-			$selectPart = $this->getSelect($entity);
-			$orderPart = $this->getOrder($entity, $orderBy, $order);
-		} else {
-			$aggDist = false;
-			if ($distinct && $aggregation == 'COUNT') {
-				$aggDist = true;
-			}
-			$selectPart = $this->getAggregationSelect($entity, $aggregation, $aggregationBy, $aggDist);
-		}
-		$joinsPart = $this->getBelongsToJoins($entity);
-		$wherePart = $this->getWhere($entity, $whereClause);
-
-		if (!empty($customWhere)) {
-			$wherePart .= ' ' . $customWhere;
-		}
-
-		if (!empty($customJoin)) {
-			$joinsPart .= ' ' . $customJoin . ' ';
-		}
-
-		if (!empty($joins) && is_array($joins)) {
-			$joinsRelated = $this->getJoins($entity, $joins, false, $joinConditions);
-			if (!empty($joinsRelated)) {
-				if (!empty($joinsPart)) {
-					$joinsPart .= ' ';
-				}
-				$joinsPart .= $joinsRelated;
-			}
-		}
-
-		if (!empty($leftJoins) && is_array($leftJoins)) {
-			$joinsRelated = $this->getJoins($entity, $leftJoins, true, $joinConditions);
-			if (!empty($joinsRelated)) {
-				if (!empty($joinsPart)) {
-					$joinsPart .= ' ';
-				}
-				$joinsPart .= $joinsRelated;
-			}
-		}
-
-		if (empty($aggregation)) {
-			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $offset, $limit, $distinct);
-		} else {
-			return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $aggregation = true);
-		}
-	}
-
-	protected function getAggregationSelect(IEntity $entity, $aggregation, $aggregationBy, $distinct = false)
-	{
-		if (!isset($entity->fields[$aggregationBy])) {
-			return false;
-		}
-
-		$aggregation = strtoupper($aggregation);
-
-		$distinctPart = '';
-		if ($distinct) {
-			$distinctPart = 'DISTINCT ';
-		}
-
-		$selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($aggregationBy) . ") AS AggregateValue";
-		return $selectPart;
-	}
-
-	protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
-	{
-		$joinsArr = array();
-		foreach ($joins as $relationName) {
-			$conditions = array();
-			if (!empty($joinConditions[$relationName])) {
-				$conditions = $joinConditions[$relationName];
-			}
-			if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left, $conditions)) {
-				$joinsArr[] = $joinRelated;
-			}
-		}
-		return implode(' ', $joinsArr);
-	}
-
 
 	public function selectRelated(IEntity $entity, $relationName, $params = array(), $totalCount = false)
 	{
@@ -268,79 +177,34 @@ abstract class Mapper implements IMapper
 		if (!$relEntity) {
 			return null;
 		}
-
-		$whereClause = array();
-		if (array_key_exists('whereClause', $params)) {
-			$whereClause = $params['whereClause'];
+		
+		if ($totalCount) {
+			$params['aggregation'] = 'COUNT';
+			$params['aggregationBy'] = 'id';
 		}
 
-		$whereClause = $whereClause + array('deleted' => 0);
-
-		foreach (self::$selectParamList as $k) {
-			$$k = array_key_exists($k, $params) ? $params[$k] : null;
-			if (is_null($$k) && isset($relOpt[$k])) {
-				$$k = $relOpt[$k];
-			}
-		}
-
-		if (!$totalCount) {
-			$selectPart = $this->getSelect($relEntity);
-			$joinsPart = $this->getBelongsToJoins($relEntity);
-			$orderPart = $this->getOrder($relEntity, $orderBy, $order);
-
-		} else {
-			$selectPart = $this->getAggregationSelect($relEntity, 'COUNT', 'id');
-			$joinsPart = '';
-			$orderPart = '';
-			$offset = null;
-			$limit = null;
-		}
-
-		if (!empty($joins) && is_array($joins)) {
-			$joinsRelated = $this->getJoins($relEntity, $joins, false, $joinConditions);
-			if (!empty($joinsRelated)) {
-				if (!empty($joinsPart)) {
-					$joinsPart .= ' ';
-				}
-				$joinsPart .= $joinsRelated;
-			}
-		}
-
-		if (!empty($customJoin)) {
-			$joinsPart .= ' ' . $customJoin . ' ';
-		}
-
-		if (!empty($leftJoins) && is_array($leftJoins)) {
-			$joinsRelated = $this->getJoins($relEntity, $leftJoins, true, $joinConditions);
-			if (!empty($joinsRelated)) {
-				if (!empty($joinsPart)) {
-					$joinsPart .= ' ';
-				}
-				$joinsPart .= $joinsRelated;
-			}
+		
+		if (empty($params['whereClause'])) {
+			$params['whereClause'] = array();
 		}
 
 		$relType = $relOpt['type'];
 
-		$keySet = $this->getKeys($entity, $relationName);
+		$keySet = $this->query->getKeys($entity, $relationName);
 
 		$key = $keySet['key'];
 		$foreignKey = $keySet['foreignKey'];
 
 		switch ($relType) {
 
-			case IEntity::BELONGS_TO:
-
-				$whereClause[$foreignKey] = $entity->get($key);
-				$wherePart = $this->getWhere($relEntity, $whereClause);
-
-				if (!empty($customWhere)) {
-					$wherePart .= ' ' . $customWhere;
-				}
-
-				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, 0, 1);
+			case IEntity::BELONGS_TO:				
+				$params['whereClause'][$foreignKey] = $entity->get($key);
+				$params['offset'] = 0;
+				$params['limit'] = 1;				
+				
+				$sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
+				
 				$ps = $this->pdo->query($sql);
-
 
 				if ($ps) {
 					foreach ($ps as $row) {
@@ -356,23 +220,17 @@ abstract class Mapper implements IMapper
 
 			case IEntity::HAS_MANY:
 			case IEntity::HAS_CHILDREN:
-
-				$whereClause[$foreignKey] = $entity->get($key);
+				
+				$params['whereClause'][$foreignKey] = $entity->get($key);
 
 				if ($relType == IEntity::HAS_CHILDREN) {
 					$foreignType = $keySet['foreignType'];
-					$whereClause[$foreignType] = $entity->getEntityName();
+					$params['whereClause'][$foreignType] = $entity->getEntityName();
 				}
 
-				$wherePart = $this->getWhere($relEntity, $whereClause);
-
-				if (!empty($customWhere)) {
-					$wherePart .= ' ' . $customWhere;
-				}
 				$dataArr = array();
 
-
-				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $offset, $limit);
+				$sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
 
 				$ps = $this->pdo->query($sql);
 				if ($ps) {
@@ -395,21 +253,25 @@ abstract class Mapper implements IMapper
 
 			case IEntity::MANY_MANY:
 
-				$MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet);
-				$wherePart = $this->getWhere($relEntity, $whereClause);
-				if ($joinsPart != '') {
-					$MMJoinPart = ' ' . $MMJoinPart;
+				$MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet);				
+				
+				if (empty($params['customJoin'])) {
+					$params['customJoin'] = '';
+				} else {
+					$params['customJoin'] .= ' ';
 				}
+				$params['customJoin'] .= $MMJoinPart;
+				
+				
+				$params['relationName'] = $relOpt['relationName'];
 
+				// TODO total
+				
+				
+				$sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
+				
 				$dataArr = array();
 
-				if (!empty($params['additionalColumns']) && is_array($params['additionalColumns'])) {
-					foreach ($params['additionalColumns'] as $column => $field) {
-						$selectPart .= ", `" . $this->toDb($relOpt['relationName']) . "`." . $this->toDb($column) . " AS `{$field}`";
-					}
-				}
-
-				$sql = $this->composeSelectQuery($this->toDb($relEntity->getEntityName()), $selectPart, $joinsPart . $MMJoinPart, $wherePart, $orderPart, $offset, $limit);
 
 				$ps = $this->pdo->query($sql);
 				if ($ps) {
@@ -434,82 +296,6 @@ abstract class Mapper implements IMapper
 		return false;
 	}
 
-	protected function getKeys(IEntity $entity, $relationName)
-	{
-		$relOpt = $entity->relations[$relationName];
-		$relType = $relOpt['type'];
-
-		switch ($relType) {
-
-			case IEntity::BELONGS_TO:
-				$key = $this->toDb($entity->getEntityName()) . 'Id';
-				if (isset($relOpt['key'])) {
-					$key = $relOpt['key'];
-				}
-				$foreignKey = 'id';
-				if(isset($relOpt['foreignKey'])){
-					$foreignKey = $relOpt['foreignKey'];
-				}
-				return array(
-					'key' => $key,
-					'foreignKey' => $foreignKey,
-				);
-
-			case IEntity::HAS_MANY:
-				$key = 'id';
-				if (isset($relOpt['key'])){
-					$key = $relOpt['key'];
-				}
-				$foreignKey = $this->toDb($entity->getEntityName()) . 'Id';
-				if (isset($relOpt['foreignKey'])) {
-					$foreignKey = $relOpt['foreignKey'];
-				}
-				return array(
-					'key' => $key,
-					'foreignKey' => $foreignKey,
-				);
-			case IEntity::HAS_CHILDREN:
-				$key = 'id';
-				if (isset($relOpt['key'])){
-					$key = $relOpt['key'];
-				}
-				$foreignKey = 'parentId';
-				if (isset($relOpt['foreignKey'])) {
-					$foreignKey = $relOpt['foreignKey'];
-				}
-				$foreignType = 'parentType';
-				if (isset($relOpt['foreignType'])) {
-					$foreignType = $relOpt['foreignType'];
-				}
-				return array(
-					'key' => $key,
-					'foreignKey' => $foreignKey,
-					'foreignType' => $foreignType,
-				);
-
-			case IEntity::MANY_MANY:
-				$key = 'id';
-				if(isset($relOpt['key'])){
-					$key = $relOpt['key'];
-				}
-				$foreignKey = 'id';
-				if(isset($relOpt['foreignKey'])){
-					$foreignKey = $relOpt['foreignKey'];
-				}
-				$nearKey = $this->toDb($entity->getEntityName()) . 'Id';
-				$distantKey = $this->toDb($relOpt['entity']) . 'Id';
-				if (isset($relOpt['midKeys']) && is_array($relOpt['midKeys'])){
-					$nearKey = $relOpt['midKeys'][0];
-					$distantKey = $relOpt['midKeys'][1];
-				}
-				return array(
-					'key' => $key,
-					'foreignKey' => $foreignKey,
-					'nearKey' => $nearKey,
-					'distantKey' => $distantKey,
-				);
-		}
-	}
 
 	public function countRelated(IEntity $entity, $relationName, $params = array())
 	{
@@ -533,7 +319,7 @@ abstract class Mapper implements IMapper
 		}
 
 		$relOpt = $entity->relations[$relationName];
-		$keySet = $this->getKeys($entity, $relationName);
+		$keySet = $this->query->getKeys($entity, $relationName);
 
 		$relType = $relOpt['type'];
 
@@ -549,6 +335,9 @@ abstract class Mapper implements IMapper
 				$setArr = array();
 				foreach ($columnData as $column => $value) {
 					$setArr[] = $this->toDb($column) . " = " . $this->pdo->quote($value);
+				}
+				if (empty($setArr)) {
+					return true;
 				}
 				$setPart = implode(', ', $setArr);
 
@@ -599,7 +388,7 @@ abstract class Mapper implements IMapper
 			$relEntity->id = $id;
 		}
 
-		$keySet = $this->getKeys($entity, $relationName);
+		$keySet = $this->query->getKeys($entity, $relationName);
 
 		switch ($relType) {
 			case IEntity::BELONGS_TO:
@@ -621,7 +410,7 @@ abstract class Mapper implements IMapper
 						$setPart .= ", " . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityName());
 					}
 
-					$wherePart = $this->getWhere($relEntity, array('id' => $id, 'deleted' => 0));
+					$wherePart = $this->query->getWhere($relEntity, array('id' => $id, 'deleted' => 0));
 					$sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityName()), $setPart, $wherePart);
 
 					if ($this->pdo->query($sql)) {
@@ -650,7 +439,7 @@ abstract class Mapper implements IMapper
 						}
 					}
 
-					$sql = $this->composeSelectQuery($relTable, '*', '', $wherePart);
+					$sql = $this->query->composeSelectQuery($relTable, '*', '', $wherePart);
 
 					$ps = $this->pdo->query($sql);
 
@@ -739,7 +528,7 @@ abstract class Mapper implements IMapper
 			$relEntity->id = $id;
 		}
 
-		$keySet = $this->getKeys($entity, $relationName);
+		$keySet = $this->query->getKeys($entity, $relationName);
 
 		switch ($relType) {
 
@@ -772,7 +561,7 @@ abstract class Mapper implements IMapper
 					$whereClause[$foreignType] = $entity->getEntityName();
 				}
 
-				$wherePart = $this->getWhere($relEntity, $whereClause);
+				$wherePart = $this->query->getWhere($relEntity, $whereClause);
 				$sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityName()), $setPart, $wherePart);
 				if ($this->pdo->query($sql)) {
 					return true;
@@ -835,13 +624,7 @@ abstract class Mapper implements IMapper
 
 			$type = $entity->fields[$field]['type'];
 
-			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
-				$value = json_encode($value);
-			}
-
-			if (is_bool($value)) {
-				$value = (int) $value;
-			}
+			$value = $this->prepareValueForInsert($type, $value);
 
 			$valArr[] = $this->quote($value);
 		}
@@ -870,19 +653,13 @@ abstract class Mapper implements IMapper
 
 			if ($type == IEntity::FOREIGN) {
 				continue;
-			}
+			}			
 
-			if ($entity->getFetched($field) === $value) {
+			if ($entity->getFetched($field) === $value && $type != IEntity::JSON_ARRAY && $type != IEntity::JSON_OBJECT) {
 				continue;
 			}
-
-			if ($type == IEntity::JSON_ARRAY && is_array($value)) {
-				$value = json_encode($value);
-			}
-
-			if (is_bool($value)) {
-				$value = (int) $value;
-			}
+			
+			$value = $this->prepareValueForInsert($type, $value);
 
 			$setArr[] = "`" . $this->toDb($field) . "` = " . $this->quote($value);
 		}
@@ -891,7 +668,7 @@ abstract class Mapper implements IMapper
 		}
 
 		$setPart = implode(', ', $setArr);
-		$wherePart = $this->getWhere($entity, array('id' => $entity->id, 'deleted' => 0));
+		$wherePart = $this->query->getWhere($entity, array('id' => $entity->id, 'deleted' => 0));
 
 		$sql = $this->composeUpdateQuery($this->toDb($entity->getEntityName()), $setPart, $wherePart);
 
@@ -900,6 +677,19 @@ abstract class Mapper implements IMapper
 		}
 
 		return false;
+	}
+	
+	protected function prepareValueForInsert($type, $value) {
+		if ($type == IEntity::JSON_ARRAY && is_array($value)) {
+			$value = json_encode($value);
+		} else if ($type == IEntity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
+			$value = json_encode($value);
+		}
+
+		if (is_bool($value)) {
+			$value = (int) $value;
+		}
+		return $value;
 	}
 
 	public function deleteFromDb($entityName, $id)
@@ -942,297 +732,12 @@ abstract class Mapper implements IMapper
 		return $entity;
 	}
 
-	protected function getAlias(IEntity $entity, $key)
-	{
-		if (!isset($this->aliasesCache[$entity->getEntityName()])) {
-			$this->aliasesCache[$entity->getEntityName()] = $this->getTableAliases($entity);
-		}
-
-		if (isset($this->aliasesCache[$entity->getEntityName()][$key])) {
-			return $this->aliasesCache[$entity->getEntityName()][$key];
-		} else {
-			return false;
-		}
-	}
-
-	protected function getTableAliases(IEntity $entity)
-	{
-		$aliases = array();
-		$c = 0;
-
-		$occuranceHash = array();
-
-		foreach ($entity->relations as $name => $r) {
-			if ($r['type'] == IEntity::BELONGS_TO) {
-				$key = $r['key'];
-				$table = $this->toDb($r['entity']);
-
-				if (!array_key_exists($key, $aliases)) {
-					if (array_key_exists($table, $occuranceHash)) {
-						$occuranceHash[$table]++;
-					} else {
-						$occuranceHash[$table] = 0;
-					}
-					$suffix = '_f';
-					if ($occuranceHash[$table] > 0) {
-						$suffix .= '_' . $occuranceHash[$table];
-					}
-
-					$aliases[$key] = $table . $suffix;
-				}
-			}
-		}
-
-		return $aliases;
-	}
-
-	protected function getFieldPath(IEntity $entity, $field)
-	{
-		if (isset($entity->fields[$field])) {
-			$f = $entity->fields[$field];
-
-			if (isset($f['source'])) {
-				if ($f['source'] != 'db') {
-					return false;
-				}
-			}
-
-			if (!empty($f['notStorable'])) {
-				return false;
-			}
-
-			$fieldPath = '';
-
-			switch($f['type']) {
-				case 'foreign':
-					if (isset($f['relation'])) {
-						$relationName = $f['relation'];
-
-						$keySet = $this->getKeys($entity, $relationName);
-						$key = $keySet['key'];
-
-						$foreigh = $f['foreign'];
-
-						if (is_array($foreigh)) {
-							foreach ($foreigh as $i => $value) {
-								if ($value == ' ') {
-									$foreigh[$i] = '\' \'';
-								} else {
-									$foreigh[$i] = $this->getAlias($entity, $key) . '.' . $this->toDb($value);
-								}
-							}
-							$fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
-						} else {
-							$fieldPath = $this->getAlias($entity, $key) . '.' . $this->toDb($foreigh);
-						}
-					}
-					break;
-				default:
-					$fieldPath = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field) ;
-			}
-
-			return $fieldPath;
-		}
-
-		return false;
-	}
-
-	protected function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND')
-	{
-		$whereParts = array();
-
-		foreach ($whereClause as $field => $value) {
-
-			if (is_int($field)) {
-				$field = 'AND';
-			}
-
-			if (!in_array($field, self::$sqlOperators)) {
-
-				$inRelated = false;
-
-				if (strpos($field, '.') !== false) {
-					list($entityName, $field) = array_map('trim', explode('.', $field));
-					$entityName = preg_replace('/[^A-Za-z0-9_]+/', '', $entityName);
-					$field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
-					$inRelated = true;
-				}
-
-				$operator = '=';
-
-				if (!preg_match('/^[a-z0-9]+$/i', $field)) {
-					foreach (self::$comparisonOperators as $op => $opDb) {
-						if (strpos($field, $op) !== false) {
-							$field = trim(str_replace($op, '', $field));
-							$operator = $opDb;
-							break;
-						}
-					}
-				}
-
-				if (!$inRelated) {
-
-					if (!isset($entity->fields[$field])) {
-						continue;
-					}
-
-					$fieldDefs = $entity->fields[$field];
-
-					if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operator])) {
-						$whereParts[] = str_replace('{value}', $this->pdo->quote($value), $fieldDefs['where'][$operator]);
-					} else {
-						if ($fieldDefs['type'] == IEntity::FOREIGN) {
-							$leftPart = '';
-							if (isset($fieldDefs['relation'])) {
-								$relationName = $fieldDefs['relation'];
-								if (isset($entity->relations[$relationName])) {
-									$keySet = $this->getKeys($entity, $relationName);
-									$key = $keySet['key'];
-
-									$alias = $this->getAlias($entity, $key);
-									if ($alias) {
-										$leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
-									}
-								}
-							}
-						} else {
-							$leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field);
-						}
-					}
-				} else {
-					$leftPart = $this->toDb($entityName) . '.' . $this->toDb($field);
-				}
-
-				if (!empty($leftPart)) {
-					if (!is_array($value)) {
-						$whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
-
-					} else {
-						$valArr = $value;
-						foreach ($valArr as $k => $v) {
-							$valArr[$k] = $this->pdo->quote($valArr[$k]);
-						}
-						$oppose = '';
-						if ($operator == '<>') {
-							$oppose = 'NOT';
-						}
-						if (!empty($valArr)) {
-						$whereParts[] = $leftPart . " {$oppose} IN " . "(" . implode(',', $valArr) . ")";
-						}
-					}
-				}
-			} else {
-				$whereParts[] = "(" . $this->getWhere($entity, $value, $field) . ")";
-			}
-		}
-		return implode(" " . $sqlOp . " ", $whereParts);
-	}
-
-	protected function getBelongsToJoins(IEntity $entity)
-	{
-		$joinsArr = array();
-
-		foreach ($entity->relations as $relationName => $r) {
-			if ($r['type'] == IEntity::BELONGS_TO) {
-				$keySet = $this->getKeys($entity, $relationName);
-				$key = $keySet['key'];
-				$foreignKey = $keySet['foreignKey'];
-
-				$alias = $this->getAlias($entity, $key);
-
-				if ($alias) {
-					$joinsArr[] =
-						"LEFT JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
-						$this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
-				}
-			}
-		}
-
-		return implode(' ', $joinsArr);
-	}
-
-	protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array())
-	{
-		$relOpt = $entity->relations[$relationName];
-		$keySet = $this->getKeys($entity, $relationName);
-
-		$pre = ($left) ? 'LEFT ' : '';
-
-		if ($relOpt['type'] == IEntity::MANY_MANY) {
-
-			$key = $keySet['key'];
-			$foreignKey = $keySet['foreignKey'];
-			$nearKey = $keySet['nearKey'];
-			$distantKey = $keySet['distantKey'];
-
-			$relTable = $this->toDb($relOpt['relationName']);
-			$distantTable = $this->toDb($relOpt['entity']);
-
-
-			/*$join = "{$pre}JOIN (SELECT DISTINCT * FROM `{$relTable}` WHERE";
-			$join .= " {$relTable}.deleted = " . $this->pdo->quote(0);
-
-			if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-				$conditions = array_merge($conditions, $relOpt['conditions']);
-			}
-			foreach ($conditions as $f => $v) {
-				$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
-			}
-
-			$join .= " GROUP BY {$relTable}." . $this->toDb($nearKey);
-
-			$join .= ") AS {$relTable} ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey);
-
-
-			$join .= " {$pre}JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
-				. " AND "
-				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
-
-			return $join;*/
-
-			$join =
-				"{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
-				. " AND "
-				. "{$relTable}.deleted = " . $this->pdo->quote(0);
-
-			if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-				$conditions = array_merge($conditions, $relOpt['conditions']);
-			}
-			foreach ($conditions as $f => $v) {
-				$join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
-			}
-
-			$join .= " {$pre}JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
-				. " AND "
-				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
-
-			return $join;
-		}
-
-		if ($relOpt['type'] == IEntity::HAS_MANY) {
-
-			$foreignKey = $keySet['foreignKey'];
-			$distantTable = $this->toDb($relOpt['entity']);
-
-			// TODO conditions
-
-			$join =
-				"{$pre}JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
-				. " AND "
-				. "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
-
-			return $join;
-		}
-
-		return false;
-	}
-
 	protected function getMMJoin(IEntity $entity, $relationName, $keySet = false)
 	{
 		$relOpt = $entity->relations[$relationName];
 
 		if (empty($keySet)) {
-			$keySet = $this->getKeys($entity, $relationName);
+			$keySet = $this->query->getKeys($entity, $relationName);
 		}
 
 		$key = $keySet['key'];
@@ -1259,67 +764,6 @@ abstract class Mapper implements IMapper
 		return $join;
 	}
 
-	protected function getSelect(IEntity $entity, $fields = null)
-	{
-		$select = "";
-		$arr = array();
-		$specifiedList = is_array($fields) ? true : false;
-
-		foreach ($entity->fields as $field => $fieldDefs) {
-			if ($specifiedList) {
-				if (!in_array($field, $fields)) {
-					continue;
-				}
-			}
-
-			if (!empty($fieldDefs['select'])) {
-				$fieldPath = $fieldDefs['select'];
-			} else {
-				if (!empty($fieldDefs['notStorable'])) {
-					continue;
-				}
-				$fieldPath = $this->getFieldPath($entity, $field);
-			}
-
-			$arr[] = $fieldPath . ' AS `' . $field . '`';
-		}
-
-		$select = implode(', ', $arr);
-
-		return $select;
-	}
-
-	protected function getOrder(IEntity $entity, $orderBy = null, $order = null)
-	{
-		$orderStr = "";
-
-		if (!is_null($orderBy)) {
-			if (!is_null($order)) {
-				$order = strtoupper($order);
-				if (!in_array($order, array('ASC', 'DESC'))) {
-					$order = 'ASC';
-				}
-			} else {
-				$order = 'ASC';
-			}
-
-			$fieldDefs = $entity->fields[$orderBy];
-			if (!empty($fieldDefs['orderBy'])) {
-				$orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
-				$orderStr .= "ORDER BY {$orderPart}";
-			} else {
-				$fieldPath = $this->getFieldPath($entity, $orderBy);
-				if ($fieldDefs['type'] == iEntity::FOREIGN) {
-
-				} else {
-
-				}
-				$orderStr .= "ORDER BY {$fieldPath} " . $order;
-			}
-		}
-
-		return $orderStr;
-	}
 
 	protected function composeInsertQuery($table, $fields, $values)
 	{
@@ -1340,8 +784,6 @@ abstract class Mapper implements IMapper
 
 		return $sql;
 	}
-
-	abstract protected function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null);
 
 	abstract protected function toDb($field);
 
