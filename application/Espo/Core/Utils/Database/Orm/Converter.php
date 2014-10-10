@@ -354,18 +354,10 @@ class Converter
 		//if empty field name, then use the main field
 		if (trim($subFieldName) == '') {
 
-			if (!isset($fieldTypeMeta['fieldDefs'])) {
-				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$fieldName.'] using "actualFields". Main field ['.$fieldName.']');
-			}
-
 			$subField['name'] = $fieldName;
 			$subField['naming'] = $fieldName;
 
 		} else {
-
-			if (!isset($fieldTypeMeta['fields'][$subFieldName])) {
-				$GLOBALS['log']->critical('Empty field defs for ['.$entityName.':'.$subFieldName.'] using "actualFields". Main field ['.$fieldName.']');
-			}
 
 			$namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
 
