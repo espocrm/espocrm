@@ -52,7 +52,7 @@
 				this.$el.find('button[data-action="sendInvitations"]').addClass('disabled');
 				this.notify('Sending...');
 				$.ajax({
-					url: 'Meeting/action/sendInvitations',
+					url: 'Call/action/sendInvitations',
 					type: 'POST',
 					data: JSON.stringify({
 						id: this.model.id
