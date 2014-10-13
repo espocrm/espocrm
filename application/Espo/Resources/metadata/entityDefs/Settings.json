@@ -52,7 +52,7 @@
             "maxLength": 1
         },
         "currencyList": {
-            "type": "array",
+            "type": "multiEnum",
             "default": ["USD", "EUR"],
             "options": ["AED","ANG","ARS","AUD","BGN","BHD","BND","BOB","BRL","BWP","CAD","CHF","CLP","CNY","COP","CRC","CZK","DKK","DOP","DZD","EEK","EGP","EUR","FJD","GBP","HKD","HNL","HRK","HUF","IDR","ILS","INR","JMD","JOD","JPY","KES","KRW","KWD","KYD","KZT","LBP","LKR","LTL","LVL","MAD","MDL","MKD","MUR","MXN","MYR","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","SAR","SCR","SEK","SGD","SKK","SLL","SVC","THB","TND","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VND","YER","ZAR","ZMK"],
             "required": true

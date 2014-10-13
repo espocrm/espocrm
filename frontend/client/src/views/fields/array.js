@@ -110,36 +110,47 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 		},
 		
 		afterRender: function () {
-			this.$list = this.$el.find('.list-group');
-			var $select = this.$select = this.$el.find('.select');
+			if (this.mode == 'edit' || this.mode == 'search') {			
+				this.$list = this.$el.find('.list-group');			
+				var $select = this.$select = this.$el.find('.select');
 			
-			if (!this.params.options) {				
-				$select.on('keypress', function (e) {
-					if (e.keyCode == 13) {
-						var value = $select.val();
-						this.addValue(value);
-						$select.val('');
+				if (!this.params.options) {				
+					$select.on('keypress', function (e) {
+						if (e.keyCode == 13) {
+							var value = $select.val();
+							this.addValue(value);
+							$select.val('');
 
-					}
-				}.bind(this));
-			}
+						}
+					}.bind(this));
+				}
 			
-			this.$list.sortable({
-				stop: function () {
-					this.trigger('change');	
-				}.bind(this)
-			});	
+				this.$list.sortable({
+					stop: function () {
+						this.trigger('change');	
+					}.bind(this)
+				});
+			}	
 		},
 		
 		getValueForDisplay: function () {
-			return this.selected.join(', ');
+			return this.selected.map(function (item) {
+				if (this.translatedOptions != null) {
+					if (item in this.translatedOptions) {
+						return this.translatedOptions[item];
+					}
+				}
+				return item;
+			}, this).join(', ');
 		},
 		
-		addValue: function (value) {		
-			for (var item in this.translatedOptions) {
-				if (this.translatedOptions[item] == value) {
-					value = item;
-					break;
+		addValue: function (value) {
+			if (this.translatedOptions != null) {		
+				for (var item in this.translatedOptions) {
+					if (this.translatedOptions[item] == value) {
+						value = item;
+						break;
+					}
 				}
 			}
 		

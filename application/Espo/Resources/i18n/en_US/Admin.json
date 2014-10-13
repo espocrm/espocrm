@@ -65,7 +65,7 @@
 		"bool": "Bool",
 		"currency": "Currency",
 		"date": "Date",
-		"datetime": "DateTime",
+		"datetime": "Date-Time",
 		"email": "Email",
 		"enum": "Enum",
 		"enumInt": "Enum Integer",
@@ -81,7 +81,8 @@
 		"url": "Url",
 		"varchar": "Varchar",
 		"file": "File",
-		"image": "Image"				
+		"image": "Image",
+		"multiEnum": "Multi-Enum"				
 	},
 	"fields": {
 		"type": "Type",

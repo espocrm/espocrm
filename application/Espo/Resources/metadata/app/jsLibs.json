@@ -12,7 +12,11 @@
 	"Textcomplete": {
 		"path": "client/lib/jquery.textcomplete.js",
 		"exportsTo": "$",
-		"exportsAs": "textcomplete"	
-	
+		"exportsAs": "textcomplete"
+	},
+	"Select2": {
+		"path": "client/lib/select2.min.js",
+		"exportsTo": "$",
+		"exportsAs": "select2"
 	}
 }
