@@ -116,7 +116,10 @@
 		"Duplicate": "Duplizieren",
 		"Notifications": "Benachrichtigungen",
 		"Mark all read": "Alle als gelesen markieren",
-		"See more": "Mehr anzeigen"
+		"See more": "Mehr anzeigen",
+		"Today": "Heute",
+		"Tomorrow": "Morgen",
+		"Yesterday": "Gestern"
 	},
 	"messages": {
 		"notModified": "Sie haben den Datensatz nicht geändert",
