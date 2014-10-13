@@ -38,7 +38,7 @@ Version: 3.5.1 Timestamp: Tue Jul 22 18:58:56 EDT 2014
     color: #444;
     text-decoration: none;
 
-    border-radius: 4px;
+    border-radius: 0px;
 
     background-clip: padding-box;
 
@@ -63,7 +63,7 @@ html[dir="rtl"] .select2-container .select2-choice {
 .select2-container.select2-drop-above .select2-choice {
     border-bottom-color: #d1d5d6;
 
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 0px 0px;
 
     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.9, #fff));
     background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 90%);
@@ -149,10 +149,9 @@ html[dir="rtl"] .select2-container .select2-choice > .select2-chosen {
     border: 1px solid #d1d5d6;
     border-top: 0;
 
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 0px 0px;
 
-    -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
-            box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
+
 }
 
 .select2-drop.select2-drop-above {
@@ -160,10 +159,9 @@ html[dir="rtl"] .select2-container .select2-choice > .select2-chosen {
     border-top: 1px solid #d1d5d6;
     border-bottom: 0;
 
-    border-radius: 4px 4px 0 0;
+    border-radius: 0px 0px 0 0;
 
-    -webkit-box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
-            box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
+
 }
 
 .select2-drop-active {
