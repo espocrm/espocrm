@@ -386,7 +386,7 @@ div.select2-container {
  */
 .select2-container-multi .select2-choices .select2-search-choice {
   color: #555555;
-  background: white;
+  background: #eee;
   border-color: #cccccc;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   -webkit-box-shadow: none;
