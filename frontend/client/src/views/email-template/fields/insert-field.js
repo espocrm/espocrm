@@ -47,7 +47,8 @@ Espo.define('Views.EmailTemplate.Fields.InsertField', 'Views.Fields.Base', funct
 				var defs = this.getMetadata().get('scopes');
 				entityList = Object.keys(defs).filter(function (scope) {
 					return defs[scope].entity && defs[scope].tab;
-				});				
+				});
+				entityList.push('User');				
 				
 				var entityFields = {};				
 				entityList.forEach(function (scope) {

@@ -53,10 +53,14 @@ class EmailTemplate extends Record
 			throw new NotFound();
 		}
 		
+		
+		
 		$entityList = array();
 		if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
 			$entityList = $params['entityHash'];
-		}		
+		}
+		
+		$entityList['User'] = $this->getUser();
 
 		if (!empty($params['emailAddress'])) {
 			$emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
