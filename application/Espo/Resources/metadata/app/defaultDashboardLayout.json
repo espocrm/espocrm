@@ -13,6 +13,10 @@
 		{
 			"name": "Tasks",
 			"id": "d3"
+		},
+		{
+			"name": "Meetings",
+			"id": "d2"
 		}
 	]
 ]
