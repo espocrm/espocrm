@@ -40,21 +40,11 @@ Espo.define('Crm:Views.Opportunity.Fields.Stage', 'Views.Fields.Enum', function 
 			}, Dep.prototype.data.call(this));
 		},
 
-		probabilityMap: {
-			'Prospecting': 10,
-			'Qualification': 10,
-			'Needs Analysis': 20,
-			'Value Proposition': 50,
-			'Id. Decision Makers': 60,
-			'Perception Analysis': 70,
-			'Proposal/Price Quote': 75,
-			'Negotiation/Review': 90,
-			'Closed Won': 100,
-			'Closed Lost': 0,
-		},
-
 		setup: function () {
 			Dep.prototype.setup.call(this);
+			
+			this.probabilityMap = this.getMetadata().get('entityDefs.Opportunity.probabilityMap') || {};
+			
 			if (this.mode != 'list') {
 				if (!this.model.has('probability') && this.model.has('stage')) {					
 					this.model.set('probability', this.probabilityMap[this.model.get('stage')]);
