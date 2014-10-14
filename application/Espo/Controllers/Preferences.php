@@ -38,6 +38,11 @@ class Preferences extends \Espo\Core\Controllers\Base
 		return $this->getContainer()->get('entityManager');
 	}
 	
+	protected function getCrypt()
+	{
+		return $this->getContainer()->get('crypt');
+	}
+	
 	protected function handleUserAccess($userId)
 	{
 		if (!$this->getUser()->isAdmin()) {
@@ -56,6 +61,10 @@ class Preferences extends \Espo\Core\Controllers\Base
 	{
 		$userId = $params['id'];
 		$this->handleUserAccess($userId);
+		
+		if (array_key_exists('smtpPassword', $data)) {
+			$data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);
+		}
 		
 		$user = $this->getEntityManager()->getEntity('User', $userId);		
 

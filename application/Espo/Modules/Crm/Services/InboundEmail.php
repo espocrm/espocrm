@@ -62,6 +62,7 @@ class InboundEmail extends \Espo\Services\Record
 	{
 		$this->dependencies[] = 'fileManager';
 		$this->dependencies[] = 'mailSender';
+		$this->dependencies[] = 'crypt';
 	}
 	
 	protected function getFileManager()
@@ -72,6 +73,19 @@ class InboundEmail extends \Espo\Services\Record
 	protected function getMailSender()
 	{
 		return $this->injections['mailSender'];
+	}
+	
+	protected function getCrypt()
+	{
+		return $this->injections['crypt'];
+	}
+	
+	protected function handleInput(&$data)
+	{	
+		parent::handleInput($data);		
+		if (array_key_exists('password', $data)) {
+			$data['password'] = $this->getCrypt()->encrypt($data['password']);
+		}
 	}	
 	
 	public function getFolders($params)
@@ -81,9 +95,9 @@ class InboundEmail extends \Espo\Services\Record
 		if (!empty($params['id'])) {
 			$entity = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
 			if ($entity) {
-				$password = $entity->get('password');
+				$password = $this->getCrypt()->decrypt($entity->get('password'));
 			}
-		}		
+		}
 		
 		$imapParams = array(
 			'host' => $params['host'],
@@ -138,7 +152,7 @@ class InboundEmail extends \Espo\Services\Record
 			'host' => $inboundEmail->get('host'),
 			'port' => $inboundEmail->get('port'),
 			'user' => $inboundEmail->get('username'),
-			'password' => $inboundEmail->get('password'),
+			'password' => $this->getCrypt()->decrypt($inboundEmail->get('password')),
 		);
 		
 		if ($inboundEmail->get('ssl')) {

@@ -34,6 +34,7 @@ class Email extends Record
 		$this->dependencies[] = 'mailSender';
 		$this->dependencies[] = 'preferences';
 		$this->dependencies[] = 'fileManager';
+		$this->dependencies[] = 'crypt';
 	}
 	
 	protected function getFileManager()
@@ -49,6 +50,11 @@ class Email extends Record
 	protected function getPreferences()
 	{
 		return $this->injections['preferences'];
+	}	
+
+	protected function getCrypt()
+	{
+		return $this->injections['crypt'];
 	}
 
 	public function createEntity($data)
@@ -60,6 +66,10 @@ class Email extends Record
 
 			if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {
 				$smtpParams = $this->getPreferences()->getSmtpParams();
+				if (array_key_exists('password', $smtpParams)) {
+					$smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+				}
+				
 				if ($smtpParams) {
 					$smtpParams['fromName'] = $this->getUser()->get('name');
 					$emailSender->useSmtp($smtpParams);

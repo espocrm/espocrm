@@ -199,6 +199,13 @@ class Container
 			$this->get('preferences')
 		);
 	}
+	
+	private function loadCrypt()
+	{
+		return new \Espo\Core\Utils\Crypt(
+			$this->get('config')
+		);
+	}
 
 	private function loadScheduledJob()
 	{

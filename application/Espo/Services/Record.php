@@ -282,12 +282,18 @@ class Record extends \Espo\Core\Services\Base
 			}
 		}
 	}
+	
+	protected function handleInput(&$data)
+	{
+		
+	}
 
 	public function createEntity($data)
 	{
 		$entity = $this->getEntity();
 		
 		$this->filterInput($data);
+		$this->handleInput($data);
 		
 		$entity->set($data);
 		
@@ -307,6 +313,7 @@ class Record extends \Espo\Core\Services\Base
 		}	
 		
 		if ($this->storeEntity($entity)) {
+			$this->prepareEntityForOutput($entity);
 			return $entity;
 		}		
 		
@@ -319,6 +326,7 @@ class Record extends \Espo\Core\Services\Base
 		unset($data['deleted']);		
 		
 		$this->filterInput($data);
+		$this->handleInput($data);
 		
 		$entity = $this->getEntity($id);
 		
@@ -333,6 +341,7 @@ class Record extends \Espo\Core\Services\Base
 		}		
 		
 		if ($this->storeEntity($entity)) {
+			$this->prepareEntityForOutput($entity);
 			return $entity;
 		}
 
@@ -613,8 +622,8 @@ class Record extends \Espo\Core\Services\Base
 		throw new Error();
     }
     
-    public function prepareEntityForOutput($entity)
-    {
+    public function prepareEntityForOutput(Entity $entity)
+    {    	
     	foreach ($this->internalFields as $field) {
     		$entity->clear($field);
     	}

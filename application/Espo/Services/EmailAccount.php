@@ -38,11 +38,25 @@ class EmailAccount extends Record
 	protected function init()
 	{
 		$this->dependencies[] = 'fileManager';
+		$this->dependencies[] = 'crypt';
 	}
 	
 	protected function getFileManager()
 	{
 		return $this->injections['fileManager'];
+	}
+	
+	protected function getCrypt()
+	{
+		return $this->injections['crypt'];
+	}
+	
+	protected function handleInput(&$data)
+	{	
+		parent::handleInput($data);		
+		if (array_key_exists('password', $data)) {
+			$data['password'] = $this->getCrypt()->encrypt($data['password']);
+		}
 	}
 	
 	public function getFolders($params)
@@ -52,7 +66,7 @@ class EmailAccount extends Record
 		if (!empty($params['id'])) {
 			$entity = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
 			if ($entity) {
-				$password = $entity->get('password');
+				$password = $this->getCrypt()->decrypt($entity->get('password'));
 			}
 		}		
 		
@@ -122,7 +136,7 @@ class EmailAccount extends Record
 			'host' => $emailAccount->get('host'),
 			'port' => $emailAccount->get('port'),
 			'user' => $emailAccount->get('username'),
-			'password' => $emailAccount->get('password'),
+			'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
 		);
 		
 		if ($emailAccount->get('ssl')) {
