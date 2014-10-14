@@ -31,22 +31,6 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
 			sortBy: 'createdAt',
 			asc: false,
 			displayRecords: 5,
-			columnLayout: [
-				{
-					name: 'name',
-					link: true,
-					sortable: false,
-					width: 40,
-				},
-				{
-					name: 'status',
-					sortable: false,
-				},
-				{
-					name: 'dateStart',
-					sortable: false,
-				}
-			],
 			expandedLayout: {
 				rows: [
 					[

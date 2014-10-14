@@ -31,22 +31,6 @@ Espo.define('Crm:Views.Dashlets.Opportunities', 'Views.Dashlets.Abstract.RecordL
 			sortBy: 'createdAt',
 			asc: false,
 			displayRecords: 5,
-			columnLayout: [
-				{
-					name: 'name',
-					link: true,
-					sortable: false,
-					width: 40,
-				},
-				{
-					name: 'stage',
-					sortable: false,
-				},
-				{
-					name: 'amount',
-					sortable: false,
-				}
-			],
 			expandedLayout: {
 				rows: [
 					[

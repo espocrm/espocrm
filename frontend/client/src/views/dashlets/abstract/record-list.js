@@ -46,16 +46,19 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
 		}),			
 
 		afterRender: function () {
-			this.getCollectionFactory().create(this.scope, function (collection) {
-
+			this.getCollectionFactory().create(this.scope, function (collection) {			
 				var searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
+				
+				if (!this.getAcl().check(this.scope, 'read')) {
+					this.$el.find('.list-container').html(this.translate('No Access'));
+					return;
+				}
 
 				this.collection = collection;
 				collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
 				collection.asc = this.getOption('asc') || this.collection.asc;
 				collection.maxSize = this.getOption('displayRecords');
-				collection.where = searchManager.getWhere();
-				
+				collection.where = searchManager.getWhere();			
 				
 				var viewName = (this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn;
 
@@ -72,11 +75,11 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
 					}, function (view) {
 						view.render();
 					});
-				}.bind(this));
+				}, this);
 				
 				collection.fetch();
 
-			}.bind(this));
+			}, this);
 		},
 		
 		actionRefresh: function () {			

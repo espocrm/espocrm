@@ -31,22 +31,6 @@ Espo.define('Crm:Views.Dashlets.Leads', 'Views.Dashlets.Abstract.RecordList', fu
 			sortBy: 'createdAt',
 			asc: false,
 			displayRecords: 5,
-			columnLayout: [
-				{
-					name: 'name',
-					link: true,
-					sortable: false,
-					width: 40,
-				},
-				{
-					name: 'email',
-					sortable: false,
-				},
-				{
-					name: 'phone',
-					sortable: false,
-				}
-			],
 			expandedLayout: {
 				rows: [
 					[
