@@ -28,7 +28,8 @@ Espo.define('Views.Search.Filter', 'View', function (Dep) {
 		data: function () {
 			return {
 				name: this.name,
-				scope: this.model.name
+				scope: this.model.name,
+				notRemovable: this.options.notRemovable
 			};
 		},			
 		
