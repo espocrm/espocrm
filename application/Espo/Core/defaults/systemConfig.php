@@ -82,6 +82,7 @@ return array (
 		'systemUser',
 		'permissionMap',
 		'permissionRules',
+		'passwordSalt',
 	),
 	'adminItems' =>
 	array (

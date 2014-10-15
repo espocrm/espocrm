@@ -15,6 +15,7 @@
         },
 		"password": {
             "type": "password",
+            "maxLength": 150,
             "internal": true
         },
         "salutationName": {
