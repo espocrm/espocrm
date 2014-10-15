@@ -159,7 +159,7 @@ class LDAP extends Base
 	 */
 	protected function adminLogin($username, $password)
 	{
-		$hash = md5($password);
+		$hash = $this->getPasswordHash()->getHash($password);
 
 		$user = $this->getEntityManager()->getRepository('User')->findOne(array(
 			'whereClause' => array(

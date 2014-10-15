@@ -35,6 +35,8 @@ class Installer
 
 	protected $permissionError;
 
+	private $passwordHash;
+
 	protected $settingList = array(
 		'dateFormat',
 		'timeFormat',
@@ -92,6 +94,16 @@ class Installer
 	protected function getFileManager()
 	{
 		return $this->app->getContainer()->get('fileManager');
+	}
+
+	protected function getPasswordHash()
+	{
+		if (!isset($this->passwordHash)) {
+			$config = $this->getConfig();
+			$this->passwordHash = new \Espo\Core\Utils\PasswordHash($config);
+		}
+
+		return $this->passwordHash;
 	}
 
 	public function getVersion()
@@ -160,6 +172,7 @@ class Installer
 			'database' => $database,
 			'language' => $language,
 			'siteUrl' => $siteUrl,
+			'passwordSalt' => $this->getPasswordHash()->generateSalt(),
 		);
 
 		$data = array_merge($data, $initData);
@@ -266,7 +279,7 @@ class Installer
 		$user = array(
 			'id' => '1',
 			'userName' => $userName,
-			'password' => md5($password),
+			'password' => $this->getPasswordHash()->getHash($password),
 			'lastName' => 'Admin',
 			'isAdmin' => '1',
 		);

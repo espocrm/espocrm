@@ -6,7 +6,7 @@
         },
         "hash": {
             "type": "varchar",
-            "maxLength": "36",
+            "maxLength": 150,
             "index": true
         },
         "userId": {
