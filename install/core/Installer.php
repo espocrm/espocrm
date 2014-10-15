@@ -279,7 +279,7 @@ class Installer
 		$user = array(
 			'id' => '1',
 			'userName' => $userName,
-			'password' => $this->getPasswordHash()->getHash($password),
+			'password' => $this->getPasswordHash()->hash($password),
 			'lastName' => 'Admin',
 			'isAdmin' => '1',
 		);
