@@ -51,7 +51,7 @@ class PasswordHash
 	 * @param  string $password
 	 * @return string
 	 */
-	public function getHash($password, $useMd5 = true)
+	public function hash($password, $useMd5 = true)
 	{
 		$salt = $this->getSalt();
 

@@ -96,7 +96,7 @@ class User extends Record
 		$config = $this->getConfig();
 		$passwordHash = new \Espo\Core\Utils\PasswordHash($config);
 
-		return $passwordHash->getHash($password);
+		return $passwordHash->hash($password);
 	}
 
 	public function createEntity($data)

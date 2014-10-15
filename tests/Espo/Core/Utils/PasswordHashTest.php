@@ -81,7 +81,7 @@ class PasswordHashTest extends \PHPUnit_Framework_TestCase
 		$this->reflection->invokeMethod('getSalt');
 	}
 
-	public function testGetHash()
+	public function testHash()
 	{
 		$password = 'test-password';
 
@@ -91,6 +91,6 @@ class PasswordHashTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->salt));
 
 		$result = '4gDlJKdkj/MMo2axSwvvWUv0ktSUeGpis/wLcpL8aEBUxXTVa.rxFb1cfKzTiSE4ookBdNpLMheJmtZqzDSRA0';
-		$this->assertEquals($result, $this->object->getHash($password));
+		$this->assertEquals($result, $this->object->hash($password));
 	}
 }
