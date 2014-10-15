@@ -1,5 +1,12 @@
 {
    "controller": "Controllers.Record",
+   "recordViews":{
+      "list":"Crm:Task.Record.List"
+   },
+   "views": {
+      "list": "Crm:Task.List",
+      "detail": "Crm:Task.Detail"
+   },
    "presetFilters": [
       {
          "name":"actual",

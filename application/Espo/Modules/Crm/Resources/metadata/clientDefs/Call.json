@@ -1,7 +1,11 @@
 {
 	"controller": "Controllers.Record",
 	"views":{
-		"detail":"Crm:Call.Detail"
+		"detail":"Crm:Call.Detail",
+		"list": "Crm:Call.List"
+	},
+	"recordViews":{
+		"list":"Crm:Call.Record.List"
 	},
 	"menu": {
 		"detail": {

@@ -59,10 +59,10 @@ Espo.define('Crm:Views.Meeting.Detail', 'Views.Detail', function (Dep) {
 					}),
 					success: function () {
 						this.notify('Sent', 'success');
-						this.$el.find('button[data-action="sendInvitations"]').removeClass('disabled');
+						this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
 					}.bind(this),
 					error: function () {
-						this.$el.find('button[data-action="sendInvitations"]').removeClass('disabled');
+						this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
 					}.bind(this),
 				});
 			}
@@ -74,10 +74,10 @@ Espo.define('Crm:Views.Meeting.Detail', 'Views.Detail', function (Dep) {
 				}, {
 					patch: true,
 					success: function () {
-						Espo.Ui.success(this.translate('Saved as Held', 'labels', 'Meeting'));
-						this.$el.find('button[data-action="sendInvitations"]').remove();
-						this.$el.find('a[data-action="setHeld"]').remove();
-						this.$el.find('a[data-action="setNotHeld"]').remove();
+						Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
+						this.$el.find('[data-action="sendInvitations"]').remove();
+						this.$el.find('[data-action="setHeld"]').remove();
+						this.$el.find('[data-action="setNotHeld"]').remove();
 					}.bind(this),
 				});
 		},
@@ -88,10 +88,10 @@ Espo.define('Crm:Views.Meeting.Detail', 'Views.Detail', function (Dep) {
 				}, {
 					patch: true,
 					success: function () {
-						Espo.Ui.success(this.translate('Saved as Not Held', 'labels', 'Meeting'));
-						this.$el.find('button[data-action="sendInvitations"]').remove();
-						this.$el.find('a[data-action="setHeld"]').remove();
-						this.$el.find('a[data-action="setNotHeld"]').remove();
+						Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
+						this.$el.find('[data-action="sendInvitations"]').remove();
+						this.$el.find('[data-action="setHeld"]').remove();
+						this.$el.find('[data-action="setNotHeld"]').remove();
 					}.bind(this),
 				});
 		},

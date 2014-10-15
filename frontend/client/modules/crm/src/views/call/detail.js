@@ -49,7 +49,7 @@
 		
 		actionSendInvitations: function () {
 			if (confirm(this.translate('confirmation', 'messages'))) {
-				this.$el.find('button[data-action="sendInvitations"]').addClass('disabled');
+				this.$el.find('[data-action="sendInvitations"]').addClass('disabled');
 				this.notify('Sending...');
 				$.ajax({
 					url: 'Call/action/sendInvitations',
@@ -59,10 +59,10 @@
 					}),
 					success: function () {
 						this.notify('Sent', 'success');
-						this.$el.find('button[data-action="sendInvitations"]').removeClass('disabled');
+						this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
 					}.bind(this),
 					error: function () {
-						this.$el.find('button[data-action="sendInvitations"]').removeClass('disabled');
+						this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
 					}.bind(this),
 				});
 			}
@@ -74,10 +74,10 @@
 			}, {
 				patch: true,
 				success: function () {
-					this.notify('Saved as Held', 'success');
-					this.$el.find('button[data-action="sendInvitations"]').remove();
-					this.$el.find('a[data-action="setHeld"]').remove();
-					this.$el.find('a[data-action="setNotHeld"]').remove();
+					this.notify('Saved', 'success');
+					this.$el.find('[data-action="sendInvitations"]').remove();
+					this.$el.find('[data-action="setHeld"]').remove();
+					this.$el.find('[data-action="setNotHeld"]').remove();
 				}.bind(this),
 			});
 		},
@@ -88,10 +88,10 @@
 			}, {
 				patch: true,
 				success: function () {
-					this.notify('Saved as Not Held', 'success');
-					this.$el.find('button[data-action="sendInvitations"]').remove();
-					this.$el.find('a[data-action="setHeld"]').remove();
-					this.$el.find('a[data-action="setNotHeld"]').remove();
+					this.notify('Saved', 'success');
+					this.$el.find('[data-action="sendInvitations"]').remove();
+					this.$el.find('[data-action="setHeld"]').remove();
+					this.$el.find('[data-action="setNotHeld"]').remove();
 				}.bind(this),
 			});
 		},

@@ -26,7 +26,8 @@
 		}
 	},
 	"labels": {
-		"Create Task": "Create Task"
+		"Create Task": "Create Task",
+		"Complete": "Complete"
 	},
 	"presetFilters": {
 		"actual": "Actual",

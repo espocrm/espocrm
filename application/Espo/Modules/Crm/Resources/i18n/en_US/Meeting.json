@@ -29,9 +29,7 @@
 		"Create Meeting": "Create Meeting",
 		"Set Held": "Set Held",
 		"Set Not Held": "Set Not Held",
-		"Send Invitations": "Send Invitations",
-		"Saved as Held": "Saved as Held",
-		"Saved as Not Held": "Saved as Not Held"
+		"Send Invitations": "Send Invitations"
 	},
 	"presetFilters": {
 		"planned": "Planned",

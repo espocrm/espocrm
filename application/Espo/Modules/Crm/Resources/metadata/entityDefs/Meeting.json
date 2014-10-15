@@ -10,8 +10,7 @@
             "default": "Planned",
             "view": "Fields.EnumStyled",
             "style": {
-            	"Held": "success",
-            	"Not Held": "danger"
+            	"Held": "success"
             }
         },
         "dateStart": {
