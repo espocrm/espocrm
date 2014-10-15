@@ -23,19 +23,22 @@ Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (De
 
 	return Dep.extend({	
 	
-		template: 'admin.layouts.rows',			
+		template: 'admin.layouts.rows',
+
 		
 		events: _.extend({
-			'click #layout a[data-action="edit-field"]': function (e) {								
+			'click #layout a[data-action="editField"]': function (e) {								
 				var data = {};
 				this.dataAttributes.forEach(function (attr) {
-					data[attr] =  $(e.target).closest('li').data(attr)
+					data[attr] =  $(e.target).closest('li').data(Espo.Utils.toDom(attr))
 				});					
 				this.openEditDialog(data);
 			},
 		}, Dep.prototype.events),
 		
 		dataAttributes: null,
+		
+		dataAttributesDefs: {},
 		
 		editable: false,
 		
@@ -64,7 +67,7 @@ Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (De
 			$("#layout ul.enabled > li").each(function (i, el) {
 				var o = {};
 				this.dataAttributes.forEach(function (attr) {
-					var value = $(el).data(attr);
+					var value = $(el).data(Espo.Utils.toDom(attr)) || null;
 					if (value) {
 						o[attr] = value;
 					}

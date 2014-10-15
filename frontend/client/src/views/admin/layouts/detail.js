@@ -23,7 +23,11 @@ Espo.define('Views.Admin.Layouts.Detail', 'Views.Admin.Layouts.Grid', function (
 
 	return Dep.extend({
 	
-		dataAttributes: ['name'],
+		dataAttributes: ['name', 'fullWidth'],
+		
+		dataAttributesDefs: {
+			fullWidth: 'bool',
+		},
 		
 		ignoreList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
 	
