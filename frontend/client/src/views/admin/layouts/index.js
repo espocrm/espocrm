@@ -28,6 +28,12 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 		scopeList: null,
 
 		typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships'],
+		
+		additionalLayouts: {
+			'Opportunity': ['detailConvert'],
+			'Contact': ['detailConvert'],
+			'Account': ['detailConvert'],
+		},
 
 		scope: null,
 
@@ -38,6 +44,20 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 				scopeList: this.scopeList,
 				typeList: this.typeList,
 				scope: this.scope,
+				layoutScopeDataList: (function () {
+					var dataList = [];
+					this.scopeList.forEach(function (scope) {
+						var d = {};
+						d.scope = scope;
+						d.typeList = _.clone(this.typeList);
+						(this.additionalLayouts[scope] || []).forEach(function (item) {
+							d.typeList.push(item);
+						});
+						
+						dataList.push(d);
+					}, this);					
+					return dataList;
+				}).call(this)
 			};
 		},
 
