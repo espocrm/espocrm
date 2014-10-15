@@ -34,7 +34,12 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 			{
 				name: 'cancel',
 				label: 'Cancel',
-			}			
+			},
+			{
+				name: 'reset',
+				label: 'Reset',
+				style: 'danger'
+			}		
 		],
 		
 		dependencyDefs: {
@@ -66,6 +71,21 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 				}, this);
 			}
 
+		},
+		
+		actionReset: function () {
+			if (confirm(this.translate('resetPreferencesConfirmation', 'messages'))) {
+				$.ajax({
+					url: 'Preferences/' + this.model.id,
+					type: 'DELETE',
+					
+				}).done(function (data) {
+					Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));					
+					this.model.set(data);
+					this.getPreferences().set(this.model.toJSON());
+					this.getPreferences().trigger('update');
+				}.bind(this));
+			}
 		},
 		
 		afterRender: function () {

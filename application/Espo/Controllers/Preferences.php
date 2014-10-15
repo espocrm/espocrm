@@ -24,6 +24,7 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\NotFound;
 
 class Preferences extends \Espo\Core\Controllers\Base
@@ -50,6 +51,17 @@ class Preferences extends \Espo\Core\Controllers\Base
 				throw new Forbidden();
 			}
 		}
+	}
+	
+	public function actionDelete($params, $data)
+	{
+		$userId = $params['id'];
+		if (empty($userId)) {
+			throw new BadRequest();
+		}
+		$this->handleUserAccess($userId);
+		
+		return $this->getEntityManager()->getRepository('Preferences')->resetToDefaults($userId);		
 	}
 	
 	public function actionPatch($params, $data)
