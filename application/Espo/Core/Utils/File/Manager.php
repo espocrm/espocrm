@@ -459,6 +459,17 @@ class Manager
 
 		return false;
 	}
+	
+	/**
+	 * Remove file/files by given path
+	 *
+	 * @param array $filePaths - File paths list
+	 * @return bool
+	 */
+	public function unlink($filePaths)
+	{
+		return $this->removeFile($filePaths);
+	}
 
 	/**
 	 * Remove file/files by given path
