@@ -44,11 +44,11 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
 		},
 		
 		events: _.extend({				
-			'click #layout a[data-action="add-panel"]': function () {
+			'click #layout a[data-action="addPanel"]': function () {
 				this.addPanel();
 				this.makeDraggable();
 			},
-			'click #layout a[data-action="remove-panel"]': function (e) {
+			'click #layout a[data-action="removePanel"]': function (e) {
 				$(e.target).closest('ul.panels > li').find('ul.cells > li').each(function (i, li) {
 					if ($(li).attr('data-name')) {
 						$(li).appendTo($('#layout ul.disabled'));
@@ -56,13 +56,13 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
 				});
 				$(e.target).closest('ul.panels > li').remove();
 			},
-			'click #layout a[data-action="add-row"]': function (e) {					
+			'click #layout a[data-action="addRow"]': function (e) {					
 				var tpl = this.unescape($("#layout-row-tpl").html());
 				var html = _.template(tpl);					
 				$(e.target).closest('ul.panels > li').find('ul.rows').append(html);
 				this.makeDraggable();
 			},
-			'click #layout a[data-action="remove-row"]': function (e) {
+			'click #layout a[data-action="removeRow"]': function (e) {
 				$(e.target).closest('ul.rows > li').find('ul.cells > li').each(function (i, li) {
 					if ($(li).attr('data-name')) {
 						$(li).appendTo($('#layout ul.disabled'));
@@ -70,21 +70,55 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
 				});
 				$(e.target).closest('ul.rows > li').remove();
 			},
-			'click #layout a[data-action="remove-field"]': function (e) {		
+			'click #layout a[data-action="removeField"]': function (e) {		
 				var el = $(e.target).closest('li');				
 				var index = el.index();
-				var parent = el.parent();				
+				var parent = el.parent();
 			
 				el.appendTo($("ul.disabled"));
 				
 				var empty = $('<li class="empty disabled"></li>');
-				
-				if (index == 0) {
-					parent.prepend(empty);
-				} else {
-					empty.insertAfter(parent.children(':nth-child(' + index + ')'));
+				if (el.data('full-width')) {
+					for (var i = 0; i < this.columnCount; i++) {
+						parent.append(empty.clone());
+					}
+				} else {		
+							
+					if (index == 0) {
+						parent.prepend(empty);
+					} else {
+						empty.insertAfter(parent.children(':nth-child(' + index + ')'));
+					}
 				}
+				
+				el.data('full-width', null);
+				el.removeAttr('data-full-width');
+				
 				this.makeDraggable();
+			},
+			'click #layout a[data-action="minusCell"]': function (e) {
+				if (this.columnCount < 2) {
+					return;
+				}
+				$li = $(e.currentTarget).closest('li');					
+				$ul = $li.parent();
+				
+				var count = 0;
+				
+				var isEmpty = false;
+				if ($ul.children('li:not(.empty)').size() == 0) {
+					isEmpty = true;
+				}
+				
+				$ul.children('li.empty').remove();
+				$ul.children('li:not(:first-child)').remove();
+				$ul.children('li').data('full-width', true).attr('data-full-width', true);	
+				
+				if (isEmpty) {
+					$ul.append($('<li class="empty disabled"></li>').data('full-width', true).attr('data-full-width', true));
+					this.makeDraggable();
+				}	
+				
 			},
 			'click #layout a[data-action="edit-panel-label"]': function (e) {
 				var el = $(e.target).closest('header').children('label');
@@ -117,12 +151,21 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
 		
 		addPanel: function (data) {
 			var tpl = this.unescape($("#layout-panel-tpl").html());
+			
+			var empty = false;
+			if (!data) {
+				empty = true;
+			}
+			
 			data = data || {label: 'new panel', rows: [[]]};
 							
 			data.rows.forEach(function (row) {
 				var rest = this.columnCount - row.length;
-				for (var i = 0; i < rest; i++) {
-					row.push(false);
+				
+				if (empty) {
+					for (var i = 0; i < rest; i++) {
+						row.push(false);
+					}
 				}
 				for (var i in row) {
 					if (row[i] != false) {
@@ -175,6 +218,10 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
 						}
 					}
 					
+					if ($(this).data('full-width')) {
+						$(ui.draggable).data('full-width', true).attr('data-full-width', true);
+					}
+					
 					ui.draggable.css({
 						top: 0,
 						left: 0,
@@ -211,7 +258,10 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
 						if (!$(li).hasClass('empty')) {										
 							cell = {};
 							self.dataAttributes.forEach(function (attr) {
-								cell[attr] = $(li).data(attr);
+								var value = $(li).data(Espo.Utils.toDom(attr)) || null;
+								if (value) {							
+									cell[attr] = value;								
+								} 
 							});
 						}
 						row.push(cell);

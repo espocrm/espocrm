@@ -70,12 +70,12 @@
 			<header>{{translate 'Enabled' scope='Admin'}}</header>
 			<ul class="enabled connected">
 				{{#each layout}}
-					<li draggable="true" {{#each ../dataAttributes}}data-{{./this}}="{{prop ../this this}}" {{/each}}>
+					<li draggable="true" {{#each ../dataAttributes}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
 						<div class="left">
 							<label>{{label}}</label>
 						</div>
 						{{#if ../editable}}
-						<div class="right"><a href="javascript:" data-action="edit-field" class="edit-field"><i class="glyphicon glyphicon-pencil"></i></a></div>
+						<div class="right"><a href="javascript:" data-action="editField" class="edit-field"><i class="glyphicon glyphicon-pencil"></i></a></div>
 						{{/if}}
 					</li>
 				{{/each}}
