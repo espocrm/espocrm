@@ -6,7 +6,7 @@
 			[{"name":"emailAddress"},{"name":"phoneNumber"}],
 			[{"name":"title"}, {"name":"doNotCall"}],
 			[{"name":"address"}, false],
-			[{"name":"description"},false]
+			[{"name":"description", "fullWidth": true}]
 		]
 	}
 ]

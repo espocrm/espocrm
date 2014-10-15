@@ -11,7 +11,7 @@
 		"label": "Details",
 		"rows": [
 			[{"name":"publishDate"}, {"name":"expirationDate"}],
-			[{"name":"description"}, false]
+			[{"name":"description", "fullWidth": true}]
 		]
 	}
 ]

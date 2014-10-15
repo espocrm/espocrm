@@ -6,7 +6,7 @@
 			[{"name":"stage"},{"name":"amount"}],
 			[{"name":"probability"}, false],
 			[{"name":"closeDate"},false],
-			[{"name":"description"},false]
+			[{"name":"description", "fullWidth": true}]
 		]
 	}
 ]

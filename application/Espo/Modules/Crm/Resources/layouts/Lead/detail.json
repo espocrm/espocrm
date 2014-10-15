@@ -6,12 +6,14 @@
 			[{"name":"emailAddress"},{"name":"phoneNumber"}],
 			[{"name":"title"},{"name":"doNotCall"}],
 			[{"name":"address"},{"name":"website"}],
-			[{"name":"description"},false]]
-		}, {
-			"label":"Details",
-			"rows": [
-				[{"name":"status"},{"name":"source"}],
-				[{"name":"opportunityAmount"},false]
-			]
-		}
+			[{"name":"description", "fullWidth": true}]
+		]
+	}, 
+	{
+		"label":"Details",
+		"rows": [
+			[{"name":"status"},{"name":"source"}],
+			[{"name":"opportunityAmount"},false]
+		]
+	}
 ]

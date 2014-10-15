@@ -6,7 +6,7 @@
 			[{"name":"website"},{"name":"phoneNumber"}],
 			[{"name":"emailAddress"},false],
 			[{"name":"billingAddress"},{"name":"shippingAddress"}],
-			[{"name":"description"},false]
+			[{"name":"description", "fullWidth": true}]
 		]
 	}, {
 		"label":"Details",
