@@ -143,9 +143,11 @@
 		"fieldShouldBeLess": "{field} should be less then {value}",
 		"fieldShouldBeGreater": "{field} should be greater then {value}",
 		"fieldBadPasswordConfirm": "{field} confirmed improperly",
+		"resetPreferencesDone": "Preferences has been reset to defaults",
 		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
 		"assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you\n\n{recordUrl}",
 		"confirmation": "Are you sure?",
+		"resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
 		"removeRecordConfirmation": "Are you sure you want to remove the record?",
 		"unlinkRecordConfirmation": "Are you sure you want to unlink relationship?",
 		"removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?"

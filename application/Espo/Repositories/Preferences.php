@@ -120,6 +120,15 @@ class Preferences extends \Espo\Core\ORM\Repository
 			return true;
 		}
 	}
+	
+	public function resetToDefaults($userId)
+	{
+		$fileName = $this->getFilePath($userId);
+		$this->getFileManager()->unlink($fileName);
+		if ($entity = $this->get($userId)) {
+			return $entity->toArray();
+		}
+	}
 
 	public function find(array $params)
 	{

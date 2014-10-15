@@ -3,17 +3,17 @@
 <div class="row">
 	<div id="layouts-menu" class="col-sm-3">
 		<div class="panel-group" id="layout-accordion">
-		{{#each scopeList}}
+		{{#each layoutScopeDataList}}
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<a class="accordion-toggle" data-parent="#layout-accordion" data-toggle="collapse" href="#collapse-{{toDom this}}">{{translate this category='scopeNamesPlural'}}</a>
+					<a class="accordion-toggle" data-parent="#layout-accordion" data-toggle="collapse" href="#collapse-{{toDom scope}}">{{translate scope category='scopeNamesPlural'}}</a>
 				</div>
-				<div id="collapse-{{toDom this}}" class="panel-collapse collapse{{#ifEqual this ../scope}} in{{/ifEqual}}">
+				<div id="collapse-{{toDom scope}}" class="panel-collapse collapse{{#ifEqual scope ../scope}} in{{/ifEqual}}">
 					<div class="panel-body">
 						<ul class="list-unstyled">
-						{{#each ../typeList}}
+						{{#each typeList}}
 							<li>
-								<button style="display: block;" class="layout-link btn btn-link" data-type="{{./this}}" data-scope="{{.././this}}">{{translate this scope='Admin' category='layouts'}}</button>			
+								<button style="display: block;" class="layout-link btn btn-link" data-type="{{./this}}" data-scope="{{../scope}}">{{translate this scope='Admin' category='layouts'}}</button>			
 							</li>
 						{{/each}}
 						</ul>
