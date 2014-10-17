@@ -124,7 +124,12 @@ class Activities extends \Espo\Core\Services\Base
 			";
 			$sql .= "
 				WHERE 
-					(meeting.parent_type <> ".$this->getPDO()->quote($scope)." OR meeting.parent_id <> ".$this->getPDO()->quote($id).") AND 
+					(
+						meeting.parent_type <> ".$this->getPDO()->quote($scope)." OR 
+						meeting.parent_id <> ".$this->getPDO()->quote($id)." OR
+						meeting.parent_type IS NULL OR
+						meeting.parent_id IS NULL
+					) AND 
 					meeting.deleted = 0
 			";
 			if (!empty($notIn)) {
@@ -198,7 +203,12 @@ class Activities extends \Espo\Core\Services\Base
 			";
 			$sql .= "
 				WHERE 
-					(call.parent_type <> ".$this->getPDO()->quote($scope)." OR call.parent_id <> ".$this->getPDO()->quote($id).") AND 
+					(
+						call.parent_type <> ".$this->getPDO()->quote($scope)." OR 
+						call.parent_id <> ".$this->getPDO()->quote($id)." OR
+						call.parent_type IS NULL OR
+						call.parent_id IS NULL
+					) AND 
 					call.deleted = 0
 			";
 			if (!empty($notIn)) {
@@ -268,7 +278,12 @@ class Activities extends \Espo\Core\Services\Base
 			$sql .= "
 				WHERE 
 					email.deleted = 0 AND
-					(email.parent_type <> ".$this->getPDO()->quote($scope)." OR email.parent_id <> ".$this->getPDO()->quote($id).") AND
+					(
+						email.parent_type <> ".$this->getPDO()->quote($scope)." OR 
+						email.parent_id <> ".$this->getPDO()->quote($id)." OR
+						email.parent_type IS NULL OR
+						email.parent_id IS NULL
+					) AND
 					(entity_email_address_1.entity_id = ".$this->getPDO()->quote($id)." OR entity_email_address_2.entity_id = ".$this->getPDO()->quote($id).")
 			";
 			if (!empty($notIn)) {
@@ -344,19 +359,24 @@ class Activities extends \Espo\Core\Services\Base
 	
 	public function getActivities($scope, $id, $params = array())
 	{
+		$fetchAll = empty($params['scope']);
+		
 		$parts = array(
-			'Meeting' => $this->getMeetingQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')),
-			'Call' => $this->getCallQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')),
+			'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')) : array(),
+			'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')) : array(),
 		);		
 		return $this->getResult($parts, $scope, $id, $params);
 	}
 	
 	public function getHistory($scope, $id, $params)
-	{
+	{	
+	
+		$fetchAll = empty($params['scope']);	
+
 		$parts = array(
-			'Meeting' => $this->getMeetingQuery($scope, $id, 'IN', array('Held')),
-			'Call' => $this->getCallQuery($scope, $id, 'IN', array('Held')),
-			'Email' => $this->getEmailQuery($scope, $id, 'IN', array('Archived', 'Sent')),
+			'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', array('Held')) : array(),
+			'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', array('Held')) : array(),
+			'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', array('Archived', 'Sent')) : array(),
 		);
 		$result = $this->getResult($parts, $scope, $id, $params);
 		

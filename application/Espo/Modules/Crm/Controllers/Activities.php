@@ -47,6 +47,11 @@ class Activities extends \Espo\Core\Controllers\Base
 	public function actionList($params, $data, $request)
 	{
 		$name = $params['name'];
+		
+		if (!in_array($name, array('activities', 'history'))) {
+			throw new BadRequest();
+		}
+		
 		$entityName = $params['scope'];
 		$id = $params['id'];
 		
