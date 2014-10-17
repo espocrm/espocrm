@@ -31,8 +31,13 @@ class Importer
 		try {
 			$email = $this->getEntityManager()->getEntity('Email');
 			
+			$subject = $message->subject;
+			if ($subject !== '0' && empty($subject)) {
+				$subject = '--empty--';
+			}
+			
 			$email->set('isHtml', false);		
-			$email->set('name', $message->subject);
+			$email->set('name', $subject);
 			$email->set('status', 'Archived');
 			$email->set('attachmentsIds', array());			
 			$email->set('assignedUserId', $userId);
