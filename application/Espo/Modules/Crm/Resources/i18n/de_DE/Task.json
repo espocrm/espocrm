@@ -29,7 +29,7 @@
 		"Create Task": "Neue Aufgabe"
 	},
 	"presetFilters": {
-		"active": "Aktiv",
+		"actual": "Tatsächlich",
 		"completed": "Abgeschlossen",
 		"todays": "Heutige",
 		"overdue": "Überfällig"
