@@ -188,6 +188,8 @@ class Email extends Record
 			if ($emailAddressId) {
 				$pdo = $this->getEntityManager()->getPDO();
 		
+				$selectParams['distinct'] = true;
+				 
 				$selectParams['customJoin'] = "
 					LEFT JOIN email_email_address 
 						ON 
