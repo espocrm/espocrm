@@ -19,16 +19,16 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Controllers.About', 'Controller', function (Dep) {
-	
-	return Dep.extend({
-	
-		defaultAction: 'about',
-	
-		about: function () {
-			this.main('About', {}, function (view) {
-				view.render();
-			});
-		},	
-	});
-	
+    
+    return Dep.extend({
+    
+        defaultAction: 'about',
+    
+        about: function () {
+            this.main('About', {}, function (view) {
+                view.render();
+            });
+        },    
+    });
+    
 });

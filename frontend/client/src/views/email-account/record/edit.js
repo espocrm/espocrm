@@ -21,15 +21,15 @@
 
 Espo.define('Views.EmailAccount.Record.Edit', ['Views.Record.Edit', 'Views.EmailAccount.Record.Detail'], function (Dep, Detail) {
 
-	return Dep.extend({	
-		
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);			
-			
-			Detail.prototype.initSslFieldListening.call(this);										
-		},
-		
-	});
-	
+    return Dep.extend({    
+        
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);            
+            
+            Detail.prototype.initSslFieldListening.call(this);                                        
+        },
+        
+    });
+    
 });
 

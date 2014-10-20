@@ -34,7 +34,7 @@
             "view": "Crm:InboundEmail.Fields.Folders"
         },
         "fetchData": {
-        	"type": "text",
+            "type": "text",
             "readOnly": true
         },
         "assignToUser": {
@@ -112,7 +112,7 @@
         }
     },
     "collection": {
-    	"sortBy": "name",
-    	"asc": true
+        "sortBy": "name",
+        "asc": true
     }
 }

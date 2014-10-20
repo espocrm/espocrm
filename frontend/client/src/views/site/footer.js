@@ -18,21 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
+    
 Espo.define('Views.Site.Footer', 'View', function (Dep) {
-	
-	return Dep.extend({
-	
-		template: 'site.footer',
-	
-		data: {
-		},
-		
-		setup: function () {
-		},
-		
-	});
-	
+    
+    return Dep.extend({
+    
+        template: 'site.footer',
+    
+        data: {
+        },
+        
+        setup: function () {
+        },
+        
+    });
+    
 });
 
 

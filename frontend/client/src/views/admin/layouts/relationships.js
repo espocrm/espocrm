@@ -21,69 +21,69 @@
 
 Espo.define('Views.Admin.Layouts.Relationships', 'Views.Admin.Layouts.Rows', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		dataAttributes: ['name'],
+        dataAttributes: ['name'],
 
-		editable: false,
+        editable: false,
 
-		setup: function () {
-			Dep.prototype.setup.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-			this.wait(true);
+            this.wait(true);
 
-			this.getModelFactory().create(this.scope, function (model) {
-				this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+            this.getModelFactory().create(this.scope, function (model) {
+                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
 
-					var allFields = [];
-					for (var field in model.defs.links) {
-						if (['hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) != -1) {
-							allFields.push(field);
-						}
-					}
+                    var allFields = [];
+                    for (var field in model.defs.links) {
+                        if (['hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) != -1) {
+                            allFields.push(field);
+                        }
+                    }
 
-					this.enabledFieldsList = [];
+                    this.enabledFieldsList = [];
 
-					this.enabledFields = [];
-					this.disabledFields = [];
-					for (var i in layout) {
-						this.enabledFields.push({
-							name: layout[i],
-							label: this.getLanguage().translate(layout[i], 'links', this.scope)
-						});
-						this.enabledFieldsList.push(layout[i]);
-					}
+                    this.enabledFields = [];
+                    this.disabledFields = [];
+                    for (var i in layout) {
+                        this.enabledFields.push({
+                            name: layout[i],
+                            label: this.getLanguage().translate(layout[i], 'links', this.scope)
+                        });
+                        this.enabledFieldsList.push(layout[i]);
+                    }
 
-					for (var i in allFields) {
-						if (!_.contains(this.enabledFieldsList, allFields[i])) {
-							this.disabledFields.push({
-								name: allFields[i],
-								label: this.getLanguage().translate(allFields[i], 'links', this.scope)
-							});
-						}
-					}
-					this.rowLayout = this.enabledFields;
+                    for (var i in allFields) {
+                        if (!_.contains(this.enabledFieldsList, allFields[i])) {
+                            this.disabledFields.push({
+                                name: allFields[i],
+                                label: this.getLanguage().translate(allFields[i], 'links', this.scope)
+                            });
+                        }
+                    }
+                    this.rowLayout = this.enabledFields;
 
-					for (var i in this.rowLayout) {
-						this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
-					}
+                    for (var i in this.rowLayout) {
+                        this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
+                    }
 
-					this.wait(false);
-				}.bind(this), false);
-			}.bind(this));
-		},
+                    this.wait(false);
+                }.bind(this), false);
+            }.bind(this));
+        },
 
-		fetch: function () {
-			var layout = [];
-			$("#layout ul.enabled > li").each(function (i, el) {
-				layout.push($(el).data('name'));
-			}.bind(this));
-			return layout;
-		},
+        fetch: function () {
+            var layout = [];
+            $("#layout ul.enabled > li").each(function (i, el) {
+                layout.push($(el).data('name'));
+            }.bind(this));
+            return layout;
+        },
 
-		validate: function () {
-			return true;
-		},
-	});
+        validate: function () {
+            return true;
+        },
+    });
 });
 

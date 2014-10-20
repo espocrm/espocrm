@@ -22,11 +22,11 @@
 
 Espo.define('Crm:Views.Lead.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
-	return Dep.extend({
-	
-		sideView: 'Crm:Lead.Record.DetailSide',
+    return Dep.extend({
+    
+        sideView: 'Crm:Lead.Record.DetailSide',
 
-	});
+    });
 });
 
 

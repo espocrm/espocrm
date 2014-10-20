@@ -21,49 +21,49 @@
 
 Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Tasks',
+        name: 'Tasks',
 
-		scope: 'Task',
+        scope: 'Task',
 
-		defaultOptions: {
-			sortBy: 'createdAt',
-			asc: false,
-			displayRecords: 5,
-			expandedLayout: {
-				rows: [
-					[
-						{
-							name: 'name',
-							link: true,
-						}
-					],
-					[
-						{
-							name: 'status'
-						},
-						{
-							name: 'dateEnd'
-						}
-					]
-				]
-			},
-			searchData: {
-				bool: {
-					onlyMy: true,
-					open: true,
-				},
-				advanced: {
-					status: {
-						type: 'notIn',
-						value: ['Completed', 'Canceled']
-					},
-				},
+        defaultOptions: {
+            sortBy: 'createdAt',
+            asc: false,
+            displayRecords: 5,
+            expandedLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'name',
+                            link: true,
+                        }
+                    ],
+                    [
+                        {
+                            name: 'status'
+                        },
+                        {
+                            name: 'dateEnd'
+                        }
+                    ]
+                ]
+            },
+            searchData: {
+                bool: {
+                    onlyMy: true,
+                    open: true,
+                },
+                advanced: {
+                    status: {
+                        type: 'notIn',
+                        value: ['Completed', 'Canceled']
+                    },
+                },
 
-			},
-		},
+            },
+        },
 
-	});
+    });
 });
 

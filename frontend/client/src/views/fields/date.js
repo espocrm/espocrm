@@ -21,255 +21,255 @@
 
 Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({	
-	
-		type: 'date',
-		
-		editTemplate: 'fields.date.edit',
-		
-		searchTemplate: 'fields.date.search',
-		
-		validations: ['required', 'date', 'after', 'before'],
-		
-		searchTypeOptions: ['today', 'past', 'future', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'on', 'after', 'before', 'between'],
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);
-		},
-		
-		setupSearch: function () {
-			this.searchParams.typeOptions = this.searchTypeOptions;
-			this.events = _.extend({
-				'change select.search-type': function (e) {				
-					var type = $(e.currentTarget).val();
-					this.handleSearchType(type);
-				},
-			}, this.events || {});		
-			
-			this.searchParams.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
-			this.searchParams.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
-		},
-		
-		getValueForDisplay: function () {
-			var value = this.model.get(this.name);			
-			if (!value) {
-				if (this.mode == 'edit' || this.mode == 'search') {
-					return '';
-				}
-				return this.translate('None');
-			}
-			
-			if (this.mode == 'list' || this.mode == 'detail') {			
-				var d = this.getDateTime().toMoment(value);
-				var today = moment().tz(this.getDateTime().timeZone || 'UTC').startOf('day');				
-				var dt = today.clone();					
-					
-				var ranges = {
-					'today': [dt.unix(), dt.add('days', 1).unix()],
-					'tomorrow': [dt.unix(), dt.add('days', 1).unix()],
-					'yesterday': [dt.add('days', -3).unix(), dt.add('days', 1).unix()]
-				};
-					
-				if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
-					return this.translate('Today');
-				} else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
-					return this.translate('Tomorrow');
-				} else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
-					return this.translate('Yesterday');
-				} 
-					
-				if (d.format('YYYY') == today.format('YYYY')) {
-					return d.format('MMM DD');
-				} else {
-					return d.format('MMM DD, YYYY');
-				}
-			}
-			
-			return this.getDateTime().toDisplayDate(value);
-		},
-		
-		afterRender: function () {
-			if (this.mode == 'edit' || this.mode == 'search') {
-				this.$element = this.$el.find('[name="' + this.name + '"]');
-				
-				var wait = false;
-				this.$element.on('change', function () {
-					if (!wait) {
-						this.trigger('change');
-						wait = true;
-						setTimeout(function () {
-							wait = false
-						}, 100);
-					}
-				}.bind(this));
-			
-				var options = {
-					format: this.getDateTime().dateFormat.toLowerCase(),
-					weekStart: this.getDateTime().weekStart,
-					autoclose: true,
-					todayHighlight: true,
-				};
-				
-				var language = this.getConfig().get('language');
-				
-				if (!(language in $.fn.datepicker.dates)) {
-					$.fn.datepicker.dates[language] = {
-						days: this.translate('dayNames', 'lists'),
-						daysShort: this.translate('dayNamesShort', 'lists'),
-						daysMin: this.translate('dayNamesMin', 'lists'),
-						months: this.translate('monthNames', 'lists'),
-						monthsShort: this.translate('monthNamesShort', 'lists'),
-						today: this.translate('Today'),
-						clear: this.translate('Clear'),
-					};
-				}
-			
-				var options = {
-					format: this.getDateTime().dateFormat.toLowerCase(),
-					weekStart: this.getDateTime().weekStart,
-					autoclose: true,
-					todayHighlight: true,
-					language: language
-				};			
-				
-				var $datePicker = this.$element.datepicker(options).on('show', function (e) {
-					$('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
-				}.bind(this));
-				
-				
-				if (this.mode == 'search') {
-					var $elAdd = this.$el.find('input[name="' + this.name + '-additional"]');
-					$elAdd.datepicker(options).on('show', function (e) {
-						$('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
-					}.bind(this));
-					$elAdd.parent().find('button.date-picker-btn').on('click', function (e) {
-						$elAdd.datepicker('show');
-					});
-				}
-				
-				this.$element.parent().find('button.date-picker-btn').on('click', function (e) {
-					this.$element.datepicker('show');
-				}.bind(this));
-				
-				var $searchType = this.$el.find('select.search-type');				
-				this.handleSearchType($searchType.val());				
-			}
-		},
-		
-		handleSearchType: function (type) {
-			if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
-				this.$el.find('div.primary').removeClass('hidden');
-				this.$el.find('div.additional').addClass('hidden');
-			} else if (type == 'between') {
-				this.$el.find('div.primary').removeClass('hidden');
-				this.$el.find('div.additional').removeClass('hidden');
-			} else {
-				this.$el.find('div.primary').addClass('hidden');
-				this.$el.find('div.additional').addClass('hidden');
-			}
-		},
-		
-		parseDate: function (string) {
-			return this.getDateTime().fromDisplayDate(string);
-		},
-		
-		parse: function (string) {
-			return this.parseDate(string);
-		},
-		
-		fetch: function () {			
-			var data = {};
-			data[this.name] = this.parse(this.$element.val());
-			return data;
-		},			
-		
-		fetchSearch: function () {
-			var value = this.parseDate(this.$element.val());
+    return Dep.extend({    
+    
+        type: 'date',
+        
+        editTemplate: 'fields.date.edit',
+        
+        searchTemplate: 'fields.date.search',
+        
+        validations: ['required', 'date', 'after', 'before'],
+        
+        searchTypeOptions: ['today', 'past', 'future', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'on', 'after', 'before', 'between'],
+        
+        setup: function () {
+            Dep.prototype.setup.call(this);
+        },
+        
+        setupSearch: function () {
+            this.searchParams.typeOptions = this.searchTypeOptions;
+            this.events = _.extend({
+                'change select.search-type': function (e) {                
+                    var type = $(e.currentTarget).val();
+                    this.handleSearchType(type);
+                },
+            }, this.events || {});        
+            
+            this.searchParams.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
+            this.searchParams.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
+        },
+        
+        getValueForDisplay: function () {
+            var value = this.model.get(this.name);            
+            if (!value) {
+                if (this.mode == 'edit' || this.mode == 'search') {
+                    return '';
+                }
+                return this.translate('None');
+            }
+            
+            if (this.mode == 'list' || this.mode == 'detail') {            
+                var d = this.getDateTime().toMoment(value);
+                var today = moment().tz(this.getDateTime().timeZone || 'UTC').startOf('day');                
+                var dt = today.clone();                    
+                    
+                var ranges = {
+                    'today': [dt.unix(), dt.add('days', 1).unix()],
+                    'tomorrow': [dt.unix(), dt.add('days', 1).unix()],
+                    'yesterday': [dt.add('days', -3).unix(), dt.add('days', 1).unix()]
+                };
+                    
+                if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
+                    return this.translate('Today');
+                } else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
+                    return this.translate('Tomorrow');
+                } else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
+                    return this.translate('Yesterday');
+                } 
+                    
+                if (d.format('YYYY') == today.format('YYYY')) {
+                    return d.format('MMM DD');
+                } else {
+                    return d.format('MMM DD, YYYY');
+                }
+            }
+            
+            return this.getDateTime().toDisplayDate(value);
+        },
+        
+        afterRender: function () {
+            if (this.mode == 'edit' || this.mode == 'search') {
+                this.$element = this.$el.find('[name="' + this.name + '"]');
+                
+                var wait = false;
+                this.$element.on('change', function () {
+                    if (!wait) {
+                        this.trigger('change');
+                        wait = true;
+                        setTimeout(function () {
+                            wait = false
+                        }, 100);
+                    }
+                }.bind(this));
+            
+                var options = {
+                    format: this.getDateTime().dateFormat.toLowerCase(),
+                    weekStart: this.getDateTime().weekStart,
+                    autoclose: true,
+                    todayHighlight: true,
+                };
+                
+                var language = this.getConfig().get('language');
+                
+                if (!(language in $.fn.datepicker.dates)) {
+                    $.fn.datepicker.dates[language] = {
+                        days: this.translate('dayNames', 'lists'),
+                        daysShort: this.translate('dayNamesShort', 'lists'),
+                        daysMin: this.translate('dayNamesMin', 'lists'),
+                        months: this.translate('monthNames', 'lists'),
+                        monthsShort: this.translate('monthNamesShort', 'lists'),
+                        today: this.translate('Today'),
+                        clear: this.translate('Clear'),
+                    };
+                }
+            
+                var options = {
+                    format: this.getDateTime().dateFormat.toLowerCase(),
+                    weekStart: this.getDateTime().weekStart,
+                    autoclose: true,
+                    todayHighlight: true,
+                    language: language
+                };            
+                
+                var $datePicker = this.$element.datepicker(options).on('show', function (e) {
+                    $('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
+                }.bind(this));
+                
+                
+                if (this.mode == 'search') {
+                    var $elAdd = this.$el.find('input[name="' + this.name + '-additional"]');
+                    $elAdd.datepicker(options).on('show', function (e) {
+                        $('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
+                    }.bind(this));
+                    $elAdd.parent().find('button.date-picker-btn').on('click', function (e) {
+                        $elAdd.datepicker('show');
+                    });
+                }
+                
+                this.$element.parent().find('button.date-picker-btn').on('click', function (e) {
+                    this.$element.datepicker('show');
+                }.bind(this));
+                
+                var $searchType = this.$el.find('select.search-type');                
+                this.handleSearchType($searchType.val());                
+            }
+        },
+        
+        handleSearchType: function (type) {
+            if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
+                this.$el.find('div.primary').removeClass('hidden');
+                this.$el.find('div.additional').addClass('hidden');
+            } else if (type == 'between') {
+                this.$el.find('div.primary').removeClass('hidden');
+                this.$el.find('div.additional').removeClass('hidden');
+            } else {
+                this.$el.find('div.primary').addClass('hidden');
+                this.$el.find('div.additional').addClass('hidden');
+            }
+        },
+        
+        parseDate: function (string) {
+            return this.getDateTime().fromDisplayDate(string);
+        },
+        
+        parse: function (string) {
+            return this.parseDate(string);
+        },
+        
+        fetch: function () {            
+            var data = {};
+            data[this.name] = this.parse(this.$element.val());
+            return data;
+        },            
+        
+        fetchSearch: function () {
+            var value = this.parseDate(this.$element.val());
 
-			var type = this.$el.find('[name="'+this.name+'-type"]').val();
-			var data;
-			
-			if (type == 'between') {
-				if (!value) {
-					return false;
-				}	
-				var valueTo = this.parseDate(this.$el.find('[name="' + this.name + '-additional"]').val());
-				if (!valueTo) {
-					return false;
-				}
-				data = {
-					type: type,
-					value: [value, valueTo],
-					dateValue: value,
-					dateValueTo: valueTo								
-				};
-			} else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
-				if (!value) {
-					return false;
-				}
-				data = {
-					type: type,
-					value: value,
-					dateValue: value									
-				};
-			} else {
-				data = {
-					type: type							
-				};
-			}
-			return data;				
-		},
-		
-		validateRequired: function () {
-			if (this.params.required || this.model.isRequired(this.name)) {
-				if (this.model.get(this.name) === null) {
-					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-					this.showValidationMessage(msg);
-					return true;
-				}
-			}
-		},
-		
-		validateDate: function () {
-			if (this.model.get(this.name) === -1) {
-				var msg = this.translate('fieldShouldBeDate', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-				this.showValidationMessage(msg);
-				return true;
-			}
-		},
-		
-		validateAfter: function () {
-			var field = this.model.getFieldParam(this.name, 'after');
-			if (field) {
-				var value = this.model.get(this.name);
-				var otherValue = this.model.get(field);
-				if (value && otherValue) {
-					if (moment(value).unix() <= moment(otherValue).unix()) {
-						var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
-						                                                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
-						
-						this.showValidationMessage(msg);
-						return true;	
-					}
-				}
-			}
-		},
-		
-		validateBefore: function () {
-			var field = this.model.getFieldParam(this.name, 'before');
-			if (field) {
-				var value = this.model.get(this.name);
-				var otherValue = this.model.get(field);
-				if (value && otherValue) {
-					if (moment(value).unix() >= moment(otherValue).unix()) {
-						var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
-						                                                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
-						this.showValidationMessage(msg);
-						return true;	
-					}
-				}
-			}
-		},
-	});
+            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+            var data;
+            
+            if (type == 'between') {
+                if (!value) {
+                    return false;
+                }    
+                var valueTo = this.parseDate(this.$el.find('[name="' + this.name + '-additional"]').val());
+                if (!valueTo) {
+                    return false;
+                }
+                data = {
+                    type: type,
+                    value: [value, valueTo],
+                    dateValue: value,
+                    dateValueTo: valueTo                                
+                };
+            } else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
+                if (!value) {
+                    return false;
+                }
+                data = {
+                    type: type,
+                    value: value,
+                    dateValue: value                                    
+                };
+            } else {
+                data = {
+                    type: type                            
+                };
+            }
+            return data;                
+        },
+        
+        validateRequired: function () {
+            if (this.params.required || this.model.isRequired(this.name)) {
+                if (this.model.get(this.name) === null) {
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    this.showValidationMessage(msg);
+                    return true;
+                }
+            }
+        },
+        
+        validateDate: function () {
+            if (this.model.get(this.name) === -1) {
+                var msg = this.translate('fieldShouldBeDate', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                this.showValidationMessage(msg);
+                return true;
+            }
+        },
+        
+        validateAfter: function () {
+            var field = this.model.getFieldParam(this.name, 'after');
+            if (field) {
+                var value = this.model.get(this.name);
+                var otherValue = this.model.get(field);
+                if (value && otherValue) {
+                    if (moment(value).unix() <= moment(otherValue).unix()) {
+                        var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                        
+                        this.showValidationMessage(msg);
+                        return true;    
+                    }
+                }
+            }
+        },
+        
+        validateBefore: function () {
+            var field = this.model.getFieldParam(this.name, 'before');
+            if (field) {
+                var value = this.model.get(this.name);
+                var otherValue = this.model.get(field);
+                if (value && otherValue) {
+                    if (moment(value).unix() >= moment(otherValue).unix()) {
+                        var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                        this.showValidationMessage(msg);
+                        return true;    
+                    }
+                }
+            }
+        },
+    });
 });
 

@@ -20,36 +20,36 @@
  ************************************************************************/ 
 
 Espo.define('Views.Site.Master', 'View', function (Dep) {
-	
-	return Dep.extend({
-	
-		template: 'site.master',
-	
-		views: {
-			header: {
-				id: 'header',
-				view: 'Site.Header'
-			},
-			main: {
-				id: 'main',
-				view: false,
-			},
-			footer: {
-				el: 'body > footer',
-				view: 'Site.Footer'
-			},
-		},
+    
+    return Dep.extend({
+    
+        template: 'site.master',
+    
+        views: {
+            header: {
+                id: 'header',
+                view: 'Site.Header'
+            },
+            main: {
+                id: 'main',
+                view: false,
+            },
+            footer: {
+                el: 'body > footer',
+                view: 'Site.Footer'
+            },
+        },
 
-		el: 'body',
+        el: 'body',
 
-		showLoadingNotification: function () {
-			this.notify('Loading...');			
-		},
-	
-		hideLoadingNotification: function () {
-			this.notify(false);
-		}		
-	});
+        showLoadingNotification: function () {
+            this.notify('Loading...');            
+        },
+    
+        hideLoadingNotification: function () {
+            this.notify(false);
+        }        
+    });
 });
 
 

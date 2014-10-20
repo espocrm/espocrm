@@ -18,33 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
+    
 Espo.define('Crm:Views.Call.Record.RowActions.Default', 'Views.Record.RowActions.Default', function (Dep) {
 
-	return Dep.extend({
-	
-		getActions: function () {
-			var actions = Dep.prototype.getActions.call(this);
-			
-			if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-				actions.push({
-					action: 'setHeld',
-					label: 'Set Held',
-					data: {
-						id: this.model.id
-					}
-				});
-				actions.push({
-					action: 'setNotHeld',
-					label: 'Set Not Held',
-					data: {
-						id: this.model.id
-					}
-				});
-			}
-			
-			return actions;
-		},
-	});
-	
+    return Dep.extend({
+    
+        getActions: function () {
+            var actions = Dep.prototype.getActions.call(this);
+            
+            if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+                actions.push({
+                    action: 'setHeld',
+                    label: 'Set Held',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+                actions.push({
+                    action: 'setNotHeld',
+                    label: 'Set Not Held',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+            
+            return actions;
+        },
+    });
+    
 });

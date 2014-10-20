@@ -19,36 +19,36 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Models.User', 'Model', function (Dep) {
-	
-	return Dep.extend({
-	
-		name: "User",
-	
-		isAdmin: function () {			
-			return this.get('isAdmin');
-		},
+    
+    return Dep.extend({
+    
+        name: "User",
+    
+        isAdmin: function () {            
+            return this.get('isAdmin');
+        },
 
-		isOwner: function (model) {
-			return this.id === model.get('assignedUserId') || this.id === model.get('createdById');
-		},
+        isOwner: function (model) {
+            return this.id === model.get('assignedUserId') || this.id === model.get('createdById');
+        },
 
-		inTeam: function (model) {
-		
-			var userTeamIds = this.getTeamIds();
+        inTeam: function (model) {
+        
+            var userTeamIds = this.getTeamIds();
 
-			if (model.name == 'Team') {
-				return (userTeamIds.indexOf(model.id) != -1);
-			} else {
-				var teamIds = model.getTeamIds();
-				for (var i in userTeamIds) {
-					if (teamIds.indexOf(i) != -1) {
-						return true;
-					}
-				}
-			}
-			return false;
-		},
+            if (model.name == 'Team') {
+                return (userTeamIds.indexOf(model.id) != -1);
+            } else {
+                var teamIds = model.getTeamIds();
+                for (var i in userTeamIds) {
+                    if (teamIds.indexOf(i) != -1) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
 
-	});
+    });
 
 });

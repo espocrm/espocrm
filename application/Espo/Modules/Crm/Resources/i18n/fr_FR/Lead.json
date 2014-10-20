@@ -1,46 +1,46 @@
 {
-	"labels": {
-		"Converted To": "Convertir Vers",
-		"Create Lead": "Créer Lead",
-		"Convert": "Convertir"
-	},
-	"fields": {
-		"name": "Nom",
-		"emailAddress": "Email",
-		"title": "Titre",
-		"website": "Site Web",
-		"phoneNumber": "Téléphone",
-		"accountName": "Nom du Compte",
-		"doNotCall": "Ne Pas Appeler",
-		"address": "Adresse",
-		"status": "Statut",
-		"source": "Source",
-		"opportunityAmount": "Montant du Challenge",
-		"description": "Description",
-		"createdAccount": "Compte",
-		"createdContact": "Contact",
-		"createdOpportunity": "Challenge"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Nouveau",
-			"Assigned": "Assigné",
-			"In Process": "En Cours de Traitement",
-			"Converted": "Converti",
-			"Recycled": "Supprimé",
-			"Dead": "Mort"
-		},
-		"source": {
-			"Call": "Appel",
-			"Email": "Email",
-			"Existing Customer": "Client Existant",
-			"Partner": "Partenaire",
-			"Public Relations": "Relations publiques",
-			"Web Site": "Site Web",
-			"Campaign": "Campagne",
-			"Other": "Autre"
-		}
-	}
+    "labels": {
+        "Converted To": "Convertir Vers",
+        "Create Lead": "Créer Lead",
+        "Convert": "Convertir"
+    },
+    "fields": {
+        "name": "Nom",
+        "emailAddress": "Email",
+        "title": "Titre",
+        "website": "Site Web",
+        "phoneNumber": "Téléphone",
+        "accountName": "Nom du Compte",
+        "doNotCall": "Ne Pas Appeler",
+        "address": "Adresse",
+        "status": "Statut",
+        "source": "Source",
+        "opportunityAmount": "Montant du Challenge",
+        "description": "Description",
+        "createdAccount": "Compte",
+        "createdContact": "Contact",
+        "createdOpportunity": "Challenge"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nouveau",
+            "Assigned": "Assigné",
+            "In Process": "En Cours de Traitement",
+            "Converted": "Converti",
+            "Recycled": "Supprimé",
+            "Dead": "Mort"
+        },
+        "source": {
+            "Call": "Appel",
+            "Email": "Email",
+            "Existing Customer": "Client Existant",
+            "Partner": "Partenaire",
+            "Public Relations": "Relations publiques",
+            "Web Site": "Site Web",
+            "Campaign": "Campagne",
+            "Other": "Autre"
+        }
+    }
 }

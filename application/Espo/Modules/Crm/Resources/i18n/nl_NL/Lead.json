@@ -1,50 +1,50 @@
 {
-	"labels": {
-		"Converted To": "Vertaald naar",
-		"Create Lead": "Grote Lead",
-		"Convert": "Converteer"
-	},
-	"fields": {
-		"name": "Record Naam",
-		"emailAddress": "Email",
-		"title": "Titel",
-		"website": "Website",
-		"phoneNumber": "Telefoon",
-		"accountName": "Relatie Naam",
-		"doNotCall": "Niet Bellen",
-		"address": "Adres",
-		"status": "Status",
-		"source": "Bron",
-		"opportunityAmount": "Aantal uitdagingen",
-		"opportunityAmountConverted": "Opportunity Amount (converted)",
-		"description": "Beschrijving",
-		"createdAccount": "Relatie",
-		"createdContact": "Contact",
-		"createdOpportunity": "Kans"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Nieuw",
-			"Assigned": "Toegewezen",
-			"In Process": "In Behandeling",
-			"Converted": "Converteren",
-			"Recycled": "Opnieuw verwerkt",
-			"Dead": "Dood"
-		},
-		"source": {
-			"Call": "Oproep",
-			"Email": "Email",
-			"Existing Customer": "Bestaande Klant",
-			"Partner": "Partner",
-			"Public Relations": "Public Relations",
-			"Web Site": "Web Pagina",
-			"Campaign": "Campagne",
-			"Other": "Ander"
-		}
-	},
-	"presetFilters": {
-		"active": "Active"
-	}
+    "labels": {
+        "Converted To": "Vertaald naar",
+        "Create Lead": "Grote Lead",
+        "Convert": "Converteer"
+    },
+    "fields": {
+        "name": "Record Naam",
+        "emailAddress": "Email",
+        "title": "Titel",
+        "website": "Website",
+        "phoneNumber": "Telefoon",
+        "accountName": "Relatie Naam",
+        "doNotCall": "Niet Bellen",
+        "address": "Adres",
+        "status": "Status",
+        "source": "Bron",
+        "opportunityAmount": "Aantal uitdagingen",
+        "opportunityAmountConverted": "Opportunity Amount (converted)",
+        "description": "Beschrijving",
+        "createdAccount": "Relatie",
+        "createdContact": "Contact",
+        "createdOpportunity": "Kans"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nieuw",
+            "Assigned": "Toegewezen",
+            "In Process": "In Behandeling",
+            "Converted": "Converteren",
+            "Recycled": "Opnieuw verwerkt",
+            "Dead": "Dood"
+        },
+        "source": {
+            "Call": "Oproep",
+            "Email": "Email",
+            "Existing Customer": "Bestaande Klant",
+            "Partner": "Partner",
+            "Public Relations": "Public Relations",
+            "Web Site": "Web Pagina",
+            "Campaign": "Campagne",
+            "Other": "Ander"
+        }
+    },
+    "presetFilters": {
+        "active": "Active"
+    }
 }

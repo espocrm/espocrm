@@ -1,29 +1,29 @@
 {
-	"fields": {
-		"name": "Nom",
-		"parent": "Parent",
-		"status": "Statut",
-		"dateStart": "Date de Début",
-		"dateEnd": "Date de Fin",
-		"duration": "Durée",
-		"description": "Description",
-		"users": "Utilisateurs",
-		"contacts": "Contacts",
-		"leads": "Leads"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Plannifié",
-			"Held": "Fait",
-			"Not Held": "Pas Fait"
-		}
-	},
-	"labels": {
-		"Create Meeting": "Créer un Rendez-vous",
-		"Set Held": "Marquer Fait",
-		"Set Not Held": "Marquer Pas Fait",
-		"Send Invitations": "Envoi d'Invitations"
-	}
+    "fields": {
+        "name": "Nom",
+        "parent": "Parent",
+        "status": "Statut",
+        "dateStart": "Date de Début",
+        "dateEnd": "Date de Fin",
+        "duration": "Durée",
+        "description": "Description",
+        "users": "Utilisateurs",
+        "contacts": "Contacts",
+        "leads": "Leads"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Plannifié",
+            "Held": "Fait",
+            "Not Held": "Pas Fait"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Créer un Rendez-vous",
+        "Set Held": "Marquer Fait",
+        "Set Not Held": "Marquer Pas Fait",
+        "Send Invitations": "Envoi d'Invitations"
+    }
 }

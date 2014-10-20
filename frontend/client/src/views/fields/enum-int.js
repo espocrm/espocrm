@@ -21,38 +21,38 @@
 
 Espo.define('Views.Fields.EnumInt', 'Views.Fields.Enum', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'enumInt',
+        type: 'enumInt',
 
-		listTemplate: 'fields.enum.detail',
+        listTemplate: 'fields.enum.detail',
 
-		detailTemplate: 'fields.enum.detail',
+        detailTemplate: 'fields.enum.detail',
 
-		editTemplate: 'fields.enum.edit',
+        editTemplate: 'fields.enum.edit',
 
-		searchTemplate: 'fields.enum.search',
-		
-		validations: [],
+        searchTemplate: 'fields.enum.search',
+        
+        validations: [],
 
-		fetch: function () {
-			var value = parseInt(this.$el.find('[name="' + this.name + '"]').val());
-			var data = {};
-			data[this.name] = value;
-			return data;
-		},
+        fetch: function () {
+            var value = parseInt(this.$el.find('[name="' + this.name + '"]').val());
+            var data = {};
+            data[this.name] = value;
+            return data;
+        },
 
-		fetchSearch: function () {
-			var arr = [];
-			$.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
-				arr.push(parseInt($(el).val()));
-			});
-			var data = {
-				type: 'in',
-				value: arr
-			};
-			return data;
-		},
-	});
+        fetchSearch: function () {
+            var arr = [];
+            $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
+                arr.push(parseInt($(el).val()));
+            });
+            var data = {
+                type: 'in',
+                value: arr
+            };
+            return data;
+        },
+    });
 });
 

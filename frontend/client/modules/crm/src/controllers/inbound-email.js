@@ -20,17 +20,17 @@
  ************************************************************************/ 
 
 Espo.define('Crm:Controllers.InboundEmail', 'Controllers.Record', function (Dep) {
-	
-	return Dep.extend({
-	
-		checkAccess: function () {
-			if (this.getUser().isAdmin()) {
-				return true;
-			}
-			return false;
-		},
-	
-	});	
+    
+    return Dep.extend({
+    
+        checkAccess: function () {
+            if (this.getUser().isAdmin()) {
+                return true;
+            }
+            return false;
+        },
+    
+    });    
 });
 
 

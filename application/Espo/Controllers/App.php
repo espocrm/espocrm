@@ -26,25 +26,25 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class App extends \Espo\Core\Controllers\Record
 {
-	public function actionUser()
-	{		
-		return array(
-			'user' => $this->getUser()->toArray(),
-			'acl' => $this->getAcl()->toArray(),
-			'preferences' => $this->getPreferences()->toArray(),
-			'token' => $this->getUser()->get('token')
-		);	
-	}
-	
-	public function actionDestroyAuthToken($params, $data)
-	{		
-		$token = $data['token'];		
-		if (empty($token)) {
-			throw new BadRequest();
-		}
+    public function actionUser()
+    {        
+        return array(
+            'user' => $this->getUser()->toArray(),
+            'acl' => $this->getAcl()->toArray(),
+            'preferences' => $this->getPreferences()->toArray(),
+            'token' => $this->getUser()->get('token')
+        );    
+    }
+    
+    public function actionDestroyAuthToken($params, $data)
+    {        
+        $token = $data['token'];        
+        if (empty($token)) {
+            throw new BadRequest();
+        }
 
-		$auth = new \Espo\Core\Utils\Auth($this->getContainer());
-		return $auth->destroyAuthToken($token);		
-	}
+        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
+        return $auth->destroyAuthToken($token);        
+    }
 }
 

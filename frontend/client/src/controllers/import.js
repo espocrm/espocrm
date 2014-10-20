@@ -19,20 +19,20 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Controllers.Import', 'Controller', function (Dep) {
-	
-	return Dep.extend({	
-	
-		checkAccess: function () {
-			if (this.getUser().isAdmin()) {
-				return true;
-			}
-			return false;
-		},			
-		
-		index: function () {		
-			this.main('Import.Index', null);
-		},
-				
-	});
-	
+    
+    return Dep.extend({    
+    
+        checkAccess: function () {
+            if (this.getUser().isAdmin()) {
+                return true;
+            }
+            return false;
+        },            
+        
+        index: function () {        
+            this.main('Import.Index', null);
+        },
+                
+    });
+    
 });

@@ -26,11 +26,11 @@ use Espo\ORM\Entity;
 
 class UniqueId extends \Espo\Core\ORM\Repositories\RDB
 {
-	protected function getNewEntity()
-	{
-		$entity = parent::getNewEntity();
-		$entity->set('name', uniqid());
-		return $entity;
-	}
+    protected function getNewEntity()
+    {
+        $entity = parent::getNewEntity();
+        $entity->set('name', uniqid());
+        return $entity;
+    }
 }
 

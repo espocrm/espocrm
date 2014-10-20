@@ -21,58 +21,58 @@
  ************************************************************************/
 
 return array (
-	'defaultPermissions' =>
-	array (
-		'dir' => '0775',
-		'file' => '0664',
-		'user' => '',
-		'group' => '',
-	),
-	'cron' => array(
-		'maxJobNumber' => 15, /** Max number of jobs per one execution */
-		'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
-		'minExecutionTime' => 50, /** to avoid too frequency execution **/
-	),
-	'crud' => array(
-		'get' => 'read',
-		'post' => 'create',
-		'put' => 'update',
-		'patch' => 'patch',
-		'delete' => 'delete',
-	),
-	'systemUser' => array(
-		'id' => 'system',
-		'userName' => 'system',
-		'firstName' => '',
-		'lastName' => 'System',
-	),
-	'systemItems' =>
-	array (
-		'systemItems',
-		'adminItems',
-		'configPath',
-		'cachePath',
-		'database',
-		'crud',
-		'logger',
-		'isInstalled',
-		'defaultPermissions',
-		'systemUser',
-	),
-	'adminItems' =>
-	array (
-		'devMode',
-		'outboundEmailIsShared',
-		'outboundEmailFromName',
-		'outboundEmailFromAddress',
-		'smtpServer',
-		'smtpPort',
-		'smtpAuth',
-		'smtpSecurity',
-		'smtpUsername',
-		'smtpPassword',
-		'cron',
-	),
-	'isInstalled' => false,
+    'defaultPermissions' =>
+    array (
+        'dir' => '0775',
+        'file' => '0664',
+        'user' => '',
+        'group' => '',
+    ),
+    'cron' => array(
+        'maxJobNumber' => 15, /** Max number of jobs per one execution */
+        'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
+        'minExecutionTime' => 50, /** to avoid too frequency execution **/
+    ),
+    'crud' => array(
+        'get' => 'read',
+        'post' => 'create',
+        'put' => 'update',
+        'patch' => 'patch',
+        'delete' => 'delete',
+    ),
+    'systemUser' => array(
+        'id' => 'system',
+        'userName' => 'system',
+        'firstName' => '',
+        'lastName' => 'System',
+    ),
+    'systemItems' =>
+    array (
+        'systemItems',
+        'adminItems',
+        'configPath',
+        'cachePath',
+        'database',
+        'crud',
+        'logger',
+        'isInstalled',
+        'defaultPermissions',
+        'systemUser',
+    ),
+    'adminItems' =>
+    array (
+        'devMode',
+        'outboundEmailIsShared',
+        'outboundEmailFromName',
+        'outboundEmailFromAddress',
+        'smtpServer',
+        'smtpPort',
+        'smtpAuth',
+        'smtpSecurity',
+        'smtpUsername',
+        'smtpPassword',
+        'cron',
+    ),
+    'isInstalled' => false,
 );
 

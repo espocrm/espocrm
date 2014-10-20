@@ -21,200 +21,200 @@
 
 (function (Espo, _, Handlebars) {
 
-	Espo.ViewHelper = function (options) {
-		this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
-		this._registerHandlebarsHelpers();
-		
-		this.mdSearch = [
-			/\("?(.*?)"?\)\[(.*?)\]/g,
-			/\&\#x60;(([\s\S]*?)\&\#x60;)/,
-			/(\*\*|__)(.*?)\1/,
-			/(\*|_)(.*?)\1/,
-			/\~\~(.*?)\~\~/
-		];
-		this.mdReplace = [
-			'<a href="$2">$1</a>',
-			'<code>$2</code>',
-			'<strong>$2</strong>',
-			'<em>$2</em>',
-			'<del>$1</del>',
-		];
-			
-	}
+    Espo.ViewHelper = function (options) {
+        this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+        this._registerHandlebarsHelpers();
+        
+        this.mdSearch = [
+            /\("?(.*?)"?\)\[(.*?)\]/g,
+            /\&\#x60;(([\s\S]*?)\&\#x60;)/,
+            /(\*\*|__)(.*?)\1/,
+            /(\*|_)(.*?)\1/,
+            /\~\~(.*?)\~\~/
+        ];
+        this.mdReplace = [
+            '<a href="$2">$1</a>',
+            '<code>$2</code>',
+            '<strong>$2</strong>',
+            '<em>$2</em>',
+            '<del>$1</del>',
+        ];
+            
+    }
 
-	_.extend(Espo.ViewHelper.prototype, {
+    _.extend(Espo.ViewHelper.prototype, {
 
-		layoutManager: null,
+        layoutManager: null,
 
-		settings: null,
+        settings: null,
 
-		user: null,
+        user: null,
 
-		preferences: null,
+        preferences: null,
 
-		language: null,
+        language: null,
 
-		_registerHandlebarsHelpers: function () {
-			var self = this;
+        _registerHandlebarsHelpers: function () {
+            var self = this;
 
-			Handlebars.registerHelper('img', function (img) {
-				return new Handlebars.SafeString("<img src=\"img/" + img + "\"></img>");
-			});
+            Handlebars.registerHelper('img', function (img) {
+                return new Handlebars.SafeString("<img src=\"img/" + img + "\"></img>");
+            });
 
-			Handlebars.registerHelper('prop', function (object, name) {
-				if (name in object) {
-					return object[name];
-				}
-			});
+            Handlebars.registerHelper('prop', function (object, name) {
+                if (name in object) {
+                    return object[name];
+                }
+            });
 
-			Handlebars.registerHelper('var', function (name, context, options) {
-				return new Handlebars.SafeString(context[name]);
-			});
+            Handlebars.registerHelper('var', function (name, context, options) {
+                return new Handlebars.SafeString(context[name]);
+            });
 
-			Handlebars.registerHelper('concat', function (left, right) {
-				return left + right;
-			});
+            Handlebars.registerHelper('concat', function (left, right) {
+                return left + right;
+            });
 
-			Handlebars.registerHelper('ifEqual', function (left, right, options) {
-				if (left == right) {
-					return options.fn(this);
-				}
-				return options.inverse(this);
-			});
+            Handlebars.registerHelper('ifEqual', function (left, right, options) {
+                if (left == right) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
 
-			Handlebars.registerHelper('ifNotEqual', function (left, right, options) {
-				if (left != right) {
-					return options.fn(this);
-				}
-				return options.inverse(this);
-			});
+            Handlebars.registerHelper('ifNotEqual', function (left, right, options) {
+                if (left != right) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
 
-			Handlebars.registerHelper('ifPropEquals', function (object, property, value, options) {
-				if (object[property] == value) {
-					return options.fn(this);
-				}
-				return options.inverse(this);
-			});
-			
-			Handlebars.registerHelper('ifAttrEquals', function (model, attr, value, options) {
-				if (model.get(attr) == value) {
-					return options.fn(this);
-				}
-				return options.inverse(this);
-			});
-			
-			Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
-				if (model.get(attr)) {
-					return options.fn(this);
-				}
-				return options.inverse(this);
-			});
+            Handlebars.registerHelper('ifPropEquals', function (object, property, value, options) {
+                if (object[property] == value) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
+            
+            Handlebars.registerHelper('ifAttrEquals', function (model, attr, value, options) {
+                if (model.get(attr) == value) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
+            
+            Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
+                if (model.get(attr)) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
 
-			Handlebars.registerHelper('get', function (model, name) {
-				return model.get(name);
-			});
+            Handlebars.registerHelper('get', function (model, name) {
+                return model.get(name);
+            });
 
-			Handlebars.registerHelper('length', function (arr) {
-				return arr.length;
-			});
+            Handlebars.registerHelper('length', function (arr) {
+                return arr.length;
+            });
 
-			Handlebars.registerHelper('translate', function (name, options) {
-				var scope = options.hash.scope || null;
-				var category = options.hash.category || null;
-				if (name === 'null') {
-					return '';
-				}
-				return self.language.translate(name, category, scope);
-			});
+            Handlebars.registerHelper('translate', function (name, options) {
+                var scope = options.hash.scope || null;
+                var category = options.hash.category || null;
+                if (name === 'null') {
+                    return '';
+                }
+                return self.language.translate(name, category, scope);
+            });
 
-			Handlebars.registerHelper('button', function (name, options) {
-				var style = options.hash.style || 'default';
-				var scope = options.hash.scope || null;
-				var label = options.hash.label || name;
-				return new Handlebars.SafeString('<button class="btn btn-'+style+'" data-action="'+name+'" type="button">'+self.language.translate(label, 'labels', scope)+'</button>');
-			});
+            Handlebars.registerHelper('button', function (name, options) {
+                var style = options.hash.style || 'default';
+                var scope = options.hash.scope || null;
+                var label = options.hash.label || name;
+                return new Handlebars.SafeString('<button class="btn btn-'+style+'" data-action="'+name+'" type="button">'+self.language.translate(label, 'labels', scope)+'</button>');
+            });
 
-			Handlebars.registerHelper('hyphen', function (string) {
-				return Espo.Utils.convert(string, 'c-h');
-			});
+            Handlebars.registerHelper('hyphen', function (string) {
+                return Espo.Utils.convert(string, 'c-h');
+            });
 
-			Handlebars.registerHelper('toDom', function (string) {
-				return Espo.Utils.toDom(string);
-			});
+            Handlebars.registerHelper('toDom', function (string) {
+                return Espo.Utils.toDom(string);
+            });
 
-			Handlebars.registerHelper('breaklines', function (text) {
-				text = Handlebars.Utils.escapeExpression(text || '');
-				text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-				return new Handlebars.SafeString(text);
-			});
-			
-			Handlebars.registerHelper('complexText', function (text) {
-				text = Handlebars.Utils.escapeExpression(text || '');
-				
-				text = text.replace(self.urlRegex, '$1($2)[$2]');
-				
-				self.mdSearch.forEach(function (re, i) {
-					text = text.replace(re, self.mdReplace[i]);
-				});
-				
-				text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-				
-				text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
-				return new Handlebars.SafeString(text);
-			});
+            Handlebars.registerHelper('breaklines', function (text) {
+                text = Handlebars.Utils.escapeExpression(text || '');
+                text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+                return new Handlebars.SafeString(text);
+            });
+            
+            Handlebars.registerHelper('complexText', function (text) {
+                text = Handlebars.Utils.escapeExpression(text || '');
+                
+                text = text.replace(self.urlRegex, '$1($2)[$2]');
+                
+                self.mdSearch.forEach(function (re, i) {
+                    text = text.replace(re, self.mdReplace[i]);
+                });
+                
+                text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+                
+                text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
+                return new Handlebars.SafeString(text);
+            });
 
-			Handlebars.registerHelper('translateOption', function (name, options) {
-				var scope = options.hash.scope || null;
-				var field = options.hash.field || null;
-				if (!field) {
-					return '';
-				}
-				var translationHash = self.language.translate(field, 'options', scope) || {};
-				return translationHash[name] || name;
-			});
+            Handlebars.registerHelper('translateOption', function (name, options) {
+                var scope = options.hash.scope || null;
+                var field = options.hash.field || null;
+                if (!field) {
+                    return '';
+                }
+                var translationHash = self.language.translate(field, 'options', scope) || {};
+                return translationHash[name] || name;
+            });
 
-			Handlebars.registerHelper('options', function (list, value, options) {
-				value = value || false;
-				list = list || {};
-				var html = '';
-				var isArray = (Object.prototype.toString.call(list) === '[object Array]');
+            Handlebars.registerHelper('options', function (list, value, options) {
+                value = value || false;
+                list = list || {};
+                var html = '';
+                var isArray = (Object.prototype.toString.call(list) === '[object Array]');
 
-				var multiple = (Object.prototype.toString.call(value) === '[object Array]');
-				var checkOption = function (name) {
-					if (multiple) {
-						return value.indexOf(name) != -1;
-					} else {
-						return value === name;
-					}
-				};
+                var multiple = (Object.prototype.toString.call(value) === '[object Array]');
+                var checkOption = function (name) {
+                    if (multiple) {
+                        return value.indexOf(name) != -1;
+                    } else {
+                        return value === name;
+                    }
+                };
 
-				var scope = options.hash.scope || false;
-				var category = options.hash.category || false;
-				var field = options.hash.field || false;
+                var scope = options.hash.scope || false;
+                var category = options.hash.category || false;
+                var field = options.hash.field || false;
 
-				var translationHash;
-				if (!category && field) {
-					var translationHash = self.language.translate(field, 'options', scope) || {};
-				}
+                var translationHash;
+                if (!category && field) {
+                    var translationHash = self.language.translate(field, 'options', scope) || {};
+                }
 
-				var translate = function (name) {
-					if (!category && field) {
-						if (typeof translationHash === 'object' && name in translationHash) {
-							return translationHash[name];
-						}
-						return name;
-					}
-					return self.language.translate(name, category, scope);
-				};
+                var translate = function (name) {
+                    if (!category && field) {
+                        if (typeof translationHash === 'object' && name in translationHash) {
+                            return translationHash[name];
+                        }
+                        return name;
+                    }
+                    return self.language.translate(name, category, scope);
+                };
 
-				for (var key in list) {
-					var keyVal = list[key];
-					html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + translate(list[key]) + "</option>"
-				}
-				return new Handlebars.SafeString(html);
-			});
-		}
-	});
+                for (var key in list) {
+                    var keyVal = list[key];
+                    html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + translate(list[key]) + "</option>"
+                }
+                return new Handlebars.SafeString(html);
+            });
+        }
+    });
 
 
 }).call(this, Espo, _, Handlebars);

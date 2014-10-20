@@ -24,11 +24,11 @@ namespace Espo\Controllers;
 
 class Email extends \Espo\Core\Controllers\Record
 {
-	public function actionGetCopiedAttachments($params, $data, $request)
-	{		
-		$id = $request->get('id');
-		
-		return $this->getRecordService()->getCopiedAttachments($id);
-	}
+    public function actionGetCopiedAttachments($params, $data, $request)
+    {        
+        $id = $request->get('id');
+        
+        return $this->getRecordService()->getCopiedAttachments($id);
+    }
 }
 

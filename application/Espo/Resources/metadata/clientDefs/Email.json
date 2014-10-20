@@ -22,15 +22,15 @@
             }
          ],
          "dropdown": [
-         	{
+             {
                "label": "Archive Email",
                "link": "#Email/create",
                "acl": "edit"
-         	},
-         	{
+             },
+             {
                "label": "Email Accounts",
                "link": "#EmailAccount"
-         	}
+             }
          ]
       },
       "detail": {
@@ -43,21 +43,21 @@
             }
          ],
          "dropdown": [
-         	{
+             {
                "label": "Reply",
                "action": "reply",
                "acl": "read"
-         	},
-         	{
+             },
+             {
                "label": "Reply to All",
                "action": "replyToAll",
                "acl": "read"
-         	},
-         	{
+             },
+             {
                "label": "Forward",
                "action": "forward",
                "acl": "read"
-         	}
+             }
          ]
       }
    },

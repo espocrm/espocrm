@@ -1,13 +1,13 @@
 {
-	"modes": {
-		"month": "Luna",
-		"week": "Saptamana",
-		"day": "Zi",
-		"agendaWeek": "Saptamana",
-		"agendaDay": "Zi"
-	},
-	"labels": {
-		"Today": "Astazi",
-		"Create": "Creaza"
-	}
+    "modes": {
+        "month": "Luna",
+        "week": "Saptamana",
+        "day": "Zi",
+        "agendaWeek": "Saptamana",
+        "agendaDay": "Zi"
+    },
+    "labels": {
+        "Today": "Astazi",
+        "Create": "Creaza"
+    }
 }

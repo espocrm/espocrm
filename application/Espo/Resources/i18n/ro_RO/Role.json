@@ -1,32 +1,32 @@
 {
-	"fields": {
-		"name": "Nume",
-		"roles": "Roluri"
-	},
-	"links": {
-		"users": "Utilizatori",
-		"teams": "Echipe"
-	},
-	"labels": {
-		"Access": "Acces",
-		"Create Role": "Creare Rol"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "ne setat",
-			"enabled": "activat",
-			"disabled": "dezactivat"
-		},
-		"levelList": {
-			"all": "toate",
-			"team": "echipa",
-			"own": "personal",
-			"no": "nu"
-		}
-	},
-	"actions": {
-		"read": "Citeste",
-		"edit": "Editare",
-		"delete": "Sterge"
-	}
+    "fields": {
+        "name": "Nume",
+        "roles": "Roluri"
+    },
+    "links": {
+        "users": "Utilizatori",
+        "teams": "Echipe"
+    },
+    "labels": {
+        "Access": "Acces",
+        "Create Role": "Creare Rol"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "ne setat",
+            "enabled": "activat",
+            "disabled": "dezactivat"
+        },
+        "levelList": {
+            "all": "toate",
+            "team": "echipa",
+            "own": "personal",
+            "no": "nu"
+        }
+    },
+    "actions": {
+        "read": "Citeste",
+        "edit": "Editare",
+        "delete": "Sterge"
+    }
 }

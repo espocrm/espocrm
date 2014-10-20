@@ -22,56 +22,56 @@
 
 Espo.define('Crm:Views.Dashlets.Cases', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Cases',
+        name: 'Cases',
 
-		scope: 'Case',
+        scope: 'Case',
 
-		defaultOptions: {
-			sortBy: 'number',
-			asc: false,
-			displayRecords: 5,
-			expandedLayout: {
-				rows: [
-					[
-						{
-							name: 'name',
-							link: true,
-						},
-						{
-							name: 'number',
-						},
-						{
-							name: 'type',
-						},
-					],
-					[
-						{
-							name: 'status'
-						},
-						{
-							name: 'priority'
-						}
-					]
-				]
-			},
-			searchData: {
-				bool: {
-					onlyMy: true,
-					open: true,
-				},
-				advanced: {
-					status: {
-						type: 'notIn',
-						value: ['Duplicate', 'Rejected', 'Closed']
-					},
-				},
+        defaultOptions: {
+            sortBy: 'number',
+            asc: false,
+            displayRecords: 5,
+            expandedLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'name',
+                            link: true,
+                        },
+                        {
+                            name: 'number',
+                        },
+                        {
+                            name: 'type',
+                        },
+                    ],
+                    [
+                        {
+                            name: 'status'
+                        },
+                        {
+                            name: 'priority'
+                        }
+                    ]
+                ]
+            },
+            searchData: {
+                bool: {
+                    onlyMy: true,
+                    open: true,
+                },
+                advanced: {
+                    status: {
+                        type: 'notIn',
+                        value: ['Duplicate', 'Rejected', 'Closed']
+                    },
+                },
 
-			},
-		},
+            },
+        },
 
-	});
+    });
 });
 
 

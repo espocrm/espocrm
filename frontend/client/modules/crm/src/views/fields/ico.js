@@ -20,27 +20,27 @@
  ************************************************************************/ 
 Espo.define('Crm:Views.Fields.Ico', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({
-	
-		//detailTemplate: '',
+    return Dep.extend({
+    
+        //detailTemplate: '',
 
-		setup: function () {
-			var tpl;
-			
-			switch (this.model.name) {
-				case 'Meeting':
-					tpl = '<span class="glyphicon glyphicon-briefcase text-muted"></span>';
-					break;
-				case 'Call':
-					tpl = '<span class="glyphicon glyphicon-phone-alt text-muted"></span>';
-					break;
-				case 'Email':
-					tpl = '<span class="glyphicon glyphicon-envelope text-muted"></span>';
-					break;			
-			}
-			this._template = tpl;
-		},
+        setup: function () {
+            var tpl;
+            
+            switch (this.model.name) {
+                case 'Meeting':
+                    tpl = '<span class="glyphicon glyphicon-briefcase text-muted"></span>';
+                    break;
+                case 'Call':
+                    tpl = '<span class="glyphicon glyphicon-phone-alt text-muted"></span>';
+                    break;
+                case 'Email':
+                    tpl = '<span class="glyphicon glyphicon-envelope text-muted"></span>';
+                    break;            
+            }
+            this._template = tpl;
+        },
 
-	});
+    });
 
 });

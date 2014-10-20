@@ -21,22 +21,22 @@
 
 Espo.define('Crm:Views.Dashlets.Calendar', 'Views.Dashlets.Abstract.Base', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Calendar',
+        name: 'Calendar',
 
-		_template: '<div class="calendar-container">{{{calendar}}}</div>',
+        _template: '<div class="calendar-container">{{{calendar}}}</div>',
 
-		setup: function () {
-			this.createView('calendar', 'Crm:Calendar.Calendar', {
-				mode: 'agendaWeek',
-				el: this.$el.selector + ' > .calendar-container',
-				header: false,
-				height: 296,
-			});				
-		},			
+        setup: function () {
+            this.createView('calendar', 'Crm:Calendar.Calendar', {
+                mode: 'agendaWeek',
+                el: this.$el.selector + ' > .calendar-container',
+                header: false,
+                height: 296,
+            });                
+        },            
 
-	});
+    });
 });
 
 

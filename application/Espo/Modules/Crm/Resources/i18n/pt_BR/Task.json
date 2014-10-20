@@ -28,10 +28,10 @@
     "labels": {
         "Create Task": "Criar Tarefa"
     },
-	"presetFilters": {
-		"active": "Ativa",
-		"completed": "Completa",
-		"todays": "Hoje",
-		"overdue": "Atrasada"
-	}
+    "presetFilters": {
+        "active": "Ativa",
+        "completed": "Completa",
+        "todays": "Hoje",
+        "overdue": "Atrasada"
+    }
 }

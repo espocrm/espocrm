@@ -19,23 +19,23 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.User.Record.EditSide', 'Views.Record.EditSide', function (Dep) {		
+Espo.define('Views.User.Record.EditSide', 'Views.Record.EditSide', function (Dep) {        
 
-	return Dep.extend({
-	
-		panels: [
-			{
-				name: 'default',
-				label: false,
-				view: 'Record.Panels.Side',
-				options: {
-					fields: ['teams', 'roles'],
-					mode: 'edit',
-				}					
-			}				
-		],
-			
-	});		
-	
+    return Dep.extend({
+    
+        panels: [
+            {
+                name: 'default',
+                label: false,
+                view: 'Record.Panels.Side',
+                options: {
+                    fields: ['teams', 'roles'],
+                    mode: 'edit',
+                }                    
+            }                
+        ],
+            
+    });        
+    
 });
 

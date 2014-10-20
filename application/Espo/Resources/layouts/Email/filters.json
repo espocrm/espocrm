@@ -1,8 +1,8 @@
 [
-	"emailAddress",
-	"dateSent",
-	"status",
-	"parent",
-	"body",
-	"teams"
+    "emailAddress",
+    "dateSent",
+    "status",
+    "parent",
+    "body",
+    "teams"
 ]

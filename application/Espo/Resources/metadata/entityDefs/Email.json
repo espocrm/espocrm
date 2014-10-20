@@ -35,37 +35,37 @@
             "view": "Email.Fields.EmailAddressVarchar"
         },
         "nameHash": {
-        	"type": "text",
-        	"notStorable": true,
-        	"readOlny": true,
-        	"disabled": true
+            "type": "text",
+            "notStorable": true,
+            "readOlny": true,
+            "disabled": true
         },
         "typeHash": {
-        	"type": "text",
-        	"notStorable": true,
-        	"readOlny": true,
-        	"disabled": true
+            "type": "text",
+            "notStorable": true,
+            "readOlny": true,
+            "disabled": true
         },
         "idHash": {
-        	"type": "text",
-        	"notStorable": true,
-        	"readOlny": true,
-        	"disabled": true
+            "type": "text",
+            "notStorable": true,
+            "readOlny": true,
+            "disabled": true
         },
         "messageId": {
-        	"type": "varchar",
-        	"maxLength": 255,
-        	"readOlny": true
+            "type": "varchar",
+            "maxLength": 255,
+            "readOlny": true
         },
         "messageIdInternal": {
-        	"type": "varchar",
-        	"maxLength": 300,
-        	"readOlny": true,
-        	"index": true
+            "type": "varchar",
+            "maxLength": 300,
+            "readOlny": true,
+            "index": true
         },
         "emailAddress": {
-        	"type": "base",
-        	"db": false
+            "type": "base",
+            "db": false
         },
         "fromEmailAddress": {
             "type": "link",
@@ -169,48 +169,48 @@
             "type": "hasMany",
             "entity": "EmailAddress",
             "relationName": "EmailEmailAddress",
-			"conditions": {
-				"addressType": "to"
-			},
+            "conditions": {
+                "addressType": "to"
+            },
             "additionalColumns": {
-            	"addressType": {
-            		"type": "varchar",
-            		"len": "4" 
-            	}
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4" 
+                }
             }
         },
         "ccEmailAddresses": {
             "type": "hasMany",
             "entity": "EmailAddress",
             "relationName": "EmailEmailAddress",
-			"conditions": {
-				"addressType": "cc"
-			},
+            "conditions": {
+                "addressType": "cc"
+            },
             "additionalColumns": {
-            	"addressType": {
-            		"type": "varchar",
-            		"len": "4" 
-            	}
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4" 
+                }
             }
         },
         "bccEmailAddresses": {
             "type": "hasMany",
             "entity": "EmailAddress",
             "relationName": "EmailEmailAddress",
-			"conditions": {
-				"addressType": "bcc"
-			},
+            "conditions": {
+                "addressType": "bcc"
+            },
             "additionalColumns": {
-            	"addressType": {
-            		"type": "varchar",
-            		"len": "4" 
-            	}
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4" 
+                }
             }
         }
     },
     "collection": {
-    	"sortBy": "dateSent",
-    	"asc": false,
-    	"textFilterFields": ["name", "body", "bodyPlain"]  	
+        "sortBy": "dateSent",
+        "asc": false,
+        "textFilterFields": ["name", "body", "bodyPlain"]      
     }
 }

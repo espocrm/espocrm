@@ -27,38 +27,38 @@ use Doctrine\ORM\Tools\Setup,
 
 class EntityManager implements Loader
 {
-	private $container;
+    private $container;
 
-	public function __construct(\Espo\Core\Container $container)
-	{
-		$this->container = $container;
-	}
+    public function __construct(\Espo\Core\Container $container)
+    {
+        $this->container = $container;
+    }
 
-	protected function getContainer()
-	{
-    	return $this->container;
-	}
+    protected function getContainer()
+    {
+        return $this->container;
+    }
 
-	public function load()
-	{
-		$config = $this->getContainer()->get('config');
+    public function load()
+    {
+        $config = $this->getContainer()->get('config');
 
-		$params = array(
-			'host' => $config->get('database.host'),
-			'port' => $config->get('database.port'),
-			'dbname' => $config->get('database.dbname'),
-			'user' => $config->get('database.user'),
-			'password' => $config->get('database.password'),
-			'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
-			'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
-		);
+        $params = array(
+            'host' => $config->get('database.host'),
+            'port' => $config->get('database.port'),
+            'dbname' => $config->get('database.dbname'),
+            'user' => $config->get('database.user'),
+            'password' => $config->get('database.password'),
+            'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
+            'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
+        );
 
-		$entityManager = new \Espo\Core\ORM\EntityManager($params);
-		$entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
-		$entityManager->setHookManager($this->getContainer()->get('hookManager'));
-		$entityManager->setContainer($this->getContainer());
+        $entityManager = new \Espo\Core\ORM\EntityManager($params);
+        $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
+        $entityManager->setHookManager($this->getContainer()->get('hookManager'));
+        $entityManager->setContainer($this->getContainer());
 
-		return $entityManager;
-	}
+        return $entityManager;
+    }
 }
 

@@ -21,77 +21,77 @@
 
 Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'record.panels.side',
+        template: 'record.panels.side',
 
-		fields: null,
+        fields: null,
 
-		data: function () {
-			return {
-				fields: this.getFieldList(),
-				dates: this.dates,
-			};
-		},
+        data: function () {
+            return {
+                fields: this.getFieldList(),
+                dates: this.dates,
+            };
+        },
 
-		mode: 'detail',
-		
-		actions: null,
-		
-		readOnly: false,
+        mode: 'detail',
+        
+        actions: null,
+        
+        readOnly: false,
 
-		setup: function () {				
-			this.fields = this.options.fields || this.fields || [];				
-			this.dates = ('dates' in this.options) ? this.options.dates : false;
-			this.mode = this.options.mode || this.mode;			
-			if ('readOnly' in this.options)	{
-				this.readOnly = this.options.readOnly;
-			}
-			this.createFields();				
-		},
-		
-		getFieldList: function () {
-			var fields = [];
-			this.fields.forEach(function (field) {
-				if (field in this.model.defs.fields) {
-					fields.push(field);
-				}
-			}, this);
-			return fields;
-		},
+        setup: function () {                
+            this.fields = this.options.fields || this.fields || [];                
+            this.dates = ('dates' in this.options) ? this.options.dates : false;
+            this.mode = this.options.mode || this.mode;            
+            if ('readOnly' in this.options)    {
+                this.readOnly = this.options.readOnly;
+            }
+            this.createFields();                
+        },
+        
+        getFieldList: function () {
+            var fields = [];
+            this.fields.forEach(function (field) {
+                if (field in this.model.defs.fields) {
+                    fields.push(field);
+                }
+            }, this);
+            return fields;
+        },
 
-		createField: function (field, readOnly) {
-			var type = this.model.getFieldType(field) || 'base';
-			var viewName = this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
-			this.createView(field, viewName, {
-				model: this.model,
-				el: this.options.el + ' .field-' + field,
-				defs: {
-					name: field,
-					params: {},
-				},
-				mode: this.mode,
-				readOnly: (typeof readOnly !== 'undefined') ? readOnly : this.readOnly
-			});
-		},
+        createField: function (field, readOnly) {
+            var type = this.model.getFieldType(field) || 'base';
+            var viewName = this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+            this.createView(field, viewName, {
+                model: this.model,
+                el: this.options.el + ' .field-' + field,
+                defs: {
+                    name: field,
+                    params: {},
+                },
+                mode: this.mode,
+                readOnly: (typeof readOnly !== 'undefined') ? readOnly : this.readOnly
+            });
+        },
 
-		createFields: function () {
-			this.fields.forEach(function (field) {
-				this.createField(field);
-			}.bind(this));
-		},
+        createFields: function () {
+            this.fields.forEach(function (field) {
+                this.createField(field);
+            }.bind(this));
+        },
 
-		getFields: function () {
-			var fields = {};
-			this.fields.forEach(function (name) {
-				fields[name] = this.getView(name);
-			}.bind(this));
-			return fields;
-		},
-		
-		getActions: function () {
-			return this.actions || [];
-		},
-	});
+        getFields: function () {
+            var fields = {};
+            this.fields.forEach(function (name) {
+                fields[name] = this.getView(name);
+            }.bind(this));
+            return fields;
+        },
+        
+        getActions: function () {
+            return this.actions || [];
+        },
+    });
 });
 

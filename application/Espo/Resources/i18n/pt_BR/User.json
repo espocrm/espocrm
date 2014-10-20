@@ -23,9 +23,9 @@
         "Preferences": "Preferências",
         "Change Password": "Trocar Senha"
     },
-	"tooltips": {
-		"defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão."
-	},
+    "tooltips": {
+        "defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão."
+    },
     "messages": {
         "passwordWillBeSent": "A senha será enviada para o email do usuário.",
         "accountInfoEmailSubject": "Informações da Conta",

@@ -25,403 +25,403 @@ namespace Espo\Core\Utils;
 
 class Util
 {
-	/**
-	 * @var string - default directory separator
-	 */
-	protected static $separator = DIRECTORY_SEPARATOR;
+    /**
+     * @var string - default directory separator
+     */
+    protected static $separator = DIRECTORY_SEPARATOR;
 
-	protected static $reservedWords = array('Case');
-
-
-	/**
-	 * Get a folder separator
-	 *
-	 * @return string
-	 */
-	public static function getSeparator()
-	{
-		return static::$separator;
-	}
+    protected static $reservedWords = array('Case');
 
 
-	/**
-	 * Convert to format with defined delimeter
-	 * ex. Espo/Utils to Espo\Utils
-	 *
-	 * @param string $name
-	 * @param string $delim - delimiter
-	 *
-	 * @return string
-	 */
-	public static function toFormat($name, $delim = '/')
-	{
-		return preg_replace("/[\/\\\]/", $delim, $name);
-	}
+    /**
+     * Get a folder separator
+     *
+     * @return string
+     */
+    public static function getSeparator()
+    {
+        return static::$separator;
+    }
 
 
-	/**
-	 * Convert name to Camel Case format, ex. camel-case to camelCase
-	 * @param  string  $name
-	 * @param  boolean $capitaliseFirstChar
-	 * @param  string  $symbol
-	 * @return string
-	 */
-	public static function toCamelCase($name, $capitaliseFirstChar = false, $symbol = '-')
-	{
-		if($capitaliseFirstChar) {
-			$name[0] = strtoupper($name[0]);
-		}
-		return preg_replace_callback('/'.$symbol.'([a-z])/', 'static::toCamelCaseConversion', $name);
-	}
+    /**
+     * Convert to format with defined delimeter
+     * ex. Espo/Utils to Espo\Utils
+     *
+     * @param string $name
+     * @param string $delim - delimiter
+     *
+     * @return string
+     */
+    public static function toFormat($name, $delim = '/')
+    {
+        return preg_replace("/[\/\\\]/", $delim, $name);
+    }
 
-	protected static function toCamelCaseConversion($matches)
-	{
-		return strtoupper($matches[1]);
-	}
 
-	/**
-	 * Convert name from Camel Case format.
-	 * ex. camelCase to camel-case
-	 *
-	 * @param string $name
-	 *
-	 * @return string
-	 */
-	public static function fromCamelCase($name, $symbol = '-')
-	{
-		$name[0] = strtolower($name[0]);
-		return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
-					 return $symbol . strtolower($matches[1]);
-				}, $name);
-	}
+    /**
+     * Convert name to Camel Case format, ex. camel-case to camelCase
+     * @param  string  $name
+     * @param  boolean $capitaliseFirstChar
+     * @param  string  $symbol
+     * @return string
+     */
+    public static function toCamelCase($name, $capitaliseFirstChar = false, $symbol = '-')
+    {
+        if($capitaliseFirstChar) {
+            $name[0] = strtoupper($name[0]);
+        }
+        return preg_replace_callback('/'.$symbol.'([a-z])/', 'static::toCamelCaseConversion', $name);
+    }
 
-	/**
-	 * Convert name from Camel Case format to underscore.
-	 * ex. camelCase to camel_case
-	 *
-	 * @param string $name
-	 *
-	 * @return string
-	 */
-	public static function toUnderScore($name)
-	{
-		return static::fromCamelCase($name, '_');
-	}
+    protected static function toCamelCaseConversion($matches)
+    {
+        return strtoupper($matches[1]);
+    }
 
-	/**
-	 * Merge arrays recursively (default PHP function is not suitable)
-	 *
-	 * @param array $currentArray
-	 * @param array $newArray - chief array (priority is same as for array_merge())
-	 *
-	 * @return array
-	 */
-	public static function merge($currentArray, $newArray)
-	{
-		$mergeIdentifier = '__APPEND__';
+    /**
+     * Convert name from Camel Case format.
+     * ex. camelCase to camel-case
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function fromCamelCase($name, $symbol = '-')
+    {
+        $name[0] = strtolower($name[0]);
+        return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
+                     return $symbol . strtolower($matches[1]);
+                }, $name);
+    }
 
-		if (is_array($currentArray) && (!is_array($newArray) || empty($newArray))) {
-			return $currentArray;
-		} else if ((!is_array($currentArray) || empty($currentArray)) && is_array($newArray)) {
-			return $newArray;
-		} else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
-			return array();
-		}
+    /**
+     * Convert name from Camel Case format to underscore.
+     * ex. camelCase to camel_case
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function toUnderScore($name)
+    {
+        return static::fromCamelCase($name, '_');
+    }
 
-		/** add root items from currentArray */
-		foreach ($currentArray as $currentName => $currentValue) {
+    /**
+     * Merge arrays recursively (default PHP function is not suitable)
+     *
+     * @param array $currentArray
+     * @param array $newArray - chief array (priority is same as for array_merge())
+     *
+     * @return array
+     */
+    public static function merge($currentArray, $newArray)
+    {
+        $mergeIdentifier = '__APPEND__';
 
-			if (!array_key_exists($currentName, $newArray)) {
+        if (is_array($currentArray) && (!is_array($newArray) || empty($newArray))) {
+            return $currentArray;
+        } else if ((!is_array($currentArray) || empty($currentArray)) && is_array($newArray)) {
+            return $newArray;
+        } else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
+            return array();
+        }
 
-				$newArray[$currentName] = $currentValue;
+        /** add root items from currentArray */
+        foreach ($currentArray as $currentName => $currentValue) {
 
-			} else if (is_array($currentValue) && is_array($newArray[$currentName])) {
+            if (!array_key_exists($currentName, $newArray)) {
 
-				/** check __APPEND__ identifier */
-				$appendKey = array_search($mergeIdentifier, $newArray[$currentName], true);
-				if ($appendKey !== false) {
-					unset($newArray[$currentName][$appendKey]);
-					$newArray[$currentName] = array_merge($currentValue, $newArray[$currentName]);
-				} else if (!static::isSingleArray($newArray[$currentName])) {
-					$newArray[$currentName] = static::merge($currentValue, $newArray[$currentName]);
-				}
+                $newArray[$currentName] = $currentValue;
 
-			}
-		}
+            } else if (is_array($currentValue) && is_array($newArray[$currentName])) {
 
-		return $newArray;
-	}
+                /** check __APPEND__ identifier */
+                $appendKey = array_search($mergeIdentifier, $newArray[$currentName], true);
+                if ($appendKey !== false) {
+                    unset($newArray[$currentName][$appendKey]);
+                    $newArray[$currentName] = array_merge($currentValue, $newArray[$currentName]);
+                } else if (!static::isSingleArray($newArray[$currentName])) {
+                    $newArray[$currentName] = static::merge($currentValue, $newArray[$currentName]);
+                }
 
-	/**
-	 * Get a full path of the file
-	 *
-	 * @param string | array $folderPath - Folder path, Ex. myfolder
-	 * @param string $filePath - File path, Ex. file.json
-	 *
-	 * @return string
-	 */
-	public static function concatPath($folderPath, $filePath = null)
-	{
-		if (is_array($folderPath)) {
-			$fullPath = '';
-			foreach ($folderPath as $path) {
-				$fullPath = static::concatPath($fullPath, $path);
-			}
-			return $fullPath;
-		}
+            }
+        }
 
-		if (empty($filePath)) {
-			return $folderPath;
-		}
-		if (empty($folderPath)) {
-			return $filePath;
-		}
+        return $newArray;
+    }
 
-		if (substr($folderPath, -1) == static::getSeparator()) {
-			return $folderPath . $filePath;
-		}
-		return $folderPath . static::getSeparator() . $filePath;
-	}
+    /**
+     * Get a full path of the file
+     *
+     * @param string | array $folderPath - Folder path, Ex. myfolder
+     * @param string $filePath - File path, Ex. file.json
+     *
+     * @return string
+     */
+    public static function concatPath($folderPath, $filePath = null)
+    {
+        if (is_array($folderPath)) {
+            $fullPath = '';
+            foreach ($folderPath as $path) {
+                $fullPath = static::concatPath($fullPath, $path);
+            }
+            return $fullPath;
+        }
 
-	/**
-	 * Convert array to object format recursively
-	 *
-	 * @param array $array
-	 * @return object
-	 */
-	public static function arrayToObject($array)
-	{
-		if (is_array($array)) {
-			return (object) array_map("static::arrayToObject", $array);
-		} else {
-			return $array; // Return an object
-		}
-	}
+        if (empty($filePath)) {
+            return $folderPath;
+        }
+        if (empty($folderPath)) {
+            return $filePath;
+        }
 
-	/**
-	 * Convert object to array format recursively
-	 *
-	 * @param object $object
-	 * @return array
-	 */
-	public static function objectToArray($object)
-	{
-		if (is_object($object)) {
-			$object = (array) $object;
-		}
+        if (substr($folderPath, -1) == static::getSeparator()) {
+            return $folderPath . $filePath;
+        }
+        return $folderPath . static::getSeparator() . $filePath;
+    }
 
-		return is_array($object) ? array_map("static::objectToArray", $object) : $object;
-	}
+    /**
+     * Convert array to object format recursively
+     *
+     * @param array $array
+     * @return object
+     */
+    public static function arrayToObject($array)
+    {
+        if (is_array($array)) {
+            return (object) array_map("static::arrayToObject", $array);
+        } else {
+            return $array; // Return an object
+        }
+    }
 
-	/**
-	 * Appends 'Obj' if name is reserved PHP word.
-	 *
-	 * @param string $name
-	 * @return string
-	 */
-	public static function normilizeClassName($name)
-	{
-		if (in_array($name, self::$reservedWords)) {
-			$name .= 'Obj';
-		}
-		return $name;
-	}
+    /**
+     * Convert object to array format recursively
+     *
+     * @param object $object
+     * @return array
+     */
+    public static function objectToArray($object)
+    {
+        if (is_object($object)) {
+            $object = (array) $object;
+        }
 
-	/**
-	* Get Naming according to prefix or postfix type
-	*
-	* @param string $name
-	* @param string $prePostFix
-	* @param string $type
-	*
-	* @return string
-	*/
-	public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '-')
-	{
-		if ($type == 'prefix') {
-			return static::toCamelCase($prePostFix.$symbol.$name, false, $symbol);
-		} else if ($type == 'postfix') {
-			return static::toCamelCase($name.$symbol.$prePostFix, false, $symbol);
-		}
+        return is_array($object) ? array_map("static::objectToArray", $object) : $object;
+    }
 
-		return null;
-	}
+    /**
+     * Appends 'Obj' if name is reserved PHP word.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function normilizeClassName($name)
+    {
+        if (in_array($name, self::$reservedWords)) {
+            $name .= 'Obj';
+        }
+        return $name;
+    }
 
-	/**
-	 * Replace $search in array recursively
-	 *
-	 * @param string $search
-	 * @param string $replace
-	 * @param string $array
-	 * @param string $isKeys
-	 *
-	 * @return array
-	 */
-	public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
-	{
-		if (!is_array($array)) {
-			return str_replace($search, $replace, $array);
-		}
+    /**
+    * Get Naming according to prefix or postfix type
+    *
+    * @param string $name
+    * @param string $prePostFix
+    * @param string $type
+    *
+    * @return string
+    */
+    public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '-')
+    {
+        if ($type == 'prefix') {
+            return static::toCamelCase($prePostFix.$symbol.$name, false, $symbol);
+        } else if ($type == 'postfix') {
+            return static::toCamelCase($name.$symbol.$prePostFix, false, $symbol);
+        }
 
-		$newArr = array();
-		foreach ($array as $key => $value) {
-			$addKey = $key;
-			if ($isKeys) { //Replace keys
-				$addKey = str_replace($search, $replace, $key);
-			}
+        return null;
+    }
 
-			// Recurse
-			$newArr[$addKey] = static::replaceInArray($search, $replace, $value, $isKeys);
-		}
+    /**
+     * Replace $search in array recursively
+     *
+     * @param string $search
+     * @param string $replace
+     * @param string $array
+     * @param string $isKeys
+     *
+     * @return array
+     */
+    public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
+    {
+        if (!is_array($array)) {
+            return str_replace($search, $replace, $array);
+        }
 
-		return $newArr;
-	}
+        $newArr = array();
+        foreach ($array as $key => $value) {
+            $addKey = $key;
+            if ($isKeys) { //Replace keys
+                $addKey = str_replace($search, $replace, $key);
+            }
 
-	/**
-	 * Unset content items defined in the unset.json
-	 *
-	 * @param array $content
-	 * @param string | array $unsets in format
-	 *   array(
-	 *      'EntityName1' => array( 'unset1', 'unset2' ),
-	 *      'EntityName2' => array( 'unset1', 'unset2' ),
-	 *  )
-	 *  OR
-	 *  array('EntityName1.unset1', 'EntityName1.unset2', .....)
-	 *  OR
-	 *  'EntityName1.unset1'
-	 *
-	 * @return array
-	 */
-	public static function unsetInArray(array $content, $unsets)
-	{
-		if (empty($unsets)) {
-			return $content;
-		}
+            // Recurse
+            $newArr[$addKey] = static::replaceInArray($search, $replace, $value, $isKeys);
+        }
 
-		if (is_string($unsets)) {
-			$unsets = (array) $unsets;
-		}
+        return $newArr;
+    }
 
-		foreach($unsets as $rootKey => $unsetItem){
-			$unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
+    /**
+     * Unset content items defined in the unset.json
+     *
+     * @param array $content
+     * @param string | array $unsets in format
+     *   array(
+     *      'EntityName1' => array( 'unset1', 'unset2' ),
+     *      'EntityName2' => array( 'unset1', 'unset2' ),
+     *  )
+     *  OR
+     *  array('EntityName1.unset1', 'EntityName1.unset2', .....)
+     *  OR
+     *  'EntityName1.unset1'
+     *
+     * @return array
+     */
+    public static function unsetInArray(array $content, $unsets)
+    {
+        if (empty($unsets)) {
+            return $content;
+        }
 
-			foreach($unsetItem as $unsetSett){
-				if (!empty($unsetSett)){
-					$keyItems = explode('.', $unsetSett);
-					$currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
+        if (is_string($unsets)) {
+            $unsets = (array) $unsets;
+        }
 
-					$lastKey = array_pop($keyItems);
-					foreach($keyItems as $keyItem){
-						$currVal .= "['{$keyItem}']";
-					}
+        foreach($unsets as $rootKey => $unsetItem){
+            $unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
 
-					$unsetElem = $currVal . "['{$lastKey}']";
+            foreach($unsetItem as $unsetSett){
+                if (!empty($unsetSett)){
+                    $keyItems = explode('.', $unsetSett);
+                    $currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
 
-					$currVal = "
-					if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists({$lastKey}, {$currVal}) )) {
-						unset({$unsetElem});
-					} ";
-					eval($currVal);
-				}
-			}
-		}
+                    $lastKey = array_pop($keyItems);
+                    foreach($keyItems as $keyItem){
+                        $currVal .= "['{$keyItem}']";
+                    }
 
-		return $content;
-	}
+                    $unsetElem = $currVal . "['{$lastKey}']";
 
-	/**
-	 * Get class name from the file path
-	 *
-	 * @param  string $filePath
-	 *
-	 * @return string
-	 */
-	public static function getClassName($filePath)
-	{
-		$className = preg_replace('/\.php$/i', '', $filePath);
-		$className = preg_replace('/^(application|custom)\//i', '', $className);
-		$className = '\\'.static::toFormat($className, '\\');
+                    $currVal = "
+                    if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists({$lastKey}, {$currVal}) )) {
+                        unset({$unsetElem});
+                    } ";
+                    eval($currVal);
+                }
+            }
+        }
 
-		return $className;
-	}
+        return $content;
+    }
 
-	/**
-	 * Return values of defined $key.
-	 *
-	 * @param  array $array
-	 * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
-	 * @param  mixed $default
-	 * @return mixed
-	 */
-	public static function getValueByKey(array $array, $key = null, $default = null)
-	{
-		if (!isset($key) || empty($key)) {
-			return $array;
-		}
+    /**
+     * Get class name from the file path
+     *
+     * @param  string $filePath
+     *
+     * @return string
+     */
+    public static function getClassName($filePath)
+    {
+        $className = preg_replace('/\.php$/i', '', $filePath);
+        $className = preg_replace('/^(application|custom)\//i', '', $className);
+        $className = '\\'.static::toFormat($className, '\\');
 
-		$keys = explode('.', $key);
+        return $className;
+    }
 
-		$lastItem = $array;
-		foreach($keys as $keyName) {
-			if (isset($lastItem[$keyName]) && is_array($lastItem)) {
-				$lastItem = $lastItem[$keyName];
-			} else {
-				return $default;
-			}
-		}
+    /**
+     * Return values of defined $key.
+     *
+     * @param  array $array
+     * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
+     * @param  mixed $default
+     * @return mixed
+     */
+    public static function getValueByKey(array $array, $key = null, $default = null)
+    {
+        if (!isset($key) || empty($key)) {
+            return $array;
+        }
 
-		return $lastItem;
-	}
+        $keys = explode('.', $key);
 
-	/**
-	 * Check if two variables are equals
-	 *
-	 * @param  mixed  $var1
-	 * @param  mixed  $var2
-	 * @return boolean
-	 */
-	public static function isEquals($var1, $var2)
-	{
-		if (is_array($var1)) {
-			static::ksortRecursive($var1);
-		}
-		if (is_array($var2)) {
-			static::ksortRecursive($var2);
-		}
+        $lastItem = $array;
+        foreach($keys as $keyName) {
+            if (isset($lastItem[$keyName]) && is_array($lastItem)) {
+                $lastItem = $lastItem[$keyName];
+            } else {
+                return $default;
+            }
+        }
 
-		return ($var1 === $var2);
-	}
+        return $lastItem;
+    }
 
-	/**
-	 * Sort array recursively
-	 * @param  array $array
-	 * @return bool
-	 */
-	public static function ksortRecursive(&$array)
-	{
-		if (!is_array($array)) {
-			return false;
-		}
+    /**
+     * Check if two variables are equals
+     *
+     * @param  mixed  $var1
+     * @param  mixed  $var2
+     * @return boolean
+     */
+    public static function isEquals($var1, $var2)
+    {
+        if (is_array($var1)) {
+            static::ksortRecursive($var1);
+        }
+        if (is_array($var2)) {
+            static::ksortRecursive($var2);
+        }
 
-		ksort($array);
-		foreach ($array as $key => $value) {
-			static::ksortRecursive($array[$key]);
-		}
+        return ($var1 === $var2);
+    }
 
-		return true;
-	}
+    /**
+     * Sort array recursively
+     * @param  array $array
+     * @return bool
+     */
+    public static function ksortRecursive(&$array)
+    {
+        if (!is_array($array)) {
+            return false;
+        }
 
-	public static function isSingleArray(array $array)
-	{
-		foreach ($array as $key => $value) {
-			if (!is_int($key)) {
-				return false;
-			}
-		}
+        ksort($array);
+        foreach ($array as $key => $value) {
+            static::ksortRecursive($array[$key]);
+        }
 
-		return true;
-	}
+        return true;
+    }
+
+    public static function isSingleArray(array $array)
+    {
+        foreach ($array as $key => $value) {
+            if (!is_int($key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 }
 

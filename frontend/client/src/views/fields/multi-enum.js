@@ -21,95 +21,95 @@
 
 Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], function (Dep, Select2) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'multiEnum',
+        type: 'multiEnum',
 
-		listTemplate: 'fields.array.detail',
+        listTemplate: 'fields.array.detail',
 
-		detailTemplate: 'fields.array.detail',
+        detailTemplate: 'fields.array.detail',
 
-		editTemplate: 'fields.multi-enum.edit',		
-		
-		events: {
-		},
-		
-		data: function () {
-			return _.extend({
-				optionList: this.params.options || []
-			}, Dep.prototype.data.call(this));
-		},
-		
-		getTranslatedOptions: function () {
-			return (this.params.options || []).map(function (item) {
-				if (this.translatedOptions != null) {
-					if (item in this.translatedOptions) {
-						return this.translatedOptions[item];
-					}
-				}
-				return item;
-			});
-		},		
-		
+        editTemplate: 'fields.multi-enum.edit',        
+        
+        events: {
+        },
+        
+        data: function () {
+            return _.extend({
+                optionList: this.params.options || []
+            }, Dep.prototype.data.call(this));
+        },
+        
+        getTranslatedOptions: function () {
+            return (this.params.options || []).map(function (item) {
+                if (this.translatedOptions != null) {
+                    if (item in this.translatedOptions) {
+                        return this.translatedOptions[item];
+                    }
+                }
+                return item;
+            });
+        },        
+        
 
-		setup: function () {
-			Dep.prototype.setup.call(this);
-		},
-		
-		afterRender: function () {			 
-			if (this.mode == 'edit' || this.mode == 'search') {
-				var $element = this.$element = this.$el.find('.main-element');
-				this.$element.val(this.selected.join(','));
-				
-				this.$element.select2({
-					data: (this.params.options || []).map(function (item) {
-						var text = item;
-						if (this.translatedOptions) {
-							if (item in this.translatedOptions) {
-								text = this.translatedOptions[item];
-							}
-						}
-						return {
-							id: item,
-							text: text
-						};
-					}, this),
-					multiple: true,
-					formatSearching: '',
-					formatNoMatches: '',
-					matcher: function (term, text) {
-						return text.toUpperCase().indexOf(term.toUpperCase()) == 0;
-					}
-				});
-				
-				this.$element.on('change', function () {
-					this.trigger('change');
-				}.bind(this));
+        setup: function () {
+            Dep.prototype.setup.call(this);
+        },
+        
+        afterRender: function () {             
+            if (this.mode == 'edit' || this.mode == 'search') {
+                var $element = this.$element = this.$el.find('.main-element');
+                this.$element.val(this.selected.join(','));
+                
+                this.$element.select2({
+                    data: (this.params.options || []).map(function (item) {
+                        var text = item;
+                        if (this.translatedOptions) {
+                            if (item in this.translatedOptions) {
+                                text = this.translatedOptions[item];
+                            }
+                        }
+                        return {
+                            id: item,
+                            text: text
+                        };
+                    }, this),
+                    multiple: true,
+                    formatSearching: '',
+                    formatNoMatches: '',
+                    matcher: function (term, text) {
+                        return text.toUpperCase().indexOf(term.toUpperCase()) == 0;
+                    }
+                });
+                
+                this.$element.on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
 
-				
-				this.$element.select2('container').find('ul.select2-choices').sortable({
-					containment: 'parent',
-					start: function () {
-						$element.select2('onSortStart');
-					},
-					update: function () {
-						$element.select2('onSortEnd');
-					}
-				});
-			}
-		},
+                
+                this.$element.select2('container').find('ul.select2-choices').sortable({
+                    containment: 'parent',
+                    start: function () {
+                        $element.select2('onSortStart');
+                    },
+                    update: function () {
+                        $element.select2('onSortEnd');
+                    }
+                });
+            }
+        },
 
-		fetch: function () {
-			var list = this.$element.val().split(',');
-			if (list.length == 1 && list[0] == '') {
-				list = [];
-			} 
-			var data = {};
-			data[this.name] = list;
-			return data;
-		},
+        fetch: function () {
+            var list = this.$element.val().split(',');
+            if (list.length == 1 && list[0] == '') {
+                list = [];
+            } 
+            var data = {};
+            data[this.name] = list;
+            return data;
+        },
 
-	});
+    });
 });
 
 

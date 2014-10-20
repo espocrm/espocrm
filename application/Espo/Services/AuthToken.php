@@ -27,7 +27,7 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
 
 class AuthToken extends Record
-{	
-	protected $internalFields = array('hash', 'token');
+{    
+    protected $internalFields = array('hash', 'token');
 }
 

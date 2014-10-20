@@ -23,72 +23,72 @@
 namespace Espo\Core\Upgrades;
 
 use Espo\Core\Utils\Util,
-	Espo\Core\Utils\Json,
-	Espo\Core\Exceptions\Error;
+    Espo\Core\Utils\Json,
+    Espo\Core\Exceptions\Error;
 
 abstract class Base
 {
-	private $container;
+    private $container;
 
-	protected $name = null;
+    protected $name = null;
 
-	protected $params = array();
+    protected $params = array();
 
-	const UPLOAD = 'upload';
+    const UPLOAD = 'upload';
 
-	const INSTALL = 'install';
+    const INSTALL = 'install';
 
-	const UNINSTALL = 'uninstall';
+    const UNINSTALL = 'uninstall';
 
-	const DELETE = 'delete';
+    const DELETE = 'delete';
 
-	public function __construct($container)
-	{
-		$this->container = $container;
+    public function __construct($container)
+    {
+        $this->container = $container;
 
-		$this->actionManager = new ActionManager($this->name, $container, $this->params);
-	}
+        $this->actionManager = new ActionManager($this->name, $container, $this->params);
+    }
 
-	protected function getContainer()
-	{
-		return $this->container;
-	}
+    protected function getContainer()
+    {
+        return $this->container;
+    }
 
-	protected function getActionManager()
-	{
-		return $this->actionManager;
-	}
+    protected function getActionManager()
+    {
+        return $this->actionManager;
+    }
 
-	public function getManifest()
-	{
-		return $this->getActionManager()->getManifest();
-	}
+    public function getManifest()
+    {
+        return $this->getActionManager()->getManifest();
+    }
 
-	public function upload($data)
-	{
-		$this->getActionManager()->setAction(self::UPLOAD);
+    public function upload($data)
+    {
+        $this->getActionManager()->setAction(self::UPLOAD);
 
-		return $this->getActionManager()->run($data);
-	}
+        return $this->getActionManager()->run($data);
+    }
 
-	public function install($processId)
-	{
-		$this->getActionManager()->setAction(self::INSTALL);
+    public function install($processId)
+    {
+        $this->getActionManager()->setAction(self::INSTALL);
 
-		return $this->getActionManager()->run($processId);
-	}
+        return $this->getActionManager()->run($processId);
+    }
 
-	public function uninstall($processId)
-	{
-		$this->getActionManager()->setAction(self::UNINSTALL);
+    public function uninstall($processId)
+    {
+        $this->getActionManager()->setAction(self::UNINSTALL);
 
-		return $this->getActionManager()->run($processId);
-	}
+        return $this->getActionManager()->run($processId);
+    }
 
-	public function delete($processId)
-	{
-		$this->getActionManager()->setAction(self::DELETE);
+    public function delete($processId)
+    {
+        $this->getActionManager()->setAction(self::DELETE);
 
-		return $this->getActionManager()->run($processId);
-	}
+        return $this->getActionManager()->run($processId);
+    }
 }

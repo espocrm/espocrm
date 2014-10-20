@@ -1,39 +1,39 @@
 {
-	"fields": {
-		"name": "Nume",
-		"parent": "Parinte",
-		"status": "Status",
-		"dateStart": "Data inceput",
-		"dateEnd": "Data terminare",
-		"direction": "Directie",
-		"duration": "Durata",
-		"description": "Descriere",
-		"users": "Utilizatori",
-		"contacts": "Contacte",
-		"leads": "Lead-uri"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Planificat",
-			"Held": "Detinut",
-			"Not Held": "Nedetinut"
-		},
-		"direction": {
-			"Outbound": "Iesire",
-			"Inbound": "Intrare"
-		}
-	},
-	"labels": {
-		"Create Call": "Creare Apelare",
-		"Set Held": "Setare detinere",
-		"Set Not Held": "Setare nedetinere",
-		"Send Invitations": "Trimite invitatii"		
-	},
-	"presetFilters": {
-		"planned": "Planificat",
-		"held": "Detinut",
-		"todays": "Today's"
-	}
+    "fields": {
+        "name": "Nume",
+        "parent": "Parinte",
+        "status": "Status",
+        "dateStart": "Data inceput",
+        "dateEnd": "Data terminare",
+        "direction": "Directie",
+        "duration": "Durata",
+        "description": "Descriere",
+        "users": "Utilizatori",
+        "contacts": "Contacte",
+        "leads": "Lead-uri"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planificat",
+            "Held": "Detinut",
+            "Not Held": "Nedetinut"
+        },
+        "direction": {
+            "Outbound": "Iesire",
+            "Inbound": "Intrare"
+        }
+    },
+    "labels": {
+        "Create Call": "Creare Apelare",
+        "Set Held": "Setare detinere",
+        "Set Not Held": "Setare nedetinere",
+        "Send Invitations": "Trimite invitatii"        
+    },
+    "presetFilters": {
+        "planned": "Planificat",
+        "held": "Detinut",
+        "todays": "Today's"
+    }
 }

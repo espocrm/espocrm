@@ -1,38 +1,38 @@
 {
-	"fields": {
-		"name": "Полное имя",
-		"emailAddress": "E-mail",
-		"title": "Должность",
-		"account": "Организация",
-		"accounts": "Организации",
-		"phoneNumber": "Телефон",
-		"accountType": "Тип организации",
-		"doNotCall": "Не звонить",
-		"address": "Адрес",
-		"opportunityRole": "Роль в возможности",
-		"accountRole": "Роль",
-		"description": "Описание",
-		"owner":"Пригласивший"
-	},
-	"links": {
-		"orders": "Заказы",
-		"cases": "Обращения"
-	},
-	"labels": {
-		"Create Contact": "Создать контакт"
-	},
-	"options": {
-		"opportunityRole": {
-			"": "--Нет--",
-			"Decision Maker": "Принимающий решение",
-			"Evaluator": "Оценщик",
-			"Influencer": "Консультант"
-		},
-		"salutationName": {
-			"options": {
-				"Жен": "Жен. ",
-				"Муж": "Муж. "
-			}
-		}
-	}
+    "fields": {
+        "name": "Полное имя",
+        "emailAddress": "E-mail",
+        "title": "Должность",
+        "account": "Организация",
+        "accounts": "Организации",
+        "phoneNumber": "Телефон",
+        "accountType": "Тип организации",
+        "doNotCall": "Не звонить",
+        "address": "Адрес",
+        "opportunityRole": "Роль в возможности",
+        "accountRole": "Роль",
+        "description": "Описание",
+        "owner":"Пригласивший"
+    },
+    "links": {
+        "orders": "Заказы",
+        "cases": "Обращения"
+    },
+    "labels": {
+        "Create Contact": "Создать контакт"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--Нет--",
+            "Decision Maker": "Принимающий решение",
+            "Evaluator": "Оценщик",
+            "Influencer": "Консультант"
+        },
+        "salutationName": {
+            "options": {
+                "Жен": "Жен. ",
+                "Муж": "Муж. "
+            }
+        }
+    }
 }

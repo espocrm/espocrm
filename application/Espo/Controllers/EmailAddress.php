@@ -24,14 +24,14 @@ namespace Espo\Controllers;
 
 class EmailAddress extends \Espo\Core\Controllers\Record
 {
-	public function actionSearchInAddressBook($params, $data, $request)
-	{
-		$q = $request->get('q');
-		$limit = intval($request->get('limit'));
-		if (empty($limit) || $limit > 30) {
-			$limit = 5;
-		}
-		return $this->getRecordService()->searchInAddressBook($q, $limit);
-	}
+    public function actionSearchInAddressBook($params, $data, $request)
+    {
+        $q = $request->get('q');
+        $limit = intval($request->get('limit'));
+        if (empty($limit) || $limit > 30) {
+            $limit = 5;
+        }
+        return $this->getRecordService()->searchInAddressBook($q, $limit);
+    }
 }
 

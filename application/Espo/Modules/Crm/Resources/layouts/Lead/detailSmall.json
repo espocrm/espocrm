@@ -1,19 +1,19 @@
 [
-	{
-		"label":"",
-		"rows":[
-			[
-				{"name":"name"}
-			],
-			[
-				{"name":"emailAddress"}
-			],
-			[
-				{"name":"phoneNumber"}
-			],
-			[
-				{"name":"status"}
-			]
-		]
-	}
+    {
+        "label":"",
+        "rows":[
+            [
+                {"name":"name"}
+            ],
+            [
+                {"name":"emailAddress"}
+            ],
+            [
+                {"name":"phoneNumber"}
+            ],
+            [
+                {"name":"status"}
+            ]
+        ]
+    }
 ]

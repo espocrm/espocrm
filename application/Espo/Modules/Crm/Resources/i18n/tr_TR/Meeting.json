@@ -1,29 +1,29 @@
 {
-	"fields": {
-		"name": "İsim",
-		"parent": "Üst Seçenek",
-		"status": "Durum",
-		"dateStart": "Başlangıç Tarihi",
-		"dateEnd": "Bitiş Tarihi",
-		"duration": "Süre",
-		"description": "açıklama",
-		"users": "Kullanıcılar",
-		"contacts": "Bağlantılar",
-		"leads": "Müşteri Adayları"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Planlanmış",
-			"Held": "Elde Tutulanlar",
-			"Not Held": "Elde Tutulmayanlar"
-		}
-	},
-	"labels": {
-		"Create Meeting": "Toplantı Oluştur ",
-		"Set Held": "SET HELDXXX",
-		"Set Not Held": "SET NOT HELD XXXX",
-		"Send Invitations": "Davetleri Gönder"
-	}
+    "fields": {
+        "name": "İsim",
+        "parent": "Üst Seçenek",
+        "status": "Durum",
+        "dateStart": "Başlangıç Tarihi",
+        "dateEnd": "Bitiş Tarihi",
+        "duration": "Süre",
+        "description": "açıklama",
+        "users": "Kullanıcılar",
+        "contacts": "Bağlantılar",
+        "leads": "Müşteri Adayları"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planlanmış",
+            "Held": "Elde Tutulanlar",
+            "Not Held": "Elde Tutulmayanlar"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Toplantı Oluştur ",
+        "Set Held": "SET HELDXXX",
+        "Set Not Held": "SET NOT HELD XXXX",
+        "Send Invitations": "Davetleri Gönder"
+    }
 }

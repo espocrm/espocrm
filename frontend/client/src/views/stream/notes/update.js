@@ -21,82 +21,82 @@
 
 Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'stream.notes.update',
-		
-		messageName: 'update',
-		
-		data: function () {
-			return _.extend({
-				fieldsArr: this.fieldsArr,
-				parentType: this.model.get('parentType')
-			}, Dep.prototype.data.call(this));
-		},
-		
-		events: {
-			'click a[data-action="expandDetails"]': function (e) {		
-				if (this.$el.find('.details').hasClass('hidden')) {
-					this.$el.find('.details').removeClass('hidden');				
-					$(e.currentTarget).find('span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-				} else {
-					this.$el.find('.details').addClass('hidden');				
-					$(e.currentTarget).find('span').addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
-				}
-			}
-		},
-		
-		setup: function () {
-			var data = this.model.get('data');
-			
-			var fields = data.fields;
-			
-			this.createMessage();
-			
-			this.wait(true);			
-			this.getModelFactory().create(this.model.get('parentType'), function (model) {
-				var modelWas = model;
-				var modelBecame = model.clone();
-				
-				data.attributes = data.attributes || {};				
-				
-				modelWas.set(data.attributes.was);
-				modelBecame.set(data.attributes.became);				
-				
-				this.fieldsArr = [];
-				
-				fields.forEach(function (field) {
-					var type = model.getFieldType(field) || 'base';
-					this.createView(field + 'Was', this.getFieldManager().getViewName(type), {
-						model: modelWas,
-						readOnly: true,
-						defs: {
-							name: field
-						},
-						mode: 'list'
-					});
-					this.createView(field + 'Became', this.getFieldManager().getViewName(type), {
-						model: modelBecame,
-						readOnly: true,
-						defs: {
-							name: field
-						},
-						mode: 'list'
-					});	
-					
-					this.fieldsArr.push({
-						field: field,
-						was: field + 'Was',
-						became: field + 'Became'						
-					});
-									
-				}, this);			
-				
-				this.wait(false);				
-								
-			}, this);			
-		},
-		
-	});
+        template: 'stream.notes.update',
+        
+        messageName: 'update',
+        
+        data: function () {
+            return _.extend({
+                fieldsArr: this.fieldsArr,
+                parentType: this.model.get('parentType')
+            }, Dep.prototype.data.call(this));
+        },
+        
+        events: {
+            'click a[data-action="expandDetails"]': function (e) {        
+                if (this.$el.find('.details').hasClass('hidden')) {
+                    this.$el.find('.details').removeClass('hidden');                
+                    $(e.currentTarget).find('span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                } else {
+                    this.$el.find('.details').addClass('hidden');                
+                    $(e.currentTarget).find('span').addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
+                }
+            }
+        },
+        
+        setup: function () {
+            var data = this.model.get('data');
+            
+            var fields = data.fields;
+            
+            this.createMessage();
+            
+            this.wait(true);            
+            this.getModelFactory().create(this.model.get('parentType'), function (model) {
+                var modelWas = model;
+                var modelBecame = model.clone();
+                
+                data.attributes = data.attributes || {};                
+                
+                modelWas.set(data.attributes.was);
+                modelBecame.set(data.attributes.became);                
+                
+                this.fieldsArr = [];
+                
+                fields.forEach(function (field) {
+                    var type = model.getFieldType(field) || 'base';
+                    this.createView(field + 'Was', this.getFieldManager().getViewName(type), {
+                        model: modelWas,
+                        readOnly: true,
+                        defs: {
+                            name: field
+                        },
+                        mode: 'list'
+                    });
+                    this.createView(field + 'Became', this.getFieldManager().getViewName(type), {
+                        model: modelBecame,
+                        readOnly: true,
+                        defs: {
+                            name: field
+                        },
+                        mode: 'list'
+                    });    
+                    
+                    this.fieldsArr.push({
+                        field: field,
+                        was: field + 'Was',
+                        became: field + 'Became'                        
+                    });
+                                    
+                }, this);            
+                
+                this.wait(false);                
+                                
+            }, this);            
+        },
+        
+    });
 });
 

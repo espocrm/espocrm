@@ -20,29 +20,29 @@
  ************************************************************************/ 
 
 Espo.define('Crm:Views.Task.Fields.IsOverdue', 'Views.Fields.Base', function (Dep) {
-	
-	return Dep.extend({
-		
-		readOnly: true,
-	
-		_template: '{{#if isOverdue}}<span class="label label-danger">{{translate "overdue"}}</span>{{/if}}',
-		
-		data: function () {
-			var isOverdue = false;			
-			if (['Completed', 'Canceled'].indexOf(this.model.get('status')) == -1) {					
-				if (this.model.has('dateEnd')) {
-					isOverdue = moment.utc().unix() > moment.utc(this.model.get('dateEnd')).unix();
-				}
-			}			
-			return {
-				isOverdue: isOverdue
-			};
-		},
-	
-		setup: function () {
-			this.mode = 'detail';	
-		},
-	
-	});
+    
+    return Dep.extend({
+        
+        readOnly: true,
+    
+        _template: '{{#if isOverdue}}<span class="label label-danger">{{translate "overdue"}}</span>{{/if}}',
+        
+        data: function () {
+            var isOverdue = false;            
+            if (['Completed', 'Canceled'].indexOf(this.model.get('status')) == -1) {                    
+                if (this.model.has('dateEnd')) {
+                    isOverdue = moment.utc().unix() > moment.utc(this.model.get('dateEnd')).unix();
+                }
+            }            
+            return {
+                isOverdue: isOverdue
+            };
+        },
+    
+        setup: function () {
+            this.mode = 'detail';    
+        },
+    
+    });
 
 });

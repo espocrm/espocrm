@@ -19,24 +19,24 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Views.Admin.Index', 'View', function (Dep) {
-	
-	return Dep.extend({
-		
-		template: 'admin.index',
-		
-		data: function () {
-			return {
-				links: this.links
-			};
-		},
-		
-		setup: function () {
-			this.links = this.getMetadata().get('app.adminPanel');
-		},
-		
-		updatePageTitle: function () {
-			this.setPageTitle(this.getLanguage().translate('Administration'));
-		},
-			
-	});
+    
+    return Dep.extend({
+        
+        template: 'admin.index',
+        
+        data: function () {
+            return {
+                links: this.links
+            };
+        },
+        
+        setup: function () {
+            this.links = this.getMetadata().get('app.adminPanel');
+        },
+        
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Administration'));
+        },
+            
+    });
 });

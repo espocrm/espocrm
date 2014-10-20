@@ -21,46 +21,46 @@
 
 Espo.define('Crm:Views.Dashlets.Opportunities', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Opportunities',
+        name: 'Opportunities',
 
-		scope: 'Opportunity',
+        scope: 'Opportunity',
 
-		defaultOptions: {
-			sortBy: 'createdAt',
-			asc: false,
-			displayRecords: 5,
-			expandedLayout: {
-				rows: [
-					[
-						{
-							name: 'name',
-							link: true,
-						},
-						{
-							name: 'account'
-						}
-					],
-					[
-						{
-							name: 'stage'
-						},
-						{
-							name: 'amount'
-						}
-					]
-				]
-			},
-			searchData: {
-				bool: {
-					onlyMy: true,
-					open: true,
-				}
-			},
-		},
+        defaultOptions: {
+            sortBy: 'createdAt',
+            asc: false,
+            displayRecords: 5,
+            expandedLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'name',
+                            link: true,
+                        },
+                        {
+                            name: 'account'
+                        }
+                    ],
+                    [
+                        {
+                            name: 'stage'
+                        },
+                        {
+                            name: 'amount'
+                        }
+                    ]
+                ]
+            },
+            searchData: {
+                bool: {
+                    onlyMy: true,
+                    open: true,
+                }
+            },
+        },
 
-	});
+    });
 });
 
 

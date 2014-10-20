@@ -1,42 +1,42 @@
 {
-	"fields": {
-		"name": "Temat",
-		"parent": "Konto",
-		"status": "Status",
-		"dateSent": "Data Wysłania",
-		"from": "Od",
-		"to": "Do",
-		"cc": "Kopia Do",
-		"bcc": "Ukryta Kopia Do",
-		"isHtml": "Format HTML",
-		"body": "Treść",
-		"subject": "Temat",
-		"attachments": "Załącznik",
-		"selectTemplate": "Wybierz szkic wiadomości",
-		"fromEmailAddress": "Z adresu",
-		"toEmailAddresses": "Do adresu",
-		"emailAddress": "E-mail Adres"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Szkic",
-		"Sending": "Wysyłam",
-		"Sent": "Wysłane",
-		"Archived": "Zapisane"
-	},
-	"labels": {
-		"Create Email": "Archiwizuj e-mail",
-		"Archive Email": "Archiwizuj e-mail",
-		"Compose": "Utwórz",
-		"Reply": "Odpowiedz",
-		"Reply to All": "Reply to All",
-		"Forward": "Forward",
-		"Original message": "Original message",
-		"Forwarded message": "Forwarded message"
-	},
-	"presetFilters": {
-		"sent": "Wysłane",
-		"archived": "Zapisane"
-	}
+    "fields": {
+        "name": "Temat",
+        "parent": "Konto",
+        "status": "Status",
+        "dateSent": "Data Wysłania",
+        "from": "Od",
+        "to": "Do",
+        "cc": "Kopia Do",
+        "bcc": "Ukryta Kopia Do",
+        "isHtml": "Format HTML",
+        "body": "Treść",
+        "subject": "Temat",
+        "attachments": "Załącznik",
+        "selectTemplate": "Wybierz szkic wiadomości",
+        "fromEmailAddress": "Z adresu",
+        "toEmailAddresses": "Do adresu",
+        "emailAddress": "E-mail Adres"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Szkic",
+        "Sending": "Wysyłam",
+        "Sent": "Wysłane",
+        "Archived": "Zapisane"
+    },
+    "labels": {
+        "Create Email": "Archiwizuj e-mail",
+        "Archive Email": "Archiwizuj e-mail",
+        "Compose": "Utwórz",
+        "Reply": "Odpowiedz",
+        "Reply to All": "Reply to All",
+        "Forward": "Forward",
+        "Original message": "Original message",
+        "Forwarded message": "Forwarded message"
+    },
+    "presetFilters": {
+        "sent": "Wysłane",
+        "archived": "Zapisane"
+    }
 }

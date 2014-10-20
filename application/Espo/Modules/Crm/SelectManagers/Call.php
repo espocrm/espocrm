@@ -24,14 +24,14 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class Call extends \Espo\Core\SelectManagers\Base
 {
-	
-	protected function getBoolFilterWhereOnlyMy()
-	{		
-		return array(
-			'type' => 'linkedWith',
-			'field' => 'users',
-			'value' => array($this->user->id)
-		);
-	}
+    
+    protected function getBoolFilterWhereOnlyMy()
+    {        
+        return array(
+            'type' => 'linkedWith',
+            'field' => 'users',
+            'value' => array($this->user->id)
+        );
+    }
 }
 

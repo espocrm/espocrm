@@ -54,35 +54,35 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
     },
     "streamRelated": {
-		"Account": [
-			"meetings",
-			"calls",
-			"tasks",
-			"opportunities"
-		],
-		"Contact": [
-			"meetings",
-			"calls",
-			"tasks"
-		],
-		"Lead": [
-			"meetings",
-			"calls",
-			"tasks"
-		],
-		"Opportunity": [
-			"meetings",
-			"calls",
-			"tasks"
-		],
-		"Case": [
-			"meetings",
-			"calls",
-			"tasks"
-		]
-	}
+        "Account": [
+            "meetings",
+            "calls",
+            "tasks",
+            "opportunities"
+        ],
+        "Contact": [
+            "meetings",
+            "calls",
+            "tasks"
+        ],
+        "Lead": [
+            "meetings",
+            "calls",
+            "tasks"
+        ],
+        "Opportunity": [
+            "meetings",
+            "calls",
+            "tasks"
+        ],
+        "Case": [
+            "meetings",
+            "calls",
+            "tasks"
+        ]
+    }
 }

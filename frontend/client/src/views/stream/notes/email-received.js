@@ -21,23 +21,23 @@
 
 Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'stream.notes.email-received',
-		
-		data: function () {
-			return _.extend({
-				emailId: this.emailId,
-				emailName: this.emailName
-			}, Dep.prototype.data.call(this));
-		},
-		
-		setup: function () {
-			var data = this.model.get('data');
-			this.emailId = data.emailId;
-			this.emailName = data.emailName;			
-		},
-		
-	});
+        template: 'stream.notes.email-received',
+        
+        data: function () {
+            return _.extend({
+                emailId: this.emailId,
+                emailName: this.emailName
+            }, Dep.prototype.data.call(this));
+        },
+        
+        setup: function () {
+            var data = this.model.get('data');
+            this.emailId = data.emailId;
+            this.emailName = data.emailName;            
+        },
+        
+    });
 });
 

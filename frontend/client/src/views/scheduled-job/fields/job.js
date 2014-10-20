@@ -20,23 +20,23 @@
  ************************************************************************/ 
 Espo.define('Views.ScheduledJob.Fields.Job', 'Views.Fields.Enum', function (Dep) {
 
-	return Dep.extend({		
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);
+    return Dep.extend({        
+        
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-			if (this.mode == 'edit' || this.mode == 'detail') {
-				this.wait(true);
-				$.ajax({
-					url: 'Admin/jobs',
-					success: function (data) {
-						this.params.options = data;
-						this.wait(false);
-					}.bind(this)
-				});
-			}			
-		},
-		
-	});
-	
+            if (this.mode == 'edit' || this.mode == 'detail') {
+                this.wait(true);
+                $.ajax({
+                    url: 'Admin/jobs',
+                    success: function (data) {
+                        this.params.options = data;
+                        this.wait(false);
+                    }.bind(this)
+                });
+            }            
+        },
+        
+    });
+    
 });

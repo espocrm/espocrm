@@ -24,8 +24,8 @@ namespace tests\Espo\Core\Upgrades\Actions;
 
 class Base extends \Espo\Core\Upgrades\Actions\Base
 {
-	public function run($data)
-	{
+    public function run($data)
+    {
 
-	}
+    }
 }

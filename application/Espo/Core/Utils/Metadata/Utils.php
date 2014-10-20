@@ -24,83 +24,83 @@ namespace Espo\Core\Utils\Metadata;
 
 class Utils
 {
-	private $metadata;
+    private $metadata;
 
-	public function __construct(\Espo\Core\Utils\Metadata $metadata)
-	{
-		$this->metadata = $metadata;
-	}
+    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    {
+        $this->metadata = $metadata;
+    }
 
-	protected function getMetadata()
-	{
-		return $this->metadata;
-	}
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
 
-	/**
-	 * Get field defenition by type in metadata, "fields" key
-	 *
-	 * @param  array | string $fieldDef - It can be a string or field defenition from entityDefs
-	 * @return array | null
-	 */
-	public function getFieldDefsByType($fieldDef)
-	{
-		if (is_string($fieldDef)) {
-			$fieldDef = array('type' => $fieldDef);
-		}
+    /**
+     * Get field defenition by type in metadata, "fields" key
+     *
+     * @param  array | string $fieldDef - It can be a string or field defenition from entityDefs
+     * @return array | null
+     */
+    public function getFieldDefsByType($fieldDef)
+    {
+        if (is_string($fieldDef)) {
+            $fieldDef = array('type' => $fieldDef);
+        }
 
-		if (isset($fieldDef['dbType'])) {
-			return $this->getMetadata()->get('fields.'.$fieldDef['dbType']);
-		} else if (isset($fieldDef['type'])) {
-			return $this->getMetadata()->get('fields.'.$fieldDef['type']);
-		}
+        if (isset($fieldDef['dbType'])) {
+            return $this->getMetadata()->get('fields.'.$fieldDef['dbType']);
+        } else if (isset($fieldDef['type'])) {
+            return $this->getMetadata()->get('fields.'.$fieldDef['type']);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function getFieldDefsInFieldMeta($fieldDef)
-	{
-		$fieldDefsByType = $this->getFieldDefsByType($fieldDef);
-		if (isset($fieldDefsByType['fieldDefs'])) {
-			return $fieldDefsByType['fieldDefs'];
-		}
+    public function getFieldDefsInFieldMeta($fieldDef)
+    {
+        $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+        if (isset($fieldDefsByType['fieldDefs'])) {
+            return $fieldDefsByType['fieldDefs'];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Get link definition defined in 'fields' metadata. In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName":"{entity}"). Variables should be defined into fieldDefs (in 'entityDefs' metadata).
-	 *
-	 * @param  string $entityName
-	 * @param  array  $fieldDef
-	 * @param  array  $linkFieldDefsByType
-	 * @return array | null
-	 */
-	public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
-	{
-		if (!isset($fieldDefsByType)) {
-			$fieldDefsByType = $this->getFieldDefsByType($fieldDef);
-			if (!isset($fieldDefsByType['linkDefs'])) {
-				return null;
-			}
-			$linkFieldDefsByType = $fieldDefsByType['linkDefs'];
-		}
+    /**
+     * Get link definition defined in 'fields' metadata. In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName":"{entity}"). Variables should be defined into fieldDefs (in 'entityDefs' metadata).
+     *
+     * @param  string $entityName
+     * @param  array  $fieldDef
+     * @param  array  $linkFieldDefsByType
+     * @return array | null
+     */
+    public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
+    {
+        if (!isset($fieldDefsByType)) {
+            $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+            if (!isset($fieldDefsByType['linkDefs'])) {
+                return null;
+            }
+            $linkFieldDefsByType = $fieldDefsByType['linkDefs'];
+        }
 
-		foreach ($linkFieldDefsByType as $paramName => &$paramValue) {
-			if (preg_match('/{(.*?)}/', $paramValue, $matches)) {
-				if (in_array($matches[1], array_keys($fieldDef))) {
-					$value = $fieldDef[$matches[1]];
-				} else if (strtolower($matches[1]) == 'entity') {
-					$value = $entityName;
-				}
+        foreach ($linkFieldDefsByType as $paramName => &$paramValue) {
+            if (preg_match('/{(.*?)}/', $paramValue, $matches)) {
+                if (in_array($matches[1], array_keys($fieldDef))) {
+                    $value = $fieldDef[$matches[1]];
+                } else if (strtolower($matches[1]) == 'entity') {
+                    $value = $entityName;
+                }
 
-				if (isset($value)) {
-					$paramValue = str_replace('{'.$matches[1].'}', $value, $paramValue);
-				}
-			}
-		}
+                if (isset($value)) {
+                    $paramValue = str_replace('{'.$matches[1].'}', $value, $paramValue);
+                }
+            }
+        }
 
-		return $linkFieldDefsByType;
-	}
+        return $linkFieldDefsByType;
+    }
 
 }
 

@@ -20,43 +20,43 @@
  ************************************************************************/ 
 
 Espo.define('Views.OutboundEmail.Record.Edit', 'Views.Record.Edit', function (Dep) {
-	
-	return Dep.extend({
-		
-		sideView: null,
-		
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			
-			if (!this.model.get('auth')) {
-				this.hideField('username');
-				this.hideField('password');	
-			}
-			
-			var authField = this.getFieldView('auth');
-			this.listenTo(authField, 'change', function () {
-				var auth = authField.fetch()['auth'];					
-				if (auth) {
-					this.showField('username');
-					this.showField('password');
-				} else {
-					this.hideField('username');
-					this.hideField('password');
-				}
-			}.bind(this));
-			
-			var securityField = this.getFieldView('security');
-			this.listenTo(securityField, 'change', function () {
-				var security = securityField.fetch()['security'];
-				if (['SSL', 'TLS'].indexOf(security) != -1) {
-					this.model.set('port', '465');
-				} else {
-					this.model.set('port', '25');
-				}			
-			}.bind(this));
-														
-		},	
-		
-	});
+    
+    return Dep.extend({
+        
+        sideView: null,
+        
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            
+            if (!this.model.get('auth')) {
+                this.hideField('username');
+                this.hideField('password');    
+            }
+            
+            var authField = this.getFieldView('auth');
+            this.listenTo(authField, 'change', function () {
+                var auth = authField.fetch()['auth'];                    
+                if (auth) {
+                    this.showField('username');
+                    this.showField('password');
+                } else {
+                    this.hideField('username');
+                    this.hideField('password');
+                }
+            }.bind(this));
+            
+            var securityField = this.getFieldView('security');
+            this.listenTo(securityField, 'change', function () {
+                var security = securityField.fetch()['security'];
+                if (['SSL', 'TLS'].indexOf(security) != -1) {
+                    this.model.set('port', '465');
+                } else {
+                    this.model.set('port', '25');
+                }            
+            }.bind(this));
+                                                        
+        },    
+        
+    });
 
 });

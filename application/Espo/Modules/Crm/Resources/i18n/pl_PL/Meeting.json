@@ -1,36 +1,36 @@
 {
-	"fields": {
-		"name": "Imię",
-		"parent": "Konto",
-		"status": "Status",
-		"dateStart": "Data Startu",
-		"dateEnd": "Data Zakończenia",
-		"duration": "Czas",
-		"description": "Opis ",
-		"users": "Użytkownik",
-		"contacts": "Kontakty",
-		"leads": "Potencjalne Kontakty"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Planowane",
-			"Held": "Zatrzymany",
-			"Not Held": "Nie zatrzymany"
-		}
-	},
-	"labels": {
-		"Create Meeting": "Utwórz Spotkanie",
-		"Set Held": "Ustaw Zatrzymanie",
-		"Set Not Held": "Ustaw nie Zatrzymany",
-		"Send Invitations": "Wyślij Powiadomienie",
-		"Saved as Held": "Zapisz jako zatrzymany",
-		"Saved as Not Held": "Zapisz jako nie utrzymany"
-	},
-	"presetFilters": {
-		"planned": "Planowane",
-		"held": "Zatrzymany",
-		"todays": "Dzisiaj"
-	}
+    "fields": {
+        "name": "Imię",
+        "parent": "Konto",
+        "status": "Status",
+        "dateStart": "Data Startu",
+        "dateEnd": "Data Zakończenia",
+        "duration": "Czas",
+        "description": "Opis ",
+        "users": "Użytkownik",
+        "contacts": "Kontakty",
+        "leads": "Potencjalne Kontakty"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planowane",
+            "Held": "Zatrzymany",
+            "Not Held": "Nie zatrzymany"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Utwórz Spotkanie",
+        "Set Held": "Ustaw Zatrzymanie",
+        "Set Not Held": "Ustaw nie Zatrzymany",
+        "Send Invitations": "Wyślij Powiadomienie",
+        "Saved as Held": "Zapisz jako zatrzymany",
+        "Saved as Not Held": "Zapisz jako nie utrzymany"
+    },
+    "presetFilters": {
+        "planned": "Planowane",
+        "held": "Zatrzymany",
+        "todays": "Dzisiaj"
+    }
 }

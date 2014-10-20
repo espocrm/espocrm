@@ -1,10 +1,10 @@
 [
-	"teams",
-	"assignedUser",
-	"stage",
-	"probability",
-	"account",
-	"amountConverted",
-	"closeDate",
-	"leadSource"
+    "teams",
+    "assignedUser",
+    "stage",
+    "probability",
+    "account",
+    "amountConverted",
+    "closeDate",
+    "leadSource"
 ]

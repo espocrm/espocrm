@@ -21,10 +21,10 @@
 
 Espo.define('Views.Role.Record.Panels.Side', 'Views.Record.Panels.Side', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'role.record.panels.side',
+        template: 'role.record.panels.side',
 
-	});
+    });
 });
 

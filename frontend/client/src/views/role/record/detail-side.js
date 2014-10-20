@@ -21,18 +21,18 @@
 
 Espo.define('Views.Role.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {
 
-	return Dep.extend({
-	
-	
-		panels: [
-			{
-				name: 'default',
-				label: false,
-				view: 'Role.Record.Panels.Side'
-			}
-		],
+    return Dep.extend({
+    
+    
+        panels: [
+            {
+                name: 'default',
+                label: false,
+                view: 'Role.Record.Panels.Side'
+            }
+        ],
 
-	});
+    });
 });
 
 

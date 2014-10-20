@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"status": "Durum",
-		"executionTime": "Çalışma Süresi"
-	}
+    "fields": {
+        "status": "Durum",
+        "executionTime": "Çalışma Süresi"
+    }
 }

@@ -21,24 +21,24 @@
 
 Espo.define('Views.Admin.AuthToken.Record.List', 'Views.Record.List', function (Dep) {
 
-	return Dep.extend({
-	
-		rowActionsView: 'Admin.AuthToken.Record.RowActions.Remove',
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			
-			var actions = [];
-			
-			this.actions.forEach(function (item) {
-				if (item.name == 'delete') {
-					actions.push(item);
-				}
-			}, this);
-			
-			this.actions = actions;
-		},
+    return Dep.extend({
+    
+        rowActionsView: 'Admin.AuthToken.Record.RowActions.Remove',
+        
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            
+            var actions = [];
+            
+            this.actions.forEach(function (item) {
+                if (item.name == 'delete') {
+                    actions.push(item);
+                }
+            }, this);
+            
+            this.actions = actions;
+        },
 
-	});
+    });
 });
 

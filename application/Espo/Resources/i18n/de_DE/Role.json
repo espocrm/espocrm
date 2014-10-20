@@ -1,35 +1,35 @@
 {
-	"fields": {
-		"name": "Name",
-		"roles": "Rollen"
-	},
-	"links": {
-		"users": "Benutzer",
-		"teams": "Teams"
-	},
-	"labels": {
-		"Access": "Zugang",
-		"Create Role": "Neue Rolle"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "nicht gesetzt",
-			"enabled": "Aktiv",
-			"disabled": "Inaktiv"
-		},
-		"levelList": {
-			"all": "Alle",
-			"team": "Team",
-			"own": "Eigene",
-			"no": "Nein"
-		}
-	},
-	"actions": {
-		"read": "Lesen",
-		"edit": "Bearbeiten",
-		"delete": "Löschen"
-	},
-	"messages": {
-		"changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
-	}
+    "fields": {
+        "name": "Name",
+        "roles": "Rollen"
+    },
+    "links": {
+        "users": "Benutzer",
+        "teams": "Teams"
+    },
+    "labels": {
+        "Access": "Zugang",
+        "Create Role": "Neue Rolle"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "nicht gesetzt",
+            "enabled": "Aktiv",
+            "disabled": "Inaktiv"
+        },
+        "levelList": {
+            "all": "Alle",
+            "team": "Team",
+            "own": "Eigene",
+            "no": "Nein"
+        }
+    },
+    "actions": {
+        "read": "Lesen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+    },
+    "messages": {
+        "changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
+    }
 }

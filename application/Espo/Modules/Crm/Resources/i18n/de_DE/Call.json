@@ -1,39 +1,39 @@
 {
-	"fields": {
-		"name": "Name",
-		"parent": "Bezieht sich auf",
-		"status": "Status",
-		"dateStart": "Startdatum",
-		"dateEnd": "Enddatum",
-		"direction": "Richtung",
-		"duration": "Dauer",
-		"description": "Beschreibung",
-		"users": "Benutzer",
-		"contacts": "Kontakte",
-		"leads": "Interessenten"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Geplant",
-			"Held": "Durchgeführt",
-			"Not Held": "Nicht durchgeführt"
-		},
-		"direction": {
-			"Outbound": "Ausgehend",
-			"Inbound": "Eingehend"
-		}
-	},
-	"labels": {
-		"Create Call": "Neuer Anruf",
-		"Set Held": "Auf Gehalten setzen",
-		"Set Not Held": "Auf nicht gehalten setzen",
-		"Send Invitations": "Einladungen versenden"		
-	},
-	"presetFilters": {
-		"planned": "Geplant",
-		"held": "Durchgeführt",
-		"todays": "Heutige"
-	}
+    "fields": {
+        "name": "Name",
+        "parent": "Bezieht sich auf",
+        "status": "Status",
+        "dateStart": "Startdatum",
+        "dateEnd": "Enddatum",
+        "direction": "Richtung",
+        "duration": "Dauer",
+        "description": "Beschreibung",
+        "users": "Benutzer",
+        "contacts": "Kontakte",
+        "leads": "Interessenten"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Geplant",
+            "Held": "Durchgeführt",
+            "Not Held": "Nicht durchgeführt"
+        },
+        "direction": {
+            "Outbound": "Ausgehend",
+            "Inbound": "Eingehend"
+        }
+    },
+    "labels": {
+        "Create Call": "Neuer Anruf",
+        "Set Held": "Auf Gehalten setzen",
+        "Set Not Held": "Auf nicht gehalten setzen",
+        "Send Invitations": "Einladungen versenden"        
+    },
+    "presetFilters": {
+        "planned": "Geplant",
+        "held": "Durchgeführt",
+        "todays": "Heutige"
+    }
 }

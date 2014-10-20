@@ -1,36 +1,36 @@
 {
-	"fields": {
-		"name": "Subiect",
-		"parent": "Parinte",
-		"status": "Status",
-		"dateSent": "Data trimiterii",
-		"from": "De la",
-		"to": "Catre",
-		"cc": "CC",
-		"bcc": "BCC",
-		"isHtml": "In format Html",
-		"body": "Corp",
-		"subject": "Subiect",
-		"attachments": "Atasamente",
-		"selectTemplate": "Selecteaza Template",
-		"fromEmailAddress": "De la adresa",
-		"toEmailAddresses": "La adresa",
-		"emailAddress": "Adresa Email"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Ciorna",
-		"Sending": "Se trimite",
-		"Sent": "Trimis",
-		"Archived": "Arhivat"
-	},
-	"labels": {
-		"Create Email": "Arhiveaza Email",
-		"Compose": "Compune"
-	},
-	"presetFilters": {
-		"sent": "Trimis",
-		"archived": "Arhivat"
-	}
+    "fields": {
+        "name": "Subiect",
+        "parent": "Parinte",
+        "status": "Status",
+        "dateSent": "Data trimiterii",
+        "from": "De la",
+        "to": "Catre",
+        "cc": "CC",
+        "bcc": "BCC",
+        "isHtml": "In format Html",
+        "body": "Corp",
+        "subject": "Subiect",
+        "attachments": "Atasamente",
+        "selectTemplate": "Selecteaza Template",
+        "fromEmailAddress": "De la adresa",
+        "toEmailAddresses": "La adresa",
+        "emailAddress": "Adresa Email"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Ciorna",
+        "Sending": "Se trimite",
+        "Sent": "Trimis",
+        "Archived": "Arhivat"
+    },
+    "labels": {
+        "Create Email": "Arhiveaza Email",
+        "Compose": "Compune"
+    },
+    "presetFilters": {
+        "sent": "Trimis",
+        "archived": "Arhivat"
+    }
 }

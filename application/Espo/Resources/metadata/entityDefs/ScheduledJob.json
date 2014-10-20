@@ -14,11 +14,11 @@
             "options": ["Active", "Inactive"] 
         },
         "scheduling": {
-        	"type": "varchar",
+            "type": "varchar",
             "required": true,
             "view": "ScheduledJob.Fields.Scheduling",
-            "default": "* * * * *"   	
-		},
+            "default": "* * * * *"       
+        },
         "lastRun": {
             "type": "datetime",
             "readOnly": true
@@ -50,13 +50,13 @@
             "entity": "User"
         },
         "log": {
-        	"type": "hasMany",
-        	"entity": "ScheduledJobLogRecord",
-        	"foreign": "scheduledJob"
+            "type": "hasMany",
+            "entity": "ScheduledJobLogRecord",
+            "foreign": "scheduledJob"
         }
     },
     "collection": {
-    	"sortBy": "name",
-    	"asc": true
+        "sortBy": "name",
+        "asc": true
     }
 }

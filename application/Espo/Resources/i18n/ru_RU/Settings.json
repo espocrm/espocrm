@@ -1,76 +1,76 @@
 {
-	"fields": {
-		"useCache": "Использовать кэш",
-		"dateFormat": "Формат даты",
-		"timeFormat": "Формат времени",
-		"timeZone": "Часовой пояс",
-		"weekStart": "Первый день недели",
-		"thousandSeparator": "Разделитель разрядов(тысячные)",
-		"decimalMark": "Десятичный знак",
-		"defaultCurrency": "Валюта по умолчанию",
-		"baseCurrency": "Базовая валюта",
-		"baseCurrency": "Базовая валюта",
-		"currencyRates": "Курсы обмена",
-		
-		"currencyList": "Список валют",
-		"language": "Язык",
-		
-		"companyLogo": "Логотип компании",
-		
-		"smtpServer": "Сервер",
-		"smtpPort": "Порт",
-		"smtpAuth": "Авторизация",
-		"smtpSecurity": "Безопасность",
-		"smtpUsername": "Имя пользователя",
-		"emailAddress": "E-mail",
-		"smtpPassword": "Пароль",
-		"outboundEmailFromName": "От имени",
-		"outboundEmailFromAddress": "От адреса",
-		"outboundEmailIsShared": "Может использоваться всеми пользователями",
-		
-		"recordsPerPage": "Показывать по страницам",
-		"recordsPerPageSmall": "Показывать по страницам (Мелкий)",		
-		"tabList": "Вкладки",
-		"quickCreateList": "Быстрое создание списка",
-		
-		"exportDelimiter": "Экспортировать разделитель",
-		
-		"authenticationMethod": "Метод аутентификации",
-		"ldapHost": "Хост",
-		"ldapPort": "Порт",
-		"ldapAuth": "Авторизация",
-		"ldapUsername": "Имя пользователя",
-		"ldapPassword": "Пароль",
-		"ldapBindRequiresDn": "Привязка по домену",
-		"ldapBaseDn": "Базовый домен",
-		"ldapAccountCanonicalForm": "Стандартная форма учетной записи",
-		"ldapAccountDomainName": "Доменное имя учетной записи",
-		"ldapTryUsernameSplit": "Попробовать имя пользователя Split",
-		"ldapCreateEspoUser": "Создать пользователя в EspoCRM",
-		"ldapSecurity": "Безопасность",
-		"ldapUserLoginFilter": "Фильтер пользовательской авторизации",
-		"ldapAccountDomainNameShort": "Краткая учетная запись домена",
-		"ldapOptReferrals": "Opt Referrals",
-		"disableExport": "Отмена экпортирования (доступно только администратору)",
-		"assignmentEmailNotifications": "Оповещать по email при назначении",
-		"assignmentEmailNotificationsEntityList": "Список вещей для оповещения"
-	},
-	"options": {
-		"weekStart": {
-			"0": "Воскресенье",
-			"1": "Понедельник"
-		}
-	},
-	"tooltips": {
-		"recordsPerPageSmall": "Число записей в панелях связей."
-	},
-	"labels": {
-		"System": "Система",
-		"Locale": "Локальные настройки",
-		"SMTP": "SMTP",
-		"Configuration": "Конфигурация",
-		"Notifications": "Оповещения",
-		"Currency Settings": "Настройки валюты",
-		"Currency Rtes": "Курсы обмена валюты"
-	}
+    "fields": {
+        "useCache": "Использовать кэш",
+        "dateFormat": "Формат даты",
+        "timeFormat": "Формат времени",
+        "timeZone": "Часовой пояс",
+        "weekStart": "Первый день недели",
+        "thousandSeparator": "Разделитель разрядов(тысячные)",
+        "decimalMark": "Десятичный знак",
+        "defaultCurrency": "Валюта по умолчанию",
+        "baseCurrency": "Базовая валюта",
+        "baseCurrency": "Базовая валюта",
+        "currencyRates": "Курсы обмена",
+        
+        "currencyList": "Список валют",
+        "language": "Язык",
+        
+        "companyLogo": "Логотип компании",
+        
+        "smtpServer": "Сервер",
+        "smtpPort": "Порт",
+        "smtpAuth": "Авторизация",
+        "smtpSecurity": "Безопасность",
+        "smtpUsername": "Имя пользователя",
+        "emailAddress": "E-mail",
+        "smtpPassword": "Пароль",
+        "outboundEmailFromName": "От имени",
+        "outboundEmailFromAddress": "От адреса",
+        "outboundEmailIsShared": "Может использоваться всеми пользователями",
+        
+        "recordsPerPage": "Показывать по страницам",
+        "recordsPerPageSmall": "Показывать по страницам (Мелкий)",        
+        "tabList": "Вкладки",
+        "quickCreateList": "Быстрое создание списка",
+        
+        "exportDelimiter": "Экспортировать разделитель",
+        
+        "authenticationMethod": "Метод аутентификации",
+        "ldapHost": "Хост",
+        "ldapPort": "Порт",
+        "ldapAuth": "Авторизация",
+        "ldapUsername": "Имя пользователя",
+        "ldapPassword": "Пароль",
+        "ldapBindRequiresDn": "Привязка по домену",
+        "ldapBaseDn": "Базовый домен",
+        "ldapAccountCanonicalForm": "Стандартная форма учетной записи",
+        "ldapAccountDomainName": "Доменное имя учетной записи",
+        "ldapTryUsernameSplit": "Попробовать имя пользователя Split",
+        "ldapCreateEspoUser": "Создать пользователя в EspoCRM",
+        "ldapSecurity": "Безопасность",
+        "ldapUserLoginFilter": "Фильтер пользовательской авторизации",
+        "ldapAccountDomainNameShort": "Краткая учетная запись домена",
+        "ldapOptReferrals": "Opt Referrals",
+        "disableExport": "Отмена экпортирования (доступно только администратору)",
+        "assignmentEmailNotifications": "Оповещать по email при назначении",
+        "assignmentEmailNotificationsEntityList": "Список вещей для оповещения"
+    },
+    "options": {
+        "weekStart": {
+            "0": "Воскресенье",
+            "1": "Понедельник"
+        }
+    },
+    "tooltips": {
+        "recordsPerPageSmall": "Число записей в панелях связей."
+    },
+    "labels": {
+        "System": "Система",
+        "Locale": "Локальные настройки",
+        "SMTP": "SMTP",
+        "Configuration": "Конфигурация",
+        "Notifications": "Оповещения",
+        "Currency Settings": "Настройки валюты",
+        "Currency Rtes": "Курсы обмена валюты"
+    }
 }

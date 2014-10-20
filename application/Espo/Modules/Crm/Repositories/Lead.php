@@ -25,8 +25,8 @@ namespace Espo\Modules\Crm\Repositories;
 use Espo\ORM\Entity;
 
 class Lead extends \Espo\Core\ORM\Repositories\RDB
-{	
-	
+{    
+    
 
 }
 

@@ -1,12 +1,12 @@
 {
-	"fields": {
-		"name": "Nombre",
-		"roles": "Roles"
-	},
-	"links": {
-		"users": "Usuarios"
-	},
-	"labels": {
-		"Create Team": "Crear Equipo"
-	}
+    "fields": {
+        "name": "Nombre",
+        "roles": "Roles"
+    },
+    "links": {
+        "users": "Usuarios"
+    },
+    "labels": {
+        "Create Team": "Crear Equipo"
+    }
 }

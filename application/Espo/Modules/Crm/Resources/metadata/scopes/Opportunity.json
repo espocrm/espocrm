@@ -1,10 +1,10 @@
 {
-	"entity": true,
-	"layouts": true,
-	"tab": true,
-	"acl": true,
-	"module": "Crm",
-	"customizable": true,
-	"stream": true,
-	"importable": true
+    "entity": true,
+    "layouts": true,
+    "tab": true,
+    "acl": true,
+    "module": "Crm",
+    "customizable": true,
+    "stream": true,
+    "importable": true
 }

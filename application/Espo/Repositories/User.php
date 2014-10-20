@@ -28,37 +28,37 @@ use \Espo\Core\Exceptions\Error;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
-	protected function beforeSave(Entity $entity)
-	{
-		if ($entity->isNew()) {
-			$userName = $entity->get('userName');
-			if (empty($userName)) {
-				throw new Error();
-			}
-			
-			$user = $this->where(array(
-				'userName' => $userName
-			))->findOne();
-			
-			if ($user) {
-				throw new Error();
-			}
-		} else {
-			if ($entity->isFieldChanged('userName')) {
-				$userName = $entity->get('userName');
-				if (empty($userName)) {
-					throw new Error();
-				}
-			
-				$user = $this->where(array(
-					'userName' => $userName,
-					'id!=' => $entity->id
-				))->findOne();
-				if ($user) {
-					throw new Error();
-				}
-			}
-		}
-	}
+    protected function beforeSave(Entity $entity)
+    {
+        if ($entity->isNew()) {
+            $userName = $entity->get('userName');
+            if (empty($userName)) {
+                throw new Error();
+            }
+            
+            $user = $this->where(array(
+                'userName' => $userName
+            ))->findOne();
+            
+            if ($user) {
+                throw new Error();
+            }
+        } else {
+            if ($entity->isFieldChanged('userName')) {
+                $userName = $entity->get('userName');
+                if (empty($userName)) {
+                    throw new Error();
+                }
+            
+                $user = $this->where(array(
+                    'userName' => $userName,
+                    'id!=' => $entity->id
+                ))->findOne();
+                if ($user) {
+                    throw new Error();
+                }
+            }
+        }
+    }
 }
 

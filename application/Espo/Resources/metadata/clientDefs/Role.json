@@ -16,6 +16,6 @@
       }
    },
   "views": {
-    "list": "Role.List"  	
+    "list": "Role.List"      
   }
 }

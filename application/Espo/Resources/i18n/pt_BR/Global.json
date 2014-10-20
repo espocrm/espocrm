@@ -5,10 +5,10 @@
         "Team": "Time",
         "Role": "Regra",
         "EmailTemplate": "Template de E-mail",
-		"EmailAccount": "Conta de e-mail",
+        "EmailAccount": "Conta de e-mail",
         "OutboundEmail": "E-mail de Saída",
         "ScheduledJob": "Tarefa Agendada",
-		"ExternalAccount": "Conta externa"
+        "ExternalAccount": "Conta externa"
     },
     "scopeNamesPlural": {
         "Email": "E-mails",
@@ -16,10 +16,10 @@
         "Team": "Times",
         "Role": "Regras",
         "EmailTemplate": "Templates de E-mail",
-		"EmailAccount": "Contas de e-mail",
+        "EmailAccount": "Contas de e-mail",
         "OutboundEmail": "E-mails de Saída",
         "ScheduledJob": "Tarefas Agendadas",
-		"ExternalAccount": "Contas externas"
+        "ExternalAccount": "Contas externas"
     },
     "labels": {
         "Misc": "Misc",
@@ -114,13 +114,13 @@
         "you": "você",
         "change": "modificar",
         "Primary": "Primário",
-		"Save Filters": "Salvar Filtros",
-		"Administration": "Administração",
-		"Run Import": "Executar Importação",
-		"Duplicate": "Duplicar",
-		"Notifications": "Notificações",
-		"Mark all read": "Marcar tudo como lido",
-		"See more": "Ver mais"
+        "Save Filters": "Salvar Filtros",
+        "Administration": "Administração",
+        "Run Import": "Executar Importação",
+        "Duplicate": "Duplicar",
+        "Notifications": "Notificações",
+        "Mark all read": "Marcar tudo como lido",
+        "See more": "Ver mais"
     },
     "messages": {
         "notModified": "Você não modificou o registro",
@@ -137,12 +137,12 @@
         "fieldShouldBeLess": "{field} deve ser menos que {value}",
         "fieldShouldBeGreater": "{field} deve ser maior que {value}",
         "fieldBadPasswordConfirm": "{field} confirmado impropriamente",
-		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-		"assignmentEmailNotificationBody": "{assignerUserName} designou {entityType} '{Entity.name}' para você\n\n{recordUrl}",
-		"confirmation": "Você tem certeza?",
-		"removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",
-		"unlinkRecordConfirmation": "Você gostaria mesmo de desfazer este relacionamento?",
-		"removeSelectedRecordsConfirmation": "Você gostaria mesmo de remover os registros selecionados?"
+        "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
+        "assignmentEmailNotificationBody": "{assignerUserName} designou {entityType} '{Entity.name}' para você\n\n{recordUrl}",
+        "confirmation": "Você tem certeza?",
+        "removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",
+        "unlinkRecordConfirmation": "Você gostaria mesmo de desfazer este relacionamento?",
+        "removeSelectedRecordsConfirmation": "Você gostaria mesmo de remover os registros selecionados?"
     },
     "boolFilters": {
         "onlyMy": "Meus",
@@ -289,9 +289,9 @@
             "after": "Anterior",
             "before": "Posterior",
             "between": "Entre",
-			"today": "Hoje",
-			"past": "Passado",
-			"future": "Futuro"
+            "today": "Hoje",
+            "past": "Passado",
+            "future": "Futuro"
         },
         "intSearchRanges": {
             "equals": "Igual",
@@ -310,13 +310,13 @@
             "5": "5 minutos",
             "10": "10 minutos"
         },
-		"phoneNumber": {
-			"Mobile": "Celular",
-			"Office": "Escritório",
-			"Fax": "Fax",
-			"Home": "Residencial",
-			"Other": "Outro"
-		}
+        "phoneNumber": {
+            "Mobile": "Celular",
+            "Office": "Escritório",
+            "Fax": "Fax",
+            "Home": "Residencial",
+            "Other": "Outro"
+        }
     },
     "sets": {
         "summernote": {

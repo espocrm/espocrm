@@ -25,37 +25,37 @@ namespace Espo\Controllers;
 use \Espo\Core\Exceptions\Error;
 
 class Integration extends \Espo\Core\Controllers\Record
-{	
-	protected function checkControllerAccess()
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
-	}
-	
-	public function actionIndex($params, $data, $request)
-	{
-		return false;
-	}
+{    
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
+    
+    public function actionIndex($params, $data, $request)
+    {
+        return false;
+    }
 
-	public function actionRead($params, $data, $request)
-	{
-		$entity = $this->getEntityManager()->getEntity('Integration', $params['id']);		
-		return $entity->toArray();
-	}
-	
-	public function actionUpdate($params, $data)
-	{
-		return $this->actionPatch($params, $data);
-	}
-	
-	public function actionPatch($params, $data)
-	{
-		$entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-		$entity->set($data);
-		$this->getEntityManager()->saveEntity($entity);
-		
-		return $entity->toArray();		
-	}
+    public function actionRead($params, $data, $request)
+    {
+        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);        
+        return $entity->toArray();
+    }
+    
+    public function actionUpdate($params, $data)
+    {
+        return $this->actionPatch($params, $data);
+    }
+    
+    public function actionPatch($params, $data)
+    {
+        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
+        $entity->set($data);
+        $this->getEntityManager()->saveEntity($entity);
+        
+        return $entity->toArray();        
+    }
 }
 

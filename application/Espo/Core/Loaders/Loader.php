@@ -25,7 +25,7 @@ namespace Espo\Core\Loaders;
 
 interface Loader
 {
-	public function load();
+    public function load();
 
 }
 

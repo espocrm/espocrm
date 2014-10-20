@@ -21,23 +21,23 @@
 
 Espo.define('Views.Admin.AuthToken.List', 'Views.List', function (Dep) {
 
-	return Dep.extend({
-	
-		searchPanel: false,
+    return Dep.extend({
+    
+        searchPanel: false,
 
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			
-			this.menu.buttons = [];		
-		},
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            
+            this.menu.buttons = [];        
+        },
 
-		getHeader: function () {
-			return '<a href="#Admin">' + this.translate('Administration') + "</a> » " + this.getLanguage().translate('Auth Tokens', 'labels', 'Administration');
-		},
+        getHeader: function () {
+            return '<a href="#Admin">' + this.translate('Administration') + "</a> » " + this.getLanguage().translate('Auth Tokens', 'labels', 'Administration');
+        },
 
-		updatePageTitle: function () {
-			this.setPageTitle(this.getLanguage().translate('Auth Tokens', 'labels', 'Administration'));
-		},
-	});
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Auth Tokens', 'labels', 'Administration'));
+        },
+    });
 });
 

@@ -1,36 +1,36 @@
 {
-	"fields": {
-		"name": "Nume",
-		"parent": "Parinte",
-		"status": "Status",
-		"dateStart": "Data inceput",
-		"dateEnd": "Data terminare",
-		"duration": "Durata",
-		"description": "Descriere",
-		"users": "Utilizatori",
-		"contacts": "Contacte",
-		"leads": "Lead-uri"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Planificat",
-			"Held": "Detinut",
-			"Not Held": "Nedetinut"
-		}
-	},
-	"labels": {
-		"Create Meeting": "Creare Intalnire",
-		"Set Held": "Setare detinere",
-		"Set Not Held": "Setare nedetinere",
-		"Send Invitations": "Trimite invitatii",
-		"Saved as Held": "Saved as Held",
-		"Saved as Not Held": "Saved as Not Held"
-	},
-	"presetFilters": {
-		"planned": "Planificat",
-		"held": "Detinut",
-		"todays": "Today's"
-	}
+    "fields": {
+        "name": "Nume",
+        "parent": "Parinte",
+        "status": "Status",
+        "dateStart": "Data inceput",
+        "dateEnd": "Data terminare",
+        "duration": "Durata",
+        "description": "Descriere",
+        "users": "Utilizatori",
+        "contacts": "Contacte",
+        "leads": "Lead-uri"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planificat",
+            "Held": "Detinut",
+            "Not Held": "Nedetinut"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Creare Intalnire",
+        "Set Held": "Setare detinere",
+        "Set Not Held": "Setare nedetinere",
+        "Send Invitations": "Trimite invitatii",
+        "Saved as Held": "Saved as Held",
+        "Saved as Not Held": "Saved as Not Held"
+    },
+    "presetFilters": {
+        "planned": "Planificat",
+        "held": "Detinut",
+        "todays": "Today's"
+    }
 }

@@ -1,6 +1,6 @@
 {
-	"entity": true,
-	"layouts": false,
-	"tab": false,
-	"acl": false
+    "entity": true,
+    "layouts": false,
+    "tab": false,
+    "acl": false
 }

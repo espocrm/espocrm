@@ -24,16 +24,16 @@ namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
 class JsonObject extends \Doctrine\DBAL\Types\ObjectType
 {
-	const JSON_OBJECT = 'jsonObject';
+    const JSON_OBJECT = 'jsonObject';
 
-	public function getName()
-	{
-		return self::JSON_OBJECT;
-	}
+    public function getName()
+    {
+        return self::JSON_OBJECT;
+    }
 
-	public static function getDbTypeName()
-	{
-		return 'TEXT';
-	}
+    public static function getDbTypeName()
+    {
+        return 'TEXT';
+    }
 
 }

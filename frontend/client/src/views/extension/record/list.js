@@ -21,23 +21,23 @@
 
 Espo.define('Views.Extension.Record.List', 'Views.Record.List', function (Dep) {
 
-	return Dep.extend({
-		
-		rowActionsView: 'Extension.Record.RowActions',
-		
-		checkboxes: false,
-		
-		removeAction: false,
-		
-		mergeAction: false,
-		
-		massUpdateAction: false,
-		
-		exportAction: false,
-		
-		allowQuickEdit: false,
-	
-	});
-	
+    return Dep.extend({
+        
+        rowActionsView: 'Extension.Record.RowActions',
+        
+        checkboxes: false,
+        
+        removeAction: false,
+        
+        mergeAction: false,
+        
+        massUpdateAction: false,
+        
+        exportAction: false,
+        
+        allowQuickEdit: false,
+    
+    });
+    
 });
 

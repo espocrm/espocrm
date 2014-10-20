@@ -21,266 +21,266 @@
 
 Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relationship', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'activities',
+        name: 'activities',
 
-		template: 'crm:record.panels.activities',
+        template: 'crm:record.panels.activities',
 
-		scopeList: ['Meeting', 'Call'],
+        scopeList: ['Meeting', 'Call'],
 
-		sortBy: 'dateStart',
+        sortBy: 'dateStart',
 
-		asc: false,
-		
-		actions: [
-			{
-				action: 'createActivity',
-				label: 'Schedule Meeting',
-				data: {
-					link: 'meetings',
-					status: 'Planned',
-				},
-				acl: 'edit',
-				aclScope: 'Meeting',
-			},
-			{
-				action: 'createActivity',
-				label: 'Schedule Call',
-				data: {
-					link: 'calls',
-					status: 'Planned',
-				},
-				acl: 'edit',
-				aclScope: 'Call',
-			},
-			{
-				action: 'composeEmail',
-				label: 'Compose Email',
-				acl: 'edit',
-				aclScope: 'Email',
-			}
-		],
+        asc: false,
+        
+        actions: [
+            {
+                action: 'createActivity',
+                label: 'Schedule Meeting',
+                data: {
+                    link: 'meetings',
+                    status: 'Planned',
+                },
+                acl: 'edit',
+                aclScope: 'Meeting',
+            },
+            {
+                action: 'createActivity',
+                label: 'Schedule Call',
+                data: {
+                    link: 'calls',
+                    status: 'Planned',
+                },
+                acl: 'edit',
+                aclScope: 'Call',
+            },
+            {
+                action: 'composeEmail',
+                label: 'Compose Email',
+                acl: 'edit',
+                aclScope: 'Email',
+            }
+        ],
 
-		listLayout: {
-			'Meeting': {
-				rows: [
-					[
-						{name: 'ico', view: 'Crm:Fields.Ico'},
-						{
-							name: 'name',
-							link: true,
-						},
-					],
-					[
-						{name: 'assignedUser'},
-						{name: 'dateStart'},
-					]
-				]
-			},
-			'Call': {
-				rows: [
-					[
-						{name: 'ico', view: 'Crm:Fields.Ico'},
-						{
-							name: 'name',
-							link: true,
-						},
-					],
-					[
-						{name: 'assignedUser'},
-						{name: 'dateStart'},
-					]
-				]
-			}
-		},
+        listLayout: {
+            'Meeting': {
+                rows: [
+                    [
+                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {
+                            name: 'name',
+                            link: true,
+                        },
+                    ],
+                    [
+                        {name: 'assignedUser'},
+                        {name: 'dateStart'},
+                    ]
+                ]
+            },
+            'Call': {
+                rows: [
+                    [
+                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {
+                            name: 'name',
+                            link: true,
+                        },
+                    ],
+                    [
+                        {name: 'assignedUser'},
+                        {name: 'dateStart'},
+                    ]
+                ]
+            }
+        },
 
-		where: {
-			scope: false,
-		},
-		
-		events: _.extend({
-			'click button.scope-switcher': function (e) {
-				var $target = $(e.currentTarget);
-				this.$el.find('button.scope-switcher').removeClass('active');
-				$target.addClass('active');
-				this.where.scope = $target.data('scope') || false;
-				
-				this.listenToOnce(this.collection, 'sync', function () {
-					this.notify(false);
-				}.bind(this));
-				this.notify('Loading...');
-				this.collection.fetch();
-				
-				this.currentTab = this.where.scope || 'all';
-				this.getStorage().set('state', this.getStorageKey(), this.currentTab);					
-			}
-		}, Dep.prototype.events),
+        where: {
+            scope: false,
+        },
+        
+        events: _.extend({
+            'click button.scope-switcher': function (e) {
+                var $target = $(e.currentTarget);
+                this.$el.find('button.scope-switcher').removeClass('active');
+                $target.addClass('active');
+                this.where.scope = $target.data('scope') || false;
+                
+                this.listenToOnce(this.collection, 'sync', function () {
+                    this.notify(false);
+                }.bind(this));
+                this.notify('Loading...');
+                this.collection.fetch();
+                
+                this.currentTab = this.where.scope || 'all';
+                this.getStorage().set('state', this.getStorageKey(), this.currentTab);                    
+            }
+        }, Dep.prototype.events),
 
-		data: function () {
-			return {
-				currentTab: this.currentTab,
-				scopeList: this.scopeList
-			};
-		},
-		
-		getStorageKey: function () {
-			return 'activities-' + this.model.name + '-' + this.name;
-		},
+        data: function () {
+            return {
+                currentTab: this.currentTab,
+                scopeList: this.scopeList
+            };
+        },
+        
+        getStorageKey: function () {
+            return 'activities-' + this.model.name + '-' + this.name;
+        },
 
-		setup: function () {
-		
-			this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
-			
-			if (this.currentTab != 'all') {
-				this.where = {scope: this.currentTab};
-			}
-			
-			this.seeds = {};
+        setup: function () {
+        
+            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
+            
+            if (this.currentTab != 'all') {
+                this.where = {scope: this.currentTab};
+            }
+            
+            this.seeds = {};
 
-			this.wait(true);
-			var i = 0;
-			this.scopeList.forEach(function (scope) {
-				this.getModelFactory().getSeed(scope, function (seed) {
-					this.seeds[scope] = seed;
-					i++;
-					if (i == this.scopeList.length) {
-						this.wait(false);
-					}
-				}.bind(this));
-			}.bind(this));
-		},
+            this.wait(true);
+            var i = 0;
+            this.scopeList.forEach(function (scope) {
+                this.getModelFactory().getSeed(scope, function (seed) {
+                    this.seeds[scope] = seed;
+                    i++;
+                    if (i == this.scopeList.length) {
+                        this.wait(false);
+                    }
+                }.bind(this));
+            }.bind(this));
+        },
 
-		afterRender: function () {
-			var url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name;						
+        afterRender: function () {
+            var url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name;                        
 
-			this.collection = new Espo.MultiCollection();
-			this.collection.seeds = this.seeds;
-			this.collection.url = url;
-			this.collection.where = this.where;
-			this.collection.sortBy = this.sortBy;
-			this.collection.asc = this.asc;
-			this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+            this.collection = new Espo.MultiCollection();
+            this.collection.seeds = this.seeds;
+            this.collection.url = url;
+            this.collection.where = this.where;
+            this.collection.sortBy = this.sortBy;
+            this.collection.asc = this.asc;
+            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
-			this.listenToOnce(this.collection, 'sync', function () {
-				this.createView('list', 'Record.ListExpanded', {
-					el: this.$el.selector + ' > .list-container',
-					pagination: false,
-					type: 'listRelationship',
-					rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
-					checkboxes: false,
-					collection: this.collection,
-					listLayout: this.listLayout,
-				}, function (view) {
-					view.render();
-				});
-			}.bind(this));			
-			this.collection.fetch();
-		},
-		
-		getCreateActivityAttributes: function (data, callback) {
-			data = data || {};
-			
-			var attributes = {
-				status: data.status
-			};
-			
-			if (this.model.name == 'Contact') {
-				if (this.model.get('accountId')) {
-					attributes.parentType = 'Account',
-					attributes.parentId = this.model.get('accountId');
-					attributes.parentName = this.model.get('accountName');
-				}
-			} else if (this.model.name == 'Lead') {
-				attributes.parentType = 'Lead',
-				attributes.parentId = this.model.id
-				attributes.parentName = this.model.get('name');
-			}
-			if (this.model.name != 'Account' && this.model.has('contactsIds')) {
-				attributes.contactsIds = this.model.get('contactsIds');
-				attributes.contactsNames = this.model.get('contactsNames');
-			}
-			
-			callback.call(this, attributes);
-		},
+            this.listenToOnce(this.collection, 'sync', function () {
+                this.createView('list', 'Record.ListExpanded', {
+                    el: this.$el.selector + ' > .list-container',
+                    pagination: false,
+                    type: 'listRelationship',
+                    rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
+                    checkboxes: false,
+                    collection: this.collection,
+                    listLayout: this.listLayout,
+                }, function (view) {
+                    view.render();
+                });
+            }.bind(this));            
+            this.collection.fetch();
+        },
+        
+        getCreateActivityAttributes: function (data, callback) {
+            data = data || {};
+            
+            var attributes = {
+                status: data.status
+            };
+            
+            if (this.model.name == 'Contact') {
+                if (this.model.get('accountId')) {
+                    attributes.parentType = 'Account',
+                    attributes.parentId = this.model.get('accountId');
+                    attributes.parentName = this.model.get('accountName');
+                }
+            } else if (this.model.name == 'Lead') {
+                attributes.parentType = 'Lead',
+                attributes.parentId = this.model.id
+                attributes.parentName = this.model.get('name');
+            }
+            if (this.model.name != 'Account' && this.model.has('contactsIds')) {
+                attributes.contactsIds = this.model.get('contactsIds');
+                attributes.contactsNames = this.model.get('contactsNames');
+            }
+            
+            callback.call(this, attributes);
+        },
 
-		actionCreateActivity: function (data) {
-			var self = this;
-			var link = data.link;
-			var scope = this.model.defs['links'][link].entity;
-			var foreignLink = this.model.defs['links'][link].foreign;
+        actionCreateActivity: function (data) {
+            var self = this;
+            var link = data.link;
+            var scope = this.model.defs['links'][link].entity;
+            var foreignLink = this.model.defs['links'][link].foreign;
 
-			this.notify('Loading...');
-			
-			this.getCreateActivityAttributes(data, function (attributes) {			
-				this.createView('quickCreate', 'Modals.Edit', {
-					scope: scope,
-					relate: {
-						model: this.model,
-						link: foreignLink,
-					},
-					attributes: attributes,
-				}, function (view) {
-					view.render();
-					view.notify(false);
-					view.once('after:save', function () {
-						self.collection.fetch();
-					});
-				});
-			});				
+            this.notify('Loading...');
+            
+            this.getCreateActivityAttributes(data, function (attributes) {            
+                this.createView('quickCreate', 'Modals.Edit', {
+                    scope: scope,
+                    relate: {
+                        model: this.model,
+                        link: foreignLink,
+                    },
+                    attributes: attributes,
+                }, function (view) {
+                    view.render();
+                    view.notify(false);
+                    view.once('after:save', function () {
+                        self.collection.fetch();
+                    });
+                });
+            });                
 
-		},
-		
-		getComposeEmailAttributes: function (data, callback) {
-			data = data || {};
-			var attributes = {
-				status: 'Draft',
-				to: this.model.get('emailAddress')
-			};
-			callback.call(this, attributes);
-		},
-		
-		actionComposeEmail: function () {
-			var self = this;
-			var link = 'emails';
-			var scope = 'Email';
-			
-			var relate = null;				
-			if ('emails' in this.model.defs['links']) {				
-				relate = {
-					model: this.model,
-					link: this.model.defs['links']['emails'].foreign
-				};
-			}						
+        },
+        
+        getComposeEmailAttributes: function (data, callback) {
+            data = data || {};
+            var attributes = {
+                status: 'Draft',
+                to: this.model.get('emailAddress')
+            };
+            callback.call(this, attributes);
+        },
+        
+        actionComposeEmail: function () {
+            var self = this;
+            var link = 'emails';
+            var scope = 'Email';
+            
+            var relate = null;                
+            if ('emails' in this.model.defs['links']) {                
+                relate = {
+                    model: this.model,
+                    link: this.model.defs['links']['emails'].foreign
+                };
+            }                        
 
-			this.notify('Loading...');
-			
-			this.getComposeEmailAttributes(null, function (attributes) {
-				if (this.model.name == 'Contact') {
-					if (this.model.get('accountId')) {
-						attributes.parentType = 'Account',
-						attributes.parentId = this.model.get('accountId');
-						attributes.parentName = this.model.get('accountName');
-					}
-				} else if (this.model.name == 'Lead') {
-					attributes.parentType = 'Lead',
-					attributes.parentId = this.model.id
-					attributes.parentName = this.model.get('name');
-				}
+            this.notify('Loading...');
+            
+            this.getComposeEmailAttributes(null, function (attributes) {
+                if (this.model.name == 'Contact') {
+                    if (this.model.get('accountId')) {
+                        attributes.parentType = 'Account',
+                        attributes.parentId = this.model.get('accountId');
+                        attributes.parentName = this.model.get('accountName');
+                    }
+                } else if (this.model.name == 'Lead') {
+                    attributes.parentType = 'Lead',
+                    attributes.parentId = this.model.id
+                    attributes.parentName = this.model.get('name');
+                }
 
-				this.createView('quickCreate', 'Modals.ComposeEmail', {
-					relate: relate,
-					attributes: attributes 
-				}, function (view) {
-					view.render();
-					view.notify(false);
-					view.once('after:save', function () {
-						self.collection.fetch();
-					});
-				});
-			});			
+                this.createView('quickCreate', 'Modals.ComposeEmail', {
+                    relate: relate,
+                    attributes: attributes 
+                }, function (view) {
+                    view.render();
+                    view.notify(false);
+                    view.once('after:save', function () {
+                        self.collection.fetch();
+                    });
+                });
+            });            
 
-		},
-	});
+        },
+    });
 });
 

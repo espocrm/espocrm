@@ -1,35 +1,35 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"roles": "Regels"
-	},
-	"links": {
-		"users": "Gebruikers",
-		"teams": "Groepen"
-	},
-	"labels": {
-		"Access": "Rechten",
-		"Create Role": "Maak Voorwaarde"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "niet-actief",
-			"enabled": "ingeschakeld",
-			"disabled": "uitgeschakeld"
-		},
-		"levelList": {
-			"all": "allemaal",
-			"team": "team",
-			"own": "eigen",
-			"no": "nee"
-		}
-	},
-	"actions": {
-		"read": "Lees",
-		"edit": "Aanpassen",
-		"delete": "Verwijder"
-	},
-	"messages": {
-		"changesAfterClearCache": "All changes in an access control will be applied after cache will be cleared."
-	}
+    "fields": {
+        "name": "Record Naam",
+        "roles": "Regels"
+    },
+    "links": {
+        "users": "Gebruikers",
+        "teams": "Groepen"
+    },
+    "labels": {
+        "Access": "Rechten",
+        "Create Role": "Maak Voorwaarde"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "niet-actief",
+            "enabled": "ingeschakeld",
+            "disabled": "uitgeschakeld"
+        },
+        "levelList": {
+            "all": "allemaal",
+            "team": "team",
+            "own": "eigen",
+            "no": "nee"
+        }
+    },
+    "actions": {
+        "read": "Lees",
+        "edit": "Aanpassen",
+        "delete": "Verwijder"
+    },
+    "messages": {
+        "changesAfterClearCache": "All changes in an access control will be applied after cache will be cleared."
+    }
 }

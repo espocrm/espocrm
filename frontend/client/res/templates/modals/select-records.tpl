@@ -2,6 +2,6 @@
 <div class="list-container">{{{list}}}</div>
 {{#if createButton}}
 <div class="button-container">
-	<button class="btn btn-default" data-action="create">{{translate "Create"}}</button>
+    <button class="btn btn-default" data-action="create">{{translate "Create"}}</button>
 </div>
 {{/if}}

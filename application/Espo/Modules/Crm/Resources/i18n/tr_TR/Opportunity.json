@@ -1,43 +1,43 @@
 {
-	"fields": {
-		"name": "İsim",
-		"account": "Hesap",
-		"stage": "Aşama",
-		"amount": "Tutar",
-		"probability": "Olasılık, %",
-		"leadSource": "Aday Müşteri Kaynağı",
-		"doNotCall": "Arama Yapma",
-		"closeDate": "Kapanış Tarii",
-		"description": "açıklama"
-	},
-	"links": {
-		"contacts": "Bağlantılar"
-	},
-	"options": {
-		"stage": {
-			"Prospecting": "Araştırma",
-			"Qualification": "Yeterlilik",
-			"Needs Analysis": "Analiz Yapılmalı",
-			"Value Proposition": "Değer Önerisi",
-			"Id. Decision Makers": "Id. Karar Vericiler",
-			"Perception Analysis": "Algı Analizi",
-			"Proposal/Price Quote": "Proposal/Price Quote",
-			"Negotiation/Review": "Görüşme/İnceleme",
-			"Closed Won": "Kapalı Kazanç",
-			"Closed Lost": "Kapalı Kayıp" 
-		},
-		"leadSource": {
-			"Call": "Arama",
-			"Email": "Eposta",
-			"Existing Customer": "Varolan Müşteri",
-			"Partner": "Ortak",
-			"Public Relations": "Halkla İlişkiler",
-			"Web Site": "Web Site",
-			"Campaign": "Kampanya",
-			"Other": "Diğer"
-		}
-	},
-	"labels": {
-		"Create Opportunity": "Fırsat Oluştur"
-	}
+    "fields": {
+        "name": "İsim",
+        "account": "Hesap",
+        "stage": "Aşama",
+        "amount": "Tutar",
+        "probability": "Olasılık, %",
+        "leadSource": "Aday Müşteri Kaynağı",
+        "doNotCall": "Arama Yapma",
+        "closeDate": "Kapanış Tarii",
+        "description": "açıklama"
+    },
+    "links": {
+        "contacts": "Bağlantılar"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Araştırma",
+            "Qualification": "Yeterlilik",
+            "Needs Analysis": "Analiz Yapılmalı",
+            "Value Proposition": "Değer Önerisi",
+            "Id. Decision Makers": "Id. Karar Vericiler",
+            "Perception Analysis": "Algı Analizi",
+            "Proposal/Price Quote": "Proposal/Price Quote",
+            "Negotiation/Review": "Görüşme/İnceleme",
+            "Closed Won": "Kapalı Kazanç",
+            "Closed Lost": "Kapalı Kayıp" 
+        },
+        "leadSource": {
+            "Call": "Arama",
+            "Email": "Eposta",
+            "Existing Customer": "Varolan Müşteri",
+            "Partner": "Ortak",
+            "Public Relations": "Halkla İlişkiler",
+            "Web Site": "Web Site",
+            "Campaign": "Kampanya",
+            "Other": "Diğer"
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Fırsat Oluştur"
+    }
 }

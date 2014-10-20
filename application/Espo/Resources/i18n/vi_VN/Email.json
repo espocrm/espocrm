@@ -1,36 +1,36 @@
 {
-	"fields": {
-		"name": "Chủ đề",
-		"parent": "Chủ",
-		"status": "Trạng thái",
-		"dateSent": "Ngày gửi",
-		"from": "Từ",
-		"to": "Tới",
-		"cc": "CC",
-		"bcc": "BCC",
-		"isHtml": "Chỉ Html",
-		"body": "Nội dung",
-		"subject": "Chủ đề",
-		"attachments": "Đính kèm",
-		"selectTemplate": "Chọn mẫu",
-		"fromEmailAddress": "Địa chỉ gửi",
-		"toEmailAddresses": "Địa chỉ nhận",
-		"emailAddress": "Địa chỉ email"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Nháp",
-		"Sending": "Đang gửi",
-		"Sent": "Đã gửi",
-		"Archived": "Lưu trữ"
-	},
-	"labels": {
-		"Create Email": "Email lưu trữ",
-		"Compose": "Soạn"
-	},
-	"presetFilters": {
-		"sent": "Đã gửi",
-		"archived": "Lưu trữ"
-	}
+    "fields": {
+        "name": "Chủ đề",
+        "parent": "Chủ",
+        "status": "Trạng thái",
+        "dateSent": "Ngày gửi",
+        "from": "Từ",
+        "to": "Tới",
+        "cc": "CC",
+        "bcc": "BCC",
+        "isHtml": "Chỉ Html",
+        "body": "Nội dung",
+        "subject": "Chủ đề",
+        "attachments": "Đính kèm",
+        "selectTemplate": "Chọn mẫu",
+        "fromEmailAddress": "Địa chỉ gửi",
+        "toEmailAddresses": "Địa chỉ nhận",
+        "emailAddress": "Địa chỉ email"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Nháp",
+        "Sending": "Đang gửi",
+        "Sent": "Đã gửi",
+        "Archived": "Lưu trữ"
+    },
+    "labels": {
+        "Create Email": "Email lưu trữ",
+        "Compose": "Soạn"
+    },
+    "presetFilters": {
+        "sent": "Đã gửi",
+        "archived": "Lưu trữ"
+    }
 }

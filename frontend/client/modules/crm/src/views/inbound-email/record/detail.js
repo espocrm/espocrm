@@ -21,49 +21,49 @@
 
 Espo.define('Crm:Views.InboundEmail.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			this.handleDistributionField();
-		},
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.handleDistributionField();
+        },
 
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);			
-			this.initSslFieldListening();
-		},
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);            
+            this.initSslFieldListening();
+        },
 
-		handleDistributionField: function () {
-			var handleRequirement = function (model) {
-				if (model.get('createCase') && ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
-					this.getFieldView('team').setRequired();
-				} else {
-					this.getFieldView('team').setNotRequired();
-				}
-			}.bind(this);
+        handleDistributionField: function () {
+            var handleRequirement = function (model) {
+                if (model.get('createCase') && ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
+                    this.getFieldView('team').setRequired();
+                } else {
+                    this.getFieldView('team').setNotRequired();
+                }
+            }.bind(this);
 
-			this.on('render', function () {
-				handleRequirement(this.model);
-			}, this);
+            this.on('render', function () {
+                handleRequirement(this.model);
+            }, this);
 
-			this.listenTo(this.model, 'change:caseDistribution', function (model) {
-				handleRequirement(model);
-			});
-		},
+            this.listenTo(this.model, 'change:caseDistribution', function (model) {
+                handleRequirement(model);
+            });
+        },
 
-		initSslFieldListening: function () {
-			var sslField = this.getFieldView('ssl');
-			this.listenTo(sslField, 'change', function () {
-				var ssl = sslField.fetch()['ssl'];
-				if (ssl) {
-					this.model.set('port', '993');
-				} else {
-					this.model.set('port', '143');
-				}
-			}, this);
-		}
+        initSslFieldListening: function () {
+            var sslField = this.getFieldView('ssl');
+            this.listenTo(sslField, 'change', function () {
+                var ssl = sslField.fetch()['ssl'];
+                if (ssl) {
+                    this.model.set('port', '993');
+                } else {
+                    this.model.set('port', '143');
+                }
+            }, this);
+        }
 
-	});
+    });
 
 });
 

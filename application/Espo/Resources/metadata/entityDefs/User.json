@@ -13,7 +13,7 @@
         "name": {
             "type": "personName"
         },
-		"password": {
+        "password": {
             "type": "password",
             "maxLength": 150,
             "internal": true
@@ -55,9 +55,9 @@
             "tooltip": true
         },
         "acceptanceStatus": {
-        	"type": "varchar",
-        	"notStorable": true,
-        	"disabled": true
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         },
         "teams": {
             "type": "linkMultiple"
@@ -85,20 +85,20 @@
             "type": "hasOne",
             "entity": "Preferences"
         },
-		"meetings": {
+        "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
             "foreign": "users"
         },
-		"calls": {
+        "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "users"
         }
     },
     "collection": {
-    	"sortBy": "userName",
-    	"asc": true,
-    	"textFilterFields": ["name", "userName"]
+        "sortBy": "userName",
+        "asc": true,
+        "textFilterFields": ["name", "userName"]
     }
 }

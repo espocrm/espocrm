@@ -1,19 +1,19 @@
 [
-	{
-		"label":"Overview",
-		"rows": [
-			[{"name":"name"},false],			
-			[{"name":"emailAddress"},{"name":"phoneNumber"}],
-			[{"name":"website"},false],
-			[{"name":"billingAddress"},{"name":"shippingAddress"}],
-			[{"name":"description", "fullWidth": true}]
-		]
-	},
-	{
-		"label":"Details",
-		"rows": [
-			[{"name":"type"},{"name":"sicCode"}],
-			[{"name":"industry"},false]
-		]
-	}
+    {
+        "label":"Overview",
+        "rows": [
+            [{"name":"name"},false],            
+            [{"name":"emailAddress"},{"name":"phoneNumber"}],
+            [{"name":"website"},false],
+            [{"name":"billingAddress"},{"name":"shippingAddress"}],
+            [{"name":"description", "fullWidth": true}]
+        ]
+    },
+    {
+        "label":"Details",
+        "rows": [
+            [{"name":"type"},{"name":"sicCode"}],
+            [{"name":"industry"},false]
+        ]
+    }
 ]

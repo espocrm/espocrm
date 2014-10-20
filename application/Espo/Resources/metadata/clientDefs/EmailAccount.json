@@ -1,9 +1,9 @@
 {
-	"controller": "Controllers.Record",
-	"recordViews":{
-		"list":"EmailAccount.Record.List",
-		"detail": "EmailAccount.Record.Detail",
-		"edit": "EmailAccount.Record.Edit"
-	},
-	"disableSearchPanel": true
+    "controller": "Controllers.Record",
+    "recordViews":{
+        "list":"EmailAccount.Record.List",
+        "detail": "EmailAccount.Record.Detail",
+        "edit": "EmailAccount.Record.Edit"
+    },
+    "disableSearchPanel": true
 }

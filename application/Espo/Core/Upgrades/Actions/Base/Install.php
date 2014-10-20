@@ -26,87 +26,87 @@ use Espo\Core\Exceptions\Error;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base
 {
-	/**
-	 * Is copied extension files to Espo
-	 *
-	 * @var [type]
-	 */
-	protected $isCopied = null;
+    /**
+     * Is copied extension files to Espo
+     *
+     * @var [type]
+     */
+    protected $isCopied = null;
 
-	/**
-	 * Main installation process
-	 *
-	 * @param  string $processId Upgrade/Extension ID, gotten in upload stage
-	 * @return bool
-	 */
-	public function run($processId)
-	{
-		$GLOBALS['log']->debug('Installation process ['.$processId.']: start run.');
+    /**
+     * Main installation process
+     *
+     * @param  string $processId Upgrade/Extension ID, gotten in upload stage
+     * @return bool
+     */
+    public function run($processId)
+    {
+        $GLOBALS['log']->debug('Installation process ['.$processId.']: start run.');
 
-		if (empty($processId)) {
-			throw new Error('Installation package ID was not specified.');
-		}
+        if (empty($processId)) {
+            throw new Error('Installation package ID was not specified.');
+        }
 
-		$this->setProcessId($processId);
+        $this->setProcessId($processId);
 
-		$this->isCopied = false;
+        $this->isCopied = false;
 
-		/** check if an archive is unzipped, if no then unzip */
-		$packagePath = $this->getPackagePath();
-		if (!file_exists($packagePath)) {
-			$this->unzipArchive();
-			$this->isAcceptable();
-		}
+        /** check if an archive is unzipped, if no then unzip */
+        $packagePath = $this->getPackagePath();
+        if (!file_exists($packagePath)) {
+            $this->unzipArchive();
+            $this->isAcceptable();
+        }
 
-		$this->beforeRunAction();
+        $this->beforeRunAction();
 
-		/* run before install script */
-		$this->runScript('before');
+        /* run before install script */
+        $this->runScript('before');
 
-		/* remove files defined in a manifest */
-		if (!$this->deleteFiles()) {
-			$this->throwErrorAndRemovePackage('Permission denied to delete files.');
-		}
+        /* remove files defined in a manifest */
+        if (!$this->deleteFiles()) {
+            $this->throwErrorAndRemovePackage('Permission denied to delete files.');
+        }
 
-		/* copy files from directory "Files" to EspoCRM files */
-		if (!$this->copyFiles()) {
-			$this->throwErrorAndRemovePackage('Cannot copy files.');
-		}
-		$this->isCopied = true;
+        /* copy files from directory "Files" to EspoCRM files */
+        if (!$this->copyFiles()) {
+            $this->throwErrorAndRemovePackage('Cannot copy files.');
+        }
+        $this->isCopied = true;
 
-		if (!$this->systemRebuild()) {
-			$this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
-		}
+        if (!$this->systemRebuild()) {
+            $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+        }
 
-		/* run before install script */
-		$this->runScript('after');
+        /* run before install script */
+        $this->runScript('after');
 
-		$this->afterRunAction();
+        $this->afterRunAction();
 
-		/* delete unziped files */
-		$this->deletePackageFiles();
+        /* delete unziped files */
+        $this->deletePackageFiles();
 
-		$GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
-	}
+        $GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
+    }
 
-	protected function restoreFiles()
-	{
-		$backupPath = $this->getPath('backupPath');
+    protected function restoreFiles()
+    {
+        $backupPath = $this->getPath('backupPath');
 
-		$res = true;
-		if ($this->isCopied) {
-			$res &= $this->copy(array($backupPath, self::FILES), '', true);
-			$GLOBALS['log']->info('Restore: copy back');
-		}
+        $res = true;
+        if ($this->isCopied) {
+            $res &= $this->copy(array($backupPath, self::FILES), '', true);
+            $GLOBALS['log']->info('Restore: copy back');
+        }
 
-		$res &= $this->getFileManager()->removeInDir($backupPath, true);
+        $res &= $this->getFileManager()->removeInDir($backupPath, true);
 
-		return $res;
-	}
+        return $res;
+    }
 
-	protected function throwErrorAndRemovePackage($errorMessage = '')
-	{
-		$this->restoreFiles();
-		parent::throwErrorAndRemovePackage($errorMessage);
-	}
+    protected function throwErrorAndRemovePackage($errorMessage = '')
+    {
+        $this->restoreFiles();
+        parent::throwErrorAndRemovePackage($errorMessage);
+    }
 }

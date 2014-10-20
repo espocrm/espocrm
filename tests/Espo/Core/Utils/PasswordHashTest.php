@@ -26,71 +26,71 @@ use tests\ReflectionHelper;
 
 class PasswordHashTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
+    protected $object;
 
-	protected $objects;
+    protected $objects;
 
-	protected $reflection;
+    protected $reflection;
 
-	protected $salt = 'bdaff81c7b8db54d';
+    protected $salt = 'bdaff81c7b8db54d';
 
-	protected function setUp()
-	{
-		$this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+    protected function setUp()
+    {
+        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
 
-		$this->object = new \Espo\Core\Utils\PasswordHash($this->objects['config']);
+        $this->object = new \Espo\Core\Utils\PasswordHash($this->objects['config']);
 
-		$this->reflection = new ReflectionHelper($this->object);
-	}
+        $this->reflection = new ReflectionHelper($this->object);
+    }
 
-	protected function tearDown()
-	{
-		$this->object = NULL;
-	}
+    protected function tearDown()
+    {
+        $this->object = NULL;
+    }
 
-	public function testGenerateSalt()
-	{
-		$salt = $this->object->generateSalt();
+    public function testGenerateSalt()
+    {
+        $salt = $this->object->generateSalt();
 
-		$this->assertEquals(16, strlen($salt));
-	}
+        $this->assertEquals(16, strlen($salt));
+    }
 
-	public function testNormalizeSalt()
-	{
-		$salt = $this->object->generateSalt();
+    public function testNormalizeSalt()
+    {
+        $salt = $this->object->generateSalt();
 
-		$result = '$6$' . $salt . '$';
-		$this->assertEquals($result, $this->reflection->invokeMethod('normalizeSalt', array($salt)));
-	}
+        $result = '$6$' . $salt . '$';
+        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeSalt', array($salt)));
+    }
 
-	public function testGetSalt()
-	{
-		$this->objects['config']
-			->expects($this->once())
-			->method('get')
-			->will($this->returnValue($this->salt));
+    public function testGetSalt()
+    {
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($this->salt));
 
-		$result = '$6$' . $this->salt . '$';
-		$this->assertEquals($result, $this->reflection->invokeMethod('getSalt'));
-	}
+        $result = '$6$' . $this->salt . '$';
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSalt'));
+    }
 
-	public function testGetSaltException()
-	{
-		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+    public function testGetSaltException()
+    {
+        $this->setExpectedException('\Espo\Core\Exceptions\Error');
 
-		$this->reflection->invokeMethod('getSalt');
-	}
+        $this->reflection->invokeMethod('getSalt');
+    }
 
-	public function testHash()
-	{
-		$password = 'test-password';
+    public function testHash()
+    {
+        $password = 'test-password';
 
-		$this->objects['config']
-			->expects($this->once())
-			->method('get')
-			->will($this->returnValue($this->salt));
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($this->salt));
 
-		$result = '4gDlJKdkj/MMo2axSwvvWUv0ktSUeGpis/wLcpL8aEBUxXTVa.rxFb1cfKzTiSE4ookBdNpLMheJmtZqzDSRA0';
-		$this->assertEquals($result, $this->object->hash($password));
-	}
+        $result = '4gDlJKdkj/MMo2axSwvvWUv0ktSUeGpis/wLcpL8aEBUxXTVa.rxFb1cfKzTiSE4ookBdNpLMheJmtZqzDSRA0';
+        $this->assertEquals($result, $this->object->hash($password));
+    }
 }

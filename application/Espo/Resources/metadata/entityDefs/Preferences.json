@@ -36,13 +36,13 @@
             "default": "USD"
         },
         "dashboardLayout": {
-        	"type": "text"        	
+            "type": "text"            
         },
         "dashletOptions": {
-        	"type": "text"
+            "type": "text"
         },
         "presetFilters": {
-        	"type": "text"        	
+            "type": "text"            
         },
         "smtpEmailAddress": {
             "type": "varchar",

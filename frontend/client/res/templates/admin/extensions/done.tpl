@@ -1,5 +1,5 @@
 
 <p class="text-success">
-	{{{text}}}
+    {{{text}}}
 </p>
 

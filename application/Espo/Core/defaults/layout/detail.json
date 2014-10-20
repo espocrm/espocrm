@@ -1,6 +1,6 @@
 [{
-	"label":"Overview",
-	"rows": [
-		[{"name":"name"}]
-	]
+    "label":"Overview",
+    "rows": [
+        [{"name":"name"}]
+    ]
 }]

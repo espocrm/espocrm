@@ -8,9 +8,9 @@
    ],
    "fields":{
       "street":{
-		  "type": "text",
-		  "maxLength": 255,
-		  "dbType": "varchar"
+          "type": "text",
+          "maxLength": 255,
+          "dbType": "varchar"
       },
       "city":{
          "type":"varchar"

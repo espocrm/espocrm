@@ -1,50 +1,50 @@
 {
-	"labels": {
-		"Converted To": "Przekształcony w ",
-		"Create Lead": "Utwórz Potencjalny Kontakt",
-		"Convert": "Przekształć"
-	},
-	"fields": {
-		"name": "Imię",
-		"emailAddress": "E-mail",
-		"title": "Tytuł",
-		"website": "Strona Internetowa",
-		"phoneNumber": "Telefon",
-		"accountName": "Nazwa Konta",
-		"doNotCall": "Nie Dzwoń",
-		"address": "Adres",
-		"status": "Status",
-		"source": "Źródło",
-		"opportunityAmount": "Wartość Szansy Sprzewdaży",
-		"opportunityAmountConverted": "Opportunity Amount (converted)",
-		"description": "Opis ",
-		"createdAccount": "Konto",
-		"createdContact": "Kontakty",
-		"createdOpportunity": "Szansa Sprzedaży"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Nowy",
-			"Assigned": "Przypisany",
-			"In Process": "W trakcie",
-			"Converted": "Przekształcony",
-			"Recycled": "Usunięty",
-			"Dead": "Martwy"
-		},
-		"source": {
-			"Call": "Telefon",
-			"Email": "E-mail",
-			"Existing Customer": "Istniejący klient",
-			"Partner": "Partner",
-			"Public Relations": "Relacje",
-			"Web Site": "Stwona Internetowa",
-			"Campaign": "Kampania",
-			"Other": "Inny"
-		}
-	},
-	"presetFilters": {
-		"active": "Aktywny"
-	}
+    "labels": {
+        "Converted To": "Przekształcony w ",
+        "Create Lead": "Utwórz Potencjalny Kontakt",
+        "Convert": "Przekształć"
+    },
+    "fields": {
+        "name": "Imię",
+        "emailAddress": "E-mail",
+        "title": "Tytuł",
+        "website": "Strona Internetowa",
+        "phoneNumber": "Telefon",
+        "accountName": "Nazwa Konta",
+        "doNotCall": "Nie Dzwoń",
+        "address": "Adres",
+        "status": "Status",
+        "source": "Źródło",
+        "opportunityAmount": "Wartość Szansy Sprzewdaży",
+        "opportunityAmountConverted": "Opportunity Amount (converted)",
+        "description": "Opis ",
+        "createdAccount": "Konto",
+        "createdContact": "Kontakty",
+        "createdOpportunity": "Szansa Sprzedaży"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nowy",
+            "Assigned": "Przypisany",
+            "In Process": "W trakcie",
+            "Converted": "Przekształcony",
+            "Recycled": "Usunięty",
+            "Dead": "Martwy"
+        },
+        "source": {
+            "Call": "Telefon",
+            "Email": "E-mail",
+            "Existing Customer": "Istniejący klient",
+            "Partner": "Partner",
+            "Public Relations": "Relacje",
+            "Web Site": "Stwona Internetowa",
+            "Campaign": "Kampania",
+            "Other": "Inny"
+        }
+    },
+    "presetFilters": {
+        "active": "Aktywny"
+    }
 }

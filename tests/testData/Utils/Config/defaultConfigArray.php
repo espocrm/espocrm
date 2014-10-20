@@ -20,11 +20,11 @@ return array (
   ),
 
   'crud' => array(
-  	'get' => 'read',
-  	'post' => 'create',
-  	'put' => 'update',
-  	'patch' => 'patch',
-  	'delete' => 'delete',
+      'get' => 'read',
+      'post' => 'create',
+      'put' => 'update',
+      'patch' => 'patch',
+      'delete' => 'delete',
   ),
   'systemItems' =>
   array (

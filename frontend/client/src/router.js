@@ -20,128 +20,128 @@
  ************************************************************************/ 
 (function (Espo, _, Backbone) {
 
-	Espo.Router = Backbone.Router.extend({
+    Espo.Router = Backbone.Router.extend({
 
-		routes: {
+        routes: {
 
-			"logout": "logout",
-			
-			"clearCache": "clearCache",
+            "logout": "logout",
+            
+            "clearCache": "clearCache",
 
-			"search/:text": "search",
+            "search/:text": "search",
 
-			":controller/view/:id/:options": "view",
-			":controller/view/:id": "view",
-			":controller/edit/:id/:options": "edit",
-			":controller/edit/:id": "edit",
-			":controller/create": "create",
+            ":controller/view/:id/:options": "view",
+            ":controller/view/:id": "view",
+            ":controller/edit/:id/:options": "edit",
+            ":controller/edit/:id": "edit",
+            ":controller/create": "create",
 
-			":controller/:action/:options": "action",
-			":controller/:action": "action",
+            ":controller/:action/:options": "action",
+            ":controller/:action": "action",
 
-			":controller": "defaultAction",
+            ":controller": "defaultAction",
 
-			"*actions": "home",
-		},
+            "*actions": "home",
+        },
 
-		_last: null,
+        _last: null,
 
-		initialize: function () {
-			this.history = [];
-			this.on('route', function () {
-				this.history.push(Backbone.history.fragment);
-			});
-		},
+        initialize: function () {
+            this.history = [];
+            this.on('route', function () {
+                this.history.push(Backbone.history.fragment);
+            });
+        },
 
-		navigateBack: function (options) {
-			var url;
-			if (this.history.length > 1) {
-				url = this.history[this.history.length - 1];
-			} else {
-				url = this.history[0];
-			}
-			this.navigate(url, options);
-		},
+        navigateBack: function (options) {
+            var url;
+            if (this.history.length > 1) {
+                url = this.history[this.history.length - 1];
+            } else {
+                url = this.history[0];
+            }
+            this.navigate(url, options);
+        },
 
-		_parseOptionsParams: function (string) {
-			if (!string) {
-				return {};
-			}
+        _parseOptionsParams: function (string) {
+            if (!string) {
+                return {};
+            }
 
-			if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
-				return string;
-			}
+            if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
+                return string;
+            }
 
-			var options = {};
-			if (typeof string !== 'undefined') {
-				string.split('&').forEach(function (item, i) {
-					var p = item.split('=');
-					options[p[0]] = true;
-					if (p.length > 1) {
-						options[p[0]] = p[1];
-					}
-				});
-			}
-			return options;
-		},
+            var options = {};
+            if (typeof string !== 'undefined') {
+                string.split('&').forEach(function (item, i) {
+                    var p = item.split('=');
+                    options[p[0]] = true;
+                    if (p.length > 1) {
+                        options[p[0]] = p[1];
+                    }
+                });
+            }
+            return options;
+        },
 
-		record: function (controller, action, id, options) {
-			var options = this._parseOptionsParams(options);			
-			options.id = id;			
-			this.dispatch(controller, action, options);
-		},
+        record: function (controller, action, id, options) {
+            var options = this._parseOptionsParams(options);            
+            options.id = id;            
+            this.dispatch(controller, action, options);
+        },
 
-		view: function (controller, id, options) {			
-			this.record(controller, 'view', id, options);
-		},
+        view: function (controller, id, options) {            
+            this.record(controller, 'view', id, options);
+        },
 
-		edit: function (controller, id, options) {
-			this.record(controller, 'edit', id, options);
-		},
+        edit: function (controller, id, options) {
+            this.record(controller, 'edit', id, options);
+        },
 
-		create: function (controller, options) {
-			this.record(controller, 'create', null, options);
-		},
+        create: function (controller, options) {
+            this.record(controller, 'create', null, options);
+        },
 
-		action: function (controller, action, options) {
-			this.dispatch(controller, action, this._parseOptionsParams(options));
-		},
+        action: function (controller, action, options) {
+            this.dispatch(controller, action, this._parseOptionsParams(options));
+        },
 
-		defaultAction: function (controller) {
-			this.dispatch(controller, null);
-		},
+        defaultAction: function (controller) {
+            this.dispatch(controller, null);
+        },
 
-		home: function () {
-			this.dispatch('Home', null);
-		},
+        home: function () {
+            this.dispatch('Home', null);
+        },
 
-		search: function (text) {
-			this.dispatch('Home', 'search', text);
-		},
+        search: function (text) {
+            this.dispatch('Home', 'search', text);
+        },
 
-		logout: function () {
-			this.dispatch(null, 'logout');
-			this.navigate('', {trigger: false});
-		},
-		
-		clearCache: function () {
-			this.dispatch(null, 'clearCache');
-		},
+        logout: function () {
+            this.dispatch(null, 'logout');
+            this.navigate('', {trigger: false});
+        },
+        
+        clearCache: function () {
+            this.dispatch(null, 'clearCache');
+        },
 
-		dispatch: function (controller, action, options) {
-			var o =	{
-				controller: controller,
-				action: action,
-				options: options
-			}
-			this._last = o;
-			this.trigger('routed', o);
-		},
+        dispatch: function (controller, action, options) {
+            var o =    {
+                controller: controller,
+                action: action,
+                options: options
+            }
+            this._last = o;
+            this.trigger('routed', o);
+        },
 
-		getLast: function () {
-			return this._last;
-		},
-	});
+        getLast: function () {
+            return this._last;
+        },
+    });
 
 
 }).call(this, Espo, _, Backbone);

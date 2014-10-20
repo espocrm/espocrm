@@ -23,9 +23,9 @@
 namespace Espo\Entities;
 
 class User extends \Espo\Core\Entities\Person
-{	
-	public function isAdmin()
-	{
-		return $this->get('isAdmin');
-	}
+{    
+    public function isAdmin()
+    {
+        return $this->get('isAdmin');
+    }
 }

@@ -1,39 +1,39 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"account": "Relatie",
-		"stage": "Status",
-		"amount": "Aantal",
-		"probability": "Naar waarschijnlijkheid, %",
-		"leadSource": "Lead Bron",
-		"doNotCall": "Niet Bellen",
-		"closeDate": "Datum gesloten",
-		"contacts": "Contactpersoon",
-		"description": "Beschrijving",
-		"amountConverted": "Amount (converted)"
-	},
-	"links": {
-		"contacts": "Contactpersoon"
-	},
-	"options": {
-		"stage": {
-			"Prospecting": "Prospecting",
-			"Qualification": "Kwalificeren",
-			"Needs Analysis": "Benodigde Analyse",
-			"Value Proposition": "Waarde Schatting",
-			"Id. Decision Makers": "Id. Beslissiers",
-			"Perception Analysis": "Perceptie Analyse",
-			"Proposal/Price Quote": "Prijs/Voorstel",
-			"Negotiation/Review": "Onderhandeling/Herziening",
-			"Closed Won": "Gesloten Gewonnen",
-			"Closed Lost": "Gesloten Verloren" 
-		}
-	},
-	"labels": {
-		"Create Opportunity": "Grote Uitdaging"
-	},
-	"presetFilters": {
-		"open": "Open",
-		"won": "Gewonnen"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "account": "Relatie",
+        "stage": "Status",
+        "amount": "Aantal",
+        "probability": "Naar waarschijnlijkheid, %",
+        "leadSource": "Lead Bron",
+        "doNotCall": "Niet Bellen",
+        "closeDate": "Datum gesloten",
+        "contacts": "Contactpersoon",
+        "description": "Beschrijving",
+        "amountConverted": "Amount (converted)"
+    },
+    "links": {
+        "contacts": "Contactpersoon"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Prospecting",
+            "Qualification": "Kwalificeren",
+            "Needs Analysis": "Benodigde Analyse",
+            "Value Proposition": "Waarde Schatting",
+            "Id. Decision Makers": "Id. Beslissiers",
+            "Perception Analysis": "Perceptie Analyse",
+            "Proposal/Price Quote": "Prijs/Voorstel",
+            "Negotiation/Review": "Onderhandeling/Herziening",
+            "Closed Won": "Gesloten Gewonnen",
+            "Closed Lost": "Gesloten Verloren" 
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Grote Uitdaging"
+    },
+    "presetFilters": {
+        "open": "Open",
+        "won": "Gewonnen"
+    }
 }

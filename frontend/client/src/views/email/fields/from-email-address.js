@@ -20,12 +20,12 @@
  ************************************************************************/ 
 Espo.define('Views.Email.Fields.FromEmailAddress', 'Views.Fields.Link', function (Dep) {
 
-	return Dep.extend({
-		
-		listTemplate: 'email.fields.from-email-address.detail',
-		
-		detailTemplate: 'email.fields.from-email-address.detail',		
-		
-	});
-	
+    return Dep.extend({
+        
+        listTemplate: 'email.fields.from-email-address.detail',
+        
+        detailTemplate: 'email.fields.from-email-address.detail',        
+        
+    });
+    
 });

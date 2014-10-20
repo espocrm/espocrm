@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Gửi",
-		"attachments": "Đính kèm"
-	}
+    "fields": {
+        "post": "Gửi",
+        "attachments": "Đính kèm"
+    }
 }

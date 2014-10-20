@@ -1,22 +1,22 @@
 {
-	"fields": {
-		"name": "Nombre",
-		"emailAddress": "Correo electrónico",
-		"title": "Título",
-		"account": "Cuenta",
-		"phone": "Teléfono",
-		"phoneOffice": "Phone (Office)",
-		"fax": "Fax",
-		"accountType": "Cuenta Tipo",
-		"doNotCall": "No Llamar",
-		"address": "Dirección",
-		"description": "Descripción"	
-	},
-	"links": {
-		"opportunities": "Oportunidades",
-		"cases": "Casos"
-	},
-	"labels": {
-		"Create Contact": "Crear Contacto"
-	}
+    "fields": {
+        "name": "Nombre",
+        "emailAddress": "Correo electrónico",
+        "title": "Título",
+        "account": "Cuenta",
+        "phone": "Teléfono",
+        "phoneOffice": "Phone (Office)",
+        "fax": "Fax",
+        "accountType": "Cuenta Tipo",
+        "doNotCall": "No Llamar",
+        "address": "Dirección",
+        "description": "Descripción"    
+    },
+    "links": {
+        "opportunities": "Oportunidades",
+        "cases": "Casos"
+    },
+    "labels": {
+        "Create Contact": "Crear Contacto"
+    }
 }

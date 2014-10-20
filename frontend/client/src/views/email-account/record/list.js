@@ -21,16 +21,16 @@
 
 Espo.define('Views.EmailAccount.Record.List', 'Views.Record.List', function (Dep) {
 
-	return Dep.extend({
-	
-		allowQuickEdit: false,
-	
-		mergeAction: false,
-		
-		massUpdateAction: false,
-		
-		exportAction: false,
-		
-	});
+    return Dep.extend({
+    
+        allowQuickEdit: false,
+    
+        mergeAction: false,
+        
+        massUpdateAction: false,
+        
+        exportAction: false,
+        
+    });
 });
 

@@ -21,15 +21,15 @@
 
 Espo.define('Views.Email.Record.EditQuick', 'Views.Email.Record.Edit', function (Dep, Detail) {
 
-	return Dep.extend({
-	
-	
-		init: function () {
-			Dep.prototype.init.call(this);			
-				
-			
-		},
-		
-	});
+    return Dep.extend({
+    
+    
+        init: function () {
+            Dep.prototype.init.call(this);            
+                
+            
+        },
+        
+    });
 });
 

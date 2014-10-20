@@ -20,136 +20,136 @@
  ************************************************************************/ 
 (function (Espo, Backbone, _, Bull, $) {
 
-	Espo.View = Bull.View.extend({
+    Espo.View = Bull.View.extend({
 
-		addActionHandler: function (action, handler) {
-			this.events = this.events || {};
+        addActionHandler: function (action, handler) {
+            this.events = this.events || {};
 
-			var fullAction = 'click button[data-action=\"'+action+'\"]';
-			this.events[fullAction] = handler;
-		},
+            var fullAction = 'click button[data-action=\"'+action+'\"]';
+            this.events[fullAction] = handler;
+        },
 
-		notify: function (label, type, timeout, scope) {
-			if (label == false) {
-				Espo.Ui.notify(false);
-				return;
-			}
-			scope = scope || null;
-			timeout = timeout || 2000;
-			if (!type) {
-				timeout = null;
-			}
-			var text = this.getLanguage().translate(label, 'labels', scope);
-			Espo.Ui.notify(text, type, timeout);
-		},
+        notify: function (label, type, timeout, scope) {
+            if (label == false) {
+                Espo.Ui.notify(false);
+                return;
+            }
+            scope = scope || null;
+            timeout = timeout || 2000;
+            if (!type) {
+                timeout = null;
+            }
+            var text = this.getLanguage().translate(label, 'labels', scope);
+            Espo.Ui.notify(text, type, timeout);
+        },
 
 
-		getHelper: function () {
-			return this._helper;
-		},
+        getHelper: function () {
+            return this._helper;
+        },
 
-		getUser: function () {
-			if (this._helper) {
-				return this._helper.user;
-			}
-		},
+        getUser: function () {
+            if (this._helper) {
+                return this._helper.user;
+            }
+        },
 
-		getPreferences: function () {
-			if (this._helper) {
-				return this._helper.preferences;
-			}
-		},
+        getPreferences: function () {
+            if (this._helper) {
+                return this._helper.preferences;
+            }
+        },
 
-		getConfig: function () {
-			if (this._helper) {
-				return this._helper.settings;
-			}
-		},
+        getConfig: function () {
+            if (this._helper) {
+                return this._helper.settings;
+            }
+        },
 
-		getAcl: function () {
-			if (this._helper) {
-				return this._helper.acl;
-			}
-		},
+        getAcl: function () {
+            if (this._helper) {
+                return this._helper.acl;
+            }
+        },
 
-		getModelFactory: function () {
-			if (this._helper) {
-				return this._helper.modelFactory;
-			}
-		},
+        getModelFactory: function () {
+            if (this._helper) {
+                return this._helper.modelFactory;
+            }
+        },
 
-		getCollectionFactory: function () {
-			if (this._helper) {
-				return this._helper.collectionFactory;
-			}
-		},
+        getCollectionFactory: function () {
+            if (this._helper) {
+                return this._helper.collectionFactory;
+            }
+        },
 
-		getRouter: function () {
-			if (this._helper) {
-				return this._helper.router;
-			}
-		},
+        getRouter: function () {
+            if (this._helper) {
+                return this._helper.router;
+            }
+        },
 
-		getStorage: function () {
-			if (this._helper) {
-				return this._helper.storage;
-			}
-		},
+        getStorage: function () {
+            if (this._helper) {
+                return this._helper.storage;
+            }
+        },
 
-		getLanguage: function () {
-			if (this._helper) {
-				return this._helper.language;
-			}
-		},
+        getLanguage: function () {
+            if (this._helper) {
+                return this._helper.language;
+            }
+        },
 
-		getMetadata: function () {
-			if (this._helper) {
-				return this._helper.metadata;
-			}
-		},
+        getMetadata: function () {
+            if (this._helper) {
+                return this._helper.metadata;
+            }
+        },
 
-		getCache: function () {
-			if (this._helper) {
-				return this._helper.cache;
-			}
-		},
+        getCache: function () {
+            if (this._helper) {
+                return this._helper.cache;
+            }
+        },
 
-		getStorage: function () {
-			if (this._helper) {
-				return this._helper.storage;
-			}
-		},
+        getStorage: function () {
+            if (this._helper) {
+                return this._helper.storage;
+            }
+        },
 
-		getDateTime: function () {
-			if (this._helper) {
-				return this._helper.dateTime;
-			}
-		},
+        getDateTime: function () {
+            if (this._helper) {
+                return this._helper.dateTime;
+            }
+        },
 
-		getFieldManager: function () {
-			if (this._helper) {
-				return this._helper.fieldManager;
-			}
-		},
-		
-		getBaseController: function () {
-			if (this._helper) {
-				return this._helper.baseController;
-			}
-		},
+        getFieldManager: function () {
+            if (this._helper) {
+                return this._helper.fieldManager;
+            }
+        },
+        
+        getBaseController: function () {
+            if (this._helper) {
+                return this._helper.baseController;
+            }
+        },
 
-		updatePageTitle: function () {
-			var title = this.getConfig().get('applicationTitle') || 'EspoCRM';
-			this.setPageTitle(title);
-		},
+        updatePageTitle: function () {
+            var title = this.getConfig().get('applicationTitle') || 'EspoCRM';
+            this.setPageTitle(title);
+        },
 
-		setPageTitle: function (title) {
-			$('head title').text(title);
-		},
+        setPageTitle: function (title) {
+            $('head title').text(title);
+        },
 
-		translate: function (label, category, scope) {
-			return this.getLanguage().translate(label, category, scope);
-		},
-	});
+        translate: function (label, category, scope) {
+            return this.getLanguage().translate(label, category, scope);
+        },
+    });
 
 }).call(this, Espo, Backbone, _, Bull, $);

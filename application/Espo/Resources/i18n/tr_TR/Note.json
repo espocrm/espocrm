@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Yayınla",
-		"attachments": "Dosya Ekle"
-	}
+    "fields": {
+        "post": "Yayınla",
+        "attachments": "Dosya Ekle"
+    }
 }

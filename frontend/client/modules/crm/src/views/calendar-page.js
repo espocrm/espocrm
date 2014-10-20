@@ -21,32 +21,32 @@
 
 Espo.define('Crm:Views.CalendarPage', 'View', function (Dep) {
 
-	return Dep.extend({		
+    return Dep.extend({        
 
-		template: 'crm:calendar-page',
-		
-		el: '#main',			
+        template: 'crm:calendar-page',
+        
+        el: '#main',            
 
-		setup: function () {
-			this.createView('calendar', 'Crm:Calendar.Calendar', {
-				date: this.options.date,
-				mode: this.options.mode,
-				el: '#main > .calendar-container',
-			}, function (view) {
-				var first = true;
-				this.listenTo(view, 'view', function (date, mode) {
-					if (!first) {
-						this.getRouter().navigate('#Calendar/show/date=' + date + '&mode=' + mode);
-					}
-					first = false;
-				}.bind(this));
-			}.bind(this));
-		},					
-		
-		updatePageTitle: function () {
-			this.setPageTitle(this.translate('Calendar', 'scopeNames'));
-		},
-	});
+        setup: function () {
+            this.createView('calendar', 'Crm:Calendar.Calendar', {
+                date: this.options.date,
+                mode: this.options.mode,
+                el: '#main > .calendar-container',
+            }, function (view) {
+                var first = true;
+                this.listenTo(view, 'view', function (date, mode) {
+                    if (!first) {
+                        this.getRouter().navigate('#Calendar/show/date=' + date + '&mode=' + mode);
+                    }
+                    first = false;
+                }.bind(this));
+            }.bind(this));
+        },                    
+        
+        updatePageTitle: function () {
+            this.setPageTitle(this.translate('Calendar', 'scopeNames'));
+        },
+    });
 });
 
 

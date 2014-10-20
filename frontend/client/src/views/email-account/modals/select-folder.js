@@ -21,39 +21,39 @@
 
 Espo.define('Views.EmailAccount.Modals.SelectFolder', 'Views.Modal', function (Dep) {
 
-	return Dep.extend({
-	
-		cssName: 'select-folder-modal',
-		
-		template: 'email-account.modals.select-folder',
-		
-		data: function () {
-			return {
-				folders: this.options.folders,
-			};
-		},
-		
-		events: {
-			'click button[data-action="select"]': function (e) {
-				var value = $(e.currentTarget).data('value');
-				this.trigger('select', value);
-			},
-		},
-		
-		setup: function () {
-					
-			this.buttons = [
-				{
-					name: 'cancel',
-					label: 'Cancel',
-					onClick: function (dialog) {
-						dialog.close();
-					}
-				} 
-			];			
+    return Dep.extend({
+    
+        cssName: 'select-folder-modal',
+        
+        template: 'email-account.modals.select-folder',
+        
+        data: function () {
+            return {
+                folders: this.options.folders,
+            };
+        },
+        
+        events: {
+            'click button[data-action="select"]': function (e) {
+                var value = $(e.currentTarget).data('value');
+                this.trigger('select', value);
+            },
+        },
+        
+        setup: function () {
+                    
+            this.buttons = [
+                {
+                    name: 'cancel',
+                    label: 'Cancel',
+                    onClick: function (dialog) {
+                        dialog.close();
+                    }
+                } 
+            ];            
 
-		},
+        },
 
-	});
+    });
 });
 

@@ -27,105 +27,105 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Extension extends \Espo\Core\Controllers\Record
 {
-	protected function checkControllerAccess()
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
-	}
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 
-	public function actionUpload($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new Forbidden();
-		}
+    public function actionUpload($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new Forbidden();
+        }
 
-		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-		$id = $manager->upload($data);
-		$manifest = $manager->getManifest();
+        $id = $manager->upload($data);
+        $manifest = $manager->getManifest();
 
-		return array(
-			'id' => $id,
-			'version' => $manifest['version'],
-			'name' => $manifest['name'],
-			'description' => $manifest['description'],
-		);
-	}
+        return array(
+            'id' => $id,
+            'version' => $manifest['version'],
+            'name' => $manifest['name'],
+            'description' => $manifest['description'],
+        );
+    }
 
-	public function actionInstall($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new Forbidden();
-		}
+    public function actionInstall($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new Forbidden();
+        }
 
-		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-		$manager->install($data['id']);
+        $manager->install($data['id']);
 
-		return true;
-	}
+        return true;
+    }
 
-	public function actionUninstall($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new Forbidden();
-		}
+    public function actionUninstall($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new Forbidden();
+        }
 
-		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-		$manager->uninstall($data['id']);
+        $manager->uninstall($data['id']);
 
-		return true;
-	}
+        return true;
+    }
 
-	public function actionCreate()
-	{
-		throw new Forbidden();
-	}
+    public function actionCreate()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionUpdate()
-	{
-		throw new Forbidden();
-	}
+    public function actionUpdate()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionPatch()
-	{
-		throw new Forbidden();
-	}
+    public function actionPatch()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionListLinked()
-	{
-		throw new Forbidden();
-	}
+    public function actionListLinked()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionDelete($params, $data, $request)
-	{
-		$manager = new \Espo\Core\ExtensionManager($this->getContainer());
+    public function actionDelete($params, $data, $request)
+    {
+        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-		$manager->delete($params['id']);
+        $manager->delete($params['id']);
 
-		return true;
-	}
+        return true;
+    }
 
-	public function actionMassUpdate()
-	{
-		throw new Forbidden();
-	}
+    public function actionMassUpdate()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionMassDelete()
-	{
-		throw new Forbidden();
-	}
+    public function actionMassDelete()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionCreateLink()
-	{
-		throw new Forbidden();
-	}
+    public function actionCreateLink()
+    {
+        throw new Forbidden();
+    }
 
-	public function actionRemoveLink()
-	{
-		throw new Forbidden();
-	}
+    public function actionRemoveLink()
+    {
+        throw new Forbidden();
+    }
 }
 

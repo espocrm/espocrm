@@ -21,184 +21,184 @@
 
 Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'array',
+        type: 'array',
 
-		listTemplate: 'fields.array.detail',
+        listTemplate: 'fields.array.detail',
 
-		detailTemplate: 'fields.array.detail',
+        detailTemplate: 'fields.array.detail',
 
-		editTemplate: 'fields.array.edit',
-		
-		data: function () {
-			return _.extend({
-				selected: this.selected,
-				translatedOptions: this.translatedOptions,
-				hasOptions: this.params.options ? true : false
-			}, Dep.prototype.data.call(this));
-		},
-		
-		events: {
-			'click [data-action="removeValue"]': function (e) {
-				var value = $(e.currentTarget).data('value');
-				this.removeValue(value);
-			},
-			'click [data-action="showAddModal"]': function () {			
-				var options = [];
-				
-				this.params.options.forEach(function (item) {
-					if (!~this.selected.indexOf(item)) {
-						options.push(item);
-					}
-				}, this);
-				this.createView('addModal', 'Modals.ArrayFieldAdd', {
-					options: options,
-					translatedOptions: this.translatedOptions					
-				}, function (view) {
-					view.render();
-					this.listenToOnce(view, 'add', function (item) {
-						this.addValue(item);
-						view.close();
-					}.bind(this));
-				}.bind(this));
-			}
-		},
+        editTemplate: 'fields.array.edit',
+        
+        data: function () {
+            return _.extend({
+                selected: this.selected,
+                translatedOptions: this.translatedOptions,
+                hasOptions: this.params.options ? true : false
+            }, Dep.prototype.data.call(this));
+        },
+        
+        events: {
+            'click [data-action="removeValue"]': function (e) {
+                var value = $(e.currentTarget).data('value');
+                this.removeValue(value);
+            },
+            'click [data-action="showAddModal"]': function () {            
+                var options = [];
+                
+                this.params.options.forEach(function (item) {
+                    if (!~this.selected.indexOf(item)) {
+                        options.push(item);
+                    }
+                }, this);
+                this.createView('addModal', 'Modals.ArrayFieldAdd', {
+                    options: options,
+                    translatedOptions: this.translatedOptions                    
+                }, function (view) {
+                    view.render();
+                    this.listenToOnce(view, 'add', function (item) {
+                        this.addValue(item);
+                        view.close();
+                    }.bind(this));
+                }.bind(this));
+            }
+        },
 
-		setup: function () {
-			Dep.prototype.setup.call(this);			
-			
-			var t = {};
-			
-			if (this.params.translation) {
-				var data = this.getLanguage().data;
-				var arr = this.params.translation.split('.');
-				var pointer = this.getLanguage().data;
-				arr.forEach(function (key) {
-					if (key in pointer) {
-						pointer = pointer[key];
-						t = pointer;
-					}
-				}, this);
-			} else {
-				t = this.translate(this.name, 'options', this.model.name);
-			}
-			
-			this.listenTo(this.model, 'change:' + this.name, function () {
-				this.selected = this.model.get(this.name);
-			}, this);					
-			
+        setup: function () {
+            Dep.prototype.setup.call(this);            
+            
+            var t = {};
+            
+            if (this.params.translation) {
+                var data = this.getLanguage().data;
+                var arr = this.params.translation.split('.');
+                var pointer = this.getLanguage().data;
+                arr.forEach(function (key) {
+                    if (key in pointer) {
+                        pointer = pointer[key];
+                        t = pointer;
+                    }
+                }, this);
+            } else {
+                t = this.translate(this.name, 'options', this.model.name);
+            }
+            
+            this.listenTo(this.model, 'change:' + this.name, function () {
+                this.selected = this.model.get(this.name);
+            }, this);                    
+            
 
-			this.translatedOptions = null;			
-					
-			var translatedOptions = {};
-			if (this.params.options) {
-				this.params.options.forEach(function (o) {
-					if (typeof t === 'object' && o in t) {
-						translatedOptions[o] = t[o];
-					} else {
-						translatedOptions[o] = o;
-					}
-				}.bind(this));
-				this.translatedOptions = translatedOptions;
-			}			
-			
-			this.selected = _.clone(this.model.get(this.name) || []);
-			if (Object.prototype.toString.call(this.selected) !== '[object Array]')	{
-				this.selected = [];	
-			}
-		},
-		
-		afterRender: function () {
-			if (this.mode == 'edit' || this.mode == 'search') {			
-				this.$list = this.$el.find('.list-group');			
-				var $select = this.$select = this.$el.find('.select');
-			
-				if (!this.params.options) {				
-					$select.on('keypress', function (e) {
-						if (e.keyCode == 13) {
-							var value = $select.val();
-							this.addValue(value);
-							$select.val('');
+            this.translatedOptions = null;            
+                    
+            var translatedOptions = {};
+            if (this.params.options) {
+                this.params.options.forEach(function (o) {
+                    if (typeof t === 'object' && o in t) {
+                        translatedOptions[o] = t[o];
+                    } else {
+                        translatedOptions[o] = o;
+                    }
+                }.bind(this));
+                this.translatedOptions = translatedOptions;
+            }            
+            
+            this.selected = _.clone(this.model.get(this.name) || []);
+            if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
+                this.selected = [];    
+            }
+        },
+        
+        afterRender: function () {
+            if (this.mode == 'edit' || this.mode == 'search') {            
+                this.$list = this.$el.find('.list-group');            
+                var $select = this.$select = this.$el.find('.select');
+            
+                if (!this.params.options) {                
+                    $select.on('keypress', function (e) {
+                        if (e.keyCode == 13) {
+                            var value = $select.val();
+                            this.addValue(value);
+                            $select.val('');
 
-						}
-					}.bind(this));
-				}
-			
-				this.$list.sortable({
-					stop: function () {
-						this.trigger('change');	
-					}.bind(this)
-				});
-			}	
-		},
-		
-		getValueForDisplay: function () {
-			return this.selected.map(function (item) {
-				if (this.translatedOptions != null) {
-					if (item in this.translatedOptions) {
-						return this.translatedOptions[item];
-					}
-				}
-				return item;
-			}, this).join(', ');
-		},
-		
-		addValue: function (value) {
-			if (this.translatedOptions != null) {		
-				for (var item in this.translatedOptions) {
-					if (this.translatedOptions[item] == value) {
-						value = item;
-						break;
-					}
-				}
-			}
-		
-			if (this.selected.indexOf(value) == -1) {
-			
-				var label = value;
-				if (this.translatedOptions) {
-					label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
-				}	
-				var html = '<div class="list-group-item" data-value="' + value + '">' + label +	
-				'&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
-				'</div>';
-				this.$list.append(html);
-				this.selected.push(value);
-				this.trigger('change');
-			}		
-		},
-		
-		removeValue: function (value) {
-			this.$list.children('[data-value="' + value + '"]').remove();
-			var index = this.selected.indexOf(value);
-			this.selected.splice(index, 1);
-			this.trigger('change');
-		},	
+                        }
+                    }.bind(this));
+                }
+            
+                this.$list.sortable({
+                    stop: function () {
+                        this.trigger('change');    
+                    }.bind(this)
+                });
+            }    
+        },
+        
+        getValueForDisplay: function () {
+            return this.selected.map(function (item) {
+                if (this.translatedOptions != null) {
+                    if (item in this.translatedOptions) {
+                        return this.translatedOptions[item];
+                    }
+                }
+                return item;
+            }, this).join(', ');
+        },
+        
+        addValue: function (value) {
+            if (this.translatedOptions != null) {        
+                for (var item in this.translatedOptions) {
+                    if (this.translatedOptions[item] == value) {
+                        value = item;
+                        break;
+                    }
+                }
+            }
+        
+            if (this.selected.indexOf(value) == -1) {
+            
+                var label = value;
+                if (this.translatedOptions) {
+                    label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
+                }    
+                var html = '<div class="list-group-item" data-value="' + value + '">' + label +    
+                '&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
+                '</div>';
+                this.$list.append(html);
+                this.selected.push(value);
+                this.trigger('change');
+            }        
+        },
+        
+        removeValue: function (value) {
+            this.$list.children('[data-value="' + value + '"]').remove();
+            var index = this.selected.indexOf(value);
+            this.selected.splice(index, 1);
+            this.trigger('change');
+        },    
 
-		fetch: function () {
-			var $li = this.$el.find('.list-group').children('.list-group-item');
-			var value = [];
-			$li.each(function (i, li) {
-				value.push($(li).data('value'));
-			});				
-			var data = {};
-			data[this.name] = value;
-			return data;
-		},
-		
-		validateRequired: function () {				
-			if (this.model.isRequired(this.name)) {
-				var value = this.model.get(this.name);
-				if (!value || value.length == 0) {
-					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-					this.showValidationMessage(msg);
-					return true;
-				}
-			}
-		},
+        fetch: function () {
+            var $li = this.$el.find('.list-group').children('.list-group-item');
+            var value = [];
+            $li.each(function (i, li) {
+                value.push($(li).data('value'));
+            });                
+            var data = {};
+            data[this.name] = value;
+            return data;
+        },
+        
+        validateRequired: function () {                
+            if (this.model.isRequired(this.name)) {
+                var value = this.model.get(this.name);
+                if (!value || value.length == 0) {
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    this.showValidationMessage(msg);
+                    return true;
+                }
+            }
+        },
 
-	});
+    });
 });
 
 

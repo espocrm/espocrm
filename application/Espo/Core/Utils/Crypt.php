@@ -24,39 +24,39 @@ namespace Espo\Core\Utils;
 
 class Crypt 
 {
-	private $config;
-	
-	private $key = null;
-	
-	private $cryptKey = null;
-	
-	public function __construct($config)
-	{
-		$this->config = $config;		
-		$this->cryptKey = $config->get('cryptKey', '');
-	}	
-	
-	protected function getKey()
-	{
-		if (empty($this->key)) {
-			$this->key = hash('sha256', $this->cryptKey, true);
-		}
-		return $this->key;
-	}
-	
-	public function encrypt($string)
-	{
-		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $string, MCRYPT_MODE_CBC));
-	}
-	
-	public function decrypt($encryptedString)
-	{
-		return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), base64_decode($encryptedString), MCRYPT_MODE_CBC));
-	}
-	
-	public function generateKey()
-	{
-		return md5(uniqid());
-	}
+    private $config;
+    
+    private $key = null;
+    
+    private $cryptKey = null;
+    
+    public function __construct($config)
+    {
+        $this->config = $config;        
+        $this->cryptKey = $config->get('cryptKey', '');
+    }    
+    
+    protected function getKey()
+    {
+        if (empty($this->key)) {
+            $this->key = hash('sha256', $this->cryptKey, true);
+        }
+        return $this->key;
+    }
+    
+    public function encrypt($string)
+    {
+        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), $string, MCRYPT_MODE_CBC));
+    }
+    
+    public function decrypt($encryptedString)
+    {
+        return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->getKey(), base64_decode($encryptedString), MCRYPT_MODE_CBC));
+    }
+    
+    public function generateKey()
+    {
+        return md5(uniqid());
+    }
 }
 

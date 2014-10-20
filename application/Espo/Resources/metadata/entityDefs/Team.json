@@ -22,7 +22,7 @@
         }
     },
     "collection": {
-    	"sortBy": "name",
-    	"asc": true
+        "sortBy": "name",
+        "asc": true
     }
 }

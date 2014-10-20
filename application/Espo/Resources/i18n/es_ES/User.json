@@ -1,21 +1,21 @@
 {
-	"fields": {
-		"name": "Nombre",
-		"userName": "Nombre de Usuario",
-		"title": "Título",
-		"isAdmin": "Es Administrador",
-		"defaultTeam": "Equipo por Defecto",
-		"emailAddress": "Correo electrónico",
-		"phone": "Teléfono",
-		"roles": "Roles",
-		"password": "Contraseña",
-		"passwordConfirm": "Confirmar Contraseña"
-	},
-	"links": {
-		"teams": "Equipos",
-		"roles": "Roles"
-	},
-	"labels": {
-		"Create User": "Crear Usuario"
-	}
+    "fields": {
+        "name": "Nombre",
+        "userName": "Nombre de Usuario",
+        "title": "Título",
+        "isAdmin": "Es Administrador",
+        "defaultTeam": "Equipo por Defecto",
+        "emailAddress": "Correo electrónico",
+        "phone": "Teléfono",
+        "roles": "Roles",
+        "password": "Contraseña",
+        "passwordConfirm": "Confirmar Contraseña"
+    },
+    "links": {
+        "teams": "Equipos",
+        "roles": "Roles"
+    },
+    "labels": {
+        "Create User": "Crear Usuario"
+    }
 }

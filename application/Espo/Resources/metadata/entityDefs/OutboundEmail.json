@@ -39,7 +39,7 @@
             "required": true
         },
         "user": {
-        	"type": "link"
+            "type": "link"
         }
     },
     "links": {

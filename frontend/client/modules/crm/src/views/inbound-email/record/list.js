@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
-Espo.define('Crm:Views.InboundEmail.Record.List', 'Views.Record.List', function (Dep) {		
+    
+Espo.define('Crm:Views.InboundEmail.Record.List', 'Views.Record.List', function (Dep) {        
 
-	return Dep.extend({
-		
-		allowQuickEdit: false,
-	
-	});		
-	
+    return Dep.extend({
+        
+        allowQuickEdit: false,
+    
+    });        
+    
 });
 

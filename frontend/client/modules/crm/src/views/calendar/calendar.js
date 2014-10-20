@@ -20,332 +20,332 @@
  ************************************************************************/ 
 
 Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], function (Dep, FullCalendar) {
-	
-	return Dep.extend({
+    
+    return Dep.extend({
 
-		template: 'crm:calendar.calendar',
+        template: 'crm:calendar.calendar',
 
-		eventAttributes: [],
+        eventAttributes: [],
 
-		colors: {
-			'Meeting': '#558BBD',
-			'Call': '#cf605d',
-			'Task': '#76BA4E',
-		},
+        colors: {
+            'Meeting': '#558BBD',
+            'Call': '#cf605d',
+            'Task': '#76BA4E',
+        },
 
-		header: true,
+        header: true,
 
-		modeList: ['month', 'agendaWeek', 'agendaDay'],
+        modeList: ['month', 'agendaWeek', 'agendaDay'],
 
-		defaultMode: 'agendaWeek',
-		
-		slotMinutes: 30,
+        defaultMode: 'agendaWeek',
+        
+        slotMinutes: 30,
 
-		titleFormat: {
-			month: 'MMMM YYYY',
-			week: 'MMMM D, YYYY',
-			day: 'dddd, MMMM D, YYYY'
-		},
+        titleFormat: {
+            month: 'MMMM YYYY',
+            week: 'MMMM D, YYYY',
+            day: 'dddd, MMMM D, YYYY'
+        },
 
-		data: function () {
-			return {
-				mode: this.mode,
-				modeList: this.modeList,
-				header: this.header,
-			};
-		},
+        data: function () {
+            return {
+                mode: this.mode,
+                modeList: this.modeList,
+                header: this.header,
+            };
+        },
 
-		events: {
-			'click button[data-action="prev"]': function () {
-				this.$calendar.fullCalendar('prev');
-				this.updateDate();
-			},
-			'click button[data-action="next"]': function () {
-				this.$calendar.fullCalendar('next');
-				this.updateDate();
-			},
-			'click button[data-action="today"]': function () {
-				this.$calendar.fullCalendar('today');
-				this.updateDate();
-			},
-			'click button[data-action="mode"]': function (e) {
-				var mode = $(e.currentTarget).data('mode');
-				this.$el.find('button[data-action="mode"]').removeClass('active');
-				this.$el.find('button[data-mode="' + mode + '"]').addClass('active');
-				this.$calendar.fullCalendar('changeView', mode);
-				this.updateDate();
-			},
-		},
+        events: {
+            'click button[data-action="prev"]': function () {
+                this.$calendar.fullCalendar('prev');
+                this.updateDate();
+            },
+            'click button[data-action="next"]': function () {
+                this.$calendar.fullCalendar('next');
+                this.updateDate();
+            },
+            'click button[data-action="today"]': function () {
+                this.$calendar.fullCalendar('today');
+                this.updateDate();
+            },
+            'click button[data-action="mode"]': function (e) {
+                var mode = $(e.currentTarget).data('mode');
+                this.$el.find('button[data-action="mode"]').removeClass('active');
+                this.$el.find('button[data-mode="' + mode + '"]').addClass('active');
+                this.$calendar.fullCalendar('changeView', mode);
+                this.updateDate();
+            },
+        },
 
-		setup: function () {
-			this.date = this.options.date || null;
-			this.mode = this.options.mode || this.defaultMode;
-			this.header = ('header' in this.options) ? this.options.header : this.header;
-			this.slotMinutes = this.options.slotMinutes || this.slotMinutes;				
-		},
+        setup: function () {
+            this.date = this.options.date || null;
+            this.mode = this.options.mode || this.defaultMode;
+            this.header = ('header' in this.options) ? this.options.header : this.header;
+            this.slotMinutes = this.options.slotMinutes || this.slotMinutes;                
+        },
 
-		updateDate: function () {			
-			if (!this.header) {
-				return;
-			}				
-			var view = this.$calendar.fullCalendar('getView');
-			var today = new Date();
-			
-			if (view.start <= today && today < view.end) {
-				this.$el.find('button[data-action="today"]').addClass('active');
-			} else {
-				this.$el.find('button[data-action="today"]').removeClass('active');
-			}
+        updateDate: function () {            
+            if (!this.header) {
+                return;
+            }                
+            var view = this.$calendar.fullCalendar('getView');
+            var today = new Date();
+            
+            if (view.start <= today && today < view.end) {
+                this.$el.find('button[data-action="today"]').addClass('active');
+            } else {
+                this.$el.find('button[data-action="today"]').removeClass('active');
+            }
 
-			var map = {
-				'agendaWeek': 'week',
-				'agendaDay': 'day',
-				'basicWeek': 'week',
-				'basicDay': 'day',
-			};
+            var map = {
+                'agendaWeek': 'week',
+                'agendaDay': 'day',
+                'basicWeek': 'week',
+                'basicDay': 'day',
+            };
 
-			var viewName = map[view.name] || view.name
-			
-			var title;
-		
-			if (viewName == 'week') {
-				title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
-			} else {
-				title = view.intervalStart.format(this.titleFormat[viewName]);
-			}
-			this.$el.find('.date-title h4').text(title);
-		},
+            var viewName = map[view.name] || view.name
+            
+            var title;
+        
+            if (viewName == 'week') {
+                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
+            } else {
+                title = view.intervalStart.format(this.titleFormat[viewName]);
+            }
+            this.$el.find('.date-title h4').text(title);
+        },
 
-		convertToFcEvent: function (o) {
-			var event = {
-				title: o.name,
-				scope: o.scope,
-				id: o.scope + '-' + o.id,
-				recordId: o.id,
-				dateStart: o.dateStart,
-				dateEnd: o.dateEnd,
-			};
-			this.eventAttributes.forEach(function (attr) {
-				event[attr] = o[attr];
-			});
-			if (o.dateStart) {
-				event.start = this.getDateTime().toMoment(o.dateStart);
-			}
-			if (o.dateEnd) {
-				event.end = this.getDateTime().toMoment(o.dateEnd);
-			}
-			if (!event.start || !event.end) {
-				event.allDay = true;
-				if (event.end) {
-					event.start = event.end;
-				}
-			} else {
-				var start = new Date(event.start);
-				var end = new Date(event.end);
-				if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
-					event.allDay = true;	
-				} else {
-					event.allDay = false;
-					if (end - start < 1800000) {
-						var m = event.start.add('minutes', 30);
-						event.end = m.format();
-					}											
-				}
-			}
+        convertToFcEvent: function (o) {
+            var event = {
+                title: o.name,
+                scope: o.scope,
+                id: o.scope + '-' + o.id,
+                recordId: o.id,
+                dateStart: o.dateStart,
+                dateEnd: o.dateEnd,
+            };
+            this.eventAttributes.forEach(function (attr) {
+                event[attr] = o[attr];
+            });
+            if (o.dateStart) {
+                event.start = this.getDateTime().toMoment(o.dateStart);
+            }
+            if (o.dateEnd) {
+                event.end = this.getDateTime().toMoment(o.dateEnd);
+            }
+            if (!event.start || !event.end) {
+                event.allDay = true;
+                if (event.end) {
+                    event.start = event.end;
+                }
+            } else {
+                var start = new Date(event.start);
+                var end = new Date(event.end);
+                if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
+                    event.allDay = true;    
+                } else {
+                    event.allDay = false;
+                    if (end - start < 1800000) {
+                        var m = event.start.add('minutes', 30);
+                        event.end = m.format();
+                    }                                            
+                }
+            }
 
-			event.color = this.colors[o.scope];
-			return event;
-		},
+            event.color = this.colors[o.scope];
+            return event;
+        },
 
-		convertToFcEvents: function (list) {
-			var events = [];
-			list.forEach(function (o) {
-				event = this.convertToFcEvent(o);
-				events.push(event)
-			}.bind(this));
-			return events;
-		},
-		
-		convertTime: function (d) {
-			var format = this.getDateTime().internalDateTimeFormat;
-			var timeZone = this.getDateTime().timeZone;
-			var string = d.format(format);
-			
-			var m;
-			if (timeZone) {	
-				m = moment.tz(string, format, timeZone).utc();
-			} else {
-				m = moment.utc(string, format);
-			}
-			
-			return m.format(format) + ':00';
-		},
+        convertToFcEvents: function (list) {
+            var events = [];
+            list.forEach(function (o) {
+                event = this.convertToFcEvent(o);
+                events.push(event)
+            }.bind(this));
+            return events;
+        },
+        
+        convertTime: function (d) {
+            var format = this.getDateTime().internalDateTimeFormat;
+            var timeZone = this.getDateTime().timeZone;
+            var string = d.format(format);
+            
+            var m;
+            if (timeZone) {    
+                m = moment.tz(string, format, timeZone).utc();
+            } else {
+                m = moment.utc(string, format);
+            }
+            
+            return m.format(format) + ':00';
+        },
 
-		afterRender: function () {
-			var $calendar = this.$calendar = this.$el.find('div.calendar');
+        afterRender: function () {
+            var $calendar = this.$calendar = this.$el.find('div.calendar');
 
-			var options = {
-				header: false,
-				axisFormat: this.getDateTime().timeFormat,
-				timeFormat: this.getDateTime().timeFormat,
-				defaultView: this.mode,
-				weekNumbers: true,
-				editable: true,
-				aspectRatio: 1.62,
-				selectable: true,
-				selectHelper: true,
-				ignoreTimezone: true,
-				height: this.options.height || null,
-				firstDay: this.getPreferences().get('weekStart'),
-				slotEventOverlap: true,
-				snapDuration: 15 * 60 * 1000,
-				timezone: this.getDateTime().timeZone,
-				select: function (start, end, allDay) {					
-					var dateStart = this.convertTime(start);
-					var dateEnd = this.convertTime(end);										
-					
-					this.notify('Loading...');
-					this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
-						attributes: {
-							dateStart: dateStart,
-							dateEnd: dateEnd,
-						},
-					}, function (view) {
-						view.render();
-						view.notify(false);
-					});
-					$calendar.fullCalendar('unselect');
-				}.bind(this),
-				eventClick: function (event) {
-					this.notify('Loading...');
-					this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
-						scope: event.scope,
-						id: event.recordId
-					}, function (view) {
-						view.render();
-						view.notify(false);
-					});
-				}.bind(this),
-				viewRender: function (view, el) {
-					var mode = view.name;
-					var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
-					
-					var m = moment(this.$calendar.fullCalendar('getDate'));
-					this.trigger('view', m.format('YYYY-MM-DD'), mode);
-				}.bind(this),
-				events: function (from, to, timezone, callback) {					
-					var fromServer = this.getDateTime().fromIso(from);
-					var toServer = this.getDateTime().fromIso(to);
-					
-					this.fetchEvents(fromServer, toServer, callback);
-				}.bind(this),
-				eventDrop: function (event, delta, callback) {		
-					var dateStart = this.convertTime(event.start) || null;
-					var dateEnd = this.convertTime(event.end) || null;					
-					
-					var attributes = {};
-					if (!event.dateStart && event.dateEnd) {
-						attributes.dateEnd = dateStart;
-						event.dateEnd = attributes.dateEnd;
-					} else {
-						if (event.dateStart) {
-							attributes.dateStart = dateStart;
-							event.dateStart = dateStart;
-						}
-						if (event.dateEnd) {
-							attributes.dateEnd = dateEnd;
-							event.dateEnd = dateEnd;
-						}
-					}				
+            var options = {
+                header: false,
+                axisFormat: this.getDateTime().timeFormat,
+                timeFormat: this.getDateTime().timeFormat,
+                defaultView: this.mode,
+                weekNumbers: true,
+                editable: true,
+                aspectRatio: 1.62,
+                selectable: true,
+                selectHelper: true,
+                ignoreTimezone: true,
+                height: this.options.height || null,
+                firstDay: this.getPreferences().get('weekStart'),
+                slotEventOverlap: true,
+                snapDuration: 15 * 60 * 1000,
+                timezone: this.getDateTime().timeZone,
+                select: function (start, end, allDay) {                    
+                    var dateStart = this.convertTime(start);
+                    var dateEnd = this.convertTime(end);                                        
+                    
+                    this.notify('Loading...');
+                    this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
+                        attributes: {
+                            dateStart: dateStart,
+                            dateEnd: dateEnd,
+                        },
+                    }, function (view) {
+                        view.render();
+                        view.notify(false);
+                    });
+                    $calendar.fullCalendar('unselect');
+                }.bind(this),
+                eventClick: function (event) {
+                    this.notify('Loading...');
+                    this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
+                        scope: event.scope,
+                        id: event.recordId
+                    }, function (view) {
+                        view.render();
+                        view.notify(false);
+                    });
+                }.bind(this),
+                viewRender: function (view, el) {
+                    var mode = view.name;
+                    var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
+                    
+                    var m = moment(this.$calendar.fullCalendar('getDate'));
+                    this.trigger('view', m.format('YYYY-MM-DD'), mode);
+                }.bind(this),
+                events: function (from, to, timezone, callback) {                    
+                    var fromServer = this.getDateTime().fromIso(from);
+                    var toServer = this.getDateTime().fromIso(to);
+                    
+                    this.fetchEvents(fromServer, toServer, callback);
+                }.bind(this),
+                eventDrop: function (event, delta, callback) {        
+                    var dateStart = this.convertTime(event.start) || null;
+                    var dateEnd = this.convertTime(event.end) || null;                    
+                    
+                    var attributes = {};
+                    if (!event.dateStart && event.dateEnd) {
+                        attributes.dateEnd = dateStart;
+                        event.dateEnd = attributes.dateEnd;
+                    } else {
+                        if (event.dateStart) {
+                            attributes.dateStart = dateStart;
+                            event.dateStart = dateStart;
+                        }
+                        if (event.dateEnd) {
+                            attributes.dateEnd = dateEnd;
+                            event.dateEnd = dateEnd;
+                        }
+                    }                
 
-					if (!(event.dateStart && event.dateEnd)) {
-						event.allDay = true;
-					} else {
-						var start = new Date(event.start);
-						var end = new Date(event.end);
-						if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
-							event.allDay = true;
-						}
-					}
+                    if (!(event.dateStart && event.dateEnd)) {
+                        event.allDay = true;
+                    } else {
+                        var start = new Date(event.start);
+                        var end = new Date(event.end);
+                        if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
+                            event.allDay = true;
+                        }
+                    }
 
-					this.$calendar.fullCalendar('renderEvent', event);								
-					
-					this.notify('Saving...');
-					this.getModelFactory().create(event.scope, function (model) {
-						model.once('sync', function () {
-							this.notify(false);
-						}.bind(this));
-						model.id = event.recordId;
-						model.save(attributes, {patch: true});
-					}, this);											
-				}.bind(this),
-				eventResize: function (event) {
-					var attributes = {
-						dateEnd: this.convertTime(event.end)
-					};
-					this.notify('Saving...');
-					this.getModelFactory().create(event.scope, function (model) {
-						model.once('sync', function () {
-							this.notify(false);
-						}.bind(this));
-						model.id = event.recordId;
-						model.save(attributes, {patch: true});
-					}.bind(this));					
-				}.bind(this),
-				allDayText: '',
-				firstHour: 8,
-				columnFormat: {
-					week: 'ddd DD',
-					day: 'ddd DD',
-				},
-				weekNumberTitle: '',
-			};
+                    this.$calendar.fullCalendar('renderEvent', event);                                
+                    
+                    this.notify('Saving...');
+                    this.getModelFactory().create(event.scope, function (model) {
+                        model.once('sync', function () {
+                            this.notify(false);
+                        }.bind(this));
+                        model.id = event.recordId;
+                        model.save(attributes, {patch: true});
+                    }, this);                                            
+                }.bind(this),
+                eventResize: function (event) {
+                    var attributes = {
+                        dateEnd: this.convertTime(event.end)
+                    };
+                    this.notify('Saving...');
+                    this.getModelFactory().create(event.scope, function (model) {
+                        model.once('sync', function () {
+                            this.notify(false);
+                        }.bind(this));
+                        model.id = event.recordId;
+                        model.save(attributes, {patch: true});
+                    }.bind(this));                    
+                }.bind(this),
+                allDayText: '',
+                firstHour: 8,
+                columnFormat: {
+                    week: 'ddd DD',
+                    day: 'ddd DD',
+                },
+                weekNumberTitle: '',
+            };
 
-			if (this.date) {				
-				options.defaultDate = moment.utc(this.date); 
-			}
+            if (this.date) {                
+                options.defaultDate = moment.utc(this.date); 
+            }
 
-			setTimeout(function () {
-				$calendar.fullCalendar(options);					
-				this.updateDate();
-			}.bind(this), 150);
-		},
+            setTimeout(function () {
+                $calendar.fullCalendar(options);                    
+                this.updateDate();
+            }.bind(this), 150);
+        },
 
-		fetchEvents: function (from, to, callback) {
-			$.ajax({
-				url: 'Activities?from=' + from + '&to=' + to,				
-				success: function (data) {
-					var events = this.convertToFcEvents(data);
-					callback(events);
-					this.notify(false);
-				}.bind(this)
-			});		
-		},
+        fetchEvents: function (from, to, callback) {
+            $.ajax({
+                url: 'Activities?from=' + from + '&to=' + to,                
+                success: function (data) {
+                    var events = this.convertToFcEvents(data);
+                    callback(events);
+                    this.notify(false);
+                }.bind(this)
+            });        
+        },
 
-		addModel: function (model) {
-			var d = model.attributes;
-			d.scope = model.name;
-			var event = this.convertToFcEvent(d);
-			this.$calendar.fullCalendar('renderEvent', event);
-		},
+        addModel: function (model) {
+            var d = model.attributes;
+            d.scope = model.name;
+            var event = this.convertToFcEvent(d);
+            this.$calendar.fullCalendar('renderEvent', event);
+        },
 
-		updateModel: function (model) {
-			var events = this.$calendar.fullCalendar('clientEvents', model.name + '-' + model.id);
-			events.forEach(function (event) {
-				var d = model.attributes;
-				d.scope = model.name;
-				var data = this.convertToFcEvent(d);
-				for (var key in data) {
-					event[key] = data[key];
-				}
-				this.$calendar.fullCalendar('updateEvent', event);
-			}.bind(this));
-		},
-		
-		removeModel: function (model) {
-			this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
-		}
+        updateModel: function (model) {
+            var events = this.$calendar.fullCalendar('clientEvents', model.name + '-' + model.id);
+            events.forEach(function (event) {
+                var d = model.attributes;
+                d.scope = model.name;
+                var data = this.convertToFcEvent(d);
+                for (var key in data) {
+                    event[key] = data[key];
+                }
+                this.$calendar.fullCalendar('updateEvent', event);
+            }.bind(this));
+        },
+        
+        removeModel: function (model) {
+            this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
+        }
 
-	});
+    });
 });
 

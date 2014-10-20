@@ -1,38 +1,38 @@
 [
-	{
-		"label": "Locale",
-		"rows": [
-			[{"name": "dateFormat"}, {"name": "timeFormat"}],
-			[{"name": "timeZone"}, {"name": "weekStart"}],
-			[{"name": "defaultCurrency"}],
-			[{"name": "thousandSeparator"}, {"name": "decimalMark"}],
-			[{"name": "language"}]
-		]
-	},
-	{
-		"label": "SMTP",
-		"rows": [
-			[
-				{
-					"name": "smtpEmailAddress"
-				}
-			],
-			[{"name": "smtpServer"}, {"name": "smtpPort"}],
-			[{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-			[{"name": "smtpUsername"}],
-			[{"name": "smtpPassword"}]
-		]
-	},
-	{
-		"label": "Misc",
-		"rows": [
-			[{"name": "exportDelimiter"}]
-		]
-	},
-	{
-		"label": "Notifications",
-		"rows": [
-			[{"name": "receiveAssignmentEmailNotifications"}]
-		]
-	}
+    {
+        "label": "Locale",
+        "rows": [
+            [{"name": "dateFormat"}, {"name": "timeFormat"}],
+            [{"name": "timeZone"}, {"name": "weekStart"}],
+            [{"name": "defaultCurrency"}],
+            [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
+            [{"name": "language"}]
+        ]
+    },
+    {
+        "label": "SMTP",
+        "rows": [
+            [
+                {
+                    "name": "smtpEmailAddress"
+                }
+            ],
+            [{"name": "smtpServer"}, {"name": "smtpPort"}],
+            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
+            [{"name": "smtpUsername"}],
+            [{"name": "smtpPassword"}]
+        ]
+    },
+    {
+        "label": "Misc",
+        "rows": [
+            [{"name": "exportDelimiter"}]
+        ]
+    },
+    {
+        "label": "Notifications",
+        "rows": [
+            [{"name": "receiveAssignmentEmailNotifications"}]
+        ]
+    }
 ]

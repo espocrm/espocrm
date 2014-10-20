@@ -1,37 +1,37 @@
 {
-	"fields": {
-		"name": "Imię",
-		"parent": "Konto",
-		"status": "Status",
-		"dateStart": "Data Startu",
-		"dateEnd": "Data Zwrotu",
-		"priority": "Pryjorytet",
-		"description": "Opis ",
-		"isOverdue": "Przegrzany"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Not Started": "Nie Rozpoczęte",
-			"Started": "Rozpoczęte",
-			"Completed": "Ukończone",
-			"Canceled": "Anulowane"
-		},
-		"priority" : {
-			"Low": "Niski",
-			"Normal": "Normalny",
-			"High": "Wysoki",
-			"Urgent": "Pilne"
-		}
-	},
-	"labels": {
-		"Create Task": "Utwórz Zadanie"
-	},
-	"presetFilters": {
-		"active": "Aktywny",
-		"completed": "Ukończone",
-		"todays": "Dzisiaj",
-		"overdue": "Przegrzane"
-	}
+    "fields": {
+        "name": "Imię",
+        "parent": "Konto",
+        "status": "Status",
+        "dateStart": "Data Startu",
+        "dateEnd": "Data Zwrotu",
+        "priority": "Pryjorytet",
+        "description": "Opis ",
+        "isOverdue": "Przegrzany"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Not Started": "Nie Rozpoczęte",
+            "Started": "Rozpoczęte",
+            "Completed": "Ukończone",
+            "Canceled": "Anulowane"
+        },
+        "priority" : {
+            "Low": "Niski",
+            "Normal": "Normalny",
+            "High": "Wysoki",
+            "Urgent": "Pilne"
+        }
+    },
+    "labels": {
+        "Create Task": "Utwórz Zadanie"
+    },
+    "presetFilters": {
+        "active": "Aktywny",
+        "completed": "Ukończone",
+        "todays": "Dzisiaj",
+        "overdue": "Przegrzane"
+    }
 }

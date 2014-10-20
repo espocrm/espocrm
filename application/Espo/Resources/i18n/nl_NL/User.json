@@ -1,35 +1,35 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"userName": "Gebruikers Naam",
-		"title": "Titel",
-		"isAdmin": "Is Admin",
-		"defaultTeam": "Voorkeur Team",
-		"emailAddress": "Email",
-		"phoneNumber": "Telefoon",
-		"roles": "Regels",		
-		"password": "Wachtwoord",
-		"passwordConfirm": "Bevestig Wachtwoord",
-		"newPassword": "Nieuw Wachtwoord"
-	},
-	"links": {
-		"teams": "Groepen",
-		"roles": "Regels"
-	},
-	"labels": {
-		"Create User": "Gebruiker Aanmaken",
-		"Generate": "Genereer",
-		"Access": "Rechten",
-		"Preferences": "Voorkeuren",
-		"Change Password": "Wachtwoord Aanpassen"
-	},
-	"tooltips": {
-		"defaultTeam": "All records created by this user will be related to this team by default."
-	},
-	"messages": {
-		"passwordWillBeSent": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
-		"accountInfoEmailSubject": "Gebruiker Informatie",
-		"accountInfoEmailBody": "Uw gebruikers informatie:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-		"passwordChanged": "Het wachtwoord is aangepast"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "userName": "Gebruikers Naam",
+        "title": "Titel",
+        "isAdmin": "Is Admin",
+        "defaultTeam": "Voorkeur Team",
+        "emailAddress": "Email",
+        "phoneNumber": "Telefoon",
+        "roles": "Regels",        
+        "password": "Wachtwoord",
+        "passwordConfirm": "Bevestig Wachtwoord",
+        "newPassword": "Nieuw Wachtwoord"
+    },
+    "links": {
+        "teams": "Groepen",
+        "roles": "Regels"
+    },
+    "labels": {
+        "Create User": "Gebruiker Aanmaken",
+        "Generate": "Genereer",
+        "Access": "Rechten",
+        "Preferences": "Voorkeuren",
+        "Change Password": "Wachtwoord Aanpassen"
+    },
+    "tooltips": {
+        "defaultTeam": "All records created by this user will be related to this team by default."
+    },
+    "messages": {
+        "passwordWillBeSent": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
+        "accountInfoEmailSubject": "Gebruiker Informatie",
+        "accountInfoEmailBody": "Uw gebruikers informatie:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+        "passwordChanged": "Het wachtwoord is aangepast"
+    }
 }

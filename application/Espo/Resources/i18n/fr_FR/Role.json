@@ -1,32 +1,32 @@
 {
-	"fields": {
-		"name": "Nom",
-		"roles": "Rôles"
-	},
-	"links": {
-		"users": "Utilisateurs",
-		"teams": "Equipes"
-	},
-	"labels": {
-		"Access": "Accès",
-		"Create Role": "Créer un rôle"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "Indéfini",
-			"enabled": "activé",
-			"disabled": "désactivé"
-		},
-		"levelList": {
-			"all": "tous",
-			"team": "équipe",
-			"own": "Appartient",
-			"no": "non"
-		}
-	},
-	"actions": {
-		"read": "Lire",
-		"edit": "Edition",
-		"delete": "Effacer"
-	}
+    "fields": {
+        "name": "Nom",
+        "roles": "Rôles"
+    },
+    "links": {
+        "users": "Utilisateurs",
+        "teams": "Equipes"
+    },
+    "labels": {
+        "Access": "Accès",
+        "Create Role": "Créer un rôle"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "Indéfini",
+            "enabled": "activé",
+            "disabled": "désactivé"
+        },
+        "levelList": {
+            "all": "tous",
+            "team": "équipe",
+            "own": "Appartient",
+            "no": "non"
+        }
+    },
+    "actions": {
+        "read": "Lire",
+        "edit": "Edition",
+        "delete": "Effacer"
+    }
 }

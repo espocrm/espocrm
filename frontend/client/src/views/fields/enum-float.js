@@ -21,28 +21,28 @@
 
 Espo.define('Views.Fields.EnumFloat', 'Views.Fields.EnumInt', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'enumFloat',		
+        type: 'enumFloat',        
 
-		fetch: function () {
-			var value = parseFloat(this.$el.find('[name="' + this.name + '"]').val());
-			var data = {};
-			data[this.name] = value;
-			return data;
-		},
+        fetch: function () {
+            var value = parseFloat(this.$el.find('[name="' + this.name + '"]').val());
+            var data = {};
+            data[this.name] = value;
+            return data;
+        },
 
-		fetchSearch: function () {
-			var arr = [];
-			$.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
-				arr.push(parseFloat($(el).val()));
-			});
-			var data = {
-				type: 'in',
-				value: arr
-			};
-			return data;
-		},
-	});
+        fetchSearch: function () {
+            var arr = [];
+            $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
+                arr.push(parseFloat($(el).val()));
+            });
+            var data = {
+                type: 'in',
+                value: arr
+            };
+            return data;
+        },
+    });
 });
 

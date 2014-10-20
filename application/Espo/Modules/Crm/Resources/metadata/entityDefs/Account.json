@@ -28,9 +28,9 @@
             "maxLength": 40
         },
         "contactRole": {
-        	"type": "varchar",
-        	"notStorable": true,
-        	"disabled": true
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         },
         "billingAddress": {
             "type": "address"
@@ -160,7 +160,7 @@
         }
     },
     "collection": {
-    	"sortBy": "name",
-    	"asc": true
+        "sortBy": "name",
+        "asc": true
     }
 }

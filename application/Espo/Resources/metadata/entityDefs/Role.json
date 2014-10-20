@@ -6,7 +6,7 @@
             "type": "varchar"
         },
         "data": {
-        	"type": "text"
+            "type": "text"
         }
     },
     "links": {
@@ -22,7 +22,7 @@
         }
     },
     "collection": {
-    	"sortBy": "name",
-    	"asc": true
+        "sortBy": "name",
+        "asc": true
     }
 }

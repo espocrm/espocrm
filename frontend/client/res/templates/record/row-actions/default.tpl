@@ -1,13 +1,13 @@
 {{#if actions.length}}
 <div class="list-row-buttons btn-group pull-right">
-	<button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-		<span class="caret"></span>
-	</button>
-	<ul class="dropdown-menu pull-right">
-	{{#each actions}}
-		<li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../../scope}}</a></li>
-	{{/each}}
-	</ul>
+    <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right">
+    {{#each actions}}
+        <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../../scope}}</a></li>
+    {{/each}}
+    </ul>
 </div>
 {{/if}}
 

@@ -1,31 +1,31 @@
 {
-	"fields": {
-		"name": "Name",
-		"emailAddress": "E-Mail",
-		"title": "Funktion",
-		"account": "Firma",
-		"accounts": "Firmen",
-		"phoneNumber": "Telefon",
-		"accountType": "Firmentyp",
-		"doNotCall": "Nicht anrufen",
-		"address": "Adresse",
-		"opportunityRole": "Verkaufschance Rolle",
-		"accountRole": "Rolle",
-		"description": "Beschreibung"
-	},
-	"links": {
-		"opportunities": "Verkaufschancen",
-		"cases": "Fälle"
-	},
-	"labels": {
-		"Create Contact": "Neuer Kontakt"
-	},
-	"options": {
-		"opportunityRole": {
-			"": "--Kein(e)--",
-			"Decision Maker": "Entscheider",
-			"Evaluator": "Vorentscheider",
-			"Influencer": "Einflussreiche Person"
-		}
-	}
+    "fields": {
+        "name": "Name",
+        "emailAddress": "E-Mail",
+        "title": "Funktion",
+        "account": "Firma",
+        "accounts": "Firmen",
+        "phoneNumber": "Telefon",
+        "accountType": "Firmentyp",
+        "doNotCall": "Nicht anrufen",
+        "address": "Adresse",
+        "opportunityRole": "Verkaufschance Rolle",
+        "accountRole": "Rolle",
+        "description": "Beschreibung"
+    },
+    "links": {
+        "opportunities": "Verkaufschancen",
+        "cases": "Fälle"
+    },
+    "labels": {
+        "Create Contact": "Neuer Kontakt"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--Kein(e)--",
+            "Decision Maker": "Entscheider",
+            "Evaluator": "Vorentscheider",
+            "Influencer": "Einflussreiche Person"
+        }
+    }
 }

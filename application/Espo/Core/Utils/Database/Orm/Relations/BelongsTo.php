@@ -24,33 +24,33 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class BelongsTo extends Base
 {
-	protected function load($linkName, $entityName)
-	{
-		$foreignEntityName = $this->getForeignEntityName();
+    protected function load($linkName, $entityName)
+    {
+        $foreignEntityName = $this->getForeignEntityName();
 
-		return array (
-			$entityName => array (
-				'fields' => array(
-					$linkName.'Name' => array(
-						'type' => 'foreign',
-						'relation' => $linkName,
-						'foreign' => $this->getForeignField('name', $foreignEntityName),
-					),
-					$linkName.'Id' => array(
-						'type' => 'foreignId',
-						'index' => true,
-					),
-				),
-				'relations' => array(
-                	$linkName => array(
-						'type' => 'belongsTo',
-						'entity' => $foreignEntityName,
-						'key' => $linkName.'Id',
-						'foreignKey' => 'id', //????
-					),
-				),
-			),
-		);
-	}
+        return array (
+            $entityName => array (
+                'fields' => array(
+                    $linkName.'Name' => array(
+                        'type' => 'foreign',
+                        'relation' => $linkName,
+                        'foreign' => $this->getForeignField('name', $foreignEntityName),
+                    ),
+                    $linkName.'Id' => array(
+                        'type' => 'foreignId',
+                        'index' => true,
+                    ),
+                ),
+                'relations' => array(
+                    $linkName => array(
+                        'type' => 'belongsTo',
+                        'entity' => $foreignEntityName,
+                        'key' => $linkName.'Id',
+                        'foreignKey' => 'id', //????
+                    ),
+                ),
+            ),
+        );
+    }
 
 }

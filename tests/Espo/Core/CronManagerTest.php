@@ -7,11 +7,11 @@ use tests\ReflectionHelper;
 
 class CronManagerTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
-	
-	protected $objects;
+    protected $object;
+    
+    protected $objects;
 
-	protected $filesPath= 'tests/testData/EntryPoints';
+    protected $filesPath= 'tests/testData/EntryPoints';
 
     protected function setUp()
     {           
@@ -19,7 +19,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->objects['serviceFactory'] = $this->getMockBuilder('\Espo\Core\ServiceFactory')->disableOriginalConstructor()->getMock();
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-		$this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();        
+        $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();        
         
         
         $map = array(
@@ -57,7 +57,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(50));
             
         $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()) ); 
-    }	
+    }    
 
 
     function testCheckLastRunTime()

@@ -1,6 +1,6 @@
 [
-	{"name":"user"},	
-	{"name":"ipAddress"},
-	{"name":"lastAccess"},
-	{"name":"createdAt"}
+    {"name":"user"},    
+    {"name":"ipAddress"},
+    {"name":"lastAccess"},
+    {"name":"createdAt"}
 ]

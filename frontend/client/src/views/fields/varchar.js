@@ -21,25 +21,25 @@
 
 Espo.define('Views.Fields.Varchar', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({	
-	
-		type: 'varchar',
-		
-		searchTemplate: 'fields.varchar.search',
-		
-		fetchSearch: function () {
-			var value = this.$element.val();
-			if (value) {
-				var data = {
-					type: 'like',
-					value: '%' + value + '%',
-					valueText: value
-				};
-				return data;
-			}
-			return false;				
-		},
+    return Dep.extend({    
+    
+        type: 'varchar',
+        
+        searchTemplate: 'fields.varchar.search',
+        
+        fetchSearch: function () {
+            var value = this.$element.val();
+            if (value) {
+                var data = {
+                    type: 'like',
+                    value: '%' + value + '%',
+                    valueText: value
+                };
+                return data;
+            }
+            return false;                
+        },
 
-	});
+    });
 });
 

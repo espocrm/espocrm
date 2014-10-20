@@ -20,8 +20,8 @@
  ************************************************************************/ 
 
 Espo.define('Controllers.User', 'Controllers.Record', function (Dep) {
-	
-	return Dep.extend({		
+    
+    return Dep.extend({        
 
-	});	
+    });    
 });

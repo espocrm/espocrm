@@ -1,31 +1,31 @@
 {
-	"fields": {
-		"name": "Nume",
-		"emailAddress": "Email",
-		"title": "Titlu",
-		"account": "Cont",
-		"accounts": "Conturi",
-		"phoneNumber": "Telefon",
-		"accountType": "Tip cont",
-		"doNotCall": "Nu sunati",
-		"address": "Adresa",
-		"opportunityRole": "Opportunity Role",
-		"accountRole": "Rol",
-		"description": "Descriere"
-	},
-	"links": {
-		"opportunities": "Oportunitati",
-		"cases": "Cazuri"
-	},
-	"labels": {
-		"Create Contact": "Creare Contact"
-	},
-	"options": {
-		"opportunityRole": {
-			"": "--None--",
-			"Decision Maker": "Decision Maker",
-			"Evaluator": "Evaluator",
-			"Influencer": "Influencer"
-		}
-	}
+    "fields": {
+        "name": "Nume",
+        "emailAddress": "Email",
+        "title": "Titlu",
+        "account": "Cont",
+        "accounts": "Conturi",
+        "phoneNumber": "Telefon",
+        "accountType": "Tip cont",
+        "doNotCall": "Nu sunati",
+        "address": "Adresa",
+        "opportunityRole": "Opportunity Role",
+        "accountRole": "Rol",
+        "description": "Descriere"
+    },
+    "links": {
+        "opportunities": "Oportunitati",
+        "cases": "Cazuri"
+    },
+    "labels": {
+        "Create Contact": "Creare Contact"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--None--",
+            "Decision Maker": "Decision Maker",
+            "Evaluator": "Evaluator",
+            "Influencer": "Influencer"
+        }
+    }
 }

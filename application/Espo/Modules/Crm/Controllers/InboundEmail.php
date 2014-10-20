@@ -24,24 +24,24 @@ namespace Espo\Modules\Crm\Controllers;
 
 class InboundEmail extends \Espo\Core\Controllers\Record
 {
-	protected function checkControllerAccess()
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
-	}
-	
-	public function actionGetFolders($params, $data, $request)
-	{		
-		return $this->getRecordService()->getFolders(array(
-			'host' => $request->get('host'),
-			'port' => $request->get('port'),
-			'ssl' => $request->get('ssl'),
-			'username' => $request->get('username'),
-			'password' => $request->get('password'),
-			'id' => $request->get('id')
-		));
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
+    
+    public function actionGetFolders($params, $data, $request)
+    {        
+        return $this->getRecordService()->getFolders(array(
+            'host' => $request->get('host'),
+            'port' => $request->get('port'),
+            'ssl' => $request->get('ssl'),
+            'username' => $request->get('username'),
+            'password' => $request->get('password'),
+            'id' => $request->get('id')
+        ));
 
-	}
+    }
 
 }

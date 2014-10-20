@@ -10,7 +10,7 @@
             "default": "Planned",
             "view": "Fields.EnumStyled",
             "style": {
-            	"Held": "success"
+                "Held": "success"
             }
         },
         "dateStart": {
@@ -41,17 +41,17 @@
             "disabled": true
         },
         "acceptanceStatus": {
-        	"type": "enum",
-        	"notStorable": true,
-        	"disabled": true,
-        	"options": ["None", "Accepted", "Declined"]
+            "type": "enum",
+            "notStorable": true,
+            "disabled": true,
+            "options": ["None", "Accepted", "Declined"]
         },
         "users": {
             "type": "linkMultiple",
             "view": "Crm:Meeting.Fields.Attendees",
             "disabled": true,
             "columns": {
-            	"status": "acceptanceStatus"
+                "status": "acceptanceStatus"
             }
         },
         "contacts": {
@@ -59,7 +59,7 @@
             "disabled": true,
             "view": "Crm:Meeting.Fields.Contacts",
             "columns": {
-            	"status": "acceptanceStatus"
+                "status": "acceptanceStatus"
             }
         },
         "leads": {
@@ -67,7 +67,7 @@
             "view": "Crm:Meeting.Fields.Attendees",
             "disabled": true,
             "columns": {
-            	"status": "acceptanceStatus"
+                "status": "acceptanceStatus"
             }
         },
         "createdAt": {
@@ -121,11 +121,11 @@
             "entity": "User",
             "foreign": "meetings",
             "additionalColumns": {
-            	"status": {
-            		"type": "varchar",
-            		"len": "36",
-            		"default": "None" 
-            	}
+                "status": {
+                    "type": "varchar",
+                    "len": "36",
+                    "default": "None" 
+                }
             }
         },
         "contacts": {
@@ -133,11 +133,11 @@
             "entity": "Contact",
             "foreign": "meetings",
             "additionalColumns": {
-            	"status": {
-            		"type": "varchar",
-            		"len": "36",
-            		"default": "None"
-            	}
+                "status": {
+                    "type": "varchar",
+                    "len": "36",
+                    "default": "None"
+                }
             }
         },
         "leads": {
@@ -145,11 +145,11 @@
             "entity": "Lead",
             "foreign": "meetings",
             "additionalColumns": {
-            	"status": {
-            		"type": "varchar",
-            		"len": "36",
-            		"default": "None" 
-            	}
+                "status": {
+                    "type": "varchar",
+                    "len": "36",
+                    "default": "None" 
+                }
             }
         },
         "parent": {
@@ -159,7 +159,7 @@
         }
     },
     "collection": {
-    	"sortBy": "dateStart",
-    	"asc": false
+        "sortBy": "dateStart",
+        "asc": false
     }
 }

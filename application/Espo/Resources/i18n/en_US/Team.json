@@ -1,15 +1,15 @@
 {
-	"fields": {
-		"name": "Name",
-		"roles": "Roles"
-	},
-	"links": {
-		"users": "Users"
-	},
-	"tooltips": {
-		"roles": "All users from this team will get access settings from selected roles."
-	},
-	"labels": {
-		"Create Team": "Create Team"
-	}
+    "fields": {
+        "name": "Name",
+        "roles": "Roles"
+    },
+    "links": {
+        "users": "Users"
+    },
+    "tooltips": {
+        "roles": "All users from this team will get access settings from selected roles."
+    },
+    "labels": {
+        "Create Team": "Create Team"
+    }
 }

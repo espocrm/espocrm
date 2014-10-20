@@ -26,65 +26,65 @@ use Espo\Core\Utils\Util;
 
 class PersonName extends \Espo\Core\Utils\Database\Orm\Base
 {
-	protected function load($fieldName, $entityName)
-	{
-		$foreignField = array('first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName));
-		
-		$tableName = Util::toUnderScore($entityName);
+    protected function load($fieldName, $entityName)
+    {
+        $foreignField = array('first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName));
+        
+        $tableName = Util::toUnderScore($entityName);
 
-		$fullList = array(); //contains empty string (" ") like delimiter
-		$fullListReverse = array(); //reverse of $fullList
-		$fieldList = array(); //doesn't contain empty string (" ") like delimiter
-		$like = array();
-		$equal = array();
+        $fullList = array(); //contains empty string (" ") like delimiter
+        $fullListReverse = array(); //reverse of $fullList
+        $fieldList = array(); //doesn't contain empty string (" ") like delimiter
+        $like = array();
+        $equal = array();
 
-		foreach($foreignField as $foreignFieldName) {
+        foreach($foreignField as $foreignFieldName) {
 
-			$fieldNameTrimmed = trim($foreignFieldName);
-			if (!empty($fieldNameTrimmed)) {
-				$columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
+            $fieldNameTrimmed = trim($foreignFieldName);
+            if (!empty($fieldNameTrimmed)) {
+                $columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
 
-				$fullList[] = $fieldList[] = $columnName;
-				$like[] = $columnName." LIKE {value}";
-				$equal[] = $columnName." = {value}";
-			} else {
-				$fullList[] = "'".$foreignFieldName."'";
-			}
-		}
+                $fullList[] = $fieldList[] = $columnName;
+                $like[] = $columnName." LIKE {value}";
+                $equal[] = $columnName." = {value}";
+            } else {
+                $fullList[] = "'".$foreignFieldName."'";
+            }
+        }
 
-		$fullListReverse = array_reverse($fullList);
+        $fullListReverse = array_reverse($fullList);
 
-		return array(
-			$entityName => array (
-				'fields' => array(
-					$fieldName => array(
-						'type' => 'varchar',
-						'select' => $this->getSelect($fullList),
-						'where' => array(
-							'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE {value} OR CONCAT(".implode(", ", $fullListReverse).") LIKE {value})",
-							'=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = {value} OR CONCAT(".implode(", ", $fullListReverse).") = {value})",
-						),
-						'orderBy' => implode(", ", array_map(function ($item) {return $item . ' {direction}';}, $fieldList)),
-					),
-				),
-			),
-		);
-	}
+        return array(
+            $entityName => array (
+                'fields' => array(
+                    $fieldName => array(
+                        'type' => 'varchar',
+                        'select' => $this->getSelect($fullList),
+                        'where' => array(
+                            'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE {value} OR CONCAT(".implode(", ", $fullListReverse).") LIKE {value})",
+                            '=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = {value} OR CONCAT(".implode(", ", $fullListReverse).") = {value})",
+                        ),
+                        'orderBy' => implode(", ", array_map(function ($item) {return $item . ' {direction}';}, $fieldList)),
+                    ),
+                ),
+            ),
+        );
+    }
 
-	protected function getSelect(array $fullList)
-	{
-		foreach ($fullList as &$item) {
+    protected function getSelect(array $fullList)
+    {
+        foreach ($fullList as &$item) {
 
-			$rowItem = trim($item, " '");
+            $rowItem = trim($item, " '");
 
-			if (!empty($rowItem)) {
-				$item = "IFNULL(".$item.", '')";
-			}
-		}
+            if (!empty($rowItem)) {
+                $item = "IFNULL(".$item.", '')";
+            }
+        }
 
-		$select = "TRIM(CONCAT(".implode(", ", $fullList)."))";
+        $select = "TRIM(CONCAT(".implode(", ", $fullList)."))";
 
-		return $select;
-	}
+        return $select;
+    }
 
 }

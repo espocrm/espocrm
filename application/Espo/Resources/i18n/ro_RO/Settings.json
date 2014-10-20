@@ -1,64 +1,64 @@
 {
-	"fields": {
-		"useCache": "Foloseste Cache",
-		"dateFormat": "Format Data ",
-		"timeFormat": "Format Timp",
-		"timeZone": "Zone Timp",
-		"weekStart": "Prima zi a saptamanii",
-		"thousandSeparator": "Separator mii",
-		"decimalMark": "Semn zecimal",
-		"defaultCurrency": "Valuta initiala",
-		"currencyList": "Lista valute",
-		"language": "Limba",
-		
-		"companyLogo": "Logo Companie",
-		
-		"smtpServer": "Server",
-		"smtpPort": "Port",
-		"smtpAuth": "Autorizare",
-		"smtpSecurity": "Securitate",
-		"smtpUsername": "Nume Utilizator",
-		"emailAddress": "Email",
-		"smtpPassword": "Parola",
-		"outboundEmailFromName": "De la",
-		"outboundEmailFromAddress": "De la adresa",
-		"outboundEmailIsShared": "Este Partajat",
-		
-		"recordsPerPage": "Inregistrari pe pagina",
-		"recordsPerPageSmall": "Records Per Page (Small)",		
-		"tabList": "Lista Tab-uri",
-		"quickCreateList": "Creare lista rapida",
-		
-		"exportDelimiter": "Delimitator Export",
-		
-		"authenticationMethod": "Authentication Method",
-		"ldapHost": "Gazda",
-		"ldapPort": "Port",
-		"ldapAuth": "Autorizare",
-		"ldapUsername": "Nume Utilizator",
-		"ldapPassword": "Parola",
-		"ldapBindRequiresDn": "Bind Requires Dn",
-		"ldapBaseDn": "Base Dn",
-		"ldapAccountCanonicalForm": "Account Canonical Form",
-		"ldapAccountDomainName": "Account Domain Name",
-		"ldapTryUsernameSplit": "Try Username Split",
-		"ldapCreateEspoUser": "Create User in EspoCRM",
-		"ldapSecurity": "Securitate",
-		"ldapUserLoginFilter": "User Login Filter",
-		"ldapAccountDomainNameShort": "Account Domain Name Short",
-		"ldapOptReferrals": "Opt Referrals",
-		"disableExport": "Disable Export (only admin is allowed)"
-	},
-	"options": {
-		"weekStart": {
-			"0": "Duminica",
-			"1": "Luni"
-		}
-	},
-	"labels": {
-		"System": "Sistem",
-		"Locale": "Localizare",
-		"SMTP": "SMTP",
-		"Configuration": "Configuratie"
-	}
+    "fields": {
+        "useCache": "Foloseste Cache",
+        "dateFormat": "Format Data ",
+        "timeFormat": "Format Timp",
+        "timeZone": "Zone Timp",
+        "weekStart": "Prima zi a saptamanii",
+        "thousandSeparator": "Separator mii",
+        "decimalMark": "Semn zecimal",
+        "defaultCurrency": "Valuta initiala",
+        "currencyList": "Lista valute",
+        "language": "Limba",
+        
+        "companyLogo": "Logo Companie",
+        
+        "smtpServer": "Server",
+        "smtpPort": "Port",
+        "smtpAuth": "Autorizare",
+        "smtpSecurity": "Securitate",
+        "smtpUsername": "Nume Utilizator",
+        "emailAddress": "Email",
+        "smtpPassword": "Parola",
+        "outboundEmailFromName": "De la",
+        "outboundEmailFromAddress": "De la adresa",
+        "outboundEmailIsShared": "Este Partajat",
+        
+        "recordsPerPage": "Inregistrari pe pagina",
+        "recordsPerPageSmall": "Records Per Page (Small)",        
+        "tabList": "Lista Tab-uri",
+        "quickCreateList": "Creare lista rapida",
+        
+        "exportDelimiter": "Delimitator Export",
+        
+        "authenticationMethod": "Authentication Method",
+        "ldapHost": "Gazda",
+        "ldapPort": "Port",
+        "ldapAuth": "Autorizare",
+        "ldapUsername": "Nume Utilizator",
+        "ldapPassword": "Parola",
+        "ldapBindRequiresDn": "Bind Requires Dn",
+        "ldapBaseDn": "Base Dn",
+        "ldapAccountCanonicalForm": "Account Canonical Form",
+        "ldapAccountDomainName": "Account Domain Name",
+        "ldapTryUsernameSplit": "Try Username Split",
+        "ldapCreateEspoUser": "Create User in EspoCRM",
+        "ldapSecurity": "Securitate",
+        "ldapUserLoginFilter": "User Login Filter",
+        "ldapAccountDomainNameShort": "Account Domain Name Short",
+        "ldapOptReferrals": "Opt Referrals",
+        "disableExport": "Disable Export (only admin is allowed)"
+    },
+    "options": {
+        "weekStart": {
+            "0": "Duminica",
+            "1": "Luni"
+        }
+    },
+    "labels": {
+        "System": "Sistem",
+        "Locale": "Localizare",
+        "SMTP": "SMTP",
+        "Configuration": "Configuratie"
+    }
 }

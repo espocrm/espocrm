@@ -18,25 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
+    
 Espo.define('Views.Site.Header', 'View', function (Dep) {
-	
-	return Dep.extend({
-	
-		template: 'site.header',
-		
-		title: 'EspoCRM',
-	
-		data: {
-			title: this.title,
-		},
-		
-		setup: function () {
-			this.createView('navbar', 'Site.Navbar', {el: '#navbar', title: this.title});
-		},
-		
-	});
-	
+    
+    return Dep.extend({
+    
+        template: 'site.header',
+        
+        title: 'EspoCRM',
+    
+        data: {
+            title: this.title,
+        },
+        
+        setup: function () {
+            this.createView('navbar', 'Site.Navbar', {el: '#navbar', title: this.title});
+        },
+        
+    });
+    
 });
 
 

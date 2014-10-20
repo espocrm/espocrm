@@ -1,44 +1,44 @@
 {
-	"fields": {
-		"name": "Assunto",
-		"parent": "Origem",
-		"status": "Status",
-		"dateSent": "Data do envio",
-		"from": "De",
-		"to": "Para",
-		"cc": "CC",
-		"bcc": "BCC",
-		"isHtml": "Html",
-		"body": "Corpo",
-		"subject": "Assunto",
-		"attachments": "Anexos",
-		"selectTemplate": "Escolher Template",
-		"fromEmailAddress": "E-mail do rementente",
-		"toEmailAddresses": "E-mail do destinatário",
-		"emailAddress": "Endereço de E-mail",
-		"deliveryDate": "Data de envio"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Rascunho",
-		"Sending": "Enviando",
-		"Sent": "Enviado",
-		"Archived": "Arquivado"
-	},
-	"labels": {
-		"Create Email": "Criar e-mail",
-		"Archive Email": "Arquivar e-mail",
-		"Compose": "Compor",
-		"Reply": "Responder",
-		"Reply to All": "Responder a Todos",
-		"Forward": "Encaminhar",
-		"Original message": "Mensagem original",
-		"Forwarded message": "Mensagem encaminhada",
-		"Email Accounts": "Contas de e-mail"
-	},
-	"presetFilters": {
-		"sent": "Enviado",
-		"archived": "Arquivado"
-	}
+    "fields": {
+        "name": "Assunto",
+        "parent": "Origem",
+        "status": "Status",
+        "dateSent": "Data do envio",
+        "from": "De",
+        "to": "Para",
+        "cc": "CC",
+        "bcc": "BCC",
+        "isHtml": "Html",
+        "body": "Corpo",
+        "subject": "Assunto",
+        "attachments": "Anexos",
+        "selectTemplate": "Escolher Template",
+        "fromEmailAddress": "E-mail do rementente",
+        "toEmailAddresses": "E-mail do destinatário",
+        "emailAddress": "Endereço de E-mail",
+        "deliveryDate": "Data de envio"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Rascunho",
+        "Sending": "Enviando",
+        "Sent": "Enviado",
+        "Archived": "Arquivado"
+    },
+    "labels": {
+        "Create Email": "Criar e-mail",
+        "Archive Email": "Arquivar e-mail",
+        "Compose": "Compor",
+        "Reply": "Responder",
+        "Reply to All": "Responder a Todos",
+        "Forward": "Encaminhar",
+        "Original message": "Mensagem original",
+        "Forwarded message": "Mensagem encaminhada",
+        "Email Accounts": "Contas de e-mail"
+    },
+    "presetFilters": {
+        "sent": "Enviado",
+        "archived": "Arquivado"
+    }
 }

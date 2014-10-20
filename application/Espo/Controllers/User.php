@@ -27,31 +27,31 @@ use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 
 class User extends \Espo\Core\Controllers\Record
-{	
-	public function actionAcl($params, $data, $request)
-	{		
-		$userId = $request->get('id');
-		if (empty($userId)) {
-			throw new Error();
-		}
-		
-		if (!$this->getUser()->isAdmin() && $this->getUser()->id != $userId) {
-			throw new Forbidden();
-		}
-		
-		$user = $this->getEntityManager()->getEntity('User', $userId);
-		if (empty($user)) {
-			throw new NotFound();
-		}
-		
-		$acl = new \Espo\Core\Acl($user, $this->getConfig(), $this->getContainer()->get('fileManager'), $this->getMetadata());
-		
-		return $acl->toArray();					
-	}
-	
-	public function actionChangeOwnPassword($params, $data)
-	{
-		return $this->getService('User')->changePassword($this->getUser()->id, $data['password']);
-	}
+{    
+    public function actionAcl($params, $data, $request)
+    {        
+        $userId = $request->get('id');
+        if (empty($userId)) {
+            throw new Error();
+        }
+        
+        if (!$this->getUser()->isAdmin() && $this->getUser()->id != $userId) {
+            throw new Forbidden();
+        }
+        
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+        if (empty($user)) {
+            throw new NotFound();
+        }
+        
+        $acl = new \Espo\Core\Acl($user, $this->getConfig(), $this->getContainer()->get('fileManager'), $this->getMetadata());
+        
+        return $acl->toArray();                    
+    }
+    
+    public function actionChangeOwnPassword($params, $data)
+    {
+        return $this->getService('User')->changePassword($this->getUser()->id, $data['password']);
+    }
 }
 

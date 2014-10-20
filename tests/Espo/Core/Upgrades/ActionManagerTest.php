@@ -23,122 +23,122 @@
 namespace tests\Espo\Core\Upgrades;
 
 use tests\ReflectionHelper,
-	Espo\Core\ExtensionManager,
-	Espo\Core\UpgradeManager;
+    Espo\Core\ExtensionManager,
+    Espo\Core\UpgradeManager;
 
 class ActionManagerTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
+    protected $object;
 
-	protected $objects;
+    protected $objects;
 
-	protected $params = array(
-		'name' => 'Extension',
-		'params' => array(
-			'packagePath' => 'tests/testData/Upgrades/data/upload/extensions',
-			'backupPath' => 'tests/testData/Upgrades/data/.backup/extensions',
+    protected $params = array(
+        'name' => 'Extension',
+        'params' => array(
+            'packagePath' => 'tests/testData/Upgrades/data/upload/extensions',
+            'backupPath' => 'tests/testData/Upgrades/data/.backup/extensions',
 
-			'scriptNames' => array(
-				'before' => 'BeforeInstall',
-				'after' => 'AfterInstall',
-				'beforeUninstall' => 'BeforeUninstall',
-				'afterUninstall' => 'AfterUninstall',
-			)
-		),
-	);
+            'scriptNames' => array(
+                'before' => 'BeforeInstall',
+                'after' => 'AfterInstall',
+                'beforeUninstall' => 'BeforeUninstall',
+                'afterUninstall' => 'AfterUninstall',
+            )
+        ),
+    );
 
-	protected function setUp()
-	{
-		$this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+    protected function setUp()
+    {
+        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
 
-		$this->object = new \Espo\Core\Upgrades\ActionManager($this->params['name'], $this->objects['container'], $this->params['params'] );
+        $this->object = new \Espo\Core\Upgrades\ActionManager($this->params['name'], $this->objects['container'], $this->params['params'] );
 
-		$this->reflection = new ReflectionHelper($this->object);
-	}
+        $this->reflection = new ReflectionHelper($this->object);
+    }
 
-	protected function tearDown()
-	{
-		$this->object = NULL;
-	}
+    protected function tearDown()
+    {
+        $this->object = NULL;
+    }
 
-	public function testGetObjectExtensionUpload()
-	{
-		$this->object->setAction(ExtensionManager::UPLOAD);
+    public function testGetObjectExtensionUpload()
+    {
+        $this->object->setAction(ExtensionManager::UPLOAD);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Upload', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Upload', $class);
+    }
 
-	public function testGetObjectExtensionInstall()
-	{
-		$this->object->setAction(ExtensionManager::INSTALL);
+    public function testGetObjectExtensionInstall()
+    {
+        $this->object->setAction(ExtensionManager::INSTALL);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Install', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Install', $class);
+    }
 
-	public function testGetObjectExtensionUninstall()
-	{
-		$this->object->setAction(ExtensionManager::UNINSTALL);
+    public function testGetObjectExtensionUninstall()
+    {
+        $this->object->setAction(ExtensionManager::UNINSTALL);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Uninstall', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Uninstall', $class);
+    }
 
-	public function testGetObjectExtensionDelete()
-	{
-		$this->object->setAction(ExtensionManager::DELETE);
+    public function testGetObjectExtensionDelete()
+    {
+        $this->object->setAction(ExtensionManager::DELETE);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Delete', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Delete', $class);
+    }
 
-	public function testGetObjectExtensionNotExists()
-	{
-		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+    public function testGetObjectExtensionNotExists()
+    {
+        $this->setExpectedException('\Espo\Core\Exceptions\Error');
 
-		$this->object->setAction('CustomClass');
-		$class = $this->reflection->invokeMethod('getObject');
-	}
+        $this->object->setAction('CustomClass');
+        $class = $this->reflection->invokeMethod('getObject');
+    }
 
-	public function testGetObjectUpgradeUpload()
-	{
-		$this->reflection->setProperty('managerName', 'Upgrade');
-		$this->object->setAction(UpgradeManager::UPLOAD);
+    public function testGetObjectUpgradeUpload()
+    {
+        $this->reflection->setProperty('managerName', 'Upgrade');
+        $this->object->setAction(UpgradeManager::UPLOAD);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Upload', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Upload', $class);
+    }
 
-	public function testGetObjectUpgradeInstall()
-	{
-		$this->reflection->setProperty('managerName', 'Upgrade');
-		$this->object->setAction(UpgradeManager::INSTALL);
+    public function testGetObjectUpgradeInstall()
+    {
+        $this->reflection->setProperty('managerName', 'Upgrade');
+        $this->object->setAction(UpgradeManager::INSTALL);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Install', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Install', $class);
+    }
 
-	public function testGetObjectUpgradeUninstall()
-	{
-		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+    public function testGetObjectUpgradeUninstall()
+    {
+        $this->setExpectedException('\Espo\Core\Exceptions\Error');
 
-		$this->reflection->setProperty('managerName', 'Upgrade');
-		$this->object->setAction(UpgradeManager::UNINSTALL);
+        $this->reflection->setProperty('managerName', 'Upgrade');
+        $this->object->setAction(UpgradeManager::UNINSTALL);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Uninstall', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Uninstall', $class);
+    }
 
-	public function testGetObjectUpgradeDelete()
-	{
-		$this->setExpectedException('\Espo\Core\Exceptions\Error');
+    public function testGetObjectUpgradeDelete()
+    {
+        $this->setExpectedException('\Espo\Core\Exceptions\Error');
 
-		$this->reflection->setProperty('managerName', 'Upgrade');
-		$this->object->setAction(UpgradeManager::DELETE);
+        $this->reflection->setProperty('managerName', 'Upgrade');
+        $this->object->setAction(UpgradeManager::DELETE);
 
-		$class = $this->reflection->invokeMethod('getObject');
-		$this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Delete', $class);
-	}
+        $class = $this->reflection->invokeMethod('getObject');
+        $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Delete', $class);
+    }
 
 }

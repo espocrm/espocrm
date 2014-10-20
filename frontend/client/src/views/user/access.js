@@ -21,37 +21,37 @@
 
 Espo.define('Views.User.Access', 'Views.Modal', function (Dep) {
 
-	return Dep.extend({
-	
-		cssName: 'user-access',	
-		
-		multiple: false,
-		
-		_template: '<div class="user-access-table">{{{table}}}</div>',
-		
-		header: false,
-		
-		setup: function () {			
-			this.buttons = [
-				{
-					name: 'cancel',
-					label: 'Cancel',
-					onClick: function (dialog) {
-						dialog.close();
-					}
-				} 
-			];
-						
-			this.createView('table', 'Role.Record.Table', {
-				aclData: this.options.aclData,
-				final: true,				
-			});
-			
-			this.header = this.translate('Access');
-			
-		},
-		
+    return Dep.extend({
+    
+        cssName: 'user-access',    
+        
+        multiple: false,
+        
+        _template: '<div class="user-access-table">{{{table}}}</div>',
+        
+        header: false,
+        
+        setup: function () {            
+            this.buttons = [
+                {
+                    name: 'cancel',
+                    label: 'Cancel',
+                    onClick: function (dialog) {
+                        dialog.close();
+                    }
+                } 
+            ];
+                        
+            this.createView('table', 'Role.Record.Table', {
+                aclData: this.options.aclData,
+                final: true,                
+            });
+            
+            this.header = this.translate('Access');
+            
+        },
+        
 
-	});
+    });
 });
 

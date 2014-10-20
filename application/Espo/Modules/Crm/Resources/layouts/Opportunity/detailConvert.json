@@ -1,12 +1,12 @@
 [
-	{
-		"label":"Overview",
-		"rows":[
-			[{"name":"name"}],
-			[{"name":"stage"},{"name":"amount"}],
-			[{"name":"probability"}, false],
-			[{"name":"closeDate"},false],
-			[{"name":"description", "fullWidth": true}]
-		]
-	}
+    {
+        "label":"Overview",
+        "rows":[
+            [{"name":"name"}],
+            [{"name":"stage"},{"name":"amount"}],
+            [{"name":"probability"}, false],
+            [{"name":"closeDate"},false],
+            [{"name":"description", "fullWidth": true}]
+        ]
+    }
 ]

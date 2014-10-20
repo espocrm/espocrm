@@ -20,11 +20,11 @@
  ************************************************************************/ 
 
 Espo.define('Views.OutboundEmail.Record.Detail', 'Views.Record.Detail', function (Dep) {
-	
-	return Dep.extend({
-		
-		sideView: null,
-		
-	});
+    
+    return Dep.extend({
+        
+        sideView: null,
+        
+    });
 
 });

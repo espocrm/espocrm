@@ -21,47 +21,47 @@
 
 Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Meetings',
+        name: 'Meetings',
 
-		scope: 'Meeting',
+        scope: 'Meeting',
 
-		defaultOptions: {
-			sortBy: 'createdAt',
-			asc: false,
-			displayRecords: 5,
-			expandedLayout: {
-				rows: [
-					[
-						{
-							name: 'name',
-							link: true,
-						}
-					],
-					[
-						{
-							name: 'status'
-						},
-						{
-							name: 'dateStart'
-						}
-					]
-				]
-			},
-			searchData: {
-				bool: {
-					onlyMy: true,
-				},
-				advanced: {
-					status: {
-						type: 'notIn',
-						value: ['Held', 'Not Held']
-					}
-				}
-			},
-		},
+        defaultOptions: {
+            sortBy: 'createdAt',
+            asc: false,
+            displayRecords: 5,
+            expandedLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'name',
+                            link: true,
+                        }
+                    ],
+                    [
+                        {
+                            name: 'status'
+                        },
+                        {
+                            name: 'dateStart'
+                        }
+                    ]
+                ]
+            },
+            searchData: {
+                bool: {
+                    onlyMy: true,
+                },
+                advanced: {
+                    status: {
+                        type: 'notIn',
+                        value: ['Held', 'Not Held']
+                    }
+                }
+            },
+        },
 
-	});
+    });
 });
 

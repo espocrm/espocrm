@@ -13,9 +13,9 @@
             "default": "New",
             "view": "Fields.EnumStyled",
             "style": {
-            	"Closed": "success",
-            	"Duplicate": "danger",
-            	"Rejected": "danger"
+                "Closed": "success",
+                "Duplicate": "danger",
+                "Rejected": "danger"
             }
         },
         "priority": {
@@ -112,8 +112,8 @@
         }
     },
     "collection": {
-    	"sortBy": "number",
-    	"asc": false,
-    	"boolFilters": ["onlyMy"]
+        "sortBy": "number",
+        "asc": false,
+        "boolFilters": ["onlyMy"]
     }
 }

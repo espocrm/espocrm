@@ -37,5 +37,5 @@
          }
       }  
    ],
-	"boolFilters": ["onlyMy"]
+    "boolFilters": ["onlyMy"]
 }

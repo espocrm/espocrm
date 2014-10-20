@@ -21,26 +21,26 @@
 
 Espo.define('Views.Fields.Image', 'Views.Fields.File', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'image',
-		
-		showPreview: true,
-		
-		accept: ['image/*'],
-		
-		defaultType: 'image/jpeg',
-		
-		previewSize: 'small',
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			
-			if ('previewSize' in this.params) {
-				this.previewSize = this.params.previewSize;
-			}
-		},
-		
-	});
+        type: 'image',
+        
+        showPreview: true,
+        
+        accept: ['image/*'],
+        
+        defaultType: 'image/jpeg',
+        
+        previewSize: 'small',
+        
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            
+            if ('previewSize' in this.params) {
+                this.previewSize = this.params.previewSize;
+            }
+        },
+        
+    });
 });
 

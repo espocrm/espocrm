@@ -1,17 +1,17 @@
 [
-	{
-		"label": "SMTP",
-		"rows": [
-			[{"name": "server"}, {"name": "port"}],
-			[{"name": "auth"}, {"name": "security"}],
-			[{"name": "username"}],
-			[{"name": "password"}]
-		]
-	},
-	{
-		"label": "Configuration",
-		"rows": [
-			[{"name": "fromName"}, {"name": "fromAddress"}]
-		]
-	}
+    {
+        "label": "SMTP",
+        "rows": [
+            [{"name": "server"}, {"name": "port"}],
+            [{"name": "auth"}, {"name": "security"}],
+            [{"name": "username"}],
+            [{"name": "password"}]
+        ]
+    },
+    {
+        "label": "Configuration",
+        "rows": [
+            [{"name": "fromName"}, {"name": "fromAddress"}]
+        ]
+    }
 ]

@@ -25,26 +25,26 @@ namespace Espo\Modules\Crm\Repositories;
 use Espo\ORM\Entity;
 
 class Meeting extends \Espo\Core\ORM\Repositories\RDB
-{	
-	protected function beforeSave(Entity $entity)
-	{	
-		parent::beforeSave($entity);
-		
-		$parentId = $entity->get('parentId');
-		$parentType = $entity->get('parentType');
-		if (!empty($parentId) || !empty($parentType)) {
-			$parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-			if (!empty($parent)) {
-				if ($parent->getEntityName() == 'Account') {
-					$accountId = $parent->id;
-				} else if ($parent->has('accountId')) {
-					$accountId = $parent->get('accountId');
-				}
-				if (!empty($accountId)) {
-					$entity->set('accountId', $accountId);
-				}
-			}
-		}		
-	}
+{    
+    protected function beforeSave(Entity $entity)
+    {    
+        parent::beforeSave($entity);
+        
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+        if (!empty($parentId) || !empty($parentType)) {
+            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+            if (!empty($parent)) {
+                if ($parent->getEntityName() == 'Account') {
+                    $accountId = $parent->id;
+                } else if ($parent->has('accountId')) {
+                    $accountId = $parent->get('accountId');
+                }
+                if (!empty($accountId)) {
+                    $entity->set('accountId', $accountId);
+                }
+            }
+        }        
+    }
 }
 

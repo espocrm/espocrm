@@ -26,46 +26,46 @@ use Espo\Core\Exceptions\Error;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
-	protected $extensionEntity;
+    protected $extensionEntity;
 
-	/**
-	 * Get entity of this extension
-	 *
-	 * @return \Espo\Entities\Extension
-	 */
-	protected function getExtensionEntity()
-	{
-		return $this->extensionEntity;
-	}
+    /**
+     * Get entity of this extension
+     *
+     * @return \Espo\Entities\Extension
+     */
+    protected function getExtensionEntity()
+    {
+        return $this->extensionEntity;
+    }
 
-	/**
-	 * Set Extension Entity
-	 *
-	 * @param \Espo\Entities\Extension $extensionEntity [description]
-	 */
-	protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
-	{
-		$this->extensionEntity = $extensionEntity;
-	}
+    /**
+     * Set Extension Entity
+     *
+     * @param \Espo\Entities\Extension $extensionEntity [description]
+     */
+    protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
+    {
+        $this->extensionEntity = $extensionEntity;
+    }
 
-	protected function beforeRunAction()
-	{
-		$processId = $this->getProcessId();
+    protected function beforeRunAction()
+    {
+        $processId = $this->getProcessId();
 
-		/** get extension entity */
-		$extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
-		if (!isset($extensionEntity)) {
-			throw new Error('Extension Entity not found.');
-		}
-		$this->setExtensionEntity($extensionEntity);
-	}
+        /** get extension entity */
+        $extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
+        if (!isset($extensionEntity)) {
+            throw new Error('Extension Entity not found.');
+        }
+        $this->setExtensionEntity($extensionEntity);
+    }
 
-	protected function afterRunAction()
-	{
-		/** Set extension entity, isInstalled = false */
-		$extensionEntity = $this->getExtensionEntity();
+    protected function afterRunAction()
+    {
+        /** Set extension entity, isInstalled = false */
+        $extensionEntity = $this->getExtensionEntity();
 
-		$extensionEntity->set('isInstalled', false);
-		$this->getEntityManager()->saveEntity($extensionEntity);
-	}
+        $extensionEntity->set('isInstalled', false);
+        $this->getEntityManager()->saveEntity($extensionEntity);
+    }
 }

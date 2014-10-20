@@ -26,7 +26,7 @@ class Metadata extends \Espo\Core\Controllers\Base
 {
 
     public function actionRead($params, $data)
-	{
-		return $this->getMetadata()->getAll(true);
-	}
+    {
+        return $this->getMetadata()->getAll(true);
+    }
 }

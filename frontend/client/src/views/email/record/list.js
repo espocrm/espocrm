@@ -21,14 +21,14 @@
 
 Espo.define('Views.Email.Record.List', 'Views.Record.List', function (Dep) {
 
-	return Dep.extend({
-	
-		mergeAction: false,
-		
-		massUpdateAction: false,
-		
-		exportAction: false,
-		
-	});
+    return Dep.extend({
+    
+        mergeAction: false,
+        
+        massUpdateAction: false,
+        
+        exportAction: false,
+        
+    });
 });
 

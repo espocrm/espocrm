@@ -24,192 +24,192 @@ namespace Espo\Core;
 
 class CronManager
 {
-	private $container;
-	private $config;
-	private $fileManager;
+    private $container;
+    private $config;
+    private $fileManager;
 
-	private $scheduledJobCron;
-	private $serviceCron;
+    private $scheduledJobCron;
+    private $serviceCron;
 
-	private $jobService;
-	private $scheduledJobService;
+    private $jobService;
+    private $scheduledJobService;
 
-	const PENDING = 'Pending';
-	const RUNNING = 'Running';
-	const SUCCESS = 'Success';
-	const FAILED = 'Failed';
+    const PENDING = 'Pending';
+    const RUNNING = 'Running';
+    const SUCCESS = 'Success';
+    const FAILED = 'Failed';
 
-	protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
-
-
-	public function __construct(\Espo\Core\Container $container)
-	{
-		$this->container = $container;
-
-		$this->config = $this->container->get('config');
-		$this->fileManager = $this->container->get('fileManager');
-
-		$this->scheduledJobCron = $this->container->get('scheduledJob');
-		$this->serviceCron = new \Espo\Core\Cron\Service( $this->container->get('serviceFactory'));
-
-		$this->jobService = $this->container->get('serviceFactory')->create('job');
-		$this->scheduledJobService = $this->container->get('serviceFactory')->create('scheduledJob');
-	}
-
-	protected function getContainer()
-	{
-		return $this->container;
-	}
-
-	protected function getConfig()
-	{
-		return $this->config;
-	}
-
-	protected function getFileManager()
-	{
-		return $this->fileManager;
-	}
-
-	protected function getJobService()
-	{
-		return $this->jobService;
-	}
-
-	protected function getScheduledJobService()
-	{
-		return $this->scheduledJobService;
-	}
-
-	protected function getScheduledJobCron()
-	{
-		return $this->scheduledJobCron;
-	}
-
-	protected function getServiceCron()
-	{
-		return $this->serviceCron;
-	}
+    protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
 
 
-	protected function getLastRunTime()
-	{
-		$lastRunTime = $this->getFileManager()->getContents($this->lastRunTime);
-		if (!is_int($lastRunTime)) {
-			$lastRunTime = time() - (intval($this->getConfig()->get('cron.minExecutionTime')) + 60);
-		}
+    public function __construct(\Espo\Core\Container $container)
+    {
+        $this->container = $container;
 
-		return $lastRunTime;
-	}
+        $this->config = $this->container->get('config');
+        $this->fileManager = $this->container->get('fileManager');
 
-	protected function setLastRunTime($time)
-	{
-		return $this->getFileManager()->putContentsPHP($this->lastRunTime, $time);
-	}
+        $this->scheduledJobCron = $this->container->get('scheduledJob');
+        $this->serviceCron = new \Espo\Core\Cron\Service( $this->container->get('serviceFactory'));
 
-	protected function checkLastRunTime()
-	{
-		$currentTime = time();
-		$lastRunTime = $this->getLastRunTime();
-		$minTime = $this->getConfig()->get('cron.minExecutionTime');
+        $this->jobService = $this->container->get('serviceFactory')->create('job');
+        $this->scheduledJobService = $this->container->get('serviceFactory')->create('scheduledJob');
+    }
 
-		if ($currentTime > ($lastRunTime + $minTime) ) {
-			return true;
-		}
+    protected function getContainer()
+    {
+        return $this->container;
+    }
 
-		return false;
-	}
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    protected function getFileManager()
+    {
+        return $this->fileManager;
+    }
+
+    protected function getJobService()
+    {
+        return $this->jobService;
+    }
+
+    protected function getScheduledJobService()
+    {
+        return $this->scheduledJobService;
+    }
+
+    protected function getScheduledJobCron()
+    {
+        return $this->scheduledJobCron;
+    }
+
+    protected function getServiceCron()
+    {
+        return $this->serviceCron;
+    }
 
 
-	public function run()
-	{
-		if (!$this->checkLastRunTime()) {
-			$GLOBALS['log']->info('Cron Manager: Stop cron running, too frequency execution');
-			return; //stop cron running, too frequency execution
-		}
+    protected function getLastRunTime()
+    {
+        $lastRunTime = $this->getFileManager()->getContents($this->lastRunTime);
+        if (!is_int($lastRunTime)) {
+            $lastRunTime = time() - (intval($this->getConfig()->get('cron.minExecutionTime')) + 60);
+        }
 
-		$this->setLastRunTime(time());
+        return $lastRunTime;
+    }
 
-		//Check scheduled jobs and create related jobs
-		$this->createJobsFromScheduledJobs();
+    protected function setLastRunTime($time)
+    {
+        return $this->getFileManager()->putContentsPHP($this->lastRunTime, $time);
+    }
 
-		$pendingJobs = $this->getJobService()->getPendingJobs();
+    protected function checkLastRunTime()
+    {
+        $currentTime = time();
+        $lastRunTime = $this->getLastRunTime();
+        $minTime = $this->getConfig()->get('cron.minExecutionTime');
 
-		foreach ($pendingJobs as $job) {
+        if ($currentTime > ($lastRunTime + $minTime) ) {
+            return true;
+        }
 
-			$this->getJobService()->updateEntity($job['id'], array(
-				'status' => self::RUNNING,
-			));
+        return false;
+    }
 
-			$isSuccess = true;
 
-			try {
-				if (!empty($job['scheduled_job_id'])) {
-					$this->getScheduledJobCron()->run($job);
-				} else {
-					$this->getServiceCron()->run($job);
-				}
-			} catch (\Exception $e) {
-				$isSuccess = false;
-				$GLOBALS['log']->error('Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
-			}
+    public function run()
+    {
+        if (!$this->checkLastRunTime()) {
+            $GLOBALS['log']->info('Cron Manager: Stop cron running, too frequency execution');
+            return; //stop cron running, too frequency execution
+        }
 
-			$status = $isSuccess ? self::SUCCESS : self::FAILED;
+        $this->setLastRunTime(time());
 
-			$this->getJobService()->updateEntity($job['id'], array(
-				'status' => $status,
-			));
+        //Check scheduled jobs and create related jobs
+        $this->createJobsFromScheduledJobs();
 
-			//set status in the schedulerJobLog
-			if (!empty($job['scheduled_job_id'])) {
-				$this->getScheduledJobService()->addLogRecord($job['scheduled_job_id'], $status);
-			}
-		}
+        $pendingJobs = $this->getJobService()->getPendingJobs();
 
-	}
+        foreach ($pendingJobs as $job) {
 
-	/**
-	 * Check scheduled jobs and create related jobs
-	 * @return array List of created Jobs
-	 */
-	protected function createJobsFromScheduledJobs()
-	{
-		$activeScheduledJobs = $this->getScheduledJobService()->getActiveJobs();
+            $this->getJobService()->updateEntity($job['id'], array(
+                'status' => self::RUNNING,
+            ));
 
-		$createdJobs = array();
-		foreach ($activeScheduledJobs as $scheduledJob) {
+            $isSuccess = true;
 
-			$scheduling = $scheduledJob['scheduling'];
+            try {
+                if (!empty($job['scheduled_job_id'])) {
+                    $this->getScheduledJobCron()->run($job);
+                } else {
+                    $this->getServiceCron()->run($job);
+                }
+            } catch (\Exception $e) {
+                $isSuccess = false;
+                $GLOBALS['log']->error('Failed job running, job ['.$job['id'].']. Error Details: '.$e->getMessage());
+            }
 
-			$cronExpression = \Cron\CronExpression::factory($scheduling);
+            $status = $isSuccess ? self::SUCCESS : self::FAILED;
 
-			try {
-				$prevDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
-			} catch (\Exception $e) {
-				$GLOBALS['log']->error('ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
-				continue;
-			}
+            $this->getJobService()->updateEntity($job['id'], array(
+                'status' => $status,
+            ));
 
-			if ($cronExpression->isDue()) {
-				$prevDate = date('Y-m-d H:i:00');
-			}
+            //set status in the schedulerJobLog
+            if (!empty($job['scheduled_job_id'])) {
+                $this->getScheduledJobService()->addLogRecord($job['scheduled_job_id'], $status);
+            }
+        }
 
-			$existsJob = $this->getJobService()->getJobByScheduledJob($scheduledJob['id'], $prevDate);
+    }
 
-			if (!isset($existsJob) || empty($existsJob)) {
-				//create a job
-				$data = array(
-					'name' => $scheduledJob['name'],
-					'status' => self::PENDING,
-					'scheduledJobId' => $scheduledJob['id'],
-					'executeTime' => $prevDate,
-					'method' => $scheduledJob['job'],
-				);
-				$createdJobs[] = $this->getJobService()->createEntity($data);
-			}
-		}
+    /**
+     * Check scheduled jobs and create related jobs
+     * @return array List of created Jobs
+     */
+    protected function createJobsFromScheduledJobs()
+    {
+        $activeScheduledJobs = $this->getScheduledJobService()->getActiveJobs();
 
-		return $createdJobs;
-	}
+        $createdJobs = array();
+        foreach ($activeScheduledJobs as $scheduledJob) {
+
+            $scheduling = $scheduledJob['scheduling'];
+
+            $cronExpression = \Cron\CronExpression::factory($scheduling);
+
+            try {
+                $prevDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
+                continue;
+            }
+
+            if ($cronExpression->isDue()) {
+                $prevDate = date('Y-m-d H:i:00');
+            }
+
+            $existsJob = $this->getJobService()->getJobByScheduledJob($scheduledJob['id'], $prevDate);
+
+            if (!isset($existsJob) || empty($existsJob)) {
+                //create a job
+                $data = array(
+                    'name' => $scheduledJob['name'],
+                    'status' => self::PENDING,
+                    'scheduledJobId' => $scheduledJob['id'],
+                    'executeTime' => $prevDate,
+                    'method' => $scheduledJob['job'],
+                );
+                $createdJobs[] = $this->getJobService()->createEntity($data);
+            }
+        }
+
+        return $createdJobs;
+    }
 }
 

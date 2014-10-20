@@ -20,23 +20,23 @@
  ************************************************************************/ 
 
 
-Espo.define('Views.Team.Record.EditSide', 'Views.Record.EditSide', function (Dep) {		
+Espo.define('Views.Team.Record.EditSide', 'Views.Record.EditSide', function (Dep) {        
 
-	return Dep.extend({
-	
-		panels: [
-			{
-				name: 'default',
-				label: false,
-				view: 'Record.Panels.Side',
-				options: {
-					fields: ['roles'],
-					mode: 'edit',
-				}					
-			}				
-		],
-			
-	});		
-	
+    return Dep.extend({
+    
+        panels: [
+            {
+                name: 'default',
+                label: false,
+                view: 'Record.Panels.Side',
+                options: {
+                    fields: ['roles'],
+                    mode: 'edit',
+                }                    
+            }                
+        ],
+            
+    });        
+    
 });
 

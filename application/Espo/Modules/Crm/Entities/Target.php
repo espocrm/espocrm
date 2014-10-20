@@ -24,6 +24,6 @@ namespace Espo\Modules\Crm\Entities;
 
 class Target extends \Espo\Core\Entities\Person
 {
-	
+    
 }
 

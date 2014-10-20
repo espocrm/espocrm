@@ -20,21 +20,21 @@
  ************************************************************************/ 
 Espo.define('Controllers.Home', 'Controller', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		index: function () {
-			this.main('Home', null);
-		},
+        index: function () {
+            this.main('Home', null);
+        },
 
-		search: function (text) {
-			$.ajax({
-				url: 'search',
-				type: 'GET',
-				data: {
-					text: text
-				},
-			});
-		},
-	});
+        search: function (text) {
+            $.ajax({
+                url: 'search',
+                type: 'GET',
+                data: {
+                    text: text
+                },
+            });
+        },
+    });
 });
 

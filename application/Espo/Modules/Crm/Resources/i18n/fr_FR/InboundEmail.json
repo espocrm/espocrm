@@ -1,43 +1,43 @@
 {
-	"fields": {
-		"name": "Nom",
-		"team": "Equipe",
-		"status": "Statut",
-		"assignToUser": "Assigné à l'Utilisateur",
-		"host": "Hôte",
-		"username": "Nom d'utilisateur",
-		"password": "Mot de Passe",
-		"port": "Porte",
-		"monitoredFolders": "Dossiers Surveillés",
-		"trashFolder": "Corbeille",
-		"ssl": "SSL",		
-		"createCase": "Créer un Ticket",
-		"reply": "Répondre",
-		"caseDistribution": "Distribution de tickets",
-		"replyEmailTemplate": "Modèle de Réponse par Email",
-		"replyFromAddress": "Répondre Depuis l'Adresse",
-		"replyFromName": "Répondre Depuis le Nom"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Active": "Activer",
-			"Inactive": "Désactiver"
-		},
-		"caseDistribution": {
-			"Direct-Assignment": "Assignation Directe",
-			"Round-Robin": "Round-Robin",
-			"Least-Busy": "Least-Busy"
-		}
-	},
-	"labels": {
-		"Create InboundEmail": "Créer une boîte email",
-		"IMAP": "IMAP",
-		"Actions": "Actions",
-		"Main": "Principal"		
-	},
-	"messages": {
-		"couldNotConnectToImap": "Impossible de se connecter au serveur IMAP"
-	}
+    "fields": {
+        "name": "Nom",
+        "team": "Equipe",
+        "status": "Statut",
+        "assignToUser": "Assigné à l'Utilisateur",
+        "host": "Hôte",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de Passe",
+        "port": "Porte",
+        "monitoredFolders": "Dossiers Surveillés",
+        "trashFolder": "Corbeille",
+        "ssl": "SSL",        
+        "createCase": "Créer un Ticket",
+        "reply": "Répondre",
+        "caseDistribution": "Distribution de tickets",
+        "replyEmailTemplate": "Modèle de Réponse par Email",
+        "replyFromAddress": "Répondre Depuis l'Adresse",
+        "replyFromName": "Répondre Depuis le Nom"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Activer",
+            "Inactive": "Désactiver"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Assignation Directe",
+            "Round-Robin": "Round-Robin",
+            "Least-Busy": "Least-Busy"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Créer une boîte email",
+        "IMAP": "IMAP",
+        "Actions": "Actions",
+        "Main": "Principal"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP"
+    }
 }

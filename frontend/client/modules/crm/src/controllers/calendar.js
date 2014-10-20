@@ -20,20 +20,20 @@
  ************************************************************************/ 
 
 Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
-	
-	return Dep.extend({		
-	
-		show: function (options) {
-			this.index(options);
-		},
-	
-		index: function (options) {
-			this.main('Crm:CalendarPage', {
-				date: options.date,
-				mode: options.mode,		
-			});
-		},			
-	});	
+    
+    return Dep.extend({        
+    
+        show: function (options) {
+            this.index(options);
+        },
+    
+        index: function (options) {
+            this.main('Crm:CalendarPage', {
+                date: options.date,
+                mode: options.mode,        
+            });
+        },            
+    });    
 });
 
 

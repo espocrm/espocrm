@@ -30,33 +30,33 @@ use \Espo\Core\Exceptions\Forbidden;
 class Layout extends \Espo\Core\Controllers\Base
 {
     public function actionRead($params, $data)
-	{
-		$data = $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
-		if (empty($data)) {
-			throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found');
-		}
-		return $data;
-	}
+    {
+        $data = $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
+        if (empty($data)) {
+            throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found');
+        }
+        return $data;
+    }
 
-	public function actionUpdate($params, $data)
-	{
+    public function actionUpdate($params, $data)
+    {
         if (!$this->getUser()->isAdmin()) {
-        	throw new Forbidden();
+            throw new Forbidden();
         }
         
         $result = $this->getContainer()->get('layout')->set($data, $params['scope'], $params['name']);
 
-		if ($result === false) {
-			throw new Error("Error while saving layout");
-		}
+        if ($result === false) {
+            throw new Error("Error while saving layout");
+        }
 
-		$this->getContainer()->get('dataManager')->updateCacheTimestamp();
+        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
 
-		return $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
-	}
+        return $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
+    }
 
-	public function actionPatch($params, $data)
-	{
+    public function actionPatch($params, $data)
+    {
         return $this->actionUpdate($params, $data);
-	}
+    }
 }

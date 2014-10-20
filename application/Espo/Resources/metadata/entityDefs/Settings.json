@@ -68,8 +68,8 @@
             "required": true
         },
         "currencyRates": {
-        	"type": "base",
-        	"view": "Settings.Fields.CurrencyRates"
+            "type": "base",
+            "view": "Settings.Fields.CurrencyRates"
         },
         "outboundEmailIsShared": {
             "type": "bool",
@@ -134,77 +134,77 @@
             "type": "image"
         },
         "authenticationMethod": {
-        	"type": "enum",
-        	"options": ["Espo", "LDAP"],
-        	"default": "Espo"
+            "type": "enum",
+            "options": ["Espo", "LDAP"],
+            "default": "Espo"
         },
         "ldapHost": {
-        	"type": "varchar",
-        	"required": true
+            "type": "varchar",
+            "required": true
         },
         "ldapPort": {
-        	"type": "int",
-        	"max": 9999,
-        	"min": 0,
-        	"default": 389
+            "type": "int",
+            "max": 9999,
+            "min": 0,
+            "default": 389
         },
         "ldapSecurity": {
-        	"type": "enum",
-        	"options": ["", "SSL", "TLS"]
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
         },
         "ldapAuth": {
-        	"type": "bool"
+            "type": "bool"
         },
         "ldapUsername": {
-        	"type": "varchar",
-        	"required": true
+            "type": "varchar",
+            "required": true
         },
         "ldapPassword": {
-        	"type": "password"
+            "type": "password"
         },
         "ldapBindRequiresDn": {
-        	"type": "bool"
+            "type": "bool"
         },
         "ldapBaseDn": {
-        	"type": "varchar"
+            "type": "varchar"
         },
         "ldapUserLoginFilter": {
-        	"type": "varchar"
+            "type": "varchar"
         },
         "ldapAccountCanonicalForm": {
-        	"type": "enum",
-        	"options": ["Dn", "Username", "Backslash", "Principal"]
+            "type": "enum",
+            "options": ["Dn", "Username", "Backslash", "Principal"]
         },
         "ldapAccountDomainName": {
-        	"type": "varchar"
+            "type": "varchar"
         },
         "ldapAccountDomainNameShort": {
-        	"type": "varchar"
+            "type": "varchar"
         },
         "ldapAccountFilterFormat": {
-        	"type": "varchar"
+            "type": "varchar"
         },
         "ldapTryUsernameSplit": {
-        	"type": "bool"
+            "type": "bool"
         },
         "ldapOptReferrals": {
-        	"type": "bool"
+            "type": "bool"
         },
         "ldapCreateEspoUser": {
-        	"type": "bool",
-        	"default": true
+            "type": "bool",
+            "default": true
         },
         "disableExport": {
-        	"type": "bool",
-        	"default": false
-     	},
+            "type": "bool",
+            "default": false
+         },
         "assignmentEmailNotifications": {
-        	"type": "bool",
-        	"default": false
-     	},
-     	"assignmentEmailNotificationsEntityList": {
-     		"type": "array",
-     		"translation": "Global.scopeNamesPlural"
-     	}
+            "type": "bool",
+            "default": false
+         },
+         "assignmentEmailNotificationsEntityList": {
+             "type": "array",
+             "translation": "Global.scopeNamesPlural"
+         }
     }
 }

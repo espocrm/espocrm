@@ -28,14 +28,14 @@ class Password extends StringType
 {
     const PASSWORD = 'password';
 
-	public function getName()
+    public function getName()
     {
         return self::PASSWORD;
     }
 
-	public static function getDbTypeName()
-	{
-		return 'VARCHAR';
-	}
+    public static function getDbTypeName()
+    {
+        return 'VARCHAR';
+    }
 }
 
