@@ -37,6 +37,9 @@
         "Forwarded message": "Forwarded message",
         "Email Accounts": "Email Accounts"
     },
+    "messages": {
+        "noSmtpSetup": "No SMTP setup. {link}."
+    },
     "presetFilters": {
         "sent": "Sent",
         "archived": "Archived"
