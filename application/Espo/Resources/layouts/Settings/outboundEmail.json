@@ -4,7 +4,7 @@
         "rows": [
             [{"name": "smtpServer"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}],
+            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "OutboundEmail.Fields.TestSend"}],
             [{"name": "smtpPassword"}]
         ]
     },

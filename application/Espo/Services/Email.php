@@ -78,6 +78,9 @@ class Email extends Record
                 if (!$this->getConfig()->get('outboundEmailIsShared')) {
                     throw new Error('Can not use system smtp. outboundEmailIsShared is false.');
                 }
+                $emailSender->setParams(array(
+                    'fromName' => $this->getUser()->get('name')
+                ));
             }
 
             $emailSender->send($entity);
@@ -269,6 +272,22 @@ class Email extends Record
             'ids' => $ids,
             'names' => $names
         );
+    }
+    
+    public function sendTestEmail($data)
+    {
+        $email = $this->getEntityManager()->getEntity('Email');
+        
+        $email->set(array(
+            'subject' => 'EspoCRM: Test Email',
+            'isHtml' => false,
+            'to' => $data['emailAddress']        
+        ));        
+                
+        $emailSender = $this->getMailSender();
+        $emailSender->useSmtp($data)->send($email);
+     
+        return true;
     }
 }
 

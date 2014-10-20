@@ -35,10 +35,14 @@
         "Forward": "Forward",
         "Original message": "Original message",
         "Forwarded message": "Forwarded message",
-        "Email Accounts": "Email Accounts"
+        "Email Accounts": "Email Accounts",
+        "Send Test Email": "Send Test Email",
+        "Send": "Send",
+        "Email Address": "Email Address"
     },
     "messages": {
-        "noSmtpSetup": "No SMTP setup. {link}."
+        "noSmtpSetup": "No SMTP setup. {link}.",
+        "testEmailSent": "Test email has been sent"
     },
     "presetFilters": {
         "sent": "Sent",

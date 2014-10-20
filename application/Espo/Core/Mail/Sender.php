@@ -68,7 +68,7 @@ class Sender
         $this->params = $params;
 
         $this->transport = new SmtpTransport();
-
+        
         $opts = array(
             'name' => 'admin',
             'host' => $params['server'],
@@ -83,7 +83,14 @@ class Sender
         if ($params['security']) {
             $opts['connection_config']['ssl'] = strtolower($params['security']);
         }
-
+        
+        if (in_array('fromName', $params)) {
+            $this->params['fromName'] = $params['fromName'];
+        }        
+        if (in_array('fromAddress', $params)) {
+            $this->params['fromAddress'] = $params['fromAddress'];
+        }
+        
         $options = new SmtpOptions($opts);
         $this->transport->setOptions($options);
 
@@ -127,10 +134,8 @@ class Sender
     public function send(Email $email, $params = array())
     {
         $message = new Message();
-
-        $config = $this->config;
-        
-        $params = $this->params + $params;
+        $config = $this->config;        
+        $params = $this->params + $params;        
 
         if ($email->get('from')) {
             $fromName = null;
@@ -155,7 +160,7 @@ class Sender
             } else {
                 $fromName = $config->get('outboundEmailFromName');
             }
-
+            
             $message->addFrom($fromAddress, $fromName);
         }
         
