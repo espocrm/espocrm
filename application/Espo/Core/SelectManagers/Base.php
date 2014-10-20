@@ -578,5 +578,15 @@ class Base
             'assignedUserId' => $this->getUser()->id
         );
     }
+
+    protected function getBoolFilterWhereOnlyMyCreated()
+    {
+        return array(
+            'type' => 'equals',
+            'field' => 'createdById',
+            'value' => $this->user->id,
+        );
+    }
+
 }
 
