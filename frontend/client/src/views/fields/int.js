@@ -139,7 +139,7 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
             var type = this.$el.find('[name="'+this.name+'-type"]').val();
             var data;
             
-            if (!value) {
+            if (isNaN(value)) {
                 return false;
             }
             
@@ -151,7 +151,7 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
                 };
             } else {
                 var valueTo = this.parse(this.$el.find('[name="' + this.name + '-additional"]').val());
-                if (!valueTo) {
+                if (isNaN(valueTo)) {
                     return false;
                 }
                 data = {
