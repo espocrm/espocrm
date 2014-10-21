@@ -53,7 +53,7 @@ Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
         },
     
         getValueForDisplay: function () {
-            var value = this.model.get(this.name) || null;
+            var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
             return this.formatNumber(value);
         },
         
