@@ -20,30 +20,10 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Interfaces;
 
-class EntityManager extends Base
+interface Loader
 {
-    public function load()
-    {
-        $config = $this->getContainer()->get('config');
-
-        $params = array(
-            'host' => $config->get('database.host'),
-            'port' => $config->get('database.port'),
-            'dbname' => $config->get('database.dbname'),
-            'user' => $config->get('database.user'),
-            'password' => $config->get('database.password'),
-            'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
-            'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
-        );
-
-        $entityManager = new \Espo\Core\ORM\EntityManager($params);
-        $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
-        $entityManager->setHookManager($this->getContainer()->get('hookManager'));
-        $entityManager->setContainer($this->getContainer());
-
-        return $entityManager;
-    }
+    public function load();
 }
 
