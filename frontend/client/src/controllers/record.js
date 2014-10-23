@@ -133,7 +133,7 @@ Espo.define('Controllers.Record', 'Controller', function (Dep) {
             });
         },
         
-        beforeCreate: function () {
+        beforeEdit: function () {
             this.handleCheckAccess('edit');
         },
 
