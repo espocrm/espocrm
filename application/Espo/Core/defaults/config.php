@@ -75,7 +75,7 @@ return array (
     'logger' =>
     array (
         'path' => 'data/logs/espo.log',
-        'level' => 'ERROR', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
+        'level' => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
         'isRotate' => true, /** rotate log files every day */
         'maxRotateFiles' => 30, /** max number of rotate files */
     ),
