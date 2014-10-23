@@ -78,6 +78,13 @@
         "meetings": "Meetings",
         "calls": "Calls",
         "tasks": "Tasks",
-        "emails": "Emails"
+        "emails": "Emails",
+        "accounts": "Accounts",
+        "cases": "Cases",
+        "documents": "Documents",
+        "account": "Account",
+        "opportunity": "Opportunity",        
+        "contact": "Contact",
+        "parent": "Parent"
     }
 }

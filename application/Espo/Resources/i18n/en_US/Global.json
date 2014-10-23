@@ -173,6 +173,11 @@
         "modifiedBy": "Modified By"
     },
     "links": {
+        "assignedUser": "Assigned User",
+        "createdBy": "Created By",
+        "modifiedBy": "Modified By",
+        "team": "Team",
+        "roles": "Roles",
         "teams": "Teams",
         "users": "Users"
     },
