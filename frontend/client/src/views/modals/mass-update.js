@@ -143,10 +143,14 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
                     }),
                     success: function (idsUpdated) {
                         var count = idsUpdated.length;
-                        if (count) {                            
-                            Espo.Ui.success(count + ' ' + self.translate('records were updated'));
+                        if (count) {
+                            var msg = 'massUpdateResult';
+                            if (count == 1) {                            
+                                msg = 'massUpdateResultSingle'
+                            }              
+                            Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
                         } else {
-                            self.notify('No records were updated', 'error');
+                            Espo.Ui.success(self.translate('noRecordsUpdated', 'messages'));
                         }                        
                         self.trigger('after:update');
                     },

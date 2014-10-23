@@ -260,28 +260,42 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                             var self = this;
 
                             if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
-                                // TODO mass delete
                                 this.notify('Removing...');
+                                var ids = [];
                                 for (var i in this.checkedList) {
-                                    var id = this.checkedList[i];
-                                    var model = this.collection.get(id);
-
-                                    this.collection.remove(model);
-                                    this.$el.find('tr[data-id="'+id+'"]').remove();
-
-                                    model.once('sync', function (model) {
-                                        deletedCount ++;
-                                        if (deletedCount == count) {
-                                            Espo.Ui.notify(false);
-                                        }
-                                    }, this);
-                                    model.destroy({
-                                        error: function () {
-                                            self.notify('Error occured', 'error');
-                                        },
-                                    });
+                                    ids.push(this.checkedList[i]);
                                 }
-                                this.checkedList = [];
+                               
+                                $.ajax({
+                                    url: this.collection.url + '/action/massDelete',
+                                    type: 'POST',
+                                    data: JSON.stringify({
+                                        ids: ids
+                                    })
+                                }).done(function (idsRemoved) {
+                                    var count = idsRemoved.length;
+                                    if (count) {  
+                                        idsRemoved.forEach(function (id) {
+                                            Espo.Ui.notify(false);
+                                            this.checkedList = [];
+                                            var model = this.collection.get(id);
+                                            this.collection.remove(model);
+                                            
+                                            this.$el.find('tr[data-id="' + id + '"]').remove();
+                                            if (this.collection.length == 0) {
+                                                this.render();
+                                            }
+                                        }, this); 
+                                        var msg = 'massRemoveResult';
+                                        if (count == 1) {                            
+                                            msg = 'massRemoveResultSingle'
+                                        }                
+                                        Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
+                                    } else {
+                                        Espo.Ui.success(self.translate('noRecordsRemoved', 'messages'));
+                                    } 
+                                }.bind(this));
+
                             }
                         }
                     });
@@ -753,6 +767,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                         self.notify('Removed', 'success');
                         self.$el.find('tr[data-id="' + id + '"]').remove();
                         self.collection.total--;
+                        if (self.collection.length == 0) {
+                            self.render();
+                        }
                     },
                     error: function () {
                         self.notify('Error occured', 'error');

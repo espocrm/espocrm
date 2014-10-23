@@ -483,6 +483,27 @@ class Record extends \Espo\Core\Services\Base
         
         // TODO update $where
     }
+
+    public function massRemove($ids = array(), $where = array())
+    {
+        $idsRemoved = array();        
+        $repository = $this->getRepository();
+                
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $entity = $this->getEntity($id);
+                if ($this->getAcl()->check($entity, 'remove')) {
+                    if ($repository->remove($entity)) {
+                        $idsRemoved[] = $id;
+                    }
+                }
+            }
+        }
+        
+        return $idsRemoved;
+        
+        // TODO update $where
+    }
     
     public function follow($id, $userId = null)
     {

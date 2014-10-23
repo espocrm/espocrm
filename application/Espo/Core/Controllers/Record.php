@@ -199,7 +199,7 @@ class Record extends Base
         );        
     }
 
-    public function actionMassUpdate($params, $data)
+    public function actionMassUpdate($params, $data, $request)
     {
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
@@ -214,7 +214,7 @@ class Record extends Base
         return $idsUpdated;
     }
 
-    public function actionMassDelete($params, $data)
+    public function actionMassDelete($params, $data, $request)
     {
         if (!$this->getAcl()->check($this->name, 'delete')) {
             throw new Forbidden();
@@ -223,9 +223,9 @@ class Record extends Base
         $ids = $data['ids'];
         $where = $data['where'];
 
-        $idsDeleted = $this->getRecordService()->massDelete($ids, $where);
+        $idsRemoved = $this->getRecordService()->massRemove($ids, $where);
 
-        return $idsDeleted;
+        return $idsRemoved;
     }
 
     public function actionCreateLink($params, $data)
