@@ -64,7 +64,7 @@ class DataManager
     {
         $result = $this->getContainer()->get('fileManager')->removeInDir($this->cachePath);
 
-        if ($result === false) {
+        if ($result != true) {
             throw new Exceptions\Error("Error while clearing cache");
         }
 
@@ -87,7 +87,7 @@ class DataManager
             $GLOBALS['log']->error('Fault to rebuild database schema'.'. Details: '.$e->getMessage());
         }
 
-        if ($result === false) {
+        if ($result != true) {
             throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
         }
 
