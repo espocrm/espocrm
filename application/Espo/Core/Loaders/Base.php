@@ -22,10 +22,17 @@
 
 namespace Espo\Core\Loaders;
 
-
-interface Loader
+abstract class Base implements \Espo\Core\Interfaces\Loader
 {
-    public function load();
+    private $container;
 
+    public function __construct(\Espo\Core\Container $container)
+    {
+        $this->container = $container;
+    }
+
+    protected function getContainer()
+    {
+        return $this->container;
+    }
 }
-

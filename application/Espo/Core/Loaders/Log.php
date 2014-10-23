@@ -25,20 +25,8 @@ namespace Espo\Core\Loaders;
 use Espo\Core\Utils,
     Espo\Core\Utils\Log\Monolog\Handler;
 
-class Log implements Loader
+class Log extends Base
 {
-    private $container;
-
-    public function __construct(\Espo\Core\Container $container)
-    {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
     public function load()
     {
         $logConfig = $this->getContainer()->get('config')->get('logger');
