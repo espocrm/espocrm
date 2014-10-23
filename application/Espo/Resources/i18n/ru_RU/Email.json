@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Тема/субъект",
+        "name": "Тема",
         "parent": "Источник",
         "status": "статус",
         "dateSent": "Дата отправки",
@@ -8,7 +8,7 @@
         "to": "К",
         "cc": "CC",
         "bcc": "BCC",
-        "isHtml": "Is Html",
+        "isHtml": "Html",
         "body": "Тело",
         "subject": "Тема",
         "attachments": "Вложения",
