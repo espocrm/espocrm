@@ -139,15 +139,18 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             var updateWidth = function () {
                 var documentWidth = $(window.document).width();
 
+                var documentWidth = window.outerWidth;
+
                 $more.children('li').each(function (i, li) {
                     unhideOneTab();
                 });
 
                 $more.parent().addClass('hide');
 
-                if (documentWidth <= 758) {
+                if (documentWidth <= 768) {
                     return;
                 }
+
 
                 var maxWidth = self.$el.width() - 590 - moreWidth;
 
