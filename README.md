@@ -1,4 +1,8 @@
+## EspoCRM
+
 <a href='http://www.espocrm.com'>EspoCRM is an Open Source CRM</a> (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities - all in an easy and intuitive interface.
+
+It's a web application with a frontend designed as a signle page application based on backbone.js and a RESTful backend written in PHP.
 
 Download the latest release from our [website](http://www.espocrm.com).
 
