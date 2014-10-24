@@ -188,7 +188,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         },
         
         validateRequired: function () {                
-            if (this.model.isRequired(this.name)) {
+            if (this.params.required || this.model.isRequired(this.name)) {
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
