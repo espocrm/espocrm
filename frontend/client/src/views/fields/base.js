@@ -420,20 +420,20 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
         showValidationMessage: function (message, selector) {
             selector = selector || '.main-element';
 
-            var el = this.$el.find(selector);
-            el.popover({
+            var $el = this.$el.find(selector);
+            $el.popover({
                 placement: 'bottom',
                 container: 'body',
                 content: message,
                 trigger: 'manual',
             }).popover('show');
 
-            el.closest('.field').one('mousedown click', function () {
-                el.popover('destroy');
+            $el.closest('.field').one('mousedown click', function () {
+                $el.popover('destroy');
             });
 
             this.once('render remove', function () {
-                el.popover('destroy');
+                $el.popover('destroy');
             });
 
             if (this._timeout) {
@@ -441,7 +441,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             }
 
             this._timeout = setTimeout(function () {
-                el.popover('destroy');
+                $el.popover('destroy');
             }, 3000);
         },
 

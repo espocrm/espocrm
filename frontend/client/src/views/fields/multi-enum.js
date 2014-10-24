@@ -58,7 +58,7 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
         
         afterRender: function () {             
             if (this.mode == 'edit' || this.mode == 'search') {
-                var $element = this.$element = this.$el.find('.main-element');
+                var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
                 this.$element.val(this.selected.join(','));
                 
                 this.$element.select2({
@@ -107,6 +107,17 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
             var data = {};
             data[this.name] = list;
             return data;
+        },
+
+        validateRequired: function () {                
+            if (this.params.required || this.model.isRequired(this.name)) {
+                var value = this.model.get(this.name);
+                if (!value || value.length == 0) {
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    this.showValidationMessage(msg, '.select2-container');
+                    return true;
+                }
+            }
         },
 
     });
