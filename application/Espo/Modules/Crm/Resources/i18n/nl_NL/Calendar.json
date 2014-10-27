@@ -1,13 +1,13 @@
 {
-    "modes": {
-        "month": "Maand",
-        "week": "Week",
-        "day": "Dag",
-        "agendaWeek": "Week",
-        "agendaDay": "Dag"
-    },
-    "labels": {
-        "Today": "Vandaag",
-        "Create": "Maak"
-    }
+	"modes": {
+		"month": "Maand",
+		"week": "Week",
+		"day": "Dag",
+		"agendaWeek": "Week",
+		"agendaDay": "Dag"
+	},
+	"labels": {
+		"Today": "Vandaag",
+		"Create": "Aanmaken"
+	}
 }

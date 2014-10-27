@@ -1,40 +1,42 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "emailAddress": "Email",
-        "website": "Website",
-        "phoneNumber": "Telefoon",
-        "billingAddress": "Factuur Adres",
-        "shippingAddress": "Bezoek adres",
-        "description": "Beschrijving",
-        "sicCode": "Sic Code",
-        "industry": "Industrie",
-        "type": "Type",
-        "contactRole": "Voorwaarde"
-    },
-    "links": {
-        "contacts": "Contactpersoon",
-        "opportunities": "Kansen",
-        "cases": "Zaken"
-    },
-    "options": {
-        "type": {
-            "Customer": "Klant",
-            "Investor": "Investeerder",
-            "Partner": "Partner",
-            "Reseller": "Reseller"
-        },
-        "industry": {
-            "Apparel": "Apparel",
-            "Banking": "Banking",
-            "Computer Software": "Computer Software",
-            "Education": "Educatie",
-            "Electronics": "Electronica",
-            "Finance": "Finance",
-            "Insurance": "Verzekeringen"
-        }
-    },
-    "labels": {
-        "Create Account": "Maak Relatie"
-    }
+	"fields": {
+		"name": "Record Naam",
+		"emailAddress": "Email",
+		"website": "Website",
+		"phoneNumber": "Telefoon",
+		"billingAddress": "Factuur Adres",
+		"shippingAddress": "Verzend Adres",
+		"description": "Beschrijving",
+		"sicCode": "Sic Code",
+		"industry": "Industrie",
+		"type": "Type",
+		"contactRole": "Rol"
+	},
+	"links": {
+		"contacts": "Contacten",
+		"opportunities": "Kansen",
+		"cases": "Casus",
+		"documents": "Documents"
+	},
+	"options": {
+		"type": {
+			"Customer": "Klant",
+			"Investor": "Investeerder",
+			"Partner": "Partner",
+			"Reseller": "Reseller"
+		},
+		"industry": {
+			"Apparel": "Confectie",
+			"Banking": "Bankwezen",
+			"Computer Software": "Computer Software",
+			"Education": "Onderwijs",
+			"Electronics": "Electronica",
+			"Finance": "Finance",
+			"Insurance": "Verzekeringen"
+		}
+	},
+	"labels": {
+		"Create Account": "Klant Aanmaken",
+		"Copy Billing": "Kopieer van Factuur"
+	}
 }

@@ -1,30 +1,30 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "status": "Status",
-        "job": "Opdracht",
-        "scheduling": "Scheduling (crontab notation)"
-    },
-    "links": {
-        "log": "Log"
-    },
-    "labels": {
-        "Create ScheduledJob": "Maak Geplande Opdracht"
-    },
-    "options": {
-        "job": {
-            "CheckInboundEmails": "Controleer Binnenkomende Emails",
-            "Cleanup": "Opschonen"
-        },
-        "cronSetup": {
-            "linux": "Note: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-            "mac": "Note: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-            "windows": "Note: Maak een batch file met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
-            "default": "Note: Add this command to Cron Job (Scheduled Task):"
-        },
-        "status": {
-            "Active": "Active",
-            "Inactive": "Inactive"
-        }
-    }
+	"fields": {
+		"name": "Record Naam",
+		"status": "Status",
+		"job": "Opdracht",
+		"scheduling": "Scheduling (crontab notatie)"
+	},
+	"links": {
+		"log": "Log"
+	},
+	"labels": {
+		"Create ScheduledJob": "Geplande Opdracht Aanmaken"
+	},
+	"options": {
+		"job": {
+			"CheckInboundEmails": "Controleer Binnenkomende Emails",
+			"Cleanup": "Opschonen"
+		},
+		"cronSetup": {
+			"linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+			"mac": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+			"windows": "Opgelet: Maak een batch bestand met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
+			"default": "Opgelet: Voeg deze regel toe aan de Cron Job (geplande opdracht):"
+		},
+		"status": {
+			"Active": "Actief",
+			"Inactive": "Inactief"
+		}
+	}
 }
