@@ -63,19 +63,19 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
                 });
             }
             
-             var type = 'listSmall';
-             var listLayout = null;
+            var type = 'listSmall';
+            var listLayout = null;
             var layout = this.defs.layout || null;
-             if (layout) {
-                 if (typeof layout == 'string') {
+            if (layout) {
+                if (typeof layout == 'string') {
                      type = layout;
-                 } else {
+                } else {
                      type = 'listRelationship';
                      listLayout = layout;
-                 }
+                }
              }
-             var sortBy = this.defs.sortBy || null;
-             var asc = this.defs.asc || null;
+            var sortBy = this.defs.sortBy || null;
+            var asc = this.defs.asc || null;
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {            

@@ -110,7 +110,13 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
         },
 
         afterRender: function () {
-            var url = this.model.name + '/' + this.model.id + '/tasks';                    
+            var url = this.model.name + '/' + this.model.id + '/tasks';
+
+            if (!this.getAcl().check('Task', 'read')) {
+                this.$el.find('.list-container').html(this.translate('No Access'));
+                this.$el.find('.button-container').remove();
+                return;
+            };                  
 
             this.getCollectionFactory().create('Task', function (collection) {
                 this.collection = collection;
