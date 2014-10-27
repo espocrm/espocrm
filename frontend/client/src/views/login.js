@@ -33,14 +33,10 @@ Espo.define('Views.Login', 'View', function (Dep) {
         },
     
         events: {
-            'keypress input': function (e) {
-                if (e.keyCode == 13) {
-                    this.login();    
-                }
-            },
-            'click #btn-login': function () {
+            'submit #login-form': function (e) {
                 this.login();
-            },    
+                return false;
+            }    
         },
         
         data: function () {
