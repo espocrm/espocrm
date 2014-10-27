@@ -5,7 +5,7 @@
         <div class="pull-right btn-group">
             {{#if actions}}
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
+                    <span class="glyphicon glyphicon-plus"></span>
                 </button>
                 <ul class="dropdown-menu">
                     {{#each actions}}
