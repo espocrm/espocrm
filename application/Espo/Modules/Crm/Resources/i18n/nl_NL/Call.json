@@ -1,39 +1,44 @@
 {
-    "fields": {
-        "name": "Record Naam",
-        "parent": "Behorende bij",
-        "status": "Status",
-        "dateStart": "Start Datum",
-        "dateEnd": "Eind Datum",
-        "direction": "Richting",
-        "duration": "Gedurende",
-        "description": "Beschrijving",
-        "users": "Gebruikers",
-        "contacts": "Contactpersoon",
-        "leads": "Leads"
-    },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Plannen",
-            "Held": "Volgen",
-            "Not Held": "Niet volgen"
-        },
-        "direction": {
-            "Outbound": "Uitgaande",
-            "Inbound": "Binnenkomende"
-        }
-    },
-    "labels": {
-        "Create Call": "Maak Call",
-        "Set Held": "Vasthouden",
-        "Set Not Held": "Niet Vasthouden",
-        "Send Invitations": "Uitnodiging versturen"        
-    },
-    "presetFilters": {
-        "planned": "Plannen",
-        "held": "Volgen",
-        "todays": "Vandaag"
-    }
+	"fields": {
+		"name": "Record Naam",
+		"parent": "Behorende bij",
+		"status": "Status",
+		"dateStart": "Start Datum",
+		"dateEnd": "Eind Datum",
+		"direction": "Richting",
+		"duration": "Duur",
+		"description": "Beschrijving",
+		"users": "Gebruikers",
+		"contacts": "Contacten",
+		"leads": "Leads"
+	},
+	"links": {
+	},
+	"options": {
+		"status": {
+			"Planned": "Gepland",
+			"Held": "Vasthouden",
+			"Not Held": "Niet Vasthouden"
+		},
+		"direction": {
+			"Outbound": "Uitgaande",
+			"Inbound": "Binnenkomende"
+		},
+		"acceptanceStatus": {
+			"None": "Geen",
+			"Accepted": "Geaccepteerd",
+			"Declined": "Geweigerd"
+		}
+	},
+	"labels": {
+		"Create Call": "Tel. Gesprek Aanmaken",
+		"Set Held": "Vasthouden",
+		"Set Not Held": "Niet Vasthouden",
+		"Send Invitations": "Uitnodiging versturen"		
+	},
+	"presetFilters": {
+		"planned": "Gepland",
+		"held": "Vasthouden",
+		"todays": "Vandaag"
+	}
 }

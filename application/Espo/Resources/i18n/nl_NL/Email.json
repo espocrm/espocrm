@@ -1,36 +1,44 @@
 {
-    "fields": {
-        "name": "Onderwerp",
-        "parent": "Behorende bij",
-        "status": "Status",
-        "dateSent": "Datum verzonden",
-        "from": "Van",
-        "to": "Naar",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Is Html",
-        "body": "Inhoud",
-        "subject": "Onderwerp",
-        "attachments": "Bijlagen",
-        "selectTemplate": "Selecteer Template",
-        "fromEmailAddress": "Van Adres",
-        "toEmailAddresses": "Naar Adres",
-        "emailAddress": "Email Adres"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Tijdelijk",
-        "Sending": "Verzenden",
-        "Sent": "Verstuur",
-        "Archived": "Archiveren"
-    },
-    "labels": {
-        "Create Email": "Archiveer Email",
-        "Compose": "Maak"
-    },
-    "presetFilters": {
-        "sent": "Verstuur",
-        "archived": "Archiveren"
-    }
+	"fields": {
+		"name": "Onderwerp",
+		"parent": "Behorende bij",
+		"status": "Status",
+		"dateSent": "Datum verzonden",
+		"from": "Van",
+		"to": "Naar",
+		"cc": "CC",
+		"bcc": "BCC",
+		"isHtml": "Is Html",
+		"body": "Inhoud",
+		"subject": "Onderwerp",
+		"attachments": "Bijlagen",
+		"selectTemplate": "Selecteer Template",
+		"fromEmailAddress": "Van Adres",
+		"toEmailAddresses": "Naar Adres",
+		"emailAddress": "Email Adres",
+		"deliveryDate": "Afleverdatum"
+	},
+	"links": {
+	},
+	"options": {
+		"Draft": "Concept",
+		"Sending": "Verzenden",
+		"Sent": "Verstuur",
+		"Archived": "Archiveren"
+	},
+	"labels": {
+		"Create Email": "Archiveer Email",
+		"Archive Email": "Archiveer Email",
+		"Compose": "Maak",
+		"Reply": "Antwoord",
+		"Reply to All": "Antwoord allen",
+		"Forward": "Doorsturen",
+		"Original message": "Originele bericht",
+		"Forwarded message": "Doorgestuurd bericht",
+		"Email Accounts": "Email Accounts"
+	},
+	"presetFilters": {
+		"sent": "Verstuur",
+		"archived": "Archiveren"
+	}
 }

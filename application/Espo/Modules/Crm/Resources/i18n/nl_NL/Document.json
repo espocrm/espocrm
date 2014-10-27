@@ -1,0 +1,32 @@
+{
+	"labels": {
+		"Create Document": "Document Aanmaken",
+		"Details": "Details"
+	},
+	"fields": {
+		"name": "Record Naam",
+		"status": "Status",
+		"file": "Bestand",
+		"type": "Type",
+		"source": "Bron",
+		"publishDate": "Publicatiedatum",
+		"expirationDate": "Vervaldatum",
+		"description": "Beschrijving"
+	},
+	"links": {
+		"accounts": "Klanten",
+		"opportunities": "Kansen"
+	},
+	"options": {
+		"status": {
+			"Active": "Actief",
+			"Draft": "Concept",
+			"Expired": "Vervallen",
+			"Canceled": "Geannuleerd"
+		}
+	},
+	"presetFilters": {
+		"active": "Actief",
+		"draft": "Concept"
+	}
+}
