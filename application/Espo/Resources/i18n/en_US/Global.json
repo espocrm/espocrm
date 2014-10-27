@@ -153,7 +153,7 @@
         "unlinkRecordConfirmation": "Are you sure you want to unlink relationship?",
         "removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?",
         "massUpdateResult": "{count} records have been updated",
-        "massUpdateResultSinle": "{count} record has been updated",
+        "massUpdateResultSingle": "{count} record has been updated",
         "noRecordsUpdated": "No records were updated",
         "massRemoveResult": "{count} records have been removed",
         "massRemoveResultSingle": "{count} record has been removed",
