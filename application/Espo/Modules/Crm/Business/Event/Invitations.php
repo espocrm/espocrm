@@ -63,8 +63,13 @@ class Invitations
         )));
         $this->getEntityManager()->saveEntity($uid);
 
+        $emailAddress = $invitee->get('emailAddress');
+        if (empty($emailAddress)) {
+            return;
+        }
+
         $email = $this->getEntityManager()->getEntity('Email');
-        $email->set('to', $invitee->get('emailAddress'));
+        $email->set('to', $emailAddress);
         
         $systemLanguage = $this->config->get('language');
 
