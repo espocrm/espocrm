@@ -65,16 +65,30 @@ class Invitations
 
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set('to', $invitee->get('emailAddress'));
+        
+        $systemLanguage = $this->config->get('language');
 
-        $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.tpl';
+        $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.'.$systemLanguage.'.tpl';
         if (!file_exists($subjectTplFileName)) {
-            $subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.tpl';
+            $subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.'.$systemLanguage.'.tpl';
+        } 
+        if (!file_exists($subjectTplFileName)) {
+            $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.en_US.tpl';
+        }
+        if (!file_exists($subjectTplFileName)) {
+            $subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.en_US.tpl';
         }
         $subjectTpl = file_get_contents($subjectTplFileName);
 
-        $bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.tpl';
+        $bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.'.$systemLanguage.'.tpl';
         if (!file_exists($bodyTplFileName)) {
-            $bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.tpl';
+            $bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.'.$systemLanguage.'.tpl';
+        }
+        if (!file_exists($bodyTplFileName)) {
+            $bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.en_US.tpl';
+        }
+        if (!file_exists($bodyTplFileName)) {
+            $bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.en_US.tpl';
         }
         $bodyTpl = file_get_contents($bodyTplFileName);
 
