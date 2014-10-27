@@ -48,7 +48,8 @@
         },
         "token": {
             "type": "varchar",
-            "notStorable": true
+            "notStorable": true,
+            "disabled": true
         },
         "defaultTeam": {
             "type": "link",
