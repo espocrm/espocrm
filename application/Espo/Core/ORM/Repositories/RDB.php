@@ -185,6 +185,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if ($entity->hasField('createdAt')) {
                 $entity->set('createdAt', $nowString);
             }
+            if ($entity->hasField('modifiedAt')) {
+                $entity->set('modifiedAt', $nowString);
+            }
             if ($entity->hasField('createdById')) {
                 $entity->set('createdById', $this->entityManager->getUser()->id);
             }
@@ -195,8 +198,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if ($entity->has('modifiedAt')) {
                 $restoreData['modifiedAt'] = $entity->get('modifiedAt');
             }
-            $entity->clear('modifiedById');
-            $entity->clear('modifiedAt');
+            $entity->clear('modifiedById');            
         } else {
             if ($entity->hasField('modifiedAt')) {
                 $entity->set('modifiedAt', $nowString);
