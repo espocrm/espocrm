@@ -56,6 +56,8 @@ Espo.define('Views.Login', 'View', function (Dep) {
         login: function () {
                 var userName = $("#field-userName").val();
                 var password = $("#field-password").val();
+
+                var $submit = this.$el.find('#btn-login');                
                 
                 if (userName == '') {                    
                     var $el = $("#field-userName");
@@ -76,6 +78,8 @@ Espo.define('Views.Login', 'View', function (Dep) {
                     return;
                 }
                 
+                $submit.addClass('disabled');
+
                 this.notify('Please wait...');
                 
                 $.ajax({
@@ -97,6 +101,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
                         });
                     }.bind(this),
                     error: function (xhr) {
+                        $submit.removeClass('disabled');
                         if (xhr.status == 401) {
                             this.onWrong();
                         }
