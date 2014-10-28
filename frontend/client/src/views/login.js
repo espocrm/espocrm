@@ -86,7 +86,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
                     url: 'App/user',
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
-                        "Espo-Authorization": Base64.encode(userName + ":" + password)
+                        'Espo-Authorization': Base64.encode(userName + ':' + password)
                     },
                     success: function (data) {                                                
                         this.notify(false);            
