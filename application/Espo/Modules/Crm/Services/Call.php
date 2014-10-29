@@ -18,16 +18,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
-
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-
-class Call extends Meeting
+class Call extends
+    Meeting
 {
 
 }

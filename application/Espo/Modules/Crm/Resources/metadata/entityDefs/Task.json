@@ -1,93 +1,109 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"        : {
+            "type"    : "varchar",
             "required": true
         },
-        "status": {
-            "type": "enum",
-            "options": ["Not Started", "Started", "Completed", "Canceled"],
-            "view": "Fields.EnumStyled",
-            "style": {
+        "status"      : {
+            "type"   : "enum",
+            "options": [
+                "Not Started",
+                "Started",
+                "Completed",
+                "Canceled"
+            ],
+            "view"   : "Fields.EnumStyled",
+            "style"  : {
                 "Completed": "success"
             }
         },
-        "priority": {
-            "type": "enum",
-            "options": ["Low", "Normal", "High", "Urgent"],
+        "priority"    : {
+            "type"   : "enum",
+            "options": [
+                "Low",
+                "Normal",
+                "High",
+                "Urgent"
+            ],
             "default": "Normal"
         },
-        "dateStart": {
-            "type": "datetime",
+        "dateStart"   : {
+            "type"  : "datetime",
             "before": "dateEnd"
         },
-        "dateEnd": {
-            "type": "datetime",
+        "dateEnd"     : {
+            "type" : "datetime",
             "after": "dateStart",
-            "view": "Crm:Task.Fields.DateEnd"
+            "view" : "Crm:Task.Fields.DateEnd"
         },
-        "isOverdue": {
-            "type": "bool",
-            "readOnly": true,
+        "isOverdue"   : {
+            "type"       : "bool",
+            "readOnly"   : true,
             "notStorable": true,
-            "view": "Crm:Task.Fields.IsOverdue"
+            "view"       : "Crm:Task.Fields.IsOverdue"
         },
-        "description": {
+        "description" : {
             "type": "text"
         },
-        "parent": {
+        "parent"      : {
             "type": "linkParent"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"   : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"  : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"   : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"  : {
+            "type"    : "link",
             "readOnly": true
         },
         "assignedUser": {
-            "type": "link",
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"       : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
         "assignedUser": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"       : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "parent": {
-            "type": "belongsToParent",
-            "entityList": ["Account", "Contact", "Lead", "Opportunity", "Case"],
-            "foreign": "tasks"
+        "parent"      : {
+            "type"      : "belongsToParent",
+            "entityList": [
+                "Account",
+                "Contact",
+                "Lead",
+                "Opportunity",
+                "Case"
+            ],
+            "foreign"   : "tasks"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

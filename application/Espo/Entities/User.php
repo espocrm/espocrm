@@ -18,12 +18,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Entities;
 
-class User extends \Espo\Core\Entities\Person
-{    
+use Espo\Core\Entities\Person;
+
+class User extends
+    Person
+{
+
     public function isAdmin()
     {
         return $this->get('isAdmin');

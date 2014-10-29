@@ -19,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades\Actions\Extension;
 
-class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
+class Upload extends
+    \Espo\Core\Upgrades\Actions\Base\Upload
 {
 
 }

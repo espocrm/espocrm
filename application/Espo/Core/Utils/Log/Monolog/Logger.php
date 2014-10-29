@@ -19,31 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Log\Monolog;
 
-class Logger extends \Monolog\Logger
+class Logger extends
+    \Monolog\Logger
 {
-    protected $defaultLevelName = 'DEBUG';
 
+    protected $defaultLevelName = 'DEBUG';
 
     /**
      * Get Level Code
-     * @param  string $level Ex. DEBUG, ...
+     *
+     * @param string $levelName Ex. DEBUG, ...
+     *
+     * @internal param string $level Ex. DEBUG, ...
+     *
      * @return int
      */
     public function getLevelCode($levelName)
     {
         $levelName = strtoupper($levelName);
-
         $levels = $this->getLevels();
-
         if (isset($levels[$levelName])) {
             return $levels[$levelName];
         }
-
         return $levels[$this->defaultLevelName];
     }
-
-
 }

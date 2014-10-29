@@ -18,43 +18,48 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\ORM\Entity;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\Entity;
+use Espo\Services\Record;
 
-class Target extends \Espo\Services\Record
-{    
+class Target extends
+    Record
+{
+
+    /**
+     * @param $id
+     *
+     * @return \Espo\Modules\Crm\Entities\Target
+
+     * @throws Forbidden
+     */
+    public function convert($id)
+    {
+
+        $entityManager = $this->getEntityManager();
+        $target = $this->getEntity($id);
+        if (!$this->getAcl()->check($target, 'delete')) {
+            throw new Forbidden();
+        }
+        if (!$this->getAcl()->check('Lead', 'read')) {
+            throw new Forbidden();
+        }
+        $lead = $entityManager->getEntity('Lead');
+        $lead->set($target->toArray());
+        $entityManager->removeEntity($target);
+        $entityManager->saveEntity($lead);
+        return $lead;
+    }
+
     protected function getDuplicateWhereClause(Entity $entity)
     {
         return array(
             'firstName' => $entity->get('firstName'),
             'lastName' => $entity->get('lastName'),
         );
-    }
-    
-    public function convert($id)
-    {
-        $entityManager = $this->getEntityManager();        
-        $target = $this->getEntity($id);
-        
-        if (!$this->getAcl()->check($target, 'delete')) {
-            throw new Forbidden();
-        }
-        if (!$this->getAcl()->check('Lead', 'read')) {
-            throw new Forbidden();
-        }     
-        
-        $lead = $entityManager->getEntity('Lead');        
-        $lead->set($target->toArray());        
-        
-        $entityManager->removeEntity($target);
-        $entityManager->saveEntity($lead);
-
-        return $lead;
     }
 }
 

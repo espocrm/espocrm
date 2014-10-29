@@ -18,21 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Forbidden;
 
-class Integration extends \Espo\Core\Controllers\Record
-{    
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
-    
+class Integration extends
+    Record
+{
+
     public function actionIndex($params, $data, $request)
     {
         return false;
@@ -40,22 +35,34 @@ class Integration extends \Espo\Core\Controllers\Record
 
     public function actionRead($params, $data, $request)
     {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);        
+        /**
+         * @var  \Espo\Entities\Integration $entity
+         */
+        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
         return $entity->toArray();
     }
-    
+
     public function actionUpdate($params, $data)
     {
         return $this->actionPatch($params, $data);
     }
-    
+
     public function actionPatch($params, $data)
     {
+        /**
+         * @var  \Espo\Entities\Integration $entity
+         */
         $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
         $entity->set($data);
         $this->getEntityManager()->saveEntity($entity);
-        
-        return $entity->toArray();        
+        return $entity->toArray();
+    }
+
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 }
 

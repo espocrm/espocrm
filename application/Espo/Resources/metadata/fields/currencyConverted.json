@@ -1,9 +1,8 @@
 {
-   "params":[
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "skip": true
-   }
+    "params"      : [],
+    "filter"      : true,
+    "notCreatable": true,
+    "fieldDefs"   : {
+        "skip": true
+    }
 }

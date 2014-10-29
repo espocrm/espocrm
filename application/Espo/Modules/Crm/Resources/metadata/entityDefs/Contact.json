@@ -1,193 +1,214 @@
 {
-    "fields": {
-        "name": {
+    "fields"    : {
+        "name"             : {
             "type": "personName"
         },
-        "salutationName": {
-            "type": "enum",
-            "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]
+        "salutationName"   : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Mr.",
+                "Mrs.",
+                "Dr.",
+                "Drs."
+            ]
         },
-        "firstName": {
-            "type": "varchar",
+        "firstName"        : {
+            "type"     : "varchar",
             "maxLength": 100,
-            "default":""
+            "default"  : ""
         },
-        "lastName": {
-            "type": "varchar",
+        "lastName"         : {
+            "type"     : "varchar",
             "maxLength": 100,
-            "required": true,
-            "default":""
+            "required" : true,
+            "default"  : ""
         },
-        "accountId": {
+        "accountId"        : {
             "where": {
                 "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})"
             }
         },
-        "title": {
-            "type": "varchar",
-            "maxLength": 50,
+        "title"            : {
+            "type"       : "varchar",
+            "maxLength"  : 50,
             "notStorable": true,
-            "select": "accountContact.role",
-            "orderBy": "accountContact.role {direction}",
-            "where": {
+            "select"     : "accountContact.role",
+            "orderBy"    : "accountContact.role {direction}",
+            "where"      : {
                 "LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE {value})",
-                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
+                "="   : "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
             }
         },
-        "description": {
+        "description"      : {
             "type": "text"
         },
-        "emailAddress": {
+        "emailAddress"     : {
             "type": "email"
         },
-        "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+        "phoneNumber"      : {
+            "type"       : "phone",
+            "typeList"   : [
+                "Mobile",
+                "Office",
+                "Home",
+                "Fax",
+                "Other"
+            ],
             "defaultType": "Mobile"
         },
-        "doNotCall": {
+        "doNotCall"        : {
             "type": "bool"
         },
-        "address": {
+        "address"          : {
             "type": "address"
         },
-        "addressStreet": {
-            "type": "text",
+        "addressStreet"    : {
+            "type"     : "text",
             "maxLength": 255,
-            "dbType": "varchar"
+            "dbType"   : "varchar"
         },
-        "addressCity": {
+        "addressCity"      : {
             "type": "varchar"
         },
-        "addressState": {
+        "addressState"     : {
             "type": "varchar"
         },
-        "addressCountry": {
+        "addressCountry"   : {
             "type": "varchar"
         },
         "addressPostalCode": {
             "type": "varchar"
         },
-        "account": {
+        "account"          : {
             "type": "link"
         },
-        "accounts": {
-            "type": "linkMultiple",
-            "view": "Crm:Contact.Fields.Accounts",
+        "accounts"         : {
+            "type"   : "linkMultiple",
+            "view"   : "Crm:Contact.Fields.Accounts",
             "columns": {
                 "role": "contactRole"
             }
         },
-        "accountRole": {
-            "type": "varchar",
+        "accountRole"      : {
+            "type"       : "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled"   : true
         },
-        "accountType": {
-            "type": "foreign",
-            "link": "account",
+        "accountType"      : {
+            "type" : "foreign",
+            "link" : "account",
             "field": "type"
         },
-        "opportunityRole": {
-            "type": "enum",
+        "opportunityRole"  : {
+            "type"       : "enum",
             "notStorable": true,
-            "disabled": true,
-            "options": ["", "Decision Maker", "Evaluator", "Influencer"]
+            "disabled"   : true,
+            "options"    : [
+                "",
+                "Decision Maker",
+                "Evaluator",
+                "Influencer"
+            ]
         },
-        "acceptanceStatus": {
-            "type": "varchar",
+        "acceptanceStatus" : {
+            "type"       : "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled"   : true
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"        : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"       : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"        : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"       : {
+            "type"    : "link",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"     : {
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"            : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy"    : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "assignedUser": {
-            "type": "belongsTo",
+        "assignedUser" : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"        : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "account": {
-            "type": "belongsTo",
+        "account"      : {
+            "type"  : "belongsTo",
             "entity": "Account"
         },
-        "accounts": {
-            "type": "hasMany",
-            "entity": "Account",
-            "foreign": "contacts",
+        "accounts"     : {
+            "type"             : "hasMany",
+            "entity"           : "Account",
+            "foreign"          : "contacts",
             "additionalColumns": {
                 "role": {
                     "type": "varchar",
-                    "len": 50
+                    "len" : 50
                 }
             }
         },
         "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
+            "type"   : "hasMany",
+            "entity" : "Opportunity",
             "foreign": "contacts"
         },
-        "cases": {
-            "type": "hasMany",
-            "entity": "Case",
+        "cases"        : {
+            "type"   : "hasMany",
+            "entity" : "Case",
             "foreign": "contact"
         },
-        "meetings": {
-            "type": "hasMany",
-            "entity": "Meeting",
+        "meetings"     : {
+            "type"   : "hasMany",
+            "entity" : "Meeting",
             "foreign": "contacts"
         },
-        "calls": {
-            "type": "hasMany",
-            "entity": "Call",
+        "calls"        : {
+            "type"   : "hasMany",
+            "entity" : "Call",
             "foreign": "contacts"
         },
-        "tasks": {
-            "type": "hasChildren",
-            "entity": "Task",
+        "tasks"        : {
+            "type"   : "hasChildren",
+            "entity" : "Task",
             "foreign": "parent"
         },
-        "activities": {
-            "type": "joint",
-            "links": ["meetings", "calls", "tasks"]
+        "activities"   : {
+            "type" : "joint",
+            "links": [
+                "meetings",
+                "calls",
+                "tasks"
+            ]
         }
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

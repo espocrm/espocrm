@@ -18,72 +18,58 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Entity;
+use Espo\ORM\EntityCollection;
+use Espo\ORM\EntityManager;
+use Slim\Http\Request;
 
-class Record extends Base
+class Record extends
+    Base
 {
+
     const MAX_SIZE_LIMIT = 200;
-    
-    public static $defaultAction = 'list';    
-    
-    protected function getEntityManager()
+
+    public static $defaultAction = 'list';
+
+    public function actionRead($params)
     {
-        return $this->getContainer()->get('entityManager');
+        /**
+         * @var Entity $entity
+         */
+        $id = $params['id'];
+        $entity = $this->getRecordService()->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+        return $entity->toArray();
     }
-    
+
     protected function getRecordService($name = null)
     {
+        /**
+         * @var \Espo\Services\Record $service
+         */
         if (empty($name)) {
             $name = $this->name;
         }
-        
         if ($this->getServiceFactory()->checkExists($name)) {
             $service = $this->getServiceFactory()->create($name);
         } else {
             $service = $this->getServiceFactory()->create('Record');
             $service->setEntityName($name);
-        }        
-        
+        }
         return $service;
     }
 
-    public function actionRead($params)
-    {
-        $id = $params['id'];
-        $entity = $this->getRecordService()->getEntity($id);
-        
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        return $entity->toArray();
-    }
-    
     public function actionPatch($params, $data)
     {
         return $this->actionUpdate($params, $data);
-    }
-    
-    public function actionCreate($params, $data)
-    {
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $service = $this->getRecordService();
-        
-        if ($entity = $service->createEntity($data)) {
-            return $entity->toArray();
-        }
-
-        throw new Error();
     }
 
     public function actionUpdate($params, $data)
@@ -91,36 +77,54 @@ class Record extends Base
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
-    
-        $id = $params['id'];        
-        
+        $id = $params['id'];
         if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
             return $entity->toArray();
         }
-
         throw new Error();
     }
 
+    public function actionCreate($params, $data)
+    {
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+        $service = $this->getRecordService();
+        if ($entity = $service->createEntity($data)) {
+            return $entity->toArray();
+        }
+        throw new Error();
+    }
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+
+     * @throws Forbidden
+     */
     public function actionList($params, $data, $request)
     {
+        /**
+         * @var EntityCollection $collection
+         */
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
-
         $where = $request->get('where');
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
-        
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
         }
         if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
             throw new Forbidden();
         }
-
         $result = $this->getRecordService()->findEntities(array(
             'where' => $where,
             'offset' => $offset,
@@ -129,32 +133,41 @@ class Record extends Base
             'sortBy' => $sortBy,
             'q' => $q,
         ));
-        
+        $collection = $result['collection'];
         return array(
             'total' => $result['total'],
-            'list' => $result['collection']->toArray()
+            'list' => $collection->toArray()
         );
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+
+     * @throws Forbidden
+     */
     public function actionListLinked($params, $data, $request)
     {
+        /**
+         * @var EntityCollection $collection
+         */
         $id = $params['id'];
-        $link = $params['link'];        
-
+        $link = $params['link'];
         $where = $request->get('where');
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
-        
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
         }
         if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
             throw new Forbidden();
-        }    
-
+        }
         $result = $this->getRecordService()->findLinkedEntities($id, $link, array(
             'where' => $where,
             'offset' => $offset,
@@ -163,54 +176,56 @@ class Record extends Base
             'sortBy' => $sortBy,
             'q' => $q,
         ));
-        
-        
+        $collection = $result['collection'];
         return array(
             'total' => $result['total'],
-            'list' => $result['collection']->toArray()
+            'list' => $collection->toArray()
         );
     }
 
     public function actionDelete($params)
     {
         $id = $params['id'];
-
         if ($this->getRecordService()->deleteEntity($id)) {
             return true;
         }
         throw new Error();
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+
+     * @throws Error
+     * @throws Forbidden
+     */
     public function actionExport($params, $data, $request)
-    {        
+    {
         if ($this->getConfig()->get('disableExport') && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
-        
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
-        }        
-    
+        }
         $ids = $request->get('ids');
         $where = $request->get('where');
-        
         return array(
             'id' => $this->getRecordService()->export($ids, $where)
-        );        
+        );
     }
 
     public function actionMassUpdate($params, $data, $request)
     {
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
-        }        
-
+        }
         $ids = $data['ids'];
         $where = $data['where'];
         $attributes = $data['attributes'];
-
         $idsUpdated = $this->getRecordService()->massUpdate($attributes, $ids, $where);
-
         return $idsUpdated;
     }
 
@@ -219,12 +234,9 @@ class Record extends Base
         if (!$this->getAcl()->check($this->name, 'delete')) {
             throw new Forbidden();
         }
-
         $ids = $data['ids'];
         $where = $data['where'];
-
         $idsRemoved = $this->getRecordService()->massRemove($ids, $where);
-
         return $idsRemoved;
     }
 
@@ -232,17 +244,15 @@ class Record extends Base
     {
         $id = $params['id'];
         $link = $params['link'];
-        
-        $foreignIds = array();        
+        $foreignIds = array();
         if (isset($data['id'])) {
             $foreignIds[] = $data['id'];
-        }        
+        }
         if (isset($data['ids']) && is_array($data['ids'])) {
             foreach ($data['ids'] as $foreignId) {
                 $foreignIds[] = $foreignId;
             }
-        }        
-        
+        }
         $result = false;
         foreach ($foreignIds as $foreignId) {
             if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
@@ -251,26 +261,23 @@ class Record extends Base
         }
         if ($result) {
             return true;
-        }    
-        
-        throw new Error();        
+        }
+        throw new Error();
     }
-    
+
     public function actionRemoveLink($params, $data)
     {
         $id = $params['id'];
         $link = $params['link'];
-        
-        $foreignIds = array();        
+        $foreignIds = array();
         if (isset($data['id'])) {
             $foreignIds[] = $data['id'];
-        }        
+        }
         if (isset($data['ids']) && is_array($data['ids'])) {
             foreach ($data['ids'] as $foreignId) {
                 $foreignIds[] = $foreignId;
             }
         }
-        
         $result = false;
         foreach ($foreignIds as $foreignId) {
             if ($this->getRecordService()->unlinkEntity($id, $link, $foreignId)) {
@@ -279,27 +286,35 @@ class Record extends Base
         }
         if ($result) {
             return true;
-        }    
-        
-        throw new Error();        
+        }
+        throw new Error();
     }
-    
+
     public function actionFollow($params)
     {
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
         $id = $params['id'];
-        return $this->getRecordService()->follow($id);        
+        return $this->getRecordService()->follow($id);
     }
-    
+
     public function actionUnfollow($params)
     {
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
         $id = $params['id'];
-        return $this->getRecordService()->unfollow($id);        
+        return $this->getRecordService()->unfollow($id);
+    }
+
+    /**
+     * @return EntityManager
+
+     */
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('entityManager');
     }
 }
 

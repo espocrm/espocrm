@@ -19,49 +19,52 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Base;
+use Espo\Core\Cron\ScheduledJob;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\UpgradeManager;
 
-class Admin extends \Espo\Core\Controllers\Base
+class Admin extends
+    Base
 {
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
 
     public function actionRebuild($params, $data)
     {
-        $result = $this->getContainer()->get('dataManager')->rebuild();
-
+        /**
+         * @var DataManager $dataManager
+         */
+        $dataManager = $this->getContainer()->get('dataManager');
+        $result = $dataManager->rebuild();
         return $result;
     }
 
     public function actionClearCache($params, $data)
     {
-        $result = $this->getContainer()->get('dataManager')->clearCache();
-
+        /**
+         * @var DataManager $dataManager
+         */
+        $dataManager = $this->getContainer()->get('dataManager');
+        $result = $dataManager->clearCache();
         return $result;
     }
 
     public function actionJobs()
     {
+        /**
+         * @var ScheduledJob $scheduledJob
+         */
         $scheduledJob = $this->getContainer()->get('scheduledJob');
-
         return $scheduledJob->getAllNamesOnly();
     }
 
     public function actionUploadUpgradePackage($params, $data)
     {
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
-
+        $upgradeManager = new UpgradeManager($this->getContainer());
         $upgradeId = $upgradeManager->upload($data);
         $manifest = $upgradeManager->getManifest();
-
         return array(
             'id' => $upgradeId,
             'version' => $manifest['version'],
@@ -70,17 +73,25 @@ class Admin extends \Espo\Core\Controllers\Base
 
     public function actionRunUpgrade($params, $data)
     {
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
-
+        $upgradeManager = new UpgradeManager($this->getContainer());
         $upgradeManager->install($data['id']);
-
         return true;
     }
 
     public function actionCronMessage($params, $data)
     {
-        return $this->getContainer()->get('scheduledJob')->getSetupMessage();
+        /**
+         * @var ScheduledJob $scheduledJob
+         */
+        $scheduledJob = $this->getContainer()->get('scheduledJob');
+        return $scheduledJob->getSetupMessage();
     }
 
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 }
 

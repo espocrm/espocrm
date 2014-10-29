@@ -18,55 +18,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Hooks\Note;
 
+use Espo\Core\Hooks\Base;
+use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
 
-class Notifications extends \Espo\Core\Hooks\Base
+class Notifications extends
+    Base
 {
-    protected $notificationService = null;
-    
+
     public static $order = 14;
-    
-    protected function init()
-    {
-        $this->dependencies[] = 'serviceFactory';
-    }
-    
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
-    }
-    
-    protected function getMentionedUserList($entity)
-    {
-        $mentionedUserList = array();
-        $data = $entity->get('data');
-        if (($data instanceof \stdClass) && ($data->mentions instanceof \stdClass)) {
-            $mentions = get_object_vars($data->mentions);
-            foreach ($mentions as $d) {
-                $mentionedUserList[] = $d->id;
-            }            
-        }
-        return $mentionedUserList;
-    }
-    
+
+    protected $notificationService = null;
+
     public function afterSave(Entity $entity)
     {
         if (!$entity->isFetched()) {
-
             $parentType = $entity->get('parentType');
-            $parentId = $entity->get('parentId');            
-        
+            $parentId = $entity->get('parentId');
             if ($parentType && $parentId) {
-
                 $mentionedUserList = $this->getMentionedUserList($entity);
-            
                 $pdo = $this->getEntityManager()->getPDO();
                 $sql = "
-                    SELECT user_id AS userId 
+                    SELECT user_id AS userId
                     FROM subscription
                     WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
                 $sth = $pdo->prepare($sql);
@@ -93,13 +69,46 @@ class Notifications extends \Espo\Core\Hooks\Base
             }
         }
     }
-    
+
+    /**
+     * @param Entity $entity
+     *
+     * @return array
+
+     */
+    protected function getMentionedUserList($entity)
+    {
+        $mentionedUserList = array();
+        $data = $entity->get('data');
+        if (($data instanceof \stdClass) && ($data->mentions instanceof \stdClass)) {
+            $mentions = get_object_vars($data->mentions);
+            foreach ($mentions as $d) {
+                $mentionedUserList[] = $d->id;
+            }
+        }
+        return $mentionedUserList;
+    }
+
+    protected function init()
+    {
+        $this->dependencies[] = 'serviceFactory';
+    }
+
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
             $this->notificationService = $this->getServiceFactory()->create('Notification');
         }
-        return $this->notificationService;        
+        return $this->notificationService;
+    }
+
+    /**
+     * @return ServiceFactory
+
+     */
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
     }
 }
 

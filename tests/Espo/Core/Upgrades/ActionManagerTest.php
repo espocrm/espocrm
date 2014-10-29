@@ -19,15 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace tests\Espo\Core\Upgrades;
 
-use tests\ReflectionHelper,
-    Espo\Core\ExtensionManager,
-    Espo\Core\UpgradeManager;
+use Espo\Core\ExtensionManager;
+use Espo\Core\UpgradeManager;
+use Espo\Core\Upgrades\ActionManager;
+use tests\ReflectionHelper;
 
-class ActionManagerTest extends \PHPUnit_Framework_TestCase
+class ActionManagerTest extends
+    \PHPUnit_Framework_TestCase
 {
+
     protected $object;
 
     protected $objects;
@@ -37,7 +39,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
         'params' => array(
             'packagePath' => 'tests/testData/Upgrades/data/upload/extensions',
             'backupPath' => 'tests/testData/Upgrades/data/.backup/extensions',
-
             'scriptNames' => array(
                 'before' => 'BeforeInstall',
                 'after' => 'AfterInstall',
@@ -47,24 +48,11 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
         ),
     );
 
-    protected function setUp()
-    {
-        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Upgrades\ActionManager($this->params['name'], $this->objects['container'], $this->params['params'] );
-
-        $this->reflection = new ReflectionHelper($this->object);
-    }
-
-    protected function tearDown()
-    {
-        $this->object = NULL;
-    }
+    protected $reflection;
 
     public function testGetObjectExtensionUpload()
     {
         $this->object->setAction(ExtensionManager::UPLOAD);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Upload', $class);
     }
@@ -72,7 +60,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectExtensionInstall()
     {
         $this->object->setAction(ExtensionManager::INSTALL);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Install', $class);
     }
@@ -80,7 +67,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectExtensionUninstall()
     {
         $this->object->setAction(ExtensionManager::UNINSTALL);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Uninstall', $class);
     }
@@ -88,7 +74,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectExtensionDelete()
     {
         $this->object->setAction(ExtensionManager::DELETE);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Extension\Delete', $class);
     }
@@ -96,7 +81,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectExtensionNotExists()
     {
         $this->setExpectedException('\Espo\Core\Exceptions\Error');
-
         $this->object->setAction('CustomClass');
         $class = $this->reflection->invokeMethod('getObject');
     }
@@ -105,7 +89,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->reflection->setProperty('managerName', 'Upgrade');
         $this->object->setAction(UpgradeManager::UPLOAD);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Upload', $class);
     }
@@ -114,7 +97,6 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->reflection->setProperty('managerName', 'Upgrade');
         $this->object->setAction(UpgradeManager::INSTALL);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Install', $class);
     }
@@ -122,10 +104,8 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectUpgradeUninstall()
     {
         $this->setExpectedException('\Espo\Core\Exceptions\Error');
-
         $this->reflection->setProperty('managerName', 'Upgrade');
         $this->object->setAction(UpgradeManager::UNINSTALL);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Uninstall', $class);
     }
@@ -133,12 +113,21 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectUpgradeDelete()
     {
         $this->setExpectedException('\Espo\Core\Exceptions\Error');
-
         $this->reflection->setProperty('managerName', 'Upgrade');
         $this->object->setAction(UpgradeManager::DELETE);
-
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Delete', $class);
     }
 
+    protected function setUp()
+    {
+        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+        $this->object = new ActionManager($this->params['name'], $this->objects['container'], $this->params['params']);
+        $this->reflection = new ReflectionHelper($this->object);
+    }
+
+    protected function tearDown()
+    {
+        $this->object = null;
+    }
 }

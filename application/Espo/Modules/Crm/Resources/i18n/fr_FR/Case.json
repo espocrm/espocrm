@@ -1,38 +1,37 @@
 {
-    "fields": {
-        "name": "Nom",
-        "number": "Numéro",
-        "status": "Statut",
-        "account": "Compte",
-        "contact": "Contact",
-        "priority": "Priorité",
-        "type": "Type",
+    "fields" : {
+        "name"       : "Nom",
+        "number"     : "Numéro",
+        "status"     : "Statut",
+        "account"    : "Compte",
+        "contact"    : "Contact",
+        "priority"   : "Priorité",
+        "type"       : "Type",
         "description": "Description"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "status": {
-            "New": "Nouveau",
-            "Assigned": "Assigné",
-            "Pending": "En attente",
-            "Closed": "Fermé",
-            "Rejected": "Rejeté",
+        "status"  : {
+            "New"      : "Nouveau",
+            "Assigned" : "Assigné",
+            "Pending"  : "En attente",
+            "Closed"   : "Fermé",
+            "Rejected" : "Rejeté",
             "Duplicate": "Doublon"
         },
-        "priority" : {
-            "Low": "Bas",
+        "priority": {
+            "Low"   : "Bas",
             "Normal": "Normal",
-            "High": "Haut",
+            "High"  : "Haut",
             "Urgent": "Urgent"
         },
-        "type": {
+        "type"    : {
             "Question": "Question",
             "Incident": "Incident",
-            "Problem": "Problème"
+            "Problem" : "Problème"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Case": "Créer un Ticket"
     }
 }

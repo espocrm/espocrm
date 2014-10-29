@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "job": "Job",
+    "fields" : {
+        "name"      : "Name",
+        "status"    : "Status",
+        "job"       : "Job",
         "scheduling": "Scheduling (crontab notation)"
     },
-    "links": {
+    "links"  : {
         "log": "Log"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Create Scheduled Job"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Check Inbound Emails",
-            "Cleanup": "Clean-up"
+            "Cleanup"           : "Clean-up"
         },
         "cronSetup": {
-            "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
-            "mac": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
+            "linux"  : "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
+            "mac"    : "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
             "windows": "Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:",
             "default": "Note: Add this command to Cron Job (Scheduled Task):"
         },
-        "status": {
-            "Active": "Active",
+        "status"   : {
+            "Active"  : "Active",
             "Inactive": "Inactive"
         }
     }

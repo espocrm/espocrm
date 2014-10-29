@@ -18,16 +18,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+class AuthToken extends
+    Record
+{
 
-class AuthToken extends Record
-{    
     protected $internalFields = array('hash', 'token');
+
 }
 

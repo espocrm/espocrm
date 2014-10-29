@@ -1,48 +1,57 @@
 {
-   "controller": "Controllers.Record",
-   "views":{
-      "detail":"Crm:Opportunity.Detail"
-   },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"Crm:Record.Panels.Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"Crm:Record.Panels.History"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"Crm:Record.Panels.Tasks"
-         }
-      ]
-   },
-   "presetFilters": [
-      {
-         "name":"open",
-         "style": "primary",
-         "data": {
-            "stage": {
-               "type": "in",
-               "value": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis","Proposal/Price Quote","Negotiation/Review"]
+    "controller"   : "Controllers.Record",
+    "views"        : {
+        "detail": "Crm:Opportunity.Detail"
+    },
+    "sidePanels"   : {
+        "detail": [
+            {
+                "name" : "activities",
+                "label": "Activities",
+                "view" : "Crm:Record.Panels.Activities"
+            },
+            {
+                "name" : "history",
+                "label": "History",
+                "view" : "Crm:Record.Panels.History"
+            },
+            {
+                "name" : "tasks",
+                "label": "Tasks",
+                "view" : "Crm:Record.Panels.Tasks"
             }
-         }
-      },
-      {
-         "name":"won",
-         "style": "success",
-         "data": {
-            "stage": {
-               "type": "in",
-               "value": ["Closed Won"]
+        ]
+    },
+    "presetFilters": [
+        {
+            "name" : "open",
+            "style": "primary",
+            "data" : {
+                "stage": {
+                    "type" : "in",
+                    "value": [
+                        "Prospecting",
+                        "Qualification",
+                        "Needs Analysis",
+                        "Value Proposition",
+                        "Id. Decision Makers",
+                        "Perception Analysis",
+                        "Proposal/Price Quote",
+                        "Negotiation/Review"
+                    ]
+                }
             }
-         }
-      }
-   ],
-    "boolFilters": ["onlyMy"]
+        },
+        {
+            "name" : "won",
+            "style": "success",
+            "data" : {
+                "stage": {
+                    "type" : "in",
+                    "value": ["Closed Won"]
+                }
+            }
+        }
+    ],
+    "boolFilters"  : ["onlyMy"]
 }

@@ -1,7 +1,13 @@
 [
-    {"name":"name","width":25,"link":true},
-    {"name":"file","width":25},
-    {"name":"type"},
-    {"name":"status"},
-    {"name":"createdAt"}
+    {"name"    : "name",
+        "width": 25,
+        "link" : true
+    },
+    {
+        "name" : "file",
+        "width": 25
+    },
+    {"name": "type"},
+    {"name": "status"},
+    {"name": "createdAt"}
 ]

@@ -1,35 +1,35 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"roles": "Rollen"
-	},
-	"links": {
-		"users": "Gebruikers",
-		"teams": "Groepen"
-	},
-	"labels": {
-		"Access": "Toegang",
-		"Create Role": "Rol aanmaken"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "niet-actief",
-			"enabled": "ingeschakeld",
-			"disabled": "uitgeschakeld"
-		},
-		"levelList": {
-			"all": "allemaal",
-			"team": "Groep",
-			"own": "eigen",
-			"no": "nee"
-		}
-	},
-	"actions": {
-		"read": "Lees",
-		"edit": "Bewerken",
-		"delete": "Verwijderen"
-	},
-	"messages": {
-		"changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."
-	}
+    "fields"  : {
+        "name" : "Record Naam",
+        "roles": "Rollen"
+    },
+    "links"   : {
+        "users": "Gebruikers",
+        "teams": "Groepen"
+    },
+    "labels"  : {
+        "Access"     : "Toegang",
+        "Create Role": "Rol aanmaken"
+    },
+    "options" : {
+        "accessList": {
+            "not-set" : "niet-actief",
+            "enabled" : "ingeschakeld",
+            "disabled": "uitgeschakeld"
+        },
+        "levelList" : {
+            "all" : "allemaal",
+            "team": "Groep",
+            "own" : "eigen",
+            "no"  : "nee"
+        }
+    },
+    "actions" : {
+        "read"  : "Lees",
+        "edit"  : "Bewerken",
+        "delete": "Verwijderen"
+    },
+    "messages": {
+        "changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."
+    }
 }

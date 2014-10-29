@@ -1,6 +1,6 @@
 {
     "fields": {
-        "status": "Estado",
+        "status"       : "Estado",
         "executionTime": "Tiempo de Ejecución"
     }
 }

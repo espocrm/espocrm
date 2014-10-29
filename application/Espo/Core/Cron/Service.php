@@ -19,49 +19,42 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Cron;
 
-use Espo\Core\Utils\Json,
-    Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Json;
 
 class Service
 {
+
     private $serviceFactory;
 
-    public function __construct(\Espo\Core\ServiceFactory $serviceFactory)
+    public function __construct(ServiceFactory $serviceFactory)
     {
         $this->serviceFactory = $serviceFactory;
+    }
+
+    public function run($job)
+    {
+        $serviceName = $job['service_name'];
+        if (!$this->getServiceFactory()->checkExists($serviceName)) {
+            throw new NotFound();
+        }
+        $service = $this->getServiceFactory()->create($serviceName);
+        $serviceMethod = $job['method'];
+        if (!method_exists($service, $serviceMethod)) {
+            throw new NotFound();
+        }
+        $data = $job['data'];
+        if (Json::isJSON($data)) {
+            $data = Json::decode($data, true);
+        }
+        $service->$serviceMethod($data);
     }
 
     protected function getServiceFactory()
     {
         return $this->serviceFactory;
     }
-
-
-
-    public function run($job)
-    {
-        $serviceName = $job['service_name'];
-
-        if (!$this->getServiceFactory()->checkExists($serviceName)) {
-            throw new NotFound();
-        }
-
-        $service = $this->getServiceFactory()->create($serviceName);
-        $serviceMethod = $job['method'];
-
-        if (!method_exists($service, $serviceMethod)) {
-            throw new NotFound();
-        }
-
-        $data = $job['data'];
-        if (Json::isJSON($data)) {
-            $data = Json::decode($data, true);
-        }
-
-        $service->$serviceMethod($data);
-    }
-
 }

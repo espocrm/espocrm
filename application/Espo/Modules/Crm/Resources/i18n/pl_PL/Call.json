@@ -1,39 +1,38 @@
 {
-    "fields": {
-        "name": "Imię",
-        "parent": "Konto",
-        "status": "Status",
-        "dateStart": "Data Startu",
-        "dateEnd": "Data Zakończenia",
-        "direction": "Kierunek",
-        "duration": "Czas",
+    "fields"       : {
+        "name"       : "Imię",
+        "parent"     : "Konto",
+        "status"     : "Status",
+        "dateStart"  : "Data Startu",
+        "dateEnd"    : "Data Zakończenia",
+        "direction"  : "Kierunek",
+        "duration"   : "Czas",
         "description": "Opis ",
-        "users": "Użytkownik",
-        "contacts": "Kontakty",
-        "leads": "Potencjalne Kontakty"
+        "users"      : "Użytkownik",
+        "contacts"   : "Kontakty",
+        "leads"      : "Potencjalne Kontakty"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Planowane",
-            "Held": "Zatrzymany",
+    "links"        : {},
+    "options"      : {
+        "status"   : {
+            "Planned" : "Planowane",
+            "Held"    : "Zatrzymany",
             "Not Held": "Nie zatrzymany"
         },
         "direction": {
             "Outbound": "Wychodzący",
-            "Inbound": "Przychodzący"
+            "Inbound" : "Przychodzący"
         }
     },
-    "labels": {
-        "Create Call": "Utwórz Telefon",
-        "Set Held": "Ustaw Zatrzymanie",
-        "Set Not Held": "Ustaw nie Zatrzymany",
-        "Send Invitations": "Wyślij Powiadomienie"        
+    "labels"       : {
+        "Create Call"     : "Utwórz Telefon",
+        "Set Held"        : "Ustaw Zatrzymanie",
+        "Set Not Held"    : "Ustaw nie Zatrzymany",
+        "Send Invitations": "Wyślij Powiadomienie"
     },
     "presetFilters": {
         "planned": "Planowane",
-        "held": "Zatrzymany",
-        "todays": "Dzisiaj"
+        "held"   : "Zatrzymany",
+        "todays" : "Dzisiaj"
     }
 }

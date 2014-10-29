@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Nome",
+    "fields"  : {
+        "name" : "Nome",
         "roles": "Regras"
     },
-    "links": {
+    "links"   : {
         "users": "Usuários",
         "teams": "Times"
     },
-    "labels": {
-        "Access": "Acesso",
+    "labels"  : {
+        "Access"     : "Acesso",
         "Create Role": "Criar Regra"
     },
-    "options": {
+    "options" : {
         "accessList": {
-            "not-set": "indefinido",
-            "enabled": "habilitado",
+            "not-set" : "indefinido",
+            "enabled" : "habilitado",
             "disabled": "desabilitado"
         },
-        "levelList": {
-            "all": "tudo",
+        "levelList" : {
+            "all" : "tudo",
             "team": "time",
-            "own": "próprio",
-            "no": "nenhum"
+            "own" : "próprio",
+            "no"  : "nenhum"
         }
     },
-    "actions": {
-        "read": "Ler",
-        "edit": "Editar",
+    "actions" : {
+        "read"  : "Ler",
+        "edit"  : "Editar",
         "delete": "Excluir"
     },
     "messages": {

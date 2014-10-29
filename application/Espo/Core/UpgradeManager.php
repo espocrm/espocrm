@@ -19,21 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
-
-class UpgradeManager extends Upgrades\Base
+class UpgradeManager extends
+    Upgrades\Base
 {
+
     protected $name = 'Upgrade';
 
     protected $params = array(
         'packagePath' => 'data/upload/upgrades',
-
         'scriptNames' => array(
             'before' => 'BeforeUpgrade',
             'after' => 'AfterUpgrade',
         )
     );
+
 }

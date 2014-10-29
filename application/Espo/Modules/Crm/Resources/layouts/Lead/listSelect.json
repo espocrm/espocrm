@@ -1,1 +1,6 @@
-[{"name":"name","link":true},{"name":"website"},{"name":"emailAddress"}]
+[{"name"  : "name",
+    "link": true
+},
+    {"name": "website"},
+    {"name": "emailAddress"}
+]

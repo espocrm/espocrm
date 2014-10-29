@@ -1,34 +1,34 @@
 {
-    "fields": {
-        "name": "Полное имя",
-        "emailAddress": "E-mail",
-        "title": "Должность",
-        "account": "Организация",
-        "accounts": "Организации",
-        "phoneNumber": "Телефон",
-        "accountType": "Тип организации",
-        "doNotCall": "Не звонить",
-        "address": "Адрес",
+    "fields" : {
+        "name"           : "Полное имя",
+        "emailAddress"   : "E-mail",
+        "title"          : "Должность",
+        "account"        : "Организация",
+        "accounts"       : "Организации",
+        "phoneNumber"    : "Телефон",
+        "accountType"    : "Тип организации",
+        "doNotCall"      : "Не звонить",
+        "address"        : "Адрес",
         "opportunityRole": "Роль в возможности",
-        "accountRole": "Роль",
-        "description": "Описание",
-        "owner":"Пригласивший"
+        "accountRole"    : "Роль",
+        "description"    : "Описание",
+        "owner"          : "Пригласивший"
     },
-    "links": {
+    "links"  : {
         "orders": "Заказы",
-        "cases": "Обращения"
+        "cases" : "Обращения"
     },
-    "labels": {
+    "labels" : {
         "Create Contact": "Создать контакт"
     },
     "options": {
         "opportunityRole": {
-            "": "--Нет--",
+            ""              : "--Нет--",
             "Decision Maker": "Принимающий решение",
-            "Evaluator": "Оценщик",
-            "Influencer": "Консультант"
+            "Evaluator"     : "Оценщик",
+            "Influencer"    : "Консультант"
         },
-        "salutationName": {
+        "salutationName" : {
             "options": {
                 "Жен": "Жен. ",
                 "Муж": "Муж. "

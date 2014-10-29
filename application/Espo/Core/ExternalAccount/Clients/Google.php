@@ -19,13 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\ExternalAccount\Clients;
 
-use \Espo\Core\Exceptions\Error;
-
-class Google extends OAuth2Abstract
+class Google extends
+    OAuth2Abstract
 {
+
     protected function getPingUrl()
     {
         return 'https://www.googleapis.com/calendar/v3/users/me/calendarList';

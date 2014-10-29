@@ -1,17 +1,34 @@
 [
     {
-        "label":false,
-        "rows":[
-            [{"name":"file"}, {"name":"source"}],
-            [{"name":"name"}, {"name":"status"}],
-            [{"name":"type"}, false]
+        "label": false,
+        "rows" : [
+            [
+                {"name": "file"},
+                {"name": "source"}
+            ],
+            [
+                {"name": "name"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "type"},
+                false
+            ]
         ]
     },
     {
         "label": "Details",
-        "rows": [
-            [{"name":"publishDate"}, {"name":"expirationDate"}],
-            [{"name":"description", "fullWidth": true}]
+        "rows" : [
+            [
+                {"name": "publishDate"},
+                {"name": "expirationDate"}
+            ],
+            [
+                {
+                    "name": "description",
+                    "fullWidth": true
+                }
+            ]
         ]
     }
 ]

@@ -1,318 +1,318 @@
 [
-  {
-    "route":"/",
-    "method":"get",
-    "params":"<h1>EspoCRM REST API<\/h1>"
-  },
-
-  {
-    "route":"/App/user",
-    "method":"get",
-    "params":{
-        "controller":"App",
-        "action":"user"
-    }
-  },
-
-  {
-    "route":"/Metadata",
-    "method":"get",
-    "params":{
-        "controller":"Metadata"
-    }
-  },
-
-  {
-    "route":"I18n",
-    "method":"get",
-    "params":{
-        "controller":"I18n"
-    }
-  },
-
-  {
-    "route":"/Settings",
-    "method":"get",
-    "params":{
-        "controller":"Settings"
+    {
+        "route" : "/",
+        "method": "get",
+        "params": "<h1>EspoCRM REST API<\/h1>"
     },
-    "conditions":{
-        "auth":false
-    }
-  },
 
-  {
-    "route":"/Settings",
-    "method":"patch",
-    "params":{
-        "controller":"Settings"
-    }
-  },
+    {
+        "route" : "/App/user",
+        "method": "get",
+        "params": {
+            "controller": "App",
+            "action"    : "user"
+        }
+    },
 
-  {
-    "route":"/Stream",
-    "method":"get",
-    "params":{
-        "controller":"Stream",
-        "action":"list",
-        "scope": "User"
-    }
-  },
+    {
+        "route" : "/Metadata",
+        "method": "get",
+        "params": {
+            "controller": "Metadata"
+        }
+    },
 
-  {
-    "route":"/GlobalSearch/:query",
-    "method":"get",
-    "params":{
-        "controller":"GlobalSearch",
-        "action":"search",
-        "query": ":query"
-    }
-  },
+    {
+        "route" : "I18n",
+        "method": "get",
+        "params": {
+            "controller": "I18n"
+        }
+    },
 
-  {
-    "route":"/:controller/action/:action",
-    "method":"post",
-    "params":{
-        "controller":":controller",
-        "action":":action"
-    }
-  },
+    {
+        "route"     : "/Settings",
+        "method"    : "get",
+        "params"    : {
+            "controller": "Settings"
+        },
+        "conditions": {
+            "auth": false
+        }
+    },
 
-  {
-    "route":"/:controller/action/:action",
-    "method":"put",
-    "params":{
-        "controller":":controller",
-        "action":":action"
-    }
-  },
+    {
+        "route" : "/Settings",
+        "method": "patch",
+        "params": {
+            "controller": "Settings"
+        }
+    },
 
-  {
-    "route":"/:controller/action/:action",
-    "method":"get",
-    "params":{
-        "controller":":controller",
-        "action":":action"
-    }
-  },
+    {
+        "route" : "/Stream",
+        "method": "get",
+        "params": {
+            "controller": "Stream",
+            "action"    : "list",
+            "scope"     : "User"
+        }
+    },
 
-  {
-    "route":"/:controller/layout/:name",
-    "method":"get",
-    "params":{
-        "controller":"Layout",
-        "scope":":controller"
-    }
-  },
+    {
+        "route" : "/GlobalSearch/:query",
+        "method": "get",
+        "params": {
+            "controller": "GlobalSearch",
+            "action"    : "search",
+            "query"     : ":query"
+        }
+    },
 
-  {
-    "route":"/:controller/layout/:name",
-    "method":"put",
-    "params":{
-        "controller":"Layout",
-        "scope":":controller"
-    }
-  },
+    {
+        "route" : "/:controller/action/:action",
+        "method": "post",
+        "params": {
+            "controller": ":controller",
+            "action"    : ":action"
+        }
+    },
 
-  {
-    "route":"/:controller/layout/:name",
-    "method":"patch",
-    "params":{
-        "controller":"Layout",
-        "scope":":controller"
-    }
-  },
+    {
+        "route" : "/:controller/action/:action",
+        "method": "put",
+        "params": {
+            "controller": ":controller",
+            "action"    : ":action"
+        }
+    },
 
-  {
-    "route":"/Admin/rebuild",
-    "method":"get",
-    "params":{
-        "controller":"Admin",
-        "action":"rebuild"
-    }
-  },
+    {
+        "route" : "/:controller/action/:action",
+        "method": "get",
+        "params": {
+            "controller": ":controller",
+            "action"    : ":action"
+        }
+    },
 
-  {
-    "route":"/Admin/clearCache",
-    "method":"get",
-    "params":{
-        "controller":"Admin",
-        "action":"clearCache"
-    }
-  },
+    {
+        "route" : "/:controller/layout/:name",
+        "method": "get",
+        "params": {
+            "controller": "Layout",
+            "scope"     : ":controller"
+        }
+    },
 
-  {
-    "route":"/Admin/jobs",
-    "method":"get",
-    "params":{
-        "controller":"Admin",
-        "action":"jobs"
-    }
-  },
+    {
+        "route" : "/:controller/layout/:name",
+        "method": "put",
+        "params": {
+            "controller": "Layout",
+            "scope"     : ":controller"
+        }
+    },
 
-  {
-    "route":"/Admin/fieldManager/:scope/:name",
-    "method":"get",
-    "params":{
-        "controller":"FieldManager",
-        "action":"read",
-        "scope":":scope",
-        "name":":name"
-    }
-  },
+    {
+        "route" : "/:controller/layout/:name",
+        "method": "patch",
+        "params": {
+            "controller": "Layout",
+            "scope"     : ":controller"
+        }
+    },
 
-  {
-    "route":"/Admin/fieldManager/:scope",
-    "method":"post",
-    "params":{
-        "controller":"FieldManager",
-        "action":"create",
-        "scope":":scope"
-    }
-  },
+    {
+        "route" : "/Admin/rebuild",
+        "method": "get",
+        "params": {
+            "controller": "Admin",
+            "action"    : "rebuild"
+        }
+    },
 
-  {
-    "route":"/Admin/fieldManager/:scope/:name",
-    "method":"put",
-    "params":{
-        "controller":"FieldManager",
-        "action":"update",
-        "scope":":scope",
-        "name":":name"
-    }
-  },
+    {
+        "route" : "/Admin/clearCache",
+        "method": "get",
+        "params": {
+            "controller": "Admin",
+            "action"    : "clearCache"
+        }
+    },
 
-  {
-    "route":"/Admin/fieldManager/:scope/:name",
-    "method":"delete",
-    "params":{
-        "controller":"FieldManager",
-        "action":"delete",
-        "scope":":scope",
-        "name":":name"
-    }
-  },
+    {
+        "route" : "/Admin/jobs",
+        "method": "get",
+        "params": {
+            "controller": "Admin",
+            "action"    : "jobs"
+        }
+    },
 
-  {
-    "route":"/:controller/:id",
-    "method":"get",
-    "params":{
-        "controller":":controller",
-        "action":"read",
-        "id":":id"
-    }
-  },
+    {
+        "route" : "/Admin/fieldManager/:scope/:name",
+        "method": "get",
+        "params": {
+            "controller": "FieldManager",
+            "action"    : "read",
+            "scope"     : ":scope",
+            "name"      : ":name"
+        }
+    },
 
-  {
-    "route":"/:controller",
-    "method":"get",
-    "params":{
-        "controller":":controller",
-        "action":"index"
-    }
-  },
+    {
+        "route" : "/Admin/fieldManager/:scope",
+        "method": "post",
+        "params": {
+            "controller": "FieldManager",
+            "action"    : "create",
+            "scope"     : ":scope"
+        }
+    },
 
-  {
-    "route":"/:controller",
-    "method":"post",
-    "params":{
-        "controller":":controller",
-        "action":"create"
-    }
-  },
+    {
+        "route" : "/Admin/fieldManager/:scope/:name",
+        "method": "put",
+        "params": {
+            "controller": "FieldManager",
+            "action"    : "update",
+            "scope"     : ":scope",
+            "name"      : ":name"
+        }
+    },
 
-  {
-    "route":"/:controller/:id",
-    "method":"put",
-    "params":{
-        "controller":":controller",
-        "action":"update",
-        "id":":id"
-    }
-  },
+    {
+        "route" : "/Admin/fieldManager/:scope/:name",
+        "method": "delete",
+        "params": {
+            "controller": "FieldManager",
+            "action"    : "delete",
+            "scope"     : ":scope",
+            "name"      : ":name"
+        }
+    },
 
-  {
-    "route":"/:controller/:id",
-    "method":"patch",
-    "params":{
-        "controller":":controller",
-        "action":"patch",
-        "id":":id"
-    }
-  },
+    {
+        "route" : "/:controller/:id",
+        "method": "get",
+        "params": {
+            "controller": ":controller",
+            "action"    : "read",
+            "id"        : ":id"
+        }
+    },
 
-  {
-    "route":"/:controller/:id",
-    "method":"delete",
-    "params":{
-        "controller":":controller",
-        "action":"delete",
-        "id":":id"
-    }
-  },
+    {
+        "route" : "/:controller",
+        "method": "get",
+        "params": {
+            "controller": ":controller",
+            "action"    : "index"
+        }
+    },
 
-  {
-    "route":"/:controller/:id/stream",
-    "method":"get",
-    "params":{
-        "controller":"Stream",
-        "action":"list",
-        "id":":id",
-        "scope":":controller"
-    }
-  },
+    {
+        "route" : "/:controller",
+        "method": "post",
+        "params": {
+            "controller": ":controller",
+            "action"    : "create"
+        }
+    },
 
-  {
-    "route":"/:controller/:id/subscription",
-    "method":"put",
-    "params":{
-        "controller":":controller",
-        "id":":id",
-        "action":"follow"
-    }
-  },
+    {
+        "route" : "/:controller/:id",
+        "method": "put",
+        "params": {
+            "controller": ":controller",
+            "action"    : "update",
+            "id"        : ":id"
+        }
+    },
 
-  {
-    "route":"/:controller/:id/subscription",
-    "method":"delete",
-    "params":{
-        "controller":":controller",
-        "id":":id",
-        "action":"unfollow"
-    }
-  },
+    {
+        "route" : "/:controller/:id",
+        "method": "patch",
+        "params": {
+            "controller": ":controller",
+            "action"    : "patch",
+            "id"        : ":id"
+        }
+    },
 
-  {
-    "route":"/:controller/:id/:link",
-    "method":"get",
-    "params":{
-        "controller":":controller",
-        "action":"listLinked",
-        "id":":id",
-        "link":":link"
-    }
-  },
+    {
+        "route" : "/:controller/:id",
+        "method": "delete",
+        "params": {
+            "controller": ":controller",
+            "action"    : "delete",
+            "id"        : ":id"
+        }
+    },
 
-  {
-    "route":"/:controller/:id/:link",
-    "method":"post",
-    "params":{
-        "controller":":controller",
-        "action":"createLink",
-        "id":":id",
-        "link":":link"
-    }
-  },
+    {
+        "route" : "/:controller/:id/stream",
+        "method": "get",
+        "params": {
+            "controller": "Stream",
+            "action"    : "list",
+            "id"        : ":id",
+            "scope"     : ":controller"
+        }
+    },
 
-  {
-    "route":"/:controller/:id/:link",
-    "method":"delete",
-    "params":{
-        "controller":":controller",
-        "action":"removeLink",
-        "id":":id",
-        "link":":link"
+    {
+        "route" : "/:controller/:id/subscription",
+        "method": "put",
+        "params": {
+            "controller": ":controller",
+            "id"        : ":id",
+            "action"    : "follow"
+        }
+    },
+
+    {
+        "route" : "/:controller/:id/subscription",
+        "method": "delete",
+        "params": {
+            "controller": ":controller",
+            "id"        : ":id",
+            "action"    : "unfollow"
+        }
+    },
+
+    {
+        "route" : "/:controller/:id/:link",
+        "method": "get",
+        "params": {
+            "controller": ":controller",
+            "action"    : "listLinked",
+            "id"        : ":id",
+            "link"      : ":link"
+        }
+    },
+
+    {
+        "route" : "/:controller/:id/:link",
+        "method": "post",
+        "params": {
+            "controller": ":controller",
+            "action"    : "createLink",
+            "id"        : ":id",
+            "link"      : ":link"
+        }
+    },
+
+    {
+        "route" : "/:controller/:id/:link",
+        "method": "delete",
+        "params": {
+            "controller": ":controller",
+            "action"    : "removeLink",
+            "id"        : ":id",
+            "link"      : ":link"
+        }
     }
-  }
 
 ]

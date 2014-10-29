@@ -1,38 +1,37 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "number": "Número",
-        "status": "Estado",
-        "account": "Cuenta",
-        "contact": "Contacto",
-        "priority": "Prioridad",
-        "type": "Tipo",
+    "fields" : {
+        "name"       : "Nombre",
+        "number"     : "Número",
+        "status"     : "Estado",
+        "account"    : "Cuenta",
+        "contact"    : "Contacto",
+        "priority"   : "Prioridad",
+        "type"       : "Tipo",
         "description": "Descripción"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "status": {
-            "New": "Nuevo",
-            "Assigned": "Asignado",
-            "Pending": "Pendiente",
-            "Closed": "Cerrado",
-            "Rejected": "Rechazado",
+        "status"  : {
+            "New"      : "Nuevo",
+            "Assigned" : "Asignado",
+            "Pending"  : "Pendiente",
+            "Closed"   : "Cerrado",
+            "Rejected" : "Rechazado",
             "Duplicate": "Duplicado"
         },
-        "priority" : {
-            "Low": "Baja",
+        "priority": {
+            "Low"   : "Baja",
             "Normal": "Normal",
-            "High": "Alta",
+            "High"  : "Alta",
             "Urgent": "Urgente"
         },
-        "type": {
+        "type"    : {
             "Question": "Pregunta",
             "Incident": "Incidente",
-            "Problem": "Problema"
+            "Problem" : "Problema"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Case": "Crear Caso"
     }
 }

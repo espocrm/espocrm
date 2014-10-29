@@ -1,42 +1,41 @@
 {
-    "fields": {
-        "name": "Nome",
-        "number": "Número",
-        "status": "Status",
-        "account": "Conta",
-        "contact": "Contato",
-        "priority": "Prioridade",
-        "type": "Tipo",
+    "fields"       : {
+        "name"       : "Nome",
+        "number"     : "Número",
+        "status"     : "Status",
+        "account"    : "Conta",
+        "contact"    : "Contato",
+        "priority"   : "Prioridade",
+        "type"       : "Tipo",
         "description": "Descrição"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Novo",
-            "Assigned": "Designado",
-            "Pending": "Pendente",
-            "Closed": "Fechado",
-            "Rejected": "Rejeitado",
+    "links"        : {},
+    "options"      : {
+        "status"  : {
+            "New"      : "Novo",
+            "Assigned" : "Designado",
+            "Pending"  : "Pendente",
+            "Closed"   : "Fechado",
+            "Rejected" : "Rejeitado",
             "Duplicate": "Duplicado"
         },
         "priority": {
-            "Low": "Baixa",
+            "Low"   : "Baixa",
             "Normal": "Normal",
-            "High": "Alta",
+            "High"  : "Alta",
             "Urgent": "Urgente"
         },
-        "type": {
+        "type"    : {
             "Question": "Questão",
             "Incident": "Incidente",
-            "Problem": "Problema"
+            "Problem" : "Problema"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Case": "Criar Atendimento"
     },
     "presetFilters": {
-        "open": "Aberto",
+        "open"  : "Aberto",
         "closed": "Fechado"
     }
 }

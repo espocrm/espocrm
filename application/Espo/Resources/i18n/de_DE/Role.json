@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Name",
+    "fields"  : {
+        "name" : "Name",
         "roles": "Rollen"
     },
-    "links": {
+    "links"   : {
         "users": "Benutzer",
         "teams": "Teams"
     },
-    "labels": {
-        "Access": "Zugang",
+    "labels"  : {
+        "Access"     : "Zugang",
         "Create Role": "Neue Rolle"
     },
-    "options": {
+    "options" : {
         "accessList": {
-            "not-set": "nicht gesetzt",
-            "enabled": "Aktiv",
+            "not-set" : "nicht gesetzt",
+            "enabled" : "Aktiv",
             "disabled": "Inaktiv"
         },
-        "levelList": {
-            "all": "Alle",
+        "levelList" : {
+            "all" : "Alle",
             "team": "Team",
-            "own": "Eigene",
-            "no": "Nein"
+            "own" : "Eigene",
+            "no"  : "Nein"
         }
     },
-    "actions": {
-        "read": "Lesen",
-        "edit": "Bearbeiten",
+    "actions" : {
+        "read"  : "Lesen",
+        "edit"  : "Bearbeiten",
         "delete": "Löschen"
     },
     "messages": {

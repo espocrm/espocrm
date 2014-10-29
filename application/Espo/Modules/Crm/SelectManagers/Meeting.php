@@ -18,15 +18,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Meeting extends \Espo\Core\SelectManagers\Base
+use Espo\Core\SelectManagers\Base;
+
+class Meeting extends
+    Base
 {
-    
+
     protected function getBoolFilterWhereOnlyMy()
-    {        
+    {
         return array(
             'type' => 'linkedWith',
             'field' => 'users',

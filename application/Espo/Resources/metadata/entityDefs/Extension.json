@@ -1,41 +1,41 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"       : {
+            "type"    : "varchar",
             "required": true
         },
-        "version": {
-            "type": "varchar",
-            "required": true,
+        "version"    : {
+            "type"     : "varchar",
+            "required" : true,
             "maxLength": 50
         },
-        "fileList": {
+        "fileList"   : {
             "type": "jsonArray"
         },
         "description": {
             "type": "text"
         },
         "isInstalled": {
-            "type": "bool",
+            "type"   : "bool",
             "default": false
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"  : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"  : {
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
+    "links"     : {
         "createdBy": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

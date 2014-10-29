@@ -1,25 +1,24 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"   : {
+            "type"    : "varchar",
             "required": true
         },
-        "lower": {
-            "type": "varchar",
+        "lower"  : {
+            "type"    : "varchar",
             "required": true,
-            "index": true
+            "index"   : true
         },
         "invalid": {
             "type": "bool"
         },
-        "optOut": {
+        "optOut" : {
             "type": "bool"
         }
     },
-    "links": {
-    },
+    "links"     : {},
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

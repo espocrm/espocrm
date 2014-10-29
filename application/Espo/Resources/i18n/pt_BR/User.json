@@ -1,35 +1,35 @@
 {
-    "fields": {
-        "name": "Nome",
-        "userName": "Usuário",
-        "title": "Título",
-        "isAdmin": "Administrador",
-        "defaultTeam": "Time Padrão",
-        "emailAddress": "E-mail",
-        "phoneNumber": "Telefone",
-        "roles": "Regras",
-        "password": "Senha",
+    "fields"  : {
+        "name"           : "Nome",
+        "userName"       : "Usuário",
+        "title"          : "Título",
+        "isAdmin"        : "Administrador",
+        "defaultTeam"    : "Time Padrão",
+        "emailAddress"   : "E-mail",
+        "phoneNumber"    : "Telefone",
+        "roles"          : "Regras",
+        "password"       : "Senha",
         "passwordConfirm": "Confirmação da Senha",
-        "newPassword": "Novo Password"
+        "newPassword"    : "Novo Password"
     },
-    "links": {
+    "links"   : {
         "teams": "Times",
         "roles": "Regras"
     },
-    "labels": {
-        "Create User": "Criar Usuário",
-        "Generate": "Gerar",
-        "Access": "Acesso",
-        "Preferences": "Preferências",
+    "labels"  : {
+        "Create User"    : "Criar Usuário",
+        "Generate"       : "Gerar",
+        "Access"         : "Acesso",
+        "Preferences"    : "Preferências",
         "Change Password": "Trocar Senha"
     },
     "tooltips": {
         "defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão."
     },
     "messages": {
-        "passwordWillBeSent": "A senha será enviada para o email do usuário.",
+        "passwordWillBeSent"     : "A senha será enviada para o email do usuário.",
         "accountInfoEmailSubject": "Informações da Conta",
-        "accountInfoEmailBody": "Informações da sua conta:\n\nUsuário: {userName}\nSenha: {password}\n\n{siteUrl}",
-        "passwordChanged": "A senha foi atualizada"
+        "accountInfoEmailBody"   : "Informações da sua conta:\n\nUsuário: {userName}\nSenha: {password}\n\n{siteUrl}",
+        "passwordChanged"        : "A senha foi atualizada"
     }
 }

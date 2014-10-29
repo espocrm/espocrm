@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"name":"Contact",
-		"label":"Custom"
-	}		
+    "fields": {
+        "name" : "Contact",
+        "label": "Custom"
+    }
 }

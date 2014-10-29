@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "Imię",
-        "status": "Status",
-        "job": "Zadanie",
+    "fields" : {
+        "name"      : "Imię",
+        "status"    : "Status",
+        "job"       : "Zadanie",
         "scheduling": "Scheduling (crontab notation)"
     },
-    "links": {
+    "links"  : {
         "log": "Log"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Utwórz zaplanowane działania"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Sprawdź pocztę przychodzącą",
-            "Cleanup": "Wyczyść"
+            "Cleanup"           : "Wyczyść"
         },
         "cronSetup": {
-            "linux": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
-            "mac": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
+            "linux"  : "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
+            "mac"    : "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
             "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:",
             "default": "Note: Add this command to Cron Job (Scheduled Task):"
         },
-        "status": {
-            "Active": "Aktywny",
+        "status"   : {
+            "Active"  : "Aktywny",
             "Inactive": "Nie Aktywny"
         }
     }

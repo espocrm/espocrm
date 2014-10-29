@@ -18,12 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-class ScheduledJobLogRecord extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Forbidden;
+
+class ScheduledJobLogRecord extends
+    Record
 {
+
     protected function checkControllerAccess()
     {
         if (!$this->getUser()->isAdmin()) {

@@ -19,28 +19,46 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Container;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repositories\RDB;
+use Espo\Entities\User;
 
 class Auth
 {
+
+    /**
+     * @var Container
+
+     */
     protected $container;
 
+    /**
+     * @var Authentication\Espo
+
+     */
     protected $authentication;
 
+    /**
+     * @var Config
+
+     */
     protected $config;
 
+    /**
+     * @var EntityManager
+
+     */
     protected $entityManager;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-
         $this->entityManager = $this->container->get('entityManager');
         $this->config = $this->container->get('config');
-
         $authenticationMethod = $this->config->get('authenticationMethod', 'Espo');
         $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
         $this->authentication = new $authenticationClassName($this->config, $this->entityManager, $this);
@@ -48,34 +66,35 @@ class Auth
 
     public function useNoAuth($isAdmin = false)
     {
-        $entityManager = $this->container->get('entityManager');
-
+        /**
+         * @var User $user
+         */
+        //$entityManager = $this->container->get('entityManager');
+        $entityManager = $this->entityManager;
         $user = $entityManager->getRepository('User')->get('system');
         if (!$user) {
             throw new Error('System user is not found');
         }
-
         $user->set('isAdmin', $isAdmin);
-
         $entityManager->setUser($user);
         $this->container->setUser($user);
     }
 
     public function login($username, $password)
     {
-        $GLOBALS['log']->debug('AUTH: Try to authenticate');
-
+        /**
+         * @var Log  $log
+         * @var User $user
+         */
+        $log = $GLOBALS['log'];
+        $log->debug('AUTH: Try to authenticate');
         $entityManager = $this->entityManager;
-
         $authToken = $entityManager->getRepository('AuthToken')->where(array('token' => $password))->findOne();
-
         $user = $this->authentication->login($username, $password, $authToken);
-
         if ($user) {
             $entityManager->setUser($user);
             $this->container->setUser($user);
-            $GLOBALS['log']->debug('AUTH: Result of authenticate is [true]');
-
+            $log->debug('AUTH: Result of authenticate is [true]');
             if (!$authToken) {
                 $authToken = $entityManager->getEntity('AuthToken');
                 $token = $this->createToken($user);
@@ -84,16 +103,19 @@ class Auth
                 $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
                 $authToken->set('userId', $user->id);
             }
-
             $authToken->set('lastAccess', date('Y-m-d H:i:s'));
-
             $entityManager->saveEntity($authToken);
             $user->set('token', $authToken->get('token'));
-
             return true;
         }
     }
 
+    /**
+     * @param User $user
+     *
+     * @return string
+
+     */
     protected function createToken($user)
     {
         return md5(uniqid($user->get('id')));
@@ -101,9 +123,12 @@ class Auth
 
     public function destroyAuthToken($token)
     {
-        $entityManager = $this->container->get('entityManager');
-
-        $authToken = $entityManager->getRepository('AuthToken')->where(array('token' => $token))->findOne();
+        /**
+         * @var RDB $authTokenRepo
+         */
+        $entityManager = $this->entityManager;
+        $authTokenRepo = $entityManager->getRepository('AuthToken');
+        $authToken = $authTokenRepo->where(array('token' => $token))->findOne();
         if ($authToken) {
             $entityManager->removeEntity($authToken);
             return true;

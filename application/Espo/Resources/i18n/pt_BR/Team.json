@@ -1,15 +1,15 @@
 {
-    "fields": {
-        "name": "Nome",
+    "fields"  : {
+        "name" : "Nome",
         "roles": "Regras"
     },
-    "links": {
+    "links"   : {
         "users": "Usuários"
     },
     "tooltips": {
         "roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas."
     },
-    "labels": {
+    "labels"  : {
         "Create Team": "Criar Time"
     }
 }

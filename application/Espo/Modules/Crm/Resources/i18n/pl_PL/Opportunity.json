@@ -1,39 +1,39 @@
 {
-    "fields": {
-        "name": "Imię",
-        "account": "Konto",
-        "stage": "Estap",
-        "amount": "Wartość",
-        "probability": "Prawdopodobieństwo, %",
-        "leadSource": "Zródło Potencjalnego Kontaktu",
-        "doNotCall": "Nie Dzwoń",
-        "closeDate": "Data Zamknięcia",
-        "contacts": "Kontakty",
-        "description": "Opis ",
+    "fields"       : {
+        "name"           : "Imię",
+        "account"        : "Konto",
+        "stage"          : "Estap",
+        "amount"         : "Wartość",
+        "probability"    : "Prawdopodobieństwo, %",
+        "leadSource"     : "Zródło Potencjalnego Kontaktu",
+        "doNotCall"      : "Nie Dzwoń",
+        "closeDate"      : "Data Zamknięcia",
+        "contacts"       : "Kontakty",
+        "description"    : "Opis ",
         "amountConverted": "Amount (converted)"
     },
-    "links": {
+    "links"        : {
         "contacts": "Kontakty"
     },
-    "options": {
+    "options"      : {
         "stage": {
-            "Prospecting": "I Spotkanie",
-            "Qualification": "Kwalifikacja",
-            "Needs Analysis": "Dodatkowa Analiza",
-            "Value Proposition": "Oferta Produktowa",
-            "Id. Decision Makers": "Oferta przekazna do osoby decyzyjnej",
-            "Perception Analysis": "Perception Analysis",
+            "Prospecting"         : "I Spotkanie",
+            "Qualification"       : "Kwalifikacja",
+            "Needs Analysis"      : "Dodatkowa Analiza",
+            "Value Proposition"   : "Oferta Produktowa",
+            "Id. Decision Makers" : "Oferta przekazna do osoby decyzyjnej",
+            "Perception Analysis" : "Perception Analysis",
             "Proposal/Price Quote": "Oferta Cenowa",
-            "Negotiation/Review": "Negocjacje ",
-            "Closed Won": "Zakończone Wygrane",
-            "Closed Lost": "Zakończone Przegrane" 
+            "Negotiation/Review"  : "Negocjacje ",
+            "Closed Won"          : "Zakończone Wygrane",
+            "Closed Lost"         : "Zakończone Przegrane"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Opportunity": "Utwórz Szanse"
     },
     "presetFilters": {
         "open": "Otwórz",
-        "won": "Wygrane"
+        "won" : "Wygrane"
     }
 }

@@ -1,15 +1,14 @@
 {
     "fields": {
-        "name": "Imię",
-        "status": "Status",
-        "isHtml": "Format HTML",
-        "body": "Treść",
-        "subject": "Temat",
+        "name"       : "Imię",
+        "status"     : "Status",
+        "isHtml"     : "Format HTML",
+        "body"       : "Treść",
+        "subject"    : "Temat",
         "attachments": "Załącznik",
         "insertField": ""
     },
-    "links": {
-    },
+    "links" : {},
     "labels": {
         "Create EmailTemplate": "Utwórz Szkic Wiadomości"
     }

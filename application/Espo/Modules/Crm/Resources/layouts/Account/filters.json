@@ -1,1 +1,6 @@
-["billingAddress","sicCode","industry","type"]
+[
+    "billingAddress",
+    "sicCode",
+    "industry",
+    "type"
+]

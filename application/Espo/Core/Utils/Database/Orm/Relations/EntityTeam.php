@@ -19,16 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class EntityTeam extends Base
+class EntityTeam extends
+    Base
 {
+
     protected function load($linkName, $entityName)
     {
         $linkParams = $this->getLinkParams();
         $foreignEntityName = $this->getForeignEntityName();
-
         return array(
             $entityName => array(
                 'relations' => array(
@@ -54,5 +54,4 @@ class EntityTeam extends Base
             ),
         );
     }
-
 }

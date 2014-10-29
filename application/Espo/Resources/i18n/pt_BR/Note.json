@@ -1,6 +1,6 @@
 {
     "fields": {
-        "post": "Postagem",
+        "post"       : "Postagem",
         "attachments": "Anexos"
     }
 }

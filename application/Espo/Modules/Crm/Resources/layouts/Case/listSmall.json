@@ -1,1 +1,13 @@
-[{"name":"number","width":18},{"name":"name","width":35,"link":true},{"name":"status"},{"name":"priority"}]
+[
+    {
+        "name" : "number",
+        "width": 18
+    },
+    {
+        "name" : "name",
+        "width": 35,
+        "link" : true
+    },
+    {"name": "status"},
+    {"name": "priority"}
+]

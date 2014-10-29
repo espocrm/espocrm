@@ -19,46 +19,41 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace tests\Espo\Core\Utils;
 
+use Espo\Core\Utils\PasswordHash;
 use tests\ReflectionHelper;
 
-class PasswordHashTest extends \PHPUnit_Framework_TestCase
+class PasswordHashTest extends
+    \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var PasswordHash
+     */
     protected $object;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject[]
+     */
     protected $objects;
 
+    /**
+     * @var ReflectionHelper
+     */
     protected $reflection;
 
     protected $salt = 'bdaff81c7b8db54d';
 
-    protected function setUp()
-    {
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Utils\PasswordHash($this->objects['config']);
-
-        $this->reflection = new ReflectionHelper($this->object);
-    }
-
-    protected function tearDown()
-    {
-        $this->object = NULL;
-    }
-
     public function testGenerateSalt()
     {
         $salt = $this->object->generateSalt();
-
         $this->assertEquals(16, strlen($salt));
     }
 
     public function testNormalizeSalt()
     {
         $salt = $this->object->generateSalt();
-
         $result = '$6$' . $salt . '$';
         $this->assertEquals($result, $this->reflection->invokeMethod('normalizeSalt', array($salt)));
     }
@@ -69,7 +64,6 @@ class PasswordHashTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue($this->salt));
-
         $result = '$6$' . $this->salt . '$';
         $this->assertEquals($result, $this->reflection->invokeMethod('getSalt'));
     }
@@ -77,20 +71,29 @@ class PasswordHashTest extends \PHPUnit_Framework_TestCase
     public function testGetSaltException()
     {
         $this->setExpectedException('\Espo\Core\Exceptions\Error');
-
         $this->reflection->invokeMethod('getSalt');
     }
 
     public function testHash()
     {
         $password = 'test-password';
-
         $this->objects['config']
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue($this->salt));
-
         $result = '4gDlJKdkj/MMo2axSwvvWUv0ktSUeGpis/wLcpL8aEBUxXTVa.rxFb1cfKzTiSE4ookBdNpLMheJmtZqzDSRA0';
         $this->assertEquals($result, $this->object->hash($password));
+    }
+
+    protected function setUp()
+    {
+        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $this->object = new PasswordHash($this->objects['config']);
+        $this->reflection = new ReflectionHelper($this->object);
+    }
+
+    protected function tearDown()
+    {
+        $this->object = null;
     }
 }

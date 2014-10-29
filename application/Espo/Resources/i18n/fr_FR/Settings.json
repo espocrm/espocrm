@@ -1,52 +1,52 @@
 {
-    "fields": {
-        "useCache": "Utiliser le Cache",
-        "dateFormat": "Format de Date",
-        "timeFormat": "Format de l'Heure",
-        "timeZone": "Fuseau Horaire",
-        "weekStart": "Premier Jour de la Semaine",
+    "fields" : {
+        "useCache"         : "Utiliser le Cache",
+        "dateFormat"       : "Format de Date",
+        "timeFormat"       : "Format de l'Heure",
+        "timeZone"         : "Fuseau Horaire",
+        "weekStart"        : "Premier Jour de la Semaine",
         "thousandSeparator": "Séparateur de Milliers",
-        "decimalMark": "Marqueur Décimal",
-        "defaultCurrency": "Monnaie Courante",
-        "currencyList": "Liste des Monnaies",
-        "language": "Langue",
-        
+        "decimalMark"      : "Marqueur Décimal",
+        "defaultCurrency"  : "Monnaie Courante",
+        "currencyList"     : "Liste des Monnaies",
+        "language"         : "Langue",
+
         "companyLogo": "Logo de la Société",
-        
-        "smtpServer": "Serveur",
-        "smtpPort": "Porte",
-        "smtpAuth": "Authorization",
-        "smtpSecurity": "Sécurité",
-        "smtpUsername": "Nom d'utilisateur",
-        "emailAddress": "Email",
-        "smtpPassword": "Mot de Passe",
-        "outboundEmailFromName": "Nom de l'Expéditeur",
+
+        "smtpServer"              : "Serveur",
+        "smtpPort"                : "Porte",
+        "smtpAuth"                : "Authorization",
+        "smtpSecurity"            : "Sécurité",
+        "smtpUsername"            : "Nom d'utilisateur",
+        "emailAddress"            : "Email",
+        "smtpPassword"            : "Mot de Passe",
+        "outboundEmailFromName"   : "Nom de l'Expéditeur",
         "outboundEmailFromAddress": "Adresse de l'Emetteur",
-        "outboundEmailIsShared": "Est partagé",
-        
-        "recordsPerPage": "Enregistrements par page",
-        "recordsPerPageSmall": "Records Per Page (Small)",        
-        "tabList": "Tab List",
-        "quickCreateList": "Création Rapide de Liste",
-        
+        "outboundEmailIsShared"   : "Est partagé",
+
+        "recordsPerPage"     : "Enregistrements par page",
+        "recordsPerPageSmall": "Records Per Page (Small)",
+        "tabList"            : "Tab List",
+        "quickCreateList"    : "Création Rapide de Liste",
+
         "exportDelimiter": "Délimiteur de champs (Export)",
-        
-        "authenticationMethod": "Methode d'Authentification",
-        "ldapHost": "Hôte",
-        "ldapPort": "Porte",
-        "ldapAuth": "Authorization",
-        "ldapUsername": "Nom d'utilisateur",
-        "ldapPassword": "Mot de Passe",
-        "ldapBindRequiresDn": "Bind Requert Nom de Domaine",
-        "ldapBaseDn": "Base Nom de Domaine",
-        "ldapAccountCanonicalForm": "Formulaire du Compte Canonique",
-        "ldapAccountDomainName": "Compte du Nom de Domaine",
-        "ldapTryUsernameSplit": "Essayer le Nom d'utilisateur séparé",
-        "ldapCreateEspoUser": "Créer un Utilisateur dans EspoCRM",
-        "ldapSecurity": "Sécurité",
-        "ldapUserLoginFilter": "Filtre de Connexion Utilisateur",
+
+        "authenticationMethod"      : "Methode d'Authentification",
+        "ldapHost"                  : "Hôte",
+        "ldapPort"                  : "Porte",
+        "ldapAuth"                  : "Authorization",
+        "ldapUsername"              : "Nom d'utilisateur",
+        "ldapPassword"              : "Mot de Passe",
+        "ldapBindRequiresDn"        : "Bind Requert Nom de Domaine",
+        "ldapBaseDn"                : "Base Nom de Domaine",
+        "ldapAccountCanonicalForm"  : "Formulaire du Compte Canonique",
+        "ldapAccountDomainName"     : "Compte du Nom de Domaine",
+        "ldapTryUsernameSplit"      : "Essayer le Nom d'utilisateur séparé",
+        "ldapCreateEspoUser"        : "Créer un Utilisateur dans EspoCRM",
+        "ldapSecurity"              : "Sécurité",
+        "ldapUserLoginFilter"       : "Filtre de Connexion Utilisateur",
         "ldapAccountDomainNameShort": "Compte de Nom de Domaine Court",
-        "ldapOptReferrals": "Opt Referrals"
+        "ldapOptReferrals"          : "Opt Referrals"
     },
     "options": {
         "weekStart": {
@@ -54,10 +54,10 @@
             "1": "Lundi"
         }
     },
-    "labels": {
-        "System": "Système",
-        "Locale": "Local",
-        "SMTP": "SMTP",
+    "labels" : {
+        "System"       : "Système",
+        "Locale"       : "Local",
+        "SMTP"         : "SMTP",
         "Configuration": "Configuration"
     }
 }

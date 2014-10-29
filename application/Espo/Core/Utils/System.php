@@ -19,11 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils;
 
 class System
 {
+
     /**
      * Get web server name
      *
@@ -32,13 +32,11 @@ class System
     public function getServerType()
     {
         $serverSoft = $_SERVER['SERVER_SOFTWARE'];
-
         preg_match('/^(.*?)\//i', $serverSoft, $match);
         if (empty($match[1])) {
             preg_match('/^(.*)\/?/i', $serverSoft, $match);
         }
-        $serverName = strtolower( trim($match[1]) );
-
+        $serverName = strtolower(trim($match[1]));
         return $serverName;
     }
 
@@ -67,15 +65,12 @@ class System
                 'NetBSD',
             ),
         );
-
         $sysOS = strtolower(PHP_OS);
-
         foreach ($osList as $osName => $osSystem) {
-            if (preg_match('/^('.implode('|', $osSystem).')/i', $sysOS)) {
+            if (preg_match('/^(' . implode('|', $osSystem) . ')/i', $sysOS)) {
                 return $osName;
             }
         }
-
         return false;
     }
 
@@ -88,7 +83,6 @@ class System
     {
         $bPath = realpath('bootstrap.php');
         $rootDir = dirname($bPath);
-
         return $rootDir;
     }
 
@@ -99,6 +93,6 @@ class System
      */
     public function getPhpBin()
     {
-        return (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
+        return (defined("PHP_BINDIR")) ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
     }
 }

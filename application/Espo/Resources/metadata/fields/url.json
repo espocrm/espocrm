@@ -1,21 +1,21 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"varchar"
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
-      }
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "type":"varchar"
-   }
+    "params"   : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "varchar"
+        },
+        {
+            "name": "maxLength",
+            "type": "int"
+        }
+    ],
+    "filter"   : true,
+    "fieldDefs": {
+        "type": "varchar"
+    }
 }

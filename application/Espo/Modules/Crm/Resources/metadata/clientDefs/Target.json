@@ -1,18 +1,18 @@
 {
-   "controller": "Controllers.Record",
-   "views":{
-      "detail":"Crm:Target.Detail"
-   },
-   "menu":{
-      "detail":{
-         "buttons":[
-            {
-               "label":"Convert to Lead",
-               "action":"convertToLead",
-               "acl":"edit"
-            }
-         ]
-      }
-   },
+    "controller" : "Controllers.Record",
+    "views"      : {
+        "detail": "Crm:Target.Detail"
+    },
+    "menu"       : {
+        "detail": {
+            "buttons": [
+                {
+                    "label" : "Convert to Lead",
+                    "action": "convertToLead",
+                    "acl"   : "edit"
+                }
+            ]
+        }
+    },
     "boolFilters": ["onlyMy"]
 }

@@ -19,15 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils,
-    Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils;
 
 class Permission
 {
-    private $fileManager;
 
     /**
      * Last permission error
@@ -39,20 +37,18 @@ class Permission
     protected $permissionErrorRules = null;
 
     protected $params = array(
-        'defaultPermissions' => array (
+        'defaultPermissions' => array(
             'dir' => '0775',
             'file' => '0664',
             'user' => '',
             'group' => '',
         ),
         'permissionMap' => array(
-
             /** array('0664', '0775') */
             'writable' => array(
                 'data',
                 'custom',
             ),
-
             /** array('0644', '0755') */
             'readable' => array(
                 'api',
@@ -73,6 +69,7 @@ class Permission
         'readable' => array('0644', '0755'),
     );
 
+    private $fileManager;
 
     public function __construct(Manager $fileManager, array $params = null)
     {
@@ -82,16 +79,34 @@ class Permission
         }
     }
 
-    protected function getFileManager()
+    public function getPermissionRules()
     {
-        return $this->fileManager;
+        return $this->permissionRules;
     }
 
-    protected function getParams()
+    /**
+     * Set default permission
+     *
+     * @param string $path
+     * @param bool   $recurse
+     *
+     * @return bool
+     */
+    public function setDefaultPermissions($path, $recurse = false)
     {
-        return $this->params;
+        if (!file_exists($path)) {
+            return false;
+        }
+        $permission = $this->getDefaultPermissions();
+        $result = $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
+        if (!empty($permission['user'])) {
+            $result &= $this->chown($path, $permission['user'], $recurse);
+        }
+        if (!empty($permission['group'])) {
+            $result &= $this->chgrp($path, $permission['group'], $recurse);
+        }
+        return $result;
     }
-
 
     /**
      * Get default settings
@@ -104,64 +119,20 @@ class Permission
         return $params['defaultPermissions'];
     }
 
-
-    public function getPermissionRules()
+    protected function getParams()
     {
-        return $this->permissionRules;
-    }
-
-    /**
-     * Set default permission
-     *
-     * @param string $path
-     * @param bool $recurse
-     *
-     * @return bool
-     */
-    public function setDefaultPermissions($path, $recurse = false)
-    {
-        if (!file_exists($path)) {
-            return false;
-        }
-
-        $permission = $this->getDefaultPermissions();
-
-        $result = $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
-        if (!empty($permission['user'])) {
-            $result &= $this->chown($path, $permission['user'], $recurse);
-        }
-        if (!empty($permission['group'])) {
-            $result &= $this->chgrp($path, $permission['group'], $recurse);
-        }
-
-        return $result;
-    }
-
-
-    /**
-     * Get current permissions
-     *
-     * @param string $filename
-     * @return string | bool
-     */
-    public function getCurrentPermission($filePath)
-    {
-        if (!file_exists($filePath)) {
-            return false;
-        }
-
-        $fileInfo= stat($filePath);
-
-        return substr(base_convert($fileInfo['mode'],10,8), -4);
+        return $this->params;
     }
 
     /**
      * Change permissions
      *
-     * @param string $filename
+     * @param string      $path
      * @param int | array $octal - ex. 0755, array(0644, 0755), array('file'=>0644, 'dir'=>0755)
-     * @param bool $recurse
+     * @param bool        $recurse
      *
+     * @throws Error
+     * @internal param string $filename
      * @return bool
      */
     public function chmod($path, $octal, $recurse = false)
@@ -169,41 +140,35 @@ class Permission
         if (!file_exists($path)) {
             return false;
         }
-
         //check the input format
-        $permission= array();
+        $permission = array();
         if (is_array($octal)) {
-            $count= 0;
-            $rule= array('file', 'dir');
+            $count = 0;
+            $rule = array('file', 'dir');
             foreach ($octal as $key => $val) {
-                $pKey= strval($key);
+                $pKey = strval($key);
                 if (!in_array($pKey, $rule)) {
-                    $pKey= $rule[$count];
+                    $pKey = $rule[$count];
                 }
-
                 if (!empty($pKey)) {
-                    $permission[$pKey]= $val;
+                    $permission[$pKey] = $val;
                 }
                 $count++;
             }
-        }
-        elseif (is_int((int)$octal)) {
-            $permission= array(
+        } elseif (is_int((int)$octal)) {
+            $permission = array(
                 'file' => $octal,
                 'dir' => $octal,
             );
-        }
-        else {
+        } else {
             return false;
         }
-
         //conver to octal value
-        foreach($permission as $key => $val) {
+        foreach ($permission as $key => $val) {
             if (is_string($val)) {
-                $permission[$key]= base_convert($val,8,10);
+                $permission[$key] = base_convert($val, 8, 10);
             }
         }
-
         //Set permission for non-recursive request
         if (!$recurse) {
             if (is_dir($path)) {
@@ -211,74 +176,91 @@ class Permission
             }
             return $this->chmodReal($path, $permission['file']);
         }
-
         //Recursive permission
         return $this->chmodRecurse($path, $permission['file'], $permission['dir']);
     }
-
 
     /**
      * Change permissions recursive
      *
      * @param string $filename
-     * @param int $fileOctal - ex. 0644
-     * @param int $dirOctal - ex. 0755
+     * @param int    $mode - ex. 0644
      *
+     * @throws Error
      * @return bool
      */
-    protected function chmodRecurse($path, $fileOctal = 0644, $dirOctal = 0755)
+    protected function chmodReal($filename, $mode)
     {
-        if (!file_exists($path)) {
-            return false;
+        try{
+            $result = chmod($filename, $mode);
+        } catch(\Exception $e){
+            $result = false;
         }
-
-        if (is_file($path)) {
-            return $this->chmodReal($path, $fileOctal);
-        }
-
-        if (is_dir($path)) {
-            $allFiles = $this->getFileManager()->getFileList($path);
-
-            foreach ($items as $item) {
-                $this->chmodRecurse($path. Utils\Util::getSeparator() .$item, $fileOctal, $dirOctal);
+        if (!$result) {
+            $this->chown($filename, $this->getDefaultOwner(true));
+            $this->chgrp($filename, $this->getDefaultGroup(true));
+            try{
+                $result = chmod($filename, $mode);
+            } catch(\Exception $e){
+                throw new Error($e->getMessage());
             }
-
-            return $this->chmodReal($path, $dirOctal);
         }
-
-        return false;
+        return $result;
     }
-
-
-
-
 
     /**
      * Change owner permission
      *
-     * @param string $path
+     * @param string       $path
      * @param int | string $user
-     * @param bool $recurse
+     * @param bool         $recurse
      *
      * @return bool
      */
-    public function chown($path, $user='', $recurse=false)
+    public function chown($path, $user = '', $recurse = false)
     {
         if (!file_exists($path)) {
             return false;
         }
-
         if (empty($user)) {
             $user = $this->getDefaultOwner();
         }
-
         //Set chown for non-recursive request
         if (!$recurse) {
             return $this->chownReal($path, $user);
         }
-
         //Recursive chown
         return $this->chownRecurse($path, $user);
+    }
+
+    /**
+     * Get default owner user
+     *
+     * @param bool $usePosix
+     *
+     * @return int  - owner id
+     */
+    public function getDefaultOwner($usePosix = false)
+    {
+        $defaultPermissions = $this->getDefaultPermissions();
+        $owner = $defaultPermissions['user'];
+        if (empty($owner) && $usePosix) {
+            $owner = function_exists('posix_getuid') ? posix_getuid() : null;
+        }
+        if (empty($owner)) {
+            return false;
+        }
+        return $owner;
+    }
+
+    protected function chownReal($path, $user)
+    {
+        try{
+            $result = chown($path, $user);
+        } catch(\Exception $e){
+            throw new Error($e->getMessage());
+        }
+        return $result;
     }
 
     /**
@@ -294,22 +276,25 @@ class Permission
         if (!file_exists($path)) {
             return false;
         }
-
-        $allFiles = $this->getFileManager()->getFileList($path);
-
+        //$allFiles = $this->getFileManager()->getFileList($path);
+        $items = $this->getFileManager()->getFileList($path);
         foreach ($items as $item) {
-            $this->chownRecurse($path. Utils\Util::getSeparator() .$item, $user);
+            $this->chownRecurse($path . Utils\Util::getSeparator() . $item, $user);
         }
-
         return $this->chownReal($path, $user);
+    }
+
+    protected function getFileManager()
+    {
+        return $this->fileManager;
     }
 
     /**
      * Change group permission
      *
-     * @param string $path
+     * @param string       $path
      * @param int | string $group
-     * @param bool $recurse
+     * @param bool         $recurse
      *
      * @return bool
      */
@@ -318,141 +303,125 @@ class Permission
         if (!file_exists($path)) {
             return false;
         }
-
         if (!isset($group)) {
             $group = $this->getDefaultGroup();
         }
-
         //Set chgrp for non-recursive request
         if (!$recurse) {
             return $this->chgrpReal($path, $group);
         }
-
         //Recursive chown
         return $this->chgrpRecurse($path, $group);
     }
 
     /**
-     * Change group permission recursive
-     *
-     * @param string $filename
-     * @param int $fileOctal - ex. 0644
-     * @param int $dirOctal - ex. 0755
-     *
-     * @return bool
-     */
-    protected function chgrpRecurse($path, $group) {
-
-        if (!file_exists($path)) {
-            return false;
-        }
-
-        $allFiles = $this->getFileManager()->getFileList($path);
-
-        foreach ($items as $item) {
-            $this->chgrpRecurse($path. Utils\Util::getSeparator() .$item, $group);
-        }
-
-        return $this->chgrpReal($path, $group);
-    }
-
-
-    /**
-     * Change permissions recursive
-     *
-     * @param string $filename
-     * @param int $mode - ex. 0644
-     *
-     * @return bool
-     */
-    protected function chmodReal($filename, $mode)
-    {
-        try {
-            $result = chmod($filename, $mode);
-        } catch (\Exception $e) {
-            $result = false;
-        }
-
-        if (!$result) {
-            $this->chown($filename, $this->getDefaultOwner(true));
-            $this->chgrp($filename, $this->getDefaultGroup(true));
-
-            try {
-                $result = chmod($filename, $mode);
-            } catch (\Exception $e) {
-                throw new Error($e->getMessage());
-            }
-        }
-
-        return $result;
-    }
-
-    protected function chownReal($path, $user)
-    {
-        try {
-            $result = chown($path, $user);
-        } catch (\Exception $e) {
-            throw new Error($e->getMessage());
-        }
-
-        return $result;
-    }
-
-    protected function chgrpReal($path, $group)
-    {
-        try {
-            $result = chgrp($path, $group);
-        } catch (\Exception $e) {
-            throw new Error($e->getMessage());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get default owner user
-     *
-     * @return int  - owner id
-     */
-    public function getDefaultOwner($usePosix = false)
-    {
-        $defaultPermissions = $this->getDefaultPermissions();
-
-        $owner = $defaultPermissions['user'];
-        if (empty($owner) && $usePosix) {
-            $owner = function_exists('posix_getuid') ? posix_getuid() : null;
-        }
-
-        if (empty($owner)) {
-            return false;
-        }
-
-        return $owner;
-    }
-
-    /**
      * Get default group user
+     *
+     * @param bool $usePosix
      *
      * @return int  - group id
      */
     public function getDefaultGroup($usePosix = false)
     {
         $defaultPermissions = $this->getDefaultPermissions();
-
         $group = $defaultPermissions['group'];
         if (empty($group) && $usePosix) {
             $group = function_exists('posix_getegid') ? posix_getegid() : null;
         }
-
         if (empty($group)) {
             return false;
         }
-
         return $group;
+    }
+
+    protected function chgrpReal($path, $group)
+    {
+        try{
+            $result = chgrp($path, $group);
+        } catch(\Exception $e){
+            throw new Error($e->getMessage());
+        }
+        return $result;
+    }
+
+    /**
+     * Change group permission recursive
+     *
+     * @param $path
+     * @param $group
+     *
+     * @throws Error
+     * @internal param string $filename
+     * @internal param int $fileOctal - ex. 0644
+     * @internal param int $dirOctal - ex. 0755
+     *
+     * @return bool
+     */
+    protected function chgrpRecurse($path, $group)
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+        //$allFiles = $this->getFileManager()->getFileList($path);
+        $items = $this->getFileManager()->getFileList($path);
+        foreach ($items as $item) {
+            $this->chgrpRecurse($path . Utils\Util::getSeparator() . $item, $group);
+        }
+        return $this->chgrpReal($path, $group);
+    }
+
+    /**
+     * Change permissions recursive
+     *
+     * @param     $path
+     * @param int $fileOctal - ex. 0644
+     * @param int $dirOctal  - ex. 0755
+     *
+     * @throws Error
+     * @internal param string $filename
+     * @return bool
+     */
+    protected function chmodRecurse($path, $fileOctal = 0644, $dirOctal = 0755)
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+        if (is_file($path)) {
+            return $this->chmodReal($path, $fileOctal);
+        }
+        if (is_dir($path)) {
+            //$allFiles = $this->getFileManager()->getFileList($path);
+            $items = $this->getFileManager()->getFileList($path);
+            foreach ($items as $item) {
+                $this->chmodRecurse($path . Utils\Util::getSeparator() . $item, $fileOctal, $dirOctal);
+            }
+            return $this->chmodReal($path, $dirOctal);
+        }
+        return false;
+    }
+
+    /**
+     * Get current permissions
+     *
+     * @param string $filePath
+     *
+     * @internal param string $filename
+     *
+     * @return string | bool
+     */
+    public function getCurrentPermission($filePath)
+    {
+        if (!file_exists($filePath)) {
+            return false;
+        }
+        $fileInfo = stat($filePath);
+        return substr(base_convert($fileInfo['mode'], 10, 8), -4);
     }
 
     /**
      * Set permission regarding defined in permissionMap
+     *
+     * @param null $mode
      *
      * @return  bool
      */
@@ -460,49 +429,36 @@ class Permission
     {
         $this->permissionError = array();
         $this->permissionErrorRules = array();
-
         $params = $this->getParams();
-
         $permissionRules = $this->permissionRules;
         if (isset($mode)) {
             foreach ($permissionRules as &$value) {
                 $value = $mode;
             }
         }
-
         $result = true;
         foreach ($params['permissionMap'] as $type => $items) {
-
             $permission = $permissionRules[$type];
-
             foreach ($items as $item) {
-
                 if (file_exists($item)) {
-
-                    try {
+                    try{
                         $this->chmod($item, $permission, true);
-                    } catch (\Exception $e) {
+                    } catch(\Exception $e){
                     }
-
                     $res = is_readable($item);
-
                     /** check is wtitable */
                     if ($type == 'writable') {
-
                         $res &= is_writable($item);
-
                         if (is_dir($item)) {
                             $name = uniqid();
-
-                            try {
+                            try{
                                 $res &= $this->getFileManager()->putContents(array($item, $name), 'test');
                                 $res &= $this->getFileManager()->removeFile($name, $item);
-                            } catch (\Exception $e) {
+                            } catch(\Exception $e){
                                 $res = false;
                             }
                         }
                     }
-
                     if (!$res) {
                         $result = false;
                         $this->permissionError[] = $item;
@@ -511,7 +467,6 @@ class Permission
                 }
             }
         }
-
         return $result;
     }
 
@@ -540,26 +495,23 @@ class Permission
      * e.g. array('application/Espo/Controllers/Email.php', 'application/Espo/Controllers/Import.php'), result is array('application/Espo/Controllers')
      *
      * @param  array $fileList
+     *
      * @return array
      */
     public function arrangePermissionList($fileList)
     {
         $betterList = array();
         foreach ($fileList as $fileName) {
-
             $pathInfo = pathinfo($fileName);
             $dirname = $pathInfo['dirname'];
-
             $currentPath = $fileName;
             if ($this->getSearchCount($dirname, $fileList) > 1) {
                 $currentPath = $dirname;
             }
-
             if (!$this->isItemIncludes($currentPath, $betterList)) {
                 $betterList[] = $currentPath;
             }
         }
-
         return $betterList;
     }
 
@@ -568,32 +520,19 @@ class Permission
      *
      * @param  string $search
      * @param  array  $array
+     *
      * @return bool
      */
     protected function getSearchCount($search, array $array)
     {
         $search = $this->getPregQuote($search);
-
         $number = 0;
         foreach ($array as $value) {
-            if (preg_match('/^'.$search.'/', $value)) {
+            if (preg_match('/^' . $search . '/', $value)) {
                 $number++;
             }
         }
-
         return $number;
-    }
-
-    protected function isItemIncludes($item, $array)
-    {
-        foreach ($array as $value) {
-            $value = $this->getPregQuote($value);
-            if (preg_match('/^'.$value.'/', $item)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     protected function getPregQuote($string)
@@ -601,5 +540,15 @@ class Permission
         return preg_quote($string, '/-+=.');
     }
 
+    protected function isItemIncludes($item, $array)
+    {
+        foreach ($array as $value) {
+            $value = $this->getPregQuote($value);
+            if (preg_match('/^' . $value . '/', $item)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 

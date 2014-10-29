@@ -1,167 +1,178 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"        : {
+        "name"                   : {
+            "type"    : "varchar",
             "required": true
         },
-        "amount": {
-            "type": "currency",
+        "amount"                 : {
+            "type"    : "currency",
             "required": true,
-            "audited": true
+            "audited" : true
         },
-        "amountConverted": {
-            "type": "currencyConverted",
+        "amountConverted"        : {
+            "type"    : "currencyConverted",
             "readOnly": true
         },
         "amountWeightedConverted": {
-            "type": "float",
-            "readOnly": true,
+            "type"       : "float",
+            "readOnly"   : true,
             "notStorable": true,
-            "select": "opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100",
-            "where": {
-                "=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
-                "<": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
-                ">": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
+            "select"     : "opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100",
+            "where"      : {
+                "=" : "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
+                "<" : "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
+                ">" : "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
                 "<=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <= {value}",
                 ">=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) >= {value}",
                 "<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
             },
-            "orderBy": "amountWeightedConverted {direction}",
-            "view": "Fields.CurrencyConverted" 
+            "orderBy"    : "amountWeightedConverted {direction}",
+            "view"       : "Fields.CurrencyConverted"
         },
-        "account": {
-            "type": "link",
+        "account"                : {
+            "type"    : "link",
             "required": true
         },
-        "contacts": {
-            "type": "linkMultiple",
-            "view": "Crm:Opportunity.Fields.Contacts",
+        "contacts"               : {
+            "type"   : "linkMultiple",
+            "view"   : "Crm:Opportunity.Fields.Contacts",
             "columns": {
                 "role": "opportunityRole"
             }
         },
-        "stage": {
-            "type": "enum",
-            "options": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis", "Proposal/Price Quote", "Negotiation/Review", "Closed Won", "Closed Lost"],
-            "view": "Crm:Opportunity.Fields.Stage",
+        "stage"                  : {
+            "type"   : "enum",
+            "options": [
+                "Prospecting",
+                "Qualification",
+                "Needs Analysis",
+                "Value Proposition",
+                "Id. Decision Makers",
+                "Perception Analysis",
+                "Proposal/Price Quote",
+                "Negotiation/Review",
+                "Closed Won",
+                "Closed Lost"
+            ],
+            "view"   : "Crm:Opportunity.Fields.Stage",
             "default": "Prospecting"
         },
-        "probability": {
-            "type": "int",
+        "probability"            : {
+            "type"    : "int",
             "required": true,
-            "min": 0,
-            "max": 100
+            "min"     : 0,
+            "max"     : 100
         },
-        "leadSource": {
+        "leadSource"             : {
             "type": "enum",
             "view": "Crm:Opportunity.Fields.LeadSource"
         },
-        "closeDate": {
-            "type": "date",
+        "closeDate"              : {
+            "type"    : "date",
             "required": true,
-            "audited": true
+            "audited" : true
         },
-        "description": {
+        "description"            : {
             "type": "text"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"              : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"             : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"              : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"             : {
+            "type"    : "link",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"           : {
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"                  : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"         : {
+        "createdBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
         "assignedUser": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"       : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "account": {
-            "type": "belongsTo",
-            "entity": "Account",
+        "account"     : {
+            "type"   : "belongsTo",
+            "entity" : "Account",
             "foreign": "opportunities"
         },
-        "contacts": {
-            "type": "hasMany",
-            "entity": "Contact",
-            "foreign": "opportunities",
+        "contacts"    : {
+            "type"             : "hasMany",
+            "entity"           : "Contact",
+            "foreign"          : "opportunities",
             "additionalColumns": {
                 "role": {
                     "type": "varchar",
-                    "len": 50
+                    "len" : 50
                 }
             }
         },
-        "meetings": {
-            "type": "hasChildren",
-            "entity": "Meeting",
+        "meetings"    : {
+            "type"   : "hasChildren",
+            "entity" : "Meeting",
             "foreign": "parent"
         },
-        "calls": {
-            "type": "hasChildren",
-            "entity": "Call",
+        "calls"       : {
+            "type"   : "hasChildren",
+            "entity" : "Call",
             "foreign": "parent"
         },
-        "tasks": {
-            "type": "hasChildren",
-            "entity": "Task",
+        "tasks"       : {
+            "type"   : "hasChildren",
+            "entity" : "Task",
             "foreign": "parent"
         },
-        "emails": {
-            "type": "hasChildren",
-            "entity": "Email",
+        "emails"      : {
+            "type"   : "hasChildren",
+            "entity" : "Email",
             "foreign": "parent"
         },
-        "documents": {
-            "type": "hasMany",
-            "entity": "Document",
+        "documents"   : {
+            "type"   : "hasMany",
+            "entity" : "Document",
             "foreign": "opportunities"
         }
     },
-    "collection": {
+    "collection"    : {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     },
     "probabilityMap": {
-        "Prospecting": 10,
-        "Qualification": 10,
-        "Needs Analysis": 20,
-        "Value Proposition": 50,
-        "Id. Decision Makers": 60,
-        "Perception Analysis": 70,
+        "Prospecting"         : 10,
+        "Qualification"       : 10,
+        "Needs Analysis"      : 20,
+        "Value Proposition"   : 50,
+        "Id. Decision Makers" : 60,
+        "Perception Analysis" : 70,
         "Proposal/Price Quote": 75,
-        "Negotiation/Review": 90,
-        "Closed Won": 100,
-        "Closed Lost": 0
+        "Negotiation/Review"  : 90,
+        "Closed Won"          : 100,
+        "Closed Lost"         : 0
     }
 }

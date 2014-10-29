@@ -2,26 +2,14 @@
 
 namespace tests\Espo\Core;
 
+use Espo\Core\SelectManagerFactory;
 
-class SelectManagerTest extends \PHPUnit_Framework_TestCase
+class SelectManagerTest extends
+    \PHPUnit_Framework_TestCase
 {
+
     protected $selectManager;
-    
-    protected function setUp()
-    {
-        $entityManager = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
-        $user = $this->getMockBuilder('\\Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
-        $acl = $this->getMockBuilder('\\Espo\\Core\\Acl')->disableOriginalConstructor()->getMock();
-        $metadata = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
-        
-        $this->selectManager = new \Espo\Core\SelectManagerFactory($entityManager, $user, $acl, $metadata);
-    }
-    
-    protected function tearDown()
-    {
-        unset($this->selectManager);
-    }
-    
+
     public function testWhere()
     {
         /*$params = array(
@@ -43,10 +31,24 @@ class SelectManagerTest extends \PHPUnit_Framework_TestCase
                 ),
             )
         );
-        
+
         $result = $this->selectManager->getSelectParams($params);
 
         $this->assertEquals($result['whereClause'][0]['OR']['name*'], 'Brom');*/
+    }
+
+    protected function setUp()
+    {
+        $entityManager = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $user = $this->getMockBuilder('\\Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
+        $acl = $this->getMockBuilder('\\Espo\\Core\\Acl')->disableOriginalConstructor()->getMock();
+        $metadata = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->selectManager = new SelectManagerFactory($entityManager, $user, $acl, $metadata);
+    }
+
+    protected function tearDown()
+    {
+        unset($this->selectManager);
     }
 }
 

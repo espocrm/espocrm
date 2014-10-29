@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"name":"Account",
-		"label":"Custom"
-	}		
+    "fields": {
+        "name" : "Account",
+        "label": "Custom"
+    }
 }

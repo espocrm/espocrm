@@ -19,11 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
-
-class Column extends \Doctrine\DBAL\Schema\Column
+class Column extends
+    \Doctrine\DBAL\Schema\Column
 {
 
     /**
@@ -36,19 +35,6 @@ class Column extends \Doctrine\DBAL\Schema\Column
      */
     protected $_unique = false;
 
-
-    /**
-     * @param boolean $unique
-     *
-     * @return \Doctrine\DBAL\Schema\Column
-     */
-    public function setUnique($unique)
-    {
-        $this->_unique = (bool)$unique;
-
-        return $this;
-    }
-
     /**
      * @return boolean
      */
@@ -58,25 +44,35 @@ class Column extends \Doctrine\DBAL\Schema\Column
     }
 
     /**
+     * @param boolean $unique
+     *
+     * @return \Doctrine\DBAL\Schema\Column
+     */
+    public function setUnique($unique)
+    {
+        $this->_unique = (bool)$unique;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
     {
         return array_merge(array(
-            'name'          => $this->_name,
-            'type'          => $this->_type,
-            'default'       => $this->_default,
-            'notnull'       => $this->_notnull,
-            'length'        => $this->_length,
-            'precision'     => $this->_precision,
-            'scale'         => $this->_scale,
-            'fixed'         => $this->_fixed,
-            'unsigned'      => $this->_unsigned,
+            'name' => $this->_name,
+            'type' => $this->_type,
+            'default' => $this->_default,
+            'notnull' => $this->_notnull,
+            'length' => $this->_length,
+            'precision' => $this->_precision,
+            'scale' => $this->_scale,
+            'fixed' => $this->_fixed,
+            'unsigned' => $this->_unsigned,
             'autoincrement' => $this->_autoincrement,
             'unique' => $this->_unique,
             'columnDefinition' => $this->_columnDefinition,
             'comment' => $this->_comment,
         ), $this->_platformOptions, $this->_customSchemaOptions);
     }
-
 }

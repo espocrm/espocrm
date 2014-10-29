@@ -1,1 +1,8 @@
-[{"name":"name","width":30,"link":true},{"name":"host"},{"name":"status"},{"name":"createCase"}]
+[{"name"   : "name",
+    "width": 30,
+    "link" : true
+},
+    {"name": "host"},
+    {"name": "status"},
+    {"name": "createCase"}
+]

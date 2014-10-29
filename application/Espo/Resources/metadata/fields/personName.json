@@ -1,25 +1,25 @@
 {
-   "actualFields":[
-      "salutation",
-      "first",
-      "last"
-   ],
-   "fields":{
-      "salutation":{
-         "type":"enum"
-      },
-      "first":{
-         "type":"varchar"
-      },
-      "last":{
-         "type":"varchar"
-      }
-   },
-   "naming":"prefix",
-   "mergable":false,
-   "notCreatable": true,
-   "filter": true,
-   "fieldDefs":{
-      "default":""
-   }
+    "actualFields": [
+        "salutation",
+        "first",
+        "last"
+    ],
+    "fields"      : {
+        "salutation": {
+            "type": "enum"
+        },
+        "first"     : {
+            "type": "varchar"
+        },
+        "last"      : {
+            "type": "varchar"
+        }
+    },
+    "naming"      : "prefix",
+    "mergable"    : false,
+    "notCreatable": true,
+    "filter"      : true,
+    "fieldDefs"   : {
+        "default": ""
+    }
 }

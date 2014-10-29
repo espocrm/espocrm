@@ -1,16 +1,15 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"status": "Status",
-		"isHtml": "Is Html",
-		"body": "Inhoud",
-		"subject": "Onderwerp",
-		"attachments": "Bijlagen",
-		"insertField": ""
-	},
-	"links": {
-	},
-	"labels": {
-		"Create EmailTemplate": "Email Template Aanmaken"
-	}
+    "fields": {
+        "name"       : "Record Naam",
+        "status"     : "Status",
+        "isHtml"     : "Is Html",
+        "body"       : "Inhoud",
+        "subject"    : "Onderwerp",
+        "attachments": "Bijlagen",
+        "insertField": ""
+    },
+    "links" : {},
+    "labels": {
+        "Create EmailTemplate": "Email Template Aanmaken"
+    }
 }

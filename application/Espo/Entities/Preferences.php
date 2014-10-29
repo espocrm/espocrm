@@ -19,10 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Entities;
 
-class Preferences extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Preferences extends
+    Entity
 {
 
     public function getSmtpParams()

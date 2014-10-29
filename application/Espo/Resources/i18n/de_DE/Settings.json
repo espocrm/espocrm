@@ -1,61 +1,60 @@
 {
-    "fields": {
-        "useCache": "Benutzer Cache",
-        "dateFormat": "Datumsformat",
-        "timeFormat": "Zeitformat",
-        "timeZone": "Zeitzone",
-        "weekStart": "Erster Tag der Woche",
+    "fields"  : {
+        "useCache"         : "Benutzer Cache",
+        "dateFormat"       : "Datumsformat",
+        "timeFormat"       : "Zeitformat",
+        "timeZone"         : "Zeitzone",
+        "weekStart"        : "Erster Tag der Woche",
         "thousandSeparator": "Tausender Trennzeichen",
-        "decimalMark": "Dezimaltrennzeichen",
-        "defaultCurrency": "Standardwährung",
-        "baseCurrency": "Basiswährung",
-        "baseCurrency": "Basiswährung",
-        "currencyRates": "Wechselkurse",
-        
+        "decimalMark"      : "Dezimaltrennzeichen",
+        "defaultCurrency"  : "Standardwährung",
+        "baseCurrency"     : "Basiswährung",
+        "currencyRates"    : "Wechselkurse",
+
         "currencyList": "Währungsliste",
-        "language": "Sprache",
-        
+        "language"    : "Sprache",
+
         "companyLogo": "Firmenlogo",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Autorisierung",
-        "smtpSecurity": "Sicherheit",
-        "smtpUsername": "Benutzername",
-        "emailAddress": "E-Mail",
-        "smtpPassword": "Passwort",
-        "outboundEmailFromName": "Von Name",
+
+        "smtpServer"              : "Server",
+        "smtpPort"                : "Port",
+        "smtpAuth"                : "Autorisierung",
+        "smtpSecurity"            : "Sicherheit",
+        "smtpUsername"            : "Benutzername",
+        "emailAddress"            : "E-Mail",
+        "smtpPassword"            : "Passwort",
+        "outboundEmailFromName"   : "Von Name",
         "outboundEmailFromAddress": "Von Adresse",
-        "outboundEmailIsShared": "Kann von allen Benutzern verwendet werden",
-        
-        "recordsPerPage": "Datensätze pro Seite",
-        "recordsPerPageSmall": "Datensätze pro Seite (Klein)",        
-        "tabList": "Reiter Liste",
-        "quickCreateList": "Liste Schnellerstellung",
-        
+        "outboundEmailIsShared"   : "Kann von allen Benutzern verwendet werden",
+
+        "recordsPerPage"     : "Datensätze pro Seite",
+        "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
+        "tabList"            : "Reiter Liste",
+        "quickCreateList"    : "Liste Schnellerstellung",
+
         "exportDelimiter": "Export Trennzeichen",
-        
-        "authenticationMethod": "Authentifizierungs Methode",
-        "ldapHost": "Host",
-        "ldapPort": "Port",
-        "ldapAuth": "Autorisierung",
-        "ldapUsername": "Benutzername",
-        "ldapPassword": "Passwort",
-        "ldapBindRequiresDn": "Bind erfordert Dn",
-        "ldapBaseDn": "Basis Dn",
-        "ldapAccountCanonicalForm": "Kanonische Form Konto",
-        "ldapAccountDomainName": "Domain Name Konto",
-        "ldapTryUsernameSplit": "Benutzernamen Split versuchen",
-        "ldapCreateEspoUser": "Benutzer in EspoCRM erstellen",
-        "ldapSecurity": "Sicherheit",
-        "ldapUserLoginFilter": "Login Filter benutzen",
-        "ldapAccountDomainNameShort": "Domain Name Konto kurz",
-        "ldapOptReferrals": "Opt Referrals",
-        "disableExport": "Export deaktivieren (nur Admin ist berechtigt)",
-        "assignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen senden",
+
+        "authenticationMethod"                  : "Authentifizierungs Methode",
+        "ldapHost"                              : "Host",
+        "ldapPort"                              : "Port",
+        "ldapAuth"                              : "Autorisierung",
+        "ldapUsername"                          : "Benutzername",
+        "ldapPassword"                          : "Passwort",
+        "ldapBindRequiresDn"                    : "Bind erfordert Dn",
+        "ldapBaseDn"                            : "Basis Dn",
+        "ldapAccountCanonicalForm"              : "Kanonische Form Konto",
+        "ldapAccountDomainName"                 : "Domain Name Konto",
+        "ldapTryUsernameSplit"                  : "Benutzernamen Split versuchen",
+        "ldapCreateEspoUser"                    : "Benutzer in EspoCRM erstellen",
+        "ldapSecurity"                          : "Sicherheit",
+        "ldapUserLoginFilter"                   : "Login Filter benutzen",
+        "ldapAccountDomainNameShort"            : "Domain Name Konto kurz",
+        "ldapOptReferrals"                      : "Opt Referrals",
+        "disableExport"                         : "Export deaktivieren (nur Admin ist berechtigt)",
+        "assignmentEmailNotifications"          : "E-Mail Nachrichten bei Zuweisungen senden",
         "assignmentEmailNotificationsEntityList": "Module für Benachrichtigungen"
     },
-    "options": {
+    "options" : {
         "weekStart": {
             "0": "Sonntag",
             "1": "Montag"
@@ -64,13 +63,13 @@
     "tooltips": {
         "recordsPerPageSmall": "Anzahl Sätze in Beziehungssubpanels"
     },
-    "labels": {
-        "System": "System",
-        "Locale": "Lokale Einstellungen",
-        "SMTP": "SMTP",
-        "Configuration": "Konfiguration",
-        "Notifications": "Benachrichtigungen",
+    "labels"  : {
+        "System"           : "System",
+        "Locale"           : "Lokale Einstellungen",
+        "SMTP"             : "SMTP",
+        "Configuration"    : "Konfiguration",
+        "Notifications"    : "Benachrichtigungen",
         "Currency Settings": "Währunsgseinstellungen",
-        "Currency Rtes": "Währungskurse"
+        "Currency Rtes"    : "Währungskurse"
     }
 }

@@ -1,37 +1,36 @@
 {
-    "fields": {
-        "dateFormat": "Datumsformat",
-        "timeFormat": "Zeitformat",
-        "timeZone": "Zeitzone",
-        "weekStart": "Erster Tag der Woche",
+    "fields" : {
+        "dateFormat"       : "Datumsformat",
+        "timeFormat"       : "Zeitformat",
+        "timeZone"         : "Zeitzone",
+        "weekStart"        : "Erster Tag der Woche",
         "thousandSeparator": "Tausender Trennzeichen",
-        "decimalMark": "Dezimaltrennzeichen",
-        "defaultCurrency": "Standardwährung",
-        "currencyList": "Währungsliste",
-        "language": "Sprache",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Autorisierung",
-        "smtpSecurity": "Sicherheit",
-        "smtpUsername": "Benutzername",
-        "emailAddress": "E-Mail",
-        "smtpPassword": "Passwort",
+        "decimalMark"      : "Dezimaltrennzeichen",
+        "defaultCurrency"  : "Standardwährung",
+        "currencyList"     : "Währungsliste",
+        "language"         : "Sprache",
+
+        "smtpServer"      : "Server",
+        "smtpPort"        : "Port",
+        "smtpAuth"        : "Autorisierung",
+        "smtpSecurity"    : "Sicherheit",
+        "smtpUsername"    : "Benutzername",
+        "emailAddress"    : "E-Mail",
+        "smtpPassword"    : "Passwort",
         "smtpEmailAddress": "E-Mail Adresse",
-        
+
         "exportDelimiter": "Export Trennzeichen",
-        
+
         "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "weekStart": {
             "0": "Sonntag",
             "1": "Montag"
         }
     },
-    "labels": {
+    "labels" : {
         "Notifications": "Benachrichtigungen"
     }
 }

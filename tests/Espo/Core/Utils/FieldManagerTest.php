@@ -2,46 +2,40 @@
 
 namespace tests\Espo\Core\Utils;
 
+use Espo\Core\Utils\FieldManager;
+use PHPUnit_Framework_MockObject_MockObject;
 use tests\ReflectionHelper;
 
-class FieldManagerTest extends \PHPUnit_Framework_TestCase
+class FieldManagerTest extends
+    \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var FieldManager
+     */
     protected $object;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject[]
+     */
     protected $objects;
 
+    /**
+     * @var ReflectionHelper
+     */
     protected $reflection;
-
-
-    protected function setUp()
-    {
-        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Utils\FieldManager($this->objects['metadata'], $this->objects['language']);
-
-        $this->reflection = new ReflectionHelper($this->object);
-    }
-
-    protected function tearDown()
-    {
-        $this->object = NULL;
-    }
 
     public function testCreateExistingField()
     {
         $this->setExpectedException('\Espo\Core\Exceptions\Conflict');
-
         $data = array(
             "type" => "varchar",
             "maxLength" => "50",
         );
-
         $this->objects['metadata']
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue($data));
-
         $this->object->create('varName', $data, 'CustomEntity');
     }
 
@@ -52,23 +46,19 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('set')
             ->will($this->returnValue(true));
-
         $this->objects['language']
             ->expects($this->once())
             ->method('set')
             ->will($this->returnValue(true));
-
         $data = array(
             "type" => "varchar",
             "maxLength" => "50",
             "label" => "Name",
         );
-
         $this->objects['metadata']
             ->expects($this->exactly(6))
             ->method('get')
             ->will($this->returnValue($data));
-
         $this->assertTrue($this->object->update('name', $data, 'Account'));
     }
 
@@ -79,17 +69,14 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "maxLength" => "50",
             "isCustom" => true,
         );
-
         $this->objects['metadata']
             ->expects($this->exactly(3))
             ->method('get')
             ->will($this->returnValue($data));
-
         $this->objects['metadata']
             ->expects($this->never())
             ->method('set')
             ->will($this->returnValue(true));
-
         $this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));
     }
 
@@ -100,27 +87,22 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "maxLength" => "50",
             "isCustom" => true,
         );
-
         $this->objects['metadata']
             ->expects($this->exactly(6))
             ->method('get')
             ->will($this->returnValue($data));
-
         $this->objects['metadata']
             ->expects($this->once())
             ->method('set')
             ->will($this->returnValue(true));
-
         $data = array(
             "type" => "varchar",
             "maxLength" => "150",
             "required" => true,
             "isCustom" => true,
         );
-
         $this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));
     }
-
 
     public function testRead()
     {
@@ -130,17 +112,14 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "isCustom" => true,
             "label" => 'Var Name',
         );
-
         $this->objects['metadata']
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue($data));
-
         $this->objects['language']
             ->expects($this->once())
             ->method('translate')
             ->will($this->returnValue('Var Name'));
-
         $this->assertEquals($data, $this->object->read('varName', 'Account'));
     }
 
@@ -159,7 +138,8 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
         );
-        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array($input1, $input2, 'CustomEntity')));
+        $this->assertEquals($result,
+            $this->reflection->invokeMethod('normalizeDefs', array($input1, $input2, 'CustomEntity')));
     }
 
     public function testDeleteTestFile()
@@ -170,10 +150,19 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    protected function setUp()
+    {
+        $GLOBALS['log'] = $this->getMockBuilder('\Espo\Core\Utils\Log')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
+        $this->object = new FieldManager($this->objects['metadata'], $this->objects['language']);
+        $this->reflection = new ReflectionHelper($this->object);
+    }
 
-
-
-
+    protected function tearDown()
+    {
+        $this->object = null;
+    }
 }
 
 ?>

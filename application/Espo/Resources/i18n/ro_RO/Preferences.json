@@ -1,28 +1,27 @@
 {
-    "fields": {
-        "dateFormat": "Format Data ",
-        "timeFormat": "Format Timp",
-        "timeZone": "Zone Timp",
-        "weekStart": "Prima zi a saptamanii",
+    "fields" : {
+        "dateFormat"       : "Format Data ",
+        "timeFormat"       : "Format Timp",
+        "timeZone"         : "Zone Timp",
+        "weekStart"        : "Prima zi a saptamanii",
         "thousandSeparator": "Separator mii",
-        "decimalMark": "Semn zecimal",
-        "defaultCurrency": "Valuta initiala",
-        "currencyList": "Lista valute",
-        "language": "Limba",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Autorizare",
-        "smtpSecurity": "Securitate",
-        "smtpUsername": "Nume Utilizator",
-        "emailAddress": "Email",
-        "smtpPassword": "Parola",
+        "decimalMark"      : "Semn zecimal",
+        "defaultCurrency"  : "Valuta initiala",
+        "currencyList"     : "Lista valute",
+        "language"         : "Limba",
+
+        "smtpServer"      : "Server",
+        "smtpPort"        : "Port",
+        "smtpAuth"        : "Autorizare",
+        "smtpSecurity"    : "Securitate",
+        "smtpUsername"    : "Nume Utilizator",
+        "emailAddress"    : "Email",
+        "smtpPassword"    : "Parola",
         "smtpEmailAddress": "Adresa Email",
-        
+
         "exportDelimiter": "Delimitator Export"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "weekStart": {
             "0": "Duminica",

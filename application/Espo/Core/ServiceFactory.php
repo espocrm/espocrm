@@ -19,16 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
-
-use \Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Util;
 
 class ServiceFactory
 {
-    private $container;
 
     protected $cacheFile = 'data/cache/application/services.php';
 
@@ -43,39 +42,58 @@ class ServiceFactory
 
     protected $data;
 
+    private $container;
+
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
+    public function checkExists($name)
+    {
+        $className = $this->getClassName($name);
+        if (!empty($className)) {
+            return true;
+        }
+    }
+
+    protected function getClassName($name)
+    {
+        $name = Util::normilizeClassName($name);
+        if (!isset($this->data)) {
+            $this->init();
+        }
+        $name = ucfirst($name);
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+        return false;
+    }
+
     protected function init()
     {
+        /**
+         * @var Config          $config
+         * @var Utils\Metadata $metadata
+         */
         $config = $this->getContainer()->get('config');
-
+        $metadata = $this->getContainer()->get('metadata');
         if (file_exists($this->cacheFile) && $config->get('useCache')) {
             $this->data = $this->getFileManager()->getContents($this->cacheFile);
         } else {
             $this->data = $this->getClassNameHash($this->paths['corePath']);
-
-            foreach ($this->getContainer()->get('metadata')->getModuleList() as $moduleName) {
+            foreach ($metadata->getModuleList() as $moduleName) {
                 $path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
                 $this->data = array_merge($this->data, $this->getClassNameHash($path));
             }
-
             $this->data = array_merge($this->data, $this->getClassNameHash($this->paths['customPath']));
-
             if ($config->get('useCache')) {
                 $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
                 if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error();
+                    throw new Error();
                 }
             }
         }
-    }
-
-    protected function getFileManager()
-    {
-        return $this->container->get('fileManager');
     }
 
     protected function getContainer()
@@ -83,60 +101,21 @@ class ServiceFactory
         return $this->container;
     }
 
-    protected function getClassName($name)
+    /**
+     * @return Manager
+
+     */
+    protected function getFileManager()
     {
-        $name = Util::normilizeClassName($name);
-
-        if (!isset($this->data)) {
-            $this->init();
-        }
-
-        $name = ucfirst($name);
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        return false;
+        return $this->container->get('fileManager');
     }
 
-    public function checkExists($name) {
-        $className = $this->getClassName($name);
-        if (!empty($className)) {
-            return true;
-        }
-    }
-
-    public function create($name)
-    {
-        $className = $this->getClassName($name);
-        if (empty($className)) {
-            throw new Error();
-        }
-        return $this->createByClassName($className);
-    }
-
-    protected function createByClassName($className)
-    {
-        if (class_exists($className)) {
-            $service = new $className();
-            $dependencies = $service->getDependencyList();
-            foreach ($dependencies as $name) {
-                $service->inject($name, $this->container->get($name));
-            }
-            return $service;
-        }
-        throw new Error("Class '$className' does not exist");
-    }
-
-    // TODO delegate to another class
     protected function getClassNameHash($dirs)
     {
         if (is_string($dirs)) {
-            $dirs = (array) $dirs;
+            $dirs = (array)$dirs;
         }
-
         $data = array();
-
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
                 $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');
@@ -149,6 +128,32 @@ class ServiceFactory
             }
         }
         return $data;
+    }
+
+    public function create($name)
+    {
+        $className = $this->getClassName($name);
+        if (empty($className)) {
+            throw new Error();
+        }
+        return $this->createByClassName($className);
+    }
+
+    // TODO delegate to another class
+    protected function createByClassName($className)
+    {
+        /**
+         * @var Services\Base $service
+         */
+        if (class_exists($className)) {
+            $service = new $className();
+            $dependencies = $service->getDependencyList();
+            foreach ($dependencies as $name) {
+                $service->inject($name, $this->container->get($name));
+            }
+            return $service;
+        }
+        throw new Error("Class '$className' does not exist");
     }
 }
 

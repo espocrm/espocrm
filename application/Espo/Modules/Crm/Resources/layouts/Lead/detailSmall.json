@@ -1,18 +1,18 @@
 [
     {
-        "label":"",
-        "rows":[
+        "label": "",
+        "rows" : [
             [
-                {"name":"name"}
+                {"name": "name"}
             ],
             [
-                {"name":"emailAddress"}
+                {"name": "emailAddress"}
             ],
             [
-                {"name":"phoneNumber"}
+                {"name": "phoneNumber"}
             ],
             [
-                {"name":"status"}
+                {"name": "status"}
             ]
         ]
     }

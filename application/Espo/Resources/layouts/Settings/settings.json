@@ -1,17 +1,29 @@
 [
     {
         "label": "System",
-        "rows": [
-            [{"name": "useCache"},{"name": "companyLogo"}],
-            [{"name": "disableExport"}]        
+        "rows" : [
+            [
+                {"name": "useCache"},
+                {"name": "companyLogo"}
+            ],
+            [{"name": "disableExport"}]
         ]
     },
     {
         "label": "Locale",
-        "rows": [
-            [{"name": "dateFormat"}, {"name": "timeZone"}],
-            [{"name": "timeFormat"}, {"name": "weekStart"}],        
-            [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
+        "rows" : [
+            [
+                {"name": "dateFormat"},
+                {"name": "timeZone"}
+            ],
+            [
+                {"name": "timeFormat"},
+                {"name": "weekStart"}
+            ],
+            [
+                {"name": "thousandSeparator"},
+                {"name": "decimalMark"}
+            ],
             [{"name": "language"}]
         ]
     }

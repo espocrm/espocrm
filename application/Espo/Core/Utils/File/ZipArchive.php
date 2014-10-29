@@ -19,13 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\File;
 
 use Espo\Core\Exceptions\Error;
 
 class ZipArchive
 {
+
     private $fileManager;
 
     public function __construct(Manager $fileManager = null)
@@ -33,26 +33,20 @@ class ZipArchive
         if (!isset($fileManager)) {
             $fileManager = new Manager();
         }
-
         $this->fileManager = $fileManager;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-
     public function zip($sourcePath, $file)
     {
-
     }
 
     /**
      * Unzip archive
      *
-     * @param  string $file  Path to .zip file
+     * @param  string $file Path to .zip file
      * @param  [type] $destinationPath
+     *
+     * @throws Error
      * @return bool
      */
     public function unzip($file, $destinationPath)
@@ -60,22 +54,19 @@ class ZipArchive
         if (!class_exists('\ZipArchive')) {
             throw new Error("Class ZipArchive does not installed. Cannot unzip the file.");
         }
-
         $zip = new \ZipArchive;
         $res = $zip->open($file);
-
-        if ($res === TRUE) {
-
+        if ($res === true) {
             $this->getFileManager()->mkdir($destinationPath);
-
             $zip->extractTo($destinationPath);
             $zip->close();
-
             return true;
         }
-
         return false;
     }
 
-
+    protected function getFileManager()
+    {
+        return $this->fileManager;
+    }
 }

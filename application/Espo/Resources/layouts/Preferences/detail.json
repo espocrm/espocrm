@@ -1,37 +1,59 @@
 [
     {
         "label": "Locale",
-        "rows": [
-            [{"name": "dateFormat"}, {"name": "timeFormat"}],
-            [{"name": "timeZone"}, {"name": "weekStart"}],
+        "rows" : [
+            [
+                {"name": "dateFormat"},
+                {"name": "timeFormat"}
+            ],
+            [
+                {"name": "timeZone"},
+                {"name": "weekStart"}
+            ],
             [{"name": "defaultCurrency"}],
-            [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
+            [
+                {"name": "thousandSeparator"},
+                {"name": "decimalMark"}
+            ],
             [{"name": "language"}]
         ]
     },
     {
         "label": "SMTP",
-        "rows": [
+        "rows" : [
             [
                 {
                     "name": "smtpEmailAddress"
                 }
             ],
-            [{"name": "smtpServer"}, {"name": "smtpPort"}],
-            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "Preferences.Fields.TestSend"}],
+            [
+                {"name": "smtpServer"},
+                {"name": "smtpPort"}
+            ],
+            [
+                {"name": "smtpAuth"},
+                {"name": "smtpSecurity"}
+            ],
+            [
+                {"name": "smtpUsername"},
+                {
+                    "name": "testSend",
+                    "customLabel": null,
+                    "view": "Preferences.Fields.TestSend"
+                }
+            ],
             [{"name": "smtpPassword"}]
         ]
     },
     {
         "label": "Misc",
-        "rows": [
+        "rows" : [
             [{"name": "exportDelimiter"}]
         ]
     },
     {
         "label": "Notifications",
-        "rows": [
+        "rows" : [
             [{"name": "receiveAssignmentEmailNotifications"}]
         ]
     }

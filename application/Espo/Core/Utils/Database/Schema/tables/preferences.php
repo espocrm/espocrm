@@ -18,13 +18,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
-return array(    
-
+ ************************************************************************/
+return array(
     'unset' => array(
-        'Preferences', 
+        'Preferences',
     ),
-
 );
 

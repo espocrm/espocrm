@@ -1,9 +1,9 @@
 {
     "fields": {
-        "name": "Tên",
+        "name" : "Tên",
         "roles": "Vai trò"
     },
-    "links": {
+    "links" : {
         "users": "Người dùng"
     },
     "labels": {

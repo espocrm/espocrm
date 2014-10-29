@@ -1,91 +1,108 @@
 {
     "fields": {
-        "timeZone": {
-            "type": "enum",
+        "timeZone"                           : {
+            "type"   : "enum",
             "detault": "UTC"
         },
-        "dateFormat": {
-            "type": "enum",
-            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY"],
+        "dateFormat"                         : {
+            "type"   : "enum",
+            "options": [
+                "MM/DD/YYYY",
+                "YYYY-MM-DD",
+                "DD.MM.YYYY"
+            ],
             "default": "MM/DD/YYYY"
         },
-        "timeFormat": {
-            "type": "enum",
-            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
+        "timeFormat"                         : {
+            "type"   : "enum",
+            "options": [
+                "HH:mm",
+                "hh:mma",
+                "hh:mmA",
+                "hh:mm A",
+                "hh:mm a"
+            ],
             "default": "HH:mm"
         },
-        "weekStart": {
-            "type": "enumInt",
-            "options": [0, 1],
+        "weekStart"                          : {
+            "type"   : "enumInt",
+            "options": [
+                0,
+                1
+            ],
             "default": 0
         },
-        "thousandSeparator": {
-            "type": "varchar",
-            "default": ",",
+        "thousandSeparator"                  : {
+            "type"     : "varchar",
+            "default"  : ",",
             "maxLength": 1,
-            "view": "Settings.Fields.ThousandSeparator"
+            "view"     : "Settings.Fields.ThousandSeparator"
         },
-        "decimalMark": {
-            "type": "varchar",
-            "default": ".",
-            "required": true,
+        "decimalMark"                        : {
+            "type"     : "varchar",
+            "default"  : ".",
+            "required" : true,
             "maxLength": 1
         },
-        "defaultCurrency": {
-            "type": "enum",
+        "defaultCurrency"                    : {
+            "type"   : "enum",
             "default": "USD"
         },
-        "dashboardLayout": {
-            "type": "text"            
-        },
-        "dashletOptions": {
+        "dashboardLayout"                    : {
             "type": "text"
         },
-        "presetFilters": {
-            "type": "text"            
+        "dashletOptions"                     : {
+            "type": "text"
         },
-        "smtpEmailAddress": {
-            "type": "varchar",
-            "readOnly": true,
+        "presetFilters"                      : {
+            "type": "text"
+        },
+        "smtpEmailAddress"                   : {
+            "type"       : "varchar",
+            "readOnly"   : true,
             "notStorable": true,
-            "view": "Preferences.Fields.SmtpEmailAddress"
+            "view"       : "Preferences.Fields.SmtpEmailAddress"
         },
-        "smtpServer": {
+        "smtpServer"                         : {
             "type": "varchar"
         },
-        "smtpPort": {
-            "type": "int",
-            "min": 0,
-            "max": 9999,
+        "smtpPort"                           : {
+            "type"   : "int",
+            "min"    : 0,
+            "max"    : 9999,
             "default": 25
         },
-        "smtpAuth": {
-            "type": "bool",
+        "smtpAuth"                           : {
+            "type"   : "bool",
             "default": false
         },
-        "smtpSecurity": {
-            "type": "enum",
-            "options": ["", "SSL", "TLS"]
+        "smtpSecurity"                       : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "SSL",
+                "TLS"
+            ]
         },
-        "smtpUsername": {
-            "type": "varchar",
+        "smtpUsername"                       : {
+            "type"    : "varchar",
             "required": true
         },
-        "smtpPassword": {
+        "smtpPassword"                       : {
             "type": "password"
         },
-        "language": {
-            "type": "enum",
-            "default": "en_US"            
+        "language"                           : {
+            "type"   : "enum",
+            "default": "en_US"
         },
-        "exportDelimiter": {
-            "type": "varchar",
-            "default": ",",
-            "required": true,
+        "exportDelimiter"                    : {
+            "type"     : "varchar",
+            "default"  : ",",
+            "required" : true,
             "maxLength": 1
         },
         "receiveAssignmentEmailNotifications": {
-            "type": "bool",
+            "type"   : "bool",
             "default": true
         }
     }

@@ -18,18 +18,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Repositories;
 
+use Espo\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
 
-class Call extends \Espo\Core\ORM\Repositories\RDB
-{    
+class Call extends
+    RDB
+{
+
     protected function beforeSave(Entity $entity)
-    {    
+    {
         parent::beforeSave($entity);
-        
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
         if (!empty($parentId) || !empty($parentType)) {
@@ -44,7 +45,7 @@ class Call extends \Espo\Core\ORM\Repositories\RDB
                     $entity->set('accountId', $accountId);
                 }
             }
-        }        
+        }
     }
 }
 

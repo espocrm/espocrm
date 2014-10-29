@@ -1,75 +1,75 @@
 {
-    "fields": {
-        "post": {
+    "fields"       : {
+        "post"       : {
             "type": "text"
         },
-        "data": {
+        "data"       : {
             "type": "jsonObject"
         },
-        "type": {
+        "type"       : {
             "type": "varchar"
         },
-        "parent": {
+        "parent"     : {
             "type": "linkParent"
         },
         "attachments": {
             "type": "linkMultiple",
             "view": "Stream.Fields.AttachmentMultiple"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"  : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt" : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"  : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy" : {
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"        : {
+        "createdBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy" : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
         "attachments": {
-            "type": "hasChildren",
-            "entity": "Attachment",
+            "type"        : "hasChildren",
+            "entity"      : "Attachment",
             "relationName": "NoteAttachments",
-            "foreign": "parent"
+            "foreign"     : "parent"
         },
-        "parent": {
-            "type": "belongsToParent",
+        "parent"     : {
+            "type"   : "belongsToParent",
             "foreign": "notes"
         }
     },
-    "collection": {
+    "collection"   : {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     },
     "streamRelated": {
-        "Account": [
+        "Account"    : [
             "meetings",
             "calls",
             "tasks",
             "opportunities"
         ],
-        "Contact": [
+        "Contact"    : [
             "meetings",
             "calls",
             "tasks"
         ],
-        "Lead": [
+        "Lead"       : [
             "meetings",
             "calls",
             "tasks"
@@ -79,7 +79,7 @@
             "calls",
             "tasks"
         ],
-        "Case": [
+        "Case"       : [
             "meetings",
             "calls",
             "tasks"

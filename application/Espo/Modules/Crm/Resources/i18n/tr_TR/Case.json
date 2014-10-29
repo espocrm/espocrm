@@ -1,38 +1,37 @@
 {
-    "fields": {
-        "name": "İsim",
-        "number": "Numara",
-        "status": "Durum",
-        "account": "Hesap",
-        "contact": "Bağlantı",
-        "priority": "Öncelik",
-        "type": "Tür",
+    "fields" : {
+        "name"       : "İsim",
+        "number"     : "Numara",
+        "status"     : "Durum",
+        "account"    : "Hesap",
+        "contact"    : "Bağlantı",
+        "priority"   : "Öncelik",
+        "type"       : "Tür",
         "description": "açıklama"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "status": {
-            "New": "Yeni",
-            "Assigned": "Atanmış",
-            "Pending": "Beklemede",
-            "Closed": "Kapandı",
-            "Rejected": "Reddedildi",
+        "status"  : {
+            "New"      : "Yeni",
+            "Assigned" : "Atanmış",
+            "Pending"  : "Beklemede",
+            "Closed"   : "Kapandı",
+            "Rejected" : "Reddedildi",
             "Duplicate": "Kopyala"
         },
-        "priority" : {
-            "Low": "Düşük",
+        "priority": {
+            "Low"   : "Düşük",
             "Normal": "Normal",
-            "High": "Yüksek",
+            "High"  : "Yüksek",
             "Urgent": "Acil"
         },
-        "type": {
+        "type"    : {
             "Question": "Soru",
             "Incident": "Olay",
-            "Problem": "sorun"
+            "Problem" : "sorun"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Case": "Dosya Oluştur"
     }
 }

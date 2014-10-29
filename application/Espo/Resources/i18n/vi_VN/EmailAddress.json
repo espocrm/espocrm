@@ -1,7 +1,7 @@
 {
     "labels": {
-        "Primary": "Chính",
+        "Primary"  : "Chính",
         "Opted Out": "Chọn ra",
-        "Invalid": "Không hợp lệ"
+        "Invalid"  : "Không hợp lệ"
     }
 }

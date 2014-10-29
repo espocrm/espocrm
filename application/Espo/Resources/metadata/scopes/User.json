@@ -1,1 +1,6 @@
-{"entity":true,"layouts":true,"tab":false,"acl":false,"customizable":true}
+{"entity"         : true,
+    "layouts"     : true,
+    "tab"         : false,
+    "acl"         : false,
+    "customizable": true
+}

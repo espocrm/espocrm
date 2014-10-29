@@ -19,14 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Loaders;
 
-abstract class Base implements \Espo\Core\Interfaces\Loader
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Loader;
+
+abstract class Base implements
+    Loader
 {
+
     private $container;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }

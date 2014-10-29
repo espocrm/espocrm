@@ -1,203 +1,231 @@
 {
-    "fields": {
-        "name": {
+    "fields"       : {
+        "name"                      : {
             "type": "personName"
         },
-        "salutationName": {
-            "type": "enum",
-            "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]
+        "salutationName"            : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Mr.",
+                "Mrs.",
+                "Dr.",
+                "Drs."
+            ]
         },
-        "firstName": {
-            "type": "varchar",
+        "firstName"                 : {
+            "type"     : "varchar",
             "maxLength": 100,
-            "default":""
+            "default"  : ""
         },
-        "lastName": {
-            "type": "varchar",
+        "lastName"                  : {
+            "type"     : "varchar",
             "maxLength": 100,
-            "required": true,
-            "default":""
+            "required" : true,
+            "default"  : ""
         },
-        "title": {
-            "type": "varchar",
+        "title"                     : {
+            "type"     : "varchar",
             "maxLength": 100
         },
-        "status": {
-            "type": "enum",
-            "options": ["New", "Assigned", "In Process", "Converted", "Recycled", "Dead"],
+        "status"                    : {
+            "type"   : "enum",
+            "options": [
+                "New",
+                "Assigned",
+                "In Process",
+                "Converted",
+                "Recycled",
+                "Dead"
+            ],
             "default": "New",
-            "view": "Fields.EnumStyled",
-            "style": {
+            "view"   : "Fields.EnumStyled",
+            "style"  : {
                 "Converted": "success",
-                "Recycled": "danger",
-                "Dead": "danger"
+                "Recycled" : "danger",
+                "Dead"     : "danger"
             }
         },
-        "source": {
-            "type": "enum",
-            "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"]
+        "source"                    : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Call",
+                "Email",
+                "Existing Customer",
+                "Partner",
+                "Public Relations",
+                "Web Site",
+                "Campaign",
+                "Other"
+            ]
         },
-        "opportunityAmount": {
-            "type": "currency",
+        "opportunityAmount"         : {
+            "type"   : "currency",
             "audited": true
         },
         "opportunityAmountConverted": {
-            "type": "currencyConverted",
-            "readOnly": true          
+            "type"    : "currencyConverted",
+            "readOnly": true
         },
-        "website": {
+        "website"                   : {
             "type": "url"
         },
-        "address": {
+        "address"                   : {
             "type": "address"
         },
-        "addressStreet": {
-            "type": "text",
+        "addressStreet"             : {
+            "type"     : "text",
             "maxLength": 255,
-            "dbType": "varchar"
+            "dbType"   : "varchar"
         },
-        "addressCity": {
+        "addressCity"               : {
             "type": "varchar"
         },
-        "addressState": {
+        "addressState"              : {
             "type": "varchar"
         },
-        "addressCountry": {
+        "addressCountry"            : {
             "type": "varchar"
         },
-        "addressPostalCode": {
+        "addressPostalCode"         : {
             "type": "varchar"
         },
-        "emailAddress": {
+        "emailAddress"              : {
             "type": "email"
         },
-        "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+        "phoneNumber"               : {
+            "type"       : "phone",
+            "typeList"   : [
+                "Mobile",
+                "Office",
+                "Home",
+                "Fax",
+                "Other"
+            ],
             "defaultType": "Mobile"
         },
-        "doNotCall": {
+        "doNotCall"                 : {
             "type": "bool"
         },
-        "description": {
+        "description"               : {
             "type": "text"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"                 : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"                : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"                 : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"                : {
+            "type"    : "link",
             "readOnly": true
         },
-        "accountName": {
+        "accountName"               : {
             "type": "varchar"
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"              : {
+            "type"    : "link",
             "required": true
         },
-        "acceptanceStatus": {
-            "type": "varchar",
+        "acceptanceStatus"          : {
+            "type"       : "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled"   : true
         },
-        "teams": {
+        "teams"                     : {
             "type": "linkMultiple"
         },
-        "createdAccount": {
-            "type": "link",
+        "createdAccount"            : {
+            "type"    : "link",
             "disabled": true,
             "readOnly": true
         },
-        "createdContact": {
-            "type": "link",
+        "createdContact"            : {
+            "type"    : "link",
             "disabled": true,
             "readOnly": true
         },
-        "createdOpportunity": {
-            "type": "link",
+        "createdOpportunity"        : {
+            "type"    : "link",
             "disabled": true,
             "readOnly": true
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"        : {
+        "createdBy"         : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"        : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "assignedUser": {
-            "type": "belongsTo",
+        "assignedUser"      : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"             : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
+        "opportunities"     : {
+            "type"   : "hasMany",
+            "entity" : "Opportunity",
             "foreign": "leads"
         },
-        "meetings": {
-            "type": "hasMany",
-            "entity": "Meeting",
+        "meetings"          : {
+            "type"   : "hasMany",
+            "entity" : "Meeting",
             "foreign": "leads"
         },
-        "calls": {
-            "type": "hasMany",
-            "entity": "Call",
+        "calls"             : {
+            "type"   : "hasMany",
+            "entity" : "Call",
             "foreign": "leads"
         },
-        "tasks": {
-            "type": "hasChildren",
-            "entity": "Task",
+        "tasks"             : {
+            "type"   : "hasChildren",
+            "entity" : "Task",
             "foreign": "parent"
         },
-        "createdAccount": {
-            "type": "belongsTo",
+        "createdAccount"    : {
+            "type"  : "belongsTo",
             "entity": "Account"
         },
-        "createdContact": {
-            "type": "belongsTo",
+        "createdContact"    : {
+            "type"  : "belongsTo",
             "entity": "Contact"
         },
         "createdOpportunity": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "Opportunity"
         }
     },
     "convertFields": {
-        "Contact": {
-        },
-        "Account": {
-            "name": "accountName",
-            "billingAddressStreet": "addressStreet",
-            "billingAddressCity": "addressCity",
-            "billingAddressState": "addressState",
+        "Contact"    : {},
+        "Account"    : {
+            "name"                    : "accountName",
+            "billingAddressStreet"    : "addressStreet",
+            "billingAddressCity"      : "addressCity",
+            "billingAddressState"     : "addressState",
             "billingAddressPostalCode": "addressPostalCode",
-            "billingAddressCountry": "addressCountry"
+            "billingAddressCountry"   : "addressCountry"
         },
         "Opportunity": {
-            "amount": "opportunityAmount",
+            "amount"    : "opportunityAmount",
             "leadSource": "source"
         }
     },
-    "collection": {
+    "collection"   : {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

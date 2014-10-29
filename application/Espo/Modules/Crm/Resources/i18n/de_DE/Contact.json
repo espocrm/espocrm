@@ -1,31 +1,31 @@
 {
-    "fields": {
-        "name": "Name",
-        "emailAddress": "E-Mail",
-        "title": "Funktion",
-        "account": "Firma",
-        "accounts": "Firmen",
-        "phoneNumber": "Telefon",
-        "accountType": "Firmentyp",
-        "doNotCall": "Nicht anrufen",
-        "address": "Adresse",
+    "fields" : {
+        "name"           : "Name",
+        "emailAddress"   : "E-Mail",
+        "title"          : "Funktion",
+        "account"        : "Firma",
+        "accounts"       : "Firmen",
+        "phoneNumber"    : "Telefon",
+        "accountType"    : "Firmentyp",
+        "doNotCall"      : "Nicht anrufen",
+        "address"        : "Adresse",
         "opportunityRole": "Verkaufschance Rolle",
-        "accountRole": "Rolle",
-        "description": "Beschreibung"
+        "accountRole"    : "Rolle",
+        "description"    : "Beschreibung"
     },
-    "links": {
+    "links"  : {
         "opportunities": "Verkaufschancen",
-        "cases": "Fälle"
+        "cases"        : "Fälle"
     },
-    "labels": {
+    "labels" : {
         "Create Contact": "Neuer Kontakt"
     },
     "options": {
         "opportunityRole": {
-            "": "--Kein(e)--",
+            ""              : "--Kein(e)--",
             "Decision Maker": "Entscheider",
-            "Evaluator": "Vorentscheider",
-            "Influencer": "Einflussreiche Person"
+            "Evaluator"     : "Vorentscheider",
+            "Influencer"    : "Einflussreiche Person"
         }
     }
 }

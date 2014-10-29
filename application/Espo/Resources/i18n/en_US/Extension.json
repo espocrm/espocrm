@@ -1,13 +1,13 @@
 {
-    "fields": {
-        "name": "Name",
-        "version": "Version",
+    "fields"  : {
+        "name"       : "Name",
+        "version"    : "Version",
         "description": "Description",
         "isInstalled": "Installed"
     },
-    "labels": {
+    "labels"  : {
         "Uninstall": "Uninstall",
-        "Install": "Install"
+        "Install"  : "Install"
     },
     "messages": {
         "uninstalled": "Extension {name} has been uninstalled"

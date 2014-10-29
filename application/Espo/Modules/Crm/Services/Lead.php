@@ -18,44 +18,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\ORM\Entity;
+use Espo\Services\Record;
 
-use \Espo\ORM\Entity;
+class Lead extends
+    Record
+{
 
-class Lead extends \Espo\Services\Record
-{    
-    protected function getDuplicateWhereClause(Entity $entity)
-    {
-        return array(
-            'OR' => array(
-                array(
-                    'firstName' => $entity->get('firstName'),
-                    'lastName' => $entity->get('lastName'),
-                ),
-                array(
-                    'emailAddress' => $entity->get('emailAddress'),
-                ),
-            ),
-        );
-    }
-    
     public function convert($id, $recordsData)
     {
+        /**
+         * @var Call $call
+         * @var Meeting $meeting
+         */
         $lead = $this->getEntity($id);
-        
         if (!$this->getAcl()->check($lead, 'edit')) {
             throw new Forbidden();
         }
-
         $entityManager = $this->getEntityManager();
-
-
-        if (!empty($recordsData->Account)) {        
+        if (!empty($recordsData->Account)) {
             $account = $entityManager->getEntity('Account');
             $account->set(get_object_vars($recordsData->Account));
             $entityManager->saveEntity($account);
@@ -80,18 +67,15 @@ class Lead extends \Espo\Services\Record
             if (isset($opportunity)) {
                 $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
             }
-            $lead->set('createdContactId', $contact->id);                      
+            $lead->set('createdContactId', $contact->id);
         }
-
-        $lead->set('status', 'Converted');        
+        $lead->set('status', 'Converted');
         $entityManager->saveEntity($lead);
-        
         if ($meetings = $lead->get('meetings')) {
             foreach ($meetings as $meeting) {
                 if (!empty($contact)) {
                     $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
-                }                
-                
+                }
                 if (!empty($opportunity)) {
                     $meeting->set('parentId', $opportunity->id);
                     $meeting->set('parentType', 'Opportunity');
@@ -118,9 +102,23 @@ class Lead extends \Espo\Services\Record
                     $entityManager->saveEntity($call);
                 }
             }
-        } 
-
+        }
         return $lead;
+    }
+
+    protected function getDuplicateWhereClause(Entity $entity)
+    {
+        return array(
+            'OR' => array(
+                array(
+                    'firstName' => $entity->get('firstName'),
+                    'lastName' => $entity->get('lastName'),
+                ),
+                array(
+                    'emailAddress' => $entity->get('emailAddress'),
+                ),
+            ),
+        );
     }
 }
 

@@ -1,105 +1,120 @@
 {
-    "fields": {
-        "isAdmin": {
+    "fields"    : {
+        "isAdmin"         : {
             "type": "bool"
         },
-        "userName": {
-            "type": "varchar",
+        "userName"        : {
+            "type"     : "varchar",
             "maxLength": 50,
-            "required": true,
-            "view": "User.Fields.UserName",
-            "tooltip": true
+            "required" : true,
+            "view"     : "User.Fields.UserName",
+            "tooltip"  : true
         },
-        "name": {
+        "name"            : {
             "type": "personName"
         },
-        "password": {
-            "type": "password",
+        "password"        : {
+            "type"     : "password",
             "maxLength": 150,
-            "internal": true
+            "internal" : true
         },
-        "salutationName": {
-            "type": "enum",
-            "options": ["", "Mr.", "Mrs.", "Dr.", "Drs."]
+        "salutationName"  : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Mr.",
+                "Mrs.",
+                "Dr.",
+                "Drs."
+            ]
         },
-        "firstName": {
-            "type": "varchar",
+        "firstName"       : {
+            "type"     : "varchar",
             "maxLength": 100,
-            "default":""
+            "default"  : ""
         },
-        "lastName": {
-            "type": "varchar",
+        "lastName"        : {
+            "type"     : "varchar",
             "maxLength": 100,
-            "required": true,
-            "default":""
+            "required" : true,
+            "default"  : ""
         },
-        "title": {
-            "type": "varchar",
+        "title"           : {
+            "type"     : "varchar",
             "maxLength": 100
         },
-        "emailAddress": {
-            "type": "email",
+        "emailAddress"    : {
+            "type"    : "email",
             "required": false
         },
-        "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+        "phoneNumber"     : {
+            "type"       : "phone",
+            "typeList"   : [
+                "Mobile",
+                "Office",
+                "Home",
+                "Fax",
+                "Other"
+            ],
             "defaultType": "Mobile"
         },
-        "token": {
-            "type": "varchar",
+        "token"           : {
+            "type"       : "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled"   : true
         },
-        "defaultTeam": {
-            "type": "link",
+        "defaultTeam"     : {
+            "type"   : "link",
             "tooltip": true
         },
         "acceptanceStatus": {
-            "type": "varchar",
+            "type"       : "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled"   : true
         },
-        "teams": {
+        "teams"           : {
             "type": "linkMultiple"
         },
-        "roles": {
+        "roles"           : {
             "type": "linkMultiple"
         }
     },
-    "links": {
+    "links"     : {
         "defaultTeam": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "Team"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"      : {
+            "type"   : "hasMany",
+            "entity" : "Team",
             "foreign": "users"
         },
-        "roles": {
-            "type": "hasMany",
-            "entity": "Role",
+        "roles"      : {
+            "type"   : "hasMany",
+            "entity" : "Role",
             "foreign": "users"
         },
         "preferences": {
-            "type": "hasOne",
+            "type"  : "hasOne",
             "entity": "Preferences"
         },
-        "meetings": {
-            "type": "hasMany",
-            "entity": "Meeting",
+        "meetings"   : {
+            "type"   : "hasMany",
+            "entity" : "Meeting",
             "foreign": "users"
         },
-        "calls": {
-            "type": "hasMany",
-            "entity": "Call",
+        "calls"      : {
+            "type"   : "hasMany",
+            "entity" : "Call",
             "foreign": "users"
         }
     },
     "collection": {
-        "sortBy": "userName",
-        "asc": true,
-        "textFilterFields": ["name", "userName"]
+        "sortBy"          : "userName",
+        "asc"             : true,
+        "textFilterFields": [
+            "name",
+            "userName"
+        ]
     }
 }

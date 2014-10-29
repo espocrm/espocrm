@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "İsim",
-        "emailAddress": "Eposta",
-        "website": "Website",
-        "phone": "Telefon",
-        "fax": "Faks",
-        "billingAddress": "Fatura Adresi",
+    "fields" : {
+        "name"           : "İsim",
+        "emailAddress"   : "Eposta",
+        "website"        : "Website",
+        "phone"          : "Telefon",
+        "fax"            : "Faks",
+        "billingAddress" : "Fatura Adresi",
         "shippingAddress": "Teslimat Adresi",
-        "description": "açıklama",
-        "sicCode": "Firma Kodu",
-        "industry": "Sektör",
-        "type": "Tür"        
+        "description"    : "açıklama",
+        "sicCode"        : "Firma Kodu",
+        "industry"       : "Sektör",
+        "type"           : "Tür"
     },
-    "links": {
-        "contacts": "Bağlantılar",
+    "links"  : {
+        "contacts"     : "Bağlantılar",
         "opportunities": "Fırsatlar",
-        "cases": "Dosyalar"
+        "cases"        : "Dosyalar"
     },
     "options": {
-        "type": {
+        "type"    : {
             "Customer": "Müşteri",
             "Investor": "Yatırımcı",
-            "Partner": "Ortak",
+            "Partner" : "Ortak",
             "Reseller": "Satıcı"
         },
         "industry": {
-            "Apparel": "Konfeksiyon",
-            "Banking": "Bankacılık",
+            "Apparel"          : "Konfeksiyon",
+            "Banking"          : "Bankacılık",
             "Computer Software": "Bilgisayar Yazılımı",
-            "Education": "Eğitim",
-            "Electronics": "Elektronik",
-            "Finance": "Finans",
-            "Insurance": "Sigortacılık"
+            "Education"        : "Eğitim",
+            "Electronics"      : "Elektronik",
+            "Finance"          : "Finans",
+            "Insurance"        : "Sigortacılık"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Account": "Hesap Oluştur"
     }
 }

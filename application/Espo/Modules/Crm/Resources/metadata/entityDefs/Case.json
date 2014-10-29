@@ -1,119 +1,136 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"        : {
+            "type"    : "varchar",
             "required": true
         },
-        "number": {
+        "number"      : {
             "type": "autoincrement"
         },
-        "status": {
-            "type": "enum",
-            "options": ["New", "Assigned", "Pending", "Closed", "Rejected", "Duplicate"],
+        "status"      : {
+            "type"   : "enum",
+            "options": [
+                "New",
+                "Assigned",
+                "Pending",
+                "Closed",
+                "Rejected",
+                "Duplicate"
+            ],
             "default": "New",
-            "view": "Fields.EnumStyled",
-            "style": {
-                "Closed": "success",
+            "view"   : "Fields.EnumStyled",
+            "style"  : {
+                "Closed"   : "success",
                 "Duplicate": "danger",
-                "Rejected": "danger"
+                "Rejected" : "danger"
             }
         },
-        "priority": {
-            "type": "enum",
-            "options": ["Low", "Normal", "High", "Urgent"],
+        "priority"    : {
+            "type"   : "enum",
+            "options": [
+                "Low",
+                "Normal",
+                "High",
+                "Urgent"
+            ],
             "default": "Normal",
             "audited": true
         },
-        "type": {
-            "type": "enum",
-            "options": ["", "Question", "Incident", "Problem"],
+        "type"        : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Question",
+                "Incident",
+                "Problem"
+            ],
             "audited": true
         },
-        "description": {
+        "description" : {
             "type": "text"
         },
-        "account": {
+        "account"     : {
             "type": "link"
         },
-        "contact": {
+        "contact"     : {
             "type": "link"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"   : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"  : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"   : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"  : {
+            "type"    : "link",
             "readOnly": true
         },
         "assignedUser": {
-            "type": "link",
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"       : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
         "assignedUser": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"       : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "account": {
-            "type": "belongsTo",
-            "entity": "Account",
+        "account"     : {
+            "type"   : "belongsTo",
+            "entity" : "Account",
             "foreign": "cases"
         },
-        "contact": {
-            "type": "belongsTo",
-            "entity": "Contact",
+        "contact"     : {
+            "type"   : "belongsTo",
+            "entity" : "Contact",
             "foreign": "cases"
         },
-        "meetings": {
-            "type": "hasChildren",
-            "entity": "Meeting",
+        "meetings"    : {
+            "type"   : "hasChildren",
+            "entity" : "Meeting",
             "foreign": "parent"
         },
-        "calls": {
-            "type": "hasChildren",
-            "entity": "Call",
+        "calls"       : {
+            "type"   : "hasChildren",
+            "entity" : "Call",
             "foreign": "parent"
         },
-        "tasks": {
-            "type": "hasChildren",
-            "entity": "Task",
+        "tasks"       : {
+            "type"   : "hasChildren",
+            "entity" : "Task",
             "foreign": "parent"
         },
-        "emails": {
-            "type": "hasChildren",
-            "entity": "Email",
+        "emails"      : {
+            "type"   : "hasChildren",
+            "entity" : "Email",
             "foreign": "parent"
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false,
+        "sortBy"     : "number",
+        "asc"        : false,
         "boolFilters": ["onlyMy"]
     }
 }

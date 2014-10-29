@@ -1,15 +1,14 @@
 {
     "fields": {
-        "name": "Tên",
-        "status": "Trạng thái",
-        "isHtml": "Chỉ Html",
-        "body": "Nội dung",
-        "subject": "Chủ đề",
+        "name"       : "Tên",
+        "status"     : "Trạng thái",
+        "isHtml"     : "Chỉ Html",
+        "body"       : "Nội dung",
+        "subject"    : "Chủ đề",
         "attachments": "Đính kèm",
         "insertField": ""
     },
-    "links": {
-    },
+    "links" : {},
     "labels": {
         "Create EmailTemplate": "Tạo mẫu email"
     }

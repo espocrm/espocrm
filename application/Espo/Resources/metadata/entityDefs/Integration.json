@@ -1,6 +1,6 @@
 {
     "fields": {
-        "data": {
+        "data"   : {
             "type": "jsonObject"
         },
         "enabled": {

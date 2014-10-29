@@ -18,25 +18,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
-class Lead extends \Espo\Core\Controllers\Record
+/**
+ * Class Lead
+ *
+ * @method \Espo\Modules\Crm\Services\Lead getRecordService()
+ * @package Espo\Modules\Crm\Controllers
+ */
+class Lead extends
+    Record
 {
+
     public function actionConvert($params, $data)
-    {        
+    {
         if (empty($data['id'])) {
             throw new BadRequest();
         }
         $entity = $this->getRecordService()->convert($data['id'], $data['records']);
-        
         if (!empty($entity)) {
             return $entity->toArray();
         }
-        throw new Error();        
+        throw new Error();
     }
 }

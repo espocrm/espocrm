@@ -1,13 +1,13 @@
 {
-    "modes": {
-        "month": "Ay",
-        "week": "hafta",
-        "day": "Gün",
+    "modes" : {
+        "month"     : "Ay",
+        "week"      : "hafta",
+        "day"       : "Gün",
         "agendaWeek": "hafta",
-        "agendaDay": "Gün"
+        "agendaDay" : "Gün"
     },
     "labels": {
-        "Today": "Bugün",
+        "Today" : "Bugün",
         "Create": "Oluştur"
     }
 }

@@ -18,23 +18,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Base;
+use Slim\Http\Request;
 
-class GlobalSearch extends \Espo\Core\Controllers\Base
+class GlobalSearch extends
+    Base
 {
+
+    /**
+     * @param          $params
+     * @param          $data
+     * @param  Request $request
+     *
+     * @return mixed
+
+     */
     public function actionSearch($params, $data, $request)
     {
+        /**
+         * @var \Espo\Services\GlobalSearch $globalSearchService
+         */
         $query = $params['query'];
-        
         $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');        
-        
-        return $this->getService('GlobalSearch')->find($query, $offset, $maxSize);
+        $maxSize = $request->get('maxSize');
+        $globalSearchService = $this->getService('GlobalSearch');
+        return $globalSearchService->find($query, $offset, $maxSize);
     }
 }
 

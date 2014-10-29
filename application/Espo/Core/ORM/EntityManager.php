@@ -18,68 +18,83 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core\ORM;
 
-use \Espo\Core\Utils\Util;
+use Espo\Core\Container;
+use Espo\Core\HookManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
-class EntityManager extends \Espo\ORM\EntityManager
+class EntityManager extends
+    \Espo\ORM\EntityManager
 {
+
+    /**
+     * @var Metadata
+     */
     protected $espoMetadata;
-    
-    private $hookManager;
-    
+
     protected $user;
-    
+
     protected $container;
-    
+
+    private $hookManager;
+
     private $repositoryClassNameHash = array();
-    
+
     private $entityClassNameHash = array();
-    
-    public function setContainer(\Espo\Core\Container $container)
-    {
-        $this->container = $container;    
-    }
-    
+
+    /**
+     * @return Container
+
+     */
     public function getContainer()
     {
-        return $this->container;    
+        return $this->container;
     }
-    
-    public function setUser($user)
+
+    public function setContainer(Container $container)
     {
-        $this->user = $user;
+        $this->container = $container;
     }
-    
+
     public function getUser()
     {
         return $this->user;
     }
-    
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
     public function getEspoMetadata()
     {
         return $this->espoMetadata;
-    }        
+    }
 
     public function setEspoMetadata($espoMetadata)
     {
         $this->espoMetadata = $espoMetadata;
     }
-    
-    public function setHookManager(\Espo\Core\HookManager $hookManager)
-    {
-        $this->hookManager = $hookManager;
-    }
-    
+
+    /**
+     * @return HookManager
+
+     */
     public function getHookManager()
     {
         return $this->hookManager;
     }
 
+    public function setHookManager(HookManager $hookManager)
+    {
+        $this->hookManager = $hookManager;
+    }
+
     public function normalizeRepositoryName($name)
-    {            
+    {
         if (empty($this->repositoryClassNameHash[$name])) {
             $className = '\\Espo\\Custom\\Repositories\\' . Util::normilizeClassName($name);
             if (!class_exists($className)) {
@@ -89,9 +104,9 @@ class EntityManager extends \Espo\ORM\EntityManager
         }
         return $this->repositoryClassNameHash[$name];
     }
-    
+
     public function normalizeEntityName($name)
-    {            
+    {
         if (empty($this->entityClassNameHash[$name])) {
             $className = '\\Espo\\Custom\\Entities\\' . Util::normilizeClassName($name);
             if (!class_exists($className)) {

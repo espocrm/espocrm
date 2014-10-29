@@ -18,50 +18,67 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
+use Espo\Core\Controllers\Base;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils as Utils;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Entities\Attachment;
 
-class Import extends \Espo\Core\Controllers\Base
-{    
-    
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
-    }
-    
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-    
+class Import extends
+    Base
+{
+
     public function actionUploadFile($params, $data)
-    {    
+    {
+        /**
+         * @var Attachment $attachment
+         */
         $contents = $data;
-        
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');
-        $attachment->set('role', 'Import File');        
+        $attachment->set('role', 'Import File');
         $this->getEntityManager()->saveEntity($attachment);
-        
         $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
-        
         return array(
             'attachmentId' => $attachment->id
         );
     }
-    
-    public function actionRevert($params, $data)
-    {            
-        return $this->getService('Import')->revert($data['entityType'], $data['idsToRemove']);
+
+    /**
+     * @return EntityManager
+
+     */
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('entityManager');
     }
-    
+
+    /**
+     * @return  Utils\File\Manager
+
+     */
+    protected function getFileManager()
+    {
+        return $this->getContainer()->get('fileManager');
+    }
+
+    public function actionRevert($params, $data)
+    {
+        /**
+         * @var \Espo\Services\Import $importService
+         */
+        $importService = $this->getService('Import');
+        return $importService->revert($data['entityType'], $data['idsToRemove']);
+    }
+
     public function actionCreate($params, $data)
-    {   
+    {
+        /**
+         * @var \Espo\Services\Import $importService
+         */
         $importParams = array(
             'headerRow' => $data['headerRow'],
             'fieldDelimiter' => $data['fieldDelimiter'],
@@ -74,14 +91,12 @@ class Import extends \Espo\Core\Controllers\Base
             'defaultValues' => $data['defaultValues'],
             'action' => $data['action'],
         );
-        
         $attachmentId = $data['attachmentId'];
-        
         if (!$this->getAcl()->check($data['entityType'], 'edit')) {
             throw new Forbidden();
         }
-        
-        return $this->getService('Import')->import($data['entityType'], $data['fields'], $attachmentId, $importParams);
+        $importService = $this->getService('Import');
+        return $importService->import($data['entityType'], $data['fields'], $attachmentId, $importParams);
     }
 }
 

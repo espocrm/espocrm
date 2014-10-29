@@ -1,6 +1,6 @@
 {
     "fields": {
-        "post": "Post",
+        "post"       : "Post",
         "attachments": "Attachments"
     }
 }

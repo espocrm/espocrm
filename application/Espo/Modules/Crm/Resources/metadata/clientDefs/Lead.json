@@ -1,41 +1,45 @@
 {
-   "controller": "Crm:Controllers.Lead",
-   "views":{
-      "detail":"Crm:Lead.Detail"
-   },
-   "recordViews":{
-      "detail":"Crm:Lead.Record.Detail"
-   },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"Crm:Record.Panels.Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"Crm:Record.Panels.History"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"Crm:Record.Panels.Tasks"
-         }
-      ]
-   },
-   "presetFilters": [
-      {
-         "name":"active",
-         "style": "primary",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["New", "Assigned", "In Process"]
+    "controller"   : "Crm:Controllers.Lead",
+    "views"        : {
+        "detail": "Crm:Lead.Detail"
+    },
+    "recordViews"  : {
+        "detail": "Crm:Lead.Record.Detail"
+    },
+    "sidePanels"   : {
+        "detail": [
+            {
+                "name" : "activities",
+                "label": "Activities",
+                "view" : "Crm:Record.Panels.Activities"
+            },
+            {
+                "name" : "history",
+                "label": "History",
+                "view" : "Crm:Record.Panels.History"
+            },
+            {
+                "name" : "tasks",
+                "label": "Tasks",
+                "view" : "Crm:Record.Panels.Tasks"
             }
-         }
-      }  
-   ],
-    "boolFilters": ["onlyMy"]
+        ]
+    },
+    "presetFilters": [
+        {
+            "name" : "active",
+            "style": "primary",
+            "data" : {
+                "status": {
+                    "type" : "in",
+                    "value": [
+                        "New",
+                        "Assigned",
+                        "In Process"
+                    ]
+                }
+            }
+        }
+    ],
+    "boolFilters"  : ["onlyMy"]
 }

@@ -1,44 +1,43 @@
 {
-    "fields": {
-        "name": "Name",
-        "parent": "Parent",
-        "status": "Status",
-        "dateStart": "Date Start",
-        "dateEnd": "Date End",
-        "direction": "Direction",
-        "duration": "Duration",
+    "fields"       : {
+        "name"       : "Name",
+        "parent"     : "Parent",
+        "status"     : "Status",
+        "dateStart"  : "Date Start",
+        "dateEnd"    : "Date End",
+        "direction"  : "Direction",
+        "duration"   : "Duration",
         "description": "Description",
-        "users": "Users",
-        "contacts": "Contacts",
-        "leads": "Leads"
+        "users"      : "Users",
+        "contacts"   : "Contacts",
+        "leads"      : "Leads"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Planned",
-            "Held": "Held",
+    "links"        : {},
+    "options"      : {
+        "status"          : {
+            "Planned" : "Planned",
+            "Held"    : "Held",
             "Not Held": "Not Held"
         },
-        "direction": {
+        "direction"       : {
             "Outbound": "Outbound",
-            "Inbound": "Inbound"
+            "Inbound" : "Inbound"
         },
         "acceptanceStatus": {
-            "None": "None",
+            "None"    : "None",
             "Accepted": "Accepted",
             "Declined": "Declined"
         }
     },
-    "labels": {
-        "Create Call": "Create Call",
-        "Set Held": "Set Held",
-        "Set Not Held": "Set Not Held",
-        "Send Invitations": "Send Invitations"        
+    "labels"       : {
+        "Create Call"     : "Create Call",
+        "Set Held"        : "Set Held",
+        "Set Not Held"    : "Set Not Held",
+        "Send Invitations": "Send Invitations"
     },
     "presetFilters": {
         "planned": "Planned",
-        "held": "Held",
-        "todays": "Today's"
+        "held"   : "Held",
+        "todays" : "Today's"
     }
 }

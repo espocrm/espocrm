@@ -18,11 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Entities;
 
-class Call extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Call extends
+    Entity
 {
 
 }

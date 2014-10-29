@@ -1,17 +1,17 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      }
-   ],
-   "actualFields":[
-      "ids"
-   ],
-   "notActualFields":[
-      "names"
-   ],
-   "notCreatable": true,
-   "filter": true
+    "params"         : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        }
+    ],
+    "actualFields"   : [
+        "ids"
+    ],
+    "notActualFields": [
+        "names"
+    ],
+    "notCreatable"   : true,
+    "filter"         : true
 }

@@ -1,20 +1,20 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name"        : "Nombre",
         "emailAddress": "Correo electrónico",
-        "title": "Título",
-        "account": "Cuenta",
-        "phone": "Teléfono",
-        "phoneOffice": "Phone (Office)",
-        "fax": "Fax",
-        "accountType": "Cuenta Tipo",
-        "doNotCall": "No Llamar",
-        "address": "Dirección",
-        "description": "Descripción"    
+        "title"       : "Título",
+        "account"     : "Cuenta",
+        "phone"       : "Teléfono",
+        "phoneOffice" : "Phone (Office)",
+        "fax"         : "Fax",
+        "accountType" : "Cuenta Tipo",
+        "doNotCall"   : "No Llamar",
+        "address"     : "Dirección",
+        "description" : "Descripción"
     },
-    "links": {
+    "links" : {
         "opportunities": "Oportunidades",
-        "cases": "Casos"
+        "cases"        : "Casos"
     },
     "labels": {
         "Create Contact": "Crear Contacto"

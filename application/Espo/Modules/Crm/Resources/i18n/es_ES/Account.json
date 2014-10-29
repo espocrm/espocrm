@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "emailAddress": "Correo electrónico",
-        "website": "Sito Web",
-        "phone": "Teléfono",
-        "fax": "Fax",
-        "billingAddress": "Dirección de Facturación",
+    "fields" : {
+        "name"           : "Nombre",
+        "emailAddress"   : "Correo electrónico",
+        "website"        : "Sito Web",
+        "phone"          : "Teléfono",
+        "fax"            : "Fax",
+        "billingAddress" : "Dirección de Facturación",
         "shippingAddress": "Dirección de Envío",
-        "description": "Descripción",
-        "sicCode": "Sic Code",
-        "industry": "Industria",
-        "type": "Tipo"        
+        "description"    : "Descripción",
+        "sicCode"        : "Sic Code",
+        "industry"       : "Industria",
+        "type"           : "Tipo"
     },
-    "links": {
-        "contacts": "Contactos",
+    "links"  : {
+        "contacts"     : "Contactos",
         "opportunities": "Oportunidades",
-        "cases": "Casos"
+        "cases"        : "Casos"
     },
     "options": {
-        "type": {
+        "type"    : {
             "Customer": "Cliente",
             "Investor": "Inversor",
-            "Partner": "Partner",
+            "Partner" : "Partner",
             "Reseller": "REvendedor"
         },
         "industry": {
-            "Apparel": "Apparel",
-            "Banking": "Banking",
+            "Apparel"          : "Apparel",
+            "Banking"          : "Banking",
             "Computer Software": "Software",
-            "Education": "Educación",
-            "Electronics": "Electrónicos",
-            "Finance": "Finanzas",
-            "Insurance": "Seguros"
+            "Education"        : "Educación",
+            "Electronics"      : "Electrónicos",
+            "Finance"          : "Finanzas",
+            "Insurance"        : "Seguros"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Account": "Crear Cuenta"
     }
 }

@@ -1,31 +1,31 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"emailAddress": "Email",
-		"title": "Titel",
-		"account": "Klant",
-		"accounts": "Klanten",
-		"phoneNumber": "Telefoon",
-		"accountType": "Klant Type",
-		"doNotCall": "Niet Bellen",
-		"address": "Adres",
-		"opportunityRole": "Kans Rol",
-		"accountRole": "Rol",
-		"description": "Beschrijving"
-	},
-	"links": {
-		"opportunities": "Kansen",
-		"cases": "Casus"
-	},
-	"labels": {
-		"Create Contact": "Contact Aanmaken"
-	},
-	"options": {
-		"opportunityRole": {
-			"": "--Geen--",
-			"Decision Maker": "Beslisser",
-			"Evaluator": "Evaluator",
-			"Influencer": "Beinvloeder"
-		}
-	}
+    "fields" : {
+        "name"           : "Record Naam",
+        "emailAddress"   : "Email",
+        "title"          : "Titel",
+        "account"        : "Klant",
+        "accounts"       : "Klanten",
+        "phoneNumber"    : "Telefoon",
+        "accountType"    : "Klant Type",
+        "doNotCall"      : "Niet Bellen",
+        "address"        : "Adres",
+        "opportunityRole": "Kans Rol",
+        "accountRole"    : "Rol",
+        "description"    : "Beschrijving"
+    },
+    "links"  : {
+        "opportunities": "Kansen",
+        "cases"        : "Casus"
+    },
+    "labels" : {
+        "Create Contact": "Contact Aanmaken"
+    },
+    "options": {
+        "opportunityRole": {
+            ""              : "--Geen--",
+            "Decision Maker": "Beslisser",
+            "Evaluator"     : "Evaluator",
+            "Influencer"    : "Beinvloeder"
+        }
+    }
 }

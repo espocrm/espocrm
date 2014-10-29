@@ -18,11 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-class Metadata extends \Espo\Core\Controllers\Base
+use Espo\Core\Controllers\Base;
+
+class Metadata extends
+    Base
 {
 
     public function actionRead($params, $data)

@@ -1,7 +1,7 @@
 {
-   "collection": "Collections.Note",
-   "recordViews":{
-      "edit":"Note.Record.Edit",
-      "editQuick":"Note.Record.Edit"
-   }
+    "collection" : "Collections.Note",
+    "recordViews": {
+        "edit"     : "Note.Record.Edit",
+        "editQuick": "Note.Record.Edit"
+    }
 }

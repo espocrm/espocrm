@@ -18,11 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Controllers;
 
-class Contact extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+
+class Contact extends
+    Record
 {
 
 }

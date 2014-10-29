@@ -1,56 +1,62 @@
 {
-   "controller": "Controllers.Record",
-   "recordViews":{
-      "list":"Crm:Task.Record.List"
-   },
-   "views": {
-      "list": "Crm:Task.List",
-      "detail": "Crm:Task.Detail"
-   },
-   "presetFilters": [
-      {
-         "name":"actual",
-         "style": "primary",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Not Started", "Started"]
+    "controller"   : "Controllers.Record",
+    "recordViews"  : {
+        "list": "Crm:Task.Record.List"
+    },
+    "views"        : {
+        "list"  : "Crm:Task.List",
+        "detail": "Crm:Task.Detail"
+    },
+    "presetFilters": [
+        {
+            "name" : "actual",
+            "style": "primary",
+            "data" : {
+                "status": {
+                    "type" : "in",
+                    "value": [
+                        "Not Started",
+                        "Started"
+                    ]
+                }
             }
-         }
-      },
-      {
-         "name":"completed",
-         "style": "success",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Completed"]
+        },
+        {
+            "name" : "completed",
+            "style": "success",
+            "data" : {
+                "status": {
+                    "type" : "in",
+                    "value": ["Completed"]
+                }
             }
-         }
-      },
-      {
-         "name":"todays",
-         "data": {
-            "dateEnd": {
-               "type": "today",
-               "dateTime": true
+        },
+        {
+            "name": "todays",
+            "data": {
+                "dateEnd": {
+                    "type"    : "today",
+                    "dateTime": true
+                }
             }
-         }
-      },
-      {
-         "name":"overdue",
-         "style": "danger",
-         "data": {
-            "dateEnd": {
-               "type": "past",
-               "dateTime": true
-            },
-            "status": {
-               "type": "in",
-               "value": ["Not Started", "Started"]
+        },
+        {
+            "name" : "overdue",
+            "style": "danger",
+            "data" : {
+                "dateEnd": {
+                    "type"    : "past",
+                    "dateTime": true
+                },
+                "status" : {
+                    "type" : "in",
+                    "value": [
+                        "Not Started",
+                        "Started"
+                    ]
+                }
             }
-         }
-      }
-   ],
-   "boolFilters": ["onlyMy"]
+        }
+    ],
+    "boolFilters"  : ["onlyMy"]
 }

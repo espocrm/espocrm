@@ -19,26 +19,29 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
+use Espo\Core\Utils\Database\Orm\Base;
+
+class LinkParent extends
+    Base
 {
+
     protected function load($fieldName, $entityName)
     {
         return array(
-            $entityName => array (
+            $entityName => array(
                 'fields' => array(
-                    $fieldName.'Id' => array(
+                    $fieldName . 'Id' => array(
                         'type' => 'foreignId',
                         'index' => $fieldName,
                     ),
-                    $fieldName.'Type' => array(
+                    $fieldName . 'Type' => array(
                         'type' => 'foreignType',
                         'notNull' => false,
                         'index' => $fieldName,
                     ),
-                    $fieldName.'Name' => array(
+                    $fieldName . 'Name' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
                     ),
@@ -46,6 +49,4 @@ class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
             ),
         );
     }
-
-
 }

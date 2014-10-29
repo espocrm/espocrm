@@ -1,7 +1,7 @@
 {
     "labels": {
-        "Primary": "Primário",
+        "Primary"  : "Primário",
         "Opted Out": "Cancelou (opt-out)",
-        "Invalid": "Inválido"
+        "Invalid"  : "Inválido"
     }
 }

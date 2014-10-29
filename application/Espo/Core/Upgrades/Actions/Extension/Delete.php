@@ -19,39 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades\Actions\Extension;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\Extension;
 
-class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
+class Delete extends
+    \Espo\Core\Upgrades\Actions\Base\Delete
 {
+
     protected $extensionEntity;
-
-    /**
-     * Get entity of this extension
-     *
-     * @return \Espo\Entities\Extension
-     */
-    protected function getExtensionEntity()
-    {
-        return $this->extensionEntity;
-    }
-
-    /**
-     * Set Extension Entity
-     *
-     * @param \Espo\Entities\Extension $extensionEntity
-     */
-    protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
-    {
-        $this->extensionEntity = $extensionEntity;
-    }
 
     protected function beforeRunAction()
     {
         $processId = $this->getProcessId();
-
         /** get extension entity */
         $extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
         if (!isset($extensionEntity)) {
@@ -65,5 +46,25 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
         /** Delete extension entity */
         $extensionEntity = $this->getExtensionEntity();
         $this->getEntityManager()->removeEntity($extensionEntity);
+    }
+
+    /**
+     * Get entity of this extension
+     *
+     * @return Extension
+     */
+    protected function getExtensionEntity()
+    {
+        return $this->extensionEntity;
+    }
+
+    /**
+     * Set Extension Entity
+     *
+     * @param Extension $extensionEntity
+     */
+    protected function setExtensionEntity(Extension $extensionEntity)
+    {
+        $this->extensionEntity = $extensionEntity;
     }
 }

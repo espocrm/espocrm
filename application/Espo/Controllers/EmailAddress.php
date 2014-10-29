@@ -18,12 +18,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-class EmailAddress extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+use Slim\Http\Request;
+
+/**
+ * Class EmailAddress
+ * @method \Espo\Services\EmailAddress getRecordService()
+ * @package Espo\Controllers
+ */
+class EmailAddress extends
+    Record
 {
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+
+     */
     public function actionSearchInAddressBook($params, $data, $request)
     {
         $q = $request->get('q');

@@ -1,166 +1,185 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"                     : {
+            "type"    : "varchar",
             "required": true
         },
-        "website": {
+        "website"                  : {
             "type": "url"
         },
-        "emailAddress": {
+        "emailAddress"             : {
             "type": "email"
         },
-        "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Office", "Fax", "Other"],
+        "phoneNumber"              : {
+            "type"       : "phone",
+            "typeList"   : [
+                "Office",
+                "Fax",
+                "Other"
+            ],
             "defaultType": "Office"
         },
-        "type": {
-            "type": "enum",
-            "options": ["", "Customer", "Investor", "Partner", "Reseller"]
+        "type"                     : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Customer",
+                "Investor",
+                "Partner",
+                "Reseller"
+            ]
         },
-        "industry": {
-            "type": "enum",
-            "options": ["", "Apparel", "Banking", "Computer Software", "Education", "Electronics", "Finance", "Insurance"]
+        "industry"                 : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Apparel",
+                "Banking",
+                "Computer Software",
+                "Education",
+                "Electronics",
+                "Finance",
+                "Insurance"
+            ]
         },
-        "sicCode": {
-            "type": "varchar",
+        "sicCode"                  : {
+            "type"     : "varchar",
             "maxLength": 40
         },
-        "contactRole": {
-            "type": "varchar",
+        "contactRole"              : {
+            "type"       : "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled"   : true
         },
-        "billingAddress": {
+        "billingAddress"           : {
             "type": "address"
         },
-        "billingAddressStreet": {
-            "type": "text",
+        "billingAddressStreet"     : {
+            "type"     : "text",
             "maxLength": 255,
-            "dbType": "varchar"
+            "dbType"   : "varchar"
         },
-        "billingAddressCity": {
+        "billingAddressCity"       : {
             "type": "varchar"
         },
-        "billingAddressState": {
+        "billingAddressState"      : {
             "type": "varchar"
         },
-        "billingAddressCountry": {
+        "billingAddressCountry"    : {
             "type": "varchar"
         },
-        "billingAddressPostalCode": {
+        "billingAddressPostalCode" : {
             "type": "varchar"
         },
-        "shippingAddress": {
+        "shippingAddress"          : {
             "type": "address",
             "view": "Crm:Account.Fields.ShippingAddress"
         },
-        "shippingAddressStreet": {
-            "type": "text",
+        "shippingAddressStreet"    : {
+            "type"     : "text",
             "maxLength": 255,
-            "dbType": "varchar"
+            "dbType"   : "varchar"
         },
-        "shippingAddressCity": {
+        "shippingAddressCity"      : {
             "type": "varchar"
         },
-        "shippingAddressState": {
+        "shippingAddressState"     : {
             "type": "varchar"
         },
-        "shippingAddressCountry": {
+        "shippingAddressCountry"   : {
             "type": "varchar"
         },
         "shippingAddressPostalCode": {
             "type": "varchar"
         },
-        "description": {
+        "description"              : {
             "type": "text"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"                : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"               : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"                : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"               : {
+            "type"    : "link",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"             : {
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"                    : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy"    : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "assignedUser": {
-            "type": "belongsTo",
+        "assignedUser" : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"        : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "contacts": {
-            "type": "hasMany",
-            "entity": "Contact",
+        "contacts"     : {
+            "type"   : "hasMany",
+            "entity" : "Contact",
             "foreign": "accounts"
         },
         "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
+            "type"   : "hasMany",
+            "entity" : "Opportunity",
             "foreign": "account"
         },
-        "cases": {
-            "type": "hasMany",
-            "entity": "Case",
+        "cases"        : {
+            "type"   : "hasMany",
+            "entity" : "Case",
             "foreign": "account"
         },
-        "documents": {
-            "type": "hasMany",
-            "entity": "Document",
+        "documents"    : {
+            "type"   : "hasMany",
+            "entity" : "Document",
             "foreign": "accounts"
         },
-        "meetings": {
-            "type": "hasChildren",
-            "entity": "Meeting",
+        "meetings"     : {
+            "type"   : "hasChildren",
+            "entity" : "Meeting",
             "foreign": "parent"
         },
-        "calls": {
-            "type": "hasChildren",
-            "entity": "Call",
+        "calls"        : {
+            "type"   : "hasChildren",
+            "entity" : "Call",
             "foreign": "parent"
         },
-        "tasks": {
-            "type": "hasChildren",
-            "entity": "Task",
+        "tasks"        : {
+            "type"   : "hasChildren",
+            "entity" : "Task",
             "foreign": "parent"
         },
-        "emails": {
-            "type": "hasChildren",
-            "entity": "Email",
+        "emails"       : {
+            "type"   : "hasChildren",
+            "entity" : "Email",
             "foreign": "parent"
         }
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

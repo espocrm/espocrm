@@ -18,49 +18,69 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Controllers\Base;
+use Espo\ORM\EntityCollection;
+use Slim\Http\Request;
 
-class Notification extends \Espo\Core\Controllers\Base
+class Notification extends
+    Base
 {
+
     public static $defaultAction = 'list';
 
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+
+     */
     public function actionList($params, $data, $request)
     {
+        /**
+         * @var \Espo\Services\Notification $notificationService
+         * @var EntityCollection            $collection
+         */
         $scope = $params['scope'];
         $id = $params['id'];
-        
         $userId = $this->getUser()->id;
-        
         $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));        
-        
+        $maxSize = intval($request->get('maxSize'));
         $params = array(
             'offset' => $offset,
             'maxSize' => $maxSize,
         );
-        
-        $result = $this->getService('Notification')->getList($userId, $params);    
-        
+        $notificationService = $this->getService('Notification');
+        $result = $notificationService->getList($userId, $params);
+        $collection = $result['collection'];
         return array(
             'total' => $result['total'],
-            'list' => $result['collection']->toArray()
+            'list' => $collection->toArray()
         );
     }
-    
+
     public function actionNotReadCount()
     {
+        /**
+         * @var \Espo\Services\Notification $notificationService
+         */
         $userId = $this->getUser()->id;
-        return $this->getService('Notification')->getNotReadCount($userId);
+        $notificationService = $this->getService('Notification');
+        return $notificationService->getNotReadCount($userId);
     }
-    
+
     public function actionMarkAllRead($params, $data, $request)
     {
+        /**
+         * @var \Espo\Services\Notification $notificationService
+         */
         $userId = $this->getUser()->id;
-        return $this->getService('Notification')->markAllRead($userId);
+        $notificationService = $this->getService('Notification');
+        return $notificationService->markAllRead($userId);
     }
 }
 

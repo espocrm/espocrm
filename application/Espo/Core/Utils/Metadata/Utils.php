@@ -22,39 +22,16 @@
 
 namespace Espo\Core\Utils\Metadata;
 
+use Espo\Core\Utils\Metadata;
+
 class Utils
 {
+
     private $metadata;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * Get field defenition by type in metadata, "fields" key
-     *
-     * @param  array | string $fieldDef - It can be a string or field defenition from entityDefs
-     * @return array | null
-     */
-    public function getFieldDefsByType($fieldDef)
-    {
-        if (is_string($fieldDef)) {
-            $fieldDef = array('type' => $fieldDef);
-        }
-
-        if (isset($fieldDef['dbType'])) {
-            return $this->getMetadata()->get('fields.'.$fieldDef['dbType']);
-        } else if (isset($fieldDef['type'])) {
-            return $this->getMetadata()->get('fields.'.$fieldDef['type']);
-        }
-
-        return null;
     }
 
     public function getFieldDefsInFieldMeta($fieldDef)
@@ -63,8 +40,32 @@ class Utils
         if (isset($fieldDefsByType['fieldDefs'])) {
             return $fieldDefsByType['fieldDefs'];
         }
-
         return null;
+    }
+
+    /**
+     * Get field defenition by type in metadata, "fields" key
+     *
+     * @param  array | string $fieldDef - It can be a string or field defenition from entityDefs
+     *
+     * @return array | null
+     */
+    public function getFieldDefsByType($fieldDef)
+    {
+        if (is_string($fieldDef)) {
+            $fieldDef = array('type' => $fieldDef);
+        }
+        if (isset($fieldDef['dbType'])) {
+            return $this->getMetadata()->get('fields.' . $fieldDef['dbType']);
+        } else if (isset($fieldDef['type'])) {
+            return $this->getMetadata()->get('fields.' . $fieldDef['type']);
+        }
+        return null;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     /**
@@ -73,6 +74,7 @@ class Utils
      * @param  string $entityName
      * @param  array  $fieldDef
      * @param  array  $linkFieldDefsByType
+     *
      * @return array | null
      */
     public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
@@ -84,7 +86,6 @@ class Utils
             }
             $linkFieldDefsByType = $fieldDefsByType['linkDefs'];
         }
-
         foreach ($linkFieldDefsByType as $paramName => &$paramValue) {
             if (preg_match('/{(.*?)}/', $paramValue, $matches)) {
                 if (in_array($matches[1], array_keys($fieldDef))) {
@@ -92,16 +93,13 @@ class Utils
                 } else if (strtolower($matches[1]) == 'entity') {
                     $value = $entityName;
                 }
-
                 if (isset($value)) {
-                    $paramValue = str_replace('{'.$matches[1].'}', $value, $paramValue);
+                    $paramValue = str_replace('{' . $matches[1] . '}', $value, $paramValue);
                 }
             }
         }
-
         return $linkFieldDefsByType;
     }
-
 }
 
 

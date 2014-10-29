@@ -1,37 +1,36 @@
 {
-    "fields": {
-        "name": "Imię",
-        "parent": "Konto",
-        "status": "Status",
-        "dateStart": "Data Startu",
-        "dateEnd": "Data Zwrotu",
-        "priority": "Pryjorytet",
+    "fields"       : {
+        "name"       : "Imię",
+        "parent"     : "Konto",
+        "status"     : "Status",
+        "dateStart"  : "Data Startu",
+        "dateEnd"    : "Data Zwrotu",
+        "priority"   : "Pryjorytet",
         "description": "Opis ",
-        "isOverdue": "Przegrzany"
+        "isOverdue"  : "Przegrzany"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
+    "links"        : {},
+    "options"      : {
+        "status"  : {
             "Not Started": "Nie Rozpoczęte",
-            "Started": "Rozpoczęte",
-            "Completed": "Ukończone",
-            "Canceled": "Anulowane"
+            "Started"    : "Rozpoczęte",
+            "Completed"  : "Ukończone",
+            "Canceled"   : "Anulowane"
         },
-        "priority" : {
-            "Low": "Niski",
+        "priority": {
+            "Low"   : "Niski",
             "Normal": "Normalny",
-            "High": "Wysoki",
+            "High"  : "Wysoki",
             "Urgent": "Pilne"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Task": "Utwórz Zadanie"
     },
     "presetFilters": {
-        "active": "Aktywny",
+        "active"   : "Aktywny",
         "completed": "Ukończone",
-        "todays": "Dzisiaj",
-        "overdue": "Przegrzane"
+        "todays"   : "Dzisiaj",
+        "overdue"  : "Przegrzane"
     }
 }

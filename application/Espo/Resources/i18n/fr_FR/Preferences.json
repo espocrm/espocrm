@@ -1,28 +1,27 @@
 {
-    "fields": {
-        "dateFormat": "Format de Date",
-        "timeFormat": "Format de l'Heure",
-        "timeZone": "Fuseau Horaire",
-        "weekStart": "Premier Jour de la Semaine",
+    "fields" : {
+        "dateFormat"       : "Format de Date",
+        "timeFormat"       : "Format de l'Heure",
+        "timeZone"         : "Fuseau Horaire",
+        "weekStart"        : "Premier Jour de la Semaine",
         "thousandSeparator": "Séparateur de Milliers",
-        "decimalMark": "Marqueur Décimal",
-        "defaultCurrency": "Monnaie Courante",
-        "currencyList": "Liste des Monnaies",
-        "language": "Langue",
-        
-        "smtpServer": "Serveur",
-        "smtpPort": "Porte",
-        "smtpAuth": "Authorization",
-        "smtpSecurity": "Sécurité",
-        "smtpUsername": "Nom d'utilisateur",
-        "emailAddress": "Email",
-        "smtpPassword": "Mot de Passe",
+        "decimalMark"      : "Marqueur Décimal",
+        "defaultCurrency"  : "Monnaie Courante",
+        "currencyList"     : "Liste des Monnaies",
+        "language"         : "Langue",
+
+        "smtpServer"      : "Serveur",
+        "smtpPort"        : "Porte",
+        "smtpAuth"        : "Authorization",
+        "smtpSecurity"    : "Sécurité",
+        "smtpUsername"    : "Nom d'utilisateur",
+        "emailAddress"    : "Email",
+        "smtpPassword"    : "Mot de Passe",
         "smtpEmailAddress": "Adresse Email",
-        
+
         "exportDelimiter": "Délimiteur de champs (Export)"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "weekStart": {
             "0": "Dimanche",

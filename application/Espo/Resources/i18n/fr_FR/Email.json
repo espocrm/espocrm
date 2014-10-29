@@ -1,32 +1,31 @@
 {
-    "fields": {
-        "name": "Sujet",
-        "parent": "Parent",
-        "status": "Statut",
-        "dateSent": "Date d'envoi",
-        "from": "De",
-        "to": "Vers",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "En HTML",
-        "body": "Corps",
-        "subject": "Sujet",
-        "attachments": "Fichiers Joints",
-        "selectTemplate": "Selectionner le Modèle",
+    "fields" : {
+        "name"            : "Sujet",
+        "parent"          : "Parent",
+        "status"          : "Statut",
+        "dateSent"        : "Date d'envoi",
+        "from"            : "De",
+        "to"              : "Vers",
+        "cc"              : "CC",
+        "bcc"             : "BCC",
+        "isHtml"          : "En HTML",
+        "body"            : "Corps",
+        "subject"         : "Sujet",
+        "attachments"     : "Fichiers Joints",
+        "selectTemplate"  : "Selectionner le Modèle",
         "fromEmailAddress": "Adresse de l'Emetteur",
         "toEmailAddresses": "Adresse du Destinataire",
-        "emailAddress": "Adresse Email"
+        "emailAddress"    : "Adresse Email"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "Draft": "Brouillon",
-        "Sending": "En Envoi",
-        "Sent": "Envoyé",
+        "Draft"   : "Brouillon",
+        "Sending" : "En Envoi",
+        "Sent"    : "Envoyé",
         "Archived": "Archivé"
     },
-    "labels": {
+    "labels" : {
         "Create Email": "Archiver les Emails",
-        "Compose": "Nouveau Message"
+        "Compose"     : "Nouveau Message"
     }
 }

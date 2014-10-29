@@ -1,34 +1,34 @@
 {
-    "fields": {
-        "data": {
+    "fields"    : {
+        "data"     : {
             "type": "jsonObject"
         },
-        "noteData": {
-            "type": "jsonObject",
+        "noteData" : {
+            "type"       : "jsonObject",
             "notStorable": true
         },
-        "type": {
+        "type"     : {
             "type": "varchar"
         },
-        "read": {
+        "read"     : {
             "type": "bool"
         },
-        "user": {
+        "user"     : {
             "type": "link"
         },
         "createdAt": {
-            "type": "datetime",
+            "type"    : "datetime",
             "readOnly": true
         }
     },
-    "links": {
+    "links"     : {
         "user": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

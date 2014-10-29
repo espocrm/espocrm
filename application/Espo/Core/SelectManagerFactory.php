@@ -18,34 +18,41 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
-
-use \Espo\Core\Utils\Util;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
+use Espo\Entities\User;
 
 class SelectManagerFactory
 {
+
     private $entityManager;
-    
+
     private $user;
-    
+
     private $acl;
-    
+
+    /**
+     * @var Metadata
+
+     */
     private $metadata;
 
-    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
+    public function __construct($entityManager, User $user, Acl $acl, $metadata)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;
         $this->metadata = $metadata;
     }
-    
+
     public function create($entityName)
     {
+        /**
+         * @var SelectManagers\Base $selectManager
+         */
         $className = '\\Espo\\Custom\\SelectManagers\\' . Util::normilizeClassName($entityName);
         if (!class_exists($className)) {
             $moduleName = $this->metadata->getScopeModuleName($entityName);
@@ -53,16 +60,14 @@ class SelectManagerFactory
                 $className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . Util::normilizeClassName($entityName);
             } else {
                 $className = '\\Espo\\SelectManagers\\' . Util::normilizeClassName($entityName);
-            }        
+            }
             if (!class_exists($className)) {
                 $className = '\\Espo\\Core\\SelectManagers\\Base';
             }
         }
-        
         $selectManager = new $className($this->entityManager, $this->user, $this->acl, $this->metadata);
         $selectManager->setEntityName($entityName);
-                
         return $selectManager;
-    }    
+    }
 }
 

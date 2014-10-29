@@ -19,45 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Jobs;
 
-use \Espo\Core\Container;
-
+use Espo\Core\Container;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 
 abstract class Base
 {
+
     private $container;
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    protected function getServiceFactory()
-    {
-        return $this->getContainer()->get('serviceFactory');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getContainer()->get('metadata');
-    }
-
-    protected function getUser()
-    {
-        return $this->getContainer()->get('user');
-    }
 
     public function __construct(Container $container)
     {
@@ -66,5 +40,58 @@ abstract class Base
 
     abstract public function run();
 
+    /**
+     * @return EntityManager
+
+     */
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('entityManager');
+    }
+
+    /**
+     * @return Container
+
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @return ServiceFactory
+
+     */
+    protected function getServiceFactory()
+    {
+        return $this->getContainer()->get('serviceFactory');
+    }
+
+    /**
+     * @return Config
+
+     */
+    protected function getConfig()
+    {
+        return $this->getContainer()->get('config');
+    }
+
+    /**
+     * @return Metadata
+
+     */
+    protected function getMetadata()
+    {
+        return $this->getContainer()->get('metadata');
+    }
+
+    /**
+     * @return User
+
+     */
+    protected function getUser()
+    {
+        return $this->getContainer()->get('user');
+    }
 }
 

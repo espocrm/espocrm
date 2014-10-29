@@ -1,1 +1,3 @@
-{"var1":"val1","var2":"new val"}
+{"var1"   : "val1",
+    "var2": "new val"
+}

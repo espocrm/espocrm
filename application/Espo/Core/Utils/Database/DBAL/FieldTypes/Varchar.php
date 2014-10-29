@@ -19,13 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
 use Doctrine\DBAL\Types\StringType;
 
-class Varchar extends StringType
+class Varchar extends
+    StringType
 {
+
     const VARCHAR = 'varchar';
 
     public function getName()

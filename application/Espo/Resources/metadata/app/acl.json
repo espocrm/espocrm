@@ -1,30 +1,30 @@
 {
     "solid": {
-        "User": {
-            "read": "all",
-            "edit": "no",
+        "User"        : {
+            "read"  : "all",
+            "edit"  : "no",
             "delete": "no"
         },
-        "Team": {
-            "read": "all",
-            "edit": "no",
+        "Team"        : {
+            "read"  : "all",
+            "edit"  : "no",
             "delete": "no"
         },
-        "Note": {
-            "read": "all",
-            "edit": "own",
+        "Note"        : {
+            "read"  : "all",
+            "edit"  : "own",
             "delete": "own"
         },
         "EmailAddress": {
-            "read": "no",
-            "edit": "no",
+            "read"  : "no",
+            "edit"  : "no",
             "delete": "no"
         },
         "EmailAccount": {
-            "read": "own",
-            "edit": "own",
+            "read"  : "own",
+            "edit"  : "own",
             "delete": "own"
         },
-        "Role": false
+        "Role"        : false
     }
 }

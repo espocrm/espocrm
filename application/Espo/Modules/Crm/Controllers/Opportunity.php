@@ -18,42 +18,83 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Controllers;
 
-class Opportunity extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+use Slim\Http\Request;
+
+class Opportunity extends
+    Record
 {
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+
+     */
     public function actionReportByLeadSource($params, $data, $request)
     {
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-                
-        return $this->getService('Opportunity')->reportByLeadSource($dateFrom, $dateTo);
+        return $this->getOpportunityService()->reportByLeadSource($dateFrom, $dateTo);
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+
+     */
     public function actionReportByStage($params, $data, $request)
     {
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-        
-        return $this->getService('Opportunity')->reportByStage($dateFrom, $dateTo);
+        return $this->getOpportunityService()->reportByStage($dateFrom, $dateTo);
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+
+     */
     public function actionReportSalesByMonth($params, $data, $request)
     {
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-                
-        return $this->getService('Opportunity')->reportSalesByMonth($dateFrom, $dateTo);        
+        return $this->getOpportunityService()->reportSalesByMonth($dateFrom, $dateTo);
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+
+     */
     public function actionReportSalesPipeline($params, $data, $request)
     {
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-        
-        return $this->getService('Opportunity')->reportSalesPipeline($dateFrom, $dateTo);
+        return $this->getOpportunityService()->reportSalesPipeline($dateFrom, $dateTo);
+    }
+
+    /**
+     * @return \Espo\Modules\Crm\Services\Opportunity
+
+     */
+    protected function getOpportunityService()
+    {
+        return $this->getService('Opportunity');
     }
 }
 

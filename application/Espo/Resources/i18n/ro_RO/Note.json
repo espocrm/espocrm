@@ -1,6 +1,6 @@
 {
     "fields": {
-        "post": "Publica",
+        "post"       : "Publica",
         "attachments": "Atasamente"
     }
 }

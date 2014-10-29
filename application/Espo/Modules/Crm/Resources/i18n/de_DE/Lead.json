@@ -1,47 +1,46 @@
 {
-    "labels": {
+    "labels"       : {
         "Converted To": "Umgewandelt zu",
-        "Create Lead": "Neuer Interessent",
-        "Convert": "Umwandeln"
+        "Create Lead" : "Neuer Interessent",
+        "Convert"     : "Umwandeln"
     },
-    "fields": {
-        "name": "Name",
-        "emailAddress": "E-Mail",
-        "title": "Funktion",
-        "website": "Webseite",
-        "phoneNumber": "Telefon",
-        "accountName": "Firmenname",
-        "doNotCall": "Nicht anrufen",
-        "address": "Adresse",
-        "status": "Status",
-        "source": "Quelle",
-        "opportunityAmount": "Verkaufschance Betrag",
+    "fields"       : {
+        "name"                      : "Name",
+        "emailAddress"              : "E-Mail",
+        "title"                     : "Funktion",
+        "website"                   : "Webseite",
+        "phoneNumber"               : "Telefon",
+        "accountName"               : "Firmenname",
+        "doNotCall"                 : "Nicht anrufen",
+        "address"                   : "Adresse",
+        "status"                    : "Status",
+        "source"                    : "Quelle",
+        "opportunityAmount"         : "Verkaufschance Betrag",
         "opportunityAmountConverted": "Verkaufschance Betrag (konvertiert)",
-        "description": "Beschreibung",
-        "createdAccount": "Firma",
-        "createdContact": "Kontakt",
-        "createdOpportunity": "Verkaufschance"
+        "description"               : "Beschreibung",
+        "createdAccount"            : "Firma",
+        "createdContact"            : "Kontakt",
+        "createdOpportunity"        : "Verkaufschance"
     },
-    "links": {
-    },
-    "options": {
+    "links"        : {},
+    "options"      : {
         "status": {
-            "New": "Neu",
-            "Assigned": "Zugewiesen",
+            "New"       : "Neu",
+            "Assigned"  : "Zugewiesen",
             "In Process": "In Arbeit",
-            "Converted": "Umgewandelt",
-            "Recycled": "Wiedereröffnet",
-            "Dead": "'Gestorben'"
+            "Converted" : "Umgewandelt",
+            "Recycled"  : "Wiedereröffnet",
+            "Dead"      : "'Gestorben'"
         },
         "source": {
-            "Call": "Anruf",
-            "Email": "E-Mail",
+            "Call"             : "Anruf",
+            "Email"            : "E-Mail",
             "Existing Customer": "Bestehender Kunde",
-            "Partner": "Partner",
-            "Public Relations": "Public Relations",
-            "Web Site": "Web Seite",
-            "Campaign": "Kampagne",
-            "Other": "Andere"
+            "Partner"          : "Partner",
+            "Public Relations" : "Public Relations",
+            "Web Site"         : "Web Seite",
+            "Campaign"         : "Kampagne",
+            "Other"            : "Andere"
         }
     },
     "presetFilters": {

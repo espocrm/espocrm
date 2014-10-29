@@ -1,7 +1,7 @@
 {
     "fields": {
         "someName": {
-            "type": "varchar",
+            "type"     : "varchar",
             "maxLength": 40
         }
     }

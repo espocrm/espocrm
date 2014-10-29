@@ -1,9 +1,9 @@
 {
-   "params":[
-      {
-         "name":"default",
-         "type":"bool"
-      }
-   ],
-   "filter": true
+    "params": [
+        {
+            "name": "default",
+            "type": "bool"
+        }
+    ],
+    "filter": true
 }

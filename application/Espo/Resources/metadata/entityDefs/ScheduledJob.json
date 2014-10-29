@@ -1,62 +1,65 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"      : {
+            "type"    : "varchar",
             "required": true
         },
-        "job": {
-            "type": "varchar",
+        "job"       : {
+            "type"    : "varchar",
             "required": true,
-            "view": "ScheduledJob.Fields.Job"
+            "view"    : "ScheduledJob.Fields.Job"
         },
-        "status": {
-            "type": "enum",
-            "options": ["Active", "Inactive"] 
+        "status"    : {
+            "type"   : "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ]
         },
         "scheduling": {
-            "type": "varchar",
+            "type"    : "varchar",
             "required": true,
-            "view": "ScheduledJob.Fields.Scheduling",
-            "default": "* * * * *"       
+            "view"    : "ScheduledJob.Fields.Scheduling",
+            "default" : "* * * * *"
         },
-        "lastRun": {
-            "type": "datetime",
+        "lastRun"   : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt" : {
+            "type"    : "datetime",
             "readOnly": true
         },
         "modifiedAt": {
-            "type": "datetime",
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy" : {
+            "type"    : "link",
             "readOnly": true
         },
         "modifiedBy": {
-            "type": "link",
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy" : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
         "modifiedBy": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "log": {
-            "type": "hasMany",
-            "entity": "ScheduledJobLogRecord",
+        "log"       : {
+            "type"   : "hasMany",
+            "entity" : "ScheduledJobLogRecord",
             "foreign": "scheduledJob"
         }
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

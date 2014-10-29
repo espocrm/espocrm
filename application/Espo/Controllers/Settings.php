@@ -19,31 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Base;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
-class Settings extends \Espo\Core\Controllers\Base
+class Settings extends
+    Base
 {
+
+    public function actionRead($params, $data)
+    {
+        return $this->getConfigData();
+    }
+
     protected function getConfigData()
     {
         $data = $this->getConfig()->getData($this->getUser()->isAdmin());
-
         $fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
-
         foreach ($fieldDefs as $field => $d) {
             if ($d['type'] == 'password') {
                 unset($data[$field]);
             }
         }
         return $data;
-    }
-
-    public function actionRead($params, $data)
-    {
-        return $this->getConfigData();
     }
 
     public function actionUpdate($params, $data)
@@ -53,22 +54,23 @@ class Settings extends \Espo\Core\Controllers\Base
 
     public function actionPatch($params, $data)
     {
+        /**
+         * @var DataManager $dataManager
+         */
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
-
         $this->getConfig()->setData($data, $this->getUser()->isAdmin());
         $result = $this->getConfig()->save();
         if ($result === false) {
             throw new Error('Cannot save settings');
         }
-
         /** Rebuild for Currency Settings */
         if (isset($data['baseCurrency']) || isset($data['currencyRates'])) {
-            $this->getContainer()->get('dataManager')->rebuildDatabase(array());
+            $dataManager = $this->getContainer()->get('dataManager');
+            $dataManager->rebuildDatabase(array());
         }
         /** END Rebuild for Currency Settings */
-
         return $this->getConfigData();
     }
 }

@@ -1,31 +1,31 @@
 {
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "E-mail",
-        "title": "Cargo",
-        "account": "Conta",
-        "accounts": "Contas",
-        "phoneNumber": "Telefone",
-        "accountType": "Tipo de Conta",
-        "doNotCall": "Não Ligar",
-        "address": "Endereço",
+    "fields" : {
+        "name"           : "Nome",
+        "emailAddress"   : "E-mail",
+        "title"          : "Cargo",
+        "account"        : "Conta",
+        "accounts"       : "Contas",
+        "phoneNumber"    : "Telefone",
+        "accountType"    : "Tipo de Conta",
+        "doNotCall"      : "Não Ligar",
+        "address"        : "Endereço",
         "opportunityRole": "Regra de Oportunidade",
-        "accountRole": "Regra",
-        "description": "Descrição"
+        "accountRole"    : "Regra",
+        "description"    : "Descrição"
     },
-    "links": {
+    "links"  : {
         "opportunities": "Oportunidades",
-        "cases": "Atendimento"
+        "cases"        : "Atendimento"
     },
-    "labels": {
+    "labels" : {
         "Create Contact": "Criar Contato"
     },
     "options": {
         "opportunityRole": {
-            "": "--Nenhum--",
+            ""              : "--Nenhum--",
             "Decision Maker": "Tomador de Decisão",
-            "Evaluator": "Avaliador",
-            "Influencer": "Influenciador"
+            "Evaluator"     : "Avaliador",
+            "Influencer"    : "Influenciador"
         }
     }
 }

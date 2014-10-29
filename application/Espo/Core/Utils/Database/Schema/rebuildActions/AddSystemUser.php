@@ -18,29 +18,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
-class AddSystemUser extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
+use Espo\Core\Utils\Database\Schema\BaseRebuildActions;
+
+class AddSystemUser extends
+    BaseRebuildActions
 {
-    
+
     public function afterRebuild()
-    {     
+    {
         $userId = $this->getConfig()->get('systemUser.id');
-
         $entity = $this->getEntityManager()->getEntity('User', $userId);
-
         if (!isset($entity)) {
-
             $systemUser = $this->getConfig()->get('systemUser');
-
             $entity = $this->getEntityManager()->getEntity('User');
-            $entity->set($systemUser);            
-
-            return $this->getEntityManager()->saveEntity($entity);            
-        }                
-    }    
-    
+            $entity->set($systemUser);
+            return $this->getEntityManager()->saveEntity($entity);
+        }
+    }
 }
 

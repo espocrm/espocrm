@@ -18,54 +18,50 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\EntryPoints\Base;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
-class Attachment extends \Espo\Core\EntryPoints\Base
+class Attachment extends
+    Base
 {
+
     public static $authRequired = true;
-    
+
     public function run()
-    {    
+    {
         $id = $_GET['id'];
         if (empty($id)) {
             throw new BadRequest();
         }
-        
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-        
         if (!$attachment) {
             throw new NotFound();
-        }        
-        
+        }
         if ($attachment->get('parentId') && $attachment->get('parentType')) {
-            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));            
+            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'),
+                $attachment->get('parentId'));
             if (!$this->getAcl()->check($parent)) {
                 throw new Forbidden();
             }
         }
-        
         $fileName = "data/upload/{$attachment->id}";
-        
         if (!file_exists($fileName)) {
             throw new NotFound();
         }
-        
         if ($attachment->get('type')) {
             header('Content-Type: ' . $attachment->get('type'));
         }
-        
         header('Pragma: public');
         header('Content-Length: ' . filesize($fileName));
         ob_clean();
         flush();
         readfile($fileName);
-        exit;        
-    }    
+        exit;
+    }
 }
 

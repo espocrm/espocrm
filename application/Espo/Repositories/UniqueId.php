@@ -19,13 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Repositories;
 
-use Espo\ORM\Entity;
+use Espo\Core\ORM\Repositories\RDB;
 
-class UniqueId extends \Espo\Core\ORM\Repositories\RDB
+class UniqueId extends
+    RDB
 {
+
     protected function getNewEntity()
     {
         $entity = parent::getNewEntity();

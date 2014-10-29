@@ -1,11 +1,19 @@
 [
     {
-        "label":"",
-        "rows":[
-            [{"name":"name"}],
-            [{"name":"subject"}],
-            [{"name":"body","fullWidth":true}],
-            [{"name":"attachments"},{"name":"isHtml"}]
+        "label": "",
+        "rows" : [
+            [{"name": "name"}],
+            [{"name": "subject"}],
+            [
+                {
+                    "name": "body",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {"name": "attachments"},
+                {"name": "isHtml"}
+            ]
         ]
     }
 ]

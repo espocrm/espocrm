@@ -1,13 +1,21 @@
 [
     {
-        "label":"Overview",
-        "rows": [
+        "label": "Overview",
+        "rows" : [
             [
-                {"name":"name"},{"name":"parent"}],
-                [{"name":"status"}, {"name":"direction"}],
-                [{"name":"dateStart"}],
-                [{"name":"duration"}],
-                [{"name":"description"},false]
+                {"name": "name"},
+                {"name": "parent"}
+            ],
+            [
+                {"name": "status"},
+                {"name": "direction"}
+            ],
+            [{"name": "dateStart"}],
+            [{"name": "duration"}],
+            [
+                {"name": "description"},
+                false
+            ]
         ]
     }
 ]

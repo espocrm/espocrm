@@ -1,7 +1,6 @@
 <?php
 
 return array(
-
     'Subscription' => array(
         'fields' => array(
             'id' => array(
@@ -28,6 +27,5 @@ return array(
             ),
         ),
     ),
-
 );
 

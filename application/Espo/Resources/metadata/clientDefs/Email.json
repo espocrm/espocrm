@@ -1,85 +1,85 @@
 {
-   "controller": "Controllers.Record",
-   "model": "Models.Email",
-   "views":{
-      "list":"Email.List",
-      "detail":"Email.Detail"
-   },
-   "recordViews":{
-      "list":"Email.Record.List",
-      "detail":"Email.Record.Detail",
-      "edit":"Email.Record.Edit",
-      "editQuick":"Email.Record.EditQuick"
-   },
-   "menu": {
-      "list": {
-         "buttons": [
-            {
-               "label": "Compose",
-               "action": "composeEmail",
-               "style": "danger",
-               "acl": "edit"
+    "controller"   : "Controllers.Record",
+    "model"        : "Models.Email",
+    "views"        : {
+        "list"  : "Email.List",
+        "detail": "Email.Detail"
+    },
+    "recordViews"  : {
+        "list"     : "Email.Record.List",
+        "detail"   : "Email.Record.Detail",
+        "edit"     : "Email.Record.Edit",
+        "editQuick": "Email.Record.EditQuick"
+    },
+    "menu"         : {
+        "list"  : {
+            "buttons" : [
+                {
+                    "label" : "Compose",
+                    "action": "composeEmail",
+                    "style" : "danger",
+                    "acl"   : "edit"
+                }
+            ],
+            "dropdown": [
+                {
+                    "label": "Archive Email",
+                    "link" : "#Email/create",
+                    "acl"  : "edit"
+                },
+                {
+                    "label": "Email Accounts",
+                    "link" : "#EmailAccount"
+                }
+            ]
+        },
+        "detail": {
+            "buttons" : [
+                {
+                    "label" : "Reply",
+                    "action": "reply",
+                    "style" : "default",
+                    "acl"   : "read"
+                }
+            ],
+            "dropdown": [
+                {
+                    "label" : "Reply",
+                    "action": "reply",
+                    "acl"   : "read"
+                },
+                {
+                    "label" : "Reply to All",
+                    "action": "replyToAll",
+                    "acl"   : "read"
+                },
+                {
+                    "label" : "Forward",
+                    "action": "forward",
+                    "acl"   : "read"
+                }
+            ]
+        }
+    },
+    "presetFilters": [
+        {
+            "name": "archived",
+            "data": {
+                "status": {
+                    "type" : "in",
+                    "value": ["Archived"]
+                }
             }
-         ],
-         "dropdown": [
-             {
-               "label": "Archive Email",
-               "link": "#Email/create",
-               "acl": "edit"
-             },
-             {
-               "label": "Email Accounts",
-               "link": "#EmailAccount"
-             }
-         ]
-      },
-      "detail": {
-         "buttons": [
-            {
-               "label": "Reply",
-               "action": "reply",
-               "style": "default",
-               "acl": "read"
+        },
+        {
+            "name": "sent",
+            "data": {
+                "status": {
+                    "type" : "in",
+                    "value": ["Sent"]
+                }
             }
-         ],
-         "dropdown": [
-             {
-               "label": "Reply",
-               "action": "reply",
-               "acl": "read"
-             },
-             {
-               "label": "Reply to All",
-               "action": "replyToAll",
-               "acl": "read"
-             },
-             {
-               "label": "Forward",
-               "action": "forward",
-               "acl": "read"
-             }
-         ]
-      }
-   },
-   "presetFilters": [
-      {
-         "name":"archived",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Archived"]
-            }
-         }
-      },
-      {
-         "name":"sent",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Sent"]
-            }
-         }
-      }
-   ],
-   "boolFilters": ["onlyMy"]
+        }
+    ],
+    "boolFilters"  : ["onlyMy"]
 }

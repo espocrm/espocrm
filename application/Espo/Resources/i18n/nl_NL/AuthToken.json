@@ -1,9 +1,9 @@
 {
-	"fields": {
-		"user": "Gebruiker",
-		"ipAddress": "IP Adres",
-		"lastAccess": "Datum van laatste toegang",
-		"createdAt": "Datum Login"
+    "fields": {
+        "user"      : "Gebruiker",
+        "ipAddress" : "IP Adres",
+        "lastAccess": "Datum van laatste toegang",
+        "createdAt" : "Datum Login"
 
-	}
+    }
 }

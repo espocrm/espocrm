@@ -1,5 +1,5 @@
 [
-    {"name":"name"},
-    {"name":"emailAddress"},
-    {"name":"city"}
+    {"name": "name"},
+    {"name": "emailAddress"},
+    {"name": "city"}
 ]

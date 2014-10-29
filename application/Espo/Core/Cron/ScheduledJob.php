@@ -19,16 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Cron;
 
-use Espo\Core\Exceptions\NotFound,
-    Espo\Core\Utils\Util;
+use Espo\Core\Container;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\System;
+use Espo\Core\Utils\Util;
 
 class ScheduledJob
 {
-    private $container;
-    private $systemUtil;
 
     protected $data = null;
 
@@ -37,6 +38,17 @@ class ScheduledJob
     protected $cronFile = 'cron.php';
 
     protected $allowedMethod = 'run';
+
+    protected $cronSetup = array(
+        'linux' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+        'windows' => '{PHP-BIN-DIR}.exe -f {CRON-FILE}',
+        'mac' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+        'default' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE}',
+    );
+
+    private $container;
+
+    private $systemUtil;
 
     /**
      * @var array - path to cron job files
@@ -47,48 +59,40 @@ class ScheduledJob
         'customPath' => 'custom/Espo/Custom/Jobs',
     );
 
-    protected $cronSetup = array(
-        'linux' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'windows' => '{PHP-BIN-DIR}.exe -f {CRON-FILE}',
-        'mac' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'default' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE}',
-    );
-
-
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->systemUtil = new \Espo\Core\Utils\System();
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->container->get('entityManager');
-    }
-
-    protected function getSystemUtil()
-    {
-        return $this->systemUtil;
+        $this->systemUtil = new System();
     }
 
     public function run(array $job)
     {
         $jobName = $job['method'];
-
         $className = $this->getClassName($jobName);
         if ($className === false) {
             throw new NotFound();
         }
-
         $jobClass = new $className($this->container);
         $method = $this->allowedMethod;
-
         $jobClass->$method();
+    }
+
+    /**
+     * Get class name of a job
+     *
+     * @param  string $name
+     *
+     * @return string
+     */
+    protected function getClassName($name)
+    {
+        $name = Util::normilizeClassName($name);
+        $data = $this->getAll();
+        $name = ucfirst($name);
+        if (isset($data[$name])) {
+            return $data[$name];
+        }
+        return false;
     }
 
     /**
@@ -101,14 +105,34 @@ class ScheduledJob
         if (!isset($this->data)) {
             $this->init();
         }
-
         return $this->data;
+    }
+
+    /**
+     * Load scheduler classes. It loads from ...Jobs, ex. \Espo\Jobs
+     *
+     * @return null
+     */
+    protected function init()
+    {
+        /**
+         * @var ClassParser $classParser
+         */
+        $classParser = $this->getContainer()->get('classParser');
+        $classParser->setAllowedMethods(array($this->allowedMethod));
+        $this->data = $classParser->getData($this->paths, $this->cacheFile);
+    }
+
+    protected function getContainer()
+    {
+        return $this->container;
     }
 
     /**
      * Get class name of a job by name
      *
      * @param  string $name
+     *
      * @return string
      */
     public function get($name)
@@ -124,62 +148,36 @@ class ScheduledJob
     public function getAllNamesOnly()
     {
         $data = $this->getAll();
-
         $namesOnly = array_keys($data);
-
         return $namesOnly;
     }
 
-    /**
-     * Get class name of a job
-     *
-     * @param  string $name
-     * @return string
-     */
-    protected function getClassName($name)
-    {
-        $name = Util::normilizeClassName($name);
-
-        $data = $this->getAll();
-
-        $name = ucfirst($name);
-        if (isset($data[$name])) {
-            return $data[$name];
-        }
-
-        return false;
-    }
-
-    /**
-     * Load scheduler classes. It loads from ...Jobs, ex. \Espo\Jobs
-     * @return null
-     */
-    protected function init()
-    {
-        $classParser = $this->getContainer()->get('classParser');
-        $classParser->setAllowedMethods( array($this->allowedMethod) );
-        $this->data = $classParser->getData($this->paths, $this->cacheFile);
-    }
-
-
     public function getSetupMessage()
     {
+        /**
+         * @var Language $language
+         */
         $language = $this->getContainer()->get('language');
-
         $OS = $this->getSystemUtil()->getOS();
         $phpBin = $this->getSystemUtil()->getPhpBin();
         $cronFile = Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile);
         $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
-
         $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
-
         $command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
         $command = str_replace(array('{PHP-BIN-DIR}', '{CRON-FILE}'), array($phpBin, $cronFile), $command);
-
         return array(
             'message' => $message,
             'command' => $command,
         );
     }
 
+    protected function getSystemUtil()
+    {
+        return $this->systemUtil;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->container->get('entityManager');
+    }
 }

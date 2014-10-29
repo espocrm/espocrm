@@ -19,22 +19,40 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Log\Monolog\Handler;
 
+use Espo\Core\Utils\File\Manager;
 use Monolog\Logger;
 
-class StreamHandler extends \Monolog\Handler\StreamHandler
+class StreamHandler extends
+    \Monolog\Handler\StreamHandler
 {
+
     protected $fileManager;
+
+    protected $errorMessage;
 
     protected $maxErrorMessageLength = 5000;
 
     public function __construct($url, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($url, $level, $bubble);
+        $this->fileManager = new Manager();
+    }
 
-        $this->fileManager = new \Espo\Core\Utils\File\Manager();
+    protected function write(array $record)
+    {
+        if (!$this->url) {
+            throw new \LogicException('Missing logger path, the stream can not be opened. Please check logger options in the data/config.php.');
+        }
+        $this->errorMessage = null;
+        set_error_handler(array($this, 'customErrorHandler'));
+        $this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
+        restore_error_handler();
+        if (isset($this->errorMessage)) {
+            throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: ' . $this->errorMessage,
+                $this->url));
+        }
     }
 
     protected function getFileManager()
@@ -42,45 +60,25 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
         return $this->fileManager;
     }
 
-
-    protected function write(array $record)
+    /**
+     * Cut the error message depends on maxErrorMessageLength
+     *
+     * @param  array $record
+     *
+     * @return string
+     */
+    protected function pruneMessage(array $record)
     {
-        if (!$this->url) {
-            throw new \LogicException('Missing logger path, the stream can not be opened. Please check logger options in the data/config.php.');
+        $message = (string)$record['message'];
+        if (strlen($message) > $this->maxErrorMessageLength) {
+            $record['message'] = substr($message, 0, $this->maxErrorMessageLength) . '...';
+            $record['formatted'] = $this->getFormatter()->format($record);
         }
-
-        $this->errorMessage = null;
-
-        set_error_handler(array($this, 'customErrorHandler'));
-        $this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
-        restore_error_handler();
-
-        if (isset($this->errorMessage)) {
-            throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: '.$this->errorMessage, $this->url));
-        }
+        return (string)$record['formatted'];
     }
 
     private function customErrorHandler($code, $msg)
     {
         $this->errorMessage = $msg;
     }
-
-    /**
-     * Cut the error message depends on maxErrorMessageLength
-     *
-     * @param  array  $record
-     * @return string
-     */
-    protected function pruneMessage(array $record)
-    {
-        $message = (string) $record['message'];
-
-        if (strlen($message) > $this->maxErrorMessageLength) {
-            $record['message'] = substr($message, 0, $this->maxErrorMessageLength) . '...';
-            $record['formatted'] = $this->getFormatter()->format($record);
-        }
-
-        return (string) $record['formatted'];
-    }
-
 }

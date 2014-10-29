@@ -1,1 +1,8 @@
-["number","status","priority","account","contact","description"]
+[
+    "number",
+    "status",
+    "priority",
+    "account",
+    "contact",
+    "description"
+]

@@ -1,21 +1,21 @@
 {
-    "Flotr": {
-        "path": "client/lib/flotr2.min.js",
+    "Flotr"       : {
+        "path"     : "client/lib/flotr2.min.js",
         "exportsTo": "window",
-        "exportsAs": "Flotr"        
+        "exportsAs": "Flotr"
     },
-    "Summernote": {
-        "path": "client/lib/summernote.min.js",
+    "Summernote"  : {
+        "path"     : "client/lib/summernote.min.js",
         "exportsTo": "$",
-        "exportsAs": "summernote"        
-    }, 
+        "exportsAs": "summernote"
+    },
     "Textcomplete": {
-        "path": "client/lib/jquery.textcomplete.js",
+        "path"     : "client/lib/jquery.textcomplete.js",
         "exportsTo": "$",
         "exportsAs": "textcomplete"
     },
-    "Select2": {
-        "path": "client/lib/select2.min.js",
+    "Select2"     : {
+        "path"     : "client/lib/select2.min.js",
         "exportsTo": "$",
         "exportsAs": "select2"
     }

@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "Имя",
-        "emailAddress": "Почта",
-        "website": "Интернет сайт",
-        "phoneNumber": "Телефонный номер",
-        "billingAddress": "Платежный адрес",
+    "fields" : {
+        "name"           : "Имя",
+        "emailAddress"   : "Почта",
+        "website"        : "Интернет сайт",
+        "phoneNumber"    : "Телефонный номер",
+        "billingAddress" : "Платежный адрес",
         "shippingAddress": "Почтовый адрес",
-        "description": "Описание",
-        "sicCode": "SicCode",
-        "industry": "Промышленность",
-        "type": "Раздел",
-        "contactRole": "Роль"
+        "description"    : "Описание",
+        "sicCode"        : "SicCode",
+        "industry"       : "Промышленность",
+        "type"           : "Раздел",
+        "contactRole"    : "Роль"
     },
-    "links": {
-        "contacts": "Контакты",
+    "links"  : {
+        "contacts"     : "Контакты",
         "opportunities": "Возможности",
-        "cases": "Обращения"
+        "cases"        : "Обращения"
     },
     "options": {
-        "type": {
+        "type"    : {
             "Customer": "Заказчик",
             "Investor": "Вкладчик",
-            "Partner": "Партнер",
+            "Partner" : "Партнер",
             "Reseller": "Посредник"
         },
         "industry": {
-            "Apparel": "Одежда",
-            "Banking": "Банковское дело",
+            "Apparel"          : "Одежда",
+            "Banking"          : "Банковское дело",
             "Computer Software": "Программное обеспечение",
-            "Education": "Образование",
-            "Electronics": "Электроника",
-            "Finance": "Финансы",
-            "Insurance": "Страхование"
+            "Education"        : "Образование",
+            "Electronics"      : "Электроника",
+            "Finance"          : "Финансы",
+            "Insurance"        : "Страхование"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Account": "Создать новую организацию"
     }
 }

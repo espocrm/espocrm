@@ -18,19 +18,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\NotFound,
-    \Espo\Core\Utils\Util;
-
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\Util;
 
 class EntryPointManager
 {
-    private $container;    
-    
-    private $fileManager;    
 
     protected $data = null;
 
@@ -38,7 +34,11 @@ class EntryPointManager
 
     protected $allowedMethods = array(
         'run',
-    );    
+    );
+
+    private $container;
+
+    private $fileManager;
 
     /**
      * @var array - path to entryPoint files
@@ -46,24 +46,13 @@ class EntryPointManager
     private $paths = array(
         'corePath' => 'application/Espo/EntryPoints',
         'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',
-        'customPath' => 'custom/Espo/Custom/EntryPoints',                                              
+        'customPath' => 'custom/Espo/Custom/EntryPoints',
     );
 
-
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(Container $container)
     {
-        $this->container = $container;        
-        $this->fileManager = $container->get('fileManager');        
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
+        $this->container = $container;
+        $this->fileManager = $container->get('fileManager');
     }
 
     public function checkAuthRequired($name)
@@ -72,44 +61,53 @@ class EntryPointManager
         if ($className === false) {
             throw new NotFound();
         }
-        return $className::$authRequired;        
-    }
-
-    public function run($name) 
-    {
-        $className = $this->getClassName($name);
-        if ($className === false) {
-            throw new NotFound();
-        }
-        $entryPoint = new $className($this->container);
-
-        $entryPoint->run();
+        return $className::$authRequired;
     }
 
     protected function getClassName($name)
     {
         $name = Util::normilizeClassName($name);
-        
         if (!isset($this->data)) {
             $this->init();
         }
-
         $name = ucfirst($name);
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
-        
-        return false; 
+        return false;
     }
-
 
     protected function init()
     {
+        /**
+         * @var ClassParser $classParser
+         */
         $classParser = $this->getContainer()->get('classParser');
         $classParser->setAllowedMethods($this->allowedMethods);
         $this->data = $classParser->getData($this->paths, $this->cacheFile);
-    }    
-     
+    }
 
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    public function run($name)
+    {
+        /**
+         * @var EntryPoints\Base $entryPoint
+         */
+        $className = $this->getClassName($name);
+        if ($className === false) {
+            throw new NotFound();
+        }
+        $entryPoint = new $className($this->container);
+        $entryPoint->run();
+    }
+
+    protected function getFileManager()
+    {
+        return $this->fileManager;
+    }
 }
 

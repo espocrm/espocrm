@@ -1,1 +1,6 @@
-["priority","status","assignedUser","teams"]
+[
+    "priority",
+    "status",
+    "assignedUser",
+    "teams"
+]

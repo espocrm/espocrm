@@ -18,56 +18,72 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core\Services;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Entities\User;
 
-abstract class Base implements Injectable
+abstract class Base implements
+    Injectable
 {
+
     protected $dependencies = array(
         'config',
         'entityManager',
         'user',
     );
-    
+
     protected $injections = array();
-    
-    public function inject($name, $object)
-    {
-        $this->injections[$name] = $object;
-    }
-    
+
     public function __construct()
     {
         $this->init();
     }
-    
+
     protected function init()
-    {    
-    }
-    
-    protected function getInjection($name)
     {
-        return $this->injections[$name];
     }
-    
+
+    public function inject($name, $object)
+    {
+        $this->injections[$name] = $object;
+    }
+
     public function getDependencyList()
     {
         return $this->dependencies;
     }
-    
+
+    /**
+     * @return EntityManager
+
+     */
     protected function getEntityManager()
     {
         return $this->getInjection('entityManager');
     }
-    
+
+    protected function getInjection($name)
+    {
+        return $this->injections[$name];
+    }
+
+    /**
+     * @return Config
+
+     */
     protected function getConfig()
     {
         return $this->getInjection('config');
     }
 
+    /**
+     * @return User
+
+     */
     protected function getUser()
     {
         return $this->getInjection('user');

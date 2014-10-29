@@ -1,7 +1,7 @@
 {
-	"fields": {
-		"name":"Contact",
-		"label":"Crm Module",
-		"source":"Crm Module"
-	}		
+    "fields": {
+        "name"  : "Contact",
+        "label" : "Crm Module",
+        "source": "Crm Module"
+    }
 }

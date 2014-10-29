@@ -1,32 +1,32 @@
 {
-    "labels": {
+    "labels"       : {
         "Create Document": "Create Document",
-        "Details": "Details"
+        "Details"        : "Details"
     },
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "file": "File",
-        "type": "Type",
-        "source": "Source",
-        "publishDate": "Publish Date",
+    "fields"       : {
+        "name"          : "Name",
+        "status"        : "Status",
+        "file"          : "File",
+        "type"          : "Type",
+        "source"        : "Source",
+        "publishDate"   : "Publish Date",
         "expirationDate": "Expiration Date",
-        "description": "Description"
+        "description"   : "Description"
     },
-    "links": {
-        "accounts": "Accounts",
+    "links"        : {
+        "accounts"     : "Accounts",
         "opportunities": "Opportunities"
     },
-    "options": {
+    "options"      : {
         "status": {
-            "Active": "Active",
-            "Draft": "Draft",
-            "Expired": "Expired",
+            "Active"  : "Active",
+            "Draft"   : "Draft",
+            "Expired" : "Expired",
             "Canceled": "Canceled"
         }
     },
     "presetFilters": {
         "active": "Active",
-        "draft": "Draft"
+        "draft" : "Draft"
     }
 }

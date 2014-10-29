@@ -19,24 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class HasChildren extends Base
+class HasChildren extends
+    Base
 {
+
     protected function load($linkName, $entityName)
     {
         $foreignLinkName = $this->getForeignLinkName();
         $foreignEntityName = $this->getForeignEntityName();
-
         return array(
-            $entityName => array (
+            $entityName => array(
                 'fields' => array(
-                       $linkName.'Ids' => array(
+                    $linkName . 'Ids' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
                     ),
-                    $linkName.'Names' => array(
+                    $linkName . 'Names' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
                     ),
@@ -45,13 +45,11 @@ class HasChildren extends Base
                     $linkName => array(
                         'type' => 'hasChildren',
                         'entity' => $foreignEntityName,
-                        'foreignKey' => $foreignLinkName.'Id',
-                        'foreignType' => $foreignLinkName.'Type',
+                        'foreignKey' => $foreignLinkName . 'Id',
+                        'foreignType' => $foreignLinkName . 'Type',
                     ),
                 ),
             ),
         );
     }
-
-
 }
