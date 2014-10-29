@@ -19,21 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades\Actions\Upgrade;
 
-class Install extends \Espo\Core\Upgrades\Actions\Base\Install
+class Install extends
+    \Espo\Core\Upgrades\Actions\Base\Install
 {
+
     protected function systemRebuild()
     {
         $manifest = $this->getManifest();
-
         $res = $this->getConfig()->set('version', $manifest['version']);
         if (method_exists($this->getConfig(), 'save')) {
             $res = $this->getConfig()->save();
         }
         $res &= parent::systemRebuild();
-
         return $res;
     }
 
@@ -46,7 +45,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $res = parent::deletePackageFiles();
         $res &= $this->deletePackageArchive();
-
         return $res;
     }
 }

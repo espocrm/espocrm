@@ -1,1 +1,7 @@
-[{"name":"userName","width":30,"link":true},{"name":"name"},{"name":"emailAddress"}]
+[{"name"   : "userName",
+    "width": 30,
+    "link" : true
+},
+    {"name": "name"},
+    {"name": "emailAddress"}
+]

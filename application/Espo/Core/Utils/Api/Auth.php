@@ -19,13 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Api;
 
-use \Espo\Core\Utils\Api\Slim;
+use Slim\Middleware;
+use Slim\Route;
 
-class Auth extends \Slim\Middleware
+class Auth extends
+    Middleware
 {
+
     protected $auth;
 
     protected $authRequired = null;
@@ -41,31 +43,28 @@ class Auth extends \Slim\Middleware
 
     function call()
     {
+        /**
+         * @var Route $firstRoute
+         */
         $req = $this->app->request();
-
         $uri = $req->getResourceUri();
         $httpMethod = $req->getMethod();
-
         $authUsername = $req->headers('PHP_AUTH_USER');
         $authPassword = $req->headers('PHP_AUTH_PW');
-
         $espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
         if (isset($espoAuth)) {
             list($authUsername, $authPassword) = explode(':', base64_decode($espoAuth));
         }
-
         $espoCgiAuth = $req->headers('HTTP_ESPO_CGI_AUTH');
-        if ( !isset($authUsername) && !isset($authPassword) && isset($espoCgiAuth) ) {
-            list($authUsername, $authPassword) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
+        if (!isset($authUsername) && !isset($authPassword) && isset($espoCgiAuth)) {
+            list($authUsername, $authPassword) = explode(':', base64_decode(substr($espoCgiAuth, 6)));
         }
-
         if (is_null($this->authRequired)) {
             $routes = $this->app->router()->getMatchedRoutes($httpMethod, $uri);
-
             if (!empty($routes[0])) {
-                $routeConditions = $routes[0]->getConditions();
+                $firstRoute = $routes[0];
+                $routeConditions = $firstRoute->getConditions();
                 if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
-
                     if ($authUsername && $authPassword) {
                         $isAuthenticated = $this->auth->login($authUsername, $authPassword);
                         if ($isAuthenticated) {
@@ -73,7 +72,6 @@ class Auth extends \Slim\Middleware
                             return;
                         }
                     }
-
                     $this->auth->useNoAuth();
                     $this->next->call();
                     return;
@@ -86,11 +84,8 @@ class Auth extends \Slim\Middleware
                 return;
             }
         }
-
         if ($authUsername && $authPassword) {
-
             $isAuthenticated = $this->auth->login($authUsername, $authPassword);
-
             if ($isAuthenticated) {
                 $this->next->call();
             } else {
@@ -107,7 +102,6 @@ class Auth extends \Slim\Middleware
     protected function processUnauthorized()
     {
         $res = $this->app->response();
-
         if ($this->showDialog) {
             $res->header('WWW-Authenticate', 'Basic realm=""');
         } else {
@@ -119,15 +113,11 @@ class Auth extends \Slim\Middleware
     protected function isXMLHttpRequest()
     {
         $req = $this->app->request();
-
         $httpXRequestedWith = $req->headers('HTTP_X_REQUESTED_WITH');
-
         if (isset($httpXRequestedWith) && strtolower($httpXRequestedWith) == 'xmlhttprequest') {
             return true;
         }
-
         return false;
     }
-
 }
 

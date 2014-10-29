@@ -18,44 +18,51 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Hooks\Note;
 
+use Espo\Core\Hooks\Base;
+use Espo\Core\ServiceFactory;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
+use Espo\Services\Notification;
 
-class Mentions extends \Espo\Core\Hooks\Base
+class Mentions extends
+    Base
 {
+
     public static $order = 9;
-    
+
     protected $notificationService = null;
-    
-    protected function init()
+
+    public function beforeSave(Entity $entity)
     {
-        $this->dependencies[] = 'serviceFactory';
+        if ($entity->get('type') == 'Post') {
+            //$post = $entity->get('post');
+            $this->addMentionData($entity);
+        }
     }
-    
-    protected function getServiceFactory()
-    {
-        return $this->getInjection('serviceFactory');
-    }
-    
+
+    /**
+     * @param Entity $entity
+     *
+     * @since 1.0
+     */
     protected function addMentionData($entity)
     {
+        /**
+         * @var User $user
+         */
         $post = $entity->get('post');
-        
         $mentionData = new \stdClass();
-        
-        $previousMentionList = array();        
+        $previousMentionList = array();
         if ($entity->isFetched()) {
             $data = $entity->get('data');
             if (!empty($data) && !empty($data->mentions)) {
-                $previousMentionList = array_keys(get_object_vars($data->mentions));                
+                $previousMentionList = array_keys(get_object_vars($data->mentions));
             }
         }
-        
-        preg_match_all('/(@\w+)/', $post, $matches);        
-        
+        preg_match_all('/(@\w+)/', $post, $matches);
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
@@ -67,43 +74,50 @@ class Mentions extends \Espo\Core\Hooks\Base
                         'userName' => $user->get('userName'),
                         '_scope' => $user->getEntityName()
                     );
-                    $mentionData->$item = (object) $m;
+                    $mentionData->$item = (object)$m;
                     if (!in_array($item, $previousMentionList)) {
                         $this->notifyAboutMention($entity, $user);
                     }
                 }
             }
         }
-        
         $data = $entity->get('data');
         if (empty($data)) {
-            $data = new \stdClass();            
+            $data = new \stdClass();
         }
         $data->mentions = $mentionData;
-        
         $entity->set('data', $data);
     }
-    
-    public function beforeSave(Entity $entity)
-    {
-        if ($entity->get('type') == 'Post') {
-            $post = $entity->get('post');
-            
-            $this->addMentionData($entity);
-        }
-    }
-    
-    protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user)
+
+    protected function notifyAboutMention(Entity $entity, User $user)
     {
         $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
     }
-    
+
+    /**
+     * @return Notification
+     * @since 1.0
+     */
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
             $this->notificationService = $this->getServiceFactory()->create('Notification');
         }
-        return $this->notificationService;        
+        return $this->notificationService;
+    }
+
+    /**
+     * @return ServiceFactory
+     * @since 1.0
+     */
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
+    }
+
+    protected function init()
+    {
+        $this->dependencies[] = 'serviceFactory';
     }
 }
 

@@ -1,37 +1,36 @@
 {
-    "fields": {
-        "dateFormat": "Format Daty",
-        "timeFormat": "Format Czasu",
-        "timeZone": "Strefa Czasowa",
-        "weekStart": "Pierwszy dzień tygodnia",
+    "fields" : {
+        "dateFormat"       : "Format Daty",
+        "timeFormat"       : "Format Czasu",
+        "timeZone"         : "Strefa Czasowa",
+        "weekStart"        : "Pierwszy dzień tygodnia",
         "thousandSeparator": "Separator Dziesiętny",
-        "decimalMark": "Znak rozdzielenia",
-        "defaultCurrency": "Domyślna Waluta",
-        "currencyList": "Domyślana Lista",
-        "language": "Język",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Zabezpieczenia",
-        "smtpUsername": "Użytkownik",
-        "emailAddress": "E-mail",
-        "smtpPassword": "Hasło",
+        "decimalMark"      : "Znak rozdzielenia",
+        "defaultCurrency"  : "Domyślna Waluta",
+        "currencyList"     : "Domyślana Lista",
+        "language"         : "Język",
+
+        "smtpServer"      : "Server",
+        "smtpPort"        : "Port",
+        "smtpAuth"        : "Auth",
+        "smtpSecurity"    : "Zabezpieczenia",
+        "smtpUsername"    : "Użytkownik",
+        "emailAddress"    : "E-mail",
+        "smtpPassword"    : "Hasło",
         "smtpEmailAddress": "E-mail Adres",
-        
+
         "exportDelimiter": "Znak rodzielenia eksportu",
-        
+
         "receiveAssignmentEmailNotifications": "Otrzymać informację w trakcie jej przypisywania"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "weekStart": {
             "0": "Niedziela",
             "1": "Poniedziałek"
         }
     },
-    "labels": {
+    "labels" : {
         "Notifications": "powiadomienia"
     }
 }

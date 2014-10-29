@@ -1,25 +1,25 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"float"
-      },
-      {
-         "name":"min",
-         "type":"float"
-      },
-      {
-         "name":"max",
-         "type":"float"
-      }
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "notNull":false
-   }
+    "params"   : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "float"
+        },
+        {
+            "name": "min",
+            "type": "float"
+        },
+        {
+            "name": "max",
+            "type": "float"
+        }
+    ],
+    "filter"   : true,
+    "fieldDefs": {
+        "notNull": false
+    }
 }

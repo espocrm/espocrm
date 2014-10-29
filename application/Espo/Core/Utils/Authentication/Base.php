@@ -19,15 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Core\Utils\Auth;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Auth;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\PasswordHash;
 
 abstract class Base
 {
+
     private $config;
 
     private $entityManager;
@@ -61,11 +62,9 @@ abstract class Base
     protected function getPasswordHash()
     {
         if (!isset($this->passwordHash)) {
-            $this->passwordHash = new \Espo\Core\Utils\PasswordHash($this->config);
+            $this->passwordHash = new PasswordHash($this->config);
         }
-
         return $this->passwordHash;
     }
-
 }
 

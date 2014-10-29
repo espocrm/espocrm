@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "status": "Estado",
-        "job": "Trabajo",
+    "fields" : {
+        "name"      : "Nombre",
+        "status"    : "Estado",
+        "job"       : "Trabajo",
         "scheduling": "Scheduling (crontab notation)"
     },
-    "links": {
+    "links"  : {
         "log": "Registro de Log"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Crear Tarea programado"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Comprobar Correos Entrantes",
-            "Cleanup": "Limpiar"
+            "Cleanup"           : "Limpiar"
         },
         "cronSetup": {
-            "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programadas:",
-            "mac": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programadas:",
+            "linux"  : "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programadas:",
+            "mac"    : "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programadas:",
             "windows": "Nota: Crear un archivo por lotes con los siguientes comandos para ejecutar tareas programadas usando Espo tareas programadas de Windows:",
             "default": "Note: Add this command to Cron Job (Scheduled Task):"
         },
-        "status": {
-            "Active": "Activo",
+        "status"   : {
+            "Active"  : "Activo",
             "Inactive": "Inactivo"
         }
     }

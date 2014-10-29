@@ -1,31 +1,31 @@
 {
-   "actualFields":[
-      "street",
-      "city",
-      "state",
-      "country",
-      "postalCode"
-   ],
-   "fields":{
-      "street":{
-          "type": "text",
-          "maxLength": 255,
-          "dbType": "varchar"
-      },
-      "city":{
-         "type":"varchar"
-      },
-      "state":{
-         "type":"varchar"
-      },
-      "country":{
-         "type":"varchar"
-      },
-      "postalCode":{
-         "type":"varchar"
-      }
-   },
-   "mergable":false,
-   "notCreatable": false,
-   "filter": true
+    "actualFields": [
+        "street",
+        "city",
+        "state",
+        "country",
+        "postalCode"
+    ],
+    "fields"      : {
+        "street"    : {
+            "type"     : "text",
+            "maxLength": 255,
+            "dbType"   : "varchar"
+        },
+        "city"      : {
+            "type": "varchar"
+        },
+        "state"     : {
+            "type": "varchar"
+        },
+        "country"   : {
+            "type": "varchar"
+        },
+        "postalCode": {
+            "type": "varchar"
+        }
+    },
+    "mergable"    : false,
+    "notCreatable": false,
+    "filter"      : true
 }

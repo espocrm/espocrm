@@ -19,21 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-class JsonArray extends \Doctrine\DBAL\Types\JsonArrayType
-{
-    const JSON_ARRAY = 'jsonArray';
+use Doctrine\DBAL\Types\JsonArrayType;
 
-    public function getName()
-    {
-        return self::JSON_ARRAY;
-    }
+class JsonArray extends
+    JsonArrayType
+{
+
+    const JSON_ARRAY = 'jsonArray';
 
     public static function getDbTypeName()
     {
         return 'TEXT';
     }
 
+    public function getName()
+    {
+        return self::JSON_ARRAY;
+    }
 }

@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "Imię",
-        "emailAddress": "E-mail",
-        "website": "Strona Internetowa",
-        "phoneNumber": "Telefon",
-        "billingAddress": "Adres Firmy",
+    "fields" : {
+        "name"           : "Imię",
+        "emailAddress"   : "E-mail",
+        "website"        : "Strona Internetowa",
+        "phoneNumber"    : "Telefon",
+        "billingAddress" : "Adres Firmy",
         "shippingAddress": "Adres Dostawy",
-        "description": "Opis ",
-        "sicCode": "PKD",
-        "industry": "Branża",
-        "type": "Rodzaj",
-        "contactRole": "Rola"
+        "description"    : "Opis ",
+        "sicCode"        : "PKD",
+        "industry"       : "Branża",
+        "type"           : "Rodzaj",
+        "contactRole"    : "Rola"
     },
-    "links": {
-        "contacts": "Kontakty",
+    "links"  : {
+        "contacts"     : "Kontakty",
         "opportunities": "Szanse Sprzedaży",
-        "cases": "Zlecenia"
+        "cases"        : "Zlecenia"
     },
     "options": {
-        "type": {
+        "type"    : {
             "Customer": "Klient",
             "Investor": "Inwestor",
-            "Partner": "Partner",
+            "Partner" : "Partner",
             "Reseller": "Sprzedawca"
         },
         "industry": {
-            "Apparel": "Odzież",
-            "Banking": "Bankowość",
+            "Apparel"          : "Odzież",
+            "Banking"          : "Bankowość",
             "Computer Software": "Oprogramowanie Komputerowe",
-            "Education": "Edukacja",
-            "Electronics": "Elektronika",
-            "Finance": "Finanse",
-            "Insurance": "Ubezpieczenia"
+            "Education"        : "Edukacja",
+            "Electronics"      : "Elektronika",
+            "Finance"          : "Finanse",
+            "Insurance"        : "Ubezpieczenia"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Account": "Utwórz Konto"
     }
 }

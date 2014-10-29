@@ -19,52 +19,53 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
+use Espo\Core\Utils\Database\Orm\Base;
 use Espo\Core\Utils\Util;
 
-class PersonName extends \Espo\Core\Utils\Database\Orm\Base
+class PersonName extends
+    Base
 {
+
     protected function load($fieldName, $entityName)
     {
         $foreignField = array('first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName));
-        
         $tableName = Util::toUnderScore($entityName);
-
         $fullList = array(); //contains empty string (" ") like delimiter
         $fullListReverse = array(); //reverse of $fullList
         $fieldList = array(); //doesn't contain empty string (" ") like delimiter
         $like = array();
         $equal = array();
-
-        foreach($foreignField as $foreignFieldName) {
-
+        foreach ($foreignField as $foreignFieldName) {
             $fieldNameTrimmed = trim($foreignFieldName);
             if (!empty($fieldNameTrimmed)) {
-                $columnName = $tableName.'.'.Util::toUnderScore($fieldNameTrimmed);
-
+                $columnName = $tableName . '.' . Util::toUnderScore($fieldNameTrimmed);
                 $fullList[] = $fieldList[] = $columnName;
-                $like[] = $columnName." LIKE {value}";
-                $equal[] = $columnName." = {value}";
+                $like[] = $columnName . " LIKE {value}";
+                $equal[] = $columnName . " = {value}";
             } else {
-                $fullList[] = "'".$foreignFieldName."'";
+                $fullList[] = "'" . $foreignFieldName . "'";
             }
         }
-
         $fullListReverse = array_reverse($fullList);
-
         return array(
-            $entityName => array (
+            $entityName => array(
                 'fields' => array(
                     $fieldName => array(
                         'type' => 'varchar',
                         'select' => $this->getSelect($fullList),
                         'where' => array(
-                            'LIKE' => "(".implode(" OR ", $like)." OR CONCAT(".implode(", ", $fullList).") LIKE {value} OR CONCAT(".implode(", ", $fullListReverse).") LIKE {value})",
-                            '=' => "(".implode(" OR ", $equal)." OR CONCAT(".implode(", ", $fullList).") = {value} OR CONCAT(".implode(", ", $fullListReverse).") = {value})",
+                            'LIKE' => "(" . implode(" OR ", $like) . " OR CONCAT(" . implode(", ",
+                                    $fullList) . ") LIKE {value} OR CONCAT(" . implode(", ",
+                                    $fullListReverse) . ") LIKE {value})",
+                            '=' => "(" . implode(" OR ", $equal) . " OR CONCAT(" . implode(", ",
+                                    $fullList) . ") = {value} OR CONCAT(" . implode(", ",
+                                    $fullListReverse) . ") = {value})",
                         ),
-                        'orderBy' => implode(", ", array_map(function ($item) {return $item . ' {direction}';}, $fieldList)),
+                        'orderBy' => implode(", ", array_map(function ($item){
+                                    return $item . ' {direction}';
+                                }, $fieldList)),
                     ),
                 ),
             ),
@@ -74,17 +75,12 @@ class PersonName extends \Espo\Core\Utils\Database\Orm\Base
     protected function getSelect(array $fullList)
     {
         foreach ($fullList as &$item) {
-
             $rowItem = trim($item, " '");
-
             if (!empty($rowItem)) {
-                $item = "IFNULL(".$item.", '')";
+                $item = "IFNULL(" . $item . ", '')";
             }
         }
-
-        $select = "TRIM(CONCAT(".implode(", ", $fullList)."))";
-
+        $select = "TRIM(CONCAT(" . implode(", ", $fullList) . "))";
         return $select;
     }
-
 }

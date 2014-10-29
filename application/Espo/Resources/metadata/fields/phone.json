@@ -1,27 +1,33 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"typeList",
-         "type":"array",         
-         "options": ["Mobile", "Office", "Home", "Fax", "Other"]         
-      },
-      {
-         "name":"defaultType",
-         "type":"varchar",
-         "default": "Mobile"
-      }
-   ],
-   "notActualFields":[
-      "data"
-   ],
-   "notCreatable": true,
-   "filter": true,
-   "fieldDefs":{
-      "notStorable":true
-   }
+    "params"         : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name"   : "typeList",
+            "type"   : "array",
+            "options": [
+                "Mobile",
+                "Office",
+                "Home",
+                "Fax",
+                "Other"
+            ]
+        },
+        {
+            "name"   : "defaultType",
+            "type"   : "varchar",
+            "default": "Mobile"
+        }
+    ],
+    "notActualFields": [
+        "data"
+    ],
+    "notCreatable"   : true,
+    "filter"         : true,
+    "fieldDefs"      : {
+        "notStorable": true
+    }
 }

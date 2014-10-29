@@ -18,24 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Entities;
 
-class Email extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Email extends
+    Entity
 {
 
-    protected function getSubject()
-    {
-        return $this->get('name');
-    }
-    
-    protected function setSubject($value)
-    {
-        return $this->set('name', $value);
-    }
-    
-    public function addAttachment(\Espo\Entities\Attachment $attachment)
+    public function addAttachment(Attachment $attachment)
     {
         if (!empty($this->id)) {
             $attachment->set('parentId', $this->id);
@@ -45,22 +37,20 @@ class Email extends \Espo\Core\ORM\Entity
             }
         }
     }
-    
+
     public function getBodyPlainForSending()
     {
-        $bodyPlain = $this->get('bodyPlain');        
+        $bodyPlain = $this->get('bodyPlain');
         if (!empty($bodyPlain)) {
             return $bodyPlain;
         }
-
         $body = $this->get('body');
-        
-        $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+        $breaks = array("<br />", "<br>", "<br/>", "<br />", "&lt;br /&gt;", "&lt;br/&gt;", "&lt;br&gt;");
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
         return $body;
     }
-    
+
     public function getBodyForSending()
     {
         $body = $this->get('body');
@@ -70,20 +60,19 @@ class Email extends \Espo\Core\ORM\Entity
                 $body = str_replace("?entryPoint=attachment&amp;id={$attachment->id}", "cid:{$attachment->id}", $body);
             }
         }
-        
-        $body = str_replace("<table class=\"table table-bordered\">", "<table class=\"table table-bordered\" width=\"100%\">", $body);
-        
+        $body = str_replace("<table class=\"table table-bordered\">",
+            "<table class=\"table table-bordered\" width=\"100%\">", $body);
         return $body;
     }
-    
+
     public function getInlineAttachments()
     {
         $attachmentList = array();
         $body = $this->get('body');
         if (!empty($body)) {
-            if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $body, $matches)) {    
-                if (!empty($matches[1]) && is_array($matches[1])) {        
-                    foreach($matches[1] as $id) {
+            if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $body, $matches)) {
+                if (!empty($matches[1]) && is_array($matches[1])) {
+                    foreach ($matches[1] as $id) {
                         $attachment = $this->entityManager->getEntity('Attachment', $id);
                         if ($attachment) {
                             $attachmentList[] = $attachment;
@@ -91,9 +80,18 @@ class Email extends \Espo\Core\ORM\Entity
                     }
                 }
             }
-            
         }
         return $attachmentList;
+    }
+
+    protected function getSubject()
+    {
+        return $this->get('name');
+    }
+
+    protected function setSubject($value)
+    {
+        $this->set('name', $value);
     }
 }
 

@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "Nome",
-        "status": "Status",
-        "job": "Tarefa",
+    "fields" : {
+        "name"      : "Nome",
+        "status"    : "Status",
+        "job"       : "Tarefa",
         "scheduling": "Agendando (notação do crontab)"
     },
-    "links": {
+    "links"  : {
         "log": "Log"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Agendar Tarefa"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Checar Emails Recebidos",
-            "Cleanup": "Limpar"
+            "Cleanup"           : "Limpar"
         },
         "cronSetup": {
-            "linux": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
-            "mac": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
+            "linux"  : "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
+            "mac"    : "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
             "windows": "Nota: Crie um arquivo em lote com os seguintes comandos para executar as tarefas agendadas do EspoCRM no agendador de tarefas do Windows:",
             "default": "Nota: Adicione este comando Cron Job (Tarefa agendada):"
         },
-        "status": {
-            "Active": "Ativo",
+        "status"   : {
+            "Active"  : "Ativo",
             "Inactive": "Inativo"
         }
     }

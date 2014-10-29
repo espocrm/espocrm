@@ -18,21 +18,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\SelectManagerFactory;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Services\Base;
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Preferences;
+use Espo\ORM\Entity;
+use Espo\ORM\Repositories\RDB;
+use Espo\Repositories\EmailAddress;
+use Espo\Repositories\PhoneNumber;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Conflict;
-
-use \Espo\Core\Utils\Util;
-
-class Record extends \Espo\Core\Services\Base
+class Record extends
+    Base
 {
+
     protected $dependencies = array(
         'entityManager',
         'user',
@@ -44,19 +52,19 @@ class Record extends \Espo\Core\Services\Base
         'selectManagerFactory',
         'preferences'
     );
-    
+
     protected $entityName;
-    
-    private $streamService;
-    
-    protected $notFilteringFields = array(); // TODO maybe remove it
-    
-    protected $internalFields = array();
-    
+
+    protected $notFilteringFields = array();
+
+    protected $internalFields = array(); // TODO maybe remove it
+
     protected $readOnlyFields = array();
-    
+
     protected $linkSelectParams = array();
-    
+
+    private $streamService;
+
     public function __construct()
     {
         parent::__construct();
@@ -75,69 +83,51 @@ class Record extends \Espo\Core\Services\Base
     {
         $this->entityName = $entityName;
     }
-    
-    protected function getServiceFactory()
+
+    public function createEntity($data)
     {
-        return $this->injections['serviceFactory'];
-    }
-    
-    protected function getSelectManagerFactory()
-    {
-        return $this->injections['selectManagerFactory'];
-    }
-    
-    protected function getAcl()
-    {
-        return $this->injections['acl'];
-    }
-    
-    protected function getFileManager()
-    {
-        return $this->injections['fileManager'];
-    }    
-    
-    protected function getPreferences()
-    {
-        return $this->injections['preferences'];
-    }
-    
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
-    }
-    
-    protected function getRepository()
-    {        
-        return $this->getEntityManager()->getRepository($this->entityName);
-    }
-    
-    protected function getRecordService($name)
-    {        
-        if ($this->getServiceFactory()->checkExists($name)) {
-            $service = $this->getServiceFactory()->create($name);
-        } else {
-            $service = $this->getServiceFactory()->create('Record');
-            $service->setEntityName($name);
-        }        
-        
-        return $service;
-    }
-    
-    protected function prepareEntity($entity)
-    {
-    
+        $entity = $this->getEntity();
+        $this->filterInput($data);
+        $this->handleInput($data);
+        $entity->set($data);
+        if (!$this->isValid($entity)) {
+            throw new BadRequest();
+        }
+        if (empty($data['forceDuplicate'])) {
+            $duplicates = $this->checkEntityForDuplicate($entity);
+            if (!empty($duplicates)) {
+                $reason = array(
+                    'reason' => 'Duplicate',
+                    'data' => $duplicates
+                );
+                throw new Conflict(json_encode($reason));
+            }
+        }
+        if ($this->storeEntity($entity)) {
+            $this->prepareEntityForOutput($entity);
+            return $entity;
+        }
+        throw new Error();
     }
 
+    /**
+     * @param null $id
+     *
+     * @return \Espo\Core\ORM\Entity
+     * @since 1.0
+     * @throws Forbidden
+     */
     public function getEntity($id = null)
     {
-        $entity = $this->getRepository()->get($id);        
+        /**
+         * @var Entity $entity
+         */
+        $entity = $this->getRepository()->get($id);
         if (!empty($entity) && !empty($id)) {
-            $this->loadAdditionalFields($entity);            
-            
+            $this->loadAdditionalFields($entity);
             if ($entity->getEntityName() == 'Opportunity') {
                 $contactsColumns = $entity->get('contactsColumns');
             }
-            
             if (!$this->getAcl()->check($entity, 'read')) {
                 throw new Forbidden();
             }
@@ -147,24 +137,25 @@ class Record extends \Espo\Core\Services\Base
         }
         return $entity;
     }
-    
-    protected function getStreamService()
+
+    /**
+     * @return RDB
+     * @since 1.0
+     */
+    protected function getRepository()
     {
-        if (empty($this->streamService)) {
-            $this->streamService = $this->getServiceFactory()->create('Stream');
-        }
-        return $this->streamService;
+        return $this->getEntityManager()->getRepository($this->entityName);
     }
-    
-    protected function loadIsFollowed(Entity $entity)
-    {    
-        if ($this->getStreamService()->checkIsFollowed($entity)) {
-            $entity->set('isFollowed', true);
-        } else {
-            $entity->set('isFollowed', false);
-        }
+
+    protected function loadAdditionalFields($entity)
+    {
+        $this->loadLinkMultipleFields($entity);
+        $this->loadParentNameFields($entity);
+        $this->loadIsFollowed($entity);
+        $this->loadEmailAddressField($entity);
+        $this->loadPhoneNumberField($entity);
     }
-    
+
     protected function loadLinkMultipleFields(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
@@ -173,12 +164,22 @@ class Record extends \Espo\Core\Services\Base
                 $columns = null;
                 if (!empty($defs['columns'])) {
                     $columns = $defs['columns'];
-                }                        
-                $entity->loadLinkMultipleField($field, $columns);    
+                }
+                /** @noinspection PhpUndefinedMethodInspection */
+                $entity->loadLinkMultipleField($field, $columns);
             }
         }
     }
-    
+
+    /**
+     * @return Metadata
+     * @since 1.0
+     */
+    protected function getMetadata()
+    {
+        return $this->injections['metadata'];
+    }
+
     protected function loadParentNameFields(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
@@ -186,8 +187,7 @@ class Record extends \Espo\Core\Services\Base
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $id = $entity->get($field . 'Id');
                 $scope = $entity->get($field . 'Type');
-                
-                if ($scope) {                
+                if ($scope) {
                     if ($foreignEntity = $this->getEntityManager()->getEntity($scope, $id)) {
                         $entity->set($field . 'Name', $foreignEntity->get('name'));
                     }
@@ -195,44 +195,125 @@ class Record extends \Espo\Core\Services\Base
             }
         }
     }
-    
-    protected function loadAdditionalFields($entity)
+
+    protected function loadIsFollowed(Entity $entity)
     {
-        $this->loadLinkMultipleFields($entity);            
-        $this->loadParentNameFields($entity);
-        $this->loadIsFollowed($entity);
-        $this->loadEmailAddressField($entity);
-        $this->loadPhoneNumberField($entity);
+        if ($this->getStreamService()->checkIsFollowed($entity)) {
+            $entity->set('isFollowed', true);
+        } else {
+            $entity->set('isFollowed', false);
+        }
     }
-    
+
+    /**
+     * @return Stream
+     * @since 1.0
+     * @throws Error
+     */
+    protected function getStreamService()
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->getServiceFactory()->create('Stream');
+        }
+        return $this->streamService;
+    }
+
+    /**
+     * @return ServiceFactory
+     * @since 1.0
+     */
+    protected function getServiceFactory()
+    {
+        return $this->injections['serviceFactory'];
+    }
+
     protected function loadEmailAddressField(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());        
+        /**
+         * @var EmailAddress $emailAddressRepo
+         */
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
         if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
             $dataFieldName = 'emailAddressData';
-            $entity->set($dataFieldName, $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity));
+            $emailAddressRepo = $this->getEntityManager()->getRepository('EmailAddress');
+            $entity->set($dataFieldName,
+                $emailAddressRepo->getEmailAddressData($entity));
         }
     }
-    
+
     protected function loadPhoneNumberField(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());        
+        /**
+         * @var PhoneNumber $phoneNumberRepo
+         */
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
         if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
             $dataFieldName = 'phoneNumberData';
-            $entity->set($dataFieldName, $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity));
+            $phoneNumberRepo = $this->getEntityManager()->getRepository('PhoneNumber');
+            $entity->set($dataFieldName,
+                $phoneNumberRepo->getPhoneNumberData($entity));
         }
     }
-    
-    protected function getSelectManager($entityName)
+
+    /**
+     * @return Acl
+     * @since 1.0
+     */
+    protected function getAcl()
     {
-        return $this->getSelectManagerFactory()->create($entityName);
+        return $this->injections['acl'];
     }
-    
-    protected function storeEntity(Entity $entity)
+
+    public function prepareEntityForOutput(Entity $entity)
     {
-        return $this->getRepository()->save($entity);
+        foreach ($this->internalFields as $field) {
+            $entity->clear($field);
+        }
     }
-    
+
+    protected function filterInput(&$data)
+    {
+        foreach ($this->readOnlyFields as $field) {
+            unset($data[$field]);
+        }
+        foreach ($data as $key => $value) {
+            if (is_array($data[$key])) {
+                foreach ($data[$key] as $i => $v) {
+                    $data[$key][$i] = $this->filterInputField($i, $data[$key][$i]);
+                }
+            } else if ($data[$key] instanceof \stdClass) {
+                $propertyList = get_object_vars($data[$key]);
+                foreach ($propertyList as $property => $bvalue) {
+                    $data[$key]->$property = $this->filterInputField($property, $data[$key]->$property);
+                }
+            } else {
+                $data[$key] = $this->filterInputField($key, $data[$key]);
+            }
+        }
+    }
+
+    protected function filterInputField($field, $value)
+    {
+        if (in_array($field, $this->notFilteringFields)) {
+            return $value;
+        }
+        $methodName = 'filterInputField' . ucfirst($field);
+        if (method_exists($this, $methodName)) {
+            $value = $this->$methodName($value);
+        }
+        return $value;
+    }
+
+    protected function handleInput(&$data)
+    {
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return bool
+     * @since 1.0
+     */
     protected function isValid($entity)
     {
         $fieldDefs = $entity->getFields();
@@ -243,230 +324,186 @@ class Record extends \Espo\Core\Services\Base
         }
         return true;
     }
-    
-    protected function stripTags($string)
+
+    public function checkEntityForDuplicate(Entity $entity)
     {
-        return strip_tags($string, '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>');
-    }
-    
-    protected function filterInputField($field, $value)
-    {        
-        if (in_array($field, $this->notFilteringFields)) {
-            return $value;
-        }
-        $methodName = 'filterInputField' . ucfirst($field);
-        if (method_exists($this, $methodName)) {
-            $value = $this->$methodName($value);
-        }
-        return $value;
-    }    
-    
-    protected function filterInput(&$data)
-    {        
-        foreach ($this->readOnlyFields as $field) {
-            unset($data[$field]);
-        }
-        
-        foreach ($data as $key => $value) {
-            if (is_array($data[$key])) {
-                foreach ($data[$key] as $i => $v) {
-                    $data[$key][$i] = $this->filterInputField($i, $data[$key][$i]);
+        /**
+         * @var Entity $e
+         */
+        $where = $this->getDuplicateWhereClause($entity);
+        if ($where) {
+            $duplicates = $this->getRepository()->where($where)->find();
+            if (count($duplicates)) {
+                $result = array();
+                foreach ($duplicates as $e) {
+                    $result[$e->id] = $e->get('name');
                 }
-            } else if ($data[$key] instanceof \stdClass) {
-                $propertyList = get_object_vars($data[$key]);
-                foreach ($propertyList as $property => $value) {
-                    $data[$key]->$property = $this->filterInputField($property, $data[$key]->$property);            
-                }
-            } else {
-                $data[$key] = $this->filterInputField($key, $data[$key]);
+                return $result;
             }
         }
-    }
-    
-    protected function handleInput(&$data)
-    {
-        
+        return false;
     }
 
-    public function createEntity($data)
+    protected function getDuplicateWhereClause(Entity $entity)
     {
-        $entity = $this->getEntity();
-        
-        $this->filterInput($data);
-        $this->handleInput($data);
-        
-        $entity->set($data);
-        
-        if (!$this->isValid($entity)) {
-            throw new BadRequest();
-        }
-        
-        if (empty($data['forceDuplicate'])) {
-            $duplicates = $this->checkEntityForDuplicate($entity);
-            if (!empty($duplicates)) {
-                $reason = array(
-                    'reason' => 'Duplicate',
-                    'data' => $duplicates
-                );
-                throw new Conflict(json_encode($reason));
-            }
-        }    
-        
-        if ($this->storeEntity($entity)) {
-            $this->prepareEntityForOutput($entity);
-            return $entity;
-        }        
-        
-        throw new Error();
+        return false;
     }
-    
-    
+
+    protected function storeEntity(Entity $entity)
+    {
+        return $this->getRepository()->save($entity);
+    }
+
     public function updateEntity($id, $data)
-    {            
-        unset($data['deleted']);        
-        
+    {
+        unset($data['deleted']);
         $this->filterInput($data);
         $this->handleInput($data);
-        
         $entity = $this->getEntity($id);
-        
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
-                        
         $entity->set($data);
-        
         if (!$this->isValid($entity)) {
             throw new BadRequest();
-        }        
-        
+        }
         if ($this->storeEntity($entity)) {
             $this->prepareEntityForOutput($entity);
             return $entity;
         }
-
         throw new Error();
     }
 
     public function deleteEntity($id)
     {
         $entity = $this->getEntity($id);
-
         if (!$this->getAcl()->check($entity, 'delete')) {
             throw new Forbidden();
         }
-    
         return $this->getRepository()->remove($entity);
     }
-    
+
     public function findEntities($params)
-    {    
+    {
         $selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
-        $collection = $this->getRepository()->find($selectParams);        
-        
+        $collection = $this->getRepository()->find($selectParams);
         foreach ($collection as $e) {
             $this->loadParentNameFields($e);
             $this->prepareEntityForOutput($e);
         }
-        
         return array(
             'total' => $this->getRepository()->count($selectParams),
             'collection' => $collection,
         );
     }
 
+    protected function getSelectManager($entityName)
+    {
+        return $this->getSelectManagerFactory()->create($entityName);
+    }
+
+    /**
+     * @return SelectManagerFactory
+     * @since 1.0
+     */
+    protected function getSelectManagerFactory()
+    {
+        return $this->injections['selectManagerFactory'];
+    }
+
     public function findLinkedEntities($id, $link, $params)
-    {        
-        $entity = $this->getEntity($id);        
+    {
+        $entity = $this->getEntity($id);
         $foreignEntityName = $entity->relations[$link]['entity'];
-        
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
         if (!$this->getAcl()->check($foreignEntityName, 'read')) {
             throw new Forbidden();
         }
-                
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
-        
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
-        
-        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);        
-        
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
         $recordService = $this->getRecordService($foreignEntityName);
-        
         foreach ($collection as $e) {
             $this->loadParentNameFields($e);
+            /** @noinspection PhpUndefinedMethodInspection */
             $recordService->prepareEntityForOutput($e);
         }
-        
         return array(
             'total' => $this->getRepository()->countRelated($entity, $link, $selectParams),
             'collection' => $collection,
         );
     }
-    
+
+    /**
+     * @param $name
+     *
+     * @return Base
+     * @since 1.0
+     * @throws Error
+     */
+    protected function getRecordService($name)
+    {
+        if ($this->getServiceFactory()->checkExists($name)) {
+            $service = $this->getServiceFactory()->create($name);
+        } else {
+            $service = $this->getServiceFactory()->create('Record');
+            /** @noinspection PhpUndefinedMethodInspection */
+            $service->setEntityName($name);
+        }
+        return $service;
+    }
+
     public function linkEntity($id, $link, $foreignId)
-    {    
-        $entity = $this->getEntity($id);    
-    
+    {
+        $entity = $this->getEntity($id);
         $entityName = $entity->getEntityName($entity);
-        $foreignEntityName = $entity->relations[$link]['entity'];               
-                
+        $foreignEntityName = $entity->relations[$link]['entity'];
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
-        
         if (empty($foreignEntityName)) {
             throw new Error();
         }
-        
         $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
-        
         if (!$this->getAcl()->check($foreignEntity, 'edit')) {
             throw new Forbidden();
-        }        
-        
+        }
         if (!empty($foreignEntity)) {
+            /** @noinspection PhpParamsInspection */
             $this->getRepository()->relate($entity, $link, $foreignEntity);
-            return true;        
+            return true;
         }
     }
-    
+
     public function unlinkEntity($id, $link, $foreignId)
     {
-        $entity = $this->getEntity($id);    
-    
+        $entity = $this->getEntity($id);
         $entityName = $entity->getEntityName($entity);
-        $foreignEntityName = $entity->relations[$link]['entity'];               
-                
+        $foreignEntityName = $entity->relations[$link]['entity'];
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
-        
         if (empty($foreignEntityName)) {
             throw new Error();
         }
-        
         $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
-        
         if (!$this->getAcl()->check($foreignEntity, 'edit')) {
             throw new Forbidden();
         }
-         
         if (!empty($foreignEntity)) {
             $this->getRepository()->unrelate($entity, $link, $foreignEntity);
-            return true;        
+            return true;
         }
     }
-    
+
     public function massUpdate($attributes = array(), $ids = array(), $where = array())
     {
-        $idsUpdated = array();        
+        $idsUpdated = array();
         $repository = $this->getRepository();
-                
         if (!empty($ids)) {
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
@@ -478,17 +515,14 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
         }
-        
         return $idsUpdated;
-        
         // TODO update $where
     }
 
     public function massRemove($ids = array(), $where = array())
     {
-        $idsRemoved = array();        
+        $idsRemoved = array();
         $repository = $this->getRepository();
-                
         if (!empty($ids)) {
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
@@ -499,64 +533,39 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
         }
-        
         return $idsRemoved;
-        
         // TODO update $where
     }
-    
+
     public function follow($id, $userId = null)
     {
         $entity = $this->getEntity($id);
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
-        
         if (empty($userId)) {
             $userId = $this->getUser()->id;
         }
-
         return $this->getStreamService()->followEntity($entity, $userId);
     }
-    
+
     public function unfollow($id, $userId = null)
     {
         $entity = $this->getEntity($id);
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
-        }        
-        
+        }
         if (empty($userId)) {
             $userId = $this->getUser()->id;
         }
-        
         return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
-    
-    protected function getDuplicateWhereClause(Entity $entity)
-    {
-        return false;
-    }
-    
-    public function checkEntityForDuplicate(Entity $entity)
-    {        
-        $where = $this->getDuplicateWhereClause($entity);
-        
-        if ($where) {
-            $duplicates = $this->getRepository()->where($where)->find();
-            if (count($duplicates)) {
-                $result = array();
-                foreach ($duplicates as $e) {
-                    $result[$e->id] = $e->get('name');
-                }
-                return $result;
-            }
-        }        
-        return false;
-    }
-    
+
     public function export($ids, $where)
-    {    
+    {
+        /**
+         * @var Entity $entity
+         */
         if (!empty($ids)) {
             $where = array(
                 array(
@@ -565,15 +574,11 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
-        }   
-        
+        }
         $selectParams = $this->getSelectManager($this->entityName)->getSelectParams(array('where' => $where), true);
         $collection = $this->getRepository()->find($selectParams);
-                
         $arr = array();
-        
         $collection->toArray();
-        
         $fieldsToSkip = array(
             'modifiedByName',
             'createdByName',
@@ -583,7 +588,6 @@ class Record extends \Espo\Core\Services\Base
             'createdAt',
             'deleted',
         );
-        
         $fields = null;
         foreach ($collection as $entity) {
             if (empty($fields)) {
@@ -592,9 +596,8 @@ class Record extends \Espo\Core\Services\Base
                     if (in_array($field, $fieldsToSkip)) {
                         continue;
                     }
-                
                     if (empty($defs['notStorable'])) {
-                        $fields[] = $field;    
+                        $fields[] = $field;
                     } else {
                         if (in_array($defs['type'], array('email', 'phone'))) {
                             $fields[] = $field;
@@ -604,20 +607,17 @@ class Record extends \Espo\Core\Services\Base
                     }
                 }
             }
-            
             $row = array();
             foreach ($fields as $field) {
                 $row[$field] = $entity->get($field);
             }
             $arr[] = $row;
-        }        
-        
+        }
         $delimiter = $this->getPreferences()->get('exportDelimiter');
         if (empty($delimiter)) {
             $delimiter = ',';
         }
-        
-        $fp = fopen('php://temp', 'w');        
+        $fp = fopen('php://temp', 'w');
         fputcsv($fp, array_keys($arr[0]), $delimiter);
         foreach ($arr as $row) {
             fputcsv($fp, $row, $delimiter);
@@ -625,29 +625,46 @@ class Record extends \Espo\Core\Services\Base
         rewind($fp);
         $csv = stream_get_contents($fp);
         fclose($fp);
-        
         $fileName = "Export_{$this->entityName}.csv";
-        
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
         $attachment->set('type', 'text/csv');
-        
         $this->getEntityManager()->saveEntity($attachment);
-        
-        if (!empty($attachment->id)) {        
-            $this->getInjection('fileManager')->putContents('data/upload/' . $attachment->id, $csv);            
-            // TODO cron job to remove file            
+        if (!empty($attachment->id)) {
+            $this->getFileManager()->putContents('data/upload/' . $attachment->id, $csv);
+            // TODO cron job to remove file
             return $attachment->id;
-        }            
+        }
         throw new Error();
     }
-    
-    public function prepareEntityForOutput(Entity $entity)
-    {        
-        foreach ($this->internalFields as $field) {
-            $entity->clear($field);
-        }
+
+    /**
+     * @return Preferences
+     * @since 1.0
+     */
+    protected function getPreferences()
+    {
+        return $this->injections['preferences'];
+    }
+
+    /**
+     * @return Manager
+     * @since 1.0
+     */
+    protected function getFileManager()
+    {
+        return $this->injections['fileManager'];
+    }
+
+    protected function prepareEntity($entity)
+    {
+    }
+
+    protected function stripTags($string)
+    {
+        return strip_tags($string,
+            '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>');
     }
 }
 

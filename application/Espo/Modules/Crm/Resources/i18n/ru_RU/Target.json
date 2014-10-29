@@ -1,19 +1,18 @@
 {
     "fields": {
-        "name": "Имя",
+        "name"        : "Имя",
         "emailAddress": "E-mail",
-        "title": "Название",
-        "website": "Сайт",
-        "accountName": "Название организации",
-        "phoneNumber": "Телефон",
-        "doNotCall": "Не звонить",
-        "address": "Адрес",
-        "description": "Описание"
+        "title"       : "Название",
+        "website"     : "Сайт",
+        "accountName" : "Название организации",
+        "phoneNumber" : "Телефон",
+        "doNotCall"   : "Не звонить",
+        "address"     : "Адрес",
+        "description" : "Описание"
     },
-    "links": {
-    },
+    "links" : {},
     "labels": {
-        "Create Target": "Создать цель",
+        "Create Target"  : "Создать цель",
         "Convert to Lead": "Преобразовать в Лид"
     }
 }

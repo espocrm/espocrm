@@ -1,74 +1,74 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"        : {
+            "type"    : "varchar",
             "required": true
         },
-        "subject": {
+        "subject"     : {
             "type": "varchar"
         },
-        "body": {
+        "body"        : {
             "type": "text",
             "view": "Fields.Wysiwyg"
         },
-        "isHtml": {
-            "type": "bool",
+        "isHtml"      : {
+            "type"   : "bool",
             "default": true
         },
-        "attachments": {
+        "attachments" : {
             "type": "linkMultiple",
             "view": "Fields.AttachmentMultiple"
         },
         "assignedUser": {
-            "type": "link",
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"       : {
             "type": "linkMultiple"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"   : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"  : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"   : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"  : {
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
-        "attachments": {
-            "type": "hasChildren",
-            "entity": "Attachment",
+    "links"     : {
+        "attachments" : {
+            "type"   : "hasChildren",
+            "entity" : "Attachment",
             "foreign": "parent"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"       : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
         "assignedUser": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "createdBy": {
-            "type": "belongsTo",
+        "createdBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         }
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

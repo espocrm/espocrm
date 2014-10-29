@@ -18,8 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\ORM;
 
 /**
@@ -27,6 +26,7 @@ namespace Espo\ORM;
  */
 interface IEntity
 {
+
     const ID = 'id';
     const VARCHAR = 'varchar';
     const INT = 'int';
@@ -40,46 +40,62 @@ interface IEntity
     const DATETIME = 'datetime';
     const JSON_ARRAY = 'jsonArray';
     const JSON_OBJECT = 'jsonObject';
-    
     const MANY_MANY = 'manyMany';
     const HAS_MANY = 'hasMany';
     const BELONGS_TO = 'belongsTo';
     const HAS_ONE = 'hasOne';
     const BELONGS_TO_PARENT = 'belongsToParent';
     const HAS_CHILDREN = 'hasChildren';
-    
+
     /**
      * Push values from the array.
      * E.g. insert values into the bean from a request data.
+     *
      * @param array $arr Array of field - value pairs
      */
     function populateFromArray(array $arr);
-    
+
     /**
      * Resets all fields in the current model.
      */
     function reset();
-    
+
     /**
      * Set field.
+     *
+     * @param $name
+     * @param $value
+     *
+     * @return
      */
-    function set($name, $value);
-    
+    function set($name, $value = null);
+
     /**
      * Get field.
+     *
+     * @param $name
+     *
+     * @return
      */
     function get($name);
-    
+
     /**
      * Check field is set.
+     *
+     * @param $name
+     *
+     * @return
      */
     function has($name);
-    
+
     /**
      * Clear field.
+     *
+     * @param $name
+     *
+     * @return
      */
     function clear($name);
-    
 }
 
 

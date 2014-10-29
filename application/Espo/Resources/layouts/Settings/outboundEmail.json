@@ -1,24 +1,43 @@
 [
     {
         "label": "SMTP",
-        "rows": [
-            [{"name": "smtpServer"}, {"name": "smtpPort"}],
-            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "OutboundEmail.Fields.TestSend"}],
+        "rows" : [
+            [
+                {"name": "smtpServer"},
+                {"name": "smtpPort"}
+            ],
+            [
+                {"name": "smtpAuth"},
+                {"name": "smtpSecurity"}
+            ],
+            [
+                {"name": "smtpUsername"},
+                {
+                    "name": "testSend",
+                    "customLabel": null,
+                    "view": "OutboundEmail.Fields.TestSend"
+                }
+            ],
             [{"name": "smtpPassword"}]
         ]
     },
     {
         "label": "Configuration",
-        "rows": [
-            [{"name": "outboundEmailFromName"}, {"name": "outboundEmailFromAddress"}],
+        "rows" : [
+            [
+                {"name": "outboundEmailFromName"},
+                {"name": "outboundEmailFromAddress"}
+            ],
             [{"name": "outboundEmailIsShared"}]
         ]
     },
     {
         "label": "Notifications",
-        "rows": [
-            [{"name": "assignmentEmailNotifications"}, {"name": "assignmentEmailNotificationsEntityList"}]
+        "rows" : [
+            [
+                {"name": "assignmentEmailNotifications"},
+                {"name": "assignmentEmailNotificationsEntityList"}
+            ]
         ]
     }
 ]

@@ -18,21 +18,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Repositories;
 
-use Espo\ORM\Entity;
+use Espo\Core\ORM\Repositories\RDB;
 
-class ExternalAccount extends \Espo\Core\ORM\Repositories\RDB
+class ExternalAccount extends
+    RDB
 {
+
     public function get($id = null)
-    {     
-        $entity = parent::get($id);        
+    {
+        $entity = parent::get($id);
         if (empty($entity) && !empty($id)) {
             $entity = $this->get();
             $entity->id = $id;
-        }        
+        }
         return $entity;
     }
 }

@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
 use Doctrine\DBAL\Types\Type;
 
-class Table extends \Doctrine\DBAL\Schema\Table
+class Table extends
+    \Doctrine\DBAL\Schema\Table
 {
 
     /**
@@ -34,13 +34,10 @@ class Table extends \Doctrine\DBAL\Schema\Table
      *
      * @return \Doctrine\DBAL\Schema\Column
      */
-    public function addColumn($columnName, $typeName, array $options=array())
+    public function addColumn($columnName, $typeName, array $options = array())
     {
         $column = new Column($columnName, Type::getType($typeName), $options);
-
         $this->_addColumn($column);
-
         return $column;
     }
-
 }

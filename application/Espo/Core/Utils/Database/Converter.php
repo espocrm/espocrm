@@ -19,49 +19,49 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\Utils\Util,
-    Espo\ORM\Entity;
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 
 class Converter
 {
+
     private $metadata;
 
     private $fileManager;
 
     private $schemaConverter;
 
-
-
     private $schemaFromMetadata = null;
 
     /**
-    * @var array $meta - metadata array
-    */
+     * @param Metadata $metadata
+     * @param Manager  $fileManager
+     *
+     * @internal param array $meta - metadata array
+     */
     //private $meta;
-
-
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(Metadata $metadata, Manager $fileManager)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
-
         $this->ormConverter = new Orm\Converter($this->metadata, $this->fileManager);
-
         $this->schemaConverter = new Schema\Converter($this->fileManager);
     }
 
+    public function getSchemaFromMetadata($entityList = null)
+    {
+        $ormMeta = $this->getMetadata()->getOrmMetadata();
+        $entityDefs = $this->getMetadata()->get('entityDefs');
+        $this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityDefs, $entityList);
+        return $this->schemaFromMetadata;
+    }
 
     protected function getMetadata()
     {
         return $this->metadata;
-    }
-
-    protected function getOrmConverter()
-    {
-        return $this->ormConverter;
     }
 
     protected function getSchemaConverter()
@@ -69,40 +69,29 @@ class Converter
         return $this->schemaConverter;
     }
 
-
-    public function getSchemaFromMetadata($entityList = null)
-    {
-        $ormMeta = $this->getMetadata()->getOrmMetadata();
-        $entityDefs = $this->getMetadata()->get('entityDefs');
-
-        $this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityDefs, $entityList);
-
-        return $this->schemaFromMetadata;
-    }
-
     /**
-    * Main method of convertation from metadata to orm metadata and database schema
-    *
-    * @return bool
-    */
+     * Main method of convertation from metadata to orm metadata and database schema
+     *
+     * @return bool
+     */
     public function process()
     {
-        $GLOBALS['log']->debug('Orm\Converter - Start: orm convertation');
-
+        /**
+         * @var Log $log
+         */
+        $log = $GLOBALS['log'];
+        $log->debug('Orm\Converter - Start: orm convertation');
         $ormMeta = $this->getOrmConverter()->process();
-
         //save database meta to a file espoMetadata.php
         $result = $this->getMetadata()->setOrmMetadata($ormMeta);
-
-        $GLOBALS['log']->debug('Orm\Converter - End: orm convertation, result=['.$result.']');
-
+        $log->debug('Orm\Converter - End: orm convertation, result=[' . $result . ']');
         return $result;
     }
 
-
-
-
+    protected function getOrmConverter()
+    {
+        return $this->ormConverter;
+    }
 }
-
 
 ?>

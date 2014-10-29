@@ -19,21 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-class JsonObject extends \Doctrine\DBAL\Types\ObjectType
-{
-    const JSON_OBJECT = 'jsonObject';
+use Doctrine\DBAL\Types\ObjectType;
 
-    public function getName()
-    {
-        return self::JSON_OBJECT;
-    }
+class JsonObject extends
+    ObjectType
+{
+
+    const JSON_OBJECT = 'jsonObject';
 
     public static function getDbTypeName()
     {
         return 'TEXT';
     }
 
+    public function getName()
+    {
+        return self::JSON_OBJECT;
+    }
 }

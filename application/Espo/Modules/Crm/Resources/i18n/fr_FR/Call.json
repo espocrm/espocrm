@@ -1,34 +1,33 @@
 {
-    "fields": {
-        "name": "Nom",
-        "parent": "Parent",
-        "status": "Statut",
-        "dateStart": "Date de Début",
-        "dateEnd": "Date de Fin",
-        "direction": "Direction",
-        "duration": "Durée",
+    "fields" : {
+        "name"       : "Nom",
+        "parent"     : "Parent",
+        "status"     : "Statut",
+        "dateStart"  : "Date de Début",
+        "dateEnd"    : "Date de Fin",
+        "direction"  : "Direction",
+        "duration"   : "Durée",
         "description": "Description",
-        "users": "Utilisateurs",
-        "contacts": "Contacts",
-        "leads": "Leads"
+        "users"      : "Utilisateurs",
+        "contacts"   : "Contacts",
+        "leads"      : "Leads"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "status": {
-            "Planned": "Plannifié",
-            "Held": "Fait",
+        "status"   : {
+            "Planned" : "Plannifié",
+            "Held"    : "Fait",
             "Not Held": "Pas Fait"
         },
         "direction": {
             "Outbound": "Sortie",
-            "Inbound": "Entrée"
+            "Inbound" : "Entrée"
         }
     },
-    "labels": {
-        "Create Call": "Générer l'appel",
-        "Set Held": "Marquer Fait",
-        "Set Not Held": "Marquer Pas Fait",
-        "Send Invitations": "Envoi d'Invitations"        
+    "labels" : {
+        "Create Call"     : "Générer l'appel",
+        "Set Held"        : "Marquer Fait",
+        "Set Not Held"    : "Marquer Pas Fait",
+        "Send Invitations": "Envoi d'Invitations"
     }
 }

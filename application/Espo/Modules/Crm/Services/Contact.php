@@ -18,14 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+use Espo\Services\Record;
 
-class Contact extends \Espo\Services\Record
+class Contact extends
+    Record
 {
+
     protected function getDuplicateWhereClause(Entity $entity)
     {
         return array(

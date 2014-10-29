@@ -1,61 +1,60 @@
 {
-    "fields": {
-        "useCache": "Use Cache",
-        "dateFormat": "Date Format",
-        "timeFormat": "Time Format",
-        "timeZone": "Time Zone",
-        "weekStart": "First Day of Week",
+    "fields"  : {
+        "useCache"         : "Use Cache",
+        "dateFormat"       : "Date Format",
+        "timeFormat"       : "Time Format",
+        "timeZone"         : "Time Zone",
+        "weekStart"        : "First Day of Week",
         "thousandSeparator": "Thousand Separator",
-        "decimalMark": "Decimal Mark",
-        "defaultCurrency": "Default Currency",
-        "baseCurrency": "Base Currency",
-        "baseCurrency": "Base Currency",
-        "currencyRates": "Rate Values",
-        
+        "decimalMark"      : "Decimal Mark",
+        "defaultCurrency"  : "Default Currency",
+        "baseCurrency"     : "Base Currency",
+        "currencyRates"    : "Rate Values",
+
         "currencyList": "Currency List",
-        "language": "Language",
-        
+        "language"    : "Language",
+
         "companyLogo": "Company Logo",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Security",
-        "smtpUsername": "Username",
-        "emailAddress": "Email",
-        "smtpPassword": "Password",
-        "outboundEmailFromName": "From Name",
+
+        "smtpServer"              : "Server",
+        "smtpPort"                : "Port",
+        "smtpAuth"                : "Auth",
+        "smtpSecurity"            : "Security",
+        "smtpUsername"            : "Username",
+        "emailAddress"            : "Email",
+        "smtpPassword"            : "Password",
+        "outboundEmailFromName"   : "From Name",
         "outboundEmailFromAddress": "From Address",
-        "outboundEmailIsShared": "Is Shared",
-        
-        "recordsPerPage": "Records Per Page",
-        "recordsPerPageSmall": "Records Per Page (Small)",        
-        "tabList": "Tab List",
-        "quickCreateList": "Quick Create List",
-        
+        "outboundEmailIsShared"   : "Is Shared",
+
+        "recordsPerPage"     : "Records Per Page",
+        "recordsPerPageSmall": "Records Per Page (Small)",
+        "tabList"            : "Tab List",
+        "quickCreateList"    : "Quick Create List",
+
         "exportDelimiter": "Export Delimiter",
-        
-        "authenticationMethod": "Authentication Method",
-        "ldapHost": "Host",
-        "ldapPort": "Port",
-        "ldapAuth": "Auth",
-        "ldapUsername": "Username",
-        "ldapPassword": "Password",
-        "ldapBindRequiresDn": "Bind Requires Dn",
-        "ldapBaseDn": "Base Dn",
-        "ldapAccountCanonicalForm": "Account Canonical Form",
-        "ldapAccountDomainName": "Account Domain Name",
-        "ldapTryUsernameSplit": "Try Username Split",
-        "ldapCreateEspoUser": "Create User in EspoCRM",
-        "ldapSecurity": "Security",
-        "ldapUserLoginFilter": "User Login Filter",
-        "ldapAccountDomainNameShort": "Account Domain Name Short",
-        "ldapOptReferrals": "Opt Referrals",
-        "disableExport": "Disable Export (only admin is allowed)",
-        "assignmentEmailNotifications": "Send Email Notifications upon Assignment",
+
+        "authenticationMethod"                  : "Authentication Method",
+        "ldapHost"                              : "Host",
+        "ldapPort"                              : "Port",
+        "ldapAuth"                              : "Auth",
+        "ldapUsername"                          : "Username",
+        "ldapPassword"                          : "Password",
+        "ldapBindRequiresDn"                    : "Bind Requires Dn",
+        "ldapBaseDn"                            : "Base Dn",
+        "ldapAccountCanonicalForm"              : "Account Canonical Form",
+        "ldapAccountDomainName"                 : "Account Domain Name",
+        "ldapTryUsernameSplit"                  : "Try Username Split",
+        "ldapCreateEspoUser"                    : "Create User in EspoCRM",
+        "ldapSecurity"                          : "Security",
+        "ldapUserLoginFilter"                   : "User Login Filter",
+        "ldapAccountDomainNameShort"            : "Account Domain Name Short",
+        "ldapOptReferrals"                      : "Opt Referrals",
+        "disableExport"                         : "Disable Export (only admin is allowed)",
+        "assignmentEmailNotifications"          : "Send Email Notifications upon Assignment",
         "assignmentEmailNotificationsEntityList": "Entities to Notify About"
     },
-    "options": {
+    "options" : {
         "weekStart": {
             "0": "Sunday",
             "1": "Monday"
@@ -64,13 +63,13 @@
     "tooltips": {
         "recordsPerPageSmall": "Count of records in relatinship panels."
     },
-    "labels": {
-        "System": "System",
-        "Locale": "Locale",
-        "SMTP": "SMTP",
-        "Configuration": "Configuration",
-        "Notifications": "Notifications",
+    "labels"  : {
+        "System"           : "System",
+        "Locale"           : "Locale",
+        "SMTP"             : "SMTP",
+        "Configuration"    : "Configuration",
+        "Notifications"    : "Notifications",
         "Currency Settings": "Currency Settings",
-        "Currency Rtes": "Currency Rates"
+        "Currency Rtes"    : "Currency Rates"
     }
 }

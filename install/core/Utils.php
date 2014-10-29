@@ -19,28 +19,36 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
+use Espo\Core\Utils\File\Manager;
 
+/**
+ * Class Utils
+ *
+ */
 class Utils
 {
-	static public $actionPath = 'install/core/actions';
 
-	static public function isActionExists($actionName)
-	{
-		$actionPath = static::$actionPath;
-		$actionFileName = $actionName . '.php';
-		$actionRealPath = realpath($actionPath . '/' . $actionFileName);
+    static public $actionPath = 'install/core/actions';
 
-		$fileManager = new \Espo\Core\Utils\File\Manager();
-		$actionList = $fileManager->getFileList($actionPath);
-
-		foreach ($actionList as $fileName) {
-			$fileRealPath = realpath($actionPath . '/' . $fileName);
-
-			if ($fileRealPath === $actionRealPath) {
-				return true;
-			}
-		}
-
-		return false;
-	}
+    /**
+     * @param string $actionName
+     *
+     * @return bool
+     * @since 1.0
+     */
+    static public function isActionExists($actionName)
+    {
+        $actionPath = static::$actionPath;
+        $actionFileName = $actionName . '.php';
+        $actionRealPath = realpath($actionPath . '/' . $actionFileName);
+        $fileManager = new Manager();
+        $actionList = $fileManager->getFileList($actionPath);
+        foreach ($actionList as $fileName) {
+            $fileRealPath = realpath($actionPath . '/' . $fileName);
+            if ($fileRealPath === $actionRealPath) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

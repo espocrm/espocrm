@@ -1,42 +1,41 @@
 {
-    "fields": {
-        "name": "Nume",
-        "number": "Numar",
-        "status": "Status",
-        "account": "Cont",
-        "contact": "Contact",
-        "priority": "Prioritate",
-        "type": "Tip",
+    "fields"       : {
+        "name"       : "Nume",
+        "number"     : "Numar",
+        "status"     : "Status",
+        "account"    : "Cont",
+        "contact"    : "Contact",
+        "priority"   : "Prioritate",
+        "type"       : "Tip",
         "description": "Descriere"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Nou",
-            "Assigned": "Alocat",
-            "Pending": "In asteptare",
-            "Closed": "Inchis",
-            "Rejected": "Respins",
+    "links"        : {},
+    "options"      : {
+        "status"  : {
+            "New"      : "Nou",
+            "Assigned" : "Alocat",
+            "Pending"  : "In asteptare",
+            "Closed"   : "Inchis",
+            "Rejected" : "Respins",
             "Duplicate": "Duplicat"
         },
-        "priority" : {
-            "Low": "Scazut",
+        "priority": {
+            "Low"   : "Scazut",
             "Normal": "Normal",
-            "High": "Inalt",
+            "High"  : "Inalt",
             "Urgent": "Urgent"
         },
-        "type": {
+        "type"    : {
             "Question": "Intrebare",
             "Incident": "Incident",
-            "Problem": "Problema"
+            "Problem" : "Problema"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Case": "Creare Caz"
     },
     "presetFilters": {
-        "open": "Deschide",
+        "open"  : "Deschide",
         "closed": "Inchis"
     }
 }

@@ -18,58 +18,60 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core\Utils\Database\Schema;
+
+use Doctrine\DBAL\Schema\Schema;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 abstract class BaseRebuildActions
 {
+
+    protected $currentSchema = null;
+
+    protected $metadataSchema = null;
+
     private $metadata;
 
     private $config;
 
     private $entityManager;
-    
-    protected $currentSchema = null;
 
-    protected $metadataSchema = null;
-
-
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\Config $config, \Espo\Core\ORM\EntityManager $entityManager)
-    {
+    public function __construct(
+        Metadata $metadata,
+        Config $config,
+        EntityManager $entityManager
+    ){
         $this->metadata = $metadata;
         $this->config = $config;
         $this->entityManager = $entityManager;
     }
-    
+
     protected function getEntityManager()
     {
         return $this->entityManager;
     }
-    
+
     protected function getConfig()
     {
         return $this->config;
     }
-    
+
     protected function getMetadata()
     {
         return $this->metadata;
     }
 
-    public function setCurrentSchema(\Doctrine\DBAL\Schema\Schema $currentSchema)
-    {
-        $this->currentSchema = $currentSchema;
-    }  
-
-    public function setMetadataSchema(\Doctrine\DBAL\Schema\Schema $metadataSchema)
-    {
-        $this->metadataSchema = $metadataSchema;
-    } 
-
     protected function getCurrentSchema()
     {
         return $this->currentSchema;
+    }
+
+    public function setCurrentSchema(Schema $currentSchema)
+    {
+        $this->currentSchema = $currentSchema;
     }
 
     protected function getMetadataSchema()
@@ -77,6 +79,10 @@ abstract class BaseRebuildActions
         return $this->metadataSchema;
     }
 
+    public function setMetadataSchema(Schema $metadataSchema)
+    {
+        $this->metadataSchema = $metadataSchema;
+    }
     /*
     public function beforeRebuild()
     {         
@@ -86,7 +92,5 @@ abstract class BaseRebuildActions
     {         
     }
     */
-    
-    
 }
 

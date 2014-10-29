@@ -1,165 +1,186 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"            : {
+            "type"    : "varchar",
             "required": true
         },
-        "status": {
-            "type": "enum",
-            "options": ["Planned", "Held", "Not Held"],
+        "status"          : {
+            "type"   : "enum",
+            "options": [
+                "Planned",
+                "Held",
+                "Not Held"
+            ],
             "default": "Planned",
-            "view": "Fields.EnumStyled",
-            "style": {
+            "view"   : "Fields.EnumStyled",
+            "style"  : {
                 "Held": "success"
             }
         },
-        "dateStart": {
-            "type": "datetime",
+        "dateStart"       : {
+            "type"    : "datetime",
             "required": true,
-            "default": "javascript: return this.dateTime.getNow(15);"
+            "default" : "javascript: return this.dateTime.getNow(15);"
         },
-        "dateEnd": {
-            "type": "datetime",
+        "dateEnd"         : {
+            "type"    : "datetime",
             "required": true,
-            "after": "dateStart"
+            "after"   : "dateStart"
         },
-        "duration": {
-            "type": "duration",
-            "start": "dateStart",
-            "end": "dateEnd",
-            "options": [0, 900, 1800, 3600, 7200, 10800, 86400],
+        "duration"        : {
+            "type"   : "duration",
+            "start"  : "dateStart",
+            "end"    : "dateEnd",
+            "options": [
+                0,
+                900,
+                1800,
+                3600,
+                7200,
+                10800,
+                86400
+            ],
             "default": 3600
         },
-        "description": {
+        "description"     : {
             "type": "text"
         },
-        "parent": {
+        "parent"          : {
             "type": "linkParent"
         },
-        "account": {
-            "type": "link",
+        "account"         : {
+            "type"    : "link",
             "disabled": true
         },
         "acceptanceStatus": {
-            "type": "enum",
+            "type"       : "enum",
             "notStorable": true,
-            "disabled": true,
-            "options": ["None", "Accepted", "Declined"]
+            "disabled"   : true,
+            "options"    : [
+                "None",
+                "Accepted",
+                "Declined"
+            ]
         },
-        "users": {
-            "type": "linkMultiple",
-            "view": "Crm:Meeting.Fields.Attendees",
+        "users"           : {
+            "type"    : "linkMultiple",
+            "view"    : "Crm:Meeting.Fields.Attendees",
             "disabled": true,
-            "columns": {
+            "columns" : {
                 "status": "acceptanceStatus"
             }
         },
-        "contacts": {
-            "type": "linkMultiple",
+        "contacts"        : {
+            "type"    : "linkMultiple",
             "disabled": true,
-            "view": "Crm:Meeting.Fields.Contacts",
-            "columns": {
+            "view"    : "Crm:Meeting.Fields.Contacts",
+            "columns" : {
                 "status": "acceptanceStatus"
             }
         },
-        "leads": {
-            "type": "linkMultiple",
-            "view": "Crm:Meeting.Fields.Attendees",
+        "leads"           : {
+            "type"    : "linkMultiple",
+            "view"    : "Crm:Meeting.Fields.Attendees",
             "disabled": true,
-            "columns": {
+            "columns" : {
                 "status": "acceptanceStatus"
             }
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"       : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"      : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"       : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"      : {
+            "type"    : "link",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"    : {
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"           : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "account": {
-            "type": "belongsTo",
+    "links"     : {
+        "account"     : {
+            "type"  : "belongsTo",
             "entity": "Account"
         },
-        "createdBy": {
-            "type": "belongsTo",
+        "createdBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
         "assignedUser": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"       : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "users": {
-            "type": "hasMany",
-            "entity": "User",
-            "foreign": "meetings",
+        "users"       : {
+            "type"             : "hasMany",
+            "entity"           : "User",
+            "foreign"          : "meetings",
             "additionalColumns": {
                 "status": {
-                    "type": "varchar",
-                    "len": "36",
-                    "default": "None" 
-                }
-            }
-        },
-        "contacts": {
-            "type": "hasMany",
-            "entity": "Contact",
-            "foreign": "meetings",
-            "additionalColumns": {
-                "status": {
-                    "type": "varchar",
-                    "len": "36",
+                    "type"   : "varchar",
+                    "len"    : "36",
                     "default": "None"
                 }
             }
         },
-        "leads": {
-            "type": "hasMany",
-            "entity": "Lead",
-            "foreign": "meetings",
+        "contacts"    : {
+            "type"             : "hasMany",
+            "entity"           : "Contact",
+            "foreign"          : "meetings",
             "additionalColumns": {
                 "status": {
-                    "type": "varchar",
-                    "len": "36",
-                    "default": "None" 
+                    "type"   : "varchar",
+                    "len"    : "36",
+                    "default": "None"
                 }
             }
         },
-        "parent": {
-            "type": "belongsToParent",
-            "entityList": ["Account", "Lead", "Opportunity", "Case"],
-            "foreign": "meetings"
+        "leads"       : {
+            "type"             : "hasMany",
+            "entity"           : "Lead",
+            "foreign"          : "meetings",
+            "additionalColumns": {
+                "status": {
+                    "type"   : "varchar",
+                    "len"    : "36",
+                    "default": "None"
+                }
+            }
+        },
+        "parent"      : {
+            "type"      : "belongsToParent",
+            "entityList": [
+                "Account",
+                "Lead",
+                "Opportunity",
+                "Case"
+            ],
+            "foreign"   : "meetings"
         }
     },
     "collection": {
         "sortBy": "dateStart",
-        "asc": false
+        "asc"   : false
     }
 }

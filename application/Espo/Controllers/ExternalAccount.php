@@ -18,23 +18,40 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Entity;
+use Espo\Repositories\Integration;
+use Slim\Http\Request;
 
-class ExternalAccount extends \Espo\Core\Controllers\Record
+/**
+ * Class ExternalAccount
+ * @method \Espo\Services\ExternalAccount getRecordService()
+ *
+ * @package Espo\Controllers
+ */
+class ExternalAccount extends
+    Record
 {
+
     public static $defaultAction = 'list';
-    
+
     public function actionList($params, $data, $request)
     {
-        $integrations = $this->getEntityManager()->getRepository('Integration')->find();    
+        /**
+         * @var Integration $integrationsRepo
+         * @var Entity      $entity
+         */
+        $integrationsRepo = $this->getEntityManager()->getRepository('Integration');
+        $integrations = $integrationsRepo->find();
         $arr = array();
         foreach ($integrations as $entity) {
-            if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')) {                
+            if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id . '.allowUserAccounts')) {
                 $arr[] = array(
                     'id' => $entity->id
                 );
@@ -44,17 +61,26 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
             'list' => $arr
         );
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+     * @since 1.0
+     * @throws Forbidden
+     */
     public function actionGetOAuth2Info($params, $data, $request)
     {
+        /**
+         * @var \Espo\Entities\Integration $entity
+         */
         $id = $request->get('id');
         list($integration, $userId) = explode('__', $id);
-        
-
         if ($this->getUser()->id != $userId) {
             throw new Forbidden();
-        }        
-        
+        }
         $entity = $this->getEntityManager()->getEntity('Integration', $integration);
         if ($entity) {
             return array(
@@ -67,57 +93,63 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 
     public function actionRead($params, $data, $request)
     {
-        list($integration, $userId) = explode('__', $params['id']);        
-
+        /**
+         * @var \Espo\Entities\ExternalAccount $entity
+         */
+        list($integration, $userId) = explode('__', $params['id']);
         if ($this->getUser()->id != $userId) {
             throw new Forbidden();
-        }        
-        
-        $entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);        
+        }
+        $entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);
         return $entity->toArray();
     }
-    
+
     public function actionUpdate($params, $data)
     {
         return $this->actionPatch($params, $data);
     }
-    
+
     public function actionPatch($params, $data)
     {
+        /**
+         * @var \Espo\Entities\ExternalAccount $entity
+         */
         list($integration, $userId) = explode('__', $params['id']);
-        
-
         if ($this->getUser()->id != $userId) {
             throw new Forbidden();
         }
-        
         if (isset($data['enabled']) && !$data['enabled']) {
             $data['data'] = null;
-        }        
-        
+        }
         $entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);
         $entity->set($data);
         $this->getEntityManager()->saveEntity($entity);
-        
-        return $entity->toArray();        
+        return $entity->toArray();
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return bool
+     * @since 1.0
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function actionAuthorizationCode($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new Error('Bad HTTP method type.');
-        }        
-        
+        }
         $id = $data['id'];
         $code = $data['code'];
-        
-        list($integration, $userId) = explode('__', $id);        
-
+        list($integration, $userId) = explode('__', $id);
         if ($this->getUser()->id != $userId) {
             throw new Forbidden();
         }
-        
-        $service = $this->getRecordService();        
+        $service = $this->getRecordService();
         return $service->authorizationCode($integration, $userId, $code);
     }
 }

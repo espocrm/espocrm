@@ -1,1 +1,6 @@
-[{"name":"name","link":true},{"name":"status"},{"name":"parent"}]
+[{"name"  : "name",
+    "link": true
+},
+    {"name": "status"},
+    {"name": "parent"}
+]

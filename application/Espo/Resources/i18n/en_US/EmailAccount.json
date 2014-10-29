@@ -1,27 +1,26 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "host": "Host",
-        "username": "Username",
-        "password": "Password",
-        "port": "Port",
+    "fields"  : {
+        "name"            : "Name",
+        "status"          : "Status",
+        "host"            : "Host",
+        "username"        : "Username",
+        "password"        : "Password",
+        "port"            : "Port",
         "monitoredFolders": "Monitored Folders",
-        "ssl": "SSL",
-        "fetchSince": "Fetch Since"
+        "ssl"             : "SSL",
+        "fetchSince"      : "Fetch Since"
     },
-    "links": {
-    },
-    "options": {
+    "links"   : {},
+    "options" : {
         "status": {
-            "Active": "Active",
+            "Active"  : "Active",
             "Inactive": "Inactive"
         }
     },
-    "labels": {
+    "labels"  : {
         "Create EmailAccount": "Create Email Account",
-        "IMAP": "IMAP",
-        "Main": "Main"        
+        "IMAP"               : "IMAP",
+        "Main"               : "Main"
     },
     "messages": {
         "couldNotConnectToImap": "Could not connect to IMAP server"

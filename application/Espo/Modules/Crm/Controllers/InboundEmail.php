@@ -18,21 +18,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Controllers;
 
-class InboundEmail extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Forbidden;
+use Slim\Http\Request;
+
+/**
+ * Class InboundEmail
+ * @method \Espo\Modules\Crm\Services\InboundEmail getRecordService()
+ *
+ * @version 1.0
+ * @package Espo\Modules\Crm\Controllers
+ */
+class InboundEmail extends
+    Record
 {
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+     * @since 1.0
+     */
     public function actionGetFolders($params, $data, $request)
-    {        
+    {
         return $this->getRecordService()->getFolders(array(
             'host' => $request->get('host'),
             'port' => $request->get('port'),
@@ -41,7 +54,12 @@ class InboundEmail extends \Espo\Core\Controllers\Record
             'password' => $request->get('password'),
             'id' => $request->get('id')
         ));
-
     }
 
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 }

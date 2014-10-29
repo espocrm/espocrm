@@ -1,13 +1,51 @@
 [
     {
-        "label":"",
-        "rows":[
-            [{"name":"status"},{"name":"from", "readOnly": true}],
-            [{"name":"dateSent", "readOnly": true}, {"name":"to", "readOnly": true}],
-            [{"name":"parent"}, {"name":"cc", "readOnly": true}],
-            [{"name":"name","fullWidth":true, "readOnly": true}],
-            [{"name":"body","fullWidth":true, "readOnly": true}],
-            [{"name":"attachments", "readOnly": true}]
+        "label": "",
+        "rows" : [
+            [
+                {"name": "status"},
+                {
+                    "name"    : "from",
+                    "readOnly": true
+                }
+            ],
+            [
+                {
+                    "name"    : "dateSent",
+                    "readOnly": true
+                },
+                {
+                    "name"    : "to",
+                    "readOnly": true
+                }
+            ],
+            [
+                {"name": "parent"},
+                {
+                    "name"    : "cc",
+                    "readOnly": true
+                }
+            ],
+            [
+                {
+                    "name"     : "name",
+                    "fullWidth": true,
+                    "readOnly" : true
+                }
+            ],
+            [
+                {
+                    "name"     : "body",
+                    "fullWidth": true,
+                    "readOnly" : true
+                }
+            ],
+            [
+                {
+                    "name"    : "attachments",
+                    "readOnly": true
+                }
+            ]
         ]
     }
 ]

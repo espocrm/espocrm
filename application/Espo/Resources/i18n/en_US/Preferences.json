@@ -1,37 +1,36 @@
 {
-    "fields": {
-        "dateFormat": "Date Format",
-        "timeFormat": "Time Format",
-        "timeZone": "Time Zone",
-        "weekStart": "First Day of Week",
+    "fields" : {
+        "dateFormat"       : "Date Format",
+        "timeFormat"       : "Time Format",
+        "timeZone"         : "Time Zone",
+        "weekStart"        : "First Day of Week",
         "thousandSeparator": "Thousand Separator",
-        "decimalMark": "Decimal Mark",
-        "defaultCurrency": "Default Currency",
-        "currencyList": "Currency List",
-        "language": "Language",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Security",
-        "smtpUsername": "Username",
-        "emailAddress": "Email",
-        "smtpPassword": "Password",
+        "decimalMark"      : "Decimal Mark",
+        "defaultCurrency"  : "Default Currency",
+        "currencyList"     : "Currency List",
+        "language"         : "Language",
+
+        "smtpServer"      : "Server",
+        "smtpPort"        : "Port",
+        "smtpAuth"        : "Auth",
+        "smtpSecurity"    : "Security",
+        "smtpUsername"    : "Username",
+        "emailAddress"    : "Email",
+        "smtpPassword"    : "Password",
         "smtpEmailAddress": "Email Address",
-        
+
         "exportDelimiter": "Export Delimiter",
-        
+
         "receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "weekStart": {
             "0": "Sunday",
             "1": "Monday"
         }
     },
-    "labels": {
+    "labels" : {
         "Notifications": "Notifications"
     }
 }

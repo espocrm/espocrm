@@ -1,32 +1,32 @@
 {
-    "labels": {
+    "labels"       : {
         "Create Document": "Neues Dokument",
-        "Details": "Details"
+        "Details"        : "Details"
     },
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "file": "Datei",
-        "type": "Typ",
-        "source": "Quelle",
-        "publishDate": "Veröffentlichungsdatum",
+    "fields"       : {
+        "name"          : "Name",
+        "status"        : "Status",
+        "file"          : "Datei",
+        "type"          : "Typ",
+        "source"        : "Quelle",
+        "publishDate"   : "Veröffentlichungsdatum",
         "expirationDate": "Verfallsdatum",
-        "description": "Beschreibung"
+        "description"   : "Beschreibung"
     },
-    "links": {
-        "accounts": "Kontakte",
+    "links"        : {
+        "accounts"     : "Kontakte",
         "opportunities": "Verkaufsshancen"
     },
-    "options": {
+    "options"      : {
         "status": {
-            "Active": "Aktiv",
-            "Draft": "Entwurf",
-            "Expired": "Abgelaufen",
+            "Active"  : "Aktiv",
+            "Draft"   : "Entwurf",
+            "Expired" : "Abgelaufen",
             "Canceled": "Storniert"
         }
     },
     "presetFilters": {
         "active": "Aktiv",
-        "draft": "Entwurf"
+        "draft" : "Entwurf"
     }
 }

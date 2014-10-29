@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Tên",
-        "userName": "Tên người dùng",
-        "title": "Tiêu đề",
-        "isAdmin": "Tài khoản Admin",
-        "defaultTeam": "Nhóm mặc định",
-        "emailAddress": "Email",
-        "phoneNumber": "Điện thoại",
-        "roles": "Vai trò",        
-        "password": "Mật khẩu",
+    "fields"  : {
+        "name"           : "Tên",
+        "userName"       : "Tên người dùng",
+        "title"          : "Tiêu đề",
+        "isAdmin"        : "Tài khoản Admin",
+        "defaultTeam"    : "Nhóm mặc định",
+        "emailAddress"   : "Email",
+        "phoneNumber"    : "Điện thoại",
+        "roles"          : "Vai trò",
+        "password"       : "Mật khẩu",
         "passwordConfirm": "Xác thực mật khẩu",
-        "newPassword": "Mật khẩu mới"
+        "newPassword"    : "Mật khẩu mới"
     },
-    "links": {
+    "links"   : {
         "teams": "Nhóm",
         "roles": "Vai trò"
     },
-    "labels": {
-        "Create User": "Tạo người dùng",
-        "Generate": "Tạo",
-        "Access": "Truy cập",
-        "Preferences": "Tùy chỉnh",
+    "labels"  : {
+        "Create User"    : "Tạo người dùng",
+        "Generate"       : "Tạo",
+        "Access"         : "Truy cập",
+        "Preferences"    : "Tùy chỉnh",
         "Change Password": "Đổi mật khẩu"
     },
     "messages": {
-        "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",
+        "passwordWillBeSent"     : "Mật khẩu sẽ được gửi tới email tài khoản",
         "accountInfoEmailSubject": "Thông tin tài khoản",
-        "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChanged": "Mật khẩu đã được đổi"
+        "accountInfoEmailBody"   : "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+        "passwordChanged"        : "Mật khẩu đã được đổi"
     }
 }

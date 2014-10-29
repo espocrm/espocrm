@@ -1,51 +1,56 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
-            "required": true            
-        },
-        "status": {
-            "type": "enum",
-            "options": ["Pending", "Running", "Success", "Failed"],
-            "default": "Pending"
-        },
-        "executeTime": {
-            "type": "datetime",
+    "fields"    : {
+        "name"        : {
+            "type"    : "varchar",
             "required": true
         },
-        "serviceName": {
-            "type": "varchar",
-            "required": true,
-            "len":100 
+        "status"      : {
+            "type"   : "enum",
+            "options": [
+                "Pending",
+                "Running",
+                "Success",
+                "Failed"
+            ],
+            "default": "Pending"
         },
-        "method": {
-            "type": "varchar",
-            "required": true,
-            "len":100
+        "executeTime" : {
+            "type"    : "datetime",
+            "required": true
         },
-        "data": {
-            "type": "jsonObject" 
-        },        
+        "serviceName" : {
+            "type"    : "varchar",
+            "required": true,
+            "len"     : 100
+        },
+        "method"      : {
+            "type"    : "varchar",
+            "required": true,
+            "len"     : 100
+        },
+        "data"        : {
+            "type": "jsonObject"
+        },
         "scheduledJob": {
             "type": "link"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"   : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"  : {
+            "type"    : "datetime",
             "readOnly": true
         }
     },
-    "links": {
+    "links"     : {
         "scheduledJob": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "ScheduledJob"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

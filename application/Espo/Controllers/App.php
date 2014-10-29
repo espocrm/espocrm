@@ -18,33 +18,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Auth;
 
-class App extends \Espo\Core\Controllers\Record
+class App extends
+    Record
 {
+
     public function actionUser()
-    {        
+    {
         return array(
             'user' => $this->getUser()->toArray(),
             'acl' => $this->getAcl()->toArray(),
             'preferences' => $this->getPreferences()->toArray(),
             'token' => $this->getUser()->get('token')
-        );    
+        );
     }
-    
+
     public function actionDestroyAuthToken($params, $data)
-    {        
-        $token = $data['token'];        
+    {
+        $token = $data['token'];
         if (empty($token)) {
             throw new BadRequest();
         }
-
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        return $auth->destroyAuthToken($token);        
+        $auth = new Auth($this->getContainer());
+        return $auth->destroyAuthToken($token);
     }
 }
 

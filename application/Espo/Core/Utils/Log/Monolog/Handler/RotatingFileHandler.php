@@ -19,21 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Log\Monolog\Handler;
 
 use Monolog\Logger;
 
-class RotatingFileHandler extends StreamHandler
+class RotatingFileHandler extends
+    StreamHandler
 {
+
     /**
      * Date format as a part of filename
+     *
      * @var string
      */
     protected $dateFormat = 'Y-m-d';
 
     /**
      * Filename format
+     *
      * @var string
      */
     protected $filenameFormat = '{filename}-{date}';
@@ -42,43 +45,12 @@ class RotatingFileHandler extends StreamHandler
 
     protected $maxFiles;
 
-
     public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
     {
         $this->filename = $filename;
-        $this->maxFiles = (int) $maxFiles;
-
+        $this->maxFiles = (int)$maxFiles;
         parent::__construct($this->getTimedFilename(), $level, $bubble);
-
         $this->rotate();
-    }
-
-    public function setFilenameFormat($filenameFormat, $dateFormat)
-    {
-        $this->filenameFormat = $filenameFormat;
-        $this->dateFormat = $dateFormat;
-    }
-
-    protected function rotate()
-    {
-        if (0 === $this->maxFiles) {
-            return; //unlimited number of files for 0
-        }
-
-        $filePattern = $this->getFilePattern();
-        $dirPath = $this->getFileManager()->getDirName($this->filename);
-        $logFiles = $this->getFileManager()->getFileList($dirPath, false, $filePattern, 'file');
-
-        if (!empty($logFiles) && count($logFiles) > $this->maxFiles) {
-
-            usort($logFiles, function($a, $b) {
-                return strcmp($b, $a);
-            });
-
-            $logFilesToBeRemoved = array_slice($logFiles, $this->maxFiles);
-
-            $this->getFileManager()->removeFile($logFilesToBeRemoved, $dirPath);
-        }
     }
 
     protected function getTimedFilename()
@@ -89,12 +61,27 @@ class RotatingFileHandler extends StreamHandler
             array($fileInfo['filename'], date($this->dateFormat)),
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
-
         if (!empty($fileInfo['extension'])) {
-            $timedFilename .= '.'.$fileInfo['extension'];
+            $timedFilename .= '.' . $fileInfo['extension'];
         }
-
         return $timedFilename;
+    }
+
+    protected function rotate()
+    {
+        if (0 === $this->maxFiles) {
+            return; //unlimited number of files for 0
+        }
+        $filePattern = $this->getFilePattern();
+        $dirPath = $this->getFileManager()->getDirName($this->filename);
+        $logFiles = $this->getFileManager()->getFileList($dirPath, false, $filePattern, 'file');
+        if (!empty($logFiles) && count($logFiles) > $this->maxFiles) {
+            usort($logFiles, function ($a, $b){
+                return strcmp($b, $a);
+            });
+            $logFilesToBeRemoved = array_slice($logFiles, $this->maxFiles);
+            $this->getFileManager()->removeFile($logFilesToBeRemoved, $dirPath);
+        }
     }
 
     protected function getFilePattern()
@@ -105,13 +92,16 @@ class RotatingFileHandler extends StreamHandler
             array($fileInfo['filename'], '.*'),
             $this->filenameFormat
         );
-
         if (!empty($fileInfo['extension'])) {
-            $glob .= '\.'.$fileInfo['extension'];
+            $glob .= '\.' . $fileInfo['extension'];
         }
-
-        $glob = '^'.$glob.'$';
-
+        $glob = '^' . $glob . '$';
         return $glob;
+    }
+
+    public function setFilenameFormat($filenameFormat, $dateFormat)
+    {
+        $this->filenameFormat = $filenameFormat;
+        $this->dateFormat = $dateFormat;
     }
 }

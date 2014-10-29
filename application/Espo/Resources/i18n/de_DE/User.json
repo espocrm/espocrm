@@ -1,35 +1,35 @@
 {
-    "fields": {
-        "name": "Name",
-        "userName": "Benutzername",
-        "title": "Funktion",
-        "isAdmin": "Ist Admin",
-        "defaultTeam": "Standard Team:",
-        "emailAddress": "E-Mail",
-        "phoneNumber": "Telefon",
-        "roles": "Rollen",        
-        "password": "Passwort",
+    "fields"  : {
+        "name"           : "Name",
+        "userName"       : "Benutzername",
+        "title"          : "Funktion",
+        "isAdmin"        : "Ist Admin",
+        "defaultTeam"    : "Standard Team:",
+        "emailAddress"   : "E-Mail",
+        "phoneNumber"    : "Telefon",
+        "roles"          : "Rollen",
+        "password"       : "Passwort",
         "passwordConfirm": "Passwort bestätigen",
-        "newPassword": "Neues Passwort"
+        "newPassword"    : "Neues Passwort"
     },
-    "links": {
+    "links"   : {
         "teams": "Teams",
         "roles": "Rollen"
     },
-    "labels": {
-        "Create User": "Neuer Benutzer",
-        "Generate": "Erzeugen",
-        "Access": "Zugang",
-        "Preferences": "Benutzereinstellungen",
+    "labels"  : {
+        "Create User"    : "Neuer Benutzer",
+        "Generate"       : "Erzeugen",
+        "Access"         : "Zugang",
+        "Preferences"    : "Benutzereinstellungen",
         "Change Password": "Passwort ändern"
     },
     "tooltips": {
         "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet."
     },
     "messages": {
-        "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
+        "passwordWillBeSent"     : "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
         "accountInfoEmailSubject": "Kontoinformation",
-        "accountInfoEmailBody": "Ihre Kontoinformation: Benutzername: {userName} - Passwort: {password} {siteUrl}",
-        "passwordChanged": "Das Passwort wurde geändert"
+        "accountInfoEmailBody"   : "Ihre Kontoinformation: Benutzername: {userName} - Passwort: {password} {siteUrl}",
+        "passwordChanged"        : "Das Passwort wurde geändert"
     }
 }

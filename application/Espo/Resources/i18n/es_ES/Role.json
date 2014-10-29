@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Nombre",
+    "fields" : {
+        "name" : "Nombre",
         "roles": "Roles"
     },
-    "links": {
+    "links"  : {
         "users": "Usuarios",
         "teams": "Equipos"
     },
-    "labels": {
-        "Access": "Acceso",
+    "labels" : {
+        "Access"     : "Acceso",
         "Create Role": "Crear Rol"
     },
     "options": {
         "accessList": {
-            "not-set": "sin establecer",
-            "enabled": "activado",
+            "not-set" : "sin establecer",
+            "enabled" : "activado",
             "disabled": "desactivado"
         },
-        "levelList": {
-            "all": "todos",
+        "levelList" : {
+            "all" : "todos",
             "team": "equipo",
-            "own": "propio",
-            "no": "no"
+            "own" : "propio",
+            "no"  : "no"
         }
     },
     "actions": {
-        "read": "Leer",
-        "edit": "Editar",
+        "read"  : "Leer",
+        "edit"  : "Editar",
         "delete": "Borrar"
     }
 }

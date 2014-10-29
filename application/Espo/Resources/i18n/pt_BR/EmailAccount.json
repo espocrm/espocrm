@@ -1,27 +1,26 @@
 {
-    "fields": {
-        "name": "Nome",
-        "status": "Status",
-        "host": "Host",
-        "username": "Usuário",
-        "password": "Senha",
-        "port": "Porta",
+    "fields"  : {
+        "name"            : "Nome",
+        "status"          : "Status",
+        "host"            : "Host",
+        "username"        : "Usuário",
+        "password"        : "Senha",
+        "port"            : "Porta",
         "monitoredFolders": "Pastas monitoradas",
-        "ssl": "SSL",
-        "fetchSince": "Buscar desde"
+        "ssl"             : "SSL",
+        "fetchSince"      : "Buscar desde"
     },
-    "links": {
-    },
-    "options": {
+    "links"   : {},
+    "options" : {
         "status": {
-            "Active": "Ativa",
+            "Active"  : "Ativa",
             "Inactive": "Inativa"
         }
     },
-    "labels": {
+    "labels"  : {
         "Create EmailAccount": "Criar conta de e-mail",
-        "IMAP": "IMAP",
-        "Main": "Principal"        
+        "IMAP"               : "IMAP",
+        "Main"               : "Principal"
     },
     "messages": {
         "couldNotConnectToImap": "Não foi possível conectar ao servidor IMAP"

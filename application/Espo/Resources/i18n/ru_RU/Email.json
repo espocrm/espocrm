@@ -1,36 +1,35 @@
 {
-    "fields": {
-        "name": "Тема",
-        "parent": "Источник",
-        "status": "статус",
-        "dateSent": "Дата отправки",
-        "from": "От",
-        "to": "К",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Html",
-        "body": "Тело",
-        "subject": "Тема",
-        "attachments": "Вложения",
-        "selectTemplate": "Выбрать шаблон",
+    "fields"       : {
+        "name"            : "Тема",
+        "parent"          : "Источник",
+        "status"          : "статус",
+        "dateSent"        : "Дата отправки",
+        "from"            : "От",
+        "to"              : "К",
+        "cc"              : "CC",
+        "bcc"             : "BCC",
+        "isHtml"          : "Html",
+        "body"            : "Тело",
+        "subject"         : "Тема",
+        "attachments"     : "Вложения",
+        "selectTemplate"  : "Выбрать шаблон",
         "fromEmailAddress": "С адреса",
         "toEmailAddresses": "На андрес",
-        "emailAddress": "E-mail адрес"
+        "emailAddress"    : "E-mail адрес"
     },
-    "links": {
-    },
-    "options": {
-        "Draft": "Черновик",
-        "Sending": "Отправляется",
-        "Sent": "Отправлено",
+    "links"        : {},
+    "options"      : {
+        "Draft"   : "Черновик",
+        "Sending" : "Отправляется",
+        "Sent"    : "Отправлено",
         "Archived": "В архиве"
     },
-    "labels": {
+    "labels"       : {
         "Create Email": "Отправить письмо в архив",
-        "Compose": "Новое сообщение"
+        "Compose"     : "Новое сообщение"
     },
     "presetFilters": {
-        "sent": "Отправлено",
+        "sent"    : "Отправлено",
         "archived": "В архиве"
     }
 }

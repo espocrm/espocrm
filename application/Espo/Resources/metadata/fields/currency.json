@@ -1,33 +1,33 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"min",
-         "type":"float"
-      },
-      {
-         "name":"max",
-         "type":"float"
-      }
-   ],
-   "actualFields":[
-      "currency",
-      "converted",
-      ""
-   ],
-   "fields":{
-      "currency":{
-         "type":"varchar",
-         "disabled": true
-      },
-      "converted":{
-         "type":"currencyConverted",
-         "readOnly": true
-      }
-   },
-   "filter": true
+    "params"      : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name": "min",
+            "type": "float"
+        },
+        {
+            "name": "max",
+            "type": "float"
+        }
+    ],
+    "actualFields": [
+        "currency",
+        "converted",
+        ""
+    ],
+    "fields"      : {
+        "currency" : {
+            "type"    : "varchar",
+            "disabled": true
+        },
+        "converted": {
+            "type"    : "currencyConverted",
+            "readOnly": true
+        }
+    },
+    "filter"      : true
 }

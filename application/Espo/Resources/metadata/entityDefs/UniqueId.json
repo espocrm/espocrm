@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
-            "required": true            
+    "fields"    : {
+        "name"     : {
+            "type"    : "varchar",
+            "required": true
         },
-        "data": {
-            "type": "text" 
-        }, 
+        "data"     : {
+            "type": "text"
+        },
         "createdAt": {
-            "type": "datetime",
+            "type"    : "datetime",
             "readOnly": true
         },
         "createdBy": {
-            "type": "link",
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
+    "links"     : {
         "createdBy": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

@@ -1,12 +1,12 @@
 [
     {
-        "label":"",
-        "rows": [
+        "label": "",
+        "rows" : [
             [
-                {"name":"post"}
+                {"name": "post"}
             ],
             [
-                {"name":"attachments"}
+                {"name": "attachments"}
             ]
         ]
     }

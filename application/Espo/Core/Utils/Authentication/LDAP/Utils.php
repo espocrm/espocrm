@@ -19,19 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Authentication\LDAP;
 
-use \Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 
 class Utils
 {
-    private $config;
 
     protected $options = null;
 
     /**
      * Association between LDAP and Espo fields
+     *
      * @var array
      */
     protected $fieldMap = array(
@@ -76,15 +75,30 @@ class Utils
         'Principal' => 4,
     );
 
+    private $config;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
     }
 
-    protected function getConfig()
+    /**
+     * Get an ldap option
+     *
+     * @param  string $name
+     * @param  mixed  $returns Return value
+     *
+     * @return mixed
+     */
+    public function getOption($name, $returns = null)
     {
-        return $this->config;
+        if (isset($this->options)) {
+            $this->getOptions();
+        }
+        if (isset($this->options[$name])) {
+            return $this->options[$name];
+        }
+        return $returns;
     }
 
     /**
@@ -97,44 +111,24 @@ class Utils
         if (isset($this->options)) {
             return $this->options;
         }
-
         $options = array();
         foreach ($this->fieldMap as $ldapName => $espoName) {
-
             $option = $this->getConfig()->get($espoName);
             if (isset($option)) {
                 $options[$ldapName] = $option;
             }
         }
-
         /** peculiar fields */
-        $options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
-        $options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
-        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[ $options['accountCanonicalForm'] ];
-
+        $options['useSsl'] = (bool)($options['useSsl'] == 'SSL');
+        $options['useStartTls'] = (bool)($options['useStartTls'] == 'TLS');
+        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[$options['accountCanonicalForm']];
         $this->options = $options;
-
         return $this->options;
     }
 
-    /**
-     * Get an ldap option
-     *
-     * @param  string $name
-     * @param  mixed $returns Return value
-     * @return mixed
-     */
-    public function getOption($name, $returns = null)
+    protected function getConfig()
     {
-        if (isset($this->options)) {
-            $this->getOptions();
-        }
-
-        if (isset($this->options[$name])) {
-            return $this->options[$name];
-        }
-
-        return $returns;
+        return $this->config;
     }
 
     /**
@@ -146,10 +140,7 @@ class Utils
     {
         $options = $this->getOptions();
         $espoOptions = array_keys($this->permittedEspoOptions);
-
         $zendOptions = array_diff_key($options, array_flip($espoOptions));
-
         return $zendOptions;
     }
-
 }

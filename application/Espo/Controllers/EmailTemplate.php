@@ -18,28 +18,43 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Error;
+use Slim\Http\Request;
 
-class EmailTemplate extends \Espo\Core\Controllers\Record
+/**
+ * Class EmailTemplate
+ * @method \Espo\Services\EmailTemplate getRecordService()
+ * @package Espo\Controllers
+ */
+class EmailTemplate extends
+    Record
 {
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+     * @since 1.0
+     * @throws Error
+     */
     public function actionParse($params, $data, $request)
-    {        
+    {
         $id = $request->get('id');
         $emailAddress = $request->get('emailAddress');
         if (empty($id)) {
             throw new Error();
         }
-        
         return $this->getRecordService()->parse($id, array(
             'emailAddress' => $request->get('emailAddress'),
             'parentType' => $request->get('parentType'),
             'parentId' => $request->get('parentId'),
         ), true);
     }
-
 }
 

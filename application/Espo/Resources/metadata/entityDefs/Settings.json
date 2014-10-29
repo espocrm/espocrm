@@ -1,210 +1,749 @@
 {
     "fields": {
-        "useCache": {
-            "type": "bool",
+        "useCache"                              : {
+            "type"   : "bool",
             "default": true
         },
-        "recordsPerPage": {
-            "type": "int",
+        "recordsPerPage"                        : {
+            "type"    : "int",
             "minValue": 1,
             "maxValue": 1000,
-            "default": 20,
+            "default" : 20,
             "required": true
         },
-        "recordsPerPageSmall": {
-            "type": "int",
+        "recordsPerPageSmall"                   : {
+            "type"    : "int",
             "minValue": 1,
             "maxValue": 100,
-            "default": 10,
+            "default" : 10,
             "required": true,
-            "tooltip": true
+            "tooltip" : true
         },
-        "timeZone": {
-            "type": "enum",
+        "timeZone"                              : {
+            "type"   : "enum",
             "detault": "UTC",
-            "options": ["UTC","Africa/Abidjan","Africa/Accra","Africa/Addis_Ababa","Africa/Algiers","Africa/Asmara","Africa/Bamako","Africa/Bangui","Africa/Banjul","Africa/Bissau","Africa/Blantyre","Africa/Brazzaville","Africa/Bujumbura","Africa/Cairo","Africa/Casablanca","Africa/Ceuta","Africa/Conakry","Africa/Dakar","Africa/Dar_es_Salaam","Africa/Djibouti","Africa/Douala","Africa/El_Aaiun","Africa/Freetown","Africa/Gaborone","Africa/Harare","Africa/Johannesburg","Africa/Juba","Africa/Kampala","Africa/Khartoum","Africa/Kigali","Africa/Kinshasa","Africa/Lagos","Africa/Libreville","Africa/Lome","Africa/Luanda","Africa/Lubumbashi","Africa/Lusaka","Africa/Malabo","Africa/Maputo","Africa/Maseru","Africa/Mbabane","Africa/Mogadishu","Africa/Monrovia","Africa/Nairobi","Africa/Ndjamena","Africa/Niamey","Africa/Nouakchott","Africa/Ouagadougou","Africa/Porto-Novo","Africa/Sao_Tome","Africa/Tripoli","Africa/Tunis","Africa/Windhoek","America/Adak","America/Anchorage","America/Anguilla","America/Antigua","America/Araguaina","America/Argentina/Buenos_Aires","America/Argentina/Catamarca","America/Argentina/Cordoba","America/Argentina/Jujuy","America/Argentina/La_Rioja","America/Argentina/Mendoza","America/Argentina/Rio_Gallegos","America/Argentina/Salta","America/Argentina/San_Juan","America/Argentina/San_Luis","America/Argentina/Tucuman","America/Argentina/Ushuaia","America/Aruba","America/Asuncion","America/Atikokan","America/Bahia","America/Bahia_Banderas","America/Barbados","America/Belem","America/Belize","America/Blanc-Sablon","America/Boa_Vista","America/Bogota","America/Boise","America/Cambridge_Bay","America/Campo_Grande","America/Cancun","America/Caracas","America/Cayenne","America/Cayman","America/Chicago","America/Chihuahua","America/Costa_Rica","America/Creston","America/Cuiaba","America/Curacao","America/Danmarkshavn","America/Dawson","America/Dawson_Creek","America/Denver","America/Detroit","America/Dominica","America/Edmonton","America/Eirunepe","America/El_Salvador","America/Fortaleza","America/Glace_Bay","America/Godthab","America/Goose_Bay","America/Grand_Turk","America/Grenada","America/Guadeloupe","America/Guatemala","America/Guayaquil","America/Guyana","America/Halifax","America/Havana","America/Hermosillo","America/Indiana/Indianapolis","America/Indiana/Knox","America/Indiana/Marengo","America/Indiana/Petersburg","America/Indiana/Tell_City","America/Indiana/Vevay","America/Indiana/Vincennes","America/Indiana/Winamac","America/Inuvik","America/Iqaluit","America/Jamaica","America/Juneau","America/Kentucky/Louisville","America/Kentucky/Monticello","America/Kralendijk","America/La_Paz","America/Lima","America/Los_Angeles","America/Lower_Princes","America/Maceio","America/Managua","America/Manaus","America/Marigot","America/Martinique","America/Matamoros","America/Mazatlan","America/Menominee","America/Merida","America/Metlakatla","America/Mexico_City","America/Miquelon","America/Moncton","America/Monterrey","America/Montevideo","America/Montserrat","America/Nassau","America/New_York","America/Nipigon","America/Nome","America/Noronha","America/North_Dakota/Beulah","America/North_Dakota/Center","America/North_Dakota/New_Salem","America/Ojinaga","America/Panama","America/Pangnirtung","America/Paramaribo","America/Phoenix","America/Port-au-Prince","America/Port_of_Spain","America/Porto_Velho","America/Puerto_Rico","America/Rainy_River","America/Rankin_Inlet","America/Recife","America/Regina","America/Resolute","America/Rio_Branco","America/Santa_Isabel","America/Santarem","America/Santiago","America/Santo_Domingo","America/Sao_Paulo","America/Scoresbysund","America/Sitka","America/St_Barthelemy","America/St_Johns","America/St_Kitts","America/St_Lucia","America/St_Thomas","America/St_Vincent","America/Swift_Current","America/Tegucigalpa","America/Thule","America/Thunder_Bay","America/Tijuana","America/Toronto","America/Tortola","America/Vancouver","America/Whitehorse","America/Winnipeg","America/Yakutat","America/Yellowknife","Antarctica/Casey","Antarctica/Davis","Antarctica/DumontDUrville","Antarctica/Macquarie","Antarctica/Mawson","Antarctica/McMurdo","Antarctica/Palmer","Antarctica/Rothera","Antarctica/Syowa","Antarctica/Vostok","Arctic/Longyearbyen","Asia/Aden","Asia/Almaty","Asia/Amman","Asia/Anadyr","Asia/Aqtau","Asia/Aqtobe","Asia/Ashgabat","Asia/Baghdad","Asia/Bahrain","Asia/Baku","Asia/Bangkok","Asia/Beirut","Asia/Bishkek","Asia/Brunei","Asia/Choibalsan","Asia/Chongqing","Asia/Colombo","Asia/Damascus","Asia/Dhaka","Asia/Dili","Asia/Dubai","Asia/Dushanbe","Asia/Gaza","Asia/Harbin","Asia/Hebron","Asia/Ho_Chi_Minh","Asia/Hong_Kong","Asia/Hovd","Asia/Irkutsk","Asia/Jakarta","Asia/Jayapura","Asia/Jerusalem","Asia/Kabul","Asia/Kamchatka","Asia/Karachi","Asia/Kashgar","Asia/Kathmandu","Asia/Khandyga","Asia/Kolkata","Asia/Krasnoyarsk","Asia/Kuala_Lumpur","Asia/Kuching","Asia/Kuwait","Asia/Macau","Asia/Magadan","Asia/Makassar","Asia/Manila","Asia/Muscat","Asia/Nicosia","Asia/Novokuznetsk","Asia/Novosibirsk","Asia/Omsk","Asia/Oral","Asia/Phnom_Penh","Asia/Pontianak","Asia/Pyongyang","Asia/Qatar","Asia/Qyzylorda","Asia/Rangoon","Asia/Riyadh","Asia/Sakhalin","Asia/Samarkand","Asia/Seoul","Asia/Shanghai","Asia/Singapore","Asia/Taipei","Asia/Tashkent","Asia/Tbilisi","Asia/Tehran","Asia/Thimphu","Asia/Tokyo","Asia/Ulaanbaatar","Asia/Urumqi","Asia/Ust-Nera","Asia/Vientiane","Asia/Vladivostok","Asia/Yakutsk","Asia/Yekaterinburg","Asia/Yerevan","Atlantic/Azores","Atlantic/Bermuda","Atlantic/Canary","Atlantic/Cape_Verde","Atlantic/Faroe","Atlantic/Madeira","Atlantic/Reykjavik","Atlantic/South_Georgia","Atlantic/St_Helena","Atlantic/Stanley","Australia/Adelaide","Australia/Brisbane","Australia/Broken_Hill","Australia/Currie","Australia/Darwin","Australia/Eucla","Australia/Hobart","Australia/Lindeman","Australia/Lord_Howe","Australia/Melbourne","Australia/Perth","Australia/Sydney","Europe/Amsterdam","Europe/Andorra","Europe/Athens","Europe/Belgrade","Europe/Berlin","Europe/Bratislava","Europe/Brussels","Europe/Bucharest","Europe/Budapest","Europe/Busingen","Europe/Chisinau","Europe/Copenhagen","Europe/Dublin","Europe/Gibraltar","Europe/Guernsey","Europe/Helsinki","Europe/Isle_of_Man","Europe/Istanbul","Europe/Jersey","Europe/Kaliningrad","Europe/Kiev","Europe/Lisbon","Europe/Ljubljana","Europe/London","Europe/Luxembourg","Europe/Madrid","Europe/Malta","Europe/Mariehamn","Europe/Minsk","Europe/Monaco","Europe/Moscow","Europe/Oslo","Europe/Paris","Europe/Podgorica","Europe/Prague","Europe/Riga","Europe/Rome","Europe/Samara","Europe/San_Marino","Europe/Sarajevo","Europe/Simferopol","Europe/Skopje","Europe/Sofia","Europe/Stockholm","Europe/Tallinn","Europe/Tirane","Europe/Uzhgorod","Europe/Vaduz","Europe/Vatican","Europe/Vienna","Europe/Vilnius","Europe/Volgograd","Europe/Warsaw","Europe/Zagreb","Europe/Zaporozhye","Europe/Zurich","Indian/Antananarivo","Indian/Chagos","Indian/Christmas","Indian/Cocos","Indian/Comoro","Indian/Kerguelen","Indian/Mahe","Indian/Maldives","Indian/Mauritius","Indian/Mayotte","Indian/Reunion","Pacific/Apia","Pacific/Auckland","Pacific/Chatham","Pacific/Chuuk","Pacific/Easter","Pacific/Efate","Pacific/Enderbury","Pacific/Fakaofo","Pacific/Fiji","Pacific/Funafuti","Pacific/Galapagos","Pacific/Gambier","Pacific/Guadalcanal","Pacific/Guam","Pacific/Honolulu","Pacific/Johnston","Pacific/Kiritimati","Pacific/Kosrae","Pacific/Kwajalein","Pacific/Majuro","Pacific/Marquesas","Pacific/Midway","Pacific/Nauru","Pacific/Niue","Pacific/Norfolk","Pacific/Noumea","Pacific/Pago_Pago","Pacific/Palau","Pacific/Pitcairn","Pacific/Pohnpei","Pacific/Port_Moresby","Pacific/Rarotonga","Pacific/Saipan","Pacific/Tahiti","Pacific/Tarawa","Pacific/Tongatapu","Pacific/Wake","Pacific/Wallis"]
+            "options": [
+                "UTC",
+                "Africa/Abidjan",
+                "Africa/Accra",
+                "Africa/Addis_Ababa",
+                "Africa/Algiers",
+                "Africa/Asmara",
+                "Africa/Bamako",
+                "Africa/Bangui",
+                "Africa/Banjul",
+                "Africa/Bissau",
+                "Africa/Blantyre",
+                "Africa/Brazzaville",
+                "Africa/Bujumbura",
+                "Africa/Cairo",
+                "Africa/Casablanca",
+                "Africa/Ceuta",
+                "Africa/Conakry",
+                "Africa/Dakar",
+                "Africa/Dar_es_Salaam",
+                "Africa/Djibouti",
+                "Africa/Douala",
+                "Africa/El_Aaiun",
+                "Africa/Freetown",
+                "Africa/Gaborone",
+                "Africa/Harare",
+                "Africa/Johannesburg",
+                "Africa/Juba",
+                "Africa/Kampala",
+                "Africa/Khartoum",
+                "Africa/Kigali",
+                "Africa/Kinshasa",
+                "Africa/Lagos",
+                "Africa/Libreville",
+                "Africa/Lome",
+                "Africa/Luanda",
+                "Africa/Lubumbashi",
+                "Africa/Lusaka",
+                "Africa/Malabo",
+                "Africa/Maputo",
+                "Africa/Maseru",
+                "Africa/Mbabane",
+                "Africa/Mogadishu",
+                "Africa/Monrovia",
+                "Africa/Nairobi",
+                "Africa/Ndjamena",
+                "Africa/Niamey",
+                "Africa/Nouakchott",
+                "Africa/Ouagadougou",
+                "Africa/Porto-Novo",
+                "Africa/Sao_Tome",
+                "Africa/Tripoli",
+                "Africa/Tunis",
+                "Africa/Windhoek",
+                "America/Adak",
+                "America/Anchorage",
+                "America/Anguilla",
+                "America/Antigua",
+                "America/Araguaina",
+                "America/Argentina/Buenos_Aires",
+                "America/Argentina/Catamarca",
+                "America/Argentina/Cordoba",
+                "America/Argentina/Jujuy",
+                "America/Argentina/La_Rioja",
+                "America/Argentina/Mendoza",
+                "America/Argentina/Rio_Gallegos",
+                "America/Argentina/Salta",
+                "America/Argentina/San_Juan",
+                "America/Argentina/San_Luis",
+                "America/Argentina/Tucuman",
+                "America/Argentina/Ushuaia",
+                "America/Aruba",
+                "America/Asuncion",
+                "America/Atikokan",
+                "America/Bahia",
+                "America/Bahia_Banderas",
+                "America/Barbados",
+                "America/Belem",
+                "America/Belize",
+                "America/Blanc-Sablon",
+                "America/Boa_Vista",
+                "America/Bogota",
+                "America/Boise",
+                "America/Cambridge_Bay",
+                "America/Campo_Grande",
+                "America/Cancun",
+                "America/Caracas",
+                "America/Cayenne",
+                "America/Cayman",
+                "America/Chicago",
+                "America/Chihuahua",
+                "America/Costa_Rica",
+                "America/Creston",
+                "America/Cuiaba",
+                "America/Curacao",
+                "America/Danmarkshavn",
+                "America/Dawson",
+                "America/Dawson_Creek",
+                "America/Denver",
+                "America/Detroit",
+                "America/Dominica",
+                "America/Edmonton",
+                "America/Eirunepe",
+                "America/El_Salvador",
+                "America/Fortaleza",
+                "America/Glace_Bay",
+                "America/Godthab",
+                "America/Goose_Bay",
+                "America/Grand_Turk",
+                "America/Grenada",
+                "America/Guadeloupe",
+                "America/Guatemala",
+                "America/Guayaquil",
+                "America/Guyana",
+                "America/Halifax",
+                "America/Havana",
+                "America/Hermosillo",
+                "America/Indiana/Indianapolis",
+                "America/Indiana/Knox",
+                "America/Indiana/Marengo",
+                "America/Indiana/Petersburg",
+                "America/Indiana/Tell_City",
+                "America/Indiana/Vevay",
+                "America/Indiana/Vincennes",
+                "America/Indiana/Winamac",
+                "America/Inuvik",
+                "America/Iqaluit",
+                "America/Jamaica",
+                "America/Juneau",
+                "America/Kentucky/Louisville",
+                "America/Kentucky/Monticello",
+                "America/Kralendijk",
+                "America/La_Paz",
+                "America/Lima",
+                "America/Los_Angeles",
+                "America/Lower_Princes",
+                "America/Maceio",
+                "America/Managua",
+                "America/Manaus",
+                "America/Marigot",
+                "America/Martinique",
+                "America/Matamoros",
+                "America/Mazatlan",
+                "America/Menominee",
+                "America/Merida",
+                "America/Metlakatla",
+                "America/Mexico_City",
+                "America/Miquelon",
+                "America/Moncton",
+                "America/Monterrey",
+                "America/Montevideo",
+                "America/Montserrat",
+                "America/Nassau",
+                "America/New_York",
+                "America/Nipigon",
+                "America/Nome",
+                "America/Noronha",
+                "America/North_Dakota/Beulah",
+                "America/North_Dakota/Center",
+                "America/North_Dakota/New_Salem",
+                "America/Ojinaga",
+                "America/Panama",
+                "America/Pangnirtung",
+                "America/Paramaribo",
+                "America/Phoenix",
+                "America/Port-au-Prince",
+                "America/Port_of_Spain",
+                "America/Porto_Velho",
+                "America/Puerto_Rico",
+                "America/Rainy_River",
+                "America/Rankin_Inlet",
+                "America/Recife",
+                "America/Regina",
+                "America/Resolute",
+                "America/Rio_Branco",
+                "America/Santa_Isabel",
+                "America/Santarem",
+                "America/Santiago",
+                "America/Santo_Domingo",
+                "America/Sao_Paulo",
+                "America/Scoresbysund",
+                "America/Sitka",
+                "America/St_Barthelemy",
+                "America/St_Johns",
+                "America/St_Kitts",
+                "America/St_Lucia",
+                "America/St_Thomas",
+                "America/St_Vincent",
+                "America/Swift_Current",
+                "America/Tegucigalpa",
+                "America/Thule",
+                "America/Thunder_Bay",
+                "America/Tijuana",
+                "America/Toronto",
+                "America/Tortola",
+                "America/Vancouver",
+                "America/Whitehorse",
+                "America/Winnipeg",
+                "America/Yakutat",
+                "America/Yellowknife",
+                "Antarctica/Casey",
+                "Antarctica/Davis",
+                "Antarctica/DumontDUrville",
+                "Antarctica/Macquarie",
+                "Antarctica/Mawson",
+                "Antarctica/McMurdo",
+                "Antarctica/Palmer",
+                "Antarctica/Rothera",
+                "Antarctica/Syowa",
+                "Antarctica/Vostok",
+                "Arctic/Longyearbyen",
+                "Asia/Aden",
+                "Asia/Almaty",
+                "Asia/Amman",
+                "Asia/Anadyr",
+                "Asia/Aqtau",
+                "Asia/Aqtobe",
+                "Asia/Ashgabat",
+                "Asia/Baghdad",
+                "Asia/Bahrain",
+                "Asia/Baku",
+                "Asia/Bangkok",
+                "Asia/Beirut",
+                "Asia/Bishkek",
+                "Asia/Brunei",
+                "Asia/Choibalsan",
+                "Asia/Chongqing",
+                "Asia/Colombo",
+                "Asia/Damascus",
+                "Asia/Dhaka",
+                "Asia/Dili",
+                "Asia/Dubai",
+                "Asia/Dushanbe",
+                "Asia/Gaza",
+                "Asia/Harbin",
+                "Asia/Hebron",
+                "Asia/Ho_Chi_Minh",
+                "Asia/Hong_Kong",
+                "Asia/Hovd",
+                "Asia/Irkutsk",
+                "Asia/Jakarta",
+                "Asia/Jayapura",
+                "Asia/Jerusalem",
+                "Asia/Kabul",
+                "Asia/Kamchatka",
+                "Asia/Karachi",
+                "Asia/Kashgar",
+                "Asia/Kathmandu",
+                "Asia/Khandyga",
+                "Asia/Kolkata",
+                "Asia/Krasnoyarsk",
+                "Asia/Kuala_Lumpur",
+                "Asia/Kuching",
+                "Asia/Kuwait",
+                "Asia/Macau",
+                "Asia/Magadan",
+                "Asia/Makassar",
+                "Asia/Manila",
+                "Asia/Muscat",
+                "Asia/Nicosia",
+                "Asia/Novokuznetsk",
+                "Asia/Novosibirsk",
+                "Asia/Omsk",
+                "Asia/Oral",
+                "Asia/Phnom_Penh",
+                "Asia/Pontianak",
+                "Asia/Pyongyang",
+                "Asia/Qatar",
+                "Asia/Qyzylorda",
+                "Asia/Rangoon",
+                "Asia/Riyadh",
+                "Asia/Sakhalin",
+                "Asia/Samarkand",
+                "Asia/Seoul",
+                "Asia/Shanghai",
+                "Asia/Singapore",
+                "Asia/Taipei",
+                "Asia/Tashkent",
+                "Asia/Tbilisi",
+                "Asia/Tehran",
+                "Asia/Thimphu",
+                "Asia/Tokyo",
+                "Asia/Ulaanbaatar",
+                "Asia/Urumqi",
+                "Asia/Ust-Nera",
+                "Asia/Vientiane",
+                "Asia/Vladivostok",
+                "Asia/Yakutsk",
+                "Asia/Yekaterinburg",
+                "Asia/Yerevan",
+                "Atlantic/Azores",
+                "Atlantic/Bermuda",
+                "Atlantic/Canary",
+                "Atlantic/Cape_Verde",
+                "Atlantic/Faroe",
+                "Atlantic/Madeira",
+                "Atlantic/Reykjavik",
+                "Atlantic/South_Georgia",
+                "Atlantic/St_Helena",
+                "Atlantic/Stanley",
+                "Australia/Adelaide",
+                "Australia/Brisbane",
+                "Australia/Broken_Hill",
+                "Australia/Currie",
+                "Australia/Darwin",
+                "Australia/Eucla",
+                "Australia/Hobart",
+                "Australia/Lindeman",
+                "Australia/Lord_Howe",
+                "Australia/Melbourne",
+                "Australia/Perth",
+                "Australia/Sydney",
+                "Europe/Amsterdam",
+                "Europe/Andorra",
+                "Europe/Athens",
+                "Europe/Belgrade",
+                "Europe/Berlin",
+                "Europe/Bratislava",
+                "Europe/Brussels",
+                "Europe/Bucharest",
+                "Europe/Budapest",
+                "Europe/Busingen",
+                "Europe/Chisinau",
+                "Europe/Copenhagen",
+                "Europe/Dublin",
+                "Europe/Gibraltar",
+                "Europe/Guernsey",
+                "Europe/Helsinki",
+                "Europe/Isle_of_Man",
+                "Europe/Istanbul",
+                "Europe/Jersey",
+                "Europe/Kaliningrad",
+                "Europe/Kiev",
+                "Europe/Lisbon",
+                "Europe/Ljubljana",
+                "Europe/London",
+                "Europe/Luxembourg",
+                "Europe/Madrid",
+                "Europe/Malta",
+                "Europe/Mariehamn",
+                "Europe/Minsk",
+                "Europe/Monaco",
+                "Europe/Moscow",
+                "Europe/Oslo",
+                "Europe/Paris",
+                "Europe/Podgorica",
+                "Europe/Prague",
+                "Europe/Riga",
+                "Europe/Rome",
+                "Europe/Samara",
+                "Europe/San_Marino",
+                "Europe/Sarajevo",
+                "Europe/Simferopol",
+                "Europe/Skopje",
+                "Europe/Sofia",
+                "Europe/Stockholm",
+                "Europe/Tallinn",
+                "Europe/Tirane",
+                "Europe/Uzhgorod",
+                "Europe/Vaduz",
+                "Europe/Vatican",
+                "Europe/Vienna",
+                "Europe/Vilnius",
+                "Europe/Volgograd",
+                "Europe/Warsaw",
+                "Europe/Zagreb",
+                "Europe/Zaporozhye",
+                "Europe/Zurich",
+                "Indian/Antananarivo",
+                "Indian/Chagos",
+                "Indian/Christmas",
+                "Indian/Cocos",
+                "Indian/Comoro",
+                "Indian/Kerguelen",
+                "Indian/Mahe",
+                "Indian/Maldives",
+                "Indian/Mauritius",
+                "Indian/Mayotte",
+                "Indian/Reunion",
+                "Pacific/Apia",
+                "Pacific/Auckland",
+                "Pacific/Chatham",
+                "Pacific/Chuuk",
+                "Pacific/Easter",
+                "Pacific/Efate",
+                "Pacific/Enderbury",
+                "Pacific/Fakaofo",
+                "Pacific/Fiji",
+                "Pacific/Funafuti",
+                "Pacific/Galapagos",
+                "Pacific/Gambier",
+                "Pacific/Guadalcanal",
+                "Pacific/Guam",
+                "Pacific/Honolulu",
+                "Pacific/Johnston",
+                "Pacific/Kiritimati",
+                "Pacific/Kosrae",
+                "Pacific/Kwajalein",
+                "Pacific/Majuro",
+                "Pacific/Marquesas",
+                "Pacific/Midway",
+                "Pacific/Nauru",
+                "Pacific/Niue",
+                "Pacific/Norfolk",
+                "Pacific/Noumea",
+                "Pacific/Pago_Pago",
+                "Pacific/Palau",
+                "Pacific/Pitcairn",
+                "Pacific/Pohnpei",
+                "Pacific/Port_Moresby",
+                "Pacific/Rarotonga",
+                "Pacific/Saipan",
+                "Pacific/Tahiti",
+                "Pacific/Tarawa",
+                "Pacific/Tongatapu",
+                "Pacific/Wake",
+                "Pacific/Wallis"
+            ]
         },
-        "dateFormat": {
-            "type": "enum",
-            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY"],
+        "dateFormat"                            : {
+            "type"   : "enum",
+            "options": [
+                "MM/DD/YYYY",
+                "YYYY-MM-DD",
+                "DD.MM.YYYY"
+            ],
             "default": "MM/DD/YYYY"
         },
-        "timeFormat": {
-            "type": "enum",
-            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
+        "timeFormat"                            : {
+            "type"   : "enum",
+            "options": [
+                "HH:mm",
+                "hh:mma",
+                "hh:mmA",
+                "hh:mm A",
+                "hh:mm a"
+            ],
             "default": "HH:mm"
         },
-        "weekStart": {
-            "type": "enumInt",
-            "options": [0, 1],
+        "weekStart"                             : {
+            "type"   : "enumInt",
+            "options": [
+                0,
+                1
+            ],
             "default": 0
         },
-        "thousandSeparator": {
-            "type": "varchar",
-            "default": ",",
+        "thousandSeparator"                     : {
+            "type"     : "varchar",
+            "default"  : ",",
             "maxLength": 1,
-            "view": "Settings.Fields.ThousandSeparator"
+            "view"     : "Settings.Fields.ThousandSeparator"
         },
-        "decimalMark": {
-            "type": "varchar",
-            "default": ".",
-            "required": true,
+        "decimalMark"                           : {
+            "type"     : "varchar",
+            "default"  : ".",
+            "required" : true,
             "maxLength": 1
         },
-        "currencyList": {
-            "type": "multiEnum",
-            "default": ["USD", "EUR"],
-            "options": ["AED","ANG","ARS","AUD","BGN","BHD","BND","BOB","BRL","BWP","CAD","CHF","CLP","CNY","COP","CRC","CZK","DKK","DOP","DZD","EEK","EGP","EUR","FJD","GBP","HKD","HNL","HRK","HUF","IDR","ILS","INR","JMD","JOD","JPY","KES","KRW","KWD","KYD","KZT","LBP","LKR","LTL","LVL","MAD","MDL","MKD","MUR","MXN","MYR","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","SAR","SCR","SEK","SGD","SKK","SLL","SVC","THB","TND","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VND","YER","ZAR","ZMK"],
+        "currencyList"                          : {
+            "type"    : "multiEnum",
+            "default" : [
+                "USD",
+                "EUR"
+            ],
+            "options" : [
+                "AED",
+                "ANG",
+                "ARS",
+                "AUD",
+                "BGN",
+                "BHD",
+                "BND",
+                "BOB",
+                "BRL",
+                "BWP",
+                "CAD",
+                "CHF",
+                "CLP",
+                "CNY",
+                "COP",
+                "CRC",
+                "CZK",
+                "DKK",
+                "DOP",
+                "DZD",
+                "EEK",
+                "EGP",
+                "EUR",
+                "FJD",
+                "GBP",
+                "HKD",
+                "HNL",
+                "HRK",
+                "HUF",
+                "IDR",
+                "ILS",
+                "INR",
+                "JMD",
+                "JOD",
+                "JPY",
+                "KES",
+                "KRW",
+                "KWD",
+                "KYD",
+                "KZT",
+                "LBP",
+                "LKR",
+                "LTL",
+                "LVL",
+                "MAD",
+                "MDL",
+                "MKD",
+                "MUR",
+                "MXN",
+                "MYR",
+                "NAD",
+                "NGN",
+                "NIO",
+                "NOK",
+                "NPR",
+                "NZD",
+                "OMR",
+                "PEN",
+                "PGK",
+                "PHP",
+                "PKR",
+                "PLN",
+                "PYG",
+                "QAR",
+                "RON",
+                "RSD",
+                "RUB",
+                "SAR",
+                "SCR",
+                "SEK",
+                "SGD",
+                "SKK",
+                "SLL",
+                "SVC",
+                "THB",
+                "TND",
+                "TRY",
+                "TTD",
+                "TWD",
+                "TZS",
+                "UAH",
+                "UGX",
+                "USD",
+                "UYU",
+                "UZS",
+                "VND",
+                "YER",
+                "ZAR",
+                "ZMK"
+            ],
             "required": true
         },
-        "defaultCurrency": {
-            "type": "enum",
-            "default": "USD",
+        "defaultCurrency"                       : {
+            "type"    : "enum",
+            "default" : "USD",
             "required": true
         },
-        "baseCurrency": {
-            "type": "enum",
-            "default": "USD",
+        "baseCurrency"                          : {
+            "type"    : "enum",
+            "default" : "USD",
             "required": true
         },
-        "currencyRates": {
+        "currencyRates"                         : {
             "type": "base",
             "view": "Settings.Fields.CurrencyRates"
         },
-        "outboundEmailIsShared": {
-            "type": "bool",
+        "outboundEmailIsShared"                 : {
+            "type"   : "bool",
             "default": false
         },
-        "outboundEmailFromName": {
-            "type": "varchar",
-            "default": "EspoCRM",
+        "outboundEmailFromName"                 : {
+            "type"    : "varchar",
+            "default" : "EspoCRM",
             "required": true
         },
-        "outboundEmailFromAddress": {
-            "type": "varchar",
-            "default": "crm@example.com",
+        "outboundEmailFromAddress"              : {
+            "type"    : "varchar",
+            "default" : "crm@example.com",
             "required": true
         },
-        "smtpServer": {
-            "type": "varchar",
+        "smtpServer"                            : {
+            "type"    : "varchar",
             "required": true
         },
-        "smtpPort": {
-            "type": "int",
+        "smtpPort"                              : {
+            "type"    : "int",
             "required": true,
-            "min": 0,
-            "max": 9999,
-            "default": 25
+            "min"     : 0,
+            "max"     : 9999,
+            "default" : 25
         },
-        "smtpAuth": {
-            "type": "bool",
+        "smtpAuth"                              : {
+            "type"   : "bool",
             "default": true
         },
-        "smtpSecurity": {
-            "type": "enum",
-            "options": ["", "SSL", "TLS"]
+        "smtpSecurity"                          : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "SSL",
+                "TLS"
+            ]
         },
-        "smtpUsername": {
-            "type": "varchar",
+        "smtpUsername"                          : {
+            "type"    : "varchar",
             "required": true
         },
-        "smtpPassword": {
+        "smtpPassword"                          : {
             "type": "password"
         },
-        "tabList": {
-            "type": "array",
+        "tabList"                               : {
+            "type"       : "array",
             "translation": "Global.scopeNamesPlural"
         },
-        "quickCreateList": {
-            "type": "array",
+        "quickCreateList"                       : {
+            "type"       : "array",
             "translation": "Global.scopeNames"
         },
-        "language": {
-            "type": "enum",
+        "language"                              : {
+            "type"   : "enum",
             "options": ["en_US"],
-            "default": "en_US"            
+            "default": "en_US"
         },
-        "exportDelimiter": {
-            "type": "varchar",
-            "default": ",",
-            "required": true,
+        "exportDelimiter"                       : {
+            "type"     : "varchar",
+            "default"  : ",",
+            "required" : true,
             "maxLength": 1
         },
-        "companyLogo": {
+        "companyLogo"                           : {
             "type": "image"
         },
-        "authenticationMethod": {
-            "type": "enum",
-            "options": ["Espo", "LDAP"],
+        "authenticationMethod"                  : {
+            "type"   : "enum",
+            "options": [
+                "Espo",
+                "LDAP"
+            ],
             "default": "Espo"
         },
-        "ldapHost": {
-            "type": "varchar",
+        "ldapHost"                              : {
+            "type"    : "varchar",
             "required": true
         },
-        "ldapPort": {
-            "type": "int",
-            "max": 9999,
-            "min": 0,
+        "ldapPort"                              : {
+            "type"   : "int",
+            "max"    : 9999,
+            "min"    : 0,
             "default": 389
         },
-        "ldapSecurity": {
-            "type": "enum",
-            "options": ["", "SSL", "TLS"]
+        "ldapSecurity"                          : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "SSL",
+                "TLS"
+            ]
         },
-        "ldapAuth": {
+        "ldapAuth"                              : {
             "type": "bool"
         },
-        "ldapUsername": {
-            "type": "varchar",
+        "ldapUsername"                          : {
+            "type"    : "varchar",
             "required": true
         },
-        "ldapPassword": {
+        "ldapPassword"                          : {
             "type": "password"
         },
-        "ldapBindRequiresDn": {
+        "ldapBindRequiresDn"                    : {
             "type": "bool"
         },
-        "ldapBaseDn": {
+        "ldapBaseDn"                            : {
             "type": "varchar"
         },
-        "ldapUserLoginFilter": {
+        "ldapUserLoginFilter"                   : {
             "type": "varchar"
         },
-        "ldapAccountCanonicalForm": {
-            "type": "enum",
-            "options": ["Dn", "Username", "Backslash", "Principal"]
+        "ldapAccountCanonicalForm"              : {
+            "type"   : "enum",
+            "options": [
+                "Dn",
+                "Username",
+                "Backslash",
+                "Principal"
+            ]
         },
-        "ldapAccountDomainName": {
+        "ldapAccountDomainName"                 : {
             "type": "varchar"
         },
-        "ldapAccountDomainNameShort": {
+        "ldapAccountDomainNameShort"            : {
             "type": "varchar"
         },
-        "ldapAccountFilterFormat": {
+        "ldapAccountFilterFormat"               : {
             "type": "varchar"
         },
-        "ldapTryUsernameSplit": {
+        "ldapTryUsernameSplit"                  : {
             "type": "bool"
         },
-        "ldapOptReferrals": {
+        "ldapOptReferrals"                      : {
             "type": "bool"
         },
-        "ldapCreateEspoUser": {
-            "type": "bool",
+        "ldapCreateEspoUser"                    : {
+            "type"   : "bool",
             "default": true
         },
-        "disableExport": {
-            "type": "bool",
+        "disableExport"                         : {
+            "type"   : "bool",
             "default": false
-         },
-        "assignmentEmailNotifications": {
-            "type": "bool",
+        },
+        "assignmentEmailNotifications"          : {
+            "type"   : "bool",
             "default": false
-         },
-         "assignmentEmailNotificationsEntityList": {
-             "type": "array",
-             "translation": "Global.scopeNamesPlural"
-         }
+        },
+        "assignmentEmailNotificationsEntityList": {
+            "type"       : "array",
+            "translation": "Global.scopeNamesPlural"
+        }
     }
 }

@@ -18,24 +18,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Entities;
 
-class Integration extends \Espo\Core\ORM\Entity
-{    
+use Espo\Core\ORM\Entity;
+
+class Integration extends
+    Entity
+{
+
+    public function clear($name)
+    {
+        parent::clear($name);
+        $data = $this->get('data');
+        if (empty($data)) {
+            $data = new \stdClass();
+        }
+        unset($data->$name);
+        $this->set('data', $data);
+    }
+
     public function get($name)
     {
         if ($name == 'id') {
             return $this->id;
         }
-        
         if ($this->hasField($name)) {
             if (array_key_exists($name, $this->valuesContainer)) {
                 return $this->valuesContainer[$name];
             }
         } else {
-            if ($this->get('data')) { 
+            if ($this->get('data')) {
                 $data = $this->get('data');
             } else {
                 $data = new \stdClass();
@@ -46,20 +59,8 @@ class Integration extends \Espo\Core\ORM\Entity
         }
         return null;
     }
-    
-    public function clear($name)
-    {
-        parent::clear($name);
-        
-        $data = $this->get('data');
-        if (empty($data)) {
-            $data = new \stdClass();
-        }
-        unset($data->$name);
-        $this->set('data', $data);    
-    }
-    
-    public function set($p1, $p2)
+
+    public function set($p1, $p2 = null)
     {
         if (is_array($p1)) {
             if ($p2 === null) {
@@ -68,15 +69,12 @@ class Integration extends \Espo\Core\ORM\Entity
             $this->populateFromArray($p1, $p2);
             return;
         }
-        
         $name = $p1;
         $value = $p2;
-        
         if ($name == 'id') {
             $this->id = $value;
             return;
         }
-                
         if ($this->hasField($name)) {
             $this->valuesContainer[$name] = $value;
         } else {
@@ -88,29 +86,26 @@ class Integration extends \Espo\Core\ORM\Entity
                 $data = new \stdClass();
             }
             $data->$name = $value;
-            $this->set('data', $data);        
+            $this->set('data', $data);
         }
     }
-    
+
     public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)
     {
         if ($reset) {
             $this->reset();
         }
-    
-        foreach ($arr as $field => $value) {            
+        foreach ($arr as $field => $value) {
             if (is_string($field)) {
                 if (is_array($value) || ($value instanceof \stdClass)) {
                     $value = json_encode($value);
                 }
-                
                 if ($this->hasField($field)) {
                     $fields = $this->getFields();
                     $fieldDefs = $fields[$field];
-                    
                     if (!is_null($value)) {
                         switch ($fieldDefs['type']) {
-                            case self::VARCHAR:                        
+                            case self::VARCHAR:
                                 break;
                             case self::BOOL:
                                 $value = ($value === 'true' || $value === '1' || $value === true);
@@ -138,20 +133,18 @@ class Integration extends \Espo\Core\ORM\Entity
                         }
                     }
                 }
-                
-
                 $this->set($field, $value);
             }
         }
     }
-    
+
     public function toArray()
-    {        
+    {
         $arr = array();
         if (isset($this->id)) {
             $arr['id'] = $this->id;
         }
-        foreach ($this->fields as $field => $defs) {        
+        foreach ($this->fields as $field => $defs) {
             if ($field == 'id') {
                 continue;
             }
@@ -159,17 +152,13 @@ class Integration extends \Espo\Core\ORM\Entity
                 $arr[$field] = $this->get($field);
             }
         }
-        
         $data = $this->get('data');
         if (empty($data)) {
             $data = new \stdClass();
         }
-        
         $dataArr = get_object_vars($data);
-
-        $arr = array_merge($arr, $dataArr);        
+        $arr = array_merge($arr, $dataArr);
         return $arr;
     }
-    
 }
 

@@ -1,51 +1,50 @@
 {
-    "fields": {
-        "name": "Subject",
-        "parent": "Parent",
-        "status": "Status",
-        "dateSent": "Date Sent",
-        "from": "From",
-        "to": "To",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Is Html",
-        "body": "Body",
-        "subject": "Subject",
-        "attachments": "Attachments",
-        "selectTemplate": "Select Template",
+    "fields"       : {
+        "name"            : "Subject",
+        "parent"          : "Parent",
+        "status"          : "Status",
+        "dateSent"        : "Date Sent",
+        "from"            : "From",
+        "to"              : "To",
+        "cc"              : "CC",
+        "bcc"             : "BCC",
+        "isHtml"          : "Is Html",
+        "body"            : "Body",
+        "subject"         : "Subject",
+        "attachments"     : "Attachments",
+        "selectTemplate"  : "Select Template",
         "fromEmailAddress": "From Address",
         "toEmailAddresses": "To Address",
-        "emailAddress": "Email Address",
-        "deliveryDate": "Delivery Date"
+        "emailAddress"    : "Email Address",
+        "deliveryDate"    : "Delivery Date"
     },
-    "links": {
-    },
-    "options": {
-        "Draft": "Draft",
-        "Sending": "Sending",
-        "Sent": "Sent",
+    "links"        : {},
+    "options"      : {
+        "Draft"   : "Draft",
+        "Sending" : "Sending",
+        "Sent"    : "Sent",
         "Archived": "Archived"
     },
-    "labels": {
-        "Create Email": "Archive Email",
-        "Archive Email": "Archive Email",
-        "Compose": "Compose",
-        "Reply": "Reply",
-        "Reply to All": "Reply to All",
-        "Forward": "Forward",
-        "Original message": "Original message",
+    "labels"       : {
+        "Create Email"     : "Archive Email",
+        "Archive Email"    : "Archive Email",
+        "Compose"          : "Compose",
+        "Reply"            : "Reply",
+        "Reply to All"     : "Reply to All",
+        "Forward"          : "Forward",
+        "Original message" : "Original message",
         "Forwarded message": "Forwarded message",
-        "Email Accounts": "Email Accounts",
-        "Send Test Email": "Send Test Email",
-        "Send": "Send",
-        "Email Address": "Email Address"
+        "Email Accounts"   : "Email Accounts",
+        "Send Test Email"  : "Send Test Email",
+        "Send"             : "Send",
+        "Email Address"    : "Email Address"
     },
-    "messages": {
-        "noSmtpSetup": "No SMTP setup. {link}.",
+    "messages"     : {
+        "noSmtpSetup"  : "No SMTP setup. {link}.",
         "testEmailSent": "Test email has been sent"
     },
     "presetFilters": {
-        "sent": "Sent",
+        "sent"    : "Sent",
         "archived": "Archived"
     }
 }

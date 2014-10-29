@@ -19,17 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Authentication\LDAP;
 
-class LDAP extends \Zend\Ldap\Ldap
-{
-    protected $usernameAttribute = 'cn';
+use Zend\Ldap\Exception\LdapException;
+use Zend\Ldap\Filter\AbstractFilter;
 
+class LDAP extends
+    \Zend\Ldap\Ldap
+{
+
+    protected $usernameAttribute = 'cn';
 
     /**
      * Get DN depends on options, ex. "cn=test,ou=People,dc=maxcrc,dc=com"
      *
+     * @param $acctname
+     *
+     * @throws LdapException
+     * @throws \Exception
      * @return string DN format
      */
     public function getDn($acctname)
@@ -41,24 +48,24 @@ class LDAP extends \Zend\Ldap\Ldap
      * Fix a bug, ex. CN=Alice Baker,CN=Users,DC=example,DC=com
      *
      * @param  string $acctname
+     *
+     * @throws LdapException
+     * @throws \Exception
      * @return string - Account DN
      */
     protected function getAccountDn($acctname)
     {
         $baseDn = $this->getBaseDn();
-
         if ($this->getBindRequiresDn() && isset($baseDn)) {
-            try {
+            try{
                 return parent::getAccountDn($acctname);
-            } catch (\Zend\Ldap\Exception\LdapException $zle) {
-                if ($zle->getCode() != \Zend\Ldap\Exception\LdapException::LDAP_NO_SUCH_OBJECT) {
+            } catch(LdapException $zle){
+                if ($zle->getCode() != LdapException::LDAP_NO_SUCH_OBJECT) {
                     throw $zle;
                 }
             }
-
-            $acctname = $this->usernameAttribute . '=' . \Zend\Ldap\Filter\AbstractFilter::escapeValue($acctname) . ',' . $baseDn;
+            $acctname = $this->usernameAttribute . '=' . AbstractFilter::escapeValue($acctname) . ',' . $baseDn;
         }
-
         return parent::getAccountDn($acctname);
     }
 
@@ -67,37 +74,39 @@ class LDAP extends \Zend\Ldap\Ldap
      *
      * @param  string $filter
      * @param  string $basedn
-     * @param  int $scope
+     * @param int     $scope
      * @param  array  $attributes
+     *
+     * @throws LdapException
      * @return array
      */
-    public function searchByLoginFilter($filter, $basedn = null, $scope = self::SEARCH_SCOPE_SUB, array $attributes = array())
-    {
+    public function searchByLoginFilter(
+        $filter,
+        $basedn = null,
+        $scope = self::SEARCH_SCOPE_SUB,
+        array $attributes = array()
+    ){
         $filter = $this->getLoginFilter($filter);
-
         $result = $this->search($filter, $basedn, $scope, $attributes);
-
         if ($result->count() > 0) {
             return $result->getFirst();
         }
-
-        throw new \Zend\Ldap\Exception\LdapException($this, 'searching: ' . $filter);
+        throw new LdapException($this, 'searching: ' . $filter);
     }
 
     /**
      * Get login filter in LDAP format
      *
      * @param  string $filter
+     *
      * @return string
      */
     protected function getLoginFilter($filter)
     {
         $baseFilter = '(objectClass=*)';
-
         if (!empty($filter)) {
-            $baseFilter = '(&' . $baseFilter . $this->convertToFilterFormat($filter). ')';
+            $baseFilter = '(&' . $baseFilter . $this->convertToFilterFormat($filter) . ')';
         }
-
         return $baseFilter;
     }
 
@@ -105,6 +114,7 @@ class LDAP extends \Zend\Ldap\Ldap
      * Check and convert filter item in LDAP format
      *
      * @param  string $filter [description]
+     *
      * @return string
      */
     protected function convertToFilterFormat($filter)
@@ -113,11 +123,9 @@ class LDAP extends \Zend\Ldap\Ldap
         if (substr($filter, 0, 1) != '(') {
             $filter = '(' . $filter;
         }
-
         if (substr($filter, -1) != ')') {
             $filter = $filter . ')';
         }
-
         return $filter;
     }
 }

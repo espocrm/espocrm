@@ -1,27 +1,30 @@
 [
     {
-        "label":"Main",
-        "rows":[
+        "label": "Main",
+        "rows" : [
             [
-                {"name":"name"},
-                {"name":"status"}
+                {"name": "name"},
+                {"name": "status"}
             ],
             [
-                {"name":"fetchSince"}
+                {"name": "fetchSince"}
             ]
         ]
     },
     {
-        "label":"IMAP",
-        "rows":[
+        "label": "IMAP",
+        "rows" : [
             [
-                {"name":"host"},{"name":"ssl"}
+                {"name": "host"},
+                {"name": "ssl"}
             ],
             [
-                {"name":"port"},{"name":"username"}
+                {"name": "port"},
+                {"name": "username"}
             ],
             [
-                {"name":"monitoredFolders"},{"name":"password"}
+                {"name": "monitoredFolders"},
+                {"name": "password"}
             ]
         ]
     }

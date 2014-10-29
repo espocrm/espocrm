@@ -18,93 +18,92 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Services\Base;
+use Espo\Entities\Note;
 
-use Espo\ORM\Entity;
+class Notification extends
+    Base
+{
 
-class Notification extends \Espo\Core\Services\Base
-{    
     protected $dependencies = array(
         'entityManager',
         'user',
         'metadata',
     );
 
-    protected function getEntityManager()
-    {
-        return $this->injections['entityManager'];
-    }
-
-    protected function getUser()
-    {
-        return $this->injections['user'];
-    }    
-    
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
-    }
-    
     public function notifyAboutMentionInPost($userId, $noteId)
     {
-        $notification = $this->getEntityManager()->getEntity('Notification');        
+        /**
+         * @var \Espo\Entities\Notification $notification
+         */
+        $notification = $this->getEntityManager()->getEntity('Notification');
         $notification->set(array(
             'type' => 'MentionInPost',
             'data' => array('noteId' => $noteId),
             'userId' => $userId
         ));
-        $this->getEntityManager()->saveEntity($notification);        
+        $this->getEntityManager()->saveEntity($notification);
     }
-    
-    public function notifyAboutNote($userId, $noteId)
+
+    /**
+     * @return \Espo\Core\ORM\EntityManager
+     * @since 1.0
+     */
+    protected function getEntityManager()
     {
-        $notification = $this->getEntityManager()->getEntity('Notification');        
-        $notification->set(array(
-            'type' => 'Note',
-            'data' => array('noteId' => $noteId),
-            'userId' => $userId
-        ));
-        $this->getEntityManager()->saveEntity($notification);        
+        return $this->injections['entityManager'];
     }
-    
+
     public function notifyAboutNoteFromJob($data)
     {
         $userIdList = $data['userIdList'];
         $noteId = $data['noteId'];
-        
         foreach ($userIdList as $userId) {
             $this->notifyAboutNote($userId, $noteId);
         }
         return true;
     }
-    
+
+    public function notifyAboutNote($userId, $noteId)
+    {
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set(array(
+            'type' => 'Note',
+            'data' => array('noteId' => $noteId),
+            'userId' => $userId
+        ));
+        $this->getEntityManager()->saveEntity($notification);
+    }
+
     public function getNotReadCount($userId)
     {
         $searchParams = array();
         $searchParams['whereClause'] = array(
             'userId' => $userId
-        );        
+        );
         return $this->getEntityManager()->getRepository('Notification')->where(array(
             'userId' => $userId,
             'read' => 0,
         ))->count();
     }
-    
+
     public function markAllRead($userId)
-    {        
+    {
         $pdo = $this->getEntityManager()->getPDO();
-        $sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
+        $sql = "UPDATE notification SET `read` = 1 WHERE user_id = " . $pdo->quote($userId) . " AND `read` = 0";
         $pdo->prepare($sql)->execute();
         return true;
     }
-    
+
     public function getList($userId, array $params = array())
-    {        
+    {
+        /**
+         * @var \Espo\Entities\Notification $entity
+         * @var Note                        $data
+         */
         $searchParams = array();
         $searchParams['whereClause'] = array(
             'userId' => $userId
@@ -117,10 +116,8 @@ class Notification extends \Espo\Core\Services\Base
         }
         $searchParams['orderBy'] = 'createdAt';
         $searchParams['order'] = 'DESC';
-                
         $collection = $this->getEntityManager()->getRepository('Notification')->find($searchParams);
         $count = $this->getEntityManager()->getRepository('Notification')->count($searchParams);
-        
         $ids = array();
         foreach ($collection as $k => $entity) {
             $ids[] = $entity->id;
@@ -130,11 +127,13 @@ class Notification extends \Espo\Core\Services\Base
             }
             switch ($entity->get('type')) {
                 case 'Note':
-                case 'MentionInPost':                
-                    $note = $this->getEntityManager()->getEntity('Note', $data->noteId);
+                case 'MentionInPost':
+                    /** @noinspection PhpUndefinedFieldInspection */
+                $note = $this->getEntityManager()->getEntity('Note', $data->noteId);
                     if ($note) {
                         if ($note->get('parentId') && $note->get('parentType')) {
-                            $parent = $this->getEntityManager()->getEntity($note->get('parentType'), $note->get('parentId'));
+                            $parent = $this->getEntityManager()->getEntity($note->get('parentType'),
+                                $note->get('parentId'));
                             if ($parent) {
                                 $note->set('parentName', $parent->get('name'));
                             }
@@ -147,21 +146,27 @@ class Notification extends \Espo\Core\Services\Base
                     }
                     break;
             }
-        }        
-        
+        }
         if (!empty($ids)) {
             $pdo = $this->getEntityManager()->getPDO();
-            $sql = "UPDATE notification SET `read` = 1 WHERE id IN ('" . implode("', '", $ids) ."')";
-
+            $sql = "UPDATE notification SET `read` = 1 WHERE id IN ('" . implode("', '", $ids) . "')";
             $s = $pdo->prepare($sql);
             $s->execute();
         }
-        
-        
         return array(
             'total' => $count,
             'collection' => $collection
         );
+    }
+
+    protected function getUser()
+    {
+        return $this->injections['user'];
+    }
+
+    protected function getMetadata()
+    {
+        return $this->injections['metadata'];
     }
 }
 

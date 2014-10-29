@@ -19,32 +19,34 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ExtensionManager;
+use Slim\Http\Request;
 
-class Extension extends \Espo\Core\Controllers\Record
+class Extension extends
+    Record
 {
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
 
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+     * @since 1.0
+     * @throws Forbidden
+     */
     public function actionUpload($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new Forbidden();
         }
-
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
+        $manager = new ExtensionManager($this->getContainer());
         $id = $manager->upload($data);
         $manifest = $manager->getManifest();
-
         return array(
             'id' => $id,
             'version' => $manifest['version'],
@@ -53,29 +55,41 @@ class Extension extends \Espo\Core\Controllers\Record
         );
     }
 
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return bool
+     * @since 1.0
+     * @throws Forbidden
+     */
     public function actionInstall($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new Forbidden();
         }
-
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
+        $manager = new ExtensionManager($this->getContainer());
         $manager->install($data['id']);
-
         return true;
     }
 
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return bool
+     * @since 1.0
+     * @throws Forbidden
+     */
     public function actionUninstall($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new Forbidden();
         }
-
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
+        $manager = new ExtensionManager($this->getContainer());
         $manager->uninstall($data['id']);
-
         return true;
     }
 
@@ -101,10 +115,8 @@ class Extension extends \Espo\Core\Controllers\Record
 
     public function actionDelete($params, $data, $request)
     {
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
+        $manager = new ExtensionManager($this->getContainer());
         $manager->delete($params['id']);
-
         return true;
     }
 
@@ -126,6 +138,13 @@ class Extension extends \Espo\Core\Controllers\Record
     public function actionRemoveLink()
     {
         throw new Forbidden();
+    }
+
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 }
 

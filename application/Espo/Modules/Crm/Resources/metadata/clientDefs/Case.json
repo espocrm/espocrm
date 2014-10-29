@@ -1,49 +1,52 @@
 {
-   "controller": "Controllers.Record",
-   "bottomPanels":{
-      "detail":[
-      ]
-   },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"Crm:Case.Record.Panels.Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"Crm:Record.Panels.History"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"Crm:Record.Panels.Tasks"
-         }
-      ]
-   },
-   "presetFilters": [
-      {
-         "name":"open",
-         "style": "primary",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["New", "Assigned", "Pending"]
+    "controller"   : "Controllers.Record",
+    "bottomPanels" : {
+        "detail": []
+    },
+    "sidePanels"   : {
+        "detail": [
+            {
+                "name" : "activities",
+                "label": "Activities",
+                "view" : "Crm:Case.Record.Panels.Activities"
+            },
+            {
+                "name" : "history",
+                "label": "History",
+                "view" : "Crm:Record.Panels.History"
+            },
+            {
+                "name" : "tasks",
+                "label": "Tasks",
+                "view" : "Crm:Record.Panels.Tasks"
             }
-         }
-      },
-      {
-         "name":"closed",
-         "style": "success",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Closed"]
+        ]
+    },
+    "presetFilters": [
+        {
+            "name" : "open",
+            "style": "primary",
+            "data" : {
+                "status": {
+                    "type" : "in",
+                    "value": [
+                        "New",
+                        "Assigned",
+                        "Pending"
+                    ]
+                }
             }
-         }
-      }
-   ],
-    "boolFilters": ["onlyMy"]
+        },
+        {
+            "name" : "closed",
+            "style": "success",
+            "data" : {
+                "status": {
+                    "type" : "in",
+                    "value": ["Closed"]
+                }
+            }
+        }
+    ],
+    "boolFilters"  : ["onlyMy"]
 }

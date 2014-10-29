@@ -18,45 +18,54 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Business\CaseDistribution;
+
+use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\Team;
+use Espo\Entities\User;
 
 class RoundRobin
 {
+
+    /**
+     * @var EntityManager
+     * @since 1.0
+     */
     protected $entityManager;
-    
+
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
     }
-    
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-    
+
+    /**
+     * @param Team $team
+     *
+     * @return mixed
+     * @since 1.0
+     */
     public function getUser($team)
     {
-        $userList = $team->get('users');        
+        /**
+         * @var User $user
+         * @var Entity $case
+         */
+        $userList = $team->get('users');
         if (count($userList) == 0) {
             return false;
-        }    
-                
+        }
         $userIdList = array();
-        
-        foreach ($userList as $user) { 
+        foreach ($userList as $user) {
             $userIdList[] = $user->id;
         }
-    
-        
         $case = $this->getEntityManager()->getRepository('Case')->where(array(
             'assignedUserId' => $userIdList,
-        ))->order('createdAt', 'DESC')->findOne();                
-        
+        ))->order('createdAt', 'DESC')->findOne();
         if (empty($case)) {
             $num = 0;
-        } else {        
+        } else {
             $num = array_search($case->get('assignedUserId'), $userIdList);
             if ($num === false || $num == count($userIdList) - 1) {
                 $num = 0;
@@ -64,8 +73,12 @@ class RoundRobin
                 $num++;
             }
         }
-                
-        return $this->getEntityManager()->getEntity('User', $userIdList[$num]);        
+        return $this->getEntityManager()->getEntity('User', $userIdList[$num]);
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 }
 

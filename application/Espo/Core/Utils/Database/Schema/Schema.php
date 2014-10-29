@@ -19,14 +19,56 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Schema;
 
-use Doctrine\DBAL\Types\Type,
-    Espo\Core\Utils\Util;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Schema\SchemaDiff;
+use Doctrine\DBAL\Types\Type;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Converter;
+use Espo\Core\Utils\Database\DBAL\Schema\Comparator;
+use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 class Schema
 {
+
+    protected $drivers = array(
+        'mysqli' => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
+        'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
+    );
+
+    protected $fieldTypePaths = array(
+        'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
+        'custom/Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
+    );
+
+    /**
+     * Paths of rebuild action folders
+     *
+     * @var array
+     */
+    protected $rebuildActionsPath = array(
+        'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
+        'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',
+    );
+
+    /**
+     * Array of rebuildActions classes in format:
+     *  array(
+     *      'beforeRebuild' => array(...),
+     *      'afterRebuild' => array(...),
+     *  )
+     *
+     * @var array
+     */
+    protected $rebuildActionClasses = null;
+
     private $config;
 
     private $metadata;
@@ -43,60 +85,44 @@ class Schema
 
     private $connection;
 
-    protected $drivers = array(
-        'mysqli' => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
-        'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
-    );
-
-    protected $fieldTypePaths = array(
-        'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
-        'custom/Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
-    );
-
-    /**
-     * Paths of rebuild action folders
-     * @var array
-     */
-    protected $rebuildActionsPath = array(
-        'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
-        'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',
-    );
-
-    /**
-     * Array of rebuildActions classes in format:
-     *  array(
-     *      'beforeRebuild' => array(...),
-     *      'afterRebuild' => array(...),
-     *  )
-     * @var array
-     */
-    protected $rebuildActionClasses = null;
-
-
-
-    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Utils\File\ClassParser $classParser)
-    {
+    public function __construct(
+        Config $config,
+        Metadata $metadata,
+        Manager $fileManager,
+        EntityManager $entityManager,
+        ClassParser $classParser
+    ){
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
         $this->classParser = $classParser;
-
-        $this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
+        $this->comparator = new Comparator();
         $this->initFieldTypes();
-
-        $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
+        $this->converter = new Converter($this->metadata, $this->fileManager);
     }
 
-
-    protected function getConfig()
+    protected function initFieldTypes()
     {
-        return $this->config;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
+        foreach ($this->fieldTypePaths as $path) {
+            $typeList = $this->getFileManager()->getFileList($path, false, '\.php$');
+            if ($typeList !== false) {
+                foreach ($typeList as $name) {
+                    $typeName = preg_replace('/\.php$/i', '', $name);
+                    $dbalTypeName = strtolower($typeName);
+                    $filePath = Util::concatPath($path, $typeName);
+                    $class = Util::getClassName($filePath);
+                    if (!Type::hasType($dbalTypeName)) {
+                        Type::addType($dbalTypeName, $class);
+                    } else {
+                        Type::overrideType($dbalTypeName, $class);
+                    }
+                    $dbTypeName = method_exists($class, 'getDbTypeName') ? $class::getDbTypeName() : $dbalTypeName;
+                    $this->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbTypeName,
+                        $dbalTypeName);
+                }
+            }
+        }
     }
 
     protected function getFileManager()
@@ -104,14 +130,51 @@ class Schema
         return $this->fileManager;
     }
 
-    protected function getEntityManager()
+    public function getConnection()
     {
-        return $this->entityManager;
+        if (isset($this->connection)) {
+            return $this->connection;
+        }
+        $dbalConfig = new Configuration();
+        $connectionParams = $this->getConfig()->get('database');
+        $connectionParams['driverClass'] = $this->drivers[$connectionParams['driver']];
+        unset($connectionParams['driver']);
+        $this->connection = DriverManager::getConnection($connectionParams, $dbalConfig);
+        return $this->connection;
     }
 
-    protected function getComparator()
+    protected function getConfig()
     {
-        return $this->comparator;
+        return $this->config;
+    }
+
+    public function rebuild($entityList = null)
+    {
+        /**
+         * @var Log $log
+         */
+        $log = $GLOBALS['log'];
+        if ($this->getConverter()->process() === false) {
+            return false;
+        }
+        $currentSchema = $this->getCurrentSchema();
+        $metadataSchema = $this->getConverter()->getSchemaFromMetadata($entityList);
+        $this->initRebuildActions($currentSchema, $metadataSchema);
+        $this->executeRebuildActions('beforeRebuild');
+        $queries = $this->getDiffSql($currentSchema, $metadataSchema);
+        $result = true;
+        $connection = $this->getConnection();
+        foreach ($queries as $sql) {
+            $log->debug('SCHEMA, Execute Query: ' . $sql);
+            try{
+                $result &= (bool)$connection->executeQuery($sql);
+            } catch(\Exception $e){
+                $log->alert('Rebuild database fault: ' . $e);
+                $result = false;
+            }
+        }
+        $this->executeRebuildActions('afterRebuild');
+        return (bool)$result;
     }
 
     protected function getConverter()
@@ -119,149 +182,28 @@ class Schema
         return $this->converter;
     }
 
-    protected function getClassParser()
-    {
-        return $this->classParser;
-    }
-
-    public function getPlatform()
-    {
-        return $this->getConnection()->getDatabasePlatform();
-    }
-
-
-    public function getConnection()
-    {
-        if (isset($this->connection)) {
-            return $this->connection;
-        }
-
-        $dbalConfig = new \Doctrine\DBAL\Configuration();
-
-        $connectionParams = $this->getConfig()->get('database');
-
-        $connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
-        unset($connectionParams['driver']);
-
-        $this->connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $dbalConfig);
-
-        return $this->connection;
-    }
-
-
-    protected function initFieldTypes()
-    {
-        foreach($this->fieldTypePaths as $path) {
-
-            $typeList = $this->getFileManager()->getFileList($path, false, '\.php$');
-            if ($typeList !== false) {
-                foreach($typeList as $name) {
-                    $typeName = preg_replace('/\.php$/i', '', $name);
-                    $dbalTypeName = strtolower($typeName);
-
-                    $filePath = Util::concatPath($path, $typeName);
-                    $class = Util::getClassName($filePath);
-
-                    if( ! Type::hasType($dbalTypeName) ) {
-                        Type::addType($dbalTypeName, $class);
-                    } else {
-                        Type::overrideType($dbalTypeName, $class);
-                    }
-
-                    $dbTypeName = method_exists($class, 'getDbTypeName') ? $class::getDbTypeName() : $dbalTypeName;
-
-                    $this->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbTypeName, $dbalTypeName);
-                }
-            }
-        }
-    }
-
-
-
-    /*
-     * Rebuild database schema
-     */
-    public function rebuild($entityList = null)
-    {
-        if ($this->getConverter()->process() === false) {
-            return false;
-        }
-
-        $currentSchema = $this->getCurrentSchema();
-        $metadataSchema = $this->getConverter()->getSchemaFromMetadata($entityList);
-
-        $this->initRebuildActions($currentSchema, $metadataSchema);
-        $this->executeRebuildActions('beforeRebuild');
-
-        $queries = $this->getDiffSql($currentSchema, $metadataSchema);
-
-        $result = true;
-        $connection = $this->getConnection();
-        foreach ($queries as $sql) {
-            $GLOBALS['log']->debug('SCHEMA, Execute Query: '.$sql);
-            try {
-                $result &= (bool) $connection->executeQuery($sql);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->alert('Rebuild database fault: '.$e);
-                $result = false;
-            }
-        }
-
-        $this->executeRebuildActions('afterRebuild');
-
-        return (bool) $result;
-    }
-
-
-    /*
-    * Get current database schema
-    *
-    * @return \Doctrine\DBAL\Schema\Schema
-    */
     protected function getCurrentSchema()
     {
         return $this->getConnection()->getSchemaManager()->createSchema();
     }
 
-    /*
-    * Get SQL queries of database schema
-    *
-    * @params \Doctrine\DBAL\Schema\Schema $schema
-    *
-    * @return array - array of SQL queries
-    */
-    public function toSql(\Doctrine\DBAL\Schema\SchemaDiff $schema)   //Doctrine\DBAL\Schema\SchemaDiff | \Doctrine\DBAL\Schema\Schema
-    {
-        return $schema->toSaveSql($this->getPlatform());
-        //return $schema->toSql($this->getPlatform()); //it can return with DROP TABLE
-    }
-
-
-    /*
-    * Get SQL queries to get from one to another schema
-    *
-    * @return array - array of SQL queries
-    */
-    public function getDiffSql(\Doctrine\DBAL\Schema\Schema $fromSchema, \Doctrine\DBAL\Schema\Schema $toSchema)
-    {
-        $schemaDiff = $this->getComparator()->compare($fromSchema, $toSchema);
-
-        return $this->toSql($schemaDiff); //$schemaDiff->toSql($this->getPlatform());
-    }
-
-
-
     /**
      * Init Rebuild Actions, get all classes and create them
+     *
+     * @param null $currentSchema
+     * @param null $metadataSchema
+     *
+     * @throws \Espo\Core\Exceptions\Error
      * @return void
      */
     protected function initRebuildActions($currentSchema = null, $metadataSchema = null)
     {
+        /**
+         * @var BaseRebuildActions $rebuildActionClass
+         */
         $methods = array('beforeRebuild', 'afterRebuild');
-
         $this->getClassParser()->setAllowedMethods($methods);
         $rebuildActions = $this->getClassParser()->getData($this->rebuildActionsPath);
-
         $classes = array();
         foreach ($rebuildActions as $actionName => $actionClass) {
             $rebuildActionClass = new $actionClass($this->metadata, $this->config, $this->entityManager);
@@ -271,20 +213,25 @@ class Schema
             if (isset($metadataSchema)) {
                 $rebuildActionClass->setMetadataSchema($metadataSchema);
             }
-
             foreach ($methods as $methodName) {
                 if (method_exists($rebuildActionClass, $methodName)) {
                     $classes[$methodName][] = $rebuildActionClass;
                 }
             }
         }
-
         $this->rebuildActionClasses = $classes;
+    }
+
+    protected function getClassParser()
+    {
+        return $this->classParser;
     }
 
     /**
      * Execute actions for RebuildAction classes
+     *
      * @param  string $action action name, possible values 'beforeRebuild' | 'afterRebuild'
+     *
      * @return void
      */
     protected function executeRebuildActions($action = 'beforeRebuild')
@@ -292,7 +239,6 @@ class Schema
         if (!isset($this->rebuildActionClasses)) {
             $this->initRebuildActions();
         }
-
         if (isset($this->rebuildActionClasses[$action])) {
             foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
                 $rebuildActionClass->$action();
@@ -300,5 +246,61 @@ class Schema
         }
     }
 
+    /*
+     * Rebuild database schema
+     */
 
+    public function getDiffSql(\Doctrine\DBAL\Schema\Schema $fromSchema, \Doctrine\DBAL\Schema\Schema $toSchema)
+    {
+        $schemaDiff = $this->getComparator()->compare($fromSchema, $toSchema);
+        return $this->toSql($schemaDiff); //$schemaDiff->toSql($this->getPlatform());
+    }
+
+    /*
+    * Get current database schema
+    *
+    * @return \Doctrine\DBAL\Schema\Schema
+    */
+
+    protected function getComparator()
+    {
+        return $this->comparator;
+    }
+
+    /*
+    * Get SQL queries of database schema
+    *
+    * @params \Doctrine\DBAL\Schema\Schema $schema
+    *
+    * @return array - array of SQL queries
+    */
+
+    public function toSql(
+        SchemaDiff $schema
+    )   //Doctrine\DBAL\Schema\SchemaDiff | \Doctrine\DBAL\Schema\Schema
+    {
+        return $schema->toSaveSql($this->getPlatform());
+        //return $schema->toSql($this->getPlatform()); //it can return with DROP TABLE
+    }
+
+    /*
+    * Get SQL queries to get from one to another schema
+    *
+    * @return array - array of SQL queries
+    */
+
+    public function getPlatform()
+    {
+        return $this->getConnection()->getDatabasePlatform();
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
 }

@@ -1,10 +1,10 @@
 {
     "fields": {
-        "title": "Title",
-        "dateFrom": "Date From",
-        "dateTo": "Date To",
+        "title"              : "Title",
+        "dateFrom"           : "Date From",
+        "dateTo"             : "Date To",
         "autorefreshInterval": "Auto-refresh Interval",
-        "displayRecords": "Display Records",
-        "isDoubleHeight": "Height 2x"
+        "displayRecords"     : "Display Records",
+        "isDoubleHeight"     : "Height 2x"
     }
 }

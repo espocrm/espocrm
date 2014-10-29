@@ -1,29 +1,28 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "parent": "Padre",
-        "status": "Estado",
-        "dateStart": "Fecha de Comienzo",
-        "dateEnd": "Fecha de Finalización",
-        "duration": "Duración",
+    "fields" : {
+        "name"       : "Nombre",
+        "parent"     : "Padre",
+        "status"     : "Estado",
+        "dateStart"  : "Fecha de Comienzo",
+        "dateEnd"    : "Fecha de Finalización",
+        "duration"   : "Duración",
         "description": "Descripción",
-        "users": "Usuarios",
-        "contacts": "Contactos",
-        "leads": "Potenciales"
+        "users"      : "Usuarios",
+        "contacts"   : "Contactos",
+        "leads"      : "Potenciales"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "status": {
-            "Planned": "Planeada",
-            "Held": "Celebrada",
+            "Planned" : "Planeada",
+            "Held"    : "Celebrada",
             "Not Held": "Sin Celebrar"
         }
     },
-    "labels": {
-        "Create Meeting": "Crear Reunión",
-        "Set Held": "Establecer Celebrada",
-        "Set Not Held": "Establecer no Celebrada",
+    "labels" : {
+        "Create Meeting"  : "Crear Reunión",
+        "Set Held"        : "Establecer Celebrada",
+        "Set Not Held"    : "Establecer no Celebrada",
         "Send Invitations": "Enviar Invitaciones"
     }
 }

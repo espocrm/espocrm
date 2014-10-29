@@ -1,37 +1,36 @@
 {
-    "fields": {
-        "name": "Имя",
-        "parent": "Источник",
-        "status": "Статус",
-        "dateStart": "Дата начала",
-        "dateEnd": "Дата окончания",
-        "priority": "Приоритет",
+    "fields"       : {
+        "name"       : "Имя",
+        "parent"     : "Источник",
+        "status"     : "Статус",
+        "dateStart"  : "Дата начала",
+        "dateEnd"    : "Дата окончания",
+        "priority"   : "Приоритет",
         "description": "Описание",
-        "isOverdue": "Просрочена"
+        "isOverdue"  : "Просрочена"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
+    "links"        : {},
+    "options"      : {
+        "status"  : {
             "Not Started": "Не началась",
-            "Started": "Началась",
-            "Completed": "Завершена",
-            "Canceled": "Отменена"
+            "Started"    : "Началась",
+            "Completed"  : "Завершена",
+            "Canceled"   : "Отменена"
         },
-        "priority" : {
-            "Low": "Низкий",
+        "priority": {
+            "Low"   : "Низкий",
             "Normal": "Нормальный",
-            "High": "Высокий",
+            "High"  : "Высокий",
             "Urgent": "Срочно"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Task": "Создать задачу"
     },
     "presetFilters": {
-        "active": "Активные",
+        "active"   : "Активные",
         "completed": "Завершенные",
-        "todays": "На сегодня",
-        "overdue": "Просроченные"
+        "todays"   : "На сегодня",
+        "overdue"  : "Просроченные"
     }
 }

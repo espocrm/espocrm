@@ -19,44 +19,53 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Controllers;
 
+use Espo\Core\Controllers\Base;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils as Utils;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
 
-class Layout extends \Espo\Core\Controllers\Base
+class Layout extends
+    Base
 {
+
     public function actionRead($params, $data)
     {
-        $data = $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
+        /**
+         * @var Utils\Layout $layout
+         */
+        $layout = $this->getContainer()->get('layout');
+        $data = $layout->get($params['scope'], $params['name']);
         if (empty($data)) {
             throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found');
         }
         return $data;
     }
 
-    public function actionUpdate($params, $data)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-        
-        $result = $this->getContainer()->get('layout')->set($data, $params['scope'], $params['name']);
-
-        if ($result === false) {
-            throw new Error("Error while saving layout");
-        }
-
-        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
-
-        return $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
-    }
-
     public function actionPatch($params, $data)
     {
         return $this->actionUpdate($params, $data);
+    }
+
+    public function actionUpdate($params, $data)
+    {
+        /**
+         * @var Utils\Layout $layout
+         * @var DataManager  $dataManager
+         */
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+        $result = $this->getContainer()->get('layout')->set($data, $params['scope'], $params['name']);
+        if ($result === false) {
+            throw new Error("Error while saving layout");
+        }
+        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager->updateCacheTimestamp();
+        $layout = $this->getContainer()->get('layout');
+        return $layout->get($params['scope'], $params['name']);
     }
 }

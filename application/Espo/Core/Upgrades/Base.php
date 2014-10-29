@@ -19,20 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades;
-
-use Espo\Core\Utils\Util,
-    Espo\Core\Utils\Json,
-    Espo\Core\Exceptions\Error;
 
 abstract class Base
 {
-    private $container;
-
-    protected $name = null;
-
-    protected $params = array();
 
     const UPLOAD = 'upload';
 
@@ -42,21 +32,16 @@ abstract class Base
 
     const DELETE = 'delete';
 
+    protected $name = null;
+
+    protected $params = array();
+
+    private $container;
+
     public function __construct($container)
     {
         $this->container = $container;
-
         $this->actionManager = new ActionManager($this->name, $container, $this->params);
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getActionManager()
-    {
-        return $this->actionManager;
     }
 
     public function getManifest()
@@ -64,31 +49,37 @@ abstract class Base
         return $this->getActionManager()->getManifest();
     }
 
+    protected function getActionManager()
+    {
+        return $this->actionManager;
+    }
+
     public function upload($data)
     {
         $this->getActionManager()->setAction(self::UPLOAD);
-
         return $this->getActionManager()->run($data);
     }
 
     public function install($processId)
     {
         $this->getActionManager()->setAction(self::INSTALL);
-
         return $this->getActionManager()->run($processId);
     }
 
     public function uninstall($processId)
     {
         $this->getActionManager()->setAction(self::UNINSTALL);
-
         return $this->getActionManager()->run($processId);
     }
 
     public function delete($processId)
     {
         $this->getActionManager()->setAction(self::DELETE);
-
         return $this->getActionManager()->run($processId);
+    }
+
+    protected function getContainer()
+    {
+        return $this->container;
     }
 }

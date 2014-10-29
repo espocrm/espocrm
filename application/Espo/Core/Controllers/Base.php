@@ -19,31 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Controllers;
 
-use \Espo\Core\Container;
-use \Espo\Core\ServiceFactory;
-use \Espo\Core\Utils\Util;
+use Espo\Core\Acl;
+use Espo\Core\Container;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
 
 abstract class Base
 {
+
+    public static $defaultAction = 'index';
+
     protected $name;
 
     private $container;
 
     private $requestMethod;
 
-    public static $defaultAction = 'index';
-
     public function __construct(Container $container, $requestMethod = null)
     {
         $this->container = $container;
-
         if (isset($requestMethod)) {
             $this->setRequestMethod($requestMethod);
         }
-
         if (empty($this->name)) {
             $name = get_class($this);
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
@@ -51,7 +53,6 @@ abstract class Base
             }
             $this->name = $name;
         }
-
         $this->checkControllerAccess();
     }
 
@@ -60,6 +61,10 @@ abstract class Base
         return;
     }
 
+    /**
+     * @return Container
+     * @since 1.0
+     */
     protected function getContainer()
     {
         return $this->container;
@@ -80,39 +85,63 @@ abstract class Base
         $this->requestMethod = strtoupper($requestMethod);
     }
 
+    /**
+     * @return User
+     * @since 1.0
+     */
     protected function getUser()
     {
         return $this->container->get('user');
     }
 
+    /**
+     * @return Acl
+     * @since 1.0
+     */
     protected function getAcl()
     {
         return $this->container->get('acl');
     }
 
+    /**
+     * @return Config
+     * @since 1.0
+     */
     protected function getConfig()
     {
         return $this->container->get('config');
     }
 
+    /**
+     * @return Preferences
+     * @since 1.0
+     */
     protected function getPreferences()
     {
         return $this->container->get('preferences');
     }
 
+    /**
+     * @return Metadata
+     * @since 1.0
+     */
     protected function getMetadata()
     {
         return $this->container->get('metadata');
     }
 
-    protected function getServiceFactory()
-    {
-        return $this->container->get('serviceFactory');
-    }
-
     protected function getService($name)
     {
         return $this->getServiceFactory()->create($name);
+    }
+
+    /**
+     * @return ServiceFactory
+     * @since 1.0
+     */
+    protected function getServiceFactory()
+    {
+        return $this->container->get('serviceFactory');
     }
 }
 

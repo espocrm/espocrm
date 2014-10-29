@@ -1,38 +1,37 @@
 {
-    "fields": {
-        "name": "Name",
-        "parent": "Parent",
-        "status": "Status",
-        "dateStart": "Date Start",
-        "dateEnd": "Date Due",
-        "priority": "Priority",
+    "fields"       : {
+        "name"       : "Name",
+        "parent"     : "Parent",
+        "status"     : "Status",
+        "dateStart"  : "Date Start",
+        "dateEnd"    : "Date Due",
+        "priority"   : "Priority",
         "description": "Description",
-        "isOverdue": "Is Overdue"
+        "isOverdue"  : "Is Overdue"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
+    "links"        : {},
+    "options"      : {
+        "status"  : {
             "Not Started": "Not Started",
-            "Started": "Started",
-            "Completed": "Completed",
-            "Canceled": "Canceled"
+            "Started"    : "Started",
+            "Completed"  : "Completed",
+            "Canceled"   : "Canceled"
         },
-        "priority" : {
-            "Low": "Low",
+        "priority": {
+            "Low"   : "Low",
             "Normal": "Normal",
-            "High": "High",
+            "High"  : "High",
             "Urgent": "Urgent"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Task": "Create Task",
-        "Complete": "Complete"
+        "Complete"   : "Complete"
     },
     "presetFilters": {
-        "actual": "Actual",
+        "actual"   : "Actual",
         "completed": "Completed",
-        "todays": "Today's",
-        "overdue": "Overdue"
+        "todays"   : "Today's",
+        "overdue"  : "Overdue"
     }
 }

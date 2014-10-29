@@ -18,16 +18,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Core\Utils\Database\DBAL\Driver\PDOMySql;
 
-class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver 
+use Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform;
+
+class Driver extends
+    \Doctrine\DBAL\Driver\PDOMySql\Driver
 {
 
     public function getDatabasePlatform()
     {
-        return new \Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform();
+        return new MySqlPlatform();
     }
-    
 }

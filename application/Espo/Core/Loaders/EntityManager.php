@@ -19,30 +19,36 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Loaders;
 
-class EntityManager extends Base
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+
+class EntityManager extends
+    Base
 {
+
     public function load()
     {
+        /**
+         * @var Config $config
+         * @var Metadata $metadata
+         */
         $config = $this->getContainer()->get('config');
-
+        $metadata = $this->getContainer()->get('metadata');
         $params = array(
             'host' => $config->get('database.host'),
             'port' => $config->get('database.port'),
             'dbname' => $config->get('database.dbname'),
             'user' => $config->get('database.user'),
             'password' => $config->get('database.password'),
-            'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
+            'metadata' => $metadata->getOrmMetadata(),
             'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
         );
-
         $entityManager = new \Espo\Core\ORM\EntityManager($params);
         $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
         $entityManager->setHookManager($this->getContainer()->get('hookManager'));
         $entityManager->setContainer($this->getContainer());
-
         return $entityManager;
     }
 }

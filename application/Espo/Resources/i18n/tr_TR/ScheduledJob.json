@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "İsim",
-        "status": "Durum",
-        "job": "İş",
+    "fields" : {
+        "name"      : "İsim",
+        "status"    : "Durum",
+        "job"       : "İş",
         "scheduling": "Scheduling (crontab notation)"
     },
-    "links": {
+    "links"  : {
         "log": "Kayıt"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Create Scheduled Job"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Gelen Epostaları Kontrol T",
-            "Cleanup": "Temizle"
+            "Cleanup"           : "Temizle"
         },
         "cronSetup": {
-            "linux": "Not: Espo Planlanmış İşleri çalıştırabilmek için şu kodları crontab dosyasına ekleyin:",
-            "mac": "Not: Espo Planlanmış İşleri çalıştırabilmek için şu kodları crontab dosyasına ekleyin:",
+            "linux"  : "Not: Espo Planlanmış İşleri çalıştırabilmek için şu kodları crontab dosyasına ekleyin:",
+            "mac"    : "Not: Espo Planlanmış İşleri çalıştırabilmek için şu kodları crontab dosyasına ekleyin:",
             "windows": "Not: Espo Planlanmış İşleri Windows Scheduled Task ile kullanabilmek için şu kodlarla bir BATCH dosyası oluşturun: ",
             "default": "Note: Add this command to Cron Job (Scheduled Task):"
         },
-        "status": {
-            "Active": "Aktif",
+        "status"   : {
+            "Active"  : "Aktif",
             "Inactive": "Pasif"
         }
     }

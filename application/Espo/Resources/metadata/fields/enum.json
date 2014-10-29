@@ -1,21 +1,21 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"options",
-         "type":"array"
-      },
-      {
-         "name":"default",
-         "type":"varchar"
-      }
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "type":"varchar"
-   }
+    "params"   : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name": "options",
+            "type": "array"
+        },
+        {
+            "name": "default",
+            "type": "varchar"
+        }
+    ],
+    "filter"   : true,
+    "fieldDefs": {
+        "type": "varchar"
+    }
 }

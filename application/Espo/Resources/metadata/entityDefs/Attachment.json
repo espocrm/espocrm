@@ -1,53 +1,53 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"     : {
+            "type"    : "varchar",
             "required": true
         },
-        "type": {
-            "type": "varchar",
+        "type"     : {
+            "type"     : "varchar",
             "maxLength": 36
         },
-        "size": {
+        "size"     : {
             "type": "int",
-            "min": 0
+            "min" : 0
         },
-        "parent": {
+        "parent"   : {
             "type": "linkParent"
         },
         "createdAt": {
-            "type": "datetime",
+            "type"    : "datetime",
             "readOnly": true
         },
         "createdBy": {
-            "type": "link",
+            "type"    : "link",
             "readOnly": true
         },
-        "contents": {
-            "type": "text",
+        "contents" : {
+            "type"       : "text",
             "notStorable": true
         },
-        "role": {
-            "type": "varchar",
+        "role"     : {
+            "type"     : "varchar",
             "maxLength": 36
         },
-        "global": {
-            "type": "bool",
+        "global"   : {
+            "type"   : "bool",
             "default": false
         }
     },
-    "links": {
+    "links"     : {
         "createdBy": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "parent": {
-            "type": "belongsToParent",
+        "parent"   : {
+            "type"   : "belongsToParent",
             "foreign": "attachments"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

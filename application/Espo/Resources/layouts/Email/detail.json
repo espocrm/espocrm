@@ -1,13 +1,35 @@
 [
     {
-        "label":"",
-        "rows":[
-            [{"name":"status"},{"name":"from"}],
-            [{"name":"dateSent"}, {"name":"to"}],
-            [{"name":"parent"}, {"name":"cc"}],
-            [{"name":"name","fullWidth":true}],
-            [{"name":"body","fullWidth":true}],
-            [{"name":"attachments"},{"name":"isHtml"}]
+        "label": "",
+        "rows" : [
+            [
+                {"name": "status"},
+                {"name": "from"}
+            ],
+            [
+                {"name": "dateSent"},
+                {"name": "to"}
+            ],
+            [
+                {"name": "parent"},
+                {"name": "cc"}
+            ],
+            [
+                {
+                    "name"     : "name",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name"     : "body",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {"name": "attachments"},
+                {"name": "isHtml"}
+            ]
         ]
     }
 ]

@@ -1,55 +1,59 @@
 [
     {
-        "label":"Main",
-        "rows":[
+        "label": "Main",
+        "rows" : [
             [
-                {"name":"name"},
-                {"name":"status"}
+                {"name": "name"},
+                {"name": "status"}
             ],
             [
-                {"name":"team"}
-                
+                {"name": "team"}
+
             ],
             [
-                {"name":"assignToUser"}
+                {"name": "assignToUser"}
             ]
         ]
     },
     {
-        "label":"IMAP",
-        "rows":[
+        "label": "IMAP",
+        "rows" : [
             [
-                {"name":"host"},{"name":"ssl"}
+                {"name": "host"},
+                {"name": "ssl"}
             ],
             [
-                {"name":"port"},{"name":"username"}
+                {"name": "port"},
+                {"name": "username"}
             ],
             [
-                {"name":"monitoredFolders"},{"name":"password"}
+                {"name": "monitoredFolders"},
+                {"name": "password"}
             ]
         ]
     },
     {
-        "label":"Actions",
-        "rows": [
+        "label": "Actions",
+        "rows" : [
             [
-                {"name":"createCase"},{"name":"reply"}
+                {"name": "createCase"},
+                {"name": "reply"}
             ],
             [
-                {"name":"caseDistribution"},
-                {"name":"replyEmailTemplate"}
-            ],
-            [
-                false,
-                {"name":"replyToAddress"}
+                {"name": "caseDistribution"},
+                {"name": "replyEmailTemplate"}
             ],
             [
                 false,
-                {"name":"replyFromAddress"}
+                {"name": "replyToAddress"}
             ],
             [
                 false,
-                {"name":"replyFromName"}
+                {"name": "replyFromAddress"}
+            ],
+            [
+                false,
+                {"name": "replyFromName"}
             ]
         ]
     }

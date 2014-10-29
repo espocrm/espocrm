@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "Nume",
-        "status": "Status",
-        "job": "Activitate",
+    "fields" : {
+        "name"      : "Nume",
+        "status"    : "Status",
+        "job"       : "Activitate",
         "scheduling": "Scheduling (crontab notation)"
     },
-    "links": {
+    "links"  : {
         "log": "Log"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Creare activiate programata"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Verificare Intrari Email",
-            "Cleanup": "Curatare"
+            "Cleanup"           : "Curatare"
         },
         "cronSetup": {
-            "linux": "Nota: Adauga acesta linie in fisierul crontab pentru a rula Activitatile programate:",
-            "mac": "Nota: Adauga acesta linie in fisierul crontab pentru a rula Activitatile programate:",
+            "linux"  : "Nota: Adauga acesta linie in fisierul crontab pentru a rula Activitatile programate:",
+            "mac"    : "Nota: Adauga acesta linie in fisierul crontab pentru a rula Activitatile programate:",
             "windows": "Nota: Creaza un fisier batch care sa contina urmatoarele comenzi pentru a rula Activitatile programate, folosind Windows Scheduled Tasks:",
             "default": "Note: Add this command to Cron Job (Scheduled Task):"
         },
-        "status": {
-            "Active": "Activ",
+        "status"   : {
+            "Active"  : "Activ",
             "Inactive": "Inactiv"
         }
     }

@@ -1,34 +1,33 @@
 {
-    "fields": {
-        "name": "İsim",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateStart": "Başlangıç Tarihi",
-        "dateEnd": "Bitiş Tarihi",
-        "direction": "Yönlendirme",
-        "duration": "Süre",
+    "fields" : {
+        "name"       : "İsim",
+        "parent"     : "Üst Seçenek",
+        "status"     : "Durum",
+        "dateStart"  : "Başlangıç Tarihi",
+        "dateEnd"    : "Bitiş Tarihi",
+        "direction"  : "Yönlendirme",
+        "duration"   : "Süre",
         "description": "açıklama",
-        "users": "Kullanıcılar",
-        "contacts": "Bağlantılar",
-        "leads": "Müşteri Adayları"
+        "users"      : "Kullanıcılar",
+        "contacts"   : "Bağlantılar",
+        "leads"      : "Müşteri Adayları"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "status": {
-            "Planned": "Planlanmış",
-            "Held": "Elde Tutulanlar",
+        "status"   : {
+            "Planned" : "Planlanmış",
+            "Held"    : "Elde Tutulanlar",
             "Not Held": "Elde Tutulmayanlar"
         },
         "direction": {
             "Outbound": "Giden",
-            "Inbound": "Gelen"
+            "Inbound" : "Gelen"
         }
     },
-    "labels": {
-        "Create Call": "Arama Oluştur",
-        "Set Held": "SET HELDXXX",
-        "Set Not Held": "SET NOT HELD XXXX",
-        "Send Invitations": "Davetleri Gönder"        
+    "labels" : {
+        "Create Call"     : "Arama Oluştur",
+        "Set Held"        : "SET HELDXXX",
+        "Set Not Held"    : "SET NOT HELD XXXX",
+        "Send Invitations": "Davetleri Gönder"
     }
 }

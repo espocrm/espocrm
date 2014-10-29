@@ -1,1 +1,14 @@
-[{"name":"name","width":30,"link":true},{"name":"parent","width":18},{"name":"status"},{"name":"dateStart"},{"name":"assignedUser"}]
+[
+    {
+        "name" : "name",
+        "width": 30,
+        "link" : true
+    },
+    {
+        "name" : "parent",
+        "width": 18
+    },
+    {"name": "status"},
+    {"name": "dateStart"},
+    {"name": "assignedUser"}
+]

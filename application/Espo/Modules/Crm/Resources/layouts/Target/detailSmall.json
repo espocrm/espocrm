@@ -1,1 +1,10 @@
-[{"label":"","rows":[[{"name":"name"}],[{"name":"emailAddress"}],[{"name":"phoneNumber"}]]}]
+[
+    {
+        "label": "",
+        "rows" : [
+            [{"name": "name"}],
+            [{"name": "emailAddress"}],
+            [{"name": "phoneNumber"}]
+        ]
+    }
+]

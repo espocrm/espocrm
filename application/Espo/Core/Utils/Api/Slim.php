@@ -19,11 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Api;
 
+use Slim\Http\Response;
+use Slim\Http\Util;
+use Slim\Middleware;
 
-class Slim extends \Slim\Slim
+class Slim extends
+    \Slim\Slim
 {
 
     /**
@@ -33,32 +36,31 @@ class Slim extends \Slim\Slim
      */
     public function run()
     {
+        /**
+         * @var Middleware $firstMiddleware
+         */
         //set_error_handler(array('\Slim\Slim', 'handleErrors')); //Espo: no needs to use this handler
-
         //Apply final outer middleware layers
         if ($this->config('debug')) {
             //Apply pretty exceptions only in debug to avoid accidental information leakage in production
             //$this->add(new \Slim\Middleware\PrettyExceptions()); //Espo: no needs to use this handler
         }
-
         //Invoke middleware and application stack
-        $this->middleware[0]->call();
-
+        $firstMiddleware = $this->middleware[0];
+        $firstMiddleware->call();
         //Fetch status, header, and body
         list($status, $headers, $body) = $this->response->finalize();
-
         // Serialize cookies (with optional encryption)
-        \Slim\Http\Util::serializeCookies($headers, $this->response->cookies, $this->settings);
-
+        Util::serializeCookies($headers, $this->response->cookies, $this->settings);
         //Send headers
         if (headers_sent() === false) {
             //Send status
             if (strpos(PHP_SAPI, 'cgi') === 0) {
-                header(sprintf('Status: %s', \Slim\Http\Response::getMessageForCode($status)));
+                header(sprintf('Status: %s', Response::getMessageForCode($status)));
             } else {
-                header(sprintf('HTTP/%s %s', $this->config('http.version'), \Slim\Http\Response::getMessageForCode($status)));
+                header(sprintf('HTTP/%s %s', $this->config('http.version'),
+                        Response::getMessageForCode($status)));
             }
-
             //Send headers
             foreach ($headers as $name => $value) {
                 $hValues = explode("\n", $value);
@@ -67,19 +69,16 @@ class Slim extends \Slim\Slim
                 }
             }
         }
-
         //Send body, but only if it isn't a HEAD request
         if (!$this->request->isHead()) {
             echo $body;
         }
-
         //restore_error_handler(); //Espo: no needs to use this handler
     }
 
     public function printError($error, $status)
     {
-        echo static::generateTemplateMarkup($status, '<p>'.$error.'</p><a href="' . $this->request->getRootUri() . '/">Visit the Home Page</a>');
+        echo static::generateTemplateMarkup($status,
+            '<p>' . $error . '</p><a href="' . $this->request->getRootUri() . '/">Visit the Home Page</a>');
     }
-
-
 }

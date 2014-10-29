@@ -1,19 +1,18 @@
 {
     "fields": {
-        "name": "Name",
+        "name"        : "Name",
         "emailAddress": "E-Mail",
-        "title": "Funktion",
-        "website": "Webseite",
-        "accountName": "Firmenname",
-        "phoneNumber": "Telefon",
-        "doNotCall": "Nicht anrufen",
-        "address": "Adresse",
-        "description": "Beschreibung"
+        "title"       : "Funktion",
+        "website"     : "Webseite",
+        "accountName" : "Firmenname",
+        "phoneNumber" : "Telefon",
+        "doNotCall"   : "Nicht anrufen",
+        "address"     : "Adresse",
+        "description" : "Beschreibung"
     },
-    "links": {
-    },
+    "links" : {},
     "labels": {
-        "Create Target": "Neuer Zielkontakt",
+        "Create Target"  : "Neuer Zielkontakt",
         "Convert to Lead": "Zu Interessent umwandeln"
     }
 }

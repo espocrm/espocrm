@@ -19,13 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Hooks;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Acl;
+use Espo\Core\Interfaces\Injectable;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 
-class Base implements Injectable
+class Base implements
+    Injectable
 {
+
+    public static $order = 9;
+
+    protected $entityName;
+
     protected $dependencies = array(
         'entityManager',
         'config',
@@ -35,8 +45,6 @@ class Base implements Injectable
     );
 
     protected $injections = array();
-
-    public static $order = 9;
 
     public function __construct()
     {
@@ -52,44 +60,68 @@ class Base implements Injectable
         return $this->dependencies;
     }
 
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
     }
 
-    protected function getEntityManager()
+    protected function getInjection($name)
     {
-        return $this->injections['entityManager'];
+        return $this->injections[$name];
     }
 
+    /**
+     * @return User
+     * @since 1.0
+     */
     protected function getUser()
     {
         return $this->injections['user'];
     }
 
+    /**
+     * @return Acl
+     * @since 1.0
+     */
     protected function getAcl()
     {
         return $this->injections['acl'];
     }
 
+    /**
+     * @return Config
+     * @since 1.0
+     */
     protected function getConfig()
     {
         return $this->injections['config'];
     }
 
+    /**
+     * @return Metadata
+     * @since 1.0
+     */
     protected function getMetadata()
     {
         return $this->injections['metadata'];
     }
 
+    /**
+     * @return \Espo\Core\ORM\Repositories\RDB
+     * @since 1.0
+     */
     protected function getRepository()
     {
         return $this->getEntityManager()->getRepository($this->entityName);
+    }
+
+    /**
+     * @return EntityManager
+     * @since 1.0
+     */
+    protected function getEntityManager()
+    {
+        return $this->injections['entityManager'];
     }
 }
 

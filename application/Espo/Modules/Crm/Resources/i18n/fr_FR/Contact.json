@@ -1,31 +1,31 @@
 {
-    "fields": {
-        "name": "Nom",
-        "emailAddress": "Email",
-        "title": "Titre",
-        "account": "Compte",
-        "accounts": "Comptes",
-        "phoneNumber": "Téléphone",
-        "accountType": "Type de Compte",
-        "doNotCall": "Ne Pas Appeler",
-        "address": "Adresse",
+    "fields" : {
+        "name"           : "Nom",
+        "emailAddress"   : "Email",
+        "title"          : "Titre",
+        "account"        : "Compte",
+        "accounts"       : "Comptes",
+        "phoneNumber"    : "Téléphone",
+        "accountType"    : "Type de Compte",
+        "doNotCall"      : "Ne Pas Appeler",
+        "address"        : "Adresse",
         "opportunityRole": "Rôle de Challenge",
-        "accountRole": "Rôle",
-        "description": "Description"
+        "accountRole"    : "Rôle",
+        "description"    : "Description"
     },
-    "links": {
+    "links"  : {
         "opportunities": "Opportunités",
-        "cases": "Tickets"
+        "cases"        : "Tickets"
     },
-    "labels": {
+    "labels" : {
         "Create Contact": "Créer un contact"
     },
     "options": {
         "opportunityRole": {
-            "": "--Aucun--",
+            ""              : "--Aucun--",
             "Decision Maker": "Décisionnaire",
-            "Evaluator": "*Evaluator",
-            "Influencer": "Prescripteur"
+            "Evaluator"     : "*Evaluator",
+            "Influencer"    : "Prescripteur"
         }
     }
 }

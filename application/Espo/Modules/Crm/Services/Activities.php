@@ -18,52 +18,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Error;
-use \PDO;
+use Espo\Core\Services\Base;
+use PDO;
 
-class Activities extends \Espo\Core\Services\Base
+class Activities extends
+    Base
 {
+
     protected $dependencies = array(
         'entityManager',
         'user',
         'metadata',
         'acl'
     );
-    
-    protected function getPDO()
+
+    public function getActivities($scope, $id, $params = array())
     {
-        return $this->getEntityManager()->getPDO();
+        $fetchAll = empty($params['scope']);
+        $parts = array(
+            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN',
+                array('Held', 'Not Held')) : array(),
+            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN',
+                array('Held', 'Not Held')) : array(),
+        );
+        return $this->getResult($parts, $scope, $id, $params);
     }
 
-    protected function getEntityManager()
-    {
-        return $this->injections['entityManager'];
-    }
-
-    protected function getUser()
-    {
-        return $this->injections['user'];
-    }
-    
-    protected function getAcl()
-    {
-        return $this->injections['acl'];
-    }
-    
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
-    }
-    
-    protected function isPerson($scope)
-    {
-        return in_array($scope, array('Contact', 'Lead', 'User'));
-    }    
-    
     protected function getMeetingQuery($scope, $id, $op = 'IN', $notIn = array())
     {
         $baseSql = "
@@ -73,35 +56,31 @@ class Activities extends \Espo\Core\Services\Base
             FROM `meeting`
             LEFT JOIN `user` ON user.id = meeting.assigned_user_id
         ";
-        
         $sql = $baseSql;
         $sql .= "
-            WHERE 
+            WHERE
                 meeting.deleted = 0 AND
         ";
         if ($scope == 'Account') {
             $sql .= "
-                (meeting.parent_type = ".$this->getPDO()->quote($scope)." AND meeting.parent_id = ".$this->getPDO()->quote($id)."
+                (meeting.parent_type = " . $this->getPDO()->quote($scope) . " AND meeting.parent_id = " . $this->getPDO()->quote($id) . "
                 OR
-                meeting.account_id = ".$this->getPDO()->quote($id).")
+                meeting.account_id = " . $this->getPDO()->quote($id) . ")
             ";
         } else {
             $sql .= "
-                (meeting.parent_type = ".$this->getPDO()->quote($scope)." AND meeting.parent_id = ".$this->getPDO()->quote($id).")
+                (meeting.parent_type = " . $this->getPDO()->quote($scope) . " AND meeting.parent_id = " . $this->getPDO()->quote($id) . ")
             ";
         }
-        
         if (!empty($notIn)) {
             $sql .= "
-                AND meeting.status {$op} ('". implode("', '", $notIn) . "')
+                AND meeting.status {$op} ('" . implode("', '", $notIn) . "')
             ";
         }
-        
         if ($this->isPerson($scope)) {
-            $sql = $sql . " 
+            $sql = $sql . "
                 UNION
             " . $baseSql;
-                
             switch ($scope) {
                 case 'Contact':
                     $joinTable = 'contact_meeting';
@@ -114,35 +93,52 @@ class Activities extends \Espo\Core\Services\Base
                 case 'User':
                     $joinTable = 'meeting_user';
                     $key = 'user_id';
-                    break;                    
+                    break;
             }
             $sql .= "
-                JOIN `{$joinTable}` ON 
-                    meeting.id = {$joinTable}.meeting_id AND 
-                    {$joinTable}.deleted = 0 AND 
-                    {$joinTable}.{$key} = ".$this->getPDO()->quote($id)."
+                JOIN `{$joinTable}` ON
+                    meeting.id = {$joinTable}.meeting_id AND
+                    {$joinTable}.deleted = 0 AND
+                    {$joinTable}.{$key} = " . $this->getPDO()->quote($id) . "
             ";
             $sql .= "
-                WHERE 
+                WHERE
                     (
-                        meeting.parent_type <> ".$this->getPDO()->quote($scope)." OR 
-                        meeting.parent_id <> ".$this->getPDO()->quote($id)." OR
+                        meeting.parent_type <> " . $this->getPDO()->quote($scope) . " OR
+                        meeting.parent_id <> " . $this->getPDO()->quote($id) . " OR
                         meeting.parent_type IS NULL OR
                         meeting.parent_id IS NULL
-                    ) AND 
+                    ) AND
                     meeting.deleted = 0
             ";
             if (!empty($notIn)) {
                 $sql .= "
-                    AND meeting.status {$op} ('". implode("', '", $notIn) . "')
+                    AND meeting.status {$op} ('" . implode("', '", $notIn) . "')
                 ";
             }
-        
         }
-
         return $sql;
     }
-    
+
+    protected function getPDO()
+    {
+        return $this->getEntityManager()->getPDO();
+    }
+
+    /**
+     * @return \Espo\Core\ORM\EntityManager
+     * @since 1.0
+     */
+    protected function getEntityManager()
+    {
+        return $this->injections['entityManager'];
+    }
+
+    protected function isPerson($scope)
+    {
+        return in_array($scope, array('Contact', 'Lead', 'User'));
+    }
+
     protected function getCallQuery($scope, $id, $op = 'IN', $notIn = array())
     {
         $baseSql = "
@@ -152,35 +148,31 @@ class Activities extends \Espo\Core\Services\Base
             FROM `call`
             LEFT JOIN `user` ON user.id = call.assigned_user_id
         ";
-        
         $sql = $baseSql;
         $sql .= "
-            WHERE 
+            WHERE
                 call.deleted = 0 AND
         ";
         if ($scope == 'Account') {
             $sql .= "
-                (call.parent_type = ".$this->getPDO()->quote($scope)." AND call.parent_id = ".$this->getPDO()->quote($id)."
+                (call.parent_type = " . $this->getPDO()->quote($scope) . " AND call.parent_id = " . $this->getPDO()->quote($id) . "
                 OR
-                call.account_id = ".$this->getPDO()->quote($id).")
+                call.account_id = " . $this->getPDO()->quote($id) . ")
             ";
         } else {
             $sql .= "
-                (call.parent_type = ".$this->getPDO()->quote($scope)." AND call.parent_id = ".$this->getPDO()->quote($id).")
+                (call.parent_type = " . $this->getPDO()->quote($scope) . " AND call.parent_id = " . $this->getPDO()->quote($id) . ")
             ";
         }
-        
         if (!empty($notIn)) {
             $sql .= "
-                AND call.status {$op} ('". implode("', '", $notIn) . "')
+                AND call.status {$op} ('" . implode("', '", $notIn) . "')
             ";
         }
-        
         if ($this->isPerson($scope)) {
-            $sql = $sql . " 
+            $sql = $sql . "
                 UNION
             " . $baseSql;
-                
             switch ($scope) {
                 case 'Contact':
                     $joinTable = 'call_contact';
@@ -193,35 +185,99 @@ class Activities extends \Espo\Core\Services\Base
                 case 'User':
                     $joinTable = 'call_user';
                     $key = 'user_id';
-                    break;                    
+                    break;
             }
             $sql .= "
-                JOIN `{$joinTable}` ON 
-                    call.id = {$joinTable}.call_id AND 
-                    {$joinTable}.deleted = 0 AND 
-                    {$joinTable}.{$key} = ".$this->getPDO()->quote($id)."
+                JOIN `{$joinTable}` ON
+                    call.id = {$joinTable}.call_id AND
+                    {$joinTable}.deleted = 0 AND
+                    {$joinTable}.{$key} = " . $this->getPDO()->quote($id) . "
             ";
             $sql .= "
-                WHERE 
+                WHERE
                     (
-                        call.parent_type <> ".$this->getPDO()->quote($scope)." OR 
-                        call.parent_id <> ".$this->getPDO()->quote($id)." OR
+                        call.parent_type <> " . $this->getPDO()->quote($scope) . " OR
+                        call.parent_id <> " . $this->getPDO()->quote($id) . " OR
                         call.parent_type IS NULL OR
                         call.parent_id IS NULL
-                    ) AND 
+                    ) AND
                     call.deleted = 0
             ";
             if (!empty($notIn)) {
                 $sql .= "
-                    AND call.status {$op} ('". implode("', '", $notIn) . "')
+                    AND call.status {$op} ('" . implode("', '", $notIn) . "')
                 ";
             }
-        
         }
-
         return $sql;
     }
-    
+
+    protected function getResult($parts, $scope, $id, $params)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+        $onlyScope = false;
+        if (!empty($params['scope'])) {
+            $onlyScope = $params['scope'];
+        }
+        if (!$onlyScope) {
+            $qu = implode(" UNION ", $parts);
+        } else {
+            $qu = $parts[$onlyScope];
+        }
+        $countQu = "SELECT COUNT(*) AS 'count' FROM ({$qu}) AS c";
+        $sth = $pdo->prepare($countQu);
+        $sth->execute();
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
+        $totalCount = $row['count'];
+        $qu .= "
+            ORDER BY dateStart DESC, createdAt DESC
+        ";
+        if (!empty($params['maxSize'])) {
+            $qu .= "
+                LIMIT :offset, :maxSize
+            ";
+        }
+        $sth = $pdo->prepare($qu);
+        if (!empty($params['maxSize'])) {
+            $offset = 0;
+            if (!empty($params['offset'])) {
+                $offset = $params['offset'];
+            }
+            $sth->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $sth->bindParam(':maxSize', $params['maxSize'], PDO::PARAM_INT);
+        }
+        $sth->execute();
+        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $list = array();
+        foreach ($rows as $row) {
+            $list[] = $row;
+        }
+        return array(
+            'list' => $rows,
+            'total' => $totalCount
+        );
+    }
+
+    public function getHistory($scope, $id, $params)
+    {
+        $fetchAll = empty($params['scope']);
+        $parts = array(
+            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN',
+                array('Held')) : array(),
+            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN',
+                array('Held')) : array(),
+            'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN',
+                array('Archived', 'Sent')) : array(),
+        );
+        $result = $this->getResult($parts, $scope, $id, $params);
+        foreach ($result['list'] as &$item) {
+            if ($item['_scope'] == 'Email') {
+                $item['dateSent'] = $item['dateStart'];
+            }
+        }
+        return $result;
+    }
+
     protected function getEmailQuery($scope, $id, $op = 'IN', $notIn = array())
     {
         $baseSql = "
@@ -232,7 +288,6 @@ class Activities extends \Espo\Core\Services\Base
             FROM `email`
             LEFT JOIN `user` ON user.id = email.assigned_user_id
         ";
-        
         $sql = $baseSql;
         $sql .= "
             WHERE 
@@ -240,22 +295,20 @@ class Activities extends \Espo\Core\Services\Base
         ";
         if ($scope == 'Account') {
             $sql .= "
-                (email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id)."
+                (email.parent_type = " . $this->getPDO()->quote($scope) . " AND email.parent_id = " . $this->getPDO()->quote($id) . "
                 OR
-                email.account_id = ".$this->getPDO()->quote($id).")
+                email.account_id = " . $this->getPDO()->quote($id) . ")
             ";
         } else {
             $sql .= "
-                (email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id).")
+                (email.parent_type = " . $this->getPDO()->quote($scope) . " AND email.parent_id = " . $this->getPDO()->quote($id) . ")
             ";
         }
-                
         if (!empty($notIn)) {
             $sql .= "
-                AND email.status {$op} ('". implode("', '", $notIn) . "')
+                AND email.status {$op} ('" . implode("', '", $notIn) . "')
             ";
-        }        
-        
+        }
         if ($this->isPerson($scope)) {
             $sql = $sql . " 
                 UNION
@@ -279,162 +332,79 @@ class Activities extends \Espo\Core\Services\Base
                 WHERE 
                     email.deleted = 0 AND
                     (
-                        email.parent_type <> ".$this->getPDO()->quote($scope)." OR 
-                        email.parent_id <> ".$this->getPDO()->quote($id)." OR
+                        email.parent_type <> " . $this->getPDO()->quote($scope) . " OR
+                        email.parent_id <> " . $this->getPDO()->quote($id) . " OR
                         email.parent_type IS NULL OR
                         email.parent_id IS NULL
                     ) AND
-                    (entity_email_address_1.entity_id = ".$this->getPDO()->quote($id)." OR entity_email_address_2.entity_id = ".$this->getPDO()->quote($id).")
+                    (entity_email_address_1.entity_id = " . $this->getPDO()->quote($id) . " OR entity_email_address_2.entity_id = " . $this->getPDO()->quote($id) . ")
             ";
             if (!empty($notIn)) {
                 $sql .= "
-                    AND email.status {$op} ('". implode("', '", $notIn) . "')
+                    AND email.status {$op} ('" . implode("', '", $notIn) . "')
                 ";
             }
         }
-        
         return $sql;
     }
-    
-    protected function getResult($parts, $scope, $id, $params)
-    {
-        $pdo = $this->getEntityManager()->getPDO();
-        
-        $onlyScope = false;            
-        if (!empty($params['scope'])) {
-            $onlyScope = $params['scope'];    
-        }
-        
-        if (!$onlyScope) {
-            $qu = implode(" UNION ", $parts);
-        } else {
-            $qu = $parts[$onlyScope];
-        }
-                    
-        $countQu = "SELECT COUNT(*) AS 'count' FROM ({$qu}) AS c";
-        $sth = $pdo->prepare($countQu);        
-        $sth->execute();
-    
-        $row = $sth->fetch(PDO::FETCH_ASSOC);        
-        $totalCount = $row['count'];
-        
-        $qu .= "
-            ORDER BY dateStart DESC, createdAt DESC
-        ";        
-        
-        if (!empty($params['maxSize'])) {
-            $qu .= "
-                LIMIT :offset, :maxSize
-            ";    
-        }        
 
-    
-
-        $sth = $pdo->prepare($qu);
-        
-        if (!empty($params['maxSize'])) {
-            $offset = 0;
-            if (!empty($params['offset'])) {
-                $offset = $params['offset'];
-            }
-            
-            $sth->bindParam(':offset', $offset, PDO::PARAM_INT);
-            $sth->bindParam(':maxSize', $params['maxSize'], PDO::PARAM_INT);
-        }
-        
-        $sth->execute();
-        
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
-        
-        $list = array();
-        foreach ($rows as $row) {
-            $list[] = $row;
-        }
-        
-        return array(
-            'list' => $rows,
-            'total' => $totalCount
-        );
-    }
-    
-    public function getActivities($scope, $id, $params = array())
-    {
-        $fetchAll = empty($params['scope']);
-        
-        $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')) : array(),
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')) : array(),
-        );        
-        return $this->getResult($parts, $scope, $id, $params);
-    }
-    
-    public function getHistory($scope, $id, $params)
-    {    
-    
-        $fetchAll = empty($params['scope']);    
-
-        $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', array('Held')) : array(),
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', array('Held')) : array(),
-            'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', array('Archived', 'Sent')) : array(),
-        );
-        $result = $this->getResult($parts, $scope, $id, $params);
-        
-        foreach ($result['list'] as &$item) {
-            if ($item['_scope'] == 'Email') {
-                $item['dateSent'] = $item['dateStart'];
-            }
-        }
-        
-        return $result;    
-    }
-    
     public function getEvents($userId, $from, $to)
     {
         $pdo = $this->getPDO();
-    
         $sql = "
-            SELECT 'Meeting' AS scope, meeting.id AS id, meeting.name AS name, meeting.date_start AS dateStart, meeting.date_end AS dateEnd, meeting.status AS status 
+            SELECT 'Meeting' AS scope, meeting.id AS id, meeting.name AS name, meeting.date_start AS dateStart, meeting.date_end AS dateEnd, meeting.status AS status
             FROM `meeting`
             JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0
-            WHERE 
+            WHERE
                 meeting.deleted = 0 AND
-                meeting.date_start >= ".$pdo->quote($from)." AND
-                meeting.date_start < ".$pdo->quote($to)." AND
-                meeting_user.user_id =".$pdo->quote($userId)." 
+                meeting.date_start >= " . $pdo->quote($from) . " AND
+                meeting.date_start < " . $pdo->quote($to) . " AND
+                meeting_user.user_id =" . $pdo->quote($userId) . "
             UNION
-            SELECT 'Call' AS scope, call.id AS id, call.name AS name, call.date_start AS dateStart, call.date_end AS dateEnd, call.status AS status 
+            SELECT 'Call' AS scope, call.id AS id, call.name AS name, call.date_start AS dateStart, call.date_end AS dateEnd, call.status AS status
             FROM `call`
             JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0
-            WHERE 
+            WHERE
                 call.deleted = 0 AND
-                call.date_start >= ".$pdo->quote($from)." AND
-                call.date_start < ".$pdo->quote($to)." AND
-                call_user.user_id = ".$pdo->quote($userId)." 
+                call.date_start >= " . $pdo->quote($from) . " AND
+                call.date_start < " . $pdo->quote($to) . " AND
+                call_user.user_id = " . $pdo->quote($userId) . "
             UNION
-            SELECT 'Task' AS scope, task.id AS id, task.name AS name, task.date_start AS dateStart, task.date_end AS dateEnd, task.status AS status 
+            SELECT 'Task' AS scope, task.id AS id, task.name AS name, task.date_start AS dateStart, task.date_end AS dateEnd, task.status AS status
             FROM `task`
-            WHERE 
+            WHERE
                 task.deleted = 0 AND
                 (
                     (
-                        task.date_start >= ".$pdo->quote($from)." AND
-                        task.date_start < ".$pdo->quote($to)."
+                        task.date_start >= " . $pdo->quote($from) . " AND
+                        task.date_start < " . $pdo->quote($to) . "
                     ) OR (
                         (task.date_start IS NULL OR task.date_start = '') AND
-                        task.date_end >= ".$pdo->quote($from)." AND
-                        task.date_end < ".$pdo->quote($to)."
+                        task.date_end >= " . $pdo->quote($from) . " AND
+                        task.date_end < " . $pdo->quote($to) . "
                     )
                 ) AND
-                task.assigned_user_id = ".$pdo->quote($userId)."
+                task.assigned_user_id = " . $pdo->quote($userId) . "
         ";
-
-        
-        $sth = $pdo->prepare($sql);        
-        $sth->execute();        
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
-        
         return $rows;
+    }
+
+    protected function getUser()
+    {
+        return $this->injections['user'];
+    }
+
+    protected function getAcl()
+    {
+        return $this->injections['acl'];
+    }
+
+    protected function getMetadata()
+    {
+        return $this->injections['metadata'];
     }
 }
 

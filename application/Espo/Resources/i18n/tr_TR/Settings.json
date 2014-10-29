@@ -1,34 +1,34 @@
 {
-    "fields": {
-        "useCache": "Önbelleği Kullan",
-        "dateFormat": "Tarih Biçimi",
-        "timeFormat": "Saat Biçimi",
-        "timeZone": "Zaman Dilimi",
-        "weekStart": "Hafta Başlangıç Günü",
+    "fields" : {
+        "useCache"         : "Önbelleği Kullan",
+        "dateFormat"       : "Tarih Biçimi",
+        "timeFormat"       : "Saat Biçimi",
+        "timeZone"         : "Zaman Dilimi",
+        "weekStart"        : "Hafta Başlangıç Günü",
         "thousandSeparator": "Binlik Ayraç",
-        "decimalMark": "Ondalık Ayraç",
-        "defaultCurrency": "Varsayılan Para Birimi",
-        "currencyList": "para Birimi Listesi",
-        "language": "Dil",
-        
+        "decimalMark"      : "Ondalık Ayraç",
+        "defaultCurrency"  : "Varsayılan Para Birimi",
+        "currencyList"     : "para Birimi Listesi",
+        "language"         : "Dil",
+
         "companyLogo": "Company Logo",
-        
-        "smtpServer": "Sunucu",
-        "smtpPort": "Bağlantı Noktası",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Güvenlik",
-        "smtpUsername": "Kullanıcı Adı",
-        "emailAddress": "Eposta",
-        "smtpPassword": "Şifre",
-        "outboundEmailFromName": "Kimden",
+
+        "smtpServer"              : "Sunucu",
+        "smtpPort"                : "Bağlantı Noktası",
+        "smtpAuth"                : "Auth",
+        "smtpSecurity"            : "Güvenlik",
+        "smtpUsername"            : "Kullanıcı Adı",
+        "emailAddress"            : "Eposta",
+        "smtpPassword"            : "Şifre",
+        "outboundEmailFromName"   : "Kimden",
         "outboundEmailFromAddress": "Gönderen Adresi",
-        "outboundEmailIsShared": "Paylaşıldı",
-        
-        "recordsPerPage": "Sayfa Başına Kayıtlar",
-        "recordsPerPageSmall": "Records Per Page (Small)",        
-        "tabList": "Sekme Listesi",
-        "quickCreateList": "Çabuk Oluşturma Listesi",
-        
+        "outboundEmailIsShared"   : "Paylaşıldı",
+
+        "recordsPerPage"     : "Sayfa Başına Kayıtlar",
+        "recordsPerPageSmall": "Records Per Page (Small)",
+        "tabList"            : "Sekme Listesi",
+        "quickCreateList"    : "Çabuk Oluşturma Listesi",
+
         "exportDelimiter": "Export Delimiter"
     },
     "options": {
@@ -37,10 +37,10 @@
             "1": "Pazartesi"
         }
     },
-    "labels": {
-        "System": "Sistem",
-        "Locale": "Yerel",
-        "SMTP": "SMTP",
+    "labels" : {
+        "System"       : "Sistem",
+        "Locale"       : "Yerel",
+        "SMTP"         : "SMTP",
         "Configuration": "Yapılandırma"
     }
 }

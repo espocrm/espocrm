@@ -1,29 +1,28 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"status": "Status",
-		"host": "Host",
-		"username": "Gebruikersnaam",
-		"password": "Wachtwoord",
-		"port": "Port",
-		"monitoredFolders": "Gecontroleerde Folders",
-		"ssl": "SSL",
-		"fetchSince": "Opgehaald Vanaf"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Active": "Actief",
-			"Inactive": "Inactief"
-		}
-	},
-	"labels": {
-		"Create EmailAccount": "Email Account Aanmaken",
-		"IMAP": "IMAP",
-		"Main": "Hoofd"		
-	},
-	"messages": {
-		"couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
-	}
+    "fields"  : {
+        "name"            : "Record Naam",
+        "status"          : "Status",
+        "host"            : "Host",
+        "username"        : "Gebruikersnaam",
+        "password"        : "Wachtwoord",
+        "port"            : "Port",
+        "monitoredFolders": "Gecontroleerde Folders",
+        "ssl"             : "SSL",
+        "fetchSince"      : "Opgehaald Vanaf"
+    },
+    "links"   : {},
+    "options" : {
+        "status": {
+            "Active"  : "Actief",
+            "Inactive": "Inactief"
+        }
+    },
+    "labels"  : {
+        "Create EmailAccount": "Email Account Aanmaken",
+        "IMAP"               : "IMAP",
+        "Main"               : "Hoofd"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
+    }
 }

@@ -1,32 +1,31 @@
 {
-    "fields": {
-        "name": "Konu",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateSent": "Gönderilen Tariht",
-        "from": "Kimden",
-        "to": "Kime",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Html olarak gönder",
-        "body": "Mesaj",
-        "subject": "Konu",
-        "attachments": "Dosya Ekle",
-        "selectTemplate": "Şablonu Seçin",
+    "fields" : {
+        "name"            : "Konu",
+        "parent"          : "Üst Seçenek",
+        "status"          : "Durum",
+        "dateSent"        : "Gönderilen Tariht",
+        "from"            : "Kimden",
+        "to"              : "Kime",
+        "cc"              : "CC",
+        "bcc"             : "BCC",
+        "isHtml"          : "Html olarak gönder",
+        "body"            : "Mesaj",
+        "subject"         : "Konu",
+        "attachments"     : "Dosya Ekle",
+        "selectTemplate"  : "Şablonu Seçin",
         "fromEmailAddress": "Gönderen Adresi",
         "toEmailAddresses": "Alıcı Adresi",
-        "emailAddress": "Eposta Adresi"
+        "emailAddress"    : "Eposta Adresi"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "Draft": "Taslak",
-        "Sending": "Gönderiyor",
-        "Sent": "Gönderildi",
+        "Draft"   : "Taslak",
+        "Sending" : "Gönderiyor",
+        "Sent"    : "Gönderildi",
         "Archived": "Arşivlendi"
     },
-    "labels": {
+    "labels" : {
         "Create Email": "Epostayı Arşivle",
-        "Compose": "Yeni Eposta"
+        "Compose"     : "Yeni Eposta"
     }
 }

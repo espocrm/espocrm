@@ -18,41 +18,50 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Business\CaseDistribution;
+
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\Team;
+use Espo\Entities\User;
 
 class LeastBusy
 {
+
+    /**
+     * @var EntityManager
+     * @since 1.0
+     */
     protected $entityManager;
-    
+
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
     }
-    
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-    
+
+    /**
+     * @param Team $team
+     *
+     * @return mixed
+     * @since 1.0
+     */
     public function getUser($team)
     {
+        /**
+         * @var User $user
+         */
         $userList = $team->get('users');
         if (count($userList) == 0) {
             return false;
         }
-                
-        $countHash = array();    
-        
+        $countHash = array();
         foreach ($userList as $user) {
             $count = $this->getEntityManager()->getRepository('Case')->where(array(
                 'assignedUserId' => $user->id,
                 'status<>' => array('Closed', 'Rejected', 'Duplicated')
             ))->count();
-            $countHash[$user->id] = $count;        
+            $countHash[$user->id] = $count;
         }
-        
         $foundUserId = false;
         $min = false;
         foreach ($countHash as $userId => $count) {
@@ -61,15 +70,19 @@ class LeastBusy
                 $foundUserId = $userId;
             } else {
                 if ($count < $min) {
-                    $min = $clunt;
+                    $min = $count;
                     $foundUserId = $userId;
                 }
-            }            
+            }
         }
-        
-        if ($foundUserId !== false) {                        
+        if ($foundUserId !== false) {
             return $this->getEntityManager()->getEntity('User', $foundUserId);
-        }                
+        }
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 }
 

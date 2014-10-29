@@ -1,1 +1,9 @@
-[{"name":"name","width":30,"link":"true"},{"name":"status"},{"name":"priority"},{"name":"dateEnd"},{"name":"createdAt"}]
+[{"name"   : "name",
+    "width": 30,
+    "link" : "true"
+},
+    {"name": "status"},
+    {"name": "priority"},
+    {"name": "dateEnd"},
+    {"name": "createdAt"}
+]

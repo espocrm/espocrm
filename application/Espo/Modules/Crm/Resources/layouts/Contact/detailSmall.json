@@ -1,11 +1,11 @@
 [
     {
         "label": "",
-        "rows": [
-            [{"name":"name"}],
-            [{"name":"accounts"}],
-            [{"name":"emailAddress"}],
-            [{"name":"phoneNumber"}]
+        "rows" : [
+            [{"name": "name"}],
+            [{"name": "accounts"}],
+            [{"name": "emailAddress"}],
+            [{"name": "phoneNumber"}]
         ]
     }
 ]

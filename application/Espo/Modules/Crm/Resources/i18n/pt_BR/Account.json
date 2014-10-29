@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "E-mail",
-        "website": "Website",
-        "phoneNumber": "Telefone",
-        "billingAddress": "Endereço de Cobrança",
+    "fields" : {
+        "name"           : "Nome",
+        "emailAddress"   : "E-mail",
+        "website"        : "Website",
+        "phoneNumber"    : "Telefone",
+        "billingAddress" : "Endereço de Cobrança",
         "shippingAddress": "Endereço de Entrega",
-        "description": "Descrição",
-        "sicCode": "CNPJ",
-        "industry": "Indústria",
-        "type": "Tipo",
-        "contactRole": "Regra"
+        "description"    : "Descrição",
+        "sicCode"        : "CNPJ",
+        "industry"       : "Indústria",
+        "type"           : "Tipo",
+        "contactRole"    : "Regra"
     },
-    "links": {
-        "contacts": "Contatos",
+    "links"  : {
+        "contacts"     : "Contatos",
         "opportunities": "Oportunidades",
-        "cases": "Atendimentos"
+        "cases"        : "Atendimentos"
     },
     "options": {
-        "type": {
+        "type"    : {
             "Customer": "Cliente",
             "Investor": "Investidor",
-            "Partner": "Parceiro",
+            "Partner" : "Parceiro",
             "Reseller": "Revendedor"
         },
         "industry": {
-            "Apparel": "Vestuário",
-            "Banking": "Banco",
+            "Apparel"          : "Vestuário",
+            "Banking"          : "Banco",
             "Computer Software": "Software",
-            "Education": "Educação",
-            "Electronics": "Eletrônicos",
-            "Finance": "Finanças",
-            "Insurance": "Seguros"
+            "Education"        : "Educação",
+            "Electronics"      : "Eletrônicos",
+            "Finance"          : "Finanças",
+            "Insurance"        : "Seguros"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Account": "Criar Conta"
     }
 }

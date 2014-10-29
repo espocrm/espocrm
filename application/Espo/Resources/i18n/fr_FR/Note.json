@@ -1,6 +1,6 @@
 {
     "fields": {
-        "post": "Poster",
+        "post"       : "Poster",
         "attachments": "Fichiers Joints"
     }
 }

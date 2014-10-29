@@ -19,37 +19,38 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades\Actions\Base;
 
-class Delete extends \Espo\Core\Upgrades\Actions\Base
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Actions\Base;
+use Espo\Core\Utils\Log;
+
+class Delete extends
+    Base
 {
+
     public function run($processId)
     {
-        $GLOBALS['log']->debug('Delete package process ['.$processId.']: start run.');
-
+        /**
+         * @var Log $log
+         */
+        $log = $GLOBALS['log'];
+        $log->debug('Delete package process [' . $processId . ']: start run.');
         if (empty($processId)) {
             throw new Error('Delete package package ID was not specified.');
         }
-
         $this->setProcessId($processId);
-
         $this->beforeRunAction();
-
         /* delete a package */
         $this->deletePackage();
-
         $this->afterRunAction();
-
-        $GLOBALS['log']->debug('Delete package process ['.$processId.']: end run.');
+        $log->debug('Delete package process [' . $processId . ']: end run.');
     }
 
     protected function deletePackage()
     {
         $packageArchivePath = $this->getPackagePath(true);
         $res = $this->getFileManager()->removeFile($packageArchivePath);
-
         return $res;
     }
-
 }

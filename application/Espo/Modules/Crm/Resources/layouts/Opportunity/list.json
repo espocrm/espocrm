@@ -1,1 +1,15 @@
-[{"name":"name","width":25,"link":true},{"name":"account","width":18},{"name":"stage"},{"name":"amount"},{"name":"assignedUser"},{"name":"createdAt"}]
+[
+    {
+        "name" : "name",
+        "width": 25,
+        "link" : true
+    },
+    {
+        "name" : "account",
+        "width": 18
+    },
+    {"name": "stage"},
+    {"name": "amount"},
+    {"name": "assignedUser"},
+    {"name": "createdAt"}
+]

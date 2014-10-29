@@ -1,35 +1,35 @@
 {
-    "fields": {
-        "name": "Imię",
-        "userName": "Nazwa Użytkownika",
-        "title": "Tytuł",
-        "isAdmin": "Czy jest Administratorem",
-        "defaultTeam": "Domyślny Zespół",
-        "emailAddress": "E-mail",
-        "phoneNumber": "Telefon",
-        "roles": "Rola",        
-        "password": "Hasło",
+    "fields"  : {
+        "name"           : "Imię",
+        "userName"       : "Nazwa Użytkownika",
+        "title"          : "Tytuł",
+        "isAdmin"        : "Czy jest Administratorem",
+        "defaultTeam"    : "Domyślny Zespół",
+        "emailAddress"   : "E-mail",
+        "phoneNumber"    : "Telefon",
+        "roles"          : "Rola",
+        "password"       : "Hasło",
         "passwordConfirm": "Potwierdź Hasło",
-        "newPassword": "Nowe Hasło"
+        "newPassword"    : "Nowe Hasło"
     },
-    "links": {
+    "links"   : {
         "teams": "Zespoły",
         "roles": "Rola"
     },
-    "labels": {
-        "Create User": "Utwórz Użytkonika",
-        "Generate": "Generuj",
-        "Access": "Dostęp",
-        "Preferences": "Preferencje",
+    "labels"  : {
+        "Create User"    : "Utwórz Użytkonika",
+        "Generate"       : "Generuj",
+        "Access"         : "Dostęp",
+        "Preferences"    : "Preferencje",
         "Change Password": "Zmień hasło"
     },
     "tooltips": {
         "defaultTeam": "Wszytskie dane utworzone przez tego użytkonika, zostaną przypisane do domyślnego zespołu."
     },
     "messages": {
-        "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkonika.",
+        "passwordWillBeSent"     : "Hasło zostanie wysłane na adres e-mail użytkonika.",
         "accountInfoEmailSubject": "Informacje o koncie",
-        "accountInfoEmailBody": "Informacje o twoim koncie:\n\nUżytkonik: {userName}\nHasło: {password}\n\n{siteUrl}",
-        "passwordChanged": "Hasło zostało zmienione"
+        "accountInfoEmailBody"   : "Informacje o twoim koncie:\n\nUżytkonik: {userName}\nHasło: {password}\n\n{siteUrl}",
+        "passwordChanged"        : "Hasło zostało zmienione"
     }
 }

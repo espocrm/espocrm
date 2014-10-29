@@ -18,29 +18,61 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Crypt;
+use Espo\Entities\Preferences;
+use Slim\Http\Request;
 
-class Email extends \Espo\Core\Controllers\Record
+/**
+ * Class Email
+ * @method \Espo\Services\Email getRecordService()
+ *
+ * @package Espo\Controllers
+ */
+class Email extends
+    Record
 {
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array
+     * @since 1.0
+     */
     public function actionGetCopiedAttachments($params, $data, $request)
-    {        
+    {
         $id = $request->get('id');
-        
         return $this->getRecordService()->getCopiedAttachments($id);
     }
-    
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     * @since 1.0
+     */
     public function actionSendTestEmail($params, $data, $request)
     {
+        /**
+         * @var Preferences $preferences
+         * @var Crypt       $crypt
+         */
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        
         if (empty($data['password'])) {
             if ($data['type'] == 'preferences') {
                 if (!$this->getUser()->isAdmin() && $data['id'] != $this->getUser()->id) {
@@ -50,8 +82,8 @@ class Email extends \Espo\Core\Controllers\Record
                 if (!$preferences) {
                     throw new Error();
                 }
-                
-                $data['password'] = $this->getContainer()->get('crypt')->decrypt($preferences->get('smtpPassword'));
+                $crypt = $this->getContainer()->get('crypt');
+                $data['password'] = $crypt->decrypt($preferences->get('smtpPassword'));
             } else {
                 if (!$this->getUser()->isAdmin()) {
                     throw new Forbidden();
@@ -59,7 +91,6 @@ class Email extends \Espo\Core\Controllers\Record
                 $data['password'] = $this->getConfig()->get('smtpPassword');
             }
         }
-        
         return $this->getRecordService()->sendTestEmail($data);
     }
 }

@@ -1,6 +1,6 @@
 <?php
+use Espo\Core\Application;
 
 require_once('../../bootstrap.php');
-
-$app = new \Espo\Core\Application();
+$app = new Application();
 $app->run();

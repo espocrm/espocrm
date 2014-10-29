@@ -1,1 +1,6 @@
-["status","priority","dateStart","dateEnd"]
+[
+    "status",
+    "priority",
+    "dateStart",
+    "dateEnd"
+]

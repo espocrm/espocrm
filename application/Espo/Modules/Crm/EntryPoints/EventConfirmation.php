@@ -18,79 +18,71 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\EntryPoints;
 
-use \Espo\Core\Utils\Util;
+use Espo\Core\EntryPoints\Base;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
+use Espo\Entities\UniqueId;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
-
-class EventConfirmation extends \Espo\Core\EntryPoints\Base
+class EventConfirmation extends
+    Base
 {
+
     public static $authRequired = false;
-    
+
     public function run()
-    {    
+    {
+        /**
+         * @var UniqueId $uniqueId
+         */
         $uid = $_GET['uid'];
         $action = $_GET['action'];
         if (empty($uid) || empty($action)) {
             throw new BadRequest();
         }
-        
         if (!in_array($action, array('accept', 'decline'))) {
             throw new BadRequest();
         }
-                
         $uniqueId = $this->getEntityManager()->getRepository('UniqueId')->where(array('name' => $uid))->findOne();
-        
         if (!$uniqueId) {
             throw new NotFound();
-            return;
+            //return; unreachable
         }
-        
         $data = json_decode($uniqueId->get('data'));
-        
         $eventType = $data->eventType;
         $eventId = $data->eventId;
         $inviteeType = $data->inviteeType;
         $inviteeId = $data->inviteeId;
         $link = $data->link;
-        
         if (!empty($eventType) && !empty($eventId) && !empty($inviteeType) && !empty($inviteeId) && !empty($link)) {
             $event = $this->getEntityManager()->getEntity($eventType, $eventId);
             $invitee = $this->getEntityManager()->getEntity($inviteeType, $inviteeId);
-            if ($event && $invitee) {                
+            if ($event && $invitee) {
                 $relDefs = $event->getRelations();
                 $tableName = Util::toUnderscore($relDefs[$link]['relationName']);
-                
                 $status = 'None';
                 if ($action == 'accept') {
                     $status = 'Accepted';
                 } else if ($action == 'decline') {
                     $status = 'Declined';
                 }
-                
                 $pdo = $this->getEntityManager()->getPDO();
                 $sql = "
                     UPDATE `{$tableName}` SET status = '{$status}'
-                    WHERE ".strtolower($eventType)."_id = '{$eventId}' AND ".strtolower($inviteeType)."_id = '{$inviteeId}'
+                    WHERE " . strtolower($eventType) . "_id = '{$eventId}' AND " . strtolower($inviteeType) . "_id = '{$inviteeId}'
                 ";
-
                 $sth = $pdo->prepare($sql);
                 $sth->execute();
-                
                 $this->getEntityManager()->getRepository('UniqueId')->remove($uniqueId);
-                
                 echo $status;
                 return;
             }
-        } 
-        
-        throw new Error();            
-    }    
+        }
+        throw new Error();
+    }
 }
 

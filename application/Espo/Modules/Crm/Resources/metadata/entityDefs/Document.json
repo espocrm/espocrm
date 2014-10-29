@@ -1,99 +1,110 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"          : {
+            "type"    : "varchar",
             "required": true,
-            "view": "Crm:Document.Fields.Name"
+            "view"    : "Crm:Document.Fields.Name"
         },
-        "file": {
-            "type": "file",
+        "file"          : {
+            "type"    : "file",
             "required": true
         },
-        "status": {
-            "type": "enum",
-            "options": ["Active", "Draft", "Expired", "Canceled"],
-            "view": "Fields.EnumStyled",
-            "style": {
+        "status"        : {
+            "type"   : "enum",
+            "options": [
+                "Active",
+                "Draft",
+                "Expired",
+                "Canceled"
+            ],
+            "view"   : "Fields.EnumStyled",
+            "style"  : {
                 "Canceled": "danger",
-                "Expired": "danger"
+                "Expired" : "danger"
             }
         },
-        "source": {
-            "type": "enum",
+        "source"        : {
+            "type"   : "enum",
             "options": ["Espo"],
             "default": "Espo"
         },
-        "type": {
-            "type": "enum",
-            "options": ["", "Contract", "NDA", "EULA", "License Agreement"]
+        "type"          : {
+            "type"   : "enum",
+            "options": [
+                "",
+                "Contract",
+                "NDA",
+                "EULA",
+                "License Agreement"
+            ]
         },
-        "publishDate": {
-            "type": "date",
+        "publishDate"   : {
+            "type"    : "date",
             "required": true,
-            "default": "javascript: return this.dateTime.getToday();"
+            "default" : "javascript: return this.dateTime.getToday();"
         },
         "expirationDate": {
-            "type": "date",
+            "type" : "date",
             "after": "publishDate"
         },
-        "description": {
+        "description"   : {
             "type": "text"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"     : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"    : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"     : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"    : {
+            "type"    : "link",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"  : {
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"         : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "accounts": {
-            "type": "hasMany",
-            "entity": "Account",
+    "links"     : {
+        "accounts"     : {
+            "type"   : "hasMany",
+            "entity" : "Account",
             "foreign": "documents"
         },
         "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
+            "type"   : "hasMany",
+            "entity" : "Opportunity",
             "foreign": "documents"
         },
-        "createdBy": {
-            "type": "belongsTo",
+        "createdBy"    : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "assignedUser": {
-            "type": "belongsTo",
+        "assignedUser" : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"        : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         }
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc"   : false
     }
 }

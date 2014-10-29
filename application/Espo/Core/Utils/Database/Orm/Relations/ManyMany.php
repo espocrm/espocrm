@@ -19,25 +19,25 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
 use Espo\Core\Utils\Util;
 
-class ManyMany extends Base
+class ManyMany extends
+    Base
 {
+
     protected function load($linkName, $entityName)
     {
         $foreignEntityName = $this->getForeignEntityName();
-
         return array(
             $entityName => array(
                 'fields' => array(
-                       $linkName.'Ids' => array(
+                    $linkName . 'Ids' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
                     ),
-                    $linkName.'Names' => array(
+                    $linkName . 'Names' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
                     ),
@@ -50,8 +50,8 @@ class ManyMany extends Base
                         'key' => 'id', //todo specify 'key'
                         'foreignKey' => 'id', //todo specify 'foreignKey'
                         'midKeys' => array(
-                            lcfirst($entityName).'Id',
-                            lcfirst($foreignEntityName).'Id',
+                            lcfirst($entityName) . 'Id',
+                            lcfirst($foreignEntityName) . 'Id',
                         ),
                     ),
                 ),
@@ -62,8 +62,7 @@ class ManyMany extends Base
     protected function getJoinTable($tableName1, $tableName2)
     {
         $tables = $this->getSortEntities($tableName1, $tableName2);
-
-        return Util::toCamelCase( implode('-', $tables) );
+        return Util::toCamelCase(implode('-', $tables));
     }
 
     protected function getSortEntities($entity1, $entity2)
@@ -72,10 +71,7 @@ class ManyMany extends Base
             Util::toCamelCase(lcfirst($entity1)),
             Util::toCamelCase(lcfirst($entity2)),
         );
-
         sort($entities);
-
         return $entities;
     }
-
 }

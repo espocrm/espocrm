@@ -2,21 +2,21 @@
     [
         {
             "name": "Stream",
-            "id": "d4"
+            "id"  : "d4"
         },
         {
             "name": "Calls",
-            "id": "d1"
+            "id"  : "d1"
         }
     ],
     [
         {
             "name": "Tasks",
-            "id": "d3"
+            "id"  : "d3"
         },
         {
             "name": "Meetings",
-            "id": "d2"
+            "id"  : "d2"
         }
     ]
 ]

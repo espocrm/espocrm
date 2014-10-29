@@ -1,21 +1,21 @@
 {
-   "recordViews":{
-      "detail":"Role.Record.Detail",
-      "edit":"Role.Record.Edit",
-      "editQuick":"Role.Record.Edit",
-      "list":"Role.Record.List"
-   },
-   "relationshipPanels":{
-      "users":{
-         "create":false,
-         "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
-      },
-      "teams":{
-         "create":false,
-         "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
-      }
-   },
-  "views": {
-    "list": "Role.List"      
-  }
+    "recordViews"       : {
+        "detail"   : "Role.Record.Detail",
+        "edit"     : "Role.Record.Edit",
+        "editQuick": "Role.Record.Edit",
+        "list"     : "Role.Record.List"
+    },
+    "relationshipPanels": {
+        "users": {
+            "create"        : false,
+            "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
+        },
+        "teams": {
+            "create"        : false,
+            "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
+        }
+    },
+    "views"             : {
+        "list": "Role.List"
+    }
 }

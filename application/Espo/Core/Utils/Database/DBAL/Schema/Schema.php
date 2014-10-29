@@ -19,10 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
-class Schema extends \Doctrine\DBAL\Schema\Schema
+use Doctrine\DBAL\Schema\Table;
+
+class Schema extends
+    \Doctrine\DBAL\Schema\Schema
 {
 
     /**
@@ -30,18 +32,15 @@ class Schema extends \Doctrine\DBAL\Schema\Schema
      *
      * @param string $tableName
      *
-     * @return \Doctrine\DBAL\Schema\Table
+     * @return Table
      */
     public function createTable($tableName)
     {
         $table = new Table($tableName);
         $this->_addTable($table);
-
         foreach ($this->_schemaConfig->getDefaultTableOptions() as $name => $value) {
             $table->addOption($name, $value);
         }
-
         return $table;
     }
-
 }

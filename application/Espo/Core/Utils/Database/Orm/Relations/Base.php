@@ -19,16 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class Base extends \Espo\Core\Utils\Database\Orm\Base
-{
-    private $params;
+use Espo\Core\Utils\Util;
 
-    private $foreignParams;
+class Base extends
+    \Espo\Core\Utils\Database\Orm\Base
+{
 
     protected $foreignLinkName = null;
+
     protected $foreignEntityName = null;
 
     protected $allowedParams = array(
@@ -38,54 +38,9 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         'midKeys',
     );
 
-    protected function getParams()
-    {
-        return $this->params;
-    }
+    private $params;
 
-    protected function getForeignParams()
-    {
-        return $this->foreignParams;
-    }
-
-    protected function setParams(array $params)
-    {
-        $this->params = $params;
-    }
-
-    protected function setForeignParams(array $foreignParams)
-    {
-        $this->foreignParams = $foreignParams;
-    }
-
-    protected function setForeignLinkName($foreignLinkName)
-    {
-        $this->foreignLinkName = $foreignLinkName;
-    }
-
-    protected function getForeignLinkName()
-    {
-        return $this->foreignLinkName;
-    }
-
-    protected function setForeignEntityName($foreignEntityName)
-    {
-        $this->foreignEntityName = $foreignEntityName;
-    }
-
-    protected function getForeignEntityName()
-    {
-        return $this->foreignEntityName;
-    }
-
-    protected function getForeignLinkParams()
-    {
-        $foreignLinkName = $this->getForeignLinkName();
-        $foreignEntityName = $this->getForeignEntityName();
-        $foreignLinkParams = $this->getLinkParams($foreignLinkName, $foreignEntityName);
-
-        return $foreignLinkParams;
-    }
+    private $foreignParams;
 
     public function process($linkName, $entityName, $foreignLinkName, $foreignEntityName)
     {
@@ -96,13 +51,10 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
             'foreignEntityName' => $foreignEntityName,
         );
         $this->setMethods($inputs);
-
         $convertedDefs = $this->load($linkName, $entityName);
         $convertedDefs = $this->mergeAllowedParams($convertedDefs);
-
         $inputs = $this->setArrayValue(null, $inputs);
         $this->setMethods($inputs);
-
         return $convertedDefs;
     }
 
@@ -110,20 +62,15 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     {
         $linkName = $this->getLinkName();
         $entityName = $this->getEntityName();
-
         if (!empty($this->allowedParams)) {
             $linkParams = &$loads[$entityName]['relations'][$linkName];
-
             foreach ($this->allowedParams as $name) {
-
                 $additionalParrams = $this->getAllowedAdditionalParams($name);
-
                 if (isset($additionalParrams) && !isset($linkParams[$name])) {
                     $linkParams[$name] = $additionalParrams;
                 }
             }
         }
-
         return $loads;
     }
 
@@ -131,12 +78,9 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     {
         $linkParams = $this->getLinkParams();
         $foreignLinkParams = $this->getForeignLinkParams();
-
         $itemLinkParams = isset($linkParams[$allowedItemName]) ? $linkParams[$allowedItemName] : null;
         $itemForeignLinkParams = isset($foreignLinkParams[$allowedItemName]) ? $foreignLinkParams[$allowedItemName] : null;
-
         $additionalParrams = null;
-
         if (isset($itemLinkParams) && isset($itemForeignLinkParams)) {
             $additionalParrams = Util::merge($itemLinkParams, $itemForeignLinkParams);
         } else if (isset($itemLinkParams)) {
@@ -144,8 +88,54 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         } else if (isset($itemForeignLinkParams)) {
             $additionalParrams = $itemForeignLinkParams;
         }
-
         return $additionalParrams;
     }
 
+    protected function getForeignLinkParams()
+    {
+        $foreignLinkName = $this->getForeignLinkName();
+        $foreignEntityName = $this->getForeignEntityName();
+        $foreignLinkParams = $this->getLinkParams($foreignLinkName, $foreignEntityName);
+        return $foreignLinkParams;
+    }
+
+    protected function getForeignLinkName()
+    {
+        return $this->foreignLinkName;
+    }
+
+    protected function setForeignLinkName($foreignLinkName)
+    {
+        $this->foreignLinkName = $foreignLinkName;
+    }
+
+    protected function getForeignEntityName()
+    {
+        return $this->foreignEntityName;
+    }
+
+    protected function setForeignEntityName($foreignEntityName)
+    {
+        $this->foreignEntityName = $foreignEntityName;
+    }
+
+    protected function getParams()
+    {
+        return $this->params;
+    }
+
+    protected function setParams(array $params)
+    {
+        $this->params = $params;
+    }
+
+    protected function getForeignParams()
+    {
+        return $this->foreignParams;
+    }
+
+    protected function setForeignParams(array $foreignParams)
+    {
+        $this->foreignParams = $foreignParams;
+    }
 }

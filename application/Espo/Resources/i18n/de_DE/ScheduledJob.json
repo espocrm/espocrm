@@ -1,29 +1,29 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "job": "Job",
+    "fields" : {
+        "name"      : "Name",
+        "status"    : "Status",
+        "job"       : "Job",
         "scheduling": "Planung (in Crontab Notation)"
     },
-    "links": {
+    "links"  : {
         "log": "Protokoll"
     },
-    "labels": {
+    "labels" : {
         "Create ScheduledJob": "Geplante Aufgabe erstellen"
     },
     "options": {
-        "job": {
+        "job"      : {
             "CheckInboundEmails": "Eingehende E-Mail überprüfen",
-            "Cleanup": "Aufräumen"
+            "Cleanup"           : "Aufräumen"
         },
         "cronSetup": {
-            "linux": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
-            "mac": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
+            "linux"  : "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
+            "mac"    : "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
             "windows": "Hinweis: Erstellen Sie eine Stapeldatei mit den folgenden Kommandos um geplante Aufgaben mit dem Windows Aufgabenplaner durchzuführen:",
             "default": "Hinweis: fügen Sie dieses Kommando zum CronJob hinzu (Geplante Aufgaben):"
         },
-        "status": {
-            "Active": "Aktiv",
+        "status"   : {
+            "Active"  : "Aktiv",
             "Inactive": "Inaktiv"
         }
     }

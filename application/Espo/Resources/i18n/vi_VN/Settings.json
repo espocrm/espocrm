@@ -1,53 +1,53 @@
 {
-    "fields": {
-        "useCache": "Dùng Cache",
-        "dateFormat": "Định dạng ngày",
-        "timeFormat": "Định dạng thời gian",
-        "timeZone": "Múi giờ",
-        "weekStart": "Ngày đầu tiên của tuần",
+    "fields" : {
+        "useCache"         : "Dùng Cache",
+        "dateFormat"       : "Định dạng ngày",
+        "timeFormat"       : "Định dạng thời gian",
+        "timeZone"         : "Múi giờ",
+        "weekStart"        : "Ngày đầu tiên của tuần",
         "thousandSeparator": "Dấu phân cách hàng nghìn",
-        "decimalMark": "Dấu phân cách thập phân",
-        "defaultCurrency": "Tiền tệ mặc định",
-        "currencyList": "Danh sách tiền tệ",
-        "language": "Ngôn ngữ",
-        
+        "decimalMark"      : "Dấu phân cách thập phân",
+        "defaultCurrency"  : "Tiền tệ mặc định",
+        "currencyList"     : "Danh sách tiền tệ",
+        "language"         : "Ngôn ngữ",
+
         "companyLogo": "Logo công ty",
-        
-        "smtpServer": "Máy chủ",
-        "smtpPort": "Cổng",
-        "smtpAuth": "Truy cập",
-        "smtpSecurity": "Bảo mật",
-        "smtpUsername": "Tên đăng nhập",
-        "emailAddress": "Email",
-        "smtpPassword": "Mật khẩu",
-        "outboundEmailFromName": "tên người gửi",
+
+        "smtpServer"              : "Máy chủ",
+        "smtpPort"                : "Cổng",
+        "smtpAuth"                : "Truy cập",
+        "smtpSecurity"            : "Bảo mật",
+        "smtpUsername"            : "Tên đăng nhập",
+        "emailAddress"            : "Email",
+        "smtpPassword"            : "Mật khẩu",
+        "outboundEmailFromName"   : "tên người gửi",
         "outboundEmailFromAddress": "Địa chỉ gửi",
-        "outboundEmailIsShared": "Được chia sẻ",
-        
-        "recordsPerPage": "Số bản ghi trên mỗi trang",
-        "recordsPerPageSmall": "Records Per Page (Small)",        
-        "tabList": "Danh sách Tab",
-        "quickCreateList": "Tạo nhanh danh sách",
-        
+        "outboundEmailIsShared"   : "Được chia sẻ",
+
+        "recordsPerPage"     : "Số bản ghi trên mỗi trang",
+        "recordsPerPageSmall": "Records Per Page (Small)",
+        "tabList"            : "Danh sách Tab",
+        "quickCreateList"    : "Tạo nhanh danh sách",
+
         "exportDelimiter": "Xuất dấu phân cách",
-        
-        "authenticationMethod": "Phương thức xác thực",
-        "ldapHost": "Máy chủ",
-        "ldapPort": "Cổng",
-        "ldapAuth": "Truy cập",
-        "ldapUsername": "Tên đăng nhập",
-        "ldapPassword": "Mật khẩu",
-        "ldapBindRequiresDn": "Yêu cầu Dn",
-        "ldapBaseDn": "Dn gốc",
-        "ldapAccountCanonicalForm": "Account Canonical Form",
-        "ldapAccountDomainName": "Tên miền tài khoản",
-        "ldapTryUsernameSplit": "Thử lại",
-        "ldapCreateEspoUser": "Tạo người dùng",
-        "ldapSecurity": "Bảo mật",
-        "ldapUserLoginFilter": "Bộ lọc đăng nhập",
+
+        "authenticationMethod"      : "Phương thức xác thực",
+        "ldapHost"                  : "Máy chủ",
+        "ldapPort"                  : "Cổng",
+        "ldapAuth"                  : "Truy cập",
+        "ldapUsername"              : "Tên đăng nhập",
+        "ldapPassword"              : "Mật khẩu",
+        "ldapBindRequiresDn"        : "Yêu cầu Dn",
+        "ldapBaseDn"                : "Dn gốc",
+        "ldapAccountCanonicalForm"  : "Account Canonical Form",
+        "ldapAccountDomainName"     : "Tên miền tài khoản",
+        "ldapTryUsernameSplit"      : "Thử lại",
+        "ldapCreateEspoUser"        : "Tạo người dùng",
+        "ldapSecurity"              : "Bảo mật",
+        "ldapUserLoginFilter"       : "Bộ lọc đăng nhập",
         "ldapAccountDomainNameShort": "Tên miền tài khoản",
-        "ldapOptReferrals": "Được giới thiệu",
-        "disableExport": "Disable Export (only admin is allowed)"
+        "ldapOptReferrals"          : "Được giới thiệu",
+        "disableExport"             : "Disable Export (only admin is allowed)"
     },
     "options": {
         "weekStart": {
@@ -55,10 +55,10 @@
             "1": "Thứ 2"
         }
     },
-    "labels": {
-        "System": "Hệ thống",
-        "Locale": "Bản địa hóa",
-        "SMTP": "SMTP",
+    "labels" : {
+        "System"       : "Hệ thống",
+        "Locale"       : "Bản địa hóa",
+        "SMTP"         : "SMTP",
         "Configuration": "Tùy chỉnh"
     }
 }

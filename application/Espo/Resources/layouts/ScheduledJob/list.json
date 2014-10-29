@@ -1,1 +1,7 @@
-[{"name":"name","width":30,"link":true},{"name":"job"},{"name":"status"}]
+[{"name"   : "name",
+    "width": 30,
+    "link" : true
+},
+    {"name": "job"},
+    {"name": "status"}
+]

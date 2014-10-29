@@ -1,22 +1,22 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"int"
-      },
-      {
-         "name":"min",
-         "type":"int"
-      },
-      {
-         "name":"max",
-         "type":"int"
-      }
-   ],
-   "filter": true
+    "params": [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "int"
+        },
+        {
+            "name": "min",
+            "type": "int"
+        },
+        {
+            "name": "max",
+            "type": "int"
+        }
+    ],
+    "filter": true
 }

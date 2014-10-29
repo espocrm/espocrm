@@ -1,6 +1,6 @@
 {
-   "notCreatable": true,
-   "fieldDefs":{
-      "type":"int"
-   }
+    "notCreatable": true,
+    "fieldDefs"   : {
+        "type": "int"
+    }
 }

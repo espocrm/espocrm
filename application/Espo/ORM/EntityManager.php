@@ -19,8 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\ORM;
+
+use Espo\Core\ORM\Repositories\RDB;
+use Espo\Core\ORM\RepositoryFactory;
 
 class EntityManager
 {
@@ -29,6 +31,10 @@ class EntityManager
 
     protected $entityFactory;
 
+    /**
+     * @var RepositoryFactory
+     * @since 1.0
+     */
     protected $repositoryFactory;
 
     protected $mappers = array();
@@ -38,34 +44,63 @@ class EntityManager
     protected $repositoryHash = array();
 
     protected $params = array();
-    
+
     protected $query;
 
     public function __construct($params)
     {
         $this->params = $params;
-
         $this->metadata = new Metadata();
-
         if (!empty($params['metadata'])) {
             $this->setMetadata($params['metadata']);
         }
-
         $entityFactoryClassName = '\\Espo\\ORM\\EntityFactory';
         if (!empty($params['entityFactoryClassName'])) {
             $entityFactoryClassName = $params['entityFactoryClassName'];
         }
         $this->entityFactory = new $entityFactoryClassName($this, $this->metadata);
-
         $repositoryFactoryClassName = '\\Espo\\ORM\\RepositoryFactory';
         if (!empty($params['repositoryFactoryClassName'])) {
             $repositoryFactoryClassName = $params['repositoryFactoryClassName'];
         }
         $this->repositoryFactory = new $repositoryFactoryClassName($this, $this->entityFactory);
-
         $this->init();
     }
-    
+
+    protected function init()
+    {
+    }
+
+    public function getMapper($className)
+    {
+        if (empty($this->mappers[$className])) {
+            // TODO use factory
+            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
+        }
+        return $this->mappers[$className];
+    }
+
+    /**
+     * @return \PDO
+     * @since 1.0
+     */
+    public function getPDO()
+    {
+        if (empty($this->pdo)) {
+            $this->initPDO();
+        }
+        return $this->pdo;
+    }
+
+    protected function initPDO()
+    {
+        $params = $this->params;
+        $port = empty($params['port']) ? '' : 'port=' . $params['port'] . ';';
+        $this->pdo = new \PDO('mysql:host=' . $params['host'] . ';' . $port . 'dbname=' . $params['dbname'] . ';charset=utf8',
+            $params['user'], $params['password']);
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    }
+
     public function getQuery()
     {
         if (empty($this->query)) {
@@ -74,43 +109,18 @@ class EntityManager
         return $this->query;
     }
 
-    public function getMapper($className)
-    {
-        if (empty($this->mappers[$className])) {
-            // TODO use factory
-            
-            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
-        }
-        return $this->mappers[$className];
-    }
-
-    protected function initPDO()
-    {
-        $params = $this->params;
-
-        $port = empty($params['port']) ? '' : 'port=' . $params['port'] . ';';
-
-        $this->pdo = new \PDO('mysql:host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=utf8', $params['user'], $params['password']);
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-    }
-
-    public function getEntity($name, $id = null)
-    {
-        return $this->getRepository($name)->get($id);
-    }
-
     public function saveEntity(Entity $entity)
     {
         $entityName = $entity->getEntityName();
         return $this->getRepository($entityName)->save($entity);
     }
 
-    public function removeEntity(Entity $entity)
-    {
-        $entityName = $entity->getEntityName();
-        return $this->getRepository($entityName)->remove($entity);
-    }
-
+    /**
+     * @param $name
+     *
+     * @return RDB
+     * @since 1.0
+     */
     public function getRepository($name)
     {
         if (empty($this->repositoryHash[$name])) {
@@ -119,9 +129,10 @@ class EntityManager
         return $this->repositoryHash[$name];
     }
 
-    public function setMetadata(array $data)
+    public function removeEntity(Entity $entity)
     {
-        $this->metadata->setData($data);
+        $entityName = $entity->getEntityName();
+        return $this->getRepository($entityName)->remove($entity);
     }
 
     public function getMetadata()
@@ -129,12 +140,9 @@ class EntityManager
         return $this->metadata;
     }
 
-    public function getPDO()
+    public function setMetadata(array $data)
     {
-        if (empty($this->pdo)) {
-            $this->initPDO();
-        }
-        return $this->pdo;
+        $this->metadata->setData($data);
     }
 
     public function normalizeRepositoryName($name)
@@ -154,8 +162,16 @@ class EntityManager
         return $collection;
     }
 
-    protected function init()
+    /**
+     * @param      $name
+     * @param null $id
+     *
+     * @return Entity
+     * @since 1.0
+     */
+    public function getEntity($name, $id = null)
     {
+        return $this->getRepository($name)->get($id);
     }
 }
 

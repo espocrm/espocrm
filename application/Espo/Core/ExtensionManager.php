@@ -19,18 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core;
 
-class ExtensionManager extends Upgrades\Base
+class ExtensionManager extends
+    Upgrades\Base
 {
+
     protected $name = 'Extension';
 
     protected $params = array(
         'packagePath' => 'data/upload/extensions',
-
         'backupPath' => 'data/.backup/extensions',
-
         'scriptNames' => array(
             'before' => 'BeforeInstall',
             'after' => 'AfterInstall',
@@ -38,4 +37,5 @@ class ExtensionManager extends Upgrades\Base
             'afterUninstall' => 'AfterUninstall',
         )
     );
+
 }

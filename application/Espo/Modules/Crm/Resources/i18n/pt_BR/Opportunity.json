@@ -1,39 +1,39 @@
 {
-    "fields": {
-        "name": "Nome",
-        "account": "Conta",
-        "stage": "Estágio",
-        "amount": "Valor",
-        "probability": "Probabilidade, %",
-        "leadSource": "Lead de Origem",
-        "doNotCall": "Não ligar",
-        "closeDate": "Data de Fechamento",
-        "contacts": "Contatos",
-        "description": "Descrição",
+    "fields"       : {
+        "name"           : "Nome",
+        "account"        : "Conta",
+        "stage"          : "Estágio",
+        "amount"         : "Valor",
+        "probability"    : "Probabilidade, %",
+        "leadSource"     : "Lead de Origem",
+        "doNotCall"      : "Não ligar",
+        "closeDate"      : "Data de Fechamento",
+        "contacts"       : "Contatos",
+        "description"    : "Descrição",
         "amountConverted": "Valor (convertido)"
     },
-    "links": {
+    "links"        : {
         "contacts": "Contatos"
     },
-    "options": {
+    "options"      : {
         "stage": {
-            "Prospecting": "Prospectando",
-            "Qualification": "Qualificação",
-            "Needs Analysis": "Necessita de Análise",
-            "Value Proposition": "Proposta de Valor",
-            "Id. Decision Makers": "Identificação dos Decisores",
-            "Perception Analysis": "Análise da Percepção",
+            "Prospecting"         : "Prospectando",
+            "Qualification"       : "Qualificação",
+            "Needs Analysis"      : "Necessita de Análise",
+            "Value Proposition"   : "Proposta de Valor",
+            "Id. Decision Makers" : "Identificação dos Decisores",
+            "Perception Analysis" : "Análise da Percepção",
             "Proposal/Price Quote": "Proposta/Cotação",
-            "Negotiation/Review": "Negociação/Revisão",
-            "Closed Won": "Ganha",
-            "Closed Lost": "Perdida"
+            "Negotiation/Review"  : "Negociação/Revisão",
+            "Closed Won"          : "Ganha",
+            "Closed Lost"         : "Perdida"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Opportunity": "Criar Oportunidade"
     },
     "presetFilters": {
         "open": "Aberta",
-        "won": "Ganha"
+        "won" : "Ganha"
     }
 }

@@ -1,41 +1,40 @@
 {
-    "fields": {
-        "name": "İsim",
-        "team": "Takım",
-        "status": "Durum",
-        "assignToUser": "Kullanıcıya Ata",
-        "host": "Sunucu",
-        "username": "Kullanıcı Adı",
-        "password": "Şifre",
-        "port": "Bağlantı Noktası",
-        "monitoredFolders": "İzlenen Klasörler",
-        "trashFolder": "Çöp Kutusu",
-        "ssl": "SSL",        
-        "createCase": "Dosya Oluştur",
-        "reply": "Cevapla",
-        "caseDistribution": "Dosya Dağılımı",
+    "fields"  : {
+        "name"              : "İsim",
+        "team"              : "Takım",
+        "status"            : "Durum",
+        "assignToUser"      : "Kullanıcıya Ata",
+        "host"              : "Sunucu",
+        "username"          : "Kullanıcı Adı",
+        "password"          : "Şifre",
+        "port"              : "Bağlantı Noktası",
+        "monitoredFolders"  : "İzlenen Klasörler",
+        "trashFolder"       : "Çöp Kutusu",
+        "ssl"               : "SSL",
+        "createCase"        : "Dosya Oluştur",
+        "reply"             : "Cevapla",
+        "caseDistribution"  : "Dosya Dağılımı",
         "replyEmailTemplate": "Cevaplama Eposta Şablonu",
-        "replyFromAddress": "Adresten Cevapla",
-        "replyFromName": "İsimden Cevapla"
+        "replyFromAddress"  : "Adresten Cevapla",
+        "replyFromName"     : "İsimden Cevapla"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Active": "Aktif",
+    "links"   : {},
+    "options" : {
+        "status"          : {
+            "Active"  : "Aktif",
             "Inactive": "Pasif"
         },
         "caseDistribution": {
             "Direct-Assignment": "DIRECT-ASSIGNMENTXXXX",
-            "Round-Robin": "ROUND-ROBINXXXX",
-            "Least-Busy": "LEAST-BUSYXXXX"
+            "Round-Robin"      : "ROUND-ROBINXXXX",
+            "Least-Busy"       : "LEAST-BUSYXXXX"
         }
     },
-    "labels": {
+    "labels"  : {
         "Create InboundEmail": "Gelen Eposta Oluştur",
-        "IMAP": "IMAP",
-        "Actions": "Hareketler",
-        "Main": "Ana"        
+        "IMAP"               : "IMAP",
+        "Actions"            : "Hareketler",
+        "Main"               : "Ana"
     },
     "messages": {
         "couldNotConnectToImap": "IMAP sunucusuna bağlanamadı"

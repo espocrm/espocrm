@@ -1,48 +1,47 @@
 {
-    "labels": {
+    "labels" : {
         "Converted To": "Çevrildi",
-        "Create Lead": "Müşteri Adayı Oluştur",
-        "Convert": "Çevir"
+        "Create Lead" : "Müşteri Adayı Oluştur",
+        "Convert"     : "Çevir"
     },
-    "fields": {
-        "name": "İsim",
-        "emailAddress": "Eposta",
-        "title": "Başlık",
-        "website": "Website",
-        "phone": "Telefon",
-        "phoneOffice": "Phone (Office)",
-        "fax": "Faks",
-        "accountName": "Hesap Adı",
-        "doNotCall": "Arama Yapma",
-        "address": "Adres",
-        "status": "Durum",
-        "source": "Kaynak",
-        "opportunityAmount": "Fırsat Tutarı",
-        "description": "açıklama",
-        "createdAccount": "Hesap",
-        "createdContact": "Bağlantı",
+    "fields" : {
+        "name"              : "İsim",
+        "emailAddress"      : "Eposta",
+        "title"             : "Başlık",
+        "website"           : "Website",
+        "phone"             : "Telefon",
+        "phoneOffice"       : "Phone (Office)",
+        "fax"               : "Faks",
+        "accountName"       : "Hesap Adı",
+        "doNotCall"         : "Arama Yapma",
+        "address"           : "Adres",
+        "status"            : "Durum",
+        "source"            : "Kaynak",
+        "opportunityAmount" : "Fırsat Tutarı",
+        "description"       : "açıklama",
+        "createdAccount"    : "Hesap",
+        "createdContact"    : "Bağlantı",
         "createdOpportunity": "Fırsat"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "status": {
-            "New": "Yeni",
-            "Assigned": "Atanmış",
+            "New"       : "Yeni",
+            "Assigned"  : "Atanmış",
             "In Process": "İşlemde",
-            "Converted": "Çevrildi",
-            "Recycled": "Geri Dönüştürüldü",
-            "Dead": "Ölü"
+            "Converted" : "Çevrildi",
+            "Recycled"  : "Geri Dönüştürüldü",
+            "Dead"      : "Ölü"
         },
         "source": {
-            "Call": "Arama",
-            "Email": "Eposta",
+            "Call"             : "Arama",
+            "Email"            : "Eposta",
             "Existing Customer": "Varolan Müşteri",
-            "Partner": "Ortak",
-            "Public Relations": "Halkla İlişkiler",
-            "Web Site": "Web Site",
-            "Campaign": "Kampanya",
-            "Other": "Diğer"
+            "Partner"          : "Ortak",
+            "Public Relations" : "Halkla İlişkiler",
+            "Web Site"         : "Web Site",
+            "Campaign"         : "Kampanya",
+            "Other"            : "Diğer"
         }
     }
 }

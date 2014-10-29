@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Имя",
+    "fields"  : {
+        "name" : "Имя",
         "roles": "Функции"
     },
-    "links": {
+    "links"   : {
         "users": "Пользователи",
         "teams": "Группы"
     },
-    "labels": {
-        "Access": "Доступ",
+    "labels"  : {
+        "Access"     : "Доступ",
         "Create Role": "Создать роль"
     },
-    "options": {
+    "options" : {
         "accessList": {
-            "not-set": "не установлен",
-            "enabled": "включен",
+            "not-set" : "не установлен",
+            "enabled" : "включен",
             "disabled": "отключен"
         },
-        "levelList": {
-            "all": "все",
+        "levelList" : {
+            "all" : "все",
             "team": "группа",
-            "own": "принадлежит",
-            "no": "нет"
+            "own" : "принадлежит",
+            "no"  : "нет"
         }
     },
-    "actions": {
-        "read": "Чтение",
-        "edit": "Редактирование",
+    "actions" : {
+        "read"  : "Чтение",
+        "edit"  : "Редактирование",
         "delete": "Удаление"
     },
     "messages": {

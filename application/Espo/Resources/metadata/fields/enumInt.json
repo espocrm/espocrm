@@ -1,17 +1,17 @@
 {
-   "params":[
-      {
-         "name":"options",
-         "type":"array"
-      },
-      {
-         "name":"default",
-         "type":"int"
-      }
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "type":"int"
-   }
+    "params"      : [
+        {
+            "name": "options",
+            "type": "array"
+        },
+        {
+            "name": "default",
+            "type": "int"
+        }
+    ],
+    "filter"      : true,
+    "notCreatable": true,
+    "fieldDefs"   : {
+        "type": "int"
+    }
 }

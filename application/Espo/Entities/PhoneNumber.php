@@ -18,20 +18,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Entities;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\Entity;
 
-class PhoneNumber extends \Espo\Core\ORM\Entity
+class PhoneNumber extends
+    Entity
 {
+
     protected function setName($value)
     {
         if (empty($value)) {
             throw new Error("Phone number can't be empty");
         }
-        $this->valuesContainer['name'] = $value;    
+        $this->valuesContainer['name'] = $value;
     }
 }
 

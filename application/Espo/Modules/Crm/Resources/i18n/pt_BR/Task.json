@@ -1,37 +1,36 @@
 {
-    "fields": {
-        "name": "Name",
-        "parent": "Relação",
-        "status": "Status",
-        "dateStart": "Data de Início",
-        "dateEnd": "Até a Data",
-        "priority": "Prioridade",
+    "fields"       : {
+        "name"       : "Name",
+        "parent"     : "Relação",
+        "status"     : "Status",
+        "dateStart"  : "Data de Início",
+        "dateEnd"    : "Até a Data",
+        "priority"   : "Prioridade",
         "description": "Descrição",
-        "isOverdue": "Atrasada"
+        "isOverdue"  : "Atrasada"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
+    "links"        : {},
+    "options"      : {
+        "status"  : {
             "Not Started": "Não Iniciada",
-            "Started": "Iniciada",
-            "Completed": "Completa",
-            "Canceled": "Cancelada"
+            "Started"    : "Iniciada",
+            "Completed"  : "Completa",
+            "Canceled"   : "Cancelada"
         },
         "priority": {
-            "Low": "Baixa",
+            "Low"   : "Baixa",
             "Normal": "Normal",
-            "High": "Alta",
+            "High"  : "Alta",
             "Urgent": "Urgente"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Task": "Criar Tarefa"
     },
     "presetFilters": {
-        "active": "Ativa",
+        "active"   : "Ativa",
         "completed": "Completa",
-        "todays": "Hoje",
-        "overdue": "Atrasada"
+        "todays"   : "Hoje",
+        "overdue"  : "Atrasada"
     }
 }

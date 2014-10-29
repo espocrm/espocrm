@@ -18,40 +18,56 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Acl;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Slim\Http\Request;
 
-class User extends \Espo\Core\Controllers\Record
-{    
+class User extends
+    Record
+{
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return array|mixed
+     * @since 1.0
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function actionAcl($params, $data, $request)
-    {        
+    {
         $userId = $request->get('id');
         if (empty($userId)) {
             throw new Error();
         }
-        
         if (!$this->getUser()->isAdmin() && $this->getUser()->id != $userId) {
             throw new Forbidden();
         }
-        
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (empty($user)) {
             throw new NotFound();
         }
-        
-        $acl = new \Espo\Core\Acl($user, $this->getConfig(), $this->getContainer()->get('fileManager'), $this->getMetadata());
-        
-        return $acl->toArray();                    
+        $acl = new Acl($user, $this->getConfig(), $this->getContainer()->get('fileManager'),
+            $this->getMetadata());
+        return $acl->toArray();
     }
-    
+
     public function actionChangeOwnPassword($params, $data)
     {
-        return $this->getService('User')->changePassword($this->getUser()->id, $data['password']);
+        /**
+         * @var \Espo\Services\User $userService
+         */
+        $userService = $this->getService('User');
+        return $userService->changePassword($this->getUser()->id, $data['password']);
     }
 }
 

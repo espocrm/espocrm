@@ -18,58 +18,70 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Modules\Crm\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden,
-    \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Controllers\Base;
+use Espo\Core\Exceptions\BadRequest;
+use Slim\Http\Request;
 
-class Activities extends \Espo\Core\Controllers\Base
+class Activities extends
+    Base
 {
-    public static $defaultAction = 'index';    
-    
+
+    public static $defaultAction = 'index';
+
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+     * @since 1.0
+     * @throws BadRequest
+     */
     public function actionListCalendarEvents($params, $data, $request)
     {
+        /**
+         * @var \Espo\Modules\Crm\Services\Activities $service
+         */
         $from = $request->get('from');
         $to = $request->get('to');
-        
         if (empty($from) || empty($to)) {
             throw new BadRequest();
         }
-        
-        
         $service = $this->getService('Activities');
         return $service->getEvents($this->getUser()->id, $from, $to);
     }
 
+    /**
+     * @param         $params
+     * @param         $data
+     * @param Request $request
+     *
+     * @return mixed
+     * @since 1.0
+     * @throws BadRequest
+     */
     public function actionList($params, $data, $request)
     {
         $name = $params['name'];
-        
         if (!in_array($name, array('activities', 'history'))) {
             throw new BadRequest();
         }
-        
         $entityName = $params['scope'];
         $id = $params['id'];
-        
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $where = $request->get('where');
-        
         $scope = null;
         if (!empty($where) && !empty($where['scope']) && $where['scope'] !== 'false') {
             $scope = $where['scope'];
-        }        
-        
+        }
         $service = $this->getService('Activities');
-
         $methodName = 'get' . ucfirst($name);
-        
         return $service->$methodName($entityName, $id, array(
             'scope' => $scope,
             'offset' => $offset,

@@ -19,25 +19,35 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Mail;
 
-use \Espo\Entities\Email;
-
-use \Zend\Mime\Message as MimeMessage;
-use \Zend\Mime\Part as MimePart;
-use \Zend\Mime\Mime as Mime;
-
-use \Zend\Mail\Message;
-use \Zend\Mail\Transport\Smtp as SmtpTransport;
-use \Zend\Mail\Transport\SmtpOptions;
-
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config;
+use Espo\Entities\Attachment;
+use Espo\Entities\Email;
+use Zend\Mail\Header\ContentType;
+use Zend\Mail\Header\MessageId;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
+use Zend\Mail\Transport\TransportInterface;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Mime as Mime;
+use Zend\Mime\Part as MimePart;
 
 class Sender
 {
+
+    /**
+     * @var Config
+     * @since 1.0
+     */
     protected $config;
 
+    /**
+     * @var TransportInterface
+     * @since 1.0
+     */
     protected $transport;
 
     protected $isGlobal = false;
@@ -48,6 +58,34 @@ class Sender
     {
         $this->config = $config;
         $this->useGlobal();
+    }
+
+    public function useGlobal()
+    {
+        $this->params = array();
+        if ($this->isGlobal) {
+            return $this;
+        }
+        $this->transport = new SmtpTransport();
+        $config = $this->config;
+        $opts = array(
+            'name' => 'admin',
+            'host' => $config->get('smtpServer'),
+            'port' => $config->get('smtpPort'),
+            'connection_config' => array()
+        );
+        if ($config->get('smtpAuth')) {
+            $opts['connection_class'] = 'login';
+            $opts['connection_config']['username'] = $config->get('smtpUsername');
+            $opts['connection_config']['password'] = $config->get('smtpPassword');
+        }
+        if ($config->get('smtpSecurity')) {
+            $opts['connection_config']['ssl'] = strtolower($config->get('smtpSecurity'));
+        }
+        $options = new SmtpOptions($opts);
+        $this->transport->setOptions($options);
+        $this->isGlobal = true;
+        return $this;
     }
 
     public function resetParams()
@@ -66,9 +104,7 @@ class Sender
     {
         $this->isGlobal = false;
         $this->params = $params;
-
         $this->transport = new SmtpTransport();
-        
         $opts = array(
             'name' => 'admin',
             'host' => $params['server'],
@@ -83,60 +119,27 @@ class Sender
         if ($params['security']) {
             $opts['connection_config']['ssl'] = strtolower($params['security']);
         }
-        
         if (in_array('fromName', $params)) {
             $this->params['fromName'] = $params['fromName'];
-        }        
+        }
         if (in_array('fromAddress', $params)) {
             $this->params['fromAddress'] = $params['fromAddress'];
         }
-        
         $options = new SmtpOptions($opts);
         $this->transport->setOptions($options);
-
-        return $this;
-    }
-
-    public function useGlobal()
-    {
-        $this->params = array();
-        if ($this->isGlobal) {
-            return $this;
-        }
-
-        $this->transport = new SmtpTransport();
-
-        $config = $this->config;
-
-        $opts = array(
-            'name' => 'admin',
-            'host' => $config->get('smtpServer'),
-            'port' => $config->get('smtpPort'),
-            'connection_config' => array()
-        );
-        if ($config->get('smtpAuth')) {
-            $opts['connection_class'] = 'login';
-            $opts['connection_config']['username'] = $config->get('smtpUsername');
-            $opts['connection_config']['password'] = $config->get('smtpPassword');
-        }
-        if ($config->get('smtpSecurity')) {
-            $opts['connection_config']['ssl'] = strtolower($config->get('smtpSecurity'));
-        }
-
-        $options = new SmtpOptions($opts);
-        $this->transport->setOptions($options);
-
-        $this->isGlobal = true;
-
         return $this;
     }
 
     public function send(Email $email, $params = array())
     {
+        /**
+         * @var Attachment  $a
+         * @var ContentType $ctHeader
+         * @var MessageId   $msgIdHeader
+         */
         $message = new Message();
-        $config = $this->config;        
-        $params = $this->params + $params;        
-
+        $config = $this->config;
+        $params = $this->params + $params;
         if ($email->get('from')) {
             $fromName = null;
             if (!empty($params['fromName'])) {
@@ -154,16 +157,13 @@ class Sender
                 }
                 $fromAddress = $config->get('outboundEmailFromAddress');
             }
-
             if (!empty($params['fromName'])) {
                 $fromName = $params['fromName'];
             } else {
                 $fromName = $config->get('outboundEmailFromName');
             }
-            
             $message->addFrom($fromAddress, $fromName);
         }
-        
         if (!empty($params['replyToAddress'])) {
             $replyToName = null;
             if (!empty($params['replyToName'])) {
@@ -171,7 +171,6 @@ class Sender
             }
             $message->setReplyTo($params['replyToAddress'], $replyToName);
         }
-
         $value = $email->get('to');
         if ($value) {
             $arr = explode(';', $value);
@@ -181,7 +180,6 @@ class Sender
                 }
             }
         }
-
         $value = $email->get('cc');
         if ($value) {
             $arr = explode(';', $value);
@@ -191,7 +189,6 @@ class Sender
                 }
             }
         }
-
         $value = $email->get('bcc');
         if ($value) {
             $arr = explode(';', $value);
@@ -201,27 +198,19 @@ class Sender
                 }
             }
         }
-
         $message->setSubject($email->get('name'));
-
         $body = new MimeMessage;
         $parts = array();
-    
-
-        $bodyPart = new MimePart($email->getBodyPlainForSending());            
+        $bodyPart = new MimePart($email->getBodyPlainForSending());
         $bodyPart->type = 'text/plain';
         $bodyPart->charset = 'utf-8';
         $parts[] = $bodyPart;
-
-        
         if ($email->get('isHtml')) {
             $bodyPart = new MimePart($email->getBodyForSending());
             $bodyPart->type = 'text/html';
             $bodyPart->charset = 'utf-8';
             $parts[] = $bodyPart;
         }
-        
-
         $aCollection = $email->get('attachments');
         if (!empty($aCollection)) {
             foreach ($aCollection as $a) {
@@ -236,7 +225,6 @@ class Sender
                 $parts[] = $attachment;
             }
         }
-        
         $aCollection = $email->getInlineAttachments();
         if (!empty($aCollection)) {
             foreach ($aCollection as $a) {
@@ -251,28 +239,24 @@ class Sender
                 $parts[] = $attachment;
             }
         }
-
         $body->setParts($parts);
         $message->setBody($body);
-        
         if ($email->get('isHtml')) {
-            $message->getHeaders()->get('content-type')->setType('multipart/alternative');
+            $ctHeader = $message->getHeaders()->get('content-type');
+            $ctHeader->setType('multipart/alternative');
         }
-
-        try {
+        try{
             $this->transport->send($message);
-            
             $headers = $message->getHeaders();
-            if ($headers->has('messageId')) {            
-                $email->set('messageId', $headers->get('messageId')->getId());
+            if ($headers->has('messageId')) {
+                $msgIdHeader = $headers->get('messageId');
+                $email->set('messageId', $msgIdHeader->getId());
             }
-
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));
-        } catch (\Exception $e) {
+        } catch(\Exception $e){
             throw new Error($e->getMessage(), 500);
         }
-
         $this->useGlobal();
     }
 }

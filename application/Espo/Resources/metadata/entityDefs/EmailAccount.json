@@ -1,83 +1,86 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"            : {
+            "type"    : "varchar",
             "required": true
         },
-        "status": {
-            "type": "enum",
-            "options": ["Active", "Inactive"]
+        "status"          : {
+            "type"   : "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ]
         },
-        "host": {
-            "type": "varchar",
+        "host"            : {
+            "type"    : "varchar",
             "required": true
         },
-        "port": {
-            "type": "varchar",
-            "default": "143",
+        "port"            : {
+            "type"    : "varchar",
+            "default" : "143",
             "required": true
         },
-        "ssl": {
+        "ssl"             : {
             "type": "bool"
         },
-        "username": {
-            "type": "varchar",
+        "username"        : {
+            "type"    : "varchar",
             "required": true
         },
-        "password": {
+        "password"        : {
             "type": "password"
         },
         "monitoredFolders": {
-            "type": "varchar",
+            "type"    : "varchar",
             "required": true,
-            "default": "INBOX",
-            "view": "EmailAccount.Fields.Folders"
+            "default" : "INBOX",
+            "view"    : "EmailAccount.Fields.Folders"
         },
-        "fetchSince": {
-            "type": "date",
+        "fetchSince"      : {
+            "type"    : "date",
             "required": true
         },
-        "fetchData": {
-            "type": "text",
+        "fetchData"       : {
+            "type"    : "text",
             "readOnly": true
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"       : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"      : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "assignedUser"    : {
+            "type"    : "link",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"       : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"      : {
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
+    "links"     : {
         "assignedUser": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "createdBy": {
-            "type": "belongsTo",
+        "createdBy"   : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"  : {
+            "type"  : "belongsTo",
             "entity": "User"
         }
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

@@ -18,13 +18,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Entities;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\Entity;
 
-class EmailAddress extends \Espo\Core\ORM\Entity
+class EmailAddress extends
+    Entity
 {
 
     protected function setName($value)
@@ -33,7 +34,6 @@ class EmailAddress extends \Espo\Core\ORM\Entity
             throw new Error("Not valid email address '{$value}'");
         }
         $this->valuesContainer['name'] = $value;
-        $this->set('lower', strtolower($value));        
-    } 
-
+        $this->set('lower', strtolower($value));
+    }
 }

@@ -1,13 +1,13 @@
 {
-    "modes": {
-        "month": "Tháng",
-        "week": "Tuần",
-        "day": "Ngày",
+    "modes" : {
+        "month"     : "Tháng",
+        "week"      : "Tuần",
+        "day"       : "Ngày",
         "agendaWeek": "Tuần",
-        "agendaDay": "Ngày"
+        "agendaDay" : "Ngày"
     },
     "labels": {
-        "Today": "Today",
+        "Today" : "Today",
         "Create": "Tạo"
     }
 }

@@ -19,13 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Actions\Base;
+use Espo\Core\Utils\Log;
 
-class Install extends \Espo\Core\Upgrades\Actions\Base
+class Install extends
+    Base
 {
+
     /**
      * Is copied extension files to Espo
      *
@@ -37,76 +40,69 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
      * Main installation process
      *
      * @param  string $processId Upgrade/Extension ID, gotten in upload stage
+     *
+     * @throws Error
      * @return bool
      */
     public function run($processId)
     {
-        $GLOBALS['log']->debug('Installation process ['.$processId.']: start run.');
-
+        /**
+         * @var Log $log
+         */
+        $log = $GLOBALS['log'];
+        $log->debug('Installation process [' . $processId . ']: start run.');
         if (empty($processId)) {
             throw new Error('Installation package ID was not specified.');
         }
-
         $this->setProcessId($processId);
-
         $this->isCopied = false;
-
         /** check if an archive is unzipped, if no then unzip */
         $packagePath = $this->getPackagePath();
         if (!file_exists($packagePath)) {
             $this->unzipArchive();
             $this->isAcceptable();
         }
-
         $this->beforeRunAction();
-
         /* run before install script */
         $this->runScript('before');
-
         /* remove files defined in a manifest */
         if (!$this->deleteFiles()) {
             $this->throwErrorAndRemovePackage('Permission denied to delete files.');
         }
-
         /* copy files from directory "Files" to EspoCRM files */
         if (!$this->copyFiles()) {
             $this->throwErrorAndRemovePackage('Cannot copy files.');
         }
         $this->isCopied = true;
-
         if (!$this->systemRebuild()) {
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
-
         /* run before install script */
         $this->runScript('after');
-
         $this->afterRunAction();
-
         /* delete unziped files */
         $this->deletePackageFiles();
-
-        $GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
-    }
-
-    protected function restoreFiles()
-    {
-        $backupPath = $this->getPath('backupPath');
-
-        $res = true;
-        if ($this->isCopied) {
-            $res &= $this->copy(array($backupPath, self::FILES), '', true);
-            $GLOBALS['log']->info('Restore: copy back');
-        }
-
-        $res &= $this->getFileManager()->removeInDir($backupPath, true);
-
-        return $res;
+        $log->debug('Installation process [' . $processId . ']: end run.');
     }
 
     protected function throwErrorAndRemovePackage($errorMessage = '')
     {
         $this->restoreFiles();
         parent::throwErrorAndRemovePackage($errorMessage);
+    }
+
+    protected function restoreFiles()
+    {
+        /**
+         * @var Log $log
+         */
+        $backupPath = $this->getPath('backupPath');
+        $res = true;
+        if ($this->isCopied) {
+            $res &= $this->copy(array($backupPath, self::FILES), '', true);
+            $log->info('Restore: copy back');
+        }
+        $res &= $this->getFileManager()->removeInDir($backupPath, true);
+        return $res;
     }
 }

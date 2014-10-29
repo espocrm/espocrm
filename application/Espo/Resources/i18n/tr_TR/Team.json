@@ -1,9 +1,9 @@
 {
     "fields": {
-        "name": "İsim",
+        "name" : "İsim",
         "roles": "Görevler"
     },
-    "links": {
+    "links" : {
         "users": "Kullanıcılar"
     },
     "labels": {

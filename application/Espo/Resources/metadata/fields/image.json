@@ -1,29 +1,34 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"previewSize",
-         "type":"enum",
-         "default":"small",
-         "options": ["x-small", "small", "medium", "large"]
-      }
-   ],
-   "actualFields":[
-      "id"
-   ],
-   "notActualFields":[
-      "name"
-   ],
-   "fieldDefs":{
-      "skip":true
-   },
-   "filter": false,
-   "linkDefs": {
-      "type": "belongsTo",
-      "entity": "Attachment"
-   }
+    "params"         : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name"   : "previewSize",
+            "type"   : "enum",
+            "default": "small",
+            "options": [
+                "x-small",
+                "small",
+                "medium",
+                "large"
+            ]
+        }
+    ],
+    "actualFields"   : [
+        "id"
+    ],
+    "notActualFields": [
+        "name"
+    ],
+    "fieldDefs"      : {
+        "skip": true
+    },
+    "filter"         : false,
+    "linkDefs"       : {
+        "type"  : "belongsTo",
+        "entity": "Attachment"
+    }
 }

@@ -1,85 +1,85 @@
 {
-    "controller": "Controllers.Record",
-    "views":{
-        "detail":"Crm:Call.Detail",
-        "list": "Crm:Call.List"
+    "controller"   : "Controllers.Record",
+    "views"        : {
+        "detail": "Crm:Call.Detail",
+        "list"  : "Crm:Call.List"
     },
-    "recordViews":{
-        "list":"Crm:Call.Record.List"
+    "recordViews"  : {
+        "list": "Crm:Call.Record.List"
     },
-    "menu": {
+    "menu"         : {
         "detail": {
             "dropdown": [
                 {
-                    "label": "Duplicate",
+                    "label" : "Duplicate",
                     "action": "duplicate",
-                    "acl": "edit"
+                    "acl"   : "edit"
                 }
             ]
         }
     },
-    "sidePanels":{
-        "detail":[
+    "sidePanels"   : {
+        "detail": [
             {
-                "name":"attendees",
-                "label":"Attendees",
-                "view":"Record.Panels.Side",
-                "options":{
-                    "fields":[
+                "name"   : "attendees",
+                "label"  : "Attendees",
+                "view"   : "Record.Panels.Side",
+                "options": {
+                    "fields": [
                         "users",
                         "contacts",
                         "leads"
                     ],
-                    "mode":"detail"
+                    "mode"  : "detail"
                 }
             }
         ],
-        "edit":[
+        "edit"  : [
             {
-                "name":"attendees",
-                "label":"Attendees",
-                "view":"Record.Panels.Side",
-                "options":{
-                    "fields":[
+                "name"   : "attendees",
+                "label"  : "Attendees",
+                "view"   : "Record.Panels.Side",
+                "options": {
+                    "fields": [
                         "users",
                         "contacts",
                         "leads"
                     ],
-                    "mode":"edit"
+                    "mode"  : "edit"
                 }
             }
         ]
     },
     "presetFilters": [
         {
-            "name":"planned",
+            "name" : "planned",
             "style": "primary",
-            "data": {
+            "data" : {
                 "status": {
-                    "type": "in",
+                    "type" : "in",
                     "value": ["Planned"]
                 }
             }
         },
         {
-            "name":"held",
+            "name" : "held",
             "style": "success",
-            "data": {
+            "data" : {
                 "status": {
-                    "type": "in",
+                    "type" : "in",
                     "value": ["Held"]
                 }
             }
         },
         {
-            "name":"todays",
+            "name": "todays",
             "data": {
                 "dateStart": {
-                    "type": "today",
+                    "type"    : "today",
                     "dateTime": true
                 }
             }
         }
     ],
-    "boolFilters": ["onlyMy"]
+    "boolFilters"  : ["onlyMy"]
 }

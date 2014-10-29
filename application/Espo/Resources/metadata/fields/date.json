@@ -1,25 +1,25 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"varchar"
-      },
-      {
-         "name":"after",
-         "type":"varchar"
-      },
-      {
-         "name":"before",
-         "type":"varchar"
-      }
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "notNull":false
-   }
+    "params"   : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "varchar"
+        },
+        {
+            "name": "after",
+            "type": "varchar"
+        },
+        {
+            "name": "before",
+            "type": "varchar"
+        }
+    ],
+    "filter"   : true,
+    "fieldDefs": {
+        "notNull": false
+    }
 }

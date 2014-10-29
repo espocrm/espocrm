@@ -19,39 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Upgrades\Actions\Extension;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\Extension;
 
-class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
+class Uninstall extends
+    \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
+
     protected $extensionEntity;
-
-    /**
-     * Get entity of this extension
-     *
-     * @return \Espo\Entities\Extension
-     */
-    protected function getExtensionEntity()
-    {
-        return $this->extensionEntity;
-    }
-
-    /**
-     * Set Extension Entity
-     *
-     * @param \Espo\Entities\Extension $extensionEntity [description]
-     */
-    protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
-    {
-        $this->extensionEntity = $extensionEntity;
-    }
 
     protected function beforeRunAction()
     {
+        /**
+         * @var Extension $extensionEntity
+         */
         $processId = $this->getProcessId();
-
         /** get extension entity */
         $extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
         if (!isset($extensionEntity)) {
@@ -64,8 +48,27 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
     {
         /** Set extension entity, isInstalled = false */
         $extensionEntity = $this->getExtensionEntity();
-
         $extensionEntity->set('isInstalled', false);
         $this->getEntityManager()->saveEntity($extensionEntity);
+    }
+
+    /**
+     * Get entity of this extension
+     *
+     * @return Extension
+     */
+    protected function getExtensionEntity()
+    {
+        return $this->extensionEntity;
+    }
+
+    /**
+     * Set Extension Entity
+     *
+     * @param Extension $extensionEntity [description]
+     */
+    protected function setExtensionEntity(Extension $extensionEntity)
+    {
+        $this->extensionEntity = $extensionEntity;
     }
 }

@@ -18,26 +18,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-
+ ************************************************************************/
 namespace Espo\Controllers;
 
-class Attachment extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+use Espo\Core\Utils\File\Manager;
+
+class Attachment extends
+    Record
 {
 
     public function actionUpload($params, $data)
-    {        
+    {
+        /**
+         * @var Manager $fileManager
+         */
         list($prefix, $contents) = explode(',', $data);
         $contents = base64_decode($contents);
-        
         $attachment = $this->getEntityManager()->getEntity('Attachment');
-        $this->getEntityManager()->saveEntity($attachment);        
-        $this->getContainer()->get('fileManager')->putContents('data/upload/' . $attachment->id, $contents);
-        
+        $this->getEntityManager()->saveEntity($attachment);
+        $fileManager = $this->getContainer()->get('fileManager');
+        $fileManager->putContents('data/upload/' . $attachment->id, $contents);
         return array(
             'attachmentId' => $attachment->id
-        );    
+        );
     }
-
 }
 

@@ -1,17 +1,17 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      }
-   ],
-   "notActualFields":[
-      "data"
-   ],
-   "notCreatable": true,
-   "filter": true,
-   "fieldDefs":{
-      "notStorable":true
-   }
+    "params"         : [
+        {
+            "name"   : "required",
+            "type"   : "bool",
+            "default": false
+        }
+    ],
+    "notActualFields": [
+        "data"
+    ],
+    "notCreatable"   : true,
+    "filter"         : true,
+    "fieldDefs"      : {
+        "notStorable": true
+    }
 }

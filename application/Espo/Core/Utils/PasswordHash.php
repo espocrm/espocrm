@@ -19,13 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Core\Utils;
 
 use Espo\Core\Exceptions\Error;
 
 class PasswordHash
 {
+
     private $config;
 
     /**
@@ -40,34 +40,31 @@ class PasswordHash
         $this->config = $config;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
     /**
      * Get hash of a pawword
      *
      * @param  string $password
+     *
+     * @param bool    $useMd5
+     *
+     * @throws Error
      * @return string
      */
     public function hash($password, $useMd5 = true)
     {
         $salt = $this->getSalt();
-
         if ($useMd5) {
             $password = md5($password);
         }
-
         $hash = crypt($password, $salt);
         $hash = str_replace($salt, '', $hash);
-
         return $hash;
     }
 
     /**
      * Get a salt from config and normalize it
      *
+     * @throws Error
      * @return string
      */
     protected function getSalt()
@@ -76,16 +73,20 @@ class PasswordHash
         if (!isset($salt)) {
             throw new Error('Option "passwordSalt" does not exist in config.php');
         }
-
         $salt = $this->normalizeSalt($salt);
-
         return $salt;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
     }
 
     /**
      * Convert salt in format in accordance to $saltFormat
      *
      * @param  string $salt
+     *
      * @return string
      */
     protected function normalizeSalt($salt)

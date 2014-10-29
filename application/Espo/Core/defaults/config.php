@@ -19,17 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
-return array (
+return array(
     'database' =>
-    array (
-        'driver' => 'pdo_mysql',
-        'host' => 'localhost',
-        'port' => '',
-        'dbname' => '',
-        'user' => '',
-        'password' => '',
-    ),
+        array(
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'port' => '',
+            'dbname' => '',
+            'user' => '',
+            'password' => '',
+        ),
     'useCache' => true,
     'recordsPerPage' => 20,
     'recordsPerPageSmall' => 5,
@@ -43,12 +42,10 @@ return array (
     'decimalMark' => '.',
     'exportDelimiter' => ';',
     'currencyList' =>
-    array (
-    ),
+        array(),
     'defaultCurrency' => 'USD',
     'baseCurrency' => 'USD',
-    'currencyRates' => array(
-    ),
+    'currencyRates' => array(),
     'outboundEmailIsShared' => true,
     'outboundEmailFromName' => 'EspoCRM',
     'outboundEmailFromAddress' => '',
@@ -73,21 +70,35 @@ return array (
     ),
     'language' => 'en_US',
     'logger' =>
-    array (
-        'path' => 'data/logs/espo.log',
-        'level' => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
-        'isRotate' => true, /** rotate log files every day */
-        'maxRotateFiles' => 30, /** max number of rotate files */
-    ),
+        array(
+            'path' => 'data/logs/espo.log',
+            'level' => 'WARNING',
+            /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
+            'isRotate' => true,
+            /** rotate log files every day */
+            'maxRotateFiles' => 30,
+            /** max number of rotate files */
+        ),
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' =>
-    array (
-        0 => 'Account',
-        1 => 'Contact',
-        2 => 'Lead',
-        3 => 'Opportunity',
+        array(
+            0 => 'Account',
+            1 => 'Contact',
+            2 => 'Lead',
+            3 => 'Opportunity',
+        ),
+    "tabList" => array(
+        "Account",
+        "Contact",
+        "Lead",
+        "Opportunity",
+        "Calendar",
+        "Meeting",
+        "Call",
+        "Task",
+        "Case",
+        "Email"
     ),
-    "tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email"),
     "quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"),
     'calendarDefaultEntity' => 'Meeting',
     'disableExport' => false,

@@ -1,216 +1,225 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"             : {
+            "type"    : "varchar",
             "required": true
         },
-        "subject": {
-            "type": "varchar",
+        "subject"          : {
+            "type"    : "varchar",
             "required": true,
-            "db": false
+            "db"      : false
         },
-        "fromName": {
+        "fromName"         : {
             "type": "varchar"
         },
-        "from": {
-            "type": "varchar",
-            "db": false,
+        "from"             : {
+            "type"    : "varchar",
+            "db"      : false,
             "required": true,
-            "view": "Email.Fields.FromAddressVarchar"
+            "view"    : "Email.Fields.FromAddressVarchar"
         },
-        "to": {
-            "type": "varchar",
-            "db": false,
+        "to"               : {
+            "type"    : "varchar",
+            "db"      : false,
             "required": true,
+            "view"    : "Email.Fields.EmailAddressVarchar"
+        },
+        "cc"               : {
+            "type": "varchar",
+            "db"  : false,
             "view": "Email.Fields.EmailAddressVarchar"
         },
-        "cc": {
+        "bcc"              : {
             "type": "varchar",
-            "db": false,
+            "db"  : false,
             "view": "Email.Fields.EmailAddressVarchar"
         },
-        "bcc": {
-            "type": "varchar",
-            "db": false,
-            "view": "Email.Fields.EmailAddressVarchar"
-        },
-        "nameHash": {
-            "type": "text",
+        "nameHash"         : {
+            "type"       : "text",
             "notStorable": true,
-            "readOlny": true,
-            "disabled": true
+            "readOlny"   : true,
+            "disabled"   : true
         },
-        "typeHash": {
-            "type": "text",
+        "typeHash"         : {
+            "type"       : "text",
             "notStorable": true,
-            "readOlny": true,
-            "disabled": true
+            "readOlny"   : true,
+            "disabled"   : true
         },
-        "idHash": {
-            "type": "text",
+        "idHash"           : {
+            "type"       : "text",
             "notStorable": true,
-            "readOlny": true,
-            "disabled": true
+            "readOlny"   : true,
+            "disabled"   : true
         },
-        "messageId": {
-            "type": "varchar",
+        "messageId"        : {
+            "type"     : "varchar",
             "maxLength": 255,
-            "readOlny": true
+            "readOlny" : true
         },
         "messageIdInternal": {
-            "type": "varchar",
+            "type"     : "varchar",
             "maxLength": 300,
-            "readOlny": true,
-            "index": true
+            "readOlny" : true,
+            "index"    : true
         },
-        "emailAddress": {
+        "emailAddress"     : {
             "type": "base",
-            "db": false
+            "db"  : false
         },
-        "fromEmailAddress": {
+        "fromEmailAddress" : {
             "type": "link",
             "view": "Email.Fields.FromEmailAddress"
         },
-        "toEmailAddresses": {
+        "toEmailAddresses" : {
             "type": "linkMultiple"
         },
-        "ccEmailAddresses": {
+        "ccEmailAddresses" : {
             "type": "linkMultiple"
         },
-        "bodyPlain": {
-            "type": "text",
+        "bodyPlain"        : {
+            "type"    : "text",
             "readOnly": true
         },
-        "body": {
+        "body"             : {
             "type": "text",
             "view": "Fields.Wysiwyg"
         },
-        "isHtml": {
-            "type": "bool",
+        "isHtml"           : {
+            "type"   : "bool",
             "default": true
         },
-        "status": {
-            "type": "enum",
-            "options": ["Draft", "Sending", "Sent", "Archived"],
+        "status"           : {
+            "type"    : "enum",
+            "options" : [
+                "Draft",
+                "Sending",
+                "Sent",
+                "Archived"
+            ],
             "readOnly": true,
-            "default": "Archived"
+            "default" : "Archived"
         },
-        "attachments": {
+        "attachments"      : {
             "type": "linkMultiple",
             "view": "Fields.AttachmentMultiple"
         },
-        "parent": {
+        "parent"           : {
             "type": "linkParent"
         },
-        "dateSent": {
+        "dateSent"         : {
             "type": "datetime"
         },
-        "deliveryDate": {
-            "type": "datetime",
-            "readOnly": true
-        },        
-        "createdAt": {
-            "type": "datetime",
+        "deliveryDate"     : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "createdAt"        : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "modifiedAt"       : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "createdBy"        : {
+            "type"    : "link",
             "readOnly": true
         },
-        "assignedUser": {
-            "type": "link",
+        "modifiedBy"       : {
+            "type"    : "link",
+            "readOnly": true
+        },
+        "assignedUser"     : {
+            "type"    : "link",
             "required": true
         },
-        "teams": {
+        "teams"            : {
             "type": "linkMultiple"
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy"        : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"       : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "assignedUser": {
-            "type": "belongsTo",
+        "assignedUser"     : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
+        "teams"            : {
+            "type"        : "hasMany",
+            "entity"      : "Team",
             "relationName": "EntityTeam"
         },
-        "attachments": {
-            "type": "hasChildren",
-            "entity": "Attachment",
+        "attachments"      : {
+            "type"   : "hasChildren",
+            "entity" : "Attachment",
             "foreign": "parent"
         },
-        "parent": {
-            "type": "belongsToParent",
+        "parent"           : {
+            "type"      : "belongsToParent",
             "entityList": [],
-            "foreign": "emails"
+            "foreign"   : "emails"
         },
-        "fromEmailAddress": {
-            "type": "belongsTo",
+        "fromEmailAddress" : {
+            "type"  : "belongsTo",
             "entity": "EmailAddress"
         },
-        "toEmailAddresses": {
-            "type": "hasMany",
-            "entity": "EmailAddress",
-            "relationName": "EmailEmailAddress",
-            "conditions": {
+        "toEmailAddresses" : {
+            "type"             : "hasMany",
+            "entity"           : "EmailAddress",
+            "relationName"     : "EmailEmailAddress",
+            "conditions"       : {
                 "addressType": "to"
             },
             "additionalColumns": {
                 "addressType": {
                     "type": "varchar",
-                    "len": "4" 
+                    "len" : "4"
                 }
             }
         },
-        "ccEmailAddresses": {
-            "type": "hasMany",
-            "entity": "EmailAddress",
-            "relationName": "EmailEmailAddress",
-            "conditions": {
+        "ccEmailAddresses" : {
+            "type"             : "hasMany",
+            "entity"           : "EmailAddress",
+            "relationName"     : "EmailEmailAddress",
+            "conditions"       : {
                 "addressType": "cc"
             },
             "additionalColumns": {
                 "addressType": {
                     "type": "varchar",
-                    "len": "4" 
+                    "len" : "4"
                 }
             }
         },
         "bccEmailAddresses": {
-            "type": "hasMany",
-            "entity": "EmailAddress",
-            "relationName": "EmailEmailAddress",
-            "conditions": {
+            "type"             : "hasMany",
+            "entity"           : "EmailAddress",
+            "relationName"     : "EmailEmailAddress",
+            "conditions"       : {
                 "addressType": "bcc"
             },
             "additionalColumns": {
                 "addressType": {
                     "type": "varchar",
-                    "len": "4" 
+                    "len" : "4"
                 }
             }
         }
     },
     "collection": {
-        "sortBy": "dateSent",
-        "asc": false,
-        "textFilterFields": ["name", "body", "bodyPlain"]      
+        "sortBy"          : "dateSent",
+        "asc"             : false,
+        "textFilterFields": [
+            "name",
+            "body",
+            "bodyPlain"
+        ]
     }
 }

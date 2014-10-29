@@ -1,9 +1,9 @@
 {
     "fields": {
-        "name": "Nume",
+        "name" : "Nume",
         "roles": "Roluri"
     },
-    "links": {
+    "links" : {
         "users": "Utilizatori"
     },
     "labels": {

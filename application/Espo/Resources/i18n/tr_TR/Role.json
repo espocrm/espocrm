@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "İsim",
+    "fields" : {
+        "name" : "İsim",
         "roles": "Görevler"
     },
-    "links": {
+    "links"  : {
         "users": "Kullanıcılar",
         "teams": "Takımlar"
     },
-    "labels": {
-        "Access": "Giriş",
+    "labels" : {
+        "Access"     : "Giriş",
         "Create Role": "Görev Oluştur"
     },
     "options": {
         "accessList": {
-            "not-set": "ayarlanmadı",
-            "enabled": "etkinleştirildi",
+            "not-set" : "ayarlanmadı",
+            "enabled" : "etkinleştirildi",
             "disabled": "devre dışı bırakıldı"
         },
-        "levelList": {
-            "all": "tümü",
+        "levelList" : {
+            "all" : "tümü",
             "team": "takım",
-            "own": "kendi",
-            "no": "NO"
+            "own" : "kendi",
+            "no"  : "NO"
         }
     },
     "actions": {
-        "read": "Oku",
-        "edit": "Düzenle",
+        "read"  : "Oku",
+        "edit"  : "Düzenle",
         "delete": "Sil"
     }
 }

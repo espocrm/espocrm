@@ -1,42 +1,41 @@
 {
-    "fields": {
-        "name": "Name",
-        "number": "Nummer",
-        "status": "Status",
-        "account": "Firma",
-        "contact": "Kontakt",
-        "priority": "Priorität",
-        "type": "Typ",
+    "fields"       : {
+        "name"       : "Name",
+        "number"     : "Nummer",
+        "status"     : "Status",
+        "account"    : "Firma",
+        "contact"    : "Kontakt",
+        "priority"   : "Priorität",
+        "type"       : "Typ",
         "description": "Beschreibung"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Neu",
-            "Assigned": "Zugewiesen",
-            "Pending": "Schwebend",
-            "Closed": "Abgeschlossen",
-            "Rejected": "Abgelehnt",
+    "links"        : {},
+    "options"      : {
+        "status"  : {
+            "New"      : "Neu",
+            "Assigned" : "Zugewiesen",
+            "Pending"  : "Schwebend",
+            "Closed"   : "Abgeschlossen",
+            "Rejected" : "Abgelehnt",
             "Duplicate": "Duplizieren"
         },
-        "priority" : {
-            "Low": "Niedrig",
+        "priority": {
+            "Low"   : "Niedrig",
             "Normal": "Normal",
-            "High": "Hoch",
+            "High"  : "Hoch",
             "Urgent": "Dringend"
         },
-        "type": {
+        "type"    : {
             "Question": "Frage",
             "Incident": "Vorfall",
-            "Problem": "Problem"
+            "Problem" : "Problem"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Case": "Neuer Fall"
     },
     "presetFilters": {
-        "open": "Offen",
+        "open"  : "Offen",
         "closed": "Abgeschlossen"
     }
 }

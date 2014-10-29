@@ -19,15 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-
-class User extends \Espo\Core\ORM\Repositories\RDB
+class User extends
+    RDB
 {
+
     protected function beforeSave(Entity $entity)
     {
         if ($entity->isNew()) {
@@ -35,11 +36,9 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             if (empty($userName)) {
                 throw new Error();
             }
-            
             $user = $this->where(array(
                 'userName' => $userName
             ))->findOne();
-            
             if ($user) {
                 throw new Error();
             }
@@ -49,7 +48,6 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 if (empty($userName)) {
                     throw new Error();
                 }
-            
                 $user = $this->where(array(
                     'userName' => $userName,
                     'id!=' => $entity->id

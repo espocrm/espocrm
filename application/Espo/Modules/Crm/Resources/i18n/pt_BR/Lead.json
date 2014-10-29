@@ -1,47 +1,46 @@
 {
-    "labels": {
+    "labels"       : {
         "Converted To": "Convertido Para",
-        "Create Lead": "Criar Lead",
-        "Convert": "Converter"
+        "Create Lead" : "Criar Lead",
+        "Convert"     : "Converter"
     },
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "E-mail",
-        "title": "Cargo",
-        "website": "Website",
-        "phoneNumber": "Telefone",
-        "accountName": "Conta",
-        "doNotCall": "Não Ligar",
-        "address": "Endereço",
-        "status": "Status",
-        "source": "Origem",
-        "opportunityAmount": "Valor da Oportunidade",
+    "fields"       : {
+        "name"                      : "Nome",
+        "emailAddress"              : "E-mail",
+        "title"                     : "Cargo",
+        "website"                   : "Website",
+        "phoneNumber"               : "Telefone",
+        "accountName"               : "Conta",
+        "doNotCall"                 : "Não Ligar",
+        "address"                   : "Endereço",
+        "status"                    : "Status",
+        "source"                    : "Origem",
+        "opportunityAmount"         : "Valor da Oportunidade",
         "opportunityAmountConverted": "Valor da Oportunidade (convertido)",
-        "description": "Descrição",
-        "createdAccount": "Conta",
-        "createdContact": "Contato",
-        "createdOpportunity": "Oportunidade"
+        "description"               : "Descrição",
+        "createdAccount"            : "Conta",
+        "createdContact"            : "Contato",
+        "createdOpportunity"        : "Oportunidade"
     },
-    "links": {
-    },
-    "options": {
+    "links"        : {},
+    "options"      : {
         "status": {
-            "New": "Novo",
-            "Assigned": "Atribuído",
+            "New"       : "Novo",
+            "Assigned"  : "Atribuído",
             "In Process": "Em Processo",
-            "Converted": "Convertido",
-            "Recycled": "Reciclado",
-            "Dead": "Morto"
+            "Converted" : "Convertido",
+            "Recycled"  : "Reciclado",
+            "Dead"      : "Morto"
         },
         "source": {
-            "Call": "Ligação",
-            "Email": "E-mail",
+            "Call"             : "Ligação",
+            "Email"            : "E-mail",
             "Existing Customer": "Cliente Existente",
-            "Partner": "Parceiro",
-            "Public Relations": "Relacionamento",
-            "Web Site": "Website",
-            "Campaign": "Campanha",
-            "Other": "Outro"
+            "Partner"          : "Parceiro",
+            "Public Relations" : "Relacionamento",
+            "Web Site"         : "Website",
+            "Campaign"         : "Campanha",
+            "Other"            : "Outro"
         }
     },
     "presetFilters": {

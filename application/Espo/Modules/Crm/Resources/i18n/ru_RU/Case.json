@@ -1,42 +1,41 @@
 {
-    "fields": {
-        "name": "Имя",
-        "number": "Номер",
-        "status": "Статус",
-        "account": "Организация",
-        "contact": "Контакт",
-        "priority": "Приоритет",
-        "type": "Раздел",
+    "fields"       : {
+        "name"       : "Имя",
+        "number"     : "Номер",
+        "status"     : "Статус",
+        "account"    : "Организация",
+        "contact"    : "Контакт",
+        "priority"   : "Приоритет",
+        "type"       : "Раздел",
         "description": "Описание"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Новый",
-            "Assigned": "На рассмотрении",
-            "Pending": "Текущее",
-            "Closed": "Закрыто",
-            "Rejected": "Отказано",
+    "links"        : {},
+    "options"      : {
+        "status"  : {
+            "New"      : "Новый",
+            "Assigned" : "На рассмотрении",
+            "Pending"  : "Текущее",
+            "Closed"   : "Закрыто",
+            "Rejected" : "Отказано",
             "Duplicate": "Копия"
         },
-        "priority" : {
-            "Low": "Низкий",
+        "priority": {
+            "Low"   : "Низкий",
             "Normal": "Нормальный",
-            "High": "Высокий",
+            "High"  : "Высокий",
             "Urgent": "Срочно"
         },
-        "type": {
+        "type"    : {
             "Question": "Вопрос",
             "Incident": "Происшествие",
-            "Problem": "Проблема"
+            "Problem" : "Проблема"
         }
     },
-    "labels": {
+    "labels"       : {
         "Create Case": "Создать обращение"
     },
     "presetFilters": {
-        "open": "Открыто",
+        "open"  : "Открыто",
         "closed": "Закрыто"
     }
 }

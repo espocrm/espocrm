@@ -1,28 +1,27 @@
 {
-    "fields": {
-        "dateFormat": "Tarih Biçimi",
-        "timeFormat": "Saat Biçimi",
-        "timeZone": "Zaman Dilimi",
-        "weekStart": "Hafta Başlangıç Günü",
+    "fields" : {
+        "dateFormat"       : "Tarih Biçimi",
+        "timeFormat"       : "Saat Biçimi",
+        "timeZone"         : "Zaman Dilimi",
+        "weekStart"        : "Hafta Başlangıç Günü",
         "thousandSeparator": "Binlik Ayraç",
-        "decimalMark": "Ondalık Ayraç",
-        "defaultCurrency": "Varsayılan Para Birimi",
-        "currencyList": "para Birimi Listesi",
-        "language": "Dil",
-        
-        "smtpServer": "Sunucu",
-        "smtpPort": "Bağlantı Noktası",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Güvenlik",
-        "smtpUsername": "Kullanıcı Adı",
-        "emailAddress": "Eposta",
-        "smtpPassword": "Şifre",
+        "decimalMark"      : "Ondalık Ayraç",
+        "defaultCurrency"  : "Varsayılan Para Birimi",
+        "currencyList"     : "para Birimi Listesi",
+        "language"         : "Dil",
+
+        "smtpServer"      : "Sunucu",
+        "smtpPort"        : "Bağlantı Noktası",
+        "smtpAuth"        : "Auth",
+        "smtpSecurity"    : "Güvenlik",
+        "smtpUsername"    : "Kullanıcı Adı",
+        "emailAddress"    : "Eposta",
+        "smtpPassword"    : "Şifre",
         "smtpEmailAddress": "Eposta Adresi",
-        
+
         "exportDelimiter": "Export Delimiter"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
         "weekStart": {
             "0": "Pazar",

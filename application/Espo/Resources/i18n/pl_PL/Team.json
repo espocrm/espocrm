@@ -1,15 +1,15 @@
 {
-    "fields": {
-        "name": "Imię",
+    "fields"  : {
+        "name" : "Imię",
         "roles": "Rola"
     },
-    "links": {
+    "links"   : {
         "users": "Użytkownik"
     },
     "tooltips": {
         "roles": "Wszyscy użytkownicy z zespołu, otrzymają dostęp do ustawień zgodnie z rolami ."
     },
-    "labels": {
+    "labels"  : {
         "Create Team": "Utwórz Zespół"
     }
 }

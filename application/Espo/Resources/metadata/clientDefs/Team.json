@@ -1,13 +1,13 @@
 {
-   "relationshipPanels":{
-      "users":{
-         "create":false,
-         "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
-      }
-   },
-   "recordViews":{
-      "detail":"Team.Record.Detail",
-      "edit":"Team.Record.Edit",
-      "list":"Team.Record.List"
-   }   
+    "relationshipPanels": {
+        "users": {
+            "create"        : false,
+            "rowActionsView": "Record.RowActions.RelationshipUnlinkOnly"
+        }
+    },
+    "recordViews"       : {
+        "detail": "Team.Record.Detail",
+        "edit"  : "Team.Record.Edit",
+        "list"  : "Team.Record.List"
+    }
 }

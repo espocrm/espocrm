@@ -1,118 +1,125 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
+    "fields"    : {
+        "name"              : {
+            "type"    : "varchar",
             "required": true
         },
-        "status": {
-            "type": "enum",
-            "options": ["Active", "Inactive"]
+        "status"            : {
+            "type"   : "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ]
         },
-        "host": {
-            "type": "varchar",
+        "host"              : {
+            "type"    : "varchar",
             "required": true
         },
-        "port": {
-            "type": "varchar",
-            "default": "143",
+        "port"              : {
+            "type"    : "varchar",
+            "default" : "143",
             "required": true
         },
-        "ssl": {
+        "ssl"               : {
             "type": "bool"
         },
-        "username": {
-            "type": "varchar",
+        "username"          : {
+            "type"    : "varchar",
             "required": true
         },
-        "password": {
+        "password"          : {
             "type": "password"
         },
-        "monitoredFolders": {
-            "type": "varchar",
+        "monitoredFolders"  : {
+            "type"    : "varchar",
             "required": true,
-            "default": "INBOX",
-            "view": "Crm:InboundEmail.Fields.Folders"
+            "default" : "INBOX",
+            "view"    : "Crm:InboundEmail.Fields.Folders"
         },
-        "fetchData": {
-            "type": "text",
+        "fetchData"         : {
+            "type"    : "text",
             "readOnly": true
         },
-        "assignToUser": {
-            "type": "link",
+        "assignToUser"      : {
+            "type"   : "link",
             "tooltip": true
         },
-        "team": {
-            "type": "link",
+        "team"              : {
+            "type"   : "link",
             "tooltip": true
         },
-        "createCase": {
-            "type": "bool",
+        "createCase"        : {
+            "type"   : "bool",
             "tooltip": true
         },
-        "caseDistribution": {
-            "type": "enum",
-            "options": ["Direct-Assignment", "Round-Robin", "Least-Busy"],
+        "caseDistribution"  : {
+            "type"   : "enum",
+            "options": [
+                "Direct-Assignment",
+                "Round-Robin",
+                "Least-Busy"
+            ],
             "default": "Direct-Assignment",
             "tooltip": true
         },
-        "reply": {
-            "type": "bool",
+        "reply"             : {
+            "type"   : "bool",
             "tooltip": true
         },
         "replyEmailTemplate": {
             "type": "link"
         },
-        "replyFromAddress": {
+        "replyFromAddress"  : {
             "type": "varchar"
         },
-        "replyToAddress": {
-            "type": "varchar",
+        "replyToAddress"    : {
+            "type"   : "varchar",
             "tooltip": true
         },
-        "replyFromName": {
+        "replyFromName"     : {
             "type": "varchar"
         },
-        "createdAt": {
-            "type": "datetime",
+        "createdAt"         : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "modifiedAt": {
-            "type": "datetime",
+        "modifiedAt"        : {
+            "type"    : "datetime",
             "readOnly": true
         },
-        "createdBy": {
-            "type": "link",
+        "createdBy"         : {
+            "type"    : "link",
             "readOnly": true
         },
-        "modifiedBy": {
-            "type": "link",
+        "modifiedBy"        : {
+            "type"    : "link",
             "readOnly": true
         }
     },
-    "links": {
-        "createdBy": {
-            "type": "belongsTo",
+    "links"     : {
+        "createdBy"         : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "modifiedBy": {
-            "type": "belongsTo",
+        "modifiedBy"        : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "assignToUser": {
-            "type": "belongsTo",
+        "assignToUser"      : {
+            "type"  : "belongsTo",
             "entity": "User"
         },
-        "team": {
-            "type": "belongsTo",
+        "team"              : {
+            "type"  : "belongsTo",
             "entity": "Team"
         },
         "replyEmailTemplate": {
-            "type": "belongsTo",
+            "type"  : "belongsTo",
             "entity": "EmailTemplate"
         }
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc"   : true
     }
 }

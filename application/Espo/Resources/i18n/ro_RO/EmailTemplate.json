@@ -1,15 +1,14 @@
 {
     "fields": {
-        "name": "Nume",
-        "status": "Status",
-        "isHtml": "In format Html",
-        "body": "Corp",
-        "subject": "Subiect",
+        "name"       : "Nume",
+        "status"     : "Status",
+        "isHtml"     : "In format Html",
+        "body"       : "Corp",
+        "subject"    : "Subiect",
         "attachments": "Atasamente",
         "insertField": ""
     },
-    "links": {
-    },
+    "links" : {},
     "labels": {
         "Create EmailTemplate": "Creare Template Email"
     }

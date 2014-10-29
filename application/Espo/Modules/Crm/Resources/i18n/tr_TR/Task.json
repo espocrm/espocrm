@@ -1,31 +1,30 @@
 {
-    "fields": {
-        "name": "İsim",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateStart": "Başlangıç Tarihi",
-        "dateEnd": "Vade Tarihi",
-        "priority": "Öncelik",
+    "fields" : {
+        "name"       : "İsim",
+        "parent"     : "Üst Seçenek",
+        "status"     : "Durum",
+        "dateStart"  : "Başlangıç Tarihi",
+        "dateEnd"    : "Vade Tarihi",
+        "priority"   : "Öncelik",
         "description": "açıklama",
-        "isOverdue": "Vadesi Geçmiş"
+        "isOverdue"  : "Vadesi Geçmiş"
     },
-    "links": {
-    },
+    "links"  : {},
     "options": {
-        "status": {
+        "status"  : {
             "Not Started": "başlamadı",
-            "Started": "Başladı",
-            "Completed": "Tamamlandı",
-            "Canceled": "İptal edildi"
+            "Started"    : "Başladı",
+            "Completed"  : "Tamamlandı",
+            "Canceled"   : "İptal edildi"
         },
-        "priority" : {
-            "Low": "Düşük",
+        "priority": {
+            "Low"   : "Düşük",
             "Normal": "Normal",
-            "High": "Yüksek",
+            "High"  : "Yüksek",
             "Urgent": "Acil"
         }
     },
-    "labels": {
+    "labels" : {
         "Create Task": "Görev Oluştur"
     }
 }
