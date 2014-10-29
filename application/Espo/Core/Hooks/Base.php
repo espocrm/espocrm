@@ -72,7 +72,7 @@ class Base implements
 
     /**
      * @return User
-     * @since 1.0
+
      */
     protected function getUser()
     {
@@ -81,7 +81,7 @@ class Base implements
 
     /**
      * @return Acl
-     * @since 1.0
+
      */
     protected function getAcl()
     {
@@ -90,7 +90,7 @@ class Base implements
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -99,7 +99,7 @@ class Base implements
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {
@@ -108,7 +108,7 @@ class Base implements
 
     /**
      * @return \Espo\Core\ORM\Repositories\RDB
-     * @since 1.0
+
      */
     protected function getRepository()
     {
@@ -117,7 +117,7 @@ class Base implements
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {

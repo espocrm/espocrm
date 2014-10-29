@@ -71,9 +71,9 @@ class Metadata
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         $data = $this->getMetadataOnly(false, $reload);
         if ($data === false) {
+            $log = $GLOBALS['log'];
             $log->emergency('Metadata:init() - metadata has not been created');
         }
         $this->meta = $data;
@@ -81,6 +81,7 @@ class Metadata
             //save medatada to a cache file
             $isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $data);
             if ($isSaved === false) {
+                $log = $GLOBALS['log'];
                 $log->emergency('Metadata:init() - metadata has not been saved to a cache file');
             }
         }
@@ -99,11 +100,11 @@ class Metadata
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         $data = false;
         if (!file_exists($this->cacheFile) || $reload) {
             $data = $this->getUnifier()->unify($this->name, $this->paths, true);
             if ($data === false) {
+                $log = $GLOBALS['log'];
                 $log->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
             }
             $data = $this->setLanguageFromConfig($data);
@@ -221,10 +222,10 @@ class Metadata
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         $path = $this->paths['customPath'];
         $result = $this->getFileManager()->unsetContents(array($path, $type, $scope . '.json'), $unsets, true);
         if ($result == false) {
+            $log = $GLOBALS['log'];
             $log->warning('Delete metadata items available only for custom code.');
         }
         $this->init(true);

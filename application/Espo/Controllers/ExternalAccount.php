@@ -68,7 +68,7 @@ class ExternalAccount extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionGetOAuth2Info($params, $data, $request)
@@ -133,7 +133,7 @@ class ExternalAccount extends
      * @param Request $request
      *
      * @return bool
-     * @since 1.0
+
      * @throws Error
      * @throws Forbidden
      * @throws NotFound

@@ -123,7 +123,7 @@ class RDB extends
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {

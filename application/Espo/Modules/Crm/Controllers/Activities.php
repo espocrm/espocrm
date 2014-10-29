@@ -37,7 +37,7 @@ class Activities extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      * @throws BadRequest
      */
     public function actionListCalendarEvents($params, $data, $request)
@@ -60,7 +60,7 @@ class Activities extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      * @throws BadRequest
      */
     public function actionList($params, $data, $request)

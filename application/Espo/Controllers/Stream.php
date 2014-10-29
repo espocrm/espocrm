@@ -40,7 +40,7 @@ class Stream extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionList($params, $data, $request)

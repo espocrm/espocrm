@@ -33,7 +33,7 @@ class EntityManager
 
     /**
      * @var RepositoryFactory
-     * @since 1.0
+
      */
     protected $repositoryFactory;
 
@@ -82,7 +82,7 @@ class EntityManager
 
     /**
      * @return \PDO
-     * @since 1.0
+
      */
     public function getPDO()
     {
@@ -119,7 +119,7 @@ class EntityManager
      * @param $name
      *
      * @return RDB
-     * @since 1.0
+
      */
     public function getRepository($name)
     {
@@ -167,7 +167,7 @@ class EntityManager
      * @param null $id
      *
      * @return Entity
-     * @since 1.0
+
      */
     public function getEntity($name, $id = null)
     {

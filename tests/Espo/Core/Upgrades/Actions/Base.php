@@ -19,13 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
 namespace tests\Espo\Core\Upgrades\Actions;
 
-class Base extends \Espo\Core\Upgrades\Actions\Base
+class Base extends
+    \Espo\Core\Upgrades\Actions\Base
 {
+
     public function run($data)
     {
-
     }
 }

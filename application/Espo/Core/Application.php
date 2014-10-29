@@ -66,7 +66,7 @@ class Application
     /**
      * @param string $name
      *
-     * @since 1.0
+
      */
     public function run($name = 'default')
     {
@@ -152,7 +152,7 @@ class Application
 
     /**
      * @return Container
-     * @since 1.0
+
      */
     public function getContainer()
     {
@@ -172,7 +172,7 @@ class Application
 
     /**
      * @return Auth
-     * @since 1.0
+
      */
     protected function getAuth()
     {
@@ -222,7 +222,7 @@ class Application
     }
 
     /**
-     * @since 1.0
+
      */
     public function runClient()
     {

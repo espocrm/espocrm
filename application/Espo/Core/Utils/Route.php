@@ -114,11 +114,11 @@ class Route
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         if (file_exists($routeFile)) {
             $content = $this->getFileManager()->getContents($routeFile);
             $arrayContent = Json::getArrayData($content);
             if (empty($arrayContent)) {
+                $log = $GLOBALS['log'];
                 $log->error('Route::unify() - Empty file or syntax error - [' . $routeFile . ']');
                 return $currData;
             }

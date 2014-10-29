@@ -40,7 +40,7 @@ class EmailTemplate extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      * @throws Error
      */
     public function actionParse($params, $data, $request)

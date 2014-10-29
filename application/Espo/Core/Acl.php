@@ -215,7 +215,7 @@ class Acl
      * @param User $entity
      *
      * @return bool
-     * @since 1.0
+
      */
     public function checkInTeam($entity)
     {
@@ -242,7 +242,7 @@ class Acl
      * @param User $entity
      *
      * @return bool
-     * @since 1.0
+
      */
     public function checkIsOwner($entity)
     {

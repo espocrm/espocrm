@@ -97,7 +97,7 @@ abstract class Base
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -231,7 +231,7 @@ abstract class Base
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {
@@ -303,7 +303,7 @@ abstract class Base
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -467,7 +467,7 @@ abstract class Base
 
     /**
      * @return ActionManager
-     * @since 1.0
+
      */
     protected function getActionManager()
     {

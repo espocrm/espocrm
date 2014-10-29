@@ -74,7 +74,7 @@ class Notifications extends
      * @param Entity $entity
      *
      * @return array
-     * @since 1.0
+
      */
     protected function getMentionedUserList($entity)
     {
@@ -104,7 +104,7 @@ class Notifications extends
 
     /**
      * @return ServiceFactory
-     * @since 1.0
+
      */
     protected function getServiceFactory()
     {

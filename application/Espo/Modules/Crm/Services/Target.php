@@ -33,7 +33,7 @@ class Target extends
      * @param $id
      *
      * @return \Espo\Modules\Crm\Entities\Target
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function convert($id)

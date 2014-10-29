@@ -34,25 +34,25 @@ class Base
 
     /**
      * @var Container
-     * @since 1.0
+
      */
     protected $container;
 
     /**
      * @var User
-     * @since 1.0
+
      */
     protected $user;
 
     /**
      * @var Acl
-     * @since 1.0
+
      */
     protected $acl;
 
     /**
      * @var EntityManager
-     * @since 1.0
+
      */
     protected $entityManager;
 
@@ -60,7 +60,7 @@ class Base
 
     /**
      * @var Metadata
-     * @since 1.0
+
      */
     protected $metadata;
 

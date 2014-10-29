@@ -38,7 +38,7 @@ class User extends
      * @param Request $request
      *
      * @return array|mixed
-     * @since 1.0
+
      * @throws Error
      * @throws Forbidden
      * @throws NotFound

@@ -147,10 +147,10 @@ class Unifier
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         $fileContent = $this->getFileManager()->getContents($paths);
         $decoded = Utils\Json::getArrayData($fileContent, null);
         if (!isset($decoded)) {
+            $log = $GLOBALS['log'];
             $log->emergency('Syntax error in ' . Utils\Util::concatPath($paths));
             return array();
         }

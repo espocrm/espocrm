@@ -62,7 +62,7 @@ class ActionManager
 
     /**
      * @return \Espo\Core\Upgrades\Actions\Base
-     * @since 1.0
+
      * @throws Error
      */
     protected function getObject()

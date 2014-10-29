@@ -102,7 +102,7 @@ class Record extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionList($params, $data, $request)
@@ -146,7 +146,7 @@ class Record extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionListLinked($params, $data, $request)
@@ -198,7 +198,7 @@ class Record extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      * @throws Error
      * @throws Forbidden
      */
@@ -310,7 +310,7 @@ class Record extends
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {

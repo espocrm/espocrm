@@ -34,7 +34,7 @@ class Opportunity extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionReportByLeadSource($params, $data, $request)
     {
@@ -49,7 +49,7 @@ class Opportunity extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionReportByStage($params, $data, $request)
     {
@@ -64,7 +64,7 @@ class Opportunity extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionReportSalesByMonth($params, $data, $request)
     {
@@ -79,7 +79,7 @@ class Opportunity extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionReportSalesPipeline($params, $data, $request)
     {
@@ -90,7 +90,7 @@ class Opportunity extends
 
     /**
      * @return \Espo\Modules\Crm\Services\Opportunity
-     * @since 1.0
+
      */
     protected function getOpportunityService()
     {

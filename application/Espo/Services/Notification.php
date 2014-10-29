@@ -50,7 +50,7 @@ class Notification extends
 
     /**
      * @return \Espo\Core\ORM\EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {

@@ -176,7 +176,7 @@ class EmailAccount extends
 
     /**
      * @return \Espo\Core\Utils\File\Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {
@@ -199,7 +199,7 @@ class EmailAccount extends
 
     /**
      * @return Crypt
-     * @since 1.0
+
      */
     protected function getCrypt()
     {

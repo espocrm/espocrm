@@ -2,27 +2,63 @@
 
 namespace tests\Espo\Core\Utils\File;
 
+use Espo\Core\Utils\File\Permission;
 use tests\ReflectionHelper;
 
 
-class PermissionTest extends \PHPUnit_Framework_TestCase
+class PermissionTest extends
+    \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var Permission
+     */
     protected $object;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject[]
+     */
     protected $objects;
 
+    /**
+     * @var ReflectionHelper
+     */
     protected $reflection;
 
     protected $fileList;
 
+    public function testGetSearchCount()
+    {
+        $search = 'application/Espo/Controllers/';
+        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
+        $result = 6;
+        $this->assertEquals($result, $methodResult);
+        $search = 'application/Espo/Controllers/Email.php';
+        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
+        $result = 1;
+        $this->assertEquals($result, $methodResult);
+        $search = 'application/Espo/Controllers/NotReal';
+        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
+        $result = 0;
+        $this->assertEquals($result, $methodResult);
+    }
+
+    public function testArrangePermissionList()
+    {
+        $result = array(
+            'application/Espo/Controllers',
+            'application/Espo/Modules/Crm/Resources/i18n/pl_PL',
+            'application/Espo/Resources/layouts/User/filters.json',
+            'application/Espo/Resources/metadata/app',
+        );
+        $this->assertEquals($result, $this->object->arrangePermissionList($this->fileList));
+    }
+
     protected function setUp()
     {
         $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Utils\File\Permission($this->objects['fileManager']);
-
+        $this->object = new Permission($this->objects['fileManager']);
         $this->reflection = new ReflectionHelper($this->object);
-
         $this->fileList = array(
             'application/Espo/Controllers/Email.php',
             'application/Espo/Controllers/EmailAccount.php',
@@ -43,39 +79,8 @@ class PermissionTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        $this->object = NULL;
+        $this->object = null;
     }
-
-    public function testGetSearchCount()
-    {
-        $search = 'application/Espo/Controllers/';
-        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
-        $result = 6;
-        $this->assertEquals($result, $methodResult);
-
-
-        $search = 'application/Espo/Controllers/Email.php';
-        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
-        $result = 1;
-        $this->assertEquals($result, $methodResult);
-
-        $search = 'application/Espo/Controllers/NotReal';
-        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
-        $result = 0;
-        $this->assertEquals($result, $methodResult);
-    }
-
-    public function testArrangePermissionList()
-    {
-        $result = array(
-            'application/Espo/Controllers',
-            'application/Espo/Modules/Crm/Resources/i18n/pl_PL',
-            'application/Espo/Resources/layouts/User/filters.json',
-            'application/Espo/Resources/metadata/app',
-        );
-        $this->assertEquals( $result, $this->object->arrangePermissionList($this->fileList) );
-    }
-
     /*public function bestPossibleList()
     {
         $fileList = array(
@@ -144,13 +149,6 @@ class PermissionTest extends \PHPUnit_Framework_TestCase
             'install/js/install.js',
         );
     }*/
-
-
-
-
-
-
-
 }
 
 ?>

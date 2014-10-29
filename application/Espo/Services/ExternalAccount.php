@@ -52,7 +52,7 @@ class ExternalAccount extends
      * @param $id
      *
      * @return OAuth2Abstract
-     * @since 1.0
+
      * @throws Error
      * @throws NotFound
      */
@@ -77,7 +77,7 @@ class ExternalAccount extends
      * @param $code
      *
      * @return bool
-     * @since 1.0
+
      * @throws Error
      * @throws NotFound
      */

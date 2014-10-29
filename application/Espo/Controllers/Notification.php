@@ -37,7 +37,7 @@ class Notification extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      */
     public function actionList($params, $data, $request)
     {

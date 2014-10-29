@@ -103,7 +103,7 @@ class ServiceFactory
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

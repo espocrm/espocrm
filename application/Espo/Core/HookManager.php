@@ -86,7 +86,7 @@ class HookManager
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -95,7 +95,7 @@ class HookManager
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

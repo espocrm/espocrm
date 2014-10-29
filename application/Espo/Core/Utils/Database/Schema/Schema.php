@@ -153,7 +153,6 @@ class Schema
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         if ($this->getConverter()->process() === false) {
             return false;
         }
@@ -164,6 +163,7 @@ class Schema
         $queries = $this->getDiffSql($currentSchema, $metadataSchema);
         $result = true;
         $connection = $this->getConnection();
+        $log = $GLOBALS['log'];
         foreach ($queries as $sql) {
             $log->debug('SCHEMA, Execute Query: ' . $sql);
             try{
@@ -249,7 +249,6 @@ class Schema
     /*
      * Rebuild database schema
      */
-
     public function getDiffSql(\Doctrine\DBAL\Schema\Schema $fromSchema, \Doctrine\DBAL\Schema\Schema $toSchema)
     {
         $schemaDiff = $this->getComparator()->compare($fromSchema, $toSchema);
@@ -261,7 +260,6 @@ class Schema
     *
     * @return \Doctrine\DBAL\Schema\Schema
     */
-
     protected function getComparator()
     {
         return $this->comparator;
@@ -274,7 +272,6 @@ class Schema
     *
     * @return array - array of SQL queries
     */
-
     public function toSql(
         SchemaDiff $schema
     )   //Doctrine\DBAL\Schema\SchemaDiff | \Doctrine\DBAL\Schema\Schema
@@ -288,7 +285,6 @@ class Schema
     *
     * @return array - array of SQL queries
     */
-
     public function getPlatform()
     {
         return $this->getConnection()->getDatabasePlatform();

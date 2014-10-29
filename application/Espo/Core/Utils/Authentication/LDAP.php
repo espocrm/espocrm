@@ -71,7 +71,7 @@ class LDAP extends
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
+
         if ($authToken) {
             return $this->loginByToken($username, $authToken);
         }
@@ -89,6 +89,7 @@ class LDAP extends
                 $log->info('LDAP Authentication: ' . $zle->getMessage());
                 return null;
             }
+            $log = $GLOBALS['log'];
             $log->info('LDAP Authentication: Administrator login by username [' . $username . ']');
         }
         $user = $this->getEntityManager()->getRepository('User')->findOne(array(
@@ -118,7 +119,7 @@ class LDAP extends
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
+
         if (!isset($authToken)) {
             return null;
         }
@@ -126,6 +127,7 @@ class LDAP extends
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $tokenUsername = $user->get('userName');
         if ($username != $tokenUsername) {
+            $log = $GLOBALS['log'];
             $log->alert('Unauthorized access attempt for user [' . $username . '] from IP [' . $_SERVER['REMOTE_ADDR'] . ']');
             return null;
         }
@@ -144,7 +146,7 @@ class LDAP extends
 
     /**
      * @return \Zend\Ldap\Ldap
-     * @since 1.0
+
      */
     protected function getZendLdap()
     {

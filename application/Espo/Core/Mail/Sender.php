@@ -40,13 +40,13 @@ class Sender
 
     /**
      * @var Config
-     * @since 1.0
+
      */
     protected $config;
 
     /**
      * @var TransportInterface
-     * @since 1.0
+
      */
     protected $transport;
 

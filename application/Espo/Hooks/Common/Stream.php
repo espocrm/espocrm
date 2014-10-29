@@ -54,7 +54,7 @@ class Stream extends
 
     /**
      * @return \Espo\Services\Stream
-     * @since 1.0
+
      */
     protected function getStreamService()
     {
@@ -66,7 +66,7 @@ class Stream extends
 
     /**
      * @return ServiceFactory
-     * @since 1.0
+
      */
     protected function getServiceFactory()
     {

@@ -205,7 +205,7 @@ class InboundEmail extends
      * @param \Espo\Modules\Crm\Entities\InboundEmail $inboundEmail
      * @param Email                                   $email
      *
-     * @since 1.0
+
      * @throws Error
      */
     protected function createCase($inboundEmail, $email)
@@ -337,7 +337,7 @@ class InboundEmail extends
      * @param User                                    $user
      *
      * @return bool
-     * @since 1.0
+
      */
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
     {
@@ -401,7 +401,7 @@ class InboundEmail extends
 
     /**
      * @return Sender
-     * @since 1.0
+
      */
     protected function getMailSender()
     {
@@ -425,7 +425,7 @@ class InboundEmail extends
 
     /**
      * @return Crypt
-     * @since 1.0
+
      */
     protected function getCrypt()
     {

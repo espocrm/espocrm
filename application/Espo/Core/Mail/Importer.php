@@ -31,7 +31,7 @@ class Importer
      * @param array   $teamsIds
      *
      * @return Email
-     * @since 1.0
+
      */
     public function importMessage($message, $userId, $teamsIds = array())
     {
@@ -103,7 +103,7 @@ class Importer
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -115,7 +115,7 @@ class Importer
      * @param         $type
      *
      * @return array
-     * @since 1.0
+
      */
     protected function getAddressListFromMessage($message, $type)
     {
@@ -137,7 +137,7 @@ class Importer
      * @param Email $email
      *
      * @return bool
-     * @since 1.0
+
      */
     protected function checkIsDuplicate($email)
     {
@@ -160,7 +160,7 @@ class Importer
      * @param Part  $part
      * @param array $inlineIds
      *
-     * @since 1.0
+
      */
     protected function importPartDataToEmail(Email $email, $part, &$inlineIds = array())
     {
@@ -236,7 +236,7 @@ class Importer
      * @param \Zend\Mime\Part|Part $part
      *
      * @return string
-     * @since 1.0
+
      */
     protected function getContentFromPart($part)
     {
@@ -282,7 +282,7 @@ class Importer
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

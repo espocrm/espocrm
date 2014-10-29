@@ -59,7 +59,7 @@ class Preferences extends
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -97,7 +97,7 @@ class Preferences extends
 
     /**
      * @return Crypt
-     * @since 1.0
+
      */
     protected function getCrypt()
     {
@@ -125,7 +125,7 @@ class Preferences extends
 
     /**
      * @return \Espo\Entities\Preferences
-     * @since 1.0
+
      */
     protected function getPreferences()
     {

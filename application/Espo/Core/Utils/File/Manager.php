@@ -126,13 +126,13 @@ class Manager
     protected function concatPaths($paths)
     {
         if (is_string($paths)) {
-            return $paths;
+            return Utils\Util::fixPath($paths);
         }
         $fullPath = '';
         foreach ($paths as $path) {
             $fullPath = Utils\Util::concatPath($fullPath, $path);
         }
-        return $fullPath;
+        return Utils\Util::fixPath($fullPath);
     }
 
     /**
@@ -259,9 +259,9 @@ return ' . var_export($content, true) . ';
         /**
          * @var Utils\Log $log
          */
-        $log = $GLOBALS['log'];
         $currentData = $this->getContents($path);
         if ($currentData == false) {
+            $log = $GLOBALS['log'];
             $log->notice('FileManager::unsetContents: File [' . $this->concatPaths($path) . '] does not exist.');
             return false;
         }
@@ -306,7 +306,6 @@ return ' . var_export($content, true) . ';
         /**
          * @var Utils\Log $log
          */
-        $log = $GLOBALS['log'];
         $fullPath = $this->concatPaths($path);
         if (file_exists($fullPath) && is_dir($path)) {
             return true;
@@ -319,6 +318,7 @@ return ' . var_export($content, true) . ';
         try{
             $result = mkdir($fullPath, $permission, true);
         } catch(\Exception $e){
+            $log = $GLOBALS['log'];
             $log->critical('Permission denied: unable to create the folder on the server - ' . $fullPath);
         }
         return isset($result) ? $result : false;

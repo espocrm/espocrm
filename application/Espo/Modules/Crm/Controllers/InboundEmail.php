@@ -29,7 +29,6 @@ use Slim\Http\Request;
  * Class InboundEmail
  * @method \Espo\Modules\Crm\Services\InboundEmail getRecordService()
  *
- * @version 1.0
  * @package Espo\Modules\Crm\Controllers
  */
 class InboundEmail extends
@@ -42,7 +41,7 @@ class InboundEmail extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      */
     public function actionGetFolders($params, $data, $request)
     {

@@ -63,7 +63,7 @@ abstract class Base
 
     /**
      * @return Container
-     * @since 1.0
+
      */
     protected function getContainer()
     {
@@ -87,7 +87,7 @@ abstract class Base
 
     /**
      * @return User
-     * @since 1.0
+
      */
     protected function getUser()
     {
@@ -96,7 +96,7 @@ abstract class Base
 
     /**
      * @return Acl
-     * @since 1.0
+
      */
     protected function getAcl()
     {
@@ -105,7 +105,7 @@ abstract class Base
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -114,7 +114,7 @@ abstract class Base
 
     /**
      * @return Preferences
-     * @since 1.0
+
      */
     protected function getPreferences()
     {
@@ -123,7 +123,7 @@ abstract class Base
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {
@@ -137,7 +137,7 @@ abstract class Base
 
     /**
      * @return ServiceFactory
-     * @since 1.0
+
      */
     protected function getServiceFactory()
     {

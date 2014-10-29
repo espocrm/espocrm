@@ -30,7 +30,7 @@ class LeastBusy
 
     /**
      * @var EntityManager
-     * @since 1.0
+
      */
     protected $entityManager;
 
@@ -43,7 +43,7 @@ class LeastBusy
      * @param Team $team
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function getUser($team)
     {

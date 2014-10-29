@@ -128,15 +128,23 @@ class Util
             return $fullPath;
         }
         if (empty($filePath)) {
-            return $folderPath;
+            return static::fixPath($folderPath);
         }
         if (empty($folderPath)) {
-            return $filePath;
+            return static::fixPath($filePath);
         }
-        if (substr($folderPath, -1) == static::getSeparator()) {
-            return $folderPath . $filePath;
+        //Adding windows support
+        $endChar = substr($folderPath, -1);
+        if ($endChar == static::getSeparator()|| $endChar == '/') {
+            return static::fixPath($folderPath . $filePath);
         }
-        return $folderPath . static::getSeparator() . $filePath;
+        $results = $folderPath . static::getSeparator() . $filePath;
+        return static::fixPath($results);
+    }
+
+    public static function fixPath($path)
+    {
+        return str_replace('/', static::getSeparator(), $path);
     }
 
     /**

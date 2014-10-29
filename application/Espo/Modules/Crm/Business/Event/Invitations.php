@@ -19,25 +19,25 @@ class Invitations
 
     /**
      * @var Sender
-     * @since 1.0
+
      */
     protected $mailSender;
 
     /**
      * @var Config
-     * @since 1.0
+
      */
     protected $config;
 
     /**
      * @var DateTime
-     * @since 1.0
+
      */
     protected $dateTime;
 
     /**
      * @var Language
-     * @since 1.0
+
      */
     protected $language;
 
@@ -119,7 +119,7 @@ class Invitations
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -133,7 +133,7 @@ class Invitations
      * @param UniqueId   $uid
      *
      * @return mixed
-     * @since 1.0
+
      */
     protected function parseInvitationTemplate($contents, $entity, $invitee = null, $uid = null)
     {

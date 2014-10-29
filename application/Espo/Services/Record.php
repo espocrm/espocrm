@@ -114,7 +114,7 @@ class Record extends
      * @param null $id
      *
      * @return \Espo\Core\ORM\Entity
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function getEntity($id = null)
@@ -140,7 +140,7 @@ class Record extends
 
     /**
      * @return RDB
-     * @since 1.0
+
      */
     protected function getRepository()
     {
@@ -173,7 +173,7 @@ class Record extends
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {
@@ -207,7 +207,7 @@ class Record extends
 
     /**
      * @return Stream
-     * @since 1.0
+
      * @throws Error
      */
     protected function getStreamService()
@@ -220,7 +220,7 @@ class Record extends
 
     /**
      * @return ServiceFactory
-     * @since 1.0
+
      */
     protected function getServiceFactory()
     {
@@ -257,7 +257,7 @@ class Record extends
 
     /**
      * @return Acl
-     * @since 1.0
+
      */
     protected function getAcl()
     {
@@ -312,7 +312,7 @@ class Record extends
      * @param Entity $entity
      *
      * @return bool
-     * @since 1.0
+
      */
     protected function isValid($entity)
     {
@@ -404,7 +404,7 @@ class Record extends
 
     /**
      * @return SelectManagerFactory
-     * @since 1.0
+
      */
     protected function getSelectManagerFactory()
     {
@@ -442,7 +442,7 @@ class Record extends
      * @param $name
      *
      * @return Base
-     * @since 1.0
+
      * @throws Error
      */
     protected function getRecordService($name)
@@ -641,7 +641,7 @@ class Record extends
 
     /**
      * @return Preferences
-     * @since 1.0
+
      */
     protected function getPreferences()
     {
@@ -650,7 +650,7 @@ class Record extends
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

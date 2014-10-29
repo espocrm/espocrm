@@ -103,7 +103,7 @@ class RDB extends
 
     /**
      * @return \Espo\Core\ORM\EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -328,7 +328,7 @@ class RDB extends
      * @param null  $param2
      *
      * @return $this
-     * @since 1.0
+
      */
     public function where($param1 = array(), $param2 = null)
     {

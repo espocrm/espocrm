@@ -28,7 +28,6 @@ use Slim\Http\Request;
  * Class EmailAccount
  * @method \Espo\Services\EmailAccount getRecordService()
  *
- * @version 1.0
  * @package Espo\Controllers
  */
 class EmailAccount extends
@@ -41,7 +40,7 @@ class EmailAccount extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionGetFolders($params, $data, $request)
     {

@@ -127,7 +127,7 @@ class Import extends
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {
@@ -302,7 +302,7 @@ class Import extends
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {

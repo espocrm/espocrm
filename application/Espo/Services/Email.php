@@ -61,7 +61,7 @@ class Email extends
 
     /**
      * @return Sender
-     * @since 1.0
+
      */
     protected function getMailSender()
     {
@@ -70,7 +70,7 @@ class Email extends
 
     /**
      * @return \Espo\Entities\Preferences
-     * @since 1.0
+
      */
     protected function getPreferences()
     {
@@ -79,7 +79,7 @@ class Email extends
 
     /**
      * @return Crypt
-     * @since 1.0
+
      */
     protected function getCrypt()
     {
@@ -259,7 +259,7 @@ class Email extends
 
     /**
      * @return \Espo\Core\Utils\File\Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

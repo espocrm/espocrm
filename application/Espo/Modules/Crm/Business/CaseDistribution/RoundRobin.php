@@ -31,7 +31,7 @@ class RoundRobin
 
     /**
      * @var EntityManager
-     * @since 1.0
+
      */
     protected $entityManager;
 
@@ -44,7 +44,7 @@ class RoundRobin
      * @param Team $team
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function getUser($team)
     {

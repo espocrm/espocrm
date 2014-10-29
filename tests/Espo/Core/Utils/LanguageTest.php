@@ -2,15 +2,29 @@
 
 namespace tests\Espo\Core\Utils;
 
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Language;
+use PHPUnit_Framework_MockObject_MockObject;
 use tests\ReflectionHelper;
 
 
-class LanguageTest extends \PHPUnit_Framework_TestCase
+class LanguageTest extends
+    \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var Language
+     */
     protected $object;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject[]
+     */
     protected $objects;
 
+    /**
+     * @var ReflectionHelper
+     */
     protected $reflection;
 
     protected $cacheFile = 'tests/testData/cache/application/languages/{*}.php';
@@ -21,120 +35,82 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         'customPath' => 'tests/testData/Utils/I18n/Espo/Custom/Resources/i18n',
     );
 
-    protected function setUp()
-    {
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
-
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $map = array(
-          array('useCache', false)
-        );
-        $this->objects['config']->expects($this->any())
-             ->method('get')
-             ->will($this->returnValueMap($map));
-
-        $this->objects['preferences'] = $this->getMockBuilder('\Espo\Entities\Preferences')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Utils\Language($this->objects['fileManager'], $this->objects['config'], $this->objects['preferences']);
-
-        $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('cacheFile', $this->cacheFile);
-        $this->reflection->setProperty('paths', $this->paths);
-        $this->reflection->setProperty('currentLanguage', 'en_US');
-    }
-
-    protected function tearDown()
-    {
-        $this->object = NULL;
-    }
-
-
     public function testLanguage()
     {
         $this->assertEquals('en_US', $this->object->getLanguage());
-
         $originalLang = $this->object->getLanguage();
         $this->object->setLanguage('lang_TEST');
         $this->assertEquals('lang_TEST', $this->object->getLanguage());
-
         $this->object->setLanguage($originalLang);
     }
-
 
     public function testGetLangCacheFile()
     {
         $cacheFile = $this->cacheFile;
-
         $result = str_replace('{*}', 'en_US', $cacheFile);
         $this->assertEquals($result, $this->reflection->invokeMethod('getLangCacheFile'));
-
         $originalLang = $this->object->getLanguage();
         $this->object->setLanguage('lang_TEST');
         $result = str_replace('{*}', 'lang_TEST', $cacheFile);
         $this->assertEquals($result, $this->reflection->invokeMethod('getLangCacheFile'));
-
         $this->object->setLanguage($originalLang);
     }
 
-
     public function testGetData()
     {
-        $result = array (
+        $result = array(
             'User' =>
-            array(
-              'fields' =>
-              array (
-                'name' => 'User',
-                'label' => 'Core',
-                'source' => 'Core',
-              ),
-            ),
+                array(
+                    'fields' =>
+                        array(
+                            'name' => 'User',
+                            'label' => 'Core',
+                            'source' => 'Core',
+                        ),
+                ),
             'Account' =>
-            array (
-                'fields' =>
-                  array (
-                    'name' => 'Account',
-                    'label' => 'Custom',
-                    'source' => 'Crm Module',
+                array(
+                    'fields' =>
+                        array(
+                            'name' => 'Account',
+                            'label' => 'Custom',
+                            'source' => 'Crm Module',
+                        ),
                 ),
-            ),
             'Contact' =>
-            array (
-                'fields' =>
-                  array (
-                    'name' => 'Contact',
-                    'label' => 'Custom',
-                    'source' => 'Crm Module',
+                array(
+                    'fields' =>
+                        array(
+                            'name' => 'Contact',
+                            'label' => 'Custom',
+                            'source' => 'Crm Module',
+                        ),
                 ),
-            ),
             'Global' =>
-            array (
-                'options' =>
-                  array (
-                    'language' =>
-                    array (
-                      'en_US' => 'English (United States)',
-                    )
+                array(
+                    'options' =>
+                        array(
+                            'language' =>
+                                array(
+                                    'en_US' => 'English (United States)',
+                                )
+                        ),
                 ),
-            ),
         );
-
         $this->assertEquals($result, $this->reflection->invokeMethod('getData', array()));
     }
 
-
     public function testGet()
     {
-        $result = array (
+        $result = array(
             'fields' =>
-            array(
-                'name' => 'User',
-                'label' => 'Core',
-                'source' => 'Core',
-            ),
+                array(
+                    'name' => 'User',
+                    'label' => 'Core',
+                    'source' => 'Core',
+                ),
         );
         $this->assertEquals($result, $this->object->get('User'));
-
         $result = 'User';
         $this->assertEquals($result, $this->object->get('User.fields.name'));
     }
@@ -142,7 +118,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
     public function testTranslate()
     {
         $this->assertEquals('Core', $this->object->translate('label', 'fields', 'User'));
-
         $input = array(
             'name',
             'label',
@@ -180,10 +155,8 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
             'en_US',
             'de_DE',
         );
-
         $this->assertEquals($result, $this->object->translate('language', 'options', 'Global', $requiredOptions));
     }
-
 
     public function testTranslateArray()
     {
@@ -204,8 +177,30 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $this->object->translate('language.en_US', 'options'));
     }
 
+    protected function setUp()
+    {
+        $GLOBALS['log'] = $this->getMockBuilder('\Espo\Core\Utils\Log')->disableOriginalConstructor()->getMock();
+        $this->objects['fileManager'] = new Manager();
+        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $map = array(
+            array('useCache', false)
+        );
+        $this->objects['config']->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap($map));
+        $this->objects['preferences'] = $this->getMockBuilder('\Espo\Entities\Preferences')->disableOriginalConstructor()->getMock();
+        $this->object = new Language($this->objects['fileManager'], $this->objects['config'],
+            $this->objects['preferences']);
+        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection->setProperty('cacheFile', $this->cacheFile);
+        $this->reflection->setProperty('paths', $this->paths);
+        $this->reflection->setProperty('currentLanguage', 'en_US');
+    }
 
-
+    protected function tearDown()
+    {
+        $this->object = null;
+    }
 }
 
 ?>

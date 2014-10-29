@@ -59,7 +59,7 @@ abstract class Base implements
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -73,7 +73,7 @@ abstract class Base implements
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -82,7 +82,7 @@ abstract class Base implements
 
     /**
      * @return User
-     * @since 1.0
+
      */
     protected function getUser()
     {

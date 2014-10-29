@@ -136,7 +136,7 @@ abstract class OAuth2Abstract implements
      * @param bool   $allowRenew
      *
      * @return string|int
-     * @since 1.0
+
      * @throws Error
      * @throws \Exception
      */

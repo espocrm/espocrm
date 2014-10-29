@@ -42,7 +42,7 @@ abstract class Base
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -51,7 +51,7 @@ abstract class Base
 
     /**
      * @return Container
-     * @since 1.0
+
      */
     protected function getContainer()
     {
@@ -60,7 +60,7 @@ abstract class Base
 
     /**
      * @return ServiceFactory
-     * @since 1.0
+
      */
     protected function getServiceFactory()
     {
@@ -69,7 +69,7 @@ abstract class Base
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -78,7 +78,7 @@ abstract class Base
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {
@@ -87,7 +87,7 @@ abstract class Base
 
     /**
      * @return User
-     * @since 1.0
+
      */
     protected function getUser()
     {

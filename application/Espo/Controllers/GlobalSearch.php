@@ -34,7 +34,7 @@ class GlobalSearch extends
      * @param  Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionSearch($params, $data, $request)
     {

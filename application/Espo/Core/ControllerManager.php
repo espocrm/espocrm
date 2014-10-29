@@ -33,13 +33,13 @@ class ControllerManager
 
     /**
      * @var Config
-     * @since 1.0
+
      */
     private $config;
 
     /**
      * @var Metadata
-     * @since 1.0
+
      */
     private $metadata;
 
@@ -60,7 +60,7 @@ class ControllerManager
      * @param Request $request
      *
      * @return string
-     * @since 1.0
+
      * @throws NotFound
      */
     public function process($controllerName, $actionName, $params, $data, $request)

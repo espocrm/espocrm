@@ -36,7 +36,7 @@ class Extension extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionUpload($params, $data, $request)
@@ -61,7 +61,7 @@ class Extension extends
      * @param Request $request
      *
      * @return bool
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionInstall($params, $data, $request)
@@ -80,7 +80,7 @@ class Extension extends
      * @param Request $request
      *
      * @return bool
-     * @since 1.0
+
      * @throws Forbidden
      */
     public function actionUninstall($params, $data, $request)

@@ -56,15 +56,12 @@ class Converter
     );
 
     //pair ORM => doctrine
-
     private $dbalSchema;
 
     //todo: same array in Converters\Orm
-
     private $fileManager;
 
     //todo: same array in Converters\Orm
-
     private $ormMeta = null;
 
     private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/tables';
@@ -79,7 +76,7 @@ class Converter
     public function process(array $ormMeta, $entityDefs, $entityList = null)
     {
         /**
-         * @var Log $log
+         * @var Log   $log
          * @var Table $entityTable
          */
         $log = $GLOBALS['log'];
@@ -293,18 +290,18 @@ class Converter
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         $tableName = Util::toUnderScore($relationParams['relationName']);
         if ($this->getSchema()->hasTable($tableName)) {
+            $log = $GLOBALS['log'];
             $log->debug('DBAL: Table [' . $tableName . '] exists.');
             return $this->getSchema()->getTable($tableName);
         }
         $table = $this->getSchema()->createTable($tableName);
         $table->addColumn('id', 'int', array(
-                'length' => $this->defaultLength['int'],
-                'autoincrement' => true,
-                'notnull' => true,
-            ));  //'unique' => true,
+            'length' => $this->defaultLength['int'],
+            'autoincrement' => true,
+            'notnull' => true,
+        ));  //'unique' => true,
         //add midKeys to a schema
         foreach ($relationParams['midKeys'] as $index => $midKey) {
             $usMidKey = Util::toUnderScore($midKey);

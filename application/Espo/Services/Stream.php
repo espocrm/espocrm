@@ -99,7 +99,7 @@ class Stream extends
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {
@@ -246,7 +246,7 @@ class Stream extends
 
     /**
      * @return Acl
-     * @since 1.0
+
      */
     protected function getAcl()
     {

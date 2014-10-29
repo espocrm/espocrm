@@ -52,7 +52,7 @@ abstract class Base
 
     /**
      * @return Acl
-     * @since 1.0
+
      */
     protected function getAcl()
     {
@@ -61,7 +61,7 @@ abstract class Base
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -75,7 +75,7 @@ abstract class Base
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {

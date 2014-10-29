@@ -39,7 +39,7 @@ class EmailAddress extends
      * @param Request $request
      *
      * @return mixed
-     * @since 1.0
+
      */
     public function actionSearchInAddressBook($params, $data, $request)
     {

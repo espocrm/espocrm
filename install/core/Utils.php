@@ -34,7 +34,7 @@ class Utils
      * @param string $actionName
      *
      * @return bool
-     * @since 1.0
+
      */
     static public function isActionExists($actionName)
     {

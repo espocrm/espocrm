@@ -19,19 +19,21 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
-return array (
+return array(
     'defaultPermissions' =>
-    array (
-        'dir' => '0775',
-        'file' => '0664',
-        'user' => '',
-        'group' => '',
-    ),
+        array(
+            'dir' => '0775',
+            'file' => '0664',
+            'user' => '',
+            'group' => '',
+        ),
     'cron' => array(
-        'maxJobNumber' => 15, /** Max number of jobs per one execution */
-        'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
-        'minExecutionTime' => 50, /** to avoid too frequency execution **/
+        'maxJobNumber' => 15,
+        /** Max number of jobs per one execution */
+        'jobPeriod' => 7800,
+        /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
+        'minExecutionTime' => 50,
+        /** to avoid too frequency execution **/
     ),
     'crud' => array(
         'get' => 'read',
@@ -47,32 +49,32 @@ return array (
         'lastName' => 'System',
     ),
     'systemItems' =>
-    array (
-        'systemItems',
-        'adminItems',
-        'configPath',
-        'cachePath',
-        'database',
-        'crud',
-        'logger',
-        'isInstalled',
-        'defaultPermissions',
-        'systemUser',
-    ),
+        array(
+            'systemItems',
+            'adminItems',
+            'configPath',
+            'cachePath',
+            'database',
+            'crud',
+            'logger',
+            'isInstalled',
+            'defaultPermissions',
+            'systemUser',
+        ),
     'adminItems' =>
-    array (
-        'devMode',
-        'outboundEmailIsShared',
-        'outboundEmailFromName',
-        'outboundEmailFromAddress',
-        'smtpServer',
-        'smtpPort',
-        'smtpAuth',
-        'smtpSecurity',
-        'smtpUsername',
-        'smtpPassword',
-        'cron',
-    ),
+        array(
+            'devMode',
+            'outboundEmailIsShared',
+            'outboundEmailFromName',
+            'outboundEmailFromAddress',
+            'smtpServer',
+            'smtpPort',
+            'smtpAuth',
+            'smtpSecurity',
+            'smtpUsername',
+            'smtpPassword',
+            'cron',
+        ),
     'isInstalled' => false,
 );
 

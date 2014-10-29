@@ -119,7 +119,7 @@ class User extends
 
     /**
      * @return Language
-     * @since 1.0
+
      */
     protected function getLanguage()
     {
@@ -128,7 +128,7 @@ class User extends
 
     /**
      * @return Sender
-     * @since 1.0
+
      */
     protected function getMailSender()
     {

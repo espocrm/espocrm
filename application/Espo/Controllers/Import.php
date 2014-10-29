@@ -49,7 +49,7 @@ class Import extends
 
     /**
      * @return EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -58,7 +58,7 @@ class Import extends
 
     /**
      * @return  Utils\File\Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

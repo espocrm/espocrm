@@ -45,7 +45,6 @@ class Email extends
      * @param Request $request
      *
      * @return array
-     * @since 1.0
      */
     public function actionGetCopiedAttachments($params, $data, $request)
     {
@@ -62,7 +61,6 @@ class Email extends
      * @throws BadRequest
      * @throws Error
      * @throws Forbidden
-     * @since 1.0
      */
     public function actionSendTestEmail($params, $data, $request)
     {

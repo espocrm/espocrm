@@ -84,7 +84,7 @@ class GlobalSearch extends
 
     /**
      * @return Acl
-     * @since 1.0
+
      */
     protected function getAcl()
     {
@@ -93,7 +93,7 @@ class GlobalSearch extends
 
     /**
      * @return SelectManagerFactory
-     * @since 1.0
+
      */
     protected function getSelectManagerFactory()
     {
@@ -102,7 +102,7 @@ class GlobalSearch extends
 
     /**
      * @return \Espo\Core\ORM\EntityManager
-     * @since 1.0
+
      */
     protected function getEntityManager()
     {
@@ -111,7 +111,7 @@ class GlobalSearch extends
 
     /**
      * @return Metadata
-     * @since 1.0
+
      */
     protected function getMetadata()
     {

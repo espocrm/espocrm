@@ -46,7 +46,7 @@ class Mentions extends
     /**
      * @param Entity $entity
      *
-     * @since 1.0
+
      */
     protected function addMentionData($entity)
     {
@@ -96,7 +96,7 @@ class Mentions extends
 
     /**
      * @return Notification
-     * @since 1.0
+
      */
     protected function getNotificationService()
     {
@@ -108,7 +108,7 @@ class Mentions extends
 
     /**
      * @return ServiceFactory
-     * @since 1.0
+
      */
     protected function getServiceFactory()
     {

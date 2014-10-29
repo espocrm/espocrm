@@ -73,8 +73,8 @@ class CronManager
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         if (!$this->checkLastRunTime()) {
+            $log = $GLOBALS['log'];
             $log->info('Cron Manager: Stop cron running, too frequency execution');
             return; //stop cron running, too frequency execution
         }
@@ -95,6 +95,7 @@ class CronManager
                 }
             } catch(\Exception $e){
                 $isSuccess = false;
+                $log = $GLOBALS['log'];
                 $log->error('Failed job running, job [' . $job['id'] . ']. Error Details: ' . $e->getMessage());
             }
             $status = $isSuccess ? self::SUCCESS : self::FAILED;
@@ -135,7 +136,7 @@ class CronManager
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {
@@ -144,7 +145,7 @@ class CronManager
 
     /**
      * @return Config
-     * @since 1.0
+
      */
     protected function getConfig()
     {
@@ -161,7 +162,7 @@ class CronManager
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
+
         $activeScheduledJobs = $this->getScheduledJobService()->getActiveJobs();
         $createdJobs = array();
         foreach ($activeScheduledJobs as $scheduledJob) {
@@ -170,6 +171,7 @@ class CronManager
             try{
                 $prevDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
             } catch(\Exception $e){
+                $log = $GLOBALS['log'];
                 $log->error('ScheduledJob [' . $scheduledJob['id'] . ']: CronExpression - Impossible CRON expression [' . $scheduling . ']');
                 continue;
             }
@@ -194,7 +196,7 @@ class CronManager
 
     /**
      * @return ScheduledJob
-     * @since 1.0
+
      */
     protected function getScheduledJobService()
     {
@@ -203,7 +205,7 @@ class CronManager
 
     /**
      * @return Job
-     * @since 1.0
+
      */
     protected function getJobService()
     {
@@ -212,7 +214,7 @@ class CronManager
 
     /**
      * @return \Espo\Core\Cron\ScheduledJob
-     * @since 1.0
+
      */
     protected function getScheduledJobCron()
     {

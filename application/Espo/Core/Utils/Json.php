@@ -38,7 +38,6 @@ class Json
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         if (version_compare(phpversion(), '5.5.0', '>=')) {
             $json = json_encode($value, $options, $depth);
         } elseif (version_compare(phpversion(), '5.3.0', '>=')) {
@@ -53,6 +52,7 @@ class Json
         }
         $error = self::getLastError();
         if ($json === null || $error) {
+            $log = $GLOBALS['log'];
             $log->error('Json::encode():' . $error . ' - ' . print_r($value, true));
         }
         return $json;
@@ -150,8 +150,8 @@ class Json
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         if (is_array($json)) {
+            $log = $GLOBALS['log'];
             $log->warning('Json::decode() - JSON cannot be decoded - ' . $json);
             return false;
         }
@@ -164,6 +164,7 @@ class Json
         }
         $error = self::getLastError();
         if ($json === null || $error) {
+            $log = $GLOBALS['log'];
             $log->error('Json::decode():' . $error);
         }
         return $json;

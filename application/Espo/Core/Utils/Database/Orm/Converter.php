@@ -85,7 +85,6 @@ class Converter
     /*
     * //pair Espo => ORM
     */
-
     private $relationManager;
 
     private $entityDefs;
@@ -109,11 +108,11 @@ class Converter
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         $entityDefs = $this->getEntityDefs();
         $ormMeta = array();
         foreach ($entityDefs as $entityName => $entityMeta) {
             if (empty($entityMeta)) {
+                $log = $GLOBALS['log'];
                 $log->critical('Orm\Converter:process(), Entity:' . $entityName . ' - metadata cannot be converted into ORM format');
                 continue;
             }
@@ -253,9 +252,9 @@ class Converter
         /**
          * @var Log $log
          */
-        $log = $GLOBALS['log'];
         /** set default type if exists */
         if (!isset($fieldParams['type']) || empty($fieldParams['type'])) {
+            $log = $GLOBALS['log'];
             $log->debug('Field type does not exist for ' . $entityName . ':' . $fieldName . '. Use default type [' . $this->defaultFieldType . ']');
             $fieldParams['type'] = $this->defaultFieldType;
         }

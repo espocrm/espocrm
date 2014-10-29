@@ -48,7 +48,7 @@ class Attachment extends
 
     /**
      * @return Manager
-     * @since 1.0
+
      */
     protected function getFileManager()
     {

@@ -231,7 +231,7 @@ abstract class Entity implements
      * @param array $params
      *
      * @return EntityCollection|string|null
-     * @since 1.0
+
      */
     public function get($name, $params = array())
     {

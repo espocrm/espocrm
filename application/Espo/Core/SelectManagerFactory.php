@@ -36,7 +36,7 @@ class SelectManagerFactory
 
     /**
      * @var Metadata
-     * @since 1.0
+
      */
     private $metadata;
 

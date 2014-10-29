@@ -47,7 +47,7 @@ class EntityManager extends
 
     /**
      * @return Container
-     * @since 1.0
+
      */
     public function getContainer()
     {
@@ -81,7 +81,7 @@ class EntityManager extends
 
     /**
      * @return HookManager
-     * @since 1.0
+
      */
     public function getHookManager()
     {

@@ -128,11 +128,11 @@ class DataManager
          * @var Log    $log
          */
         $schema = $this->getContainer()->get('schema');
-        $log = $GLOBALS['log'];
         try{
             $result = $schema->rebuild($entityList);
         } catch(\Exception $e){
             $result = false;
+            $log = $GLOBALS['log'];
             $log->error('Fault to rebuild database schema' . '. Details: ' . $e->getMessage());
         }
         if ($result != true) {

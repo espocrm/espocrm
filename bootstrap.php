@@ -1,7 +1,7 @@
 <?php
 
-chdir(dirname(__FILE__));
-set_include_path(dirname(__FILE__));
-
+define('BP', dirname(__FILE__));
+chdir(BP);
+set_include_path(BP);
 require_once "vendor/autoload.php";
 

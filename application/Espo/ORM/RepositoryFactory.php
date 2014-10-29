@@ -46,7 +46,7 @@ class RepositoryFactory
      * @param $name
      *
      * @return RDB
-     * @since 1.0
+
      */
     public function create($name)
     {

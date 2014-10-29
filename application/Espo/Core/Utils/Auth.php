@@ -32,25 +32,25 @@ class Auth
 
     /**
      * @var Container
-     * @since 1.0
+
      */
     protected $container;
 
     /**
      * @var Authentication\Espo
-     * @since 1.0
+
      */
     protected $authentication;
 
     /**
      * @var Config
-     * @since 1.0
+
      */
     protected $config;
 
     /**
      * @var EntityManager
-     * @since 1.0
+
      */
     protected $entityManager;
 
@@ -114,7 +114,7 @@ class Auth
      * @param User $user
      *
      * @return string
-     * @since 1.0
+
      */
     protected function createToken($user)
     {
