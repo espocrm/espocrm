@@ -21,7 +21,7 @@ Never update composer dependencies if you are going to contribute code back.
 
 Now you can build.
 
-If your repository is accessible via a web server then you can run EspoCRM by url `http://PROJECT_URL/frontend` w/o making a build. To get a proper data/config.php and data in a database you can run /install via browser.
+If your repository is accessible via a web server then you can run EspoCRM by url `http://PROJECT_URL/frontend`.  To get a proper data/config.php and data in a database you can run /install via browser. Also you need to run build before to have compiled css.
 
 ### How to build
 
