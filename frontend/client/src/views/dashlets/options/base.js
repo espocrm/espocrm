@@ -106,8 +106,8 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
 
             this.header = this.getLanguage().translate('Dashlet Options') + ': ' + this.getLanguage().translate(this.name, 'dashlets');
         },
-        
-        save: function (dialog) {
+
+        fetchAttributes: function () {
             var attributes = {};
             this.fieldList.forEach(function (field) {
                 var fieldView = this.getView('record').getView(field);    
@@ -124,6 +124,14 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
             
             if (!valid) {
                 this.notify('Not Valid', 'error');
+                return null;
+            }
+            return attributes;
+        },
+        
+        save: function (dialog) {
+            var attributes = this.fetchAttributes();
+            if (attributes == null) {
                 return;
             }
             
