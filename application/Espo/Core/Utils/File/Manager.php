@@ -53,12 +53,12 @@ class Manager
      * @param string $path string - Folder path, Ex. myfolder
      * @param bool | int $recursively - Find files in subfolders
      * @param string $filter - Filter for files. Use regular expression, Ex. \.json$
-     * @param string $fileType [all, file, dir] - Filter for type of files/directories.
+     * @param bool $onlyFileType [null, true, false] - Filter for type of files/directories. If TRUE - returns only file list, if FALSE - only directory list
      * @param bool $isReturnSingleArray - if need to return a single array of file list
      *
      * @return array
      */
-    public function getFileList($path, $recursively=false, $filter='', $fileType='all', $isReturnSingleArray = false)
+    public function getFileList($path, $recursively = false, $filter = '', $onlyFileType = null, $isReturnSingleArray = false)
     {
         if (!file_exists($path)) {
             return false;
@@ -69,20 +69,20 @@ class Manager
         $cdir = scandir($path);
         foreach ($cdir as $key => $value)
         {
-            if (!in_array($value,array(".","..")))
+            if (!in_array($value,array(".", "..")))
             {
-                $add= false;
+                $add = false;
                 if (is_dir($path . Utils\Util::getSeparator() . $value)) {
                     if ($recursively || (is_int($recursively) && $recursively!=0) ) {
                         $nextRecursively = is_int($recursively) ? ($recursively-1) : $recursively;
-                        $result[$value] = $this->getFileList($path.Utils\Util::getSeparator().$value, $nextRecursively, $filter, $fileType);
+                        $result[$value] = $this->getFileList($path . Utils\Util::getSeparator() . $value, $nextRecursively, $filter, $onlyFileType);
                     }
-                    else if (in_array($fileType, array('all', 'dir'))){
-                        $add= true;
+                    else if (!isset($onlyFileType) || !$onlyFileType){ /*save only directories*/
+                        $add = true;
                     }
                 }
-                else if (in_array($fileType, array('all', 'file'))) {
-                    $add= true;
+                else if (!isset($onlyFileType) || $onlyFileType) { /*save only files*/
+                    $add = true;
                 }
 
                 if ($add) {
@@ -100,7 +100,7 @@ class Manager
         }
 
         if ($isReturnSingleArray) {
-            return $this->getSingeFileList($result);
+            return $this->getSingeFileList($result, $onlyFileType);
         }
 
         return $result;
@@ -110,20 +110,31 @@ class Manager
      * Convert file list to a single array
      *
      * @param aray $fileList
+     * @param bool $onlyFileType [null, true, false] - Filter for type of files/directories.
      * @param string $parentDirName
      *
      * @return aray
      */
-    protected function getSingeFileList(array $fileList, $parentDirName = '')
+    protected function getSingeFileList(array $fileList, $onlyFileType = null, $parentDirName = '')
     {
         $singleFileList = array();
         foreach($fileList as $dirName => $fileName) {
 
             if (is_array($fileName)) {
-            $currentDir = Utils\Util::concatPath($parentDirName, $dirName);
-                    $singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $currentDir));
+                $currentDir = Utils\Util::concatPath($parentDirName, $dirName);
+
+                if (!isset($onlyFileType) || $onlyFileType == $this->isFile($currentDir)) {
+                    $singleFileList[] = $currentDir;
+                }
+
+                $singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $onlyFileType, $currentDir));
+
             } else {
-                $singleFileList[] = Utils\Util::concatPath($parentDirName, $fileName);
+                $currentFileName = Utils\Util::concatPath($parentDirName, $fileName);
+
+                if (!isset($onlyFileType) || $onlyFileType == $this->isFile($currentFileName)) {
+                    $singleFileList[] = $currentFileName;
+                }
             }
         }
 
@@ -381,7 +392,7 @@ class Manager
                 }
             }
         } else {
-            $fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', 'file', true);
+            $fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', true, true);
         }
 
         /** Check permission before copying */
@@ -419,7 +430,9 @@ class Manager
             $sourceFile = is_file($sourcePath) ? $sourcePath : $this->concatPaths(array($sourcePath, $file));
             $destFile = $this->concatPaths(array($destPath, $file));
 
-            $res &= copy($sourceFile, $destFile);
+            if (file_exists($sourceFile)) {
+                $res &= copy($sourceFile, $destFile);
+            }
         }
 
         return $res;
@@ -459,7 +472,7 @@ class Manager
 
         return false;
     }
-    
+
     /**
      * Remove file/files by given path
      *
@@ -469,6 +482,22 @@ class Manager
     public function unlink($filePaths)
     {
         return $this->removeFile($filePaths);
+    }
+
+    public function rmdir($dirPaths)
+    {
+        if (!is_array($dirPaths)) {
+            $dirPaths = (array) $dirPaths;
+        }
+
+        $result = true;
+        foreach ($dirPaths as $dirPath) {
+            if (is_dir($dirPath) && is_writable($dirPath)) {
+                $result &= rmdir($dirPath);
+            }
+        }
+
+        return (bool) $result;
     }
 
     /**
@@ -523,12 +552,10 @@ class Manager
         }
 
         if ($removeWithDir) {
-            if (file_exists($dirPath)) {
-                rmdir($dirPath);
-            }
+            $result &= $this->rmdir($dirPath);
         }
 
-        return $result;
+        return (bool) $result;
     }
 
     /**
@@ -538,7 +565,7 @@ class Manager
      * @param  string $dirPath
      * @return boolean
      */
-    public function remove($items, $dirPath = null)
+    public function remove($items, $dirPath = null, $removeEmptyDirs = false)
     {
         if (!is_array($items)) {
             $items = (array) $items;
@@ -551,13 +578,73 @@ class Manager
             }
 
             if (is_dir($item)) {
-                $result = $this->removeInDir($item, true);
+                $result &= $this->removeInDir($item, true);
             } else {
-                $result = $this->removeFile($item);
+                $result &= $this->removeFile($item);
+            }
+
+            if ($removeEmptyDirs) {
+                $result &= $this->removeEmptyDirs($item);
             }
         }
 
-        return $result;
+        return (bool) $result;
+    }
+
+    /**
+     * Remove empty parent directories if they are empty
+     * @param  string $path
+     * @return bool
+     */
+    protected function removeEmptyDirs($path)
+    {
+        $parentDirName = $this->getParentDirName($path);
+
+        $res = true;
+        if ($this->isDirEmpty($parentDirName)) {
+            $res &= $this->rmdir($parentDirName);
+            $res &= $this->removeEmptyDirs($parentDirName);
+        }
+
+        return (bool) $res;
+    }
+
+    /**
+     * Check if $filename is file. If $filename doesn'ot exist, check by pathinfo
+     *
+     * @param  string  $filename
+     * @return boolean
+     */
+    public function isFile($filename)
+    {
+        if (file_exists($filename)) {
+            return is_file($filename);
+        }
+
+        $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!empty($fileExtension)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if directory is empty
+     * @param  string  $path
+     * @return boolean
+     */
+    public function isDirEmpty($path)
+    {
+        if (is_dir($path)) {
+            $fileList = $this->getFileList($path, true);
+
+            if (is_array($fileList) && empty($fileList)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -588,7 +675,6 @@ class Manager
         return end($exFileName);
     }
 
-
     /**
      * Get a directory name from the path
      *
@@ -597,17 +683,29 @@ class Manager
      *
      * @return array
      */
-    public function getDirName($path, $isFullPath = true)
+    public function getDirName($path, $isFullPath = true, $useIsDir = true)
     {
-        $pathInfo = pathinfo($path);
+        $dirName = preg_replace('/\/$/i', '', $path);
+        $dirName = ($useIsDir && is_dir($dirName)) ? $dirName : pathinfo($dirName, PATHINFO_DIRNAME);
 
         if (!$isFullPath) {
-            $pieces = explode('/', $pathInfo['dirname']);
-
-            return $pieces[count($pieces)-1];
+            $pieces = explode('/', $dirName);
+            $dirName = $pieces[count($pieces)-1];
         }
 
-        return $pathInfo['dirname'];
+        return $dirName;
+    }
+
+    /**
+     * Get parent dir name/path
+     *
+     * @param  string  $path
+     * @param  boolean $isFullPath
+     * @return string
+     */
+    public function getParentDirName($path, $isFullPath = true)
+    {
+        return $this->getDirName($path, $isFullPath, false);
     }
 
     /**

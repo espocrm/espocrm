@@ -28,14 +28,6 @@ use Espo\Core\Utils\Util,
 
 abstract class Base
 {
-    private $container;
-
-    private $actionManager;
-
-    private $zipUtil;
-
-    private $fileManager;
-
     private $config;
 
     private $entityManager;
@@ -43,6 +35,14 @@ abstract class Base
     protected $data;
 
     protected $params = null;
+
+    private $container;
+
+    private $actionManager;
+
+    private $zipUtil;
+
+    private $fileManager;
 
     protected $processId = null;
 
@@ -311,12 +311,19 @@ abstract class Base
      *
      * @return boolen
      */
-    protected function deleteFiles()
+    protected function deleteFiles($withEmptyDirs = false)
     {
         $deleteFileList = $this->getDeleteFileList();
 
+        //remove directories, leave only files
+        foreach ($deleteFileList as $key => $filePath) {
+            if (!is_file($filePath)) {
+                unset($deleteFileList[$key]);
+            }
+        }
+
         if (!empty($deleteFileList)) {
-            return $this->getFileManager()->remove($deleteFileList);
+            return $this->getFileManager()->remove($deleteFileList, null, $withEmptyDirs);
         }
 
         return true;
@@ -328,7 +335,7 @@ abstract class Base
             $packagePath = $this->getPackagePath();
             $filesPath = Util::concatPath($packagePath, self::FILES);
 
-            $this->data['fileList'] = $this->getFileManager()->getFileList($filesPath, true, '', 'all', true);
+            $this->data['fileList'] = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
         }
 
         return $this->data['fileList'];
