@@ -263,7 +263,7 @@ class InboundEmail extends \Espo\Services\Record
             );
             $case = $this->emailToCase($email, $params);
             $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
-            $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+            $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
             if ($inboundEmail->get('reply')) {
                 $this->autoReply($inboundEmail, $email, $case, $user);
             }

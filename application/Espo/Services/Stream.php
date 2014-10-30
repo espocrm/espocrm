@@ -263,7 +263,7 @@ class Stream extends \Espo\Core\Services\Base
         }
     }
     
-    public function noteEmailReceived(Entity $entity, Entity $email)
+    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false)
     {
         $entityName = $entity->getEntityName();
         
@@ -278,7 +278,8 @@ class Stream extends \Espo\Core\Services\Base
         $data = array();
         
         $data['emailId'] = $email->id;
-        $data['emailName'] = $email->get('name');    
+        $data['emailName'] = $email->get('name');
+        $data['isInitial'] = $isInitial;
         
         $note->set('data', $data);
                         

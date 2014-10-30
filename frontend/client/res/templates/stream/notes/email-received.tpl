@@ -3,9 +3,8 @@
 {{/unless}}    
     
     <div class="stream-head-container">
-        <span class="text-muted"><span class="glyphicon glyphicon-envelope "></span> {{translate 'Email'}} <a href="#Email/view/{{emailId}}">{{emailName}}</a>  
-            {{translate 'has been received' category='stream'}}
-            {{#if isUserStream}} {{translate 'for' category='stream'}} {{parentTypeString}} {{{parent}}} {{/if}} 
+        <span class="text-muted"><span class="glyphicon glyphicon-envelope "></span> 
+            {{{message}}}
         </span>        
     </div>
 
