@@ -47,13 +47,23 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
         setup: function () {
             this.setupSearchManager();
             this.setupSorting();
+
+            if (this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
+                this.searchPanel = false;
+            }
         
-            if (this.searchPanel && !this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
+            if (this.searchPanel) {
                 this.createView('search', 'Record.Search', {
                     collection: this.collection,
                     el: '#main > .search-container',
                     searchManager: this.searchManager,
-                });
+                }, function (view) {                    
+                    this.listenTo(view, 'reset', function () {
+                        this.collection.sortBy = this.defaultSortBy;
+                        this.collection.asc = this.defaultAsc;
+                        this.getStorage().clear('listSorting', this.collection.name)
+                    }, this);
+                }.bind(this));
             }    
 
             if (this.createButton) {
@@ -97,15 +107,6 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
             if ('asc' in sortingParams) {
                 collection.asc = sortingParams.asc;
             }
-
-            this.on('after:render', function () {
-                var searchView = this.getView('search');
-                this.listenTo(searchView, 'reset', function () {
-                    collection.sortBy = this.defaultSortBy;
-                    collection.asc = this.defaultAsc;
-                    this.getStorage().clear('listSorting', collection.name)
-                }, this);
-            }, this);
         },
 
         afterRender: function () {
