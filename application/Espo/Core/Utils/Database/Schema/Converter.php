@@ -319,7 +319,7 @@ class Converter
     {
         $customTables = array();
 
-        $fileList = $this->getFileManager()->getFileList($this->customTablePath, false, '\.php$', 'file');
+        $fileList = $this->getFileManager()->getFileList($this->customTablePath, false, '\.php$', true);
 
         foreach($fileList as $fileName) {
             $fileData = $this->getFileManager()->getContents( array($this->customTablePath, $fileName) );

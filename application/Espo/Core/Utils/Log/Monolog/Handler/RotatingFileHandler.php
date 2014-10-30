@@ -67,7 +67,7 @@ class RotatingFileHandler extends StreamHandler
 
         $filePattern = $this->getFilePattern();
         $dirPath = $this->getFileManager()->getDirName($this->filename);
-        $logFiles = $this->getFileManager()->getFileList($dirPath, false, $filePattern, 'file');
+        $logFiles = $this->getFileManager()->getFileList($dirPath, false, $filePattern, true);
 
         if (!empty($logFiles) && count($logFiles) > $this->maxFiles) {
 

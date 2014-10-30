@@ -46,7 +46,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         if (file_exists($backupPath)) {
 
             /* remove extension files, saved in fileList */
-            if (!$this->deleteFiles()) {
+            if (!$this->deleteFiles(true)) {
                 throw new Error('Permission denied to delete files.');
             }
 

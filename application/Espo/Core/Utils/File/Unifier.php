@@ -58,7 +58,7 @@ class Unifier
 
         if (!empty($paths['modulePath'])) {
             $customDir = strstr($paths['modulePath'], '{*}', true);
-            $dirList = $this->getFileManager()->getFileList($customDir, false, '', 'dir');
+            $dirList = $this->getFileManager()->getFileList($customDir, false, '', false);
 
             foreach ($dirList as $dirName) {
                 $curPath = str_replace('{*}', $dirName, $paths['modulePath']);

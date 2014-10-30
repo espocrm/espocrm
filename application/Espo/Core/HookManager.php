@@ -143,7 +143,7 @@ class HookManager
         foreach ($hookDirs as $hookDir) {
 
             if (file_exists($hookDir)) {
-                $fileList = $this->getFileManager()->getFileList($hookDir, 1, '\.php$', 'file');
+                $fileList = $this->getFileManager()->getFileList($hookDir, 1, '\.php$', true);
 
                 foreach ($fileList as $scopeName => $hookFiles) {
 

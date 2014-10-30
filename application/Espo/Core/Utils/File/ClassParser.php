@@ -18,13 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\File;
 
 use \Espo\Core\Utils\Util;
 
-class ClassParser 
+class ClassParser
 {
     private $fileManager;
 
@@ -65,45 +65,44 @@ class ClassParser
         $this->allowedMethods = $methods;
     }
 
-
-
     /**
      * Return path data of classes
+     *
      * @param  string  $cacheFile full path for a cache file, ex. data/cache/application/entryPoints.php
      * @param  string | array $paths in format array(
      *    'corePath' => '',
      *    'modulePath' => '',
      *    'customPath' => '',
      * );
-     * @return array 
+     * @return array
      */
     public function getData($paths, $cacheFile = false)
-    {        
+    {
         $data = null;
 
         if (is_string($paths)) {
             $paths = array(
-                'corePath' => $paths,    
-            );    
+                'corePath' => $paths,
+            );
         }
 
         if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
             $data = $this->getFileManager()->getContents($cacheFile);
-        } else {                    
+        } else {
             $data = $this->getClassNameHash($paths['corePath']);
 
             if (isset($paths['modulePath'])) {
                 foreach ($this->getMetadata()->getModuleList() as $moduleName) {
-                    $path = str_replace('{*}', $moduleName, $paths['modulePath']);                
+                    $path = str_replace('{*}', $moduleName, $paths['modulePath']);
 
                     $data = array_merge($data, $this->getClassNameHash($path));
-                }    
+                }
             }
 
             if (isset($paths['customPath'])) {
-                $data = array_merge($data, $this->getClassNameHash($paths['customPath']));    
-            }            
-            
+                $data = array_merge($data, $this->getClassNameHash($paths['customPath']));
+            }
+
             if ($cacheFile && $this->getConfig()->get('useCache')) {
                 $result = $this->getFileManager()->putContentsPHP($cacheFile, $data);
                 if ($result == false) {
@@ -114,36 +113,35 @@ class ClassParser
 
         return $data;
     }
-    
 
     protected function getClassNameHash($dirs)
     {
         if (is_string($dirs)) {
-            $dirs = (array) $dirs;    
+            $dirs = (array) $dirs;
         }
 
         $data = array();
-        foreach ($dirs as $dir) {          
+        foreach ($dirs as $dir) {
             if (file_exists($dir)) {
-                $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');                
+                $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', true);
 
-                foreach ($fileList as $file) {                    
+                foreach ($fileList as $file) {
                     $filePath = Util::concatPath($dir, $file);
-                    $className = Util::getClassName($filePath);       
-                    $fileName = $this->getFileManager()->getFileName($filePath); 
-                    $fileName = ucfirst($fileName); 
+                    $className = Util::getClassName($filePath);
+                    $fileName = $this->getFileManager()->getFileName($filePath);
+                    $fileName = ucfirst($fileName);
 
-                    foreach ($this->allowedMethods as $methodName) {    
-                        if (method_exists($className, $methodName)) {                            
+                    foreach ($this->allowedMethods as $methodName) {
+                        if (method_exists($className, $methodName)) {
                             $data[$fileName] = $className;
                         }
-                    }                    
-                    
+                    }
+
                 }
             }
         }
 
         return $data;
     }
-    
+
 }

@@ -139,7 +139,7 @@ class ServiceFactory
 
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
-                $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', 'file');
+                $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', true);
                 foreach ($fileList as $file) {
                     $filePath = Util::concatPath($dir, $file);
                     $className = Util::getClassName($filePath);
