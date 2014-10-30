@@ -273,9 +273,7 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('parentId', $entity->id);
         $note->set('parentType', $entityName);
 
-        $bodyPlain = $email->getBodyPlain();
-
-        $note->set('post', $email->get)
+        $note->set('post', $email->getBodyPlain());
         
         $data = array();
         
