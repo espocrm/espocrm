@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "name"        : "שם",
+        "emailAddress": "דוא\"ל",
+        "title"       : "כותרת",
+        "website"     : "אתר אינטרנט",
+        "accountName" : "שם חשבון",
+        "phoneNumber" : "טלפון",
+        "doNotCall"   : "לא להתקשר",
+        "address"     : "כתובת",
+        "description" : "תיאור"
+    },
+    "links" : {},
+    "labels": {
+        "Create Target"  : "יצירת מטרה",
+        "Convert to Lead": "המרה לכיוון"
+    }
+}

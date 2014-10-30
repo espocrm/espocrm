@@ -1,0 +1,28 @@
+{
+    "fields"  : {
+        "name"            : "שם",
+        "status"          : "סטטוס",
+        "host"            : "מארח",
+        "username"        : "שם משתמש",
+        "password"        : "סיסמה",
+        "port"            : "יציאה",
+        "monitoredFolders": "תיקייות מנוטרות",
+        "ssl"             : "SSL",
+        "fetchSince"      : "שליפה החל מתאריך"
+    },
+    "links"   : {},
+    "options" : {
+        "status": {
+            "Active"  : "פעיל",
+            "Inactive": "לא פעיל"
+        }
+    },
+    "labels"  : {
+        "Create EmailAccount": "יצירת חשבון דוא\"ל",
+        "IMAP"               : "IMAP",
+        "Main"               : "ראשי"
+    },
+    "messages": {
+        "couldNotConnectToImap": "לא ניתן להתחבר לשרת IMAP "
+    }
+}

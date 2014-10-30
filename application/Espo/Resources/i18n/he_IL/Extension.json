@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "name": "שם",
+        "version": "גרסה",
+        "description": "תיאור",
+        "isInstalled": "מותקן"
+    },
+    "labels": {
+        "Uninstall": "הסרה",
+        "Install": "התקנה"
+    },
+    "messages": {
+        "uninstalled": "התוסף {name} הוסר בהצלחה"
+    }
+}

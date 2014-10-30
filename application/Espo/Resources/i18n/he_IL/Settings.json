@@ -1,0 +1,75 @@
+{
+    "fields"  : {
+        "useCache"         : "השתמש במטמון",
+        "dateFormat"       : "פורמט תאריך",
+        "timeFormat"       : "פורמט שעה",
+        "timeZone"         : "אזור זמן",
+        "weekStart"        : "יום ראשון בשבוע",
+        "thousandSeparator": "מפריד אלפים",
+        "decimalMark"      : "סימן דצימלי",
+        "defaultCurrency"  : "מטבע ברירת מחדל",
+        "baseCurrency"     : "מטבע בסיס",
+        "currencyRates"    : "ערך שערים",
+
+        "currencyList": "רשימת מטבעות",
+        "language"    : "שפה",
+
+        "companyLogo": "לוגו חברה",
+
+        "smtpServer"              : "שרת",
+        "smtpPort"                : "יציאה",
+        "smtpAuth"                : "אימות",
+        "smtpSecurity"            : "אבטחה",
+        "smtpUsername"            : "שם משתמש",
+        "emailAddress"            : "דוא\"ל",
+        "smtpPassword"            : "סיסמא",
+        "outboundEmailFromName"   : "שם מאת",
+        "outboundEmailFromAddress": "כתובת מאת",
+        "outboundEmailIsShared"   : "האם משותף",
+
+        "recordsPerPage"     : "רשומות לעמוד",
+        "recordsPerPageSmall": "רשומות לעמוד (קטן)",
+        "tabList"            : "רשימת טאבים",
+        "quickCreateList"    : "יצירת רשימה מהירה",
+
+        "exportDelimiter": "מפריד ייצוא",
+
+        "authenticationMethod"                  : "שיטת אימות",
+        "ldapHost"                              : "מארח",
+        "ldapPort"                              : "יציאה",
+        "ldapAuth"                              : "אימות",
+        "ldapUsername"                          : "שם משתמש",
+        "ldapPassword"                          : "סיסמא",
+        "ldapBindRequiresDn"                    : "קבע דרישת שם דומיין",
+        "ldapBaseDn"                            : "שם דומיין בסיסי",
+        "ldapAccountCanonicalForm"              : "שם חלופי שולח",
+        "ldapAccountDomainName"                 : "שם דומיין לחשבון",
+        "ldapTryUsernameSplit"                  : "נסה פיצול משתמש",
+        "ldapCreateEspoUser"                    : "צור משתמש במערכת EspoCRM",
+        "ldapSecurity"                          : "אבטחה",
+        "ldapUserLoginFilter"                   : "סינון התחברות משתמשים",
+        "ldapAccountDomainNameShort"            : "שם דומיין מקוצר לחשבון",
+        "ldapOptReferrals"                      : "Opt Referrals",
+        "disableExport"                         : "השבת ייצוא (רק מנהל מורשה)",
+        "assignmentEmailNotifications"          : "שלח התראות מייל בשיוך",
+        "assignmentEmailNotificationsEntityList": "ישויות עבורם יש להתריע"
+    },
+    "options" : {
+        "weekStart": {
+            "0": "ראשון",
+            "1": "שני"
+        }
+    },
+    "tooltips": {
+        "recordsPerPageSmall": "מספר רשומות בפאנלים מקושרים."
+    },
+    "labels"  : {
+        "System"           : "מערכת",
+        "Locale"           : "שפה",
+        "SMTP"             : "SMTP",
+        "Configuration"    : "הגדרות",
+        "Notifications"    : "התראות",
+        "Currency Settings": "הגדרות מטבע",
+        "Currency Rtes"    : "שערי מטבעות"
+    }
+}

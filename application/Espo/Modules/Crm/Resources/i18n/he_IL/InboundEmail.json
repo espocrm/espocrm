@@ -1,0 +1,51 @@
+{
+    "fields"  : {
+        "name"              : "שם",
+        "team"              : "צוות",
+        "status"            : "סטטוס",
+        "assignToUser"      : "שיוך למשתמש",
+        "host"              : "מארח",
+        "username"          : "שם משתמש",
+        "password"          : "סיסמא",
+        "port"              : "יציאה",
+        "monitoredFolders"  : "תיקייות מנוטרות",
+        "trashFolder"       : "תיקיית אשפה",
+        "ssl"               : "SSL",
+        "createCase"        : "יצירת מקרה",
+        "reply"             : "השבה",
+        "caseDistribution"  : "הפצת מקרים",
+        "replyEmailTemplate": "השבה באמצעות תבנית",
+        "replyFromAddress"  : "כתובת שליחת תגובה",
+        "replyToAddress"    : "כתובת השבה לתגובה",
+        "replyFromName"     : "שם כתובת השבה לתגובה"
+    },
+    "tooltips": {
+        "reply"           : "עדכן שולח מייל שההודעה שלו התקבלה.",
+        "createCase"      : "צור אוטומטית מקרים ממיילים נכנסים.",
+        "replyToAddress"  : "יש לציין את כתובת הדוא\"ל כך שהתגובה תגיע אליו.",
+        "caseDistribution": "איך מקרים ישוייכו. ישירות למשתמש או אל הצוות.",
+        "assignToUser"    : "ממיילים/מקרים של המשתמש ישוייכו אל.",
+        "team"            : "מיילים/מקרים של הצוות ישויכו אל."
+    },
+    "links"   : {},
+    "options" : {
+        "status"          : {
+            "Active"  : "פעיל",
+            "Inactive": "לא פעיל"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "שיוך ישיר",
+            "Round-Robin"      : "Round-Robin",
+            "Least-Busy"       : "פחות עסוק"
+        }
+    },
+    "labels"  : {
+        "Create InboundEmail": "יצירת דוא\"ל נכנס",
+        "IMAP"               : "IMAP",
+        "Actions"            : "פעולות",
+        "Main"               : "ראשי"
+    },
+    "messages": {
+        "couldNotConnectToImap": "לא ניתן להתחבר לשרת IMAP"
+    }
+}

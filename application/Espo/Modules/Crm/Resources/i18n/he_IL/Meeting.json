@@ -1,0 +1,38 @@
+{
+    "fields"       : {
+        "name"       : "שם",
+        "parent"     : "אב",
+        "status"     : "סטטוס",
+        "dateStart"  : "תאריך תחילה",
+        "dateEnd"    : "תאריך סיום",
+        "duration"   : "משך",
+        "description": "תיאור",
+        "users"      : "משתמשים",
+        "contacts"   : "אנשי קשר",
+        "leads"      : "כיוונים"
+    },
+    "links"        : {},
+    "options"      : {
+        "status"          : {
+            "Planned" : "בתכנון",
+            "Held"    : "בהמתנה",
+            "Not Held": "לא בהמתנה"
+        },
+        "acceptanceStatus": {
+            "None"    : "ללא",
+            "Accepted": "אושר",
+            "Declined": "נדחה"
+        }
+    },
+    "labels"       : {
+        "Create Meeting"  : "יצירת פגישה",
+        "Set Held"        : "הגדר בהמתנה",
+        "Set Not Held"    : "הגדר לא בהמתנה",
+        "Send Invitations": "שלח הזמנות"
+    },
+    "presetFilters": {
+        "planned": "בתכנון",
+        "held"   : "בהמתנה",
+        "todays" : "מהיום"
+    }
+}

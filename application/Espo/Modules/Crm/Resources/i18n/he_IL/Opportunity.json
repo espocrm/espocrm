@@ -1,0 +1,41 @@
+{
+    "fields"       : {
+        "name"                   : "שם",
+        "account"                : "חשבון",
+        "stage"                  : "שלב",
+        "amount"                 : "כמות",
+        "probability"            : "סבירות, %",
+        "leadSource"             : "מקור כיוון",
+        "doNotCall"              : "לא להתקשר",
+        "closeDate"              : "תאריך סגירה",
+        "contacts"               : "אנשי קשר",
+        "description"            : "תיאור",
+        "amountConverted"        : "כמות (מומר)",
+        "amountWeightedConverted": "כמות מחושבת"
+    },
+    "links"        : {
+        "contacts" : "אנשי קשר",
+        "documents": "מסמכים"
+    },
+    "options"      : {
+        "stage": {
+            "Prospecting"         : "סקירה",
+            "Qualification"       : "הסמכה",
+            "Needs Analysis"      : "נדרש ניתוח",
+            "Value Proposition"   : "שערוך הצעה",
+            "Id. Decision Makers" : "ממתין למקבלי החלטה",
+            "Perception Analysis" : "ניתוח תפיסה",
+            "Proposal/Price Quote": "הצעת מחיר",
+            "Negotiation/Review"  : "מיקוח/סקירה",
+            "Closed Won"          : "נסגר בהצלחה",
+            "Closed Lost"         : "נסגר בכשלון"
+        }
+    },
+    "labels"       : {
+        "Create Opportunity": "יצירת הזדמנות"
+    },
+    "presetFilters": {
+        "open": "פתוח",
+        "won" : "הצלחה"
+    }
+}

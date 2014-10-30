@@ -1,0 +1,13 @@
+{
+    "modes" : {
+        "month"     : "חודש",
+        "week"      : "שבוע",
+        "day"       : "יום",
+        "agendaWeek": "שבוע",
+        "agendaDay" : "יום"
+    },
+    "labels": {
+        "Today" : "היום",
+        "Create": "יצירה"
+    }
+}

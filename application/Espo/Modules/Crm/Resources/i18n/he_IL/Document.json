@@ -1,0 +1,32 @@
+{
+    "labels"       : {
+        "Create Document": "יצירת מסמך",
+        "Details"        : "פרטים"
+    },
+    "fields"       : {
+        "name"          : "שם",
+        "status"        : "סטטוס",
+        "file"          : "קובץ",
+        "type"          : "סוג",
+        "source"        : "מקור",
+        "publishDate"   : "תאריך פרסום",
+        "expirationDate": "תאריך תפוגה",
+        "description"   : "תיאור"
+    },
+    "links"        : {
+        "accounts"     : "חשבונות",
+        "opportunities": "הזדמנויות"
+    },
+    "options"      : {
+        "status": {
+            "Active"  : "פעיל",
+            "Draft"   : "טיוטה",
+            "Expired" : "פג תוקף",
+            "Canceled": "בוטל"
+        }
+    },
+    "presetFilters": {
+        "active": "פעיל",
+        "draft" : "טיוטה"
+    }
+}

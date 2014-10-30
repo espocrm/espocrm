@@ -1,0 +1,36 @@
+{
+    "fields"  : {
+        "name"           : "שם",
+        "userName"       : "שם משתמש",
+        "title"          : "כותרת",
+        "isAdmin"        : "הינו מנהל",
+        "defaultTeam"    : "צוות ברירת מחדל",
+        "emailAddress"   : "דוא\"ל",
+        "phoneNumber"    : "טלפון",
+        "roles"          : "הרשאות",
+        "password"       : "סיסמא",
+        "passwordConfirm": "אימות סיסמט",
+        "newPassword"    : "סיסמא חדשה"
+    },
+    "links"   : {
+        "teams": "צוותים",
+        "roles": "הרשאות"
+    },
+    "labels"  : {
+        "Create User"    : "יצירת משתמש",
+        "Generate"       : "יצירה אוטומטית",
+        "Access"         : "גישה",
+        "Preferences"    : "הגדרות",
+        "Change Password": "שינוי סיסמה"
+    },
+    "tooltips": {
+        "defaultTeam": "כל הרשומות שנוצרו ע\"י המשתמש ישוייכו אוטומטית לצוות הזה.",
+        "userName"   : "התווים המותרים הינם a-z 0-9 וקו תחתון (_)."
+    },
+    "messages": {
+        "passwordWillBeSent"     : "הסיסמא תשלח אל הדוא\"ל של המשתמש.",
+        "accountInfoEmailSubject": "מידע חשבון",
+        "accountInfoEmailBody"   : "מידע חשבונך:\n\nשם משתמש: {userName}\nסיסמה: {password}\n\n{siteUrl}",
+        "passwordChanged"        : "הסיסמא שונתה בהצלחה"
+    }
+}

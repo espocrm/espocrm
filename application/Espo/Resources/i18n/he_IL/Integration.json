@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "enabled": "פעיל",
+        "clientId": "מזהה לקוח",
+        "clientSecret": "Secret לקוח",
+        "redirectUri": "כתובת הפנייה"
+    },
+    "messages": {
+        "selectIntegration": "בחר התממשקות מהתפריט."
+    },
+    "help": {
+        "Google": "<p><b>קבל פרטי אימות OAuth 2.0 מ-Google Developers Console.</b></p><p>בקר ב-<a href=\"https://console.developers.google.com/project\">Google Developers Console</a> לקבלת פרטי אימות OAuth 2.0 כמו מזהה לקוח ו Secret לקוח שמוכרים ל-Google ולאפליקציית EspoCRM.</p>"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "fields" : {
+        "name"      : "שם",
+        "status"    : "סטטוס",
+        "job"       : "עבודה",
+        "scheduling": "תזמון (crontab notation)"
+    },
+    "links"  : {
+        "log": "לוג"
+    },
+    "labels" : {
+        "Create ScheduledJob": "צור משימה מתוזמנת"
+    },
+    "options": {
+        "job"      : {
+            "CheckInboundEmails": "בדיקת מיילים נכנסים",
+            "Cleanup"           : "נקה"
+        },
+        "cronSetup": {
+            "linux"  : "הערה: הוסף שורה זו ל-crontab כדי להריץ משימות מתוזמנות:",
+            "mac"    : "הערה: הוסף שורה זו ל-crontab כדי להריץ משימות מתוזמנות:",
+            "windows": "הערה: צור קובץ באץ' עם הפקודות הבאות ע\"מ להריץ משימות מתוזמנות באמצעות Windows Scheduled Tasks:",
+            "default": "הערה: הוסף פקודה זו ל Cron Job (משימה מתוזמנת):"
+        },
+        "status"   : {
+            "Active"  : "פעיל",
+            "Inactive": "לא פעיל"
+        }
+    }
+}

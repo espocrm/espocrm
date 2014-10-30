@@ -1,0 +1,51 @@
+{
+    "fields": {
+        "name": "נושא",
+        "parent": "אב",
+        "status": "סטטוס",
+        "dateSent": "תאריך שליחה",
+        "from": "מאת",
+        "to": "אל",
+        "cc": "עותק",
+        "bcc": "עותק נסתר",
+        "isHtml": "הינו HTML",
+        "body": "תוכן ההודעה",
+        "subject": "נושא",
+        "attachments": "קבצים מצורפים",
+        "selectTemplate": "בחירת תבנית",
+        "fromEmailAddress": "מאת כתובת",
+        "toEmailAddresses": "אל כתובת",
+        "emailAddress": "כתובת דוא\"ל",
+        "deliveryDate": "תאריך שליחה"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "טיוטה",
+        "Sending": "שולח",
+        "Sent": "נשלח",
+        "Archived": "בארכיון"
+    },
+    "labels": {
+        "Create Email": "העבר לארכיון",
+        "Archive Email": "העבר לארכיון",
+        "Compose": "חדש",
+        "Reply": "השב",
+        "Reply to All": "השב לכולם",
+        "Forward": "העבר",
+        "Original message": "הודעה מקורית",
+        "Forwarded message": "הודעה שהועברה",
+        "Email Accounts": "חשבונות דוא\"ל",
+        "Send Test Email": "שלח מייל ניסיון",
+        "Send": "שליחה",
+        "Email Address": "כתובת דוא\"ל"
+    },
+    "messages": {
+        "noSmtpSetup": "לא הוגדר SMTP. {link}.",
+        "testEmailSent": "דוא\"ל בדיקה נשלח"
+    },
+    "presetFilters": {
+        "sent": "נשלח",
+        "archived": "אורכב"
+    }
+}
