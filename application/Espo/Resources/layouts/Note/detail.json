@@ -3,7 +3,12 @@
         "label":"",
         "rows": [
             [
-                {"name":"post"}
+                {
+                    "name":"post",
+                    "params": {
+                        "required": true
+                    }
+                }
             ],
             [
                 {"name":"attachments"}
