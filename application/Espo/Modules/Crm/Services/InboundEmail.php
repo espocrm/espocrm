@@ -262,8 +262,8 @@ class InboundEmail extends \Espo\Services\Record
                 'userId' => $inboundEmail->get('assignToUserId'),
             );
             $case = $this->emailToCase($email, $params);
-            $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
             $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+            $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
             if ($inboundEmail->get('reply')) {
                 $this->autoReply($inboundEmail, $email, $case, $user);
             }

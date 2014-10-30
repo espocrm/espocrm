@@ -35,7 +35,24 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
         setup: function () {
             var data = this.model.get('data');
             this.emailId = data.emailId;
-            this.emailName = data.emailName;            
+            this.emailName = data.emailName;
+
+            if (this.model.get('post')) {
+                this.createField('post', null, null, 'Stream.Fields.Post');                
+            }            
+            if ((this.model.get('attachmentsIds') || []).length) {
+                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+                
+                if (!this.model.get('post')) {
+                    this.messageName = 'attach';                    
+                    if (!this.isUserStream) {
+                        this.messageName += 'This';    
+                    }
+                }
+            }
+
+            this.createMessage();
+
         },
         
     });
