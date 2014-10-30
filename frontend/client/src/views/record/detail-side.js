@@ -112,9 +112,6 @@
             actions.forEach(function (item) {
                 if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
                     filtered.push(item);
-                    if (item.action == 'createTask') {
-                        console.log(item);
-                    }
                 }
             }, this);
             return filtered;

@@ -83,7 +83,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.notify('Please wait...');
                 this.collection.once('sync', function () {
                     this.notify(false);
-                    this.trigger('sort', {field: field, asc: asc});
+                    this.trigger('sort', {sortBy: field, asc: asc});
                 }.bind(this));
                 this.collection.sort(field, asc);
                 this.deactivate();
