@@ -63,7 +63,7 @@ class ManyMany extends Base
     {
         $tables = $this->getSortEntities($tableName1, $tableName2);
 
-        return Util::toCamelCase( implode('-', $tables) );
+        return Util::toCamelCase( implode('_', $tables) );
     }
 
     protected function getSortEntities($entity1, $entity2)

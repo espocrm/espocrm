@@ -118,7 +118,7 @@ class RelationManager
 
         $method = $currentType;
         if ($foreignLink !== false) {
-            $method .= '-'.$foreignLink['params']['type'];
+            $method .= '_' . $foreignLink['params']['type'];
         }
         $method = Util::toCamelCase($method);
 
