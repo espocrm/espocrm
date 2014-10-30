@@ -19,7 +19,7 @@
     {{/unless}}
     
     
-    <div>
+    <div class="stream-head-container">
         <span class="text-muted message">{{{message}}}</span>
     </div>
     
@@ -35,7 +35,7 @@
     </div>
     {{/if}}
     
-    <div class="">
+    <div class="stream-date-container">
         <span class="text-muted small">{{{createdAt}}}</span>
     </div>
     

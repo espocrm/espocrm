@@ -2,14 +2,14 @@
 <li data-id="{{model.id}}" class="list-group-item">
 {{/unless}}
 
-    <div>
+    <div class="stream-head-container">
         {{#if statusText}}
         <span class="label label-{{statusStyle}}">{{statusText}}</span>
         {{/if}}        
         <span class="text-muted message">{{{message}}}</span>
     </div>
     
-    <div>
+    <div class="stream-date-container">
         <span class="text-muted small">{{{createdAt}}}</span>
     </div>
         

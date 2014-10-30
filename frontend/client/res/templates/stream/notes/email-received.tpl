@@ -2,7 +2,7 @@
 <li data-id="{{model.id}}" class="list-group-item">
 {{/unless}}    
     
-    <div>
+    <div class="stream-head-container">
         <span class="text-muted"><span class="label label-primary"><span class="glyphicon glyphicon-envelope "></span></span> {{translate 'Email'}} <a href="#Email/view/{{emailId}}">{{emailName}}</a>  
             {{translate 'has been received' category='stream'}}
             {{#if isUserStream}} {{translate 'for' category='stream'}} {{parentTypeString}} {{{parent}}} {{/if}} 
@@ -10,7 +10,7 @@
     </div>
     
     
-    <div>
+    <div class="stream-date-container">
         <span class="text-muted small">{{{createdAt}}}</span>
     </div>
     

@@ -2,11 +2,11 @@
 <li data-id="{{model.id}}" class="list-group-item">
 {{/unless}}
     
-    <div>
+    <div class="stream-head-container">
         <span class="text-muted message">{{{message}}}</span> <a href="javascript:" data-action="expandDetails"><span class="glyphicon glyphicon-chevron-down"></span></a>
     </div>
     
-    <div class="hidden details">
+    <div class="hidden details stream-details-container">
         <span>
             {{#each fieldsArr}}
                 {{translate field category='fields' scope=../parentType}}: {{{var was ../this}}} &raquo; {{{var became ../this}}}
@@ -15,7 +15,7 @@
         </span>
     </div>
     
-    <div>
+    <div class="stream-date-container">
         <span class="text-muted small">{{{createdAt}}}</span>
     </div>
 
