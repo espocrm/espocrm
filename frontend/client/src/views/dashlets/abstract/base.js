@@ -30,7 +30,6 @@ Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
         optionsData: null,
 
         actionRefresh: function () {
-            this.setup();
             this.render();
         },
 
