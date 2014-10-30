@@ -14,16 +14,16 @@ class UtilTest extends \PHPUnit_Framework_TestCase
     public function testToCamelCase()
     {
        $this->assertEquals('detail', Util::toCamelCase('detail'));
-       $this->assertEquals('detailView', Util::toCamelCase('detail-view'));
-       $this->assertEquals('myDetailView', Util::toCamelCase('my-detail-view'));
+       $this->assertEquals('detailView', Util::toCamelCase('detail-view', '-'));
+       $this->assertEquals('myDetailView', Util::toCamelCase('my_detail_view'));
     }
 
     public function testFromCamelCase()
     {
        $this->assertEquals('detail', Util::fromCamelCase('detail'));
-       $this->assertEquals('detail-view', Util::fromCamelCase('detailView'));
-       $this->assertEquals('my-detail-view', Util::fromCamelCase('myDetailView'));
-       $this->assertEquals('my-f-f', Util::fromCamelCase('myFF'));
+       $this->assertEquals('detail-view', Util::fromCamelCase('detailView', '-'));
+       $this->assertEquals('my_detail_view', Util::fromCamelCase('myDetailView'));
+       $this->assertEquals('my_f_f', Util::fromCamelCase('myFF'));
     }
 
     public function testToUnderScoree()

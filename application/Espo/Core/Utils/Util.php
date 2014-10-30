@@ -60,13 +60,15 @@ class Util
 
 
     /**
-     * Convert name to Camel Case format, ex. camel-case to camelCase
+     * Convert name to Camel Case format, ex. camel_case to camelCase
+     *
      * @param  string  $name
-     * @param  boolean $capitaliseFirstChar
      * @param  string  $symbol
+     * @param  boolean $capitaliseFirstChar
+     *
      * @return string
      */
-    public static function toCamelCase($name, $capitaliseFirstChar = false, $symbol = '-')
+    public static function toCamelCase($name, $symbol = '_', $capitaliseFirstChar = false)
     {
         if($capitaliseFirstChar) {
             $name[0] = strtoupper($name[0]);
@@ -87,7 +89,7 @@ class Util
      *
      * @return string
      */
-    public static function fromCamelCase($name, $symbol = '-')
+    public static function fromCamelCase($name, $symbol = '_')
     {
         $name[0] = strtolower($name[0]);
         return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
@@ -236,12 +238,12 @@ class Util
     *
     * @return string
     */
-    public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '-')
+    public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '_')
     {
         if ($type == 'prefix') {
-            return static::toCamelCase($prePostFix.$symbol.$name, false, $symbol);
+            return static::toCamelCase($prePostFix.$symbol.$name, $symbol);
         } else if ($type == 'postfix') {
-            return static::toCamelCase($name.$symbol.$prePostFix, false, $symbol);
+            return static::toCamelCase($name.$symbol.$prePostFix, $symbol);
         }
 
         return null;
