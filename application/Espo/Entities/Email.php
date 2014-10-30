@@ -46,6 +46,21 @@ class Email extends \Espo\Core\ORM\Entity
         }
     }
     
+    public function getBodyPlain()
+    {
+        $bodyPlain = $this->get('bodyPlain');        
+        if (!empty($bodyPlain)) {
+            return $bodyPlain;
+        }
+
+        $body = $this->get('body');
+        
+        $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+        $body = str_ireplace($breaks, "\r\n", $body);
+        $body = strip_tags($body);
+        return $body;
+    }
+
     public function getBodyPlainForSending()
     {
         $bodyPlain = $this->get('bodyPlain');        
