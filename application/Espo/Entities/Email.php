@@ -25,12 +25,12 @@ namespace Espo\Entities;
 class Email extends \Espo\Core\ORM\Entity
 {
 
-    protected function getSubject()
+    protected function _getSubject()
     {
         return $this->get('name');
     }
     
-    protected function setSubject($value)
+    protected function _setSubject($value)
     {
         return $this->set('name', $value);
     }
@@ -63,17 +63,7 @@ class Email extends \Espo\Core\ORM\Entity
 
     public function getBodyPlainForSending()
     {
-        $bodyPlain = $this->get('bodyPlain');        
-        if (!empty($bodyPlain)) {
-            return $bodyPlain;
-        }
-
-        $body = $this->get('body');
-        
-        $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
-        $body = str_ireplace($breaks, "\r\n", $body);
-        $body = strip_tags($body);
-        return $body;
+        return $this->getBodyPlain();
     }
     
     public function getBodyForSending()

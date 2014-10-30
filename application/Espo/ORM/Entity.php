@@ -94,7 +94,7 @@ abstract class Entity implements IEntity
         $this->valuesContainer = array();
     }
     
-    protected function _setValue($name, $value)
+    protected function setValue($name, $value)
     {
         $this->valuesContainer[$name] = $value;
     }    
@@ -113,7 +113,7 @@ abstract class Entity implements IEntity
                 $this->id = $value;
             }
             if ($this->hasField($name)) {
-                $method = 'set' . ucfirst($name);
+                $method = '_set' . ucfirst($name);
                 if (method_exists($this, $method)) {
                     $this->$method($value);
                 } else {
@@ -128,7 +128,7 @@ abstract class Entity implements IEntity
         if ($name == 'id') {
             return $this->id;
         }
-        $method = 'get' . ucfirst($name);
+        $method = '_get' . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method();        
         }
@@ -206,7 +206,7 @@ abstract class Entity implements IEntity
                     }
                 }
                 
-                $method = 'set' . ucfirst($field);
+                $method = '_set' . ucfirst($field);
                 if (method_exists($this, $method)) {
                     $this->$method($value);
                 } else {
