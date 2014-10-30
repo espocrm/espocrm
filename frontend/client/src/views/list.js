@@ -38,7 +38,7 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
             }
         },
         
-        searchPanel: true,        
+        searchPanel: true,
         
         searchManager: true,
         
@@ -46,8 +46,9 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 
         setup: function () {
             this.setupSearchManager();
+            this.setupSorting();
         
-            if (this.searchPanel && !this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {            
+            if (this.searchPanel && !this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
                 this.createView('search', 'Record.Search', {
                     collection: this.collection,
                     el: '#main > .search-container',
@@ -74,18 +75,45 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
         
             var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
             searchManager.loadStored();
-            collection.where = searchManager.getWhere();                
+            collection.where = searchManager.getWhere();
             collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
                 
             this.searchManager = searchManager;
         },
 
+        setupSorting: function () {
+            if (!this.searchPanel) return;
+
+            var collection = this.collection;
+
+            var sortingParams = this.getStorage().get('listSorting', collection.name) || {};
+            
+            this.defaultSortBy = collection.sortBy;
+            this.defaultAsc = collection.asc;
+
+            if ('sortBy' in sortingParams) {
+                collection.sortBy = sortingParams.sortBy;
+            }
+            if ('asc' in sortingParams) {
+                collection.asc = sortingParams.asc;
+            }
+
+            this.on('after:render', function () {
+                var searchView = this.getView('search');
+                this.listenTo(searchView, 'reset', function () {
+                    collection.sortBy = this.defaultSortBy;
+                    collection.asc = this.defaultAsc;
+                    this.getStorage().clear('listSorting', collection.name)
+                }, this);
+            }, this);
+        },
+
         afterRender: function () {
-            this.notify('Loading...');    
+            this.notify('Loading...');
             
             var listViewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
             
-            this.listenToOnce(this.collection, 'sync', function () {                
+            this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', listViewName, {
                     collection: this.collection,
                     el: this.options.el + ' > .list-container',
@@ -93,13 +121,15 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
                     view.render();
                     view.notify(false);
                     
-                    this.listenTo(this.getView('list'), 'sort', function (o) {
-                        // TODO store
-                    }.bind(this));
+                    if (this.searchPanel) {
+                        this.listenTo(this.getView('list'), 'sort', function (obj) {
+                            this.getStorage().set('listSorting', this.collection.name, obj);
+                        }, this);
+                    }
                     
-                }.bind(this));                            
-            }.bind(this));            
-            this.collection.fetch();    
+                }.bind(this));
+            }, this);
+            this.collection.fetch();
         },
 
         getHeader: function () {
