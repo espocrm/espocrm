@@ -72,6 +72,11 @@ class Container
         return $className;
     }
 
+    protected function loadContainer()
+    {
+        return $this;
+    }
+
     private function loadSlim()
     {
         return new \Espo\Core\Utils\Api\Slim();
