@@ -233,8 +233,13 @@ class Email extends Record
             'collection' => $collection,
         );
     }
+
+    public function copyAttachments($emailId, $parentType, $parentId)
+    {
+        return $this->getCopiedAttachments($emailId, $parentType, $parentId);
+    }
     
-    public function getCopiedAttachments($id)
+    public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
         $ids = array();        
         $names = new \stdClass();
@@ -254,6 +259,11 @@ class Email extends Record
                         $attachment->set('size', $source->get('size'));
                         $attachment->set('global', $source->get('global'));
                         $attachment->set('name', $source->get('name'));
+
+                        if (!empty($parentType) && !empty($parentId)) {
+                            $attachment->set('parentType', $parentType);
+                            $attachment->set('parentId', $parentId);
+                        }
                         
                         $this->getEntityManager()->saveEntity($attachment);
                         

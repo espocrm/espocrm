@@ -199,7 +199,8 @@
         "status": "{user} updated {field} on {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
         "createRelated": "{user} created {relatedEntityType} {relatedEntity} linked to {entityType} {entity}",
-        "emailReceived": "{entity} has been received for {entityType} {entity}",
+        "emailReceived": "Email {email} has been received for {entityType} {entity}",
+        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
         "mentionInPost": "{user} mentioned {mentioned} on {entityType} {entity}",
         
         "createThis": "{user} created this {entityType}",        
@@ -210,7 +211,8 @@
         "statusThis": "{user} updated {field}",
         "updateThis": "{user} updated this {entityType}",
         "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} linked to this {entityType}",
-        "emailReceivedThis": "{entity} has been received"
+        "emailReceivedThis": "Email {email} has been received",
+        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}"
     },
     "lists": {
         "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

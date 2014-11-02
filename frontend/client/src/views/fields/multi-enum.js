@@ -60,6 +60,10 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
             if (this.mode == 'edit' || this.mode == 'search') {
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
                 this.$element.val(this.selected.join(','));
+
+                this.on('remove', function () {
+                    $('.select2-hidden-accessible').remove();
+                });
                 
                 this.$element.select2({
                     data: (this.params.options || []).map(function (item) {

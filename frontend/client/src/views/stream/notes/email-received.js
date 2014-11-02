@@ -25,17 +25,29 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
 
         template: 'stream.notes.email-received',
         
-        data: function () {
-            return _.extend({
-                emailId: this.emailId,
-                emailName: this.emailName
-            }, Dep.prototype.data.call(this));
-        },
-        
         setup: function () {
-            var data = this.model.get('data');
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;            
+            var data = this.model.get('data') || {};
+
+            if (this.model.get('post')) {
+                this.createField('post', null, null, 'Stream.Fields.Post');                
+            }            
+            if ((this.model.get('attachmentsIds') || []).length) {
+                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');                
+            }
+
+            this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
+
+            this.messageName = 'emailReceived';
+
+            if (data.isInitial) {
+                this.messageName += 'Initial';
+            }
+            if (!this.isUserStream) {
+                this.messageName += 'This';    
+            }
+
+            this.createMessage();
+
         },
         
     });

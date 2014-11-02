@@ -1,12 +1,9 @@
 
 
 .select2-container-multi .select2-choices .select2-search-choice {
-  margin: 3px 5px 3px 0
+  margin: 3px 2px 3px 5px
 }
 
-.select2-container-multi .select2-choices .select2-search-choice:first-child {
-  margin-left: 5px;
-}
 
 .select2-container.form-control {
   background: transparent;

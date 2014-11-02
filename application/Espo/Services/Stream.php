@@ -66,8 +66,14 @@ class Stream extends \Espo\Core\Services\Base
         'config',
         'user',
         'metadata',
-        'acl'
+        'acl',
+        'container',
     );
+
+    protected function getServiceFactory()
+    {
+        return $this->injections['container']->get('serviceFactory');
+    }
     
     protected function getAcl()
     {
@@ -183,7 +189,7 @@ class Stream extends \Espo\Core\Services\Base
         $collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
         
         foreach ($collection as $e) {
-            if ($e->get('type') == 'Post') {
+            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
                 $e->loadAttachments();
             }
         }
@@ -239,7 +245,7 @@ class Stream extends \Espo\Core\Services\Base
         ));
         
         foreach ($collection as $e) {
-            if ($e->get('type') == 'Post') {
+            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
                 $e->loadAttachments();
             }
         }
@@ -263,7 +269,7 @@ class Stream extends \Espo\Core\Services\Base
         }
     }
     
-    public function noteEmailReceived(Entity $entity, Entity $email)
+    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false)
     {
         $entityName = $entity->getEntityName();
         
@@ -278,11 +284,17 @@ class Stream extends \Espo\Core\Services\Base
         $data = array();
         
         $data['emailId'] = $email->id;
-        $data['emailName'] = $email->get('name');    
+        $data['emailName'] = $email->get('name');
+        $data['isInitial'] = $isInitial;
         
         $note->set('data', $data);
                         
         $this->getEntityManager()->saveEntity($note);
+
+        $attachmentsIds = $email->get('attachmentsIds');
+        if (!empty($attachmentsIds)) {
+            $attachmentsData = $this->getServiceFactory()->create('Email')->copyAttachments($email->id, 'Note', $note->id);            
+        }
     }
     
     public function noteCreate(Entity $entity)
