@@ -22,6 +22,7 @@
 
 namespace tests\Espo\Core\Upgrades\Actions;
 
+use Espo\Core\Utils\Util;
 use tests\ReflectionHelper;
 
 
@@ -45,6 +46,8 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             'afterUninstall' => 'AfterUninstall',
         )
     );
+
+    protected $reflection;
 
     protected function setUp()
     {
@@ -217,7 +220,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function testGetPath()
     {
         $packageId = $this->reflection->invokeMethod('getProcessId');
-        $packagePath = $this->actionManagerParams['packagePath'] . '/' . $packageId;
+        $packagePath = Util::fixPath($this->actionManagerParams['packagePath'] . '/' . $packageId);
 
         $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array()) );
         $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array('packagePath')) );
@@ -225,7 +228,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $postfix = $this->reflection->getProperty('packagePostfix');
         $this->assertEquals( $packagePath.$postfix, $this->reflection->invokeMethod('getPath', array('packagePath', true)) );
 
-        $backupPath = $this->actionManagerParams['backupPath'] . '/' . $packageId;
+        $backupPath = Util::fixPath($this->actionManagerParams['backupPath'] . '/' . $packageId);
 
         $this->assertEquals( $backupPath, $this->reflection->invokeMethod('getPath', array('backupPath')) );
     }
