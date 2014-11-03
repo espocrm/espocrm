@@ -20,6 +20,11 @@
             "edit": "no",
             "delete": "no"
         },
+        "PhoneNumber": {
+            "read": "no",
+            "edit": "no",
+            "delete": "no"
+        },
         "EmailAccount": {
             "read": "own",
             "edit": "own",

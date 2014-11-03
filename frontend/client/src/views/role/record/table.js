@@ -79,24 +79,27 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
                         access = 'enabled';
                     }                    
                 }
-                for (var j in this.actionList) {
-                    var action = this.actionList[j];
-                    var level = 'all';
-                    if (controller in aclData) {
-                        if (access == 'enabled') {
-                            if (action in aclData[controller]) {
-                                level = aclData[controller][action];
+                if (this.aclTypeMap[controller] == 'record') {
+                    for (var j in this.actionList) {
+                        var action = this.actionList[j];
+                        var level = 'all';
+                        if (controller in aclData) {
+                            if (access == 'enabled') {
+                                if (action in aclData[controller]) {
+                                    level = aclData[controller][action];
+                                }
+                            } else {
+                                level = 'no';
                             }
-                        } else {
-                            level = 'no';
-                        }
-                    } 
-                    o[action] = {level: level, name: controller + '-' + action};
+                        } 
+                        o[action] = {level: level, name: controller + '-' + action};
+                    }
                 }                
                 aclTable[controller] = {
                     acl: o,
                     access: access,
-                    name: controller
+                    name: controller,
+                    type: this.aclTypeMap[controller]
                 };                
             }
             return aclTable;
@@ -106,12 +109,20 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
             this.mode = this.options.mode || 'detail';
             this.aclData = this.options.aclData;            
             this.final = this.options.final || false;
+
+            this.aclTypeMap = {};
             
             this.scopeList = [];                
             var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort();
             scopesAll.forEach(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.acl')) {
+                var acl = this.getMetadata().get('scopes.' + scope + '.acl');
+                if (acl) {
                     this.scopeList.push(scope);
+                    if (acl == 'boolean') {
+                        this.aclTypeMap[scope] = 'boolean';    
+                    } else {
+                        this.aclTypeMap[scope] = 'record';
+                    }
                 }
             }.bind(this));    
         },

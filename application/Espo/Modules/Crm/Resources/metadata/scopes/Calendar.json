@@ -1,1 +1,6 @@
-{"entity":false,"tab":true,"acl":false,"module":"Crm"}
+{
+    "entity": false,
+    "tab": true,
+    "acl": "boolean",
+    "module": "Crm"
+}
