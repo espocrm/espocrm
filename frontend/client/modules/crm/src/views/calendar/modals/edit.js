@@ -52,9 +52,37 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
                     this.createEdit(model, function (view) {                                                
                         view.render();
                         view.notify(false);
-                    });                    
+                    });
+                    this.handleAccess(model);                  
                 }.bind(this));
             },
+        },
+
+        handleAccess: function (model) {
+            if (!this.getAcl().checkModel(model, 'edit')) {
+                this.$el.find('button[data-name="save"]').addClass('hidden');                
+                this.$el.find('button[data-name="fullForm"]').addClass('hidden');
+            } else {
+                this.$el.find('button[data-name="save"]').removeClass('hidden');                
+                this.$el.find('button[data-name="fullForm"]').removeClass('hidden');
+            }
+
+            if (!this.getAcl().checkModel(model, 'delete')) {
+                this.$el.find('button[data-name="remove"]').addClass('hidden');
+            } else {
+                this.$el.find('button[data-name="remove"]').removeClass('hidden');
+            }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            if (this.hasView('edit')) {
+                var model = this.getView('edit').model;
+                if (model) {
+                    this.handleAccess(model);  
+                }
+            }
+            
         },
         
         disableButtons: function () {
@@ -62,8 +90,27 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
         },
 
         setup: function () {
-            if (!this.options.id && !this.options.scope) {            
-                this.options.scope = this.getConfig().get('calendarDefaultEntity', this.scopeList[0]);
+            if (!this.options.id && !this.options.scope) {
+                var scopeList = [];
+                this.scopeList.forEach(function (scope) {
+                    if (this.getAcl().check(scope, 'edit')) {
+                        scopeList.push(scope); 
+                    }
+                }, this);
+                this.scopeList = scopeList;
+
+                var calendarDefaultEntity = this.getConfig().get('calendarDefaultEntity');
+
+                if (calendarDefaultEntity && ~this.scopeList.indexOf(calendarDefaultEntity)) {
+                    this.options.scope = calendarDefaultEntity;
+                } else {
+                    this.options.scope = this.scopeList[0] || null;
+                }
+
+                if (this.scopeList.length == 0) {
+                    this.remove();
+                    return;
+                }
             }
             Dep.prototype.setup.call(this);
             
@@ -71,7 +118,7 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
                 this.header = this.translate('Create', 'labels', 'Calendar');
             }
             
-            if (this.id) {            
+            if (this.id) {          
                 this.buttons.splice(1, 0, {
                     name: 'remove',
                     text: this.translate('Remove'),
@@ -103,12 +150,12 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
                 } else {
                     parentView.updateModel.call(parentView, model);
                 }
-            }.bind(this));
+            }, this);
             
             this.once('after:destroy', function (model) {
                 var parentView = this.getParentView();
                 parentView.removeModel.call(parentView, model);                
-            }.bind(this));
+            }, this);
         },
     });
 });
