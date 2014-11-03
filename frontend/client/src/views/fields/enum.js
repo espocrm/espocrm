@@ -33,6 +33,14 @@ Espo.define('Views.Fields.Enum', 'Views.Fields.Base', function (Dep) {
 
         searchTemplate: 'fields.enum.search',
 
+        translatedOptions: null,
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.translatedOptions = this.translatedOptions;
+            return data;
+        },
+
         setup: function () {
             if (!this.params.options) {
                 var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';

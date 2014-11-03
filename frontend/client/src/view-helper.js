@@ -169,7 +169,10 @@
                 if (!field) {
                     return '';
                 }
-                var translationHash = self.language.translate(field, 'options', scope) || {};
+                var translationHash = options.hash.translatedOptions || null;
+                if (translationHash === null) {
+                    translationHash = self.language.translate(field, 'options', scope) || {};
+                }
                 return translationHash[name] || name;
             });
 
@@ -192,9 +195,11 @@
                 var category = options.hash.category || false;
                 var field = options.hash.field || false;
 
-                var translationHash;
-                if (!category && field) {
-                    var translationHash = self.language.translate(field, 'options', scope) || {};
+                var translationHash = options.hash.translatedOptions || null;
+                if (translationHash === null) {
+                    if (!category && field) {
+                        translationHash = self.language.translate(field, 'options', scope) || {};
+                    }
                 }
 
                 var translate = function (name) {
