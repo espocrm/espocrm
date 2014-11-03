@@ -22,10 +22,17 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
+
 class Opportunity extends \Espo\Core\Controllers\Record
 {
     public function actionReportByLeadSource($params, $data, $request)
     {
+        if (!$this->getAcl()->check('Lead', 'read')) {
+            throw new Forbidden();
+        }
+
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
                 
@@ -34,6 +41,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
     
     public function actionReportByStage($params, $data, $request)
     {
+        if (!$this->getAcl()->check('Opportunity', 'read')) {
+            throw new Forbidden();
+        }
+
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
         
@@ -42,6 +53,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
     
     public function actionReportSalesByMonth($params, $data, $request)
     {
+        if (!$this->getAcl()->check('Opportunity', 'read')) {
+            throw new Forbidden();
+        }
+
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
                 
@@ -50,6 +65,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
     
     public function actionReportSalesPipeline($params, $data, $request)
     {
+        if (!$this->getAcl()->check('Opportunity', 'read')) {
+            throw new Forbidden();
+        }
+
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
         
