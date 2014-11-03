@@ -56,6 +56,9 @@ Espo.define('Views.Import.Step1', 'View', function (Dep) {
                     list.push(scopeName);
                 }
             }
+            list.sort(function (v1, v2) {
+                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
             return list;
         },
         

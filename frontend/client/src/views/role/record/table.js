@@ -112,10 +112,12 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
 
             this.aclTypeMap = {};
             
-            this.scopeList = [];                
+            this.scopeList = [];
+
             var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural')) > 0;
-            }.bind(this));
+                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));  
+
             scopesAll.forEach(function (scope) {
                 var acl = this.getMetadata().get('scopes.' + scope + '.acl');
                 if (acl) {

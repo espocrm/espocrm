@@ -78,9 +78,9 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
         setup: function () {
             this.scopeList = [];  
-                          
+
             var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural')) > 0;
+                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
             }.bind(this));
 
             scopesAll.forEach(function (scope) {

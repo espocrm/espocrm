@@ -30,11 +30,15 @@ Espo.define('Views.Admin.UserInterface', 'Views.Settings.Record.Edit', function 
         
             this.model.defs.fields.tabList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
                 return this.getMetadata().get('scopes.' + scope + '.tab');
-            }, this);
+            }, this).sort(function (v1, v2) {
+                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
             
             this.model.defs.fields.quickCreateList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
                 return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.tab');
-            }, this);
+            }, this).sort(function (v1, v2) {
+                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
         },
         
     });        
