@@ -21,7 +21,8 @@
         "accountId": {
             "where": {
                 "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})"
-            }
+            },
+            "disabled": true
         },
         "title": {
             "type": "varchar",
