@@ -131,7 +131,13 @@ _.extend(Espo.Controller.prototype, {
     
     handleCheckAccess: function (action) {
         if (!this.checkAccess(action)) {
-            throw new Espo.Exceptions.AccessDenied("Denied access to action '" + this.name + "#" + action + "'");
+            var msg;
+            if (action) {
+                msg = "Denied access to action '" + this.name + "#" + action + "'";
+            } else {
+                msg = "Denied access to scope '" + this.name + "'";
+            }
+            throw new Espo.Exceptions.AccessDenied(msg);
         }
     },
     
