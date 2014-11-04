@@ -260,13 +260,16 @@ class Sender
         }
 
         try {
-            $this->transport->send($message);
-            
-            $headers = $message->getHeaders();
-            if ($headers->has('messageId')) {            
-                $email->set('messageId', $headers->get('messageId')->getId());
+            if ($email->get('parentType')) {
+                $message_id = '<'.$email->get('parentType').'/'.$email->get('parentId').'/'.time().'@espo>';
+            } else {
+                $message_id = '<'.md5($email->get('name')).'/'.time().'@espo>';
             }
+            $message->getHeaders()->addHeaderLine('Message-Id', $message_id);
 
+            $this->transport->send($message);
+
+            $email->set('messageId', $message_id);
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));
         } catch (\Exception $e) {
