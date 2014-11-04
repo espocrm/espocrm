@@ -107,9 +107,10 @@ class Invitations
         $email->set('isHtml', true);        
         $this->getEntityManager()->saveEntity($email);
         
+        $attachmentName = ucwords($this->language->translate($entity->getEntityName(), 'scopeNames')).'.ics';
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set(array(
-            'name' => 'event.ics',
+            'name' => $attachmentName,
             'type' => 'text/calendar',
             'contents' => $this->getIscContents($entity),
         ));
