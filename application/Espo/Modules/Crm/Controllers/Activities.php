@@ -32,6 +32,10 @@ class Activities extends \Espo\Core\Controllers\Base
     
     public function actionListCalendarEvents($params, $data, $request)
     {
+        if (!$this->getAcl()->check('Calendar')) {
+            throw new Forbidden();
+        }
+
         $from = $request->get('from');
         $to = $request->get('to');
         
