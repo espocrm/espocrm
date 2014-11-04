@@ -8,6 +8,8 @@ class Invitations
 {
     protected $entityManager;
     
+    protected $smtpParams;
+
     protected $mailSender;
     
     protected $config;
@@ -20,9 +22,10 @@ class Invitations
     
     protected $ics;
     
-    public function __construct($entityManager, $mailSender, $config, $dateTime, $language, $fileManager)
+    public function __construct($entityManager, $smtpParams, $mailSender, $config, $dateTime, $language, $fileManager)
     {
         $this->entityManager = $entityManager;
+        $this->smtpParams = $smtpParams;
         $this->mailSender = $mailSender;
         $this->config = $config;
         $this->dateTime = $dateTime;
@@ -118,6 +121,10 @@ class Invitations
         $email->addAttachment($attachment);        
 
         $emailSender = $this->mailSender;
+
+        if ($this->smtpParams) {
+            $emailSender->useSmtp($this->smtpParams);
+        }
         $emailSender->send($email);        
         
         $this->getEntityManager()->removeEntity($email);

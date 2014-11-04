@@ -36,6 +36,7 @@ class Meeting extends \Espo\Services\Record
         $this->dependencies[] = 'preferences';
         $this->dependencies[] = 'language';
         $this->dependencies[] = 'dateTime';
+        $this->dependencies[] = 'crypt';
     }
 
     protected function getMailSender()
@@ -46,6 +47,11 @@ class Meeting extends \Espo\Services\Record
     protected function getPreferences()
     {
         return $this->injections['preferences'];
+    }
+
+    protected function getCrypt()
+    {
+        return $this->injections['crypt'];
     }
 
     protected function getLanguage()
@@ -60,7 +66,14 @@ class Meeting extends \Espo\Services\Record
     
     protected function getInvitationManager()
     {
-        return new Invitations($this->getEntityManager(), $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
+        $smtpParams = $this->getPreferences()->getSmtpParams();
+        if ($smtpParams) {
+            if (array_key_exists('password', $smtpParams)) {
+                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+            }
+            $smtpParams['fromName'] = $this->getUser()->get('name');
+        }
+        return new Invitations($this->getEntityManager(), $smtpParams, $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
     }
 
     public function sendInvitations(Entity $entity)
