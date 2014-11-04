@@ -29,7 +29,8 @@ class Opportunity extends \Espo\Core\Controllers\Record
 {
     public function actionReportByLeadSource($params, $data, $request)
     {
-        if (!$this->getAcl()->check('Lead', 'read')) {
+        $level = $this->getAcl()->getLevel('Lead', 'read');
+        if (!$level || $level == 'own') {
             throw new Forbidden();
         }
 
@@ -41,7 +42,8 @@ class Opportunity extends \Espo\Core\Controllers\Record
     
     public function actionReportByStage($params, $data, $request)
     {
-        if (!$this->getAcl()->check('Opportunity', 'read')) {
+        $level = $this->getAcl()->getLevel('Opportunity', 'read');
+        if (!$level || $level == 'own') {
             throw new Forbidden();
         }
 
@@ -53,7 +55,8 @@ class Opportunity extends \Espo\Core\Controllers\Record
     
     public function actionReportSalesByMonth($params, $data, $request)
     {
-        if (!$this->getAcl()->check('Opportunity', 'read')) {
+        $level = $this->getAcl()->getLevel('Opportunity', 'read');
+        if (!$level || $level == 'own') {
             throw new Forbidden();
         }
 
@@ -65,7 +68,8 @@ class Opportunity extends \Espo\Core\Controllers\Record
     
     public function actionReportSalesPipeline($params, $data, $request)
     {
-        if (!$this->getAcl()->check('Opportunity', 'read')) {
+        $level = $this->getAcl()->getLevel('Opportunity', 'read');
+        if (!$level || $level == 'own') {
             throw new Forbidden();
         }
 

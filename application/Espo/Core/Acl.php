@@ -125,6 +125,19 @@ class Acl
         return $this->data;
     }
 
+    public function getLevel($scope, $action)
+    {
+        if ($this->user->isAdmin()) {
+            return 'all';
+        }
+        if (array_key_exists($scope, $this->data)) {
+            if (array_key_exists($action, $this->data[$scope])) {
+                return $this->data[$scope][$action];
+            }
+        }
+        return false;
+    }
+
     public function check($subject, $action = null, $isOwner = null, $inTeam = null)
     {    
         if ($this->user->isAdmin()) {
