@@ -1,13 +1,6 @@
 <div class="link-container list-group">
-{{#each selected}}
-    <div class="list-group-item" data-value="{{./this}}">
-        {{#if ../translatedOptions}}
-            {{prop ../../translatedOptions this}}&nbsp;
-        {{else}}
-            {{./this}}&nbsp;
-        {{/if}}
-        <a href="javascript:" class="pull-right" data-value="{{./this}}" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>
-    </div>
+{{#each itemHtmlList}}
+    {{{./this}}}
 {{/each}}
 </div>
 {{#if hasOptions}}

@@ -94,6 +94,12 @@ class FieldManager
             $res &= $this->setLabel($name, $fieldDef['label'], $scope);
         }
 
+        if (isset($fieldDef['type']) && $fieldDef['type'] == 'enum') {
+            if (isset($fieldDef['translatedOptions'])) {
+                $res &= $this->setTranslatedOptions($name, $fieldDef['translatedOptions'], $scope);
+            }  
+        }
+
         if ($this->isDefsChanged($name, $fieldDef, $scope)) {
             $res &= $this->setEntityDefs($name, $fieldDef, $scope);
         }
@@ -127,6 +133,11 @@ class FieldManager
         $res = $this->getMetadata()->set($data, $this->metadataType, $scope);
 
         return $res;
+    }
+
+    protected function setTranslatedOptions($name, $value, $scope)
+    {
+        return $this->getLanguage()->set($name, $value, 'options', $scope);
     }
 
     protected function setLabel($name, $value, $scope)

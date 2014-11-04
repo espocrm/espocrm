@@ -78,7 +78,7 @@
         "required": "Obrigatório",
         "default": "Padrão",
         "maxLength": "Tamanho máximo",
-        "options": "Opções (valores raw, não traduzíveis)",
+        "options": "Opções",
         "after": "Antes (field)",
         "before": "Após (field)",
         "link": "Link",

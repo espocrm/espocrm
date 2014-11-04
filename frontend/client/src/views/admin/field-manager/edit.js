@@ -133,7 +133,8 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
         },
         
         createFieldView: function (type, name, readOnly, params) {
-            this.createView(name, this.getFieldManager().getViewName(type), {
+            var viewName = (params || {}).view || this.getFieldManager().getViewName(type);
+            this.createView(name, viewName, {
                 model: this.model,
                 el: this.options.el + ' .field-' + name,
                 defs: {
@@ -142,6 +143,8 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
                 },
                 mode: readOnly ? 'detail' : 'edit',
                 readOnly: readOnly,
+                scope: this.scope,
+                field: this.field,
             });
             this.fieldList.push(name);
         },
@@ -175,6 +178,14 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
                         data[this.scope]['fields'] = {};
                     }
                     data[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
+
+                    
+                    if (this.model.get('type') == 'enum' && this.model.get('translatedOptions')) {
+                        if (!('options' in data[this.scope])) {
+                            data[this.scope]['options'] = {};
+                        }
+                        data[this.scope]['options'][this.model.get('name')] = this.model.get('translatedOptions') || {};
+                    }
                 }
                 
                 this.getRouter().navigate('#Admin/fieldManager/scope=' + this.scope + '&field=' + this.model.get('name'), {trigger: true});

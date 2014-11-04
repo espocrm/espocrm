@@ -32,10 +32,16 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         editTemplate: 'fields.array.edit',
         
         data: function () {
+            var itemHtmlList = [];
+            (this.selected || []).forEach(function (value) {
+                itemHtmlList.push(this.getItemHtml(value));
+            }, this);
+
             return _.extend({
                 selected: this.selected,
                 translatedOptions: this.translatedOptions,
-                hasOptions: this.params.options ? true : false
+                hasOptions: this.params.options ? true : false,
+                itemHtmlList: itemHtmlList
             }, Dep.prototype.data.call(this));
         },
         
@@ -143,8 +149,8 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                 return item;
             }, this).join(', ');
         },
-        
-        addValue: function (value) {
+
+        getItemHtml: function (value) {            
             if (this.translatedOptions != null) {        
                 for (var item in this.translatedOptions) {
                     if (this.translatedOptions[item] == value) {
@@ -153,16 +159,21 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                     }
                 }
             }
-        
-            if (this.selected.indexOf(value) == -1) {
             
-                var label = value;
-                if (this.translatedOptions) {
-                    label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
-                }    
-                var html = '<div class="list-group-item" data-value="' + value + '">' + label +    
-                '&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
-                '</div>';
+            var label = value;
+            if (this.translatedOptions) {
+                label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
+            }    
+            var html = '<div class="list-group-item" data-value="' + value + '">' + label +    
+            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
+            '</div>';
+
+            return html;
+        },
+        
+        addValue: function (value) {        
+            if (this.selected.indexOf(value) == -1) {
+                var html = this.getItemHtml(value);
                 this.$list.append(html);
                 this.selected.push(value);
                 this.trigger('change');

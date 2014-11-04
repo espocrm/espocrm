@@ -74,7 +74,7 @@
         "required": "Erforderlich",
         "default": "Standard",
         "maxLength": "Maximallänge",
-        "options": "Optionen (Datenbank Werte, nicht übersetzt)",
+        "options": "Optionen",
         "after": "Nach (Feld)",
         "before": "Vor (Feld)",
         "link": "Link",

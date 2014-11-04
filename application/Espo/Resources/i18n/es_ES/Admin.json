@@ -71,7 +71,7 @@
         "required": "Requerido",
         "default": "Por Defecto",
         "maxLength": "Longitud máxima",
-        "options": "Options (raw values, not translated)",
+        "options": "Options",
         "after": "After (field)",
         "before": "Before (field)",
         "link": "Enlace",

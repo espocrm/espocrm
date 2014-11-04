@@ -87,7 +87,7 @@
 		"required": "Verplicht",
 		"default": "Standaard",
 		"maxLength": "Max Lengte",
-		"options": "Opties (ruwe waarden, niet vertaald)",
+		"options": "Opties",
 		"after": "Achter (veld)",
 		"before": "Voor (veld)",
 		"link": "Link",

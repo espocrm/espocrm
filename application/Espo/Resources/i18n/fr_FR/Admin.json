@@ -73,7 +73,7 @@
         "required": "Requis",
         "default": "Standard",
         "maxLength": "Taille Maximum",
-        "options": "Options (raw values, not translated)",
+        "options": "Options",
         "after": "After (field)",
         "before": "Before (field)",
         "link": "Lien",
