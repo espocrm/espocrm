@@ -203,7 +203,7 @@
             "default": false
          },
          "assignmentEmailNotificationsEntityList": {
-             "type": "array",
+             "type": "multiEnum",
              "translation": "Global.scopeNamesPlural"
          }
     }
