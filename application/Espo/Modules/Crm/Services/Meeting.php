@@ -71,6 +71,7 @@ class Meeting extends \Espo\Services\Record
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
+            $smtpParams['fromAddress'] = $this->getUser()->get('emailAddress');
             $smtpParams['fromName'] = $this->getUser()->get('name');
         }
         return new Invitations($this->getEntityManager(), $smtpParams, $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
