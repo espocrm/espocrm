@@ -1,13 +1,11 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "website": "Sito Web",
         "accountName": "Nombre de Cuenta",
-        "phone": "Teléfono",
-        "phoneOffice": "Phone (Office)",
-        "fax": "Fax",
+        "phoneNumber": "Teléfono",
         "doNotCall": "No Llamar",
         "address": "Dirección",
         "description": "Descripción"
@@ -15,7 +13,7 @@
     "links": {
     },
     "labels": {
-        "Create Target": "Crear Prospecto",
+        "Create Target": "Crear Objetivo",
         "Convert to Lead": "Convertir en Lider"
     }
 }

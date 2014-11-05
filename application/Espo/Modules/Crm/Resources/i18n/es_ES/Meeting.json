@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "parent": "Padre",
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",
@@ -18,6 +18,11 @@
             "Planned": "Planeada",
             "Held": "Celebrada",
             "Not Held": "Sin Celebrar"
+        },
+        "acceptanceStatus": {
+            "None": "Ninguno",
+            "Accepted": "Aceptado",
+            "Declined": "Rechazado"
         }
     },
     "labels": {
@@ -25,5 +30,10 @@
         "Set Held": "Establecer Celebrada",
         "Set Not Held": "Establecer no Celebrada",
         "Send Invitations": "Enviar Invitaciones"
+    },
+    "presetFilters": {
+        "planned": "Planeada",
+        "held": "Celebrada",
+        "todays": "De Hoy"
     }
 }

@@ -3,27 +3,29 @@
         "Account": "Cuenta",
         "Contact": "Contacto",
         "Lead": "Potenciales",
-        "Target": "Prospecto",
-        "Opportunity": "Opportunidad",
+        "Target": "Objetivo",
+        "Opportunity": "Oportunidad",
         "Meeting": "Reunión",
         "Calendar": "Calendario",
         "Call": "Llamada",
         "Task": "Tarea",
         "Case": "Caso",
-        "InboundEmail": "Correo Entrante"
+        "InboundEmail": "Correo Entrante",
+        "Document": "Documento"
     },
     "scopeNamesPlural": {
         "Account": "Cuentas",
         "Contact": "Contactos",
         "Lead": "Potenciales",
-        "Targets": "Prospectos",
+        "Target": "Objetivos",
         "Opportunity": "Oportunidades",
         "Meeting": "Reuniones",
         "Calendar": "Calendario",
         "Call": "Llamadas",
         "Task": "Tareas",
         "Case": "Casos",
-        "InboundEmail": "Correos Entrantes"
+        "InboundEmail": "Correos Entrantes",
+        "Document": "Documentos"
     },
     "dashlets": {
         "Leads": "Mis potenciales",
@@ -31,6 +33,8 @@
         "Tasks": "Mis Tareas",
         "Cases": "Mis Casos",
         "Calendar": "Calendario",
+        "Calls": "",
+        "Meetings": "",
         "OpportunitiesByStage": "Oportunidades por Etapa",
         "OpportunitiesByLeadSource": "Oportunidades de origen de cliente potencial",
         "SalesByMonth": "Ventas por Mes",
@@ -43,7 +47,7 @@
         "Attendees": "Los asistentes",
         "Schedule Meeting": "Reunión Programada",
         "Schedule Call": "Llamada Programada",
-        "Compose Email": "Componer Correo",
+        "Compose Email": "Escribir Correo",
         "Log Meeting": "Log de Reunión",
         "Log Call": "Log de Llamada",
         "Archive Email": "Archivar Correo",
@@ -61,11 +65,11 @@
         "addressCountry": "país",
         "addressState": "Estado/Distrito",
         "addressPostalCode": "Código Postal",        
-        "shippingAddressCity": "City (Shipping)",
-        "shippingAddressStreet": "Street (Shipping)",
-        "shippingAddressCountry": "Country (Shipping)",
-        "shippingAddressState": "State (Shipping)",
-        "shippingAddressPostalCode": "Postal Code (Shipping)"
+        "shippingAddressCity": "Ciudad (Envío)",
+        "shippingAddressStreet": "Calle (Envío)",
+        "shippingAddressCountry": "País (Envío)",
+        "shippingAddressState": "Estado (Envío)",
+        "shippingAddressPostalCode": "Código Postal (Envío)"
     },
     "links": {
         "contacts": "Contactos",
@@ -74,6 +78,13 @@
         "meetings": "Reuniones",
         "calls": "Llamadas",
         "tasks": "Tareas",
-        "emails": "Correos"
+        "emails": "Correos",
+        "accounts": "Cuentas",
+        "cases": "Casos",
+        "documents": "Documentos",
+        "account": "Cuenta",
+        "opportunity": "Oportunidad",        
+        "contact": "Contacto",
+        "parent": "Padre"
     }
 }

@@ -8,18 +8,20 @@
         "decimalMark": "Separador decimal",
         "defaultCurrency": "Moneda por Defecto",
         "currencyList": "Lista de Moneda",
-        "language": "Lenguaje",
+        "language": "Idioma",
         
         "smtpServer": "Servidor",
         "smtpPort": "Puerto",
         "smtpAuth": "Autenticación",
-        "smtpSecurity": "Securidad",
+        "smtpSecurity": "Seguridad",
         "smtpUsername": "Nombre de Usuario",
         "emailAddress": "Correo electrónico",
         "smtpPassword": "Contraseña",
         "smtpEmailAddress": "Correo Electrónico",
         
-        "exportDelimiter": "Export Delimiter"
+        "exportDelimiter": "Exportar Delimitador",
+        
+        "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado"
     },
     "links": {
     },
@@ -28,5 +30,8 @@
             "0": "Domingo",
             "1": "Lunes"
         }
+    },
+    "labels": {
+        "Notifications": "Notificaciones"
     }
 }

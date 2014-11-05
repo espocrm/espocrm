@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "account": "Cuenta",
         "stage": "Etapa",
         "amount": "Cantidad",
@@ -8,10 +8,14 @@
         "leadSource": "Fuente Principal",
         "doNotCall": "No Llamar",
         "closeDate": "Fecha de cierre",
-        "description": "Descripción"
+        "contacts": "Contactos",
+        "description": "Descripción",
+        "amountConverted": "Cantidad (convertido)",
+        "amountWeightedConverted": "Cantidad Ponderada"
     },
     "links": {
-        "contacts": "Contactos"
+        "contacts": "Contactos",
+        "documents": "Documentos"
     },
     "options": {
         "stage": {
@@ -25,19 +29,13 @@
             "Negotiation/Review": "Negociación/Revisión",
             "Closed Won": "Cerrado Ganado",
             "Closed Lost": "Cerrado Perdido" 
-        },
-        "leadSource": {
-            "Call": "Llamada",
-            "Email": "Correo electrónico",
-            "Existing Customer": "Cliente Existente",
-            "Partner": "Partner",
-            "Public Relations": "Relaciones Públicas",
-            "Web Site": "Sitio Web",
-            "Campaign": "Campaña",
-            "Other": "Otro"
         }
     },
     "labels": {
         "Create Opportunity": "Crear Oportunidad"
+    },
+    "presetFilters": {
+        "open": "Abrir",
+        "won": "Ganado"
     }
 }

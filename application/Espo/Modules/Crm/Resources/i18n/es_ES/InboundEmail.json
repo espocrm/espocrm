@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "team": "Equipo",
         "status": "Estado",
         "assignToUser": "Asignado a Usuario",
@@ -14,9 +14,18 @@
         "createCase": "Crear Caso",
         "reply": "Responder",
         "caseDistribution": "Caso Distribución",
-        "replyEmailTemplate": "Responder De Plantilla",
+        "replyEmailTemplate": "Plantilla Responder",
         "replyFromAddress": "Responder De Dirección",
+        "replyToAddress": "Responder a Dirección",
         "replyFromName": "Responder De Nombre"
+    },
+    "tooltips": {
+        "reply": "Notificar al remitente que sus emails han sido recividos",
+        "createCase": "Crear asunto de forma automática para correos recibidos",
+        "replyToAddress": "Especificar esta dirección de correo electrónico para que las respuestas lleguen aquí",
+        "caseDistribution": "Asignar directamente a los usuarios del equipo de que forma serán distribuidoslos asuntos.",
+        "assignToUser": "Email usuario/asunto será asignado a.",
+        "team": "Email Equipo/asunto estará relacionado con"
     },
     "links": {
     },
@@ -28,7 +37,7 @@
         "caseDistribution": {
             "Direct-Assignment": "Asignación-Directa",
             "Round-Robin": "Round-Robin",
-            "Least-Busy": "Least-Busy"
+            "Least-Busy": "Menos-Ocupado"
         }
     },
     "labels": {

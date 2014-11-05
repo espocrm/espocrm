@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "roles": "Roles"
     },
     "links": {
@@ -28,5 +28,8 @@
         "read": "Leer",
         "edit": "Editar",
         "delete": "Borrar"
+    },
+    "messages": {
+        "changesAfterClearCache": "Todos los cambios en el control de acceso serán aplicacados después de limpiar la caché"
     }
 }

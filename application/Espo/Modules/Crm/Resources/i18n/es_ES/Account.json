@@ -1,32 +1,33 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "emailAddress": "Correo electrónico",
         "website": "Sito Web",
-        "phone": "Teléfono",
-        "fax": "Fax",
+        "phoneNumber": "Teléfono",
         "billingAddress": "Dirección de Facturación",
         "shippingAddress": "Dirección de Envío",
         "description": "Descripción",
         "sicCode": "Sic Code",
         "industry": "Industria",
-        "type": "Tipo"        
+        "type": "Tipo",
+        "contactRole": "Rol"
     },
     "links": {
         "contacts": "Contactos",
         "opportunities": "Oportunidades",
-        "cases": "Casos"
+        "cases": "Casos",
+        "documents": "Documentos"
     },
     "options": {
         "type": {
             "Customer": "Cliente",
             "Investor": "Inversor",
-            "Partner": "Partner",
-            "Reseller": "REvendedor"
+            "Partner": "Socio",
+            "Reseller": "Revendedor"
         },
         "industry": {
-            "Apparel": "Apparel",
-            "Banking": "Banking",
+            "Apparel": "Vestuario",
+            "Banking": "Banca",
             "Computer Software": "Software",
             "Education": "Educación",
             "Electronics": "Electrónicos",
@@ -35,6 +36,7 @@
         }
     },
     "labels": {
-        "Create Account": "Crear Cuenta"
+        "Create Account": "Crear Cuenta",
+        "Copy Billing": "Copia Facturación"
     }
 }

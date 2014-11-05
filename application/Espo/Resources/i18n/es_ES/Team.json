@@ -1,10 +1,13 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "roles": "Roles"
     },
     "links": {
         "users": "Usuarios"
+    },
+    "tooltips": {
+        "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados"
     },
     "labels": {
         "Create Team": "Crear Equipo"

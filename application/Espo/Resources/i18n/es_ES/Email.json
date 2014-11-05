@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Sujeto",
         "parent": "Padre",
         "status": "Estado",
         "dateSent": "Enviado",
@@ -10,12 +10,13 @@
         "bcc": "BCC",
         "isHtml": "Es Html",
         "body": "Cuerpo",
-        "subject": "Asunto",
+        "subject": "Sujeto",
         "attachments": "Adjuntos",
         "selectTemplate": "Seleccione una Plantilla",
         "fromEmailAddress": "De la dirección",
         "toEmailAddresses": "a la Dirección",
-        "emailAddress": "Correo Electrónico"
+        "emailAddress": "Correo Electrónico",
+        "deliveryDate": "Fecha Entrega"
     },
     "links": {
     },
@@ -27,6 +28,24 @@
     },
     "labels": {
         "Create Email": "Archivar Correo",
-        "Compose": "Componer"
+        "Archive Email": "Archivar Correo",
+        "Compose": "Nuevo",
+        "Reply": "Responder",
+        "Reply to All": "Responder a Todos",
+        "Forward": "Adelante",
+        "Original message": "Mensaje Original",
+        "Forwarded message": "Mensaje reenviado",
+        "Email Accounts": "Cuentas de Correo Electrónico",
+        "Send Test Email": "Send Test Email",
+        "Send": "Send",
+        "Email Address": "Correo Electrónico"
+    },
+    "messages": {
+        "noSmtpSetup": "No SMTP setup. {link}.",
+        "testEmailSent": "Test email has been sent"
+    },
+    "presetFilters": {
+        "sent": "Enviado",
+        "archived": "Archivado"
     }
 }

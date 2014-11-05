@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "number": "Número",
         "status": "Estado",
         "account": "Cuenta",
@@ -18,7 +18,7 @@
             "Pending": "Pendiente",
             "Closed": "Cerrado",
             "Rejected": "Rechazado",
-            "Duplicate": "Duplicado"
+            "Duplicate": "Duplicar"
         },
         "priority" : {
             "Low": "Baja",
@@ -34,5 +34,9 @@
     },
     "labels": {
         "Create Case": "Crear Caso"
+    },
+    "presetFilters": {
+        "open": "Abrir",
+        "closed": "Cerrado"
     }
 }

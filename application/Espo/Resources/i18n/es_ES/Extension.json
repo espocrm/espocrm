@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "version": "Version",
+        "description": "Descripción",
+        "isInstalled": "Instalado"
+    },
+    "labels": {
+        "Uninstall": "Desinstalar",
+        "Install": "Instalar"
+    },
+    "messages": {
+        "uninstalled": "Extension {name} ha sido desinstalada"
+    }
+}

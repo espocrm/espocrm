@@ -1,9 +1,9 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "status": "Estado",
         "job": "Trabajo",
-        "scheduling": "Scheduling (crontab notation)"
+        "scheduling": "Programación (crontab anotación)"
     },
     "links": {
         "log": "Registro de Log"
@@ -17,10 +17,10 @@
             "Cleanup": "Limpiar"
         },
         "cronSetup": {
-            "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programadas:",
-            "mac": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programadas:",
-            "windows": "Nota: Crear un archivo por lotes con los siguientes comandos para ejecutar tareas programadas usando Espo tareas programadas de Windows:",
-            "default": "Note: Add this command to Cron Job (Scheduled Task):"
+            "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
+            "mac": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
+            "windows": "Nota: Crear un archivo por lotes con los siguientes comandos para ejecutar trabajos programados de Espo usando tareas programadas de Windows:",
+            "default": "Nota: Agregar este comando a Cron Job (Tarea Programada):"
         },
         "status": {
             "Active": "Activo",
