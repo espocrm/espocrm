@@ -52,7 +52,9 @@
         "ldapOptReferrals": "Opt Referrals",
         "disableExport": "Disable Export (only admin is allowed)",
         "assignmentEmailNotifications": "Send Email Notifications upon Assignment",
-        "assignmentEmailNotificationsEntityList": "Entities to Notify About"
+        "assignmentEmailNotificationsEntityList": "Entities to Notify About",
+
+        "b2cMode": "B2C Mode"
     },
     "options": {
         "weekStart": {

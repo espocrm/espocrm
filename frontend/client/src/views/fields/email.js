@@ -225,16 +225,41 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
         },
         
         mailTo: function (emailAddress) {
+            var attributes = {
+                status: 'Draft',
+                to: emailAddress
+            };
+
+            var scope = this.model.name;
+            switch (scope) {
+                case 'Account':
+                case 'Lead':
+                    attributes.parentType = scope;
+                    attributes.parentName = this.model.get('name');
+                    attributes.parentId = this.model.id;
+                    break;
+                case 'Contact':
+                    if (this.getConfig().get('b2cMode')) {
+                        attributes.parentType = 'Contact';
+                        attributes.parentName = this.model.get('name');
+                        attributes.parentId = this.model.id;
+                    } else {
+                        if (this.model.get('accountId')) {
+                            attributes.parentType = 'Account';
+                            attributes.parentName = this.model.get('accountName');
+                            attributes.parentId = this.model.get('accountId');
+                        }
+                    }
+                    break;
+            }
+
             this.notify('Loading...');
-                this.createView('quickCreate', 'Modals.ComposeEmail', {
-                    attributes: {
-                        status: 'Draft',
-                        to: emailAddress
-                    },
-                }, function (view) {
-                    view.render();
-                    view.notify(false);
-                });
+            this.createView('quickCreate', 'Modals.ComposeEmail', {
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+            });
         },
         
         setup: function () {

@@ -197,14 +197,18 @@
         "disableExport": {
             "type": "bool",
             "default": false
-         },
+        },
         "assignmentEmailNotifications": {
             "type": "bool",
             "default": false
-         },
-         "assignmentEmailNotificationsEntityList": {
-             "type": "multiEnum",
-             "translation": "Global.scopeNamesPlural"
-         }
+        },
+        "assignmentEmailNotificationsEntityList": {
+            "type": "multiEnum",
+            "translation": "Global.scopeNamesPlural"
+        },
+        "b2cMode": {
+            "type": "bool",
+            "default": false
+        }
     }
 }

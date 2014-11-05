@@ -257,10 +257,16 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             
             this.getComposeEmailAttributes(null, function (attributes) {
                 if (this.model.name == 'Contact') {
-                    if (this.model.get('accountId')) {
-                        attributes.parentType = 'Account',
-                        attributes.parentId = this.model.get('accountId');
-                        attributes.parentName = this.model.get('accountName');
+                    if (this.getConfig().get('b2cMode')) {
+                        attributes.parentType = 'Contact';
+                        attributes.parentName = this.model.get('name');
+                        attributes.parentId = this.model.id;
+                    } else {
+                        if (this.model.get('accountId')) {
+                            attributes.parentType = 'Account',
+                            attributes.parentId = this.model.get('accountId');
+                            attributes.parentName = this.model.get('accountName');
+                        }
                     }
                 } else if (this.model.name == 'Lead') {
                     attributes.parentType = 'Lead',
