@@ -54,6 +54,9 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
         setup: function () {
             this.nameName = this.name + 'Name';
             this.idName = this.name + 'Id';
+
+            this.foreignScope = this.options.foreignScope || this.foreignScope;
+
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.defs.links[this.name].entity;
 
             var self = this;
