@@ -260,12 +260,12 @@ class Sender
         }
 
         try {
-            if ($email->get('parentType')) {
-                $message_id = '<'.$email->get('parentType').'/'.$email->get('parentId').'/'.time().'@espo>';
+            if ($email->get('parentType') && $email->get('parentId')) {
+                $messageId = '<' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '@espo>';
             } else {
-                $message_id = '<'.md5($email->get('name')).'/'.time().'@espo>';
+                $messageId = '<' . md5($email->get('name')) . '/' . time() . '@espo>';
             }
-            $message->getHeaders()->addHeaderLine('Message-Id', $message_id);
+            $message->getHeaders()->addHeaderLine('Message-Id', $messageId);
 
             $this->transport->send($message);
 
