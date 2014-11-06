@@ -28,7 +28,7 @@ use Espo\ORM\EntityFactory;
 use PDO;
 
 class Query
-{    
+{
     protected static $selectParamList = array(
         'select',
         'whereClause',
@@ -44,14 +44,14 @@ class Query
         'joinConditions',
         'aggregation',
         'aggregationBy',
-        'groupBy'    
+        'groupBy'
     );
-    
+
     protected static $sqlOperators = array(
         'OR',
         'AND',
     );
-    
+
     protected static $comparisonOperators = array(
         '!=' => '<>',
         '*' => 'LIKE',
@@ -61,23 +61,23 @@ class Query
         '<' => '<',
         '=' => '=',
     );
-    
+
     protected $entityFactory;
-    
+
     protected $pdo;
-    
+
     protected $fieldsMapCache = array();
-    
+
     protected $aliasesCache = array();
-    
+
     protected $seedCache = array();
-    
+
     public function __construct(PDO $pdo, EntityFactory $entityFactory)
     {
         $this->entityFactory = $entityFactory;
         $this->pdo = $pdo;
     }
-    
+
     protected function getSeed($entityName)
     {
         if (empty($this->seedCache[$entityName])) {
@@ -85,34 +85,34 @@ class Query
         }
         return $this->seedCache[$entityName];
     }
-    
+
     public function createSelectQuery($entityName, array $params = array(), $deleted = false)
     {
         $entity = $this->getSeed($entityName);
-        
+
         foreach (self::$selectParamList as $k) {
             $params[$k] = array_key_exists($k, $params) ? $params[$k] : null;
         }
-        
-        $whereClause = $params['whereClause'];        
+
+        $whereClause = $params['whereClause'];
         if (empty($whereClause)) {
             $whereClause = array();
         }
-        
+
         if (!$deleted) {
             $whereClause = $whereClause + array('deleted' => 0);
         }
-        
+
         if (empty($params['aggregation'])) {
             $selectPart = $this->getSelect($entity, $params['select'], $params['distinct']);
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
-            
+
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $selectPart .= ", `" . $this->toDb($params['relationName']) . "`." . $this->toDb($column) . " AS `{$field}`";
                 }
             }
-            
+
         } else {
             $aggDist = false;
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
@@ -120,18 +120,18 @@ class Query
             }
             $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
         }
-        
+
         if (empty($params['joins'])) {
             $params['joins'] = array();
-        }        
+        }
         if (empty($params['leftJoins'])) {
             $params['leftJoins'] = array();
-        }        
-        
+        }
+
         $joinsPart = $this->getBelongsToJoins($entity, $params['select'], $params['joins'] + $params['leftJoins']);
-        
+
         $wherePart = $this->getWhere($entity, $whereClause);
-        
+
         if (!empty($params['customWhere'])) {
             $wherePart .= ' ' . $params['customWhere'];
         }
@@ -142,7 +142,7 @@ class Query
             }
             $joinsPart .= '' . $params['customJoin'] . '';
         }
-        
+
         if (!empty($params['joins']) && is_array($params['joins'])) {
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
             if (!empty($joinsRelated)) {
@@ -162,7 +162,7 @@ class Query
                 $joinsPart .= $joinsRelated;
             }
         }
-        
+
         $groupByPart = null;
         if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
             $arr = array();
@@ -171,14 +171,14 @@ class Query
             }
             $groupByPart = implode(', ', $arr);
         }
-        
+
         if (empty($params['aggregation'])) {
             return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
         } else {
             return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
-        }        
+        }
     }
-    
+
     protected function getFunctionPart($function, $part, $entityName, $distinct = false)
     {
         switch ($function) {
@@ -193,17 +193,17 @@ class Query
                 case 'SUM':
                 case 'COUNT':
                     return $function . "({$part}) * COUNT(DISTINCT {$idPart}) / COUNT({$idPart})";
-            }    
+            }
         }
         return $function . '(' . $part . ')';
     }
-    
-    
+
+
     protected function convertComplexExpression($entity, $field, $entityName = null, $distinct = false)
     {
         $function = null;
         $relName = null;
-        
+
         if (strpos($field, ':')) {
             list($function, $field) = explode(':', $field);
         }
@@ -220,7 +220,7 @@ class Query
         if (!empty($field)) {
             $field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
         }
-                
+
         $part = $this->toDb($field);
         if ($relName) {
             $part = $this->toDb($relName) . '.' . $part;
@@ -238,20 +238,20 @@ class Query
         }
         return $part;
     }
-    
+
     protected function getSelect(IEntity $entity, $fields = null, $distinct = false)
     {
         $select = "";
         $arr = array();
         $specifiedList = is_array($fields) ? true : false;
-        
+
         if (empty($fields)) {
             $fieldList = array_keys($entity->fields);
         } else {
             $fieldList = $fields;
         }
-        
-        foreach ($fieldList as $field) {        
+
+        foreach ($fieldList as $field) {
             if (array_key_exists($field, $entity->fields)) {
                 $fieldDefs = $entity->fields[$field];
             } else {
@@ -276,31 +276,31 @@ class Query
 
         return $select;
     }
-    
+
     protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null)
     {
         if (empty($r)) {
             $r = $entity->relations[$relationName];
         }
-            
+
         $keySet = $this->getKeys($entity, $relationName);
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
-        
+
         $alias = $this->getAlias($entity, $relationName);
-        
+
         if ($alias) {
             return "JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
                    $this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
         }
     }
-    
+
     protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array())
     {
         $joinsArr = array();
-        
+
         $fieldDefs = $entity->fields;
-        
+
         $relationsToJoin = array();
         if (is_array($select)) {
             foreach ($select as $field) {
@@ -310,12 +310,12 @@ class Query
             }
         }
 
-        foreach ($entity->relations as $relationName => $r) {            
+        foreach ($entity->relations as $relationName => $r) {
             if ($r['type'] == IEntity::BELONGS_TO) {
                 if (in_array($relationName, $skipList)) {
                     continue;
                 }
-            
+
                 if (!empty($select)) {
                     if (!in_array($relationName, $relationsToJoin)) {
                         continue;
@@ -324,39 +324,39 @@ class Query
 
                 $join = $this->getBelongsToJoin($entity, $relationName, $r);
                 if ($join) {
-                    $joinsArr[] = 'LEFT ' . $join;                        
+                    $joinsArr[] = 'LEFT ' . $join;
                 }
             }
         }
 
         return implode(' ', $joinsArr);
     }
-    
+
     protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null) {
-        
-        if (!is_null($orderBy)) {        
+
+        if (!is_null($orderBy)) {
             if (is_array($orderBy)) {
                 $arr = array();
-                
+
                 foreach ($orderBy as $item) {
                     if (is_array($item)) {
                         $orderByInternal = $item[0];
                         $orderInternal = null;
                         if (!empty($item[1])) {
-                            $orderInternal = $item[1]; 
+                            $orderInternal = $item[1];
                         }
                         $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal);
-                    }                    
+                    }
                 }
-                return implode(", ", $arr);                
+                return implode(", ", $arr);
             }
-        
+
             if (strpos($orderBy, 'LIST:') === 0) {
-                list($l, $field, $list) = explode(':', $orderBy);                
-                $fieldPath = $this->getFieldPathForOrderBy($entity, $field);                
-                return "FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";                
+                list($l, $field, $list) = explode(':', $orderBy);
+                $fieldPath = $this->getFieldPathForOrderBy($entity, $field);
+                return "FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";
             }
-        
+
             if (!is_null($order)) {
                 $order = strtoupper($order);
                 if (!in_array($order, array('ASC', 'DESC'))) {
@@ -365,18 +365,18 @@ class Query
             } else {
                 $order = 'ASC';
             }
-            
+
             if (is_integer($orderBy)) {
                 return "{$orderBy} " . $order;
             }
-            
+
             if (!empty($entity->fields[$orderBy])) {
                 $fieldDefs = $entity->fields[$orderBy];
             }
             if (!empty($fieldDefs) && !empty($fieldDefs['orderBy'])) {
                 $orderPart = str_replace('{direction}', $order, $fieldDefs['orderBy']);
                 return "{$orderPart}";
-            } else {            
+            } else {
                 $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
 
                 return "{$fieldPath} " . $order;
@@ -392,18 +392,18 @@ class Query
         }
 
     }
-    
+
     protected function getFieldPathForOrderBy($entity, $orderBy)
     {
         if (strpos($orderBy, '.') !== false) {
-            list($alias, $field) = explode('.', $orderBy);                    
+            list($alias, $field) = explode('.', $orderBy);
             $fieldPath = $this->toDb($alias) . '.' . $this->toDb($field);
         } else {
             $fieldPath = $this->getFieldPath($entity, $orderBy);
         }
         return $fieldPath;
     }
-    
+
     protected function getAggregationSelect(IEntity $entity, $aggregation, $aggregationBy, $distinct = false)
     {
         if (!isset($entity->fields[$aggregationBy])) {
@@ -420,7 +420,7 @@ class Query
         $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($aggregationBy) . ") AS AggregateValue";
         return $selectPart;
     }
-    
+
     public function toDb($field)
     {
         if (array_key_exists($field, $this->fieldsMapCache)) {
@@ -434,12 +434,12 @@ class Query
             return $dbField;
         }
     }
-    
+
     protected function toDbConversion($matches)
     {
         return "_" . strtolower($matches[1]);
     }
-    
+
     protected function getAlias(IEntity $entity, $relationName)
     {
         if (!isset($this->aliasesCache[$entity->getEntityName()])) {
@@ -452,7 +452,7 @@ class Query
             return false;
         }
     }
-    
+
     protected function getTableAliases(IEntity $entity)
     {
         $aliases = array();
@@ -483,7 +483,7 @@ class Query
 
         return $aliases;
     }
-    
+
     protected function getFieldPath(IEntity $entity, $field)
     {
         if (isset($entity->fields[$field])) {
@@ -531,7 +531,7 @@ class Query
 
         return false;
     }
-    
+
     public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND')
     {
         $whereParts = array();
@@ -590,8 +590,6 @@ class Query
                             $leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field);
                         }
                     }
-                } else {
-                    //$leftPart = $this->toDb($entityName) . '.' . $this->toDb($field);
                 }
 
                 if (!empty($leftPart)) {
@@ -618,7 +616,7 @@ class Query
         }
         return implode(" " . $sqlOp . " ", $whereParts);
     }
-    
+
     protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
     {
         $joinsArr = array();
@@ -633,7 +631,7 @@ class Query
         }
         return implode(' ', $joinsArr);
     }
-    
+
     protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array())
     {
         $relOpt = $entity->relations[$relationName];
@@ -684,14 +682,14 @@ class Query
 
             return $join;
         }
-        
+
         if ($relOpt['type'] == IEntity::BELONGS_TO) {
             return $pre . $this->getBelongsToJoin($entity, $relationName);
         }
 
         return false;
     }
-    
+
     public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false, $groupBy = null)
     {
         $sql = "SELECT";
@@ -709,7 +707,7 @@ class Query
         if (!empty($where)) {
             $sql .= " WHERE {$where}";
         }
-        
+
         if (!empty($groupBy)) {
             $sql .= " GROUP BY {$groupBy}";
         } else {
@@ -734,7 +732,7 @@ class Query
 
         return $sql;
     }
-    
+
     public function getKeys(IEntity $entity, $relationName)
     {
         $relOpt = $entity->relations[$relationName];
@@ -811,6 +809,6 @@ class Query
                 );
         }
     }
-    
+
 }
 
