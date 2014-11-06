@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Base', 'View', function (Dep) {
 
@@ -52,11 +52,11 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
         editableInline: true,
 
         enabled: true,
-        
+
         readOnly: false,
 
         attributeList: null,
-        
+
         initialAttributes: null,
 
         isRequired: function () {
@@ -70,11 +70,11 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
         getCellElement: function () {
             return this.$el.parent();
         },
-        
+
         setRequired: function () {
             this.params.required = true;
         },
-        
+
         setNotRequired: function () {
             this.params.required = false;
             this.getCellElement().removeClass('has-error');
@@ -142,35 +142,35 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             this.defs = this.options.defs;
             this.name = this.options.defs.name;
             this.params = this.options.defs.params || {};
-                        
-            this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;            
-            
+
+            this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
+
             this.getFieldManager().getParams(this.type).forEach(function (d) {
                 var name = d.name;
                 if (!(name in this.params)) {
                     this.params[name] = this.model.getFieldParam(this.name, name) || null;
                 }
             }.bind(this));
-            
+
             this.mode = this.options.mode || this.mode;
-            
-            if (this.mode == 'edit' || this.mode == 'detail') {            
-                var isReadOnlyField = this.model.getFieldParam(this.name, 'readOnly');    
+
+            if (this.mode == 'edit' || this.mode == 'detail') {
+                var isReadOnlyField = this.model.getFieldParam(this.name, 'readOnly');
                 if (isReadOnlyField) {
                     this.readOnly = true;
                 } else {
                     if ('readOnly' in this.params) {
-                        this.readOnly = this.params.readOnly;    
+                        this.readOnly = this.params.readOnly;
                     } else {
                         this.readOnly = ('readOnly' in this.options) ? this.options.readOnly : this.readOnly;
                     }
                 }
             }
-            
+
             if (this.mode == 'edit' && this.readOnly) {
                 this.mode = 'detail';
             }
-            
+
             if ('editableInline' in this.options) {
                 this.editableInline = this.options.editableInline;
             } else {
@@ -178,9 +178,9 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                     this.editableInline = this.params.editableInline;
                 }
             }
-            
+
             this.setMode(this.mode || 'detail');
-            
+
             if (this.mode == 'search') {
                 this.searchParams = _.clone(this.options.searchParams || {});
                 this.setupSearch();
@@ -202,7 +202,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                     this.getLabelElement().append(' *');
                 }, this);
             }
-            
+
             if ((this.mode == 'detail' || this.mode == 'edit') && this.model.getFieldParam(this.name, 'tooltip')) {
                 this.once('after:render', function () {
                     var $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
@@ -224,21 +224,21 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 
             if (this.mode == 'detail') {
                 var self = this;
-                
-                if (!this.readOnly && this.editableInline) {                    
+
+                if (!this.readOnly && this.editableInline) {
                     var initInlineEdit = function () {
 
                         var $cell = this.getCellElement();
                         var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hide"><span class="glyphicon glyphicon-pencil"></span></a>');
-                        
+
                         // sometimes field is being re-rendered in this time so need to init once again
-                        if ($cell.size() == 0) {                            
+                        if ($cell.size() == 0) {
                             this.listenToOnce(this, 'after:render', initInlineEdit);
                             return;
                         }
-                        
+
                         $cell.prepend($editLink);
-                                            
+
                         $editLink.on('click', function () {
                             self.inlineEdit();
                         });
@@ -258,27 +258,27 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                             }
                         });
                     }.bind(this);
-                
+
                     this.listenToOnce(this, 'after:render', initInlineEdit);
                 }
             }
 
             if (this.mode == 'edit' || this.mode == 'detail') {
                 this.attributeList = this.getAttributeList();
-                
-                this.listenTo(this.model, 'change', function (model, options) {    
-                    if (this.isRendered() || this.isBeingRendered()) {                
+
+                this.listenTo(this.model, 'change', function (model, options) {
+                    if (this.isRendered() || this.isBeingRendered()) {
                         if (options.ui) {
                             return;
-                        }                                                        
-                    
+                        }
+
                         var changed = false;
                         this.attributeList.forEach(function (attribute) {
-                            if (model.hasChanged(attribute)) {                            
+                            if (model.hasChanged(attribute)) {
                                 changed = true;
                             }
-                        });    
-    
+                        });
+
                         if (changed) {
                             if (this.isRendered()) {
                                 this.render();
@@ -290,10 +290,10 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                         }
                     }
                 }.bind(this));
-                
+
                 this.listenTo(this, 'change', function () {
                     var attributes = this.fetch();
-                    this.model.set(attributes, {ui: true});    
+                    this.model.set(attributes, {ui: true});
                 });
             }
         },
@@ -312,21 +312,21 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
         setup: function () {},
 
         setupSearch: function () {},
-        
+
         getAttributeList: function () {
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
         },
 
         inlineEditSave: function () {
-            var data = this.fetch();                        
-            
+            var data = this.fetch();
+
             var self = this;
             var model = this.model;
             var prev = this.initialAttributes;
-            
-            model.set(data, {silent: true});            
+
+            model.set(data, {silent: true});
             data = model.attributes;
-            
+
             var attrs = false;
             for (var attr in data) {
                 if (_.isEqual(prev[attr], data[attr])) {
@@ -359,17 +359,17 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                     self.render()
                 },
                 patch: true
-            });            
+            });
             this.inlineEditClose(true);
         },
-        
+
         removeInlineEditLinks: function () {
             var $cell = this.getCellElement();
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
             $cell.find('.inline-edit-link').addClass('hide');
         },
-        
+
         addInlineEditLinks: function () {
             var $cell = this.getCellElement();
             var $saveLink = $('<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>');
@@ -389,12 +389,12 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             if (this.mode != 'edit') {
                 return;
             }
-                
+
             this.setMode('detail');
             this.once('after:render', function () {
                 this.removeInlineEditLinks();
             }, this);
-            
+
             if (!dontReset) {
                 this.model.set(this.initialAttributes);
             }
@@ -404,12 +404,12 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 
         inlineEdit: function () {
             var self = this;
-            
-            this.trigger('edit', this);            
-            this.setMode('edit');            
-            
+
+            this.trigger('edit', this);
+            this.setMode('edit');
+
             this.initialAttributes = this.model.getClonedAttributes();
-            
+
             this.once('after:render', function () {
                 this.addInlineEditLinks();
             }, this);
@@ -465,7 +465,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                 }
             }
         },
-        
+
         fetchToModel: function () {
             this.model.set(this.fetch(), {silent: true});
         },
