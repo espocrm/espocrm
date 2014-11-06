@@ -202,13 +202,23 @@ class Query
     protected function convertComplexExpression($entity, $field, $entityName = null, $distinct = false)
     {
         $function = null;
-        $relName = null;            
+        $relName = null;
         
         if (strpos($field, ':')) {
-            list($function, $field) = explode(':', $field); 
+            list($function, $field) = explode(':', $field);
         }
         if (strpos($field, '.')) {
             list($relName, $field) = explode('.', $field);
+        }
+
+        if (!empty($function)) {
+            $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
+        }
+        if (!empty($relName)) {
+            $relName = preg_replace('/[^A-Za-z0-9_]+/', '', $relName);
+        }
+        if (!empty($field)) {
+            $field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
         }
                 
         $part = $this->toDb($field);
@@ -533,15 +543,7 @@ class Query
             }
 
             if (!in_array($field, self::$sqlOperators)) {
-
-                $inRelated = false;
-
-                if (strpos($field, '.') !== false) {
-                    list($entityName, $field) = array_map('trim', explode('.', $field));
-                    $entityName = preg_replace('/[^A-Za-z0-9_]+/', '', $entityName);
-                    $field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
-                    $inRelated = true;
-                }
+                $isComplex = false;
 
                 $operator = '=';
 
@@ -555,7 +557,13 @@ class Query
                     }
                 }
 
-                if (!$inRelated) {
+                if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
+                    $leftPart = $this->convertComplexExpression($entity, $field);
+                    $isComplex = true;
+                }
+
+
+                if (empty($isComplex)) {
 
                     if (!isset($entity->fields[$field])) {
                         continue;
@@ -583,7 +591,7 @@ class Query
                         }
                     }
                 } else {
-                    $leftPart = $this->toDb($entityName) . '.' . $this->toDb($field);
+                    //$leftPart = $this->toDb($entityName) . '.' . $this->toDb($field);
                 }
 
                 if (!empty($leftPart)) {
