@@ -80,13 +80,13 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
             
             if (cc) {
                 attributes['cc'] = this.model.get('cc');
-                (this.model.get('to')).split(',').forEach(function (item) {
+                (this.model.get('to')).split(';').forEach(function (item) {
                    item = item.trim();
                    if (item != this.getUser().get('emailAddress')) {
-                       attributes['cc'] += ', ' + item;
+                       attributes['cc'] += '; ' + item;
                    }
                 }, this);
-                attributes['cc'] = attributes['cc'].replace(/^(\, )/,"");
+                attributes['cc'] = attributes['cc'].replace(/^(\; )/,"");
             }
             
             if (this.model.get('parentId')) {
