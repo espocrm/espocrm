@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
@@ -48,7 +48,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                 foreignScope: this.foreignScope,
             }, Dep.prototype.data.call(this));
         },
-        
+
         getSelectFilters: function () {},
 
         setup: function () {
@@ -85,20 +85,20 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                 });
             }
         },
-        
-        afterRender: function () {            
-            if (this.mode == 'edit' || this.mode == 'search') {            
+
+        afterRender: function () {
+            if (this.mode == 'edit' || this.mode == 'search') {
                 this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
-                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');                
-                
+                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
+
                 this.$elementName.on('change', function () {
-                    if (this.$elementName.val() == '') {                
+                    if (this.$elementName.val() == '') {
                         this.$elementName.val('');
                         this.$elementId.val('');
                         this.trigger('change');
                     }
-                }.bind(this));                
-            
+                }.bind(this));
+
                 if (this.mode == 'edit') {
                     this.$elementName.on('blur', function (e) {
                         if (this.model.has(this.nameName)) {
@@ -110,7 +110,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                         e.currentTarget.value = '';
                     }.bind(this));
                 }
-                
+
                 this.$elementName.autocomplete({
                     serviceUrl: function (q) {
                         return this.foreignScope + '?orderBy=name&limit=7';
@@ -122,8 +122,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                         return suggestion.name;
                     },
                     transformResult: function (response) {
-                        var response = JSON.parse(response);                
-                        var list = [];                        
+                        var response = JSON.parse(response);
+                        var list = [];
                         response.list.forEach(function(item) {
                             list.push({
                                 id: item.id,
@@ -134,7 +134,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                         }, this);
                         return {
                             suggestions: list
-                        };                        
+                        };
                     }.bind(this),
                     onSelect: function (s) {
                         this.$elementId.val(s.id);
@@ -142,17 +142,17 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                         this.trigger('change');
                     }.bind(this)
                 });
-                
+
                 var $elementName = this.$elementName;
                 this.once('render', function () {
                     $elementName.autocomplete('dispose');
-                }, this);            
-                
+                }, this);
+
                 this.once('remove', function () {
                     $elementName.autocomplete('dispose');
                 }, this);
             }
-        },        
+        },
 
         getValueForDisplay: function () {
             return this.model.get(this.nameName);
@@ -172,17 +172,17 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
             var data = {};
             data[this.nameName] = this.$el.find('[name="'+this.nameName+'"]').val() || null;
             data[this.idName] = this.$el.find('[name="'+this.idName+'"]').val() || null;
-            
+
             return data;
         },
 
         fetchSearch: function () {
             var value = this.$el.find('[name="' + this.idName + '"]').val();
-            
+
             if (!value) {
                 return false;
             }
-            
+
             var data = {
                 type: 'equals',
                 field: this.idName,

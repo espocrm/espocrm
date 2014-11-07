@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
+ ************************************************************************/
+
 Espo.define('Views.Record.List', 'View', function (Dep) {
 
     return Dep.extend({
@@ -31,7 +31,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         type: 'list',
 
         name: 'list',
-        
+
         presentationType: 'table',
 
         /**
@@ -49,9 +49,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         scope: null,
 
         _internalLayoutType: 'list-row',
-        
+
         listContainerEl: '.list > table > tbody',
-        
+
         showCount: true,
 
         events: {
@@ -62,20 +62,20 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 e.preventDefault();
                 var id = $(e.currentTarget).data('id');
                 var model = this.collection.get(id);
-                
+
                 this.getRouter().navigate('#' + this.scope + '/view/' + id);
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: id,
                     model: model
                 });
-                            
+
             },
             'click [data-action="showMore"]': function () {
-                this.showMoreRecords();        
+                this.showMoreRecords();
             },
             'click a.sort': function (e) {
-                var field = $(e.currentTarget).data('name');            
-                
+                var field = $(e.currentTarget).data('name');
+
                 var asc = true;
                 if (field === this.collection.sortBy && this.collection.asc) {
                     asc = false;
@@ -109,7 +109,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             'click .record-checkbox': function (e) {
                 var target = $(e.currentTarget);
-                var id = target.data('id');                
+                var id = target.data('id');
                 this._checkRecord(id, e.currentTarget.checked, target);
             },
             'click .selectAll': function (e) {
@@ -129,9 +129,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     this.$el.find('.list > table tbody tr').removeClass('active');
                 }
             },
-            'click [data-action="quickEdit"]': function (e) {                
-                var id = $(e.currentTarget).data('id');                
-                this.quickEdit(id);                
+            'click [data-action="quickEdit"]': function (e) {
+                var id = $(e.currentTarget).data('id');
+                this.quickEdit(id);
 
             },
             'click [data-action="quickRemove"]': function (e) {
@@ -151,17 +151,17 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
          * @param {bool} To dispaly table header with column names.
          */
         header: true,
-        
+
         showMore: true,
-        
+
         removeAction: true,
-        
+
         mergeAction: true,
-        
+
         massUpdateAction: true,
-        
+
         exportAction: true,
-        
+
         allowQuickEdit: true,
 
         /**
@@ -187,12 +187,12 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount,
                 moreCount: this.collection.total - this.collection.length,
-                
-                checkboxes: this.checkboxes,                
+
+                checkboxes: this.checkboxes,
                 actions: this._getActions(),
                 rows: this.rows,
                 topBar: paginationTop || this.checkboxes,
-                bottomBar: paginationBottom,                
+                bottomBar: paginationBottom,
             };
         },
 
@@ -204,7 +204,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
-            this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore; 
+            this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
         },
 
         deactivate: function () {
@@ -213,11 +213,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.$el.find("a.sort").addClass('disabled');
             }
         },
-        
+
         export: function () {
             var ids = this.checkedList;
             var where = this.collection.where;
-                    
+
             $.ajax({
                 url: this.scope + '/action/export',
                 type: 'GET',
@@ -241,9 +241,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.scope = this.collection.name || null;
             this.events = Espo.Utils.clone(this.events);
             this.actions = Espo.Utils.clone(this.actions);
-            
+
             if (this.checkboxes) {
-            
+
                 if (this.removeAction) {
                     this.actions.push({
                         name: 'remove',
@@ -265,7 +265,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                                 for (var i in this.checkedList) {
                                     ids.push(this.checkedList[i]);
                                 }
-                               
+
                                 $.ajax({
                                     url: this.collection.url + '/action/massDelete',
                                     type: 'POST',
@@ -274,33 +274,33 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                                     })
                                 }).done(function (idsRemoved) {
                                     var count = idsRemoved.length;
-                                    if (count) {  
+                                    if (count) {
                                         idsRemoved.forEach(function (id) {
                                             Espo.Ui.notify(false);
                                             this.checkedList = [];
                                             var model = this.collection.get(id);
                                             this.collection.remove(model);
-                                            
+
                                             this.$el.find('tr[data-id="' + id + '"]').remove();
                                             if (this.collection.length == 0) {
                                                 this.render();
                                             }
-                                        }, this); 
+                                        }, this);
                                         var msg = 'massRemoveResult';
-                                        if (count == 1) {                            
+                                        if (count == 1) {
                                             msg = 'massRemoveResultSingle'
-                                        }                
+                                        }
                                         Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
                                     } else {
                                         Espo.Ui.success(self.translate('noRecordsRemoved', 'messages'));
-                                    } 
+                                    }
                                 }.bind(this));
 
                             }
                         }
                     });
                 }
-            
+
                 if (this.mergeAction) {
                     this.actions.push({
                         name: 'merge',
@@ -324,8 +324,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                             this.getRouter().navigate(url, {trigger: true});
                         }
                     });
-                }            
-            
+                }
+
                 if (this.massUpdateAction) {
                     this.actions.push({
                         name: 'massUpdate',
@@ -376,17 +376,17 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     }
                 };
             }
-            
+
             if ('showCount' in this.options) {
                 this.showCount = this.options.showCount;
             }
-            
+
             if (this.exportAction) {
                 if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
                     this.actions.push({
                         name: 'export',
                         label: 'Export',
-                        action: function (e) {                
+                        action: function (e) {
                             this.export();
                         }.bind(this)
                     });
@@ -406,7 +406,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             }
 
             this.listenTo(this.collection, 'sync', function () {
-                if (this.noRebuild) {                    
+                if (this.noRebuild) {
                     this.noRebuild = null;
                     return;
                 }
@@ -435,7 +435,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var defs = [];
 
             for (var i in this.listLayout) {
-                
+
                 var item = {
                     name: this.listLayout[i].name,
                     sortable: !(this.listLayout[i].notSortable || false),
@@ -460,7 +460,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
-            
+
             var layout = [];
 
             if (this.checkboxes) {
@@ -479,11 +479,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
                 var item = {
                     name: col.name,
-                    view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),                    
+                    view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),
                     options: {
                         defs: {
                             name: col.name,
-                            params: col.params || {},                            
+                            params: col.params || {},
                         },
                         mode: 'list'
                     }
@@ -501,13 +501,13 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             }
             return layout;
         },
-        
+
         checkRecord: function (id) {
-            var $target = this.$el.find('.record-checkbox[data-id="' + id + '"]');            
+            var $target = this.$el.find('.record-checkbox[data-id="' + id + '"]');
             $target.get(0).checked = true;
             this._checkRecord(id, true, $target);
         },
-        
+
         _checkRecord: function (id, checked, target) {
                 var index = this.checkedList.indexOf(id);
 
@@ -563,7 +563,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             }.bind(this));
             return list;
         },
-        
+
         getInternalLayoutForModel: function (callback, model) {
             var scope = model.name;
             if (this._internalLayout == null) {
@@ -581,14 +581,14 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     callback(null);
                     return;
                 } else {
-                    this.getInternalLayoutForModel(callback, model); 
-                    return;                    
+                    this.getInternalLayoutForModel(callback, model);
+                    return;
                 }
-            }                
+            }
             if (this._internalLayout !== null) {
                 callback(this._internalLayout);
                 return;
-            }                
+            }
             if (this.listLayout !== null) {
                 this._internalLayout = this._convertLayout(this.listLayout);
                 callback(this._internalLayout);
@@ -601,10 +601,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 return;
             }.bind(this));
         },
-        
+
         buildRow: function (i, model, callback) {
             var key = 'row-' + model.id;
-            
+
             this.rows.push(key);
             this.getInternalLayout(function (internalLayout) {
                 if (this.presentationType == 'table' && Object.prototype.toString.call(internalLayout) === '[object Array]') {
@@ -612,7 +612,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                         item.el = this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
                     }, this);
                 }
- 
+
                 this.createView(key, 'Base', {
                     model: model,
                     acl: {
@@ -632,10 +632,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         buildRows: function (callback) {
             this.checkedList = [];
             this.rows = [];
-            
+
 
             if (this.collection.length > 0) {
-                            
+
                 var i = 0;
                 var c = !this.pagination ? 1 : 2;
                 var func = function () {
@@ -648,19 +648,19 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 }
 
                 this.wait(true);
-                this.getInternalLayout(function (internalLayout) {                        
+                this.getInternalLayout(function (internalLayout) {
                     var count = this.collection.models.length;
                     var built = 0;
-                    for (var i in this.collection.models) {                            
+                    for (var i in this.collection.models) {
                         var model = this.collection.models[i];
                         this.buildRow(i, model, function () {
-                            built++;                                
+                            built++;
                             if (built == count) {
                                 func();
                                 this.wait(false);
                             }
                         }.bind(this));
-                    }                    
+                    }
                 }.bind(this));
 
                 if (this.pagination) {
@@ -674,64 +674,64 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 }
             }
         },
-        
+
         showMoreRecords: function () {
-            var collection = this.collection;            
-                    
+            var collection = this.collection;
+
             var $showMore = this.$el.find('.show-more');
             var $list = this.$el.find(this.listContainerEl);
-                
-            $showMore.children('a').addClass('disabled');    
+
+            $showMore.children('a').addClass('disabled');
             this.notify('Loading...');
-                
+
             var final = function () {
                 $showMore.parent().append($showMore);
                 if (collection.total > collection.length) {
                     this.$el.find('.more-count').text(collection.total - this.collection.length);
-                    $showMore.removeClass('hide');                    
+                    $showMore.removeClass('hide');
                 }
-                $showMore.children('a').removeClass('disabled');            
-                                
+                $showMore.children('a').removeClass('disabled');
+
                 this.notify(false);
             }.bind(this);
-            
+
             var initialCount = collection.length;
-                
+
             var success = function () {
                 this.notify(false);
                 $showMore.addClass('hide');
-                
-                var temp = collection.models[initialCount - 1];                
-                
+
+                var temp = collection.models[initialCount - 1];
+
                 var rowCount = collection.length - initialCount;
                 var rowsReady = 0;
-                for (var i = initialCount; i < collection.length; i++) {                    
+                for (var i = initialCount; i < collection.length; i++) {
                     var model = collection.at(i);
-                    
-                    this.buildRow(i, model, function (view) {            
+
+                    this.buildRow(i, model, function (view) {
                         view.getHtml(function (html) {
-                            $list.append(html);                                
+                            $list.append(html);
                             rowsReady++;
-                            if (rowsReady == rowCount) {            
-                                final();                                
+                            if (rowsReady == rowCount) {
+                                final();
                             }
                             view._afterRender();
                             if (view.options.el) {
                                 view.setElement(view.options.el);
-                            }                                                    
+                            }
                         }.bind(this));
-                    });                        
-                }    
+                    });
+                }
                 this.noRebuild = true;
             }.bind(this);
-            
+
             collection.fetch({
                 success: success,
                 remove: false,
                 more: true,
             });
         },
-        
+
         quickEdit: function (id) {
             if (this.allowQuickEdit) {
                 this.notify('Loading...');
@@ -751,9 +751,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: true});
             }
         },
-        
+
         quickRemove: function (id) {
-            var model = this.collection.get(id);                
+            var model = this.collection.get(id);
             if (!this.getAcl().checkModel(model, 'delete')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -761,9 +761,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var self = this;
             if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
                 this.collection.remove(model);
-                this.notify('Removing...');            
+                this.notify('Removing...');
                 model.destroy({
-                    success: function () {                        
+                    success: function () {
                         self.notify('Removed', 'success');
                         self.$el.find('tr[data-id="' + id + '"]').remove();
                         self.collection.total--;
