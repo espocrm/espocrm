@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Role.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
-    
+
         sideView: 'Role.Record.DetailSide',
-        
+
         editModeEnabled: false,
 
         getDetailLayout: function (callback) {
@@ -35,21 +35,21 @@ Espo.define('Views.Role.Record.Detail', 'Views.Record.Detail', function (Dep) {
                         {
                             name: 'name',
                             type: 'base',
-                        },                        
+                        },
                     ]
-                }            
-            ];        
+                }
+            ];
             callback({
                 type: 'record',
                 layout: this._convertSimplifiedLayout(simpleLayout)
             });
         },
-    
+
         setup: function () {
-            Dep.prototype.setup.call(this);            
+            Dep.prototype.setup.call(this);
             this.createView('extra', 'Role.Record.Table', {
                 aclData: JSON.parse(this.model.get('data') || '{}') || {}
-            });                            
+            });
         },
     });
 });

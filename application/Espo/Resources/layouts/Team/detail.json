@@ -1,0 +1,13 @@
+[
+    {
+        "label":"Main",
+        "rows":[
+            [
+                {"name":"name"}
+            ],
+            [
+                {"name":"roles"}
+            ]
+        ]
+    }
+]
