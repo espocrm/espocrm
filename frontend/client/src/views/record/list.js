@@ -274,6 +274,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                                     })
                                 }).done(function (idsRemoved) {
                                     var count = idsRemoved.length;
+                                    this.collection.total = this.collection.total - count;
                                     if (count) {
                                         idsRemoved.forEach(function (id) {
                                             Espo.Ui.notify(false);
@@ -282,7 +283,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                                             this.collection.remove(model);
 
                                             this.$el.find('tr[data-id="' + id + '"]').remove();
-                                            if (this.collection.length == 0) {
+                                            if (this.collection.length == 0 && this.collection.total == 0) {
                                                 this.render();
                                             }
                                         }, this);
@@ -767,7 +768,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                         self.notify('Removed', 'success');
                         self.$el.find('tr[data-id="' + id + '"]').remove();
                         self.collection.total--;
-                        if (self.collection.length == 0) {
+                        if (self.collection.length == 0 && self.collection.total == 0) {
                             self.render();
                         }
                     },
