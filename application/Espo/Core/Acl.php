@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
 
@@ -35,29 +35,29 @@ class Acl
     private $actionList = array('read', 'edit', 'delete');
 
     private $levelList = array('all', 'team', 'own', 'no');
-    
+
     protected $fileManager;
-    
+
     protected $metadata;
 
     public function __construct(\Espo\Entities\User $user, $config = null, $fileManager = null, $metadata = null)
     {
         $this->user = $user;
-        
-        $this->metadata = $metadata;        
-        
+
+        $this->metadata = $metadata;
+
         if (!$this->user->isFetched()) {
             throw new Error();
         }
-        
+
         $this->user->loadLinkMultipleField('teams');
-        
+
         if ($fileManager) {
             $this->fileManager = $fileManager;
         }
-            
+
         $this->cacheFile = 'data/cache/application/acl/' . $user->id . '.php';
-        
+
         if ($config && $config->get('useCache') && file_exists($this->cacheFile)) {
             $cached = include $this->cacheFile;
             $this->data = $cached;
@@ -71,32 +71,32 @@ class Acl
         }
 
     }
-    
+
     public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
     {
-        if (array_key_exists($scope, $this->data)) {            
+        if (array_key_exists($scope, $this->data)) {
             if ($this->data[$scope] === false) {
                 return false;
             }
             if ($this->data[$scope] === true) {
                 return true;
             }
-            if (!is_null($action)) {        
+            if (!is_null($action)) {
                 if (array_key_exists($action, $this->data[$scope])) {
                     $value = $this->data[$scope][$action];
-            
+
                     if ($value === 'all' || $value === true) {
-                        return true;                    
+                        return true;
                     }
-            
+
                     if (!$value || $value === 'no') {
-                        return false;                    
-                    }                    
-                
+                        return false;
+                    }
+
                     if (is_null($isOwner)) {
                         return true;
                     }
-                
+
                     if ($isOwner) {
                         if ($value === 'own' || $value === 'team') {
                             return true;
@@ -105,21 +105,21 @@ class Acl
                     if ($inTeam === null && $entity) {
                         $inTeam = $this->checkInTeam($entity);
                     }
-            
+
                     if ($inTeam) {
                         if ($value === 'team') {
                             return true;
                         }
                     }
-            
+
                     return false;
                 }
             }
             return true;
         }
-        return true;        
+        return true;
     }
-    
+
     public function toArray()
     {
         return $this->data;
@@ -139,7 +139,7 @@ class Acl
     }
 
     public function check($subject, $action = null, $isOwner = null, $inTeam = null)
-    {    
+    {
         if ($this->user->isAdmin()) {
             return true;
         }
@@ -148,12 +148,12 @@ class Acl
         } else {
             $entity = $subject;
             if ($entity instanceof Entity) {
-                $entityName = $entity->getEntityName();            
+                $entityName = $entity->getEntityName();
                 return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $inTeam, $entity);
             }
         }
     }
-            
+
     public function checkReadOnlyTeam($scope)
     {
         if (isset($this->data[$scope]) && isset($this->data[$scope]['read'])) {
@@ -161,7 +161,7 @@ class Acl
         }
         return false;
     }
-    
+
     public function checkReadOnlyOwn($scope)
     {
         if ($this->user->isAdmin()) {
@@ -172,7 +172,7 @@ class Acl
         }
         return false;
     }
-    
+
     public function checkIsOwner($entity)
     {
         if ($this->user->isAdmin()) {
@@ -184,30 +184,30 @@ class Acl
         }
         return false;
     }
-    
+
     public function checkInTeam($entity)
     {
         $userTeamIds = $this->user->get('teamsIds');
-        
-        if (!$entity->hasRelation('teams') || !$entity->hasField('teamsIds')) {            
+
+        if (!$entity->hasRelation('teams') || !$entity->hasField('teamsIds')) {
             return false;
         }
-        
+
         if (!$entity->has('teamsIds')) {
             $entity->loadLinkMultipleField('teams');
         }
-                
-        $teamIds = $entity->get('teamsIds');        
-        
+
+        $teamIds = $entity->get('teamsIds');
+
         if (empty($teamIds)) {
             return false;
         }
-        
+
         foreach ($userTeamIds as $id) {
             if (in_array($id, $teamIds)) {
                 return true;
             }
-        }        
+        }
         return false;
     }
 
@@ -216,7 +216,7 @@ class Acl
         $aclTables = array();
 
         $userRoles = $this->user->get('roles');
-        
+
         foreach ($userRoles as $role) {
             $aclTables[] = json_decode($role->get('data'));
         }
@@ -231,11 +231,11 @@ class Acl
 
         $this->data = $this->merge($aclTables);
     }
-    
+
     private function initSolid()
     {
         $data = $this->metadata->get('app.acl.solid', array());
-        
+
         foreach ($data as $entityName => $item) {
             $this->data[$entityName] = $item;
         }
