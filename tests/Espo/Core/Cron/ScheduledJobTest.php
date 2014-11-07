@@ -10,7 +10,7 @@ class ScheduledJobTest extends \PHPUnit_Framework_TestCase
     protected $object;
 
     protected $objects;
-
+    protected $reflection;
     protected $cronSetup = array(
         'linux' => 'linux command',
         'windows' => 'windows command',
@@ -61,13 +61,26 @@ class ScheduledJobTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($cronSetup));
 
         $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.2.17 (Ubuntu)';
-
         $res = array(
+            'linux' => array(
             'message' => 'linux message',
             'command' => 'linux command',
+            ),
+            'windows' => array(
+            'message' => 'windows message',
+            'command' => 'windows command',
+            ),
+            'mac' => array(
+            'message' => 'mac message',
+            'command' => 'mac command',
+            ),
+            'default' => array(
+            'message' => 'default message',
+            'command' => 'default command',
+            ),
         );
-
-        $this->assertEquals( $res, $this->reflection->invokeMethod('getSetupMessage', array()) );
+        $os = $this->reflection->invokeMethod('getSystemUtil')->getOS();
+        $this->assertEquals( $res[$os], $this->reflection->invokeMethod('getSetupMessage', array()) );
     }
 
 

@@ -14,3 +14,5 @@
 /tests/testData/cache/*
 composer.phar
 vendor/
+application/Espo/Modules/Crm/Resources/i18n/he_IL
+application/Espo/Resources/i18n/he_IL
