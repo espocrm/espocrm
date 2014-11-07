@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Hooks\Note;
 
@@ -27,19 +27,19 @@ use Espo\ORM\Entity;
 class Notifications extends \Espo\Core\Hooks\Base
 {
     protected $notificationService = null;
-    
+
     public static $order = 14;
-    
+
     protected function init()
     {
         $this->dependencies[] = 'serviceFactory';
     }
-    
+
     protected function getServiceFactory()
     {
         return $this->getInjection('serviceFactory');
     }
-    
+
     protected function getMentionedUserList($entity)
     {
         $mentionedUserList = array();
@@ -48,25 +48,25 @@ class Notifications extends \Espo\Core\Hooks\Base
             $mentions = get_object_vars($data->mentions);
             foreach ($mentions as $d) {
                 $mentionedUserList[] = $d->id;
-            }            
+            }
         }
         return $mentionedUserList;
     }
-    
+
     public function afterSave(Entity $entity)
     {
-        if (!$entity->isFetched()) {
+        if ($entity->isNew()) {
 
             $parentType = $entity->get('parentType');
-            $parentId = $entity->get('parentId');            
-        
+            $parentId = $entity->get('parentId');
+
             if ($parentType && $parentId) {
 
                 $mentionedUserList = $this->getMentionedUserList($entity);
-            
+
                 $pdo = $this->getEntityManager()->getPDO();
                 $sql = "
-                    SELECT user_id AS userId 
+                    SELECT user_id AS userId
                     FROM subscription
                     WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
                 $sth = $pdo->prepare($sql);
@@ -93,13 +93,13 @@ class Notifications extends \Espo\Core\Hooks\Base
             }
         }
     }
-    
+
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
             $this->notificationService = $this->getServiceFactory()->create('Notification');
         }
-        return $this->notificationService;        
+        return $this->notificationService;
     }
 }
 

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\ORM\Repositories;
 
@@ -31,61 +31,61 @@ use \Espo\ORM\IEntity;
 
 class RDB extends \Espo\ORM\Repository
 {
-    
+
     public static $mapperClassName = '\\Espo\\ORM\\DB\\MysqlMapper';
-    
+
     /**
      * @var Object Mapper.
      */
-    protected $mapper;    
-    
+    protected $mapper;
+
     /**
      * @var array Where clause array. To be used in further find operation.
-     */    
+     */
     protected $whereClause = array();
 
     /**
      * @var array Parameters to be used in further find operations.
-     */    
-    protected $listParams = array();    
-    
+     */
+    protected $listParams = array();
+
     public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
     {
-        $this->entityName = $entityName;        
-        $this->entityFactory = $entityFactory;        
-        $this->seed = $this->entityFactory->create($entityName);        
+        $this->entityName = $entityName;
+        $this->entityFactory = $entityFactory;
+        $this->seed = $this->entityFactory->create($entityName);
         $this->entityClassName = get_class($this->seed);
-        $this->entityManager = $entityManager;        
+        $this->entityManager = $entityManager;
     }
-    
+
     protected function getMapper()
     {
         if (empty($this->mapper)) {
             $this->mapper = $this->getEntityManager()->getMapper(self::$mapperClassName);
-        }    
+        }
         return $this->mapper;
-    }        
-    
+    }
+
     public function handleSelectParams(&$params)
     {
     }
-    
+
     protected function getEntityFactory()
     {
         return $this->entityFactory;
     }
-    
+
     protected function getEntityManager()
     {
         return $this->entityManager;
     }
-    
+
     public function reset()
     {
         $this->whereClause = array();
         $this->listParams = array();
     }
-    
+
     protected function getNewEntity()
     {
         $entity = $this->entityFactory->create($this->entityName);
@@ -95,12 +95,12 @@ class RDB extends \Espo\ORM\Repository
             return $entity;
         }
     }
-    
+
     protected function getEntityById($id)
     {
         $params = array();
         $this->handleSelectParams($params);
-        
+
         $entity = $this->entityFactory->create($this->entityName);
         if ($entity) {
             if ($this->getMapper()->selectById($entity, $id, $params)) {
@@ -110,50 +110,54 @@ class RDB extends \Espo\ORM\Repository
         }
         return null;
     }
-    
+
     public function get($id = null)
-    {                
+    {
         if (empty($id)) {
             return $this->getNewEntity();
-        }                    
+        }
         return $this->getEntityById($id);
     }
-    
+
     protected function beforeSave(Entity $entity)
-    {        
+    {
     }
-    
+
     protected function afterSave(Entity $entity)
-    {        
+    {
     }
-    
+
     public function save(Entity $entity)
-    {    
+    {
         $this->beforeSave($entity);
         if ($entity->isNew()) {
             $result = $this->getMapper()->insert($entity);
-            if ($result) {
-                $entity->setIsNew(false);
-            }
         } else {
             $result = $this->getMapper()->update($entity);
         }
-        if ($result) {    
+        if ($result) {
             $this->afterSave($entity);
+            if ($entity->isNew()) {
+                $entity->setIsNew(false);
+            } else {
+                if ($entity->isFetched()) {
+                    $entity->updateFetchedValues();
+                }
+            }
         }
         return $result;
     }
-    
+
     protected function beforeRemove(Entity $entity)
-    {        
+    {
     }
-    
+
     protected function afterRemove(Entity $entity)
-    {        
-    }    
-        
+    {
+    }
+
     public function remove(Entity $entity)
-    {    
+    {
         $this->beforeRemove($entity);
         $result = $this->getMapper()->delete($entity);
         if ($result) {
@@ -161,58 +165,58 @@ class RDB extends \Espo\ORM\Repository
         }
         return $result;
     }
-    
+
     public function deleteFromDb($id)
     {
         return $this->getMapper()->deleteFromDb($this->entityName, $id);
     }
 
     public function find(array $params = array())
-    {    
+    {
         $this->handleSelectParams($params);
-        $params = $this->getSelectParams($params);        
+        $params = $this->getSelectParams($params);
 
         $dataArr = $this->getMapper()->select($this->seed, $params);
-            
+
         $collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
         $this->reset();
-        
+
         return $collection;
     }
-    
+
     public function findOne(array $params = array())
-    {    
-        $collection = $this->limit(0, 1)->find($params);        
+    {
+        $collection = $this->limit(0, 1)->find($params);
         if (count($collection)) {
             return $collection[0];
         }
         return null;
     }
-    
+
     public function findRelated(Entity $entity, $relationName, array $params = array())
     {
-        $entityName = $entity->relations[$relationName]['entity'];        
-        $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);        
-        
-        $result = $this->getMapper()->selectRelated($entity, $relationName, $params);        
+        $entityName = $entity->relations[$relationName]['entity'];
+        $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
+
+        $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
 
         if (is_array($result)) {
-            $collection = new EntityCollection($result, $entityName, $this->entityFactory);    
+            $collection = new EntityCollection($result, $entityName, $this->entityFactory);
             return $collection;
         } else {
             return $result;
         }
-        
-    }    
-        
+
+    }
+
     public function countRelated(Entity $entity, $relationName, array $params = array())
-    {        
+    {
         $entityName = $entity->relations[$relationName]['entity'];
         $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
-        
+
         return $this->getMapper()->countRelated($entity, $relationName, $params);
     }
-    
+
     public function relate(Entity $entity, $relationName, $foreign, $data)
     {
         if ($data instanceof \stdClass) {
@@ -226,7 +230,7 @@ class RDB extends \Espo\ORM\Repository
         }
         return false;
     }
-    
+
     public function unrelate(Entity $entity, $relationName, $foreign)
     {
         if ($foreign instanceof Entity) {
@@ -240,7 +244,7 @@ class RDB extends \Espo\ORM\Repository
         }
         return false;
     }
-    
+
     public function updateRelation(Entity $entity, $relationName, $foreign, $data)
     {
         if ($data instanceof \stdClass) {
@@ -256,124 +260,124 @@ class RDB extends \Espo\ORM\Repository
         }
         return false;
     }
-    
-    
+
+
     public function getAll()
     {
-        $this->reset();        
+        $this->reset();
         return $this->find();
     }
-    
+
     public function count(array $params = array())
-    {    
+    {
         $this->handleSelectParams($params);
-        
-        $params = $this->getSelectParams($params);        
+
+        $params = $this->getSelectParams($params);
         return $this->getMapper()->count($this->seed, $params);
     }
-    
+
     public function max($field)
-    {    
-        $params = $this->getSelectParams();        
+    {
+        $params = $this->getSelectParams();
         return $this->getMapper()->max($this->seed, $params, $field);
     }
-    
+
     public function min($field)
-    {    
-        $params = $this->getSelectParams();        
+    {
+        $params = $this->getSelectParams();
         return $this->getMapper()->min($this->seed, $params, $field);
     }
-    
+
     public function sum($field)
-    {    
-        $params = $this->getSelectParams();        
+    {
+        $params = $this->getSelectParams();
         return $this->getMapper()->sum($this->seed, $params, $field);
     }
 
     // @TODO use abstract class for list params
     // @TODO join conditions
     public function join()
-    {    
+    {
         $args = func_get_args();
-        
+
         if (empty($this->listParams['joins'])) {
             $this->listParams['joins'] = array();
         }
-            
+
         foreach ($args as &$param) {
             if (is_array($param)) {
                 foreach ($param as $k => $v) {
-                    $this->listParams['joins'][] = $v;                
-                }            
+                    $this->listParams['joins'][] = $v;
+                }
             } else {
                 $this->listParams['joins'][] = $param;
             }
         }
-        
+
         return $this;
     }
-    
+
     public function distinct()
     {
         $this->listParams['distinct'] = true;
         return $this;
     }
-    
+
     public function where($param1 = array(), $param2 = null)
     {
         if (is_array($param1)) {
-            $this->whereClause = $param1 + $this->whereClause;            
-        
+            $this->whereClause = $param1 + $this->whereClause;
+
         } else {
             if (!is_null($param2)) {
                 $this->whereClause[$param1] = $param2;
             }
         }
-        
+
         return $this;
     }
-    
+
     public function order($field = 'id', $direction = "ASC")
     {
         $this->listParams['orderBy'] = $field;
         $this->listParams['order'] = $direction;
-        
+
         return $this;
     }
-    
+
     public function limit($offset, $limit)
     {
         $this->listParams['offset'] = $offset;
         $this->listParams['limit'] = $limit;
-        
+
         return $this;
     }
-    
+
     public function setListParams(array $params = array())
     {
         $this->listParams = $params;
     }
-    
+
     public function getListParams()
     {
         return $this->listParams;
     }
-    
+
     protected function getSelectParams(array $params = array())
     {
         if (isset($params['whereClause'])) {
-            $params['whereClause'] = $params['whereClause'] + $this->whereClause;        
+            $params['whereClause'] = $params['whereClause'] + $this->whereClause;
         } else {
             $params['whereClause'] = $this->whereClause;
-        }        
+        }
         $params = $params + $this->listParams;
-        
+
         return $params;
-    }    
-    
+    }
+
     protected function getPDO()
     {
-        return $this->getEntityManager()->getPDO();    
+        return $this->getEntityManager()->getPDO();
     }
 }
 

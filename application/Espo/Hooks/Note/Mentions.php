@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Hooks\Note;
 
@@ -27,35 +27,35 @@ use Espo\ORM\Entity;
 class Mentions extends \Espo\Core\Hooks\Base
 {
     public static $order = 9;
-    
+
     protected $notificationService = null;
-    
+
     protected function init()
     {
         $this->dependencies[] = 'serviceFactory';
     }
-    
+
     protected function getServiceFactory()
     {
         return $this->getInjection('serviceFactory');
     }
-    
+
     protected function addMentionData($entity)
     {
         $post = $entity->get('post');
-        
+
         $mentionData = new \stdClass();
-        
-        $previousMentionList = array();        
-        if ($entity->isFetched()) {
+
+        $previousMentionList = array();
+        if (!$entity->isNew()) {
             $data = $entity->get('data');
             if (!empty($data) && !empty($data->mentions)) {
-                $previousMentionList = array_keys(get_object_vars($data->mentions));                
+                $previousMentionList = array_keys(get_object_vars($data->mentions));
             }
         }
-        
-        preg_match_all('/(@\w+)/', $post, $matches);        
-        
+
+        preg_match_all('/(@\w+)/', $post, $matches);
+
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
@@ -74,36 +74,36 @@ class Mentions extends \Espo\Core\Hooks\Base
                 }
             }
         }
-        
+
         $data = $entity->get('data');
         if (empty($data)) {
-            $data = new \stdClass();            
+            $data = new \stdClass();
         }
         $data->mentions = $mentionData;
-        
+
         $entity->set('data', $data);
     }
-    
+
     public function beforeSave(Entity $entity)
     {
         if ($entity->get('type') == 'Post') {
             $post = $entity->get('post');
-            
+
             $this->addMentionData($entity);
         }
     }
-    
+
     protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user)
     {
         $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
     }
-    
+
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
             $this->notificationService = $this->getServiceFactory()->create('Notification');
         }
-        return $this->notificationService;        
+        return $this->notificationService;
     }
 }
 
