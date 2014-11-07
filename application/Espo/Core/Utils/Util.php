@@ -169,20 +169,31 @@ class Util
             foreach ($folderPath as $path) {
                 $fullPath = static::concatPath($fullPath, $path);
             }
-            return $fullPath;
+            return static::fixPath($fullPath);
         }
 
         if (empty($filePath)) {
-            return $folderPath;
+            return static::fixPath($folderPath);
         }
         if (empty($folderPath)) {
-            return $filePath;
+            return static::fixPath($filePath);
         }
 
-        if (substr($folderPath, -1) == static::getSeparator()) {
-            return $folderPath . $filePath;
+        if (substr($folderPath, -1) == static::getSeparator() || substr($folderPath, -1) == '/') {
+            return static::fixPath($folderPath . $filePath);
         }
         return $folderPath . static::getSeparator() . $filePath;
+    }
+
+    /**
+     * Fix path separator
+     *
+     * @param  string $path
+     * @return string
+     */
+    public static function fixPath($path)
+    {
+        return str_replace('/', static::getSeparator(), $path);
     }
 
     /**

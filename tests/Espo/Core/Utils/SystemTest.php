@@ -2,6 +2,8 @@
 
 namespace tests\Espo\Core\Utils;
 
+use Espo\Core\Utils\Util;
+
 class SystemTest extends \PHPUnit_Framework_TestCase
 {
     protected $object;
@@ -37,7 +39,6 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'apache', $this->object->getServerType());
     }
 
-
     public function testGetOS()
     {
         $possibleValues = array(
@@ -52,7 +53,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase
     public function testGetRootDir()
     {
         $rootDir = dirname(__FILE__);
-        $rootDir = preg_replace('/\/tests\/Espo\/Core\/Utils\/?/', '', $rootDir, 1);
+        $rootDir = str_replace(Util::fixPath('/tests/Espo/Core/Utils'),'',$rootDir);
 
         $this->assertEquals($rootDir, $this->object->getRootDir());
     }
@@ -65,9 +66,4 @@ class SystemTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($phpBin, $this->object->getPhpBin());
         }
     }
-
-
-
 }
-
-?>

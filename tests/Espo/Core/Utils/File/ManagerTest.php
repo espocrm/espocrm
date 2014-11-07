@@ -3,7 +3,7 @@
 namespace tests\Espo\Core\Utils\File;
 
 use tests\ReflectionHelper;
-
+use Espo\Core\Utils\Util;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,8 +61,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testConcatPaths()
     {
-        $input = 'application/Espo/Resources/metadata/app/panel.json';
-        $result = 'application/Espo/Resources/metadata/app/panel.json';
+        $input = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
+        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
 
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
 
@@ -73,7 +73,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'app',
             'panel.json',
         );
-        $result = 'application/Espo/Resources/metadata/app/panel.json';
+        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
 
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
 
@@ -82,7 +82,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'application/Espo/Resources/metadata/app',
             'panel.json',
         );
-        $result = 'application/Espo/Resources/metadata/app/panel.json';
+        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
 
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
 
@@ -91,7 +91,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'application/Espo/Resources/metadata/app/',
             'panel.json',
         );
-        $result = 'application/Espo/Resources/metadata/app/panel.json';
+        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
 
         $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
     }
@@ -246,6 +246,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input)));
     }
@@ -273,8 +274,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = array (
-            'custom/Espo/Custom/Modules/ExtensionTest/File.json',
-            'custom/Espo/Custom/Modules/ExtensionTest/File.php',
+            Util::fixPath('custom/Espo/Custom/Modules/ExtensionTest/File.json'),
+            Util::fixPath('custom/Espo/Custom/Modules/ExtensionTest/File.php'),
         );
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, true)));
@@ -309,6 +310,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'custom/Espo/Custom/Modules',
             'custom/Espo/Custom/Modules/ExtensionTest',
         );
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, false)));
     }
@@ -358,6 +360,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.json',
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.php',
         );
+        $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $res = $this->object->copy($path, $cachePath, true);
         if ($res) {
