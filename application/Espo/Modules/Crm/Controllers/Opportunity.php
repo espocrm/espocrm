@@ -29,7 +29,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
 {
     public function actionReportByLeadSource($params, $data, $request)
     {
-        $level = $this->getAcl()->getLevel('Lead', 'read');
+        $level = $this->getAcl()->getLevel('Opportunity', 'read');
         if (!$level || $level == 'own') {
             throw new Forbidden();
         }
