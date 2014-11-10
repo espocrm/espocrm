@@ -1,57 +1,50 @@
 {
     "labels": {
         "Converted To": "Преобразован в",
-        "Create Lead": "Создать Лид",
+        "Create Lead": "Создать потенциального клиента",
         "Convert": "Преобразовать"
     },
     "fields": {
-        "name": "Полное имя",
-        "emailAddress": "E-mail",
-        "title": "Должность",
-        "website": "Сайт",
-        "phoneNumber": "Телефон",
-        "accountName": "Название организации",
+        "name": "Name",
+        "emailAddress": "",
+        "title": "Название",
+        "website": "Интернет сайт",
+        "phoneNumber": "Phone",
+        "accountName": "Имя контрагента",
         "doNotCall": "Не звонить",
-        "address": "Адрес",
-        "status": "Статус",
-        "source": "Источник",
-        "opportunityAmount": "Возможный доход",
-        "opportunityAmountConverted": "Возможный доход (конвертирован)",
+        "address": "",
+        "status": "статус",
+        "source": "",
+        "opportunityAmount": "Сумма сделки",
+        "opportunityAmountConverted": "Сумма сделки (конвертирован)",
         "description": "Описание",
-        "createdAccount": "Созданная организация",
-        "createdContact": "Созданный контакт",
-        "createdOpportunity": "Созданная возможность"
+        "createdAccount": "Контрагент",
+        "createdContact": "Контакт",
+        "createdOpportunity": "Cделка"
     },
     "links": {
     },
     "options": {
         "status": {
             "New": "Новый",
-            "Assigned": "Назначено",
+            "Assigned": "На рассмотрении",
             "In Process": "В процессе",
             "Converted": "Преобразовано",
             "Recycled": "Восстановленный",
             "Dead": "Мертв"
         },
         "source": {
-            "Call": "Звонок",
-            "Email": "E-mail",
-            "Partner": "Партнеры",
-            "Other": "Другое",
-            "friend": "подруга/друг",
-            "relative": "родственник",
-            "1happy": "1 happy",
-            "autopay": "автопей",
-            "vk": "вконтакт",
-            "wife": "жена/муж",
-            "BA": "ба/аба",
-            "mother": "мама/дочь",
-            "radio": "сарафанное радио",
-            "talk": "мое общение",
-            "magic": "волшебным образом"
+            "Call": "Вызов",
+            "Email": "",
+            "Existing Customer": "",
+            "Partner": "Партнер",
+            "Public Relations": "",
+            "Web Site": "",
+            "Campaign": "",
+            "Other": "Дополнительно"
         }
     },
     "presetFilters": {
-        "active": "Только активные"
+        "active": "Активный"
     }
 }

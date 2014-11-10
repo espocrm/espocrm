@@ -1,18 +1,18 @@
 {
     "fields": {
-        "name": "Имя",
-        "team": "Команда",
-        "status": "Состояние",
+        "name": "Name",
+        "team": "Группа",
+        "status": "статус",
         "assignToUser": "Связаться с пользователем",
-        "host": "Хост",
-        "username": "Имя пользователя",
+        "host": "",
+        "username": "",
         "password": "Пароль",
         "port": "Порт",
         "monitoredFolders": "Отслеживаемые разделы",
         "trashFolder": "Корзина",
         "ssl": "SSL",        
         "createCase": "Создать обращение",
-        "reply": "Ответ",
+        "reply": "Ответить",
         "caseDistribution": "Распределение обращений",
         "replyEmailTemplate": "Ответить по образцу",
         "replyFromAddress": "Ответить с адреса",
@@ -41,10 +41,10 @@
         }
     },
     "labels": {
-        "Create InboundEmail": "Создать входящее письмо",
+        "Create InboundEmail": "Создать входящую почту",
         "IMAP": "IMAP",
         "Actions": "Действия",
-        "Main": "Главная"        
+        "Main": ""        
     },
     "messages": {
         "couldNotConnectToImap": "Не получается подключиться к серверу IMAP"

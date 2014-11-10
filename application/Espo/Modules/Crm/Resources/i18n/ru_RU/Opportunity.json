@@ -1,19 +1,21 @@
 {
     "fields": {
-        "name": "Имя",
-        "account": "Организация",
+        "name": "Name",
+        "account": "Контрагент",
         "stage": "Стадия",
         "amount": "Сумма",
         "probability": "Вероятность успеха, %",
-        "leadSource": "Лид",
+        "leadSource": "Источник потенциального клиента",
         "doNotCall": "Не звонить",
         "closeDate": "Дата закрытия",
         "contacts": "Контакты",
         "description": "Описание",
-        "amountConverted": "Сумма (сконвертирована)"
+        "amountConverted": "Сумма (сконвертирована)",
+        "amountWeightedConverted": ""
     },
     "links": {
-        "contacts": "Контакты"
+        "contacts": "Контакты",
+        "documents": ""
     },
     "options": {
         "stage": {
@@ -30,10 +32,10 @@
         }
     },
     "labels": {
-        "Create Opportunity": "Создать возможность"
+        "Create Opportunity": "Создать сделку"
     },
     "presetFilters": {
-        "open": "Открытые",
+        "open": "Открыть",
         "won": "Успешные"
     }
 }

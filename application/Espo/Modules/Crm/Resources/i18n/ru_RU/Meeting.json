@@ -1,36 +1,39 @@
 {
     "fields": {
-        "name": "Имя",
+        "name": "Name",
         "parent": "Источник",
-        "status": "Статус",
+        "status": "статус",
         "dateStart": "Дата начала",
         "dateEnd": "Дата окончания",
-        "duration": "Продолжительность",
+        "duration": "",
         "description": "Описание",
-        "users": "Пользователи",
+        "users": "",
         "contacts": "Контакты",
-        "leads": "Лиды"
+        "leads": "Потенциальные клиенты"
     },
     "links": {
     },
     "options": {
         "status": {
-            "Planned": "Запланирована",
-            "Held": "Проведена",
-            "Not Held": "Не состоялась"
+            "Planned": "Запланированный",
+            "Held": "Выполнен",
+            "Not Held": "Не состоялся"
+        },
+        "acceptanceStatus": {
+            "None": "Нет",
+            "Accepted": "",
+            "Declined": ""
         }
     },
     "labels": {
         "Create Meeting": "Создать встречу",
-        "Set Held": "Была проведена",
-        "Set Not Held": "Не состоялась",
-        "Send Invitations": "Отправить приглашение",
-        "Saved as Held": "Сохранено как состоявшееся",
-        "Saved as Not Held": "Сохранено как несостоявшееся"
+        "Set Held": "Был выполнен",
+        "Set Not Held": "",
+        "Send Invitations": "Отправить приглашения"
     },
     "presetFilters": {
-        "planned": "Запланированные",
-        "held": "Проведенные",
+        "planned": "Запланированный",
+        "held": "Выполнен",
         "todays": "На сегодня"
     }
 }

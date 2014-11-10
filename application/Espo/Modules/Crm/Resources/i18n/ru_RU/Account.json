@@ -1,21 +1,22 @@
 {
     "fields": {
-        "name": "Имя",
-        "emailAddress": "Почта",
+        "name": "Name",
+        "emailAddress": "",
         "website": "Интернет сайт",
-        "phoneNumber": "Телефонный номер",
+        "phoneNumber": "Phone",
         "billingAddress": "Платежный адрес",
         "shippingAddress": "Почтовый адрес",
         "description": "Описание",
         "sicCode": "SicCode",
         "industry": "Промышленность",
-        "type": "Раздел",
+        "type": "Type",
         "contactRole": "Роль"
     },
     "links": {
         "contacts": "Контакты",
-        "opportunities": "Возможности",
-        "cases": "Обращения"
+        "opportunities": "Сделки",
+        "cases": "Обращения",
+        "documents": ""
     },
     "options": {
         "type": {
@@ -35,6 +36,7 @@
         }
     },
     "labels": {
-        "Create Account": "Создать новую организацию"
+        "Create Account": "Создать контрагента",
+        "Copy Billing": ""
     }
 }

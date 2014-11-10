@@ -1,16 +1,16 @@
 {
     "fields": {
-        "name": "Тема",
+        "name": "Name",
         "parent": "Источник",
-        "status": "Статус",
+        "status": "статус",
         "dateStart": "Дата начала",
         "dateEnd": "Дата окончания",
         "direction": "Категория",
-        "duration": "Длительность",
+        "duration": "",
         "description": "Описание",
-        "users": "Пользователи",
+        "users": "",
         "contacts": "Контакты",
-        "leads": "Лиды"
+        "leads": "Потенциальные клиенты"
     },
     "links": {
     },
@@ -23,17 +23,22 @@
         "direction": {
             "Outbound": "Исходящий",
             "Inbound": "Входящий"
+        },
+        "acceptanceStatus": {
+            "None": "Нет",
+            "Accepted": "",
+            "Declined": ""
         }
     },
     "labels": {
         "Create Call": "Новый звонок",
         "Set Held": "Был выполнен",
-        "Set Not Held": "Не состоялся",
-        "Send Invitations": "Отправить приглашения"
+        "Set Not Held": "",
+        "Send Invitations": "Отправить приглашения"        
     },
     "presetFilters": {
-        "planned": "Запланированные",
-        "held": "Отложенные",
+        "planned": "Запланированный",
+        "held": "Выполнен",
         "todays": "На сегодня"
     }
 }

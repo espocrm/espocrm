@@ -3,8 +3,8 @@
         "month": "месяц",
         "week": "неделя",
         "day": "день",
-        "agendaWeek": "На неделю",
-        "agendaDay": "На день"
+        "agendaWeek": "неделя",
+        "agendaDay": "день"
     },
     "labels": {
         "Today": "Сегодня",

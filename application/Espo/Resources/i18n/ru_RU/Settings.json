@@ -20,11 +20,11 @@
         "smtpPort": "Порт",
         "smtpAuth": "Авторизация",
         "smtpSecurity": "Безопасность",
-        "smtpUsername": "Имя пользователя",
-        "emailAddress": "E-mail",
+        "smtpUsername": "",
+        "emailAddress": "",
         "smtpPassword": "Пароль",
         "outboundEmailFromName": "От имени",
-        "outboundEmailFromAddress": "От адреса",
+        "outboundEmailFromAddress": "С адреса",
         "outboundEmailIsShared": "Может использоваться всеми пользователями",
         
         "recordsPerPage": "Показывать по страницам",
@@ -32,13 +32,13 @@
         "tabList": "Вкладки",
         "quickCreateList": "Быстрое создание списка",
         
-        "exportDelimiter": "Экспортировать разделитель",
+        "exportDelimiter": "Разделитель (Перемещение)",
         
         "authenticationMethod": "Метод аутентификации",
-        "ldapHost": "Хост",
+        "ldapHost": "",
         "ldapPort": "Порт",
         "ldapAuth": "Авторизация",
-        "ldapUsername": "Имя пользователя",
+        "ldapUsername": "",
         "ldapPassword": "Пароль",
         "ldapBindRequiresDn": "Привязка по домену",
         "ldapBaseDn": "Базовый домен",
@@ -52,7 +52,9 @@
         "ldapOptReferrals": "Opt Referrals",
         "disableExport": "Отмена экпортирования (доступно только администратору)",
         "assignmentEmailNotifications": "Оповещать по email при назначении",
-        "assignmentEmailNotificationsEntityList": "Список вещей для оповещения"
+        "assignmentEmailNotificationsEntityList": "Список вещей для оповещения",
+
+        "b2cMode": ""
     },
     "options": {
         "weekStart": {
@@ -64,7 +66,7 @@
         "recordsPerPageSmall": "Число записей в панелях связей."
     },
     "labels": {
-        "System": "Система",
+        "System": "",
         "Locale": "Локальные настройки",
         "SMTP": "SMTP",
         "Configuration": "Конфигурация",

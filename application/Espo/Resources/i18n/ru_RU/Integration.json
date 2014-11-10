@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "enabled": "",
+        "clientId": "",
+        "clientSecret": "",
+        "redirectUri": ""
+    },
+    "messages": {
+        "selectIntegration": ""
+    },
+    "help": {
+        "Google": ""
+    }
+}

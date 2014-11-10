@@ -1,30 +1,31 @@
 {
     "fields": {
-        "name": "Имя",
+        "name": "Name",
         "userName": "Имя пользователя",
         "title": "Название",
-        "isAdmin": "Администратор",
+        "isAdmin": "",
         "defaultTeam": "Группа по умолчанию",
-        "emailAddress": "E-mail",
-        "phoneNumber": "Телефон",
+        "emailAddress": "",
+        "phoneNumber": "Phone",
         "roles": "Роли",        
         "password": "Пароль",
         "passwordConfirm": "Подтвердите пароль",
         "newPassword": "Новый пароль"
     },
     "links": {
-        "teams": "Группы",
+        "teams": "",
         "roles": "Роли"
     },
     "labels": {
         "Create User": "Создать пользователя",
         "Generate": "Сгенерировать",
         "Access": "Доступ",
-        "Preferences": "Преимущества",
+        "Preferences": "Настройки",
         "Change Password": "Изменить пароль"
     },
     "tooltips": {
-        "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой команде."
+        "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой команде.",
+        "userName": ""
     },
     "messages": {
         "passwordWillBeSent": "Пароль будет выслан на почтовый адрес пользователя",

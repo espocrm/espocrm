@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "title": "Название",
+        "dateFrom": "Дата от",
+        "dateTo": "Дата к",
+        "autorefreshInterval": "Интервал авто-обновления",
+        "displayRecords": "Отобразить записи",
+        "isDoubleHeight": "Высота 2x"
+    }
+}

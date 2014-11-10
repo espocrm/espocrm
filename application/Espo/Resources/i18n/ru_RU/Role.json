@@ -1,11 +1,11 @@
 {
     "fields": {
-        "name": "Имя",
-        "roles": "Функции"
+        "name": "Name",
+        "roles": "Роли"
     },
     "links": {
-        "users": "Пользователи",
-        "teams": "Группы"
+        "users": "",
+        "teams": ""
     },
     "labels": {
         "Access": "Доступ",
@@ -26,8 +26,8 @@
     },
     "actions": {
         "read": "Чтение",
-        "edit": "Редактирование",
-        "delete": "Удаление"
+        "edit": "Редактировать",
+        "delete": "Удалить"
     },
     "messages": {
         "changesAfterClearCache": "Все изменения применятся только после очистки кэша."

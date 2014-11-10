@@ -1,10 +1,10 @@
 {
     "fields": {
-        "name": "Имя",
+        "name": "Name",
         "parent": "Источник",
-        "status": "Статус",
+        "status": "статус",
         "dateStart": "Дата начала",
-        "dateEnd": "Дата окончания",
+        "dateEnd": "",
         "priority": "Приоритет",
         "description": "Описание",
         "isOverdue": "Просрочена"
@@ -26,11 +26,12 @@
         }
     },
     "labels": {
-        "Create Task": "Создать задачу"
+        "Create Task": "Создать задачу",
+        "Complete": ""
     },
     "presetFilters": {
-        "active": "Активные",
-        "completed": "Завершенные",
+        "actual": "",
+        "completed": "Завершена",
         "todays": "На сегодня",
         "overdue": "Просроченные"
     }

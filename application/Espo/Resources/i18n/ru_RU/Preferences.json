@@ -14,10 +14,10 @@
         "smtpPort": "Порт",
         "smtpAuth": "Авторизация",
         "smtpSecurity": "Безопасность",
-        "smtpUsername": "Имя пользователя",
-        "emailAddress": "E-mail",
+        "smtpUsername": "",
+        "emailAddress": "",
         "smtpPassword": "Пароль",
-        "smtpEmailAddress": "Адрес e-mail",
+        "smtpEmailAddress": "E-mail адрес",
         
         "exportDelimiter": "Разделитель (Перемещение)",
         
@@ -30,5 +30,8 @@
             "0": "Воскресенье",
             "1": "Понедельник"
         }
+    },
+    "labels": {
+        "Notifications": "Оповещения"
     }
 }

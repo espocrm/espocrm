@@ -1,6 +1,6 @@
 {
     "fields": {
-        "status": "Статус",
+        "status": "статус",
         "executionTime": "Время запуска"
     }
 }

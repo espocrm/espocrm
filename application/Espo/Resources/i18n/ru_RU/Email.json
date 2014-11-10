@@ -15,7 +15,8 @@
         "selectTemplate": "Выбрать шаблон",
         "fromEmailAddress": "С адреса",
         "toEmailAddresses": "На андрес",
-        "emailAddress": "E-mail адрес"
+        "emailAddress": "E-mail адрес",
+        "deliveryDate": "Дата доставки"
     },
     "links": {
     },
@@ -27,7 +28,21 @@
     },
     "labels": {
         "Create Email": "Отправить письмо в архив",
-        "Compose": "Новое сообщение"
+        "Archive Email": "Отправить письмо в архив",
+        "Compose": "Новое сообщение",
+        "Reply": "Ответить",
+        "Reply to All": "Ответить всем",
+        "Forward": "Переслать",
+        "Original message": "Оригинал сообщение",
+        "Forwarded message": "",
+        "Email Accounts": "",
+        "Send Test Email": "Отправить тестовое сообщение",
+        "Send": "Отправить",
+        "Email Address": "E-mail адрес"
+    },
+    "messages": {
+        "noSmtpSetup": "",
+        "testEmailSent": ""
     },
     "presetFilters": {
         "sent": "Отправлено",

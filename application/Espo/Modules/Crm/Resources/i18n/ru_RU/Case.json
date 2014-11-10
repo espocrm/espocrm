@@ -1,12 +1,12 @@
 {
     "fields": {
-        "name": "Имя",
+        "name": "Name",
         "number": "Номер",
-        "status": "Статус",
-        "account": "Организация",
+        "status": "статус",
+        "account": "Контрагент",
         "contact": "Контакт",
         "priority": "Приоритет",
-        "type": "Раздел",
+        "type": "Type",
         "description": "Описание"
     },
     "links": {
@@ -36,7 +36,7 @@
         "Create Case": "Создать обращение"
     },
     "presetFilters": {
-        "open": "Открыто",
+        "open": "Открыть",
         "closed": "Закрыто"
     }
 }
