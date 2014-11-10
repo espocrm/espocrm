@@ -8,10 +8,10 @@
         "username": "Benutzername",
         "password": "Passwort",
         "port": "Port",
-        "monitoredFolders": "Überwachter Ordner",
+        "monitoredFolders": "Überwachte Ordner",
         "trashFolder": "Papierkorb Ordner",
         "ssl": "SSL",        
-        "createCase": "Neuer Fall",
+        "createCase": "Fall erstellen",
         "reply": "Antworten",
         "caseDistribution": "Fall Verteilung",
         "replyEmailTemplate": "Vorlage E-Mail Antwort",
@@ -20,12 +20,12 @@
         "replyFromName": "Von Name antworten"
     },
     "tooltips": {
-        "reply": "Absender informieren dass die E-Mail empfangen wurde.",
+        "reply": "Absender informieren, dass die E-Mail empfangen wurde.",
         "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
-        "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an, um Antworten hier zu empfangen.",
+        "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
         "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
-        "assignToUser": "Benutzer E-Mails\/Fälle werden zugewiesen an",
-        "team": "Team E-Mails\/Fälle werden verknüpft mit"
+        "assignToUser": "Benutzer E-Mails/Fälle werden zugewiesen an",
+        "team": "Team E-Mails/Fälle werden verknüpft mit"
     },
     "links": {
     },
@@ -37,7 +37,7 @@
         "caseDistribution": {
             "Direct-Assignment": "Direkte Zuordnung",
             "Round-Robin": "Umlauf-Verfahren",
-            "Least-Busy": "geringste Auslastung"
+            "Least-Busy": "Geringste Auslastung"
         }
     },
     "labels": {

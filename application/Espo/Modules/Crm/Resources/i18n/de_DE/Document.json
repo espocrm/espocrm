@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Create Document": "Neues Dokument",
+        "Create Document": "Dokument erstellen",
         "Details": "Details"
     },
     "fields": {
@@ -10,12 +10,12 @@
         "type": "Typ",
         "source": "Quelle",
         "publishDate": "Veröffentlichungsdatum",
-        "expirationDate": "Verfallsdatum",
+        "expirationDate": "Ablaufdatum",
         "description": "Beschreibung"
     },
     "links": {
-        "accounts": "Kontakte",
-        "opportunities": "Verkaufsshancen"
+        "accounts": "Firmen",
+        "opportunities": "Verkaufschancen"
     },
     "options": {
         "status": {

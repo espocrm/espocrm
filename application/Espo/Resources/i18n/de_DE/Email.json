@@ -15,19 +15,34 @@
         "selectTemplate": "Vorlage wählen",
         "fromEmailAddress": "Von Adresse",
         "toEmailAddresses": "An Adresse",
-        "emailAddress": "E-Mail Adresse"
+        "emailAddress": "E-Mail Adresse",
+        "deliveryDate": "Zustelldatum"
     },
     "links": {
     },
     "options": {
         "Draft": "Entwurf",
-        "Sending": "wird gesendet",
+        "Sending": "Wird gesendet",
         "Sent": "Gesendet",
         "Archived": "Archiviert"
     },
     "labels": {
         "Create Email": "E-Mail archivieren",
-        "Compose": "Erstellen"
+        "Archive Email": "E-Mail archivieren",
+        "Compose": "Erstellen",
+        "Reply": "Antworten",
+        "Reply to All": "Allen antworten",
+        "Forward": "Weiterleiten",
+        "Original message": "Originalnachricht",
+        "Forwarded message": "Weitergeleitete Nachricht:",
+        "Email Accounts": "E-Mail Konten",
+        "Send Test Email": "Test E-Mail senden",
+        "Send": "Senden",
+        "Email Address": "E-Mail Adresse"
+    },
+    "messages": {
+        "noSmtpSetup": "Keine SMTP Einstellung, {link}. ",
+        "testEmailSent": "Eine Test E-Mail wurde gesendet"
     },
     "presetFilters": {
         "sent": "Gesendet",

@@ -15,7 +15,8 @@
     "links": {
         "contacts": "Kontakte",
         "opportunities": "Verkaufschancen",
-        "cases": "Fälle"
+        "cases": "Fälle",
+        "documents": "Dokumente"
     },
     "options": {
         "type": {
@@ -35,6 +36,7 @@
         }
     },
     "labels": {
-        "Create Account": "Neue Firma"
+        "Create Account": "Firma erstellen",
+        "Copy Billing": "Rechnungsadresse kopieren"
     }
 }

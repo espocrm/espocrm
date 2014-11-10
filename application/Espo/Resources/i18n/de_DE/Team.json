@@ -10,6 +10,6 @@
         "roles": "Alle Benutzer dieses Teams erben die Zugriffsrechte von ausgewählten Rollen."
     },
     "labels": {
-        "Create Team": "Neues Team"
+        "Create Team": "Team erstellen"
     }
 }

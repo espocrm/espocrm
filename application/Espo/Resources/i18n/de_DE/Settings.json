@@ -52,7 +52,9 @@
         "ldapOptReferrals": "Opt Referrals",
         "disableExport": "Export deaktivieren (nur Admin ist berechtigt)",
         "assignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen senden",
-        "assignmentEmailNotificationsEntityList": "Module für Benachrichtigungen"
+        "assignmentEmailNotificationsEntityList": "Module für Benachrichtigungen",
+
+        "b2cMode": "B2C Modus"
     },
     "options": {
         "weekStart": {

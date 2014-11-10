@@ -26,7 +26,8 @@
         }
     },
     "labels": {
-        "Create Task": "Neue Aufgabe"
+        "Create Task": "Neue Aufgabe",
+        "Complete": "Fertig"
     },
     "presetFilters": {
         "actual": "Tatsächlich",

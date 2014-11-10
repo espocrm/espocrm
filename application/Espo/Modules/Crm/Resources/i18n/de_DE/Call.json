@@ -23,11 +23,16 @@
         "direction": {
             "Outbound": "Ausgehend",
             "Inbound": "Eingehend"
+        },
+        "acceptanceStatus": {
+            "None": "Kein(e)",
+            "Accepted": "Akzeptiert",
+            "Declined": "Abgelehnt"
         }
     },
     "labels": {
-        "Create Call": "Neuer Anruf",
-        "Set Held": "Auf Gehalten setzen",
+        "Create Call": "Anruf erstellen",
+        "Set Held": "Auf gehalten setzen",
         "Set Not Held": "Auf nicht gehalten setzen",
         "Send Invitations": "Einladungen versenden"        
     },

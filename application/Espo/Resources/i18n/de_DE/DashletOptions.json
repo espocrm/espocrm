@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "title": "Funktion",
+        "dateFrom": "Von Datum",
+        "dateTo": "Bis Datum",
+        "autorefreshInterval": "Aktualisierungsintervall",
+        "displayRecords": "Sätze anzeigen",
+        "isDoubleHeight": "Zweifache Höhe"
+    }
+}

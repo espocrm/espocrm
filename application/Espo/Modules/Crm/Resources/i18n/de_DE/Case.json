@@ -33,7 +33,7 @@
         }
     },
     "labels": {
-        "Create Case": "Neuer Fall"
+        "Create Case": "Fall erstellen"
     },
     "presetFilters": {
         "open": "Offen",

@@ -13,7 +13,7 @@
         "Add Field": "Feld hinzufügen",
         "Settings": "Einstellungen",
         "Scheduled Jobs": "Geplante Jobs",
-        "Upgrade": "Upgrade",
+        "Upgrade": "Aktualisierung",
         "Clear Cache": "Cache leeren",
         "Rebuild": "Neu aufbauen",
         "Teams": "Teams",
@@ -26,8 +26,21 @@
         "Field Manager": "Felder anpassen",
         "User Interface": "Benutzeroberfläche",
         "Auth Tokens": "Auth Tokens",
-        "Authentication": "Authentifizierung:",
-        "Currency": "Währung"
+        "Authentication": "Authentifizierung",
+        "Currency": "Währung",
+        "Integrations": "Integrationen",
+        "Extensions": "Erweiterungen",
+        "Upload": "Hochladen",
+        "Installing...": "Installiere...",
+        "Upgrading...": "Aktualisiere....",
+        "Upgraded successfully": "Erfolgreich aktualisiert",
+        "Installed successfully": "Erfolgreich installiert",
+        "Ready for upgrade": "Bereit für Aktualisierung",
+        "Run Upgrade": "Aktualisierung duchführen",
+        "Install": "Installieren",
+        "Ready for installation": "Bereit für Installation",
+        "Uninstalling...": "Deinstalliere...",
+        "Uninstalled": "Deinstalliert"
     },
     "layouts": {
         "list": "Liste",
@@ -40,8 +53,8 @@
     },
     "fieldTypes": {
         "address": "Adresse",
-        "array": "Array",
-        "foreign": "Fremd",
+        "array": "Mehrfachauswahl",
+        "foreign": "Fremdbezug",
         "duration": "Dauer",
         "password": "Passwort",
         "parsonName": "Person Name",
@@ -49,7 +62,7 @@
         "bool": "Bool",
         "currency": "Währung",
         "date": "Datum",
-        "datetime": "Datum\/Zeit",
+        "datetime": "Datum/Zeit",
         "email": "E-Mail",
         "enum": "Einfachauswahl",
         "enumInt": "Einfachauswahl Ganzzahlwerte",
@@ -58,14 +71,15 @@
         "int": "Ganzzahl",
         "link": "Link",
         "linkMultiple": "Mehrfachlinks",
-        "linkParent": "Mutterlink",
+        "linkParent": "Übergeordneter Link",
         "multienim": "Mehrfachauswahl",
         "phone": "Telefon",
         "text": "Textbox",
         "url": "URL",
         "varchar": "Text (max. 255)",
         "file": "Datei",
-        "image": "Bild"                
+        "image": "Bild",
+        "multiEnum": "Mehrfachauswahl"                
     },
     "fields": {
         "type": "Typ",
@@ -85,14 +99,19 @@
         "previewSize": "Vorschau Größe"                
     },
     "messages": {
-        "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}<\/strong> aktualisiert. Dies kann eine Weile dauern.",
-        "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}<\/strong> aktualisiert. Bitte aktualisieren Sie Ihren Browser.",
-        "upgradeBackup": "Wir empfehlen, vor der Aktualisierung von EspoCRM Verzeichnis sowie Datenbank zu sichern.",
+        "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
+        "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert. Laden Sie Sie Ihr Browser Fenster neu.",
+        "upgradeBackup": "Wir empfehlen, vor der Aktualisierung von EspoCRM das Programmverzeichnis sowie die Datenbank zu sichern.",
         "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen kann nicht gleich dem Dezimaltrennzeichen sein",
-        "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail-Adresse.",
+        "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
         "selectEntityType": "Modul links auswählen",
         "selectUpgradePackage": "Aktualisierungspaket auswählen",
-        "selectLayout": "Layout zum Editieren links auswählen"
+        "downloadUpgradePackage": "Benötigte Aktualisierungs Paket(e) <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">hier</a> herunterladen.",
+        "selectLayout": "Layout zum Editieren links auswählen",
+        "selectExtensionPackage": "Erweiterungspaket auswählen",
+        "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
+        "installExtension": "Erweiterung {name} {version} ist bereit für die Installation",
+        "uninstallConfirmation": "Wollen Sie die Erweiterung wirklich deinstallieren?"
     },
     "descriptions": {
         "settings": "Systemeinstellungen der Applikation.",
@@ -104,15 +123,16 @@
         "teams": "Teamverwaltung.",
         "roles": "Rollenverwaltung.",
         "outboundEmails": "SMTP Einstellungen für ausgehende E-Mails.",
-        "inboundEmails": "IMAP Gruppen E-Mail Konten. E-Mail Import und E-Mail für Fälle.",
+        "inboundEmails": "IMAP Gruppenkonten. E-Mail Import und E-Mails für Fälle.",
         "emailTemplates": "Vorlagen für ausgehende E-Mails.",
         "import": "Datenimport aus CSV Datei.",
         "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
         "fieldManager": "Neue Felder erstellen oder bestehende anpassen.",
         "userInterface": "Benutzeroberfläche anpassen.",
-        "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum",
+        "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum.",
         "authentication": "Authentifizierungs Einstellungen.",
-        "currency": "Währungseinstellungen und Kurse"
+        "currency": "Währungseinstellungen und Kurse",
+        "extensions": "Erweiterungen installieren oder deinstallieren"
     },
     "options": {
         "previewSize": {

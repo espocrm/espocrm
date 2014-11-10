@@ -10,7 +10,8 @@
         "Call": "Anruf",
         "Task": "Aufgabe",
         "Case": "Fall",
-        "InboundEmail": "Eingehende E-Mails"
+        "InboundEmail": "Eingehende E-Mails",
+        "Document": "Dokument"
     },
     "scopeNamesPlural": {
         "Account": "Firmen",
@@ -23,7 +24,8 @@
         "Call": "Anrufe",
         "Task": "Aufgaben",
         "Case": "Fälle",
-        "InboundEmail": "Eingehende E-Mails"
+        "InboundEmail": "Eingehende E-Mails",
+        "Document": "Dokumente"
     },
     "dashlets": {
         "Leads": "Meine Interessenten",
@@ -56,17 +58,17 @@
         "billingAddressCity": "Ort",
         "billingAddressCountry": "Land",
         "billingAddressPostalCode": "PLZ",
-        "billingAddressState": "Bundesland",
+        "billingAddressState": "Bundesland/Kanton",
         "billingAddressStreet": "Straße",
         "addressCity": "Ort",
         "addressStreet": "Straße",
         "addressCountry": "Land",
-        "addressState": "Bundesland",
+        "addressState": "Bundesland/Kanton",
         "addressPostalCode": "PLZ",        
         "shippingAddressCity": "Ort (Lieferadresse)",
         "shippingAddressStreet": "Straße (Lieferadresse)",
         "shippingAddressCountry": "Land (Lieferadresse)",
-        "shippingAddressState": "Bundesland\/Kanton (Lieferadresse)",
+        "shippingAddressState": "Bundesland/Kanton (Lieferadresse)",
         "shippingAddressPostalCode": "PLZ (Lieferadresse)"
     },
     "links": {
@@ -76,6 +78,13 @@
         "meetings": "Meetings",
         "calls": "Anrufe",
         "tasks": "Aufgaben",
-        "emails": "E-Mails"
+        "emails": "E-Mails",
+        "accounts": "Firmen",
+        "cases": "Fälle",
+        "documents": "Dokumente",
+        "account": "Firma",
+        "opportunity": "Verkaufschance",        
+        "contact": "Kontakt",
+        "parent": "Bezieht sich auf"
     }
 }

@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Name",
+        "status": "Status",
+        "host": "Host",
+        "username": "Benutzername",
+        "password": "Passwort",
+        "port": "Port",
+        "monitoredFolders": "Überwachte Ordner",
+        "ssl": "SSL",
+        "fetchSince": "Holen seit"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Aktiv",
+            "Inactive": "Inaktiv"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "E-Mail Konto erstellen",
+        "IMAP": "IMAP",
+        "Main": "Wichtig"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"
+    }
+}

@@ -18,15 +18,18 @@
             "Planned": "Geplant",
             "Held": "Durchgeführt",
             "Not Held": "Nicht durchgeführt"
+        },
+        "acceptanceStatus": {
+            "None": "Kein(e)",
+            "Accepted": "Akzeptiert",
+            "Declined": "Abgelehnt"
         }
     },
     "labels": {
-        "Create Meeting": "Neues Meeting",
-        "Set Held": "Auf Gehalten setzen",
+        "Create Meeting": "Meeting erstellen",
+        "Set Held": "Auf gehalten setzen",
         "Set Not Held": "Auf nicht gehalten setzen",
-        "Send Invitations": "Einladungen versenden",
-        "Saved as Held": "Gespeichert als durchgeführt",
-        "Saved as Not Held": "Gespeichert als nicht durchgeführt"
+        "Send Invitations": "Einladungen versenden"
     },
     "presetFilters": {
         "planned": "Geplant",

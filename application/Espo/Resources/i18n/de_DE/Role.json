@@ -9,7 +9,7 @@
     },
     "labels": {
         "Access": "Zugang",
-        "Create Role": "Neue Rolle"
+        "Create Role": "Rolle erstellen"
     },
     "options": {
         "accessList": {
