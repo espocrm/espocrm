@@ -74,7 +74,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
                 shadowSize: false,
                 pie: {
                     show: true, 
-                    explode: 4,
+                    explode: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
                     sizeRatio: 0.8,
