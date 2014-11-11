@@ -23,7 +23,7 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
     return Dep.extend({
     
-        sideView: 'User.Record.EditSide',
+        sideView: false,
         
         setup: function () {
             Dep.prototype.setup.call(this);

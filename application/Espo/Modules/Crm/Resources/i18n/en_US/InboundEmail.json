@@ -10,14 +10,15 @@
         "port": "Port",
         "monitoredFolders": "Monitored Folders",
         "trashFolder": "Trash Folder",
-        "ssl": "SSL",        
+        "ssl": "SSL",
         "createCase": "Create Case",
         "reply": "Reply",
         "caseDistribution": "Case Distribution",
         "replyEmailTemplate": "Reply Email Template",
         "replyFromAddress": "Reply From Address",
         "replyToAddress": "Reply To Address",
-        "replyFromName": "Reply From Name"
+        "replyFromName": "Reply From Name",
+        "targetUserPosition": "Target User Position"
     },
     "tooltips": {
         "reply": "Notify email senders that their emails has been received.",
@@ -44,7 +45,7 @@
         "Create InboundEmail": "Create Inbound Email",
         "IMAP": "IMAP",
         "Actions": "Actions",
-        "Main": "Main"        
+        "Main": "Main"
     },
     "messages": {
         "couldNotConnectToImap": "Could not connect to IMAP server"

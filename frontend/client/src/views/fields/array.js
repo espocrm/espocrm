@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 
@@ -30,7 +30,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         detailTemplate: 'fields.array.detail',
 
         editTemplate: 'fields.array.edit',
-        
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -44,15 +44,15 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                 itemHtmlList: itemHtmlList
             }, Dep.prototype.data.call(this));
         },
-        
+
         events: {
             'click [data-action="removeValue"]': function (e) {
                 var value = $(e.currentTarget).data('value');
                 this.removeValue(value);
             },
-            'click [data-action="showAddModal"]': function () {            
+            'click [data-action="showAddModal"]': function () {
                 var options = [];
-                
+
                 this.params.options.forEach(function (item) {
                     if (!~this.selected.indexOf(item)) {
                         options.push(item);
@@ -60,7 +60,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                 }, this);
                 this.createView('addModal', 'Modals.ArrayFieldAdd', {
                     options: options,
-                    translatedOptions: this.translatedOptions                    
+                    translatedOptions: this.translatedOptions
                 }, function (view) {
                     view.render();
                     this.listenToOnce(view, 'add', function (item) {
@@ -72,10 +72,10 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         },
 
         setup: function () {
-            Dep.prototype.setup.call(this);            
-            
+            Dep.prototype.setup.call(this);
+
             var t = {};
-            
+
             if (this.params.translation) {
                 var data = this.getLanguage().data;
                 var arr = this.params.translation.split('.');
@@ -89,14 +89,14 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
             } else {
                 t = this.translate(this.name, 'options', this.model.name);
             }
-            
-            this.listenTo(this.model, 'change:' + this.name, function () {
-                this.selected = this.model.get(this.name);
-            }, this);                    
-            
 
-            this.translatedOptions = null;            
-                    
+            this.listenTo(this.model, 'change:' + this.name, function () {
+                this.selected = Espo.Utils.clone(this.model.get(this.name));
+            }, this);
+
+
+            this.translatedOptions = null;
+
             var translatedOptions = {};
             if (this.params.options) {
                 this.params.options.forEach(function (o) {
@@ -107,38 +107,37 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                     }
                 }.bind(this));
                 this.translatedOptions = translatedOptions;
-            }            
-            
-            this.selected = _.clone(this.model.get(this.name) || []);
+            }
+
+            this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
             if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
-                this.selected = [];    
+                this.selected = [];
             }
         },
-        
+
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {            
-                this.$list = this.$el.find('.list-group');            
+            if (this.mode == 'edit' || this.mode == 'search') {
+                this.$list = this.$el.find('.list-group');
                 var $select = this.$select = this.$el.find('.select');
-            
-                if (!this.params.options) {                
+
+                if (!this.params.options) {
                     $select.on('keypress', function (e) {
                         if (e.keyCode == 13) {
                             var value = $select.val();
                             this.addValue(value);
                             $select.val('');
-
                         }
                     }.bind(this));
                 }
-            
+
                 this.$list.sortable({
                     stop: function () {
-                        this.trigger('change');    
+                        this.trigger('change');
                     }.bind(this)
                 });
-            }    
+            }
         },
-        
+
         getValueForDisplay: function () {
             return this.selected.map(function (item) {
                 if (this.translatedOptions != null) {
@@ -150,8 +149,8 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
             }, this).join(', ');
         },
 
-        getItemHtml: function (value) {            
-            if (this.translatedOptions != null) {        
+        getItemHtml: function (value) {
+            if (this.translatedOptions != null) {
                 for (var item in this.translatedOptions) {
                     if (this.translatedOptions[item] == value) {
                         value = item;
@@ -159,46 +158,41 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                     }
                 }
             }
-            
+
             var label = value;
             if (this.translatedOptions) {
                 label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
-            }    
-            var html = '<div class="list-group-item" data-value="' + value + '">' + label +    
+            }
+            var html = '<div class="list-group-item" data-value="' + value + '">' + label +
             '&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
             '</div>';
 
             return html;
         },
-        
-        addValue: function (value) {        
+
+        addValue: function (value) {
             if (this.selected.indexOf(value) == -1) {
                 var html = this.getItemHtml(value);
                 this.$list.append(html);
                 this.selected.push(value);
                 this.trigger('change');
-            }        
+            }
         },
-        
+
         removeValue: function (value) {
             this.$list.children('[data-value="' + value + '"]').remove();
             var index = this.selected.indexOf(value);
             this.selected.splice(index, 1);
             this.trigger('change');
-        },    
+        },
 
         fetch: function () {
-            var $li = this.$el.find('.list-group').children('.list-group-item');
-            var value = [];
-            $li.each(function (i, li) {
-                value.push($(li).data('value'));
-            });                
             var data = {};
-            data[this.name] = value;
+            data[this.name] = Espo.Utils.clone(this.selected || []);
             return data;
         },
-        
-        validateRequired: function () {                
+
+        validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {

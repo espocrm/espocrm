@@ -55,6 +55,10 @@
             "default": "Direct-Assignment",
             "tooltip": true
         },
+        "targetUserPosition": {
+            "type": "enum",
+            "view": "Crm:InboundEmail.Fields.TargetUserPosition"
+        },
         "reply": {
             "type": "bool",
             "tooltip": true

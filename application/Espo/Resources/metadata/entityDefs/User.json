@@ -1,7 +1,8 @@
 {
     "fields": {
         "isAdmin": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "userName": {
             "type": "varchar",
@@ -60,11 +61,22 @@
             "notStorable": true,
             "disabled": true
         },
+        "teamRole": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true,
+            "columns": {
+                "role": "userRole"
+            },
+            "view": "User.Fields.Teams"
         },
         "roles": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         }
     },
     "links": {
@@ -75,7 +87,13 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "foreign": "users"
+            "foreign": "users",
+            "additionalColumns": {
+                "role": {
+                    "type": "varchar",
+                    "len": 100
+                }
+            }
         },
         "roles": {
             "type": "hasMany",

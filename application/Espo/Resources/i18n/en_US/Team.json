@@ -1,13 +1,15 @@
 {
     "fields": {
         "name": "Name",
-        "roles": "Roles"
+        "roles": "Roles",
+        "positionList": "Position List"
     },
     "links": {
         "users": "Users"
     },
     "tooltips": {
-        "roles": "All users from this team will get access settings from selected roles."
+        "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
+        "positionList": "Available positions in this team. E.g. Salesperson, Manager."
     },
     "labels": {
         "Create Team": "Create Team"

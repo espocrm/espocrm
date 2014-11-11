@@ -1,11 +1,17 @@
 [
     {
-        "label":"Overview",
-        "rows":[
-            [{"name":"userName"},{"name":"isAdmin"}],
-            [{"name":"name"},{"name":"title"}],
-            [{"name":"defaultTeam"}],
-            [{"name":"emailAddress"},{"name":"phoneNumber"}]
+        "label": "Overview",
+        "rows": [
+            [{"name":"userName"}],
+            [{"name": "name"}, {"name": "title"}],
+            [{"name": "emailAddress"}, {"name": "phoneNumber"}]
+        ]
+    },
+    {
+        "label": "Teams and Access Control",
+        "rows": [
+            [{"name":"defaultTeam"}, {"name":"isAdmin"}],
+            [{"name":"teams"}, {"name":"roles"}]
         ]
     }
 ]

@@ -7,6 +7,15 @@
         "roles": {
             "type": "linkMultiple",
             "tooltip": true
+        },
+        "positionList": {
+            "type": "array",
+            "tooltip": true
+        },
+        "userRole": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         }
     },
     "links": {

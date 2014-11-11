@@ -3,10 +3,6 @@
         "rows": [
             [
                 {"name": "name"}
-            ],
-            [
-                {"name": "roles"},
-                {"name": "positionList"}
             ]
         ]
     }

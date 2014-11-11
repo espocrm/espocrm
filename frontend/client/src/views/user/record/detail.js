@@ -23,7 +23,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
     
-        sideView: 'User.Record.DetailSide',
+        sideView: false,
         
         editModeEnabled: false,
         

@@ -21,6 +21,28 @@
                 }
             ]
         },
+        "caseDistribution": {
+            "map": {
+                "Round-Robin" : [
+                    {
+                        "action": "show",
+                        "fields": ["targetUserPosition"]
+                    }
+                ],
+                "Least-Busy" : [
+                    {
+                        "action": "show",
+                        "fields": ["targetUserPosition"]
+                    }
+                ]
+            },
+            "default": [
+                {
+                    "action": "hide",
+                    "fields": ["targetUserPosition"]
+                }
+            ]
+        },
         "reply": {
             "map": {
                 "true" : [
@@ -40,7 +62,7 @@
                 }, {
                     "action": "setNotRequired",
                     "fields": ["replyEmailTemplate"]
-                }                
+                }
             ]
         }
     },

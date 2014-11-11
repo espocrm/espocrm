@@ -73,6 +73,7 @@ abstract class Mapper implements IMapper
         'leftJoins',
         'distinct',
         'joinConditions',
+        'additionalColumnsConditions'
     );
 
     public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query $query) {
@@ -253,7 +254,12 @@ abstract class Mapper implements IMapper
 
             case IEntity::MANY_MANY:
 
-                $MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet);                
+                $additionalColumnsConditions = null;
+                if (!empty($params['additionalColumnsConditions'])) {
+                    $additionalColumnsConditions = $params['additionalColumnsConditions'];
+                }
+
+                $MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet, $additionalColumnsConditions);                
                 
                 if (empty($params['customJoin'])) {
                     $params['customJoin'] = '';
@@ -732,7 +738,7 @@ abstract class Mapper implements IMapper
         return $entity;
     }
 
-    protected function getMMJoin(IEntity $entity, $relationName, $keySet = false)
+    protected function getMMJoin(IEntity $entity, $relationName, $keySet = false, $conditions = array())
     {
         $relOpt = $entity->relations[$relationName];
 
@@ -757,6 +763,12 @@ abstract class Mapper implements IMapper
 
         if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
             foreach ($relOpt['conditions'] as $f => $v) {
+                $join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
+            }
+        }
+
+        if (!empty($conditions) && is_array($conditions)) {
+            foreach ($conditions as $f => $v) {
                 $join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
             }
         }

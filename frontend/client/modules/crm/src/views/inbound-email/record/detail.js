@@ -29,7 +29,7 @@ Espo.define('Crm:Views.InboundEmail.Record.Detail', 'Views.Record.Detail', funct
         },
 
         afterRender: function () {
-            Dep.prototype.afterRender.call(this);            
+            Dep.prototype.afterRender.call(this);
             this.initSslFieldListening();
         },
 
@@ -41,6 +41,12 @@ Espo.define('Crm:Views.InboundEmail.Record.Detail', 'Views.Record.Detail', funct
                     this.getFieldView('team').setNotRequired();
                 }
             }.bind(this);
+
+            this.listenTo(this.model, 'change:createCase', function (model) {
+                if (!model.get('createCase')) {
+                    this.model.set('caseDistribution', 'Direct-Assignment');
+                }
+            }, this);
 
             this.on('render', function () {
                 handleRequirement(this.model);
