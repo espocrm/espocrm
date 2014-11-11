@@ -9,7 +9,7 @@
         "Customization": "Customization",
         "Available Fields": "Available Fields",
         "Layout": "Layout",
-        "Add Panel": "Add Panel",        
+        "Add Panel": "Add Panel",
         "Add Field": "Add Field",
         "Settings": "Settings",
         "Scheduled Jobs": "Scheduled Jobs",
@@ -79,7 +79,7 @@
         "varchar": "Varchar",
         "file": "File",
         "image": "Image",
-        "multiEnum": "Multi-Enum"                
+        "multiEnum": "Multi-Enum"
     },
     "fields": {
         "type": "Type",
@@ -96,7 +96,7 @@
         "min": "Min",
         "max": "Max",
         "translation": "Translation",
-        "previewSize": "Preview Size"                
+        "previewSize": "Preview Size"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
@@ -110,7 +110,7 @@
         "selectLayout": "Select needed layout in the left menu and edit it.",
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
-        "installExtension": "Extension {name} {version} is ready for an istallation.",
+        "installExtension": "Extension {name} {version} is ready for an installation.",
         "uninstallConfirmation": "Are you really want to uninstall the extension?"
     },
     "descriptions": {
