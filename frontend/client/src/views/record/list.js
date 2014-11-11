@@ -453,7 +453,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             };
             if (this.rowActionsView) {
                 defs.push({
-                    width: '7%',
+                    width: '5%',
                 });
             }
             return defs;
@@ -544,7 +544,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 options: {
                     defs: {
                         params: {
-                            width: '7%'
+                            width: '5%'
                         }
                     },
                 },
