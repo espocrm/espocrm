@@ -174,7 +174,7 @@ class Base
             if (empty($result['whereClause'])) {
                 $result['whereClause'] = array();
             }
-            
+
             $fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
 
             $value = $params['q'];
@@ -332,8 +332,8 @@ class Base
                     break;
                 case 'currentQuarter':
                     $dt = new \DateTime();
-                    $quarter = ceil($dt->format('m') / 3);                        
-                    $dt->modify('first day of January this year');                                
+                    $quarter = ceil($dt->format('m') / 3);
+                    $dt->modify('first day of January this year');
                     $part['AND'] = array(
                         $item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
                         $item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
@@ -341,13 +341,13 @@ class Base
                     break;
                 case 'lastQuarter':
                     $dt = new \DateTime();
-                    $quarter = ceil($dt->format('m') / 3);                    
-                    $dt->modify('first day of January this year');                    
+                    $quarter = ceil($dt->format('m') / 3);
+                    $dt->modify('first day of January this year');
                     $quarter--;
                     if ($quarter == 0) {
                         $quarter = 4;
                         $dt->sub('P1Y');
-                    }                        
+                    }
                     $part['AND'] = array(
                         $item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
                         $item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),

@@ -38,7 +38,7 @@ class EntityManager
     protected $repositoryHash = array();
 
     protected $params = array();
-    
+
     protected $query;
 
     public function __construct($params)
@@ -65,7 +65,7 @@ class EntityManager
 
         $this->init();
     }
-    
+
     public function getQuery()
     {
         if (empty($this->query)) {
@@ -78,7 +78,7 @@ class EntityManager
     {
         if (empty($this->mappers[$className])) {
             // TODO use factory
-            
+
             $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
         }
         return $this->mappers[$className];

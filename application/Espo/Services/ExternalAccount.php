@@ -29,29 +29,29 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
 class ExternalAccount extends Record
-{    
+{
     protected function getClient($integration, $id)
-    {        
+    {
         $integrationEntity = $this->getEntityManager()->getEntity('Integration', $integration);
-        
+
         if (!$integrationEntity) {
             throw new NotFound();
         }
         $d = $integrationEntity->toArray();
-        
+
         if (!$integrationEntity->get('enabled')) {
             throw new Error("{$integration} is disabled.");
         }
-        
-        $factory = new \Espo\Core\ExternalAccount\ClientManager($this->getEntityManager(), $this->getMetadata(), $this->getConfig());        
+
+        $factory = new \Espo\Core\ExternalAccount\ClientManager($this->getEntityManager(), $this->getMetadata(), $this->getConfig());
         return $factory->create($integration, $id);
     }
-    
+
     public function getExternalAccountEntity($integration, $userId)
     {
         return $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
     }
-    
+
     public function ping($integration, $userId)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);
@@ -62,7 +62,7 @@ class ExternalAccount extends Record
             }
         } catch (\Exception $e) {}
     }
-    
+
     public function authorizationCode($integration, $userId, $code)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);
@@ -71,14 +71,14 @@ class ExternalAccount extends Record
         }
         $entity->set('enabled', true);
         $this->getEntityManager()->saveEntity($entity);
-        
+
         $client = $this->getClient($integration, $userId);
-        if ($client instanceof \Espo\Core\ExternalAccount\Clients\OAuth2Abstract) {        
+        if ($client instanceof \Espo\Core\ExternalAccount\Clients\OAuth2Abstract) {
             $result = $client->getAccessTokenFromAuthorizationCode($code);
-            if (!empty($result) && !empty($result['accessToken'])) {                
+            if (!empty($result) && !empty($result['accessToken'])) {
                 $entity->clear('accessToken');
                 $entity->clear('refreshToken');
-                $entity->clear('tokenType');                
+                $entity->clear('tokenType');
                 foreach ($result as $name => $value) {
                     $entity->set($name, $value);
                 }

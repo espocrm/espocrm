@@ -31,24 +31,24 @@ class EmailAddress extends Record
     private function findInAddressBookByEntityType($where, $limit, $entityType, &$result)
     {
         $service = $this->getServiceFactory()->create($entityType);
-        
+
         $r = $service->findEntities(array(
             'where' => $where,
             'maxSize' => $limit,
             'sortBy' => 'name'
-        ));        
-        
+        ));
+
         foreach ($r['collection'] as $entity) {
             $entity->loadLinkMultipleField('emailAddress');
-            
+
             $emailAddress = $entity->get('emailAddress');
-            
+
             $result[] = array(
                 'emailAddress' => $emailAddress,
                 'name' => $entity->get('name'),
                 'entityType' => $entityType
             );
-            
+
 
             $c = $service->getEntity($entity->id);
             $emailAddressData = $c->get('emailAddressData');
@@ -63,14 +63,14 @@ class EmailAddress extends Record
                     break;
                 }
             }
-        }    
+        }
     }
-    
-    
+
+
     public function searchInAddressBook($query, $limit)
     {
-        $result = array();        
-        
+        $result = array();
+
         $where = array(
             array(
                 'type' => 'or',
@@ -93,13 +93,13 @@ class EmailAddress extends Record
                 'value' => null
             )
         );
-        
+
         $this->findInAddressBookByEntityType($where, $limit, 'Contact', $result);
         $this->findInAddressBookByEntityType($where, $limit, 'Lead', $result);
-        $this->findInAddressBookByEntityType($where, $limit, 'User', $result);        
-        
+        $this->findInAddressBookByEntityType($where, $limit, 'User', $result);
+
         $final = array();
-        
+
         foreach ($result as $r) {
             foreach ($final as $f) {
                 if ($f['emailAddress'] == $r['emailAddress'] && $f['name'] == $r['name']) {
@@ -108,9 +108,9 @@ class EmailAddress extends Record
             }
             $final[] = $r;
         }
-        
+
         return $final;
     }
-    
+
 }
 

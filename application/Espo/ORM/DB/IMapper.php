@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\ORM\DB;
 
@@ -35,7 +35,7 @@ interface IMapper
      * @return IEntity $entity
      */
     function selectById(IEntity $entity, $id);
-    
+
     /**
      * Selects list of beans according to given parameters.
      *
@@ -56,7 +56,7 @@ interface IMapper
      * @return mixed Result of the aggregation
      */
     function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted);
-    
+
     /**
      * Returns count of records according to given parameters.
      *
@@ -65,7 +65,7 @@ interface IMapper
      * @return int Count of record
      */
     function count(IEntity $entity, $params);
-    
+
     /**
      * Returns max value of the field in the select according to given parameters.
      *
@@ -76,7 +76,7 @@ interface IMapper
      * @return mixed Max value
      */
     function max(IEntity $entity, $params, $field, $deleted);
-    
+
     /**
      * Returns min value of the field in the select according to given parameters.
      *
@@ -87,7 +87,7 @@ interface IMapper
      * @return mixed Min value
      */
     function min(IEntity $entity, $params, $field, $deleted);
-    
+
     /**
      * Returns sum value of the field in the select according to given parameters.
      *
@@ -98,7 +98,7 @@ interface IMapper
      * @return mixed Sum value
      */
     function sum(IEntity $entity, $params);
-    
+
     /**
      * Selects related bean or list of beans.
      *
@@ -109,7 +109,7 @@ interface IMapper
      * @return array List of beans or total count if $totalCount was passed as true
      */
     function selectRelated(IEntity $entity, $relName, $params, $totalCount);
-    
+
     /**
      * Returns count of related records according to given parameters.
      *
@@ -119,7 +119,7 @@ interface IMapper
      * @return int Count of records
      */
     function countRelated(IEntity $entity, $relName, $params);
-    
+
     /**
      * Links the bean with another one.
      *
@@ -128,8 +128,8 @@ interface IMapper
      * @param string $id Id of the foreign record.
      * @return bool True if success
      */
-    function addRelation(IEntity $entity, $relName, $id);    
-    
+    function addRelation(IEntity $entity, $relName, $id);
+
     /**
      * Removes relation of bean with certain record.
      *
@@ -139,7 +139,7 @@ interface IMapper
      * @return bool True if success
      */
     function removeRelation(IEntity $entity, $relName, $id);
-    
+
     /**
      * Removes all relations of bean of specified relation name.
      *
@@ -148,7 +148,7 @@ interface IMapper
      * @return bool True if success
      */
     function removeAllRelations(IEntity $entity, $relName);
-    
+
     /**
      * Insert the bean into db.
      *
@@ -156,7 +156,7 @@ interface IMapper
      * @return bool True if success
      */
     function insert(IEntity $entity);
-    
+
     /**
      * Updates the bean in db.
      *
@@ -164,8 +164,8 @@ interface IMapper
      * @return bool True if success
      */
     function update(IEntity $entity);
-    
-    
+
+
     /**
      * Deletes the bean.
      * (Marks as deleted)
@@ -174,7 +174,7 @@ interface IMapper
      * @return bool True if success
      */
     function delete(IEntity $entity);
-    
+
     /**
      * Sets class name of a model collection that will be returned by operations such as select.
      *

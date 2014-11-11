@@ -66,26 +66,26 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->handlePhoneNumberParams($params);
         $this->handleCurrencyParams($params);
     }
-    
+
     protected function handleCurrencyParams(&$params)
     {
         $entityName = $this->entityName;
-        
+
         $metadata = $this->getMetadata();
-        
+
         if (!$metadata) {
             return;
         }
-        
+
         $defs = $metadata->get('entityDefs.' . $entityName);
 
         foreach ($defs['fields'] as $field => $d) {
             if (isset($d['type']) && $d['type'] == 'currency') {
                 if (empty($params['customJoin'])) {
-                    $params['customJoin'] = '';    
+                    $params['customJoin'] = '';
                 }
                 $alias = Util::toUnderScore($field) . "_currency_alias";
-                $params['customJoin'] .= " 
+                $params['customJoin'] .= "
                     LEFT JOIN currency AS `{$alias}` ON {$alias}.id = ".Util::toUnderScore($entityName).".".Util::toUnderScore($field)."_currency
                 ";
             }
@@ -114,10 +114,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             );
         }
     }
-    
+
     protected function handlePhoneNumberParams(&$params)
     {
-        $entityName = $this->entityName;        
+        $entityName = $this->entityName;
 
         $defs = $this->getEntityManager()->getMetadata()->get($entityName);
         if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
@@ -198,7 +198,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if ($entity->has('modifiedAt')) {
                 $restoreData['modifiedAt'] = $entity->get('modifiedAt');
             }
-            $entity->clear('modifiedById');            
+            $entity->clear('modifiedById');
         } else {
             if ($entity->hasField('modifiedAt')) {
                 $entity->set('modifiedAt', $nowString);
@@ -228,15 +228,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     }
 
     protected function handleEmailAddressSave(Entity $entity)
-    {        
-        if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {        
+    {
+        if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {
             $emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
         }
     }
-    
+
     protected function handlePhoneNumberSave(Entity $entity)
-    {        
-        if ($entity->hasRelation('phoneNumbers') && $entity->hasField('phoneNumber')) {        
+    {
+        if ($entity->hasRelation('phoneNumbers') && $entity->hasField('phoneNumber')) {
             $emailAddressRepository = $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
         }
     }
@@ -254,32 +254,32 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         $existingIds = array();
                         $toUpdateIds = array();
                         $existingColumnsData = new \stdClass();
-                        
+
                         $defs = array();
                         $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".fields.{$name}.columns");
-                        if (!empty($columns)) {    
+                        if (!empty($columns)) {
                             $columnData = $entity->get($name . 'Columns');
                             $defs['additionalColumns'] = $columns;
 
-                        }        
-            
+                        }
+
                         foreach ($entity->get($name, $defs) as $foreignEntity) {
                             $existingIds[] = $foreignEntity->id;
-                            if (!empty($columns)) {    
+                            if (!empty($columns)) {
                                 $data = new \stdClass();
                                 foreach ($columns as $columnName => $columnField) {
                                     $foreignId = $foreignEntity->id;
                                     $data->$columnName = $foreignEntity->get($columnField);
-                                }                                
+                                }
                                 $existingColumnsData->$foreignId = $data;
-                            }    
-                                                    
+                            }
+
                         }
                         foreach ($existingIds as $id) {
                             if (!in_array($id, $specifiedIds)) {
                                 $toRemoveIds[] = $id;
                             } else {
-                                if (!empty($columns)) {    
+                                if (!empty($columns)) {
                                     foreach ($columns as $columnName => $columnField) {
                                         if ($columnData->$id->$columnName != $existingColumnsData->$id->$columnName) {
                                             $toUpdateIds[] = $id;
@@ -291,7 +291,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         foreach ($specifiedIds as $id) {
                             if (!in_array($id, $existingIds)) {
                                 $data = null;
-                                if (!empty($columns)) {    
+                                if (!empty($columns)) {
                                     $data = $columnData->$id;
                                 }
                                 $this->relate($entity, $name, $id, $data);
@@ -300,7 +300,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         foreach ($toRemoveIds as $id) {
                             $this->unrelate($entity, $name, $id);
                         }
-                        if (!empty($columns)) {    
+                        if (!empty($columns)) {
                             foreach ($toUpdateIds as $id) {
                                 $data = $columnData->$id;
                                 $this->updateRelation($entity, $name, $id, $data);

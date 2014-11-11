@@ -37,7 +37,7 @@ abstract class Mapper implements IMapper
     public $pdo;
 
     protected $entityFactroy;
-    
+
     protected $query;
 
     protected $fieldsMapCache = array();
@@ -148,7 +148,7 @@ abstract class Mapper implements IMapper
         if (empty($aggregation) || !isset($entity->fields[$aggregationBy])) {
             return false;
         }
-        
+
         $params['aggregation'] = $aggregation;
         $params['aggregationBy'] = $aggregationBy;
 
@@ -178,13 +178,13 @@ abstract class Mapper implements IMapper
         if (!$relEntity) {
             return null;
         }
-        
+
         if ($totalCount) {
             $params['aggregation'] = 'COUNT';
             $params['aggregationBy'] = 'id';
         }
 
-        
+
         if (empty($params['whereClause'])) {
             $params['whereClause'] = array();
         }
@@ -198,13 +198,13 @@ abstract class Mapper implements IMapper
 
         switch ($relType) {
 
-            case IEntity::BELONGS_TO:                
+            case IEntity::BELONGS_TO:
                 $params['whereClause'][$foreignKey] = $entity->get($key);
                 $params['offset'] = 0;
-                $params['limit'] = 1;                
-                
+                $params['limit'] = 1;
+
                 $sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
-                
+
                 $ps = $this->pdo->query($sql);
 
                 if ($ps) {
@@ -221,7 +221,7 @@ abstract class Mapper implements IMapper
 
             case IEntity::HAS_MANY:
             case IEntity::HAS_CHILDREN:
-                
+
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == IEntity::HAS_CHILDREN) {
@@ -259,23 +259,23 @@ abstract class Mapper implements IMapper
                     $additionalColumnsConditions = $params['additionalColumnsConditions'];
                 }
 
-                $MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet, $additionalColumnsConditions);                
-                
+                $MMJoinPart = $this->getMMJoin($entity, $relationName, $keySet, $additionalColumnsConditions);
+
                 if (empty($params['customJoin'])) {
                     $params['customJoin'] = '';
                 } else {
                     $params['customJoin'] .= ' ';
                 }
                 $params['customJoin'] .= $MMJoinPart;
-                
-                
+
+
                 $params['relationName'] = $relOpt['relationName'];
 
                 // TODO total
-                
-                
+
+
                 $sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
-                
+
                 $dataArr = array();
 
 
@@ -659,12 +659,12 @@ abstract class Mapper implements IMapper
 
             if ($type == IEntity::FOREIGN) {
                 continue;
-            }            
+            }
 
             if ($entity->getFetched($field) === $value && $type != IEntity::JSON_ARRAY && $type != IEntity::JSON_OBJECT) {
                 continue;
             }
-            
+
             $value = $this->prepareValueForInsert($type, $value);
 
             $setArr[] = "`" . $this->toDb($field) . "` = " . $this->quote($value);
@@ -684,7 +684,7 @@ abstract class Mapper implements IMapper
 
         return false;
     }
-    
+
     protected function prepareValueForInsert($type, $value) {
         if ($type == IEntity::JSON_ARRAY && is_array($value)) {
             $value = json_encode($value);

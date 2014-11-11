@@ -18,16 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\ORM;
 
 class EntityFactory
-{    
+{
     protected $metadata;
-    
+
     protected $entityManager;
-    
+
     public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
         $this->entityManager = $entityManager;
@@ -35,12 +35,12 @@ class EntityFactory
     }
     public function create($name)
     {
-        $className = $this->entityManager->normalizeEntityName($name);        
+        $className = $this->entityManager->normalizeEntityName($name);
         $defs = $this->metadata->get($name);
         if (!class_exists($className)) {
             return null;
         }
-        $entity = new $className($defs, $this->entityManager);        
+        $entity = new $className($defs, $this->entityManager);
         return $entity;
     }
 
