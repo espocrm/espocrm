@@ -36,7 +36,8 @@
             "type": "link"
         },
         "contact": {
-            "type": "link"
+            "type": "link",
+            "view": "Crm:Case.Fields.Contact"
         },
         "createdAt": {
             "type": "datetime",
