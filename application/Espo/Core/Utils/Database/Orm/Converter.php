@@ -284,6 +284,9 @@ class Converter
             if (isset($fieldTypeMeta['linkDefs'])) {
                 $linkDefs = $this->getMetadataUtils()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMeta['linkDefs']);
                 if (isset($linkDefs)) {
+                    if (!isset($entityMeta['links'])) {
+                        $entityMeta['links'] = array();
+                    }
                     $entityMeta['links'] = Util::merge( array($fieldName => $linkDefs), $entityMeta['links'] );
                 }
             }
