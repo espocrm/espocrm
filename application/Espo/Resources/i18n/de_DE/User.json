@@ -7,7 +7,7 @@
         "defaultTeam": "Standard Team",
         "emailAddress": "E-Mail",
         "phoneNumber": "Telefon",
-        "roles": "Rollen",        
+        "roles": "Rollen",
         "password": "Passwort",
         "passwordConfirm": "Passwort bestätigen",
         "newPassword": "Neues Passwort"
@@ -25,7 +25,10 @@
     },
     "tooltips": {
         "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
-        "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt."
+        "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
+        "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
+        "teams": "Die Teams denen dieser Benutzer angehört. Zugriffsberechtigungen werden von der Rolle des Teams vererbt.",
+        "roles": "Zusätzliche Zugriffsrollen. Nur zu verwenden wenn der Benutzer keinem Team angehört bzw. wenn die Zugriffsberechtigungen nur für diesen Benutzer angepasst werden müssen."
     },
     "messages": {
         "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
