@@ -26,10 +26,10 @@
         "Teams and Access Control": "Teams and Access Control"
     },
     "tooltips": {
-        "isAdmin": "Admin user can access everything.",
         "defaultTeam": "All records created by this user will be related to this team by default.",
         "userName": "Letters a-z, numbers 0-9 and underscores are allowed.",
-        "teams": "Teams which this user belongs to. Access control level is inherited from team roles.",
+        "isAdmin": "Admin user can access everything.",
+        "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
         "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level only for this user."
     },
     "messages": {

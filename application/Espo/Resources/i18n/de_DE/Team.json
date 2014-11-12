@@ -1,7 +1,8 @@
 {
     "fields": {
         "name": "Name",
-        "roles": "Rollen"
+        "roles": "Rollen",
+        "positionList": "Stellungen"
     },
     "links": {
         "users": "Benutzer"
