@@ -24,21 +24,21 @@ namespace Espo\Entities;
 
 class Note extends \Espo\Core\ORM\Entity
 {
-	public function loadAttachments()
-	{
-		$collection = $this->get('attachments');
-		$ids = array();
-		$names = new \stdClass();
-		$types = new \stdClass();	
-		foreach ($collection as $e) {
-			$id = $e->id;
-			$ids[] = $id;
-			$names->$id = $e->get('name');
-			$types->$id = $e->get('type');
-		}			
-		$this->set('attachmentsIds', $ids);
-		$this->set('attachmentsNames', $names);
-		$this->set('attachmentsTypes', $types);
-	}
+    public function loadAttachments()
+    {
+        $collection = $this->get('attachments');
+        $ids = array();
+        $names = new \stdClass();
+        $types = new \stdClass();    
+        foreach ($collection as $e) {
+            $id = $e->id;
+            $ids[] = $id;
+            $names->$id = $e->get('name');
+            $types->$id = $e->get('type');
+        }            
+        $this->set('attachmentsIds', $ids);
+        $this->set('attachmentsNames', $names);
+        $this->set('attachmentsTypes', $types);
+    }
 }
 

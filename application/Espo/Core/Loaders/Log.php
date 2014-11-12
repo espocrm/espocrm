@@ -23,42 +23,30 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\Utils,
-	Espo\Core\Utils\Log\Monolog\Handler;
+    Espo\Core\Utils\Log\Monolog\Handler;
 
-class Log implements Loader
+class Log extends Base
 {
-	private $container;
+    public function load()
+    {
+        $logConfig = $this->getContainer()->get('config')->get('logger');
 
-	public function __construct(\Espo\Core\Container $container)
-	{
-		$this->container = $container;
-	}
+        $log = new Utils\Log('Espo');
 
-	protected function getContainer()
-	{
-    	return $this->container;
-	}
+        $levelCode = $log->getLevelCode($logConfig['level']);
 
-	public function load()
-	{
-		$logConfig = $this->getContainer()->get('config')->get('logger');
+        if ($logConfig['isRotate']) {
+            $handler = new Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
+        } else {
+            $handler = new Handler\StreamHandler($logConfig['path'], $levelCode);
+        }
+        $log->pushHandler($handler);
 
-		$log = new Utils\Log('Espo');
+        $errorHandler = new \Monolog\ErrorHandler($log);
+        $errorHandler->registerExceptionHandler(null, false);
+        $errorHandler->registerErrorHandler(array(), false);
 
-		$levelCode = $log->getLevelCode($logConfig['level']);
-
-		if ($logConfig['isRotate']) {
-			$handler = new Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
-		} else {
-			$handler = new Handler\StreamHandler($logConfig['path'], $levelCode);
-		}
-		$log->pushHandler($handler);
-
-		$errorHandler = new \Monolog\ErrorHandler($log);
-		$errorHandler->registerExceptionHandler(null, false);
-		$errorHandler->registerErrorHandler(array(), false);
-
-		return $log;
-	}
+        return $log;
+    }
 }
 

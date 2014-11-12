@@ -21,63 +21,63 @@
 
 Espo.define('Views.Main', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		el: '#main',
+        el: '#main',
 
-		scope: null,
+        scope: null,
 
-		name: null,
+        name: null,
 
-		menu: null,
+        menu: null,
 
-		events: {
-			'click .action': function (e) {
-				var $target = $(e.currentTarget);
-				var action = $target.data('action');
-				var data = $target.data();
-				if (action) {
-					var method = 'action' + Espo.Utils.upperCaseFirst(action);
-					if (typeof this[method] == 'function') {
-						this[method].call(this, data);
-					}
-				}
-			},
-		},
+        events: {
+            'click .action': function (e) {
+                var $target = $(e.currentTarget);
+                var action = $target.data('action');
+                var data = $target.data();
+                if (action) {
+                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    if (typeof this[method] == 'function') {
+                        this[method].call(this, data);
+                    }
+                }
+            },
+        },
 
-		init: function () {
-			this.scope = this.options.scope || this.scope;
-			this.menu = {};
-			
-			if (this.name && this.scope) {					
-				var menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
-				this.menu = _.clone(menu);
-			}
-			
-			this.menu.buttons = [];
-			this.menu.dropdown = [];				
-			
-			if (menu) {				
-				(menu.buttons || []).forEach(function (item) {
-					if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
-						this.menu.buttons.push(item);
-					}
-				}, this);
-			
-				(menu.dropdown || []).forEach(function (item) {
-					if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
-						this.menu.dropdown.push(item);
-					}
-				}, this);
-			}
-		},
+        init: function () {
+            this.scope = this.options.scope || this.scope;
+            this.menu = {};
+            
+            if (this.name && this.scope) {                    
+                var menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
+                this.menu = _.clone(menu);
+            }
+            
+            this.menu.buttons = [];
+            this.menu.dropdown = [];                
+            
+            if (menu) {                
+                (menu.buttons || []).forEach(function (item) {
+                    if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
+                        this.menu.buttons.push(item);
+                    }
+                }, this);
+            
+                (menu.dropdown || []).forEach(function (item) {
+                    if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
+                        this.menu.dropdown.push(item);
+                    }
+                }, this);
+            }
+        },
 
-		getMenu: function () {
-			return this.menu;
-		},
+        getMenu: function () {
+            return this.menu;
+        },
 
-		getHeader: function () {},
-	});
+        getHeader: function () {},
+    });
 });
 
 

@@ -3,22 +3,22 @@
 		"name": "Record Naam",
 		"emailAddress": "Email",
 		"title": "Titel",
-		"account": "Relatie",
-		"accounts": "Relaties",
+		"account": "Klant",
+		"accounts": "Klanten",
 		"phoneNumber": "Telefoon",
-		"accountType": "Relatie Type",
+		"accountType": "Klant Type",
 		"doNotCall": "Niet Bellen",
 		"address": "Adres",
-		"opportunityRole": "Opportunity Role",
-		"accountRole": "Voorwaarde",
+		"opportunityRole": "Kans Rol",
+		"accountRole": "Rol",
 		"description": "Beschrijving"
 	},
 	"links": {
 		"opportunities": "Kansen",
-		"cases": "Zaken"
+		"cases": "Casus"
 	},
 	"labels": {
-		"Create Contact": "Maak Contact"
+		"Create Contact": "Contact Aanmaken"
 	},
 	"options": {
 		"opportunityRole": {

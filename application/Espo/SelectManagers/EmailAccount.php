@@ -23,13 +23,13 @@
 namespace Espo\SelectManagers;
 
 class EmailAccount extends \Espo\Core\SelectManagers\Base
-{	
+{    
     protected function access(&$result)
     {
-    	if (!array_key_exists('whereClause', $result)) {
-    		$result['whereClause'] = array();
-    	}
-    	$result['whereClause']['assignedUserId'] = $this->user->id;
+        if (!array_key_exists('whereClause', $result)) {
+            $result['whereClause'] = array();
+        }
+        $result['whereClause']['assignedUserId'] = $this->user->id;
     }
     
 }

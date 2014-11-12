@@ -1,12 +1,12 @@
 {
-	"fields": {
-		"name": "İsim",
-		"roles": "Görevler"
-	},
-	"links": {
-		"users": "Kullanıcılar"
-	},
-	"labels": {
-		"Create Team": "Takım Oluştur"
-	}
+    "fields": {
+        "name": "İsim",
+        "roles": "Görevler"
+    },
+    "links": {
+        "users": "Kullanıcılar"
+    },
+    "labels": {
+        "Create Team": "Takım Oluştur"
+    }
 }

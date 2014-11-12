@@ -1,15 +1,15 @@
 {
-	"labels": {
-		"Revert": "Revert",
-		"Return to Import": "Return to Import",
-		"Run Import": "Run Import",
-		"Back": "Back",
-		"Field Mapping": "Field Mapping",
-		"Default Values": "Default Values",
-		"Add Field": "Add Field",
-		"Created": "Created",
-		"Updated": "Updated",
-		"Result": "Result",
-		"Show records": "Show records"
-	}
+    "labels": {
+        "Revert": "Revert",
+        "Return to Import": "Return to Import",
+        "Run Import": "Run Import",
+        "Back": "Back",
+        "Field Mapping": "Field Mapping",
+        "Default Values": "Default Values",
+        "Add Field": "Add Field",
+        "Created": "Created",
+        "Updated": "Updated",
+        "Result": "Result",
+        "Show records": "Show records"
+    }
 }

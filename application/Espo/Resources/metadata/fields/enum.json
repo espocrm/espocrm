@@ -7,7 +7,8 @@
       },
       {
          "name":"options",
-         "type":"array"
+         "type":"array",
+         "view": "Admin.FieldManager.Fields.Options"
       },
       {
          "name":"default",

@@ -1,40 +1,42 @@
 {
-	"fields": {
-		"name": "Nombre",
-		"emailAddress": "Correo electrónico",
-		"website": "Sito Web",
-		"phone": "Teléfono",
-		"fax": "Fax",
-		"billingAddress": "Dirección de Facturación",
-		"shippingAddress": "Dirección de Envío",
-		"description": "Descripción",
-		"sicCode": "Sic Code",
-		"industry": "Industria",
-		"type": "Tipo"		
-	},
-	"links": {
-		"contacts": "Contactos",
-		"opportunities": "Oportunidades",
-		"cases": "Casos"
-	},
-	"options": {
-		"type": {
-			"Customer": "Cliente",
-			"Investor": "Inversor",
-			"Partner": "Partner",
-			"Reseller": "REvendedor"
-		},
-		"industry": {
-			"Apparel": "Apparel",
-			"Banking": "Banking",
-			"Computer Software": "Software",
-			"Education": "Educación",
-			"Electronics": "Electrónicos",
-			"Finance": "Finanzas",
-			"Insurance": "Seguros"
-		}
-	},
-	"labels": {
-		"Create Account": "Crear Cuenta"
-	}
+    "fields": {
+        "name": "Asunto",
+        "emailAddress": "Correo electrónico",
+        "website": "Sito Web",
+        "phoneNumber": "Teléfono",
+        "billingAddress": "Dirección de Facturación",
+        "shippingAddress": "Dirección de Envío",
+        "description": "Descripción",
+        "sicCode": "Sic Code",
+        "industry": "Industria",
+        "type": "Tipo",
+        "contactRole": "Rol"
+    },
+    "links": {
+        "contacts": "Contactos",
+        "opportunities": "Oportunidades",
+        "cases": "Casos",
+        "documents": "Documentos"
+    },
+    "options": {
+        "type": {
+            "Customer": "Cliente",
+            "Investor": "Inversor",
+            "Partner": "Socio",
+            "Reseller": "Revendedor"
+        },
+        "industry": {
+            "Apparel": "Vestuario",
+            "Banking": "Banca",
+            "Computer Software": "Software",
+            "Education": "Educación",
+            "Electronics": "Electrónicos",
+            "Finance": "Finanzas",
+            "Insurance": "Seguros"
+        }
+    },
+    "labels": {
+        "Create Account": "Crear Cuenta",
+        "Copy Billing": "Copia Facturación"
+    }
 }

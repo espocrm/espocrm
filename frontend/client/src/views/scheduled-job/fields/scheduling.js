@@ -20,15 +20,15 @@
  ************************************************************************/ 
 Espo.define('Views.ScheduledJob.Fields.Scheduling', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({		
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);
+    return Dep.extend({        
+        
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-			if (this.mode == 'edit' || this.mode == 'detail') {
-			}			
-		},
-		
-	});
-	
+            if (this.mode == 'edit' || this.mode == 'detail') {
+            }            
+        },
+        
+    });
+    
 });

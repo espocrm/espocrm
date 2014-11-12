@@ -20,11 +20,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-return array(	
+return array(    
 
-	'unset' => array(
-		'Settings', 
-	),
+    'unset' => array(
+        'Settings', 
+    ),
 
 );
 

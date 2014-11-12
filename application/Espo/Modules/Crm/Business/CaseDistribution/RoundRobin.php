@@ -18,54 +18,62 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Business\CaseDistribution;
 
 class RoundRobin
 {
-	protected $entityManager;
-	
-	public function __construct($entityManager)
-	{
-		$this->entityManager = $entityManager;
-	}
-	
-	protected function getEntityManager()
-	{
-		return $this->entityManager;
-	}
-	
-	public function getUser($team)
-	{
-		$userList = $team->get('users');		
-		if (count($userList) == 0) {
-			return false;
-		}	
-				
-		$userIdList = array();
-		
-		foreach ($userList as $user) { 
-			$userIdList[] = $user->id;
-		}
-	
-		
-		$case = $this->getEntityManager()->getRepository('Case')->where(array(
-			'assignedUserId' => $userIdList,
-		))->order('createdAt', 'DESC')->findOne();				
-		
-		if (empty($case)) {
-			$num = 0;
-		} else {		
-			$num = array_search($case->get('assignedUserId'), $userIdList);
-			if ($num === false || $num == count($userIdList) - 1) {
-				$num = 0;
-			} else {
-				$num++;
-			}
-		}
-				
-		return $this->getEntityManager()->getEntity('User', $userIdList[$num]);		
-	}
+    protected $entityManager;
+
+    public function __construct($entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    public function getUser($team, $targetUserPosition = null)
+    {
+        $params = array();
+        if (!empty($targetUserPosition)) {
+            $params['additionalColumnsConditions'] = array(
+                'role' => $targetUserPosition
+            );
+        }
+
+        $userList = $team->get('users', $params);
+
+        if (count($userList) == 0) {
+            return false;
+        }
+
+        $userIdList = array();
+
+        foreach ($userList as $user) {
+            $userIdList[] = $user->id;
+        }
+
+
+        $case = $this->getEntityManager()->getRepository('Case')->where(array(
+            'assignedUserId' => $userIdList,
+        ))->order('createdAt', 'DESC')->findOne();
+
+        if (empty($case)) {
+            $num = 0;
+        } else {
+            $num = array_search($case->get('assignedUserId'), $userIdList);
+            if ($num === false || $num == count($userIdList) - 1) {
+                $num = 0;
+            } else {
+                $num++;
+            }
+        }
+
+        return $this->getEntityManager()->getEntity('User', $userIdList[$num]);
+    }
 }
 

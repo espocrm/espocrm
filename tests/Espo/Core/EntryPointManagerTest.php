@@ -7,15 +7,15 @@ use tests\ReflectionHelper;
 
 class EntryPointManagerTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
-	
-	protected $objects;
+    protected $object;
+    
+    protected $objects;
 
-	protected $filesPath= 'tests/testData/EntryPoints';
+    protected $filesPath= 'tests/testData/EntryPoints';
 
     protected function setUp()
     {                          
-		$this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
         $this->object = new \Espo\Core\EntryPointManager($this->objects['container']);
 

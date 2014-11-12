@@ -28,9 +28,9 @@
             "default": "New",
             "view": "Fields.EnumStyled",
             "style": {
-            	"Converted": "success",
-            	"Recycled": "danger",
-            	"Dead": "danger"
+                "Converted": "success",
+                "Recycled": "danger",
+                "Dead": "danger"
             }
         },
         "source": {
@@ -106,9 +106,9 @@
             "required": true
         },
         "acceptanceStatus": {
-        	"type": "varchar",
-        	"notStorable": true,
-        	"disabled": true
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         },
         "teams": {
             "type": "linkMultiple"
@@ -197,7 +197,7 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
     }
 }

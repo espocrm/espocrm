@@ -26,7 +26,7 @@ use Doctrine\DBAL\Types\IntegerType;
 
 class Int extends IntegerType
 {
-	const INTtype = 'int';
+    const INTtype = 'int';
 
     public function getName()
     {

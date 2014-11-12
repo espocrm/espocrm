@@ -1,7 +1,7 @@
 [
-	{"name":"name","width":30,"link":true},
-	{"name":"file","width":10, "view": "Crm:Document.Fields.FileShort","notSortable": true},
-	{"name":"type"},
-	{"name":"status"},
-	{"name":"createdAt"}
+    {"name":"name","width":30,"link":true},
+    {"name":"file","width":10, "view": "Crm:Document.Fields.FileShort","notSortable": true},
+    {"name":"type"},
+    {"name":"status"},
+    {"name":"createdAt"}
 ]

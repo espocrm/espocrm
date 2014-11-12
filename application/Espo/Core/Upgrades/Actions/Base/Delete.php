@@ -24,32 +24,32 @@ namespace Espo\Core\Upgrades\Actions\Base;
 
 class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
-	public function run($processId)
-	{
-		$GLOBALS['log']->debug('Delete package process ['.$processId.']: start run.');
+    public function run($processId)
+    {
+        $GLOBALS['log']->debug('Delete package process ['.$processId.']: start run.');
 
-		if (empty($processId)) {
-			throw new Error('Delete package package ID was not specified.');
-		}
+        if (empty($processId)) {
+            throw new Error('Delete package package ID was not specified.');
+        }
 
-		$this->setProcessId($processId);
+        $this->setProcessId($processId);
 
-		$this->beforeRunAction();
+        $this->beforeRunAction();
 
-		/* delete a package */
-		$this->deletePackage();
+        /* delete a package */
+        $this->deletePackage();
 
-		$this->afterRunAction();
+        $this->afterRunAction();
 
-		$GLOBALS['log']->debug('Delete package process ['.$processId.']: end run.');
-	}
+        $GLOBALS['log']->debug('Delete package process ['.$processId.']: end run.');
+    }
 
-	protected function deletePackage()
-	{
-		$packageArchivePath = $this->getPackagePath(true);
-		$res = $this->getFileManager()->removeFile($packageArchivePath);
+    protected function deletePackage()
+    {
+        $packageArchivePath = $this->getPackagePath(true);
+        $res = $this->getFileManager()->removeFile($packageArchivePath);
 
-		return $res;
-	}
+        return $res;
+    }
 
 }

@@ -21,81 +21,81 @@
 
 Espo.define('Crm:Views.Meeting.Detail', 'Views.Detail', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		setup: function () {
-			Dep.prototype.setup.call(this);
-			if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
-				if (this.getAcl().checkModel(this.model, 'edit')) {
-					this.menu.buttons.push({
-						'label': 'Send Invitations',
-						'action': 'sendInvitations',
-						icon: 'glyphicon glyphicon-send',
-						'acl': 'edit',
-					});
-					this.menu.dropdown.push({
-						'label': 'Set Held',
-						'action': 'setHeld',
-						'acl': 'edit'
-					});
-					this.menu.dropdown.push({
-						'label': 'Set Not Held',
-						'action': 'setNotHeld',
-						'acl': 'edit'
-					});
-				}
-			}
-		},
-		
-		actionSendInvitations: function () {
-			if (confirm(this.translate('confirmation', 'messages'))) {
-				this.$el.find('button[data-action="sendInvitations"]').addClass('disabled');
-				this.notify('Sending...');
-				$.ajax({
-					url: 'Meeting/action/sendInvitations',
-					type: 'POST',
-					data: JSON.stringify({
-						id: this.model.id
-					}),
-					success: function () {
-						this.notify('Sent', 'success');
-						this.$el.find('button[data-action="sendInvitations"]').removeClass('disabled');
-					}.bind(this),
-					error: function () {
-						this.$el.find('button[data-action="sendInvitations"]').removeClass('disabled');
-					}.bind(this),
-				});
-			}
-		},
-		
-		actionSetHeld: function () {
-				this.model.save({
-					status: 'Held'
-				}, {
-					patch: true,
-					success: function () {
-						Espo.Ui.success(this.translate('Saved as Held', 'labels', 'Meeting'));
-						this.$el.find('button[data-action="sendInvitations"]').remove();
-						this.$el.find('a[data-action="setHeld"]').remove();
-						this.$el.find('a[data-action="setNotHeld"]').remove();
-					}.bind(this),
-				});
-		},
-		
-		actionSetNotHeld: function () {
-				this.model.save({
-					status: 'Not Held'
-				}, {
-					patch: true,
-					success: function () {
-						Espo.Ui.success(this.translate('Saved as Not Held', 'labels', 'Meeting'));
-						this.$el.find('button[data-action="sendInvitations"]').remove();
-						this.$el.find('a[data-action="setHeld"]').remove();
-						this.$el.find('a[data-action="setNotHeld"]').remove();
-					}.bind(this),
-				});
-		},
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
+                if (this.getAcl().checkModel(this.model, 'edit')) {
+                    this.menu.buttons.push({
+                        'label': 'Send Invitations',
+                        'action': 'sendInvitations',
+                        icon: 'glyphicon glyphicon-send',
+                        'acl': 'edit',
+                    });
+                    this.menu.dropdown.push({
+                        'label': 'Set Held',
+                        'action': 'setHeld',
+                        'acl': 'edit'
+                    });
+                    this.menu.dropdown.push({
+                        'label': 'Set Not Held',
+                        'action': 'setNotHeld',
+                        'acl': 'edit'
+                    });
+                }
+            }
+        },
+        
+        actionSendInvitations: function () {
+            if (confirm(this.translate('confirmation', 'messages'))) {
+                this.$el.find('button[data-action="sendInvitations"]').addClass('disabled');
+                this.notify('Sending...');
+                $.ajax({
+                    url: 'Meeting/action/sendInvitations',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        id: this.model.id
+                    }),
+                    success: function () {
+                        this.notify('Sent', 'success');
+                        this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
+                    }.bind(this),
+                    error: function () {
+                        this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
+                    }.bind(this),
+                });
+            }
+        },
+        
+        actionSetHeld: function () {
+                this.model.save({
+                    status: 'Held'
+                }, {
+                    patch: true,
+                    success: function () {
+                        Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
+                        this.$el.find('[data-action="sendInvitations"]').remove();
+                        this.$el.find('[data-action="setHeld"]').remove();
+                        this.$el.find('[data-action="setNotHeld"]').remove();
+                    }.bind(this),
+                });
+        },
+        
+        actionSetNotHeld: function () {
+                this.model.save({
+                    status: 'Not Held'
+                }, {
+                    patch: true,
+                    success: function () {
+                        Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
+                        this.$el.find('[data-action="sendInvitations"]').remove();
+                        this.$el.find('[data-action="setHeld"]').remove();
+                        this.$el.find('[data-action="setNotHeld"]').remove();
+                    }.bind(this),
+                });
+        },
 
-	});
+    });
 });
 

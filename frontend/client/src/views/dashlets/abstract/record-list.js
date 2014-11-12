@@ -21,67 +21,70 @@
 
 Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Leads',
+        name: 'Leads',
 
-		scope: null,
+        scope: null,
 
-		listViewColumn: 'Record.List',
+        listViewColumn: 'Record.List',
 
-		listViewExpanded: 'Record.ListExpanded',
+        listViewExpanded: 'Record.ListExpanded',
 
-		_template: '<div class="list-container">{{{list}}}</div>',
+        _template: '<div class="list-container">{{{list}}}</div>',
 
-		layoutType: 'expanded',
-		
-		optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
-			'displayRecords': {
-				type: 'enumInt',
-				options: [3,4,5,10,15],							
-			},
-			'isDoubleHeight': {
-				type: 'bool',							
-			}
-		}),			
+        layoutType: 'expanded',
+        
+        optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
+            'displayRecords': {
+                type: 'enumInt',
+                options: [3,4,5,10,15],                            
+            },
+            'isDoubleHeight': {
+                type: 'bool',                            
+            }
+        }),            
 
-		afterRender: function () {
-			this.getCollectionFactory().create(this.scope, function (collection) {
+        afterRender: function () {
+            this.getCollectionFactory().create(this.scope, function (collection) {            
+                var searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
+                
+                if (!this.getAcl().check(this.scope, 'read')) {
+                    this.$el.find('.list-container').html(this.translate('No Access'));
+                    return;
+                }
 
-				var searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
+                this.collection = collection;
+                collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
+                collection.asc = this.getOption('asc') || this.collection.asc;
+                collection.maxSize = this.getOption('displayRecords');
+                collection.where = searchManager.getWhere();            
+                
+                var viewName = (this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn;
 
-				this.collection = collection;
-				collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
-				collection.asc = this.getOption('asc') || this.collection.asc;
-				collection.maxSize = this.getOption('displayRecords');
-				collection.where = searchManager.getWhere();
-				
-				
-				var viewName = (this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn;
+                this.listenToOnce(collection, 'sync', function () {
+                    this.createView('list', viewName, {
+                        collection: collection,
+                        el: this.$el.selector + ' .list-container',
+                        pagination: this.getOption('pagination') ? 'bottom' : false,
+                        type: 'listDashlet',
+                        rowActionsView: false,
+                        checkboxes: false,
+                        showMore: true,
+                        listLayout: this.getOption(this.layoutType + 'Layout')
+                    }, function (view) {
+                        view.render();
+                    });
+                }, this);
+                
+                collection.fetch();
 
-				this.listenToOnce(collection, 'sync', function () {
-					this.createView('list', viewName, {
-						collection: collection,
-						el: this.$el.selector + ' .list-container',
-						pagination: this.getOption('pagination') ? 'bottom' : false,
-						type: 'listDashlet',
-						rowActionsView: false,
-						checkboxes: false,
-						showMore: true,
-						listLayout: this.getOption(this.layoutType + 'Layout')
-					}, function (view) {
-						view.render();
-					});
-				}.bind(this));
-				
-				collection.fetch();
-
-			}.bind(this));
-		},
-		
-		actionRefresh: function () {			
-			this.collection.fetch();
-		},
-	});
+            }, this);
+        },
+        
+        actionRefresh: function () {            
+            this.collection.fetch();
+        },
+    });
 });
 

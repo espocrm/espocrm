@@ -14,14 +14,14 @@
             "options": ["Active", "Draft", "Expired", "Canceled"],
             "view": "Fields.EnumStyled",
             "style": {
-            	"Canceled": "danger",
-            	"Expired": "danger"
+                "Canceled": "danger",
+                "Expired": "danger"
             }
         },
         "source": {
-        	"type": "enum",
-        	"options": ["Espo"],
-        	"default": "Espo"
+            "type": "enum",
+            "options": ["Espo"],
+            "default": "Espo"
         },
         "type": {
             "type": "enum",
@@ -64,16 +64,16 @@
         }
     },
     "links": {
-    	"accounts": {
+        "accounts": {
             "type": "hasMany",
             "entity": "Account",
             "foreign": "documents"
-    	},
-    	"opportunities": {
+        },
+        "opportunities": {
             "type": "hasMany",
             "entity": "Opportunity",
             "foreign": "documents"
-    	},
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
@@ -93,7 +93,7 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
     }
 }

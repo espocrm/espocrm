@@ -1,36 +1,51 @@
 {
-	"fields": {
-		"name": "Betreff",
-		"parent": "Bezieht sich auf",
-		"status": "Status",
-		"dateSent": "Sendedatum",
-		"from": "Von",
-		"to": "An",
-		"cc": "CC",
-		"bcc": "BCC",
-		"isHtml": "Ist HTML",
-		"body": "Inhalt",
-		"subject": "Betreff",
-		"attachments": "Anhänge",
-		"selectTemplate": "Vorlage wählen",
-		"fromEmailAddress": "Von Adresse",
-		"toEmailAddresses": "An Adresse",
-		"emailAddress": "E-Mail Adresse"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Entwurf",
-		"Sending": "wird gesendet",
-		"Sent": "Gesendet",
-		"Archived": "Archiviert"
-	},
-	"labels": {
-		"Create Email": "E-Mail archivieren",
-		"Compose": "Erstellen"
-	},
-	"presetFilters": {
-		"sent": "Gesendet",
-		"archived": "Archiviert"
-	}
+    "fields": {
+        "name": "Betreff",
+        "parent": "Bezieht sich auf",
+        "status": "Status",
+        "dateSent": "Sendedatum",
+        "from": "Von",
+        "to": "An",
+        "cc": "CC",
+        "bcc": "BCC",
+        "isHtml": "Ist HTML",
+        "body": "Inhalt",
+        "subject": "Betreff",
+        "attachments": "Anhänge",
+        "selectTemplate": "Vorlage wählen",
+        "fromEmailAddress": "Von Adresse",
+        "toEmailAddresses": "An Adresse",
+        "emailAddress": "E-Mail Adresse",
+        "deliveryDate": "Zustelldatum"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Entwurf",
+        "Sending": "Wird gesendet",
+        "Sent": "Gesendet",
+        "Archived": "Archiviert"
+    },
+    "labels": {
+        "Create Email": "E-Mail archivieren",
+        "Archive Email": "E-Mail archivieren",
+        "Compose": "Erstellen",
+        "Reply": "Antworten",
+        "Reply to All": "Allen antworten",
+        "Forward": "Weiterleiten",
+        "Original message": "Originalnachricht",
+        "Forwarded message": "Weitergeleitete Nachricht:",
+        "Email Accounts": "E-Mail Konten",
+        "Send Test Email": "Test E-Mail senden",
+        "Send": "Senden",
+        "Email Address": "E-Mail Adresse"
+    },
+    "messages": {
+        "noSmtpSetup": "Keine SMTP Einstellung, {link}. ",
+        "testEmailSent": "Eine Test E-Mail wurde gesendet"
+    },
+    "presetFilters": {
+        "sent": "Gesendet",
+        "archived": "Archiviert"
+    }
 }

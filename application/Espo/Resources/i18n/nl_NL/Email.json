@@ -15,19 +15,27 @@
 		"selectTemplate": "Selecteer Template",
 		"fromEmailAddress": "Van Adres",
 		"toEmailAddresses": "Naar Adres",
-		"emailAddress": "Email Adres"
+		"emailAddress": "Email Adres",
+		"deliveryDate": "Afleverdatum"
 	},
 	"links": {
 	},
 	"options": {
-		"Draft": "Tijdelijk",
+		"Draft": "Concept",
 		"Sending": "Verzenden",
 		"Sent": "Verstuur",
 		"Archived": "Archiveren"
 	},
 	"labels": {
 		"Create Email": "Archiveer Email",
-		"Compose": "Maak"
+		"Archive Email": "Archiveer Email",
+		"Compose": "Maak",
+		"Reply": "Antwoord",
+		"Reply to All": "Antwoord allen",
+		"Forward": "Doorsturen",
+		"Original message": "Originele bericht",
+		"Forwarded message": "Doorgestuurd bericht",
+		"Email Accounts": "Email Accounts"
 	},
 	"presetFilters": {
 		"sent": "Verstuur",

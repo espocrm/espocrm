@@ -1,36 +1,37 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"account": "Relatie",
-		"stage": "Status",
+		"account": "Klant",
+		"stage": "Stadium",
 		"amount": "Aantal",
-		"probability": "Naar waarschijnlijkheid, %",
-		"leadSource": "Lead Bron",
+		"probability": "Waarschijnlijkheid, %",
+		"leadSource": "Leadbron",
 		"doNotCall": "Niet Bellen",
 		"closeDate": "Datum gesloten",
-		"contacts": "Contactpersoon",
+		"contacts": "Contacten",
 		"description": "Beschrijving",
-		"amountConverted": "Amount (converted)"
+		"amountConverted": "Bedrag (geconverteerd)"
 	},
 	"links": {
-		"contacts": "Contactpersoon"
+		"contacts": "Contacten",
+		"documents": "Documents"
 	},
 	"options": {
 		"stage": {
-			"Prospecting": "Prospecting",
-			"Qualification": "Kwalificeren",
-			"Needs Analysis": "Benodigde Analyse",
-			"Value Proposition": "Waarde Schatting",
+			"Prospecting": "Prospectie",
+			"Qualification": "Kwalificatie",
+			"Needs Analysis": "Analyse behoefte",
+			"Value Proposition": "Waarde voorstel",
 			"Id. Decision Makers": "Id. Beslissiers",
 			"Perception Analysis": "Perceptie Analyse",
-			"Proposal/Price Quote": "Prijs/Voorstel",
-			"Negotiation/Review": "Onderhandeling/Herziening",
+			"Proposal/Price Quote": "Voorstel/Offerte",
+			"Negotiation/Review": "Onderhandeling/Beoordeling",
 			"Closed Won": "Gesloten Gewonnen",
 			"Closed Lost": "Gesloten Verloren" 
 		}
 	},
 	"labels": {
-		"Create Opportunity": "Grote Uitdaging"
+		"Create Opportunity": "Kans aanmaken"
 	},
 	"presetFilters": {
 		"open": "Open",

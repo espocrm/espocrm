@@ -21,72 +21,72 @@
 
 Espo.define('Views.Edit', 'Views.Main', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'edit',
+        template: 'edit',
 
-		el: '#main',
+        el: '#main',
 
-		scope: null,
-		
-		name: 'Edit',
-		
-		menu: null,
-		
-		optionsToPass: ['returnUrl'],
+        scope: null,
+        
+        name: 'Edit',
+        
+        menu: null,
+        
+        optionsToPass: ['returnUrl'],
 
-		views: {
-			header: {
-				selector: '> .page-header',
-				view: 'Header'
-			},
-			body: {
-				view: 'Record.Edit',
-				selector: '> .body'
-			}
-		},
+        views: {
+            header: {
+                selector: '> .page-header',
+                view: 'Header'
+            },
+            body: {
+                view: 'Record.Edit',
+                selector: '> .body'
+            }
+        },
 
-		setup: function () {
-		},
+        setup: function () {
+        },
 
-		getHeader: function () {
-			var html = '';
-			
-			if (this.options.noHeaderLinks) {
-				html += this.getLanguage().translate(this.model.name, 'scopeNamesPlural');
-			} else {
-				html += '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>';
-			}
-			
-			html += ' &raquo ';
-			if (this.model.isNew()) {
-				html += this.getLanguage().translate('create');
-			} else {
-				var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-				if (this.options.noHeaderLinks) {
-					html += name;
-				} else {
-					html += '<a href="#' + this.model.name + '/view/' + this.model.id + '">' + name + '</a>';
-				}
-			}
-			return html;
-		},
+        getHeader: function () {
+            var html = '';
+            
+            if (this.options.noHeaderLinks) {
+                html += this.getLanguage().translate(this.model.name, 'scopeNamesPlural');
+            } else {
+                html += '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>';
+            }
+            
+            html += ' &raquo ';
+            if (this.model.isNew()) {
+                html += this.getLanguage().translate('create');
+            } else {
+                var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+                if (this.options.noHeaderLinks) {
+                    html += name;
+                } else {
+                    html += '<a href="#' + this.model.name + '/view/' + this.model.id + '">' + name + '</a>';
+                }
+            }
+            return html;
+        },
 
-		updatePageTitle: function () {
-			var title;
-			if (this.model.isNew()) {
-				title = this.getLanguage().translate('Create') + ' ' + this.getLanguage().translate(this.model.name, 'scopeNames');
-			} else {
-				var name = this.model.get('name');
-				if (name) {
-					title = name;
-				} else {
-					title = this.getLanguage().translate(this.model.name, 'scopeNames')
-				}
-			}
-			this.setPageTitle(title);
-		},
-	});
+        updatePageTitle: function () {
+            var title;
+            if (this.model.isNew()) {
+                title = this.getLanguage().translate('Create') + ' ' + this.getLanguage().translate(this.model.name, 'scopeNames');
+            } else {
+                var name = this.model.get('name');
+                if (name) {
+                    title = name;
+                } else {
+                    title = this.getLanguage().translate(this.model.name, 'scopeNames')
+                }
+            }
+            this.setPageTitle(title);
+        },
+    });
 });
 
 

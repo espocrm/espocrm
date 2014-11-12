@@ -21,23 +21,23 @@
 
 Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
 
-	return Dep.extend({
-	
-		mode: 'edit',
+    return Dep.extend({
+    
+        mode: 'edit',
 
-		panels: [
-			{
-				name: 'default',
-				label: false,
-				view: 'Record.Panels.Side',
-				options: {
-					fields: ['assignedUser', 'teams'],
-					mode: 'edit',
-				}	
-			}				
-		],			
+        panels: [
+            {
+                name: 'default',
+                label: false,
+                view: 'Record.Panels.Side',
+                options: {
+                    fields: ['assignedUser', 'teams'],
+                    mode: 'edit',
+                }    
+            }                
+        ],            
 
-	});	
+    });    
 });
 
 

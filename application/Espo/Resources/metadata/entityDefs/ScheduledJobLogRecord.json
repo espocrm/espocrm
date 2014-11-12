@@ -18,8 +18,8 @@
             "readOnly": true
         },
         "scheduledJob": {
-        	"type": "link"
-		}
+            "type": "link"
+        }
     },
     "links": {
         "scheduledJob": {
@@ -28,7 +28,7 @@
         }
     },
     "collection": {
-    	"sortBy": "executionTime",
-    	"asc": false
+        "sortBy": "executionTime",
+        "asc": false
     }
 }

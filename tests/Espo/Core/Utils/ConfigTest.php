@@ -7,138 +7,138 @@ use tests\ReflectionHelper;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
+    protected $object;
 
-	protected $objects;
+    protected $objects;
 
-	protected $defaultTestConfig = 'tests/testData/Utils/Config/config.php';
+    protected $defaultTestConfig = 'tests/testData/Utils/Config/config.php';
 
-	protected $configPath = 'tests/testData/cache/config.php';
+    protected $configPath = 'tests/testData/cache/config.php';
 
-	protected $systemConfigPath = 'tests/testData/Utils/Config/systemConfig.php';
+    protected $systemConfigPath = 'tests/testData/Utils/Config/systemConfig.php';
 
-	protected function setUp()
-	{
-		$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+    protected function setUp()
+    {
+        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
-		/*copy defaultTestConfig file to cache*/
-		if (!file_exists($this->configPath)) {
-			copy($this->defaultTestConfig, $this->configPath);
-		}
+        /*copy defaultTestConfig file to cache*/
+        if (!file_exists($this->configPath)) {
+            copy($this->defaultTestConfig, $this->configPath);
+        }
 
-		$this->object = new \Espo\Core\Utils\Config($this->objects['fileManager']);
+        $this->object = new \Espo\Core\Utils\Config($this->objects['fileManager']);
 
-		$this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->object);
 
-		$this->reflection->setProperty('configPath', $this->configPath);
-		$this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
-	}
+        $this->reflection->setProperty('configPath', $this->configPath);
+        $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
+    }
 
-	protected function tearDown()
-	{
-		$this->object = NULL;
-	}
-
-
-	public function testLoadConfig()
-	{
-		$this->assertArrayHasKey('database', $this->reflection->invokeMethod('loadConfig', array()));
-
-		$this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('loadConfig', array()));
-	}
-
-	public function testGet()
-	{
-		$result = array(
-			'driver' => 'pdo_mysql',
-			'host' => 'localhost',
-			'dbname' => 'espocrm',
-			'user' => 'root',
-			'password' => '',
-		);
-		$this->assertEquals($result, $this->object->get('database'));
-
-		$result = 'pdo_mysql';
-		$this->assertEquals($result, $this->object->get('database.driver'));
+    protected function tearDown()
+    {
+        $this->object = NULL;
+    }
 
 
-		$result = 'YYYY-MM-DD';
-		$this->assertEquals($result, $this->object->get('dateFormat'));
+    public function testLoadConfig()
+    {
+        $this->assertArrayHasKey('database', $this->reflection->invokeMethod('loadConfig', array()));
 
-		$this->assertTrue($this->object->get('isInstalled'));
-	}
+        $this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('loadConfig', array()));
+    }
+
+    public function testGet()
+    {
+        $result = array(
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'dbname' => 'espocrm',
+            'user' => 'root',
+            'password' => '',
+        );
+        $this->assertEquals($result, $this->object->get('database'));
+
+        $result = 'pdo_mysql';
+        $this->assertEquals($result, $this->object->get('database.driver'));
 
 
-	public function testSet()
-	{
-		$setKey= 'testOption';
-		$setValue= 'Test';
+        $result = 'YYYY-MM-DD';
+        $this->assertEquals($result, $this->object->get('dateFormat'));
 
-		$this->object->set($setKey, $setValue);
-		$this->assertTrue($this->object->save());
-		$this->assertEquals($setValue, $this->object->get($setKey));
+        $this->assertTrue($this->object->get('isInstalled'));
+    }
 
-		$this->object->set($setKey, 'Another Wrong Value');
-		$this->assertTrue($this->object->save());
-	}
 
-	public function testSetNull()
-	{
-		$setKey= 'testOption';
-		$setValue= 'Test';
+    public function testSet()
+    {
+        $setKey= 'testOption';
+        $setValue= 'Test';
 
-		$this->object->set($setKey, $setValue);
-		$this->assertTrue($this->object->save());
-		$this->assertEquals($setValue, $this->object->get($setKey));
+        $this->object->set($setKey, $setValue);
+        $this->assertTrue($this->object->save());
+        $this->assertEquals($setValue, $this->object->get($setKey));
 
-		$this->object->set($setKey, null);
-		$this->assertTrue($this->object->save());
-		$this->assertNull($this->object->get($setKey));
-	}
+        $this->object->set($setKey, 'Another Wrong Value');
+        $this->assertTrue($this->object->save());
+    }
 
-	public function testSetArray()
-	{
-		$values = array(
-			'testOption' => 'Test',
-			'testOption2' => 'Test2',
-		);
+    public function testSetNull()
+    {
+        $setKey= 'testOption';
+        $setValue= 'Test';
 
-		$this->object->set($values);
-		$this->assertTrue($this->object->save());
-		$this->assertEquals('Test', $this->object->get('testOption'));
-		$this->assertEquals('Test2', $this->object->get('testOption2'));
+        $this->object->set($setKey, $setValue);
+        $this->assertTrue($this->object->save());
+        $this->assertEquals($setValue, $this->object->get($setKey));
 
-		$wrongArray = array(
-			'testOption' => 'Another Wrong Value',
-		);
-		$this->object->set($wrongArray);
-		$this->assertTrue($this->object->save());
-	}
+        $this->object->set($setKey, null);
+        $this->assertTrue($this->object->save());
+        $this->assertNull($this->object->get($setKey));
+    }
 
-	public function testRemove()
-	{
-		$optKey = 'removeOption';
-		$optValue = 'Test';
+    public function testSetArray()
+    {
+        $values = array(
+            'testOption' => 'Test',
+            'testOption2' => 'Test2',
+        );
 
-		$this->object->set($optKey, $optValue);
-		$this->assertTrue($this->object->save());
+        $this->object->set($values);
+        $this->assertTrue($this->object->save());
+        $this->assertEquals('Test', $this->object->get('testOption'));
+        $this->assertEquals('Test2', $this->object->get('testOption2'));
 
-		$this->assertTrue($this->object->remove($optKey));
+        $wrongArray = array(
+            'testOption' => 'Another Wrong Value',
+        );
+        $this->object->set($wrongArray);
+        $this->assertTrue($this->object->save());
+    }
 
-		$this->assertNull($this->object->get($optKey));
-	}
+    public function testRemove()
+    {
+        $optKey = 'removeOption';
+        $optValue = 'Test';
 
-	public function testSystemConfigMerge()
-	{
-		$configDataWithoutSystem = $this->objects['fileManager']->getContents($this->configPath);
-		$this->assertArrayNotHasKey('systemItems', $configDataWithoutSystem);
-		$this->assertArrayNotHasKey('adminItems', $configDataWithoutSystem);
+        $this->object->set($optKey, $optValue);
+        $this->assertTrue($this->object->save());
 
-		$configData = $this->reflection->invokeMethod('loadConfig', array());
+        $this->assertTrue($this->object->remove($optKey));
 
-		$this->assertArrayHasKey('systemItems', $configData);
-		$this->assertArrayHasKey('adminItems', $configData);
-	}
+        $this->assertNull($this->object->get($optKey));
+    }
+
+    public function testSystemConfigMerge()
+    {
+        $configDataWithoutSystem = $this->objects['fileManager']->getContents($this->configPath);
+        $this->assertArrayNotHasKey('systemItems', $configDataWithoutSystem);
+        $this->assertArrayNotHasKey('adminItems', $configDataWithoutSystem);
+
+        $configData = $this->reflection->invokeMethod('loadConfig', array());
+
+        $this->assertArrayHasKey('systemItems', $configData);
+        $this->assertArrayHasKey('adminItems', $configData);
+    }
 
 
 

@@ -1,39 +1,41 @@
 {
-	"fields": {
-		"name": "Имя",
-		"account": "Организация",
-		"stage": "Стадия",
-		"amount": "Сумма",
-		"probability": "Вероятность успеха, %",
-		"leadSource": "Лид",
-		"doNotCall": "Не звонить",
-		"closeDate": "Дата закрытия",
-		"contacts": "Контакты",
-		"description": "Описание",
-		"amountConverted": "Сумма (сконвертирована)"
-	},
-	"links": {
-		"contacts": "Контакты"
-	},
-	"options": {
-		"stage": {
-			"Prospecting": "Привлечение клиента",
-			"Qualification": "Оценка возможности",
-			"Needs Analysis": "Требует анализа",
-			"Value Proposition": "Выбор предложения/оферты",
-			"Id. Decision Makers": "Определение ответственного лица",
-			"Perception Analysis": "Проведение анализа",
-			"Proposal/Price Quote": "Отправлено предложение/оферта",
-			"Negotiation/Review": "Согласование/рассмотрение",
-			"Closed Won": "Закрыто - Успех",
-			"Closed Lost": "Закрыто - Провал" 
-		}
-	},
-	"labels": {
-		"Create Opportunity": "Создать возможность"
-	},
-	"presetFilters": {
-		"open": "Открытые",
-		"won": "Успешные"
-	}
+    "fields": {
+        "name": "Name",
+        "account": "Контрагент",
+        "stage": "Стадия",
+        "amount": "Сумма",
+        "probability": "Вероятность успеха, %",
+        "leadSource": "Источник потенциального клиента",
+        "doNotCall": "Не звонить",
+        "closeDate": "Дата закрытия",
+        "contacts": "Контакты",
+        "description": "Описание",
+        "amountConverted": "Сумма (сконвертирована)",
+        "amountWeightedConverted": "Amount Weighted"
+    },
+    "links": {
+        "contacts": "Контакты",
+        "documents": "Documents"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Привлечение клиента",
+            "Qualification": "Оценка возможности",
+            "Needs Analysis": "Требует анализа",
+            "Value Proposition": "Выбор предложения/оферты",
+            "Id. Decision Makers": "Определение ответственного лица",
+            "Perception Analysis": "Проведение анализа",
+            "Proposal/Price Quote": "Отправлено предложение/оферта",
+            "Negotiation/Review": "Согласование/рассмотрение",
+            "Closed Won": "Закрыто - Успех",
+            "Closed Lost": "Закрыто - Провал" 
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Создать сделку"
+    },
+    "presetFilters": {
+        "open": "Открыть",
+        "won": "Успешные"
+    }
 }

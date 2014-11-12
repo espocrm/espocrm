@@ -1,44 +1,75 @@
 {
-	"fields": {
-		"useCache": "Usar Cache",
-		"dateFormat": "Formato de fecha",
-		"timeFormat": "Formato de tiempo",
-		"timeZone": "Zona Horaria",
-		"weekStart": "Primer día de la semana",
-		"thousandSeparator": "Separador de miles",
-		"decimalMark": "Separador decimal",
-		"defaultCurrency": "Moneda por Defecto",
-		"currencyList": "Lista de Moneda",
-		"language": "Lenguaje",
-		
-		"smtpServer": "Servidor",
-		"smtpPort": "Puerto",
-		"smtpAuth": "Autenticación",
-		"smtpSecurity": "Securidad",
-		"smtpUsername": "Nombre de Usuario",
-		"emailAddress": "Correo electrónico",
-		"smtpPassword": "Contraseña",
-		"outboundEmailFromName": "De Nombre",
-		"outboundEmailFromAddress": "De la dirección",
-		"outboundEmailIsShared": "Es Compartido",
-		
-		"recordsPerPage": "Registros por Página",
-		"recordsPerPageSmall": "Records Per Page (Small)",		
-		"tabList": "Lista Pestaña",
-		"quickCreateList": "Crear Lista Rápido",
-		
-		"exportDelimiter": "Export Delimiter"
-	},
-	"options": {
-		"weekStart": {
-			"0": "Domingo",
-			"1": "Lunes"
-		}
-	},
-	"labels": {
-		"System": "Sistema",
-		"Locale": "Localización",
-		"SMTP": "SMTP",
-		"Configuration": "Configuración"
-	}
+    "fields": {
+        "useCache": "Usar Caché",
+        "dateFormat": "Formato de fecha",
+        "timeFormat": "Formato de tiempo",
+        "timeZone": "Zona Horaria",
+        "weekStart": "Primer día de la semana",
+        "thousandSeparator": "Separador de miles",
+        "decimalMark": "Separador decimal",
+        "defaultCurrency": "Moneda por Defecto",
+        "baseCurrency": "Moneda Base",
+        "currencyRates": "Valores Tarifa",
+        
+        "currencyList": "Lista de Moneda",
+        "language": "Idioma",
+        
+        "companyLogo": "Logo Compañia",
+        
+        "smtpServer": "Servidor",
+        "smtpPort": "Puerto",
+        "smtpAuth": "Autenticación",
+        "smtpSecurity": "Seguridad",
+        "smtpUsername": "Nombre de Usuario",
+        "emailAddress": "Correo electrónico",
+        "smtpPassword": "Contraseña",
+        "outboundEmailFromName": "De Nombre",
+        "outboundEmailFromAddress": "De la dirección",
+        "outboundEmailIsShared": "Es Compartido",
+        
+        "recordsPerPage": "Registros por Página",
+        "recordsPerPageSmall": "Registros Por Página (Pequeño)",        
+        "tabList": "Lista Pestaña",
+        "quickCreateList": "Crear Lista Rápida",
+        
+        "exportDelimiter": "Exportar Delimitador",
+        
+        "authenticationMethod": "Método de Autentificación",
+        "ldapHost": "Host",
+        "ldapPort": "Puerto",
+        "ldapAuth": "Autenticación",
+        "ldapUsername": "Nombre de Usuario",
+        "ldapPassword": "Contraseña",
+        "ldapBindRequiresDn": "Bind Necesita Nd (Nombre Dominio)",
+        "ldapBaseDn": "ND Base",
+        "ldapAccountCanonicalForm": "Forma Canónica de la Cuenta",
+        "ldapAccountDomainName": "Nombre de Dominio de la Cuenta",
+        "ldapTryUsernameSplit": "Intentar dividir el nombre de Usuario",
+        "ldapCreateEspoUser": "Crear Usuario en EspoCRM",
+        "ldapSecurity": "Seguridad",
+        "ldapUserLoginFilter": "Usar Filtro en el Login",
+        "ldapAccountDomainNameShort": "Nombre Dominio Corto para la Cuenta",
+        "ldapOptReferrals": "Referencias Opt",
+        "disableExport": "Desactivar Exportar (Solo admin está permitido)",
+        "assignmentEmailNotifications": "Enviar Correos Electrónicos de notificación sobre Asignación",
+        "assignmentEmailNotificationsEntityList": "Entidades a Notificar"
+    },
+    "options": {
+        "weekStart": {
+            "0": "Domingo",
+            "1": "Lunes"
+        }
+    },
+    "tooltips": {
+        "recordsPerPageSmall": "Contador de registros en los paneles de relación"
+    },
+    "labels": {
+        "System": "Sistema",
+        "Locale": "Localización",
+        "SMTP": "SMTP",
+        "Configuration": "Configuración",
+        "Notifications": "Notificaciones",
+        "Currency Settings": "Configuración Moneda",
+        "Currency Rtes": "Tarifa Moneda"
+    }
 }

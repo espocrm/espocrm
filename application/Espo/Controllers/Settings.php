@@ -27,48 +27,48 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Settings extends \Espo\Core\Controllers\Base
 {
-	protected function getConfigData()
-	{
-		$data = $this->getConfig()->getData($this->getUser()->isAdmin());
+    protected function getConfigData()
+    {
+        $data = $this->getConfig()->getData($this->getUser()->isAdmin());
 
-		$fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
+        $fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
 
-		foreach ($fieldDefs as $field => $d) {
-			if ($d['type'] == 'password') {
-				unset($data[$field]);
-			}
-		}
-		return $data;
-	}
+        foreach ($fieldDefs as $field => $d) {
+            if ($d['type'] == 'password') {
+                unset($data[$field]);
+            }
+        }
+        return $data;
+    }
 
-	public function actionRead($params, $data)
-	{
-		return $this->getConfigData();
-	}
+    public function actionRead($params, $data)
+    {
+        return $this->getConfigData();
+    }
 
-	public function actionUpdate($params, $data)
-	{
-		return $this->actionPatch($params, $data);
-	}
+    public function actionUpdate($params, $data)
+    {
+        return $this->actionPatch($params, $data);
+    }
 
-	public function actionPatch($params, $data)
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
+    public function actionPatch($params, $data)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-		$this->getConfig()->setData($data, $this->getUser()->isAdmin());
-		$result = $this->getConfig()->save();
-		if ($result === false) {
-			throw new Error('Cannot save settings');
-		}
+        $this->getConfig()->setData($data, $this->getUser()->isAdmin());
+        $result = $this->getConfig()->save();
+        if ($result === false) {
+            throw new Error('Cannot save settings');
+        }
 
-		/** Rebuild for Currency Settings */
-		if (isset($data['baseCurrency']) || isset($data['currencyRates'])) {
-			$this->getContainer()->get('dataManager')->rebuildDatabase(array());
-		}
-		/** END Rebuild for Currency Settings */
+        /** Rebuild for Currency Settings */
+        if (isset($data['baseCurrency']) || isset($data['currencyRates'])) {
+            $this->getContainer()->get('dataManager')->rebuildDatabase(array());
+        }
+        /** END Rebuild for Currency Settings */
 
-		return $this->getConfigData();
-	}
+        return $this->getConfigData();
+    }
 }

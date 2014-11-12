@@ -21,21 +21,21 @@
 
 Espo.define('Crm:Views.Opportunity.Fields.LeadSource', 'Views.Fields.Enum', function (Dep) {
 
-	return Dep.extend({
-	
-		listTemplate: 'crm:opportunity.fields.lead-source.detail',
+    return Dep.extend({
+    
+        listTemplate: 'crm:opportunity.fields.lead-source.detail',
 
-		detailTemplate: 'crm:opportunity.fields.lead-source.detail',
+        detailTemplate: 'crm:opportunity.fields.lead-source.detail',
 
-		editTemplate: 'crm:opportunity.fields.lead-source.edit',
+        editTemplate: 'crm:opportunity.fields.lead-source.edit',
 
-		searchTemplate: 'crm:opportunity.fields.lead-source.search',
-	
-		setup: function () {		
-			Dep.prototype.setup.call(this);			
-			this.params.options = this.getMetadata().get('entityDefs.Lead.fields.source.options');			
-		},
-		
-	});
+        searchTemplate: 'crm:opportunity.fields.lead-source.search',
+    
+        setup: function () {        
+            Dep.prototype.setup.call(this);            
+            this.params.options = this.getMetadata().get('entityDefs.Lead.fields.source.options');            
+        },
+        
+    });
 
 });

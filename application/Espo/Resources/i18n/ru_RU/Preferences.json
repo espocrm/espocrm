@@ -1,34 +1,37 @@
 {
-	"fields": {
-		"dateFormat": "Формат даты",
-		"timeFormat": "Формат времени",
-		"timeZone": "Часовой пояс",
-		"weekStart": "Первый день недели",
-		"thousandSeparator": "Разделитель разрядов(тысячные)",
-		"decimalMark": "Десятичный знак",
-		"defaultCurrency": "Валюта по умолчанию",
-		"currencyList": "Список валют",
-		"language": "Язык",
-		
-		"smtpServer": "Сервер",
-		"smtpPort": "Порт",
-		"smtpAuth": "Авторизация",
-		"smtpSecurity": "Безопасность",
-		"smtpUsername": "Имя пользователя",
-		"emailAddress": "E-mail",
-		"smtpPassword": "Пароль",
-		"smtpEmailAddress": "Адрес e-mail",
-		
-		"exportDelimiter": "Разделитель (Перемещение)",
-		
-		"receiveAssignmentEmailNotifications": "Получать уведомления при назначении"
-	},
-	"links": {
-	},
-	"options": {
-		"weekStart": {
-			"0": "Воскресенье",
-			"1": "Понедельник"
-		}
-	}
+    "fields": {
+        "dateFormat": "Формат даты",
+        "timeFormat": "Формат времени",
+        "timeZone": "Часовой пояс",
+        "weekStart": "Первый день недели",
+        "thousandSeparator": "Разделитель разрядов(тысячные)",
+        "decimalMark": "Десятичный знак",
+        "defaultCurrency": "Валюта по умолчанию",
+        "currencyList": "Список валют",
+        "language": "Язык",
+        
+        "smtpServer": "Сервер",
+        "smtpPort": "Порт",
+        "smtpAuth": "Авторизация",
+        "smtpSecurity": "Безопасность",
+        "smtpUsername": "Username",
+        "emailAddress": "Email",
+        "smtpPassword": "Пароль",
+        "smtpEmailAddress": "E-mail адрес",
+        
+        "exportDelimiter": "Разделитель (Перемещение)",
+        
+        "receiveAssignmentEmailNotifications": "Получать уведомления при назначении"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Воскресенье",
+            "1": "Понедельник"
+        }
+    },
+    "labels": {
+        "Notifications": "Оповещения"
+    }
 }

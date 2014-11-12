@@ -21,30 +21,42 @@
 
 Espo.define('Views.Email.List', 'Views.List', function (Dep) {
 
-	return Dep.extend({
-	
-		createButton: false,
+    return Dep.extend({
+    
+        createButton: false,
 
-		actionComposeEmail: function () {
-			this.notify('Loading...');
-			this.createView('quickCreate', 'Modals.ComposeEmail', {
-				attributes: {
-					status: 'Draft'
-				},
-			}, function (view) {
-				view.render();
-				view.notify(false);
-			});
-		},
-		
-		getSearchDefaultData: function () {
-			return {
-				bool: {
-					'onlyMy': true
-				}
-			};
-		},
-		
-	});
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            if (this.getAcl().check('EmailAccountScope')) {
+                this.menu.dropdown.push({
+                   "label": "Email Accounts",
+                   "link": "#EmailAccount"
+                });
+            }
+
+        },
+
+        actionComposeEmail: function () {
+            this.notify('Loading...');
+            this.createView('quickCreate', 'Modals.ComposeEmail', {
+                attributes: {
+                    status: 'Draft'
+                },
+            }, function (view) {
+                view.render();
+                view.notify(false);
+            });
+        },
+        
+        getSearchDefaultData: function () {
+            return {
+                bool: {
+                    'onlyMy': true
+                }
+            };
+        },
+        
+    });
 });
 

@@ -19,19 +19,19 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Models.Settings', 'ModelOffline', function (Dep) {
-	
-	return Dep.extend({
-	
-		name: 'Settings',
+    
+    return Dep.extend({
+    
+        name: 'Settings',
 
-		getDefaultCurrencyOptions: function () {
-			return this.get('currencyList') || [];
-		},
-		
-		getBaseCurrencyOptions: function () {
-			return this.get('currencyList') || [];
-		},
+        getDefaultCurrencyOptions: function () {
+            return this.get('currencyList') || [];
+        },
+        
+        getBaseCurrencyOptions: function () {
+            return this.get('currencyList') || [];
+        },
 
-	});
+    });
 
 });

@@ -1,57 +1,50 @@
 {
-	"labels": {
-		"Converted To": "Преобразован в",
-		"Create Lead": "Создать Лид",
-		"Convert": "Преобразовать"
-	},
-	"fields": {
-		"name": "Полное имя",
-		"emailAddress": "E-mail",
-		"title": "Должность",
-		"website": "Сайт",
-		"phoneNumber": "Телефон",
-		"accountName": "Название организации",
-		"doNotCall": "Не звонить",
-		"address": "Адрес",
-		"status": "Статус",
-		"source": "Источник",
-		"opportunityAmount": "Возможный доход",
-		"opportunityAmountConverted": "Возможный доход (конвертирован)",
-		"description": "Описание",
-		"createdAccount": "Созданная организация",
-		"createdContact": "Созданный контакт",
-		"createdOpportunity": "Созданная возможность"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Новый",
-			"Assigned": "Назначено",
-			"In Process": "В процессе",
-			"Converted": "Преобразовано",
-			"Recycled": "Восстановленный",
-			"Dead": "Мертв"
-		},
-		"source": {
-			"Call": "Звонок",
-			"Email": "E-mail",
-			"Partner": "Партнеры",
-			"Other": "Другое",
-			"friend": "подруга/друг",
-			"relative": "родственник",
-			"1happy": "1 happy",
-			"autopay": "автопей",
-			"vk": "вконтакт",
-			"wife": "жена/муж",
-			"BA": "ба/аба",
-			"mother": "мама/дочь",
-			"radio": "сарафанное радио",
-			"talk": "мое общение",
-			"magic": "волшебным образом"
-		}
-	},
-	"presetFilters": {
-		"active": "Только активные"
-	}
+    "labels": {
+        "Converted To": "Преобразован в",
+        "Create Lead": "Создать потенциального клиента",
+        "Convert": "Преобразовать"
+    },
+    "fields": {
+        "name": "Name",
+        "emailAddress": "Email",
+        "title": "Название",
+        "website": "Интернет сайт",
+        "phoneNumber": "Phone",
+        "accountName": "Имя контрагента",
+        "doNotCall": "Не звонить",
+        "address": "Address",
+        "status": "статус",
+        "source": "Source",
+        "opportunityAmount": "Сумма сделки",
+        "opportunityAmountConverted": "Сумма сделки (конвертирован)",
+        "description": "Описание",
+        "createdAccount": "Контрагент",
+        "createdContact": "Контакт",
+        "createdOpportunity": "Cделка"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Новый",
+            "Assigned": "На рассмотрении",
+            "In Process": "В процессе",
+            "Converted": "Преобразовано",
+            "Recycled": "Восстановленный",
+            "Dead": "Мертв"
+        },
+        "source": {
+            "Call": "Вызов",
+            "Email": "Email",
+            "Existing Customer": "Existing Customer",
+            "Partner": "Партнер",
+            "Public Relations": "Public Relations",
+            "Web Site": "Web Site",
+            "Campaign": "Campaign",
+            "Other": "Дополнительно"
+        }
+    },
+    "presetFilters": {
+        "active": "Активный"
+    }
 }

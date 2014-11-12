@@ -21,18 +21,18 @@
 
 Espo.define('Views.About', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'about',
+        template: 'about',
 
-		el: '#main',
-		
-		data: function () {
-			return {			
-				version: this.getConfig().get('version')
-			};
-		}
+        el: '#main',
+        
+        data: function () {
+            return {            
+                version: this.getConfig().get('version')
+            };
+        }
 
-	});
+    });
 });
 

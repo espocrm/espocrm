@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Opublikuj",
-		"attachments": "Załącznik"
-	}
+    "fields": {
+        "post": "Opublikuj",
+        "attachments": "Załącznik"
+    }
 }

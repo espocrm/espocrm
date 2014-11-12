@@ -22,42 +22,42 @@
 
 Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		cssName: 'add-dashlet',
+        cssName: 'add-dashlet',
 
-		template: 'modals.add-dashlet',
+        template: 'modals.add-dashlet',
 
-		data: function () {
-			return {
-				dashletList: this.dashletList,
-			};
-		},
+        data: function () {
+            return {
+                dashletList: this.dashletList,
+            };
+        },
 
-		events: {
-			'click button.add': function (e) {
-				var name = $(e.currentTarget).data('name');
-				this.getParentView().addDashlet(name);					
-				this.close();
-			},
-		},
+        events: {
+            'click button.add': function (e) {
+                var name = $(e.currentTarget).data('name');
+                this.getParentView().addDashlet(name);                    
+                this.close();
+            },
+        },
 
-		setup: function () {
-			this.buttons = [
-				{
-					name: 'cancel',
-					label: 'Cancel',
-					onClick: function (dialog) {
-						dialog.close();
-					}
-				}
-			];
-			
-			this.header = this.translate('Add Dashlet');
-			
-			this.dashletList = Object.keys(this.getMetadata().get('dashlets') || {});				
-		},
-	});
+        setup: function () {
+            this.buttons = [
+                {
+                    name: 'cancel',
+                    label: 'Cancel',
+                    onClick: function (dialog) {
+                        dialog.close();
+                    }
+                }
+            ];
+            
+            this.header = this.translate('Add Dashlet');
+            
+            this.dashletList = Object.keys(this.getMetadata().get('dashlets') || {});                
+        },
+    });
 });
 
 

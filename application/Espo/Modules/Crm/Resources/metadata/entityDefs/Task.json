@@ -9,7 +9,7 @@
             "options": ["Not Started", "Started", "Completed", "Canceled"],
             "view": "Fields.EnumStyled",
             "style": {
-            	"Completed": "success"
+                "Completed": "success"
             }
         },
         "priority": {
@@ -27,10 +27,10 @@
             "view": "Crm:Task.Fields.DateEnd"
         },
         "isOverdue": {
-        	"type": "bool",
-        	"readOnly": true,
-        	"notStorable": true,
-        	"view": "Crm:Task.Fields.IsOverdue"
+            "type": "bool",
+            "readOnly": true,
+            "notStorable": true,
+            "view": "Crm:Task.Fields.IsOverdue"
         },
         "description": {
             "type": "text"
@@ -87,7 +87,7 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
     }
 }

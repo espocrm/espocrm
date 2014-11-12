@@ -22,5 +22,5 @@
          }
       ]
    },
-	"boolFilters": ["onlyMy"]
+    "boolFilters": ["onlyMy"]
 }

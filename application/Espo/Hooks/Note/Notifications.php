@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Hooks\Note;
 
@@ -26,80 +26,80 @@ use Espo\ORM\Entity;
 
 class Notifications extends \Espo\Core\Hooks\Base
 {
-	protected $notificationService = null;
-	
-	public static $order = 14;
-	
-	protected function init()
-	{
-		$this->dependencies[] = 'serviceFactory';
-	}
-	
-	protected function getServiceFactory()
-	{
-		return $this->getInjection('serviceFactory');
-	}
-	
-	protected function getMentionedUserList($entity)
-	{
-		$mentionedUserList = array();
-		$data = $entity->get('data');
-		if (($data instanceof \stdClass) && ($data->mentions instanceof \stdClass)) {
-			$mentions = get_object_vars($data->mentions);
-			foreach ($mentions as $d) {
-				$mentionedUserList[] = $d->id;
-			}			
-		}
-		return $mentionedUserList;
-	}
-	
-	public function afterSave(Entity $entity)
-	{
-		if (!$entity->isFetched()) {
+    protected $notificationService = null;
 
-			$parentType = $entity->get('parentType');
-			$parentId = $entity->get('parentId');			
-		
-			if ($parentType && $parentId) {
+    public static $order = 14;
 
-				$mentionedUserList = $this->getMentionedUserList($entity);
-			
-				$pdo = $this->getEntityManager()->getPDO();
-				$sql = "
-					SELECT user_id AS userId 
-					FROM subscription
-					WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
-				$sth = $pdo->prepare($sql);
-				$sth->execute();
-				$userIdList = array();
-				while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-					if ($this->getUser()->id != $row['userId'] && !in_array($row['userId'], $mentionedUserList)) {
-						$userIdList[] = $row['userId'];
-					}
-				}
-				if (!empty($userIdList)) {
-					$job = $this->getEntityManager()->getEntity('Job');
-					$job->set(array(
-						'serviceName' => 'Notification',
-						'method' => 'notifyAboutNoteFromJob',
-						'data' => array(
-							'userIdList' => $userIdList,
-							'noteId' => $entity->id
-						),
-						'executeTime' => date('Y-m-d H:i:s'),
-					));
-					$this->getEntityManager()->saveEntity($job);
-				}
-			}
-		}
-	}
-	
-	protected function getNotificationService()
-	{
-		if (empty($this->notificationService)) {
-			$this->notificationService = $this->getServiceFactory()->create('Notification');
-		}
-		return $this->notificationService;		
-	}
+    protected function init()
+    {
+        $this->dependencies[] = 'serviceFactory';
+    }
+
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
+    }
+
+    protected function getMentionedUserList($entity)
+    {
+        $mentionedUserList = array();
+        $data = $entity->get('data');
+        if (($data instanceof \stdClass) && ($data->mentions instanceof \stdClass)) {
+            $mentions = get_object_vars($data->mentions);
+            foreach ($mentions as $d) {
+                $mentionedUserList[] = $d->id;
+            }
+        }
+        return $mentionedUserList;
+    }
+
+    public function afterSave(Entity $entity)
+    {
+        if ($entity->isNew()) {
+
+            $parentType = $entity->get('parentType');
+            $parentId = $entity->get('parentId');
+
+            if ($parentType && $parentId) {
+
+                $mentionedUserList = $this->getMentionedUserList($entity);
+
+                $pdo = $this->getEntityManager()->getPDO();
+                $sql = "
+                    SELECT user_id AS userId
+                    FROM subscription
+                    WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
+                $sth = $pdo->prepare($sql);
+                $sth->execute();
+                $userIdList = array();
+                while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                    if ($this->getUser()->id != $row['userId'] && !in_array($row['userId'], $mentionedUserList)) {
+                        $userIdList[] = $row['userId'];
+                    }
+                }
+                if (!empty($userIdList)) {
+                    $job = $this->getEntityManager()->getEntity('Job');
+                    $job->set(array(
+                        'serviceName' => 'Notification',
+                        'method' => 'notifyAboutNoteFromJob',
+                        'data' => array(
+                            'userIdList' => $userIdList,
+                            'noteId' => $entity->id
+                        ),
+                        'executeTime' => date('Y-m-d H:i:s'),
+                    ));
+                    $this->getEntityManager()->saveEntity($job);
+                }
+            }
+        }
+    }
+
+    protected function getNotificationService()
+    {
+        if (empty($this->notificationService)) {
+            $this->notificationService = $this->getServiceFactory()->create('Notification');
+        }
+        return $this->notificationService;
+    }
 }
 

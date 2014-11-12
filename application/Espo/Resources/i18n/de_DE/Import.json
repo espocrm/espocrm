@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "Revert": "Zurückkehren",
+        "Return to Import": "Zurück zum Import",
+        "Run Import": "Import durchführen",
+        "Back": "Zurück",
+        "Field Mapping": "Feldzuordnung",
+        "Default Values": "Standardwerte",
+        "Add Field": "Feld hinzufügen",
+        "Created": "Erstellt",
+        "Updated": "Aktualisiert",
+        "Result": "Resultat",
+        "Show records": "Datensätze zeigen"
+    }
+}

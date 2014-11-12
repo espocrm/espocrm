@@ -1,14 +1,14 @@
 [
-	{
-		"label":"",
-		"rows":[
-			[{"name":"dateSent", "readOnly": true}],
-			[{"name":"parent"}],
-			[{"name":"from", "readOnly": true}],
-			[{"name":"to", "readOnly": true}],
-			[{"name":"name", "readOnly": true}],			
-			[{"name":"body", "readOnly": true}],
-			[{"name":"attachments", "readOnly": true}]
-		]
-	}
+    {
+        "label":"",
+        "rows":[
+            [{"name":"dateSent", "readOnly": true}],
+            [{"name":"parent"}],
+            [{"name":"from", "readOnly": true}],
+            [{"name":"to", "readOnly": true}],
+            [{"name":"name", "readOnly": true}],            
+            [{"name":"body", "readOnly": true}],
+            [{"name":"attachments", "readOnly": true}]
+        ]
+    }
 ]

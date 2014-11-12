@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Сообщение",
-		"attachments": "Вложения"
-	}
+    "fields": {
+        "post": "Разместить",
+        "attachments": "Вложения"
+    }
 }

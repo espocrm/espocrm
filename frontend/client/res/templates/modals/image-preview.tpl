@@ -1,5 +1,5 @@
 <div style="text-align: center;" class="image-container">
-	<img src="?entryPoint=image&size={{size}}&id={{id}}">
+    <img src="?entryPoint=image&size={{size}}&id={{id}}">
 </div>
 
 <div class="margin">

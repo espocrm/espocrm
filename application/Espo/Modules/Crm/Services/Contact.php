@@ -26,19 +26,19 @@ use \Espo\ORM\Entity;
 
 class Contact extends \Espo\Services\Record
 {
-	protected function getDuplicateWhereClause(Entity $entity)
-	{
-		return array(
-			'OR' => array(
-				array(
-					'firstName' => $entity->get('firstName'),
-					'lastName' => $entity->get('lastName'),
-				),
-				array(
-					'emailAddress' => $entity->get('emailAddress'),
-				),
-			),
-		);
-	}
+    protected function getDuplicateWhereClause(Entity $entity)
+    {
+        return array(
+            'OR' => array(
+                array(
+                    'firstName' => $entity->get('firstName'),
+                    'lastName' => $entity->get('lastName'),
+                ),
+                array(
+                    'emailAddress' => $entity->get('emailAddress'),
+                ),
+            ),
+        );
+    }
 }
 

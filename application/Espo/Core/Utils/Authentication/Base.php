@@ -28,33 +28,44 @@ use \Espo\Core\Utils\Auth;
 
 abstract class Base
 {
-	private $config;
+    private $config;
 
-	private $entityManager;
+    private $entityManager;
 
-	private $auth;
+    private $auth;
 
-	public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
-	{
-		$this->config = $config;
-		$this->entityManager = $entityManager;
-		$this->auth = $auth;
-	}
+    private $passwordHash;
 
-	protected function getConfig()
-	{
-		return $this->config;
-	}
+    public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+        $this->auth = $auth;
+    }
 
-	protected function getEntityManager()
-	{
-		return $this->entityManager;
-	}
+    protected function getConfig()
+    {
+        return $this->config;
+    }
 
-	protected function getAuth()
-	{
-		return $this->auth;
-	}
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    protected function getAuth()
+    {
+        return $this->auth;
+    }
+
+    protected function getPasswordHash()
+    {
+        if (!isset($this->passwordHash)) {
+            $this->passwordHash = new \Espo\Core\Utils\PasswordHash($this->config);
+        }
+
+        return $this->passwordHash;
+    }
 
 }
 

@@ -1,36 +1,41 @@
 {
-	"fields": {
-		"name": "Name",
-		"userName": "User Name",
-		"title": "Title",
-		"isAdmin": "Is Admin",
-		"defaultTeam": "Default Team",
-		"emailAddress": "Email",
-		"phoneNumber": "Phone",
-		"roles": "Roles",		
-		"password": "Password",
-		"passwordConfirm": "Confirm Password",
-		"newPassword": "New Password"
-	},
-	"links": {
-		"teams": "Teams",
-		"roles": "Roles"
-	},
-	"labels": {
-		"Create User": "Create User",
-		"Generate": "Generate",
-		"Access": "Access",
-		"Preferences": "Preferences",
-		"Change Password": "Change Password"
-	},
-	"tooltips": {
-		"defaultTeam": "All records created by this user will be related to this team by default.",
-		"userName": "Letters a-z, numbers 0-9 and underscores are allowed."
-	},
-	"messages": {
-		"passwordWillBeSent": "Password will be sent to user's email address.",
-		"accountInfoEmailSubject": "Account info",
-		"accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-		"passwordChanged": "Password has been changed"
-	}
+    "fields": {
+        "name": "Name",
+        "userName": "User Name",
+        "title": "Title",
+        "isAdmin": "Is Admin",
+        "defaultTeam": "Default Team",
+        "emailAddress": "Email",
+        "phoneNumber": "Phone",
+        "roles": "Roles",
+        "teamRole": "Position",
+        "password": "Password",
+        "passwordConfirm": "Confirm Password",
+        "newPassword": "New Password"
+    },
+    "links": {
+        "teams": "Teams",
+        "roles": "Roles"
+    },
+    "labels": {
+        "Create User": "Create User",
+        "Generate": "Generate",
+        "Access": "Access",
+        "Preferences": "Preferences",
+        "Change Password": "Change Password",
+        "Teams and Access Control": "Teams and Access Control"
+    },
+    "tooltips": {
+        "defaultTeam": "All records created by this user will be related to this team by default.",
+        "userName": "Letters a-z, numbers 0-9 and underscores are allowed.",
+        "isAdmin": "Admin user can access everything.",
+        "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
+        "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level only for this user."
+    },
+    "messages": {
+        "passwordWillBeSent": "Password will be sent to user's email address.",
+        "accountInfoEmailSubject": "Account info",
+        "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+        "passwordChanged": "Password has been changed"
+    }
 }

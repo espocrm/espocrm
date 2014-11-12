@@ -20,14 +20,14 @@
  ************************************************************************/ 
 
 Espo.define('Views.EmailTemplate.Record.Edit', ['Views.Record.Edit', 'Views.EmailTemplate.Record.Detail'], function (Dep, Detail) {
-	
-	return Dep.extend({
-	
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			Detail.prototype.listenToInsertField.call(this);
-		},
-		
-	});
+    
+    return Dep.extend({
+    
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            Detail.prototype.listenToInsertField.call(this);
+        },
+        
+    });
 
 });

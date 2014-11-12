@@ -26,25 +26,25 @@ use \Espo\Core\Exceptions;
 
 class CheckInboundEmails extends \Espo\Core\Jobs\Base
 {
-	public function run()
-	{	
-		$service = $this->getServiceFactory()->create('InboundEmail');		
-		$collection = $this->getEntityManager()->getRepository('InboundEmail')->where(array('status' => 'Active'))->find();
-		foreach ($collection as $entity) {
-			try {
-				$service->fetchFromMailServer($entity);
-			} catch (\Exception $e) {}
-		}
-		
-		$service = $this->getServiceFactory()->create('EmailAccount');		
-		$collection = $this->getEntityManager()->getRepository('EmailAccount')->where(array('status' => 'Active'))->find();
-		foreach ($collection as $entity) {
-			try {
-				$service->fetchFromMailServer($entity);
-			} catch (\Exception $e) {}
-		}
-		
-		return true;
-	}	
+    public function run()
+    {    
+        $service = $this->getServiceFactory()->create('InboundEmail');        
+        $collection = $this->getEntityManager()->getRepository('InboundEmail')->where(array('status' => 'Active'))->find();
+        foreach ($collection as $entity) {
+            try {
+                $service->fetchFromMailServer($entity);
+            } catch (\Exception $e) {}
+        }
+        
+        $service = $this->getServiceFactory()->create('EmailAccount');        
+        $collection = $this->getEntityManager()->getRepository('EmailAccount')->where(array('status' => 'Active'))->find();
+        foreach ($collection as $entity) {
+            try {
+                $service->fetchFromMailServer($entity);
+            } catch (\Exception $e) {}
+        }
+        
+        return true;
+    }    
 }
 

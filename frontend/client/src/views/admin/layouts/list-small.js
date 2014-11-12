@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-	
-Espo.define('Views.Admin.Layouts.ListSmall', 'Views.Admin.Layouts.List', function (Dep) {		
+    
+Espo.define('Views.Admin.Layouts.ListSmall', 'Views.Admin.Layouts.List', function (Dep) {        
 
-	return Dep.extend({			
-	});
+    return Dep.extend({            
+    });
 });
 
 

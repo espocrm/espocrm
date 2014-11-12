@@ -27,60 +27,60 @@ use \Espo\Core\Exceptions\Error,
 
 class Admin extends \Espo\Core\Controllers\Base
 {
-	protected function checkControllerAccess()
-	{
-		if (!$this->getUser()->isAdmin()) {
-			throw new Forbidden();
-		}
-	}
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 
-	public function actionRebuild($params, $data)
-	{
-		$result = $this->getContainer()->get('dataManager')->rebuild();
+    public function actionRebuild($params, $data)
+    {
+        $result = $this->getContainer()->get('dataManager')->rebuild();
 
-		return $result;
-	}
+        return $result;
+    }
 
-	public function actionClearCache($params, $data)
-	{
-		$result = $this->getContainer()->get('dataManager')->clearCache();
+    public function actionClearCache($params, $data)
+    {
+        $result = $this->getContainer()->get('dataManager')->clearCache();
 
-		return $result;
-	}
+        return $result;
+    }
 
-	public function actionJobs()
-	{
-		$scheduledJob = $this->getContainer()->get('scheduledJob');
+    public function actionJobs()
+    {
+        $scheduledJob = $this->getContainer()->get('scheduledJob');
 
-		return $scheduledJob->getAllNamesOnly();
-	}
+        return $scheduledJob->getAllNamesOnly();
+    }
 
-	public function actionUploadUpgradePackage($params, $data)
-	{
-		$upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+    public function actionUploadUpgradePackage($params, $data)
+    {
+        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
 
-		$upgradeId = $upgradeManager->upload($data);
-		$manifest = $upgradeManager->getManifest();
+        $upgradeId = $upgradeManager->upload($data);
+        $manifest = $upgradeManager->getManifest();
 
-		return array(
-			'id' => $upgradeId,
-			'version' => $manifest['version'],
-		);
-	}
+        return array(
+            'id' => $upgradeId,
+            'version' => $manifest['version'],
+        );
+    }
 
-	public function actionRunUpgrade($params, $data)
-	{
-		$upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+    public function actionRunUpgrade($params, $data)
+    {
+        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
 
-		$upgradeManager->install($data['id']);
+        $upgradeManager->install($data['id']);
 
-		return true;
-	}
+        return true;
+    }
 
-	public function actionCronMessage($params, $data)
-	{
-		return $this->getContainer()->get('scheduledJob')->getSetupMessage();
-	}
+    public function actionCronMessage($params, $data)
+    {
+        return $this->getContainer()->get('scheduledJob')->getSetupMessage();
+    }
 
 }
 

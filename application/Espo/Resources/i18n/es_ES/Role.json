@@ -1,32 +1,35 @@
 {
-	"fields": {
-		"name": "Nombre",
-		"roles": "Roles"
-	},
-	"links": {
-		"users": "Usuarios",
-		"teams": "Equipos"
-	},
-	"labels": {
-		"Access": "Acceso",
-		"Create Role": "Crear Rol"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "sin establecer",
-			"enabled": "activado",
-			"disabled": "desactivado"
-		},
-		"levelList": {
-			"all": "todos",
-			"team": "equipo",
-			"own": "propio",
-			"no": "no"
-		}
-	},
-	"actions": {
-		"read": "Leer",
-		"edit": "Editar",
-		"delete": "Borrar"
-	}
+    "fields": {
+        "name": "Asunto",
+        "roles": "Roles"
+    },
+    "links": {
+        "users": "Usuarios",
+        "teams": "Equipos"
+    },
+    "labels": {
+        "Access": "Acceso",
+        "Create Role": "Crear Rol"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "sin establecer",
+            "enabled": "activado",
+            "disabled": "desactivado"
+        },
+        "levelList": {
+            "all": "todos",
+            "team": "equipo",
+            "own": "propio",
+            "no": "no"
+        }
+    },
+    "actions": {
+        "read": "Leer",
+        "edit": "Editar",
+        "delete": "Borrar"
+    },
+    "messages": {
+        "changesAfterClearCache": "Todos los cambios en el control de acceso serán aplicacados después de limpiar la caché"
+    }
 }

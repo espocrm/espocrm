@@ -18,31 +18,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication;
 
 use \Espo\Core\Exceptions\Error;
 
 class Espo extends Base
-{	
-	
-	public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
-	{
-		if ($authToken) {
-			$hash = $authToken->get('hash');
-		} else {
-			$hash = md5($password);
-		}
-		
-		$user = $this->getEntityManager()->getRepository('User')->findOne(array(
-			'whereClause' => array(
-				'userName' => $username,
-				'password' => $hash
-			),
-		));
-		
-		return $user;
-	}
+{
+    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
+    {
+        if ($authToken) {
+            $hash = $authToken->get('hash');
+        } else {
+            $hash = $this->getPasswordHash()->hash($password);
+        }
+
+        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
+            'whereClause' => array(
+                'userName' => $username,
+                'password' => $hash
+            ),
+        ));
+
+        return $user;
+    }
 }
 

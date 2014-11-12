@@ -26,15 +26,15 @@ use Doctrine\DBAL\Types\BooleanType;
 
 class Bool extends BooleanType
 {
-	const BOOL = 'bool';
+    const BOOL = 'bool';
 
-	public function getName()
+    public function getName()
     {
         return self::BOOL;
     }
 
-	public static function getDbTypeName()
-	{
-		return 'TINYINT';
-	}
+    public static function getDbTypeName()
+    {
+        return 'TINYINT';
+    }
 }

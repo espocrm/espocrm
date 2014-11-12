@@ -1,7 +1,7 @@
 {
-	"labels": {
-		"Primary": "Главные",
-		"Opted Out": "Отписка",
-		"Invalid": "Неверный адрес"
-	}
+    "labels": {
+        "Primary": "Главные",
+        "Opted Out": "Отписка",
+        "Invalid": "Неверный адрес"
+    }
 }

@@ -1,42 +1,42 @@
 {
-	"fields": {
-		"name": "Имя",
-		"number": "Номер",
-		"status": "Статус",
-		"account": "Организация",
-		"contact": "Контакт",
-		"priority": "Приоритет",
-		"type": "Раздел",
-		"description": "Описание"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Новый",
-			"Assigned": "На рассмотрении",
-			"Pending": "Текущее",
-			"Closed": "Закрыто",
-			"Rejected": "Отказано",
-			"Duplicate": "Копия"
-		},
-		"priority" : {
-			"Low": "Низкий",
-			"Normal": "Нормальный",
-			"High": "Высокий",
-			"Urgent": "Срочно"
-		},
-		"type": {
-			"Question": "Вопрос",
-			"Incident": "Происшествие",
-			"Problem": "Проблема"
-		}
-	},
-	"labels": {
-		"Create Case": "Создать обращение"
-	},
-	"presetFilters": {
-		"open": "Открыто",
-		"closed": "Закрыто"
-	}
+    "fields": {
+        "name": "Name",
+        "number": "Номер",
+        "status": "статус",
+        "account": "Контрагент",
+        "contact": "Контакт",
+        "priority": "Приоритет",
+        "type": "Type",
+        "description": "Описание"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Новый",
+            "Assigned": "На рассмотрении",
+            "Pending": "Текущее",
+            "Closed": "Закрыто",
+            "Rejected": "Отказано",
+            "Duplicate": "Копия"
+        },
+        "priority" : {
+            "Low": "Низкий",
+            "Normal": "Нормальный",
+            "High": "Высокий",
+            "Urgent": "Срочно"
+        },
+        "type": {
+            "Question": "Вопрос",
+            "Incident": "Происшествие",
+            "Problem": "Проблема"
+        }
+    },
+    "labels": {
+        "Create Case": "Создать обращение"
+    },
+    "presetFilters": {
+        "open": "Открыть",
+        "closed": "Закрыто"
+    }
 }

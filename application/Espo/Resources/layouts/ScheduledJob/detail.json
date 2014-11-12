@@ -1,9 +1,9 @@
 [
-	{
-		"rows": [
-			[{"name": "name"}, {"name": "status"}],
-			[{"name": "job"}],
-			[{"name": "scheduling"}]
-		]
-	}
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "status"}],
+            [{"name": "job"}],
+            [{"name": "scheduling"}]
+        ]
+    }
 ]

@@ -26,37 +26,37 @@ use Espo\Core\Exceptions\Error;
 
 class Upload extends \Espo\Core\Upgrades\Actions\Base
 {
-	/**
-	 * Upload an upgrade/extension package
-	 *
-	 * @param  [type] $contents
-	 * @return string  ID of upgrade/extension process
-	 */
-	public function run($data)
-	{
-		$processId = $this->createProcessId();
+    /**
+     * Upload an upgrade/extension package
+     *
+     * @param  [type] $contents
+     * @return string  ID of upgrade/extension process
+     */
+    public function run($data)
+    {
+        $processId = $this->createProcessId();
 
-		$GLOBALS['log']->debug('Installation process ['.$processId.']: start upload the package.');
+        $GLOBALS['log']->debug('Installation process ['.$processId.']: start upload the package.');
 
-		$packagePath = $this->getPackagePath();
-		$packageArchivePath = $this->getPackagePath(true);
+        $packagePath = $this->getPackagePath();
+        $packageArchivePath = $this->getPackagePath(true);
 
-		if (!empty($data)) {
-			list($prefix, $contents) = explode(',', $data);
-			$contents = base64_decode($contents);
-		}
+        if (!empty($data)) {
+            list($prefix, $contents) = explode(',', $data);
+            $contents = base64_decode($contents);
+        }
 
-		$res = $this->getFileManager()->putContents($packageArchivePath, $contents);
-		if ($res === false) {
-			throw new Error('Could not upload the package.');
-		}
+        $res = $this->getFileManager()->putContents($packageArchivePath, $contents);
+        if ($res === false) {
+            throw new Error('Could not upload the package.');
+        }
 
-		$this->unzipArchive();
+        $this->unzipArchive();
 
-		$this->isAcceptable();
+        $this->isAcceptable();
 
-		$GLOBALS['log']->debug('Installation process ['.$processId.']: end upload the package.');
+        $GLOBALS['log']->debug('Installation process ['.$processId.']: end upload the package.');
 
-		return $processId;
-	}
+        return $processId;
+    }
 }

@@ -1,3 +1,3 @@
 <div class="calendar-container">
-	{{{calendar}}}
+    {{{calendar}}}
 </div>

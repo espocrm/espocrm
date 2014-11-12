@@ -1,0 +1,32 @@
+{
+    "labels": {
+        "Create Document": "Crear Documento",
+        "Details": "Detalles"
+    },
+    "fields": {
+        "name": "Asunto",
+        "status": "Estado",
+        "file": "Archivo",
+        "type": "Tipo",
+        "source": "Fuente",
+        "publishDate": "Publicar Fecha",
+        "expirationDate": "Fecha de Expiración",
+        "description": "Descripción"
+    },
+    "links": {
+        "accounts": "Cuentas",
+        "opportunities": "Oportunidades"
+    },
+    "options": {
+        "status": {
+            "Active": "Activo",
+            "Draft": "Borrador",
+            "Expired": "Expirado",
+            "Canceled": "Cancelado"
+        }
+    },
+    "presetFilters": {
+        "active": "Activo",
+        "draft": "Borrador"
+    }
+}

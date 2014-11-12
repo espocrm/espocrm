@@ -30,84 +30,84 @@
  */
 
 Espo.Acl = function (user) {
-	this.data = {};
-	this.user = user || null;			
+    this.data = {};
+    this.user = user || null;            
 }
 
 _.extend(Espo.Acl.prototype, {
 
-	data: null,
-	
-	user: null,
-		
-	set: function (data) {
-		data = data || {};
-		this.data = data;
-	},
-	
-	check: function (controller, action, isOwner, inTeam) {
-		if (this.user.isAdmin()) {
-			return true;
-		}
-		
-		if (controller in this.data) {			
-			if (this.data[controller] === false) {
-				return false;
-			}
-			if (this.data[controller] === true) {
-				return true;
-			}
-			if (typeof action !== 'undefined') {			
-				if (action in this.data[controller]) {
-					var value = this.data[controller][action];
-				
-					if (value === 'all' || value === true) {
-						return true;					
-					}
-				
-					if (!value || value === 'no') {
-						return false;					
-					}
-				
-					if (typeof isOwner === 'undefined') {
-						return true;
-					}
-				
-					if (isOwner) {
-						if (value === 'own' || value === 'team') {
-							return true;
-						}
-					}
-				
-					//if (inTeam) {
-						if (value === 'team') {
-							return true;
-						}
-					//}
-				
-					return false;
-				}
-			}
-			return true;
-		}
-		return true;
-	},
-	
-	checkModel: function (model, action) {
-		if (action == 'edit') {
-			if (!model.isEditable()) {
-				return false;
-			}
-		}
-		if (this.user.isAdmin()) {
-			return true;
-		}
-		return this.check(model.name, action, this.user.isOwner(model), this.user.inTeam(model));
-	},
-	
-	clear: function () {
-		this.data = {};
-	}
+    data: null,
+    
+    user: null,
+        
+    set: function (data) {
+        data = data || {};
+        this.data = data;
+    },
+    
+    check: function (controller, action, isOwner, inTeam) {
+        if (this.user.isAdmin()) {
+            return true;
+        }
+        
+        if (controller in this.data) {            
+            if (this.data[controller] === false) {
+                return false;
+            }
+            if (this.data[controller] === true) {
+                return true;
+            }
+            if (typeof action !== 'undefined') {            
+                if (action in this.data[controller]) {
+                    var value = this.data[controller][action];
+                
+                    if (value === 'all' || value === true) {
+                        return true;                    
+                    }
+                
+                    if (!value || value === 'no') {
+                        return false;                    
+                    }
+                
+                    if (typeof isOwner === 'undefined') {
+                        return true;
+                    }
+                
+                    if (isOwner) {
+                        if (value === 'own' || value === 'team') {
+                            return true;
+                        }
+                    }
+                
+                    //if (inTeam) {
+                        if (value === 'team') {
+                            return true;
+                        }
+                    //}
+                
+                    return false;
+                }
+            }
+            return true;
+        }
+        return true;
+    },
+    
+    checkModel: function (model, action) {
+        if (action == 'edit') {
+            if (!model.isEditable()) {
+                return false;
+            }
+        }
+        if (this.user.isAdmin()) {
+            return true;
+        }
+        return this.check(model.name, action, this.user.isOwner(model), this.user.inTeam(model));
+    },
+    
+    clear: function () {
+        this.data = {};
+    }
 });
 
 

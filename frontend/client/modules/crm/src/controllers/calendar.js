@@ -20,20 +20,29 @@
  ************************************************************************/ 
 
 Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
-	
-	return Dep.extend({		
-	
-		show: function (options) {
-			this.index(options);
-		},
-	
-		index: function (options) {
-			this.main('Crm:CalendarPage', {
-				date: options.date,
-				mode: options.mode,		
-			});
-		},			
-	});	
+    
+    return Dep.extend({        
+    
+        checkAccess: function () {
+            if (this.getAcl().check('Calendar')) {
+                return true;
+            }
+            return false;
+        },
+
+        show: function (options) {
+            this.index(options);
+        },
+    
+        index: function (options) {
+            this.handleCheckAccess();
+
+            this.main('Crm:CalendarPage', {
+                date: options.date,
+                mode: options.mode,        
+            });
+        },            
+    });    
 });
 
 

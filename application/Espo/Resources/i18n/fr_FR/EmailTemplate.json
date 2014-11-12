@@ -1,16 +1,16 @@
 {
-	"fields": {
-		"name": "Nom",
-		"status": "Statut",
-		"isHtml": "En HTML",
-		"body": "Corps",
-		"subject": "Sujet",
-		"attachments": "Fichiers Joints",
-		"insertField": ""
-	},
-	"links": {
-	},
-	"labels": {
-		"Create EmailTemplate": "Créer un modèle d'email"
-	}
+    "fields": {
+        "name": "Nom",
+        "status": "Statut",
+        "isHtml": "En HTML",
+        "body": "Corps",
+        "subject": "Sujet",
+        "attachments": "Fichiers Joints",
+        "insertField": ""
+    },
+    "links": {
+    },
+    "labels": {
+        "Create EmailTemplate": "Créer un modèle d'email"
+    }
 }

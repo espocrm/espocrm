@@ -19,16 +19,16 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Controllers.Role', 'Controllers.Record', function (Dep) {
-	
-	return Dep.extend({	
-	
-		checkAccess: function () {
-			if (this.getUser().isAdmin()) {
-				return true;
-			}
-			return false;
-		},
+    
+    return Dep.extend({    
+    
+        checkAccess: function () {
+            if (this.getUser().isAdmin()) {
+                return true;
+            }
+            return false;
+        },
 
-	});
-	
+    });
+    
 });

@@ -6,7 +6,7 @@
         },
         "hash": {
             "type": "varchar",
-            "maxLength": "36",
+            "maxLength": 150,
             "index": true
         },
         "userId": {
@@ -17,8 +17,8 @@
             "type": "link"
         },
         "ipAddress": {
-        	"type": "varchar",
-        	"maxLength": "36"
+            "type": "varchar",
+            "maxLength": "36"
         },
         "lastAccess": {
             "type": "datetime"
@@ -39,7 +39,7 @@
         }
     },
     "collection": {
-    	"sortBy": "lastAccess",
-    	"asc": false
+        "sortBy": "lastAccess",
+        "asc": false
     }
 }

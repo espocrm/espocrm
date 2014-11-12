@@ -20,12 +20,12 @@
  ************************************************************************/ 
 Espo.define('Controllers.Page', 'Controller', function (Dep) {
 
-	return Dep.extend({
-		
-		view: function (options) {
-			var page = options.id;
-			this.main(null, {template: 'pages.' + Espo.Utils.convert(page, 'c-h')});
-			
-		}		
-	});	
+    return Dep.extend({
+        
+        view: function (options) {
+            var page = options.id;
+            this.main(null, {template: 'pages.' + Espo.Utils.convert(page, 'c-h')});
+            
+        }        
+    });    
 });

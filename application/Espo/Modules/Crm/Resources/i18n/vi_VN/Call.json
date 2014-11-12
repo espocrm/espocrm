@@ -1,39 +1,39 @@
 {
-	"fields": {
-		"name": "Tên",
-		"parent": "Chủ",
-		"status": "Trạng thái",
-		"dateStart": "Ngày bắt đầu",
-		"dateEnd": "Ngày kết thúc",
-		"direction": "Hướng",
-		"duration": "Thời gian",
-		"description": "Mô tả",
-		"users": "Người dùng",
-		"contacts": "Sổ liên lạc",
-		"leads": "Trưởng nhóm"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Đã lên kế hoạch",
-			"Held": "Đã được tổ chức",
-			"Not Held": "Chưa được tổ chức"
-		},
-		"direction": {
-			"Outbound": "Ra ngoài",
-			"Inbound": "Vào trong"
-		}
-	},
-	"labels": {
-		"Create Call": "Tạo cuộc gọi",
-		"Set Held": "Tổ chức",
-		"Set Not Held": "Không tổ chức",
-		"Send Invitations": "Gửi giấy mời"		
-	},
-	"presetFilters": {
-		"planned": "Đã lên kế hoạch",
-		"held": "Đã được tổ chức",
-		"todays": "Hôm nay"
-	}
+    "fields": {
+        "name": "Tên",
+        "parent": "Chủ",
+        "status": "Trạng thái",
+        "dateStart": "Ngày bắt đầu",
+        "dateEnd": "Ngày kết thúc",
+        "direction": "Hướng",
+        "duration": "Thời gian",
+        "description": "Mô tả",
+        "users": "Người dùng",
+        "contacts": "Sổ liên lạc",
+        "leads": "Trưởng nhóm"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Đã lên kế hoạch",
+            "Held": "Đã được tổ chức",
+            "Not Held": "Chưa được tổ chức"
+        },
+        "direction": {
+            "Outbound": "Ra ngoài",
+            "Inbound": "Vào trong"
+        }
+    },
+    "labels": {
+        "Create Call": "Tạo cuộc gọi",
+        "Set Held": "Tổ chức",
+        "Set Not Held": "Không tổ chức",
+        "Send Invitations": "Gửi giấy mời"        
+    },
+    "presetFilters": {
+        "planned": "Đã lên kế hoạch",
+        "held": "Đã được tổ chức",
+        "todays": "Hôm nay"
+    }
 }

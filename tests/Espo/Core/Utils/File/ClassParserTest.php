@@ -7,22 +7,22 @@ use tests\ReflectionHelper;
 
 class ClassParserTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
-	
-	protected $objects;
+    protected $object;
+    
+    protected $objects;
 
-	protected $reflection;
+    protected $reflection;
 
 
     protected function setUp()
     {  
-    	$this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
-    	$this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-    	$this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
 
-		$this->object = new \Espo\Core\Utils\File\ClassParser($this->objects['fileManager'], $this->objects['config'], $this->objects['metadata']);
+        $this->object = new \Espo\Core\Utils\File\ClassParser($this->objects['fileManager'], $this->objects['config'], $this->objects['metadata']);
 
-		$this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->object);
     }
 
     protected function tearDown()
@@ -33,9 +33,9 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
 
     function testGetClassNameHash()
     {
-    	$paths = array(
-        	'tests/testData/EntryPoints/Espo/EntryPoints',
-	     	'tests/testData/EntryPoints/Espo/Modules/Crm/EntryPoints',    	     
+        $paths = array(
+            'tests/testData/EntryPoints/Espo/EntryPoints',
+             'tests/testData/EntryPoints/Espo/Modules/Crm/EntryPoints',             
         );
 
         $result = array(
@@ -44,33 +44,33 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
             'InModule' => '\tests\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'          
         );        
         $this->assertEquals( $result, $this->reflection->invokeMethod('getClassNameHash', array($paths)) ); 
-    }	
+    }    
 
 
     function testGetDataWithCache()
     {
-    	$this->objects['config']
+        $this->objects['config']
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue(true));
 
         $cacheFile = 'tests/testData/EntryPoints/cache/entryPoints.php';
         $paths = array(
-        	'corePath' => 'tests/testData/EntryPoints/Espo/EntryPoints',
-	     	'modulePath' => 'tests/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
-    		'customPath' => 'tests/testData/EntryPoints/Espo/Custom/EntryPoints',      
+            'corePath' => 'tests/testData/EntryPoints/Espo/EntryPoints',
+             'modulePath' => 'tests/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
+            'customPath' => 'tests/testData/EntryPoints/Espo/Custom/EntryPoints',      
         );
 
         $result = array (
-		  'Download' => '\\tests\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
-		);
+          'Download' => '\\tests\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
+        );
 
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths, $cacheFile)) );    	
-    }	
+        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths, $cacheFile)) );        
+    }    
 
     function testGetDataWithNoCache()
     {
-    	$this->objects['config']
+        $this->objects['config']
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
@@ -79,16 +79,16 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(
-            	array(
-            		'Crm',
-            	)
+                array(
+                    'Crm',
+                )
             )); 
 
         $cacheFile = 'tests/testData/EntryPoints/cache/entryPoints.php';
         $paths = array(
-        	'corePath' => 'tests/testData/EntryPoints/Espo/EntryPoints',
-	     	'modulePath' => 'tests/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
-    		'customPath' => 'tests/testData/EntryPoints/Espo/Custom/EntryPoints',      
+            'corePath' => 'tests/testData/EntryPoints/Espo/EntryPoints',
+             'modulePath' => 'tests/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
+            'customPath' => 'tests/testData/EntryPoints/Espo/Custom/EntryPoints',      
         );
 
         $result = array(
@@ -97,7 +97,7 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
             'InModule' => '\tests\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'          
         );  
 
-        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths, $cacheFile)) );    	
+        $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths, $cacheFile)) );        
     }
 
 
@@ -157,7 +157,7 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( $result, $this->reflection->invokeMethod('getData', array($paths)) );      
     }
-	
+    
 
 
 }

@@ -21,37 +21,37 @@
 
 Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Default', function (Dep) {
 
-	return Dep.extend({
-		
-		getActions: function () {
-			if (this.options.acl.edit) {
-				return [
-					{
-						action: 'editRelated',
-						label: 'Edit',
-						data: {
-							id: this.model.id
-						}					
-					},
-					{
-						action: 'unlinkRelated',
-						label: 'Unlink',
-						data: {
-							id: this.model.id
-						}					
-					},
-					{
-						action: 'removeRelated',
-						label: 'Remove',
-						data: {
-							id: this.model.id
-						}					
-					}
-				];
-			}
-		},
-		
-	});
+    return Dep.extend({
+        
+        getActions: function () {
+            if (this.options.acl.edit) {
+                return [
+                    {
+                        action: 'editRelated',
+                        label: 'Edit',
+                        data: {
+                            id: this.model.id
+                        }                    
+                    },
+                    {
+                        action: 'unlinkRelated',
+                        label: 'Unlink',
+                        data: {
+                            id: this.model.id
+                        }                    
+                    },
+                    {
+                        action: 'removeRelated',
+                        label: 'Remove',
+                        data: {
+                            id: this.model.id
+                        }                    
+                    }
+                ];
+            }
+        },
+        
+    });
 
 });
 

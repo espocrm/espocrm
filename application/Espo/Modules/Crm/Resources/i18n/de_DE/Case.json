@@ -1,42 +1,42 @@
 {
-	"fields": {
-		"name": "Name",
-		"number": "Nummer",
-		"status": "Status",
-		"account": "Firma",
-		"contact": "Kontakt",
-		"priority": "Priorität",
-		"type": "Typ",
-		"description": "Beschreibung"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Neu",
-			"Assigned": "Zugewiesen",
-			"Pending": "Schwebend",
-			"Closed": "Abgeschlossen",
-			"Rejected": "Abgelehnt",
-			"Duplicate": "Duplizieren"
-		},
-		"priority" : {
-			"Low": "Niedrig",
-			"Normal": "Normal",
-			"High": "Hoch",
-			"Urgent": "Dringend"
-		},
-		"type": {
-			"Question": "Frage",
-			"Incident": "Vorfall",
-			"Problem": "Problem"
-		}
-	},
-	"labels": {
-		"Create Case": "Neuer Fall"
-	},
-	"presetFilters": {
-		"open": "Offen",
-		"closed": "Abgeschlossen"
-	}
+    "fields": {
+        "name": "Name",
+        "number": "Nummer",
+        "status": "Status",
+        "account": "Firma",
+        "contact": "Kontakt",
+        "priority": "Priorität",
+        "type": "Typ",
+        "description": "Beschreibung"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Neu",
+            "Assigned": "Zugewiesen",
+            "Pending": "Schwebend",
+            "Closed": "Abgeschlossen",
+            "Rejected": "Abgelehnt",
+            "Duplicate": "Duplizieren"
+        },
+        "priority" : {
+            "Low": "Niedrig",
+            "Normal": "Normal",
+            "High": "Hoch",
+            "Urgent": "Dringend"
+        },
+        "type": {
+            "Question": "Frage",
+            "Incident": "Vorfall",
+            "Problem": "Problem"
+        }
+    },
+    "labels": {
+        "Create Case": "Fall erstellen"
+    },
+    "presetFilters": {
+        "open": "Offen",
+        "closed": "Abgeschlossen"
+    }
 }

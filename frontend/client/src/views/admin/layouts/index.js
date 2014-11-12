@@ -21,103 +21,127 @@
 
 Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'admin.layouts.index',
+        template: 'admin.layouts.index',
 
-		scopeList: null,
+        scopeList: null,
 
-		typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships'],
+        typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships'],
+        
+        additionalLayouts: {
+            'Opportunity': ['detailConvert'],
+            'Contact': ['detailConvert'],
+            'Account': ['detailConvert'],
+        },
 
-		scope: null,
+        scope: null,
 
-		type: null,
+        type: null,
 
-		data: function () {
-			return {
-				scopeList: this.scopeList,
-				typeList: this.typeList,
-				scope: this.scope,
-			};
-		},
+        data: function () {
+            return {
+                scopeList: this.scopeList,
+                typeList: this.typeList,
+                scope: this.scope,
+                layoutScopeDataList: (function () {
+                    var dataList = [];
+                    this.scopeList.forEach(function (scope) {
+                        var d = {};
+                        d.scope = scope;
+                        d.typeList = _.clone(this.typeList);
+                        (this.additionalLayouts[scope] || []).forEach(function (item) {
+                            d.typeList.push(item);
+                        });
+                        
+                        dataList.push(d);
+                    }, this);                    
+                    return dataList;
+                }).call(this)
+            };
+        },
 
-		events: {
-			'click #layouts-menu button.layout-link': function (e) {
-				var scope = $(e.currentTarget).data('scope');
-				var type = $(e.currentTarget).data('type');
-				if (this.getView('content')) {
-					if (this.scope == scope && this.type == type) {
-						return;
-					}
-				}
-				$("#layouts-menu button.layout-link").removeClass('disabled');
-				$(e.target).addClass('disabled');
-				this.openLayout(scope, type);
-			},
-		},
+        events: {
+            'click #layouts-menu button.layout-link': function (e) {
+                var scope = $(e.currentTarget).data('scope');
+                var type = $(e.currentTarget).data('type');
+                if (this.getView('content')) {
+                    if (this.scope == scope && this.type == type) {
+                        return;
+                    }
+                }
+                $("#layouts-menu button.layout-link").removeClass('disabled');
+                $(e.target).addClass('disabled');
+                this.openLayout(scope, type);
+            },
+        },
 
-		setup: function () {
-			this.scopeList = [];				
-			var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort();
-			scopesAll.forEach(function (scope) {
-				if (this.getMetadata().get('scopes.' + scope + '.entity') &&
-				    this.getMetadata().get('scopes.' + scope + '.layouts')) {
-					this.scopeList.push(scope);
-				}
-			}.bind(this));	
+        setup: function () {
+            this.scopeList = [];  
 
-			this.on('after:render', function () {
-				$("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');
-				this.renderLayoutHeader();
-				if (!this.options.scope) {
-					this.renderDefaultPage();
-				}
-				if (this.scope) {
-					this.openLayout(this.options.scope, this.options.type);
-				}
-			});
+            var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
+                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
 
-			this.scope = this.options.scope || null;
-			this.type = this.options.type || null;
-		},
+            scopesAll.forEach(function (scope) {
+                if (this.getMetadata().get('scopes.' + scope + '.entity') &&
+                    this.getMetadata().get('scopes.' + scope + '.layouts')) {
+                    this.scopeList.push(scope);
+                }
+            }.bind(this));    
 
-		openLayout: function (scope, type) {
-			this.scope = scope;
-			this.type = type;
+            this.on('after:render', function () {
+                $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');
+                this.renderLayoutHeader();
+                if (!this.options.scope) {
+                    this.renderDefaultPage();
+                }
+                if (this.scope) {
+                    this.openLayout(this.options.scope, this.options.type);
+                }
+            });
 
-			this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type, {trigger: false});
+            this.scope = this.options.scope || null;
+            this.type = this.options.type || null;
+        },
 
-			this.notify('Loading...');
+        openLayout: function (scope, type) {
+            this.scope = scope;
+            this.type = type;
 
-			this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(type), {
-				el: '#layout-content',
-				scope: scope,
-				type: type,
-			}, function (view) {
-				this.renderLayoutHeader();
-				view.render();
-				this.notify(false);
-				$(window).scrollTop(0);
-			}.bind(this));
-		},
+            this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type, {trigger: false});
 
-		renderDefaultPage: function () {
-			$("#layout-header").html('').hide();
-			$("#layout-content").html(this.translate('selectLayout', 'messages', 'Admin'));
-		},
+            this.notify('Loading...');
 
-		renderLayoutHeader: function () {
-			if (!this.scope) {
-				$("#layout-header").html("");
-				return;
-			}
-			$("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') + " » " + this.getLanguage().translate(this.type, 'layouts', 'Admin'));
-		},
+            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(type), {
+                el: '#layout-content',
+                scope: scope,
+                type: type,
+            }, function (view) {
+                this.renderLayoutHeader();
+                view.render();
+                this.notify(false);
+                $(window).scrollTop(0);
+            }.bind(this));
+        },
 
-		updatePageTitle: function () {
-			this.setPageTitle(this.getLanguage().translate('Layout Manager'));
-		},
-	});
+        renderDefaultPage: function () {
+            $("#layout-header").html('').hide();
+            $("#layout-content").html(this.translate('selectLayout', 'messages', 'Admin'));
+        },
+
+        renderLayoutHeader: function () {
+            if (!this.scope) {
+                $("#layout-header").html("");
+                return;
+            }
+            $("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') + " » " + this.getLanguage().translate(this.type, 'layouts', 'Admin'));
+        },
+
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Layout Manager'));
+        },
+    });
 });
 
 

@@ -1,30 +1,30 @@
 [
-	{
-		"label":"",
-		"rows":[
-			[
-				{
-					"name":"from",
-					"view": "Email.Fields.ComposeFromAddress"
-				},
-				{"name":"cc"}			
-			],
-			[
-				{"name":"to"},
-				{"name":"bcc"}
-			],			
-			[
-				{
-					"name": "parent"
-				},
-				{
-					"name":"selectTemplate",
-					"view":"Email.Fields.SelectTemplate" 
-				}
-			],
-			[{"name":"name","fullWidth":true}],
-			[{"name":"body","fullWidth":true}],
-			[{"name":"attachments"},{"name":"isHtml"}]
-		]
-	}
+    {
+        "label":"",
+        "rows":[
+            [
+                {
+                    "name":"from",
+                    "view": "Email.Fields.ComposeFromAddress"
+                },
+                {"name":"cc"}            
+            ],
+            [
+                {"name":"to"},
+                {"name":"bcc"}
+            ],            
+            [
+                {
+                    "name": "parent"
+                },
+                {
+                    "name":"selectTemplate",
+                    "view":"Email.Fields.SelectTemplate" 
+                }
+            ],
+            [{"name":"name","fullWidth":true}],
+            [{"name":"body","fullWidth":true}],
+            [{"name":"attachments"},{"name":"isHtml"}]
+        ]
+    }
 ]

@@ -26,44 +26,44 @@ use Espo\Core\Exceptions\Error;
 
 class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
 {
-	protected $extensionEntity;
+    protected $extensionEntity;
 
-	/**
-	 * Get entity of this extension
-	 *
-	 * @return \Espo\Entities\Extension
-	 */
-	protected function getExtensionEntity()
-	{
-		return $this->extensionEntity;
-	}
+    /**
+     * Get entity of this extension
+     *
+     * @return \Espo\Entities\Extension
+     */
+    protected function getExtensionEntity()
+    {
+        return $this->extensionEntity;
+    }
 
-	/**
-	 * Set Extension Entity
-	 *
-	 * @param \Espo\Entities\Extension $extensionEntity
-	 */
-	protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
-	{
-		$this->extensionEntity = $extensionEntity;
-	}
+    /**
+     * Set Extension Entity
+     *
+     * @param \Espo\Entities\Extension $extensionEntity
+     */
+    protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
+    {
+        $this->extensionEntity = $extensionEntity;
+    }
 
-	protected function beforeRunAction()
-	{
-		$processId = $this->getProcessId();
+    protected function beforeRunAction()
+    {
+        $processId = $this->getProcessId();
 
-		/** get extension entity */
-		$extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
-		if (!isset($extensionEntity)) {
-			throw new Error('Extension Entity not found.');
-		}
-		$this->setExtensionEntity($extensionEntity);
-	}
+        /** get extension entity */
+        $extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
+        if (!isset($extensionEntity)) {
+            throw new Error('Extension Entity not found.');
+        }
+        $this->setExtensionEntity($extensionEntity);
+    }
 
-	protected function afterRunAction()
-	{
-		/** Delete extension entity */
-		$extensionEntity = $this->getExtensionEntity();
-		$this->getEntityManager()->removeEntity($extensionEntity);
-	}
+    protected function afterRunAction()
+    {
+        /** Delete extension entity */
+        $extensionEntity = $this->getExtensionEntity();
+        $this->getEntityManager()->removeEntity($extensionEntity);
+    }
 }

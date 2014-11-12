@@ -21,18 +21,18 @@
 
 Espo.define('Views.Home', 'View', function (Dep) {
 
-	return Dep.extend({		
+    return Dep.extend({        
 
-		template: 'home',
-		
-		el: '#main',			
-		
-		views: {
-			dashboard: {
-				view: 'Dashboard',
-				selector: '> .dashboard',					
-			}
-		},			
-	});
+        template: 'home',
+        
+        el: '#main',            
+        
+        views: {
+            dashboard: {
+                view: 'Dashboard',
+                selector: '> .dashboard',                    
+            }
+        },            
+    });
 });
 

@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "customField": {
+            "type": "varchar",
+            "required": false,
+            "isCustom": true
+        }
+    }
+}

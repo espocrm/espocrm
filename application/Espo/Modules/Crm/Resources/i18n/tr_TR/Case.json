@@ -1,38 +1,38 @@
 {
-	"fields": {
-		"name": "İsim",
-		"number": "Numara",
-		"status": "Durum",
-		"account": "Hesap",
-		"contact": "Bağlantı",
-		"priority": "Öncelik",
-		"type": "Tür",
-		"description": "açıklama"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Yeni",
-			"Assigned": "Atanmış",
-			"Pending": "Beklemede",
-			"Closed": "Kapandı",
-			"Rejected": "Reddedildi",
-			"Duplicate": "Kopyala"
-		},
-		"priority" : {
-			"Low": "Düşük",
-			"Normal": "Normal",
-			"High": "Yüksek",
-			"Urgent": "Acil"
-		},
-		"type": {
-			"Question": "Soru",
-			"Incident": "Olay",
-			"Problem": "sorun"
-		}
-	},
-	"labels": {
-		"Create Case": "Dosya Oluştur"
-	}
+    "fields": {
+        "name": "İsim",
+        "number": "Numara",
+        "status": "Durum",
+        "account": "Hesap",
+        "contact": "Bağlantı",
+        "priority": "Öncelik",
+        "type": "Tür",
+        "description": "açıklama"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Yeni",
+            "Assigned": "Atanmış",
+            "Pending": "Beklemede",
+            "Closed": "Kapandı",
+            "Rejected": "Reddedildi",
+            "Duplicate": "Kopyala"
+        },
+        "priority" : {
+            "Low": "Düşük",
+            "Normal": "Normal",
+            "High": "Yüksek",
+            "Urgent": "Acil"
+        },
+        "type": {
+            "Question": "Soru",
+            "Incident": "Olay",
+            "Problem": "sorun"
+        }
+    },
+    "labels": {
+        "Create Case": "Dosya Oluştur"
+    }
 }

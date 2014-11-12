@@ -1,37 +1,38 @@
 {
-	"fields": {
-		"name": "Имя",
-		"parent": "Источник",
-		"status": "Статус",
-		"dateStart": "Дата начала",
-		"dateEnd": "Дата окончания",
-		"priority": "Приоритет",
-		"description": "Описание",
-		"isOverdue": "Просрочена"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Not Started": "Не началась",
-			"Started": "Началась",
-			"Completed": "Завершена",
-			"Canceled": "Отменена"
-		},
-		"priority" : {
-			"Low": "Низкий",
-			"Normal": "Нормальный",
-			"High": "Высокий",
-			"Urgent": "Срочно"
-		}
-	},
-	"labels": {
-		"Create Task": "Создать задачу"
-	},
-	"presetFilters": {
-		"active": "Активные",
-		"completed": "Завершенные",
-		"todays": "На сегодня",
-		"overdue": "Просроченные"
-	}
+    "fields": {
+        "name": "Name",
+        "parent": "Источник",
+        "status": "статус",
+        "dateStart": "Дата начала",
+        "dateEnd": "Date Due",
+        "priority": "Приоритет",
+        "description": "Описание",
+        "isOverdue": "Просрочена"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Not Started": "Не началась",
+            "Started": "Началась",
+            "Completed": "Завершена",
+            "Canceled": "Отменена"
+        },
+        "priority" : {
+            "Low": "Низкий",
+            "Normal": "Нормальный",
+            "High": "Высокий",
+            "Urgent": "Срочно"
+        }
+    },
+    "labels": {
+        "Create Task": "Создать задачу",
+        "Complete": "Complete"
+    },
+    "presetFilters": {
+        "actual": "Actual",
+        "completed": "Завершена",
+        "todays": "На сегодня",
+        "overdue": "Просроченные"
+    }
 }

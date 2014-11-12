@@ -14,7 +14,7 @@
             "type": "bool"
         },
         "user": {
-        	"type": "link"
+            "type": "link"
         },
         "createdAt": {
             "type": "datetime",
@@ -22,13 +22,13 @@
         }
     },
     "links": {
-    	"user": {
-    		"type": "belongsTo",
-    		"entity": "User"
-    	}
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
     }
 }

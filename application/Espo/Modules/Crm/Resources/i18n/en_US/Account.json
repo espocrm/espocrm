@@ -1,42 +1,42 @@
 {
-	"fields": {
-		"name": "Name",
-		"emailAddress": "Email",
-		"website": "Website",
-		"phoneNumber": "Phone",
-		"billingAddress": "Billing Address",
-		"shippingAddress": "Shipping Address",
-		"description": "Description",
-		"sicCode": "Sic Code",
-		"industry": "Industry",
-		"type": "Type",
-		"contactRole": "Role"
-	},
-	"links": {
-		"contacts": "Contacts",
-		"opportunities": "Opportunities",
-		"cases": "Cases",
-		"documents": "Documents"
-	},
-	"options": {
-		"type": {
-			"Customer": "Customer",
-			"Investor": "Investor",
-			"Partner": "Partner",
-			"Reseller": "Reseller"
-		},
-		"industry": {
-			"Apparel": "Apparel",
-			"Banking": "Banking",
-			"Computer Software": "Computer Software",
-			"Education": "Education",
-			"Electronics": "Electronics",
-			"Finance": "Finance",
-			"Insurance": "Insurance"
-		}
-	},
-	"labels": {
-		"Create Account": "Create Account",
-		"Copy Billing": "Copy Billing"
-	}
+    "fields": {
+        "name": "Name",
+        "emailAddress": "Email",
+        "website": "Website",
+        "phoneNumber": "Phone",
+        "billingAddress": "Billing Address",
+        "shippingAddress": "Shipping Address",
+        "description": "Description",
+        "sicCode": "Sic Code",
+        "industry": "Industry",
+        "type": "Type",
+        "contactRole": "Role"
+    },
+    "links": {
+        "contacts": "Contacts",
+        "opportunities": "Opportunities",
+        "cases": "Cases",
+        "documents": "Documents"
+    },
+    "options": {
+        "type": {
+            "Customer": "Customer",
+            "Investor": "Investor",
+            "Partner": "Partner",
+            "Reseller": "Reseller"
+        },
+        "industry": {
+            "Apparel": "Apparel",
+            "Banking": "Banking",
+            "Computer Software": "Computer Software",
+            "Education": "Education",
+            "Electronics": "Electronics",
+            "Finance": "Finance",
+            "Insurance": "Insurance"
+        }
+    },
+    "labels": {
+        "Create Account": "Create Account",
+        "Copy Billing": "Copy Billing"
+    }
 }

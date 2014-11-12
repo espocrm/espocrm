@@ -23,243 +23,254 @@
 namespace Espo\Core\Utils;
 
 use \Espo\Core\Exceptions\Error,
-	\Espo\Core\Exceptions\Conflict;
+    \Espo\Core\Exceptions\Conflict;
 
 class FieldManager
 {
-	private $metadata;
+    private $metadata;
 
-	private $language;
+    private $language;
 
-	private $metadataUtils;
+    private $metadataUtils;
 
-	protected $isChanged = null;
+    protected $isChanged = null;
 
-	protected $metadataType = 'entityDefs';
+    protected $metadataType = 'entityDefs';
 
-	protected $customOptionName = 'isCustom';
+    protected $customOptionName = 'isCustom';
 
 
-	public function __construct(Metadata $metadata, Language $language)
-	{
-		$this->metadata = $metadata;
-		$this->language = $language;
+    public function __construct(Metadata $metadata, Language $language)
+    {
+        $this->metadata = $metadata;
+        $this->language = $language;
 
-		$this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
-	}
+        $this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
+    }
 
-	protected function getMetadata()
-	{
-		return $this->metadata;
-	}
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
 
-	protected function getLanguage()
-	{
-		return $this->language;
-	}
+    protected function getLanguage()
+    {
+        return $this->language;
+    }
 
-	protected function getMetadataUtils()
-	{
-		return $this->metadataUtils;
-	}
+    protected function getMetadataUtils()
+    {
+        return $this->metadataUtils;
+    }
 
-	public function read($name, $scope)
-	{
-		$fieldDef = $this->getFieldDef($name, $scope);
+    public function read($name, $scope)
+    {
+        $fieldDef = $this->getFieldDef($name, $scope);
 
-		$fieldDef['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
+        $fieldDef['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
 
-		return $fieldDef;
-	}
+        return $fieldDef;
+    }
 
-	public function create($name, $fieldDef, $scope)
-	{
-		$existingField = $this->getFieldDef($name, $scope);
-		if (isset($existingField)) {
-			throw new Conflict('Field ['.$name.'] exists in '.$scope);
-		}
+    public function create($name, $fieldDef, $scope)
+    {
+        $existingField = $this->getFieldDef($name, $scope);
+        if (isset($existingField)) {
+            throw new Conflict('Field ['.$name.'] exists in '.$scope);
+        }
 
-		return $this->update($name, $fieldDef, $scope);
-	}
+        return $this->update($name, $fieldDef, $scope);
+    }
 
-	public function update($name, $fieldDef, $scope)
-	{
-		/*Add option to metadata to identify the custom field*/
-		if (!$this->isCore($name, $scope)) {
-			$fieldDef[$this->customOptionName] = true;
-		}
+    public function update($name, $fieldDef, $scope)
+    {
+        /*Add option to metadata to identify the custom field*/
+        if (!$this->isCore($name, $scope)) {
+            $fieldDef[$this->customOptionName] = true;
+        }
 
-		$res = true;
-		if (isset($fieldDef['label'])) {
-			$res &= $this->setLabel($name, $fieldDef['label'], $scope);
-		}
+        $res = true;
+        if (isset($fieldDef['label'])) {
+            $res &= $this->setLabel($name, $fieldDef['label'], $scope);
+        }
 
-		if ($this->isDefsChanged($name, $fieldDef, $scope)) {
-			$res &= $this->setEntityDefs($name, $fieldDef, $scope);
-		}
+        if (isset($fieldDef['type']) && $fieldDef['type'] == 'enum') {
+            if (isset($fieldDef['translatedOptions'])) {
+                $res &= $this->setTranslatedOptions($name, $fieldDef['translatedOptions'], $scope);
+            }  
+        }
 
-		return (bool) $res;
-	}
+        if ($this->isDefsChanged($name, $fieldDef, $scope)) {
+            $res &= $this->setEntityDefs($name, $fieldDef, $scope);
+        }
 
-	public function delete($name, $scope)
-	{
-		if ($this->isCore($name, $scope)) {
-			throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
-		}
+        return (bool) $res;
+    }
 
-		$unsets = array(
-			'fields.'.$name,
-			'links.'.$name,
-		);
+    public function delete($name, $scope)
+    {
+        if ($this->isCore($name, $scope)) {
+            throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
+        }
 
-		$res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
+        $unsets = array(
+            'fields.'.$name,
+            'links.'.$name,
+        );
 
-		$this->deleteLabel($name, $scope);
+        $res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
 
-		return $res;
-	}
+        $this->deleteLabel($name, $scope);
 
-	protected function setEntityDefs($name, $fieldDef, $scope)
-	{
-		$fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
+        return $res;
+    }
 
-		$data = Json::encode($fieldDef);
-		$res = $this->getMetadata()->set($data, $this->metadataType, $scope);
+    protected function setEntityDefs($name, $fieldDef, $scope)
+    {
+        $fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
 
-		return $res;
-	}
+        $data = Json::encode($fieldDef);
+        $res = $this->getMetadata()->set($data, $this->metadataType, $scope);
 
-	protected function setLabel($name, $value, $scope)
-	{
-		return $this->getLanguage()->set($name, $value, 'fields', $scope);
-	}
+        return $res;
+    }
 
-	protected function deleteLabel($name, $scope)
-	{
-		return $this->getLanguage()->delete($name, 'fields', $scope);
-	}
+    protected function setTranslatedOptions($name, $value, $scope)
+    {
+        return $this->getLanguage()->set($name, $value, 'options', $scope);
+    }
 
-	protected function getFieldDef($name, $scope)
-	{
-		return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
-	}
+    protected function setLabel($name, $value, $scope)
+    {
+        return $this->getLanguage()->set($name, $value, 'fields', $scope);
+    }
 
-	protected function getLinkDef($name, $scope)
-	{
-		return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.links.'.$name);
-	}
+    protected function deleteLabel($name, $scope)
+    {
+        return $this->getLanguage()->delete($name, 'fields', $scope);
+    }
 
-	/**
-	 * Prepare input fieldDefs, remove unnecessary fields
-	 *
-	 * @param string $fieldName
-	 * @param array $fieldDef
-	 * @param string $scope
-	 * @return array
-	 */
-	protected function prepareFieldDef($name, $fieldDef, $scope)
-	{
-		$unnecessaryFields = array(
-			'name',
-			'label',
-		);
+    protected function getFieldDef($name, $scope)
+    {
+        return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
+    }
 
-		foreach ($unnecessaryFields as $fieldName) {
-			if (isset($fieldDef[$fieldName])) {
-				unset($fieldDef[$fieldName]);
-			}
-		}
+    protected function getLinkDef($name, $scope)
+    {
+        return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.links.'.$name);
+    }
 
-		if (isset($fieldDef['linkDefs'])) {
-			$linkDefs = $fieldDef['linkDefs'];
-			unset($fieldDef['linkDefs']);
-		}
+    /**
+     * Prepare input fieldDefs, remove unnecessary fields
+     *
+     * @param string $fieldName
+     * @param array $fieldDef
+     * @param string $scope
+     * @return array
+     */
+    protected function prepareFieldDef($name, $fieldDef, $scope)
+    {
+        $unnecessaryFields = array(
+            'name',
+            'label',
+        );
 
-		$currentOptionList = array_keys((array) $this->getFieldDef($name, $scope));
-		foreach ($fieldDef as $defName => $defValue) {
-			if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
-				unset($fieldDef[$defName]);
-			}
-		}
+        foreach ($unnecessaryFields as $fieldName) {
+            if (isset($fieldDef[$fieldName])) {
+                unset($fieldDef[$fieldName]);
+            }
+        }
 
-		return $fieldDef;
-	}
+        if (isset($fieldDef['linkDefs'])) {
+            $linkDefs = $fieldDef['linkDefs'];
+            unset($fieldDef['linkDefs']);
+        }
 
-	/**
-	 * Add all needed block for a field defenition
-	 *
-	 * @param string $fieldName
-	 * @param array $fieldDef
-	 * @param string $scope
-	 * @return array
-	 */
-	protected function normalizeDefs($fieldName, array $fieldDef, $scope)
-	{
-		$fieldDef = $this->prepareFieldDef($fieldName, $fieldDef, $scope);
+        $currentOptionList = array_keys((array) $this->getFieldDef($name, $scope));
+        foreach ($fieldDef as $defName => $defValue) {
+            if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
+                unset($fieldDef[$defName]);
+            }
+        }
 
-		$metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
-		if (isset($metaFieldDef)) {
-			$fieldDef = Util::merge($metaFieldDef, $fieldDef);
-		}
+        return $fieldDef;
+    }
 
-		$defs = array(
-			'fields' => array(
-				$fieldName => $fieldDef,
-			),
-		);
+    /**
+     * Add all needed block for a field defenition
+     *
+     * @param string $fieldName
+     * @param array $fieldDef
+     * @param string $scope
+     * @return array
+     */
+    protected function normalizeDefs($fieldName, array $fieldDef, $scope)
+    {
+        $fieldDef = $this->prepareFieldDef($fieldName, $fieldDef, $scope);
 
-		/** Save links for a field. */
-		$metaLinkDef = $this->getMetadataUtils()->getLinkDefsInFieldMeta($scope, $fieldDef);
-		if (isset($linkDefs) || isset($metaLinkDef)) {
-			$linkDefs = Util::merge((array) $metaLinkDef, (array) $linkDefs);
-			$defs['links'] = array(
-				$fieldName => $linkDefs,
-			);
-		}
+        $metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
+        if (isset($metaFieldDef)) {
+            $fieldDef = Util::merge($metaFieldDef, $fieldDef);
+        }
 
-		return $defs;
-	}
+        $defs = array(
+            'fields' => array(
+                $fieldName => $fieldDef,
+            ),
+        );
 
-	/**
-	 * Check if changed metadata defenition for a field except 'label'
-	 *
-	 * @return boolean
-	 */
-	protected function isDefsChanged($name, $fieldDef, $scope)
-	{
-		$fieldDef = $this->prepareFieldDef($name, $fieldDef, $scope);
-		$currentFieldDef = $this->getFieldDef($name, $scope);
+        /** Save links for a field. */
+        $metaLinkDef = $this->getMetadataUtils()->getLinkDefsInFieldMeta($scope, $fieldDef);
+        if (isset($linkDefs) || isset($metaLinkDef)) {
+            $linkDefs = Util::merge((array) $metaLinkDef, (array) $linkDefs);
+            $defs['links'] = array(
+                $fieldName => $linkDefs,
+            );
+        }
 
-		$this->isChanged = Util::isEquals($fieldDef, $currentFieldDef) ? false : true;
+        return $defs;
+    }
 
-		return $this->isChanged;
-	}
+    /**
+     * Check if changed metadata defenition for a field except 'label'
+     *
+     * @return boolean
+     */
+    protected function isDefsChanged($name, $fieldDef, $scope)
+    {
+        $fieldDef = $this->prepareFieldDef($name, $fieldDef, $scope);
+        $currentFieldDef = $this->getFieldDef($name, $scope);
 
-	/**
-	 * Only for update method
-	 *
-	 * @return boolean
-	 */
-	public function isChanged()
-	{
-		return $this->isChanged;
-	}
+        $this->isChanged = Util::isEquals($fieldDef, $currentFieldDef) ? false : true;
 
-	/**
-	 * Check if a field is core field
-	 *
-	 * @param  string  $name
-	 * @param  string  $scope
-	 * @return boolean
-	 */
-	protected function isCore($name, $scope)
-	{
-		$existingField = $this->getFieldDef($name, $scope);
-		if (isset($existingField) && (!isset($existingField[$this->customOptionName]) || !$existingField[$this->customOptionName])) {
-			return true;
-		}
+        return $this->isChanged;
+    }
 
-		return false;
-	}
+    /**
+     * Only for update method
+     *
+     * @return boolean
+     */
+    public function isChanged()
+    {
+        return $this->isChanged;
+    }
+
+    /**
+     * Check if a field is core field
+     *
+     * @param  string  $name
+     * @param  string  $scope
+     * @return boolean
+     */
+    protected function isCore($name, $scope)
+    {
+        $existingField = $this->getFieldDef($name, $scope);
+        if (isset($existingField) && (!isset($existingField[$this->customOptionName]) || !$existingField[$this->customOptionName])) {
+            return true;
+        }
+
+        return false;
+    }
 
 }

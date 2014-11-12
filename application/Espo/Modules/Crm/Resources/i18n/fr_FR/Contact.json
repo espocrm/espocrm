@@ -1,31 +1,31 @@
 {
-	"fields": {
-		"name": "Nom",
-		"emailAddress": "Email",
-		"title": "Titre",
-		"account": "Compte",
-		"accounts": "Comptes",
-		"phoneNumber": "Téléphone",
-		"accountType": "Type de Compte",
-		"doNotCall": "Ne Pas Appeler",
-		"address": "Adresse",
-		"opportunityRole": "Rôle de Challenge",
-		"accountRole": "Rôle",
-		"description": "Description"
-	},
-	"links": {
-		"opportunities": "Opportunités",
-		"cases": "Tickets"
-	},
-	"labels": {
-		"Create Contact": "Créer un contact"
-	},
-	"options": {
-		"opportunityRole": {
-			"": "--Aucun--",
-			"Decision Maker": "Décisionnaire",
-			"Evaluator": "*Evaluator",
-			"Influencer": "Prescripteur"
-		}
-	}
+    "fields": {
+        "name": "Nom",
+        "emailAddress": "Email",
+        "title": "Titre",
+        "account": "Compte",
+        "accounts": "Comptes",
+        "phoneNumber": "Téléphone",
+        "accountType": "Type de Compte",
+        "doNotCall": "Ne Pas Appeler",
+        "address": "Adresse",
+        "opportunityRole": "Rôle de Challenge",
+        "accountRole": "Rôle",
+        "description": "Description"
+    },
+    "links": {
+        "opportunities": "Opportunités",
+        "cases": "Tickets"
+    },
+    "labels": {
+        "Create Contact": "Créer un contact"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--Aucun--",
+            "Decision Maker": "Décisionnaire",
+            "Evaluator": "*Evaluator",
+            "Influencer": "Prescripteur"
+        }
+    }
 }

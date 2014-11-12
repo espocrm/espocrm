@@ -20,8 +20,9 @@
         },
         "accountId": {
             "where": {
-            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})"
-            }
+                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})"
+            },
+            "disabled": true
         },
         "title": {
             "type": "varchar",
@@ -30,8 +31,8 @@
             "select": "accountContact.role",
             "orderBy": "accountContact.role {direction}",
             "where": {
-            	"LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE {value})",
-            	"=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
+                "LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE {value})",
+                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
             }
         },
         "description": {
@@ -75,13 +76,13 @@
             "type": "linkMultiple",
             "view": "Crm:Contact.Fields.Accounts",
             "columns": {
-            	"role": "contactRole"
+                "role": "contactRole"
             }
         },
         "accountRole": {
-        	"type": "varchar",
-        	"notStorable": true,
-        	"disabled": true
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         },
         "accountType": {
             "type": "foreign",
@@ -89,15 +90,15 @@
             "field": "type"
         },
         "opportunityRole": {
-        	"type": "enum",
-        	"notStorable": true,
-        	"disabled": true,
-        	"options": ["", "Decision Maker", "Evaluator", "Influencer"]
+            "type": "enum",
+            "notStorable": true,
+            "disabled": true,
+            "options": ["", "Decision Maker", "Evaluator", "Influencer"]
         },
         "acceptanceStatus": {
-        	"type": "varchar",
-        	"notStorable": true,
-        	"disabled": true
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         },
         "createdAt": {
             "type": "datetime",
@@ -149,12 +150,12 @@
             "type": "hasMany",
             "entity": "Account",
             "foreign": "contacts",
-			"additionalColumns": {
-				"role": {
-					"type": "varchar",
-		    		"len": 50
-				}
-			}
+            "additionalColumns": {
+                "role": {
+                    "type": "varchar",
+                    "len": 50
+                }
+            }
         },
         "opportunities": {
             "type": "hasMany",
@@ -187,7 +188,7 @@
         }
     },
     "collection": {
-    	"sortBy": "name",
-    	"asc": true
+        "sortBy": "name",
+        "asc": true
     }
 }

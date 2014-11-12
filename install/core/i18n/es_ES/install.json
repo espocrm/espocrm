@@ -1,7 +1,7 @@
 {
 	"labels": {
 		"Main page title": "Bienvenido a EspoCRM(Español)",
-		"Main page header": "",
+		"Main page header": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: EspoCRM <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\n",
 		"Start page title": "Contrato de licencia",
 		"Step1 page title": "Contrato de licencia",
 		"License Agreement": "Contrato de licencia",
@@ -12,10 +12,16 @@
 		"Step5 page title": "Configuración SMTP para los correos salientes",
 		"Errors page title": "Errores",
 		"Finish page title": "La instalación ha finalizado",
-		"Congratulation! Welcome to EspoCRM": "¡Enhorabuena! EspoCRM(Español) se ha instalado correctamente.",
-		"Installation Guide": "Instrucciones de instalación",
+		"Congratulation! Welcome to EspoCRM": "¡Felicitaciones! EspoCRM(Español) se ha instalado correctamente.",
+		"More Information": "Para más información, por favir visitar nuestro {BLOG},siguenos en {TWITTER}.<br><br>Si tienes alguna sugerencia o pregunta, por favor realizala en el {FORUM}. ",
+		"share": "Si te gusta EspoCRM, compartelo con tus amigos. Deja que sepan de este genial producto",
+		"blog": "blog",
+		"twitter": "twitter",
+		"forum": "foro",
+		"Installation Guide": "Guía de instalación",
 		"admin": "admin",
 		"localhost": "localhost",
+		"port": "3306",
 		"Locale": "Localización",
 		"Outbound Email Configuration": "Configuración de Correo Saliente",
 		"SMTP": "SMTP",
@@ -26,12 +32,18 @@
 		"Re-check": "Revisar otra vez",
 		"Version": "Version",
 		"Test settings": "Test de conexión",
-		"Database Settings Description": "Enter your MySQL database connection information (hostname, username and password). You can specify the server port for hostname like localhost:3306.",
-		"phpVersion": "PHP version",
-		"mysqlVersion": "MySQL version",
+		"Database Settings Description": "Ingresa la información de conexión a tu Base de Datos MySQL (nombre del host, usuario y contraseña). Puedes especificar el puerto del servidor por ejemplo localhost:3306.",
+		"Install": "Instalar",
+		"SetupConfirmation page title": "Configuración Recomendada",
+		"PHP Configuration": "Configuración PHP Recomendada",
+		"MySQL Configuration": "Configuración MySQL",
+		"Configuration Instructions": "Instrucciones de Configuración",
+		"phpVersion": "Versión PHP",
+		"mysqlVersion": "Versión MySQL",
 		"dbHostName": "Hostname usualmente(localhost)",
 		"dbName": "Nombre de la Base de Datos",
-		"dbUserName": "Usuario de la Base de Datos"
+		"dbUserName": "Usuario de la Base de Datos",
+		"OK": "OK"
 	},
 	"fields": {
 		"Choose your language": "Seleccione un lenguaje",
@@ -41,7 +53,7 @@
 		"Database User Name": "Usuario de la Base de Datos",
 		"Database User Password": "Contraseña de la Base de Datos",
 		"Database driver": "Controlador de base de datos",
-		"User Name": "Nombre de Usuario",
+		"User Name": "Nombre Usuario",
 		"Password": "Contraseña",
 		"Confirm Password": "Confirme su contraseña",
 		"From Address": "De la dirección",
@@ -55,27 +67,27 @@
 		"Decimal Mark": "Separador decimal",
 		"Default Currency": "Moneda por Defecto",
 		"Currency List": "Lista de Moneda",
-		"Language": "Lenguaje",
+		"Language": "Idioma",
 		"smtpServer": "Servidor",
 		"smtpPort": "Puerto",
 		"smtpAuth": "Autenticación",
-		"smtpSecurity": "Securidad",
+		"smtpSecurity": "Seguridad",
 		"smtpUsername": "Nombre de Usuario",
 		"emailAddress": "Correo electrónico",
 		"smtpPassword": "Contraseña"
 	},
 	"messages": {
-		"Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre>\n\tOperation not permitted? Try this one: {CSU}",
-		"Some errors occurred!": "Some errors occurred!",
-		"phpVersion": "Your PHP version is not supported by EspoCRM, please update to PHP {minVersion} at least",
-		"MySQLVersion": "Your MySQL version is not supported by EspoCRM, please update to MySQL {minVersion} at least",
-		"The PHP extension was not found...": "PHP Error: Extension <b>{extName}</b> is not found.",
-		"All Settings correct": "All Settings are correct",
-		"Failed to connect to database": "Failed to connect to database",
-		"PHP version": "PHP version",
+		"Bad init Permission": "Permiso denegado para directorio \"{*}\". Por favor establecer 775 para \"{*}\" o solo ejecute este comando en la terminal <pre><b>{C}</b></pre>\n\t¿Operacion no permitida? Intenta esta otra: {CSU}",
+		"Some errors occurred!": "¡Algunos errores ocurrieron!",
+		"phpVersion": "Su versión de PHP no está soportada por EspoCRM,por favor actualizar  a PHP{minVersion} por lo menos",
+		"MySQLVersion": "Su versión de MySQL no está soportada por EspoCRM,por favor actualizar  a MySQL{minVersion} por lo menos",
+		"The PHP extension was not found...": "PHP Error: Extensión <b>{extName}</b> no encontrada.",
+		"All Settings correct": "Todas las configuraciones son correctas",
+		"Failed to connect to database": "Fallo al conectar a la base de datos",
+		"PHP version": "Versión PHP",
 		"You must agree to the license agreement": "Usted debe aceptar el acuerdo de licencia",
-		"Passwords do not match": "Passwords do not match",
-		"Enable mod_rewrite in Apache server": "Enable mod_rewrite in Apache server",
+		"Passwords do not match": "Contraseñas no Coinciden",
+		"Enable mod_rewrite in Apache server": "Activar mod_rewrite en servidor Apache",
 		"checkWritable error": "checkWritable error",
 		"applySett error": "applySett error",
 		"buildDatabse error": "buildDatabse error",
@@ -84,15 +96,18 @@
 		"Ajax failed": "Ajax failed",
 		"Cannot create user": "Cannot create user",
 		"Permission denied": "Permission denied",
-		"permissionInstruction": "<br>Run this in Terminal<pre><b>\"{C}\"</b></pre>",
-		"operationNotPermitted" : "Operation not permitted? Try this: <br>{CSU}",
+		"permissionInstruction": "<br>Ejecutar esto en terminal<pre><b>\"{C}\"</b></pre>",
+		"operationNotPermitted" : "¿Operacion no permitida? Intenta Esto: <br>{CSU}",
 		"Permission denied to": "Permission denied",
-		"Can not save settings": "Can not save settings",
-		"Cannot save preferences": "Cannot save preferences",
-		"Thousand Separator and Decimal Mark equal": "Thousand Separator and Decimal Mark cannot be equal",
-		"1049": "Unknown database",
-		"2005": "Unknown MySQL server host",
-		"1045": "Access denied for user"
+		"Can not save settings": "No se puede grabar configuración",
+		"Cannot save preferences": "No se puede grabar preferencias",
+		"Thousand Separator and Decimal Mark equal": "El separador de miles y el separador decimal no pueden ser iguales",
+		"1049": "Base de Datos Desconocida",
+		"2005": "Servidor MySQL Desconocido",
+		"1045": "Acceso denegado para este usuario",
+		"extension": "{0} extensión está perdida",
+		"option": "El valor recomendado es {0}",
+		"mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}"
 	},
 	"options": {
 		"db driver": {
@@ -101,18 +116,18 @@
 		},
 		"modRewriteInstruction": {
 			"apache": {
-				"linux": "<br><br>To add the RewriteBase path, open a file {API_PATH}.htaccess and change the following line:<pre># RewriteBase /</pre>To<pre>RewriteBase {ESPO_PATH}{API_PATH}</pre><br>To enable .htaccess support add/edit the Server configuration settings inside your &#60;VirtualHost&#62; section (httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62;\n <b>AllowOverride All</b>\n&#60;/Directory&#62;</pre>\n Afterwards run this command in a Terminal:<pre><b>service apache2 restart</b></pre><br>To enable \"mod_rewrite\" run those commands in a Terminal:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
-				"windows": "<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.\n</pre>"
+				"linux": "<br><br>Para agregar la ruta a RewriteBase, abre un archivo {API_PATH}.htaccess y cambia la siguiente línea:<pre># RewriteBase /</pre>A<pre>RewriteBase {ESPO_PATH}{API_PATH}</pre><br>Para activar el soporte a .htaccess agrega/edita la configuración del servidor dentro de su  &#60;VirtualHost&#62; section (httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62;\n <b>AllowOverride All</b>\n&#60;/Directory&#62;</pre>\n Después correr este comando en la terminal:<pre><b>service apache2 restart</b></pre><br>Para activar \"mod_rewrite\" Ejecutar estos comandos en una terminal:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
+				"windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas dis líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea LoadModule rewrite_module modules/mod_rewrite.so (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>"
 			},
 			"microsoft-iis": {
-				"windows": ""
+				"windows": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: EspoCRM <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\n"
 			}
 		},
 		"modRewriteHelp": {
-			"apache": "API Error: EspoCRM API unavailable.<br> Possible problems: RewriteBase required, disabled \"mod_rewrite\" in Apache server or .htaccess support.",
-			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to your Nginx Host Config (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
-			"microsoft-iis": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled \"URL Rewrite\". Please check and enable \"URL Rewrite\" Module in IIS server",
-			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
+			"apache": "API Error: EspoCRM API inaccesible.<br> Posibles problemas: se requiere RewriteBase , \"mod_rewrite\" desactivado en el servidor  Apache o en el soporte .htaccess.",
+			"nginx": "API Error: EspoCRM API inaccesible.<br> Agregar este código a su Configuración de Host Nginx (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
+			"microsoft-iis": "API Error: EspoCRM API inaccesible.<br> Problema posible: \"URL Rewrite\" desactivado. Por favor revisar y activar \"URL Rewrite\" Módulo en Servidor IIS",
+			"default": "API Error: EspoCRM API inaccesible.<br> Problema posible: Módulo Rewrite desactivado.Por favor revisar y activar el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y en el soporte .htaccess"
 		}
 	}
 }

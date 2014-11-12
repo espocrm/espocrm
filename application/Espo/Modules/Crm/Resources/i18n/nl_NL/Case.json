@@ -3,7 +3,7 @@
 		"name": "Record Naam",
 		"number": "Nummer",
 		"status": "Status",
-		"account": "Relatie",
+		"account": "Klant",
 		"contact": "Contact",
 		"priority": "Prioriteit",
 		"type": "Type",
@@ -15,14 +15,14 @@
 		"status": {
 			"New": "Nieuw",
 			"Assigned": "Toegewezen",
-			"Pending": "Pending",
+			"Pending": "In afwachting",
 			"Closed": "Gesloten",
 			"Rejected": "Geweigerd",
 			"Duplicate": "Dupliceer"
 		},
 		"priority" : {
 			"Low": "Laag",
-			"Normal": "Normaal",
+			"Normal": "Standaard",
 			"High": "Hoog",
 			"Urgent": "Urgent"
 		},
@@ -33,7 +33,7 @@
 		}
 	},
 	"labels": {
-		"Create Case": "Maak Case"
+		"Create Case": "Casus Aanmaken"
 	},
 	"presetFilters": {
 		"open": "Open",

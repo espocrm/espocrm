@@ -1,21 +1,36 @@
 {
-	"fields": {
-		"name": "Nombre",
-		"userName": "Nombre de Usuario",
-		"title": "Título",
-		"isAdmin": "Es Administrador",
-		"defaultTeam": "Equipo por Defecto",
-		"emailAddress": "Correo electrónico",
-		"phone": "Teléfono",
-		"roles": "Roles",
-		"password": "Contraseña",
-		"passwordConfirm": "Confirmar Contraseña"
-	},
-	"links": {
-		"teams": "Equipos",
-		"roles": "Roles"
-	},
-	"labels": {
-		"Create User": "Crear Usuario"
-	}
+    "fields": {
+        "name": "Asunto",
+        "userName": "Nombre Usuario",
+        "title": "Título",
+        "isAdmin": "Es Administrador",
+        "defaultTeam": "Equipo por Defecto",
+        "emailAddress": "Correo electrónico",
+        "phoneNumber": "Teléfono",
+        "roles": "Roles",        
+        "password": "Contraseña",
+        "passwordConfirm": "Confirmar Contraseña",
+        "newPassword": "Nueva Contraseña"
+    },
+    "links": {
+        "teams": "Equipos",
+        "roles": "Roles"
+    },
+    "labels": {
+        "Create User": "Crear Usuario",
+        "Generate": "Generar",
+        "Access": "Acceso",
+        "Preferences": "Preferencias",
+        "Change Password": "Cambiar Contraseña"
+    },
+    "tooltips": {
+        "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
+        "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos"
+    },
+    "messages": {
+        "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
+        "accountInfoEmailSubject": "Información Cuenta",
+        "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
+        "passwordChanged": "La Contraseña ha sido cambiada"
+    }
 }

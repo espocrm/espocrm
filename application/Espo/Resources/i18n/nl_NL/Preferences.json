@@ -1,19 +1,19 @@
 {
 	"fields": {
-		"dateFormat": "Datum notatie",
+		"dateFormat": "Datumnotatie",
 		"timeFormat": "Tijdnotatie",
-		"timeZone": "Tijd Zone",
+		"timeZone": "Tijdzone",
 		"weekStart": "Eerste dag van de Week",
 		"thousandSeparator": "Duizendtal scheidingsteken",
-		"decimalMark": "Duizendtal scheidingsteken",
-		"defaultCurrency": "Voorkeur Valuta",
+		"decimalMark": "Decimaal scheidingsteken",
+		"defaultCurrency": "Standaard Valuta",
 		"currencyList": "Valuta Lijst",
 		"language": "Taal",
 		
 		"smtpServer": "Server",
-		"smtpPort": "Poort",
-		"smtpAuth": "Authenticatie",
-		"smtpSecurity": "Veiligheid",
+		"smtpPort": "Port",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Beveiliging",
 		"smtpUsername": "Gebruikersnaam",
 		"emailAddress": "Email",
 		"smtpPassword": "Wachtwoord",
@@ -21,7 +21,7 @@
 		
 		"exportDelimiter": "Scheidingsteken Export",
 		
-		"receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment"
+		"receiveAssignmentEmailNotifications": "Ontvang bevestiging toewijzingen per email."
 	},
 	"links": {
 	},
@@ -32,6 +32,6 @@
 		}
 	},
 	"labels": {
-		"Notifications": "Notificaties"
+		"Notifications": "Meldingen"
 	}
 }

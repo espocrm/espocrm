@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Name",
+        "status": "статус",
+        "host": "Host",
+        "username": "Username",
+        "password": "Пароль",
+        "port": "Порт",
+        "monitoredFolders": "Отслеживаемые разделы",
+        "ssl": "SSL",
+        "fetchSince": "Fetch Since"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Активный",
+            "Inactive": "Неактивный"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Create Email Account",
+        "IMAP": "IMAP",
+        "Main": "Main"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "Не получается подключиться к серверу IMAP"
+    }
+}

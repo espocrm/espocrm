@@ -22,13 +22,45 @@
 
 namespace Espo\Controllers;
 
+use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\Error;
+
 class Email extends \Espo\Core\Controllers\Record
 {
-	public function actionGetCopiedAttachments($params, $data, $request)
-	{		
-		$id = $request->get('id');
-		
-		return $this->getRecordService()->getCopiedAttachments($id);
-	}
+    public function actionGetCopiedAttachments($params, $data, $request)
+    {        
+        $id = $request->get('id');
+        
+        return $this->getRecordService()->getCopiedAttachments($id);
+    }
+    
+    public function actionSendTestEmail($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        
+        if (empty($data['password'])) {
+            if ($data['type'] == 'preferences') {
+                if (!$this->getUser()->isAdmin() && $data['id'] != $this->getUser()->id) {
+                    throw new Forbidden();
+                }
+                $preferences = $this->getEntityManager()->getEntity('Preferences', $data['id']);
+                if (!$preferences) {
+                    throw new Error();
+                }
+                
+                $data['password'] = $this->getContainer()->get('crypt')->decrypt($preferences->get('smtpPassword'));
+            } else {
+                if (!$this->getUser()->isAdmin()) {
+                    throw new Forbidden();
+                }
+                $data['password'] = $this->getConfig()->get('smtpPassword');
+            }
+        }
+        
+        return $this->getRecordService()->sendTestEmail($data);
+    }
 }
 

@@ -10,6 +10,7 @@
 /client
 /test.php
 /main.html
+/frontend/client/css/bootstrap.css
 /tests/testData/cache/*
 composer.phar
 vendor/

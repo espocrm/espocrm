@@ -4,71 +4,85 @@ namespace tests\Espo\Core\Cron;
 
 use tests\ReflectionHelper;
 
-
 class ScheduledJobTest extends \PHPUnit_Framework_TestCase
 {
-	protected $object;
+    protected $object;
 
-	protected $objects;
+    protected $objects;
 
-	protected $cronSetup = array(
-		'linux' => 'linux command',
-		'windows' => 'windows command',
-		'mac' => 'mac command',
-		'default' => 'default command',
-	);
+    protected $reflection;
 
-	protected function setUp()
-	{
-		$this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+    protected $cronSetup = array(
+        'linux' => 'linux command',
+        'windows' => 'windows command',
+        'mac' => 'mac command',
+        'default' => 'default command',
+    );
 
-		$this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
+    protected function setUp()
+    {
+        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
 
-		$map = array(
-			array('language', $this->objects['language']),
-		);
+        $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
 
-		$this->objects['container']
-			->expects($this->any())
-			->method('get')
-			->will($this->returnValueMap($map));
+        $map = array(
+            array('language', $this->objects['language']),
+        );
 
-		$this->object = new \Espo\Core\Cron\ScheduledJob( $this->objects['container'] );
+        $this->objects['container']
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap($map));
 
-		$this->reflection = new ReflectionHelper($this->object);
+        $this->object = new \Espo\Core\Cron\ScheduledJob( $this->objects['container'] );
 
-		$this->reflection->setProperty('cronSetup', $this->cronSetup);
-	}
+        $this->reflection = new ReflectionHelper($this->object);
 
-	protected function tearDown()
-	{
-		$this->object = NULL;
-	}
+        $this->reflection->setProperty('cronSetup', $this->cronSetup);
+    }
+
+    protected function tearDown()
+    {
+        $this->object = NULL;
+    }
 
 
-	public function testGetSetupMessage()
-	{
-		$cronSetup = array (
-			'linux' => 'linux message',
-			'mac' => 'mac message',
-			'windows' => 'windows message',
-			'default' => 'default message',
-		);
+    public function testGetSetupMessage()
+    {
+        $cronSetup = array (
+            'linux' => 'linux message',
+            'mac' => 'mac message',
+            'windows' => 'windows message',
+            'default' => 'default message',
+        );
 
-		$this->objects['language']
-			->expects($this->once())
-			->method('translate')
-			->will($this->returnValue($cronSetup));
+        $this->objects['language']
+            ->expects($this->once())
+            ->method('translate')
+            ->will($this->returnValue($cronSetup));
 
-		$_SERVER['SERVER_SOFTWARE'] = 'Apache/2.2.17 (Ubuntu)';
+        $res = array(
+            'linux' => array(
+                'message' => 'linux message',
+                'command' => 'linux command',
+            ),
+            'windows' => array(
+                'message' => 'windows message',
+                'command' => 'windows command',
+            ),
+            'mac' => array(
+                'message' => 'mac message',
+                'command' => 'mac command',
+            ),
+            'default' => array(
+                'message' => 'default message',
+                'command' => 'default command',
+            ),
+        );
 
-		$res = array(
-			'message' => 'linux message',
-			'command' => 'linux command',
-		);
-
-		$this->assertEquals( $res, $this->reflection->invokeMethod('getSetupMessage', array()) );
-	}
+        $os = $this->reflection->invokeMethod('getSystemUtil')->getOS();
+        $this->assertEquals( $res[$os], $this->reflection->invokeMethod('getSetupMessage', array()) );
+    }
 
 
 

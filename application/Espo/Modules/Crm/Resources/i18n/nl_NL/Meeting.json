@@ -5,19 +5,24 @@
 		"status": "Status",
 		"dateStart": "Start Datum",
 		"dateEnd": "Eind Datum",
-		"duration": "Gedurende",
+		"duration": "Duur",
 		"description": "Beschrijving",
 		"users": "Gebruikers",
-		"contacts": "Contactpersoon",
+		"contacts": "Contacten",
 		"leads": "Leads"
 	},
 	"links": {
 	},
 	"options": {
 		"status": {
-			"Planned": "Plannen",
-			"Held": "Volgen",
-			"Not Held": "Niet volgen"
+			"Planned": "Gepland",
+			"Held": "Vasthouden",
+			"Not Held": "Niet Vasthouden"
+		},
+		"acceptanceStatus": {
+			"None": "Geen",
+			"Accepted": "Geaccepteerd",
+			"Declined": "Geweigerd"
 		}
 	},
 	"labels": {
@@ -25,12 +30,12 @@
 		"Set Held": "Vasthouden",
 		"Set Not Held": "Niet Vasthouden",
 		"Send Invitations": "Uitnodiging versturen",
-		"Saved as Held": "Opslaan Bewaren",
-		"Saved as Not Held": "Opslaan niet Bewaren"
+		"Saved as Held": "Opgeslagen als Vasthouden",
+		"Saved as Not Held": "Opslaan als Niet Vasthouden"
 	},
 	"presetFilters": {
-		"planned": "Plannen",
-		"held": "Volgen",
+		"planned": "Gepland",
+		"held": "Vasthouden",
 		"todays": "Vandaag"
 	}
 }

@@ -21,101 +21,101 @@
 
 Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'notifications.badge',
-		
-		updateFrequency: 10,
-		
-		timeout: null,
-		
-		events: {
-			'click a[data-action="showNotifications"]': function (e) {
-				this.showNotifications();
-			},
-		},
-		
-		setup: function () {
-			this.once('remove', function () {
-				if (this.timeout) {
-					clearTimeout(this.timeout);
-				}
-			}, this);
-		},
-		
-		afterRender: function () {
-			this.$badge = this.$el.find('.notifications-button');
-			this.$icon = this.$el.find('.notifications-button .icon');	
-			this.checkUpdates();
-		},
-		
-		showNotRead: function (count) {
-			this.$icon.addClass('warning');
-			this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
-		},
-		
-		hideNotRead: function () {
-			this.$icon.removeClass('warning');
-			this.$badge.attr('title', '');
-		},
-		
-		checkUpdates: function () {			
-			$.ajax('Notification/action/notReadCount').done(function (count) {
-				if (count) {
-					this.showNotRead(count);
-				} else {
-					this.hideNotRead();
-				}
-			}.bind(this));
-		
-			this.timeout = setTimeout(function () {
-				this.checkUpdates();
-			}.bind(this), this.updateFrequency * 1000)
-		},
-		
-		showNotifications: function () {
-			this.closeNotifications();
-			
-			var $container = $('<div>').attr('id', 'notifications-panel').css({
-				'position': 'absolute',
-				'width': '500px',
-				'z-index': 1001,
-				'right': 0,
-				'left': 'auto'
-			});			
-						
-			$container.appendTo(this.$el.find('.notifications-panel-container'));
-			
-			this.createView('panel', 'Notifications.Panel', {
-				el: '#notifications-panel',				
-			}, function (view) {
-				view.render();
-				this.listenTo(view, 'all-read', function () {
-					this.hideNotRead();
-					this.$el.find('.badge-circle-warning').remove();
-				}, this);
-			}.bind(this));
-			
-			$document = $(document);			
-			$document.on('mouseup.notification', function (e) { 				
- 				if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-					this.closeNotifications();
-       			}
-			}.bind(this));
-		},
-		
-		closeNotifications: function () {
-			$container = $('#notifications-panel');
-			
-			$('#notifications-panel').remove();			
-			$document = $(document);
-			if (this.hasView('panel')) {
-				this.getView('panel').remove();
-			};
- 			$document.off('mouseup.notification');
-       		$container.remove();
-		},
-		
-	});
-	
+        template: 'notifications.badge',
+        
+        updateFrequency: 10,
+        
+        timeout: null,
+        
+        events: {
+            'click a[data-action="showNotifications"]': function (e) {
+                this.showNotifications();
+            },
+        },
+        
+        setup: function () {
+            this.once('remove', function () {
+                if (this.timeout) {
+                    clearTimeout(this.timeout);
+                }
+            }, this);
+        },
+        
+        afterRender: function () {
+            this.$badge = this.$el.find('.notifications-button');
+            this.$icon = this.$el.find('.notifications-button .icon');    
+            this.checkUpdates();
+        },
+        
+        showNotRead: function (count) {
+            this.$icon.addClass('warning');
+            this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
+        },
+        
+        hideNotRead: function () {
+            this.$icon.removeClass('warning');
+            this.$badge.attr('title', '');
+        },
+        
+        checkUpdates: function () {            
+            $.ajax('Notification/action/notReadCount').done(function (count) {
+                if (count) {
+                    this.showNotRead(count);
+                } else {
+                    this.hideNotRead();
+                }
+            }.bind(this));
+        
+            this.timeout = setTimeout(function () {
+                this.checkUpdates();
+            }.bind(this), this.updateFrequency * 1000)
+        },
+        
+        showNotifications: function () {
+            this.closeNotifications();
+            
+            var $container = $('<div>').attr('id', 'notifications-panel').css({
+                'position': 'absolute',
+                'width': '500px',
+                'z-index': 1001,
+                'right': 0,
+                'left': 'auto'
+            });            
+                        
+            $container.appendTo(this.$el.find('.notifications-panel-container'));
+            
+            this.createView('panel', 'Notifications.Panel', {
+                el: '#notifications-panel',                
+            }, function (view) {
+                view.render();
+                this.listenTo(view, 'all-read', function () {
+                    this.hideNotRead();
+                    this.$el.find('.badge-circle-warning').remove();
+                }, this);
+            }.bind(this));
+            
+            $document = $(document);            
+            $document.on('mouseup.notification', function (e) {                 
+                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                    this.closeNotifications();
+                   }
+            }.bind(this));
+        },
+        
+        closeNotifications: function () {
+            $container = $('#notifications-panel');
+            
+            $('#notifications-panel').remove();            
+            $document = $(document);
+            if (this.hasView('panel')) {
+                this.getView('panel').remove();
+            };
+             $document.off('mouseup.notification');
+               $container.remove();
+        },
+        
+    });
+    
 });

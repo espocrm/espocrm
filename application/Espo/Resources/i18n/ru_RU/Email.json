@@ -1,36 +1,51 @@
 {
-	"fields": {
-		"name": "Тема/субъект",
-		"parent": "Источник",
-		"status": "статус",
-		"dateSent": "Дата отправки",
-		"from": "От",
-		"to": "К",
-		"cc": "CC",
-		"bcc": "BCC",
-		"isHtml": "Is Html",
-		"body": "Тело",
-		"subject": "Тема",
-		"attachments": "Вложения",
-		"selectTemplate": "Выбрать шаблон",
-		"fromEmailAddress": "С адреса",
-		"toEmailAddresses": "На андрес",
-		"emailAddress": "E-mail адрес"
-	},
-	"links": {
-	},
-	"options": {
-		"Draft": "Черновик",
-		"Sending": "Отправляется",
-		"Sent": "Отправлено",
-		"Archived": "В архиве"
-	},
-	"labels": {
-		"Create Email": "Отправить письмо в архив",
-		"Compose": "Новое сообщение"
-	},
-	"presetFilters": {
-		"sent": "Отправлено",
-		"archived": "В архиве"
-	}
+    "fields": {
+        "name": "Тема",
+        "parent": "Источник",
+        "status": "статус",
+        "dateSent": "Дата отправки",
+        "from": "От",
+        "to": "К",
+        "cc": "CC",
+        "bcc": "BCC",
+        "isHtml": "Html",
+        "body": "Тело",
+        "subject": "Тема",
+        "attachments": "Вложения",
+        "selectTemplate": "Выбрать шаблон",
+        "fromEmailAddress": "С адреса",
+        "toEmailAddresses": "На андрес",
+        "emailAddress": "E-mail адрес",
+        "deliveryDate": "Дата доставки"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Черновик",
+        "Sending": "Отправляется",
+        "Sent": "Отправлено",
+        "Archived": "В архиве"
+    },
+    "labels": {
+        "Create Email": "Отправить письмо в архив",
+        "Archive Email": "Отправить письмо в архив",
+        "Compose": "Новое сообщение",
+        "Reply": "Ответить",
+        "Reply to All": "Ответить всем",
+        "Forward": "Переслать",
+        "Original message": "Оригинал сообщение",
+        "Forwarded message": "Forwarded message",
+        "Email Accounts": "Email Accounts",
+        "Send Test Email": "Отправить тестовое сообщение",
+        "Send": "Отправить",
+        "Email Address": "E-mail адрес"
+    },
+    "messages": {
+        "noSmtpSetup": "No SMTP setup. {link}.",
+        "testEmailSent": "Test email has been sent"
+    },
+    "presetFilters": {
+        "sent": "Отправлено",
+        "archived": "В архиве"
+    }
 }

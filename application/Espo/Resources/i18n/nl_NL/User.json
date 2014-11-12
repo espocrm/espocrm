@@ -1,35 +1,36 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"userName": "Gebruikers Naam",
+		"userName": "Gebruikesnaam",
 		"title": "Titel",
 		"isAdmin": "Is Admin",
-		"defaultTeam": "Voorkeur Team",
+		"defaultTeam": "Standaardgroep",
 		"emailAddress": "Email",
 		"phoneNumber": "Telefoon",
-		"roles": "Regels",		
+		"roles": "Rollen",		
 		"password": "Wachtwoord",
 		"passwordConfirm": "Bevestig Wachtwoord",
 		"newPassword": "Nieuw Wachtwoord"
 	},
 	"links": {
 		"teams": "Groepen",
-		"roles": "Regels"
+		"roles": "Rollen"
 	},
 	"labels": {
 		"Create User": "Gebruiker Aanmaken",
 		"Generate": "Genereer",
-		"Access": "Rechten",
+		"Access": "Toegang",
 		"Preferences": "Voorkeuren",
-		"Change Password": "Wachtwoord Aanpassen"
+		"Change Password": "Wachtwoord wijzigen"
 	},
 	"tooltips": {
-		"defaultTeam": "All records created by this user will be related to this team by default."
+		"defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
+		"userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan."
 	},
 	"messages": {
-		"passwordWillBeSent": "Het Wachtwoord wordt naar het email adres van de gebruiker verzonden.",
-		"accountInfoEmailSubject": "Gebruiker Informatie",
-		"accountInfoEmailBody": "Uw gebruikers informatie:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-		"passwordChanged": "Het wachtwoord is aangepast"
+		"passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
+		"accountInfoEmailSubject": "Informatie Gebruiker",
+		"accountInfoEmailBody": "Uw gegevens:\n\nGebruikersnaam: {userName}\nWachtwoord: {password}\n\n{siteUrl}",
+		"passwordChanged": "Het wachtwoord is gewijzigd"
 	}
 }

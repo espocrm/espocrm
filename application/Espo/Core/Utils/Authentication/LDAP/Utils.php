@@ -26,130 +26,130 @@ use \Espo\Core\Utils\Config;
 
 class Utils
 {
-	private $config;
+    private $config;
 
-	protected $options = null;
+    protected $options = null;
 
-	/**
-	 * Association between LDAP and Espo fields
-	 * @var array
-	 */
-	protected $fieldMap = array(
-		'host' => 'ldapHost',
-		'port' => 'ldapPort',
-		'useSsl' => 'ldapSecurity',
-		'useStartTls' => 'ldapSecurity',
-		'username' => 'ldapUsername',
-		'password' => 'ldapPassword',
-		'bindRequiresDn' => 'ldapBindRequiresDn',
-		'baseDn' => 'ldapBaseDn',
-		'accountCanonicalForm' => 'ldapAccountCanonicalForm',
-		'accountDomainName' => 'ldapAccountDomainName',
-		'accountDomainNameShort' => 'ldapAccountDomainNameShort',
-		'accountFilterFormat' => 'ldapAccountFilterFormat',
-		'optReferrals' => 'ldapOptReferrals',
-		'tryUsernameSplit' => 'ldapTryUsernameSplit',
-		'networkTimeout' => 'ldapNetworkTimeout',
-		'createEspoUser' => 'ldapCreateEspoUser',
-		'userLoginFilter' => 'ldapUserLoginFilter',
-	);
+    /**
+     * Association between LDAP and Espo fields
+     * @var array
+     */
+    protected $fieldMap = array(
+        'host' => 'ldapHost',
+        'port' => 'ldapPort',
+        'useSsl' => 'ldapSecurity',
+        'useStartTls' => 'ldapSecurity',
+        'username' => 'ldapUsername',
+        'password' => 'ldapPassword',
+        'bindRequiresDn' => 'ldapBindRequiresDn',
+        'baseDn' => 'ldapBaseDn',
+        'accountCanonicalForm' => 'ldapAccountCanonicalForm',
+        'accountDomainName' => 'ldapAccountDomainName',
+        'accountDomainNameShort' => 'ldapAccountDomainNameShort',
+        'accountFilterFormat' => 'ldapAccountFilterFormat',
+        'optReferrals' => 'ldapOptReferrals',
+        'tryUsernameSplit' => 'ldapTryUsernameSplit',
+        'networkTimeout' => 'ldapNetworkTimeout',
+        'createEspoUser' => 'ldapCreateEspoUser',
+        'userLoginFilter' => 'ldapUserLoginFilter',
+    );
 
-	/**
-	 * Permitted Espo Options
-	 *
-	 * @var array
-	 */
-	protected $permittedEspoOptions = array(
-		'createEspoUser' => false,
-		'userLoginFilter' => null,
-	);
+    /**
+     * Permitted Espo Options
+     *
+     * @var array
+     */
+    protected $permittedEspoOptions = array(
+        'createEspoUser' => false,
+        'userLoginFilter' => null,
+    );
 
-	/**
-	 * accountCanonicalForm Map between Espo and Zend value
-	 *
-	 * @var array
-	 */
-	protected $accountCanonicalFormMap = array(
-		'Dn' => 1,
-		'Username' => 2,
-		'Backslash' => 3,
-		'Principal' => 4,
-	);
+    /**
+     * accountCanonicalForm Map between Espo and Zend value
+     *
+     * @var array
+     */
+    protected $accountCanonicalFormMap = array(
+        'Dn' => 1,
+        'Username' => 2,
+        'Backslash' => 3,
+        'Principal' => 4,
+    );
 
 
-	public function __construct(Config $config)
-	{
-		$this->config = $config;
-	}
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
 
-	protected function getConfig()
-	{
-		return $this->config;
-	}
+    protected function getConfig()
+    {
+        return $this->config;
+    }
 
-	/**
-	 * Get Options from espo config according to $this->fieldMap
-	 *
-	 * @return array
-	 */
-	public function getOptions()
-	{
-		if (isset($this->options)) {
-			return $this->options;
-		}
+    /**
+     * Get Options from espo config according to $this->fieldMap
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        if (isset($this->options)) {
+            return $this->options;
+        }
 
-		$options = array();
-		foreach ($this->fieldMap as $ldapName => $espoName) {
+        $options = array();
+        foreach ($this->fieldMap as $ldapName => $espoName) {
 
-			$option = $this->getConfig()->get($espoName);
-			if (isset($option)) {
-				$options[$ldapName] = $option;
-			}
-		}
+            $option = $this->getConfig()->get($espoName);
+            if (isset($option)) {
+                $options[$ldapName] = $option;
+            }
+        }
 
-		/** peculiar fields */
-		$options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
-		$options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
-		$options['accountCanonicalForm'] = $this->accountCanonicalFormMap[ $options['accountCanonicalForm'] ];
+        /** peculiar fields */
+        $options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
+        $options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
+        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[ $options['accountCanonicalForm'] ];
 
-		$this->options = $options;
+        $this->options = $options;
 
-		return $this->options;
-	}
+        return $this->options;
+    }
 
-	/**
-	 * Get an ldap option
-	 *
-	 * @param  string $name
-	 * @param  mixed $returns Return value
-	 * @return mixed
-	 */
-	public function getOption($name, $returns = null)
-	{
-		if (isset($this->options)) {
-			$this->getOptions();
-		}
+    /**
+     * Get an ldap option
+     *
+     * @param  string $name
+     * @param  mixed $returns Return value
+     * @return mixed
+     */
+    public function getOption($name, $returns = null)
+    {
+        if (isset($this->options)) {
+            $this->getOptions();
+        }
 
-		if (isset($this->options[$name])) {
-			return $this->options[$name];
-		}
+        if (isset($this->options[$name])) {
+            return $this->options[$name];
+        }
 
-		return $returns;
-	}
+        return $returns;
+    }
 
-	/**
-	 * Get Zend options for using Zend\Ldap
-	 *
-	 * @return array
-	 */
-	public function getZendOptions()
-	{
-		$options = $this->getOptions();
-		$espoOptions = array_keys($this->permittedEspoOptions);
+    /**
+     * Get Zend options for using Zend\Ldap
+     *
+     * @return array
+     */
+    public function getZendOptions()
+    {
+        $options = $this->getOptions();
+        $espoOptions = array_keys($this->permittedEspoOptions);
 
-		$zendOptions = array_diff_key($options, array_flip($espoOptions));
+        $zendOptions = array_diff_key($options, array_flip($espoOptions));
 
-		return $zendOptions;
-	}
+        return $zendOptions;
+    }
 
 }

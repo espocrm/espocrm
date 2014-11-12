@@ -2,8 +2,8 @@
 	"fields": {
 		"user": "Gebruiker",
 		"ipAddress": "IP Adres",
-		"lastAccess": "Laatste toegangs datum",
-		"createdAt": "Login Datum"
+		"lastAccess": "Datum van laatste toegang",
+		"createdAt": "Datum Login"
 
 	}
 }

@@ -21,143 +21,147 @@
 
 Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		cssName: 'mass-update',
+        cssName: 'mass-update',
 
-		header: false,
+        header: false,
 
-		template: 'modals.mass-update',
+        template: 'modals.mass-update',
 
-		data: function () {
-			return {
-				scope: this.scope,
-				fields: this.fields
-			};
-		},
+        data: function () {
+            return {
+                scope: this.scope,
+                fields: this.fields
+            };
+        },
 
-		events: {
-			'click button[data-action="update"]': function () {
-				this.update();
-			},
-			'click a[data-action="add-field"]': function (e) {
-				var field = $(e.currentTarget).data('name');
-				var $ul = $(e.currentTarget).closest('ul');
-				$(e.currentTarget).parent().remove();
-				if ($ul.children().size() == 0) {
-					$ul.parent().find('button').addClass('disabled');
-				}
-				this.addField(field);
-			},
-		},
+        events: {
+            'click button[data-action="update"]': function () {
+                this.update();
+            },
+            'click a[data-action="add-field"]': function (e) {
+                var field = $(e.currentTarget).data('name');
+                var $ul = $(e.currentTarget).closest('ul');
+                $(e.currentTarget).parent().remove();
+                if ($ul.children().size() == 0) {
+                    $ul.parent().find('button').addClass('disabled');
+                }
+                this.addField(field);
+            },
+        },
 
-		setup: function () {
-			this.buttons = [
-				{
-					name: 'update',
-					label: 'Update',
-					style: 'danger',
-					onClick: function (dialog) {
-						this.update();
-					}.bind(this),
-				},
-				{
-					name: 'cancel',
-					label: 'Cancel',
-					onClick: function (dialog) {
-						dialog.close();
-					}
-				}
-			];
+        setup: function () {
+            this.buttons = [
+                {
+                    name: 'update',
+                    label: 'Update',
+                    style: 'danger',
+                    onClick: function (dialog) {
+                        this.update();
+                    }.bind(this),
+                },
+                {
+                    name: 'cancel',
+                    label: 'Cancel',
+                    onClick: function (dialog) {
+                        dialog.close();
+                    }
+                }
+            ];
 
-			this.scope = this.options.scope;
-			this.ids = this.options.ids;
+            this.scope = this.options.scope;
+            this.ids = this.options.ids;
 
-			this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
+            this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
 
-			this.wait(true);
-			this.getModelFactory().create(this.scope, function (model) {
-				this.model = model;
-				this.getHelper().layoutManager.get(this.scope, 'massUpdate', function (layout) {
-					this.fields = layout;
-					this.wait(false);
-				}.bind(this));
-			}.bind(this));
+            this.wait(true);
+            this.getModelFactory().create(this.scope, function (model) {
+                this.model = model;
+                this.getHelper().layoutManager.get(this.scope, 'massUpdate', function (layout) {
+                    this.fields = layout;
+                    this.wait(false);
+                }.bind(this));
+            }.bind(this));
 
-			this.fieldsToUpdate = [];
-		},
+            this.fieldsToUpdate = [];
+        },
 
-		afterRender: function () {
-			$(this.containerSelector + ' button[data-name="update"]').addClass('disabled');
-		},
+        afterRender: function () {
+            $(this.containerSelector + ' button[data-name="update"]').addClass('disabled');
+        },
 
-		addField: function (name) {
-			$(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
+        addField: function (name) {
+            $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
 
-			this.notify('Loading...');
-			var label = this.translate(name, 'fields', this.scope);
-			var html = '<div class="cell form-group col-sm-6"><label class="control-label">'+label+'</label><div class="field field-'+name+'" /></div>';
-			this.$el.find('.fields-container').append(html);
+            this.notify('Loading...');
+            var label = this.translate(name, 'fields', this.scope);
+            var html = '<div class="cell form-group col-sm-6"><label class="control-label">'+label+'</label><div class="field field-'+name+'" /></div>';
+            this.$el.find('.fields-container').append(html);
 
-			var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
-			this.createView(name, this.getFieldManager().getViewName(type), {
-				model: this.model,
-				el: this.$el.selector + ' .field-' + name,
-				defs: {
-					name: name,
-				},
-				mode: 'edit'
-			}, function (view) {
-				this.fieldsToUpdate.push(name);
-				view.render();
-				view.notify(false);
-			}.bind(this));
-		},
+            var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
+            this.createView(name, this.getFieldManager().getViewName(type), {
+                model: this.model,
+                el: this.$el.selector + ' .field-' + name,
+                defs: {
+                    name: name,
+                },
+                mode: 'edit'
+            }, function (view) {
+                this.fieldsToUpdate.push(name);
+                view.render();
+                view.notify(false);
+            }.bind(this));
+        },
 
-		update: function () {
-			var self = this;
+        update: function () {
+            var self = this;
 
-			var attributes = {};
-			this.fieldsToUpdate.forEach(function (field) {
-				var view = self.getView(field);
-				_.extend(attributes, view.fetch());
-			});
+            var attributes = {};
+            this.fieldsToUpdate.forEach(function (field) {
+                var view = self.getView(field);
+                _.extend(attributes, view.fetch());
+            });
 
-			this.model.set(attributes);
+            this.model.set(attributes);
 
-			var notValid = false;
-			this.fieldsToUpdate.forEach(function (field) {
-				var view = self.getView(field);
-				notValid = view.validate() || notValid;
-			});
+            var notValid = false;
+            this.fieldsToUpdate.forEach(function (field) {
+                var view = self.getView(field);
+                notValid = view.validate() || notValid;
+            });
 
-			if (!notValid) {
-				self.notify('Saving...');
-				$.ajax({
-					url: this.scope + '/action/massUpdate',
-					type: 'PUT',
-					data: JSON.stringify({
-						attributes: attributes,
-						ids: self.ids || null,
-						where: (self.ids.length == 0) ? self.options.where : null,
-					}),
-					success: function (idsUpdated) {
-						var count = idsUpdated.length;
-						if (count) {							
-							Espo.Ui.success(count + ' ' + self.translate('records were updated'));
-						} else {
-							self.notify('No records were updated', 'error');
-						}						
-						self.trigger('after:update');
-					},
-					error: function () {
-						self.notify('Error occurred', 'error');
-					},
-				});
-			} else {
-				this.notify('Not valid', 'error');
-			}
-		},
-	});
+            if (!notValid) {
+                self.notify('Saving...');
+                $.ajax({
+                    url: this.scope + '/action/massUpdate',
+                    type: 'PUT',
+                    data: JSON.stringify({
+                        attributes: attributes,
+                        ids: self.ids || null,
+                        where: (self.ids.length == 0) ? self.options.where : null,
+                    }),
+                    success: function (idsUpdated) {
+                        var count = idsUpdated.length;
+                        if (count) {
+                            var msg = 'massUpdateResult';
+                            if (count == 1) {                            
+                                msg = 'massUpdateResultSingle'
+                            }              
+                            Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
+                        } else {
+                            Espo.Ui.success(self.translate('noRecordsUpdated', 'messages'));
+                        }                        
+                        self.trigger('after:update');
+                    },
+                    error: function () {
+                        self.notify('Error occurred', 'error');
+                    },
+                });
+            } else {
+                this.notify('Not valid', 'error');
+            }
+        },
+    });
 });
 

@@ -29,7 +29,7 @@
         "edit": "Editar",
         "delete": "Excluir"
     },
-	"messages": {
-		"changesAfterClearCache": "Todas as modificações no controle de acesso serão aplicadas após a limpeza do cache."
-	}
+    "messages": {
+        "changesAfterClearCache": "Todas as modificações no controle de acesso serão aplicadas após a limpeza do cache."
+    }
 }

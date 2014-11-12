@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Senden",
-		"attachments": "Anhänge"
-	}
+    "fields": {
+        "post": "Senden",
+        "attachments": "Anhänge"
+    }
 }

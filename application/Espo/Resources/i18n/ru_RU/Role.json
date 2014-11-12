@@ -1,35 +1,35 @@
 {
-	"fields": {
-		"name": "Имя",
-		"roles": "Функции"
-	},
-	"links": {
-		"users": "Пользователи",
-		"teams": "Группы"
-	},
-	"labels": {
-		"Access": "Доступ",
-		"Create Role": "Создать роль"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "не установлен",
-			"enabled": "включен",
-			"disabled": "отключен"
-		},
-		"levelList": {
-			"all": "все",
-			"team": "группа",
-			"own": "принадлежит",
-			"no": "нет"
-		}
-	},
-	"actions": {
-		"read": "Чтение",
-		"edit": "Редактирование",
-		"delete": "Удаление"
-	},
-	"messages": {
-		"changesAfterClearCache": "Все изменения применятся только после очистки кэша."
-	}
+    "fields": {
+        "name": "Name",
+        "roles": "Роли"
+    },
+    "links": {
+        "users": "Users",
+        "teams": "Teams"
+    },
+    "labels": {
+        "Access": "Доступ",
+        "Create Role": "Создать роль"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "не установлен",
+            "enabled": "включен",
+            "disabled": "отключен"
+        },
+        "levelList": {
+            "all": "все",
+            "team": "группа",
+            "own": "принадлежит",
+            "no": "нет"
+        }
+    },
+    "actions": {
+        "read": "Чтение",
+        "edit": "Редактировать",
+        "delete": "Удалить"
+    },
+    "messages": {
+        "changesAfterClearCache": "Все изменения применятся только после очистки кэша."
+    }
 }

@@ -21,34 +21,34 @@
 
 Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		setup: function () {
-			if (this.model.get('status') == 'Converted') {
-				var panel = {
-					name: 'convertedTo',
-					label: 'Converted To',
-					view: 'Record.Panels.Side',
-					options: {
-						fields: [],
-						mode: 'detail',
-					}
-				};
-				if (this.model.get('createdAccountId')) {
-					panel.options.fields.push('createdAccount');
-				}
-				if (this.model.get('createdContactId')) {
-					panel.options.fields.push('createdContact');
-				}
-				if (this.model.get('createdOpportunityId')) {
-					panel.options.fields.push('createdOpportunity');
-				}
-				if (panel.options.fields.length) {
-					this.panels.splice(1, 0, panel);
-				}
-			}
-			Dep.prototype.setup.call(this);
-		},
-	});
+        setup: function () {
+            if (this.model.get('status') == 'Converted') {
+                var panel = {
+                    name: 'convertedTo',
+                    label: 'Converted To',
+                    view: 'Record.Panels.Side',
+                    options: {
+                        fields: [],
+                        mode: 'detail',
+                    }
+                };
+                if (this.model.get('createdAccountId')) {
+                    panel.options.fields.push('createdAccount');
+                }
+                if (this.model.get('createdContactId')) {
+                    panel.options.fields.push('createdContact');
+                }
+                if (this.model.get('createdOpportunityId')) {
+                    panel.options.fields.push('createdOpportunity');
+                }
+                if (panel.options.fields.length) {
+                    this.panels.splice(1, 0, panel);
+                }
+            }
+            Dep.prototype.setup.call(this);
+        },
+    });
 });
 

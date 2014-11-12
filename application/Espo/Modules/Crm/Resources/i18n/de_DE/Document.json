@@ -1,0 +1,32 @@
+{
+    "labels": {
+        "Create Document": "Dokument erstellen",
+        "Details": "Details"
+    },
+    "fields": {
+        "name": "Name",
+        "status": "Status",
+        "file": "Datei",
+        "type": "Typ",
+        "source": "Quelle",
+        "publishDate": "Veröffentlichungsdatum",
+        "expirationDate": "Ablaufdatum",
+        "description": "Beschreibung"
+    },
+    "links": {
+        "accounts": "Firmen",
+        "opportunities": "Verkaufschancen"
+    },
+    "options": {
+        "status": {
+            "Active": "Aktiv",
+            "Draft": "Entwurf",
+            "Expired": "Abgelaufen",
+            "Canceled": "Storniert"
+        }
+    },
+    "presetFilters": {
+        "active": "Aktiv",
+        "draft": "Entwurf"
+    }
+}

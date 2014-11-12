@@ -3,13 +3,13 @@
 		"name": "Record Naam",
 		"status": "Status",
 		"job": "Opdracht",
-		"scheduling": "Scheduling (crontab notation)"
+		"scheduling": "Scheduling (crontab notatie)"
 	},
 	"links": {
 		"log": "Log"
 	},
 	"labels": {
-		"Create ScheduledJob": "Maak Geplande Opdracht"
+		"Create ScheduledJob": "Geplande Opdracht Aanmaken"
 	},
 	"options": {
 		"job": {
@@ -17,14 +17,14 @@
 			"Cleanup": "Opschonen"
 		},
 		"cronSetup": {
-			"linux": "Note: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-			"mac": "Note: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-			"windows": "Note: Maak een batch file met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
-			"default": "Note: Add this command to Cron Job (Scheduled Task):"
+			"linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+			"mac": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+			"windows": "Opgelet: Maak een batch bestand met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
+			"default": "Opgelet: Voeg deze regel toe aan de Cron Job (geplande opdracht):"
 		},
 		"status": {
-			"Active": "Active",
-			"Inactive": "Inactive"
+			"Active": "Actief",
+			"Inactive": "Inactief"
 		}
 	}
 }

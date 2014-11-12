@@ -24,24 +24,24 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class NoteAttachments extends HasChildren
 {
-	protected function load($linkName, $entityName)
-	{
-		$parentRelation = parent::load($linkName, $entityName);
+    protected function load($linkName, $entityName)
+    {
+        $parentRelation = parent::load($linkName, $entityName);
 
-		$relation = array(
-			$entityName => array (
-				'fields' => array(
-					$linkName.'Types' => array(
-						'type' => 'varchar',
-						'notStorable' => true,
-					),
-				),
-			),
-		);
+        $relation = array(
+            $entityName => array (
+                'fields' => array(
+                    $linkName.'Types' => array(
+                        'type' => 'varchar',
+                        'notStorable' => true,
+                    ),
+                ),
+            ),
+        );
 
-		$relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
+        $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
 
-		return $relation;
-	}
+        return $relation;
+    }
 }
 

@@ -23,110 +23,110 @@
 namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error,
-	Espo\Core\Utils\Util;
+    Espo\Core\Utils\Util;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
-	public function run($processId)
-	{
-		$GLOBALS['log']->debug('Uninstallation process ['.$processId.']: start run.');
+    public function run($processId)
+    {
+        $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: start run.');
 
-		if (empty($processId)) {
-			throw new Error('Uninstallation package ID was not specified.');
-		}
+        if (empty($processId)) {
+            throw new Error('Uninstallation package ID was not specified.');
+        }
 
-		$this->setProcessId($processId);
+        $this->setProcessId($processId);
 
-		$this->beforeRunAction();
+        $this->beforeRunAction();
 
-		/* run before install script */
-		$this->runScript('beforeUninstall');
+        /* run before install script */
+        $this->runScript('beforeUninstall');
 
-		$backupPath = $this->getPath('backupPath');
-		if (file_exists($backupPath)) {
+        $backupPath = $this->getPath('backupPath');
+        if (file_exists($backupPath)) {
 
-			/* remove extension files, saved in fileList */
-			if (!$this->deleteFiles()) {
-				throw new Error('Permission denied to delete files.');
-			}
+            /* remove extension files, saved in fileList */
+            if (!$this->deleteFiles(true)) {
+                throw new Error('Permission denied to delete files.');
+            }
 
-			/* copy core files */
-			if (!$this->copyFiles()) {
-				throw new Error('Cannot copy files.');
-			}
-		}
+            /* copy core files */
+            if (!$this->copyFiles()) {
+                throw new Error('Cannot copy files.');
+            }
+        }
 
-		if (!$this->systemRebuild()) {
-			throw new Error('Error occurred while EspoCRM rebuild.');
-		}
+        if (!$this->systemRebuild()) {
+            throw new Error('Error occurred while EspoCRM rebuild.');
+        }
 
-		/* run before install script */
-		$this->runScript('afterUninstall');
+        /* run before install script */
+        $this->runScript('afterUninstall');
 
-		$this->afterRunAction();
+        $this->afterRunAction();
 
-		/* delete backup files */
-		$this->deletePackageFiles();
+        /* delete backup files */
+        $this->deletePackageFiles();
 
-		$GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
-	}
+        $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
+    }
 
-	protected function getDeleteFileList()
-	{
-		$extensionEntity = $this->getExtensionEntity();
-		return $extensionEntity->get('fileList');
-	}
+    protected function getDeleteFileList()
+    {
+        $extensionEntity = $this->getExtensionEntity();
+        return $extensionEntity->get('fileList');
+    }
 
-	protected function restoreFiles()
-	{
-		$packagePath = $this->getPath('packagePath');
-		$filesPath = Util::concatPath($packagePath, self::FILES);
+    protected function restoreFiles()
+    {
+        $packagePath = $this->getPath('packagePath');
+        $filesPath = Util::concatPath($packagePath, self::FILES);
 
-		if (!file_exists($filesPath)) {
-			$this->unzipArchive($packagePath);
-		}
+        if (!file_exists($filesPath)) {
+            $this->unzipArchive($packagePath);
+        }
 
-		$res = $this->copy($filesPath, '', true);
-		$res &= $this->getFileManager()->removeInDir($packagePath, true);
+        $res = $this->copy($filesPath, '', true);
+        $res &= $this->getFileManager()->removeInDir($packagePath, true);
 
-		return $res;
-	}
+        return $res;
+    }
 
-	protected function copyFiles()
-	{
-		$backupPath = $this->getPath('backupPath');
-		$res = $this->copy(array($backupPath, self::FILES), '', true);
+    protected function copyFiles()
+    {
+        $backupPath = $this->getPath('backupPath');
+        $res = $this->copy(array($backupPath, self::FILES), '', true);
 
-		return $res;
-	}
+        return $res;
+    }
 
-	/**
-	 * Get backup path
-	 *
-	 * @param  string $processId
-	 * @return string
-	 */
-	protected function getPackagePath($isPackage = false)
-	{
-		if ($isPackage) {
-			return $this->getPath('packagePath', $isPackage);
-		}
+    /**
+     * Get backup path
+     *
+     * @param  string $processId
+     * @return string
+     */
+    protected function getPackagePath($isPackage = false)
+    {
+        if ($isPackage) {
+            return $this->getPath('packagePath', $isPackage);
+        }
 
-		return $this->getPath('backupPath');
-	}
+        return $this->getPath('backupPath');
+    }
 
-	protected function deletePackageFiles()
-	{
-		$backupPath = $this->getPath('backupPath');
-		$res = $this->getFileManager()->removeInDir($backupPath, true);
+    protected function deletePackageFiles()
+    {
+        $backupPath = $this->getPath('backupPath');
+        $res = $this->getFileManager()->removeInDir($backupPath, true);
 
-		return $res;
-	}
+        return $res;
+    }
 
-	protected function throwErrorAndRemovePackage($errorMessage = '')
-	{
-		$this->restoreFiles();
-		throw new Error($errorMessage);
-	}
+    protected function throwErrorAndRemovePackage($errorMessage = '')
+    {
+        $this->restoreFiles();
+        throw new Error($errorMessage);
+    }
 
 }

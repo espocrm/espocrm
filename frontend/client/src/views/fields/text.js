@@ -21,58 +21,58 @@
 
 Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({	
-	
-		type: 'text',
-		
-		listTemplate: 'fields.text.detail',
-		
-		detailTemplate: 'fields.text.detail',
-		
-		editTemplate: 'fields.text.edit',
-		
-		detailMaxLength: 400,
-		
-		seeMoreText: false,
-		
-		events: {
-			'click a[data-action="seeMoreText"]': function (e) {		
-				this.seeMoreText = true;
-				this.render();
-			}
-		},
-		
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-		},
-		
-		setup: function () {
-			this.params.rows = this.params.rows || 4; 
-		},
-		
-		getValueForDisplay: function () {
-			var text = this.model.get(this.name);
-			if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
-				if (text.length > this.detailMaxLength) {
-					text = text.substr(0, this.detailMaxLength) + ' ...\n[#see-more-text]';
-				}
-			}
-			return text;
-		},
-		
-		fetchSearch: function () {
-			var value = this.$element.val();
-			if (value) {
-				var data = {
-					type: 'like',
-					value: '%' + value + '%',
-					valueText: value
-				};
-				return data;
-			}
-			return false;				
-		},
+    return Dep.extend({    
+    
+        type: 'text',
+        
+        listTemplate: 'fields.text.detail',
+        
+        detailTemplate: 'fields.text.detail',
+        
+        editTemplate: 'fields.text.edit',
+        
+        detailMaxLength: 400,
+        
+        seeMoreText: false,
+        
+        events: {
+            'click a[data-action="seeMoreText"]': function (e) {        
+                this.seeMoreText = true;
+                this.render();
+            }
+        },
+        
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+        },
+        
+        setup: function () {
+            this.params.rows = this.params.rows || 4; 
+        },
+        
+        getValueForDisplay: function () {
+            var text = this.model.get(this.name);
+            if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
+                if (text.length > this.detailMaxLength) {
+                    text = text.substr(0, this.detailMaxLength) + ' ...\n[#see-more-text]';
+                }
+            }
+            return text;
+        },
+        
+        fetchSearch: function () {
+            var value = this.$element.val();
+            if (value) {
+                var data = {
+                    type: 'like',
+                    value: '%' + value + '%',
+                    valueText: value
+                };
+                return data;
+            }
+            return false;                
+        },
 
-	});
+    });
 });
 

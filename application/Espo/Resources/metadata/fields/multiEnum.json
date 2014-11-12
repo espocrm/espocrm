@@ -1,0 +1,18 @@
+{
+   "params":[
+      {
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name":"options",
+         "type":"array"
+      }
+   ],
+   "filter": false,
+   "notCreatable": false,
+   "fieldDefs":{
+      "type":"jsonArray"
+   }
+}

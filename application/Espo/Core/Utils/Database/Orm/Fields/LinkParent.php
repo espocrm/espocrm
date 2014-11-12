@@ -24,28 +24,28 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
 {
-	protected function load($fieldName, $entityName)
-	{
-		return array(
-			$entityName => array (
-				'fields' => array(
-					$fieldName.'Id' => array(
-						'type' => 'foreignId',
-						'index' => $fieldName,
-					),
-					$fieldName.'Type' => array(
-						'type' => 'foreignType',
-						'notNull' => false,
-						'index' => $fieldName,
-					),
-					$fieldName.'Name' => array(
-						'type' => 'varchar',
-						'notStorable' => true,
-					),
-				),
-			),
-		);
-	}
+    protected function load($fieldName, $entityName)
+    {
+        return array(
+            $entityName => array (
+                'fields' => array(
+                    $fieldName.'Id' => array(
+                        'type' => 'foreignId',
+                        'index' => $fieldName,
+                    ),
+                    $fieldName.'Type' => array(
+                        'type' => 'foreignType',
+                        'notNull' => false,
+                        'index' => $fieldName,
+                    ),
+                    $fieldName.'Name' => array(
+                        'type' => 'varchar',
+                        'notStorable' => true,
+                    ),
+                ),
+            ),
+        );
+    }
 
 
 }

@@ -19,54 +19,54 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Views.Import.Step3', 'View', function (Dep) {
-	
-	return Dep.extend({
-		
-		template: 'import.step-3',
-		
-		data: function () {
-			return {
-				result: this.result,
-				scope: this.scope
-			};		
-		},
-		
-		events: {
-			'click button[data-action="revert"]': function () {
-				this.revert();
-			},
-		},
-		
-		afterRender: function () {
-			this.getRouter().navigate('#Import/results');
-		},
-		
-		setup: function () {
-			this.formData = this.options.formData;
-			this.scope = this.formData.entityType;
-			
-			this.result = this.options.result || {};
-		},
-		
-		revert: function () {
-			this.notify('Please wait...');
-			
-			this.$el.find('[data-action="revert"]').addClass('disabled');			
-			
-			$.ajax({
-				type: 'POST',
-				url: 'Import/action/revert',
-				data: JSON.stringify({
-					entityType: this.formData.entityType,
-					idsToRemove: this.result.importedIds
-				}),
-				timeout: 150000,
-				success: function (result) {
-					Espo.Ui.success(this.translate('Reverted', 'labels', 'Import'));
-					this.$el.find('[data-action="revert"]').remove();
-				}.bind(this)
-			});
-		}		
-					
-	});
+    
+    return Dep.extend({
+        
+        template: 'import.step-3',
+        
+        data: function () {
+            return {
+                result: this.result,
+                scope: this.scope
+            };        
+        },
+        
+        events: {
+            'click button[data-action="revert"]': function () {
+                this.revert();
+            },
+        },
+        
+        afterRender: function () {
+            this.getRouter().navigate('#Import/results');
+        },
+        
+        setup: function () {
+            this.formData = this.options.formData;
+            this.scope = this.formData.entityType;
+            
+            this.result = this.options.result || {};
+        },
+        
+        revert: function () {
+            this.notify('Please wait...');
+            
+            this.$el.find('[data-action="revert"]').addClass('disabled');            
+            
+            $.ajax({
+                type: 'POST',
+                url: 'Import/action/revert',
+                data: JSON.stringify({
+                    entityType: this.formData.entityType,
+                    idsToRemove: this.result.importedIds
+                }),
+                timeout: 150000,
+                success: function (result) {
+                    Espo.Ui.success(this.translate('Reverted', 'labels', 'Import'));
+                    this.$el.find('[data-action="revert"]').remove();
+                }.bind(this)
+            });
+        }        
+                    
+    });
 });

@@ -17,15 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-	
-Espo.define('Views.Team.Record.Detail', 'Views.Record.Detail', function (Dep) {		
+ ************************************************************************/
 
-	return Dep.extend({
-	
-		sideView: 'Team.Record.DetailSide',
-			
-	});		
-	
+Espo.define('Views.Team.Record.Detail', 'Views.Record.Detail', function (Dep) {
+
+    return Dep.extend({
+
+        sideView: 'Role.Record.DetailSide',
+
+    });
+
 });
-

@@ -1,39 +1,44 @@
 {
-	"fields": {
-		"name": "Тема",
-		"parent": "Источник",
-		"status": "Статус",
-		"dateStart": "Дата начала",
-		"dateEnd": "Дата окончания",
-		"direction": "Категория",
-		"duration": "Длительность",
-		"description": "Описание",
-		"users": "Пользователи",
-		"contacts": "Контакты",
-		"leads": "Лиды"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Запланированный",
-			"Held": "Выполнен",
-			"Not Held": "Не состоялся"
-		},
-		"direction": {
-			"Outbound": "Исходящий",
-			"Inbound": "Входящий"
-		}
-	},
-	"labels": {
-		"Create Call": "Новый звонок",
-		"Set Held": "Был выполнен",
-		"Set Not Held": "Не состоялся",
-		"Send Invitations": "Отправить приглашения"
-	},
-	"presetFilters": {
-		"planned": "Запланированные",
-		"held": "Отложенные",
-		"todays": "На сегодня"
-	}
+    "fields": {
+        "name": "Name",
+        "parent": "Источник",
+        "status": "статус",
+        "dateStart": "Дата начала",
+        "dateEnd": "Дата окончания",
+        "direction": "Категория",
+        "duration": "Duration",
+        "description": "Описание",
+        "users": "Users",
+        "contacts": "Контакты",
+        "leads": "Потенциальные клиенты"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Запланированный",
+            "Held": "Выполнен",
+            "Not Held": "Не состоялся"
+        },
+        "direction": {
+            "Outbound": "Исходящий",
+            "Inbound": "Входящий"
+        },
+        "acceptanceStatus": {
+            "None": "Нет",
+            "Accepted": "Accepted",
+            "Declined": "Declined"
+        }
+    },
+    "labels": {
+        "Create Call": "Новый звонок",
+        "Set Held": "Был выполнен",
+        "Set Not Held": "Set Not Held",
+        "Send Invitations": "Отправить приглашения"        
+    },
+    "presetFilters": {
+        "planned": "Запланированный",
+        "held": "Выполнен",
+        "todays": "На сегодня"
+    }
 }

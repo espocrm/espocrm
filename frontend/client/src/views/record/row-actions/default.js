@@ -21,38 +21,38 @@
 
 Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'record.row-actions.default',
-		
-		getActions: function () {
-			if (this.options.acl.edit) {
-				return [
-					{
-						action: 'quickEdit',
-						label: 'Edit',
-						data: {
-							id: this.model.id
-						}					
-					},
-					{
-						action: 'quickRemove',
-						label: 'Remove',
-						data: {
-							id: this.model.id
-						}					
-					}
-				];
-			}
-		},
-		
-		data: function () {			
-			return {
-				acl: this.options.acl,
-				actions: this.getActions()
-			};
-		}
-	});
+        template: 'record.row-actions.default',
+        
+        getActions: function () {
+            if (this.options.acl.edit) {
+                return [
+                    {
+                        action: 'quickEdit',
+                        label: 'Edit',
+                        data: {
+                            id: this.model.id
+                        }                    
+                    },
+                    {
+                        action: 'quickRemove',
+                        label: 'Remove',
+                        data: {
+                            id: this.model.id
+                        }                    
+                    }
+                ];
+            }
+        },
+        
+        data: function () {            
+            return {
+                acl: this.options.acl,
+                actions: this.getActions()
+            };
+        }
+    });
 
 });
 

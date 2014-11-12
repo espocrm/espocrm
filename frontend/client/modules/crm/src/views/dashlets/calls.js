@@ -21,63 +21,63 @@
 
 Espo.define('Crm:Views.Dashlets.Calls', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: 'Calls',
+        name: 'Calls',
 
-		scope: 'Call',
+        scope: 'Call',
 
-		defaultOptions: {
-			sortBy: 'createdAt',
-			asc: false,
-			displayRecords: 5,
-			columnLayout: [
-				{
-					name: 'name',
-					link: true,
-					sortable: false,
-					width: 40,
-				},
-				{
-					name: 'status',
-					sortable: false,
-				},
-				{
-					name: 'dateStart',
-					sortable: false,
-				}
-			],
-			expandedLayout: {
-				rows: [
-					[
-						{
-							name: 'name',
-							link: true,
-						}
-					],
-					[
-						{
-							name: 'status'
-						},
-						{
-							name: 'dateStart'
-						}
-					]
-				]
-			},
-			searchData: {
-				bool: {
-					onlyMy: true,
-				},
-				advanced: {
-					status: {
-						type: 'notIn',
-						value: ['Held', 'Not Held']
-					}
-				}
-			},
-		},
+        defaultOptions: {
+            sortBy: 'createdAt',
+            asc: false,
+            displayRecords: 5,
+            columnLayout: [
+                {
+                    name: 'name',
+                    link: true,
+                    sortable: false,
+                    width: 40,
+                },
+                {
+                    name: 'status',
+                    sortable: false,
+                },
+                {
+                    name: 'dateStart',
+                    sortable: false,
+                }
+            ],
+            expandedLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'name',
+                            link: true,
+                        }
+                    ],
+                    [
+                        {
+                            name: 'status'
+                        },
+                        {
+                            name: 'dateStart'
+                        }
+                    ]
+                ]
+            },
+            searchData: {
+                bool: {
+                    onlyMy: true,
+                },
+                advanced: {
+                    status: {
+                        type: 'notIn',
+                        value: ['Held', 'Not Held']
+                    }
+                }
+            },
+        },
 
-	});
+    });
 });
 

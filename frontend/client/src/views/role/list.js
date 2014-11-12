@@ -20,15 +20,15 @@
  ************************************************************************/ 
 Espo.define('Views.Role.List', 'Views.List', function (Dep) {
 
-	return Dep.extend({	
-	
-		searchPanel: false,
-		
-		setup: function () {
-			Dep.prototype.setup.call(this);			
-			
-		},
-		
-	});
-	
+    return Dep.extend({    
+    
+        searchPanel: false,
+        
+        setup: function () {
+            Dep.prototype.setup.call(this);            
+            
+        },
+        
+    });
+    
 });

@@ -13,9 +13,9 @@
             "default": "New",
             "view": "Fields.EnumStyled",
             "style": {
-            	"Closed": "success",
-            	"Duplicate": "danger",
-            	"Rejected": "danger"
+                "Closed": "success",
+                "Duplicate": "danger",
+                "Rejected": "danger"
             }
         },
         "priority": {
@@ -36,7 +36,8 @@
             "type": "link"
         },
         "contact": {
-            "type": "link"
+            "type": "link",
+            "view": "Crm:Case.Fields.Contact"
         },
         "createdAt": {
             "type": "datetime",
@@ -112,8 +113,8 @@
         }
     },
     "collection": {
-    	"sortBy": "number",
-    	"asc": false,
-    	"boolFilters": ["onlyMy"]
+        "sortBy": "number",
+        "asc": false,
+        "boolFilters": ["onlyMy"]
     }
 }

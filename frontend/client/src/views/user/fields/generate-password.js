@@ -20,22 +20,22 @@
  ************************************************************************/ 
 Espo.define('Views.User.Fields.GeneratePassword', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({
-	
-		_template: '<button type="button" class="btn" data-action="generatePassword">{{translate \'Generate\' scope=\'User\'}}</button>',
-	
-		events: {
-			'click [data-action="generatePassword"]': function () {
-				var password = Math.random().toString(36).slice(-8);				
-				$('input[name="password"]').val(password);
-				$('input[name="passwordConfirm"]').val(password);
-			}
-		},
-		
-		fetch: function () {
-			return {};
-		},
-		
-	});
-	
+    return Dep.extend({
+    
+        _template: '<button type="button" class="btn" data-action="generatePassword">{{translate \'Generate\' scope=\'User\'}}</button>',
+    
+        events: {
+            'click [data-action="generatePassword"]': function () {
+                var password = Math.random().toString(36).slice(-8);                
+                $('input[name="password"]').val(password);
+                $('input[name="passwordConfirm"]').val(password);
+            }
+        },
+        
+        fetch: function () {
+            return {};
+        },
+        
+    });
+    
 });

@@ -28,89 +28,89 @@ use \Espo\Core\Exceptions\Error;
 
 class EmailAddress extends Record
 {
-	private function findInAddressBookByEntityType($where, $limit, $entityType, &$result)
-	{
-		$service = $this->getServiceFactory()->create($entityType);
-		
-		$r = $service->findEntities(array(
-			'where' => $where,
-			'maxSize' => $limit,
-			'sortBy' => 'name'
-		));		
-		
-		foreach ($r['collection'] as $entity) {
-			$entity->loadLinkMultipleField('emailAddress');
-			
-			$emailAddress = $entity->get('emailAddress');
-			
-			$result[] = array(
-				'emailAddress' => $emailAddress,
-				'name' => $entity->get('name'),
-				'entityType' => $entityType
-			);
-			
+    private function findInAddressBookByEntityType($where, $limit, $entityType, &$result)
+    {
+        $service = $this->getServiceFactory()->create($entityType);
 
-			$c = $service->getEntity($entity->id);
-			$emailAddressData = $c->get('emailAddressData');
-			foreach ($emailAddressData as $d) {
-				if ($emailAddress != $d->emailAddress) {
-					$emailAddress = $d->emailAddress;
-					$result[] = array(
-						'emailAddress' => $emailAddress,
-						'name' => $entity->get('name'),
-						'entityType' => $entityType
-					);
-					break;
-				}
-			}
-		}	
-	}
-	
-	
-	public function searchInAddressBook($query, $limit)
-	{
-		$result = array();		
-		
-		$where = array(
-			array(
-				'type' => 'or',
-				'value' => array(
-					array(
-						'type' => 'like',
-						'field' => 'name',
-						'value' => $query . '%'
-					),
-					array(
-						'type' => 'like',
-						'field' => 'emailAddress',
-						'value' => $query . '%'
-					)
-				)
-			),
-			array(
-				'type' => 'notEquals',
-				'field' => 'emailAddress',
-				'value' => null
-			)
-		);
-		
-		$this->findInAddressBookByEntityType($where, $limit, 'Contact', $result);
-		$this->findInAddressBookByEntityType($where, $limit, 'Lead', $result);
-		$this->findInAddressBookByEntityType($where, $limit, 'User', $result);		
-		
-		$final = array();
-		
-		foreach ($result as $r) {
-			foreach ($final as $f) {
-				if ($f['emailAddress'] == $r['emailAddress'] && $f['name'] == $r['name']) {
-					continue 2;
-				}
-			}
-			$final[] = $r;
-		}
-		
-		return $final;
-	}
-	
+        $r = $service->findEntities(array(
+            'where' => $where,
+            'maxSize' => $limit,
+            'sortBy' => 'name'
+        ));
+
+        foreach ($r['collection'] as $entity) {
+            $entity->loadLinkMultipleField('emailAddress');
+
+            $emailAddress = $entity->get('emailAddress');
+
+            $result[] = array(
+                'emailAddress' => $emailAddress,
+                'name' => $entity->get('name'),
+                'entityType' => $entityType
+            );
+
+
+            $c = $service->getEntity($entity->id);
+            $emailAddressData = $c->get('emailAddressData');
+            foreach ($emailAddressData as $d) {
+                if ($emailAddress != $d->emailAddress) {
+                    $emailAddress = $d->emailAddress;
+                    $result[] = array(
+                        'emailAddress' => $emailAddress,
+                        'name' => $entity->get('name'),
+                        'entityType' => $entityType
+                    );
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public function searchInAddressBook($query, $limit)
+    {
+        $result = array();
+
+        $where = array(
+            array(
+                'type' => 'or',
+                'value' => array(
+                    array(
+                        'type' => 'like',
+                        'field' => 'name',
+                        'value' => $query . '%'
+                    ),
+                    array(
+                        'type' => 'like',
+                        'field' => 'emailAddress',
+                        'value' => $query . '%'
+                    )
+                )
+            ),
+            array(
+                'type' => 'notEquals',
+                'field' => 'emailAddress',
+                'value' => null
+            )
+        );
+
+        $this->findInAddressBookByEntityType($where, $limit, 'Contact', $result);
+        $this->findInAddressBookByEntityType($where, $limit, 'Lead', $result);
+        $this->findInAddressBookByEntityType($where, $limit, 'User', $result);
+
+        $final = array();
+
+        foreach ($result as $r) {
+            foreach ($final as $f) {
+                if ($f['emailAddress'] == $r['emailAddress'] && $f['name'] == $r['name']) {
+                    continue 2;
+                }
+            }
+            $final[] = $r;
+        }
+
+        return $final;
+    }
+
 }
 

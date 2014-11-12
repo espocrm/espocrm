@@ -22,43 +22,28 @@
 
 namespace Espo\Core\Loaders;
 
-use Doctrine\ORM\Tools\Setup,
-    Espo\Core\Doctrine\ORM\Mapping\Driver\EspoPHPDriver;
-
-class EntityManager implements Loader
+class EntityManager extends Base
 {
-	private $container;
+    public function load()
+    {
+        $config = $this->getContainer()->get('config');
 
-	public function __construct(\Espo\Core\Container $container)
-	{
-		$this->container = $container;
-	}
+        $params = array(
+            'host' => $config->get('database.host'),
+            'port' => $config->get('database.port'),
+            'dbname' => $config->get('database.dbname'),
+            'user' => $config->get('database.user'),
+            'password' => $config->get('database.password'),
+            'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
+            'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
+        );
 
-	protected function getContainer()
-	{
-    	return $this->container;
-	}
+        $entityManager = new \Espo\Core\ORM\EntityManager($params);
+        $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
+        $entityManager->setHookManager($this->getContainer()->get('hookManager'));
+        $entityManager->setContainer($this->getContainer());
 
-	public function load()
-	{
-		$config = $this->getContainer()->get('config');
-
-		$params = array(
-			'host' => $config->get('database.host'),
-			'port' => $config->get('database.port'),
-			'dbname' => $config->get('database.dbname'),
-			'user' => $config->get('database.user'),
-			'password' => $config->get('database.password'),
-			'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
-			'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
-		);
-
-		$entityManager = new \Espo\Core\ORM\EntityManager($params);
-		$entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
-		$entityManager->setHookManager($this->getContainer()->get('hookManager'));
-		$entityManager->setContainer($this->getContainer());
-
-		return $entityManager;
-	}
+        return $entityManager;
+    }
 }
 

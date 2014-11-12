@@ -9,6 +9,6 @@
     "list":"ScheduledJob.Record.List"
   },
   "views": {
-    "list": "ScheduledJob.List"  	
+    "list": "ScheduledJob.List"      
   }
 }

@@ -21,94 +21,125 @@
 
 Espo.define('Views.List', 'Views.Main', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'list',
+        template: 'list',
 
-		el: '#main',
+        el: '#main',
 
-		scope: null,
+        scope: null,
 
-		name: 'List',
+        name: 'List',
 
-		views: {
-			header: {
-				selector: '> .page-header',
-				view: 'Header'
-			}
-		},
-		
-		searchPanel: true,		
-		
-		searchManager: true,
-		
-		createButton: true,
+        views: {
+            header: {
+                selector: '> .page-header',
+                view: 'Header'
+            }
+        },
+        
+        searchPanel: true,
+        
+        searchManager: true,
+        
+        createButton: true,
 
-		setup: function () {
-			this.setupSearchManager();
-		
-			if (this.searchPanel && !this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {			
-				this.createView('search', 'Record.Search', {
-					collection: this.collection,
-					el: '#main > .search-container',
-					searchManager: this.searchManager,
-				});
-			}	
+        setup: function () {
+            this.setupSearchManager();
+            this.setupSorting();
 
-			if (this.createButton) {
-				this.menu.buttons.unshift({
-					link: '#' + this.scope + '/create',
-					label: 'Create ' +  this.scope,
-					style: 'primary',
-					acl: 'edit'
-				});
-			}			
-		},
-		
-		getSearchDefaultData: function () {
-			return null;
-		},
-		
-		setupSearchManager: function () {
-			var collection = this.collection;
-		
-			var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
-			searchManager.loadStored();
-			collection.where = searchManager.getWhere();				
-			collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-				
-			this.searchManager = searchManager;
-		},
+            if (this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
+                this.searchPanel = false;
+            }
+        
+            if (this.searchPanel) {
+                this.createView('search', 'Record.Search', {
+                    collection: this.collection,
+                    el: '#main > .search-container',
+                    searchManager: this.searchManager,
+                }, function (view) {                    
+                    this.listenTo(view, 'reset', function () {
+                        this.collection.sortBy = this.defaultSortBy;
+                        this.collection.asc = this.defaultAsc;
+                        this.getStorage().clear('listSorting', this.collection.name)
+                    }, this);
+                }.bind(this));
+            }    
 
-		afterRender: function () {
-			this.notify('Loading...');	
-			
-			var listViewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-			
-			this.listenToOnce(this.collection, 'sync', function () {				
-				this.createView('list', listViewName, {
-					collection: this.collection,
-					el: this.options.el + ' > .list-container',
-				}, function (view) {
-					view.render();
-					view.notify(false);
-					
-					this.listenTo(this.getView('list'), 'sort', function (o) {
-						// TODO store
-					}.bind(this));
-					
-				}.bind(this));							
-			}.bind(this));			
-			this.collection.fetch();	
-		},
+            if (this.createButton) {
+                this.menu.buttons.unshift({
+                    link: '#' + this.scope + '/create',
+                    label: 'Create ' +  this.scope,
+                    style: 'primary',
+                    acl: 'edit'
+                });
+            }            
+        },
+        
+        getSearchDefaultData: function () {
+            return null;
+        },
+        
+        setupSearchManager: function () {
+            var collection = this.collection;
+        
+            var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+            searchManager.loadStored();
+            collection.where = searchManager.getWhere();
+            collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+                
+            this.searchManager = searchManager;
+        },
 
-		getHeader: function () {
-			return this.getLanguage().translate(this.collection.name, 'scopeNamesPlural');
-		},
+        setupSorting: function () {
+            if (!this.searchPanel) return;
 
-		updatePageTitle: function () {
-			this.setPageTitle(this.getLanguage().translate(this.collection.name, 'scopeNamesPlural'));
-		},
-	});
+            var collection = this.collection;
+
+            var sortingParams = this.getStorage().get('listSorting', collection.name) || {};
+            
+            this.defaultSortBy = collection.sortBy;
+            this.defaultAsc = collection.asc;
+
+            if ('sortBy' in sortingParams) {
+                collection.sortBy = sortingParams.sortBy;
+            }
+            if ('asc' in sortingParams) {
+                collection.asc = sortingParams.asc;
+            }
+        },
+
+        afterRender: function () {
+            this.notify('Loading...');
+            
+            var listViewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+            
+            this.listenToOnce(this.collection, 'sync', function () {
+                this.createView('list', listViewName, {
+                    collection: this.collection,
+                    el: this.options.el + ' > .list-container',
+                }, function (view) {
+                    view.render();
+                    view.notify(false);
+                    
+                    if (this.searchPanel) {
+                        this.listenTo(this.getView('list'), 'sort', function (obj) {
+                            this.getStorage().set('listSorting', this.collection.name, obj);
+                        }, this);
+                    }
+                    
+                }.bind(this));
+            }, this);
+            this.collection.fetch();
+        },
+
+        getHeader: function () {
+            return this.getLanguage().translate(this.collection.name, 'scopeNamesPlural');
+        },
+
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate(this.collection.name, 'scopeNamesPlural'));
+        },
+    });
 });
 

@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "enabled": "Activado",
+        "clientId": "ID Cliente",
+        "clientSecret": "Secreto Cliente",
+        "redirectUri": "Redireccionar URI"
+    },
+    "messages": {
+        "selectIntegration": "Seleccionar una integración en menú"
+    },
+    "help": {
+        "Google": "<p><b>Obtener las credenciales de  OAuth 2.0 desde la Consola de Google Developers.</b></p><p>Visita <a href=\"https://console.developers.google.com/project\">Consola Google Developers</a> para obtener las credenciales de  OAuth 2.0 tales como  ID Cliente y Secreto de Cliente que son conocidos por ambos Google y la aplicación EspoCRM.</p>"
+    }
+}

@@ -1,48 +1,50 @@
 {
-	"labels": {
-		"Converted To": "Convertido a",
-		"Create Lead": "Crear Principal",
-		"Convert": "Convertir"
-	},
-	"fields": {
-		"name": "Nombre",
-		"emailAddress": "Correo electrónico",
-		"title": "Título",
-		"website": "Sito Web",
-		"phone": "Teléfono",
-		"phoneOffice": "Phone (Office)",
-		"fax": "Fax",
-		"accountName": "Nombre de Cuenta",
-		"doNotCall": "No Llamar",
-		"address": "Dirección",
-		"status": "Estado",
-		"source": "Fuente",
-		"opportunityAmount": "Oportunidad Cantidad",
-		"description": "Descripción",
-		"createdAccount": "Cuenta",
-		"createdContact": "Contacto",
-		"createdOpportunity": "Opportunidad"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Nuevo",
-			"Assigned": "Asignado",
-			"In Process": "En Proceso",
-			"Converted": "Convertido",
-			"Recycled": "Reciclado",
-			"Dead": "Muerto"
-		},
-		"source": {
-			"Call": "Llamada",
-			"Email": "Correo electrónico",
-			"Existing Customer": "Cliente Existente",
-			"Partner": "Partner",
-			"Public Relations": "Relaciones Públicas",
-			"Web Site": "Sitio Web",
-			"Campaign": "Campaña",
-			"Other": "Otro"
-		}
-	}
+    "labels": {
+        "Converted To": "Convertido a",
+        "Create Lead": "Crear Principal",
+        "Convert": "Convertir"
+    },
+    "fields": {
+        "name": "Asunto",
+        "emailAddress": "Correo electrónico",
+        "title": "Título",
+        "website": "Sito Web",
+        "phoneNumber": "Teléfono",
+        "accountName": "Nombre de Cuenta",
+        "doNotCall": "No Llamar",
+        "address": "Dirección",
+        "status": "Estado",
+        "source": "Fuente",
+        "opportunityAmount": "Costo de Oportunidad",
+        "opportunityAmountConverted": "Costo de Oportunidad (convertido)",
+        "description": "Descripción",
+        "createdAccount": "Cuenta",
+        "createdContact": "Contacto",
+        "createdOpportunity": "Oportunidad"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nuevo",
+            "Assigned": "Asignado",
+            "In Process": "En Proceso",
+            "Converted": "Convertido",
+            "Recycled": "Reciclado",
+            "Dead": "Muerto"
+        },
+        "source": {
+            "Call": "Llamada",
+            "Email": "Correo electrónico",
+            "Existing Customer": "Cliente Existente",
+            "Partner": "Socio",
+            "Public Relations": "Relaciones Públicas",
+            "Web Site": "Sitio Web",
+            "Campaign": "Campaña",
+            "Other": "Otro"
+        }
+    },
+    "presetFilters": {
+        "active": "Activo"
+    }
 }

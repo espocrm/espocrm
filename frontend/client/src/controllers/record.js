@@ -20,211 +20,211 @@
  ************************************************************************/ 
 Espo.define('Controllers.Record', 'Controller', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		viewMap: null,
+        viewMap: null,
 
-		defaultAction: 'list',
-		
-		checkAccess: function (action) {
-			if (this.getUser().isAdmin()) {
-				return true;
-			}
-			if (this.getAcl().check(this.name, action)) {
-				return true;
-			}
-			return false;
-		},
+        defaultAction: 'list',
+        
+        checkAccess: function (action) {
+            if (this.getUser().isAdmin()) {
+                return true;
+            }
+            if (this.getAcl().check(this.name, action)) {
+                return true;
+            }
+            return false;
+        },
 
-		initialize: function () {
-			this.viewMap = this.viewMap || {};
-			this.viewsMap = this.viewsMap || {};
-		},
+        initialize: function () {
+            this.viewMap = this.viewMap || {};
+            this.viewsMap = this.viewsMap || {};
+        },
 
-		getViewName: function (type) {
-			return this.viewMap[type] || this.getMetadata().get('clientDefs.' + this.name + '.views.' + type) || Espo.Utils.upperCaseFirst(type);
-		},
+        getViewName: function (type) {
+            return this.viewMap[type] || this.getMetadata().get('clientDefs.' + this.name + '.views.' + type) || Espo.Utils.upperCaseFirst(type);
+        },
 
-		getViews: function (type) {
-			var views = {};
-			var recordView = this.getMetadata().get('clientDefs.' + this.name + '.recordViews.' + type);
-			if (recordView) {
-				if (!views.body) {
-					views.body = {};
-				}
-				views.body.view = recordView;
-			}
-			return views;
-		},
-		
-		beforeList: function () {
-			this.handleCheckAccess('read');
-		},
+        getViews: function (type) {
+            var views = {};
+            var recordView = this.getMetadata().get('clientDefs.' + this.name + '.recordViews.' + type);
+            if (recordView) {
+                if (!views.body) {
+                    views.body = {};
+                }
+                views.body.view = recordView;
+            }
+            return views;
+        },
+        
+        beforeList: function () {
+            this.handleCheckAccess('read');
+        },
 
-		list: function (options) {						
-			this.getCollection(function (collection) {		
+        list: function (options) {                        
+            this.getCollection(function (collection) {        
 
 
-				this.main(this.getViewName('list'), {
-					scope: this.name,
-					collection: collection,
-				});		
-			});
-		},
-		
-		beforeView: function () {
-			this.handleCheckAccess('read');
-		},
+                this.main(this.getViewName('list'), {
+                    scope: this.name,
+                    collection: collection,
+                });        
+            });
+        },
+        
+        beforeView: function () {
+            this.handleCheckAccess('read');
+        },
 
-		view: function (options) {
-			var id = options.id;
-			
-			var createView = function (model) {
-				this.main(this.getViewName('detail'), {
-					scope: this.name,
-					model: model,
-					views: this.getViews('detail'),
-				});	
-			}.bind(this);
-			
-			if ('model' in options) {
-				var model = options.model;
-				createView(model);
-				
-				model.once('sync', function () {
-					this.hideLoadingNotification();
-				}, this);
-				this.showLoadingNotification();
-				model.fetch();	
-			} else {
-				this.getModel(function (model) {
-					model.id = id;
-					
-					this.showLoadingNotification();
-					model.once('sync', function () {
-						createView(model);
-					}, this);				
-					model.fetch({main: true});
-				});
-			}
-		},
-		
-		beforeCreate: function () {
-			this.handleCheckAccess('edit');
-		},
+        view: function (options) {
+            var id = options.id;
+            
+            var createView = function (model) {
+                this.main(this.getViewName('detail'), {
+                    scope: this.name,
+                    model: model,
+                    views: this.getViews('detail'),
+                });    
+            }.bind(this);
+            
+            if ('model' in options) {
+                var model = options.model;
+                createView(model);
+                
+                model.once('sync', function () {
+                    this.hideLoadingNotification();
+                }, this);
+                this.showLoadingNotification();
+                model.fetch();    
+            } else {
+                this.getModel(function (model) {
+                    model.id = id;
+                    
+                    this.showLoadingNotification();
+                    model.once('sync', function () {
+                        createView(model);
+                    }, this);                
+                    model.fetch({main: true});
+                });
+            }
+        },
+        
+        beforeCreate: function () {
+            this.handleCheckAccess('edit');
+        },
 
-		create: function (options) {
-			options = options || {};
-			this.getModel(function (model) {
-				model.populateDefaults();
-				if (options.relate) {
-					model.setRelate(options.relate);
-				}
-				if (options.attributes) {
-					model.set(options.attributes)
-				}
+        create: function (options) {
+            options = options || {};
+            this.getModel(function (model) {
+                model.populateDefaults();
+                if (options.relate) {
+                    model.setRelate(options.relate);
+                }
+                if (options.attributes) {
+                    model.set(options.attributes)
+                }
 
-				this.main(this.getViewName('edit'), {
-					scope: this.name,
-					model: model,
-					returnUrl: options.returnUrl,
-					views: this.getViews('edit'),
-				});
-			});
-		},
-		
-		beforeCreate: function () {
-			this.handleCheckAccess('edit');
-		},
+                this.main(this.getViewName('edit'), {
+                    scope: this.name,
+                    model: model,
+                    returnUrl: options.returnUrl,
+                    views: this.getViews('edit'),
+                });
+            });
+        },
+        
+        beforeEdit: function () {
+            this.handleCheckAccess('edit');
+        },
 
-		edit: function (options) {
-			var id = options.id;
+        edit: function (options) {
+            var id = options.id;
 
-			this.getModel(function (model) {
-				model.id = id;
-				
-				this.showLoadingNotification();
-				model.once('sync', function () {
+            this.getModel(function (model) {
+                model.id = id;
+                
+                this.showLoadingNotification();
+                model.once('sync', function () {
 
-					if (options.attributes) {
-						model.set(options.attributes)
-					}
-					
-					this.main(this.getViewName('edit'), {
-						scope: this.name,
-						model: model,
-						returnUrl: options.returnUrl,
-						views: this.getViews('edit'),
-					});	
-				}, this);				
-				model.fetch({main: true});
-			});
-		},
-		
-		beforeMerge: function () {
-			this.handleCheckAccess('edit');
-		},
+                    if (options.attributes) {
+                        model.set(options.attributes)
+                    }
+                    
+                    this.main(this.getViewName('edit'), {
+                        scope: this.name,
+                        model: model,
+                        returnUrl: options.returnUrl,
+                        views: this.getViews('edit'),
+                    });    
+                }, this);                
+                model.fetch({main: true});
+            });
+        },
+        
+        beforeMerge: function () {
+            this.handleCheckAccess('edit');
+        },
 
-		merge: function (options) {
-			var ids = options.ids.split(',');
+        merge: function (options) {
+            var ids = options.ids.split(',');
 
-			this.getModel(function (model) {
-				var models = [];
+            this.getModel(function (model) {
+                var models = [];
 
-				var proceed = function () {
-					this.main('Merge', {
-						models: models,
-						scope: this.name
-					});
-				}.bind(this);
+                var proceed = function () {
+                    this.main('Merge', {
+                        models: models,
+                        scope: this.name
+                    });
+                }.bind(this);
 
-				var i = 0;
-				ids.forEach(function (id) {
-					var current = model.clone();
-					current.id = id;
-					models.push(current);
-					current.once('sync', function () {
-						i++;
-						if (i == ids.length) {
-							proceed();
-						}
-					});
-					current.fetch();
-				}.bind(this));
-			}.bind(this));
-		},
+                var i = 0;
+                ids.forEach(function (id) {
+                    var current = model.clone();
+                    current.id = id;
+                    models.push(current);
+                    current.once('sync', function () {
+                        i++;
+                        if (i == ids.length) {
+                            proceed();
+                        }
+                    });
+                    current.fetch();
+                }.bind(this));
+            }.bind(this));
+        },
 
-		/**
-		 * Get collection for the current controller.
-		 * @param {Espo.Collection}.
-		 */
-		getCollection: function (callback, context) {
-			context = context || this;
-			
-			if (!this.name) {
-				throw new Error('No collection for unnamed controller');
-			}
-			var collectionName = this.name;
-			this.collectionFactory.create(collectionName, function (collection) {
-				callback.call(context, collection);
-			}, context);
-		},
+        /**
+         * Get collection for the current controller.
+         * @param {Espo.Collection}.
+         */
+        getCollection: function (callback, context) {
+            context = context || this;
+            
+            if (!this.name) {
+                throw new Error('No collection for unnamed controller');
+            }
+            var collectionName = this.name;
+            this.collectionFactory.create(collectionName, function (collection) {
+                callback.call(context, collection);
+            }, context);
+        },
 
-		/**
-		 * Get model for the current controller.
-		 * @param {Espo.Model}.
-		 */
-		getModel: function (callback, context) {			
-			context = context || this;
-							
-			if (!this.name) {
-				throw new Error('No collection for unnamed controller');
-			}
-			var modelName = this.name;
-			this.modelFactory.create(modelName, function (model) {
-				callback.call(context, model);
-			}, context);
-		},
-	});
+        /**
+         * Get model for the current controller.
+         * @param {Espo.Model}.
+         */
+        getModel: function (callback, context) {            
+            context = context || this;
+                            
+            if (!this.name) {
+                throw new Error('No collection for unnamed controller');
+            }
+            var modelName = this.name;
+            this.modelFactory.create(modelName, function (model) {
+                callback.call(context, model);
+            }, context);
+        },
+    });
 
 });

@@ -24,30 +24,30 @@ namespace Espo\Core\Entities;
 
 class Person extends \Espo\Core\ORM\Entity
 {
-	public static $person = true;
-	
-	public function setLastName($value)
-	{
-		$this->_setValue('lastName', $value);
-		
-		$firstName = $this->get('firstName');
-		if (empty($firstName)) {
-			$this->_setValue('name', $value);
-		} else {
-			$this->_setValue('name', $firstName . ' ' . $value);
-		}
-	}
-	
-	public function setFirstName($value)
-	{
-		$this->_setValue('firstName', $value);
-		
-		$lastName = $this->get('lastName');
-		if (empty($lastName)) {
-			$this->_setValue('name', $value);
-		} else {
-			$this->_setValue('name', $value . ' ' . $lastName);
-		}
-	}
+    public static $person = true;
+    
+    public function _setLastName($value)
+    {
+        $this->setValue('lastName', $value);
+        
+        $firstName = $this->get('firstName');
+        if (empty($firstName)) {
+            $this->setValue('name', $value);
+        } else {
+            $this->setValue('name', $firstName . ' ' . $value);
+        }
+    }
+    
+    public function _setFirstName($value)
+    {
+        $this->setValue('firstName', $value);
+        
+        $lastName = $this->get('lastName');
+        if (empty($lastName)) {
+            $this->setValue('name', $value);
+        } else {
+            $this->setValue('name', $value . ' ' . $lastName);
+        }
+    }
 }
 

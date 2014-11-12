@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Services;
 
@@ -28,79 +28,79 @@ use \Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 class GlobalSearch extends \Espo\Core\Services\Base
-{	
-	protected $dependencies = array(
-		'entityManager',
-		'user',
-		'metadata',
-		'acl',
-		'selectManagerFactory',
-		'config',
-	);
-	
-	protected function getSelectManagerFactory()
-	{
-		return $this->injections['selectManagerFactory'];
-	}
+{
+    protected $dependencies = array(
+        'entityManager',
+        'user',
+        'metadata',
+        'acl',
+        'selectManagerFactory',
+        'config',
+    );
 
-	protected function getEntityManager()
-	{
-		return $this->injections['entityManager'];
-	}
-	
-	protected function getAcl()
-	{
-		return $this->injections['acl'];
-	}
-	
-	protected function getMetadata()
-	{
-		return $this->injections['metadata'];
-	}	
-	
-	public function find($query, $offset, $maxSize)
-	{
-		$entityNameList = $this->getConfig()->get('globalSearchEntityList');
-		
-		$entityTypeCount = count($entityNameList);
-		
-		$list = array();
-		$count = 0;
-		$total = 0;
-		foreach ($entityNameList as $entityName) {	
-		
-			if (!$this->getAcl()->check($entityName, 'read')) {
-				continue;
-			}
-			$selectManager = $this->getSelectManagerFactory()->create($entityName);			
-			
-			$searchParams = array(
-				'whereClause' => array(
-					'OR' => array(
-						'name*' => '%' . $query . '%',
-					)
-				),
-				'offset' => round($offset / $entityTypeCount),
-				'limit' => round($maxSize / $entityTypeCount),
-				'orderBy' => 'createdAt',
-				'order' => 'DESC',
-			);
-			$selectParams = array_merge_recursive($searchParams, $selectManager->getAclParams());
-			
-			$collection = $this->getEntityManager()->getRepository($entityName)->find($selectParams);
-			$count += count($collection);
-			$total += $this->getEntityManager()->getRepository($entityName)->count($selectParams);
-			foreach ($collection as $entity) {
-				$data = $entity->toArray();
-				$data['_scope'] = $entityName;
-				$list[] = $data;
-			}
-		}
-		
-		return array(
-			'total' => $total,
-			'list' => $list,
-		);
-	}
+    protected function getSelectManagerFactory()
+    {
+        return $this->injections['selectManagerFactory'];
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->injections['entityManager'];
+    }
+
+    protected function getAcl()
+    {
+        return $this->injections['acl'];
+    }
+
+    protected function getMetadata()
+    {
+        return $this->injections['metadata'];
+    }
+
+    public function find($query, $offset, $maxSize)
+    {
+        $entityNameList = $this->getConfig()->get('globalSearchEntityList');
+
+        $entityTypeCount = count($entityNameList);
+
+        $list = array();
+        $count = 0;
+        $total = 0;
+        foreach ($entityNameList as $entityName) {
+
+            if (!$this->getAcl()->check($entityName, 'read')) {
+                continue;
+            }
+            $selectManager = $this->getSelectManagerFactory()->create($entityName);
+
+            $searchParams = array(
+                'whereClause' => array(
+                    'OR' => array(
+                        'name*' => '%' . $query . '%',
+                    )
+                ),
+                'offset' => round($offset / $entityTypeCount),
+                'limit' => round($maxSize / $entityTypeCount),
+                'orderBy' => 'createdAt',
+                'order' => 'DESC',
+            );
+            $selectParams = array_merge_recursive($searchParams, $selectManager->getAclParams());
+
+            $collection = $this->getEntityManager()->getRepository($entityName)->find($selectParams);
+            $count += count($collection);
+            $total += $this->getEntityManager()->getRepository($entityName)->count($selectParams);
+            foreach ($collection as $entity) {
+                $data = $entity->toArray();
+                $data['_scope'] = $entityName;
+                $list[] = $data;
+            }
+        }
+
+        return array(
+            'total' => $total,
+            'list' => $list,
+        );
+    }
 }
 

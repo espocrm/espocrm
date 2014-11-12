@@ -21,86 +21,86 @@
 
 Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'global-search.global-search',
-		
-		events: {
-			'keypress #global-search-input': function (e) {
-				if (e.keyCode == 13) {
-					var text = e.currentTarget.value;
-					if (text != '' && text.length > 2) {
-						text = encodeURI(text);
-						this.search(text);
-					}
-				}
-			}		
-		},
-		
-		setup: function () {
-			
-			this.wait(true);
-			this.getCollectionFactory().create('GlobalSearch', function (collection) {
-				this.collection = collection;
-				collection.name = 'GlobalSearch';
-				this.wait(false);						
-			}, this);
+        template: 'global-search.global-search',
+        
+        events: {
+            'keypress #global-search-input': function (e) {
+                if (e.keyCode == 13) {
+                    var text = e.currentTarget.value;
+                    if (text != '' && text.length > 2) {
+                        text = encodeURI(text);
+                        this.search(text);
+                    }
+                }
+            }        
+        },
+        
+        setup: function () {
+            
+            this.wait(true);
+            this.getCollectionFactory().create('GlobalSearch', function (collection) {
+                this.collection = collection;
+                collection.name = 'GlobalSearch';
+                this.wait(false);                        
+            }, this);
 
-		},		
-		
-		search: function (text) {
-			this.collection.url = this.collection.urlRoot =  'GlobalSearch/' + text;
-			
-			this.showPanel();
-		},
-		
-		showPanel: function () {
-			this.closePanel();
-			
-			var $container = $('<div>').attr('id', 'global-search-panel').css({
-				'position': 'absolute',
-				'width': '500px',
-				'z-index': 1001,
-				'right': 0,
-				'left': 'auto'
-			});			
-						
-			$container.appendTo(this.$el.find('.global-search-panel-container'));
-			
-			this.createView('panel', 'GlobalSearch.Panel', {
-				el: '#global-search-panel',
-				collection: this.collection,			
-			}, function (view) {
-				view.render();
-			}.bind(this));
-			
-			$document = $(document);			
-			$document.on('mouseup.global-search', function (e) {
-				if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
-					setTimeout(function () {
-						this.closePanel();
-					}.bind(this), 100);
-					return;
-				}
- 				if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-					this.closePanel();
-       			}
-			}.bind(this));
-		},
-		
-		closePanel: function () {
-			$container = $('#global-search-panel');
-			
-			$('#global-search-panel').remove();			
-			$document = $(document);
-			if (this.hasView('panel')) {
-				this.getView('panel').remove();
-			};
- 			$document.off('mouseup.global-search');
-       		$container.remove();
-		},
-		
-	});
-	
+        },        
+        
+        search: function (text) {
+            this.collection.url = this.collection.urlRoot =  'GlobalSearch/' + text;
+            
+            this.showPanel();
+        },
+        
+        showPanel: function () {
+            this.closePanel();
+            
+            var $container = $('<div>').attr('id', 'global-search-panel').css({
+                'position': 'absolute',
+                'width': '500px',
+                'z-index': 1001,
+                'right': 0,
+                'left': 'auto'
+            });            
+                        
+            $container.appendTo(this.$el.find('.global-search-panel-container'));
+            
+            this.createView('panel', 'GlobalSearch.Panel', {
+                el: '#global-search-panel',
+                collection: this.collection,            
+            }, function (view) {
+                view.render();
+            }.bind(this));
+            
+            $document = $(document);            
+            $document.on('mouseup.global-search', function (e) {
+                if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
+                    setTimeout(function () {
+                        this.closePanel();
+                    }.bind(this), 100);
+                    return;
+                }
+                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                    this.closePanel();
+                   }
+            }.bind(this));
+        },
+        
+        closePanel: function () {
+            $container = $('#global-search-panel');
+            
+            $('#global-search-panel').remove();            
+            $document = $(document);
+            if (this.hasView('panel')) {
+                this.getView('panel').remove();
+            };
+             $document.off('mouseup.global-search');
+               $container.remove();
+        },
+        
+    });
+    
 });
 

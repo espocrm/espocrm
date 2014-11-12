@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Hooks\Common;
 
@@ -26,142 +26,154 @@ use Espo\ORM\Entity;
 
 class Stream extends \Espo\Core\Hooks\Base
 {
-	protected $streamService = null;	
-	
-	protected $auditedFieldsCache = array();
-	
-	protected $statusDefs = array(
-		'Lead' => 'status',
-		'Case' => 'status',
-		'Opportunity' => 'stage',	
-	);
-	
-	protected function init()
-	{
-		$this->dependencies[] = 'serviceFactory';
-	}
-	
-	protected function getServiceFactory()
-	{
-		return $this->getInjection('serviceFactory');
-	}
-	
-	protected function checkHasStream(Entity $entity)
-	{
-		$entityName = $entity->getEntityName();
-		return $this->getMetadata()->get("scopes.{$entityName}.stream");
-	}
-	
-	public function afterRemove(Entity $entity)
-	{
-		if ($this->checkHasStream($entity)) {
-			$this->getStreamService()->unfollowAllUsersFromEntity($entity);
-		}
-	}
-	
-	protected function isLinkObservableInStream($scope, $link)
-	{
-		return $this->getMetadata()->get("scopes.{$scope}.stream") && 
-		       in_array($link, $this->getMetadata()->get("entityDefs.Note.streamRelated.{$scope}", array()));
-	}
-	
-	protected function handleCreateRelated(Entity $entity)
-	{
-		$linkDefs = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".links", array());
-			
-		$scopeNotifiedList = array();
-		foreach ($linkDefs as $link => $defs) {
-			if ($defs['type'] == 'belongsTo') {
-				$foreign = $defs['foreign'];
-				$scope = $defs['entity'];
-				$entityId = $entity->get($link . 'Id');
-				if (!empty($scope) && !empty($entityId)) {
-					if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
-						continue;
-					}
-					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
-					$scopeNotifiedList[] = $scope;
-				}
-			} else if ($defs['type'] == 'belongsToParent') {		
-				$foreign = $defs['foreign'];
-				$scope = $entity->get($link . 'Type');
-				$entityId = $entity->get($link . 'Id');
-				if (!empty($scope) && !empty($entityId)) {
-					if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
-						continue;
-					}
-					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
-					$scopeNotifiedList[] = $scope;
-					
-				}
-			} else if ($defs['type'] == 'hasMany') {		
-				$foreign = $defs['foreign'];
-				$scope = $defs['entity'];
-				$entityIds = $entity->get($link . 'Ids');
-				if (!empty($scope) && is_array($entityIds) && !empty($entityIds)) {
-					if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
-						continue;
-					}
-					$entityId = $entityIds[0];
-					$this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
-					$scopeNotifiedList[] = $scope;					
-				}
-			}
-		}
-	}
-	
-	public function afterSave(Entity $entity)
-	{
-		$entityName = $entity->getEntityName();
-		
-		if ($this->checkHasStream($entity)) {
-			if (!$entity->isFetched()) {
-				
-				$assignedUserId = $entity->get('assignedUserId');
-				$createdById = $entity->get('createdById');
-				
-				if (!empty($createdById)) {
-					$this->getStreamService()->followEntity($entity, $createdById);
-				}
-				
-				if (!empty($assignedUserId) && $createdById != $assignedUserId) {
-					$this->getStreamService()->followEntity($entity, $assignedUserId);
-				}	
-				$this->getStreamService()->noteCreate($entity);
-									
-			} else {
-				if ($entity->isFieldChanged('assignedUserId')) {
-					$assignedUserId = $entity->get('assignedUserId');
-					if (!empty($assignedUserId)) {
-						$this->getStreamService()->followEntity($entity, $assignedUserId);
-						$this->getStreamService()->noteAssign($entity);
-					}
-				}				
-				$this->getStreamService()->handleAudited($entity);
-				
-				if (array_key_exists($entityName, $this->statusDefs)) {
-					$field = $this->statusDefs[$entityName];
-					$value = $entity->get($field);
-					if (!empty($value) && $value != $entity->getFetched($field)) {
-						$this->getStreamService()->noteStatus($entity, $field);
-					}
-				}			
-			}	
+    protected $streamService = null;
 
-		}
-		
-		if (!$entity->isFetched() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
-			$this->handleCreateRelated($entity);
-		}
-	}
-	
-	protected function getStreamService()
-	{
-		if (empty($this->streamService)) {
-			$this->streamService = $this->getServiceFactory()->create('Stream');
-		}
-		return $this->streamService;		
-	}	
+    protected $auditedFieldsCache = array();
+
+    protected $hasStreamCache = array();
+
+    protected $isLinkObservableInStreamCache = array();
+
+    protected $statusDefs = array(
+        'Lead' => 'status',
+        'Case' => 'status',
+        'Opportunity' => 'stage',
+    );
+
+    protected function init()
+    {
+        $this->dependencies[] = 'serviceFactory';
+    }
+
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
+    }
+
+    protected function checkHasStream(Entity $entity)
+    {
+        $entityName = $entity->getEntityName();
+        if (!array_key_exists($entityName, $this->hasStreamCache)) {
+            $this->hasStreamCache[$entityName] = $this->getMetadata()->get("scopes.{$entityName}.stream");
+        }
+        return $this->hasStreamCache[$entityName];
+    }
+
+    protected function isLinkObservableInStream($scope, $link)
+    {
+        $key = $scope . '__' . $link;
+        if (!array_key_exists($key, $this->isLinkObservableInStreamCache)) {
+            $this->isLinkObservableInStreamCache[$key] = $this->getMetadata()->get("scopes.{$scope}.stream") &&
+                in_array($link, $this->getMetadata()->get("entityDefs.Note.streamRelated.{$scope}", array()));
+        }
+
+        return $this->isLinkObservableInStreamCache[$key];
+    }
+
+    public function afterRemove(Entity $entity)
+    {
+        if ($this->checkHasStream($entity)) {
+            $this->getStreamService()->unfollowAllUsersFromEntity($entity);
+        }
+    }
+
+    protected function handleCreateRelated(Entity $entity)
+    {
+        $linkDefs = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".links", array());
+
+        $scopeNotifiedList = array();
+        foreach ($linkDefs as $link => $defs) {
+            if ($defs['type'] == 'belongsTo') {
+                $foreign = $defs['foreign'];
+                $scope = $defs['entity'];
+                $entityId = $entity->get($link . 'Id');
+                if (!empty($scope) && !empty($entityId)) {
+                    if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
+                        continue;
+                    }
+                    $this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+                    $scopeNotifiedList[] = $scope;
+                }
+            } else if ($defs['type'] == 'belongsToParent') {
+                $foreign = $defs['foreign'];
+                $scope = $entity->get($link . 'Type');
+                $entityId = $entity->get($link . 'Id');
+                if (!empty($scope) && !empty($entityId)) {
+                    if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
+                        continue;
+                    }
+                    $this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+                    $scopeNotifiedList[] = $scope;
+
+                }
+            } else if ($defs['type'] == 'hasMany') {
+                $foreign = $defs['foreign'];
+                $scope = $defs['entity'];
+                $entityIds = $entity->get($link . 'Ids');
+                if (!empty($scope) && is_array($entityIds) && !empty($entityIds)) {
+                    if (in_array($scope, $scopeNotifiedList) || !$this->isLinkObservableInStream($scope, $foreign)) {
+                        continue;
+                    }
+                    $entityId = $entityIds[0];
+                    $this->getStreamService()->noteCreateRelated($entity, $scope, $entityId);
+                    $scopeNotifiedList[] = $scope;
+                }
+            }
+        }
+    }
+
+    public function afterSave(Entity $entity)
+    {
+        $entityName = $entity->getEntityName();
+
+        if ($this->checkHasStream($entity)) {
+            if ($entity->isNew()) {
+
+                $assignedUserId = $entity->get('assignedUserId');
+                $createdById = $entity->get('createdById');
+
+                if (!empty($createdById)) {
+                    $this->getStreamService()->followEntity($entity, $createdById);
+                }
+
+                if (!empty($assignedUserId) && $createdById != $assignedUserId) {
+                    $this->getStreamService()->followEntity($entity, $assignedUserId);
+                }
+                $this->getStreamService()->noteCreate($entity);
+
+            } else {
+                if ($entity->isFieldChanged('assignedUserId')) {
+                    $assignedUserId = $entity->get('assignedUserId');
+                    if (!empty($assignedUserId)) {
+                        $this->getStreamService()->followEntity($entity, $assignedUserId);
+                        $this->getStreamService()->noteAssign($entity);
+                    }
+                }
+                $this->getStreamService()->handleAudited($entity);
+
+                if (array_key_exists($entityName, $this->statusDefs)) {
+                    $field = $this->statusDefs[$entityName];
+                    $value = $entity->get($field);
+                    if (!empty($value) && $value != $entity->getFetched($field)) {
+                        $this->getStreamService()->noteStatus($entity, $field);
+                    }
+                }
+            }
+
+        }
+
+        if ($entity->isNew() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
+            $this->handleCreateRelated($entity);
+        }
+    }
+
+    protected function getStreamService()
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->getServiceFactory()->create('Stream');
+        }
+        return $this->streamService;
+    }
 
 }
 

@@ -21,16 +21,16 @@
 
 Espo.define('Views.Admin.AuthToken.Record.RowActions.Remove', 'View', function (Dep) {
 
-	return Dep.extend({
-	
-		_template: '<a href="javascript:" data-action="quickRemove" data-id="{{id}}">{{translate "Remove"}}</a>',
-		
-		data: function () {
-			return {
-				id: this.model.id
-			};
-		}
+    return Dep.extend({
+    
+        _template: '<a href="javascript:" data-action="quickRemove" data-id="{{id}}">{{translate "Remove"}}</a>',
+        
+        data: function () {
+            return {
+                id: this.model.id
+            };
+        }
 
-	});
+    });
 });
 

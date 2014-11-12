@@ -19,25 +19,29 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 
-Espo.define('Views.Admin.UserInterface', 'Views.Settings.Record.Edit', function (Dep) {		
+Espo.define('Views.Admin.UserInterface', 'Views.Settings.Record.Edit', function (Dep) {        
 
-	return Dep.extend({
-		
-		layoutName: 'userInterface',	
-	
-		setup: function () {
-			Dep.prototype.setup.call(this);				
-		
-			this.model.defs.fields.tabList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-				return this.getMetadata().get('scopes.' + scope + '.tab');
-			}, this);
-			
-			this.model.defs.fields.quickCreateList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-				return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.tab');
-			}, this);
-		},
-		
-	});		
-	
+    return Dep.extend({
+        
+        layoutName: 'userInterface',    
+    
+        setup: function () {
+            Dep.prototype.setup.call(this);                
+        
+            this.model.defs.fields.tabList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
+                return this.getMetadata().get('scopes.' + scope + '.tab');
+            }, this).sort(function (v1, v2) {
+                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
+            
+            this.model.defs.fields.quickCreateList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
+                return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.tab');
+            }, this).sort(function (v1, v2) {
+                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
+        },
+        
+    });        
+    
 });
 

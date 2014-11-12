@@ -1,14 +1,14 @@
 [
-	{
-		"label": "Currency Settings",
-		"rows": [
-			[{"name": "defaultCurrency"}, {"name": "currencyList"}]
-		]
-	},
-	{
-		"label": "Currency Rates",
-		"rows": [
-			[{"name": "baseCurrency"}, {"name": "currencyRates"}]
-		]
-	}
+    {
+        "label": "Currency Settings",
+        "rows": [
+            [{"name": "defaultCurrency"}, {"name": "currencyList"}]
+        ]
+    },
+    {
+        "label": "Currency Rates",
+        "rows": [
+            [{"name": "baseCurrency"}, {"name": "currencyRates"}]
+        ]
+    }
 ]

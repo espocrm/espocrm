@@ -30,80 +30,94 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Meeting extends \Espo\Services\Record
 {
-	protected function init()
-	{
-		$this->dependencies[] = 'mailSender';
-		$this->dependencies[] = 'preferences';
-		$this->dependencies[] = 'language';
-		$this->dependencies[] = 'dateTime';
-	}
+    protected function init()
+    {
+        $this->dependencies[] = 'mailSender';
+        $this->dependencies[] = 'preferences';
+        $this->dependencies[] = 'language';
+        $this->dependencies[] = 'dateTime';
+        $this->dependencies[] = 'crypt';
+    }
 
-	protected function getMailSender()
-	{
-		return $this->injections['mailSender'];
-	}
+    protected function getMailSender()
+    {
+        return $this->injections['mailSender'];
+    }
 
-	protected function getPreferences()
-	{
-		return $this->injections['preferences'];
-	}
+    protected function getPreferences()
+    {
+        return $this->injections['preferences'];
+    }
 
-	protected function getLanguage()
-	{
-		return $this->injections['language'];
-	}
+    protected function getCrypt()
+    {
+        return $this->injections['crypt'];
+    }
 
-	protected function getDateTime()
-	{
-		return $this->injections['dateTime'];
-	}
-	
-	protected function getInvitationManager()
-	{
-		return new Invitations($this->getEntityManager(), $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
-	}
+    protected function getLanguage()
+    {
+        return $this->injections['language'];
+    }
 
-	public function sendInvitations(Entity $entity)
-	{
-		$invitationManager = $this->getInvitationManager();
-		
-		$users = $entity->get('users');
-		foreach ($users as $user) {
-			$invitationManager->sendInvitation($entity, $user, 'users');
-		}
+    protected function getDateTime()
+    {
+        return $this->injections['dateTime'];
+    }
+    
+    protected function getInvitationManager()
+    {
+        $smtpParams = $this->getPreferences()->getSmtpParams();
+        if ($smtpParams) {
+            if (array_key_exists('password', $smtpParams)) {
+                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+            }
+            $smtpParams['fromAddress'] = $this->getUser()->get('emailAddress');
+            $smtpParams['fromName'] = $this->getUser()->get('name');
+        }
+        return new Invitations($this->getEntityManager(), $smtpParams, $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
+    }
 
-		$contacts = $entity->get('contacts');
-		foreach ($contacts as $contact) {
-			$invitationManager->sendInvitation($entity, $contact, 'contacts');
-		}
+    public function sendInvitations(Entity $entity)
+    {
+        $invitationManager = $this->getInvitationManager();
+        
+        $users = $entity->get('users');
+        foreach ($users as $user) {
+            $invitationManager->sendInvitation($entity, $user, 'users');
+        }
 
-		$leads = $entity->get('leads');
-		foreach ($leads as $lead) {
-			$invitationManager->sendInvitation($entity, $lead, 'leads');
-		}
+        $contacts = $entity->get('contacts');
+        foreach ($contacts as $contact) {
+            $invitationManager->sendInvitation($entity, $contact, 'contacts');
+        }
 
-		return true;
-	}
+        $leads = $entity->get('leads');
+        foreach ($leads as $lead) {
+            $invitationManager->sendInvitation($entity, $lead, 'leads');
+        }
 
-	protected function storeEntity(Entity $entity)
-	{
-		$assignedUserId = $entity->get('assignedUserId');
-		if ($assignedUserId && $entity->has('usersIds')) {
-			$usersIds = $entity->get('usersIds');
-			if (!is_array($usersIds)) {
-				$usersIds = array();
-			}
-			if (!in_array($assignedUserId, $usersIds)) {
-				$usersIds[] = $assignedUserId;
-				$entity->set('usersIds', $usersIds);
-				$hash = $entity->get('usersNames');
-				if ($hash instanceof \stdClass) {
-					$hash->assignedUserId = $entity->get('assignedUserName');
-					$entity->set('usersNames', $hash);
-				}
-			}
-		}
-		return parent::storeEntity($entity);
-	}
+        return true;
+    }
+
+    protected function storeEntity(Entity $entity)
+    {
+        $assignedUserId = $entity->get('assignedUserId');
+        if ($assignedUserId && $entity->has('usersIds')) {
+            $usersIds = $entity->get('usersIds');
+            if (!is_array($usersIds)) {
+                $usersIds = array();
+            }
+            if (!in_array($assignedUserId, $usersIds)) {
+                $usersIds[] = $assignedUserId;
+                $entity->set('usersIds', $usersIds);
+                $hash = $entity->get('usersNames');
+                if ($hash instanceof \stdClass) {
+                    $hash->assignedUserId = $entity->get('assignedUserName');
+                    $entity->set('usersNames', $hash);
+                }
+            }
+        }
+        return parent::storeEntity($entity);
+    }
 }
 

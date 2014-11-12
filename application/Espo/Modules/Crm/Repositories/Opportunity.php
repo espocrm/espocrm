@@ -25,7 +25,7 @@ namespace Espo\Modules\Crm\Repositories;
 use Espo\ORM\Entity;
 
 class Opportunity extends \Espo\Core\ORM\Repositories\RDB
-{	
+{    
 
 
 }

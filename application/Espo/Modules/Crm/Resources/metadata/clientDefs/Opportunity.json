@@ -44,5 +44,5 @@
          }
       }
    ],
-	"boolFilters": ["onlyMy"]
+    "boolFilters": ["onlyMy"]
 }

@@ -22,19 +22,27 @@
 
 namespace Espo\Controllers;
 
-class EmailAccount extends \Espo\Core\Controllers\Record
-{
-	public function actionGetFolders($params, $data, $request)
-	{		
-		return $this->getRecordService()->getFolders(array(
-			'host' => $request->get('host'),
-			'port' => $request->get('port'),
-			'ssl' => $request->get('ssl'),
-			'username' => $request->get('username'),
-			'password' => $request->get('password'),
-			'id' => $request->get('id')
-		));
+use \Espo\Core\Exceptions\Forbidden;
 
-	}
+class EmailAccount extends \Espo\Core\Controllers\Record
+{    
+    public function actionGetFolders($params, $data, $request)
+    {        
+        return $this->getRecordService()->getFolders(array(
+            'host' => $request->get('host'),
+            'port' => $request->get('port'),
+            'ssl' => $request->get('ssl'),
+            'username' => $request->get('username'),
+            'password' => $request->get('password'),
+            'id' => $request->get('id')
+        ));
+    }
+
+    protected function checkControllerAccess()
+    {
+        if (!$this->getAcl()->check('EmailAccountScope')) {
+            throw new Forbidden();
+        }
+    }
 }
 

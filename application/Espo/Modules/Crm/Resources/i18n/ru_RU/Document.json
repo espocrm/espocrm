@@ -1,0 +1,32 @@
+{
+    "labels": {
+        "Create Document": "Create Document",
+        "Details": "Описание"
+    },
+    "fields": {
+        "name": "Name",
+        "status": "статус",
+        "file": "File",
+        "type": "Type",
+        "source": "Source",
+        "publishDate": "Publish Date",
+        "expirationDate": "Expiration Date",
+        "description": "Описание"
+    },
+    "links": {
+        "accounts": "Контрагенты",
+        "opportunities": "Сделки"
+    },
+    "options": {
+        "status": {
+            "Active": "Активный",
+            "Draft": "Черновик",
+            "Expired": "Expired",
+            "Canceled": "Отменена"
+        }
+    },
+    "presetFilters": {
+        "active": "Активный",
+        "draft": "Черновик"
+    }
+}

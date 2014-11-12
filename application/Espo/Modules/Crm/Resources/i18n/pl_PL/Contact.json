@@ -1,31 +1,31 @@
 {
-	"fields": {
-		"name": "Imię",
-		"emailAddress": "E-mail",
-		"title": "Tytuł",
-		"account": "Konto",
-		"accounts": "Klienci",
-		"phoneNumber": "Telefon",
-		"accountType": "Typ Klienta",
-		"doNotCall": "Nie Dzwoń",
-		"address": "Adres",
-		"opportunityRole": "Rola Szansy Sprzedaży",
-		"accountRole": "Rola",
-		"description": "Opis "
-	},
-	"links": {
-		"opportunities": "Szanse Sprzedaży",
-		"cases": "Zlecenia"
-	},
-	"labels": {
-		"Create Contact": "Utwórz Kontakt"
-	},
-	"options": {
-		"opportunityRole": {
-			"": "--NIC--",
-			"Decision Maker": "Osoba Decyzyjna",
-			"Evaluator": "Oceniający",
-			"Influencer": "Wpływający"
-		}
-	}
+    "fields": {
+        "name": "Imię",
+        "emailAddress": "E-mail",
+        "title": "Tytuł",
+        "account": "Konto",
+        "accounts": "Klienci",
+        "phoneNumber": "Telefon",
+        "accountType": "Typ Klienta",
+        "doNotCall": "Nie Dzwoń",
+        "address": "Adres",
+        "opportunityRole": "Rola Szansy Sprzedaży",
+        "accountRole": "Rola",
+        "description": "Opis "
+    },
+    "links": {
+        "opportunities": "Szanse Sprzedaży",
+        "cases": "Zlecenia"
+    },
+    "labels": {
+        "Create Contact": "Utwórz Kontakt"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--NIC--",
+            "Decision Maker": "Osoba Decyzyjna",
+            "Evaluator": "Oceniający",
+            "Influencer": "Wpływający"
+        }
+    }
 }

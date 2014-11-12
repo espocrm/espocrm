@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "status": "Estado",
+        "host": "Host",
+        "username": "Nombre de Usuario",
+        "password": "Contraseña",
+        "port": "Puerto",
+        "monitoredFolders": "Carpetas supervisadas",
+        "ssl": "SSL",
+        "fetchSince": "Traer Desde"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Activo",
+            "Inactive": "Inactivo"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Crear Cuenta de Correo Electrónico",
+        "IMAP": "IMAP",
+        "Main": "Principal"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP"
+    }
+}

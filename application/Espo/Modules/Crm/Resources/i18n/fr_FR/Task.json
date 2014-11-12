@@ -1,31 +1,31 @@
 {
-	"fields": {
-		"name": "Nom",
-		"parent": "Parent",
-		"status": "Statut",
-		"dateStart": "Date de Début",
-		"dateEnd": "Date d'échéance",
-		"priority": "Priorité",
-		"description": "Description",
-		"isOverdue": "Est en Retard"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Not Started": "Pas Commencé",
-			"Started": "Commencé",
-			"Completed": "Terminé",
-			"Canceled": "Annulé"
-		},
-		"priority" : {
-			"Low": "Bas",
-			"Normal": "Normal",
-			"High": "Haut",
-			"Urgent": "Urgent"
-		}
-	},
-	"labels": {
-		"Create Task": "Créer une tâche"
-	}
+    "fields": {
+        "name": "Nom",
+        "parent": "Parent",
+        "status": "Statut",
+        "dateStart": "Date de Début",
+        "dateEnd": "Date d'échéance",
+        "priority": "Priorité",
+        "description": "Description",
+        "isOverdue": "Est en Retard"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Not Started": "Pas Commencé",
+            "Started": "Commencé",
+            "Completed": "Terminé",
+            "Canceled": "Annulé"
+        },
+        "priority" : {
+            "Low": "Bas",
+            "Normal": "Normal",
+            "High": "Haut",
+            "Urgent": "Urgent"
+        }
+    },
+    "labels": {
+        "Create Task": "Créer une tâche"
+    }
 }

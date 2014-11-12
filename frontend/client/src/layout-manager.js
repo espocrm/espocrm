@@ -20,92 +20,92 @@
  ************************************************************************/ 
 
 Espo.LayoutManager = function (options) {
-	var options = options || {};
-	this.cache = options.cache || null;
-	this.data = {};
-	this.ajax = $.ajax;		
+    var options = options || {};
+    this.cache = options.cache || null;
+    this.data = {};
+    this.ajax = $.ajax;        
 }
 
 _.extend(Espo.LayoutManager.prototype, {
 
-	cache: null,
-	
-	data: null,
-	
-	_getKey: function (controller, type) {			
-		return controller + '-' + type;
-	},
-	
-	_getUrl: function (controller, type) {
-		return controller + '/layout/' + type;
-	},
+    cache: null,
+    
+    data: null,
+    
+    _getKey: function (controller, type) {            
+        return controller + '-' + type;
+    },
+    
+    _getUrl: function (controller, type) {
+        return controller + '/layout/' + type;
+    },
 
-	get: function (controller, type, callback, cache) {				
-		if (typeof cache == 'undefined') {
-			cache = true;
-		}
-	
-		var key = this._getKey(controller, type);
-		
-		if (cache) {
-			if (key in this.data) {
-				if (typeof callback === 'function') {
-					callback(this.data[key]);
-				}
-				return; 
-			}
-		}
-	
-		if (this.cache !== null && cache) {
-			var cached = this.cache.get('app-layout', key);
-			if (cached) {
-				if (typeof callback === 'function') {
-					callback(cached);
-				}
-				this.data[key] = cached;
-				return;										
-			}
-		}
+    get: function (controller, type, callback, cache) {                
+        if (typeof cache == 'undefined') {
+            cache = true;
+        }
+    
+        var key = this._getKey(controller, type);
+        
+        if (cache) {
+            if (key in this.data) {
+                if (typeof callback === 'function') {
+                    callback(this.data[key]);
+                }
+                return; 
+            }
+        }
+    
+        if (this.cache !== null && cache) {
+            var cached = this.cache.get('app-layout', key);
+            if (cached) {
+                if (typeof callback === 'function') {
+                    callback(cached);
+                }
+                this.data[key] = cached;
+                return;                                        
+            }
+        }
 
-		this.ajax({
-			url: this._getUrl(controller, type),
-			type: 'GET',
-			dataType: 'json',
-			success: function (layout) {
-				if (typeof callback === 'function') {
-					callback(layout);
-				}				
-				this.data[key] = layout;
-				if (this.cache !== null) {
-					this.cache.set('app-layout', key, layout);
-				}
-			}.bind(this),
-			/*error: function () {
-				console.error('Could not load layout ' + controller + '#' + type);
-			},*/
-		});			
-	},		
-	
-	set: function (controller, type, layout, callback) {
-		var key = this._getKey(controller, type);
+        this.ajax({
+            url: this._getUrl(controller, type),
+            type: 'GET',
+            dataType: 'json',
+            success: function (layout) {
+                if (typeof callback === 'function') {
+                    callback(layout);
+                }                
+                this.data[key] = layout;
+                if (this.cache !== null) {
+                    this.cache.set('app-layout', key, layout);
+                }
+            }.bind(this),
+            /*error: function () {
+                console.error('Could not load layout ' + controller + '#' + type);
+            },*/
+        });            
+    },        
+    
+    set: function (controller, type, layout, callback) {
+        var key = this._getKey(controller, type);
 
-		this.ajax({
-			url: this._getUrl(controller, type),
-			type: 'PUT',
-			data: JSON.stringify(layout),
-			success: function () {
-				if (this.cache !== null) {
-					this.cache.set('app-layout', key, layout);
-				}
-				this.data[key] = layout;					
-				this.trigger('sync');					
-				if (typeof callback === 'function') {
-					callback();
-				}					
-			}.bind(this)
-		});			
-	},
-			
+        this.ajax({
+            url: this._getUrl(controller, type),
+            type: 'PUT',
+            data: JSON.stringify(layout),
+            success: function () {
+                if (this.cache !== null) {
+                    this.cache.set('app-layout', key, layout);
+                }
+                this.data[key] = layout;                    
+                this.trigger('sync');                    
+                if (typeof callback === 'function') {
+                    callback();
+                }                    
+            }.bind(this)
+        });            
+    },
+            
 
 }, Backbone.Events);
 

@@ -20,19 +20,19 @@
  ************************************************************************/ 
 Espo.define('Views.Settings.Fields.ThousandSeparator', 'Views.Fields.Varchar', function (Dep) {
 
-	return Dep.extend({
-	
-		validations: ['required', 'thousandSeparator'],		
-		
-		validateThousandSeparator: function () {
-			if (this.model.get('thousandSeparator') == this.model.get('decimalMark')) {
-				var msg = this.translate('thousandSeparatorEqualsDecimalMark', 'messages', 'Admin');
-				this.showValidationMessage(msg);
-				return true;
-			}
-		
-		},
-		
-	});
-	
+    return Dep.extend({
+    
+        validations: ['required', 'thousandSeparator'],        
+        
+        validateThousandSeparator: function () {
+            if (this.model.get('thousandSeparator') == this.model.get('decimalMark')) {
+                var msg = this.translate('thousandSeparatorEqualsDecimalMark', 'messages', 'Admin');
+                this.showValidationMessage(msg);
+                return true;
+            }
+        
+        },
+        
+    });
+    
 });

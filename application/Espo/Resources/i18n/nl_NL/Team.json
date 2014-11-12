@@ -1,15 +1,15 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"roles": "Regels"
+		"roles": "Rollen"
 	},
 	"links": {
 		"users": "Gebruikers"
 	},
 	"tooltips": {
-		"roles": "All users from this team will get access settings from selected roles."
+		"roles": "Alle gebruikers van deze groep krijgen de rechten uit de geselecteerde rollen."
 	},
 	"labels": {
-		"Create Team": "Maak een Team"
+		"Create Team": "Groep Aanmaken"
 	}
 }

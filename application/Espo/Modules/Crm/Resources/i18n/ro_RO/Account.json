@@ -1,40 +1,40 @@
 {
-	"fields": {
-		"name": "Nume",
-		"emailAddress": "Email",
-		"website": "Site Web",
-		"phoneNumber": "Telefon",
-		"billingAddress": "Adresa de Facturare",
-		"shippingAddress": "Adresa de Transport",
-		"description": "Descriere",
-		"sicCode": "Cod Sic",
-		"industry": "Industrie",
-		"type": "Tip",
-		"contactRole": "Rol"
-	},
-	"links": {
-		"contacts": "Contacte",
-		"opportunities": "Oportunitati",
-		"cases": "Cazuri"
-	},
-	"options": {
-		"type": {
-			"Customer": "Client",
-			"Investor": "Investitor",
-			"Partner": "Partener",
-			"Reseller": "Reseller"
-		},
-		"industry": {
-			"Apparel": "Haine",
-			"Banking": "Banking",
-			"Computer Software": "Software Computer",
-			"Education": "Educatie",
-			"Electronics": "Electronice",
-			"Finance": "Finante",
-			"Insurance": "Asigurari"
-		}
-	},
-	"labels": {
-		"Create Account": "Creare cont"
-	}
+    "fields": {
+        "name": "Nume",
+        "emailAddress": "Email",
+        "website": "Site Web",
+        "phoneNumber": "Telefon",
+        "billingAddress": "Adresa de Facturare",
+        "shippingAddress": "Adresa de Transport",
+        "description": "Descriere",
+        "sicCode": "Cod Sic",
+        "industry": "Industrie",
+        "type": "Tip",
+        "contactRole": "Rol"
+    },
+    "links": {
+        "contacts": "Contacte",
+        "opportunities": "Oportunitati",
+        "cases": "Cazuri"
+    },
+    "options": {
+        "type": {
+            "Customer": "Client",
+            "Investor": "Investitor",
+            "Partner": "Partener",
+            "Reseller": "Reseller"
+        },
+        "industry": {
+            "Apparel": "Haine",
+            "Banking": "Banking",
+            "Computer Software": "Software Computer",
+            "Education": "Educatie",
+            "Electronics": "Electronice",
+            "Finance": "Finante",
+            "Insurance": "Asigurari"
+        }
+    },
+    "labels": {
+        "Create Account": "Creare cont"
+    }
 }

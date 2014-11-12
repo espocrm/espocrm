@@ -25,20 +25,20 @@ namespace Espo\Modules\Crm\Services;
 use \Espo\ORM\Entity;
 
 class Account extends \Espo\Services\Record
-{	
-	protected $linkSelectParams = array(
-		'contacts' => array(
-			'additionalColumns' => array(
-				'role' => 'accountRole'
-			)
-		)
-	);
-	
-	protected function getDuplicateWhereClause(Entity $entity)
-	{
-		return array(
-			'name' => $entity->get('name')
-		);
-	}	
+{    
+    protected $linkSelectParams = array(
+        'contacts' => array(
+            'additionalColumns' => array(
+                'role' => 'accountRole'
+            )
+        )
+    );
+    
+    protected function getDuplicateWhereClause(Entity $entity)
+    {
+        return array(
+            'name' => $entity->get('name')
+        );
+    }    
 }
 

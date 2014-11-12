@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "Revert": "Revert",
+        "Return to Import": "Return to Import",
+        "Run Import": "Импортировать",
+        "Back": "Back",
+        "Field Mapping": "Field Mapping",
+        "Default Values": "Default Values",
+        "Add Field": "Add Field",
+        "Created": "Создано",
+        "Updated": "Updated",
+        "Result": "Result",
+        "Show records": "Show records"
+    }
+}

@@ -28,59 +28,59 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Download extends \Espo\Core\EntryPoints\Base
 {
-	public static $authRequired = true;
-	
-	protected $fileTypesToShowInline = array(
-		'application/pdf',
-	);
-	
-	public function run()
-	{	
-		$id = $_GET['id'];
-		if (empty($id)) {
-			throw new BadRequest();
-		}
-		
-		$attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-		
-		if (!$attachment) {
-			throw new NotFound();
-		}		
-		
-		if ($attachment->get('parentId') && $attachment->get('parentType')) {
-			$parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));			
-			if (!$this->getAcl()->check($parent)) {
-				throw new Forbidden();
-			}
-		}
-		
-		$fileName = "data/upload/{$attachment->id}";
-		
-		if (!file_exists($fileName)) {
-			throw new NotFound();
-		}
-		
-		$type = $attachment->get('type');
-		
-		$disposition = 'attachment';
-		if (in_array($type, $this->fileTypesToShowInline)) {
-			$disposition = 'inline';
-		}
-			
-		
-		header('Content-Description: File Transfer');
-		if ($type) {
-			header('Content-Type: ' . $type);
-		}
-		header('Content-Disposition: ' . $disposition . '; filename=' . $attachment->get('name'));
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate');
-		header('Pragma: public');
-		header('Content-Length: ' . filesize($fileName));
-		ob_clean();
-		flush();
-		readfile($fileName);
-		exit;		
-	}	
+    public static $authRequired = true;
+    
+    protected $fileTypesToShowInline = array(
+        'application/pdf',
+    );
+    
+    public function run()
+    {    
+        $id = $_GET['id'];
+        if (empty($id)) {
+            throw new BadRequest();
+        }
+        
+        $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+        
+        if (!$attachment) {
+            throw new NotFound();
+        }        
+        
+        if ($attachment->get('parentId') && $attachment->get('parentType')) {
+            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));            
+            if (!$this->getAcl()->check($parent)) {
+                throw new Forbidden();
+            }
+        }
+        
+        $fileName = "data/upload/{$attachment->id}";
+        
+        if (!file_exists($fileName)) {
+            throw new NotFound();
+        }
+        
+        $type = $attachment->get('type');
+        
+        $disposition = 'attachment';
+        if (in_array($type, $this->fileTypesToShowInline)) {
+            $disposition = 'inline';
+        }
+            
+        
+        header('Content-Description: File Transfer');
+        if ($type) {
+            header('Content-Type: ' . $type);
+        }
+        header('Content-Disposition: ' . $disposition . '; filename=' . $attachment->get('name'));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($fileName));
+        ob_clean();
+        flush();
+        readfile($fileName);
+        exit;        
+    }    
 }
 

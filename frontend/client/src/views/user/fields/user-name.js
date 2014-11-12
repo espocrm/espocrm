@@ -20,21 +20,21 @@
  ************************************************************************/ 
 Espo.define('Views.User.Fields.UserName', 'Views.Fields.Varchar', function (Dep) {
 
-	return Dep.extend({
-	
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			
-			if (this.mode == 'edit') {
-				this.$element.on('change', function () {
-					var value = this.$element.val();
-					value = value.replace(/[^a-z0-9_\s]/gi, '').replace(/[\s]/g, '_').toLowerCase();
-					this.$element.val(value);
-					this.trigger('change');
-				}.bind(this));
-			}
-		},
-		
-	});
-	
+    return Dep.extend({
+    
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            
+            if (this.mode == 'edit') {
+                this.$element.on('change', function () {
+                    var value = this.$element.val();
+                    value = value.replace(/[^a-z0-9_\s]/gi, '').replace(/[\s]/g, '_').toLowerCase();
+                    this.$element.val(value);
+                    this.trigger('change');
+                }.bind(this));
+            }
+        },
+        
+    });
+    
 });

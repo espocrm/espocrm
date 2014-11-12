@@ -21,73 +21,72 @@
 
 Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		optionsView: 'Dashlets.Options.Base',
+        optionsView: 'Dashlets.Options.Base',
 
-		defaultOptions: null,
+        defaultOptions: null,
 
-		optionsData: null,
+        optionsData: null,
 
-		actionRefresh: function () {
-			this.setup();
-			this.render();
-		},
+        actionRefresh: function () {
+            this.render();
+        },
 
-		actionOptions: function () {},
+        actionOptions: function () {},
 
-		optionsFields: {
-			'title': {
-				type: 'varchar',
-				required: true,
-			},
-			'autorefreshInterval': {
-				type: 'enumFloat',
-				options: [0, 0.5, 1, 2, 5, 10],
-			},
-		},
+        optionsFields: {
+            'title': {
+                type: 'varchar',
+                required: true,
+            },
+            'autorefreshInterval': {
+                type: 'enumFloat',
+                options: [0, 0.5, 1, 2, 5, 10],
+            },
+        },
 
-		init: function () {
-			this.defaultOptions = _.extend({
-				title: this.getLanguage().translate(this.name, 'dashlets'),
-			}, this.defaultOptions || {});
-			
-			
-			var options = _.clone(this.defaultOptions);
-			
-			for (var key in options) {
-				if (typeof options[key] == 'function') {
-					options[key] = options[key].call(this);
-				} 
-			}
+        init: function () {
+            this.defaultOptions = _.extend({
+                title: this.getLanguage().translate(this.name, 'dashlets'),
+            }, this.defaultOptions || {});
+            
+            
+            var options = _.clone(this.defaultOptions);
+            
+            for (var key in options) {
+                if (typeof options[key] == 'function') {
+                    options[key] = options[key].call(this);
+                } 
+            }
 
-			var storedOptions = this.getPreferences().getDashletOptions(this.options.id) || {};
-			
-			this.optionsData = _.extend(options, storedOptions);
-			
-			if (this.optionsData.autorefreshInterval || false) {
-				var interval = this.optionsData.autorefreshInterval * 60000;				
-				
-				var t;				
-				var process = function () {
-					t = setTimeout(function () {
-						this.actionRefresh();
-						process();									
-					}.bind(this), interval);
-				}.bind(this);
-				
-				process();
-				
-				this.once('remove', function () {
-					clearTimeout(t);
-				}, this);
-			}
-		},
+            var storedOptions = this.getPreferences().getDashletOptions(this.options.id) || {};
+            
+            this.optionsData = _.extend(options, storedOptions);
+            
+            if (this.optionsData.autorefreshInterval || false) {
+                var interval = this.optionsData.autorefreshInterval * 60000;                
+                
+                var t;                
+                var process = function () {
+                    t = setTimeout(function () {
+                        this.actionRefresh();
+                        process();                                    
+                    }.bind(this), interval);
+                }.bind(this);
+                
+                process();
+                
+                this.once('remove', function () {
+                    clearTimeout(t);
+                }, this);
+            }
+        },
 
-		getOption: function (key) {
-			return this.optionsData[key];
-		},
-	});
+        getOption: function (key) {
+            return this.optionsData[key];
+        },
+    });
 });
 
 

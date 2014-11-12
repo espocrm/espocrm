@@ -1,5 +1,5 @@
 
 <p class="text-danger">
-	{{{text}}}
+    {{{text}}}
 </p>
 

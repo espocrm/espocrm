@@ -24,74 +24,95 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\NotFound;
 
 class Preferences extends \Espo\Core\Controllers\Base
-{	
-	protected function getPreferences()
-	{
-		return $this->getContainer()->get('preferences');
-	}
-	
-	protected function getEntityManager()
-	{
-		return $this->getContainer()->get('entityManager');
-	}
-	
-	protected function handleUserAccess($userId)
-	{
-		if (!$this->getUser()->isAdmin()) {
-			if ($this->getUser()->id != $userId) {
-				throw new Forbidden();
-			}
-		}
-	}
-	
-	public function actionPatch($params, $data)
-	{
-		return $this->actionUpdate($params, $data);
-	}	
+{    
+    protected function getPreferences()
+    {
+        return $this->getContainer()->get('preferences');
+    }
+    
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('entityManager');
+    }
+    
+    protected function getCrypt()
+    {
+        return $this->getContainer()->get('crypt');
+    }
+    
+    protected function handleUserAccess($userId)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            if ($this->getUser()->id != $userId) {
+                throw new Forbidden();
+            }
+        }
+    }
+    
+    public function actionDelete($params, $data)
+    {
+        $userId = $params['id'];
+        if (empty($userId)) {
+            throw new BadRequest();
+        }
+        $this->handleUserAccess($userId);
+        
+        return $this->getEntityManager()->getRepository('Preferences')->resetToDefaults($userId);        
+    }
+    
+    public function actionPatch($params, $data)
+    {
+        return $this->actionUpdate($params, $data);
+    }    
 
-	public function actionUpdate($params, $data)
-	{
-		$userId = $params['id'];
-		$this->handleUserAccess($userId);
-		
-		$user = $this->getEntityManager()->getEntity('User', $userId);		
+    public function actionUpdate($params, $data)
+    {
+        $userId = $params['id'];
+        $this->handleUserAccess($userId);
+        
+        if (array_key_exists('smtpPassword', $data)) {
+            $data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);
+        }
+        
+        $user = $this->getEntityManager()->getEntity('User', $userId);        
 
-		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);
-		
-		if ($entity) {
-			$entity->set($data);
-			$this->getEntityManager()->saveEntity($entity);
-			
-			$entity->set('smtpEmailAddress', $user->get('emailAddress'));			
-			$entity->set('name', $user->get('name'));
-			
-			$entity->clear('smtpPassword');
-			
-			return $entity->toArray();		
-		}
-		throw new Error();
-	}
+        $entity = $this->getEntityManager()->getEntity('Preferences', $userId);
+        
+        if ($entity) {
+            $entity->set($data);
+            $this->getEntityManager()->saveEntity($entity);
+            
+            $entity->set('smtpEmailAddress', $user->get('emailAddress'));            
+            $entity->set('name', $user->get('name'));
+            
+            $entity->clear('smtpPassword');
+            
+            return $entity->toArray();        
+        }
+        throw new Error();
+    }
 
     public function actionRead($params)
-	{
-		$userId = $params['id'];
-		$this->handleUserAccess($userId);
+    {
+        $userId = $params['id'];
+        $this->handleUserAccess($userId);
 
-		$entity = $this->getEntityManager()->getEntity('Preferences', $userId);		
-		$user = $this->getEntityManager()->getEntity('User', $userId);
-		
-		$entity->set('smtpEmailAddress', $user->get('emailAddress'));
-		$entity->set('name', $user->get('name'));
-		
-		$entity->clear('smtpPassword');
-		
-		if ($entity) {
-			return $entity->toArray();		
-		}
-		throw new NotFound();
-	}
+        $entity = $this->getEntityManager()->getEntity('Preferences', $userId);        
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+        
+        $entity->set('smtpEmailAddress', $user->get('emailAddress'));
+        $entity->set('name', $user->get('name'));
+        
+        $entity->clear('smtpPassword');
+        
+        if ($entity) {
+            return $entity->toArray();        
+        }
+        throw new NotFound();
+    }
 }
 

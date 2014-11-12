@@ -1,41 +1,39 @@
 {
-	"fields": {
-		"name": "Name",
-		"parent": "Parent",
-		"status": "Status",
-		"dateStart": "Date Start",
-		"dateEnd": "Date End",
-		"duration": "Duration",
-		"description": "Description",
-		"users": "Users",
-		"contacts": "Contacts",
-		"leads": "Leads"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Planned",
-			"Held": "Held",
-			"Not Held": "Not Held"
-		},
-		"acceptanceStatus": {
-			"None": "None",
-			"Accepted": "Accepted",
-			"Declined": "Declined"
-		}
-	},
-	"labels": {
-		"Create Meeting": "Create Meeting",
-		"Set Held": "Set Held",
-		"Set Not Held": "Set Not Held",
-		"Send Invitations": "Send Invitations",
-		"Saved as Held": "Saved as Held",
-		"Saved as Not Held": "Saved as Not Held"
-	},
-	"presetFilters": {
-		"planned": "Planned",
-		"held": "Held",
-		"todays": "Today's"
-	}
+    "fields": {
+        "name": "Name",
+        "parent": "Parent",
+        "status": "Status",
+        "dateStart": "Date Start",
+        "dateEnd": "Date End",
+        "duration": "Duration",
+        "description": "Description",
+        "users": "Users",
+        "contacts": "Contacts",
+        "leads": "Leads"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planned",
+            "Held": "Held",
+            "Not Held": "Not Held"
+        },
+        "acceptanceStatus": {
+            "None": "None",
+            "Accepted": "Accepted",
+            "Declined": "Declined"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Create Meeting",
+        "Set Held": "Set Held",
+        "Set Not Held": "Set Not Held",
+        "Send Invitations": "Send Invitations"
+    },
+    "presetFilters": {
+        "planned": "Planned",
+        "held": "Held",
+        "todays": "Today's"
+    }
 }

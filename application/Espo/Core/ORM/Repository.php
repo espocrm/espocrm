@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\ORM;
 
@@ -26,23 +26,23 @@ use \Espo\Core\Interfaces\Injectable;
 
 abstract class Repository extends \Espo\ORM\Repository implements Injectable
 {
-	protected $dependencies = array();
-	
-	protected $injections = array();
-	
-	public function inject($name, $object)
-	{
-		$this->injections[$name] = $object;
-	}	
-	
-	protected function getInjection($name)
-	{
-		return $this->injections[$name];
-	}
-	
-	public function getDependencyList()
-	{
-		return $this->dependencies;
-	}	
+    protected $dependencies = array();
+
+    protected $injections = array();
+
+    public function inject($name, $object)
+    {
+        $this->injections[$name] = $object;
+    }
+
+    protected function getInjection($name)
+    {
+        return $this->injections[$name];
+    }
+
+    public function getDependencyList()
+    {
+        return $this->dependencies;
+    }
 }
 

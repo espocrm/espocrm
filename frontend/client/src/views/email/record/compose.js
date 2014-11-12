@@ -20,14 +20,14 @@
  ************************************************************************/ 
 
 Espo.define('Views.Email.Record.Compose', 'Views.Record.Edit', function (Dep) {
-	
-	return Dep.extend({
-		
-		isWide: true,
-		
-		sideView: false,
-			
-	
-	});
-	
+    
+    return Dep.extend({
+        
+        isWide: true,
+        
+        sideView: false,
+            
+    
+    });
+    
 });

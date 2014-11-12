@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Entrada",
-		"attachments": "Adjuntos"
-	}
+    "fields": {
+        "post": "Entrada",
+        "attachments": "Adjuntos"
+    }
 }

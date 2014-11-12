@@ -32,8 +32,8 @@
             "maxLength": 36
         },
         "global": {
-        	"type": "bool",
-        	"default": false
+            "type": "bool",
+            "default": false
         }
     },
     "links": {
@@ -47,7 +47,7 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
     }
 }

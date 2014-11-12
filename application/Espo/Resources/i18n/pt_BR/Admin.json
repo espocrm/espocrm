@@ -9,8 +9,8 @@
         "Customization": "Customização",
         "Available Fields": "Campos Disponíveis",
         "Layout": "Layout",
-		
-		
+        
+        
         "Add Panel": "Adicionar Painel",
         "Add Field": "Adicionar Campo",
         "Settings": "Preferências",
@@ -18,7 +18,7 @@
         "Upgrade": "Atualização",
         "Clear Cache": "Limpar Cache",
         "Rebuild": "Reconstruir",
-		
+        
         "Teams": "Times",
         "Roles": "Regras",
         "Outbound Emails": "E-mails de Saída",
@@ -30,8 +30,8 @@
         "User Interface": "Interface do Usuário",
         "Auth Tokens": "Tokens de Autenticação",
         "Authentication": "Autenticação",
-		"Currency": "Moeda",
-		"Integrations": "Integrações"
+        "Currency": "Moeda",
+        "Integrations": "Integrações"
     },
     "layouts": {
         "list": "Lista",
@@ -78,7 +78,7 @@
         "required": "Obrigatório",
         "default": "Padrão",
         "maxLength": "Tamanho máximo",
-        "options": "Opções (valores raw, não traduzíveis)",
+        "options": "Opções",
         "after": "Antes (field)",
         "before": "Após (field)",
         "link": "Link",
@@ -116,7 +116,7 @@
         "userInterface": "Configurar UI.",
         "authTokens": "Sessões autenticadas ativas. Endereço de IP e última data de acesso.",
         "authentication": "Configurações de autenticação.",
-		"currency": "Configurações de moeda e taxas."
+        "currency": "Configurações de moeda e taxas."
     },
     "options": {
         "previewSize": {

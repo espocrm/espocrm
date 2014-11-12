@@ -21,76 +21,76 @@
 
 Espo.define('Views.Modal', 'View', function (Dep) {
 
-	return Dep.extend({	
-		
-		cssName: 'modal-dialog',
-		
-		header: false,	
-		
-		dialog: null,
-		
-		containerSelector: null,
-					
-		buttons: [
-			{
-				name: 'cancel',
-				label: 'Cancel',
-				onClick: function (dialog) {
-					dialog.close();
-				}
-			} 
-		],
-		
-		width: false,
-		
-		init: function () {
-			var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
-			var containerSelector = this.containerSelector = '#' + id;
-			
-			this.options = this.options || {};
-			this.options.el = this.containerSelector;
-			
-			this.on('render', function () {			
-				$(containerSelector).remove();
-				$('<div />').css('display', 'none').attr('id', id).appendTo('body');
-				
-				var buttons = _.clone(this.buttons);
-				
-				for (var i in buttons) {
-					if (!('text' in buttons[i]) && ('label' in buttons[i])) {
-						buttons[i].text = this.getLanguage().translate(buttons[i].label);
-					}
-				}
-								
-				this.dialog = new Espo.Ui.Dialog({
-					header: this.header,
-					container: containerSelector,
-					body: '',
-					buttons: buttons,
-					width: this.width,
-					onRemove: function () {
-						this.remove();
-					}.bind(this)
-				});
-				this.setElement(containerSelector + ' .body');							
-			}, this);
-			
-			this.on('after:render', function () {					
-				$(containerSelector).show();
-				this.dialog.show();
-			});
-			
-			this.once('remove', function () {
-				if (this.dialog) {
-					this.dialog.close();
-				}
-				$(containerSelector).remove();
-			});
-		},
-		
-		close: function () {
-			this.dialog.close();
-		},			
-	});
+    return Dep.extend({    
+        
+        cssName: 'modal-dialog',
+        
+        header: false,    
+        
+        dialog: null,
+        
+        containerSelector: null,
+                    
+        buttons: [
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: function (dialog) {
+                    dialog.close();
+                }
+            } 
+        ],
+        
+        width: false,
+        
+        init: function () {
+            var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
+            var containerSelector = this.containerSelector = '#' + id;
+            
+            this.options = this.options || {};
+            this.options.el = this.containerSelector;
+            
+            this.on('render', function () {            
+                $(containerSelector).remove();
+                $('<div />').css('display', 'none').attr('id', id).appendTo('body');
+                
+                var buttons = _.clone(this.buttons);
+                
+                for (var i in buttons) {
+                    if (!('text' in buttons[i]) && ('label' in buttons[i])) {
+                        buttons[i].text = this.getLanguage().translate(buttons[i].label);
+                    }
+                }
+                                
+                this.dialog = new Espo.Ui.Dialog({
+                    header: this.header,
+                    container: containerSelector,
+                    body: '',
+                    buttons: buttons,
+                    width: this.width,
+                    onRemove: function () {
+                        this.remove();
+                    }.bind(this)
+                });
+                this.setElement(containerSelector + ' .body');                            
+            }, this);
+            
+            this.on('after:render', function () {                    
+                $(containerSelector).show();
+                this.dialog.show();
+            });
+            
+            this.once('remove', function () {
+                if (this.dialog) {
+                    this.dialog.close();
+                }
+                $(containerSelector).remove();
+            });
+        },
+        
+        close: function () {
+            this.dialog.close();
+        },            
+    });
 });
 

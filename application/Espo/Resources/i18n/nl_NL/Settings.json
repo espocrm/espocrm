@@ -1,59 +1,58 @@
 {
 	"fields": {
 		"useCache": "Gebruik Cache",
-		"dateFormat": "Datum notatie",
+		"dateFormat": "Datumnotatie",
 		"timeFormat": "Tijdnotatie",
-		"timeZone": "Tijd Zone",
+		"timeZone": "Tijdzone",
 		"weekStart": "Eerste dag van de Week",
 		"thousandSeparator": "Duizendtal scheidingsteken",
-		"decimalMark": "Duizendtal scheidingsteken",
-		"defaultCurrency": "Voorkeur Valuta",
-		"baseCurrency": "Base Currency",
-		"baseCurrency": "Base Currency",
-		"currencyRates": "Rate Values",
+		"decimalMark": "Decimaal scheidingsteken",
+		"defaultCurrency": "Standaard Valuta",
+		"baseCurrency": "Basisvaluta",
+		"currencyRates": "Tariefwaarden",
 		
 		"currencyList": "Valuta Lijst",
 		"language": "Taal",
 		
-		"companyLogo": "Firma logo",
+		"companyLogo": "Bedrijfslogo",
 		
 		"smtpServer": "Server",
-		"smtpPort": "Poort",
-		"smtpAuth": "Authenticatie",
-		"smtpSecurity": "Veiligheid",
+		"smtpPort": "Port",
+		"smtpAuth": "Auth",
+		"smtpSecurity": "Beveiliging",
 		"smtpUsername": "Gebruikersnaam",
 		"emailAddress": "Email",
 		"smtpPassword": "Wachtwoord",
-		"outboundEmailFromName": "Naam van",
+		"outboundEmailFromName": "Van Naam",
 		"outboundEmailFromAddress": "Van Adres",
 		"outboundEmailIsShared": "Is Gedeeld",
 		
-		"recordsPerPage": "Velden per pagina",
-		"recordsPerPageSmall": "Records Per Page (Small)",		
+		"recordsPerPage": "Records per pagina",
+		"recordsPerPageSmall": "Records per pagina (Klein)",		
 		"tabList": "Tab lijst",
-		"quickCreateList": "Snel gemaakte lijst",
+		"quickCreateList": "Lijst aanmaken",
 		
 		"exportDelimiter": "Scheidingsteken Export",
 		
-		"authenticationMethod": "Authentication Methode",
+		"authenticationMethod": "Authenticatie Methode",
 		"ldapHost": "Host",
-		"ldapPort": "Poort",
-		"ldapAuth": "Authenticatie",
+		"ldapPort": "Port",
+		"ldapAuth": "Auth",
 		"ldapUsername": "Gebruikersnaam",
 		"ldapPassword": "Wachtwoord",
-		"ldapBindRequiresDn": "Bind heeft Dn Nodig",
-		"ldapBaseDn": "Base Dn",
+		"ldapBindRequiresDn": "Bind vereist DN",
+		"ldapBaseDn": "Basis Dn",
 		"ldapAccountCanonicalForm": "Standaard Formulier Gebruiker",
-		"ldapAccountDomainName": "Contact Domein Naam",
+		"ldapAccountDomainName": "Domeinnaam Account",
 		"ldapTryUsernameSplit": "Probeer gesplitste Gebruikersnaam",
 		"ldapCreateEspoUser": "Gebruiker aanmaken in EspoCRM",
-		"ldapSecurity": "Veiligheid",
+		"ldapSecurity": "Beveiliging",
 		"ldapUserLoginFilter": "Gebruikers Login Filter",
-		"ldapAccountDomainNameShort": "Korte Contact Domein Naam",
+		"ldapAccountDomainNameShort": "Domeinnaam Account",
 		"ldapOptReferrals": "Opt Referentie",
-		"disableExport": "Disable Export (only admin is allowed)",
-		"assignmentEmailNotifications": "Send Email Notifications upon Assignment",
-		"assignmentEmailNotificationsEntityList": "Entities to Notify About"
+		"disableExport": "Exporteren Uitschakelen (Uitsluitend toegestaan voor Admin)",
+		"assignmentEmailNotifications": "Verzend Email na Toewijzing",
+		"assignmentEmailNotificationsEntityList": "Entities om over te informeren"
 	},
 	"options": {
 		"weekStart": {
@@ -62,15 +61,15 @@
 		}
 	},
 	"tooltips": {
-		"recordsPerPageSmall": "Count of records in relatinship panels."
+		"recordsPerPageSmall": "Aantal records in relatie kaders."
 	},
 	"labels": {
 		"System": "Systeem",
 		"Locale": "Lokaal",
 		"SMTP": "SMTP",
 		"Configuration": "Configuratie",
-		"Notifications": "Notificaties",
-		"Currency Settings": "Currency Settings",
-		"Currency Rtes": "Currency Rates"
+		"Notifications": "Meldingen",
+		"Currency Settings": "Valutainstellingen",
+		"Currency Rtes": "Valutakoersen"
 	}
 }

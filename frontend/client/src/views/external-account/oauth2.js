@@ -20,283 +20,283 @@
  ************************************************************************/ 
 
 Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
-	
-	return Dep.extend({
-	
-		template: 'external-account.oauth2',
-		
-		events: {
+    
+    return Dep.extend({
+    
+        template: 'external-account.oauth2',
+        
+        events: {
 
-		},
-		
-		data: function () {
-			return {
-				integration: this.integration,
-				helpText: this.helpText,
-				isConnected: this.isConnected
-			};
-		},
-		
-		isConnected: false,
-		
-		events: {
-			'click button[data-action="cancel"]': function () {
-				this.getRouter().navigate('#ExternalAccount', {trigger: true});
-			},
-			'click button[data-action="save"]': function () {
-				this.save();
-			},
-			'click [data-action="connect"]': function () {
-				this.connect();
-			}
-		},
-		
-		setup: function () {
-			this.integration = this.options.integration;
-			this.id = this.options.id;
-							
-		
-			this.helpText = false;
-			if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
-				this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
-			}
-			
-			this.fieldList = [];
-			
-			this.dataFieldList = [];		
-			
-			this.model = new Espo.Model();
-			this.model.id = this.id;
-			this.model.name = 'ExternalAccount';
-			this.model.urlRoot = 'ExternalAccount';
-			
-			this.model.defs = {
-				fields: {
-					enabled: {
-						required: true,
-						type: 'bool'
-					},
-				}
-			};			
-			
-			this.wait(true);			
-				
-			this.model.populateDefaults();
-			
-			this.listenToOnce(this.model, 'sync', function () {
-				this.createFieldView('bool', 'enabled');
-				
-				$.ajax({
-					url: 'ExternalAccount/action/getOAuth2Info?id=' + this.id,
-					dataType: 'json'
-				}).done(function (respose) {
-					this.clientId = respose.clientId;
-					this.redirectUri = respose.redirectUri;					
-					if (respose.isConnected) {	
-						this.isConnected = true;
-					}					
-					this.wait(false);					
-				}.bind(this));
-				
-			}, this);
-			
-			this.model.fetch();			 
-		},
-		
-		hideField: function (name) {
-			this.$el.find('label.field-label-' + name).addClass('hide');
-			this.$el.find('div.field-' + name).addClass('hide');
-			var view = this.getView(name);
-			if (view) {
-				view.enabled = false;
-			}
-		},
-		
-		showField: function (name) {
-			this.$el.find('label.field-label-' + name).removeClass('hide');
-			this.$el.find('div.field-' + name).removeClass('hide');
-			var view = this.getView(name);
-			if (view) {
-				view.enabled = true;
-			}
-		},
-		
-		afterRender: function () {
-			if (!this.model.get('enabled')) {
-				this.$el.find('.data-panel').addClass('hidden');
-			}
-			
-			this.listenTo(this.model, 'change:enabled', function () {
-				if (this.model.get('enabled')) {
-					this.$el.find('.data-panel').removeClass('hidden');
-				} else {
-					this.$el.find('.data-panel').addClass('hidden');
-				}
-			}, this);
-		},
-		
-		createFieldView: function (type, name, readOnly, params) {
-			this.createView(name, this.getFieldManager().getViewName(type), {
-				model: this.model,
-				el: this.options.el + ' .field-' + name,
-				defs: {
-					name: name,
-					params: params
-				},
-				mode: readOnly ? 'detail' : 'edit',
-				readOnly: readOnly,
-			});
-			this.fieldList.push(name);
-		},
-		
-		save: function () {
-			this.fieldList.forEach(function (field) {
-				var view = this.getView(field);
-				if (!view.readOnly) {
-					view.fetchToModel();
-				}
-			}, this);						
-			
-			var notValid = false;
-			this.fieldList.forEach(function (field) {
-				notValid = this.getView(field).validate() || notValid;
-			}, this);
-			
-			if (notValid) {
-				this.notify('Not valid', 'error');
-				return;
-			}					
-			
-			this.listenToOnce(this.model, 'sync', function () {	
-				this.notify('Saved', 'success');
-				if (!this.model.get('enabled')) {					
-					this.setNotConnected();
-				}
-			}, this);
-			
-			this.notify('Saving...');
-			this.model.save();
-		},
-		
-		popup: function (options, callback) {
-			options.windowName = options.windowName ||  'ConnectWithOAuth';
-			options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
-			options.callback = options.callback || function(){ window.location.reload(); };
-			
-			var self = this;
-			
-			var path = options.path;
-			
-			var arr = [];
-			var params = (options.params || {});
-			for (var name in params) {
-				if (params[name]) {
-					arr.push(name + '=' + encodeURI(params[name]));
-				}
-			}
-			path += '?' + arr.join('&');
-			
-			var parseUrl = function (str) {
-				var code = null;
-				var error = null;
-				
-				str = str.substr(str.indexOf('?') + 1, str.length);
-				str.split('&').forEach(function (part) {
-					var arr = part.split('=');
-					var name = decodeURI(arr[0]);
-					var value = decodeURI(arr[1] || '');
-					
-					if (name == 'code') {
-						code = value;
-					}
-					if (name == 'error') {
-						error = value;
-					}
-				}, this);
-				if (code) {
-					return {
-						code: code,
-					}
-				} else if (error) {
-					return {
-						error: error,
-					}
-				}
-			}
-			
-			popup = window.open(path, options.windowName, options.windowOptions);
-			interval = window.setInterval(function () {
-				if (popup.closed) {
-					window.clearInterval(interval);
-				} else {
-					var res = parseUrl(popup.location.href.toString());
-					if (res) {	
-						callback.call(self, res);
-						popup.close();
-						window.clearInterval(interval);
-					}
-				}
-			}, 500);
-		},
-		
-		connect: function () {
-			this.notify('Please wait...');			
-			this.popup({
-				path: this.getMetadata().get('integrations.' + this.integration + '.params.endpoint'),
-				params: {
-					client_id: this.clientId,
-					redirect_uri: this.redirectUri,
-					scope: this.getMetadata().get('integrations.' + this.integration + '.params.scope'),
-					response_type: 'code',
-					access_type: 'offline',
-					approval_prompt: 'force'
-				}		
-			}, function (res) {
-				if (res.errror) {
-					this.notify(false);
-					return;
-				}
-				if (res.code) {
-					this.$el.find('[data-action="connect"]').addClass('disabled');
-					$.ajax({
-						url: 'ExternalAccount/action/authorizationCode',
-						type: 'POST',
-						data: JSON.stringify({
-							'id': this.id,
-							'code': res.code
-						}),
-						dataType: 'json',
-						error: function () {
-							this.$el.find('[data-action="connect"]').removeClass('disabled');
-						}.bind(this)						
-					}).done(function (response) {
-						this.notify(false);
-						if (response === true) {
-							this.setConneted();
-						} else {
-							this.setNotConneted();							
-						}
-						this.$el.find('[data-action="connect"]').removeClass('disabled');				
-					}.bind(this));
-					
-				} else {
-					this.notify('Error occured', 'error');
-				}
-			});
-		},
-		
-		setConneted: function () {
-			this.isConnected = true;
-			this.$el.find('[data-action="connect"]').addClass('hidden');;
-			this.$el.find('.connected-label').removeClass('hidden');
-		},
-		
-		setNotConnected: function () {
-			this.isConnected = false;
-			this.$el.find('[data-action="connect"]').removeClass('hidden');;
-			this.$el.find('.connected-label').addClass('hidden');
-		},
-		
-	});
+        },
+        
+        data: function () {
+            return {
+                integration: this.integration,
+                helpText: this.helpText,
+                isConnected: this.isConnected
+            };
+        },
+        
+        isConnected: false,
+        
+        events: {
+            'click button[data-action="cancel"]': function () {
+                this.getRouter().navigate('#ExternalAccount', {trigger: true});
+            },
+            'click button[data-action="save"]': function () {
+                this.save();
+            },
+            'click [data-action="connect"]': function () {
+                this.connect();
+            }
+        },
+        
+        setup: function () {
+            this.integration = this.options.integration;
+            this.id = this.options.id;
+                            
+        
+            this.helpText = false;
+            if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
+                this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
+            }
+            
+            this.fieldList = [];
+            
+            this.dataFieldList = [];        
+            
+            this.model = new Espo.Model();
+            this.model.id = this.id;
+            this.model.name = 'ExternalAccount';
+            this.model.urlRoot = 'ExternalAccount';
+            
+            this.model.defs = {
+                fields: {
+                    enabled: {
+                        required: true,
+                        type: 'bool'
+                    },
+                }
+            };            
+            
+            this.wait(true);            
+                
+            this.model.populateDefaults();
+            
+            this.listenToOnce(this.model, 'sync', function () {
+                this.createFieldView('bool', 'enabled');
+                
+                $.ajax({
+                    url: 'ExternalAccount/action/getOAuth2Info?id=' + this.id,
+                    dataType: 'json'
+                }).done(function (respose) {
+                    this.clientId = respose.clientId;
+                    this.redirectUri = respose.redirectUri;                    
+                    if (respose.isConnected) {    
+                        this.isConnected = true;
+                    }                    
+                    this.wait(false);                    
+                }.bind(this));
+                
+            }, this);
+            
+            this.model.fetch();             
+        },
+        
+        hideField: function (name) {
+            this.$el.find('label.field-label-' + name).addClass('hide');
+            this.$el.find('div.field-' + name).addClass('hide');
+            var view = this.getView(name);
+            if (view) {
+                view.enabled = false;
+            }
+        },
+        
+        showField: function (name) {
+            this.$el.find('label.field-label-' + name).removeClass('hide');
+            this.$el.find('div.field-' + name).removeClass('hide');
+            var view = this.getView(name);
+            if (view) {
+                view.enabled = true;
+            }
+        },
+        
+        afterRender: function () {
+            if (!this.model.get('enabled')) {
+                this.$el.find('.data-panel').addClass('hidden');
+            }
+            
+            this.listenTo(this.model, 'change:enabled', function () {
+                if (this.model.get('enabled')) {
+                    this.$el.find('.data-panel').removeClass('hidden');
+                } else {
+                    this.$el.find('.data-panel').addClass('hidden');
+                }
+            }, this);
+        },
+        
+        createFieldView: function (type, name, readOnly, params) {
+            this.createView(name, this.getFieldManager().getViewName(type), {
+                model: this.model,
+                el: this.options.el + ' .field-' + name,
+                defs: {
+                    name: name,
+                    params: params
+                },
+                mode: readOnly ? 'detail' : 'edit',
+                readOnly: readOnly,
+            });
+            this.fieldList.push(name);
+        },
+        
+        save: function () {
+            this.fieldList.forEach(function (field) {
+                var view = this.getView(field);
+                if (!view.readOnly) {
+                    view.fetchToModel();
+                }
+            }, this);                        
+            
+            var notValid = false;
+            this.fieldList.forEach(function (field) {
+                notValid = this.getView(field).validate() || notValid;
+            }, this);
+            
+            if (notValid) {
+                this.notify('Not valid', 'error');
+                return;
+            }                    
+            
+            this.listenToOnce(this.model, 'sync', function () {    
+                this.notify('Saved', 'success');
+                if (!this.model.get('enabled')) {                    
+                    this.setNotConnected();
+                }
+            }, this);
+            
+            this.notify('Saving...');
+            this.model.save();
+        },
+        
+        popup: function (options, callback) {
+            options.windowName = options.windowName ||  'ConnectWithOAuth';
+            options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
+            options.callback = options.callback || function(){ window.location.reload(); };
+            
+            var self = this;
+            
+            var path = options.path;
+            
+            var arr = [];
+            var params = (options.params || {});
+            for (var name in params) {
+                if (params[name]) {
+                    arr.push(name + '=' + encodeURI(params[name]));
+                }
+            }
+            path += '?' + arr.join('&');
+            
+            var parseUrl = function (str) {
+                var code = null;
+                var error = null;
+                
+                str = str.substr(str.indexOf('?') + 1, str.length);
+                str.split('&').forEach(function (part) {
+                    var arr = part.split('=');
+                    var name = decodeURI(arr[0]);
+                    var value = decodeURI(arr[1] || '');
+                    
+                    if (name == 'code') {
+                        code = value;
+                    }
+                    if (name == 'error') {
+                        error = value;
+                    }
+                }, this);
+                if (code) {
+                    return {
+                        code: code,
+                    }
+                } else if (error) {
+                    return {
+                        error: error,
+                    }
+                }
+            }
+            
+            popup = window.open(path, options.windowName, options.windowOptions);
+            interval = window.setInterval(function () {
+                if (popup.closed) {
+                    window.clearInterval(interval);
+                } else {
+                    var res = parseUrl(popup.location.href.toString());
+                    if (res) {    
+                        callback.call(self, res);
+                        popup.close();
+                        window.clearInterval(interval);
+                    }
+                }
+            }, 500);
+        },
+        
+        connect: function () {
+            this.notify('Please wait...');            
+            this.popup({
+                path: this.getMetadata().get('integrations.' + this.integration + '.params.endpoint'),
+                params: {
+                    client_id: this.clientId,
+                    redirect_uri: this.redirectUri,
+                    scope: this.getMetadata().get('integrations.' + this.integration + '.params.scope'),
+                    response_type: 'code',
+                    access_type: 'offline',
+                    approval_prompt: 'force'
+                }        
+            }, function (res) {
+                if (res.errror) {
+                    this.notify(false);
+                    return;
+                }
+                if (res.code) {
+                    this.$el.find('[data-action="connect"]').addClass('disabled');
+                    $.ajax({
+                        url: 'ExternalAccount/action/authorizationCode',
+                        type: 'POST',
+                        data: JSON.stringify({
+                            'id': this.id,
+                            'code': res.code
+                        }),
+                        dataType: 'json',
+                        error: function () {
+                            this.$el.find('[data-action="connect"]').removeClass('disabled');
+                        }.bind(this)                        
+                    }).done(function (response) {
+                        this.notify(false);
+                        if (response === true) {
+                            this.setConneted();
+                        } else {
+                            this.setNotConneted();                            
+                        }
+                        this.$el.find('[data-action="connect"]').removeClass('disabled');                
+                    }.bind(this));
+                    
+                } else {
+                    this.notify('Error occured', 'error');
+                }
+            });
+        },
+        
+        setConneted: function () {
+            this.isConnected = true;
+            this.$el.find('[data-action="connect"]').addClass('hidden');;
+            this.$el.find('.connected-label').removeClass('hidden');
+        },
+        
+        setNotConnected: function () {
+            this.isConnected = false;
+            this.$el.find('[data-action="connect"]').removeClass('hidden');;
+            this.$el.find('.connected-label').addClass('hidden');
+        },
+        
+    });
 
 });

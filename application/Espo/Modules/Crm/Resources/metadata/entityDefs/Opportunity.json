@@ -19,12 +19,12 @@
             "notStorable": true,
             "select": "opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100",
             "where": {
-            	"=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
-            	"<": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
-            	">": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
-            	"<=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <= {value}",
-            	">=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) >= {value}",
-            	"<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
+                "=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) = {value}",
+                "<": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) < {value}",
+                ">": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) > {value}",
+                "<=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <= {value}",
+                ">=": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) >= {value}",
+                "<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
             },
             "orderBy": "amountWeightedConverted {direction}",
             "view": "Fields.CurrencyConverted" 
@@ -37,7 +37,7 @@
             "type": "linkMultiple",
             "view": "Crm:Opportunity.Fields.Contacts",
             "columns": {
-            	"role": "opportunityRole"
+                "role": "opportunityRole"
             }
         },
         "stage": {
@@ -115,12 +115,12 @@
             "type": "hasMany",
             "entity": "Contact",
             "foreign": "opportunities",
-			"additionalColumns": {
-				"role": {
-					"type": "varchar",
-		    		"len": 50
-				}
-			}
+            "additionalColumns": {
+                "role": {
+                    "type": "varchar",
+                    "len": 50
+                }
+            }
         },
         "meetings": {
             "type": "hasChildren",
@@ -149,7 +149,19 @@
         }
     },
     "collection": {
-    	"sortBy": "createdAt",
-    	"asc": false
+        "sortBy": "createdAt",
+        "asc": false
+    },
+    "probabilityMap": {
+        "Prospecting": 10,
+        "Qualification": 10,
+        "Needs Analysis": 20,
+        "Value Proposition": 50,
+        "Id. Decision Makers": 60,
+        "Perception Analysis": 70,
+        "Proposal/Price Quote": 75,
+        "Negotiation/Review": 90,
+        "Closed Won": 100,
+        "Closed Lost": 0
     }
 }

@@ -1,81 +1,85 @@
 {
-	"controller": "Controllers.Record",
-	"views":{
-		"detail":"Crm:Call.Detail"
-	},
-	"menu": {
-		"detail": {
-			"dropdown": [
-				{
-					"label": "Duplicate",
-					"action": "duplicate",
-					"acl": "edit"
-				}
-			]
-		}
-	},
-	"sidePanels":{
-		"detail":[
-			{
-				"name":"attendees",
-				"label":"Attendees",
-				"view":"Record.Panels.Side",
-				"options":{
-					"fields":[
-						"users",
-						"contacts",
-						"leads"
-					],
-					"mode":"detail"
-				}
-			}
-		],
-		"edit":[
-			{
-				"name":"attendees",
-				"label":"Attendees",
-				"view":"Record.Panels.Side",
-				"options":{
-					"fields":[
-						"users",
-						"contacts",
-						"leads"
-					],
-					"mode":"edit"
-				}
-			}
-		]
-	},
-	"presetFilters": [
-		{
-			"name":"planned",
-			"style": "primary",
-			"data": {
-				"status": {
-					"type": "in",
-					"value": ["Planned"]
-				}
-			}
-		},
-		{
-			"name":"held",
-			"style": "success",
-			"data": {
-				"status": {
-					"type": "in",
-					"value": ["Held"]
-				}
-			}
-		},
-		{
-			"name":"todays",
-			"data": {
-				"dateStart": {
-					"type": "today",
-					"dateTime": true
-				}
-			}
-		}
-	],
-	"boolFilters": ["onlyMy"]
+    "controller": "Controllers.Record",
+    "views":{
+        "detail":"Crm:Call.Detail",
+        "list": "Crm:Call.List"
+    },
+    "recordViews":{
+        "list":"Crm:Call.Record.List"
+    },
+    "menu": {
+        "detail": {
+            "dropdown": [
+                {
+                    "label": "Duplicate",
+                    "action": "duplicate",
+                    "acl": "edit"
+                }
+            ]
+        }
+    },
+    "sidePanels":{
+        "detail":[
+            {
+                "name":"attendees",
+                "label":"Attendees",
+                "view":"Record.Panels.Side",
+                "options":{
+                    "fields":[
+                        "users",
+                        "contacts",
+                        "leads"
+                    ],
+                    "mode":"detail"
+                }
+            }
+        ],
+        "edit":[
+            {
+                "name":"attendees",
+                "label":"Attendees",
+                "view":"Record.Panels.Side",
+                "options":{
+                    "fields":[
+                        "users",
+                        "contacts",
+                        "leads"
+                    ],
+                    "mode":"edit"
+                }
+            }
+        ]
+    },
+    "presetFilters": [
+        {
+            "name":"planned",
+            "style": "primary",
+            "data": {
+                "status": {
+                    "type": "in",
+                    "value": ["Planned"]
+                }
+            }
+        },
+        {
+            "name":"held",
+            "style": "success",
+            "data": {
+                "status": {
+                    "type": "in",
+                    "value": ["Held"]
+                }
+            }
+        },
+        {
+            "name":"todays",
+            "data": {
+                "dateStart": {
+                    "type": "today",
+                    "dateTime": true
+                }
+            }
+        }
+    ],
+    "boolFilters": ["onlyMy"]
 }

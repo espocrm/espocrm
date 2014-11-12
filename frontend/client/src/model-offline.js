@@ -21,49 +21,49 @@
 
 Espo.ModelOffline = Espo.Model.extend({
 
-	name: null,
+    name: null,
 
-	cache: null,
+    cache: null,
 
-	_key: null,
+    _key: null,
 
-	initialize: function (attributes, options) {
-		options = options || {};
-		Espo.Model.prototype.initialize.apply(this, arguments);
-		this._key = this.url = this.name;
-		this.cache = options.cache || null;
-	},
+    initialize: function (attributes, options) {
+        options = options || {};
+        Espo.Model.prototype.initialize.apply(this, arguments);
+        this._key = this.url = this.name;
+        this.cache = options.cache || null;
+    },
 
-	load: function (sync) {
-		this.once('sync', function (model) {
-			model.storeToCache();
-		});
+    load: function (sync) {
+        this.once('sync', function (model) {
+            model.storeToCache();
+        });
 
-		this.fetch({
-			async: !(sync || false)
-		});
-	},
+        this.fetch({
+            async: !(sync || false)
+        });
+    },
 
-	loadFromCache: function () {
-		if (this.cache) {
-			var cached = this.cache.get('app', this._key);
-			if (cached) {
-				this.set(cached);
-				return true;
-			}
-		}
-		return null;
-	},
+    loadFromCache: function () {
+        if (this.cache) {
+            var cached = this.cache.get('app', this._key);
+            if (cached) {
+                this.set(cached);
+                return true;
+            }
+        }
+        return null;
+    },
 
-	storeToCache: function () {
-		if (this.cache) {
-			this.cache.set('app', this._key, this.toJSON());
-		}
-	},
+    storeToCache: function () {
+        if (this.cache) {
+            this.cache.set('app', this._key, this.toJSON());
+        }
+    },
 
-	isNew: function () {
-		return false;
-	},
+    isNew: function () {
+        return false;
+    },
 
 });
 

@@ -1,38 +1,38 @@
 {
-	"fields": {
-		"name": "Nom",
-		"number": "Numéro",
-		"status": "Statut",
-		"account": "Compte",
-		"contact": "Contact",
-		"priority": "Priorité",
-		"type": "Type",
-		"description": "Description"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Nouveau",
-			"Assigned": "Assigné",
-			"Pending": "En attente",
-			"Closed": "Fermé",
-			"Rejected": "Rejeté",
-			"Duplicate": "Doublon"
-		},
-		"priority" : {
-			"Low": "Bas",
-			"Normal": "Normal",
-			"High": "Haut",
-			"Urgent": "Urgent"
-		},
-		"type": {
-			"Question": "Question",
-			"Incident": "Incident",
-			"Problem": "Problème"
-		}
-	},
-	"labels": {
-		"Create Case": "Créer un Ticket"
-	}
+    "fields": {
+        "name": "Nom",
+        "number": "Numéro",
+        "status": "Statut",
+        "account": "Compte",
+        "contact": "Contact",
+        "priority": "Priorité",
+        "type": "Type",
+        "description": "Description"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nouveau",
+            "Assigned": "Assigné",
+            "Pending": "En attente",
+            "Closed": "Fermé",
+            "Rejected": "Rejeté",
+            "Duplicate": "Doublon"
+        },
+        "priority" : {
+            "Low": "Bas",
+            "Normal": "Normal",
+            "High": "Haut",
+            "Urgent": "Urgent"
+        },
+        "type": {
+            "Question": "Question",
+            "Incident": "Incident",
+            "Problem": "Problème"
+        }
+    },
+    "labels": {
+        "Create Case": "Créer un Ticket"
+    }
 }

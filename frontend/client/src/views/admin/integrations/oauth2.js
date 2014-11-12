@@ -20,19 +20,19 @@
  ************************************************************************/ 
 
 Espo.define('Views.Admin.Integrations.OAuth2', 'Views.Admin.Integrations.Edit', function (Dep) {
-	
-	return Dep.extend({
-	
-		template: 'admin.integrations.oauth2',
-		
-		data: function () {
-		
-			return _.extend({
-				// TODO fetch from server
-				redirectUri: this.getConfig().get('siteUrl') + '/oauthcallback'
-			}, Dep.prototype.data.call(this));
-		},		
-		
-	});
+    
+    return Dep.extend({
+    
+        template: 'admin.integrations.oauth2',
+        
+        data: function () {
+        
+            return _.extend({
+                // TODO fetch from server
+                redirectUri: this.getConfig().get('siteUrl') + '/oauthcallback'
+            }, Dep.prototype.data.call(this));
+        },        
+        
+    });
 
 });

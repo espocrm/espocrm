@@ -15,22 +15,22 @@
 		"status": {
 			"Not Started": "Niet Gestart",
 			"Started": "Gestart",
-			"Completed": "Beeindigd",
+			"Completed": "Voltooid",
 			"Canceled": "Geannuleerd"
 		},
 		"priority" : {
 			"Low": "Laag",
-			"Normal": "Normaal",
+			"Normal": "Standaard",
 			"High": "Hoog",
 			"Urgent": "Urgent"
 		}
 	},
 	"labels": {
-		"Create Task": "Maak een Taak"
+		"Create Task": "Taak Aanmaken"
 	},
 	"presetFilters": {
-		"active": "Active",
-		"completed": "Beeindigd",
+		"actual": "Werkelijke",
+		"completed": "Voltooid",
 		"todays": "Vandaag",
 		"overdue": "Laat"
 	}

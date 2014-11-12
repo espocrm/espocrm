@@ -1,15 +1,15 @@
 {
 	"fields": {
 		"name": "Record Naam",
-		"roles": "Regels"
+		"roles": "Rollen"
 	},
 	"links": {
 		"users": "Gebruikers",
 		"teams": "Groepen"
 	},
 	"labels": {
-		"Access": "Rechten",
-		"Create Role": "Maak Voorwaarde"
+		"Access": "Toegang",
+		"Create Role": "Rol aanmaken"
 	},
 	"options": {
 		"accessList": {
@@ -19,17 +19,17 @@
 		},
 		"levelList": {
 			"all": "allemaal",
-			"team": "team",
+			"team": "Groep",
 			"own": "eigen",
 			"no": "nee"
 		}
 	},
 	"actions": {
 		"read": "Lees",
-		"edit": "Aanpassen",
-		"delete": "Verwijder"
+		"edit": "Bewerken",
+		"delete": "Verwijderen"
 	},
 	"messages": {
-		"changesAfterClearCache": "All changes in an access control will be applied after cache will be cleared."
+		"changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."
 	}
 }

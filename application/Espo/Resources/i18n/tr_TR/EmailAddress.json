@@ -1,7 +1,7 @@
 {
-	"labels": {
-		"Primary": "Öncelikli",
-		"Opted Out": "SeçildiXXX",
-		"Invalid": "Geçersiz"
-	}
+    "labels": {
+        "Primary": "Öncelikli",
+        "Opted Out": "SeçildiXXX",
+        "Invalid": "Geçersiz"
+    }
 }

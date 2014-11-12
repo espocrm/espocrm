@@ -21,60 +21,68 @@
 
 Espo.define('Views.Fields.Enum', 'Views.Fields.Base', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'enum',
+        type: 'enum',
 
-		listTemplate: 'fields.enum.detail',
+        listTemplate: 'fields.enum.detail',
 
-		detailTemplate: 'fields.enum.detail',
+        detailTemplate: 'fields.enum.detail',
 
-		editTemplate: 'fields.enum.edit',
+        editTemplate: 'fields.enum.edit',
 
-		searchTemplate: 'fields.enum.search',
+        searchTemplate: 'fields.enum.search',
 
-		setup: function () {
-			if (!this.params.options) {
-				var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
-				if (typeof this.model[methodName] == 'function') {
-					this.params.options = this.model[methodName].call(this.model);
-				}
-			}
-		},
-		
-		validateRequired: function () {				
-			if (this.params.required || this.model.isRequired(this.name)) {
-				if (!this.model.get(this.name)) {
-					var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-					this.showValidationMessage(msg);
-					return true;
-				}
-			}
-		},
+        translatedOptions: null,
 
-		fetch: function () {
-			var value = this.$el.find('[name="' + this.name + '"]').val();
-			var data = {};
-			data[this.name] = value;
-			return data;
-		},
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.translatedOptions = this.translatedOptions;
+            return data;
+        },
 
-		fetchSearch: function () {
-			var arr = [];
-			$.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
-				arr.push($(el).val());
-			});
-			
-			if (arr.length == 0) {
-				return false;
-			}
-			
-			var data = {
-				type: 'in',
-				value: arr
-			};
-			return data;
-		},
-	});
+        setup: function () {
+            if (!this.params.options) {
+                var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
+                if (typeof this.model[methodName] == 'function') {
+                    this.params.options = this.model[methodName].call(this.model);
+                }
+            }
+        },
+        
+        validateRequired: function () {                
+            if (this.params.required || this.model.isRequired(this.name)) {
+                if (!this.model.get(this.name)) {
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    this.showValidationMessage(msg);
+                    return true;
+                }
+            }
+        },
+
+        fetch: function () {
+            var value = this.$el.find('[name="' + this.name + '"]').val();
+            var data = {};
+            data[this.name] = value;
+            return data;
+        },
+
+        fetchSearch: function () {
+            var arr = [];
+            $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
+                arr.push($(el).val());
+            });
+            
+            if (arr.length == 0) {
+                return false;
+            }
+            
+            var data = {
+                type: 'in',
+                value: arr
+            };
+            return data;
+        },
+    });
 });
 

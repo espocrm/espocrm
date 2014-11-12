@@ -1,1 +1,1 @@
-{{translateOption value scope=scope field=name}}
+{{translateOption value scope=scope field=name translatedOptions=translatedOptions}}

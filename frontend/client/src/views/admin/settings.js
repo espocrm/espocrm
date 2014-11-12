@@ -21,15 +21,15 @@
 
 Espo.define('Views.Admin.Settings', 'Views.Settings.Record.Edit', function (Dep) {
 
-	return Dep.extend({
-		
-		layoutName: 'settings',
+    return Dep.extend({
+        
+        layoutName: 'settings',
 
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
 
-		},
+        },
 
-	});
+    });
 });
 

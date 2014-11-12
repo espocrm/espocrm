@@ -5,17 +5,18 @@
 		"website": "Website",
 		"phoneNumber": "Telefoon",
 		"billingAddress": "Factuur Adres",
-		"shippingAddress": "Bezoek adres",
+		"shippingAddress": "Verzend Adres",
 		"description": "Beschrijving",
 		"sicCode": "Sic Code",
 		"industry": "Industrie",
 		"type": "Type",
-		"contactRole": "Voorwaarde"
+		"contactRole": "Rol"
 	},
 	"links": {
-		"contacts": "Contactpersoon",
+		"contacts": "Contacten",
 		"opportunities": "Kansen",
-		"cases": "Zaken"
+		"cases": "Casus",
+		"documents": "Documents"
 	},
 	"options": {
 		"type": {
@@ -25,16 +26,17 @@
 			"Reseller": "Reseller"
 		},
 		"industry": {
-			"Apparel": "Apparel",
-			"Banking": "Banking",
+			"Apparel": "Confectie",
+			"Banking": "Bankwezen",
 			"Computer Software": "Computer Software",
-			"Education": "Educatie",
+			"Education": "Onderwijs",
 			"Electronics": "Electronica",
 			"Finance": "Finance",
 			"Insurance": "Verzekeringen"
 		}
 	},
 	"labels": {
-		"Create Account": "Maak Relatie"
+		"Create Account": "Klant Aanmaken",
+		"Copy Billing": "Kopieer van Factuur"
 	}
 }

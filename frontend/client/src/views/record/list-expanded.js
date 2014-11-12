@@ -21,94 +21,94 @@
 
 Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'record.list-expanded',
+        template: 'record.list-expanded',
 
-		checkboxes: false,
+        checkboxes: false,
 
-		selectable: false,
+        selectable: false,
 
-		rowActionsView: false,			
-		
-		_internalLayoutType: 'list-row-expanded',
-		
-		presentationType: 'expanded',
-		
-		pagination: false,
+        rowActionsView: false,            
+        
+        _internalLayoutType: 'list-row-expanded',
+        
+        presentationType: 'expanded',
+        
+        pagination: false,
 
-		header: false,
+        header: false,
 
-		_internalLayout: null,
+        _internalLayout: null,
 
-		checkedList: null,
-		
-		listContainerEl: '.list > ul',
+        checkedList: null,
+        
+        listContainerEl: '.list > ul',
 
-		_loadListLayout: function (callback) {
-			var type = this.type + 'Expanded';
-			this._helper.layoutManager.get(this.collection.name, type, function (listLayout) {
-				callback(listLayout);
-			});
-		},
+        _loadListLayout: function (callback) {
+            var type = this.type + 'Expanded';
+            this._helper.layoutManager.get(this.collection.name, type, function (listLayout) {
+                callback(listLayout);
+            });
+        },
 
-		_convertLayout: function (listLayout, model) {				
-			model = model || this.collection.model.prototype;
-			
-			var layout = {
-				rows: [],
-				right: false,
-			};								
+        _convertLayout: function (listLayout, model) {                
+            model = model || this.collection.model.prototype;
+            
+            var layout = {
+                rows: [],
+                right: false,
+            };                                
 
-			for (var i in listLayout.rows) {
-				var row = listLayout.rows[i];					
-				var layoutRow = [];				 
-				for (var j in row) {
-				
-					var e = row[j];
-					var type = e.type || model.getFieldType(e.name) || 'base';
-					
-					var item = {
-						name: e.name,
-						view: e.view || model.getFieldParam(e.name, 'view') || this.getFieldManager().getViewName(type),
-						options: {
-							defs: {
-								name: e.name,
-								params: e.params || {}
-							},
-							mode: 'list'
-						}
-					};
-					if (e.link) {
-						item.options.mode = 'listLink';
-					}
-					layoutRow.push(item);						
-				}
-				layout.rows.push(layoutRow);
-			}
-			
-			if ('right' in listLayout) {	
-				if (listLayout.right != false) {			
-					layout.right = {
-						name: listLayout.right.name || 'right',
-						view: listLayout.right.view,
-						options: {
-							defs: {
-								params: {
-									width: listLayout.right.width || '7%'
-								}
-							}
-						}
-					};
-				}	
-			} else {			
-				if (this.rowActionsView) {
-					layout.right = this.getRowActionsDefs();
-				}
-			}
-			return layout;
-		},
-	});
+            for (var i in listLayout.rows) {
+                var row = listLayout.rows[i];                    
+                var layoutRow = [];                 
+                for (var j in row) {
+                
+                    var e = row[j];
+                    var type = e.type || model.getFieldType(e.name) || 'base';
+                    
+                    var item = {
+                        name: e.name,
+                        view: e.view || model.getFieldParam(e.name, 'view') || this.getFieldManager().getViewName(type),
+                        options: {
+                            defs: {
+                                name: e.name,
+                                params: e.params || {}
+                            },
+                            mode: 'list'
+                        }
+                    };
+                    if (e.link) {
+                        item.options.mode = 'listLink';
+                    }
+                    layoutRow.push(item);                        
+                }
+                layout.rows.push(layoutRow);
+            }
+            
+            if ('right' in listLayout) {    
+                if (listLayout.right != false) {            
+                    layout.right = {
+                        name: listLayout.right.name || 'right',
+                        view: listLayout.right.view,
+                        options: {
+                            defs: {
+                                params: {
+                                    width: listLayout.right.width || '7%'
+                                }
+                            }
+                        }
+                    };
+                }    
+            } else {            
+                if (this.rowActionsView) {
+                    layout.right = this.getRowActionsDefs();
+                }
+            }
+            return layout;
+        },
+    });
 });
 
 

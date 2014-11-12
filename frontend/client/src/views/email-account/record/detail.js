@@ -21,26 +21,26 @@
 
 Espo.define('Views.EmailAccount.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		afterRender: function () {
-			Dep.prototype.afterRender.call(this);
-			this.initSslFieldListening();
-		},
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            this.initSslFieldListening();
+        },
 
-		initSslFieldListening: function () {
-			var sslField = this.getFieldView('ssl');
-			this.listenTo(sslField, 'change', function () {
-				var ssl = sslField.fetch()['ssl'];
-				if (ssl) {
-					this.model.set('port', '993');
-				} else {
-					this.model.set('port', '143');
-				}
-			}, this);
-		}
+        initSslFieldListening: function () {
+            var sslField = this.getFieldView('ssl');
+            this.listenTo(sslField, 'change', function () {
+                var ssl = sslField.fetch()['ssl'];
+                if (ssl) {
+                    this.model.set('port', '993');
+                } else {
+                    this.model.set('port', '143');
+                }
+            }, this);
+        }
 
-	});
+    });
 
 });
 

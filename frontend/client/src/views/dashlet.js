@@ -21,80 +21,80 @@
 
 Espo.define('Views.Dashlet', 'View', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		name: null,
+        name: null,
 
-		id: null,
+        id: null,
 
-		elId: null,
+        elId: null,
 
-		template: 'dashlet',
+        template: 'dashlet',
 
-		data: function () {
-			return {
-				name: this.name,
-				id: this.id,
-				title: this.getOption('title'),
-				isDoubleHeight: this.getOption('isDoubleHeight')
-			};
-		},
+        data: function () {
+            return {
+                name: this.name,
+                id: this.id,
+                title: this.getOption('title'),
+                isDoubleHeight: this.getOption('isDoubleHeight')
+            };
+        },
 
-		setup: function () {
-			this.events = this.events || {};
-			this.name = this.options.name;
-			this.id = this.options.id;
+        setup: function () {
+            this.events = this.events || {};
+            this.name = this.options.name;
+            this.id = this.options.id;
 
-			this.events['click [data-action="refresh"]'] = function (e) {
-				this.actionRefresh();
-			}.bind(this);
-			this.events['click [data-action="options"]'] = function (e) {
-				this.actionOptions();
-			};
-			this.events['click [data-action="remove"]'] = function (e) {
-				this.actionRemove();
-			};
+            this.events['click [data-action="refresh"]'] = function (e) {
+                this.actionRefresh();
+            }.bind(this);
+            this.events['click [data-action="options"]'] = function (e) {
+                this.actionOptions();
+            };
+            this.events['click [data-action="remove"]'] = function (e) {
+                this.actionRemove();
+            };
 
-			var bodySelector = '#dashlet-' + this.id + ' .dashlet-body';
-			var view = this.getMetadata().get('dashlets.' + this.name + '.view') || 'Dashlets.' + this.name;
-						
-			this.createView('body', view, {el: bodySelector, id: this.id});
-		},
-		
-		refresh: function () {
-			this.getView('body').actionRefresh();
-		},		
+            var bodySelector = '#dashlet-' + this.id + ' .dashlet-body';
+            var view = this.getMetadata().get('dashlets.' + this.name + '.view') || 'Dashlets.' + this.name;
+                        
+            this.createView('body', view, {el: bodySelector, id: this.id});
+        },
+        
+        refresh: function () {
+            this.getView('body').actionRefresh();
+        },        
 
-		actionRefresh: function () {
-			this.refresh();
-		},
+        actionRefresh: function () {
+            this.refresh();
+        },
 
-		actionOptions: function () {
-			var optionsView = this.getView('body').optionsView;
-			this.createView('options', optionsView, {
-				name: this.name,
-				optionsData: this.getOptionsData(),
-				fields: this.getView('body').optionsFields,
-			}, function (view) {
-				view.render();
-			});
-		},
+        actionOptions: function () {
+            var optionsView = this.getView('body').optionsView;
+            this.createView('options', optionsView, {
+                name: this.name,
+                optionsData: this.getOptionsData(),
+                fields: this.getView('body').optionsFields,
+            }, function (view) {
+                view.render();
+            });
+        },
 
-		getOptionsData: function () {
-			return this.getView('body').optionsData;
-		},
+        getOptionsData: function () {
+            return this.getView('body').optionsData;
+        },
 
-		getOption: function (key) {
-			return this.getView('body').getOption(key);
-		},
+        getOption: function (key) {
+            return this.getView('body').getOption(key);
+        },
 
-		actionRemove: function () {
-			var dashboard = this.getParentView().getParentView();
-			dashboard.removeDashlet(this.options.id);
-			this.$el.remove();
-			this.remove();
-		},
-	});
+        actionRemove: function () {
+            var dashboard = this.getParentView().getParentView();
+            dashboard.removeDashlet(this.options.id);
+            this.$el.remove();
+            this.remove();
+        },
+    });
 });
 
 

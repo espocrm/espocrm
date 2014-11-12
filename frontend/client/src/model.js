@@ -20,175 +20,175 @@
  ************************************************************************/ 
 (function (Espo, _, Backbone) {
 
-	Espo.Model = Backbone.Model.extend({
+    Espo.Model = Backbone.Model.extend({
 
-		name: null,
+        name: null,
 
-		dateTime: null,
+        dateTime: null,
 
-		_user: null,
-		
-		defs: null,
+        _user: null,
+        
+        defs: null,
 
-		initialize: function () {		
-			this.urlRoot = this.urlRoot || this.name;
-			
-			this.defs = this.defs || {};
-			this.defs.fields = this.defs.fields || {};
-			this.defs.links = this.defs.links || {};
+        initialize: function () {        
+            this.urlRoot = this.urlRoot || this.name;
+            
+            this.defs = this.defs || {};
+            this.defs.fields = this.defs.fields || {};
+            this.defs.links = this.defs.links || {};
 
-			Backbone.Model.prototype.initialize.call(this);
-		},
-		
-		url: function () {
-			var url = Backbone.Model.prototype.url.call(this);
-			return url;
-		},
-		
-		isNew: function () {
-			return !this.id;
-		},
+            Backbone.Model.prototype.initialize.call(this);
+        },
+        
+        url: function () {
+            var url = Backbone.Model.prototype.url.call(this);
+            return url;
+        },
+        
+        isNew: function () {
+            return !this.id;
+        },
 
-		setDefs: function (defs) {
-			this.defs = defs || {};
-			this.defs.fields = this.defs.fields || {};
-		},
-		
-		getClonedAttributes: function () {
-			var attributes = {};
-			for (var name in this.attributes) {
-				// TODO maybe use cloneDeep method ???
-				attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
-			}
-			return attributes;
-		},
+        setDefs: function (defs) {
+            this.defs = defs || {};
+            this.defs.fields = this.defs.fields || {};
+        },
+        
+        getClonedAttributes: function () {
+            var attributes = {};
+            for (var name in this.attributes) {
+                // TODO maybe use cloneDeep method ???
+                attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
+            }
+            return attributes;
+        },
 
-		populateDefaults: function () {
-			var defaultHash = {};
-			if ('fields' in this.defs) {
-				for (var field in this.defs.fields) {
-					var defaultValue = this.getFieldParam(field, 'default');
+        populateDefaults: function () {
+            var defaultHash = {};
+            if ('fields' in this.defs) {
+                for (var field in this.defs.fields) {
+                    var defaultValue = this.getFieldParam(field, 'default');
 
-					if (defaultValue != null) {
-						var defaultValue = this._getDefaultValue(defaultValue);
-						if (typeof defaultValue === 'object') {
-							defaultHash = _.extend(defaultHash, defaultValue);
-						} else {
-							defaultHash[field] = defaultValue;
-						}
-					}
-				}
-			}		
-			
-			var user = this.getUser();
-			if (user) {
-				if (this.hasField('assignedUser')) {
-					this.set('assignedUserId', this.getUser().id);
-					this.set('assignedUserName', this.getUser().get('name'));
-				}
-				var defaultTeamId = this.getUser().get('defaultTeamId');
-				if (defaultTeamId) {			
-					if (this.hasField('teams') && !this.getFieldParam('teams', 'default')) {
-						defaultHash['teamsIds'] = [defaultTeamId];
-						defaultHash['teamsNames'] = {};
-						defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
-					}
-				}
-			}
-			
-			this.set(defaultHash, {silent: true});
-		},
+                    if (defaultValue != null) {
+                        var defaultValue = this._getDefaultValue(defaultValue);
+                        if (typeof defaultValue === 'object') {
+                            defaultHash = _.extend(defaultHash, defaultValue);
+                        } else {
+                            defaultHash[field] = defaultValue;
+                        }
+                    }
+                }
+            }        
+            
+            var user = this.getUser();
+            if (user) {
+                if (this.hasField('assignedUser')) {
+                    this.set('assignedUserId', this.getUser().id);
+                    this.set('assignedUserName', this.getUser().get('name'));
+                }
+                var defaultTeamId = this.getUser().get('defaultTeamId');
+                if (defaultTeamId) {            
+                    if (this.hasField('teams') && !this.getFieldParam('teams', 'default')) {
+                        defaultHash['teamsIds'] = [defaultTeamId];
+                        defaultHash['teamsNames'] = {};
+                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
+                    }
+                }
+            }
+            
+            this.set(defaultHash, {silent: true});
+        },
 
-		_getDefaultValue: function (defaultValue) {
-			if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0 ) {
-				var code = defaultValue.substring(11);
-				defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
-			}
-			return defaultValue;
-		},
+        _getDefaultValue: function (defaultValue) {
+            if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0 ) {
+                var code = defaultValue.substring(11);
+                defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
+            }
+            return defaultValue;
+        },
 
-		setRelate: function (data) {		
+        setRelate: function (data) {        
 
-			var setRelate = function (options) {
-				var link = options.link;
-				var model = options.model;
-				if (!link || !model) {
-					throw new Error('Bad related options');
-				}
-				var type = this.defs.links[link].type;
-				switch (type) {
-					case 'belongsToParent':
-						this.set(link + 'Id', model.id);
-						this.set(link + 'Type', model.name);
-						this.set(link + 'Name', model.get('name'));
-						break;
-					case 'belongsTo':
-						this.set(link + 'Id', model.id);
-						this.set(link + 'Name', model.get('name'));
-						break;
-					case 'hasMany':
-						var ids = [];
-						ids.push(model.id);
-						var names = {};
-						names[model.id] = model.get('name');						
-						this.set(link + 'Ids', ids);
-						this.set(link + 'Names', names);
-						break;
-				}
-			}.bind(this);			
-			
-			if (Object.prototype.toString.call(data) === '[object Array]') {
-				data.forEach(function (options) {
-					setRelate(options);
-				}.bind(this));
-			} else {
-				setRelate(data);
-			}
-		},
+            var setRelate = function (options) {
+                var link = options.link;
+                var model = options.model;
+                if (!link || !model) {
+                    throw new Error('Bad related options');
+                }
+                var type = this.defs.links[link].type;
+                switch (type) {
+                    case 'belongsToParent':
+                        this.set(link + 'Id', model.id);
+                        this.set(link + 'Type', model.name);
+                        this.set(link + 'Name', model.get('name'));
+                        break;
+                    case 'belongsTo':
+                        this.set(link + 'Id', model.id);
+                        this.set(link + 'Name', model.get('name'));
+                        break;
+                    case 'hasMany':
+                        var ids = [];
+                        ids.push(model.id);
+                        var names = {};
+                        names[model.id] = model.get('name');                        
+                        this.set(link + 'Ids', ids);
+                        this.set(link + 'Names', names);
+                        break;
+                }
+            }.bind(this);            
+            
+            if (Object.prototype.toString.call(data) === '[object Array]') {
+                data.forEach(function (options) {
+                    setRelate(options);
+                }.bind(this));
+            } else {
+                setRelate(data);
+            }
+        },
 
-		getFieldType: function (field) {
-			if (('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields)) {
-				return this.defs.fields[field].type || null;
-			}
-			return null;
-		},
+        getFieldType: function (field) {
+            if (('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields)) {
+                return this.defs.fields[field].type || null;
+            }
+            return null;
+        },
 
-		getFieldParam: function (field, param) {
-			if (('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields)) {
-				if (param in this.defs.fields[field]) {
-					return this.defs.fields[field][param];
-				}
-			}
-			return null;
-		},
+        getFieldParam: function (field, param) {
+            if (('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields)) {
+                if (param in this.defs.fields[field]) {
+                    return this.defs.fields[field][param];
+                }
+            }
+            return null;
+        },
 
-		isFieldReadOnly: function (field) {
-			return this.getFieldParam(field, 'readOnly') || false;		
-		},
+        isFieldReadOnly: function (field) {
+            return this.getFieldParam(field, 'readOnly') || false;        
+        },
 
-		isRequired: function (field) {
-			return this.getFieldParam(field, 'required') || false;
-		},
+        isRequired: function (field) {
+            return this.getFieldParam(field, 'required') || false;
+        },
 
-		getTeamIds: function () {
-			return this.get('teamsIds') || [];
-		},
+        getTeamIds: function () {
+            return this.get('teamsIds') || [];
+        },
 
-		getDateTime: function () {
-			return this.dateTime;
-		},
+        getDateTime: function () {
+            return this.dateTime;
+        },
 
-		getUser: function () {
-			return this._user;
-		},
-		
-		hasField: function (field) {
-			return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
-		},
-		
-		isEditable: function () {
-			return true;
-		},
-	});
+        getUser: function () {
+            return this._user;
+        },
+        
+        hasField: function (field) {
+            return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
+        },
+        
+        isEditable: function () {
+            return true;
+        },
+    });
 
 }).call(this, Espo, _, Backbone);

@@ -29,24 +29,24 @@ use \Espo\Core\Exceptions\Error;
 
 class LogoImage extends Image
 {
-	public static $authRequired = false;
-	
-	public function run()
-	{	
-		$this->imageSizes['small-logo'] = array(173, 38);
-		
-		$id = $this->getConfig()->get('companyLogoId');
-		
-		if (empty($id)) {
-			throw new NotFound();
-		}
-		
-		$size = null;		
-		if (!empty($_GET['size'])) {
-			$size = $_GET['size'];
-		} 
-				
-		$this->show($id, $size);		
-	}
+    public static $authRequired = false;
+    
+    public function run()
+    {    
+        $this->imageSizes['small-logo'] = array(173, 38);
+        
+        $id = $this->getConfig()->get('companyLogoId');
+        
+        if (empty($id)) {
+            throw new NotFound();
+        }
+        
+        $size = null;        
+        if (!empty($_GET['size'])) {
+            $size = $_GET['size'];
+        } 
+                
+        $this->show($id, $size);        
+    }
 }
 

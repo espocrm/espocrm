@@ -21,45 +21,45 @@
 
 Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		template: 'record.edit',
+        template: 'record.edit',
 
-		type: 'edit',
+        type: 'edit',
 
-		name: 'edit',
+        name: 'edit',
 
-		fieldsMode: 'edit',
-		
-		buttons: [
-			{
-				name: 'save',
-				label: 'Save',
-				style: 'primary',
-			},
-			{
-				name: 'cancel',
-				label: 'Cancel',
-			}
-		],
+        fieldsMode: 'edit',
+        
+        buttons: [
+            {
+                name: 'save',
+                label: 'Save',
+                style: 'primary',
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            }
+        ],
 
-		sideView: 'Record.EditSide',
+        sideView: 'Record.EditSide',
 
-		bottomView: null,
-		
-		actionSave: function () {
-			this.save();
-		},
-		
-		actionCancel: function () {
-			this.cancel();		
-		},
-		
-		cancel: function () {
-			this.exit('cancel');
-		},
+        bottomView: null,
+        
+        actionSave: function () {
+            this.save();
+        },
+        
+        actionCancel: function () {
+            this.cancel();        
+        },
+        
+        cancel: function () {
+            this.exit('cancel');
+        },
 
-	});
+    });
 });
 
 

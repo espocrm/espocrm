@@ -1,6 +1,6 @@
 {{#if value}}
-	{{{value}}}
+    {{{value}}}
 {{else}}
-	{{{translate 'None'}}}
+    {{{translate 'None'}}}
 {{/if}}
 

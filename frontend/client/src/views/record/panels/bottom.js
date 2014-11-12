@@ -21,43 +21,43 @@
 
 Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
 
-	return Dep.extend({
-	
-		actions: null,
-		
-		defs: null,			
-		
-		events: {
-			'click .action': function (e) {			
-				$el = $(e.currentTarget);
-				var action = $el.data('action');
-				var method = 'action' + Espo.Utils.upperCaseFirst(action);
-				if (typeof this[method] == 'function') {
-					this[method]($el.data('id'));
-				}
-			}
-		},
-		
-		data: function () {
-			return {
-				scope: this.scope,
-				name: this.panelName,
-			};
-		},
-		
-		init: function () {
-			this.panelName = this.options.panelName;
-			this.defs = this.options.defs || {};
-		},
-		
-		getButtons: function () {
-			return [];
-		},			
-		
-		getActions: function () {
-			return [];
-		},
-		
-	});
+    return Dep.extend({
+    
+        actions: null,
+        
+        defs: null,            
+        
+        events: {
+            'click .action': function (e) {            
+                $el = $(e.currentTarget);
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                if (typeof this[method] == 'function') {
+                    this[method]($el.data('id'));
+                }
+            }
+        },
+        
+        data: function () {
+            return {
+                scope: this.scope,
+                name: this.panelName,
+            };
+        },
+        
+        init: function () {
+            this.panelName = this.options.panelName;
+            this.defs = this.options.defs || {};
+        },
+        
+        getButtons: function () {
+            return [];
+        },            
+        
+        getActions: function () {
+            return [];
+        },
+        
+    });
 });
 

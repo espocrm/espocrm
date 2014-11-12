@@ -1,8 +1,8 @@
 {
 	"labels": {
-		"Converted To": "Vertaald naar",
-		"Create Lead": "Grote Lead",
-		"Convert": "Converteer"
+		"Converted To": "Geconverteerd naar",
+		"Create Lead": "Lead Aanmaken",
+		"Convert": "Converteren"
 	},
 	"fields": {
 		"name": "Record Naam",
@@ -10,15 +10,15 @@
 		"title": "Titel",
 		"website": "Website",
 		"phoneNumber": "Telefoon",
-		"accountName": "Relatie Naam",
+		"accountName": "Naam Klant",
 		"doNotCall": "Niet Bellen",
 		"address": "Adres",
 		"status": "Status",
 		"source": "Bron",
-		"opportunityAmount": "Aantal uitdagingen",
-		"opportunityAmountConverted": "Opportunity Amount (converted)",
+		"opportunityAmount": "Bedrag Kansen",
+		"opportunityAmountConverted": "Bedrag Kans (geconverteerd)",
 		"description": "Beschrijving",
-		"createdAccount": "Relatie",
+		"createdAccount": "Klant",
 		"createdContact": "Contact",
 		"createdOpportunity": "Kans"
 	},
@@ -29,22 +29,22 @@
 			"New": "Nieuw",
 			"Assigned": "Toegewezen",
 			"In Process": "In Behandeling",
-			"Converted": "Converteren",
+			"Converted": "Geconverteerd",
 			"Recycled": "Opnieuw verwerkt",
 			"Dead": "Dood"
 		},
 		"source": {
-			"Call": "Oproep",
+			"Call": "Tel. Gesprek",
 			"Email": "Email",
 			"Existing Customer": "Bestaande Klant",
 			"Partner": "Partner",
 			"Public Relations": "Public Relations",
-			"Web Site": "Web Pagina",
+			"Web Site": "Website",
 			"Campaign": "Campagne",
-			"Other": "Ander"
+			"Other": "Overig"
 		}
 	},
 	"presetFilters": {
-		"active": "Active"
+		"active": "Actief"
 	}
 }

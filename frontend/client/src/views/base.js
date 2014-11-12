@@ -19,8 +19,8 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
 Espo.define('Views.Base', 'View', function (Dep) {
-	
-	return Dep.extend({
-	});
+    
+    return Dep.extend({
+    });
 
 });

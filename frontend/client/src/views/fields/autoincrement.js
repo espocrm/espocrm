@@ -21,31 +21,31 @@
 
 Espo.define('Views.Fields.Autoincrement', 'Views.Fields.Int', function (Dep) {
 
-	return Dep.extend({
+    return Dep.extend({
 
-		type: 'autoincrement',
+        type: 'autoincrement',
 
-		editTemplate: 'fields.base.detail',
+        editTemplate: 'fields.base.detail',
 
-		validations: [],
+        validations: [],
 
-		editableInline: false,
+        editableInline: false,
 
-		parse: function (value) {
-			value = (value !== '') ? value : null;
-			if (value !== null) {
-				 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
-				 	value = NaN;
-				 } else {
-				 	value = parseInt(value);
-				 }
-			}
-			return value;
-		},
+        parse: function (value) {
+            value = (value !== '') ? value : null;
+            if (value !== null) {
+                 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
+                     value = NaN;
+                 } else {
+                     value = parseInt(value);
+                 }
+            }
+            return value;
+        },
 
-		fetch: function () {
-			return {};
-		},
-	});
+        fetch: function () {
+            return {};
+        },
+    });
 });
 

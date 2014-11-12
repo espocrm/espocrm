@@ -21,16 +21,16 @@
 
 Espo.define('Views.Email.Record.Edit', ['Views.Record.Edit', 'Views.Email.Record.Detail'], function (Dep, Detail) {
 
-	return Dep.extend({
-	
-		init: function () {
-			Dep.prototype.init.call(this);
+    return Dep.extend({
+    
+        init: function () {
+            Dep.prototype.init.call(this);
 
-			
-			Detail.prototype.layoutNameConfigure.call(this);			
-			
-		},
-		
-	});
+            
+            Detail.prototype.layoutNameConfigure.call(this);            
+            
+        },
+        
+    });
 });
 

@@ -21,57 +21,57 @@
 
 Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
-	return Dep.extend({
-	
-		scope: 'Email',
-		
-		layoutName: 'composeSmall',
-	
-		saveButton: false,
-		
-		fullFormButton: false,
-		
-		editViewName: 'Email.Record.Compose',
-		
-		columnCount: 2,
+    return Dep.extend({
+    
+        scope: 'Email',
+        
+        layoutName: 'composeSmall',
+    
+        saveButton: false,
+        
+        fullFormButton: false,
+        
+        editViewName: 'Email.Record.Compose',
+        
+        columnCount: 2,
 
-		setup: function () {		
-			Dep.prototype.setup.call(this);
-			var self = this;
-			
-			this.buttons.unshift({
-				name: 'send',
-				text: this.getLanguage().translate('Send'),
-				style: 'primary',
-				onClick: function (dialog) {
-					var editView = this.getView('edit');
-					var model = editView.model;
-					model.set('status', 'Sending');	
-									
-					editView.once('after:save', function () {
-						this.trigger('after:save', model);
-						this.notify('Email has been sent', 'success');
-						dialog.close();
-					}, this);
-					
-					editView.once('before:save', function () {
-						this.notify('Sending...');
-					}, this);					
-					
-					var $button = dialog.$el.find('button[data-name="send"]');		
-					$button.addClass('disabled');
-					editView.once('cancel:save', function () {
-						$button.removeClass('disabled');	
-					}, this);
-														
-					editView.save();
-					
-				}.bind(this)
-			});
-			
-			this.header = this.getLanguage().translate('Compose Email');
-		},
+        setup: function () {        
+            Dep.prototype.setup.call(this);
+            var self = this;
+            
+            this.buttons.unshift({
+                name: 'send',
+                text: this.getLanguage().translate('Send'),
+                style: 'primary',
+                onClick: function (dialog) {
+                    var editView = this.getView('edit');
+                    var model = editView.model;
+                    model.set('status', 'Sending');    
+                                    
+                    editView.once('after:save', function () {
+                        this.trigger('after:save', model);
+                        this.notify('Email has been sent', 'success');
+                        dialog.close();
+                    }, this);
+                    
+                    editView.once('before:save', function () {
+                        this.notify('Sending...');
+                    }, this);                    
+                    
+                    var $button = dialog.$el.find('button[data-name="send"]');        
+                    $button.addClass('disabled');
+                    editView.once('cancel:save', function () {
+                        $button.removeClass('disabled');    
+                    }, this);
+                                                        
+                    editView.save();
+                    
+                }.bind(this)
+            });
+            
+            this.header = this.getLanguage().translate('Compose Email');
+        },
 
-	});
+    });
 });
 
