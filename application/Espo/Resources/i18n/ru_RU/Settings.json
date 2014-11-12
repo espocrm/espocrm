@@ -20,8 +20,8 @@
         "smtpPort": "Порт",
         "smtpAuth": "Авторизация",
         "smtpSecurity": "Безопасность",
-        "smtpUsername": "",
-        "emailAddress": "",
+        "smtpUsername": "Username",
+        "emailAddress": "Email",
         "smtpPassword": "Пароль",
         "outboundEmailFromName": "От имени",
         "outboundEmailFromAddress": "С адреса",
@@ -35,10 +35,10 @@
         "exportDelimiter": "Разделитель (Перемещение)",
         
         "authenticationMethod": "Метод аутентификации",
-        "ldapHost": "",
+        "ldapHost": "Host",
         "ldapPort": "Порт",
         "ldapAuth": "Авторизация",
-        "ldapUsername": "",
+        "ldapUsername": "Username",
         "ldapPassword": "Пароль",
         "ldapBindRequiresDn": "Привязка по домену",
         "ldapBaseDn": "Базовый домен",
@@ -54,7 +54,7 @@
         "assignmentEmailNotifications": "Оповещать по email при назначении",
         "assignmentEmailNotificationsEntityList": "Список вещей для оповещения",
 
-        "b2cMode": ""
+        "b2cMode": "B2C Mode"
     },
     "options": {
         "weekStart": {
@@ -66,7 +66,7 @@
         "recordsPerPageSmall": "Число записей в панелях связей."
     },
     "labels": {
-        "System": "",
+        "System": "System",
         "Locale": "Локальные настройки",
         "SMTP": "SMTP",
         "Configuration": "Конфигурация",

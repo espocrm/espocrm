@@ -4,8 +4,8 @@
         "roles": "Роли"
     },
     "links": {
-        "users": "",
-        "teams": ""
+        "users": "Users",
+        "teams": "Teams"
     },
     "labels": {
         "Access": "Доступ",

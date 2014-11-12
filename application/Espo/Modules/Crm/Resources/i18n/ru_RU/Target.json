@@ -1,13 +1,13 @@
 {
     "fields": {
         "name": "Name",
-        "emailAddress": "",
+        "emailAddress": "Email",
         "title": "Название",
         "website": "Интернет сайт",
         "accountName": "Имя контрагента",
         "phoneNumber": "Phone",
         "doNotCall": "Не звонить",
-        "address": "",
+        "address": "Address",
         "description": "Описание"
     },
     "links": {

@@ -11,11 +11,11 @@
         "contacts": "Контакты",
         "description": "Описание",
         "amountConverted": "Сумма (сконвертирована)",
-        "amountWeightedConverted": ""
+        "amountWeightedConverted": "Amount Weighted"
     },
     "links": {
         "contacts": "Контакты",
-        "documents": ""
+        "documents": "Documents"
     },
     "options": {
         "stage": {

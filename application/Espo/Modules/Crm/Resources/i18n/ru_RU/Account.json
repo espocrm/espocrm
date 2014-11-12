@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Name",
-        "emailAddress": "",
+        "emailAddress": "Email",
         "website": "Интернет сайт",
         "phoneNumber": "Phone",
         "billingAddress": "Платежный адрес",
@@ -16,7 +16,7 @@
         "contacts": "Контакты",
         "opportunities": "Сделки",
         "cases": "Обращения",
-        "documents": ""
+        "documents": "Documents"
     },
     "options": {
         "type": {
@@ -37,6 +37,6 @@
     },
     "labels": {
         "Create Account": "Создать контрагента",
-        "Copy Billing": ""
+        "Copy Billing": "Copy Billing"
     }
 }

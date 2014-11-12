@@ -34,15 +34,15 @@
         "Reply to All": "Ответить всем",
         "Forward": "Переслать",
         "Original message": "Оригинал сообщение",
-        "Forwarded message": "",
-        "Email Accounts": "",
+        "Forwarded message": "Forwarded message",
+        "Email Accounts": "Email Accounts",
         "Send Test Email": "Отправить тестовое сообщение",
         "Send": "Отправить",
         "Email Address": "E-mail адрес"
     },
     "messages": {
-        "noSmtpSetup": "",
-        "testEmailSent": ""
+        "noSmtpSetup": "No SMTP setup. {link}.",
+        "testEmailSent": "Test email has been sent"
     },
     "presetFilters": {
         "sent": "Отправлено",

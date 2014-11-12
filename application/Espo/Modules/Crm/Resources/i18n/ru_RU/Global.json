@@ -11,7 +11,7 @@
         "Task": "Задача",
         "Case": "Обращение",
         "InboundEmail": "Входящая почта",
-        "Document": ""
+        "Document": "Document"
     },
     "scopeNamesPlural": {
         "Account": "Контрагенты",
@@ -24,8 +24,8 @@
         "Call": "Звонки",
         "Task": "Задачи",
         "Case": "Обращения",
-        "InboundEmail": "",
-        "Document": ""
+        "InboundEmail": "Inbound Emails",
+        "Document": "Documents"
     },
     "dashlets": {
         "Leads": "Мои потенциальные клиенты",
@@ -81,7 +81,7 @@
         "emails": "Письма",
         "accounts": "Контрагенты",
         "cases": "Обращения",
-        "documents": "",
+        "documents": "Documents",
         "account": "Контрагент",
         "opportunity": "Cделка",        
         "contact": "Контакт",

@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Create Document": "",
+        "Create Document": "Create Document",
         "Details": "Описание"
     },
     "fields": {
@@ -8,9 +8,9 @@
         "status": "статус",
         "file": "File",
         "type": "Type",
-        "source": "",
-        "publishDate": "",
-        "expirationDate": "",
+        "source": "Source",
+        "publishDate": "Publish Date",
+        "expirationDate": "Expiration Date",
         "description": "Описание"
     },
     "links": {
@@ -21,7 +21,7 @@
         "status": {
             "Active": "Активный",
             "Draft": "Черновик",
-            "Expired": "",
+            "Expired": "Expired",
             "Canceled": "Отменена"
         }
     },

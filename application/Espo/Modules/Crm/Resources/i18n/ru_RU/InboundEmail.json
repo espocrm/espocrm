@@ -4,8 +4,8 @@
         "team": "Группа",
         "status": "статус",
         "assignToUser": "Связаться с пользователем",
-        "host": "",
-        "username": "",
+        "host": "Host",
+        "username": "Username",
         "password": "Пароль",
         "port": "Порт",
         "monitoredFolders": "Отслеживаемые разделы",
@@ -44,7 +44,7 @@
         "Create InboundEmail": "Создать входящую почту",
         "IMAP": "IMAP",
         "Actions": "Действия",
-        "Main": ""        
+        "Main": "Main"        
     },
     "messages": {
         "couldNotConnectToImap": "Не получается подключиться к серверу IMAP"

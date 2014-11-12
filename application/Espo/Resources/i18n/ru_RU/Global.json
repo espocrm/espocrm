@@ -1,28 +1,28 @@
 {
     "scopeNames": {
-        "Email": "",
+        "Email": "Email",
         "User": "Пользователь",
         "Team": "Группа",
         "Role": "Роль",
         "EmailTemplate": "Шаблон письма",
-        "EmailAccount": "",
-        "EmailAccountScope": "",
+        "EmailAccount": "Email Account",
+        "EmailAccountScope": "Email Account",
         "OutboundEmail": "Исходящее письмо",
         "ScheduledJob": "Запланированная работа",
-        "ExternalAccount": "",
+        "ExternalAccount": "External Account",
         "Extension": "Расширение"
     },
     "scopeNamesPlural": {
         "Email": "Письма",
-        "User": "",
-        "Team": "",
+        "User": "Users",
+        "Team": "Teams",
         "Role": "Роли",
-        "EmailTemplate": "",
-        "EmailAccount": "",
-        "EmailAccountScope": "",
-        "OutboundEmail": "",
-        "ScheduledJob": "",
-        "ExternalAccount": "",
+        "EmailTemplate": "Email Templates",
+        "EmailAccount": "Email Accounts",
+        "EmailAccountScope": "Email Accounts",
+        "OutboundEmail": "Outbound Emails",
+        "ScheduledJob": "Scheduled Jobs",
+        "ExternalAccount": "External Accounts",
         "Extension": "Расширения"
     },
     "labels": {
@@ -77,7 +77,7 @@
         "Refresh": "Обновить",
         "Remove": "Удалить",
         "Options": "Options",
-        "Username": "",
+        "Username": "Username",
         "Password": "Пароль",
         "Login": "Войти",
         "Log Out": "Выйти",
@@ -97,10 +97,10 @@
         "Edit": "Редактировать",
         "Cancel": "Отменить",
         "Unlink": "Убрать ссылку",
-        "Mass Update": "",
+        "Mass Update": "Mass Update",
         "Export": "Экспортировать",
         "No Data": "Нет данных",
-        "No Access": "",
+        "No Access": "No Access",
         "All": "Все",
         "Active": "Активный",
         "Inactive": "Неактивный",
@@ -112,13 +112,13 @@
         "Full Form": "Раширенная форма",
         "Insert": "Вставить",
         "Person": "Личность",
-        "First Name": "",
+        "First Name": "First Name",
         "Last Name": "Фамилия",
         "Original": "Оригинальный",
         "You": "Вы",
         "you": "вы",
         "change": "изменить",
-        "Change": "",
+        "Change": "Change",
         "Primary": "Главные",
         "Save Filters": "Сохранить фильтры",
         "Administration": "Администрирование",
@@ -146,20 +146,20 @@
         "fieldShouldBeLess": "{field} должно быть меньше чем {value}",
         "fieldShouldBeGreater": "{field} должно быть больше чем {value}",
         "fieldBadPasswordConfirm": "{field} подтверждено неверно",
-        "resetPreferencesDone": "",
+        "resetPreferencesDone": "Preferences has been reset to defaults",
         "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
         "assignmentEmailNotificationBody": "{assignerUserName} назначил {entityType} '{Entity.name}' на вас\n\n{recordUrl}",
         "confirmation": "Вы уверены?",
-        "resetPreferencesConfirmation": "",
+        "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
         "removeRecordConfirmation": "Удалить запись?",
         "unlinkRecordConfirmation": "Убрать связь?",
         "removeSelectedRecordsConfirmation": "Удалить выбранные записи?",
-        "massUpdateResult": "",
-        "massUpdateResultSingle": "",
-        "noRecordsUpdated": "",
-        "massRemoveResult": "",
-        "massRemoveResultSingle": "",
-        "noRecordsRemoved": ""
+        "massUpdateResult": "{count} records have been updated",
+        "massUpdateResultSingle": "{count} record has been updated",
+        "noRecordsUpdated": "No records were updated",
+        "massRemoveResult": "{count} records have been removed",
+        "massRemoveResultSingle": "{count} record has been removed",
+        "noRecordsRemoved": "No records were removed"
     },
     "boolFilters": {
         "onlyMy": "Тлько мои",
@@ -168,13 +168,13 @@
     },
     "fields": {
         "name": "Name",
-        "firstName": "",
+        "firstName": "First Name",
         "lastName": "Фамилия",
         "salutationName": "Пол",
         "assignedUser": "Выбранный пользователь",
-        "emailAddress": "",
+        "emailAddress": "Email",
         "assignedUserName": "Имя выбранного пользователя",
-        "teams": "",
+        "teams": "Teams",
         "createdAt": "Создан в",
         "modifiedAt": "Изменен в",
         "createdBy": "Создан (кем)",
@@ -186,8 +186,8 @@
         "modifiedBy": "Изменен (кем)",
         "team": "Группа",
         "roles": "Роли",
-        "teams": "",
-        "users": ""
+        "teams": "Teams",
+        "users": "Users"
     },
     "dashlets": {
         "Stream": "Лента"        
@@ -202,19 +202,19 @@
         "update": "{user} обновлен {entityType} {entity}",
         "createRelated": "{user} создан {relatedEntityType} {relatedEntity} привязан к {entityType} {entity}",
         "emailReceived": "{entity} было получено для {entityType} {entity}",
-        "emailReceivedInitial": "",
-        "mentionInPost": "",
+        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
+        "mentionInPost": "{user} mentioned {mentioned} on {entityType} {entity}",
         
         "createThis": "{user} создал это {entityType}",        
         "createAssignedThis": "{user} создал это {entityType} присвоен {assignee}",
         "assignThis": "{user} присвоено это {entityType} к {assignee}",
         "postThis": "{user} добавил",
-        "attachThis": "",
+        "attachThis": "{user} attached",
         "statusThis": "{user} обновил {field}",
         "updateThis": "{user} обновил это {entityType}",
         "createRelatedThis": "{user} создал {relatedEntityType} {relatedEntity} привязал к этому {entityType}",
         "emailReceivedThis": "{entity} было получено",
-        "emailReceivedInitialThis": ""
+        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}"
     },
     "lists": {
         "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -228,7 +228,7 @@
             "Mr.": "Г-н.",
             "Mrs.": "Г-жа.",
             "Dr.": "Д-р.",
-            "Drs.": ""
+            "Drs.": "Drs."
         },
         "language":     {
             "af_ZA": "Африкаанс",
@@ -312,12 +312,12 @@
             "today": "Сегодня",
             "past": "Прошлое",
             "future": "Будущее",
-            "currentMonth": "",
-            "lastMonth": "",
-            "currentQuarter": "",
-            "lastQuarter": "",
-            "currentYear": "",
-            "lastYear": ""
+            "currentMonth": "Current Month",
+            "lastMonth": "Last Month",
+            "currentQuarter": "Current Quarter",
+            "lastQuarter": "Last Quarter",
+            "currentYear": "Current Year",
+            "lastYear": "Last Year"
         },
         "intSearchRanges": {
             "equals": "Равняется",
@@ -442,7 +442,7 @@
                 "documentStyle": "Стиль документа"
             },
             "history":{
-                "undo": "",
+                "undo":"Undo",
                 "redo": "Повтор"
             }
         }

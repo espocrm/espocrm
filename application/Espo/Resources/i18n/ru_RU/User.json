@@ -3,9 +3,9 @@
         "name": "Name",
         "userName": "Имя пользователя",
         "title": "Название",
-        "isAdmin": "",
+        "isAdmin": "Is Admin",
         "defaultTeam": "Группа по умолчанию",
-        "emailAddress": "",
+        "emailAddress": "Email",
         "phoneNumber": "Phone",
         "roles": "Роли",        
         "password": "Пароль",
@@ -13,7 +13,7 @@
         "newPassword": "Новый пароль"
     },
     "links": {
-        "teams": "",
+        "teams": "Teams",
         "roles": "Роли"
     },
     "labels": {
@@ -25,7 +25,7 @@
     },
     "tooltips": {
         "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой команде.",
-        "userName": ""
+        "userName": "Letters a-z, numbers 0-9 and underscores are allowed."
     },
     "messages": {
         "passwordWillBeSent": "Пароль будет выслан на почтовый адрес пользователя",

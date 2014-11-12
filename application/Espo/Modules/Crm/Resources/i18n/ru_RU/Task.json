@@ -4,7 +4,7 @@
         "parent": "Источник",
         "status": "статус",
         "dateStart": "Дата начала",
-        "dateEnd": "",
+        "dateEnd": "Date Due",
         "priority": "Приоритет",
         "description": "Описание",
         "isOverdue": "Просрочена"
@@ -27,10 +27,10 @@
     },
     "labels": {
         "Create Task": "Создать задачу",
-        "Complete": ""
+        "Complete": "Complete"
     },
     "presetFilters": {
-        "actual": "",
+        "actual": "Actual",
         "completed": "Завершена",
         "todays": "На сегодня",
         "overdue": "Просроченные"

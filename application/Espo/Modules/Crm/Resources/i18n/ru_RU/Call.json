@@ -6,9 +6,9 @@
         "dateStart": "Дата начала",
         "dateEnd": "Дата окончания",
         "direction": "Категория",
-        "duration": "",
+        "duration": "Duration",
         "description": "Описание",
-        "users": "",
+        "users": "Users",
         "contacts": "Контакты",
         "leads": "Потенциальные клиенты"
     },
@@ -26,14 +26,14 @@
         },
         "acceptanceStatus": {
             "None": "Нет",
-            "Accepted": "",
-            "Declined": ""
+            "Accepted": "Accepted",
+            "Declined": "Declined"
         }
     },
     "labels": {
         "Create Call": "Новый звонок",
         "Set Held": "Был выполнен",
-        "Set Not Held": "",
+        "Set Not Held": "Set Not Held",
         "Send Invitations": "Отправить приглашения"        
     },
     "presetFilters": {

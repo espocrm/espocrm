@@ -1,14 +1,14 @@
 {
     "fields": {
         "name": "Name",
-        "emailAddress": "",
+        "emailAddress": "Email",
         "title": "Название",
         "account": "Контрагент",
         "accounts": "Контрагенты",
         "phoneNumber": "Phone",
         "accountType": "Тип контрагента",
         "doNotCall": "Не звонить",
-        "address": "",
+        "address": "Address",
         "opportunityRole": "Роль сделки",
         "accountRole": "Роль",
         "description": "Описание"

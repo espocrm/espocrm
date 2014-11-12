@@ -14,8 +14,8 @@
         "smtpPort": "Порт",
         "smtpAuth": "Авторизация",
         "smtpSecurity": "Безопасность",
-        "smtpUsername": "",
-        "emailAddress": "",
+        "smtpUsername": "Username",
+        "emailAddress": "Email",
         "smtpPassword": "Пароль",
         "smtpEmailAddress": "E-mail адрес",
         

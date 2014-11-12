@@ -5,9 +5,9 @@
         "status": "статус",
         "dateStart": "Дата начала",
         "dateEnd": "Дата окончания",
-        "duration": "",
+        "duration": "Duration",
         "description": "Описание",
-        "users": "",
+        "users": "Users",
         "contacts": "Контакты",
         "leads": "Потенциальные клиенты"
     },
@@ -21,14 +21,14 @@
         },
         "acceptanceStatus": {
             "None": "Нет",
-            "Accepted": "",
-            "Declined": ""
+            "Accepted": "Accepted",
+            "Declined": "Declined"
         }
     },
     "labels": {
         "Create Meeting": "Создать встречу",
         "Set Held": "Был выполнен",
-        "Set Not Held": "",
+        "Set Not Held": "Set Not Held",
         "Send Invitations": "Отправить приглашения"
     },
     "presetFilters": {
