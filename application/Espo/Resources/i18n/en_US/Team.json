@@ -8,7 +8,7 @@
         "users": "Users"
     },
     "tooltips": {
-        "roles": "Alle Benutzer dieses Teams erben die Zugriffsrechte von ausgewählten Rollen.",
+        "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
         "positionList": "Available positions in this team. E.g. Salesperson, Manager."
     },
     "labels": {
