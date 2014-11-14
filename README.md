@@ -25,7 +25,7 @@ If your repository is accessible via a web server then you can run EspoCRM by ur
 
 ### How to build
 
-You need to have nodejs installed.
+You need to have nodejs and Grunt CLI installed.
 
 1. Change to the project's root directory.
 2. Install project dependencies with `npm install`.
