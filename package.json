@@ -3,7 +3,10 @@
   "version": "2.7.0",
   "description": "",
   "main": "index.php",
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/espocrm/espocrm.git"
+  },
   "author": "",
   "license": "GPL",
   "devDependencies": {
