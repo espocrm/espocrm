@@ -28,20 +28,24 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\ORM\Entity;
 
 class Lead extends \Espo\Services\Record
-{    
+{
     protected function getDuplicateWhereClause(Entity $entity)
     {
-        return array(
+        $data = array(
             'OR' => array(
                 array(
                     'firstName' => $entity->get('firstName'),
                     'lastName' => $entity->get('lastName'),
-                ),
-                array(
-                    'emailAddress' => $entity->get('emailAddress'),
-                ),
-            ),
+                )
+            )
         );
+        if ($entity->get('emailAddress')) {
+            $data['OR'][] = array(
+                'emailAddress' => $entity->get('emailAddress'),
+             );
+        }
+
+        return $data;
     }
     
     public function convert($id, $recordsData)
@@ -55,7 +59,7 @@ class Lead extends \Espo\Services\Record
         $entityManager = $this->getEntityManager();
 
 
-        if (!empty($recordsData->Account)) {        
+        if (!empty($recordsData->Account)) {
             $account = $entityManager->getEntity('Account');
             $account->set(get_object_vars($recordsData->Account));
             $entityManager->saveEntity($account);
@@ -80,17 +84,17 @@ class Lead extends \Espo\Services\Record
             if (isset($opportunity)) {
                 $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
             }
-            $lead->set('createdContactId', $contact->id);                      
+            $lead->set('createdContactId', $contact->id);
         }
 
-        $lead->set('status', 'Converted');        
+        $lead->set('status', 'Converted');
         $entityManager->saveEntity($lead);
         
         if ($meetings = $lead->get('meetings')) {
             foreach ($meetings as $meeting) {
                 if (!empty($contact)) {
                     $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
-                }                
+                }
                 
                 if (!empty($opportunity)) {
                     $meeting->set('parentId', $opportunity->id);
@@ -118,7 +122,7 @@ class Lead extends \Espo\Services\Record
                     $entityManager->saveEntity($call);
                 }
             }
-        } 
+        }
 
         return $lead;
     }
