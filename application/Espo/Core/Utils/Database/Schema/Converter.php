@@ -162,9 +162,15 @@ class Converter
             }
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
+
+            //add indexes
+            if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
+                $indexList = array_merge($indexList, $entityParams['indexes']);
+            }
             if (!empty($indexList)) {
-                foreach($indexList as $indexItem) {
-                    $tables[$entityName]->addIndex($indexItem);
+                foreach($indexList as $indexName => $indexItem) {
+                    $tableIndexName = is_string($indexName) ? $indexName : null;
+                    $tables[$entityName]->addIndex($indexItem, $tableIndexName);
                 }
             }
 

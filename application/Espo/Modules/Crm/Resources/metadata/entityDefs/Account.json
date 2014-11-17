@@ -162,5 +162,8 @@
     "collection": {
         "sortBy": "name",
         "asc": true
+    },
+    "indexes": {
+        "name": ["name"]
     }
 }
