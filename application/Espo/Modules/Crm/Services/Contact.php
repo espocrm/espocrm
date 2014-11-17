@@ -28,17 +28,21 @@ class Contact extends \Espo\Services\Record
 {
     protected function getDuplicateWhereClause(Entity $entity)
     {
-        return array(
+        $data = array(
             'OR' => array(
                 array(
                     'firstName' => $entity->get('firstName'),
                     'lastName' => $entity->get('lastName'),
-                ),
-                array(
-                    'emailAddress' => $entity->get('emailAddress'),
-                ),
-            ),
+                )
+            )
         );
+        if ($entity->get('emailAddress')) {
+            $data['OR'][] = array(
+                'emailAddress' => $entity->get('emailAddress'),
+             );
+        }
+
+        return $data;
     }
 }
 
