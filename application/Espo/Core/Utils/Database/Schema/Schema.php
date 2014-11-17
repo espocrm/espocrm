@@ -198,7 +198,7 @@ class Schema
         $result = true;
         $connection = $this->getConnection();
         foreach ($queries as $sql) {
-            $GLOBALS['log']->debug('SCHEMA, Execute Query: '.$sql);
+            $GLOBALS['log']->info('SCHEMA, Execute Query: '.$sql);
             try {
                 $result &= (bool) $connection->executeQuery($sql);
             } catch (\Exception $e) {

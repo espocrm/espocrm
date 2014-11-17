@@ -151,6 +151,10 @@ class Converter
             ),
         );
 
+        if (isset($entityMeta['indexes'])) {
+            $ormMeta[$entityName]['indexes'] = $entityMeta['indexes'];
+        }
+
         $ormMeta[$entityName]['fields'] = $this->convertFields($entityName, $entityMeta);
 
         $convertedLinks = $this->convertLinks($entityName, $entityMeta, $ormMeta);
