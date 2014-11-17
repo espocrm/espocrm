@@ -25,7 +25,7 @@ namespace Espo\Modules\Crm\Services;
 use \Espo\ORM\Entity;
 
 class Account extends \Espo\Services\Record
-{    
+{
     protected $linkSelectParams = array(
         'contacts' => array(
             'additionalColumns' => array(
@@ -39,6 +39,6 @@ class Account extends \Espo\Services\Record
         return array(
             'name' => $entity->get('name')
         );
-    }    
+    }
 }
 
