@@ -52,7 +52,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
             return;
         }
         
-        $data = json_decode($uniqueId->get('data'));
+        $data = $uniqueId->get('data');
         
         $eventType = $data->eventType;
         $eventId = $data->eventId;

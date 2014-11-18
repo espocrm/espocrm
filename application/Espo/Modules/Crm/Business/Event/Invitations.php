@@ -57,13 +57,13 @@ class Invitations
     public function sendInvitation(Entity $entity, Entity $invitee, $link)
     {
         $uid = $this->getEntityManager()->getEntity('UniqueId');
-        $uid->set('data', json_encode(array(
+        $uid->set('data', array(
             'eventType' => $entity->getEntityName(),
             'eventId' => $entity->id,
             'inviteeId' => $invitee->id,
             'inviteeType' => $invitee->getEntityName(),
             'link' => $link
-        )));
+        ));
         $this->getEntityManager()->saveEntity($uid);
 
         $emailAddress = $invitee->get('emailAddress');
@@ -79,7 +79,7 @@ class Invitations
         $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.'.$systemLanguage.'.tpl';
         if (!file_exists($subjectTplFileName)) {
             $subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.'.$systemLanguage.'.tpl';
-        } 
+        }
         if (!file_exists($subjectTplFileName)) {
             $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.en_US.tpl';
         }
@@ -107,7 +107,7 @@ class Invitations
 
         $email->set('subject', $subject);
         $email->set('body', $body);
-        $email->set('isHtml', true);        
+        $email->set('isHtml', true);
         $this->getEntityManager()->saveEntity($email);
         
         $attachmentName = ucwords($this->language->translate($entity->getEntityName(), 'scopeNames')).'.ics';
@@ -118,21 +118,21 @@ class Invitations
             'contents' => $this->getIscContents($entity),
         ));
         
-        $email->addAttachment($attachment);        
+        $email->addAttachment($attachment);
 
         $emailSender = $this->mailSender;
 
         if ($this->smtpParams) {
             $emailSender->useSmtp($this->smtpParams);
         }
-        $emailSender->send($email);        
+        $emailSender->send($email);
         
         $this->getEntityManager()->removeEntity($email);
     }
     
     protected function getIscContents(Entity $entity)
     {
-        $user = $entity->get('assignedUser');        
+        $user = $entity->get('assignedUser');
         
         $who = '';
         $email = '';

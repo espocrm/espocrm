@@ -67,7 +67,7 @@ Espo.define('Views.Role.Record.Edit', 'Views.Record.Edit', function (Dep) {
                 }
             }
 
-            data['data'] = JSON.stringify(data['data']);
+            data['data'] = data['data'];
             return data;
         },
 
@@ -94,7 +94,7 @@ Espo.define('Views.Role.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
             this.createView('extra', 'Role.Record.Table', {
                 mode: 'edit',
-                aclData: JSON.parse(this.model.get('data') || '{}') || {}
+                aclData: this.model.get('data') || {}
             });
         },
     });

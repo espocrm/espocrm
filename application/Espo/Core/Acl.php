@@ -218,14 +218,14 @@ class Acl
         $userRoles = $this->user->get('roles');
 
         foreach ($userRoles as $role) {
-            $aclTables[] = json_decode($role->get('data'));
+            $aclTables[] = $role->get('data');
         }
 
         $teams = $this->user->get('teams');
         foreach ($teams as $team) {
             $teamRoles = $team->get('roles');
             foreach ($teamRoles as $role) {
-                $aclTables[] = json_decode($role->get('data'));
+                $aclTables[] = $role->get('data');
             }
         }
 

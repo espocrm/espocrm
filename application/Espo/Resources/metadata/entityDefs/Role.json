@@ -6,7 +6,7 @@
             "type": "varchar"
         },
         "data": {
-            "type": "text"
+            "type": "jsonObject"
         }
     },
     "links": {

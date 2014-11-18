@@ -2,11 +2,11 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true            
+            "required": true
         },
         "data": {
-            "type": "text" 
-        }, 
+            "type": "jsonObject"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
