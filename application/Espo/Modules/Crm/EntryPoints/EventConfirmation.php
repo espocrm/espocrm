@@ -34,7 +34,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
     public static $authRequired = false;
     
     public function run()
-    {    
+    {
         $uid = $_GET['uid'];
         $action = $_GET['action'];
         if (empty($uid) || empty($action)) {
@@ -63,7 +63,7 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
         if (!empty($eventType) && !empty($eventId) && !empty($inviteeType) && !empty($inviteeId) && !empty($link)) {
             $event = $this->getEntityManager()->getEntity($eventType, $eventId);
             $invitee = $this->getEntityManager()->getEntity($inviteeType, $inviteeId);
-            if ($event && $invitee) {                
+            if ($event && $invitee) {
                 $relDefs = $event->getRelations();
                 $tableName = Util::toUnderscore($relDefs[$link]['relationName']);
                 
@@ -88,9 +88,9 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
                 echo $status;
                 return;
             }
-        } 
+        }
         
-        throw new Error();            
-    }    
+        throw new Error();
+    }
 }
 
