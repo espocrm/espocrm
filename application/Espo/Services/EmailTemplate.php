@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Services;
 
@@ -35,48 +35,48 @@ class EmailTemplate extends Record
         $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'dateTime';
     }
-    
+
     protected function getFileManager()
     {
         return $this->injections['fileManager'];
     }
-    
+
     protected function getDateTime()
     {
         return $this->injections['dateTime'];
     }
-    
+
     public function parse($id, array $params = array(), $copyAttachments = false)
-    {            
+    {
         $emailTemplate = $this->getEntity($id);
         if (empty($emailTemplate)) {
             throw new NotFound();
         }
-        
-        
-        
+
         $entityList = array();
         if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
             $entityList = $params['entityHash'];
         }
-        
-        $entityList['User'] = $this->getUser();
+
+        if (!isset($entityList['User'])) {
+            $entityList['User'] = $this->getUser();
+        }
 
         if (!empty($params['emailAddress'])) {
             $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
                 'lower' => $params['emailAddress']
             ))->findOne();
-            
+
 
             if (!empty($emailAddress)) {
                 $pdo = $this->getEntityManager()->getPDO();
                 $sql = "
                     SELECT * FROM `entity_email_address`
-                    WHERE 
+                    WHERE
                         `primary` = 1 AND `deleted` = 0 AND `email_address_id` = " . $pdo->quote($emailAddress->id). "
                 ";
                 $sth = $pdo->prepare($sql);
-                $sth->execute();                
+                $sth->execute();
                 while ($row = $sth->fetch()) {
                     if (!empty($row['entity_id'])) {
                         $entity = $this->getEntityManager()->getEntity($row['entity_type'], $row['entity_id']);
@@ -87,41 +87,41 @@ class EmailTemplate extends Record
                             if (empty($entityList[$entity->getEntityName()])) {
                                 $entityList[$entity->getEntityName()] = $entity;
                             }
-                            break;                            
+                            break;
                         }
-                                            
-                    } 
+
+                    }
                 }
             }
         }
-        
+
         if (!empty($params['parentId']) && !empty($params['parentType'])) {
             $parent = $this->getEntityManager()->getEntity($params['parentType'], $params['parentId']);
             if (!empty($parent)) {
                 $entityList[$params['parentType']] = $parent;
                 $entityList['Parent'] = $parent;
-                
+
                 if (empty($entityList['Person']) && !empty($parent::$person)) {
                     $entityList['Person'] = $parent;
                 }
             }
         }
-        
+
         $subject = $emailTemplate->get('subject');
         $body = $emailTemplate->get('body');
-        
+
         foreach ($entityList as $type => $entity) {
             $subject = $this->parseText($type, $entity, $subject);
         }
         foreach ($entityList as $type => $entity) {
             $body = $this->parseText($type, $entity, $body);
         }
-        
+
         $attachmentsIds = array();
         $attachmentsNames = new \StdClass();
-        
+
         if ($copyAttachments) {
-            $attachmentList = $emailTemplate->get('attachments');        
+            $attachmentList = $emailTemplate->get('attachments');
             if (!empty($attachmentList)) {
                 foreach ($attachmentList as $attachment) {
                     $clone = $this->getEntityManager()->getEntity('Attachment');
@@ -131,33 +131,37 @@ class EmailTemplate extends Record
                     unset($data['id']);
                     $clone->set($data);
                     $this->getEntityManager()->saveEntity($clone);
-                        
+
                     $contents = $this->getFileManager()->getContents('data/upload/' . $attachment->id);
                     if (empty($contents)) {
                         continue;
                     }
-                    $this->getFileManager()->putContents('data/upload/' . $clone->id, $contents);            
-            
+                    $this->getFileManager()->putContents('data/upload/' . $clone->id, $contents);
+
                     $attachmentsIds[] = $id = $clone->id;
                     $attachmentsNames->$id = $clone->get('name');
                 }
             }
-        }        
-        
+        }
+
         return array(
             'subject' => $subject,
             'body' => $body,
             'attachmentsIds' => $attachmentsIds,
             'attachmentsNames' => $attachmentsNames,
             'isHtml' => $emailTemplate->get('isHtml')
-        );        
+        );
     }
-    
+
     protected function parseText($type, Entity $entity, $text)
-    {        
+    {
         $fields = array_keys($entity->getFields());
         foreach ($fields as $field) {
             $value = $entity->get($field);
+            if (is_object($value)) {
+                continue;
+            }
+
             if ($entity->fields[$field]['type'] == 'date') {
                 $value = $this->getDateTime()->convertSystemDateToGlobal($value);
             } else if ($entity->fields[$field]['type'] == 'datetime') {
