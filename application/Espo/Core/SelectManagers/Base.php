@@ -40,6 +40,8 @@ class Base
 
     protected $metadata;
 
+    private $seed = null;
+
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -90,6 +92,14 @@ class Base
         return $this->metadata->get("entityDefs.{$this->entityName}.collection.textFilterFields", array('name'));
     }
 
+    protected function getSeed()
+    {
+        if (empty($this->seed)) {
+            $this->seed = $this->entityManager->getEntity($this->entityName);
+        }
+        return $this->seed;
+    }
+
     protected function where($params, &$result)
     {
         if (!empty($params['where']) && is_array($params['where'])) {
@@ -108,7 +118,7 @@ class Base
                         if (empty($result['whereClause'])) {
                             $result['whereClause'] = array();
                         }
-                        $fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
+                        $fieldDefs = $this->getSeed()->getFields();
                         $fieldList = $this->getTextFilterFields();
                         $d = array();
                         foreach ($fieldList as $field) {
@@ -146,14 +156,32 @@ class Base
                 $joins = array();
 
                 $part = array();
-                foreach ($linkedWith as $link => $ids) {
-                    $joins[] = $link;
-                    $defs = $this->entityManager->getMetadata()->get($this->entityName);
-
-                    $entityName = $defs['relations'][$link]['entity'];
-                    if ($entityName) {
-                        $part[$entityName . '.id'] = $ids;
+                foreach ($linkedWith as $link => $idsValue) {
+                    if (is_array($idsValue) && count($idsValue) == 1) {
+                        $idsValue = $idsValue[0];
                     }
+                    
+
+                    $relDefs = $this->getSeed()->getRelations();
+
+                    if (!empty($relDefs[$link])) {
+                        $defs = $relDefs[$link];
+                        if ($defs['type'] == 'manyMany') {
+                            $joins[] = $link;
+                            if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
+                                $key = $defs['midKeys'][1];
+                                $relationName = $defs['relationName'];
+                                $part[$relationName . '.' . $key] = $idsValue;
+                            }
+                        } else if ($defs['type'] == 'belongsTo') {
+                            if (!empty($defs['type']['key'])) {
+                                $key = $defs['type']['key'];
+                                $part[$key] = $idsValue;
+                            }
+                        }
+                    }
+
+
                 }
 
                 if (!empty($part)) {
@@ -175,7 +203,7 @@ class Base
                 $result['whereClause'] = array();
             }
 
-            $fieldDefs = $this->entityManager->getEntity($this->entityName)->getFields();
+            $fieldDefs = $this->getSeed()->getFields();
 
             $value = $params['q'];
 
@@ -222,7 +250,6 @@ class Base
                 'Team.id' => $this->user->get('teamsIds'),
                 'assignedUserId' => $this->user->id
             );
-            //$result['whereClause']['Team.id'] = $this->user->get('teamsIds');
         }
     }
 
