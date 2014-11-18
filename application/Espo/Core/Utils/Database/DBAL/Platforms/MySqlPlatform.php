@@ -31,7 +31,6 @@ use Doctrine\DBAL\Schema\TableDiff,
 
 class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 {
-
     public function getAlterTableSQL(TableDiff $diff)
     {
         $columnSql = array();
@@ -104,7 +103,6 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
         return array_merge($sql, $tableSql, $columnSql);
     }
 
-
     protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
     {
         $sql = array();
@@ -138,7 +136,6 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 
         return $sql;
     }
-
 
     public function getDropIndexSQL($index, $table=null)
     {
@@ -269,6 +266,15 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
         }
 
         return 'ALTER TABLE ' . $this->espoQuote($table) . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index->getQuotedColumns($this)) . ')';
+    }
+
+    protected function _getCreateTableSQL($tableName, array $columns, array $options = array())
+    {
+        if (!isset($options['engine'])) {
+            $options['engine'] = 'MyISAM';
+        }
+
+        return parent::_getCreateTableSQL($tableName, $columns, $options);
     }
     //end: ESPO
 }
