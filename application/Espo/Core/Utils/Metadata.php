@@ -53,8 +53,6 @@ class Metadata
 
     private $ormCacheFile = 'data/cache/application/ormMetadata.php';
 
-
-
     private $moduleList = null;
 
     public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
@@ -130,7 +128,7 @@ class Metadata
      */
     protected function getData()
     {
-        if (!isset($this->meta)) {
+        if (empty($this->meta) || !is_array($this->meta)) {
             $this->init();
         }
 
@@ -282,7 +280,7 @@ class Metadata
 
     public function getOrmMetadata($reload = false)
     {
-        if (!empty($this->ormMeta) && !$reload) {
+        if (!empty($this->ormMeta) && is_array($this->ormMeta) && !$reload) {
             return $this->ormMeta;
         }
 
@@ -329,7 +327,6 @@ class Metadata
         return implode($delim, array($path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))));
     }
 
-
     /**
      * Get Scopes
      *
@@ -342,10 +339,15 @@ class Metadata
         }
 
         $metadata = $this->getMetadataOnly(false);
+        if (!is_array($metadata)) {
+            $metadata = $this->getMetadataOnly(false, true);
+        }
 
         $scopes = array();
-        foreach ($metadata['scopes'] as $name => $details) {
-            $scopes[$name] = isset($details['module']) ? $details['module'] : false;
+        if (is_array($metadata['scopes'])) {
+            foreach ($metadata['scopes'] as $name => $details) {
+                $scopes[$name] = isset($details['module']) ? $details['module'] : false;
+            }
         }
 
         return $this->scopes = $scopes;
@@ -418,9 +420,9 @@ class Metadata
       */
     public function isScopeExists($scopeName)
     {
-        $scopeModuleMap= $this->getScopes();
+        $scopeModuleMap = $this->getScopes();
 
-        $lowerEntityName= strtolower($scopeName);
+        $lowerEntityName = strtolower($scopeName);
         foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
             if ($lowerEntityName == strtolower($rowEntityName)) {
                 return true;
