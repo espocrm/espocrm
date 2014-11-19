@@ -164,7 +164,7 @@ _.extend(Espo.App.prototype, {
     doAction: function (params) {
         this.trigger('action', params);
 
-        this._getController(params.controller, function (controller) {
+        this.getController(params.controller, function (controller) {
             try {
                 controller.doAction(params.action, params.options);
                 this.trigger('action:done');
@@ -205,7 +205,7 @@ _.extend(Espo.App.prototype, {
         };
     },
 
-    _getController: function (name, callback) {
+    getController: function (name, callback) {
         if (!(name || false)) {
             callback(this.baseController);
             return;
