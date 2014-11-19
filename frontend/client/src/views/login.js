@@ -36,7 +36,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
             'submit #login-form': function (e) {
                 this.login();
                 return false;
-            }    
+            }
         },
         
         data: function () {
@@ -57,12 +57,12 @@ Espo.define('Views.Login', 'View', function (Dep) {
                 var userName = $("#field-userName").val();
                 var password = $("#field-password").val();
 
-                var $submit = this.$el.find('#btn-login');                
+                var $submit = this.$el.find('#btn-login');
                 
-                if (userName == '') {                    
+                if (userName == '') {
                     var $el = $("#field-userName");
                 
-                    var message = this.getLanguage().translate('Username can not be empty!');                
+                    var message = this.getLanguage().translate('Username can not be empty!');
                     $el.popover({
                         placement: 'bottom',
                         content: message,
@@ -70,11 +70,11 @@ Espo.define('Views.Login', 'View', function (Dep) {
                     }).popover('show');
                     
                     var cell = $el.closest('.form-group');
-                    cell.addClass('has-error');                
+                    cell.addClass('has-error');
                     this.$el.one('mousedown click', function () {
                         cell.removeClass('has-error');
                         $el.popover('destroy');
-                    });                    
+                    });
                     return;
                 }
                 
@@ -88,8 +88,8 @@ Espo.define('Views.Login', 'View', function (Dep) {
                         'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
                         'Espo-Authorization': Base64.encode(userName + ':' + password)
                     },
-                    success: function (data) {                                                
-                        this.notify(false);            
+                    success: function (data) {
+                        this.notify(false);
                         this.trigger('login', {
                             auth: {
                                 userName: userName,
@@ -112,11 +112,11 @@ Espo.define('Views.Login', 'View', function (Dep) {
         
         onWrong: function () {
             var cell = $('#login .form-group');
-            cell.addClass('has-error');                
+            cell.addClass('has-error');
             this.$el.one('mousedown click', function () {
                 cell.removeClass('has-error');
             });
-            this.notify('Wrong username/password', 'error');    
+            this.notify('Wrong username/password', 'error');
         },
     });
 
