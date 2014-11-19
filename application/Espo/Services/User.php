@@ -134,7 +134,7 @@ class User extends Record
         }
 
         $dt = new \DateTime();
-        $dt->add(\DateTimeInterval('P'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'i'));
+        $dt->add(\DateInterval('P'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'i'));
         
         $job->set(array(
             'serviceName' => 'User',
