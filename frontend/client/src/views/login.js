@@ -36,6 +36,9 @@ Espo.define('Views.Login', 'View', function (Dep) {
             'submit #login-form': function (e) {
                 this.login();
                 return false;
+            },
+            'click a[data-action="passwordChangeRequest"]': function (e) {
+                this.showPasswordChangeRequest();
             }
         },
         
@@ -62,17 +65,17 @@ Espo.define('Views.Login', 'View', function (Dep) {
                 if (userName == '') {
                     var $el = $("#field-userName");
                 
-                    var message = this.getLanguage().translate('Username can not be empty!');
+                    var message = this.getLanguage().translate('Username can not be empty', 'labels', 'User');
                     $el.popover({
                         placement: 'bottom',
                         content: message,
                         trigger: 'manual',
                     }).popover('show');
                     
-                    var cell = $el.closest('.form-group');
-                    cell.addClass('has-error');
+                    var $cell = $el.closest('.form-group');
+                    $cell.addClass('has-error');
                     this.$el.one('mousedown click', function () {
-                        cell.removeClass('has-error');
+                        $cell.removeClass('has-error');
                         $el.popover('destroy');
                     });
                     return;
@@ -118,6 +121,15 @@ Espo.define('Views.Login', 'View', function (Dep) {
             });
             this.notify('Wrong username/password', 'error');
         },
+
+        showPasswordChangeRequest: function () {
+            this.notify('Please wait...');
+            this.createView('passwordChangeRequest', 'Modals.PasswordChangeRequest', {
+            }, function (view) {
+                view.render();
+                view.notify(false);
+            });
+        }
     });
 
 });

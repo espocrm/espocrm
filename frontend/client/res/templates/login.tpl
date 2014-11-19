@@ -1,5 +1,5 @@
 <div class="container content">
-    <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">    
+    <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
     <div id="login" class="panel panel-default">
         <div class="panel-heading">
             <img src="{{logoSrc}}"></img>
@@ -8,15 +8,16 @@
             <div>
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group">
-                        <label for="field-username">{{translate 'Username'}}</label>
+                        <label for="field-username">{{translate 'Username' scope='User'}}</label>
                         <input type="text" name="username" id="field-userName" class="form-control" autocapitalize="off" autocorrect="off">
                     </div>
                     <div class="form-group">
-                        <label for="login">{{translate 'Password'}}</label>
+                        <label for="login">{{translate 'Password' scope='User'}}</label>
                         <input type="password" name="password" id="field-password" class="form-control">
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary" id="btn-login">{{translate 'Login'}}</button>
+                        <a href="javascript:" class="btn btn-link pull-right" data-action="passwordChangeRequest">{{translate 'Forgot Password?' scope='User'}}</a>
+                        <button type="submit" class="btn btn-primary" id="btn-login">{{translate 'Login' scope='User'}}</button>
                     </div>
                 </form>
             </div>

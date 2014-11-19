@@ -25,11 +25,12 @@ namespace Espo\Controllers;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class User extends \Espo\Core\Controllers\Record
-{    
+{
     public function actionAcl($params, $data, $request)
-    {        
+    {
         $userId = $request->get('id');
         if (empty($userId)) {
             throw new Error();
@@ -46,12 +47,28 @@ class User extends \Espo\Core\Controllers\Record
         
         $acl = new \Espo\Core\Acl($user, $this->getConfig(), $this->getContainer()->get('fileManager'), $this->getMetadata());
         
-        return $acl->toArray();                    
+        return $acl->toArray();
     }
     
     public function actionChangeOwnPassword($params, $data)
     {
         return $this->getService('User')->changePassword($this->getUser()->id, $data['password']);
+    }
+
+    public function actionPasswordChangeRequest($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new Forbidden();
+        }
+        
+        if (empty($data['userName']) || empty($data['emailAddress'])) {
+            throw new BadRequest();
+        }
+
+        $userName = $data['userName'];
+        $emailAddress = $data['emailAddress'];
+
+        return $this->getService('User')->passwordChangeRequest($userName, $emailAddress);
     }
 }
 

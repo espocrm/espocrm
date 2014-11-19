@@ -30,22 +30,28 @@ use \Espo\ORM\Entity;
 
 class User extends Record
 {
+    const PASSWORD_CHANGE_REQUEST_LIFETIME = 360; // minutes
+
     protected function init()
     {
-        $this->dependencies[] = 'mailSender';
-        $this->dependencies[] = 'language';
+        $this->dependencies[] = 'container';
     }
 
     protected $internalFields = array('password');
 
     protected function getMailSender()
     {
-        return $this->injections['mailSender'];
+        return $this->getContainer()->get('mailSender');
     }
 
     protected function getLanguage()
     {
-        return $this->injections['language'];
+        return $this->getContainer()->get('language');
+    }
+
+    protected function getContainer()
+    {
+        return $this->injections['container'];
     }
 
     public function getEntity($id)
@@ -88,6 +94,73 @@ class User extends Record
 
         $this->getEntityManager()->saveEntity($user);
 
+        return true;
+    }
+
+    public function passwordChangeRequest($userName, $emailAddress)
+    {
+        $user = $this->getEntityManager()->getRepository('User')->where(array(
+            'userName' => $userName,
+            'emailAddress' => $emailAddress
+        ))->findOne();
+
+        if (empty($user)) {
+            throw new NotFound();
+        }
+
+        $userId = $user->id;
+
+        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
+            'userId' => $userId
+        ))->findOne();
+        if ($passwordChangeRequest) {
+            throw new Forbidden();
+        }
+
+        $requestId = uniqid();
+
+        $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
+        $passwordChangeRequest->set(array(
+            'userId' => $userId,
+            'requestId' => $requestId
+        ));
+
+        $this->sendChangePasswordLink($requestId, $emailAddress);
+
+        $this->getEntityManager()->saveEntity($passwordChangeRequest);
+
+        if (!$passwordChangeRequest->id) {
+            throw new Error();
+        }
+
+        $dt = new \DateTime();
+        $dt->add(\DateTimeInterval('P'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'i'));
+        
+        $job->set(array(
+            'serviceName' => 'User',
+            'method' => 'removeChangePasswordRequestJob',
+            'data' => json_encode(array(
+                'id' => $passwordChangeRequest->id,
+            )),
+            'executeTime' => $dt->format('Y-m-d H:i:s') ,
+        ));
+
+        $this->getEntityManager()->saveEntity($job);
+
+        return true;
+    }
+
+    public function removeChangePasswordRequestJob($data)
+    {
+        $id = $data->id;
+        if (empty($id)) {
+            return;
+        }
+
+        $p = $this->getEntityManager()->getEntity('PasswordChangeRequest', $data->id);
+        if ($p) {
+            $this->getEntityManager()->removeEntity($p);
+        }
         return true;
     }
 
@@ -157,6 +230,35 @@ class User extends Record
         $body = str_replace('{userName}', $user->get('userName'), $body);
         $body = str_replace('{password}', $password, $body);
         $body = str_replace('{siteUrl}', $this->getConfig()->get('siteUrl'), $body);
+
+        $email->set(array(
+            'subject' => $subject,
+            'body' => $body,
+            'isHtml' => false,
+            'to' => $emailAddress
+        ));
+
+        $this->getMailSender()->send($email);
+    }
+
+    protected function sendChangePasswordLink($requestId, $emailAddress, Entity $user = null)
+    {
+        if (empty($emailAddress)) {
+            return;
+        }
+
+        $email = $this->getEntityManager()->getEntity('Email');
+
+        if (!$this->getConfig()->get('smtpServer')) {
+            return;
+        }
+
+        $subject = $this->getLanguage()->translate('passwordChangeLinkEmailSubject', 'messages', 'User');
+        $body = $this->getLanguage()->translate('passwordChangeLinkEmailBody', 'messages', 'User');
+
+        $link = $this->getConfig()->get('siteUrl') . '?entryPoint=changePassword&id=' . $requestId;
+        
+        $body = str_replace('{link}', $this->getConfig()->get('siteUrl'), $body);
 
         $email->set(array(
             'subject' => $subject,

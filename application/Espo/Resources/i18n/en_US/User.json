@@ -23,7 +23,13 @@
         "Access": "Access",
         "Preferences": "Preferences",
         "Change Password": "Change Password",
-        "Teams and Access Control": "Teams and Access Control"
+        "Teams and Access Control": "Teams and Access Control",
+        "Forgot Password?": "Forgot Password?",
+        "Password Change Request": "Password Change Request",
+        "Username": "Username",
+        "Email Address": "Email Address",
+        "Password": "Password",
+        "Login": "Login"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -36,6 +42,8 @@
         "passwordWillBeSent": "Password will be sent to user's email address.",
         "accountInfoEmailSubject": "Account info",
         "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+        "passwordChangeLinkEmailSubject": "EspoCRM: Change Password Request",
+        "passwordChangeLinkEmailBody": "Open {link} to change your password. This unique url will be exprired soon.",
         "passwordChanged": "Password has been changed"
     }
 }

@@ -50,6 +50,18 @@
   },
 
   {
+    "route":"/PasswordChangeRequest",
+    "method": "post",
+    "params": {
+      "controller":"User",
+      "action": "passwordChangeRequest"
+    },
+    "conditions": {
+        "auth":false
+    }
+  },
+
+  {
     "route":"/Stream",
     "method":"get",
     "params":{
