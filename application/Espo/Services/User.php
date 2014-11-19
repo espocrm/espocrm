@@ -134,8 +134,10 @@ class User extends Record
         }
 
         $dt = new \DateTime();
-        $dt->add(\DateInterval('P'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'i'));
+        $dt->add(new \DateInterval('PT'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'M'));
         
+        $job = $this->getEntityManager()->getEntity('Job');
+
         $job->set(array(
             'serviceName' => 'User',
             'method' => 'removeChangePasswordRequestJob',
@@ -152,12 +154,12 @@ class User extends Record
 
     public function removeChangePasswordRequestJob($data)
     {
-        $id = $data->id;
-        if (empty($id)) {
+        if (empty($data['id'])) {
             return;
         }
+        $id = $data['id'];
 
-        $p = $this->getEntityManager()->getEntity('PasswordChangeRequest', $data->id);
+        $p = $this->getEntityManager()->getEntity('PasswordChangeRequest', $id);
         if ($p) {
             $this->getEntityManager()->removeEntity($p);
         }
@@ -258,7 +260,7 @@ class User extends Record
 
         $link = $this->getConfig()->get('siteUrl') . '?entryPoint=changePassword&id=' . $requestId;
         
-        $body = str_replace('{link}', $this->getConfig()->get('siteUrl'), $body);
+        $body = str_replace('{link}', $link, $body);
 
         $email->set(array(
             'subject' => $subject,

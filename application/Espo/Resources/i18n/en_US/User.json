@@ -42,8 +42,8 @@
         "passwordWillBeSent": "Password will be sent to user's email address.",
         "accountInfoEmailSubject": "Account info",
         "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "EspoCRM: Change Password Request",
-        "passwordChangeLinkEmailBody": "Open {link} to change your password. This unique url will be exprired soon.",
+        "passwordChangeLinkEmailSubject": "Change Password Request",
+        "passwordChangeLinkEmailBody": "You can change your password by this link {link}. This unique url will be exprired soon.",
         "passwordChanged": "Password has been changed"
     }
 }

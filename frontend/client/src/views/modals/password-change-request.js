@@ -40,7 +40,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
+                    label: 'Close',
                     onClick: function (dialog) {
                         dialog.close();
                     }
@@ -106,7 +106,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
 
             if (!isValid) return;
 
-            $submit = this.$el.find('.msg-box');
+            $submit = this.$el.find('button[data-name="submit"]');
             $submit.addClass('disabled');
             this.notify('Please wait...');
 
@@ -122,14 +122,22 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
                         this.notify(this.translate('Username/Email Address not found', 'labels', 'User'), 'error');
                         xhr.errorIsHandled = true;
                     }
+                    if (xhr.status == 403) {
+                        this.notify(this.translate('Forbidden, please try later', 'labels', 'User'), 'error');
+                        xhr.errorIsHandled = true;
+                    }
                     $submit.removeClass('disabled');
                 }.bind(this)
             }).done(function () {
+                this.notify(false);
+
                 var msg = this.translate('The unique link has been sent to the specified email address.', 'labels', 'User');
 
                 this.$el.find('.cell-userName').addClass('hidden');
                 this.$el.find('.cell-emailAddress').addClass('hidden');
+                
                 $submit.addClass('hidden');
+                
                 this.$el.find('.msg-box').removeClass('hidden');
 
                 this.$el.find('.msg-box').html('<span class="text-success">' + msg + '</span>');
