@@ -88,6 +88,7 @@ class Application
         $html = file_get_contents('main.html');
         $html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
         $html = str_replace('{{useCache}}', $config->get('useCache') ? 'true' : 'false' , $html);
+        $html = str_replace('{{runScript}}', 'app.start();' , $html);
         echo $html;
         exit;
     }

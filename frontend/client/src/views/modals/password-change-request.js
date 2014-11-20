@@ -74,13 +74,11 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
 
                 var $cellUserName = $userName.closest('.form-group');
                 $cellUserName.addClass('has-error');
-                
 
                 $userName.one('mousedown click', function () {
                     $cellUserName.removeClass('has-error');
                     $userName.popover('destroy');
                 });
-
             }
 
             var isValid = true;
@@ -111,7 +109,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
             this.notify('Please wait...');
 
             $.ajax({
-                url: 'PasswordChangeRequest',
+                url: 'User/passwordChangeRequest',
                 type: 'POST',
                 data: JSON.stringify({
                     userName: userName,
@@ -119,11 +117,11 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
                 }),
                 error: function (xhr) {
                     if (xhr.status == 404) {
-                        this.notify(this.translate('Username/Email Address not found', 'labels', 'User'), 'error');
+                        this.notify(this.translate('userNameEmailAddressNotFound', 'messages', 'User'), 'error');
                         xhr.errorIsHandled = true;
                     }
                     if (xhr.status == 403) {
-                        this.notify(this.translate('Forbidden, please try later', 'labels', 'User'), 'error');
+                        this.notify(this.translate('forbidden', 'messages', 'User'), 'error');
                         xhr.errorIsHandled = true;
                     }
                     $submit.removeClass('disabled');
@@ -131,7 +129,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
             }).done(function () {
                 this.notify(false);
 
-                var msg = this.translate('The unique link has been sent to the specified email address.', 'labels', 'User');
+                var msg = this.translate('uniqueLinkHasBeenSent', 'messages', 'User');
 
                 this.$el.find('.cell-userName').addClass('hidden');
                 this.$el.find('.cell-emailAddress').addClass('hidden');

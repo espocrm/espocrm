@@ -147,7 +147,7 @@
         "fieldShouldBeBetween": "{field} should be between {min} and {max}",
         "fieldShouldBeLess": "{field} should be less then {value}",
         "fieldShouldBeGreater": "{field} should be greater then {value}",
-        "fieldBadPasswordConfirm": "{field} confirmed improperly",
+        "fieldBadPasswordConfirm": "{field} not confirmed properly",
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
         "assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you\n\n{recordUrl}",

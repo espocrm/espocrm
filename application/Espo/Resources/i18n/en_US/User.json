@@ -11,7 +11,8 @@
         "teamRole": "Position",
         "password": "Password",
         "passwordConfirm": "Confirm Password",
-        "newPassword": "New Password"
+        "newPassword": "New Password",
+        "newPasswordConfirm": "Confirm New Password"
     },
     "links": {
         "teams": "Teams",
@@ -47,7 +48,10 @@
         "passwordChanged": "Password has been changed",
         "userCantBeEmpty": "Username can not be empty",
         "wrongUsernamePasword": "Wrong username/password",
-        "emailAddressCantBeEmpty": "Email Address can not be empty"
-
+        "emailAddressCantBeEmpty": "Email Address can not be empty",
+        "userNameEmailAddressNotFound": "Username/Email Address not found",
+        "forbidden": "Forbidden, please try later",
+        "uniqueLinkHasBeenSent": "The unique link has been sent to the specified email address.",
+        "passwordChangedByRequest": "Password has been changed."
     }
 }

@@ -53,14 +53,26 @@
   },
 
   {
-    "route":"/PasswordChangeRequest",
+    "route":"User/passwordChangeRequest",
     "method": "post",
     "params": {
       "controller":"User",
       "action": "passwordChangeRequest"
     },
     "conditions": {
-        "auth":false
+        "auth": false
+    }
+  },
+
+  {
+    "route":"User/changePasswordByRequest",
+    "method": "post",
+    "params": {
+      "controller":"User",
+      "action": "changePasswordByRequest"
+    },
+    "conditions": {
+        "auth": false
     }
   },
 
