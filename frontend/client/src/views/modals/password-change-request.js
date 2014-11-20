@@ -64,7 +64,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
             if (userName == '') {
                 isValid = false;
                 
-                var message = this.getLanguage().translate('Username can not be empty', 'labels', 'User');
+                var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
                 $userName.popover({
                     placement: 'bottom',
@@ -87,7 +87,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
             if (emailAddress == '') {
                 isValid = false;
                 
-                var message = this.getLanguage().translate('Email Address can not be empty', 'labels', 'User');
+                var message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
 
                 $emailAddress.popover({
                     placement: 'bottom',

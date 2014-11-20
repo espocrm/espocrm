@@ -41,7 +41,7 @@
         "Sending...": "Sending...",
         "Removed": "Removed",
         "Posted": "Posted",
-        "Linked": "Linked",    
+        "Linked": "Linked",
         "Unlinked": "Unlinked",
         "Access denied": "Access denied",
         "Access": "Access",
@@ -130,7 +130,8 @@
         "Today": "Today",
         "Tomorrow": "Tomorrow",
         "Yesterday": "Yesterday",
-        "Submit": "Submit"
+        "Submit": "Submit",
+        "Close": "Close"
     },
     "messages": {
         "notModified": "You have not modified the record",

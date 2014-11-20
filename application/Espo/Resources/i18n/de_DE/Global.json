@@ -129,7 +129,9 @@
         "See more": "Mehr anzeigen",
         "Today": "Heute",
         "Tomorrow": "Morgen",
-        "Yesterday": "Gestern"
+        "Yesterday": "Gestern",
+        "Submit": "Einreichen",
+        "Close": "Schließen"
     },
     "messages": {
         "notModified": "Sie haben den Datensatz nicht geändert",

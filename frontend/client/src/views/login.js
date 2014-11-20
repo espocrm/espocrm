@@ -65,7 +65,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
                 if (userName == '') {
                     var $el = $("#field-userName");
                 
-                    var message = this.getLanguage().translate('Username can not be empty', 'labels', 'User');
+                    var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
                     $el.popover({
                         placement: 'bottom',
                         content: message,
@@ -119,7 +119,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
             this.$el.one('mousedown click', function () {
                 cell.removeClass('has-error');
             });
-            this.notify('Wrong username/password', 'error');
+            Espo.Ui.error(this.translate('wrongUsernamePasword', 'messages', 'User'));
         },
 
         showPasswordChangeRequest: function () {

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.Language = function (cache) {
     this.cache = cache || null;
@@ -67,17 +67,17 @@ _.extend(Espo.Language.prototype, {
     },
     
     translateOption: function (value, field, scope) {
-        var translation = this.translate(field, 'options', scope);    
+        var translation = this.translate(field, 'options', scope);
         if (typeof translation != 'object') {
             translation = {};
-        }        
+        }
         return translation[value] || value;
     },
     
     loadFromCache: function () {
         
         if (this.cache) {
-            var cached = this.cache.get('app', 'language');            
+            var cached = this.cache.get('app', 'language');
             if (cached) {
                 this.data = cached;
                 return true;
@@ -98,18 +98,23 @@ _.extend(Espo.Language.prototype, {
         }
     },
     
-    load: function (callback, sync) {
-        var sync = (typeof sync == 'undefined') ? true: sync; 
+    load: function (callback, disableCache, sync) {
+        var sync = (typeof sync == 'undefined') ? true: sync;
+        
         this.once('sync', callback);
-        if (!this.loadFromCache()) {                
-            this.fetch(sync);
-            return;
+
+        if (!disableCache) {
+            if (this.loadFromCache()) {
+                this.trigger('sync');
+                return;
+            }
         }
-        this.trigger('sync');
+
+        this.fetch(sync);
     },
 
     fetch: function (sync) {
-        var self = this;        
+        var self = this;
         $.ajax({
             url: this.url,
             type: 'GET',

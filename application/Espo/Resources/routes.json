@@ -27,6 +27,9 @@
     "method":"get",
     "params":{
         "controller":"I18n"
+    },
+    "conditions":{
+        "auth":false
     }
   },
 

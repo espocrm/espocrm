@@ -43,43 +43,46 @@ Espo.App = function (options, callback) {
     this._setupAjax();
 
     this.settings = new Espo['Models.Settings'](null, {cache: this.cache});
-    if (!this.settings.loadFromCache()) {
-        this.settings.load(true);
-    }
-
-    this.metadata = new Espo.Metadata(this.cache);
-    
     this.language = new Espo.Language(this.cache);
-
+    this.metadata = new Espo.Metadata(this.cache);
     this.fieldManager = new Espo.FieldManager();
 
-    this.user = new Espo['Models.User']();
-    this.preferences = new Espo['Models.Preferences']();
-    this.preferences.settings = this.settings;
-    this.acl = new Espo.Acl(this.user);
     
-    this.preferences.on('update', function (model) {
-        this.storage.set('user', 'preferences', this.preferences.toJSON());
-    }, this);
+    var proceed = function () {
+        this.user = new Espo['Models.User']();
+        this.preferences = new Espo['Models.Preferences']();
+        this.preferences.settings = this.settings;
+        this.acl = new Espo.Acl(this.user);
+        
+        this.preferences.on('update', function (model) {
+            this.storage.set('user', 'preferences', this.preferences.toJSON());
+        }, this);
 
-    this._modelFactory = new Espo.ModelFactory(this.loader, this.metadata, this.user);
-    this._collectionFactory = new Espo.CollectionFactory(this.loader, this._modelFactory);
+        this._modelFactory = new Espo.ModelFactory(this.loader, this.metadata, this.user);
+        this._collectionFactory = new Espo.CollectionFactory(this.loader, this._modelFactory);
 
-    this._initDateTime();
-    this._initView();
-    this._initBaseController();
+        this._initDateTime();
+        this._initView();
+        this._initBaseController();
 
-    this._preLoader = new Espo.PreLoader(this.cache, this._viewFactory);
-    
-    var countLoaded = 0;
-    var manageCallback = function () {
-        countLoaded++;
-        if (countLoaded == 1) {
+        this._preLoader = new Espo.PreLoader(this.cache, this._viewFactory);
+        
+        this._preLoad(function () {
             callback.call(this, this);
-        }
+        });
     }.bind(this);
-    
-    this._preLoad(manageCallback);
+
+
+    var countLoaded = 0;
+    var handleCallback = function () {
+        countLoaded++;
+        if (countLoaded == 2) {
+            proceed();
+        }
+    };
+
+    this.settings.load(handleCallback);
+    this.language.load(handleCallback);
 }
 
 _.extend(Espo.App.prototype, {

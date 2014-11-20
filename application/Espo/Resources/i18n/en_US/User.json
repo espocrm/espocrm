@@ -44,6 +44,10 @@
         "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
         "passwordChangeLinkEmailSubject": "Change Password Request",
         "passwordChangeLinkEmailBody": "You can change your password by this link {link}. This unique url will be exprired soon.",
-        "passwordChanged": "Password has been changed"
+        "passwordChanged": "Password has been changed",
+        "userCantBeEmpty": "Username can not be empty",
+        "wrongUsernamePasword": "Wrong username/password",
+        "emailAddressCantBeEmpty": "Email Address can not be empty"
+
     }
 }

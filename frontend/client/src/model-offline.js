@@ -34,10 +34,15 @@ Espo.ModelOffline = Espo.Model.extend({
         this.cache = options.cache || null;
     },
 
-    load: function (sync) {
-        this.once('sync', function (model) {
-            model.storeToCache();
-        });
+    load: function (callback, disableCache, sync) {
+        this.once('sync', callback);
+
+        if (!disableCache) {
+            if (this.loadFromCache()) {
+                this.trigger('sync');
+                return;
+            }
+        }
 
         this.fetch({
             async: !(sync || false)
