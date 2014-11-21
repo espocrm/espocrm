@@ -26,9 +26,10 @@ use Espo\ORM\Entity;
 
 class Attachment extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected $dependencies = array(
-        'fileManager',
-    );
+    protected function init()
+    {
+        $this->dependencies[] = 'fileManager';
+    }
     
     protected function getFileManager()
     {
