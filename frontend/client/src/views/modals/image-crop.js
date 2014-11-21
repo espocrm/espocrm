@@ -44,7 +44,7 @@ Espo.define('Views.Modals.ImageCrop', ['Views.Modal', 'lib!Cropper'], function (
         },
 
         setup: function () {
-            this.header = this.translate('Setup Avatar', 'labels', 'User');
+            this.header = null;
 
             this.buttons = [
                 {

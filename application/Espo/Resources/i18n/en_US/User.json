@@ -31,8 +31,7 @@
         "Username": "Username",
         "Email Address": "Email Address",
         "Password": "Password",
-        "Login": "Login",
-        "Setup Avatar": "Setup Avatar"
+        "Login": "Login"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
