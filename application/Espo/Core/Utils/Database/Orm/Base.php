@@ -119,29 +119,6 @@ class Base
     }
 
     /**
-     * Start process Orm converting for fields/relations
-     *
-     * @param  string $itemName    Field name OR Link name
-     * @param  string $entityName
-     * @return array
-     */
-    public function process($itemName, $entityName)
-    {
-        $inputs = array(
-            'itemName' => $itemName,
-            'entityName' => $entityName,
-        );
-        $this->setMethods($inputs);
-
-        $convertedDefs = $this->load($itemName, $entityName);
-
-        $inputs = $this->setArrayValue(null, $inputs);
-        $this->setMethods($inputs);
-
-        return $convertedDefs;
-    }
-
-    /**
      * Get Entity Defs by type (entity/orm)
      *
      * @param  boolean $isOrmEntityDefs

@@ -22,38 +22,28 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class LinkMultiple extends Base
+class Base extends \Espo\Core\Utils\Database\Orm\Base
 {
-    protected function load($fieldName, $entityName)
+    /**
+     * Start process Orm converting for fields
+     *
+     * @param  string $itemName    Field name
+     * @param  string $entityName
+     * @return array
+     */
+    public function process($itemName, $entityName)
     {
-        $data = array(
-            $entityName => array (
-                'fields' => array(
-                    $fieldName.'Ids' => array(
-                        'type' => 'varchar',
-                        'notStorable' => true,
-                    ),
-                    $fieldName.'Names' => array(
-                        'type' => 'varchar',
-                        'notStorable' => true,
-                    ),
-                ),
-            ),
-            'unset' => array(
-                $entityName => array(
-                    'fields.'.$fieldName,
-                ),
-            ),
+        $inputs = array(
+            'itemName' => $itemName,
+            'entityName' => $entityName,
         );
+        $this->setMethods($inputs);
 
-        $columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
-        if (!empty($columns)) {
-            $data[$entityName]['fields'][$fieldName . 'Columns'] = array(
-                'type' => 'varchar',
-                'notStorable' => true,
-            );
-        }
+        $convertedDefs = $this->load($itemName, $entityName);
 
-        return $data;
+        $inputs = $this->setArrayValue(null, $inputs);
+        $this->setMethods($inputs);
+
+        return $convertedDefs;
     }
 }

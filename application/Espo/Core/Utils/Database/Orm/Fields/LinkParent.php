@@ -22,7 +22,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
+class LinkParent extends Base
 {
     protected function load($fieldName, $entityName)
     {
@@ -46,6 +46,4 @@ class LinkParent extends \Espo\Core\Utils\Database\Orm\Base
             ),
         );
     }
-
-
 }

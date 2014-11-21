@@ -24,12 +24,12 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 use Espo\Core\Utils\Util;
 
-class PersonName extends \Espo\Core\Utils\Database\Orm\Base
+class PersonName extends Base
 {
     protected function load($fieldName, $entityName)
     {
         $subList = array('first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName));
-        
+
         $tableName = Util::toUnderScore($entityName);
 
         $orderByField = 'first' . ucfirst($fieldName); // TODO available in settings
