@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Image', 'Views.Fields.File', function (Dep) {
 
@@ -36,7 +36,7 @@ Espo.define('Views.Fields.Image', 'Views.Fields.File', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             
-            if ('previewSize' in this.params) {
+            if ('previewSize' in this.params && this.params.previewSize) {
                 this.previewSize = this.params.previewSize;
             }
         },

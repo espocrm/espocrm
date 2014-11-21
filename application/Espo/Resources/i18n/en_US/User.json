@@ -12,7 +12,8 @@
         "password": "Password",
         "passwordConfirm": "Confirm Password",
         "newPassword": "New Password",
-        "newPasswordConfirm": "Confirm New Password"
+        "newPasswordConfirm": "Confirm New Password",
+        "avatar": "Avatar"
     },
     "links": {
         "teams": "Teams",
@@ -30,7 +31,8 @@
         "Username": "Username",
         "Email Address": "Email Address",
         "Password": "Password",
-        "Login": "Login"
+        "Login": "Login",
+        "Setup Avatar": "Setup Avatar"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

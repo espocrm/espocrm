@@ -17,16 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
     
-Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {        
+Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
     
-        sideView: false,
+        sideView: 'User.Record.DetailSide',
         
         editModeEnabled: false,
-        
         
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -58,12 +57,12 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
             
             if (this.model.id == this.getUser().id) {
                 this.listenTo(this.model, 'after:save', function () {
-                    this.getUser().set(this.model.toJSON());                
+                    this.getUser().set(this.model.toJSON());
                 }.bind(this));
             }
         },
         
-        actionChangePassword: function () {            
+        actionChangePassword: function () {
             this.notify('Loading...');
             
             this.createView('changePassword', 'Modals.ChangePassword', {
@@ -73,7 +72,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                 this.notify(false);
                 
                 this.listenToOnce(view, 'changed', function () {
-                    setTimeout(function () {                
+                    setTimeout(function () {
                         this.getBaseController().logout();
                     }.bind(this), 2000);
                 }, this);
@@ -94,20 +93,20 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                 data: {
                     id: this.model.id,
                 }
-            }).done(function (aclData) {            
+            }).done(function (aclData) {
                 this.createView('access', 'User.Access', {
                     aclData: aclData,
                     model: this.model,
                 }, function (view) {
                     this.notify(false);
-                    view.render();                                    
+                    view.render();
                 }.bind(this));
             }.bind(this));
             
 
         },
             
-    });        
+    });
     
 });
 

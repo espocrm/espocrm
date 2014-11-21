@@ -77,6 +77,11 @@
         "roles": {
             "type": "linkMultiple",
             "tooltip": true
+        },
+        "avatar": {
+            "type": "image",
+            "view": "User.Fields.Avatar",
+            "previewSize": "small"
         }
     },
     "links": {

@@ -17,15 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Modal', 'View', function (Dep) {
 
-    return Dep.extend({    
+    return Dep.extend({
         
         cssName: 'modal-dialog',
         
-        header: false,    
+        header: false,
         
         dialog: null,
         
@@ -38,7 +38,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 onClick: function (dialog) {
                     dialog.close();
                 }
-            } 
+            }
         ],
         
         width: false,
@@ -50,7 +50,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
             this.options = this.options || {};
             this.options.el = this.containerSelector;
             
-            this.on('render', function () {            
+            this.on('render', function () {
                 $(containerSelector).remove();
                 $('<div />').css('display', 'none').attr('id', id).appendTo('body');
                 
@@ -72,10 +72,10 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                         this.remove();
                     }.bind(this)
                 });
-                this.setElement(containerSelector + ' .body');                            
+                this.setElement(containerSelector + ' .body');
             }, this);
             
-            this.on('after:render', function () {                    
+            this.on('after:render', function () {
                 $(containerSelector).show();
                 this.dialog.show();
             });
@@ -90,7 +90,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
         
         close: function () {
             this.dialog.close();
-        },            
+        },
     });
 });
 

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
 
@@ -50,16 +50,16 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
                 var $div = $(e.currentTarget).parent();
                 this.deleteAttachment();
                 $div.parent().remove();
-            },            
+            },
             'change input.file': function (e) {
                 var $file = $(e.currentTarget);
-                var files = e.currentTarget.files;                
+                var files = e.currentTarget.files;
                 if (files.length) {
                     this.uploadFile(files[0]);
                     $file.replaceWith($file.clone(true));
-                }                
+                }
             },
-            'click a[data-action="showImagePreview"]': function (e) {                
+            'click a[data-action="showImagePreview"]': function (e) {
                 var id = $(e.currentTarget).data('id');
                 this.createView('preview', 'Modals.ImagePreview', {
                     id: id,
@@ -121,7 +121,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
         },
         
         afterRender: function () {
-            if (this.mode == 'edit') {            
+            if (this.mode == 'edit') {
                 this.$attachment = this.$el.find('div.attachment');
 
                 var name = this.model.get(this.nameName);
@@ -129,9 +129,9 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
                 var id = this.model.get(this.idName);
                 if (id) {
                     this.addAttachmentBox(name, type, id);
-                }        
-            }            
-        },    
+                }
+            }
+        },
         
         getDetailPreview: function (name, type, id) {
             var preview = name;
@@ -141,7 +141,7 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
                 case 'image/jpeg':
                 case 'image/gif':
                     preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
-            }                        
+            }
             return preview;
         },
         
@@ -179,17 +179,17 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
             }
         },
         
-        deleteAttachment: function () {        
-            var id = this.model.get(this.idName);            
-            var o = {};            
+        deleteAttachment: function () {
+            var id = this.model.get(this.idName);
+            var o = {};
             o[this.idName] = null;
-            o[this.nameName] = null;            
+            o[this.nameName] = null;
             this.model.set(o);
             
             this.$attachment.empty();
             
             if (id) {
-                if (this.model.isNew()) {        
+                if (this.model.isNew()) {
                     this.getModelFactory().create('Attachment', function (attachment) {
                         attachment.id = id;
                         attachment.destroy();
@@ -200,16 +200,16 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
         
         setAttachment: function (attachment) {
             var arr = _.clone(this.model.get(this.idsName));
-            var o = {};            
+            var o = {};
             o[this.idName] = attachment.id;
             o[this.nameName] = attachment.get('name');
             this.model.set(o);
         },
 
-        uploadFile: function (file) {        
+        uploadFile: function (file) {
             var isCanceled = false;
             
-            this.getModelFactory().create('Attachment', function (attachment) {            
+            this.getModelFactory().create('Attachment', function (attachment) {
                 var $att = this.addAttachmentBox(file.name, file.type);
                 
                 this.$el.find('.attachment-button').addClass('hidden');
@@ -221,42 +221,53 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
             
                 var fileReader = new FileReader();
                 fileReader.onload = function (e) {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'Attachment/action/upload',
-                        data: e.target.result,
-                        contentType: 'multipart/encrypted',
-                        timeout: 0,
-                    }).done(function (data) {
-                        attachment.id = data.attachmentId;                            
-                        attachment.set('name', file.name);
-                        attachment.set('type', file.type || 'text/plain');
-                        attachment.set('size', file.size);
-                        attachment.set('role', 'Attachment');
-                        attachment.set('parentType', this.model.name);
-                        attachment.set('parentId', this.model.id);
-                        
-                        attachment.once('sync', function () {
-                            if (!isCanceled) {
-                                $att.trigger('ready');                            
-                                this.setAttachment(attachment);
-                            }
-                        }, this);                        
-                        attachment.save();
+                    this.handleFileUpload(file, e.target.result, function (result, fileParams) {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'Attachment/action/upload',
+                            data: result,
+                            contentType: 'multipart/encrypted',
+                            timeout: 0,
+                        }).done(function (data) {
+                            attachment.id = data.attachmentId;
+                            attachment.set('name', fileParams.name);
+                            attachment.set('type', fileParams.type || 'text/plain');
+                            attachment.set('size', fileParams.size);
+                            attachment.set('role', 'Attachment');
+                            attachment.set('parentType', this.model.name);
+                            attachment.set('parentId', this.model.id);
+                            
+                            attachment.once('sync', function () {
+                                if (!isCanceled) {
+                                    $att.trigger('ready');
+                                    this.setAttachment(attachment);
+                                }
+                            }, this);
+                            attachment.save();
+                        }.bind(this));
                     }.bind(this));
                 }.bind(this);
-                fileReader.readAsDataURL(file);                
+                fileReader.readAsDataURL(file);
             }, this);
+        },
+
+        handleFileUpload: function (file, contents, callback) {
+            var params = {
+                name: file.name,
+                type: file.type,
+                size: file.size
+            };
+            callback(contents, params);
         },
         
         addAttachmentBox: function (name, type, id) {
             this.$attachment.empty();
             
-            var self = this;            
+            var self = this;
                 
             var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="glyphicon glyphicon-remove"></span></a>';
 
-            var preview = name;            
+            var preview = name;
             if (this.showPreview && id) {
                 preview = this.getEditPreview(name, type, id);
             }
@@ -267,11 +278,11 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
                                  .append($('<span class="preview">' + preview + '</span>').css('width', '270px'))
                                  .append(removeLink);
                 
-            var $container = $('<div>').append($att);                    
-            this.$attachment.append($container);        
+            var $container = $('<div>').append($att);
+            this.$attachment.append($container);
                 
             if (!id) {
-                var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');                
+                var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');
                 $container.append($loading);
                 $att.on('ready', function () {
                     $loading.html(self.translate('Ready'));

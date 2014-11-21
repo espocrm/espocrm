@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
     
-Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {        
+Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {
 
     return Dep.extend({
         
@@ -29,10 +29,10 @@ Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function 
                 label: false,
                 view: 'Record.Panels.Side',
                 options: {
-                    fields: ['teams', 'roles'],
+                    fields: ['avatar'],
                     mode: 'detail',
-                }                    
-            }            
+                }
+            }
         ],
             
     });

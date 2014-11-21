@@ -17,20 +17,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
     
-Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {        
+Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
     return Dep.extend({
     
-        sideView: false,
+        sideView: 'User.Record.EditSide',
         
         setup: function () {
             Dep.prototype.setup.call(this);
             
             if (this.model.id == this.getUser().id) {
                 this.listenTo(this.model, 'after:save', function () {
-                    this.getUser().set(this.model.toJSON());                    
+                    this.getUser().set(this.model.toJSON());
                 }.bind(this));
             }
         },
@@ -43,7 +43,7 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
                 
                 var layout = _.clone(simpleLayout);
                 
-                if (this.type == 'edit') {                
+                if (this.type == 'edit') {
                     layout.push({
                         label: 'Password',
                         rows: [
@@ -53,7 +53,7 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
                                 params: {
                                     required: self.isNew,
                                     readyToChange: true
-                                } 
+                                }
                             },{
                                 name: 'generatePassword',
                                 view: 'User.Fields.GeneratePassword',
@@ -65,7 +65,7 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
                                 params: {
                                     required: self.isNew,
                                     readyToChange: true
-                                } 
+                                }
                             },{
                                 name: 'passwordInfo',
                                 customLabel: '',
@@ -101,7 +101,7 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
             return data;
         }
     
-    });        
+    });
     
 });
 
