@@ -79,27 +79,27 @@ class Extension extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function actionCreate()
+    public function actionCreate($params, $data)
     {
         throw new Forbidden();
     }
 
-    public function actionUpdate()
+    public function actionUpdate($params, $data)
     {
         throw new Forbidden();
     }
 
-    public function actionPatch()
+    public function actionPatch($params, $data)
     {
         throw new Forbidden();
     }
 
-    public function actionListLinked()
+    public function actionListLinked($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionDelete($params, $data, $request)
+    public function actionDelete($params)
     {
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
@@ -108,22 +108,22 @@ class Extension extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function actionMassUpdate()
+    public function actionMassUpdate($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionMassDelete()
+    public function actionMassDelete($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionCreateLink()
+    public function actionCreateLink($params, $data)
     {
         throw new Forbidden();
     }
 
-    public function actionRemoveLink()
+    public function actionRemoveLink($params, $data)
     {
         throw new Forbidden();
     }
