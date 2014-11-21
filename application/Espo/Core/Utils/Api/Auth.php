@@ -55,7 +55,7 @@ class Auth extends \Slim\Middleware
         }
 
         $espoCgiAuth = $req->headers('HTTP_ESPO_CGI_AUTH');
-        if ( !isset($authUsername) && !isset($authPassword) && isset($espoCgiAuth) ) {
+        if ( !isset($authUsername) && !isset($authPassword) && !empty($espoCgiAuth) ) {
             list($authUsername, $authPassword) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
         }
 
