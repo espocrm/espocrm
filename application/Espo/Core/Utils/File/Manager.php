@@ -208,7 +208,7 @@ class Manager
      */
     public function putContentsPHP($path, $data)
     {
-        return $this->putContents($path, $this->getPHPFormat($data));
+        return $this->putContents($path, $this->getPHPFormat($data), LOCK_EX);
     }
 
     /**
@@ -227,7 +227,7 @@ class Manager
             $data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
         }
 
-        return $this->putContents($path, $data);
+        return $this->putContents($path, $data, LOCK_EX);
     }
 
     /**
@@ -244,6 +244,11 @@ class Manager
     public function mergeContents($path, $content, $isJSON = false, $removeOptions = null, $isReturn = false)
     {
         $fileContent = $this->getContents($path);
+
+        $fullPath = $this->concatPaths($path);
+        if (file_exists($fullPath) && ($fileContent === false || empty($fileContent))) {
+            throw new Error('Failed to read file [' . $fullPath .'].');
+        }
 
         $savedDataArray = Utils\Json::getArrayData($fileContent);
         $newDataArray = Utils\Json::getArrayData($content);
