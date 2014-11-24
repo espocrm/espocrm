@@ -26,6 +26,20 @@ class Importer
         return $this->fileManager;
     }
     
+    protected function findBestEntities($emailArr, &$leadEntity, &$contactEntity)
+    {
+        foreach ($emailArr as $emailAddr) {
+            $entity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($emailAddr);
+            if ($entity) {
+               if (!$contactEntity && $entity->getEntityName() === 'Contact') {
+                   $contactEntity = $entity;
+               } else if (!$leadEntity && $entity->getEntityName() === 'Lead') {
+                 $leadEntity = $entity;
+               }
+            }
+        }
+    }
+
     public function importMessage($message, $userId, $teamsIds = array())
     {
         try {
@@ -38,20 +52,11 @@ class Importer
             
             $email->set('isHtml', false);        
             $email->set('name', $subject);
-            $email->set('status', 'Archived');
-            $email->set('attachmentsIds', array());            
+            $email->set('attachmentsIds', array());
             $email->set('assignedUserId', $userId);
             $email->set('teamsIds', $teamsIds);
-            
-            $fromArr = $this->getAddressListFromMessage($message, 'from');            
-            if (isset($message->from)) {
-                $email->set('fromName', $message->from);
-            }            
-            $email->set('from', $fromArr[0]);
-            $email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));        
-            $email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
-            
-            if (isset($message->messageId) && !empty($message->messageId)) { 
+
+            if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
                 if (isset($message->deliveredTo)) {
                     $email->set('messageIdInternal', $message->messageId . '-' . $message->deliveredTo);
@@ -60,7 +65,77 @@ class Importer
             
             if ($this->checkIsDuplicate($email)) {
                 return false;
-            }            
+            }
+
+            $fromArr = $this->getAddressListFromMessage($message, 'from');
+            if (isset($message->from)) {
+                $email->set('fromName', $message->from);
+            }
+            $email->set('from', $fromArr[0]);
+
+            $toArr = $this->getAddressListFromMessage($message, 'to');
+            $email->set('to', implode(';', $toArr));
+
+            $ccArr = $this->getAddressListFromMessage($message, 'cc');
+            $email->set('cc', implode(';', $ccArr));
+
+            $allArr = array_merge($toArr, $fromArr, $ccArr);
+
+            $leadEntity = $contactEntity = $parentEntity = null;
+
+            $hasLead = $hasContact = false;
+            $this->findBestEntities($toArr, $leadEntity, $contactEntity);
+            if ($leadEntity) {
+                $hasLead = true;
+                $parentEntity = $leadEntity;
+            } else if ($contactEntity) {
+                $hasContact = true;
+                $parentEntity = $contactEntity;
+            }
+
+            $this->findBestEntities($fromArr, $leadEntity, $contactEntity);
+            if (!$hasLead && $leadEntity) {
+                $parentEntity = $leadEntity;
+            } else if (!$hasContact && $contactEntity) {
+                $parentEntity = $contactEntity;
+            }
+
+            $this->findBestEntities($ccArr, $leadEntity, $contactEntity);
+
+            if ($contactEntity) {
+                $email->set('accountId', $contactEntity->get('accountId'));
+            }
+
+            if ($parentEntity) {
+                if ($parentEntity->getEntityName() === 'Lead') {
+                    $email->set('parentType', 'Lead');
+                    $email->set('parentId', $parentEntity->id);
+                } else {
+                    $email->set('parentType', 'Account');
+                    $email->set('parentId', $parentEntity->get('accountId'));
+                }
+            }
+
+            // Now attempt to relate based on previous message IDs
+            if (isset($message->references) && !empty($message->references)) {
+                $reference = str_replace(array('/', '@'), " ", trim($message->references, '<>'));
+                $parentType = $parentId = '';
+                $emailSent = PHP_INT_MAX;
+                $n = sscanf($reference, '%s %s %d espo', $parentType, $parentId, $emailSent);
+                if ($n == 3 && $emailSent < time()) {
+                    if ($parentType === 'Case' || $parentType === 'Opportunity') {
+                        $email->set('parentType', $parentType);
+                        $email->set('parentId', $parentId);
+                    }
+                }
+            }
+
+            $emailStatus = 'Archived';
+            $fromEntity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($fromArr[0]);
+            if ($fromEntity && $fromEntity->getEntityName() === 'User') {
+                $emailStatus = 'Sent';
+            }
+            $email->set('status', $emailStatus);
 
             if (isset($message->date)) {
                 $dt = new \DateTime($message->date);
@@ -107,6 +182,14 @@ class Importer
         if ($email->get('messageIdInternal')) {
             $duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
                 'messageIdInternal' => $email->get('messageIdInternal')
+            ))->findOne();
+            if ($duplicate) {
+                return true;
+            }
+        }
+        else if ($email->get('messageId')) {
+            $duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
+                'messageId' => $email->get('messageId')
             ))->findOne();
             if ($duplicate) {
                 return true;
