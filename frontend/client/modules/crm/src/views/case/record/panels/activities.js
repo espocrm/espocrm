@@ -27,7 +27,7 @@ Espo.define('Crm:Views.Case.Record.Panels.Activities', 'Crm:Views.Record.Panels.
             data = data || {};
             var attributes = {
                 status: 'Draft',
-                name: '[#' + this.model.get('number') + '] ' + this.model.get('name')
+                name: this.model.get('name')
             };
             
             if (this.model.get('contactId')) {
