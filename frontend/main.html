@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+    <head>
+        <title>EspoCRM</title>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="description" content="EspoCRM is Open Source CRM application. Increase profitability through customer loyalty!">
+        
+        <script type="text/javascript" src="client/lib/jquery-2.0.2.min.js"></script>
+        <script type="text/javascript" src="client/lib/underscore-min.js"></script>
+        <script type="text/javascript" src="client/lib/backbone-min.js"></script>
+        <script type="text/javascript" src="client/lib/handlebars.js"></script>
+        <script type="text/javascript" src="client/lib/base64.js"></script>
+        <script type="text/javascript" src="client/lib/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="client/lib/moment.min.js"></script>
+        <script type="text/javascript" src="client/lib/moment-timezone-with-data.min.js"></script>
+        <script type="text/javascript" src="client/lib/jquery.timepicker.min.js"></script> 
+        <script type="text/javascript" src="client/lib/jquery.autocomplete.js"></script>
+        <script type="text/javascript" src="client/lib/bootstrap.min.js"></script>
+        <script type="text/javascript" src="client/lib/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="client/lib/bull.min.js"></script>    
+
+    
+        <script type="text/javascript" src="client/src/app.js"></script>
+        <script type="text/javascript" src="client/src/exceptions.js"></script>     
+        <script type="text/javascript" src="client/src/utils.js"></script>
+        <script type="text/javascript" src="client/src/storage.js"></script>
+        <script type="text/javascript" src="client/src/loader.js"></script>
+        <script type="text/javascript" src="client/src/pre-loader.js"></script>
+        <script type="text/javascript" src="client/src/ui.js"></script>     
+        <script type="text/javascript" src="client/src/acl.js"></script>
+    
+        <script type="text/javascript" src="client/src/model.js"></script>
+        <script type="text/javascript" src="client/src/model-offline.js"></script>
+        <script type="text/javascript" src="client/src/metadata.js"></script>
+        <script type="text/javascript" src="client/src/language.js"></script>
+        <script type="text/javascript" src="client/src/cache.js"></script>
+        <script type="text/javascript" src="client/src/controller.js"></script>
+        <script type="text/javascript" src="client/src/router.js"></script>
+        <script type="text/javascript" src="client/src/date-time.js"></script>
+        <script type="text/javascript" src="client/src/field-manager.js"></script>
+        <script type="text/javascript" src="client/src/search-manager.js"></script>
+    
+        <script type="text/javascript" src="client/src/collection.js"></script>
+        <script type="text/javascript" src="client/src/multi-collection.js"></script>   
+        <script type="text/javascript" src="client/src/view-helper.js"></script>
+        <script type="text/javascript" src="client/src/layout-manager.js"></script>
+        <script type="text/javascript" src="client/src/model-factory.js"></script>
+        <script type="text/javascript" src="client/src/collection-factory.js"></script>
+        
+        <script type="text/javascript" src="client/src/controllers/base.js"></script>
+    
+        <script type="text/javascript" src="client/src/models/settings.js"></script>
+        <script type="text/javascript" src="client/src/models/user.js"></script>
+        <script type="text/javascript" src="client/src/models/preferences.js"></script> 
+    
+        <script type="text/javascript" src="client/src/controllers/record.js"></script> 
+        <script type="text/javascript" src="client/src/controllers/role.js"></script>   
+        <script type="text/javascript" src="client/src/controllers/admin.js"></script>
+    
+        <script type="text/javascript" src="client/src/view.js"></script>
+    
+        <script type="text/javascript" src="client/src/views/base.js"></script>
+        <script type="text/javascript" src="client/src/views/login.js"></script>
+        
+        <link href="client/css/bootstrap.css" rel="stylesheet">
+        <link href="client/css/jquery.timepicker.css" rel="stylesheet">
+        <link href="client/css/datepicker.css" rel="stylesheet">
+        
+        <link rel="icon" href="client/img/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="client/img/favicon.ico" type="image/x-icon">
+        
+        <script type="text/javascript">
+            $(function () {
+                var app = new Espo.App({
+                    useCache: false,
+                    url: '../api/v1',
+                }, function (app) {
+                    app.start();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container content"></div>
+        <footer>
+            <p class="credit small">&copy; 2014 <a href="http://www.espocrm.com" title="EspoCRM Home" alt="Visit official EspoCRM website">EspoCRM</a></p>
+        </footer>
+    </body>
+</html>
