@@ -43,6 +43,8 @@ class Application
         date_default_timezone_set('UTC');
 
         $GLOBALS['log'] = $this->container->get('log');
+
+        $this->initAutoloads();
     }
 
     public function getSlim()
@@ -216,7 +218,6 @@ class Application
         });
     }
 
-
     protected function initRoutes()
     {
         $routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
@@ -238,6 +239,32 @@ class Application
                 $currentRoute->conditions($route['conditions']);
             }
         }
+    }
+
+    protected function initAutoloads()
+    {
+        $autoload = new \Espo\Core\Utils\Autoload($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
+        $autoloadList = $autoload->getAll();
+
+        if (empty($autoloadList)) {
+            return;
+        }
+
+        $namespacesPath = 'vendor/composer/autoload_namespaces.php';
+        $existingNamespaces = file_exists($namespacesPath) ? include($namespacesPath) : array();
+        if (!empty($existingNamespaces) && is_array($existingNamespaces)) {
+            $existingNamespaces = array_keys($existingNamespaces);
+        }
+
+        $classLoader = new \Composer\Autoload\ClassLoader();
+
+        foreach ($autoloadList as $prefix => $path) {
+            if (!in_array($prefix, $existingNamespaces)) {
+                $classLoader->add($prefix, $path);
+            }
+        }
+
+        $classLoader->register(true);
     }
 }
 

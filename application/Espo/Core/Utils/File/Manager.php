@@ -718,7 +718,7 @@ class Manager
      */
     public function getPHPFormat($content)
     {
-        if (empty($content)) {
+        if (!isset($content)) {
             return false;
         }
 

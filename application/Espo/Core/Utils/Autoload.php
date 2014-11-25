@@ -1,0 +1,127 @@
+<?php
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014  Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: http://www.espocrm.com
+ *
+ * EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ ************************************************************************/
+
+namespace Espo\Core\Utils;
+
+class Autoload
+{
+    protected $data = null;
+
+    private $fileManager;
+    private $config;
+    private $metadata;
+
+    protected $cacheFile = 'data/cache/application/autoload.php';
+
+    protected $paths = array(
+        'corePath' => 'application/Espo/Resources/autoload.json',
+        'modulePath' => 'application/Espo/Modules/{*}/Resources/autoload.json',
+        'customPath' => 'custom/Espo/Custom/Resources/autoload.json',
+    );
+
+    public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
+    {
+        $this->config = $config;
+        $this->metadata = $metadata;
+        $this->fileManager = $fileManager;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    protected function getFileManager()
+    {
+        return $this->fileManager;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    public function get($key = null, $returns = null)
+    {
+        if (!isset($this->data)) {
+            $this->init();
+        }
+
+        if (!isset($key)) {
+            return $this->data;
+        }
+
+        return Utill::getValueByKey($this->data, $key, $returns);
+    }
+
+
+    public function getAll()
+    {
+        return $this->get();
+    }
+
+    protected function init()
+    {
+        if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
+            $this->data = $this->getFileManager()->getContents($this->cacheFile);
+            return;
+        }
+
+        $this->data = $this->unify();
+
+        if ($this->getConfig()->get('useCache')) {
+            $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
+            if ($result == false) {
+                 throw new \Espo\Core\Exceptions\Error('Autoload: Cannot save unified autoload.');
+            }
+        }
+    }
+
+    protected function unify()
+    {
+        $data = $this->loadData($this->paths['corePath']);
+
+        foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+            $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+            $data = array_merge($data, $this->loadData($modulePath));
+        }
+
+        $data = array_merge($data, $this->loadData($this->paths['customPath']));
+
+        return $data;
+    }
+
+    protected function loadData($autoloadFile, $returns = array())
+    {
+        if (file_exists($autoloadFile)) {
+            $content= $this->getFileManager()->getContents($autoloadFile);
+            $arrayContent = Json::getArrayData($content);
+            if (!empty($arrayContent)) {
+                return $arrayContent;
+            }
+
+            $GLOBALS['log']->error('Autoload::unify() - Empty file or syntax error - ['.$autoloadFile.']');
+        }
+
+        return $returns;
+    }
+}
