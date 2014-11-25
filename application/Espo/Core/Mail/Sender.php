@@ -86,7 +86,7 @@ class Sender
         
         if (in_array('fromName', $params)) {
             $this->params['fromName'] = $params['fromName'];
-        }        
+        }
         if (in_array('fromAddress', $params)) {
             $this->params['fromAddress'] = $params['fromAddress'];
         }
@@ -134,8 +134,8 @@ class Sender
     public function send(Email $email, $params = array())
     {
         $message = new Message();
-        $config = $this->config;        
-        $params = $this->params + $params;        
+        $config = $this->config;
+        $params = $this->params + $params;
 
         if ($email->get('from')) {
             $fromName = null;
@@ -204,22 +204,29 @@ class Sender
 
         $message->setSubject($email->get('name'));
 
-        $body = new MimeMessage;
-        $parts = array();
+        $textPart = new MimePart($email->getBodyPlainForSending());
+
+        $textPart->type = 'text/plain';
+        $textPart->charset = 'utf-8';
     
 
-        $bodyPart = new MimePart($email->getBodyPlainForSending());            
-        $bodyPart->type = 'text/plain';
-        $bodyPart->charset = 'utf-8';
-        $parts[] = $bodyPart;
+        $body = new MimeMessage();
 
+        $content = new MimeMessage();
+        $content->addPart($textPart);
         
         if ($email->get('isHtml')) {
-            $bodyPart = new MimePart($email->getBodyForSending());
-            $bodyPart->type = 'text/html';
-            $bodyPart->charset = 'utf-8';
-            $parts[] = $bodyPart;
+            $htmlPart = new MimePart($email->getBodyForSending());
+            $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+            $htmlPart->type = 'text/html';
+            $htmlPart->charset = 'utf-8';
+            $content->addPart($htmlPart);
         }
+
+        $contentPart = new MimePart($content->generateMessage());
+        $contentPart->type = "multipart/alternative;\n boundary=\"" . $content->getMime()->boundary() . '"';
+        $body->addPart($contentPart);
+        $messageType = 'multipart/related';
         
 
         $aCollection = $email->get('attachments');
@@ -233,7 +240,7 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
-                $parts[] = $attachment;
+                $body->addPart($attachment);
             }
         }
         
@@ -248,16 +255,15 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
-                $parts[] = $attachment;
+                $body->addPart($attachment);
             }
         }
 
-        $body->setParts($parts);
+
         $message->setBody($body);
-        
-        if ($email->get('isHtml')) {
-            $message->getHeaders()->get('content-type')->setType('multipart/alternative');
-        }
+
+        $message->getHeaders()->get('content-type')->setType($messageType);
+        $message->setEncoding('UTF-8');
 
         try {
             if ($email->get('parentType') && $email->get('parentId')) {
