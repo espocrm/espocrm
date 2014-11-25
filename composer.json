@@ -6,7 +6,8 @@
 		"zendframework/zend-validator": "2.*",
 		"zendframework/zend-mail": "2.*",
 		"zendframework/zend-ldap": "2.*",
-		"monolog/monolog": "1.*"
+		"monolog/monolog": "1.*",
+		"yzalis/identicon": "*"
 	},
 	"autoload": {
 		"psr-0": {

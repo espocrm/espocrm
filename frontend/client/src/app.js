@@ -32,6 +32,8 @@ Espo.App = function (options, callback) {
         this.cache = new Espo.Cache();
         if (options.cacheTimestamp) {
             this.cache.handleActuality(options.cacheTimestamp);
+        } else {
+            this.cache.storeTimestamp();
         }
     }
 

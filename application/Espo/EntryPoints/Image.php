@@ -51,10 +51,11 @@ class Image extends \Espo\Core\EntryPoints\Base
     
     public function run()
     {
-        $id = $_GET['id'];
-        if (empty($id)) {
+        if (empty($_GET['id'])) {
             throw new BadRequest();
         }
+
+        $id = $_GET['id'];
             
         $size = null;
         if (!empty($_GET['size'])) {
@@ -132,6 +133,7 @@ class Image extends \Espo\Core\EntryPoints\Base
             header('Content-Type: ' . $fileType);
         }
         header('Pragma: public');
+        header('Cache-Control: max-age=360000, must-revalidate');
         $fileSize = filesize($filePath);
         if ($fileSize) {
             header('Content-Length: ' . $fileSize);
@@ -146,7 +148,6 @@ class Image extends \Espo\Core\EntryPoints\Base
     {
         list($originalWidth, $originalHeight) = getimagesize($filePath);
         list($width, $height) = $this->imageSizes[$size];
-        
     
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
