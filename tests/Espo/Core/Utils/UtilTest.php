@@ -586,6 +586,111 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, Util::merge($currentArray, $newArray));
     }
 
+    public function testMergeEmptyArray()
+    {
+        $currentArray = array(
+          'Call' =>array (
+            'fields' =>
+            array (
+              'accountId' =>
+              array (
+                'type' => 'varchar',
+                'where' =>
+                array (
+                  '=' => 'contact.id IN ({value})',
+                ),
+                'len' => 255,
+              ),
+              'deleted' =>
+              array (
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ),
+            ),
+          ),
+        );
+
+        $newArray = array(
+          'Call' =>array (
+            'fields' =>
+            array (
+            ),
+          ),
+        );
+
+        $result = $currentArray;
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
+    public function testMergeEmptyArray2()
+    {
+        $currentArray = array(
+          'Call' => array (
+            'fields' =>
+            array (
+              'accountId' =>
+              array (
+                'type' => 'varchar',
+                'where' =>
+                array (
+                  '=' => 'contact.id IN ({value})',
+                ),
+                'len' => 255,
+              ),
+              'deleted' =>
+              array (
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ),
+            ),
+          ),
+        );
+
+        $newArray = array(
+          'Call' => array (),
+        );
+
+        $result = $currentArray;
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
+    public function testMergeEmptyArray3()
+    {
+        $currentArray = array(
+          'Call' =>array (
+            'fields' =>
+            array (
+              'accountId' =>
+              array (
+                'type' => 'varchar',
+                'where' =>
+                array (
+                  '=' => 'contact.id IN ({value})',
+                ),
+                'len' => 255,
+              ),
+              'deleted' =>
+              array (
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ),
+            ),
+          ),
+        );
+
+        $newArray = array(
+        );
+
+        $result = $currentArray;
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
     public function testToFormat()
     {
        $this->assertEquals('/Espo/Core/Utils', Util::toFormat('/Espo/Core/Utils', '/'));
