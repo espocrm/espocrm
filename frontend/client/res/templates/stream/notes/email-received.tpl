@@ -1,11 +1,12 @@
 {{#unless onlyContent}}
 <li data-id="{{model.id}}" class="list-group-item">
-{{/unless}}    
+{{/unless}}
     
     <div class="stream-head-container">
+        {{{avatar}}}
         <span class="text-muted"><span class="glyphicon glyphicon-envelope "></span> 
             {{{message}}}
-        </span>        
+        </span>
     </div>
 
 
@@ -16,7 +17,7 @@
     {{/if}}
     
     {{#if attachments}}
-    <div class="stream-attachments-container">        
+    <div class="stream-attachments-container">
         <span class="cell cell-attachments">{{{attachments}}}</span>
     </div>
     {{/if}}

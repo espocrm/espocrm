@@ -3,9 +3,10 @@
 {{/unless}}
 
     <div class="stream-head-container">
+        {{{avatar}}}
         {{#if statusText}}
         <span class="label label-{{statusStyle}}">{{statusText}}</span>
-        {{/if}}        
+        {{/if}}
         <span class="text-muted message">{{{message}}}</span>
     </div>
     

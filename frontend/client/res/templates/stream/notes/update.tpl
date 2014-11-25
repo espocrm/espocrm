@@ -3,6 +3,7 @@
 {{/unless}}
     
     <div class="stream-head-container">
+        {{{avatar}}}
         <span class="text-muted message">{{{message}}}</span> <a href="javascript:" data-action="expandDetails"><span class="glyphicon glyphicon-chevron-down"></span></a>
     </div>
     
@@ -10,7 +11,7 @@
         <span>
             {{#each fieldsArr}}
                 {{translate field category='fields' scope=../parentType}}: {{{var was ../this}}} &raquo; {{{var became ../this}}}
-                <br>                
+                <br>
             {{/each}}
         </span>
     </div>

@@ -38,7 +38,7 @@ class Image extends \Espo\Core\EntryPoints\Base
     );
     
     protected $imageSizes = array(
-        'xxx-small' => array(19, 19),
+        'xxx-small' => array(18, 18),
         'xx-small' => array(32, 32),
         'x-small' => array(64, 64),
         'small' => array(128, 128),
@@ -174,7 +174,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         switch ($fileType) {
             case 'image/jpeg':
                 $sourceImage = imagecreatefromjpeg($filePath);
-                imagecopyresampled ($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);    
+                imagecopyresampled ($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
             case 'image/png':
                 $sourceImage = imagecreatefrompng($filePath);
@@ -186,7 +186,7 @@ class Image extends \Espo\Core\EntryPoints\Base
                 break;
             case 'image/gif':
                 $sourceImage = imagecreatefromgif($filePath);
-                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);    
+                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
         }
         

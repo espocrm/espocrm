@@ -3,6 +3,7 @@
 {{/unless}}
     
     <div class="stream-head-container">
+        {{{avatar}}}
         <span class="label label-{{style}}">{{statusText}}</span>
         <span class="text-muted message">{{{message}}}</span>
     </div>

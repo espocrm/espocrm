@@ -1,9 +1,10 @@
 {{#unless onlyContent}}
 <li data-id="{{model.id}}" class="list-group-item">
 {{/unless}}
-    
+
     <div class="stream-head-container">
-        <span class="text-muted message">{{{message}}}</span>        
+        {{{avatar}}}
+        <span class="text-muted message">{{{message}}}</span>
     </div>
     <div class="stream-date-container">
         <span class="text-muted small">{{{createdAt}}}</span>
