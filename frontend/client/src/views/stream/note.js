@@ -88,6 +88,9 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
         },
 
         getAvatarHtml: function () {
+            if (this.getConfig().get('disableAvatars')) {
+                return '';
+            }
             var t;
             var cache = this.getCache();
             if (cache) {
