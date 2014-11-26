@@ -50,6 +50,7 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
             return {
                 acl: this.options.acl,
                 actions: this.getActions(),
+                scope: this.model.name
             };
         }
     });
