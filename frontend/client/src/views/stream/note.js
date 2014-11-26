@@ -98,7 +98,7 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             } else {
                 t = Date.now();
             }
-            return '<img class="avatar" width="18" src="?entryPoint=avatar&size=small&id=' + this.model.get('createdById') + '&t='+t+'">';
+            return '<img class="avatar" width="20" src="?entryPoint=avatar&size=small&id=' + this.model.get('createdById') + '&t='+t+'">';
         },
         
 
