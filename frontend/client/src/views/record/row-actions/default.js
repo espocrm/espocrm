@@ -49,7 +49,8 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
         data: function () {            
             return {
                 acl: this.options.acl,
-                actions: this.getActions()
+                actions: this.getActions(),
+                scope: this.model.name
             };
         }
     });
