@@ -17,21 +17,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Record.Panels.DefaultSide', 'Views.Record.Panels.Side', function (Dep) {
+Espo.define('Views.Fields.UserWithAvatar', 'Views.Fields.Link', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.panels.default-side',
+        listTemplate: 'fields.user-with-avatar.detail',
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.createField('modifiedBy', true);
-            this.createField('modifiedAt', true);
-            this.createField('createdBy', true);
-            this.createField('createdAt', true);
+        detailTemplate: 'fields.user-with-avatar.detail',
+
+        data: function () {
+            var o = _.extend({}, Dep.prototype.data.call(this));
+            if (this.mode == 'detail' || this.mode == 'list') {
+                o.avatar = this.getAvatarHtml();
+            }
+            return o;
         },
+
+        getAvatarHtml: function () {
+            var t;
+            var cache = this.getCache();
+            if (cache) {
+                t = cache.get('app', 'timestamp');
+            } else {
+                t = Date.now();
+            }
+            return '<img class="avatar avatar-link" width="14" src="?entryPoint=avatar&size=small&id=' + this.model.get(this.idName) + '&t='+t+'">';
+        },
+
     });
 });
 

@@ -54,7 +54,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                     }
                 ],
                 [
-                    {name: 'assignedUser'},
+                    {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
                     {name: 'status'},
                     {name: 'dateEnd'},
                 ]

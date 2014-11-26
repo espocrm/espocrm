@@ -40,19 +40,25 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         
         readOnly: false,
 
-        setup: function () {                
-            this.fields = this.options.fields || this.fields || [];                
+        setup: function () {
+            this.fields = this.options.fields || this.fields || [];
             this.dates = ('dates' in this.options) ? this.options.dates : false;
-            this.mode = this.options.mode || this.mode;            
+            this.mode = this.options.mode || this.mode;
             if ('readOnly' in this.options)    {
                 this.readOnly = this.options.readOnly;
             }
-            this.createFields();                
+            this.createFields();
         },
         
         getFieldList: function () {
             var fields = [];
-            this.fields.forEach(function (field) {
+            this.fields.forEach(function (item) {
+                var field;
+                if (typeof item === 'object') {
+                    field = item.name;
+                } else {
+                   field = item;
+                }
                 if (field in this.model.defs.fields) {
                     fields.push(field);
                 }
@@ -60,9 +66,9 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
             return fields;
         },
 
-        createField: function (field, readOnly) {
+        createField: function (field, readOnly, viewName) {
             var type = this.model.getFieldType(field) || 'base';
-            var viewName = this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+            viewName = viewName || this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
             this.createView(field, viewName, {
                 model: this.model,
                 el: this.options.el + ' .field-' + field,
@@ -76,14 +82,31 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         },
 
         createFields: function () {
-            this.fields.forEach(function (field) {
-                this.createField(field);
+            this.fields.forEach(function (item) {
+                var view = null;
+                var field;
+                if (typeof item === 'object') {
+                    field = item.name;
+                    view = item.view;
+                } else {
+                   field = item;
+                }
+                this.createField(field, null, view);
+
             }.bind(this));
         },
 
         getFields: function () {
             var fields = {};
-            this.fields.forEach(function (name) {
+            this.fields.forEach(function (item) {
+
+                var name;
+                if (typeof item === 'object') {
+                    name = item.name;
+                } else {
+                   name = item;
+                }
+
                 fields[name] = this.getView(name);
             }.bind(this));
             return fields;
