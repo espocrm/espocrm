@@ -31,14 +31,14 @@ Espo.define('Views.Record.RowActions.RelationshipNoUnlink', 'Views.Record.RowAct
                         label: 'Edit',
                         data: {
                             id: this.model.id
-                        }                    
+                        }
                     },
                     {
                         action: 'removeRelated',
                         label: 'Remove',
                         data: {
                             id: this.model.id
-                        }                    
+                        }
                     }
                 ];
             }

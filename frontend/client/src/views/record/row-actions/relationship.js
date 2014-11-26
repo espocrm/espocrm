@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Default', function (Dep) {
 
@@ -31,21 +31,21 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
                         label: 'Edit',
                         data: {
                             id: this.model.id
-                        }                    
+                        }
                     },
                     {
                         action: 'unlinkRelated',
                         label: 'Unlink',
                         data: {
                             id: this.model.id
-                        }                    
+                        }
                     },
                     {
                         action: 'removeRelated',
                         label: 'Remove',
                         data: {
                             id: this.model.id
-                        }                    
+                        }
                     }
                 ];
             }
