@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
 
@@ -25,7 +25,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 
         template: 'stream.panel',
         
-        postingMode: false,    
+        postingMode: false,
 
         events: _.extend({
             'focus textarea.note': function (e) {
@@ -40,7 +40,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 } else if (e.keyCode == 9) {
                     $text = $(e.currentTarget)
                     if ($text.val() == '') {
-                        this.disablePostingMode();                
+                        this.disablePostingMode();
                     }
                 }
             },
@@ -58,11 +58,11 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
         }, Dep.prototype.events),
         
         enablePostingMode: function () {
-            this.$el.find('.buttons-panel').removeClass('hide');            
+            this.$el.find('.buttons-panel').removeClass('hide');
             
             if (!this.postingMode) {
-                $('body').on('click.stream-panel', function (e) {                    
-                    if (!$.contains(this.$el.get(0), e.target)) {                                            
+                $('body').on('click.stream-panel', function (e) {
+                    if (!$.contains(this.$el.get(0), e.target)) {
                         if (this.$textarea.val() == '') {
                             var attachmentsIds = this.seed.get('attachmentsIds');
                             if (!attachmentsIds.length) {
@@ -81,8 +81,8 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
             this.postingMode = false;
             
             this.$textarea.val('');
-            this.getView('attachments').empty();            
-            this.$el.find('.buttons-panel').addClass('hide');            
+            this.getView('attachments').empty();
+            this.$el.find('.buttons-panel').addClass('hide');
         },
 
         setup: function () {
@@ -92,38 +92,38 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
                 this.createCollection(function () {
-                    this.wait(false);                
-                }.bind(this));                
+                    this.wait(false);
+                }.bind(this));
             }.bind(this));
         },
 
         createCollection: function (callback) {
-            this.getCollectionFactory().create('Note', function (collection) {            
+            this.getCollectionFactory().create('Note', function (collection) {
             
                 this.collection = collection;
                 collection.url = this.model.name + '/' + this.model.id + '/stream';
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
             
-                callback();                
+                callback();
             }, this);
         },
         
-        afterRender: function () {        
+        afterRender: function () {
             this.$textarea = this.$el.find('textarea.note');
             this.$attachments = this.$el.find('div.attachments');
         
             var collection = this.collection;
             
-            this.listenTo(this.model, 'sync', function () {                
-                collection.fetchNew();                
+            this.listenTo(this.model, 'sync', function () {
+                collection.fetchNew();
             }.bind(this));
             
-            this.listenToOnce(collection, 'sync', function () {                
+            this.listenToOnce(collection, 'sync', function () {
                 this.createView('list', 'Stream.List', {
                     el: this.options.el + ' > .list-container',
                     collection: collection,
                 }, function (view) {
-                    view.render();                                        
+                    view.render();
                 });
             }.bind(this));
             collection.fetch();
@@ -137,7 +137,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                     if (term.length == 0) {
                         callback([]);
                         return;
-                    }                    
+                    }
                     $.ajax({
                         url: 'User?orderBy=name&limit=7&q=' + term,
                     
@@ -160,7 +160,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 el: this.options.el + ' div.attachments-container',
                 defs: {
                     name: 'attachments',
-                },                                                                
+                },
             }, function (view) {
                 view.render();
             });
@@ -170,19 +170,19 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
             this.$el.find('textarea.note').prop('rows', 1);
         },
 
-        post: function () {    
-            var message = this.$textarea.val();            
+        post: function () {
+            var message = this.$textarea.val();
             
             this.$textarea.prop('disabled', true);
 
-            this.getModelFactory().create('Note', function (model) {                
+            this.getModelFactory().create('Note', function (model) {
                 if (message == '' && this.seed.get('attachmentsIds').length == 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
                     return;
                 }
                                 
-                model.once('sync', function () {                    
+                model.once('sync', function () {
                     this.notify('Posted', 'success');
                     this.collection.fetchNew();
                     
@@ -200,7 +200,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 this.notify('Posting...');
                 model.save(null, {
                     error: function () {
-                        this.$textarea.prop('disabled', false);    
+                        this.$textarea.prop('disabled', false);
                     }.bind(this)
                 });
             }.bind(this));
