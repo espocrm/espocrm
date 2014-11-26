@@ -69,6 +69,9 @@ class Mentions extends \Espo\Core\Hooks\Base
                     );
                     $mentionData->$item = (object) $m;
                     if (!in_array($item, $previousMentionList)) {
+                        if ($user->id == $this->getUser()->id) {
+                            continue;
+                        }
                         $this->notifyAboutMention($entity, $user);
                     }
                 }
