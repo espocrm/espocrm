@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Entities;
 
@@ -26,16 +26,29 @@ class Note extends \Espo\Core\ORM\Entity
 {
     public function loadAttachments()
     {
-        $collection = $this->get('attachments');
+        $data = $this->get('data');
+        if (!empty($data) && !empty($data->attachmentsIds)) {
+            $attachmentsIds = $data->attachmentsIds;
+            $collection = array();
+            foreach ($attachmentsIds as $id) {
+                $attachment = $this->entityManager->getEntity('Attachment', $id);
+                if ($attachment) {
+                    $collection[] = $attachment;
+                }
+            }
+        } else {
+            $collection = $this->get('attachments');
+        }
+        
         $ids = array();
         $names = new \stdClass();
-        $types = new \stdClass();    
+        $types = new \stdClass();
         foreach ($collection as $e) {
             $id = $e->id;
             $ids[] = $id;
             $names->$id = $e->get('name');
             $types->$id = $e->get('type');
-        }            
+        }
         $this->set('attachmentsIds', $ids);
         $this->set('attachmentsNames', $names);
         $this->set('attachmentsTypes', $types);
