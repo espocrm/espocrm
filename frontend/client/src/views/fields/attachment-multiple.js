@@ -177,11 +177,11 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
         
         addAttachmentBox: function (name, type, id) {
             $attachments = this.$attachments;
-            var self = this;            
+            var self = this;
                 
             var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="glyphicon glyphicon-remove"></span></a>';
 
-            var preview = name;            
+            var preview = name;
             if (this.showPreviews && id) {
                 preview = this.getEditPreview(name, type, id);
             }
@@ -192,11 +192,11 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                                  .append($('<span class="preview">' + preview + '</span>').css('width', '270px'))
                                  .append(removeLink);
                 
-            var $container = $('<div>').append($att);                    
-            $attachments.append($container);        
+            var $container = $('<div>').append($att);
+            $attachments.append($container);
                 
             if (!id) {
-                var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');                
+                var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');
                 $container.append($loading);
                 $att.on('ready', function () {
                     $loading.html(self.translate('Ready'));
@@ -208,7 +208,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
             return $att;
         },
         
-        uploadFiles: function (files) {            
+        uploadFiles: function (files) {
             var uploadedCount = 0;
             var totalCount = 0;
             
@@ -222,7 +222,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                 
                 fileList.forEach(function (file) {
                     
-                    var $att = this.addAttachmentBox(file.name, file.type);                    
+                    var $att = this.addAttachmentBox(file.name, file.type);
                     
                     $att.find('.remove-attachment').on('click.uploading', function () {
                         canceledList.push(attachment.cid);
@@ -232,7 +232,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                     var attachment = model.clone();
 
                     var fileReader = new FileReader();
-                    fileReader.onload = function (e) {                    
+                    fileReader.onload = function (e) {
                         $.ajax({
                             type: 'POST',
                             url: 'Attachment/action/upload',
@@ -241,22 +241,22 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                             timeout: 0,
                         }).done(function (data) {
                                 
-                            attachment.id = data.attachmentId;                            
+                            attachment.id = data.attachmentId;
                             attachment.set('name', file.name);
                             attachment.set('type', file.type || 'text/plain');
                             attachment.set('role', 'Attachment');
                             attachment.set('size', file.size);
                             attachment.once('sync', function () {
                                 if (canceledList.indexOf(attachment.cid) === -1) {
-                                    $att.trigger('ready');                            
+                                    $att.trigger('ready');
                                     this.pushAttachment(attachment);
-                                    $att.attr('data-id', attachment.id);                                    
-                                    uploadedCount++;            
-                                    if (uploadedCount == totalCount) {                                
+                                    $att.attr('data-id', attachment.id);
+                                    uploadedCount++;
+                                    if (uploadedCount == totalCount) {
                                         afterAttachmentsUploaded.call(this);
                                     }
                                 }
-                            }, this);                        
+                            }, this);
                             attachment.save();
                         }.bind(this));
                     }.bind(this);
@@ -269,8 +269,8 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
         
         },
         
-        afterRender: function () {    
-            if (this.mode == 'edit') {            
+        afterRender: function () {
+            if (this.mode == 'edit') {
                 this.$attachments = this.$el.find('div.attachments');
                 
                 var ids = this.model.get(this.idsName) || [];
@@ -278,14 +278,14 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                 var hameHash = this.model.get(this.nameHashName);
                 var typeHash = this.model.get(this.typeHashName) || {};
                 
-                ids.forEach(function (id) {                    
+                ids.forEach(function (id) {
                     if (hameHash) {
                         var name = hameHash[id];
                         var type = typeHash[id] || null;
                         this.addAttachmentBox(name, type, id);
                     }
-                }, this);            
-            }            
+                }, this);
+            }
         },
         
         getDetailPreview: function (name, type, id) {
@@ -296,7 +296,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                 case 'image/jpeg':
                 case 'image/gif':
                     preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
-            }                        
+            }
             return preview;
         },
 
@@ -305,7 +305,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                 var nameHash = this.nameHash;
                 var typeHash = this.model.get(this.typeHashName) || {};
             
-                var previews = [];            
+                var previews = [];
                 var names = [];
                 for (var id in nameHash) {
                     var type = typeHash[id] || false;
@@ -314,10 +314,10 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
-                    var line = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a>';
+                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a></div>';
                     names.push(line);
                 }
-                var string = previews.join('') + names.join(', ');            
+                var string = previews.join('') + names.join(', ');
             
                 return string;
             }
