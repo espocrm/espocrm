@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 (function (Espo, $) {
 
     var Dialog = function (options) {
@@ -47,13 +47,13 @@
         
         this.contents = '';
         if (this.header) {
-            this.contents += '<header class="modal-header">' + 
-                             ((this.closeButton) ? '<a href="javascript:" class="close" aria-hidden="true">&times;</a>' : '') + 
+            this.contents += '<header class="modal-header">' +
+                             ((this.closeButton) ? '<a href="javascript:" class="close" aria-hidden="true">&times;</a>' : '') +
                              '<h4 class="modal-title">' + this.header + '</h4>' +
                              '</header>';
         }
         
-        this.contents += '<div class="modal-body body">' + this.body + '</div>';        
+        this.contents += '<div class="modal-body body">' + this.body + '</div>';
         
         if (this.buttons.length) {
             this.contents += '<footer class="modal-footer">';
@@ -99,7 +99,7 @@
         if (this.width) {
             modalContentEl.css('width', this.width);
             modalContentEl.css('margin-left', '-' + (parseInt(this.width.replace('px', '')) / 5) + 'px');
-        }        
+        }
         
         if (this.removeOnClose) {
             this.$el.on('hidden.bs.modal', function (e) {
@@ -118,45 +118,45 @@
             $('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
             $('.modal-backdrop').not('.stacked').addClass('stacked');
         });
-        this.$el.on('hidden.bs.modal', function (event) {    
+        this.$el.on('hidden.bs.modal', function (event) {
             if ($('.modal:visible').length > 0) {
                 setTimeout(function() {
                     $(document.body).addClass('modal-open');
                 }, 0);
             }
-        });    
+        });
 
-    }    
-    Dialog.prototype.show = function () {        
+    }
+    Dialog.prototype.show = function () {
         this.$el.modal({
              backdrop: this.backdrop,
         });
         
         /*this.$el.css('z-index', 1200);
-        $('.modal-backdrop').css('z-index', 1100);*/        
-    };    
-    Dialog.prototype.close = function () {        
+        $('.modal-backdrop').css('z-index', 1100);*/
+    };
+    Dialog.prototype.close = function () {
         this.$el.modal('hide');
-        $(this).trigger('dialog:close');        
-    };    
+        $(this).trigger('dialog:close');
+    };
     Dialog.prototype.remove = function () {
         this.onRemove();
         this.$el.remove();
-        $(this).off();    
+        $(this).off();
     };
     
-    Espo.Ui = {    
+    Espo.Ui = {
         
-        Dialog: Dialog,            
+        Dialog: Dialog,
         
-        dialog: function (options) {        
-            return new Dialog(options);        
+        dialog: function (options) {
+            return new Dialog(options);
         },
         
         notify: function (message, type, timeout, closeButton) {
             $('#nofitication').remove();
         
-            if (message) {        
+            if (message) {
                 type = type || 'warning';
                 if (typeof closeButton == 'undefined') {
                     closeButton = false;
@@ -169,7 +169,7 @@
                 var el = $('<div class="alert alert-' + type + ' fade in" id="nofitication" />').css({
                     position: 'fixed',
                     top: '0px',
-                    'z-index': 2000,                            
+                    'z-index': 2000,
                 }).html(message);
                 
                 if (closeButton) {
@@ -183,7 +183,7 @@
                 }
                 
                 el.appendTo('body');
-                el.css("left", ($(window).width() - el.width()) / 2 + $(window).scrollLeft()  + "px");                
+                el.css("left", ($(window).width() - el.width()) / 2 + $(window).scrollLeft()  + "px");
             }
         },
         
@@ -202,6 +202,6 @@
         info: function (message) {
             Espo.Ui.notify(message, 'info', 2000);
         },
-    }    
+    }
 
 }).call(this, Espo, $);
