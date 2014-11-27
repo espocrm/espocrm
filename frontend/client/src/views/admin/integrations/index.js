@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Admin.Integrations.Index', 'View', function (Dep) {
 
@@ -43,38 +43,38 @@ Espo.define('Views.Admin.Integrations.Index', 'View', function (Dep) {
             },
         },
 
-        setup: function () {            
+        setup: function () {
             this.integrationList = Object.keys(this.getMetadata().get('integrations') || {});;
 
             this.integration = this.options.integration || null;
-            
-            this.on('after:render', function () {                
-                this.renderHeader();                
+
+            this.on('after:render', function () {
+                this.renderHeader();
                 if (!this.integration) {
                     this.renderDefaultPage();
                 } else {
                     this.openIntegration(this.integration);
-                }                
-            });            
+                }
+            });
         },
 
         openIntegration: function (integration) {
             this.integration = integration;
-            
+
             this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
-            
-            var viewName = 'Admin.Integrations.' + this.getMetadata().get('integrations.' + integration + '.authMethod');
-            this.notify('Loading...');            
+
+            var viewName = this.getMetadata().get('integrations.' + integration + '.view') || 'Admin.Integrations.' + this.getMetadata().get('integrations.' + integration + '.authMethod');
+            this.notify('Loading...');
             this.createView('content', viewName, {
                 el: '#integration-content',
                 integration: integration,
             }, function (view) {
                 this.renderHeader();
                 view.render();
-                this.notify(false);                
+                this.notify(false);
                 $(window).scrollTop(0);
             }.bind(this));
-        },        
+        },
 
         renderDefaultPage: function () {
             $('#integration-header').html('').hide();
