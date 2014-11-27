@@ -273,7 +273,7 @@ class Sender
             } else {
                 $messageId = '' . md5($email->get('name')) . '/' . time() . '/' . $rand .  '@espo';
             }
-            //$message->getHeaders()->addHeaderLine('Message-Id', $messageId);
+
             $messageIdHeader = new \Zend\Mail\Header\MessageId();
             $messageIdHeader->setId($messageId);
             $message->getHeaders()->addHeader($messageIdHeader);
