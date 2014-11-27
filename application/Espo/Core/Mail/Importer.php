@@ -5,7 +5,7 @@ namespace Espo\Core\Mail;
 use \Zend\Mime\Mime as Mime;
 
 class Importer
-{    
+{
     private $entityManager;
     
     private $fileManager;
@@ -36,22 +36,22 @@ class Importer
                 $subject = '--empty--';
             }
             
-            $email->set('isHtml', false);        
+            $email->set('isHtml', false);
             $email->set('name', $subject);
             $email->set('status', 'Archived');
-            $email->set('attachmentsIds', array());            
+            $email->set('attachmentsIds', array());
             $email->set('assignedUserId', $userId);
             $email->set('teamsIds', $teamsIds);
             
-            $fromArr = $this->getAddressListFromMessage($message, 'from');            
+            $fromArr = $this->getAddressListFromMessage($message, 'from');
             if (isset($message->from)) {
                 $email->set('fromName', $message->from);
-            }            
+            }
             $email->set('from', $fromArr[0]);
-            $email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));        
+            $email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));
             $email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
             
-            if (isset($message->messageId) && !empty($message->messageId)) { 
+            if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
                 if (isset($message->deliveredTo)) {
                     $email->set('messageIdInternal', $message->messageId . '-' . $message->deliveredTo);
@@ -60,29 +60,29 @@ class Importer
             
             if ($this->checkIsDuplicate($email)) {
                 return false;
-            }            
+            }
 
             if (isset($message->date)) {
                 $dt = new \DateTime($message->date);
                 if ($dt) {
-                    $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');        
+                    $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('dateSent', $dateSent);
                 }
             }
             if (isset($message->deliveryDate)) {
                 $dt = new \DateTime($message->deliveryDate);
                 if ($dt) {
-                    $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');        
+                    $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('deliveryDate', $deliveryDate);
                 }
             }
             
             $inlineIds = array();
     
-            if ($message->isMultipart()) {                
+            if ($message->isMultipart()) {
                 foreach (new \RecursiveIteratorIterator($message) as $part) {
                     $this->importPartDataToEmail($email, $part, $inlineIds);
-                }            
+                }
             } else {
                 $this->importPartDataToEmail($email, $message, $inlineIds);
             }
@@ -128,15 +128,15 @@ class Importer
     }
     
     protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array())
-    {        
+    {
         try {
             $type = strtok($part->contentType, ';');
             $encoding = null;
             
             switch ($type) {
-                case 'text/plain':                    
-                    $content = $this->getContentFromPart($part);                
-                    if (!$email->get('body')) {                
+                case 'text/plain':
+                    $content = $this->getContentFromPart($part);
+                    if (!$email->get('body')) {
                         $email->set('body', $content);
                     }
                     $email->set('bodyPlain', $content);
@@ -147,23 +147,23 @@ class Importer
                     $email->set('isHtml', true);
                     break;
                 default:
-                    $content = $part->getContent();                    
+                    $content = $part->getContent();
                     $disposition = null;
                     
                     $fileName = null;
                     $contentId = null;
                             
-                    if (isset($part->ContentDisposition)) {                
+                    if (isset($part->ContentDisposition)) {
                         if (strpos($part->ContentDisposition, 'attachment') === 0) {
                             if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
                                 $fileName = $m[1];
                                 $disposition = 'attachment';
-                            }                            
+                            }
                         } else if (strpos($part->ContentDisposition, 'inline') === 0) {
                             $contentId = trim($part->contentID, '<>');
                             $fileName = $contentId;
                             $disposition = 'inline';
-                        }                        
+                        }
                     }
                     
                     if (isset($part->contentTransferEncoding)) {
@@ -171,7 +171,7 @@ class Importer
                     }
                     
                     $attachment = $this->getEntityManager()->getEntity('Attachment');
-                    $attachment->set('name', $fileName);                            
+                    $attachment->set('name', $fileName);
                     $attachment->set('type', $type);
                     
                     if ($disposition == 'inline') {
@@ -188,18 +188,18 @@ class Importer
                             
                     $this->getEntityManager()->saveEntity($attachment);
                                                 
-                    $path = 'data/upload/' . $attachment->id;                    
-                    $this->getFileManager()->putContents($path, $content);                    
+                    $path = 'data/upload/' . $attachment->id;
+                    $this->getFileManager()->putContents($path, $content);
                     
                     if ($disposition == 'attachment') {
                         $attachmentsIds = $email->get('attachmentsIds');
                         $attachmentsIds[] = $attachment->id;
-                        $email->set('attachmentsIds', $attachmentsIds);    
+                        $email->set('attachmentsIds', $attachmentsIds);
                     } else if ($disposition == 'inline') {
                         $inlineIds[$contentId] = $attachment->id;
-                    }        
+                    }
             }
-        } catch (\Exception $e) {}        
+        } catch (\Exception $e) {}
     }
     
     protected function getContentFromPart($part)
@@ -223,7 +223,7 @@ class Importer
                 $content = base64_decode($content);
             }
             
-            $charset = 'UTF-8';            
+            $charset = 'UTF-8';
             
             if (isset($part->contentType)) {
                 $ctHeader = $part->getHeader('Content-Type');
@@ -235,14 +235,14 @@ class Importer
             
             if ($charset !== 'UTF-8') {
                 $content = mb_convert_encoding($content, 'UTF-8', $charset);
-            }            
+            }
             
             if (isset($part->contentTransferEncoding)) {
-                $cteHeader = $part->getHeader('Content-Transfer-Encoding');            
-                if ($cteHeader->getTransferEncoding() == 'quoted-printable') {                    
+                $cteHeader = $part->getHeader('Content-Transfer-Encoding');
+                if ($cteHeader->getTransferEncoding() == 'quoted-printable') {
                     $content = quoted_printable_decode($content);
                 }
-            }            
+            }
         }
         return $content;
     }
