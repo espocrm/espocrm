@@ -9,16 +9,23 @@ class Importer
     private $entityManager;
     
     private $fileManager;
+
+    private $config;
     
-    public function __construct($entityManager, $fileManager)
+    public function __construct($entityManager, $fileManager, $config)
     {
         $this->entityManager = $entityManager;
         $this->fileManager = $fileManager;
+        $this->config = $config;
     }
     
     protected function getEntityManager()
     {
         return $this->entityManager;
+    }
+    protected function getConfig()
+    {
+        return $this->config;
     }
     
     protected function getFileManager()
@@ -104,6 +111,26 @@ class Importer
                     if (!empty($parentType) && !empty($parentId)) {
                         $email->set('parentType', $parentType);
                         $email->set('parentId', $parentId);
+                    }
+                }
+            }
+
+            if (!$email->has('parentId')) {
+                $from = $email->get('from');
+                if ($from) {
+                    $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
+                        'emailAddress' => $from
+                    ))->findOne();
+                    if ($contact) {
+                        if (!$this->getConfig()->get('b2cMode')) {
+                            if ($contact->get('accountId')) {
+                                $email->set('parentType', 'Account');
+                                $email->set('parentId', $contact->get('accountId'));
+                            }
+                        } else {
+                            $email->set('parentType', 'Contact');
+                            $email->set('parentId', $contact->id);
+                        }
                     }
                 }
             }

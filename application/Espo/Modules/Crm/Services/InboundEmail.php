@@ -127,7 +127,7 @@ class InboundEmail extends \Espo\Services\Record
             throw new Error();
         }
 
-        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager());
+        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager(), $this->getConfig());
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
