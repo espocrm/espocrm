@@ -202,36 +202,13 @@ class Sender
             }
         }
 
-        $message->setSubject($email->get('name'));
+        $attachmentPartList = array();
 
-        $textPart = new MimePart($email->getBodyPlainForSending());
+        $attachmentCollection = $email->get('attachments');
+        $attachmentInlineCollection = $email->getInlineAttachments();
 
-        $textPart->type = 'text/plain';
-        $textPart->charset = 'utf-8';
-    
-
-        $body = new MimeMessage();
-
-        $content = new MimeMessage();
-        $content->addPart($textPart);
-        
-        if ($email->get('isHtml')) {
-            $htmlPart = new MimePart($email->getBodyForSending());
-            $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-            $htmlPart->type = 'text/html';
-            $htmlPart->charset = 'utf-8';
-            $content->addPart($htmlPart);
-        }
-
-        $contentPart = new MimePart($content->generateMessage());
-        $contentPart->type = "multipart/alternative;\n boundary=\"" . $content->getMime()->boundary() . '"';
-        $body->addPart($contentPart);
-        $messageType = 'multipart/related';
-        
-
-        $aCollection = $email->get('attachments');
-        if (!empty($aCollection)) {
-            foreach ($aCollection as $a) {
+        if (!empty($attachmentCollection)) {
+            foreach ($attachmentCollection as $a) {
                 $fileName = 'data/upload/' . $a->id;
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
@@ -240,13 +217,12 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
-                $body->addPart($attachment);
+                $attachmentPartList[] = $attachment;
             }
         }
         
-        $aCollection = $email->getInlineAttachments();
-        if (!empty($aCollection)) {
-            foreach ($aCollection as $a) {
+        if (!empty($attachmentInlineCollection)) {
+            foreach ($attachmentInlineCollection as $a) {
                 $fileName = 'data/upload/' . $a->id;
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_INLINE;
@@ -255,14 +231,63 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
-                $body->addPart($attachment);
+                $attachmentPartList[] = $attachment;
             }
         }
 
 
+        $message->setSubject($email->get('name'));
+
+        $body = new MimeMessage();
+        
+        $textPart = new MimePart($email->getBodyPlainForSending());
+        $textPart->type = 'text/plain';
+        $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+        $textPart->charset = 'utf-8';
+        
+        if ($email->get('isHtml')) {
+            $htmlPart = new MimePart($email->getBodyForSending());
+            $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+            $htmlPart->type = 'text/html';
+            $htmlPart->charset = 'utf-8';
+        }
+
+        if (!empty($attachmentPartList)) {
+            $messageType = 'multipart/related';
+            if ($email->get('isHtml')) {
+                $content = new MimeMessage();
+                $content->addPart($textPart);
+                $content->addPart($htmlPart);
+
+                $messageType = 'multipart/mixed';
+
+                $contentPart = new MimePart($content->generateMessage());
+                $contentPart->type = "multipart/alternative;\n boundary=\"" . $content->getMime()->boundary() . '"';
+
+                $body->addPart($contentPart);
+            } else {
+                $body->addPart($textPart);
+            }
+
+            foreach ($attachmentPartList as $attachmentPart) {
+                $body->addPart($attachmentPart);
+            }
+
+        } else {
+            if ($email->get('isHtml')) {
+                $body->setParts(array($textPart, $htmlPart));
+                $messageType = 'multipart/alternative';
+            } else {
+                $body = $email->getBodyPlainForSending();
+                $messageType = 'text/plain';
+            }
+        }
+
         $message->setBody($body);
 
-        $message->getHeaders()->get('content-type')->setType($messageType);
+        if ($message->getHeaders()->has('content-type')) {
+            $message->getHeaders()->get('content-type')->setType($messageType);
+        }
         $message->setEncoding('UTF-8');
 
         try {
