@@ -209,6 +209,10 @@
         "b2cMode": {
             "type": "bool",
             "default": false
+        },
+        "disableAvatars": {
+            "type": "bool",
+            "default": false
         }
     }
 }

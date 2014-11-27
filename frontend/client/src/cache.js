@@ -17,10 +17,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.Cache = function () {
-
+    if (!this.get('app', 'timestamp')) {
+        this.storeTimestamp();
+    }
 };
 
 _.extend(Espo.Cache.prototype, {
@@ -32,11 +34,18 @@ _.extend(Espo.Cache.prototype, {
         if (stored) {
             if (stored !== cacheTimestamp) {
                 this.clear();
+                this.storeFrontendCacheTimestamp();
             }
         } else {
             this.clear();
             this.set('app', 'cacheTimestamp', cacheTimestamp);
+            this.storeFrontendCacheTimestamp();
         }
+    },
+
+    storeTimestamp: function () {
+        var frontendCacheTimestamp = Date.now();
+        this.set('app', 'timestamp', frontendCacheTimestamp);
     },
     
     _composeFullPrefix: function (type) {

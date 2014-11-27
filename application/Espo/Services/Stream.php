@@ -70,6 +70,8 @@ class Stream extends \Espo\Core\Services\Base
         'container',
     );
 
+    protected $auditedFieldsCache = array();
+
     protected function getServiceFactory()
     {
         return $this->injections['container']->get('serviceFactory');
@@ -286,15 +288,11 @@ class Stream extends \Espo\Core\Services\Base
         $data['emailId'] = $email->id;
         $data['emailName'] = $email->get('name');
         $data['isInitial'] = $isInitial;
+        $data['attachmentsIds'] = $email->get('attachmentsIds');
 
         $note->set('data', $data);
 
         $this->getEntityManager()->saveEntity($note);
-
-        $attachmentsIds = $email->get('attachmentsIds');
-        if (!empty($attachmentsIds)) {
-            $attachmentsData = $this->getServiceFactory()->create('Email')->copyAttachments($email->id, 'Note', $note->id);
-        }
     }
 
     public function noteCreate(Entity $entity)

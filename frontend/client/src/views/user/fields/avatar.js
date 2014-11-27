@@ -50,7 +50,22 @@ Espo.define('Views.User.Fields.Avatar', 'Views.Fields.Image', function (Dep) {
                 }.bind(this));
             }.bind(this));
         },
-        
+
+        getValueForDisplay: function () {
+            if (this.mode == 'detail' || this.mode == 'list') {
+                var id = this.model.get(this.idName);
+                var userId = this.model.id;
+
+                var t = Date.now();
+                
+                var imgHtml = '<img src="?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
+                if (!id) {
+                    return imgHtml;
+                }
+                return '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '">' + imgHtml +' </a>';
+            }
+        },
+
     });
     
 });

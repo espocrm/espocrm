@@ -31,16 +31,18 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
         
         size: 'x-large',
 
+        backdrop: true,
+
         data: function () {
             return {
                 id: this.options.id,
                 name: this.options.name,
                 size: this.size
             };
-        },        
+        },
 
         setup: function () {
-            this.buttons = [];            
+            this.buttons = [];
             this.header = '&nbsp;';
         },
         

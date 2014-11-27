@@ -3,23 +3,24 @@
 {{/unless}}
     
     {{#unless isUserStream}}
-    <div class="list-row-buttons pull-right right">        
-        {{#if acl.edit}}        
+    <div class="list-row-buttons pull-right right">
+        {{#if acl.edit}}
         <div class="btn-group">
         <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
-        </button>        
+        </button>
         <ul class="dropdown-menu pull-right">
             <li><a href="javascript:" class="action" data-action="editRelated" data-id="{{model.id}}">{{translate 'Edit'}}</a></li>
-            <li><a href="javascript:" class="action" data-action="removeRelated" data-id="{{model.id}}">{{translate 'Remove'}}</a></li>    
+            <li><a href="javascript:" class="action" data-action="removeRelated" data-id="{{model.id}}">{{translate 'Remove'}}</a></li>
         </ul>
-        </div>        
+        </div>
         {{/if}}
     </div>
     {{/unless}}
     
     
     <div class="stream-head-container">
+        {{{avatar}}}
         <span class="text-muted message">{{{message}}}</span>
     </div>
     
@@ -30,7 +31,7 @@
     {{/if}}
     
     {{#if attachments}}
-    <div class="stream-attachments-container">        
+    <div class="stream-attachments-container">
         <span class="cell cell-attachments">{{{attachments}}}</span>
     </div>
     {{/if}}

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -17,21 +18,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Record.Panels.DefaultSide', 'Views.Record.Panels.Side', function (Dep) {
+include "../bootstrap.php";
 
-    return Dep.extend({
+$app = new \Espo\Core\Application();
 
-        template: 'record.panels.default-side',
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.createField('modifiedBy', true);
-            this.createField('modifiedAt', true);
-            this.createField('createdBy', true);
-            this.createField('createdAt', true);
-        },
-    });
-});
+if (!empty($_GET['entryPoint'])) {
+    $app->runEntryPoint($_GET['entryPoint']);
+    exit;
+}
+
+$html = include("main.html");
+echo $html;
 

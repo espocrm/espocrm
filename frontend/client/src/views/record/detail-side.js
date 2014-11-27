@@ -34,7 +34,13 @@
                 label: false,
                 view: 'Record.Panels.DefaultSide',
                 options: {
-                    fields: ['assignedUser', 'teams'],
+                    fields: [
+                        {
+                            name: 'assignedUser',
+                            view: 'Fields.UserWithAvatar'
+                        },
+                        'teams'
+                    ],
                     mode: 'detail',
                 }
             }

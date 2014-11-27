@@ -25,6 +25,8 @@ Espo.define('Views.Note.Record.Edit', 'Views.Record.Edit', function (Dep) {
     
         sideView: null,
 
+        isWide: true,
+
     });
 });
 

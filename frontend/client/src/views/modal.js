@@ -30,6 +30,8 @@ Espo.define('Views.Modal', 'View', function (Dep) {
         dialog: null,
         
         containerSelector: null,
+
+        backdrop: 'static',
                     
         buttons: [
             {
@@ -63,6 +65,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 }
                                 
                 this.dialog = new Espo.Ui.Dialog({
+                    backdrop: this.backdrop,
                     header: this.header,
                     container: containerSelector,
                     body: '',

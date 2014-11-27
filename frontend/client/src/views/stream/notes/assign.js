@@ -40,14 +40,13 @@ Espo.define('Views.Stream.Notes.Assign', 'Views.Stream.Note', function (Dep) {
             
             this.messageData['assignee'] = '<a href="#User/view/' + data.assignedUserId + '">' + data.assignedUserName + '</a>';
             
-            
             if (this.isUserStream) {
                 if (this.assignedUserId == this.getUser().id) {
                     this.messageData['assignee'] = this.translate('you');
                 }
             }
             
-            this.createMessage();    
+            this.createMessage();
         },
         
     });

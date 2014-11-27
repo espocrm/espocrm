@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relationship', function (Dep) {
 
@@ -73,7 +73,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                         },
                     ],
                     [
-                        {name: 'assignedUser'},
+                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
                         {name: 'dateStart'},
                     ]
                 ]
@@ -88,7 +88,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                         },
                     ],
                     [
-                        {name: 'assignedUser'},
+                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
                         {name: 'dateStart'},
                     ]
                 ]
@@ -113,7 +113,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 this.collection.fetch();
                 
                 this.currentTab = this.where.scope || 'all';
-                this.getStorage().set('state', this.getStorageKey(), this.currentTab);                    
+                this.getStorage().set('state', this.getStorageKey(), this.currentTab);
             }
         }, Dep.prototype.events),
 
@@ -152,7 +152,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
         },
 
         afterRender: function () {
-            var url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name;                        
+            var url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
             this.collection = new Espo.MultiCollection();
             this.collection.seeds = this.seeds;
@@ -174,7 +174,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 }, function (view) {
                     view.render();
                 });
-            }.bind(this));            
+            }.bind(this));
             this.collection.fetch();
         },
         
@@ -212,7 +212,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 
             this.notify('Loading...');
             
-            this.getCreateActivityAttributes(data, function (attributes) {            
+            this.getCreateActivityAttributes(data, function (attributes) {
                 this.createView('quickCreate', 'Modals.Edit', {
                     scope: scope,
                     relate: {
@@ -227,7 +227,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                         self.collection.fetch();
                     });
                 });
-            });                
+            });
 
         },
         
@@ -245,13 +245,13 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             var link = 'emails';
             var scope = 'Email';
             
-            var relate = null;                
-            if ('emails' in this.model.defs['links']) {                
+            var relate = null;
+            if ('emails' in this.model.defs['links']) {
                 relate = {
                     model: this.model,
                     link: this.model.defs['links']['emails'].foreign
                 };
-            }                        
+            }
 
             this.notify('Loading...');
             
@@ -284,7 +284,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                         self.collection.fetch();
                     });
                 });
-            });            
+            });
 
         },
     });

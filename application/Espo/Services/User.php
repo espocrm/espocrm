@@ -54,9 +54,9 @@ class User extends Record
         return $this->injections['container'];
     }
 
-    public function getEntity($id)
+    public function getEntity($id = null)
     {
-        if ($id == 'system') {
+        if (isset($id) && $id == 'system') {
             throw new Forbidden();
         }
 

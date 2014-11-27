@@ -31,7 +31,7 @@ Espo.define('Views.Record.RowActions.RelationshipUnlinkOnly', 'Views.Record.RowA
                         label: 'Unlink',
                         data: {
                             id: this.model.id
-                        }                    
+                        }
                     }
                 ];
             }

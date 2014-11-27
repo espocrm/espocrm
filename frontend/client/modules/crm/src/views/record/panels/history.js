@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activities', function (Dep) {
 
@@ -87,8 +87,8 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                         },
                         {name: 'status'},
                     ],
-                    [                        
-                        {name: 'assignedUser'},
+                    [
+                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
                         {name: 'dateStart'},
                     ]
                 ]
@@ -103,7 +103,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                         },
                     ],
                     [
-                        {name: 'assignedUser'},
+                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
                         {name: 'status'},
                         {name: 'dateSent'},
                     ]

@@ -486,12 +486,18 @@ td.cell-buttons > .btn-group {
 
 .attachment-preview {
     display: inline-block;
+    vertical-align: top;
     margin: 3px 6px 3px 0;
 }
 
 .field > .attachment-preview {
     display: block;
     overflow: hidden;
+}
+
+.attachment-block {
+    display: inline-block;
+    vertical-align: top;
 }
 
 .stick-sub {
@@ -635,8 +641,21 @@ body > footer > p a:visited {
     padding-bottom: 3px;
 }
 
-.stream-post-container, .stream-attachments-container, stream-details-container {
-    padding: 2px 0 5px;
+.stream-head-container > img.avatar {
+    display: inline-block;
+    margin-top: -3px;
+    margin-right: 3px;
+    margin-bottom: -2px;
+}
+
+img.avatar.avatar-link {
+    display: inline-block;
+    margin-top: -2px;
+    margin-right: 3px;
+}
+
+.stream-post-container, .stream-attachments-container, .stream-details-container {
+    padding: 2px 0 5px 26px;
 }
 
 .link-container .list-group-item {

@@ -33,12 +33,13 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             return {
                 isUserStream: this.isUserStream,
                 acl: this.options.acl,
-                onlyContent: this.options.onlyContent
+                onlyContent: this.options.onlyContent,
+                avatar: this.getAvatarHtml()
             };
         },
     
         init: function () {
-            this.createField('createdAt', null, null, 'Fields.DatetimeShort');            
+            this.createField('createdAt', null, null, 'Fields.DatetimeShort');
             this.isUserStream = this.options.isUserStream;
             
             if (this.isUserStream) {
@@ -47,19 +48,19 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             
             if (this.messageName) {
                 if (!this.isUserStream) {
-                    this.messageName += 'This';    
+                    this.messageName += 'This';
                 }
             }
             
             this.messageData = {
                 'user': 'field:createdBy',
                 'entity': 'field:parent',
-                'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase()
-            };            
+                'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase(),
+            };
         },
         
-        createField: function (name, type, params, view) {            
-            type = type || this.model.getFieldType(name) || 'base';        
+        createField: function (name, type, params, view) {
+            type = type || this.model.getFieldType(name) || 'base';
             this.createView(name, view || this.getFieldManager().getViewName(type), {
                 model: this.model,
                 defs: {
@@ -82,8 +83,22 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',
                 model: this.model,
-                messageData: this.messageData            
+                messageData: this.messageData
             });
+        },
+
+        getAvatarHtml: function () {
+            if (this.getConfig().get('disableAvatars')) {
+                return '';
+            }
+            var t;
+            var cache = this.getCache();
+            if (cache) {
+                t = cache.get('app', 'timestamp');
+            } else {
+                t = Date.now();
+            }
+            return '<img class="avatar" width="20" src="?entryPoint=avatar&size=small&id=' + this.model.get('createdById') + '&t='+t+'">';
         },
         
 

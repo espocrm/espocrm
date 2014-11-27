@@ -18,33 +18,37 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-    
-Espo.define('Crm:Views.Call.Record.RowActions.Default', 'Views.Record.RowActions.Default', function (Dep) {
+
+Espo.define('Views.Fields.UserWithAvatar', 'Views.Fields.Link', function (Dep) {
 
     return Dep.extend({
-    
-        getActions: function () {
-            var actions = Dep.prototype.getActions.call(this);
-            
-            if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                actions.push({
-                    action: 'setHeld',
-                    label: 'Set Held',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-                actions.push({
-                    action: 'setNotHeld',
-                    label: 'Set Not Held',
-                    data: {
-                        id: this.model.id
-                    }
-                });
+
+        listTemplate: 'fields.user-with-avatar.detail',
+
+        detailTemplate: 'fields.user-with-avatar.detail',
+
+        data: function () {
+            var o = _.extend({}, Dep.prototype.data.call(this));
+            if (this.mode == 'detail' || this.mode == 'list') {
+                o.avatar = this.getAvatarHtml();
             }
-            
-            return actions;
+            return o;
         },
+
+        getAvatarHtml: function () {
+            if (this.getConfig().get('disableAvatars')) {
+                return '';
+            }
+            var t;
+            var cache = this.getCache();
+            if (cache) {
+                t = cache.get('app', 'timestamp');
+            } else {
+                t = Date.now();
+            }
+            return '<img class="avatar avatar-link" width="14" src="?entryPoint=avatar&size=small&id=' + this.model.get(this.idName) + '&t='+t+'">';
+        },
+
     });
-    
 });
+

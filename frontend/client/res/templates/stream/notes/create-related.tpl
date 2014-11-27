@@ -2,7 +2,8 @@
 <li data-id="{{model.id}}" class="list-group-item">
 {{/unless}}
 
-    <div class="stream-head-container">        
+    <div class="stream-head-container">
+        {{{avatar}}}
         <span class="text-muted message">{{{message}}}</span>
     </div>
     
