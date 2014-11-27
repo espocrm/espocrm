@@ -95,6 +95,19 @@ class Importer
                 $email->set('body', $body);
             }
 
+            if (isset($message->references) && !empty($message->references)) {
+                $reference = str_replace(array('/', '@'), " ", trim($message->references, '<>'));
+                $parentType = $parentId = null;
+                $emailSent = PHP_INT_MAX;
+                $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
+                if ($n == 4 && $emailSent < time()) {
+                    if (!empty($parentType) && !empty($parentId)) {
+                        $email->set('parentType', $parentType);
+                        $email->set('parentId', $parentId);
+                    }
+                }
+            }
+
             $this->getEntityManager()->saveEntity($email);
             
             return $email;

@@ -266,16 +266,21 @@ class Sender
         $message->setEncoding('UTF-8');
 
         try {
+            $rand = mt_rand(1000, 9999);
+
             if ($email->get('parentType') && $email->get('parentId')) {
-                $messageId = '<' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '@espo>';
+                $messageId = '' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';
             } else {
-                $messageId = '<' . md5($email->get('name')) . '/' . time() . '@espo>';
+                $messageId = '' . md5($email->get('name')) . '/' . time() . '/' . $rand .  '@espo';
             }
-            $message->getHeaders()->addHeaderLine('Message-Id', $messageId);
+            //$message->getHeaders()->addHeaderLine('Message-Id', $messageId);
+            $messageIdHeader = new \Zend\Mail\Header\MessageId();
+            $messageIdHeader->setId($messageId);
+            $message->getHeaders()->addHeader($messageIdHeader);
 
             $this->transport->send($message);
 
-            $email->set('messageId', $message_id);
+            $email->set('messageId', $messageId);
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));
         } catch (\Exception $e) {
