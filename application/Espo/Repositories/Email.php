@@ -25,12 +25,12 @@ namespace Espo\Repositories;
 use Espo\ORM\Entity;
 
 class Email extends \Espo\Core\ORM\Repositories\RDB
-{    
+{
     protected function prepareAddressess(Entity $entity, $type)
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
         
-        $address = $entity->get($type);        
+        $address = $entity->get($type);
         $ids = array();
         if (!empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
             $arr = array_map(function ($e) {
@@ -38,7 +38,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }, explode(';', $address));
             
             $ids = $eaRepositoty->getIds($arr);
-        } 
+        }
         $entity->set($type . 'EmailAddressesIds', $ids);
     }
     
@@ -46,9 +46,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
         
-        $from = trim($entity->get('from'));        
+        $from = trim($entity->get('from'));
         if (!empty($from)) {
-            $ids = $eaRepositoty->getIds(array($from));        
+            $ids = $eaRepositoty->getIds(array($from));
             if (!empty($ids)) {
                 $entity->set('fromEmailAddressId', $ids[0]);
             }
@@ -76,13 +76,13 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $entity->set('accountId', $accountId);
                 }
             }
-        } else {        
+        } else {
             // TODO find account by from address
         }
     }
     
     protected function beforeRemove(Entity $entity)
-    {        
+    {
         parent::beforeRemove($entity);
         $attachments = $entity->get('attachments');
         foreach ($attachments as $attachment) {
