@@ -45,7 +45,7 @@
         "attachments": {
             "type": "hasChildren",
             "entity": "Attachment",
-            "relationName": "NoteAttachments",
+            "relationName": "Attachments",
             "foreign": "parent"
         },
         "parent": {

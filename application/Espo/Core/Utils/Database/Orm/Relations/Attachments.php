@@ -22,7 +22,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class NoteAttachments extends HasChildren
+class Attachments extends HasChildren
 {
     protected function load($linkName, $entityName)
     {

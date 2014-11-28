@@ -108,7 +108,7 @@
         "deliveryDate": {
             "type": "datetime",
             "readOnly": true
-        },        
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -154,7 +154,8 @@
         "attachments": {
             "type": "hasChildren",
             "entity": "Attachment",
-            "foreign": "parent"
+            "foreign": "parent",
+            "relationName": "Attachments"
         },
         "parent": {
             "type": "belongsToParent",
