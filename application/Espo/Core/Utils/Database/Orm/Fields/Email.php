@@ -22,7 +22,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class Email extends \Espo\Core\Utils\Database\Orm\Base
+class Email extends Base
 {
     protected function load($fieldName, $entityName)
     {
@@ -34,28 +34,28 @@ class Email extends \Espo\Core\Utils\Database\Orm\Base
                         'where' =>
                         array (
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id 
+                                SELECT entity_id
                                 FROM entity_email_address
                                 JOIN email_address ON email_address.id = entity_email_address.email_address_id
-                                WHERE 
+                                WHERE
                                     entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
-                                    email_address.deleted = 0 AND email_address.name LIKE {value}                  
+                                    email_address.deleted = 0 AND email_address.name LIKE {value}
                             )",
                             '=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id 
+                                SELECT entity_id
                                 FROM entity_email_address
                                 JOIN email_address ON email_address.id = entity_email_address.email_address_id
-                                WHERE 
+                                WHERE
                                     entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
-                                    email_address.deleted = 0 AND email_address.name = {value}                  
+                                    email_address.deleted = 0 AND email_address.name = {value}
                             )",
                             '<>' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id 
+                                SELECT entity_id
                                 FROM entity_email_address
                                 JOIN email_address ON email_address.id = entity_email_address.email_address_id
-                                WHERE 
+                                WHERE
                                     entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
-                                    email_address.deleted = 0 AND email_address.name <> {value}                  
+                                    email_address.deleted = 0 AND email_address.name <> {value}
                             )"
                         ),
                         'orderBy' => 'email_address.name {direction}',
@@ -92,6 +92,5 @@ class Email extends \Espo\Core\Utils\Database\Orm\Base
             ),
         );
     }
-
 
 }

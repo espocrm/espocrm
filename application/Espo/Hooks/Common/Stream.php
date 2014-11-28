@@ -84,6 +84,9 @@ class Stream extends \Espo\Core\Hooks\Base
         $scopeNotifiedList = array();
         foreach ($linkDefs as $link => $defs) {
             if ($defs['type'] == 'belongsTo') {
+                if (empty($defs['foreign']) || empty($defs['entity'])) {
+                    continue;
+                }
                 $foreign = $defs['foreign'];
                 $scope = $defs['entity'];
                 $entityId = $entity->get($link . 'Id');
@@ -96,6 +99,9 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
             } else if ($defs['type'] == 'belongsToParent') {
                 $foreign = $defs['foreign'];
+                if (empty($defs['foreign'])) {
+                    continue;
+                }
                 $scope = $entity->get($link . 'Type');
                 $entityId = $entity->get($link . 'Id');
                 if (!empty($scope) && !empty($entityId)) {
@@ -107,6 +113,9 @@ class Stream extends \Espo\Core\Hooks\Base
 
                 }
             } else if ($defs['type'] == 'hasMany') {
+                if (empty($defs['foreign']) || empty($defs['entity'])) {
+                    continue;
+                }
                 $foreign = $defs['foreign'];
                 $scope = $defs['entity'];
                 $entityIds = $entity->get($link . 'Ids');

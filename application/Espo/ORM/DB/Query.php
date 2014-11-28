@@ -547,6 +547,8 @@ class Query
 
                 $operator = '=';
 
+                $leftPart = null;
+
                 if (!preg_match('/^[a-z0-9]+$/i', $field)) {
                     foreach (self::$comparisonOperators as $op => $opDb) {
                         if (strpos($field, $op) !== false) {

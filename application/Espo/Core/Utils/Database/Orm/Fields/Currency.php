@@ -24,22 +24,22 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 use Espo\Core\Utils\Util;
 
-class Currency extends \Espo\Core\Utils\Database\Orm\Base
+class Currency extends Base
 {
     protected function load($fieldName, $entityName)
     {
         $converedFieldName = $fieldName . 'Converted';
-        
+
         $currencyColumnName = Util::toUnderScore($fieldName);
-        
+
         $alias = Util::toUnderScore($fieldName) . "_currency_alias";
-        
+
         return array(
             $entityName => array(
-                'fields' => array(                    
+                'fields' => array(
                     $fieldName => array(
                         "type" => "float",
-                        "orderBy" => $converedFieldName . " {direction}"                            
+                        "orderBy" => $converedFieldName . " {direction}"
                     ),
                     $fieldName . 'Converted' => array(
                         'type' => 'float',
@@ -54,11 +54,10 @@ class Currency extends \Espo\Core\Utils\Database\Orm\Base
                                 "<>" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <> {value}"
                         ),
                         'notStorable' => true,
-                        'orderBy' => $converedFieldName . " {direction}"                
+                        'orderBy' => $converedFieldName . " {direction}"
                     ),
                 ),
             ),
         );
     }
-
 }

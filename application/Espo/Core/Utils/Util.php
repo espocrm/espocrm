@@ -130,28 +130,60 @@ class Util
             return array();
         }
 
-        /** add root items from currentArray */
-        foreach ($currentArray as $currentName => $currentValue) {
+        foreach ($newArray as $newName => $newValue) {
 
-            if (!array_key_exists($currentName, $newArray)) {
+            if (is_array($newValue) && empty($newValue)) {
+                continue;
+            }
 
-                $newArray[$currentName] = $currentValue;
+            if (is_array($newValue) && array_key_exists($newName, $currentArray) && is_array($currentArray[$newName])) {
 
-            } else if (is_array($currentValue) && is_array($newArray[$currentName])) {
-
-                /** check __APPEND__ identifier */
-                $appendKey = array_search($mergeIdentifier, $newArray[$currentName], true);
+                // check __APPEND__ identifier
+                $appendKey = array_search($mergeIdentifier, $newValue, true);
                 if ($appendKey !== false) {
-                    unset($newArray[$currentName][$appendKey]);
-                    $newArray[$currentName] = array_merge($currentValue, $newArray[$currentName]);
-                } else if (!static::isSingleArray($newArray[$currentName])) {
-                    $newArray[$currentName] = static::merge($currentValue, $newArray[$currentName]);
+                    unset($newValue[$appendKey]);
+                    $newValue = array_merge($currentArray[$newName], $newValue);
+                } else if (!static::isSingleArray($newValue)) {
+                    $newValue = static::merge($currentArray[$newName], $newValue);
                 }
 
             }
+
+            //check if exists __APPEND__ identifier and remove its
+            if (!isset($currentArray[$newName]) && is_array($newValue)) {
+                $newValue = static::unsetInArrayByValue($mergeIdentifier, $newValue);
+            }
+
+            $currentArray[$newName] = $newValue;
         }
 
-        return $newArray;
+        return $currentArray;
+    }
+
+    /**
+     * Unset a value in array recursively
+     *
+     * @param  string $needle
+     * @param  array  $haystack
+     * @param  bool   $reIndex
+     * @return array
+     */
+    public static function unsetInArrayByValue($needle, array $haystack, $reIndex = true)
+    {
+        foreach($haystack as $key => $value) {
+            if (is_array($value)) {
+                $haystack[$key] = static::unsetInArrayByValue($needle, $value);
+            } else if ($needle === $value) {
+
+                if ($reIndex) {
+                    array_splice($haystack, $key, 1);
+                } else {
+                    unset($haystack[$key]);
+                }
+            }
+        }
+
+        return $haystack;
     }
 
     /**

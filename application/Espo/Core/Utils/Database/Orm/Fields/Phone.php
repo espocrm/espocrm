@@ -22,7 +22,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class Phone extends \Espo\Core\Utils\Database\Orm\Base
+class Phone extends Base
 {
     protected function load($fieldName, $entityName)
     {
@@ -34,28 +34,28 @@ class Phone extends \Espo\Core\Utils\Database\Orm\Base
                         'where' =>
                         array (
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id 
+                                SELECT entity_id
                                 FROM entity_phone_number
                                 JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
-                                WHERE 
+                                WHERE
                                     entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-                                    phone_number.deleted = 0 AND phone_number.name LIKE {value}                  
+                                    phone_number.deleted = 0 AND phone_number.name LIKE {value}
                             )",
                             '=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id 
+                                SELECT entity_id
                                 FROM entity_phone_number
                                 JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
-                                WHERE 
+                                WHERE
                                     entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-                                    phone_number.deleted = 0 AND phone_number.name = {value}                  
+                                    phone_number.deleted = 0 AND phone_number.name = {value}
                             )",
                             '<>' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id 
+                                SELECT entity_id
                                 FROM entity_phone_number
                                 JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
-                                WHERE 
+                                WHERE
                                     entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-                                    phone_number.deleted = 0 AND phone_number.name <> {value}                  
+                                    phone_number.deleted = 0 AND phone_number.name <> {value}
                             )"
                         ),
                         'orderBy' => 'phone_number.name {direction}',

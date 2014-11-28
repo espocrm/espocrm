@@ -70,6 +70,8 @@ class Stream extends \Espo\Core\Services\Base
         'container',
     );
 
+    protected $auditedFieldsCache = array();
+
     protected function getServiceFactory()
     {
         return $this->injections['container']->get('serviceFactory');

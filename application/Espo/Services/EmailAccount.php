@@ -87,7 +87,7 @@ class EmailAccount extends Record
         
         $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($folders as $name => $folder) {        
-            $foldersArr[] =  $folder->getGlobalName();
+            $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
         return $foldersArr;
     }
@@ -152,7 +152,8 @@ class EmailAccount extends Record
         
         $monitoredFoldersArr = explode(',', $monitoredFolders);                
         foreach ($monitoredFoldersArr as $folder) {
-            $folder = trim($folder);            
+            $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
+            
             $storage->selectFolder($folder);
             
             $lastUID = 0;

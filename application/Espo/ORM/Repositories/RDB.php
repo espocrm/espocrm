@@ -56,6 +56,11 @@ class RDB extends \Espo\ORM\Repository
         $this->seed = $this->entityFactory->create($entityName);
         $this->entityClassName = get_class($this->seed);
         $this->entityManager = $entityManager;
+        $this->init();
+    }
+
+    protected function init()
+    {
     }
 
     protected function getMapper()
@@ -217,7 +222,7 @@ class RDB extends \Espo\ORM\Repository
         return $this->getMapper()->countRelated($entity, $relationName, $params);
     }
 
-    public function relate(Entity $entity, $relationName, $foreign, $data)
+    public function relate(Entity $entity, $relationName, $foreign, $data = null)
     {
         if ($data instanceof \stdClass) {
             $data = get_object_vars($data);

@@ -95,7 +95,7 @@ class Base
         if (!empty($params['where']) && is_array($params['where'])) {
             $where = array();
 
-            foreach    ($params['where'] as $item) {
+            foreach ($params['where'] as $item) {
                 if ($item['type'] == 'boolFilters' && !empty($item['value']) && is_array($item['value'])) {
                     foreach ($item['value'] as $filter) {
                         $p = $this->getBoolFilterWhere($filter);
@@ -183,7 +183,7 @@ class Base
             $d = array();
             foreach ($fieldList as $field) {
                 if (
-                    strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+                    strlen($value) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
                     &&
                     !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
                 ) {

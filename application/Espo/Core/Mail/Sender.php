@@ -86,7 +86,7 @@ class Sender
         
         if (in_array('fromName', $params)) {
             $this->params['fromName'] = $params['fromName'];
-        }        
+        }
         if (in_array('fromAddress', $params)) {
             $this->params['fromAddress'] = $params['fromAddress'];
         }
@@ -134,8 +134,8 @@ class Sender
     public function send(Email $email, $params = array())
     {
         $message = new Message();
-        $config = $this->config;        
-        $params = $this->params + $params;        
+        $config = $this->config;
+        $params = $this->params + $params;
 
         if ($email->get('from')) {
             $fromName = null;
@@ -202,29 +202,13 @@ class Sender
             }
         }
 
-        $message->setSubject($email->get('name'));
+        $attachmentPartList = array();
 
-        $body = new MimeMessage;
-        $parts = array();
-    
+        $attachmentCollection = $email->get('attachments');
+        $attachmentInlineCollection = $email->getInlineAttachments();
 
-        $bodyPart = new MimePart($email->getBodyPlainForSending());            
-        $bodyPart->type = 'text/plain';
-        $bodyPart->charset = 'utf-8';
-        $parts[] = $bodyPart;
-
-        
-        if ($email->get('isHtml')) {
-            $bodyPart = new MimePart($email->getBodyForSending());
-            $bodyPart->type = 'text/html';
-            $bodyPart->charset = 'utf-8';
-            $parts[] = $bodyPart;
-        }
-        
-
-        $aCollection = $email->get('attachments');
-        if (!empty($aCollection)) {
-            foreach ($aCollection as $a) {
+        if (!empty($attachmentCollection)) {
+            foreach ($attachmentCollection as $a) {
                 $fileName = 'data/upload/' . $a->id;
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
@@ -233,13 +217,12 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
-                $parts[] = $attachment;
+                $attachmentPartList[] = $attachment;
             }
         }
         
-        $aCollection = $email->getInlineAttachments();
-        if (!empty($aCollection)) {
-            foreach ($aCollection as $a) {
+        if (!empty($attachmentInlineCollection)) {
+            foreach ($attachmentInlineCollection as $a) {
                 $fileName = 'data/upload/' . $a->id;
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_INLINE;
@@ -248,28 +231,81 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
-                $parts[] = $attachment;
+                $attachmentPartList[] = $attachment;
             }
         }
 
-        $body->setParts($parts);
-        $message->setBody($body);
+
+        $message->setSubject($email->get('name'));
+
+        $body = new MimeMessage();
+        
+        $textPart = new MimePart($email->getBodyPlainForSending());
+        $textPart->type = 'text/plain';
+        $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+        $textPart->charset = 'utf-8';
         
         if ($email->get('isHtml')) {
-            $message->getHeaders()->get('content-type')->setType('multipart/alternative');
+            $htmlPart = new MimePart($email->getBodyForSending());
+            $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+            $htmlPart->type = 'text/html';
+            $htmlPart->charset = 'utf-8';
         }
 
-        try {
-            if ($email->get('parentType') && $email->get('parentId')) {
-                $messageId = '<' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '@espo>';
+        if (!empty($attachmentPartList)) {
+            $messageType = 'multipart/related';
+            if ($email->get('isHtml')) {
+                $content = new MimeMessage();
+                $content->addPart($textPart);
+                $content->addPart($htmlPart);
+
+                $messageType = 'multipart/mixed';
+
+                $contentPart = new MimePart($content->generateMessage());
+                $contentPart->type = "multipart/alternative;\n boundary=\"" . $content->getMime()->boundary() . '"';
+
+                $body->addPart($contentPart);
             } else {
-                $messageId = '<' . md5($email->get('name')) . '/' . time() . '@espo>';
+                $body->addPart($textPart);
             }
-            $message->getHeaders()->addHeaderLine('Message-Id', $messageId);
+
+            foreach ($attachmentPartList as $attachmentPart) {
+                $body->addPart($attachmentPart);
+            }
+
+        } else {
+            if ($email->get('isHtml')) {
+                $body->setParts(array($textPart, $htmlPart));
+                $messageType = 'multipart/alternative';
+            } else {
+                $body = $email->getBodyPlainForSending();
+                $messageType = 'text/plain';
+            }
+        }
+
+        $message->setBody($body);
+
+        if ($message->getHeaders()->has('content-type')) {
+            $message->getHeaders()->get('content-type')->setType($messageType);
+        }
+        $message->setEncoding('UTF-8');
+
+        try {
+            $rand = mt_rand(1000, 9999);
+
+            if ($email->get('parentType') && $email->get('parentId')) {
+                $messageId = '' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';
+            } else {
+                $messageId = '' . md5($email->get('name')) . '/' . time() . '/' . $rand .  '@espo';
+            }
+
+            $messageIdHeader = new \Zend\Mail\Header\MessageId();
+            $messageIdHeader->setId($messageId);
+            $message->getHeaders()->addHeader($messageIdHeader);
 
             $this->transport->send($message);
 
-            $email->set('messageId', $message_id);
+            $email->set('messageId', $messageId);
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));
         } catch (\Exception $e) {

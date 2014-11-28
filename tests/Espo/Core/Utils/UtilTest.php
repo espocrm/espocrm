@@ -586,6 +586,278 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, Util::merge($currentArray, $newArray));
     }
 
+    public function testMergeEmptyArray()
+    {
+        $currentArray = array(
+          'Call' =>array (
+            'fields' =>
+            array (
+              'accountId' =>
+              array (
+                'type' => 'varchar',
+                'where' =>
+                array (
+                  '=' => 'contact.id IN ({value})',
+                ),
+                'len' => 255,
+              ),
+              'deleted' =>
+              array (
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ),
+            ),
+          ),
+        );
+
+        $newArray = array(
+          'Call' =>array (
+            'fields' =>
+            array (
+            ),
+          ),
+        );
+
+        $result = $currentArray;
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
+    public function testMergeEmptyArray2()
+    {
+        $currentArray = array(
+          'Call' => array (
+            'fields' =>
+            array (
+              'accountId' =>
+              array (
+                'type' => 'varchar',
+                'where' =>
+                array (
+                  '=' => 'contact.id IN ({value})',
+                ),
+                'len' => 255,
+              ),
+              'deleted' =>
+              array (
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ),
+            ),
+          ),
+        );
+
+        $newArray = array(
+          'Call' => array (),
+        );
+
+        $result = $currentArray;
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
+    public function testMergeEmptyArray3()
+    {
+        $currentArray = array(
+          'Call' =>array (
+            'fields' =>
+            array (
+              'accountId' =>
+              array (
+                'type' => 'varchar',
+                'where' =>
+                array (
+                  '=' => 'contact.id IN ({value})',
+                ),
+                'len' => 255,
+              ),
+              'deleted' =>
+              array (
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ),
+            ),
+          ),
+        );
+
+        $newArray = array(
+        );
+
+        $result = $currentArray;
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
+    public function testMergeCompleteTest()
+    {
+        $currentArray = array (
+            'fields' =>
+            array (
+                'aaa1' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        0 => 'a1',
+                        1 => 'a3',
+                        2 => 'a3',
+                    ),
+                    'isCustom' => true,
+                ),
+                'append' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        'b1',
+                        'b3',
+                        'b3',
+                    ),
+                ),
+                't1111' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '11111',
+                ),
+                't2222' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '2222',
+                ),
+                't3333' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '3333',
+                    'maxLength' => 70,
+                ),
+            ),
+        );
+
+        $newArray = array (
+            'fields' =>
+            array (
+                'aaa1' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        'a1',
+                    ),
+                    'isCustom' => false,
+                    'newValue' => 'NNNNN',
+                ),
+                'new111' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                ),
+                'append' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        '__APPEND__',
+                        'b4',
+                        'b5',
+                    ),
+                ),
+                'aloneAppend' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        '__APPEND__',
+                        'c1',
+                        'c2',
+                    ),
+                ),
+            ),
+        );
+
+        $result = array (
+            'fields' =>
+            array (
+                'aaa1' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        0 => 'a1',
+                    ),
+                    'isCustom' => false,
+                    'newValue' => 'NNNNN',
+                ),
+                'append' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        'b1',
+                        'b3',
+                        'b3',
+                        'b4',
+                        'b5',
+                    ),
+                ),
+                't1111' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '11111',
+                ),
+                't2222' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '2222',
+                ),
+                't3333' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '3333',
+                    'maxLength' => 70,
+                ),
+                'new111' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                ),
+                'aloneAppend' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        'c1',
+                        'c2',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
     public function testToFormat()
     {
        $this->assertEquals('/Espo/Core/Utils', Util::toFormat('/Espo/Core/Utils', '/'));
