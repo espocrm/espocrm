@@ -18,11 +18,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils;
 
-class Crypt 
+class Crypt
 {
     private $config;
     
@@ -32,9 +32,9 @@ class Crypt
     
     public function __construct($config)
     {
-        $this->config = $config;        
+        $this->config = $config;
         $this->cryptKey = $config->get('cryptKey', '');
-    }    
+    }
     
     protected function getKey()
     {
