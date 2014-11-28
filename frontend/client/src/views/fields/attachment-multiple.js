@@ -39,7 +39,7 @@ Espo.define('Views.Fields.AttachmentMultiple', 'Views.Fields.Base', function (De
 
         foreignScope: null,
         
-        showPreviews: false,
+        showPreviews: true,
         
         previewTypeList: [
             'image/jpeg',

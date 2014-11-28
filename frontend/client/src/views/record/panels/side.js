@@ -91,24 +91,20 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
                 } else {
                    field = item;
                 }
+                if (!(field in this.model.defs.fields)) {
+                    return;
+                }
                 this.createField(field, null, view);
 
-            }.bind(this));
+            }, this);
         },
 
         getFields: function () {
             var fields = {};
-            this.fields.forEach(function (item) {
 
-                var name;
-                if (typeof item === 'object') {
-                    name = item.name;
-                } else {
-                   name = item;
-                }
-
+            this.getFieldList().forEach(function (name) {
                 fields[name] = this.getView(name);
-            }.bind(this));
+            }, this);
             return fields;
         },
         
