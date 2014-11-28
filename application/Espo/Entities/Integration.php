@@ -59,7 +59,7 @@ class Integration extends \Espo\Core\ORM\Entity
         $this->set('data', $data);
     }
 
-    public function set($p1, $p2)
+    public function set($p1, $p2 = null)
     {
         if (is_array($p1)) {
             if ($p2 === null) {
