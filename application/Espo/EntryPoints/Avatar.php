@@ -43,7 +43,16 @@ class Avatar extends Image
         if (!$user) {
             throw new NotFound();
         }
-        $id = $user->get('avatarId');
+
+        if (isset($_GET['attachmentId'])) {
+            $id = $_GET['attachmentId'];
+            if ($id == 'false') {
+                $id = false;
+            }
+        } else {
+            $id = $user->get('avatarId');
+        }
+
 
         $size = null;
         if (!empty($_GET['size'])) {

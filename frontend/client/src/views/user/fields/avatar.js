@@ -23,7 +23,7 @@ Espo.define('Views.User.Fields.Avatar', 'Views.Fields.Image', function (Dep) {
     return Dep.extend({
     
         handleFileUpload: function (file, contents, callback) {
-
+            
             this.createView('crop', 'Modals.ImageCrop', {
                 contents: contents
             }, function (view) {
@@ -47,6 +47,7 @@ Espo.define('Views.User.Fields.Avatar', 'Views.Fields.Image', function (Dep) {
                             this.render();
                         }.bind(this), 10);
                     }
+                    this.clearView('crop');
                 }.bind(this));
             }.bind(this));
         },
@@ -57,12 +58,20 @@ Espo.define('Views.User.Fields.Avatar', 'Views.Fields.Image', function (Dep) {
                 var userId = this.model.id;
 
                 var t = Date.now();
-                
-                var imgHtml = '<img src="?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
-                if (!id) {
+
+                var imgHtml;
+
+                if (this.mode == 'detail') {
+                    imgHtml =  '<img src="?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '&attachmentId=' + ( id || 'false') + '">';
+                } else {
+                    imgHtml = '<img src="?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
+                }
+
+                if (id) {
+                    return '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '">' + imgHtml +' </a>';
+                } else {
                     return imgHtml;
                 }
-                return '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '">' + imgHtml +' </a>';
             }
         },
 
