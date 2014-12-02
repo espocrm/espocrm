@@ -30,5 +30,15 @@
     "collection": {
         "sortBy": "createdAt",
         "asc": false
+    },
+    "indexes": {
+        "createdAt": {
+            "type": "index",
+            "columns": ["createdAt"]
+        },
+        "user": {
+            "type": "index",
+            "columns": ["userId", "createdAt"]
+        }
     }
 }

@@ -2,7 +2,8 @@
     "fields": {
         "token": {
             "type": "varchar",
-            "maxLength": "36"
+            "maxLength": "36",
+            "index": true
         },
         "hash": {
             "type": "varchar",
@@ -41,5 +42,10 @@
     "collection": {
         "sortBy": "lastAccess",
         "asc": false
+    },
+    "indexes": {
+        "token": {
+            "columns": ["token", "deleted"]
+        }
     }
 }

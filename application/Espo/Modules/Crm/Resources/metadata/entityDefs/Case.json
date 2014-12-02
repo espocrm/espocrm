@@ -5,7 +5,8 @@
             "required": true
         },
         "number": {
-            "type": "autoincrement"
+            "type": "autoincrement",
+            "index": true
         },
         "status": {
             "type": "enum",
@@ -116,5 +117,16 @@
         "sortBy": "number",
         "asc": false,
         "boolFilters": ["onlyMy"]
+    },
+    "indexes": {
+        "status": {
+            "columns": ["status", "deleted"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        },
+        "assignedUserStatus": {
+            "columns": ["assignedUserId", "status"]
+        }
     }
 }

@@ -190,5 +190,16 @@
     "collection": {
         "sortBy": "name",
         "asc": true
+    },
+    "indexes": {
+        "firstName": {
+            "columns": ["firstName", "deleted"]
+        },
+        "name": {
+            "columns": ["firstName", "lastName"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        }
     }
 }

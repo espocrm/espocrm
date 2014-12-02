@@ -49,5 +49,10 @@
     "collection": {
         "sortBy": "createdAt",
         "asc": false
+    },
+    "indexes": {
+        "parent": {
+            "columns": ["parentType", "parentId"]
+        }
     }
 }

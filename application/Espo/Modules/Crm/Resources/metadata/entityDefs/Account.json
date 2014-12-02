@@ -165,8 +165,10 @@
     },
     "indexes": {
         "name": {
-            "type": "index",
-            "columns": ["name"]
+            "columns": ["name", "deleted"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
         }
     }
 }

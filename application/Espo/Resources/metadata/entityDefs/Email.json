@@ -204,7 +204,7 @@
             "additionalColumns": {
                 "addressType": {
                     "type": "varchar",
-                    "len": "4" 
+                    "len": "4"
                 }
             }
         }
@@ -212,6 +212,14 @@
     "collection": {
         "sortBy": "dateSent",
         "asc": false,
-        "textFilterFields": ["name", "body", "bodyPlain"]      
+        "textFilterFields": ["name", "body", "bodyPlain"]
+    },
+    "indexes": {
+        "dateSentAssignedUser": {
+            "columns": ["dateSent", "assignedUserId"]
+        },
+        "dateSent": {
+            "columns": ["dateSent", "deleted"]
+        }
     }
 }

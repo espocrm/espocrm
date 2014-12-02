@@ -43,7 +43,7 @@
         },
         "opportunityAmountConverted": {
             "type": "currencyConverted",
-            "readOnly": true          
+            "readOnly": true
         },
         "website": {
             "type": "url"
@@ -199,5 +199,28 @@
     "collection": {
         "sortBy": "createdAt",
         "asc": false
+    },
+    "indexes": {
+        "firstName": {
+            "columns": ["firstName", "deleted"]
+        },
+        "name": {
+            "columns": ["firstName", "lastName"]
+        },
+        "status": {
+            "columns": ["status", "deleted"]
+        },
+        "createdAt": {
+            "columns": ["createdAt", "deleted"]
+        },
+        "createdAtStatus": {
+            "columns": ["createdAt", "status"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        },
+        "assignedUserStatus": {
+            "columns": ["assignedUserId", "status"]
+        }
     }
 }

@@ -2,7 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true            
+            "required": true
         },
         "status": {
             "type": "enum",
@@ -16,7 +16,7 @@
         "serviceName": {
             "type": "varchar",
             "required": true,
-            "len":100 
+            "len":100
         },
         "method": {
             "type": "varchar",
@@ -25,7 +25,7 @@
         },
         "data": {
             "type": "jsonObject" 
-        },        
+        },
         "scheduledJob": {
             "type": "link"
         },
@@ -47,5 +47,13 @@
     "collection": {
         "sortBy": "createdAt",
         "asc": false
+    },
+    "indexes": {
+        "executeTime": {
+            "columns": ["status", "executeTime"]
+        },
+        "status": {
+            "columns": ["status", "deleted"]
+        }
     }
 }

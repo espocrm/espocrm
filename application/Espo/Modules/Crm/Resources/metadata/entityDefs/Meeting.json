@@ -161,5 +161,22 @@
     "collection": {
         "sortBy": "dateStart",
         "asc": false
+    },
+    "indexes": {
+        "dateStartStatus": {
+            "columns": ["dateStart", "status"]
+        },
+        "dateStart": {
+            "columns": ["dateStart", "deleted"]
+        },
+        "status": {
+            "columns": ["status", "deleted"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        },
+        "assignedUserStatus": {
+            "columns": ["assignedUserId", "status"]
+        }
     }
 }

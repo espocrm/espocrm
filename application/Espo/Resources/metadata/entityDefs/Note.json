@@ -84,5 +84,15 @@
             "calls",
             "tasks"
         ]
+    },
+    "indexes": {
+        "createdAt": {
+            "type": "index",
+            "columns": ["createdAt"]
+        },
+        "parent": {
+            "type": "index",
+            "columns": ["parentId", "parentType"]
+        }
     }
 }
