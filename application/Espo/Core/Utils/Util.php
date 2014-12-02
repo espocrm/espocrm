@@ -63,13 +63,21 @@ class Util
      * Convert name to Camel Case format, ex. camel_case to camelCase
      *
      * @param  string  $name
-     * @param  string  $symbol
+     * @param  string | array  $symbol
      * @param  boolean $capitaliseFirstChar
      *
      * @return string
      */
     public static function toCamelCase($name, $symbol = '_', $capitaliseFirstChar = false)
     {
+        if (is_array($name)) {
+            foreach ($name as &$value) {
+                $value = static::toCamelCase($value, $symbol, $capitaliseFirstChar);
+            }
+
+            return $name;
+        }
+
         if($capitaliseFirstChar) {
             $name[0] = strtoupper($name[0]);
         }
@@ -85,12 +93,20 @@ class Util
      * Convert name from Camel Case format.
      * ex. camelCase to camel-case
      *
-     * @param string $name
+     * @param string | array $name
      *
      * @return string
      */
     public static function fromCamelCase($name, $symbol = '_')
     {
+        if (is_array($name)) {
+            foreach ($name as &$value) {
+                $value = static::fromCamelCase($value, $symbol);
+            }
+
+            return $name;
+        }
+
         $name[0] = strtolower($name[0]);
         return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
                      return $symbol . strtolower($matches[1]);
@@ -101,7 +117,7 @@ class Util
      * Convert name from Camel Case format to underscore.
      * ex. camelCase to camel_case
      *
-     * @param string $name
+     * @param string | array $name
      *
      * @return string
      */
