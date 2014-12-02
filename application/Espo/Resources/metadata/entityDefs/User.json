@@ -12,7 +12,8 @@
             "tooltip": true
         },
         "name": {
-            "type": "personName"
+            "type": "personName",
+            "view": "User.Fields.Name"
         },
         "password": {
             "type": "password",
