@@ -43,7 +43,7 @@ abstract class Mapper implements IMapper
     protected $fieldsMapCache = array();
     protected $aliasesCache = array();
 
-    protected $returnCollection = true;
+    protected $returnCollection = false;
 
     protected $collectionClass = "\\Espo\\ORM\\EntityCollection";
 
@@ -76,7 +76,7 @@ abstract class Mapper implements IMapper
         'additionalColumnsConditions'
     );
 
-    public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query $query) {
+    public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query) {
         $this->pdo = $pdo;
         $this->query = $query;
         $this->entityFactory = $entityFactory;
