@@ -1,5 +1,0 @@
-[
-    {"name":"name", "link":true},
-    {"name":"website", "notSortable": true},
-    {"name":"phoneNumber", "notSortable": true}
-]

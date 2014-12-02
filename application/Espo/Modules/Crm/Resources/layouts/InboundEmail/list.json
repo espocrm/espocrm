@@ -1,1 +1,6 @@
-[{"name":"name","width":30,"link":true},{"name":"host"},{"name":"status"},{"name":"createCase"}]
+[
+    {"name":"name","width":30,"link":true},
+    {"name":"host", "notSortable": true},
+    {"name":"status"},
+    {"name":"createCase", "notSortable": true}
+]

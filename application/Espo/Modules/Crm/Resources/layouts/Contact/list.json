@@ -1,1 +1,6 @@
-[{"name":"name","width":30,"link":true},{"name":"account","width":20},{"name":"emailAddress"},{"name":"phoneNumber"}]
+[
+    {"name":"name","width":30,"link":true},
+    {"name":"account","width":20},
+    {"name":"emailAddress", "notSortable": true},
+    {"name":"phoneNumber", "notSortable": true}
+]

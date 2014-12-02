@@ -1,6 +1,6 @@
 [
     {"name":"name","width":32,"link":"true"},
     {"name":"account"},
-    {"name":"emailAddress"},
-    {"name":"phoneNumber"}
+    {"name":"emailAddress", "notSortable": true},
+    {"name":"phoneNumber", "notSortable": true}
 ]
