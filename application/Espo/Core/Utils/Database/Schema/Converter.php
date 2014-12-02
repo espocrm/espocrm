@@ -167,7 +167,8 @@ class Converter
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
                     if (is_array($indexParams['columns'])) {
-                        $indexList[$indexName] = $indexParams['columns'];
+                        $uIndexName = strtoupper( Util::toUnderScore($indexName) );
+                        $indexList[$uIndexName] = Util::toUnderScore($indexParams['columns']);
                     }
                 }
             }

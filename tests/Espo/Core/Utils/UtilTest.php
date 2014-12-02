@@ -13,25 +13,61 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 
     public function testToCamelCase()
     {
-       $this->assertEquals('detail', Util::toCamelCase('detail'));
-       $this->assertEquals('detailView', Util::toCamelCase('detail-view', '-'));
-       $this->assertEquals('myDetailView', Util::toCamelCase('my_detail_view'));
+        $this->assertEquals('detail', Util::toCamelCase('detail'));
+        $this->assertEquals('detailView', Util::toCamelCase('detail-view', '-'));
+        $this->assertEquals('myDetailView', Util::toCamelCase('my_detail_view'));
+
+        $input = array(
+            'detail',
+            'my_detail_view',
+        );
+        $result = array(
+            'detail',
+            'myDetailView',
+        );
+        $this->assertEquals($result, Util::toCamelCase($input));
     }
 
     public function testFromCamelCase()
     {
-       $this->assertEquals('detail', Util::fromCamelCase('detail'));
-       $this->assertEquals('detail-view', Util::fromCamelCase('detailView', '-'));
-       $this->assertEquals('my_detail_view', Util::fromCamelCase('myDetailView'));
-       $this->assertEquals('my_f_f', Util::fromCamelCase('myFF'));
+        $this->assertEquals('detail', Util::fromCamelCase('detail'));
+        $this->assertEquals('detail-view', Util::fromCamelCase('detailView', '-'));
+        $this->assertEquals('my_detail_view', Util::fromCamelCase('myDetailView'));
+        $this->assertEquals('my_f_f', Util::fromCamelCase('myFF'));
+
+        $input = array(
+            'detail',
+            'myDetailView',
+            'myFF',
+        );
+        $result = array(
+            'detail',
+            'my_detail_view',
+            'my_f_f',
+        );
+        $this->assertEquals($result, Util::fromCamelCase($input));
     }
 
-    public function testToUnderScoree()
+    public function testToUnderScore()
     {
-       $this->assertEquals('detail', Util::toUnderScore('detail'));
-       $this->assertEquals('detail_view', Util::toUnderScore('detailView'));
-       $this->assertEquals('my_detail_view', Util::toUnderScore('myDetailView'));
-       $this->assertEquals('my_f_f', Util::toUnderScore('myFF'));
+        $this->assertEquals('detail', Util::toUnderScore('detail'));
+        $this->assertEquals('detail_view', Util::toUnderScore('detailView'));
+        $this->assertEquals('my_detail_view', Util::toUnderScore('myDetailView'));
+        $this->assertEquals('my_f_f', Util::toUnderScore('myFF'));
+
+        $input = array(
+            'detail',
+            'detailView',
+            'myDetailView',
+            'myFF',
+        );
+        $result = array(
+            'detail',
+            'detail_view',
+            'my_detail_view',
+            'my_f_f',
+        );
+        $this->assertEquals($result, Util::toUnderScore($input));
     }
 
     public function testMerge()
