@@ -165,7 +165,11 @@ class Converter
 
             //add indexes
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
-                $indexList = array_merge($indexList, $entityParams['indexes']);
+                foreach ($entityParams['indexes'] as $indexName => $indexParams) {
+                    if (is_array($indexParams['columns'])) {
+                        $indexList[$indexName] = $indexParams['columns'];
+                    }
+                }
             }
             if (!empty($indexList)) {
                 foreach($indexList as $indexName => $indexItem) {
