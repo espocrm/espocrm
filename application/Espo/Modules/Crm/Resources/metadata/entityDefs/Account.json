@@ -164,6 +164,9 @@
         "asc": true
     },
     "indexes": {
-        "name": ["name"]
+        "name": {
+            "type": "index",
+            "columns": ["name"]
+        }
     }
 }
