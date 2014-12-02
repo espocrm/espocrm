@@ -17,17 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
     
-Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (Dep) {        
+Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (Dep) {
 
     return Dep.extend({
     
-        dataAttributes: ['name', 'width', 'link'],
+        dataAttributes: ['name', 'width', 'link', 'notSortable'],
         
         dataAttributesDefs: {
             link: 'bool',
             width: 'text',
+            notSortable: 'bool',
         },
         
         editable: true,
@@ -40,18 +41,18 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
             this.wait(true);
             this.loadLayout(function () {
                 this.wait(false);
-            }.bind(this));            
+            }.bind(this));
         },
         
         loadLayout: function (callback) {
             this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {                    
-                    this.readDataFromLayout(model, layout);                        
+                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+                    this.readDataFromLayout(model, layout);
                     if (callback) {
                         callback();
-                    }                
+                    }
                 }.bind(this), false);
-            }.bind(this));    
+            }.bind(this));
         },
         
         readDataFromLayout: function (model, layout) {
@@ -61,7 +62,7 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                 
                     allFields.push(field);
                 }
-            }            
+            }
                     
             this.enabledFieldsList = [];
             
@@ -75,8 +76,6 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                 });
                 this.enabledFieldsList.push(layout[i].name);
             }
-            
-            
                 
             for (var i in allFields) {
                 if (!_.contains(this.enabledFieldsList, allFields[i])) {
@@ -95,14 +94,14 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
         },
         
         parseDataAttributes: function (dialog) {
-            var width = parseFloat(dialog.$el.find("[name='width']").val());                                    
+            var width = parseFloat(dialog.$el.find("[name='width']").val());
             if (isNaN(width) || width > 100 || width < 0) {
                 width = '';
-            }                        
+            }
             return {
                 width: width,
                 link: dialog.$el.find("[name='link']").val()
-            };                
+            };
         },
         
         checkFieldType: function (type) {

@@ -103,19 +103,19 @@
 
 <div id="edit-dialog-tpl" style="display: none;">
         {{#each    dataAttributes}}
-            {{#ifNotEqual this 'name'}}    
+            {{#ifNotEqual this 'name'}}
                 <div class="form-group">
-                    <label>{{translate this}}</label>
+                    <label>{{translate this category='layoutManagerDataAttributes' scope='Admin'}}</label>
                     {{#ifPropEquals ../../dataAttributesDefs this 'text'}}
                         <input type="text" name="{{.././this}}" value="" size="8" maxlength="8" class="form-control input-small">
-                    {{/ifPropEquals}}                        
-                    {{#ifPropEquals ../../dataAttributesDefs this 'bool'}}                        
+                    {{/ifPropEquals}}
+                    {{#ifPropEquals ../../dataAttributesDefs this 'bool'}}
                         <select name="{{.././this}}" class="form-control input-small">
-                            <option value="">no</option>
-                            <option value="true">yes</option>
+                            <option value="">{{translate 'No'}}</option>
+                            <option value="true">{{translate 'Yes'}}</option>
                         </select>
-                    {{/ifPropEquals}}                        
+                    {{/ifPropEquals}}
                 </div>
             {{/ifNotEqual}}
-        {{/each}}        
+        {{/each}}
 </div>

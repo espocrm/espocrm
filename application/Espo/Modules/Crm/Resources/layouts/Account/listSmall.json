@@ -1,1 +1,4 @@
-[{"name":"name","width":35,"link":"true"},{"name":"billingAddressCity"}]
+[
+    {"name":"name","width":50,"link":"true"},
+    {"name":"billingAddressCity", "notSortable": true}
+]

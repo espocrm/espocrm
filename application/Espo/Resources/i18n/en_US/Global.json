@@ -131,7 +131,9 @@
         "Tomorrow": "Tomorrow",
         "Yesterday": "Yesterday",
         "Submit": "Submit",
-        "Close": "Close"
+        "Close": "Close",
+        "Yes": "Yes",
+        "No": "No"
     },
     "messages": {
         "notModified": "You have not modified the record",

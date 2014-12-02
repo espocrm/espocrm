@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {        
+Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
 
     return Dep.extend({
     
@@ -35,7 +35,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
             },
             'click button[data-action="cancel"]': function () {
                 this.getRouter().navigate('#Admin/layouts', {trigger: true});
-            },                
+            },
         },
         
         buttons: [
@@ -47,8 +47,8 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
             {
                 name: 'cancel',
                 label: 'Cancel',
-            }            
-        ],    
+            }
+        ],
         
         dataAttributes: null,
         
@@ -82,7 +82,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
         cancel: function () {
             this.loadLayout(function () {
                 this.render();
-            }.bind(this));                
+            }.bind(this));
         },
         
         reset: function () {
@@ -111,7 +111,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                 '&quot;': '"',
                 '&#x27;': "'"
             };
-            var reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');        
+            var reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');
 
             return ('' + string).replace(reg, function (match) {
                 return map[match];
@@ -122,22 +122,22 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
             var tpl = this.unescape($("#edit-dialog-tpl").html());
                 
             var dialog = new Espo.Ui.Dialog({
-                header: 'Field: ' + data.name,
+                header: this.translate(data.name, 'fields', this.scope),
                 body: _.template(tpl, data),
                 buttons: [
                     {
                         name: 'ok',
                         text: '&nbsp; Ok &nbsp;',
-                        onClick: function (dialog) {                                    
-                            var o = this.parseDataAttributes(dialog);                                                                                                    
-                            var li = $("#layout ul > li[data-name='" + data.name + "']");                                                                                                                                                
-                            for (var key in o) {    
+                        onClick: function (dialog) {
+                            var o = this.parseDataAttributes(dialog);
+                            var li = $("#layout ul > li[data-name='" + data.name + "']");
+                            for (var key in o) {
                                 li.attr('data-' + key, o[key]);
                                 li.data(key, o[key]);
                                 li.find('.' + key + '-value').text(o[key]);
                             }
                             dialog.close();
-                        }.bind(this),                                
+                        }.bind(this),
                     },
                     {
                         name: 'cancel',
@@ -145,9 +145,9 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                         onClick: function (dialog) {
                             dialog.close();
                         }
-                    } 
-                ]        
-            });    
+                    }
+                ]
+            });
             
             this.dataAttributes.forEach(function (attr) {
                 var type = this.dataAttributesDefs[attr] || 'text';
@@ -157,7 +157,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                         value = "true";
                     }
                 }
-                dialog.$el.find("[name='"+attr+"']").val(value);    
+                dialog.$el.find("[name='"+attr+"']").val(value);
             }.bind(this));
                             
             dialog.show();
@@ -167,7 +167,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
         
         validate: function (layout) {
             return true;
-        },    
+        },
     });
 });
 
