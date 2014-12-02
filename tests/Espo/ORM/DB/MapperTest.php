@@ -1,7 +1,7 @@
 <?php
 
 use Espo\ORM\DB\MysqlMapper;
-use Espo\ORM\DB\Query;
+use Espo\ORM\DB\Query\Mysql as Query;
 use Espo\ORM\EntityFactory;
 
 use Espo\Entities\Post;
@@ -46,6 +46,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
         $this->query = new Query($this->pdo, $this->entityFactory);
         
         $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
+        $this->db->setReturnCollection(true);
+
         $this->post = new \Espo\Entities\Post();
         $this->comment = new \Espo\Entities\Comment();
         $this->tag = new \Espo\Entities\Tag();

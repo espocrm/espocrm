@@ -20,10 +20,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\ORM\DB;
+namespace Espo\ORM\DB\Query;
 
-class MysqlMapper extends \Espo\ORM\DB\MysqlMapper
+use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
+use Espo\ORM\EntityFactory;
+use PDO;
+
+class Mysql extends Base
 {
-    protected $returnCollection = false;
-}
 
+}

@@ -20,14 +20,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\ORM\DB;
+namespace Espo\ORM\DB\Query;
 
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 use PDO;
 
-class Query
+class Base
 {
     protected static $selectParamList = array(
         'select',

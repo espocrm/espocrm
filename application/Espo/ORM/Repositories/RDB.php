@@ -31,9 +31,6 @@ use \Espo\ORM\IEntity;
 
 class RDB extends \Espo\ORM\Repository
 {
-
-    public static $mapperClassName = '\\Espo\\ORM\\DB\\MysqlMapper';
-
     /**
      * @var Object Mapper.
      */
@@ -66,7 +63,7 @@ class RDB extends \Espo\ORM\Repository
     protected function getMapper()
     {
         if (empty($this->mapper)) {
-            $this->mapper = $this->getEntityManager()->getMapper(self::$mapperClassName);
+            $this->mapper = $this->getEntityManager()->getMapper('RDB');
         }
         return $this->mapper;
     }

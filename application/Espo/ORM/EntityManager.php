@@ -41,11 +41,27 @@ class EntityManager
 
     protected $query;
 
+    protected $driverPlatformMap = array(
+        'pdo_mysql' => 'Mysql',
+        'mysqli' => 'Mysql',
+    );
+
     public function __construct($params)
     {
         $this->params = $params;
 
         $this->metadata = new Metadata();
+
+        if (empty($this->params['platform'])) {
+            if (empty($this->params['driver'])) {
+                throw new \Exception('No database driver specified.');
+            }
+            $driver = $this->params['driver'];
+            if (empty($this->driverPlatformMap[$driver])) {
+                throw new \Exception("Database driver '{$driver}' is not supported.");
+            }
+            $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
+        }
 
         if (!empty($params['metadata'])) {
             $this->setMetadata($params['metadata']);
@@ -69,16 +85,36 @@ class EntityManager
     public function getQuery()
     {
         if (empty($this->query)) {
-            $this->query = new DB\Query($this->getPDO(), $this->entityFactory);
+            $platform = $this->params['platform'];
+            $className = '\\Espo\\ORM\\DB\\Query\\' . ucfirst($platform);
+            $this->query = new $className($this->getPDO(), $this->entityFactory);
         }
         return $this->query;
     }
 
-    public function getMapper($className)
+    protected function getMapperClassName($name)
     {
-        if (empty($this->mappers[$className])) {
-            // TODO use factory
+        $className = null;
+        
+        switch ($name) {
+            case 'RDB':
+                $platform = $this->params['platform'];
+                $className = '\\Espo\\ORM\\DB\\' . ucfirst($platform) . 'Mapper';
+                break;
+        }
 
+        return $className;
+    }
+
+    public function getMapper($name)
+    {
+        if ($name{0} == '\\') {
+            $className = $name;
+        } else {
+            $className = $this->getMapperClassName($name);
+        }
+
+        if (empty($this->mappers[$className])) {
             $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
         }
         return $this->mappers[$className];
@@ -90,7 +126,9 @@ class EntityManager
 
         $port = empty($params['port']) ? '' : 'port=' . $params['port'] . ';';
 
-        $this->pdo = new \PDO('mysql:host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=utf8', $params['user'], $params['password']);
+        $platform = strtolower($params['platform']);
+
+        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=utf8', $params['user'], $params['password']);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 

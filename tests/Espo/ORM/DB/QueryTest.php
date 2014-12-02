@@ -1,6 +1,6 @@
 <?php
 
-use Espo\ORM\DB\Query;
+use Espo\ORM\DB\Query\Mysql as Query;
 use Espo\ORM\EntityFactory;
 
 use Espo\Entities\Post;

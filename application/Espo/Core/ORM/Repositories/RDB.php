@@ -32,8 +32,6 @@ use \Espo\Core\Interfaces\Injectable;
 
 class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {
-    public static $mapperClassName = '\\Espo\\Core\\ORM\\DB\\MysqlMapper';
-
     protected $dependencies = array(
         'metadata'
     );
