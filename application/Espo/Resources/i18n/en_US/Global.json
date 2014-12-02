@@ -10,7 +10,9 @@
         "OutboundEmail": "Outbound Email",
         "ScheduledJob": "Scheduled Job",
         "ExternalAccount": "External Account",
-        "Extension": "Extension"
+        "Extension": "Extension",
+        "Dashboard": "Dashboard",
+        "Stream": "Stream"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -23,7 +25,9 @@
         "OutboundEmail": "Outbound Emails",
         "ScheduledJob": "Scheduled Jobs",
         "ExternalAccount": "External Accounts",
-        "Extension": "Extensions"
+        "Extension": "Extensions",
+        "Dashboard": "Dashboard",
+        "Stream": "Stream"
     },
     "labels": {
         "Misc": "Misc",

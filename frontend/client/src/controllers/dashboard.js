@@ -18,21 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
-Espo.define('Views.Home', 'View', function (Dep) {
-
+Espo.define('Controllers.Dashboard', 'Controller', function (Dep) {
+    
     return Dep.extend({
+    
+        defaultAction: 'index',
+    
+        index: function () {
+            this.main('Dashboard', {
+                displayTitle: true,
+            }, function (view) {
+                view.render();
+            });
+        }
 
-        template: 'home',
-        
-        el: '#main',
-        
-        views: {
-            dashboard: {
-                view: 'Dashboard',
-                selector: '> .home-content',
-            }
-        },
     });
+    
 });
-

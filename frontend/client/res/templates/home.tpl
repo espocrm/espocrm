@@ -1,1 +1,1 @@
-<div class="dashboard">{{{dashboard}}}</div>
+<div class="home-content">{{{dashboard}}}</div>

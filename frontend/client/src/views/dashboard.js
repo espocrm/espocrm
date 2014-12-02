@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Dashboard', 'View', function (Dep) {
 
@@ -34,6 +34,12 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 });
             },
         },
+
+        data: function () {
+            return {
+                displayTitle: this.options.displayTitle
+            };
+        },
     
         getDashletsLayout: function (callback) {
             var dashboardLayout = this.dashboardLayout = this.getPreferences().get('dashboardLayout') || [[],[]];
@@ -45,14 +51,14 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
             var layout = {
                 type: 'columns-2',
                 layout: [],
-            };            
+            };
             dashboardLayout.forEach(function (col) {
                 var c = [];
                 col.forEach(function (defs) {
                     if (defs && defs.name && defs.id) {
                         var o = {
                             name: 'dashlet-' + defs.id,
-                            id: 'dashlet-container-' + defs.id,                        
+                            id: 'dashlet-container-' + defs.id,
                             view: 'Dashlet',
                             options: {
                                 name: defs.name,
@@ -64,10 +70,10 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 });
                 layout.layout.push(c);
             });
-            callback(layout);        
+            callback(layout);
         },
     
-        setup: function () {    
+        setup: function () {
         },
         
         afterRender: function () {
@@ -100,7 +106,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                     this.updateDom();
                     this.updateDashletsLayout();
                 }.bind(this)
-            });        
+            });
         },
         
         updateDom: function () {
@@ -121,23 +127,23 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
         },
         
         updateDashletsLayout: function () {
-            this.getPreferences().set('dashboardLayout', this.dashboardLayout);    
+            this.getPreferences().set('dashboardLayout', this.dashboardLayout);
             this.getPreferences().save({patch: true});
             this.getPreferences().trigger('update');
         },
     
-        removeDashlet: function (id) {            
+        removeDashlet: function (id) {
             this.dashboardLayout.forEach(function (col, i) {
                 col.forEach(function (o, j) {
-                    if (o.id == id) {            
-                        col.splice(j, 1);    
-                        return;            
+                    if (o.id == id) {
+                        col.splice(j, 1);
+                        return;
                     }
                 });
             });
             
-            this.getPreferences().unsetDashletOptions(id);            
-            this.updateDashletsLayout();            
+            this.getPreferences().unsetDashletOptions(id);
+            this.updateDashletsLayout();
         },
         
         addDashlet: function (name) {
@@ -148,7 +154,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 id: id
             });
             
-            this.updateDashletsLayout();            
+            this.updateDashletsLayout();
         
             $('#dashlets').children().first().prepend('<div id="dashlet-container-' + id + '"></div>');
             
@@ -158,9 +164,9 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 id: id,
                 el: '#dashlet-container-' + id
             }, function (view) {
-                view.render();    
+                view.render();
             });
-        },    
-    });    
+        },
+    });
 });
 

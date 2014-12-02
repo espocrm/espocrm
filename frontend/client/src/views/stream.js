@@ -17,50 +17,40 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (Dep) {
+Espo.define('Views.Stream', 'View', function (Dep) {
 
     return Dep.extend({
     
-        name: 'Stream',
+        template: 'stream',
+        
+        events: {
+        },
 
-        defaultOptions: {
-            displayRecords: 5,
-            autorefreshInterval: 0.5,
-            isDoubleHeight: false
+        data: function () {
+            return {
+                displayTitle: this.options.displayTitle
+            };
         },
-        
-        _template: '<div class="list-container">{{{list}}}</div>',
-        
-        optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
-            'displayRecords': {
-                type: 'enumInt',
-                options: [3,4,5,10,15]
-            },
-            'isDoubleHeight': {
-                type: 'bool',
-            },
-        }),
-        
-        actionRefresh: function () {
-            this.getView('list').showNewRecords();
-        },
-        
-        afterRender: function () {
+
+        setup: function () {
             
+        },
+
+        afterRender: function () {
+            this.notify('Loading...');
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
-                
                 collection.url = 'Stream';
-                collection.maxSize = this.getOption('displayRecords');
                 
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', 'Stream.List', {
-                        el: this.options.el + ' > .list-container',
+                        el: this.options.el + ' .list-container',
                         collection: collection,
                         isUserStream: true,
                     }, function (view) {
+                        view.notify(false);
                         view.render();
                     });
                 }.bind(this));
@@ -68,9 +58,7 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
                 
             }, this);
         },
-        
 
     });
 });
-
 
