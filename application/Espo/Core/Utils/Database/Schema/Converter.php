@@ -167,8 +167,8 @@ class Converter
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
                     if (is_array($indexParams['columns'])) {
-                        $uIndexName = strtoupper( Util::toUnderScore($indexName) );
-                        $indexList[$uIndexName] = Util::toUnderScore($indexParams['columns']);
+                        $tableIndexName = $this->generateIndexName($indexName, $entityName);
+                        $indexList[$tableIndexName] = Util::toUnderScore($indexParams['columns']);
                     }
                 }
             }
@@ -372,5 +372,21 @@ class Converter
         return $dependentEntities;
     }
 
+    /**
+     * Generate index name
+     *
+     * @return string
+     */
+    protected function generateIndexName($name, $entityName)
+    {
+        $names = array(
+            'IDX',
+        );
+
+        $names[] = strtoupper( Util::toUnderScore($entityName) );
+        $names[] = strtoupper( Util::toUnderScore($name) );
+
+        return implode('_', $names);
+    }
 
 }
