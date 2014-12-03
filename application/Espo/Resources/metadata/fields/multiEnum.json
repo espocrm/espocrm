@@ -8,6 +8,11 @@
       {
          "name":"options",
          "type":"array"
+      },
+      {
+         "name":"translation",
+         "type":"varchar",
+         "hidden": true
       }
    ],
    "filter": false,

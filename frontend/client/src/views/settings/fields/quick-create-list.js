@@ -18,14 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
-Espo.define('Views.Admin.UserInterface', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('Views.Settings.Fields.QuickCreateList', 'Views.Fields.Array', function (Dep) {
 
     return Dep.extend({
+    
+        setup: function () {
+
+            this.params.options =  Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
+                return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.tab');
+            }, this).sort(function (v1, v2) {
+                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            }.bind(this));
+
+            Dep.prototype.setup.call(this);
+        },
         
-        layoutName: 'userInterface',
         
     });
     
 });
-
