@@ -81,13 +81,13 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             this.date = this.options.date || null;
             this.mode = this.options.mode || this.defaultMode;
             this.header = ('header' in this.options) ? this.options.header : this.header;
-            this.slotMinutes = this.options.slotMinutes || this.slotMinutes;                
+            this.slotMinutes = this.options.slotMinutes || this.slotMinutes;
         },
 
-        updateDate: function () {            
+        updateDate: function () {
             if (!this.header) {
                 return;
-            }                
+            }
             var view = this.$calendar.fullCalendar('getView');
             var today = new Date();
             
@@ -134,27 +134,37 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             if (o.dateEnd) {
                 event.end = this.getDateTime().toMoment(o.dateEnd);
             }
+            if (event.end && event.start) {
+                event.duration = event.end.unix() - event.start.unix();
+                if (event.duration < 1800) {
+                    event.end = event.start.clone().add(30, 'm');
+                }
+
+            }
+
+            this.handleAllDay(event);
+
+            event.color = this.colors[o.scope];
+            return event;
+        },
+
+        handleAllDay: function (event) {
             if (!event.start || !event.end) {
                 event.allDay = true;
                 if (event.end) {
                     event.start = event.end;
                 }
             } else {
-                var start = new Date(event.start);
-                var end = new Date(event.end);
-                if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
-                    event.allDay = true;    
+                if (
+                    (event.start.format('d') != event.end.format('d') && (event.end.hours() != 0 || event.end.minutes() != 0))
+                    ||
+                    (event.end.unix() - event.start.unix() >= 86400)
+                ) {
+                    event.allDay = true;
                 } else {
                     event.allDay = false;
-                    if (end - start < 1800000) {
-                        var m = event.start.add('minutes', 30);
-                        event.end = m.format();
-                    }                                            
                 }
             }
-
-            event.color = this.colors[o.scope];
-            return event;
         },
 
         convertToFcEvents: function (list) {
@@ -172,7 +182,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             var string = d.format(format);
             
             var m;
-            if (timeZone) {    
+            if (timeZone) {
                 m = moment.tz(string, format, timeZone).utc();
             } else {
                 m = moment.utc(string, format);
@@ -200,9 +210,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 slotEventOverlap: true,
                 snapDuration: 15 * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
-                select: function (start, end, allDay) {                    
+                select: function (start, end, allDay) {
                     var dateStart = this.convertTime(start);
-                    var dateEnd = this.convertTime(end);                                        
+                    var dateEnd = this.convertTime(end);
                     
                     this.notify('Loading...');
                     this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
@@ -233,15 +243,19 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     var m = moment(this.$calendar.fullCalendar('getDate'));
                     this.trigger('view', m.format('YYYY-MM-DD'), mode);
                 }.bind(this),
-                events: function (from, to, timezone, callback) {                    
+                events: function (from, to, timezone, callback) {
                     var fromServer = this.getDateTime().fromIso(from);
                     var toServer = this.getDateTime().fromIso(to);
                     
                     this.fetchEvents(fromServer, toServer, callback);
                 }.bind(this),
-                eventDrop: function (event, delta, callback) {        
+                eventDrop: function (event, delta, callback) {
                     var dateStart = this.convertTime(event.start) || null;
-                    var dateEnd = this.convertTime(event.end) || null;                    
+
+                    var dateEnd = null;
+                    if (event.duration) {
+                        dateEnd = this.convertTime(event.start.clone().add(event.duration, 's')) || null;
+                    }
                     
                     var attributes = {};
                     if (!event.dateStart && event.dateEnd) {
@@ -256,19 +270,15 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                             attributes.dateEnd = dateEnd;
                             event.dateEnd = dateEnd;
                         }
-                    }                
-
-                    if (!(event.dateStart && event.dateEnd)) {
-                        event.allDay = true;
-                    } else {
-                        var start = new Date(event.start);
-                        var end = new Date(event.end);
-                        if ((start.getDate() != end.getDate()) || (end - start >= 86400000)) {
-                            event.allDay = true;
-                        }
                     }
 
-                    this.$calendar.fullCalendar('renderEvent', event);                                
+                    if (!event.end) {
+                        event.end = event.start.clone().add(event.duration, 's');
+                    }
+
+                    this.handleAllDay(event);
+
+                    this.$calendar.fullCalendar('renderEvent', event);
                     
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
@@ -277,7 +287,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         }.bind(this));
                         model.id = event.recordId;
                         model.save(attributes, {patch: true});
-                    }, this);                                            
+                    }, this);
                 }.bind(this),
                 eventResize: function (event) {
                     var attributes = {
@@ -290,7 +300,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         }.bind(this));
                         model.id = event.recordId;
                         model.save(attributes, {patch: true});
-                    }.bind(this));                    
+                    }.bind(this));
                 }.bind(this),
                 allDayText: '',
                 firstHour: 8,
@@ -301,25 +311,25 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 weekNumberTitle: '',
             };
 
-            if (this.date) {                
-                options.defaultDate = moment.utc(this.date); 
+            if (this.date) {
+                options.defaultDate = moment.utc(this.date);
             }
 
             setTimeout(function () {
-                $calendar.fullCalendar(options);                    
+                $calendar.fullCalendar(options);
                 this.updateDate();
             }.bind(this), 150);
         },
 
         fetchEvents: function (from, to, callback) {
             $.ajax({
-                url: 'Activities?from=' + from + '&to=' + to,                
+                url: 'Activities?from=' + from + '&to=' + to,
                 success: function (data) {
                     var events = this.convertToFcEvents(data);
                     callback(events);
                     this.notify(false);
                 }.bind(this)
-            });        
+            });
         },
 
         addModel: function (model) {

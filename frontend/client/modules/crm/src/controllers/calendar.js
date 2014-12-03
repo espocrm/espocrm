@@ -17,11 +17,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
     
-    return Dep.extend({        
+    return Dep.extend({
     
         checkAccess: function () {
             if (this.getAcl().check('Calendar')) {
@@ -39,10 +39,10 @@ Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
 
             this.main('Crm:CalendarPage', {
                 date: options.date,
-                mode: options.mode,        
+                mode: options.mode,
             });
-        },            
-    });    
+        },
+    });
 });
 
 
