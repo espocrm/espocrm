@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
@@ -61,7 +61,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             }, this);
             if (~index) {
                 this.menu.buttons.splice(index, 1);
-            }            
+            }
         },
         
         addFollowButtonToMenu: function () {
@@ -89,15 +89,15 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             Dep.prototype.setup.call(this);
             
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
-                if (this.model.has('isFollowed')) {                
+                if (this.model.has('isFollowed')) {
                     if (this.model.get('isFollowed')) {
                         this.addUnfollowButtonToMenu();
                     } else {
                         this.addFollowButtonToMenu();
                     }
                 } else {
-                    this.once('after:render', function () {                    
-                        var proceed = function () {                        
+                    this.once('after:render', function () {
+                        var proceed = function () {
                             if (this.model.get('isFollowed')) {
                                 this.addUnfollowButton();
                                 this.addUnfollowButtonToMenu();
@@ -120,20 +120,20 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
                     }, this);
                 }
-            }            
+            }
         },
         
         addFollowButton: function () {
             $el = $('<button>').addClass('btn btn-default action')
                                .attr('data-action', 'follow')
-                               .html('<span class="glyphicon glyphicon-share-alt"></span> ' + this.translate('Follow'));            
+                               .html('<span class="glyphicon glyphicon-share-alt"></span> ' + this.translate('Follow'));
             $("div.header-buttons").prepend($el);
         },
         
         addUnfollowButton: function () {
             $el = $('<button>').addClass('btn btn-default action btn-success')
                                .attr('data-action', 'unfollow')
-                               .html(this.translate('Followed'));            
+                               .html(this.translate('Followed'));
             $("div.header-buttons").prepend($el);
         },
         
@@ -147,7 +147,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                     $el.remove();
                     this.addUnfollowButton();
                 }.bind(this)
-            });            
+            });
         },
         
         actionUnfollow: function () {
@@ -156,7 +156,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             $.ajax({
                 url: this.model.name + '/' + this.model.id + '/subscription',
                 type: 'DELETE',
-                success: function () {                    
+                success: function () {
                     $el.remove();
                     this.addFollowButton();
                 }.bind(this)
@@ -183,7 +183,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 if (rel) {
                     rel.collection.fetch();
                 }
-            }                
+            }
         },
         
         relatedAttributeMap: {},
@@ -231,11 +231,11 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             
             var filters = this.selectRelatedFilters[link] || null;
             
-            for (var filterName in filters) {    
+            for (var filterName in filters) {
                 if (typeof filters[filterName] == 'function') {
                     filters[filterName] = filters[filterName].call(this);
-                }            
-            }            
+                }
+            }
 
             this.notify('Loading...');
             this.createView('dialog', 'Modals.SelectRecords', {
@@ -246,8 +246,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
-                dialog.once('select', function (selectObj) {                
-                    var data = {};                                    
+                dialog.once('select', function (selectObj) {
+                    var data = {};
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
                         selectObj.forEach(function (model) {
@@ -258,8 +258,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                         data.id = selectObj.id;
                     }
                     $.ajax({
-                        url: self.scope + '/' + self.model.id + '/' + link, 
-                        type: 'POST',                        
+                        url: self.scope + '/' + self.model.id + '/' + link,
+                        type: 'POST',
                         data: JSON.stringify(data),
                         success: function () {
                             self.notify('Linked', 'success');
@@ -282,8 +282,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             this.getRouter().dispatch(this.scope, 'create', {
                 attributes: attributes,
             });
-            this.getRouter().navigate(url, {trigger: false});            
-        },        
+            this.getRouter().navigate(url, {trigger: false});
+        },
         
     });
 });
