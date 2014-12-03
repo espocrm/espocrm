@@ -132,10 +132,19 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 
                 this.$list.sortable({
                     stop: function () {
+                        this.fetchFromDom();
                         this.trigger('change');
                     }.bind(this)
                 });
             }
+        },
+
+        fetchFromDom: function () {
+            var selected = [];
+            this.$el.find('.list-group .list-group-item').each(function (i, el) {
+                selected.push($(el).data('value'));
+            });
+            this.selected = selected;
         },
 
         getValueForDisplay: function () {
