@@ -607,7 +607,8 @@ class Record extends \Espo\Core\Services\Base
 
             $row = array();
             foreach ($fields as $field) {
-                $row[$field] = $entity->get($field);
+                $value = $this->getFieldFromEntityForExport($entity, $field);
+                $row[$field] = $value;
             }
             $arr[] = $row;
         }
@@ -641,6 +642,28 @@ class Record extends \Espo\Core\Services\Base
             return $attachment->id;
         }
         throw new Error();
+    }
+
+    protected function getFieldFromEntityForExport(Entity $entity, $field)
+    {
+        $defs = $entity->getFields();
+        if (!empty($defs[$field]) && !empty($defs[$field]['type'])) {
+            $type = $defs[$field]['type'];
+            switch ($type) {
+                case 'jsonArray':
+                    $value = $entity->get($field);
+                    if (is_array($value)) {
+                        return implode(',', $value);
+                    } else {
+                        return null;
+                    }
+                    break;
+                case 'password':
+                    return null;
+                    break;
+            }
+        }
+        return $entity->get($field);
     }
 
     public function prepareEntityForOutput(Entity $entity)
