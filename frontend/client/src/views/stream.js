@@ -26,6 +26,10 @@ Espo.define('Views.Stream', 'View', function (Dep) {
         template: 'stream',
         
         events: {
+            'click button[data-action="refresh"]': function () {
+                if (!this.hasView('list')) return;
+                this.getView('list').showNewRecords();
+            },
         },
 
         data: function () {
