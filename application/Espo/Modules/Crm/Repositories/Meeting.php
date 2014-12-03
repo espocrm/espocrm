@@ -18,16 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
 class Meeting extends \Espo\Core\ORM\Repositories\RDB
-{    
+{
     protected function beforeSave(Entity $entity)
-    {    
+    {
         parent::beforeSave($entity);
         
         $parentId = $entity->get('parentId');
@@ -44,7 +44,24 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                     $entity->set('accountId', $accountId);
                 }
             }
-        }        
+        }
+
+        $assignedUserId = $entity->get('assignedUserId');
+        if ($assignedUserId && $entity->has('usersIds')) {
+            $usersIds = $entity->get('usersIds');
+            if (!is_array($usersIds)) {
+                $usersIds = array();
+            }
+            if (!in_array($assignedUserId, $usersIds)) {
+                $usersIds[] = $assignedUserId;
+                $entity->set('usersIds', $usersIds);
+                $hash = $entity->get('usersNames');
+                if ($hash instanceof \stdClass) {
+                    $hash->$assignedUserId = $entity->get('assignedUserName');
+                    $entity->set('usersNames', $hash);
+                }
+            }
+        }
     }
 }
 
