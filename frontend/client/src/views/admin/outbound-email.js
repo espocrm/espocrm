@@ -63,9 +63,6 @@ Espo.define('Views.Admin.OutboundEmail', 'Views.Settings.Record.Edit', function 
         setup: function () {
             Dep.prototype.setup.call(this);                
         
-            this.model.defs.fields.assignmentEmailNotificationsEntityList.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-                return this.getMetadata().get('scopes.' + scope + '.tab') && this.getMetadata().get('scopes.' + scope + '.entity');
-            }, this);
         },
         
         afterRender: function () {

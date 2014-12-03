@@ -113,16 +113,18 @@
         },
         "tabList": {
             "type": "array",
-            "translation": "Global.scopeNamesPlural"
+            "translation": "Global.scopeNamesPlural",
+            "view": "Settings.Fields.TabList"
         },
         "quickCreateList": {
             "type": "array",
-            "translation": "Global.scopeNames"
+            "translation": "Global.scopeNames",
+            "view": "Settings.Fields.QuickCreateList"
         },
         "language": {
             "type": "enum",
             "options": ["en_US"],
-            "default": "en_US"            
+            "default": "en_US"
         },
         "exportDelimiter": {
             "type": "varchar",
@@ -204,7 +206,8 @@
         },
         "assignmentEmailNotificationsEntityList": {
             "type": "multiEnum",
-            "translation": "Global.scopeNamesPlural"
+            "translation": "Global.scopeNamesPlural",
+            "view": "Settings.Fields.AssignmentEmailNotificationsEntityList"
         },
         "b2cMode": {
             "type": "bool",
