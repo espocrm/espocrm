@@ -31,8 +31,6 @@ Espo.define('Views.Settings.Fields.AssignmentEmailNotificationsEntityList', 'Vie
             }.bind(this));
 
             Dep.prototype.setup.call(this);
-
-            console.log(this.translatedOptions);
         },
         
     });
