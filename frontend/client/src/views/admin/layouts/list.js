@@ -34,6 +34,8 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
         editable: true,
         
         ignoreList: [],
+
+        ignoreTypeList: [],
     
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -113,6 +115,9 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
         
         isFieldEnabled: function (model, name) {
             if (this.ignoreList.indexOf(name) != -1) {
+                return false;
+            }
+            if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
             return !model.getFieldParam(name, 'disabled');

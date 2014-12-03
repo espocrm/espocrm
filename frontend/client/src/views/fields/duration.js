@@ -33,25 +33,25 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
         data: function () {
             return _.extend({
                 durationOptions: this.durationOptions,
-            }, Dep.prototype.data.call(this));            
+            }, Dep.prototype.data.call(this));
         },
         
         calculateSeconds: function () {
-            this.seconds = 0;            
+            this.seconds = 0;
             var start = this.model.get(this.startField);
             var end = this.model.get(this.endField);
             if (this.mode == 'edit' || this.mode == 'detail') {
                 this.seconds = this.model.getFieldParam(this.name, 'default') || 0;
-            }            
+            }
             
             if (start && end) {
-                this.seconds = moment(this.model.get(this.endField)).unix() - moment(this.model.get(this.startField)).unix();                            
+                this.seconds = moment(this.model.get(this.endField)).unix() - moment(this.model.get(this.startField)).unix();
             } else {
                 if (start) {
                     var end = this._getDateEnd();
                     this.model.set(this.endField, end, {silent: true});
                 }
-            }            
+            }
         },
         
         init: function () {
@@ -119,28 +119,31 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
         },
 
         afterRender: function () {
-            this.startFieldView = this.getParentView().getView(this.startField);
-            this.endFieldView = this.getParentView().getView(this.endField);
+            var parentView = this.getParentView();
+            if (parentView && 'getView' in parentView) {
+                this.startFieldView = parentView.getView(this.startField);
+                this.endFieldView = parentView.getView(this.endField);
+            }
 
             if (this.mode == 'edit') {
                 this.$duration = this.$el.find('[name="' + this.name + '"]');
-                this.$duration.on('change', function () {                    
+                this.$duration.on('change', function () {
                     this.seconds = parseInt(this.$duration.val());
                     this.updateDateEnd();
                     this.$duration.find('option.custom').remove();
-                }.bind(this));                
-            }            
+                }.bind(this));
+            }
             
             this.stopListening(this.model, 'change:' + this.endField);
             this.stopListening(this.model, 'change:' + this.endField);
             
-            this.listenTo(this.model, 'change:' + this.endField, function () {        
+            this.listenTo(this.model, 'change:' + this.endField, function () {
                 var start = this.model.get(this.startField);
                 var end = this.model.get(this.endField);
                 
                 if (!end || !start) {
                     return;
-                }                
+                }
                     
                 this.seconds = moment(end).unix() - moment(start).unix();
                 this.updateDuration();
@@ -178,7 +181,7 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
             var endUnix;
             var end;
             if (seconds) {
-                endUnix = moment.utc(start).unix() + seconds;                
+                endUnix = moment.utc(start).unix() + seconds;
                 end = moment.unix(endUnix).utc().format(this.getDateTime().internalDateTimeFormat);
             } else {
                 end = start;
@@ -204,7 +207,7 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
                     this.setup();
                     this.render();
                 }
-            } else {            
+            } else {
                 if (this.mode == 'edit') {
                     this.$duration.find('option.custom').remove();
                     var $o = $('<option>').val(seconds).text(this.stringifyDuration(seconds)).addClass('custom');

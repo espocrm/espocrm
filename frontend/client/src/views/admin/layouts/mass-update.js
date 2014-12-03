@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
     
-Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', function (Dep) {        
+Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', function (Dep) {
 
     return Dep.extend({
     
@@ -28,6 +28,8 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
         editable: false,
         
         ignoreList: [],
+
+        ignoreTypeList: ['duration'],
         
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -54,7 +56,7 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
                             label: this.getLanguage().translate(layout[i], 'fields', this.scope)
                         });
                         this.enabledFieldsList.push(layout[i]);
-                    }                        
+                    }
                 
                     for (var i in allFields) {
                         if (!_.contains(this.enabledFieldsList, allFields[i])) {
@@ -70,14 +72,14 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
                     }
                     
-                    this.wait(false);                    
+                    this.wait(false);
                 }.bind(this), false);
-            }.bind(this));                
+            }.bind(this));
         },
         
         fetch: function () {
             var layout = [];
-            $("#layout ul.enabled > li").each(function (i, el) {                
+            $("#layout ul.enabled > li").each(function (i, el) {
                 layout.push($(el).data('name'));
             }.bind(this));
             return layout;
@@ -89,6 +91,9 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
         
         isFieldEnabled: function (model, name) {
             if (this.ignoreList.indexOf(name) != -1) {
+                return false;
+            }
+            if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
             return !model.getFieldParam(name, 'disabled');
