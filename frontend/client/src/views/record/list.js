@@ -753,6 +753,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             }
         },
 
+        getRowSelector: function (id) {
+            return 'tr[data-id="' + id + '"]';
+        },
+
         quickRemove: function (id) {
             var model = this.collection.get(id);
             if (!this.getAcl().checkModel(model, 'delete')) {
@@ -766,7 +770,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 model.destroy({
                     success: function () {
                         self.notify('Removed', 'success');
-                        self.$el.find('tr[data-id="' + id + '"]').remove();
+                        self.$el.find(self.getRowSelector(id)).remove();
                         self.collection.total--;
                         if (self.collection.length == 0 && self.collection.total == 0) {
                             self.render();

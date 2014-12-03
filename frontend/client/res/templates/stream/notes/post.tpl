@@ -2,7 +2,7 @@
 <li data-id="{{model.id}}" class="list-group-item">
 {{/unless}}
     
-    {{#unless isUserStream}}
+    {{#unless noEdit}}
     <div class="list-row-buttons pull-right right">
         {{#if acl.edit}}
         <div class="btn-group">
@@ -10,8 +10,8 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right">
-            <li><a href="javascript:" class="action" data-action="editRelated" data-id="{{model.id}}">{{translate 'Edit'}}</a></li>
-            <li><a href="javascript:" class="action" data-action="removeRelated" data-id="{{model.id}}">{{translate 'Remove'}}</a></li>
+            <li><a href="javascript:" class="action" data-action="quickEdit" data-id="{{model.id}}">{{translate 'Edit'}}</a></li>
+            <li><a href="javascript:" class="action" data-action="quickRemove" data-id="{{model.id}}">{{translate 'Remove'}}</a></li>
         </ul>
         </div>
         {{/if}}

@@ -40,6 +40,7 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
                     edit: this.getAcl().checkModel(model)
                 },
                 isUserStream: this.options.isUserStream,
+                noEdit: this.options.noEdit,
                 optionsToPass: ['acl'],
                 name: this.type + '-' + model.name,
                 el: this.options.el + ' li[data-id="' + model.id + '"]'

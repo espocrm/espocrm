@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Views.Record.Detail', 'View', function (Dep) {
     
     return Dep.extend({
@@ -39,7 +39,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
          */
         buttonsPosition: 'top',
 
-        columnCount: 2,        
+        columnCount: 2,
         
         scope: null,
         
@@ -82,7 +82,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         
         editModeEnabled: true,
         
-        readOnly: false,        
+        readOnly: false,
         
         isWide: false,
         
@@ -103,7 +103,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         },
         
         actionEdit: function () {
-            if (this.editModeEnabled) {        
+            if (this.editModeEnabled) {
                 this.setEditMode();
                 $(window).scrollTop(0);
             } else {
@@ -128,11 +128,11 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         },
         
         afterRender: function () {
-            var $container = this.$el.find('.detail-button-container');                        
+            var $container = this.$el.find('.detail-button-container');
             var stickTop = 62;
-            var blockHeihgt = 21;        
+            var blockHeihgt = 21;
             var $block = $('<div>').css('height', blockHeihgt + 'px').html('&nbsp;').hide().insertAfter($container);
-            var $record = this.getView('record').$el;            
+            var $record = this.getView('record').$el;
             var $window = $(window);
             
             $window.on('scroll.detail', function (e) {
@@ -143,31 +143,31 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
                     return;
                 }
                             
-                var edge = $record.position().top + $record.outerHeight(true);                    
+                var edge = $record.position().top + $record.outerHeight(true);
                 var scrollTop = $window.scrollTop();
                 
                 if (scrollTop < edge) {
                     if (scrollTop > stickTop) {
                         if (!$container.hasClass('stick-sub')) {
-                            $container.addClass('stick-sub');                            
+                            $container.addClass('stick-sub');
                             $block.show();
                                 
-                            var $p = $('.popover');                            
+                            var $p = $('.popover');
                             $p.each(function (i, el) {
                                 $el = $(el);
                                 $el.css('top', ($el.position().top - blockHeihgt) + 'px');
-                            });    
+                            });
                         }
                     } else {
                         if ($container.hasClass('stick-sub')) {
-                            $container.removeClass('stick-sub');                            
+                            $container.removeClass('stick-sub');
                             $block.hide();
                             
-                            var $p = $('.popover');                            
+                            var $p = $('.popover');
                             $p.each(function (i, el) {
                                 $el = $(el);
                                 $el.css('top', ($el.position().top + blockHeihgt) + 'px');
-                            });    
+                            });
                         }
                     }
                     $container.show();
@@ -179,31 +179,30 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
             
             var fields = this.getFields();
             
-            var fieldInEditMode = null;        
-            for (var field in fields) {                
+            var fieldInEditMode = null;
+            for (var field in fields) {
                 var fieldView = fields[field];
                 this.listenTo(fieldView, 'edit', function (view) {
                     if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
                         fieldInEditMode.inlineEditClose();
                     }
-                    fieldInEditMode = view;                    
+                    fieldInEditMode = view;
                 }.bind(this));
             }
         },
         
         setEditMode: function () {
             this.$el.find('.record-buttons').addClass('hidden');
-            this.$el.find('.edit-buttons').removeClass('hidden');            
+            this.$el.find('.edit-buttons').removeClass('hidden');
             
-            var fields = this.getFields();                
+            var fields = this.getFields();
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (!fieldView.readOnly) {
                     if (fieldView.mode == 'edit') {
                         fieldView.fetchToModel();
                         fieldView.removeInlineEditLinks();
-                        //fieldView.inlineEditClose(true);
-                    }            
+                    }
                     fieldView.setMode('edit');
                     fieldView.render();
                 }
@@ -214,7 +213,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
             
-            var fields = this.getFields();                
+            var fields = this.getFields();
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (fieldView.mode != 'detail') {
@@ -227,7 +226,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         cancelEdit: function () {
             this.model.set(this.attributes);
             this.setDetailMode();
-        },        
+        },
 
         delete: function () {
             if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
@@ -317,7 +316,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         setup: function () {
             if (typeof this.model === 'undefined') {
                 throw new Error('Model has not been injected into record view.');
-            }                        
+            }
 
             this.id = Espo.Utils.toDom(this.model.name) + '-' + Espo.Utils.toDom(this.type);
 
@@ -358,27 +357,27 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
             
             
             this._initDependancy();
-        },    
+        },
         
-        _initDependancy: function () {        
+        _initDependancy: function () {
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
                 
             Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
                 this.listenTo(this.model, 'change:' + attr, function () {
                     this._handleDependencyAttribute(attr);
-                }, this);                
+                }, this);
             }, this);
             
             this.on('after:render', function () {
                 this._handleDependencyAttributes();
             }, this);
-        },    
+        },
         
         validate: function () {
             var notValid = false;
             var fields = this.getFields();
             for (var i in fields) {
-                if (fields[i].mode == 'edit') {                    
+                if (fields[i].mode == 'edit') {
                     if (fields[i].enabled && !fields[i].readOnly) {
                         notValid = fields[i].validate() || notValid;
                     }
@@ -387,18 +386,18 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
             return notValid
         },
 
-        save: function (callback) {            
+        save: function (callback) {
             this.disableButtons();
             var data = this.fetch();
 
             var self = this;
             var model = this.model;
 
-            var attrsInitialy = this.attributes;        
+            var attrsInitialy = this.attributes;
             
             var attrsBefore = this.model.getClonedAttributes();
             
-            data = _.extend(Espo.Utils.cloneDeep(attrsBefore), data);            
+            data = _.extend(Espo.Utils.cloneDeep(attrsBefore), data);
                         
             var attrs = false;
             if (model.isNew()) {
@@ -460,23 +459,23 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
                     if (xhr.status == 409) {
                         var header = xhr.getResponseHeader('X-Status-Reason');
                         try {
-                            var response = JSON.parse(header);                            
+                            var response = JSON.parse(header);
                         } catch (e) {
                             console.error('Error while parsing response');
                         }
                     }
                     
-                    if (response) {                        
+                    if (response) {
                         if (response.reason == 'Duplicate') {
                             xhr.errorIsHandled = true;
                             self.notify(false);
                             self.showDuplicate(response.data);
-                        }                        
+                        }
                     }
                     
                     model.attributes = attrsBefore;
                     self.trigger('cancel:save');
-                    self.enableButtons();                    
+                    self.enableButtons();
                 },
                 patch: !model.isNew()
             });
@@ -560,11 +559,11 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
                             continue;
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(cellDefs.name) || 'base';                    
+                        var type = cellDefs.type || this.model.getFieldType(cellDefs.name) || 'base';
                         var viewName = cellDefs.view || this.model.getFieldParam(cellDefs.name, 'view') || this.getFieldManager().getViewName(type);
 
                         
-                        var readOnly = this.readOnly;                        
+                        var readOnly = this.readOnly;
                         if (!readOnly) {
                             readOnly = cellDefs.readOnly || false;
                         }
@@ -679,7 +678,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         
         _handleDependencyAttributes: function () {
             Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
-                this._handleDependencyAttribute(attr);                
+                this._handleDependencyAttribute(attr);
             }, this);
         },
         
@@ -700,7 +699,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         },
         
         _doDependencyAction: function (data) {
-            var action = data.action;        
+            var action = data.action;
             
             var methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
             if (methodName in this && typeof this.methodName == 'function') {
@@ -736,7 +735,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
                             fieldView.setRequired();
                         }
                     }, this);
-                    break;                                
+                    break;
             }
         },
         

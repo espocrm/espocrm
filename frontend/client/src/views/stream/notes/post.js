@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
 
@@ -27,23 +27,23 @@ Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
         
         messageName: 'post',
         
-        setup: function () {        
+        setup: function () {
             if (this.model.get('post')) {
-                this.createField('post', null, null, 'Stream.Fields.Post');                
-            }            
+                this.createField('post', null, null, 'Stream.Fields.Post');
+            }
             if ((this.model.get('attachmentsIds') || []).length) {
                 this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
                 
                 if (!this.model.get('post')) {
-                    this.messageName = 'attach';                    
+                    this.messageName = 'attach';
                     if (!this.isUserStream) {
                         this.messageName += 'This';
                     }
                 }
-            }            
+            }
             
             this.createMessage();
-        },        
+        },
     });
 });
 

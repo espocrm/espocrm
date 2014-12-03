@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
@@ -29,7 +29,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
         selectable: false,
 
-        rowActionsView: false,            
+        rowActionsView: false,
         
         _internalLayoutType: 'list-row-expanded',
         
@@ -52,17 +52,17 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
             });
         },
 
-        _convertLayout: function (listLayout, model) {                
+        _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
             
             var layout = {
                 rows: [],
                 right: false,
-            };                                
+            };
 
             for (var i in listLayout.rows) {
-                var row = listLayout.rows[i];                    
-                var layoutRow = [];                 
+                var row = listLayout.rows[i];
+                var layoutRow = [];
                 for (var j in row) {
                 
                     var e = row[j];
@@ -82,13 +82,13 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
                     if (e.link) {
                         item.options.mode = 'listLink';
                     }
-                    layoutRow.push(item);                        
+                    layoutRow.push(item);
                 }
                 layout.rows.push(layoutRow);
             }
             
-            if ('right' in listLayout) {    
-                if (listLayout.right != false) {            
+            if ('right' in listLayout) {
+                if (listLayout.right != false) {
                     layout.right = {
                         name: listLayout.right.name || 'right',
                         view: listLayout.right.view,
@@ -100,14 +100,19 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
                             }
                         }
                     };
-                }    
-            } else {            
+                }
+            } else {
                 if (this.rowActionsView) {
                     layout.right = this.getRowActionsDefs();
                 }
             }
             return layout;
         },
+
+        getRowSelector: function (id) {
+            return 'li[data-id="' + id + '"]';
+        },
+
     });
 });
 

@@ -60,6 +60,7 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
                         el: this.options.el + ' > .list-container',
                         collection: collection,
                         isUserStream: true,
+                        noEdit: true,
                     }, function (view) {
                         view.render();
                     });

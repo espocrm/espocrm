@@ -32,6 +32,7 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
         data: function () {
             return {
                 isUserStream: this.isUserStream,
+                noEdit: this.options.noEdit,
                 acl: this.options.acl,
                 onlyContent: this.options.onlyContent,
                 avatar: this.getAvatarHtml()
