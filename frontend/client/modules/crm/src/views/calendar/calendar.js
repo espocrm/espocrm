@@ -276,6 +276,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         event.end = event.start.clone().add(event.duration, 's');
                     }
 
+                    event.allDay = false;
+
                     this.handleAllDay(event);
 
                     this.$calendar.fullCalendar('renderEvent', event);
