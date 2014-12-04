@@ -245,8 +245,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         foreach ($entity->getRelations() as $name => $defs) {
             if (in_array($defs['type'], $relationTypes)) {
                 $fieldName = $name . 'Ids';
-                if ($entity->has($fieldName)) {
-                    $specifiedIds = $entity->get($fieldName);
+                $columnsFieldsName = $name . 'Columns';
+
+                if ($entity->has($fieldName) || $entity->has($columnsFieldsName)) {
+
+                    if ($entity->has($fieldName)) {
+                        $specifiedIds = $entity->get($fieldName);
+                    } else {
+                        $specifiedIds = array();
+                        foreach ($entity->get($columnsFieldsName) as $id => $d) {
+                            $specifiedIds[] = $id;
+                        }
+                    }
                     if (is_array($specifiedIds)) {
                         $toRemoveIds = array();
                         $existingIds = array();
@@ -256,9 +266,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         $defs = array();
                         $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".fields.{$name}.columns");
                         if (!empty($columns)) {
-                            $columnData = $entity->get($name . 'Columns');
+                            $columnData = $entity->get($columnsFieldsName);
                             $defs['additionalColumns'] = $columns;
-
                         }
 
                         foreach ($entity->get($name, $defs) as $foreignEntity) {

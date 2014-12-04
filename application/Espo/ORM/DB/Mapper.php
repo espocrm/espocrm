@@ -340,7 +340,7 @@ abstract class Mapper implements IMapper
 
                 $setArr = array();
                 foreach ($columnData as $column => $value) {
-                    $setArr[] = $this->toDb($column) . " = " . $this->pdo->quote($value);
+                    $setArr[] = "`".$this->toDb($column) . "` = " . $this->pdo->quote($value);
                 }
                 if (empty($setArr)) {
                     return true;

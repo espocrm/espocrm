@@ -28,6 +28,8 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Conflict;
+use \Espo\Core\Exceptions\NotFound;
+
 
 use \Espo\Core\Utils\Util;
 
@@ -133,10 +135,6 @@ class Record extends \Espo\Core\Services\Base
         $entity = $this->getRepository()->get($id);
         if (!empty($entity) && !empty($id)) {
             $this->loadAdditionalFields($entity);
-
-            if ($entity->getEntityName() == 'Opportunity') {
-                $contactsColumns = $entity->get('contactsColumns');
-            }
 
             if (!$this->getAcl()->check($entity, 'read')) {
                 throw new Forbidden();
@@ -290,7 +288,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function createEntity($data)
     {
-        $entity = $this->getEntity();
+        $entity = $this->getRepository()->get();
 
         $this->filterInput($data);
         $this->handleInput($data);
@@ -325,10 +323,18 @@ class Record extends \Espo\Core\Services\Base
     {
         unset($data['deleted']);
 
+        if (empty($id)) {
+            throw BadRequest();
+        }
+
         $this->filterInput($data);
         $this->handleInput($data);
 
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
 
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
@@ -350,7 +356,15 @@ class Record extends \Espo\Core\Services\Base
 
     public function deleteEntity($id)
     {
-        $entity = $this->getEntity($id);
+        if (empty($id)) {
+            throw BadRequest();
+        }
+
+        $entity = $this->getRepository()->get($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
 
         if (!$this->getAcl()->check($entity, 'delete')) {
             throw new Forbidden();
