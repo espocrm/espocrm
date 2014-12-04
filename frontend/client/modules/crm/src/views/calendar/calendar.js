@@ -139,8 +139,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 if (event.duration < 1800) {
                     event.end = event.start.clone().add(30, 'm');
                 }
-
             }
+
+            event.allDay = false;
 
             this.handleAllDay(event);
 
@@ -204,7 +205,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 aspectRatio: 1.62,
                 selectable: true,
                 selectHelper: true,
-                ignoreTimezone: true,
                 height: this.options.height || null,
                 firstDay: this.getPreferences().get('weekStart'),
                 slotEventOverlap: true,
@@ -244,10 +244,18 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     this.trigger('view', m.format('YYYY-MM-DD'), mode);
                 }.bind(this),
                 events: function (from, to, timezone, callback) {
-                    var fromServer = this.getDateTime().fromIso(from);
-                    var toServer = this.getDateTime().fromIso(to);
-                    
-                    this.fetchEvents(fromServer, toServer, callback);
+                    var dateTimeFormat = this.getDateTime().internalDateTimeFormat;
+
+                    var fromStr = from.format(dateTimeFormat);
+                    var toStr = to.format(dateTimeFormat);
+
+                    from = moment.tz(fromStr, timezone);
+                    to = moment.tz(toStr, timezone);
+
+                    fromStr = from.utc().format(dateTimeFormat);
+                    toStr = to.utc().format(dateTimeFormat);
+                   
+                    this.fetchEvents(fromStr, toStr, callback);
                 }.bind(this),
                 eventDrop: function (event, delta, callback) {
                     var dateStart = this.convertTime(event.start) || null;
@@ -295,6 +303,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     var attributes = {
                         dateEnd: this.convertTime(event.end)
                     };
+                    event.duration = event.end.unix() - event.start.unix();
+                    
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
                         model.once('sync', function () {
@@ -342,16 +352,22 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         },
 
         updateModel: function (model) {
-            var events = this.$calendar.fullCalendar('clientEvents', model.name + '-' + model.id);
-            events.forEach(function (event) {
-                var d = model.attributes;
-                d.scope = model.name;
-                var data = this.convertToFcEvent(d);
-                for (var key in data) {
-                    event[key] = data[key];
-                }
-                this.$calendar.fullCalendar('updateEvent', event);
-            }.bind(this));
+            var eventId = model.name + '-' + model.id;
+
+            var events = this.$calendar.fullCalendar('clientEvents', eventId);
+            if (!events.length) return;
+
+            var event = events[0];
+
+            var d = model.attributes;
+            d.scope = model.name;
+            var data = this.convertToFcEvent(d);
+            for (var key in data) {
+                event[key] = data[key];
+            }
+
+            this.$calendar.fullCalendar('updateEvent', event);
+
         },
         
         removeModel: function (model) {

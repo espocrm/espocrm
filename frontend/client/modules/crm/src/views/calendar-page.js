@@ -21,11 +21,11 @@
 
 Espo.define('Crm:Views.CalendarPage', 'View', function (Dep) {
 
-    return Dep.extend({        
+    return Dep.extend({
 
         template: 'crm:calendar-page',
         
-        el: '#main',            
+        el: '#main',
 
         setup: function () {
             this.createView('calendar', 'Crm:Calendar.Calendar', {
@@ -41,7 +41,7 @@ Espo.define('Crm:Views.CalendarPage', 'View', function (Dep) {
                     first = false;
                 }.bind(this));
             }.bind(this));
-        },                    
+        },
         
         updatePageTitle: function () {
             this.setPageTitle(this.translate('Calendar', 'scopeNames'));
