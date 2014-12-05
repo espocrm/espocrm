@@ -6,7 +6,7 @@
 
 <div class="cell form-group">
     <div class="field">
-        {{notificationData.name}}
+        <a href="#{{notificationData.entityType}}/view/{{notificationData.id}}" data-action="close">{{notificationData.name}}</a>
     </div>
 
 </div>

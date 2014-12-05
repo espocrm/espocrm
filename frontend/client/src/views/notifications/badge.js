@@ -132,7 +132,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             var view = this.popupNotificationsData[name].view;
             if (!view) return;
 
-            var id = data.id || null;
+            var id = data.notificationId || null;
 
             if (id) {
                 id = name + '_' + id;

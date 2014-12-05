@@ -441,10 +441,18 @@ class Activities extends \Espo\Core\Services\Base
     {
         return array(
             array(
-                'id' => '43276532423',
+                'notificationId' => '43276532423',
+                'id' => '544fb55080905',
                 'entityType' => 'Call',
                 'dateStart' => '2014-12-05 14:10',
                 'name' => 'Test Call'
+            ),
+            array(
+                'notificationId' => '4321677446',
+                'id' => '54804822f368e',
+                'entityType' => 'Meeting',
+                'dateStart' => '2014-12-05 14:10',
+                'name' => 'Test Meeting Hello world'
             )
         );
     }
