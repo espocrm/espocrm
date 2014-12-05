@@ -28,7 +28,7 @@ use \Espo\Core\Exceptions\Error,
 
 class Activities extends \Espo\Core\Controllers\Base
 {
-    public static $defaultAction = 'index';    
+    public static $defaultAction = 'index';
     
     public function actionListCalendarEvents($params, $data, $request)
     {
@@ -46,6 +46,13 @@ class Activities extends \Espo\Core\Controllers\Base
         
         $service = $this->getService('Activities');
         return $service->getEvents($this->getUser()->id, $from, $to);
+    }
+
+    public function actionPopupNotifications()
+    {
+        $userId = $this->getUser()->id;
+        
+        return $this->getService('Activities')->getPopupNotifications($userId);
     }
 
     public function actionList($params, $data, $request)
@@ -68,7 +75,7 @@ class Activities extends \Espo\Core\Controllers\Base
         $scope = null;
         if (!empty($where) && !empty($where['scope']) && $where['scope'] !== 'false') {
             $scope = $where['scope'];
-        }        
+        }
         
         $service = $this->getService('Activities');
 

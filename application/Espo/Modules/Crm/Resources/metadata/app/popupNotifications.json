@@ -1,0 +1,7 @@
+{
+    "event": {
+        "url": "Activities/action/popupNotifications",
+        "interval": 5,
+        "view": "Crm:Meeting.PopupNotification"
+    }
+}

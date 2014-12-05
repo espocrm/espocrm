@@ -430,11 +430,23 @@ class Activities extends \Espo\Core\Services\Base
         ";
 
         
-        $sth = $pdo->prepare($sql);        
-        $sth->execute();        
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
         
         return $rows;
+    }
+
+    public function getPopupNotifications($userId)
+    {
+        return array(
+            array(
+                'id' => '43276532423',
+                'entityType' => 'Call',
+                'dateStart' => '2014-12-05 14:10',
+                'name' => 'Test Call'
+            )
+        );
     }
 }
 
