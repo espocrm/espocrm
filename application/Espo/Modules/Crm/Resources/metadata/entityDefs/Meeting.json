@@ -30,6 +30,11 @@
             "options": [900, 1800, 3600, 7200, 10800, 86400],
             "default": 3600
         },
+        "reminders": {
+            "type": "jsonArray",
+            "notStorable": true,
+            "view": "Crm:Meeting.Fields.Reminders"
+        },
         "description": {
             "type": "text"
         },

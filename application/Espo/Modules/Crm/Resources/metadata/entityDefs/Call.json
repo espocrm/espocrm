@@ -30,6 +30,11 @@
             "options": [300, 600, 900, 1800, 2700, 3600, 7200],
             "default": 300
         },
+        "reminders": {
+            "type": "jsonArray",
+            "notStorable": true,
+            "view": "Crm:Meeting.Fields.Reminders"
+        },
         "direction": {
             "type": "enum",
             "options": ["Outbound", "Inbound"],

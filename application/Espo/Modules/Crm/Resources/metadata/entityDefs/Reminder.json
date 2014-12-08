@@ -12,11 +12,12 @@
             "type": "enum",
             "options": ["Popup", "Email"],
             "maxLength": 36,
-            "index": true
+            "index": true,
+            "default": "Popup"
         },
         "seconds": {
             "type": "enumInt",
-            "options": [0, 60, 300, 900, 1800, 3600, 7200, 10800, 86400],
+            "options": [0, 60, 120, 300, 900, 1800, 3600, 7200, 10800, 18000, 86400],
             "default": 0
         },
         "entityType": {

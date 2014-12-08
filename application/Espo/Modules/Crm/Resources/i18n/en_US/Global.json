@@ -86,5 +86,11 @@
         "opportunity": "Opportunity",        
         "contact": "Contact",
         "parent": "Parent"
+    },
+    "options": {
+        "reminderTypes": {
+            "Popup": "Popup",
+            "Email": "Email"
+        }
     }
 }
