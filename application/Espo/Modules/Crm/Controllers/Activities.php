@@ -55,6 +55,20 @@ class Activities extends \Espo\Core\Controllers\Base
         return $this->getService('Activities')->getPopupNotifications($userId);
     }
 
+    public function actionRemovePopupNotification($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        $id = $data['id'];
+
+        return $this->getService('Activities')->removeReminder($id);
+    }
+
     public function actionList($params, $data, $request)
     {
         $name = $params['name'];

@@ -437,24 +437,66 @@ class Activities extends \Espo\Core\Services\Base
         return $rows;
     }
 
+    public function removeReminder($id)
+    {
+        
+        $pdo = $this->getPDO();
+        $sql = "
+            DELETE FROM `reminder`
+            WHERE id = ".$pdo->quote($id)."
+        ";
+        if (!$this->getUser()->isAdmin()) {
+            $sql .= " AND user_id = " . $pdo->quote($this->getUser()->id);
+        }
+
+        $pdo->query($sql);
+        return true;
+
+    }
+
     public function getPopupNotifications($userId)
     {
-        return array(
-            array(
-                'notificationId' => '43276532423',
-                'id' => '544fb55080905',
-                'entityType' => 'Call',
-                'dateStart' => '2014-12-05 14:10',
-                'name' => 'Test Call'
-            ),
-            array(
-                'notificationId' => '4321677446',
-                'id' => '54804822f368e',
-                'entityType' => 'Meeting',
-                'dateStart' => '2014-12-05 14:10',
-                'name' => 'Test Meeting Hello world'
-            )
-        );
+        $pdo = $this->getPDO();
+
+        $dt = new \DateTime();
+
+        $now = $dt->format('Y-m-d H:i:s');
+        $nowShifted = $dt->sub(new \DateInterval('PT1H'))->format('Y-m-d H:i:s');
+
+        $sql = "
+            SELECT id, entity_type AS 'entityType', entity_id AS 'entityId'
+            FROM `reminder`
+            WHERE
+                `type` = 'Popup' AND
+                `user_id` = ".$pdo->quote($userId)." AND
+                `remind_at` <= '{$now}' AND
+                `start_at` > '{$nowShifted}' AND
+                `deleted` = 0
+        ";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+        $result = array();
+        foreach ($rows as $row) {
+            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+            $data = null;
+            if ($entity) {
+                $data = array(
+                    'id' => $entity->id,
+                    'entityType' => $row['entityType'],
+                    'dateStart' => $entity->get('dateStart'),
+                    'name' => $entity->get('name')
+                );
+            }
+            $result[] = array(
+                'id' => $row['id'],
+                'data' => $data
+            );
+
+        }
+        return $result;
     }
 }
 

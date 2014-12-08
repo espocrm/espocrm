@@ -60,16 +60,28 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
             });
 
             this.notificationData = this.options.notificationData;
+            this.notificationId = this.options.notificationId;
+            this.id = this.options.id;
         },
 
         data: function () {
             return {
                 closeButton: this.closeButton,
-                notificationData: this.notificationData
+                notificationData: this.notificationData,
+                notificationId: this.notificationId
             };
         },
 
+        onConfirm: function () {
+        },
+
         onCancel: function () {
+        },
+
+        confirm: function () {
+            this.onConfirm();
+            this.trigger('confirm');
+            this.remove();
         },
 
         cancel: function () {
@@ -77,7 +89,6 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
             this.trigger('cancel');
             this.remove();
         }
-
 
     });
 });
