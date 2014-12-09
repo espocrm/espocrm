@@ -111,11 +111,9 @@
         
         this.$el.on('show.bs.modal', function (event) {
             var idx = $('.modal:visible').length;
-            $(this).css('z-index', 1040 + (10 * idx));
         });
         this.$el.on('shown.bs.modal', function (event) {
             var idx = ($('.modal:visible').length) - 1;
-            $('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
             $('.modal-backdrop').not('.stacked').addClass('stacked');
         });
         this.$el.on('hidden.bs.modal', function (event) {
@@ -131,9 +129,6 @@
         this.$el.modal({
              backdrop: this.backdrop,
         });
-        
-        /*this.$el.css('z-index', 1200);
-        $('.modal-backdrop').css('z-index', 1100);*/
     };
     Dialog.prototype.close = function () {
         this.$el.modal('hide');
