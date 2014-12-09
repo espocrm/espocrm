@@ -98,5 +98,18 @@ class Meeting extends \Espo\Services\Record
 
         return true;
     }
+
+    protected function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+        $this->loadRemindersField($entity);
+    }
+
+    protected function loadRemindersField(Entity $entity)
+    {
+        $reminders = $this->getRepository()->getEntityReminders($entity);
+        $entity->set('reminders', $reminders);
+    }
+
 }
 

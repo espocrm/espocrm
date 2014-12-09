@@ -54,6 +54,10 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
             },
         },
 
+        getAttributeList: function () {
+            return [this.name];
+        },
+
         setup: function () {
             this.reminderList = this.model.get(this.name) || [];
 
@@ -74,6 +78,16 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
             }
         },
 
+        updateType: function (type, index) {
+            this.reminderList[index].type = type;
+            this.trigger('change');
+        },
+
+        updateSeconds: function (seconds, index) {
+            this.reminderList[index].seconds = seconds;
+            this.trigger('change');
+        },
+
         addItemHtml: function (item) {
             var $item = $('<div>').addClass('input-group').addClass('reminder');
 
@@ -84,12 +98,20 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
             }, this);
             $type.val(item.type);
 
+            $type.on('change', function () {
+                this.updateType($type.val(), $type.closest('.reminder').index());
+            }.bind(this));
+
             var $seconds = $('<select>').attr('name', 'seconds').addClass('form-control');
             this.secondsList.forEach(function (seconds) {
                 var $o = $('<option>').attr('value', seconds).text(this.stringifySeconds(seconds));
                 $seconds.append($o);
             }, this);
             $seconds.val(item.seconds);
+
+            $seconds.on('change', function () {
+                this.updateSeconds(parseInt($seconds.val()), $seconds.closest('.reminder').index());
+            }.bind(this));
 
             var $remove = $('<button>').addClass('btn')
                                        .addClass('btn-link')
@@ -135,7 +157,7 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
         },
 
         getDetailItemHtml: function (item) {
-            var body = this.getLanguage().translateOption(itemtype, 'reminderTypes') + ' ' + this.stringifySeconds(item.seconds);
+            var body = this.getLanguage().translateOption(item.type, 'reminderTypes') + ' ' + this.stringifySeconds(item.seconds);
             return '<div>' + body +'</div>';
         },
 

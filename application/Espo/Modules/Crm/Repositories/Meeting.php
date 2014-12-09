@@ -63,5 +63,124 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
             }
         }
     }
+
+    public function getEntityReminders(Entity $entity)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+        $reminders = array();
+
+        $sql = "
+            SELECT id, `seconds`, `type`
+            FROM `reminder`
+            WHERE
+                `entity_type` = ".$pdo->quote($entity->getEntityName())." AND
+                `entity_id` = ".$pdo->quote($entity->id)." AND
+                `deleted` = 0
+                ORDER BY `seconds` ASC
+        ";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($rows as $row) {
+            $o = new \StdClass();
+            $o->seconds = intval($row['seconds']);
+            $o->type = $row['type'];
+            $reminders[] = $o;
+        }
+
+        return $reminders;
+
+        $entity->set('reminders', $reminders);
+    }
+
+    protected function afterSave(Entity $entity)
+    {
+        parent::afterSave($entity);
+
+        if (
+            $entity->isNew() ||
+            $entity->isFieldChanged('assignedUserId') ||
+            $entity->isFieldChanged('dateStart') ||
+            $entity->has('reminders')
+        ) {
+            $pdo = $this->getEntityManager()->getPDO();
+
+            $reminderTypeList = $this->getMetadata()->get('entityDefs.Reminder.fields.type.options');
+
+            if (!$entity->has('reminders')) {
+                $reminders = $this->getEntityReminders($entity);
+            } else {
+                $reminders = $entity->get('reminders');
+            }
+
+            if (!$entity->isNew()) {
+                $sql = "
+                    DELETE FROM `reminder`
+                    WHERE
+                        entity_id = ".$pdo->quote($entity->id)." AND
+                        entity_type = ".$pdo->quote($entity->getEntityName())." AND
+                        deleted = 0
+                ";
+                $pdo->query($sql);
+            }
+            
+            if (empty($reminders) || !is_array($reminders)) return;
+
+            $entityType = $entity->getEntityName();
+
+            $dateStart = $entity->get('dateStart');
+            $assignedUserId = $entity->get('assignedUserId');
+
+            if (!$dateStart || !$assignedUserId) {
+                $e = $this->get($entity->id);
+                if ($e) {
+                    $dateStart = $e->get('dateStart');
+                    $assignedUserId = $e->get('assignedUserId');
+                }
+            }
+
+            if (!$dateStart || !$assignedUserId) {
+                return;
+            }
+
+
+            $dateStartObj = new \DateTime($dateStart);
+            if (!$dateStartObj) {
+                return;
+            }
+
+            foreach ($reminders as $item) {
+                $remindAt = clone $dateStartObj;
+                $seconds = intval($item->seconds);
+                $type = $item->type;
+
+                if (!in_array($type , $reminderTypeList)) continue;
+
+                $remindAt->sub(new \DateInterval('PT' . $seconds . 'S'));
+
+                $id = uniqid();
+
+                $sql = "
+                    INSERT
+                    INTO `reminder`
+                    (id, entity_id, entity_type, `type`, user_id, remind_at, start_at, `seconds`)
+                    VALUES (
+                        ".$pdo->quote($id).",
+                        ".$pdo->quote($entity->id).",
+                        ".$pdo->quote($entityType).",
+                        ".$pdo->quote($type).",
+                        ".$pdo->quote($assignedUserId).",
+                        ".$pdo->quote($remindAt->format('Y-m-d H:i:s')).",
+                        ".$pdo->quote($dateStart).",
+                        ".$pdo->quote($seconds)."
+                    )
+                ";
+                $pdo->query($sql);
+
+            }
+        }
+    }
 }
 
