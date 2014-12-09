@@ -47,6 +47,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
                 }
             }, this);
 
+            this.popupCheckIteration = 0;
             this.lastId = 0;
             this.shownNotificationIds = [];
             this.closedNotificationIds = [];
@@ -117,18 +118,24 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 
             if (!url || !interval) return;
 
+            var isFirstCheck = false;
+            if (this.popupCheckIteration == 0) {
+                isFirstCheck = true;
+            }
+
             $.ajax(url).done(function (list) {
                 list.forEach(function (d) {
-                    this.showPopupNotification(name, d);
+                    this.showPopupNotification(name, d, isFirstCheck);
                 }, this);
             }.bind(this));
         
             this.popoupTimeouts[name] = setTimeout(function () {
+                this.popupCheckIteration++;
                 this.checkPopupNotifications(name);
             }.bind(this), interval * 1000);
         },
 
-        showPopupNotification: function (name, data) {
+        showPopupNotification: function (name, data, isFirstCheck) {
             var view = this.popupNotificationsData[name].view;
             if (!view) return;
 
@@ -147,7 +154,8 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             this.createView('popup-' + id, view, {
                 notificationData: data.data || {},
                 notificationId: data.id,
-                id: id
+                id: id,
+                isFirstCheck: isFirstCheck
             }, function (view) {
                 view.render();
                 this.$popupContainer.removeClass('hidden');

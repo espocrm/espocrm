@@ -29,6 +29,8 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
 
         closeButton: true,
 
+        soundPath: 'client/sounds/pop_cork',
+
         init: function () {
             Dep.prototype.init.call(this);
 
@@ -54,6 +56,10 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
                     this.cancel();
                 }.bind(this));
             }, this);
+
+            this.once('after:render', function () {
+                this.onShow();
+            }.bind(this));
             
             this.once('remove', function () {
                 $(containerSelector).remove();
@@ -70,6 +76,23 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
                 notificationData: this.notificationData,
                 notificationId: this.notificationId
             };
+        },
+
+        playSound: function () {
+            var html = '' +
+                '<audio autoplay="autoplay">'+
+                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
+                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />'+
+                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />'+
+                '</audio>';
+            $(html).get(0).volume = 0.3;
+            $(html).get(0).play();
+        },
+
+        onShow: function () {
+            if (!this.options.isFirstCheck) {
+                this.playSound();
+            }
         },
 
         onConfirm: function () {

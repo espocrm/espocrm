@@ -25,7 +25,7 @@ Espo.define('Crm:Views.Meeting.PopupNotification', 'Views.PopupNotification', fu
 
         type: 'event',
 
-        style: 'warning',
+        style: 'primary',
 
         template: 'crm:meeting.popup-notification',
 
