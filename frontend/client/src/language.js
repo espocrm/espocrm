@@ -98,9 +98,7 @@ _.extend(Espo.Language.prototype, {
         }
     },
     
-    load: function (callback, disableCache, sync) {
-        var sync = (typeof sync == 'undefined') ? true: sync;
-        
+    load: function (callback, disableCache) {
         this.once('sync', callback);
 
         if (!disableCache) {
@@ -110,7 +108,7 @@ _.extend(Espo.Language.prototype, {
             }
         }
 
-        this.fetch(sync);
+        this.fetch();
     },
 
     fetch: function (sync) {

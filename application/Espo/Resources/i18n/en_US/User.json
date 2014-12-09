@@ -28,10 +28,7 @@
         "Teams and Access Control": "Teams and Access Control",
         "Forgot Password?": "Forgot Password?",
         "Password Change Request": "Password Change Request",
-        "Username": "Username",
-        "Email Address": "Email Address",
-        "Password": "Password",
-        "Login": "Login"
+        "Email Address": "Email Address"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

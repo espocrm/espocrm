@@ -8,11 +8,11 @@
             <div>
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group">
-                        <label for="field-username">{{translate 'Username' scope='User'}}</label>
+                        <label for="field-username">{{translate 'Username'}}</label>
                         <input type="text" name="username" id="field-userName" class="form-control" autocapitalize="off" autocorrect="off">
                     </div>
                     <div class="form-group">
-                        <label for="login">{{translate 'Password' scope='User'}}</label>
+                        <label for="login">{{translate 'Password'}}</label>
                         <input type="password" name="password" id="field-password" class="form-control">
                     </div>
                     <div>
