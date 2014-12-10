@@ -18,11 +18,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils;
 
-class DateTime 
+class DateTime
 {
     protected $dataFormat;
     
@@ -48,8 +48,8 @@ class DateTime
         $this->dateFormat = $dateFormat;
         $this->timeFormat = $timeFormat;
         
-        $this->timezone = new \DateTimeZone($timeZone);        
-    }    
+        $this->timezone = new \DateTimeZone($timeZone);
+    }
     
     protected function getPhpDateFormat()
     {
@@ -63,7 +63,7 @@ class DateTime
     
     public function convertSystemDateToGlobal($string)
     {
-        $dateTime = \DateTime::createFromFormat('Y-m-d', $string);        
+        $dateTime = \DateTime::createFromFormat('Y-m-d', $string);
         if ($dateTime) {
             return $dateTime->format($this->getPhpDateFormat());
         }
@@ -72,12 +72,32 @@ class DateTime
     
     public function convertSystemDateTimeToGlobal($string)
     {
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);        
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
         if ($dateTime) {
             return $dateTime->setTimezone($this->timezone)->format($this->getPhpDateTimeFormat());
         }
         return null;
     }
+
+    public function convertSystemDate($string)
+    {
+        return $this->convertSystemDateToGlobal($string);
+    }
+
+    public function convertSystemDateTime($string, $timezone = null)
+    {
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
+        if (empty($timezone)) {
+            $timezone = $this->timezone;
+        } else {
+            $timezone = new \DateTimeZone($timezone);
+        }
+        if ($dateTime) {
+            return $dateTime->setTimezone($timezone)->format($this->getPhpDateTimeFormat());
+        }
+        return null;
+    }
+
 }
 
 

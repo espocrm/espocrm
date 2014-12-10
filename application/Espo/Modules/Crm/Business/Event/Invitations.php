@@ -64,7 +64,7 @@ class Invitations
 
         $siteUrl = rtrim($this->config->get('siteUrl'), '/');
 
-        $url = $siteUrl . '#' . $entity->getEntityName() . '/view/' . $entity->id;
+        $url = $siteUrl . '/#' . $entity->getEntityName() . '/view/' . $entity->id;
         $contents = str_replace('{url}', $url, $contents);
 
         if ($invitee && $invitee->getEntityName() != 'User') {

@@ -13,7 +13,6 @@
     },
     "options": {
         "job": {
-            "CheckInboundEmails": "Check Inbound Emails",
             "Cleanup": "Clean-up"
         },
         "cronSetup": {
