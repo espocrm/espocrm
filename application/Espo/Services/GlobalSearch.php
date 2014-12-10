@@ -74,18 +74,6 @@ class GlobalSearch extends \Espo\Core\Services\Base
             }
             $selectManager = $this->getSelectManagerFactory()->create($entityName);
 
-            /*$searchParams = array(
-                'whereClause' => array(
-                    'OR' => array(
-                        'name*' => '%' . $query . '%',
-                    )
-                ),
-                'offset' => round($offset / $entityTypeCount),
-                'limit' => round($maxSize / $entityTypeCount),
-                'orderBy' => 'createdAt',
-                'order' => 'DESC',
-            );*/
-
             $selectParams = $selectManager->getSelectParams(array(
                 'where' => array(
                     array(
@@ -97,10 +85,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
                 'sortBy' => 'name',
                 'offset' => round($offset / $entityTypeCount),
                 'maxSize' => round($maxSize / $entityTypeCount),
-
             ), true);
-
-            //$selectParams = array_merge_recursive($searchParams, $selectManager->getAclParams());
 
             $collection = $this->getEntityManager()->getRepository($entityName)->find($selectParams);
             $count += count($collection);
