@@ -36,5 +36,11 @@ return array(
 			'status' => 'Active',
 			'scheduling' => '/10 * * * *',
 		),
+		1 => array(
+			'name' => 'Send Email Reminders',
+			'job' => 'SendEmailReminders',
+			'status' => 'Active',
+			'scheduling' => '/2 * * * *',
+		),
 	),
 );
