@@ -40,18 +40,63 @@ class Invitations
     
     protected function parseInvitationTemplate($contents, $entity, $invitee = null, $uid = null)
     {
-        $contents = str_replace('{name}', $entity->get('name'), $contents);
+        
         $contents = str_replace('{eventType}', strtolower($this->language->translate($entity->getEntityName(), 'scopeNames')), $contents);
-        $contents = str_replace('{dateStart}', $this->dateTime->convertSystemDateTimeToGlobal($entity->get('dateStart')), $contents);
+        
+        foreach ($entity->getFields() as $field => $d) {
+            if (empty($d['type'])) continue;
+            $key = '{'.$field.'}';
+            switch ($d['type']) {
+                case 'datetime':
+                    $contents = str_replace($key, $this->dateTime->convertSystemDateTimeToGlobal($entity->get($field)), $contents);
+                    break;
+                case 'date':
+                    $contents = str_replace($key, $this->dateTime->convertSystemDateToGlobal($entity->get($field)), $contents);
+                    break;
+                default:
+                    $contents = str_replace($key, $entity->get($field), $contents);
+            }
+        }
+
         if ($invitee) {
             $contents = str_replace('{inviteeName}', $invitee->get('name'), $contents);
         }
+
+        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
+
+        $url = $siteUrl . '#' . $entity->getEntityName() . '/view/' . $entity->id;
+        $contents = str_replace('{url}', $url, $contents);
+
+        if ($invitee && $invitee->getEntityName() != 'User') {
+            $contents = preg_replace('/\{#userOnly\}(.*?)\{\/userOnly\}/s', '', $contents);
+        }
+
+        $contents = str_replace('{#userOnly}', '', $contents);
+        $contents = str_replace('{/userOnly}', '', $contents);
+
         if ($uid) {
-            $siteUrl = rtrim($this->config->get('siteUrl'), '/');
             $contents = str_replace('{acceptLink}', $siteUrl . '?entryPoint=eventConfirmation&action=accept&uid=' . $uid->get('name'), $contents);
             $contents = str_replace('{declineLink}', $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name'), $contents);
         }
         return $contents;
+    }
+
+    protected function getTemplate($name)
+    {
+        $systemLanguage = $this->config->get('language');
+
+        $fileName = 'custom/Espo/Custom/Resources/templates/'.$name.'.'.$systemLanguage.'.tpl';
+        if (!file_exists($fileName)) {
+            $fileName = 'application/Espo/Modules/Crm/Resources/templates/'.$name.'.'.$systemLanguage.'.tpl';
+        }
+        if (!file_exists($fileName)) {
+            $fileName = 'custom/Espo/Custom/Resources/templates/'.$name.'.en_US.tpl';
+        }
+        if (!file_exists($fileName)) {
+            $fileName = 'application/Espo/Modules/Crm/Resources/templates/'.$name.'.en_US.tpl';
+        }
+
+        return file_get_contents($fileName);
     }
     
     public function sendInvitation(Entity $entity, Entity $invitee, $link)
@@ -73,32 +118,9 @@ class Invitations
 
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set('to', $emailAddress);
-        
-        $systemLanguage = $this->config->get('language');
 
-        $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.'.$systemLanguage.'.tpl';
-        if (!file_exists($subjectTplFileName)) {
-            $subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.'.$systemLanguage.'.tpl';
-        }
-        if (!file_exists($subjectTplFileName)) {
-            $subjectTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationSubject.en_US.tpl';
-        }
-        if (!file_exists($subjectTplFileName)) {
-            $subjectTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationSubject.en_US.tpl';
-        }
-        $subjectTpl = file_get_contents($subjectTplFileName);
-
-        $bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.'.$systemLanguage.'.tpl';
-        if (!file_exists($bodyTplFileName)) {
-            $bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.'.$systemLanguage.'.tpl';
-        }
-        if (!file_exists($bodyTplFileName)) {
-            $bodyTplFileName = 'custom/Espo/Custom/Resources/templates/InvitationBody.en_US.tpl';
-        }
-        if (!file_exists($bodyTplFileName)) {
-            $bodyTplFileName = 'application/Espo/Modules/Crm/Resources/templates/InvitationBody.en_US.tpl';
-        }
-        $bodyTpl = file_get_contents($bodyTplFileName);
+        $subjectTpl = $this->getTemplate('InvitationSubject');
+        $bodyTpl = $this->getTemplate('InvitationBody');
 
         $subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee, $uid);
         $subject = str_replace(array("\n", "\r"), '', $subject);
