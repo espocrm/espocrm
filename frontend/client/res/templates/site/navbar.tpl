@@ -10,23 +10,23 @@
     </div>
     
     <div class="collapse navbar-collapse navbar-body">
-        <ul class="nav navbar-nav tabs">            
+        <ul class="nav navbar-nav tabs">
             {{#each tabs}}
             <li data-name="{{name}}"><a href="{{link}}">{{label}}</a></li>
             {{/each}}
             <li class="dropdown">
-                <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>                
-                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">                    
-                </ul>                
+                <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
+                </ul>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li class="nav navbar-nav navbar-form global-search-container hidden-xs">
                 {{{globalSearch}}}
-            </li>        
+            </li>
             <li class="dropdown hidden-xs notifications-badge-container">
                 {{{notificationsBadge}}}
-            </li>            
+            </li>
             {{#if enableQuickCreate}}
             <li class="dropdown hidden-xs">
                 <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-plus"></i></a>
@@ -34,7 +34,7 @@
                     <li class="dropdown-header">{{translate 'Create'}}</li>
                     {{#each quickCreateList}}
                     <li><a href="#{{./this}}/create" data-name="{{./this}}" data-action="quick-create">{{translate this category='scopeNames'}}</a></li>
-                    {{/each}}                                
+                    {{/each}}
                 </ul>
             </li>
             {{/if}}
@@ -49,9 +49,9 @@
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}
-                    {{/each}}                    
+                    {{/each}}
                 </ul>
             </li>
         </ul>
-    </div>    
+    </div>
 </div>
