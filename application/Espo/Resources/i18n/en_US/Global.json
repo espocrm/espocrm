@@ -234,9 +234,10 @@
     "options": {
         "salutationName": {
             "Mr.": "Mr.",
+            "Ms.": "Ms.",
             "Mrs.": "Mrs.",
-            "Dr.": "Dr.",
-            "Drs.": "Drs."
+            "Miss": "Miss",
+            "Dr.": "Dr."
         },
         "language":     {
             "af_ZA":"Afrikaans",
