@@ -1,5 +1,3 @@
-//to run: node po.js lastRelease es_ES
-
 if (process.argv.length < 2) {
     throw new Error('No dir argument passed');
 }
