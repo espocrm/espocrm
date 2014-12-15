@@ -34,12 +34,12 @@ _.extend(Espo.Cache.prototype, {
         if (stored) {
             if (stored !== cacheTimestamp) {
                 this.clear();
-                this.storeFrontendCacheTimestamp();
+                this.storeTimestamp();
             }
         } else {
             this.clear();
             this.set('app', 'cacheTimestamp', cacheTimestamp);
-            this.storeFrontendCacheTimestamp();
+            this.storeTimestamp();
         }
     },
 
