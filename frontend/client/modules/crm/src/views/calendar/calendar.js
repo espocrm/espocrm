@@ -208,7 +208,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 height: this.options.height || null,
                 firstDay: this.getPreferences().get('weekStart'),
                 slotEventOverlap: true,
-                snapDuration: 15 * 60 * 1000,
+                snapDuration: 30 * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
                 select: function (start, end, allDay) {
                     var dateStart = this.convertTime(start);
@@ -287,8 +287,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     event.allDay = false;
 
                     this.handleAllDay(event);
-
-                    this.$calendar.fullCalendar('renderEvent', event);
                     
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
@@ -299,7 +297,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         model.save(attributes, {patch: true});
                     }, this);
                 }.bind(this),
-                eventResize: function (event) {
+                eventResize: function (event, delta, revertFunc) {
                     var attributes = {
                         dateEnd: this.convertTime(event.end)
                     };
@@ -367,7 +365,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             }
 
             this.$calendar.fullCalendar('updateEvent', event);
-
         },
         
         removeModel: function (model) {
