@@ -9,7 +9,7 @@
         "Customization": "Anpassung",
         "Available Fields": "Verfügbare Felder",
         "Layout": "Aktuelles Layout",
-        "Add Panel": "Panel hinzufügen",        
+        "Add Panel": "Panel hinzufügen",
         "Add Field": "Feld hinzufügen",
         "Settings": "Einstellungen",
         "Scheduled Jobs": "Geplante Jobs",
@@ -79,7 +79,7 @@
         "varchar": "Text (max. 255)",
         "file": "Datei",
         "image": "Bild",
-        "multiEnum": "Mehrfachauswahl"                
+        "multiEnum": "Mehrfachauswahl"
     },
     "fields": {
         "type": "Typ",
@@ -96,7 +96,7 @@
         "min": "Min",
         "max": "Max",
         "translation": "Übersetzung",
-        "previewSize": "Vorschau Größe"                
+        "previewSize": "Vorschau Größe"
     },
     "messages": {
         "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
@@ -129,7 +129,7 @@
         "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
         "fieldManager": "Neue Felder erstellen oder bestehende anpassen.",
         "userInterface": "Benutzeroberfläche anpassen.",
-        "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum.",
+        "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum",
         "authentication": "Authentifizierungs Einstellungen.",
         "currency": "Währungseinstellungen und Kurse",
         "extensions": "Erweiterungen installieren oder deinstallieren"
@@ -141,5 +141,10 @@
             "medium": "Medium",
             "large": "Large"
         }
+    },
+    "layoutManagerDataAttributes": {
+        "width": "Breite (%)",
+        "link": "Link",
+        "notSortable": "Nicht sortierbar"
     }
 }

@@ -14,7 +14,7 @@
 		"Finish page title": "Die Installation ist abgeschlossen",
 		"Congratulation! Welcome to EspoCRM": "Gratulation! EspoCRM wurde erfolgreich installiert.",
 		"More Information": "Für mehr Informationen besuchen Sie bitte unseren  {BLOG} und/oder folgen Sie und auf {TWITTER}.<br><br>Für Fragen oder Verbesserungsvorschläge besuchen Sie das {FORUM}.",
-		"share": "Wenn Sie EspoCRM gut finden dann erzählen Sie anderen Leuten wie toll Sie das Produkt finden.",
+		"share": "Wenn Ihnen  EspoCRM gefällt dann teilen Sie! Erzählen Sie allen wie toll und hilfreich Sie das Produkt finden.",
 		"blog": "Blog",
 		"twitter": "Twitter",
 		"forum": "Forum",
@@ -77,10 +77,10 @@
 		"smtpPassword": "Passwort"
 	},
 	"messages": {
-		"Bad init Permission": "Zugriff verweigert für Verzeichnis \"{*}\". Bitte setzen Sie 775 für \"{*}\" oder führen Sie dieses Kommando in einem Terminal Fenster aus <pre><b>{C}</b></pre> Operation nicht erlaubt? Versuchen Sie das: {CSU}",
+		"Bad init Permission": "Zugriff für Verzeichnis \"{*}\" verweigert. Bitte setzen Sie 775 für \"{*}\" oder führen Sie dieses Kommando in einem Terminal Fenster aus <pre><b>{C}</b></pre> Operation nicht erlaubt? Versuchen Sie das: {CSU}",
 		"Some errors occurred!": "Es sind Fehler passiert!",
 		"phpVersion": "Ihre PHP Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf {minVersion}",
-		"MySQLVersion": "Ihre PHP Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf MySQL {minVersion}",
+		"MySQLVersion": "Ihre MySQL Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf MySQL {minVersion}",
 		"The PHP extension was not found...": "PHP Fehler: Erweiterung <b>{extName}</b> wurde nicht gefunden...",
 		"All Settings correct": "Alle Einstellungen sind korrekt",
 		"Failed to connect to database": "Konnte nicht zur Datenbank verbinden",
@@ -116,8 +116,8 @@
 		},
 		"modRewriteInstruction": {
 			"apache": {
-				"linux": "<br><br>Um die RewriteBase Pfad hinzufügen, öffnen Sie eine Datei {API_PATH}.htaccess und ändern Sie die folgende Zeile:<pre># RewriteBase /</pre>To<pre>RewriteBase {ESPO_PATH}{API_PATH}</pre><br>Für die .htaccess Unterstützung ändern/ergänzen Sie die Server Einstellungen innerhalb der &#60;VirtualHost&#62; Sektion (httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62; <b>AllowOverride All</b> &#60;/Directory&#62;</pre>Dann führen Sie dieses Kommando in einem Terminalfenster aus:<pre><b>service apache2 restart</b></pre><br>Um \"mod_rewrite\" zu aktivieren führen Sie diese Kommandos in einem Terminalfenster aus:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
-				"windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br> 2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile LoadModule rewrite_module modules/mod_rewrite.so (entfernen Sie das # Zeichen vom Anfang der Zeile)<br> 3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c. </pre>"
+				"linux": "<br><br>Um den RewriteBase Pfad hinzufügen, öffnen Sie eine Datei {API_PATH}.htaccess und ändern Sie die folgende Zeile:<pre># RewriteBase /</pre>auf<pre>RewriteBase {ESPO_PATH}{API_PATH}</pre><br>Für die .htaccess Unterstützung ändern/ergänzen Sie die Server Einstellungen innerhalb der &#60;VirtualHost&#62; Sektion (httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62;\n <b>AllowOverride All</b>\n&#60;/Directory&#62;</pre>\n Dann führen Sie dieses Kommando in einem Terminalfenster aus:<pre><b>service apache2 restart</b></pre><br>Um \"mod_rewrite\" zu aktivieren führen Sie diese Kommandos in einem Terminalfenster aus:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
+				"windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br>\n2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile LoadModule rewrite_module modules/mod_rewrite.so (entfernen Sie das # Zeichen vom Anfang der Zeile)<br>\n3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c.\n</pre>"
 			},
 			"microsoft-iis": {
 				"windows": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: EspoCRM <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: de_DE\n"
@@ -127,7 +127,7 @@
 			"apache": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: RewriteBase erforderlich, deaktiviertes \"mod_rewrite\" des Apache Servers oder des .htaccess Supports.",
 			"nginx": "API Fehler: EspoCRM API nicht verfügbar.<br>Fügen Sie diesen Code zu Nginx Host Config (innerhalb des \"server\" Blocks) hinzu:<br> <pre> {0} </pre>",
 			"microsoft-iis": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes \"URL Rewrite\". Bitte überprüfen und aktivieren Sie das \"URL Rewrite\" Modul im IIS Server.",
-			"default": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes Rewrite Modul. Bitte überprüfen und aktivieren Sie das Rewrite Modul für Ihren Server (z.B. mod_rewrite für Apache) sowie die .htaccess Unterstützung."
+			"default": "API Fehler: EspoCRM API nicht verfügbar<br>Mögliches Problem: deaktiviertes Rewrite Modul. Bitte überprüfen und aktivieren Sie das Rewrite Modul (z.B. mod_rewrite im Apache Server) und die .htaccess Unterstützung."
 		}
 	}
 }

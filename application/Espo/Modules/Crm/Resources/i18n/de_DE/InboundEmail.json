@@ -10,14 +10,15 @@
         "port": "Port",
         "monitoredFolders": "Überwachte Ordner",
         "trashFolder": "Papierkorb Ordner",
-        "ssl": "SSL",        
+        "ssl": "SSL",
         "createCase": "Fall erstellen",
         "reply": "Antworten",
         "caseDistribution": "Fall Verteilung",
         "replyEmailTemplate": "Vorlage E-Mail Antwort",
         "replyFromAddress": "Von Adresse antworten",
         "replyToAddress": "Antwort an Adresse",
-        "replyFromName": "Von Name antworten"
+        "replyFromName": "Von Name antworten",
+        "targetUserPosition": "Position Zielbenutzer"
     },
     "tooltips": {
         "reply": "Absender informieren, dass die E-Mail empfangen wurde.",
@@ -44,7 +45,7 @@
         "Create InboundEmail": "Eingehende E-Mail erstellen",
         "IMAP": "IMAP",
         "Actions": "Aktionen",
-        "Main": "Wichtig"        
+        "Main": "Wichtig"
     },
     "messages": {
         "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"

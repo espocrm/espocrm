@@ -8,9 +8,12 @@
         "emailAddress": "E-Mail",
         "phoneNumber": "Telefon",
         "roles": "Rollen",
+        "teamRole": "Position",
         "password": "Passwort",
         "passwordConfirm": "Passwort bestätigen",
-        "newPassword": "Neues Passwort"
+        "newPassword": "Neues Passwort",
+        "newPasswordConfirm": "Neues Passwort bestätigen",
+        "avatar": "Avatar"
     },
     "links": {
         "teams": "Teams",
@@ -21,19 +24,32 @@
         "Generate": "Erzeugen",
         "Access": "Zugang",
         "Preferences": "Benutzereinstellungen",
-        "Change Password": "Passwort ändern"
+        "Change Password": "Passwort ändern",
+        "Teams and Access Control": "Teams und Zugriffsberechtigung",
+        "Forgot Password?": "Passwort vergessen?",
+        "Password Change Request": "Anforderung zur Passwortänderung",
+        "Email Address": "E-Mail Adresse"
     },
     "tooltips": {
         "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
         "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
         "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
-        "teams": "Die Teams denen dieser Benutzer angehört. Zugriffsberechtigungen werden von der Rolle des Teams vererbt.",
-        "roles": "Zusätzliche Zugriffsrollen. Nur zu verwenden wenn der Benutzer keinem Team angehört bzw. wenn die Zugriffsberechtigungen nur für diesen Benutzer angepasst werden müssen."
+        "teams": "Das Team zu dem dieser Benutzer gehört Zugriffsberechtigung ist von der Team Rolle vererbt",
+        "roles": "Zusätzliche Zugriffsrollen Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
     },
     "messages": {
         "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
         "accountInfoEmailSubject": "Kontoinformation",
         "accountInfoEmailBody": "Ihre Kontoinformation: Benutzername: {userName} - Passwort: {password} {siteUrl}",
-        "passwordChanged": "Das Passwort wurde geändert"
+        "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
+        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern Diese eindeutige URL ist nur für kurze Zeit gültig",
+        "passwordChanged": "Das Passwort wurde geändert",
+        "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
+        "wrongUsernamePasword": "Falscher Benutzername/Passwort",
+        "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
+        "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
+        "forbidden": "Verboten, bitte später nochmals versuchen",
+        "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
+        "passwordChangedByRequest": "Das Passwort wurde geändert"
     }
 }

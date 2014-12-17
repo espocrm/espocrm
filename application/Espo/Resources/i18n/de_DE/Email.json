@@ -41,7 +41,7 @@
         "Email Address": "E-Mail Adresse"
     },
     "messages": {
-        "noSmtpSetup": "Keine SMTP Einstellung, {link}. ",
+        "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
         "testEmailSent": "Eine Test E-Mail wurde gesendet"
     },
     "presetFilters": {

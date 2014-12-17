@@ -86,5 +86,11 @@
         "opportunity": "Verkaufschance",        
         "contact": "Kontakt",
         "parent": "Bezieht sich auf"
+    },
+    "options": {
+        "reminderTypes": {
+            "Popup": "Popup",
+            "Email": "E-Mail"
+        }
     }
 }

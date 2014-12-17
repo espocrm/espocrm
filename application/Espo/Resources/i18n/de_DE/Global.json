@@ -10,7 +10,9 @@
         "OutboundEmail": "Ausgehende E-Mail",
         "ScheduledJob": "Geplante Aufgabe",
         "ExternalAccount": "Externes Konto",
-        "Extension": "Erweiterung"
+        "Extension": "Erweiterung",
+        "Dashboard": "Übersicht",
+        "Stream": "Vorgänge"
     },
     "scopeNamesPlural": {
         "Email": "E-Mails",
@@ -23,7 +25,9 @@
         "OutboundEmail": "Ausgehende E-Mails",
         "ScheduledJob": "Geplante Jobs",
         "ExternalAccount": "Externe Konten",
-        "Extension": "Erweiterungen"
+        "Extension": "Erweiterungen",
+        "Dashboard": "Übersicht",
+        "Stream": "Vorgänge"
     },
     "labels": {
         "Misc": "Verschiedenes",
@@ -41,7 +45,7 @@
         "Sending...": "Wird gesendet...",
         "Removed": "Gelöscht",
         "Posted": "Geposted",
-        "Linked": "Verlinkt",    
+        "Linked": "Verlinkt",
         "Unlinked": "Verknüpfung gelöscht",
         "Access denied": "Zugriff verweigert",
         "Access": "Zugang",
@@ -130,8 +134,10 @@
         "Today": "Heute",
         "Tomorrow": "Morgen",
         "Yesterday": "Gestern",
-        "Submit": "Einreichen",
-        "Close": "Schließen"
+        "Submit": "Ausführen",
+        "Close": "Schließen",
+        "Yes": "Ja",
+        "No": "Nein"
     },
     "messages": {
         "notModified": "Sie haben den Datensatz nicht geändert",

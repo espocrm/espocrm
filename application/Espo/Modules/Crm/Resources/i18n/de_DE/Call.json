@@ -10,7 +10,8 @@
         "description": "Beschreibung",
         "users": "Benutzer",
         "contacts": "Kontakte",
-        "leads": "Interessenten"
+        "leads": "Interessenten",
+        "reminders": "Erinnerungen"
     },
     "links": {
     },

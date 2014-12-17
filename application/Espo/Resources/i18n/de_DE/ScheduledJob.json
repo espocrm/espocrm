@@ -13,7 +13,6 @@
     },
     "options": {
         "job": {
-            "CheckInboundEmails": "Eingehende E-Mail überprüfen",
             "Cleanup": "Aufräumen"
         },
         "cronSetup": {

@@ -9,7 +9,8 @@
         "description": "Beschreibung",
         "users": "Benutzer",
         "contacts": "Kontakte",
-        "leads": "Interessenten"
+        "leads": "Interessenten",
+        "reminders": "Erinnerungen"
     },
     "links": {
     },
@@ -29,7 +30,9 @@
         "Create Meeting": "Meeting erstellen",
         "Set Held": "Auf gehalten setzen",
         "Set Not Held": "Auf nicht gehalten setzen",
-        "Send Invitations": "Einladungen versenden"
+        "Send Invitations": "Einladungen versenden",
+        "on time": "Aktuelle Zeit",
+        "before": "Bevor"
     },
     "presetFilters": {
         "planned": "Geplant",

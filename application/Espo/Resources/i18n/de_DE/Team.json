@@ -8,7 +8,8 @@
         "users": "Benutzer"
     },
     "tooltips": {
-        "roles": "Alle Benutzer dieses Teams erben die Zugriffsrechte von ausgewählten Rollen."
+        "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen",
+        "positionList": "Verfügbare Positionen in diesem Team Z.B. Verkäufer, Manager etc."
     },
     "labels": {
         "Create Team": "Team erstellen"

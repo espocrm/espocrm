@@ -1,0 +1,9 @@
+{
+
+    "options": {
+        "job": {
+            "CheckInboundEmails": "Eingehende E-Mail überprüfen",
+            "SendEmailReminders": "E-Mail Erinnerungen senden"
+        }
+    }
+}
