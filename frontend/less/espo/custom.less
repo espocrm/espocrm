@@ -583,6 +583,20 @@ body > footer {
     background-color: @gray-lighter;
 }
 
+
+@media screen and (max-width: @screen-sm-min) {
+    body > .content {
+        margin-top: -95px;
+        padding-top: 95px;
+        margin-bottom: -20px;
+    }
+
+    body > footer {
+        margin-top: 0;
+    }
+}
+
+
 body > footer > p {
     padding: 6px 15px;
 }

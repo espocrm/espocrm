@@ -192,6 +192,11 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             return m.format(format) + ':00';
         },
 
+        getCalculatedHeight: function () {
+           return  $(window).height() - 150;
+
+        },
+
         afterRender: function () {
             var $calendar = this.$calendar = this.$el.find('div.calendar');
 
@@ -202,7 +207,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 defaultView: this.mode,
                 weekNumbers: true,
                 editable: true,
-                aspectRatio: 1.62,
+                contentHeight: this.getCalculatedHeight(),
+                //aspectRatio: 1.62,
                 selectable: true,
                 selectHelper: true,
                 height: this.options.height || null,
@@ -210,6 +216,12 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 slotEventOverlap: true,
                 snapDuration: 30 * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
+                windowResize: function () {
+                    var height = this.getCalculatedHeight();
+                    $calendar.fullCalendar('option', 'contentHeight', height);
+
+                    
+                }.bind(this),
                 select: function (start, end, allDay) {
                     var dateStart = this.convertTime(start);
                     var dateEnd = this.convertTime(end);
