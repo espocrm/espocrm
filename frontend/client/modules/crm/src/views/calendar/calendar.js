@@ -212,8 +212,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 defaultView: this.mode,
                 weekNumbers: true,
                 editable: true,
-                contentHeight: this.getCalculatedHeight(),
-                //aspectRatio: 1.62,
                 selectable: true,
                 selectHelper: true,
                 height: this.options.height || null,
@@ -337,6 +335,12 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 },
                 weekNumberTitle: '',
             };
+
+            if (!this.options.height) {
+                options.contentHeight = this.getCalculatedHeight();
+            } else {
+                options.aspectRatio = 1.62;
+            }
 
             if (this.date) {
                 options.defaultDate = moment.utc(this.date);
