@@ -127,7 +127,6 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
         },
         
         updateDashletsLayout: function () {
-            //this.getPreferences().set('dashboardLayout', this.dashboardLayout);
             this.getPreferences().save({
                 dashboardLayout: this.dashboardLayout
             }, {patch: true});
