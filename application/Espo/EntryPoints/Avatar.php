@@ -30,14 +30,38 @@ use \Espo\Core\Exceptions\Error;
 class Avatar extends Image
 {
     public static $authRequired = true;
-       
+
+    private $colorList = [
+        [111,168,214],
+        [237, 197, 85],
+        [212,114,155],
+        [78,108,173],
+        [124,196,164],
+        [222,102,102],
+        [138,124,194],
+    ];
+
+    protected function getColor($hash)
+    {
+        $length = strlen($hash);
+        $sum = 0;
+        for ($i = 0; $i < $length; $i++) {
+            $sum += ord($hash[$i]);
+        }
+        $x = intval($sum % 128) + 1;
+
+        $index = intval($x * count($this->colorList) / 128);
+        return $this->colorList[$index];
+    }
+
     public function run()
     {
         if (empty($_GET['id'])) {
             throw new BadRequest();
         }
-        
+
         $userId = $_GET['id'];
+
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -52,7 +76,6 @@ class Avatar extends Image
         } else {
             $id = $user->get('avatarId');
         }
-
 
         $size = null;
         if (!empty($_GET['size'])) {
@@ -74,10 +97,9 @@ class Avatar extends Image
 
                 ob_clean();
                 flush();
-                $identicon->displayImage($userId, $width);
+                $identicon->displayImage($userId, $width, $this->getColor($userId));
                 exit;
             }
-            
         }
     }
 
