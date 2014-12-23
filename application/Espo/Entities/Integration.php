@@ -97,9 +97,6 @@ class Integration extends \Espo\Core\ORM\Entity
 
         foreach ($arr as $field => $value) {
             if (is_string($field)) {
-                if (is_array($value) || ($value instanceof \stdClass)) {
-                    $value = json_encode($value);
-                }
 
                 if ($this->hasField($field)) {
                     $fields = $this->getFields();
