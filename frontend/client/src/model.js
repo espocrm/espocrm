@@ -27,24 +27,24 @@
         dateTime: null,
 
         _user: null,
-        
+
         defs: null,
 
-        initialize: function () {        
+        initialize: function () {
             this.urlRoot = this.urlRoot || this.name;
-            
+
             this.defs = this.defs || {};
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
 
             Backbone.Model.prototype.initialize.call(this);
         },
-        
+
         url: function () {
             var url = Backbone.Model.prototype.url.call(this);
             return url;
         },
-        
+
         isNew: function () {
             return !this.id;
         },
@@ -53,7 +53,7 @@
             this.defs = defs || {};
             this.defs.fields = this.defs.fields || {};
         },
-        
+
         getClonedAttributes: function () {
             var attributes = {};
             for (var name in this.attributes) {
@@ -71,15 +71,11 @@
 
                     if (defaultValue != null) {
                         var defaultValue = this._getDefaultValue(defaultValue);
-                        if (typeof defaultValue === 'object') {
-                            defaultHash = _.extend(defaultHash, defaultValue);
-                        } else {
-                            defaultHash[field] = defaultValue;
-                        }
+                        defaultHash[field] = defaultValue;
                     }
                 }
-            }        
-            
+            }
+
             var user = this.getUser();
             if (user) {
                 if (this.hasField('assignedUser')) {
@@ -87,7 +83,7 @@
                     this.set('assignedUserName', this.getUser().get('name'));
                 }
                 var defaultTeamId = this.getUser().get('defaultTeamId');
-                if (defaultTeamId) {            
+                if (defaultTeamId) {
                     if (this.hasField('teams') && !this.getFieldParam('teams', 'default')) {
                         defaultHash['teamsIds'] = [defaultTeamId];
                         defaultHash['teamsNames'] = {};
@@ -95,7 +91,9 @@
                     }
                 }
             }
-            
+
+            defaultHash = Espo.Utils.cloneDeep(defaultHash);
+
             this.set(defaultHash, {silent: true});
         },
 
@@ -107,7 +105,7 @@
             return defaultValue;
         },
 
-        setRelate: function (data) {        
+        setRelate: function (data) {
 
             var setRelate = function (options) {
                 var link = options.link;
@@ -130,13 +128,13 @@
                         var ids = [];
                         ids.push(model.id);
                         var names = {};
-                        names[model.id] = model.get('name');                        
+                        names[model.id] = model.get('name');
                         this.set(link + 'Ids', ids);
                         this.set(link + 'Names', names);
                         break;
                 }
-            }.bind(this);            
-            
+            }.bind(this);
+
             if (Object.prototype.toString.call(data) === '[object Array]') {
                 data.forEach(function (options) {
                     setRelate(options);
@@ -163,7 +161,7 @@
         },
 
         isFieldReadOnly: function (field) {
-            return this.getFieldParam(field, 'readOnly') || false;        
+            return this.getFieldParam(field, 'readOnly') || false;
         },
 
         isRequired: function (field) {
@@ -181,11 +179,11 @@
         getUser: function () {
             return this._user;
         },
-        
+
         hasField: function (field) {
             return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
         },
-        
+
         isEditable: function () {
             return true;
         },
