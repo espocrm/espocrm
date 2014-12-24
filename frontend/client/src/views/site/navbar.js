@@ -133,7 +133,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                     $one.insertAfter($tabs.children().eq(count - 2));
                 }
             };
-            
+
             var moreWidth = $('#nav-more-tabs-dropdown').width();
 
             var updateWidth = function () {
@@ -166,6 +166,13 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             };
 
             updateWidth();
+
+            setTimeout(function () {
+                console.log($('#navbar .navbar').height());
+                if ($('#navbar .navbar').height() > 45) {
+                    updateWidth();
+                }
+            }.bind(this), 200);
         },
 
         selectTab: function (name) {
