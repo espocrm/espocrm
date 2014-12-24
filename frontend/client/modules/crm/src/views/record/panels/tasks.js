@@ -32,7 +32,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
         sortBy: 'createdAt',
 
         asc: false,
-        
+
         actions: [
             {
                 action: 'createTask',
@@ -54,36 +54,36 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                     }
                 ],
                 [
-                    {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
+                    {name: 'assignedUser'},
                     {name: 'status'},
                     {name: 'dateEnd'},
                 ]
             ]
         },
 
-        
+
         events: _.extend({
             'click button.tab-switcher': function (e) {
                 var $target = $(e.currentTarget);
                 this.$el.find('button.tab-switcher').removeClass('active');
                 $target.addClass('active');
-                
+
                 this.currentTab = $target.data('tab');
-                    
+
                 this.collection.where = this.where = [
                     {
                         type: 'boolFilters',
                         value: [this.currentTab]
                     }
                 ];
-                
+
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.notify(false);
                 }.bind(this));
                 this.notify('Loading...');
                 this.collection.fetch();
-                
-                this.getStorage().set('state', this.getStorageKey(), this.currentTab);                    
+
+                this.getStorage().set('state', this.getStorageKey(), this.currentTab);
             }
         }, Dep.prototype.events),
 
@@ -93,20 +93,20 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                 tabList: this.tabList
             };
         },
-        
+
         getStorageKey: function () {
             return 'tasks-' + this.model.name + '-' + this.name;
         },
 
-        setup: function () {        
+        setup: function () {
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'Active';
-            
+
             this.where = [
                 {
                     type: 'boolFilters',
                     value: [this.currentTab]
                 }
-            ];            
+            ];
         },
 
         afterRender: function () {

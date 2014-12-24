@@ -22,15 +22,15 @@
 Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activities', function (Dep) {
 
     return Dep.extend({
-    
+
         name: 'history',
 
         scopeList: ['Meeting', 'Call', 'Email'],
-                    
+
         sortBy: 'dateStart',
-        
+
         asc: false,
-        
+
         actions: [
             {
                 action: 'createActivity',
@@ -59,7 +59,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                 aclScope: 'Email',
             },
         ],
-        
+
         listLayout: {
             'Meeting': {
                 rows: [
@@ -88,7 +88,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                         {name: 'status'},
                     ],
                     [
-                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
+                        {name: 'assignedUser'},
                         {name: 'dateStart'},
                     ]
                 ]
@@ -103,18 +103,18 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                         },
                     ],
                     [
-                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
+                        {name: 'assignedUser'},
                         {name: 'status'},
                         {name: 'dateSent'},
                     ]
                 ]
             },
         },
-        
+
         where: {
             scope: false,
         },
-        
+
         getArchiveEmailAttributes: function (data, callback) {
             data = data || {};
             var attributes = {
@@ -123,7 +123,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                 from: this.model.get('emailAddress'),
                 to: this.getUser().get('emailAddress')
             };
-                
+
             if (this.model.name == 'Contact') {
                 if (this.model.get('accountId')) {
                     attributes.parentType = 'Account',
@@ -137,22 +137,22 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
             }
             callback.call(this, attributes);
         },
-        
+
         actionArchiveEmail: function (data) {
             var self = this;
             var link = 'emails';
             var scope = 'Email';
-            
-            var relate = null;                
-            if ('emails' in this.model.defs['links']) {                
+
+            var relate = null;
+            if ('emails' in this.model.defs['links']) {
                 relate = {
                     model: this.model,
                     link: this.model.defs['links']['emails'].foreign
                 };
-            }                        
+            }
 
             this.notify('Loading...');
-            
+
             this.getArchiveEmailAttributes(data, function (attributes) {
                 this.createView('quickCreate', 'Modals.Edit', {
                     scope: scope,

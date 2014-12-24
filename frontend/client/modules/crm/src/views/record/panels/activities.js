@@ -32,7 +32,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
         sortBy: 'dateStart',
 
         asc: false,
-        
+
         actions: [
             {
                 action: 'createActivity',
@@ -73,7 +73,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                         },
                     ],
                     [
-                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
+                        {name: 'assignedUser'},
                         {name: 'dateStart'},
                     ]
                 ]
@@ -88,7 +88,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                         },
                     ],
                     [
-                        {name: 'assignedUser', view: 'Fields.UserWithAvatar'},
+                        {name: 'assignedUser'},
                         {name: 'dateStart'},
                     ]
                 ]
@@ -98,20 +98,20 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
         where: {
             scope: false,
         },
-        
+
         events: _.extend({
             'click button.scope-switcher': function (e) {
                 var $target = $(e.currentTarget);
                 this.$el.find('button.scope-switcher').removeClass('active');
                 $target.addClass('active');
                 this.where.scope = $target.data('scope') || false;
-                
+
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.notify(false);
                 }.bind(this));
                 this.notify('Loading...');
                 this.collection.fetch();
-                
+
                 this.currentTab = this.where.scope || 'all';
                 this.getStorage().set('state', this.getStorageKey(), this.currentTab);
             }
@@ -123,19 +123,19 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 scopeList: this.scopeList
             };
         },
-        
+
         getStorageKey: function () {
             return 'activities-' + this.model.name + '-' + this.name;
         },
 
         setup: function () {
-        
+
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
-            
+
             if (this.currentTab != 'all') {
                 this.where = {scope: this.currentTab};
             }
-            
+
             this.seeds = {};
 
             this.wait(true);
@@ -177,14 +177,14 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             }.bind(this));
             this.collection.fetch();
         },
-        
+
         getCreateActivityAttributes: function (data, callback) {
             data = data || {};
-            
+
             var attributes = {
                 status: data.status
             };
-            
+
             if (this.model.name == 'Contact') {
                 if (this.model.get('accountId')) {
                     attributes.parentType = 'Account',
@@ -200,7 +200,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 attributes.contactsIds = this.model.get('contactsIds');
                 attributes.contactsNames = this.model.get('contactsNames');
             }
-            
+
             callback.call(this, attributes);
         },
 
@@ -211,7 +211,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             var foreignLink = this.model.defs['links'][link].foreign;
 
             this.notify('Loading...');
-            
+
             this.getCreateActivityAttributes(data, function (attributes) {
                 this.createView('quickCreate', 'Modals.Edit', {
                     scope: scope,
@@ -230,7 +230,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             });
 
         },
-        
+
         getComposeEmailAttributes: function (data, callback) {
             data = data || {};
             var attributes = {
@@ -239,12 +239,12 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             };
             callback.call(this, attributes);
         },
-        
+
         actionComposeEmail: function () {
             var self = this;
             var link = 'emails';
             var scope = 'Email';
-            
+
             var relate = null;
             if ('emails' in this.model.defs['links']) {
                 relate = {
@@ -254,7 +254,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             }
 
             this.notify('Loading...');
-            
+
             this.getComposeEmailAttributes(null, function (attributes) {
                 if (this.model.name == 'Contact') {
                     if (this.getConfig().get('b2cMode')) {
