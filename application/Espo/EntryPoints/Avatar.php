@@ -33,11 +33,14 @@ class Avatar extends Image
 
     private $colorList = [
         [111,168,214],
-        [237, 197, 85],
+        [237,197,85],
         [212,114,155],
-        [78,108,173],
+        '#8093BD',
         [124,196,164],
         [138,124,194],
+        [222,102,102],
+        '#73D160',
+        '#E8AF64',
     ];
 
     protected function getColor($hash)
