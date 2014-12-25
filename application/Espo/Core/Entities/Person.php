@@ -18,18 +18,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Entities;
 
 class Person extends \Espo\Core\ORM\Entity
 {
-    public static $person = true;
-    
     public function _setLastName($value)
     {
         $this->setValue('lastName', $value);
-        
+
         $firstName = $this->get('firstName');
         if (empty($firstName)) {
             $this->setValue('name', $value);
@@ -37,11 +35,11 @@ class Person extends \Espo\Core\ORM\Entity
             $this->setValue('name', $firstName . ' ' . $value);
         }
     }
-    
+
     public function _setFirstName($value)
     {
         $this->setValue('firstName', $value);
-        
+
         $lastName = $this->get('lastName');
         if (empty($lastName)) {
             $this->setValue('name', $value);

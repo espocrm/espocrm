@@ -23,9 +23,11 @@
 namespace Espo\Services;
 
 use \Espo\ORM\Entity;
+use \Espo\Core\Entities\Person;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
+
 
 class EmailTemplate extends Record
 {
@@ -81,7 +83,7 @@ class EmailTemplate extends Record
                     if (!empty($row['entity_id'])) {
                         $entity = $this->getEntityManager()->getEntity($row['entity_type'], $row['entity_id']);
                         if ($entity) {
-                            if (!empty($entity::$person)) {
+                            if ($entity instanceof Person) {
                                 $entityList['Person'] = $entity;
                             }
                             if (empty($entityList[$entity->getEntityName()])) {
@@ -101,7 +103,7 @@ class EmailTemplate extends Record
                 $entityList[$params['parentType']] = $parent;
                 $entityList['Parent'] = $parent;
 
-                if (empty($entityList['Person']) && !empty($parent::$person)) {
+                if (empty($entityList['Person']) && ($entity instanceof Person)) {
                     $entityList['Person'] = $parent;
                 }
             }
