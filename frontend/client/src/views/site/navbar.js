@@ -168,7 +168,6 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             updateWidth();
 
             setTimeout(function () {
-                console.log($('#navbar .navbar').height());
                 if ($('#navbar .navbar').height() > 45) {
                     updateWidth();
                 }
