@@ -41,7 +41,7 @@
         "Sending...": "Отправляется...",
         "Removed": "Удалено",
         "Posted": "Добавлено",
-        "Linked": "Ссылка добавлена",    
+        "Linked": "Ссылка добавлена",
         "Unlinked": "Ссылка удалена",
         "Access denied": "В доступе отказано",
         "Access": "Доступ",
@@ -53,8 +53,8 @@
         "Unlinking...": "Ссылка удаляется...",
         "Posting...": "Размещается...",
         "Username can not be empty!": "Имя пользователя не может быть пустым!",
-        "Cache is not enabled": "Кэш не подключен",    
-        "Cache has been cleared": "Кэш очищен",    
+        "Cache is not enabled": "Кэш не подключен",
+        "Cache has been cleared": "Кэш очищен",
         "Rebuild has been done": "Восстановление выполнено",
         "Saving...": "Сохраняется...",
         "Modified": "Изменено",
@@ -129,12 +129,13 @@
         "See more": "Подробнее",
         "Today": "Сегодня",
         "Tomorrow": "Завтра",
-        "Yesterday": "Вчера"
+        "Yesterday": "Вчера",
+        "Type & press enter": "Введите и нажмите enter"
     },
     "messages": {
         "notModified": "Вы не внесли изменения в запись",
         "duplicate": "Созданная вами запись дублировалась",
-        "fieldIsRequired": "{field} необходимы",
+        "fieldIsRequired": "{field} обязательное",
         "fieldShouldBeEmail": "{field} должно быть правильным e-mail",
         "fieldShouldBeFloat": "{field} должно быть верное дробное число",
         "fieldShouldBeInt": "{field} должно быть верное целое число",
@@ -190,10 +191,10 @@
         "users": "Users"
     },
     "dashlets": {
-        "Stream": "Лента"        
+        "Stream": "Лента"
     },
     "streamMessages": {
-        "create": "{user} создал {entityType} {entity}",        
+        "create": "{user} создал {entityType} {entity}",
         "createAssigned": "{user} создал {entityType} {entity} присвоен {assignee}",
         "assign": "{user} присвоено {entityType} {entity} к {assignee}",
         "post": "{user} опубликован на {entityType} {entity}",
@@ -204,8 +205,8 @@
         "emailReceived": "{entity} было получено для {entityType} {entity}",
         "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
         "mentionInPost": "{user} mentioned {mentioned} on {entityType} {entity}",
-        
-        "createThis": "{user} создал это {entityType}",        
+
+        "createThis": "{user} создал это {entityType}",
         "createAssignedThis": "{user} создал это {entityType} присвоен {assignee}",
         "assignThis": "{user} присвоено это {entityType} к {assignee}",
         "postThis": "{user} добавил",
