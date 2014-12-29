@@ -91,7 +91,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                         $target.addClass('active').children().removeClass('text-muted');
                     }
                 }
-                this.fetchToModel();
+                this.trigger('change');
             },
 
             'click [data-action="removePhoneNumber"]': function (e) {
@@ -101,7 +101,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                 } else {
                     this.removePhoneNumberBlock($block);
                 }
-                this.fetchToModel();
+                this.trigger('change');
             },
 
             'change input.phone-number': function (e) {
@@ -109,7 +109,6 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                 var $block = $input.closest('div.phone-number-block');
 
                 if ($input.val() == '') {
-                    console.log('e');
                     if ($block.parent().children().size() == 1) {
                         $block.find('input.phone-number').val('');
                     } else {
@@ -117,7 +116,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                     }
                 }
 
-                this.fetchToModel();
+                this.trigger('change');
 
                 this.manageAddButton();
             },
@@ -193,12 +192,6 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 
         setup: function () {
             this.dataFieldName = this.name + 'Data';
-
-            if (this.mode == 'detail' || this.mode == 'edit') {
-                this.listenTo(this.model, 'change:' + this.dataFieldName, function () {
-                    this.render();
-                }, this);
-            }
         },
 
         fetchPhoneNumberData: function () {
@@ -229,8 +222,16 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
             var adderssData = this.fetchPhoneNumberData();
             data[this.dataFieldName] = adderssData;
             data[this.name] = null;
+
+            var primaryIndex = 0;
+            (adderssData || []).forEach(function (item, i) {
+                if (item.primary) {
+                    primaryIndex = i;
+                    return;
+                }
+            });
             if (adderssData.length) {
-                data[this.name] = adderssData[0].phoneNumber;
+                data[this.name] = adderssData[primaryIndex].phoneNumber;
             }
 
             return data;

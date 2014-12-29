@@ -112,7 +112,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                         $target.addClass('active').children().removeClass('text-muted');
                     }
                 }
-                this.fetchToModel();
+                this.trigger('change');
             },
 
             'click [data-action="removeEmailAddress"]': function (e) {
@@ -122,7 +122,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                 } else {
                     this.removeEmailAddressBlock($block);
                 }
-                this.fetchToModel();
+                this.trigger('change');
             },
 
             'change input.email-address': function (e) {
@@ -137,7 +137,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                     }
                 }
 
-                this.fetchToModel();
+                this.trigger('change');
 
                 this.manageAddButton();
             },
@@ -254,12 +254,6 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
 
         setup: function () {
             this.dataFieldName = this.name + 'Data';
-
-            if (this.mode == 'detail' || this.mode == 'edit') {
-                this.listenTo(this.model, 'change:' + this.dataFieldName, function () {
-                    this.render();
-                }, this);
-            }
         },
 
         fetchEmailAddressData: function () {
@@ -292,8 +286,17 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
             var adderssData = this.fetchEmailAddressData();
             data[this.dataFieldName] = adderssData;
             data[this.name] = null;
+
+            var primaryIndex = 0;
+            (adderssData || []).forEach(function (item, i) {
+                if (item.primary) {
+                    primaryIndex = i;
+                    return;
+                }
+            });
+
             if (adderssData.length) {
-                data[this.name] = adderssData[0].emailAddress;
+                data[this.name] = adderssData[primaryIndex].emailAddress;
             }
 
             return data;
