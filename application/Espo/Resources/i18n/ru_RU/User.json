@@ -1,19 +1,20 @@
 {
     "fields": {
-        "name": "Name",
+        "name": "Имя",
         "userName": "Имя пользователя",
         "title": "Название",
-        "isAdmin": "Is Admin",
+        "isAdmin": "Права администратора",
         "defaultTeam": "Группа по умолчанию",
         "emailAddress": "Email",
-        "phoneNumber": "Phone",
-        "roles": "Роли",        
+        "phoneNumber": "Номер телефона",
+        "roles": "Роли",
         "password": "Пароль",
         "passwordConfirm": "Подтвердите пароль",
-        "newPassword": "Новый пароль"
+        "newPassword": "Новый пароль",
+        "teamRole": "Должность"
     },
     "links": {
-        "teams": "Teams",
+        "teams": "Группы",
         "roles": "Роли"
     },
     "labels": {

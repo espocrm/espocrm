@@ -14,10 +14,10 @@
     },
     "scopeNamesPlural": {
         "Email": "Письма",
-        "User": "Users",
-        "Team": "Teams",
+        "User": "Пользователи",
+        "Team": "Группы",
         "Role": "Роли",
-        "EmailTemplate": "Email Templates",
+        "EmailTemplate": "Email шаблоны",
         "EmailAccount": "Email Accounts",
         "EmailAccountScope": "Email Accounts",
         "OutboundEmail": "Outbound Emails",
@@ -33,7 +33,7 @@
         "Saved": "Сохранено",
         "Error": "Ошибка",
         "Select": "Выбрать",
-        "Not valid": "Неправильный",
+        "Not valid": "Некорректные данные",
         "Please wait...": "Пожалуйста, подождите...",
         "Please wait": "Пожалуйста, подождите",
         "Loading...": "Загрузка...",
@@ -172,23 +172,23 @@
         "firstName": "First Name",
         "lastName": "Фамилия",
         "salutationName": "Пол",
-        "assignedUser": "Выбранный пользователь",
+        "assignedUser": "Ответственный пользователь",
         "emailAddress": "Email",
-        "assignedUserName": "Имя выбранного пользователя",
-        "teams": "Teams",
+        "assignedUserName": "Имя ответственного пользователя",
+        "teams": "Группы",
         "createdAt": "Создан в",
         "modifiedAt": "Изменен в",
         "createdBy": "Создан (кем)",
         "modifiedBy": "Изменен (кем)"
     },
     "links": {
-        "assignedUser": "Выбранный пользователь",
+        "assignedUser": "Ответственный пользователь",
         "createdBy": "Создан (кем)",
         "modifiedBy": "Изменен (кем)",
         "team": "Группа",
         "roles": "Роли",
-        "teams": "Teams",
-        "users": "Users"
+        "teams": "Группы",
+        "users": "Пользователи"
     },
     "dashlets": {
         "Stream": "Лента"

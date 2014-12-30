@@ -1,11 +1,11 @@
 {
     "fields": {
-        "name": "Name",
+        "name": "Имя",
         "roles": "Роли"
     },
     "links": {
-        "users": "Users",
-        "teams": "Teams"
+        "users": "Пользователи",
+        "teams": "Группы"
     },
     "labels": {
         "Access": "Доступ",

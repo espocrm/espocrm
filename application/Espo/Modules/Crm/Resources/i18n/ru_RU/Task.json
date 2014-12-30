@@ -1,8 +1,8 @@
 {
     "fields": {
-        "name": "Name",
+        "name": "Имя",
         "parent": "Источник",
-        "status": "статус",
+        "status": "Статус",
         "dateStart": "Дата начала",
         "dateEnd": "Date Due",
         "priority": "Приоритет",
@@ -27,7 +27,7 @@
     },
     "labels": {
         "Create Task": "Создать задачу",
-        "Complete": "Complete"
+        "Complete": "Завершить"
     },
     "presetFilters": {
         "actual": "Actual",
