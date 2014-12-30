@@ -1,15 +1,16 @@
 {
     "fields": {
-        "name": "Name",
+        "name": "Имя",
         "parent": "Источник",
-        "status": "статус",
+        "status": "Статус",
         "dateStart": "Дата начала",
         "dateEnd": "Дата окончания",
-        "duration": "Duration",
+        "duration": "Длительность",
         "description": "Описание",
-        "users": "Users",
+        "users": "Пользователи",
         "contacts": "Контакты",
-        "leads": "Потенциальные клиенты"
+        "leads": "Потенциальные клиенты",
+        "reminders": "Напоминания"
     },
     "links": {
     },
