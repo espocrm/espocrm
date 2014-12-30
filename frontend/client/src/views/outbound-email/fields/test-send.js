@@ -70,29 +70,41 @@ Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function
 
 
         send: function () {
-            var data = this.getSmtpData();            
-            
+            var data = this.getSmtpData();
+
             this.createView('popup', 'OutboundEmail.Modals.TestSend', {
                 emailAddress: this.getUser().get('emailAddress')
             }, function (view) {
                 view.render();
 
-                this.listenToOnce(view, 'send', function (emailAddress) {                
+                this.listenToOnce(view, 'send', function (emailAddress) {
                     this.$el.find('button').addClass('disabled');
                     data.emailAddress = emailAddress;
-                    
+
                     this.notify('Sending...');
-                    
+
                     view.close();
-                    
+
                     $.ajax({
                         url: 'Email/action/sendTestEmail',
                         type: 'POST',
                         data: JSON.stringify(data),
-                        error: function () {
+                        error: function (xhr, status) {
+                            var statusReason = xhr.getResponseHeader('X-Status-Reason');
+                            statusReason = statusReason.replace(/ $/, '');
+                            statusReason = statusReason.replace(/,$/, '');
+
+                            var msg = this.translate('Error') + ' ' + xhr.status;
+                            if (statusReason) {
+                                msg += ': ' + statusReason;
+                            }
+                            Espo.Ui.error(msg);
+                            console.error(msg);
+                            xhr.errorIsHandled = true;
+
                             this.$el.find('button').removeClass('disabled');
                         }.bind(this)
-                    }).done(function () {                        
+                    }).done(function () {
                         this.$el.find('button').removeClass('disabled');
                         Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
                     }.bind(this));
