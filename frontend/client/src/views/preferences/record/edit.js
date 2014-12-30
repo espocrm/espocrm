@@ -66,8 +66,9 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
-                    this.model.clear('smtpPassword');
-                    this.getPreferences().set(this.model.toJSON());
+                    var data = this.model.toJSON();
+                    delete data['smtpPassword'];
+                    this.getPreferences().set(data);
                     this.getPreferences().trigger('update');
                 }, this);
             }
