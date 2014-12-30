@@ -49,13 +49,13 @@ Espo.App = function (options, callback) {
     this.metadata = new Espo.Metadata(this.cache);
     this.fieldManager = new Espo.FieldManager();
 
-    
+
     var proceed = function () {
         this.user = new Espo['Models.User']();
         this.preferences = new Espo['Models.Preferences']();
         this.preferences.settings = this.settings;
         this.acl = new Espo.Acl(this.user);
-        
+
         this.preferences.on('update', function (model) {
             this.storage.set('user', 'preferences', this.preferences.toJSON());
         }, this);
@@ -68,7 +68,7 @@ Espo.App = function (options, callback) {
         this._initBaseController();
 
         this._preLoader = new Espo.PreLoader(this.cache, this._viewFactory);
-        
+
         this._preLoad(function () {
             callback.call(this, this);
         });
@@ -129,14 +129,14 @@ _.extend(Espo.App.prototype, {
             this.metadata.load(function () {
                 this.fieldManager.defs = this.metadata.get('fields');
                 this.fieldManager.metadata = this.metadata;
-                
+
                 this.settings.defs = this.metadata.get('entityDefs.Settings');
                 this.user.defs = this.metadata.get('entityDefs.User');
                 this.preferences.defs = this.metadata.get('entityDefs.Preferences');
-                
+
 
                 this.loader.addLibsConfig(this.metadata.get('app.jsLibs') || {});
-                                        
+
                 this._initRouter();
             }.bind(this));
         }.bind(this);
@@ -222,7 +222,7 @@ _.extend(Espo.App.prototype, {
                     var module = this.metadata.get('scopes.' + name + '.module');
                     className = Espo.Utils.composeClassName(module, name, 'Controllers');
                 }
-                
+
                 this.loader.load(className, function (controllerClass) {
                     this.controllers[name] = new controllerClass(this.baseController.params, this._getControllerInjection());
                     this.controllers[name].name = name;
@@ -270,10 +270,9 @@ _.extend(Espo.App.prototype, {
         this._viewLoader = function (viewName, callback) {
             this.loader.load(Espo.Utils.composeViewClassName(viewName), callback);
         }.bind(this);
-        
+
         var self = this;
-        
-    
+
         var getResourceInnerPath = function (type, name) {
             switch (type) {
                 case 'template':
@@ -284,7 +283,7 @@ _.extend(Espo.App.prototype, {
                     return 'res/layouts/' + name + '.json';
             }
         };
-        
+
         var getResourcePath = function (type, name) {
             var path;
             if (name.indexOf(':') != -1) {
@@ -331,7 +330,7 @@ _.extend(Espo.App.prototype, {
             this.storage.set('user', 'user', data.user);
             this.storage.set('user', 'preferences', data.preferences);
             this.storage.set('user', 'acl', data.acl || {});
-            
+
             this._initUserData(data, function () {
                 this.trigger('auth');
             }.bind(this));
@@ -342,9 +341,9 @@ _.extend(Espo.App.prototype, {
             this.logout();
         }.bind(this));
     },
-    
+
     logout: function () {
-    
+
         if (this.auth) {
             var arr = Base64.decode(this.auth).split(':');
             if (arr.length > 1) {
@@ -357,7 +356,7 @@ _.extend(Espo.App.prototype, {
                 });
             }
         }
-    
+
         this.auth = null;
         this.user.clear();
         this.preferences.clear();
@@ -377,23 +376,23 @@ _.extend(Espo.App.prototype, {
 
     _initUserData: function (options, callback) {
         options = options || {};
-        
+
         if (this.auth !== null) {
             this.language.load(function () {
                 this.dateTime.setLanguage(this.language);
-            
+
                 var userData = options.user || this.storage.get('user', 'user') || null;
                 var preferencesData = options.preferences || this.storage.get('user', 'preferences') || null;
                 var aclData = options.acl || this.storage.get('user', 'acl') || null;
-                
+
                 this.user.set(userData);
                 this.preferences.set(preferencesData);
                 this.acl.set(aclData);
-                
+
                 this.user.on('change', function () {
                     this.storage.set('user', 'user', this.user.toJSON());
                 }, this);
-                
+
                 if (!this.auth) {
                     return;
                 }
@@ -427,7 +426,7 @@ _.extend(Espo.App.prototype, {
             timeout: 60000,
             contentType: 'application/json'
         });
-        
+
         $(document).ajaxError(function (event, xhr, options) {
             if (xhr.errorIsHandled) {
                 return;
@@ -467,7 +466,7 @@ _.extend(Espo.App.prototype, {
                 default:
                     Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
             }
-            
+
             var statusReason = xhr.getResponseHeader('X-Status-Reason');
             if (statusReason) {
                 console.error('Server side error: ' + statusReason);

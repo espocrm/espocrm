@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
-Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep) {        
+ ************************************************************************/
+
+Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
     return Dep.extend({
-    
+
         sideView: null,
-    
+
         buttons: [
             {
                 name: 'save',
@@ -39,9 +39,9 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
                 name: 'reset',
                 label: 'Reset',
                 style: 'danger'
-            }        
+            }
         ],
-        
+
         dependencyDefs: {
             'smtpAuth': {
                 map: {
@@ -60,41 +60,41 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
                 ]
             }
         },
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
+                    this.model.clear('smtpPassword');
                     this.getPreferences().set(this.model.toJSON());
                     this.getPreferences().trigger('update');
                 }, this);
             }
 
         },
-        
+
         actionReset: function () {
             if (confirm(this.translate('resetPreferencesConfirmation', 'messages'))) {
                 $.ajax({
                     url: 'Preferences/' + this.model.id,
                     type: 'DELETE',
-                    
                 }).done(function (data) {
-                    Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));                    
+                    Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
                     this.model.set(data);
                     this.getPreferences().set(this.model.toJSON());
                     this.getPreferences().trigger('update');
                 }.bind(this));
             }
         },
-        
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            
+
             if (!this.getConfig().get('assignmentEmailNotifications')) {
                 this.hideField('receiveAssignmentEmailNotifications');
-            }            
-            
+            }
+
             var smtpSecurityField = this.getFieldView('smtpSecurity');
             this.listenTo(smtpSecurityField, 'change', function () {
                 var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
@@ -104,17 +104,16 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
                     this.model.set('smtpPort', '587');
                 } else {
                     this.model.set('smtpPort', '25');
-                }            
-            }.bind(this));                                                        
+                }
+            }.bind(this));
         },
-        
+
         exit: function (after) {
             if (after == 'cancel') {
                 this.getRouter().navigate('#User/view/' + this.model.id, {trigger: true});
             }
         },
-    
-    });        
-    
-});
 
+    });
+
+});

@@ -27,24 +27,27 @@ use \Espo\Core\Exceptions\BadRequest;
 class App extends \Espo\Core\Controllers\Record
 {
     public function actionUser()
-    {        
+    {
+        $preferences = $this->getPreferences()->toArray();
+        unset($preferences['smtpPassword']);
+
         return array(
             'user' => $this->getUser()->toArray(),
             'acl' => $this->getAcl()->toArray(),
-            'preferences' => $this->getPreferences()->toArray(),
+            'preferences' => $preferences,
             'token' => $this->getUser()->get('token')
-        );    
+        );
     }
-    
+
     public function actionDestroyAuthToken($params, $data)
-    {        
-        $token = $data['token'];        
+    {
+        $token = $data['token'];
         if (empty($token)) {
             throw new BadRequest();
         }
 
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        return $auth->destroyAuthToken($token);        
+        return $auth->destroyAuthToken($token);
     }
 }
 
