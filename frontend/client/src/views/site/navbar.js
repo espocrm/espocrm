@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
@@ -60,7 +60,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 });
             },
         },
-        
+
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
             if (!companyLogoId) {
@@ -70,7 +70,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
         },
 
         setup: function () {
-            this.getRouter().on('routed', function (e) {                
+            this.getRouter().on('routed', function (e) {
                 if (e.controller) {
                     this.selectTab(e.controller);
                 } else {
@@ -84,19 +84,19 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
                 return true;
             }, this);
-                        
 
-            this.quickCreateList = this.getConfig().get('quickCreateList').filter(function (scope) {
+
+            this.quickCreateList = (this.getConfig().get('quickCreateList') || []).filter(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.acl')) {
                     return this.getAcl().check(scope, 'edit');
                 }
                 return true;
             }, this);
-            
+
             this.createView('notificationsBadge', 'Notifications.Badge', {
                 el: this.options.el + ' .notifications-badge-container'
             });
-            
+
             this.createView('globalSearch', 'GlobalSearch.GlobalSearch', {
                 el: this.options.el + ' .global-search-container'
             });
