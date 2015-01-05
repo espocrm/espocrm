@@ -43,7 +43,7 @@
         },
         "account": {
             "type": "link",
-            "disabled": true
+            "readOnly": true
         },
         "acceptanceStatus": {
             "type": "enum",
