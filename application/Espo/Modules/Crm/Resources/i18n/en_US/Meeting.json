@@ -10,7 +10,8 @@
         "users": "Users",
         "contacts": "Contacts",
         "leads": "Leads",
-        "reminders": "Reminders"
+        "reminders": "Reminders",
+        "account": "Account"
     },
     "links": {
     },
