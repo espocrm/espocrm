@@ -290,7 +290,7 @@ class Base
                             $a = $this->getWherePart($i);
                             foreach ($a as $left => $right) {
                                 if (!empty($right)) {
-                                    $arr[$left] = $right;
+                                    $arr[] = array($left => $right);
                                 }
                             }
                         }

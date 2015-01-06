@@ -15,7 +15,7 @@
          "hidden": true
       }
    ],
-   "filter": false,
+   "filter": true,
    "notCreatable": false,
    "fieldDefs":{
       "type":"jsonArray"

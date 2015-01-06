@@ -201,6 +201,24 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
             return data;
         },
 
+        fetchSearch: function () {
+            var field = this.name;
+            var arr = [];
+            $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
+                arr.push( {type: 'like', field: field, value: "%" + $(el).val() + "%"} );
+            });
+
+            if (arr.length == 0) {
+                return false;
+            }
+
+            var data = {
+                type: 'or',
+                value: arr
+            };
+            return data;
+        },
+
         validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 var value = this.model.get(this.name);
