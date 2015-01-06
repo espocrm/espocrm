@@ -13,12 +13,4 @@
 /tests/testData/cache/*
 composer.phar
 vendor/
-
-/custom/*
-!/custom/Espo/
-/custom/Espo/*
-!/custom/Espo/Custom/
-/custom/Espo/Custom/*
-!/custom/Espo/Custom/Core/
-/custom/Espo/Custom/Core/*
-!/custom/Espo/Custom/Core/Loaders/
+/custom
