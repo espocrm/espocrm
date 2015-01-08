@@ -17,10 +17,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], function (Dep, FullCalendar) {
-    
+
     return Dep.extend({
 
         template: 'crm:calendar.calendar',
@@ -38,7 +38,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         modeList: ['month', 'agendaWeek', 'agendaDay'],
 
         defaultMode: 'agendaWeek',
-        
+
         slotMinutes: 30,
 
         titleFormat: {
@@ -90,7 +90,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             }
             var view = this.$calendar.fullCalendar('getView');
             var today = new Date();
-            
+
             if (view.start <= today && today < view.end) {
                 this.$el.find('button[data-action="today"]').addClass('active');
             } else {
@@ -105,9 +105,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             };
 
             var viewName = map[view.name] || view.name
-            
+
             var title;
-        
+
             if (viewName == 'week') {
                 title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
             } else {
@@ -176,19 +176,19 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             }.bind(this));
             return events;
         },
-        
+
         convertTime: function (d) {
             var format = this.getDateTime().internalDateTimeFormat;
             var timeZone = this.getDateTime().timeZone;
             var string = d.format(format);
-            
+
             var m;
             if (timeZone) {
                 m = moment.tz(string, format, timeZone).utc();
             } else {
                 m = moment.utc(string, format);
             }
-            
+
             return m.format(format) + ':00';
         },
 
@@ -223,12 +223,12 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     var height = this.getCalculatedHeight();
                     $calendar.fullCalendar('option', 'contentHeight', height);
 
-                    
+
                 }.bind(this),
                 select: function (start, end, allDay) {
                     var dateStart = this.convertTime(start);
                     var dateEnd = this.convertTime(end);
-                    
+
                     this.notify('Loading...');
                     this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
                         attributes: {
@@ -254,7 +254,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 viewRender: function (view, el) {
                     var mode = view.name;
                     var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
-                    
+
                     var m = moment(this.$calendar.fullCalendar('getDate'));
                     this.trigger('view', m.format('YYYY-MM-DD'), mode);
                 }.bind(this),
@@ -269,7 +269,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
                     fromStr = from.utc().format(dateTimeFormat);
                     toStr = to.utc().format(dateTimeFormat);
-                   
+
                     this.fetchEvents(fromStr, toStr, callback);
                 }.bind(this),
                 eventDrop: function (event, delta, callback) {
@@ -279,7 +279,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     if (event.duration) {
                         dateEnd = this.convertTime(event.start.clone().add(event.duration, 's')) || null;
                     }
-                    
+
                     var attributes = {};
                     if (!event.dateStart && event.dateEnd) {
                         attributes.dateEnd = dateStart;
@@ -302,7 +302,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     event.allDay = false;
 
                     this.handleAllDay(event);
-                    
+
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
                         model.once('sync', function () {
@@ -317,7 +317,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         dateEnd: this.convertTime(event.end)
                     };
                     event.duration = event.end.unix() - event.start.unix();
-                    
+
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
                         model.once('sync', function () {
@@ -387,7 +387,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
             this.$calendar.fullCalendar('updateEvent', event);
         },
-        
+
         removeModel: function (model) {
             this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
         }
