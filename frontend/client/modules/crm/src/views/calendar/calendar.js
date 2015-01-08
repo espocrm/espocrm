@@ -39,7 +39,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
         defaultMode: 'agendaWeek',
 
-        slotMinutes: 30,
+        slotDuration: 30,
 
         titleFormat: {
             month: 'MMMM YYYY',
@@ -81,7 +81,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             this.date = this.options.date || null;
             this.mode = this.options.mode || this.defaultMode;
             this.header = ('header' in this.options) ? this.options.header : this.header;
-            this.slotMinutes = this.options.slotMinutes || this.slotMinutes;
+            this.slotDuration = this.options.slotDuration || this.slotDuration;
         },
 
         updateDate: function () {
@@ -205,6 +205,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         afterRender: function () {
             var $calendar = this.$calendar = this.$el.find('div.calendar');
 
+            var slotDuration = '00:' + this.slotDuration + ':00';
+
             var options = {
                 header: false,
                 axisFormat: this.getDateTime().timeFormat,
@@ -217,7 +219,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 height: this.options.height || null,
                 firstDay: this.getPreferences().get('weekStart'),
                 slotEventOverlap: true,
-                snapDuration: 30 * 60 * 1000,
+                slotDuration: slotDuration,
+                snapDuration: this.slotDuration * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
                 windowResize: function () {
                     var height = this.getCalculatedHeight();
