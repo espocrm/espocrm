@@ -33,6 +33,18 @@ class Language
     private $preferences;
     private $unifier;
 
+    /**
+     * Data of all languages
+     *
+     * @var array
+     */
+    private $allData = array();
+
+    /**
+     * Data of current language
+     *
+     * @var array
+     */
     private $data = null;
 
     private $name = 'i18n';
@@ -81,7 +93,6 @@ class Language
     {
         return $this->unifier;
     }
-
 
     public function getLanguage()
     {
@@ -182,7 +193,6 @@ class Language
         return $this->get();
     }
 
-
     /**
      * Get data of Unifier language files
      *
@@ -230,20 +240,24 @@ class Language
         return $result;
     }
 
-
     protected function init($reload = false)
     {
         if ($reload || !file_exists($this->getLangCacheFile()) || !$this->getConfig()->get('useCache')) {
-            $this->fullData = $this->getUnifier()->unify($this->name, $this->paths, true);
+            $fullData = $this->getUnifier()->unify($this->name, $this->paths, true);
 
             $result = true;
-            foreach ($this->fullData as $i18nName => $i18nData) {
-                $i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
+            foreach ($fullData as $i18nName => $i18nData) {
 
                 if ($i18nName != $this->defaultLanguage) {
-                    $i18nData = Util::merge($this->fullData[$this->defaultLanguage], $i18nData);
+                    $i18nData = Util::merge($fullData[$this->defaultLanguage], $i18nData);
                 }
-                $result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
+
+                $this->allData[$i18nName] = $i18nData;
+
+                if ($this->getConfig()->get('useCache')) {
+                    $i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
+                    $result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
+                }
             }
 
             if ($result == false) {
@@ -251,7 +265,12 @@ class Language
             }
         }
 
-        $this->data = $this->getFileManager()->getContents($this->getLangCacheFile());
+        $currentLanguage = $this->getLanguage();
+        if (empty($this->allData[$currentLanguage])) {
+            $this->allData[$currentLanguage] = $this->getFileManager()->getContents($this->getLangCacheFile());
+        }
+
+        $this->data = $this->allData[$currentLanguage];
     }
 
     protected function normalizeDefs($label, $value, $category)
