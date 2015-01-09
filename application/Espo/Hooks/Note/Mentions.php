@@ -56,6 +56,8 @@ class Mentions extends \Espo\Core\Hooks\Base
 
         preg_match_all('/(@\w+)/', $post, $matches);
 
+        $mentionCount = 0;
+
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
@@ -68,6 +70,7 @@ class Mentions extends \Espo\Core\Hooks\Base
                         '_scope' => $user->getEntityName()
                     );
                     $mentionData->$item = (object) $m;
+                    $mentionCount++;
                     if (!in_array($item, $previousMentionList)) {
                         if ($user->id == $this->getUser()->id) {
                             continue;
@@ -82,7 +85,11 @@ class Mentions extends \Espo\Core\Hooks\Base
         if (empty($data)) {
             $data = new \stdClass();
         }
-        $data->mentions = $mentionData;
+        if ($mentionCount) {
+            $data->mentions = $mentionData;
+        } else {
+            unset($data->mentions);
+        }
 
         $entity->set('data', $data);
     }
