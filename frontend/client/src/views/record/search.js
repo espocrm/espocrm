@@ -36,7 +36,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
         advanced: null,
 
         bool: null,
-        
+
         disableSavePreset: false,
 
         data: function () {
@@ -56,7 +56,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
         setup: function () {
             this.scope = this.collection.name;
             this.searchManager = this.options.searchManager;
-            
+
             if ('disableSavePreset' in this.options) {
                 this.disableSavePreset = this.options.disableSavePreset;
             }
@@ -64,15 +64,15 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.addReadyCondition(function () {
                 return this.fields != null && this.moreFields != null;
             }.bind(this));
-            
+
             this.boolFilters = this.getMetadata().get('clientDefs.' + this.scope + '.boolFilters') || [];
 
             this._helper.layoutManager.get(this.scope, 'filters', function (list) {
                 this.moreFields = list;
                 this.tryReady();
             }.bind(this));
-            
-            this.presetFilters = _.clone(this.getMetadata().get('clientDefs.' + this.scope + '.presetFilters') || []);            
+
+            this.presetFilters = _.clone(this.getMetadata().get('clientDefs.' + this.scope + '.presetFilters') || []);
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
                 this.presetFilters.push(item);
             }, this);
@@ -80,21 +80,21 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.loadSearchData();
 
             this.model = new this.collection.model();
-            this.model.clear();            
+            this.model.clear();
 
             this.createFilters();
         },
-        
-        createFilters: function (callback) {            
+
+        createFilters: function (callback) {
             var i = 0;
             var count = Object.keys(this.advanced || {}).length;
-            
-            if (count == 0) {                    
+
+            if (count == 0) {
                 if (typeof callback === 'function') {
                     callback();
                 }
             }
-            
+
             for (var field in this.advanced) {
                 this.createFilter(field, this.advanced[field], function () {
                     i++;
@@ -116,65 +116,65 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             'click button[data-action="search"]': function (e) {
                 this.search();
             },
-            'click a[data-action="addFilter"]': function (e) { 
+            'click a[data-action="addFilter"]': function (e) {
                 var $target = $(e.currentTarget);
                 var name = $target.data('name');
-                this.advanced[name] = {};                    
-                
+                this.advanced[name] = {};
+
                 $target.closest('li').addClass('hide');
-                
+
                 this.presetName = null;
-                
-                this.createFilter(name, {}, function () {                
+
+                this.createFilter(name, {}, function () {
                     this.fetch();
                     this.updateSearch();
                 }.bind(this));
                 this.updateAddFilterButton();
-                
+
                 this.managePresetFilters();
             },
-            'click .advanced-filters a.remove-filter': function (e) {            
+            'click .advanced-filters a.remove-filter': function (e) {
                 var $target = $(e.currentTarget);
                 var name = $target.data('name');
-                
+
                 this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hide');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
-                this.clearView('filter-' + name);                
+                this.clearView('filter-' + name);
                 container.remove();
                 delete this.advanced[name];
-                
+
                 this.presetName = null;
-                
-                this.updateAddFilterButton();                
-            
+
+                this.updateAddFilterButton();
+
                 this.fetch();
                 this.updateSearch();
-                
+
                 this.managePresetFilters();
             },
             'click button[data-action="reset"]': function (e) {
                 this.resetFilters();
             },
             'click button[data-action="refresh"]': function (e) {
-                this.notify('Loading...');                
+                this.notify('Loading...');
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.notify(false);
                 }.bind(this));
-                
+
                 this.collection.reset();
                 this.collection.fetch();
-                
+
             },
             'click a[data-action="selectPreset"]': function (e) {
                 this.presetName = $(e.currentTarget).data('name') || null;
-                
+
                 this.removeFilters();
-                                
-                this.advanced = this.getPresetData();    
+
+                this.advanced = this.getPresetData();
                 this.updateSearch();
-                
+
                 this.managePresetFilters();
-                
+
                 this.createFilters(function () {
                     this.render();
                 }.bind(this));
@@ -185,17 +185,17 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             },
             'click .advanced-filters-bar a[data-action="savePreset"]': function (e) {
                 this.createView('savePreset', 'Modals.SaveFilters', {}, function (view) {
-                    view.render();                    
+                    view.render();
                     this.listenToOnce(view, 'save', function (name) {
                         this.savePreset(name);
                         view.close();
-                        
+
                         this.removeFilters();
                         this.createFilters(function () {
                             this.render();
-                        }.bind(this));    
+                        }.bind(this));
 
-                    }, this); 
+                    }, this);
                 }.bind(this));
             },
             'click .advanced-filters-bar a[data-action="removePreset"]': function (e) {
@@ -209,19 +209,19 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                 this.search();
             }
         },
-        
+
         removeFilters: function () {
-            this.$advancedFiltersPanel.empty();            
-            for (var name in this.advanced) {                
+            this.$advancedFiltersPanel.empty();
+            for (var name in this.advanced) {
                 this.clearView('filter-' + name);
             }
         },
-        
+
         resetFilters: function () {
             this.trigger('reset');
 
             this.removeFilters();
-                
+
             this.presetName = null;
 
             this.searchManager.reset();
@@ -230,74 +230,74 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.render();
             this.updateCollection();
         },
-        
+
         savePreset: function (name) {
             var id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
-            
+
             this.fetch();
             this.updateSearch();
-            
+
             var presetFilters = this.getPreferences().get('presetFilters') || {};
             if (!(this.scope in presetFilters)) {
                 presetFilters[this.scope] = [];
             }
-            
+
             var data = {
                 id: id,
                 name: id,
                 label: name,
                 data: this.advanced
             };
-            
+
             presetFilters[this.scope].push(data);
-            
+
             this.presetFilters.push(data);
-            
+
             this.getPreferences().set('presetFilters', presetFilters);
             this.getPreferences().save({patch: true});
             this.getPreferences().trigger('update');
-            
-            this.presetName = id;            
+
+            this.presetName = id;
         },
-        
-        removePreset: function (id) {        
+
+        removePreset: function (id) {
             var presetFilters = this.getPreferences().get('presetFilters') || {};
             if (!(this.scope in presetFilters)) {
                 presetFilters[this.scope] = [];
             }
-            
+
             var list;
             list = presetFilters[this.scope];
             list.forEach(function (item, i) {
                 if (item.id == id) {
                     list.splice(i, 1);
-                    return;                
+                    return;
                 }
             }, this);
-            
+
             list = this.presetFilters;
             list.forEach(function (item, i) {
                 if (item.id == id) {
                     list.splice(i, 1);
-                    return;                
+                    return;
                 }
-            }, this);        
+            }, this);
 
-            
+
             this.getPreferences().set('presetFilters', presetFilters);
             this.getPreferences().save({patch: true});
-            this.getPreferences().trigger('update');            
-            
+            this.getPreferences().trigger('update');
+
             this.presetName = null;
             this.advanced = {};
-            
+
             this.removeFilters();
-            
+
             this.render();
             this.updateSearch();
             this.updateCollection();
         },
-        
+
         updateAddFilterButton: function () {
             var $ul = this.$el.find('ul.filter-list');
             if ($ul.children().not('.hide').size() == 0) {
@@ -309,22 +309,22 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
         afterRender: function () {
             this.updateAddFilterButton();
-            
+
             this.$advancedFiltersBar = this.$el.find('.advanced-filters-bar');
             this.$advancedFiltersPanel = this.$el.find('.advanced-filters');
-            
+
             this.managePresetFilters();
         },
-        
-        managePresetFilters: function () {            
+
+        managePresetFilters: function () {
             var name = this.presetName || null;
             var data = this.getPresetData();
-            
+
             this.$el.find('ul.filter-menu a.preset span').remove();
-            
+
             if (name) {
                 this.$advancedFiltersPanel.addClass('hidden');
-                                
+
                 var label = null;
                 var style = null;
                 var id = null;
@@ -335,33 +335,33 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                         id = item.id;
                         return;
                     }
-                }, this);            
-                label = label || this.translate(this.presetName, 'presetFilters', this.scope);                
-                
+                }, this);
+                label = label || this.translate(this.presetName, 'presetFilters', this.scope);
+
                 var barContentHtml = '<a href="javascript:" class="label label-'+style+'" data-action="showFiltersPanel">' + label + '</a>';
                 if (id) {
                     barContentHtml += ' <a href="javascript:" title="'+this.translate('Remove')+'" class="small" data-action="removePreset" data-id="'+id+'"><span class="glyphicon glyphicon-remove"></span></a>';
                 }
-                
-                this.$advancedFiltersBar.removeClass('hidden').html(barContentHtml);        
+
+                this.$advancedFiltersBar.removeClass('hidden').html(barContentHtml);
             } else {
-                this.$advancedFiltersPanel.removeClass('hidden');                
-                
-                if (Object.keys(this.advanced).length !== 0) {                    
-                    if (!this.disableSavePreset) {                    
+                this.$advancedFiltersPanel.removeClass('hidden');
+
+                if (Object.keys(this.advanced).length !== 0) {
+                    if (!this.disableSavePreset) {
                         var barHtml = '<a href="javascript:" class="small" data-action="savePreset">' + this.translate('Save Filters') + '</a>';
-                        this.$advancedFiltersBar.removeClass('hidden').html(barHtml);    
+                        this.$advancedFiltersBar.removeClass('hidden').html(barHtml);
                     } else {
                         this.$advancedFiltersBar.addClass('hidden').empty();
-                    }                    
+                    }
                     return;
                 } else {
-                    this.$advancedFiltersBar.addClass('hidden').empty();    
-                }                
+                    this.$advancedFiltersBar.addClass('hidden').empty();
+                }
             }
 
             name = name || '';
-            
+
             this.$el.find('ul.filter-menu a.preset[data-name="'+name+'"]').prepend('<span class="glyphicon glyphicon-ok pull-right"></span>');
         },
 
@@ -389,7 +389,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.collection.fetch();
         },
 
-        
+
         getPresetData: function () {
             var data = {};
             this.presetFilters.forEach(function (item) {
@@ -404,11 +404,11 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
         loadSearchData: function () {
             var searchData = this.searchManager.get();
             this.textFilter = searchData.textFilter;
-            
+
             if ('presetName' in searchData) {
-                this.presetName = searchData.presetName;    
-            }        
-            
+                this.presetName = searchData.presetName;
+            }
+
             if (this.presetName) {
                 this.advanced = this.getPresetData();
             } else {
@@ -447,7 +447,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.textFilter = this.$el.find('input[name="textFilter"]').val();
 
             this.bool = {};
-            
+
             this.boolFilters.forEach(function (name) {
                 this.bool[name] = this.$el.find('input[name="' + name + '"]').prop('checked');
             }, this);

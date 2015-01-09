@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
     return Dep.extend({
 
         template: 'record.bottom',
-        
+
         mode: 'detail',
 
         data: function () {
@@ -53,13 +53,13 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
         },
 
         setup: function () {
-            this.panels = [];                
+            this.panels = [];
             var scope = this.model.name;
-            
+
             this.wait(true);
-            
+
             var panels = _.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
-            
+
             if (this.mode == 'detail' && this.getMetadata().get('scopes.' + scope + '.stream')) {
                 panels.unshift({
                     "name":"stream",
@@ -67,7 +67,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                     "view":"Stream.Panel"
                 });
             }
-                                    
+
             panels.forEach(function (p) {
                 var name = p.name;
                 this.panels.push(p);
@@ -83,29 +83,30 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                         p.buttons = this.filterActions(view.getButtons());
                     }
                     if (p.label) {
-                        p.title = this.translate(p.label, 'labels', scope);                
+                        p.title = this.translate(p.label, 'labels', scope);
                     } else {
                         p.title = view.title;
                     }
                 }.bind(this));
-            }.bind(this));            
-            
+            }.bind(this));
+
             this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
-                        
+
                 var panelList = layout;
                 panelList.forEach(function (name) {
                     var p = {name: name};
                     var name = p.name;
-                    
-                    var foreignScope = this.model.defs.links[name].entity;                        
+
+                    var foreignScope = this.model.defs.links[name].entity;
                     if (!this.getAcl().check(foreignScope, 'read')) {
                         return;
                     }
-                    
+
                     this.panels.push(p);
-                    
-                    var viewName = 'Record.Panels.Relationship';
-                    var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};                        
+
+                    var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
+
+                    var viewName = defs.view || 'Record.Panels.Relationship';
 
                     var total = 8;
 
@@ -123,13 +124,12 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                             p.buttons = this.filterActions(view.getButtons());
                         }
                         p.title = view.title;
-                    }.bind(this));                        
+                    }.bind(this));
                 }.bind(this));
-                
+
                 this.wait(false);
             }.bind(this));
         },
-        
 
 
         filterActions: function (actions) {

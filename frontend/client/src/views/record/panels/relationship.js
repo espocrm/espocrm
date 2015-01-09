@@ -17,18 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', function (Dep) {
+Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', 'SearchManager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
         template: 'record.panels.relationship',
-        
+
         rowActionsView: 'Record.RowActions.Relationship',
 
         setup: function () {
-            this.link = this.panelName;                
+            this.link = this.panelName;
             if (!(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
@@ -50,7 +50,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
             if (this.getAcl().check(this.scope, 'edit')) {
                 this.buttons.create = this.defs.create;
             }
-            
+
             this.actions = _.clone(this.defs.actions || []);
 
             if (this.defs.select) {
@@ -62,7 +62,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
                     }
                 });
             }
-            
+
             var type = 'listSmall';
             var listLayout = null;
             var layout = this.defs.layout || null;
@@ -77,10 +77,17 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
+
             this.wait(true);
-            this.getCollectionFactory().create(this.scope, function (collection) {            
+            this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-            
+
+                if (this.defs.filters) {
+                    var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
+                    searchManager.setAdvanced(this.defs.filters);
+                    collection.where = searchManager.getWhere();
+                }
+
                 collection.url = collection.urlRoot = url;
                 if (sortBy) {
                     collection.sortBy = sortBy;
@@ -88,9 +95,9 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
                 if (asc) {
                     collection.asc = asc;
                 }
-                this.collection = collection;                
-                
-                this.once('after:render', function () {                    
+                this.collection = collection;
+
+                this.once('after:render', function () {
                     collection.once('sync', function () {
                         this.createView('list', 'Record.List', {
                             collection: collection,
@@ -105,17 +112,15 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
                     }, this);
                     collection.fetch();
                 }, this);
-                
 
-                
                 this.wait(false);
-            }.bind(this));
+            }, this);
         },
-        
+
         getActions: function () {
             return this.actions || [];
         },
-        
+
         getButtons: function () {
             if (this.buttons && this.buttons.create) {
                 return [{
@@ -168,7 +173,7 @@ Espo.define('Views.Record.Panels.Relationship', 'Views.Record.Panels.Bottom', fu
                 });
             }
         },
-        
+
         actionRemoveRelated: function (id) {
             var self = this;
             if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {

@@ -22,7 +22,7 @@
 Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Default', function (Dep) {
 
     return Dep.extend({
-        
+
         getActions: function () {
             if (this.options.acl.edit) {
                 return [
@@ -50,7 +50,7 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
                 ];
             }
         },
-        
+ 
     });
 
 });

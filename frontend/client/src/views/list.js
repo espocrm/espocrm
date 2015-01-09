@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.List', 'Views.Main', function (Dep) {
+Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -37,11 +37,11 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
                 view: 'Header'
             }
         },
-        
+
         searchPanel: true,
-        
+
         searchManager: true,
-        
+
         createButton: true,
 
         setup: function () {
@@ -51,20 +51,20 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
             if (this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
                 this.searchPanel = false;
             }
-        
+
             if (this.searchPanel) {
                 this.createView('search', 'Record.Search', {
                     collection: this.collection,
                     el: '#main > .search-container',
                     searchManager: this.searchManager,
-                }, function (view) {                    
+                }, function (view) {
                     this.listenTo(view, 'reset', function () {
                         this.collection.sortBy = this.defaultSortBy;
                         this.collection.asc = this.defaultAsc;
                         this.getStorage().clear('listSorting', this.collection.name)
                     }, this);
                 }.bind(this));
-            }    
+            }
 
             if (this.createButton) {
                 this.menu.buttons.unshift({
@@ -73,21 +73,21 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
                     style: 'primary',
                     acl: 'edit'
                 });
-            }            
+            }
         },
-        
+
         getSearchDefaultData: function () {
             return null;
         },
-        
+
         setupSearchManager: function () {
             var collection = this.collection;
-        
-            var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+
+            var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
             searchManager.loadStored();
             collection.where = searchManager.getWhere();
             collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-                
+
             this.searchManager = searchManager;
         },
 
@@ -97,7 +97,7 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
             var collection = this.collection;
 
             var sortingParams = this.getStorage().get('listSorting', collection.name) || {};
-            
+
             this.defaultSortBy = collection.sortBy;
             this.defaultAsc = collection.asc;
 
@@ -111,9 +111,9 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
 
         afterRender: function () {
             this.notify('Loading...');
-            
+
             var listViewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-            
+
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', listViewName, {
                     collection: this.collection,
@@ -121,13 +121,13 @@ Espo.define('Views.List', 'Views.Main', function (Dep) {
                 }, function (view) {
                     view.render();
                     view.notify(false);
-                    
+
                     if (this.searchPanel) {
                         this.listenTo(this.getView('list'), 'sort', function (obj) {
                             this.getStorage().set('listSorting', this.collection.name, obj);
                         }, this);
                     }
-                    
+
                 }.bind(this));
             }, this);
             this.collection.fetch();
