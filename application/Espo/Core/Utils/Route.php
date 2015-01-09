@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils;
 
@@ -35,7 +35,7 @@ class Route
     protected $paths = array(
         'corePath' => 'application/Espo/Resources/routes.json',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/routes.json',
-        'customPath' => 'custom/Espo/Custom/Resources/routes.json',                                              
+        'customPath' => 'custom/Espo/Custom/Resources/routes.json',
     );
 
     public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
@@ -99,10 +99,12 @@ class Route
         } else {
             $this->data = $this->unify();
 
-            $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
-             if ($result == false) {            
-                 throw new \Espo\Core\Exceptions\Error('Route - Cannot save unified routes');
-             }
+            if ($this->getConfig()->get('useCache')) {
+                $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
+                if ($result == false) {
+                    throw new \Espo\Core\Exceptions\Error('Route - Cannot save unified routes');
+                }
+            }
         }
     }
 
@@ -110,10 +112,10 @@ class Route
     {
         $data = array();
 
-        $data = $this->getAddData($data, $this->paths['customPath']);        
+        $data = $this->getAddData($data, $this->paths['customPath']);
 
         foreach ($this->getMetadata()->getModuleList() as $moduleName) {
-            $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);            
+            $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
             $data = $this->getAddData($data, $modulePath);
         }
 
@@ -145,11 +147,11 @@ class Route
             return $data;
         }
 
-        foreach($newData as $route) {  
-            
+        foreach($newData as $route) {
+
             $route['route'] = $this->adjustPath($route['route']);
-            
-            $data[] = $route;               
+
+            $data[] = $route;
         }
 
         return $data;
@@ -167,7 +169,7 @@ class Route
         $routePath = trim($routePath);
 
         if ( substr($routePath,0,1) != '/') {
-            return '/'.$routePath;    
+            return '/'.$routePath;
         }
 
         return $routePath;

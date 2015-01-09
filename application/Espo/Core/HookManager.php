@@ -83,10 +83,10 @@ class HookManager
 
         foreach ($metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-            $this->data = array_merge($this->data, $this->getHookData($modulePath));
+            $this->data = array_merge_recursive($this->data, $this->getHookData($modulePath));
         }
 
-        $this->data = array_merge($this->data, $this->getHookData($this->paths['customPath']));
+        $this->data = array_merge_recursive($this->data, $this->getHookData($this->paths['customPath']));
 
         if ($this->getConfig()->get('useCache')) {
             $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);

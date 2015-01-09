@@ -51,9 +51,13 @@ class Container
             $obj = $this->$loadMethod();
             $this->data[$name] = $obj;
         } else {
-            $className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
-            if (!class_exists($className)) {
-                $className = '\Espo\Core\Loaders\\'.ucfirst($name);
+
+            $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name));
+            if (!isset($className) || !class_exists($className)) {
+                $className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
+                if (!class_exists($className)) {
+                    $className = '\Espo\Core\Loaders\\'.ucfirst($name);
+                }
             }
 
             if (class_exists($className)) {
@@ -64,7 +68,7 @@ class Container
 
         return null;
     }
-    
+
     protected function getServiceClassName($name, $default)
     {
         $metadata = $this->get('metadata');
@@ -204,7 +208,7 @@ class Container
             $this->get('preferences')
         );
     }
-    
+
     private function loadCrypt()
     {
         return new \Espo\Core\Utils\Crypt(
