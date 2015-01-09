@@ -198,11 +198,6 @@ class Language
         $path = $this->paths['customPath'];
         $currentLanguage = $this->getLanguage();
 
-        /*echo '<pre>';
-        print_r($this->changedData);
-        print_r($this->deletedData);
-        exit;*/
-
         $result = true;
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $scope => $data) {
