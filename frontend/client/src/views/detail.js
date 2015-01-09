@@ -30,7 +30,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
         scope: null,
 
         name: 'Detail',
-        
+
         optionsToPass: [],
 
         views: {
@@ -43,7 +43,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 selector: '> .body',
             }
         },
-        
+
         addUnfollowButtonToMenu: function () {
             this.menu.buttons.unshift({
                 name: 'unfollow',
@@ -51,7 +51,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 style: 'success',
                 action: 'unfollow'
             });
-            
+
             var index = -1;
             this.menu.buttons.forEach(function (data, i) {
                 if (data.name == 'follow') {
@@ -63,7 +63,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 this.menu.buttons.splice(index, 1);
             }
         },
-        
+
         addFollowButtonToMenu: function () {
             this.menu.buttons.unshift({
                 name: 'follow',
@@ -72,7 +72,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 icon: 'glyphicon glyphicon-share-alt',
                 action: 'follow'
             });
-            
+
             var index = -1;
             this.menu.buttons.forEach(function (data, i) {
                 if (data.name == 'unfollow') {
@@ -84,10 +84,10 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 this.menu.buttons.splice(index, 1);
             }
         },
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
                     if (this.model.get('isFollowed')) {
@@ -104,10 +104,10 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                             } else {
                                 this.addFollowButton();
                                 this.addFollowButtonToMenu();
-                    
+
                             }
                         }.bind(this);
-                    
+
                         if (this.model.has('isFollowed')) {
                             proceed();
                         } else {
@@ -122,21 +122,21 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 }
             }
         },
-        
+
         addFollowButton: function () {
             $el = $('<button>').addClass('btn btn-default action')
                                .attr('data-action', 'follow')
                                .html('<span class="glyphicon glyphicon-share-alt"></span> ' + this.translate('Follow'));
             $("div.header-buttons").prepend($el);
         },
-        
+
         addUnfollowButton: function () {
             $el = $('<button>').addClass('btn btn-default action btn-success')
                                .attr('data-action', 'unfollow')
                                .html(this.translate('Followed'));
             $("div.header-buttons").prepend($el);
         },
-        
+
         actionFollow: function () {
             $el = this.$el.find('button[data-action="follow"]');
             $el.addClass('disabled');
@@ -149,7 +149,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 }.bind(this)
             });
         },
-        
+
         actionUnfollow: function () {
             $el = this.$el.find('button[data-action="unfollow"]');
             $el.addClass('disabled');
@@ -161,12 +161,12 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                     this.addFollowButton();
                 }.bind(this)
             });
-            
+
         },
 
         getHeader: function () {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-            
+
             var html = '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>';
             html += ' &raquo ' + name;
             return html;
@@ -175,7 +175,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
         updatePageTitle: function () {
             this.setPageTitle(this.model.get('name'));
         },
-        
+
         updateRelationshipPanel: function (name) {
             var bottom = this.getView('body').getView('bottom');
             if (bottom) {
@@ -185,9 +185,9 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 }
             }
         },
-        
+
         relatedAttributeMap: {},
-        
+
         selectRelatedFilters: {},
 
         actionCreateRelated: function (data) {
@@ -195,9 +195,9 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             var link = data.link;
             var scope = this.model.defs['links'][link].entity;
             var foreignLink = this.model.defs['links'][link].foreign;
-            
+
             var attributes = {};
-            
+
             Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
                 attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
             }, this);
@@ -224,13 +224,13 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
         actionSelectRelated: function (data) {
             var link = data.link;
             var scope = this.model.defs['links'][link].entity;
-            
+
             var self = this;
-            
+
             var attributes = {};
-            
+
             var filters = this.selectRelatedFilters[link] || null;
-            
+
             for (var filterName in filters) {
                 if (typeof filters[filterName] == 'function') {
                     filters[filterName] = filters[filterName].call(this);
@@ -272,11 +272,11 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 }.bind(this));
             }.bind(this));
         },
-        
+
         actionDuplicate: function () {
             var attributes = Espo.Utils.cloneDeep(this.model.attributes);
             delete attributes.id;
-            
+
             var url = '#' + this.scope + '/create';
 
             this.getRouter().dispatch(this.scope, 'create', {
@@ -284,7 +284,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             });
             this.getRouter().navigate(url, {trigger: false});
         },
-        
+
     });
 });
 
