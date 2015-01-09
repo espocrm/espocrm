@@ -149,6 +149,9 @@ class Integration extends \Espo\Core\ORM\Entity
             if ($field == 'id') {
                 continue;
             }
+            if ($field == 'data') {
+                continue;
+            }
             if ($this->has($field)) {
                 $arr[$field] = $this->get($field);
             }
