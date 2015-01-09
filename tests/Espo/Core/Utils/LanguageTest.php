@@ -204,7 +204,22 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $this->object->translate('language.en_US', 'options'));
     }
 
+    public function testSet()
+    {
+        $label = 'TEST';
+        $this->object->set('label', $label, 'fields', 'User');
+        $this->assertEquals($label, $this->object->translate('label', 'fields', 'User'));
 
+        $label2 = 'TEST2';
+        $this->object->set('name', $label2, 'fields', 'User');
+        $this->assertEquals($label2, $this->object->translate('name', 'fields', 'User'));
+
+        $label3 = 'TEST3';
+        $this->object->set('name', $label3, 'fields', 'Account');
+        $this->assertEquals($label3, $this->object->translate('name', 'fields', 'Account'));
+
+        $this->reflection->invokeMethod('init', array(true));
+    }
 
 }
 

@@ -91,13 +91,17 @@ class FieldManager
 
         $res = true;
         if (isset($fieldDef['label'])) {
-            $res &= $this->setLabel($name, $fieldDef['label'], $scope);
+            $this->setLabel($name, $fieldDef['label'], $scope);
         }
 
         if (isset($fieldDef['type']) && $fieldDef['type'] == 'enum') {
             if (isset($fieldDef['translatedOptions'])) {
-                $res &= $this->setTranslatedOptions($name, $fieldDef['translatedOptions'], $scope);
-            }  
+                $this->setTranslatedOptions($name, $fieldDef['translatedOptions'], $scope);
+            }
+        }
+
+        if (isset($fieldDef['label']) || isset($fieldDef['translatedOptions'])) {
+            $res &= $this->getLanguage()->save();
         }
 
         if ($this->isDefsChanged($name, $fieldDef, $scope)) {
@@ -119,10 +123,9 @@ class FieldManager
         );
 
         $res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
+        $res &= $this->deleteLabel($name, $scope);
 
-        $this->deleteLabel($name, $scope);
-
-        return $res;
+        return (bool) $res;
     }
 
     protected function setEntityDefs($name, $fieldDef, $scope)
@@ -147,7 +150,8 @@ class FieldManager
 
     protected function deleteLabel($name, $scope)
     {
-        return $this->getLanguage()->delete($name, 'fields', $scope);
+        $this->getLanguage()->delete($name, 'fields', $scope);
+        return $this->getLanguage()->save();
     }
 
     protected function getFieldDef($name, $scope)
