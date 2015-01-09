@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col-sm-4 form-group">
                         <label class="control-label">{{translate 'Entity Type' scope='Import'}}</label>
-                        <select id="import-entity-type" class="form-control">                
+                        <select id="import-entity-type" class="form-control">
                             {{#each entityList}}
                             <option value="{{./this}}" {{#ifEqual this ../entityType}}selected{{/ifEqual}}>{{translate this category='scopeNamesPlural'}}</option>
                             {{/each}}
@@ -17,6 +17,7 @@
                         <div>
                             <input type="file" id="import-file">
                         </div>
+                        <div class="text-muted small">{{translate 'utf8' category='messages' scope='Import'}}</div>
                     </div>
                     <div class="col-sm-4 form-group">
                         <label class="control-label">{{translate 'What to do?' scope='Import'}}</label>
@@ -86,7 +87,7 @@
                         <label class="control-label">{{translate 'Text Qualifier' scope='Import'}}</label>
                         <select class="form-control" id="import-text-qualifier">
                             <option value="&quot;">Double Quote</option>
-                            <option value="'">Single Quote</option>                            
+                            <option value="'">Single Quote</option>
                         </select>
                     </div>
                     <div class="col-sm-4 form-group">
@@ -118,8 +119,8 @@
             <div id="import-preview" style="overflow-x: auto; overflow-y: hidden;">
             </div>
         </div>
-    </div>    
-    
+    </div>
+
     <div style="padding-bottom: 10px;" class="clearfix">
         <button class="btn btn-primary pull-right hidden" data-action="next">{{translate 'Next'}}</button>
     </div>
