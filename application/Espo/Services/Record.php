@@ -629,7 +629,7 @@ class Record extends \Espo\Core\Services\Base
 
         $delimiter = $this->getPreferences()->get('exportDelimiter');
         if (empty($delimiter)) {
-            $delimiter = ',';
+        	$delimiter = $this->getConfig()->get('exportDelimiter', ';');
         }
 
         $fp = fopen('php://temp', 'w');
