@@ -51,7 +51,7 @@ class Json
         }
 
         $error = self::getLastError();
-        if ($json === null || $error) {
+        if ($json === null || !empty($error)) {
             $GLOBALS['log']->error('Json::encode():' . $error . ' - ' . print_r($value, true));
         }
 
@@ -69,6 +69,10 @@ class Json
      */
     public static function decode($json, $assoc = false, $depth = 512, $options = 0)
     {
+        if (is_null($json) || $json === false) {
+            return $json;
+        }
+
         if (is_array($json)) {
             $GLOBALS['log']->warning('Json::decode() - JSON cannot be decoded - '.$json);
             return false;
@@ -85,13 +89,12 @@ class Json
         }
 
         $error = self::getLastError();
-        if ($json === null || $error) {
+        if ($error) {
             $GLOBALS['log']->error('Json::decode():' . $error);
         }
 
         return $json;
     }
-
 
     /**
      * Check if the string is JSON
@@ -109,7 +112,6 @@ class Json
 
         return static::decode($json) != null;
     }
-
 
     /**
     * Get an array data (if JSON convert to array)
@@ -129,7 +131,6 @@ class Json
 
         return $returns;
     }
-
 
     protected static function getLastError($error = null)
     {
