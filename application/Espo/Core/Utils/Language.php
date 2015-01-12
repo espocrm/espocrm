@@ -38,14 +38,11 @@ class Language
      *
      * @var array
      */
-    private $allData = array();
+    private $data = array();
 
-    /**
-     * Data of current language
-     *
-     * @var array
-     */
-    private $data = null;
+    private $deletedData = array();
+
+    private $changedData = array();
 
     private $name = 'i18n';
 
@@ -175,7 +172,6 @@ class Language
         return $value;
     }
 
-
     public function get($key = null, $returns = null)
     {
         $data = $this->getData();
@@ -187,10 +183,57 @@ class Language
         return Util::getValueByKey($data, $key, $returns);
     }
 
-
     public function getAll()
     {
         return $this->get();
+    }
+
+    /**
+     * Save changes
+     *
+     * @return bool
+     */
+    public function save()
+    {
+        $path = $this->paths['customPath'];
+        $currentLanguage = $this->getLanguage();
+
+        $result = true;
+        if (!empty($this->changedData)) {
+            foreach ($this->changedData as $scope => $data) {
+                if (!empty($data)) {
+                    $result &= $this->getFileManager()->mergeContents(array($path, $currentLanguage, $scope.'.json'), $data, true);
+                }
+            }
+        }
+
+        if (!empty($this->deletedData)) {
+            foreach ($this->deletedData as $scope => $unsetData) {
+                if (!empty($unsetData)) {
+                    $result &= $this->getFileManager()->unsetContents(array($path, $currentLanguage, $scope.'.json'), $unsetData, true);
+                }
+            }
+        }
+
+        if ($result == false) {
+            throw new Error("Error saving languages. See log file for details.");
+        }
+
+        $this->clearChanges();
+        $this->init(true);
+
+        return (bool) $result;
+    }
+
+    /**
+     * Clear unsaved changes
+     *
+     * @return void
+     */
+    public function clearChanges()
+    {
+        $this->changedData = array();
+        $this->deletedData = array();
     }
 
     /**
@@ -200,44 +243,64 @@ class Language
      */
     protected function getData()
     {
-        if (!isset($this->data)) {
+        $currentLanguage = $this->getLanguage();
+        if (!isset($this->data[$currentLanguage])) {
             $this->init();
         }
 
-        return $this->data;
+        return $this->data[$currentLanguage];
     }
 
+    /**
+     * Set/change a label
+     * @param string | array $label
+     * @param mixed $value
+     * @param string $category
+     * @param string $scope
+     */
     public function set($label, $value, $category = 'labels', $scope = 'Global')
     {
-        $path = $this->paths['customPath'];
-        $currentLanguage = $this->getLanguage();
-
-        $data = $this->normalizeDefs($label, $value, $category);
-
-        $result = $this->getFileManager()->mergeContents(array($path, $currentLanguage, $scope.'.json'), $data, true);
-        if ($result === false) {
-            throw new Error("Error saving languages. See log file for details.");
+        if (is_array($label)) {
+            foreach ($label as $rowLabel => $rowValue) {
+                $this->set($rowLabel, $rowValue, $category, $scope);
+            }
+            return;
         }
 
-        $this->init(true);
+        $this->changedData[$scope][$category][$label] = $value;
 
-        return $result;
+        $currentLanguage = $this->getLanguage();
+        $this->data[$currentLanguage][$scope][$category][$label] = $value;
     }
 
+    /**
+     * Remove a label
+     *
+     * @param  string $label
+     * @param  string $category
+     * @param  string $scope
+     *
+     * @return void
+     */
     public function delete($label, $category = 'labels', $scope = 'Global')
     {
-        $path = $this->paths['customPath'];
+        if (is_array($label)) {
+            foreach ($label as $rowLabel) {
+                $this->delete($rowLabel, $category, $scope);
+            }
+            return;
+        }
+
+        $this->deletedData[$scope][$category][] = $label;
+
         $currentLanguage = $this->getLanguage();
+        if (isset($this->data[$currentLanguage][$scope][$category][$label])) {
+            unset($this->data[$currentLanguage][$scope][$category][$label]);
+        }
 
-        $unsets = array(
-            $category => $label,
-        );
-
-        $result = $this->getFileManager()->unsetContents(array($path, $currentLanguage, $scope.'.json'), $unsets, true);
-
-        $this->init(true);
-
-        return $result;
+        if (isset($this->changedData[$scope][$category][$label])) {
+            unset($this->changedData[$scope][$category][$label]);
+        }
     }
 
     protected function init($reload = false)
@@ -252,7 +315,7 @@ class Language
                     $i18nData = Util::merge($fullData[$this->defaultLanguage], $i18nData);
                 }
 
-                $this->allData[$i18nName] = $i18nData;
+                $this->data[$i18nName] = $i18nData;
 
                 if ($this->getConfig()->get('useCache')) {
                     $i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
@@ -266,34 +329,8 @@ class Language
         }
 
         $currentLanguage = $this->getLanguage();
-        if (empty($this->allData[$currentLanguage])) {
-            $this->allData[$currentLanguage] = $this->getFileManager()->getContents($this->getLangCacheFile());
+        if (empty($this->data[$currentLanguage])) {
+            $this->data[$currentLanguage] = $this->getFileManager()->getContents($this->getLangCacheFile());
         }
-
-        $this->data = $this->allData[$currentLanguage];
     }
-
-    protected function normalizeDefs($label, $value, $category)
-    {
-        if (!is_array($label)) {
-            $label = array(
-                $label => $value,
-            );
-        }
-
-        $data = array(
-            $category => $label,
-        );
-
-        return $data;
-    }
-
-
-
-
-
-
-
-
-
 }

@@ -152,7 +152,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
 
 
-                var maxWidth = self.$el.width() - 591 - moreWidth;
+                var maxWidth = self.$el.width() - 596 - moreWidth;
 
                 var width = $tabs.width();
                 while (width > maxWidth) {

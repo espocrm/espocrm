@@ -380,7 +380,7 @@ class Util
                     $unsetElem = $currVal . "['{$lastKey}']";
 
                     $currVal = "
-                    if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists({$lastKey}, {$currVal}) )) {
+                    if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists('{$lastKey}', {$currVal}) )) {
                         unset({$unsetElem});
                     } ";
                     eval($currVal);
