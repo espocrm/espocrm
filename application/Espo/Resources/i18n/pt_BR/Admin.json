@@ -9,16 +9,13 @@
         "Customization": "Customização",
         "Available Fields": "Campos Disponíveis",
         "Layout": "Layout",
-        
-        
         "Add Panel": "Adicionar Painel",
         "Add Field": "Adicionar Campo",
         "Settings": "Preferências",
         "Scheduled Jobs": "Tarefas agendadas",
         "Upgrade": "Atualização",
         "Clear Cache": "Limpar Cache",
-        "Rebuild": "Reconstruir",
-        
+        "Rebuild": "Reconstruir",		
         "Teams": "Times",
         "Roles": "Regras",
         "Outbound Emails": "E-mails de Saída",
@@ -30,8 +27,20 @@
         "User Interface": "Interface do Usuário",
         "Auth Tokens": "Tokens de Autenticação",
         "Authentication": "Autenticação",
-        "Currency": "Moeda",
-        "Integrations": "Integrações"
+		"Currency": "Moeda",
+		"Integrations": "Integrações",
+		"Extensions": "Extensões",
+		"Upload": "Upload",
+		"Installing...": "Instalando...",
+		"Upgrading...": "Atualizando...",
+		"Upgraded successfully": "Atualizado com sucesso",
+		"Installed successfully": "Instalado com sucesso",
+		"Ready for upgrade": "Pronto para a atualização",
+		"Run Upgrade": "Rodar atualização",
+		"Install": "Instalar",
+		"Ready for installation": "Pronto para a instalação",
+		"Uninstalling...": "Desinstalando...",
+		"Uninstalled": "Desinstalado"
     },
     "layouts": {
         "list": "Lista",
@@ -69,7 +78,8 @@
         "url": "Url",
         "varchar": "Varchar",
         "file": "Arquivo",
-        "image": "Imagem"
+        "image": "Imagem",
+        "multiEnum": "Lista múltipla"
     },
     "fields": {
         "type": "Tipe",
@@ -78,7 +88,7 @@
         "required": "Obrigatório",
         "default": "Padrão",
         "maxLength": "Tamanho máximo",
-        "options": "Opções",
+        "options": "Opções (valores raw, não traduzíveis)",
         "after": "Antes (field)",
         "before": "Após (field)",
         "link": "Link",
@@ -96,7 +106,12 @@
         "userHasNoEmailAddress": "Usuário não possui endereço de e-mail.",
         "selectEntityType": "Escolha o tipo de entidade no menu a esquerda.",
         "selectUpgradePackage": "Selecione o pacote de atualização",
-        "selectLayout": "Selecione o layout necessário no meu a esquerda e edite ele."
+        "downloadUpgradePackage": "Download do(s) pacote(s) de atualização <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">aqui</a>.",
+		"selectLayout": "Selecione o layout necessário no meu a esquerda e edite ele.",
+		"selectExtensionPackage": "Selecione o pacote de extensão",
+		"extensionInstalled": "A extensão {name} {version} foi instalada.",
+		"installExtension": "A extensão {name} {version} está pronta para instalação.",
+		"uninstallConfirmation": "Você confirma a desinstalação da extensão?"
     },
     "descriptions": {
         "settings": "Configurações gerais do aplicativo.",
@@ -113,10 +128,11 @@
         "import": "Importar dados de arquivo CSV.",
         "layoutManager": "Customizar layouts (listas, detalhes, edição, busca, atualização em massa).",
         "fieldManager": "Criar novos campos ou personalizar os existentes.",
-        "userInterface": "Configurar UI.",
+        "userInterface": "Configurar a interface gráfica.",
         "authTokens": "Sessões autenticadas ativas. Endereço de IP e última data de acesso.",
         "authentication": "Configurações de autenticação.",
-        "currency": "Configurações de moeda e taxas."
+		"currency": "Configurações de moeda e taxas.",
+		"extensions": "Instalar ou desinstalar extensoes."
     },
     "options": {
         "previewSize": {
@@ -125,5 +141,10 @@
             "medium": "Médio",
             "large": "Grande"
         }
+    },
+    "layoutManagerDataAttributes": {
+        "width": "Largura (%)",
+        "link": "Link",
+        "notSortable": "Não ordenável"
     }
 }

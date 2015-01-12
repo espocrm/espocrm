@@ -1,40 +1,42 @@
 {
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "E-mail",
-        "website": "Website",
-        "phoneNumber": "Telefone",
-        "billingAddress": "Endereço de Cobrança",
-        "shippingAddress": "Endereço de Entrega",
-        "description": "Descrição",
-        "sicCode": "CNPJ",
-        "industry": "Indústria",
-        "type": "Tipo",
-        "contactRole": "Regra"
-    },
-    "links": {
-        "contacts": "Contatos",
-        "opportunities": "Oportunidades",
-        "cases": "Atendimentos"
-    },
-    "options": {
-        "type": {
-            "Customer": "Cliente",
-            "Investor": "Investidor",
-            "Partner": "Parceiro",
-            "Reseller": "Revendedor"
-        },
-        "industry": {
-            "Apparel": "Vestuário",
-            "Banking": "Banco",
-            "Computer Software": "Software",
-            "Education": "Educação",
-            "Electronics": "Eletrônicos",
-            "Finance": "Finanças",
-            "Insurance": "Seguros"
-        }
-    },
-    "labels": {
-        "Create Account": "Criar Conta"
-    }
+	"fields": {
+		"name": "Nome",
+		"emailAddress": "E-mail",
+		"website": "Website",
+		"phoneNumber": "Telefone",
+		"billingAddress": "Endereço de Cobrança",
+		"shippingAddress": "Endereço de Entrega",
+		"description": "Descrição",
+		"sicCode": "CNPJ",
+		"industry": "Indústria",
+		"type": "Tipo",
+		"contactRole": "Regra"
+	},
+	"links": {
+		"contacts": "Contatos",
+		"opportunities": "Oportunidades",
+		"cases": "Atendimentos",
+		"documents": "Documentos"
+	},
+	"options": {
+		"type": {
+			"Customer": "Cliente",
+			"Investor": "Investidor",
+			"Partner": "Parceiro",
+			"Reseller": "Revendedor"
+		},
+		"industry": {
+			"Apparel": "Vestuário",
+			"Banking": "Banco",
+			"Computer Software": "Software",
+			"Education": "Educação",
+			"Electronics": "Eletrônicos",
+			"Finance": "Finanças",
+			"Insurance": "Seguros"
+		}
+	},
+	"labels": {
+		"Create Account": "Criar Conta",
+		"Copy Billing": "Copiar Cobrança"
+	}
 }
