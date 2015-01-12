@@ -91,8 +91,6 @@ class Converter
         $this->relationManager = new RelationManager($this->metadata);
 
         $this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
-
-        $this->entityDefs = $this->getMetadata()->get('entityDefs');
     }
 
 
@@ -103,6 +101,10 @@ class Converter
 
     protected function getEntityDefs()
     {
+        if (empty($this->entityDefs)) {
+            $this->entityDefs = $this->getMetadata()->get('entityDefs');
+        }
+
         return $this->entityDefs;
     }
 

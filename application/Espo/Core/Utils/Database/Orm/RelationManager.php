@@ -30,12 +30,9 @@ class RelationManager
 
     private $entityDefs;
 
-
     public function __construct(\Espo\Core\Utils\Metadata $metadata)
     {
         $this->metadata = $metadata;
-
-        $this->entityDefs = $this->getMetadata()->get('entityDefs');
     }
 
     protected function getMetadata()
@@ -45,6 +42,10 @@ class RelationManager
 
     protected function getEntityDefs()
     {
+        if (empty($this->entityDefs)) {
+            $this->entityDefs = $this->getMetadata()->get('entityDefs');
+        }
+
         return $this->entityDefs;
     }
 

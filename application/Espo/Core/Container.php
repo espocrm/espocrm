@@ -52,7 +52,10 @@ class Container
             $this->data[$name] = $obj;
         } else {
 
-            $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name));
+            try {
+                $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name));
+            } catch (\Exception $e) {}
+
             if (!isset($className) || !class_exists($className)) {
                 $className = '\Espo\Custom\Core\Loaders\\'.ucfirst($name);
                 if (!class_exists($className)) {
