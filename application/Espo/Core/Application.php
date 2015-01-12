@@ -244,7 +244,10 @@ class Application
     protected function initAutoloads()
     {
         $autoload = new \Espo\Core\Utils\Autoload($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
-        $autoloadList = $autoload->getAll();
+
+        try {
+            $autoloadList = $autoload->getAll();
+        } catch (\Exception $e) {} //bad permissions
 
         if (empty($autoloadList)) {
             return;
