@@ -8,10 +8,9 @@
         "thousandSeparator": "Separador de Milhar",
         "decimalMark": "Deparador Decimal",
         "defaultCurrency": "Moeda Padrão",
-        "baseCurrency": "Moeda Base",
-        
-        "currencyRates": "Conversão de Moedas",
-        
+		"baseCurrency": "Moeda Base",		
+		"currencyRates": "Conversão de Moedas",
+		
         "currencyList": "Moedas Disponíveis",
         "language": "Idioma",
 
@@ -34,26 +33,28 @@
         "quickCreateList": "Lista de Criação Rápida",
 
         "exportDelimiter": "Delimitador de exportação",
-        
-        "authenticationMethod": "Método de Autenticação",
-        "ldapHost": "Host",
-        "ldapPort": "Porta",
-        "ldapAuth": "Auth",
-        "ldapUsername": "Usuário",
-        "ldapPassword": "Senha",
-        "ldapBindRequiresDn": "Ligação exige Dn",
-        "ldapBaseDn": "Dn Base",
-        "ldapAccountCanonicalForm": "Formulário Canônico de Conta",
-        "ldapAccountDomainName": "Nome de Domínio da Conta",
-        "ldapTryUsernameSplit": "Tentar dividir o Nome de Usuário",
-        "ldapCreateEspoUser": "Criar usuário no EspoCRM",
-        "ldapSecurity": "Segurança",
-        "ldapUserLoginFilter": "Filtro para Login de Usuário",
-        "ldapAccountDomainNameShort": "Nome curto do Domínio da Conta",
-        "ldapOptReferrals": "Referências Opt",
-        "disableExport": "Desabilitar exportação (permitido apenas para administradores)",
-        "assignmentEmailNotifications": "Enviar notificações sobre as designações por e-mail",
-        "assignmentEmailNotificationsEntityList": "Entidades para notificar"
+		
+		"authenticationMethod": "Método de Autenticação",
+		"ldapHost": "Host",
+		"ldapPort": "Porta",
+		"ldapAuth": "Auth",
+		"ldapUsername": "Usuário",
+		"ldapPassword": "Senha",
+		"ldapBindRequiresDn": "Ligação exige Dn",
+		"ldapBaseDn": "Dn Base",
+		"ldapAccountCanonicalForm": "Formulário Canônico de Conta",
+		"ldapAccountDomainName": "Nome de Domínio da Conta",
+		"ldapTryUsernameSplit": "Tentar dividir o Nome de Usuário",
+		"ldapCreateEspoUser": "Criar usuário no EspoCRM",
+		"ldapSecurity": "Segurança",
+		"ldapUserLoginFilter": "Filtro para Login de Usuário",
+		"ldapAccountDomainNameShort": "Nome curto do Domínio da Conta",
+		"ldapOptReferrals": "Referências Opt",
+		"disableExport": "Desabilitar exportação (permitido apenas para administradores)",
+		"assignmentEmailNotifications": "Enviar notificações sobre as designações por e-mail",
+		"assignmentEmailNotificationsEntityList": "Entidades para notificar",
+        "b2cMode": "Modo B2C",
+        "disableAvatars": "Desabilitar Avatares"
     },
     "options": {
         "weekStart": {
@@ -61,16 +62,16 @@
             "1": "Segunda"
         }
     },
-    "tooltips": {
-        "recordsPerPageSmall": "Contar registros nos painéis de relacionamento."
-    },
+	"tooltips": {
+		"recordsPerPageSmall": "Contar registros nos painéis de relacionamento."
+	},
     "labels": {
         "System": "Sistema",
         "Locale": "Idioma",
         "SMTP": "SMTP",
         "Configuration": "Configuração",
-        "Notifications": "Notificações",
-        "Currency Settings": "Configurações de Moeda",
-        "Currency Rates": "Conversão de moedas"
+		"Notifications": "Notificações",
+		"Currency Settings": "Configurações de Moeda",
+		"Currency Rates": "Conversão de moedas"
     }
 }

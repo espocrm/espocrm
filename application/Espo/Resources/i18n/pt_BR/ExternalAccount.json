@@ -1,7 +1,8 @@
 {
-    "labels": {
-        "Connect": "Conectar"
-    },
-    "help": {
-    }
+	"labels": {
+		"Connect": "Conectar",
+		"Connected": "Conectado"
+	},
+	"help": {
+	}
 }

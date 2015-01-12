@@ -3,14 +3,15 @@
         "Account": "Conta",
         "Contact": "Contato",
         "Lead": "Lead",
-        "Prospect": "Prospecto",
+        "Target": "Alvo",
         "Opportunity": "Oportunidade",
         "Meeting": "Reunião",
         "Calendar": "Calendário",
         "Call": "Ligação",
         "Task": "Tarefa",
         "Case": "Atendimento",
-        "InboundEmail": "E-mail de Entrada"
+        "InboundEmail": "E-mail de Entrada",
+		"Document": "Documento"
     },
     "scopeNamesPlural": {
         "Account": "Contas",
@@ -23,7 +24,8 @@
         "Call": "Ligações",
         "Task": "Tarefas",
         "Case": "Atendimentos",
-        "InboundEmail": "E-mails de Entrada"
+        "InboundEmail": "E-mails de Entrada",
+		"Document": "Documentos"
     },
     "dashlets": {
         "Leads": "Meus Leads",
@@ -31,8 +33,8 @@
         "Tasks": "Minhas Tarefas",
         "Cases": "Meus Atendimentos",
         "Calendar": "Calendário",
-        "Calls": "Minhas Ligações",
-        "Meetings": "Minhas Reuniões",
+		"Calls": "Minhas Ligações",
+		"Meetings": "Minhas Reuniões",
         "OpportunitiesByStage": "Oportunidades por Estágio",
         "OpportunitiesByLeadSource": "Oportunities por Origem do Lead",
         "SalesByMonth": "Vendas Por Mês",
@@ -76,6 +78,19 @@
         "meetings": "Reuniões",
         "calls": "Ligações",
         "tasks": "Tarefas",
-        "emails": "E-mails"
+        "emails": "E-mails",
+        "accounts": "Contas",
+        "cases": "Atendimentos",
+        "documents": "Documentos",
+        "account": "Conta",
+        "opportunity": "Oportunidade",        
+        "contact": "Contato",
+        "parent": "Pai"
+    },
+    "options": {
+        "reminderTypes": {
+            "Popup": "Popup",
+            "Email": "Email"
+        }
     }
 }

@@ -1,0 +1,15 @@
+{
+	"labels": {
+		"Revert": "Reverter",
+		"Return to Import": "Retornar a Importação",
+		"Run Import": "Executar importação",
+		"Back": "Voltar",
+		"Field Mapping": "Mapeamento de Campos",
+		"Default Values": "Valores Padrão",
+		"Add Field": "Adicionar Campo",
+		"Created": "Criado",
+		"Updated": "Atualizado",
+		"Result": "Resultado",
+		"Show records": "Exibir Registros"
+	}
+}

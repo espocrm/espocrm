@@ -154,7 +154,11 @@ class Application
         $container = $this->getContainer();
         $slim = $this->getSlim();
 
-        $auth = $this->getAuth();
+        try {
+            $auth = $this->getAuth();
+        } catch (\Exception $e) {
+            $container->get('output')->processError($e->getMessage(), $e->getCode());
+        }
 
         $apiAuth = new \Espo\Core\Utils\Api\Auth($auth);
         $this->getSlim()->add($apiAuth);
