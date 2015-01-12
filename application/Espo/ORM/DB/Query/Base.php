@@ -109,7 +109,7 @@ class Base
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
-                    $selectPart .= ", `" . $this->toDb($params['relationName']) . "`." . $this->toDb($column) . " AS `{$field}`";
+                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$field}`";
                 }
             }
 
@@ -397,7 +397,7 @@ class Base
     {
         if (strpos($orderBy, '.') !== false) {
             list($alias, $field) = explode('.', $orderBy);
-            $fieldPath = $this->toDb($alias) . '.' . $this->toDb($field);
+            $fieldPath = $this->toDb($alias) . '.' . $this->toDb($this->sanitize($field));
         } else {
             $fieldPath = $this->getFieldPath($entity, $orderBy);
         }
@@ -417,7 +417,7 @@ class Base
             $distinctPart = 'DISTINCT ';
         }
 
-        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($aggregationBy) . ") AS AggregateValue";
+        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
         return $selectPart;
     }
 
@@ -523,7 +523,7 @@ class Base
                     }
                     break;
                 default:
-                    $fieldPath = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field) ;
+                    $fieldPath = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($this->sanitize($field));
             }
 
             return $fieldPath;
@@ -588,8 +588,8 @@ class Base
                                     }
                                 }
                             }
-                        } else {
-                            $leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($field);
+                        } else {                            
+                            $leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($this->sanitize($field));
                         }
                     }
                 }
@@ -617,6 +617,11 @@ class Base
             }
         }
         return implode(" " . $sqlOp . " ", $whereParts);
+    }
+
+    protected function sanitize($string)
+    {
+        return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
 
     protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
@@ -660,7 +665,7 @@ class Base
                 $conditions = array_merge($conditions, $relOpt['conditions']);
             }
             foreach ($conditions as $f => $v) {
-                $join .= " AND {$relTable}." . $this->toDb($f) . " = " . $this->pdo->quote($v);
+                $join .= " AND {$relTable}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
             }
 
             $join .= " {$pre}JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
