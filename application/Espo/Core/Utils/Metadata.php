@@ -63,15 +63,12 @@ class Metadata
         $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
-
-        $this->init(!$this->isCached());
     }
 
     protected function getConfig()
     {
         return $this->config;
     }
-
 
     protected function getUnifier()
     {
@@ -88,7 +85,6 @@ class Metadata
         return $this->converter;
     }
 
-
     public function isCached()
     {
         if (!$this->getConfig()->get('useCache')) {
@@ -101,7 +97,6 @@ class Metadata
 
         return false;
     }
-
 
     public function init($reload = false)
     {
@@ -131,12 +126,11 @@ class Metadata
     protected function getData()
     {
         if (empty($this->meta) || !is_array($this->meta)) {
-            $this->init();
+            $this->init(!$this->isCached());
         }
 
         return $this->meta;
     }
-
 
     /**
     * Get Metadata
@@ -151,7 +145,6 @@ class Metadata
         return Util::getValueByKey($this->getData(), $key, $default);
     }
 
-
     /**
     * Get All Metadata context
     *
@@ -163,7 +156,7 @@ class Metadata
     public function getAll($isJSON = false, $reload = false)
     {
         if ($reload) {
-            $this->init();
+            $this->init(true);
         }
 
         if ($isJSON) {
@@ -171,8 +164,6 @@ class Metadata
         }
         return $this->meta;
     }
-
-
 
     /**
     * Get Metadata only without saving it to the a file and database sync
