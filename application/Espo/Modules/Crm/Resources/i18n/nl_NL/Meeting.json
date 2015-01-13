@@ -1,41 +1,43 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"parent": "Behorende bij",
-		"status": "Status",
-		"dateStart": "Start Datum",
-		"dateEnd": "Eind Datum",
-		"duration": "Duur",
-		"description": "Beschrijving",
-		"users": "Gebruikers",
-		"contacts": "Contacten",
-		"leads": "Leads"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Planned": "Gepland",
-			"Held": "Vasthouden",
-			"Not Held": "Niet Vasthouden"
-		},
-		"acceptanceStatus": {
-			"None": "Geen",
-			"Accepted": "Geaccepteerd",
-			"Declined": "Geweigerd"
-		}
-	},
-	"labels": {
-		"Create Meeting": "Plan Vergadering",
-		"Set Held": "Vasthouden",
-		"Set Not Held": "Niet Vasthouden",
-		"Send Invitations": "Uitnodiging versturen",
-		"Saved as Held": "Opgeslagen als Vasthouden",
-		"Saved as Not Held": "Opslaan als Niet Vasthouden"
-	},
-	"presetFilters": {
-		"planned": "Gepland",
-		"held": "Vasthouden",
-		"todays": "Vandaag"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "parent": "Behorende bij",
+        "status": "Status",
+        "dateStart": "Start Datum",
+        "dateEnd": "Eind Datum",
+        "duration": "Duur",
+        "description": "Beschrijving",
+        "users": "Gebruikers",
+        "contacts": "Contacten",
+        "leads": "Leads",
+        "reminders": "Herineringen",
+        "account": "Account"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Gepland",
+            "Held": "Vasthouden",
+            "Not Held": "Niet Vasthouden"
+        },
+        "acceptanceStatus": {
+            "None": "Geen",
+            "Accepted": "Geaccepteerd",
+            "Declined": "Geweigerd"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Plan Vergadering",
+        "Set Held": "Vasthouden",
+        "Set Not Held": "Niet vasthouden",
+        "Send Invitations": "Uitnodiging versturen",
+        "on time": "op tijd",
+        "before": "voordat"
+    },
+    "presetFilters": {
+        "planned": "Gepland",
+        "held": "Vasthouden",
+        "todays": "Huidig"
+    }
 }

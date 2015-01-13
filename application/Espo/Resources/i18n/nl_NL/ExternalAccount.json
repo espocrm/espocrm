@@ -1,8 +1,8 @@
 {
-	"labels": {
-		"Connect": "Verbinden",
-		"Connected": "Verbonden"
-	},
-	"help": {
-	}
+    "labels": {
+        "Connect": "Verbinden",
+        "Connected": "Verbonden"
+    },
+    "help": {
+    }
 }

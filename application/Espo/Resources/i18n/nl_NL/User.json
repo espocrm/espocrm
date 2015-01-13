@@ -1,36 +1,55 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"userName": "Gebruikesnaam",
-		"title": "Titel",
-		"isAdmin": "Is Admin",
-		"defaultTeam": "Standaardgroep",
-		"emailAddress": "Email",
-		"phoneNumber": "Telefoon",
-		"roles": "Rollen",		
-		"password": "Wachtwoord",
-		"passwordConfirm": "Bevestig Wachtwoord",
-		"newPassword": "Nieuw Wachtwoord"
-	},
-	"links": {
-		"teams": "Groepen",
-		"roles": "Rollen"
-	},
-	"labels": {
-		"Create User": "Gebruiker Aanmaken",
-		"Generate": "Genereer",
-		"Access": "Toegang",
-		"Preferences": "Voorkeuren",
-		"Change Password": "Wachtwoord wijzigen"
-	},
-	"tooltips": {
-		"defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
-		"userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan."
-	},
-	"messages": {
-		"passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
-		"accountInfoEmailSubject": "Informatie Gebruiker",
-		"accountInfoEmailBody": "Uw gegevens:\n\nGebruikersnaam: {userName}\nWachtwoord: {password}\n\n{siteUrl}",
-		"passwordChanged": "Het wachtwoord is gewijzigd"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "userName": "Gebruikesnaam",
+        "title": "Titel",
+        "isAdmin": "Is Admin",
+        "defaultTeam": "Standaardgroep",
+        "emailAddress": "Email",
+        "phoneNumber": "Telefoon",
+        "roles": "Functies",
+        "teamRole": "Positie",
+        "password": "Wachtwoord",
+        "passwordConfirm": "Bevestig Wachtwoord",
+        "newPassword": "Nieuw Wachtwoord",
+        "newPasswordConfirm": "Nieuwe Wachtwoord Bevestigen",
+        "avatar": "Avatar"
+    },
+    "links": {
+        "teams": "Groepen",
+        "roles": "Functies"
+    },
+    "labels": {
+        "Create User": "Gebruiker Aanmaken",
+        "Generate": "Genereer",
+        "Access": "Toegang",
+        "Preferences": "Voorkeuren",
+        "Change Password": "Wachtwoord wijzigen",
+        "Teams and Access Control": "Groeps toegang beheer",
+        "Forgot Password?": "Wachtwoord vergeten?",
+        "Password Change Request": "Verzoek voor aanpassen Wachtwoord",
+        "Email Address": "Email Adres"
+    },
+    "tooltips": {
+        "defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
+        "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
+        "isAdmin": "Gebruiker admin heeft overal toegang",
+        "teams": "Tot welke groep deze gebruiekr behoord. Toegang beheer is afhankelijk van groep regels.",
+        "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden."
+    },
+    "messages": {
+        "passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
+        "accountInfoEmailSubject": "Informatie Gebruiker",
+        "accountInfoEmailBody": "Uw gegevens:\n\nGebruikersnaam: {userName}\nWachtwoord: {password}\n\n{siteUrl}",
+        "passwordChangeLinkEmailSubject": "Verzoek tot Wachtwoord verandering",
+        "passwordChangeLinkEmailBody": "U kunt het wachtwoord veranderen via deze link {link}. Deze unieke link (url) wordt spoedig weer opgeheven.",
+        "passwordChanged": "Het wachtwoord is gewijzigd",
+        "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
+        "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",
+        "emailAddressCantBeEmpty": "Email adres kan niet leeg zijn",
+        "userNameEmailAddressNotFound": "Gebruikersnaam/Email adres niet gevonden",
+        "forbidden": "Toegang niet juist, probeer later",
+        "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
+        "passwordChangedByRequest": "Het wachtwoord is aangepast"
+    }
 }

@@ -1,37 +1,37 @@
 {
-	"fields": {
-		"dateFormat": "Datumnotatie",
-		"timeFormat": "Tijdnotatie",
-		"timeZone": "Tijdzone",
-		"weekStart": "Eerste dag van de Week",
-		"thousandSeparator": "Duizendtal scheidingsteken",
-		"decimalMark": "Decimaal scheidingsteken",
-		"defaultCurrency": "Standaard Valuta",
-		"currencyList": "Valuta Lijst",
-		"language": "Taal",
-		
-		"smtpServer": "Server",
-		"smtpPort": "Port",
-		"smtpAuth": "Auth",
-		"smtpSecurity": "Beveiliging",
-		"smtpUsername": "Gebruikersnaam",
-		"emailAddress": "Email",
-		"smtpPassword": "Wachtwoord",
-		"smtpEmailAddress": "Email Adres",
-		
-		"exportDelimiter": "Scheidingsteken Export",
-		
-		"receiveAssignmentEmailNotifications": "Ontvang bevestiging toewijzingen per email."
-	},
-	"links": {
-	},
-	"options": {
-		"weekStart": {
-			"0": "Zondag",
-			"1": "Maandag"
-		}
-	},
-	"labels": {
-		"Notifications": "Meldingen"
-	}
+    "fields": {
+        "dateFormat": "Datumnotatie",
+        "timeFormat": "Tijdnotatie",
+        "timeZone": "Tijdzone",
+        "weekStart": "Eerste dag van de Week",
+        "thousandSeparator": "Duizendtal scheidingsteken",
+        "decimalMark": "Decimaal scheidingsteken",
+        "defaultCurrency": "Standaard Valuta",
+        "currencyList": "Valuta Lijst",
+        "language": "Taal",
+        
+        "smtpServer": "Server",
+        "smtpPort": "Port",
+        "smtpAuth": "Auth",
+        "smtpSecurity": "Beveiliging",
+        "smtpUsername": "Gebruikersnaam",
+        "emailAddress": "Email",
+        "smtpPassword": "Wachtwoord",
+        "smtpEmailAddress": "Email Adres",
+        
+        "exportDelimiter": "Scheidingsteken Export",
+        
+        "receiveAssignmentEmailNotifications": "Ontvang bevestiging toewijzingen per email."
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Zondag",
+            "1": "Maandag"
+        }
+    },
+    "labels": {
+        "Notifications": "Meldingen"
+    }
 }

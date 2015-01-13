@@ -1,4 +1,4 @@
-// node lang.js espocrm-nl_NL.po lastRelease nl_NL
+﻿// node lang.js espocrm-nl_NL.po lastRelease nl_NL
 
 if (process.argv.length < 2) {
     throw new Error('No dir argument passed');

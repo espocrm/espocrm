@@ -1,0 +1,9 @@
+{
+
+    "options": {
+        "job": {
+            "CheckInboundEmails": "Controleer Binnenkomende Emails",
+            "SendEmailReminders": "Stuur Herinnering Email"
+        }
+    }
+}

@@ -1,37 +1,38 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"parent": "Behorende bij",
-		"status": "Status",
-		"dateStart": "Start Datum",
-		"dateEnd": "Vervaldatum",
-		"priority": "Prioriteit",
-		"description": "Beschrijving",
-		"isOverdue": "Te Laat"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"Not Started": "Niet Gestart",
-			"Started": "Gestart",
-			"Completed": "Voltooid",
-			"Canceled": "Geannuleerd"
-		},
-		"priority" : {
-			"Low": "Laag",
-			"Normal": "Standaard",
-			"High": "Hoog",
-			"Urgent": "Urgent"
-		}
-	},
-	"labels": {
-		"Create Task": "Taak Aanmaken"
-	},
-	"presetFilters": {
-		"actual": "Werkelijke",
-		"completed": "Voltooid",
-		"todays": "Vandaag",
-		"overdue": "Laat"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "parent": "Behorende bij",
+        "status": "Status",
+        "dateStart": "Start Datum",
+        "dateEnd": "Vervaldatum",
+        "priority": "Prioriteit",
+        "description": "Beschrijving",
+        "isOverdue": "Te Laat"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Not Started": "Niet Gestart",
+            "Started": "Gestart",
+            "Completed": "Voltooid",
+            "Canceled": "Geannuleerd"
+        },
+        "priority" : {
+            "Low": "Laag",
+            "Normal": "Normaal",
+            "High": "Hoog",
+            "Urgent": "Urgent"
+        }
+    },
+    "labels": {
+        "Create Task": "Taak Aanmaken",
+        "Complete": "Voltooien"
+    },
+    "presetFilters": {
+        "actual": "Werkelijke",
+        "completed": "Voltooid",
+        "todays": "Huidig",
+        "overdue": "Laat"
+    }
 }

@@ -1,0 +1,18 @@
+{
+    "labels": {
+        "Revert": "Terugkeren",
+        "Return to Import": "Voor Import geef Enter",
+        "Run Import": "Start Importeren",
+        "Back": "Terug",
+        "Field Mapping": "Velden Overzicht",
+        "Default Values": "Voorkeur waarden",
+        "Add Field": "Veld toevoegen",
+        "Created": "Gemaakt",
+        "Updated": "Geupdate",
+        "Result": "Resultaat",
+        "Show records": "Toon Velden"
+    },
+    "messages": {
+        "utf8": "Should be UTF-8 encoded"
+    }
+}

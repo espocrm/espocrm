@@ -1,40 +1,41 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"account": "Klant",
-		"stage": "Stadium",
-		"amount": "Aantal",
-		"probability": "Waarschijnlijkheid, %",
-		"leadSource": "Leadbron",
-		"doNotCall": "Niet Bellen",
-		"closeDate": "Datum gesloten",
-		"contacts": "Contacten",
-		"description": "Beschrijving",
-		"amountConverted": "Bedrag (geconverteerd)"
-	},
-	"links": {
-		"contacts": "Contacten",
-		"documents": "Documents"
-	},
-	"options": {
-		"stage": {
-			"Prospecting": "Prospectie",
-			"Qualification": "Kwalificatie",
-			"Needs Analysis": "Analyse behoefte",
-			"Value Proposition": "Waarde voorstel",
-			"Id. Decision Makers": "Id. Beslissiers",
-			"Perception Analysis": "Perceptie Analyse",
-			"Proposal/Price Quote": "Voorstel/Offerte",
-			"Negotiation/Review": "Onderhandeling/Beoordeling",
-			"Closed Won": "Gesloten Gewonnen",
-			"Closed Lost": "Gesloten Verloren" 
-		}
-	},
-	"labels": {
-		"Create Opportunity": "Kans aanmaken"
-	},
-	"presetFilters": {
-		"open": "Open",
-		"won": "Gewonnen"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "account": "Account",
+        "stage": "Stadium",
+        "amount": "Aantal",
+        "probability": "Waarschijnlijkheid, %",
+        "leadSource": "Leadbron",
+        "doNotCall": "Niet Bellen",
+        "closeDate": "Datum gesloten",
+        "contacts": "Contacten",
+        "description": "Beschrijving",
+        "amountConverted": "Bedrag (geconverteerd)",
+        "amountWeightedConverted": "Afgewogen bedrag"
+    },
+    "links": {
+        "contacts": "Contacten",
+        "documents": "Documents"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Prospectie",
+            "Qualification": "Kwalificatie",
+            "Needs Analysis": "Analyse behoefte",
+            "Value Proposition": "Waarde voorstel",
+            "Id. Decision Makers": "Id. Beslissers",
+            "Perception Analysis": "Perceptie Analyse",
+            "Proposal/Price Quote": "Voorstel/Offerte",
+            "Negotiation/Review": "Onderhandeling/Beoordeling",
+            "Closed Won": "Gesloten Gewonnen",
+            "Closed Lost": "Gesloten Verloren" 
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Kans aanmaken"
+    },
+    "presetFilters": {
+        "open": "Open",
+        "won": "Gewonnen"
+    }
 }
