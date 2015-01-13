@@ -1,14 +1,16 @@
 {
     "fields": {
         "name": "Nome",
-        "roles": "Regras"
+        "roles": "Regras",
+        "positionList": "Lista de Posições"
     },
     "links": {
         "users": "Usuários"
     },
-    "tooltips": {
-        "roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas."
-    },
+	"tooltips": {
+		"roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas."
+		"positionList": "Posições disponíveis neste time. E.g. Vendedor, Gerente."
+	},
     "labels": {
         "Create Team": "Criar Time"
     }

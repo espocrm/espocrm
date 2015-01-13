@@ -8,12 +8,14 @@
         "leadSource": "Lead de Origem",
         "doNotCall": "Não ligar",
         "closeDate": "Data de Fechamento",
-        "contacts": "Contatos",
+		"contacts": "Contatos",
         "description": "Descrição",
-        "amountConverted": "Valor (convertido)"
+		"amountConverted": "Valor (convertido)",
+		"amountWeightedConverted": "Valor Quantificado"
     },
     "links": {
-        "contacts": "Contatos"
+        "contacts": "Contatos",
+		"documents": "Documentos"
     },
     "options": {
         "stage": {
@@ -32,8 +34,8 @@
     "labels": {
         "Create Opportunity": "Criar Oportunidade"
     },
-    "presetFilters": {
-        "open": "Aberta",
-        "won": "Ganha"
-    }
+	"presetFilters": {
+		"open": "Aberta",
+		"won": "Ganha"
+	}
 }

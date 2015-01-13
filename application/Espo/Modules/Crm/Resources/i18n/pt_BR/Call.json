@@ -10,7 +10,8 @@
         "description": "Descrição",
         "users": "Usuários",
         "contacts": "Contatos",
-        "leads": "Leads"
+        "leads": "Leads",
+        "reminders": "Lembretes"
     },
     "links": {
     },
@@ -24,11 +25,11 @@
             "Outbound": "Saída",
             "Inbound": "Entrada"
         },
-        "acceptanceStatus": {
-            "None": "Nenhum",
-            "Accepted": "Aceita",
-            "Declined": "Rejeitada"
-        }
+		"acceptanceStatus": {
+			"None": "Nenhum",
+			"Accepted": "Aceita",
+			"Declined": "Rejeitada"
+		}
     },
     "labels": {
         "Create Call": "Criar Ligação",
@@ -36,9 +37,9 @@
         "Set Not Held": "Marcar como não realizada",
         "Send Invitations": "Enviar Convites"
     },
-    "presetFilters": {
-        "planned": "Planejado",
-        "held": "Realizado",
-        "todays": "Hoje"
-    }
+	"presetFilters": {
+		"planned": "Planejado",
+		"held": "Realizado",
+		"todays": "Hoje"
+	}
 }

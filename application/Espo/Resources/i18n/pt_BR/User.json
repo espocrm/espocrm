@@ -8,9 +8,12 @@
         "emailAddress": "E-mail",
         "phoneNumber": "Telefone",
         "roles": "Regras",
+        "teamRole": "Posição",
         "password": "Senha",
         "passwordConfirm": "Confirmação da Senha",
-        "newPassword": "Novo Password"
+        "newPassword": "Nova senha",
+        "newPasswordConfirm": "Confirme a nova senha",
+        "avatar": "Avatar"
     },
     "links": {
         "teams": "Times",
@@ -21,15 +24,32 @@
         "Generate": "Gerar",
         "Access": "Acesso",
         "Preferences": "Preferências",
-        "Change Password": "Trocar Senha"
+        "Change Password": "Trocar Senha",
+        "Teams and Access Control": "Times e controle de acesso",
+        "Forgot Password?": "Esqueceu a senha?",
+        "Password Change Request": "Solicitar troca da senha",
+        "Email Address": "Endereço de e-mail"
     },
-    "tooltips": {
-        "defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão."
-    },
+	"tooltips": {
+		"defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão.",
+		"userName": "Letras a-z, números 0-9 e underscores são permitidos.",
+        "isAdmin": "Usuário Admin pode acessar tudo.",
+        "teams": "Times aos quais este usuário pertence. O controle de acesso é herdado das regras do time.",
+        "roles": "Regras de acesso adicionais. Use se o usuário não pertence a nenhum time ou se for necessário extender o controle de acesso deste usuário."
+	},
     "messages": {
         "passwordWillBeSent": "A senha será enviada para o email do usuário.",
         "accountInfoEmailSubject": "Informações da Conta",
-        "accountInfoEmailBody": "Informações da sua conta:\n\nUsuário: {userName}\nSenha: {password}\n\n{siteUrl}",
-        "passwordChanged": "A senha foi atualizada"
+        "accountInfoEmailBody": "Informações da sua conta:\n\nUsuário: {userName}\nSenha: {password}\n\n{siteUrl}",,
+        "passwordChangeLinkEmailSubject": "Solicitação para troca da senha",
+        "passwordChangeLinkEmailBody": "Você pode atualizar sua senha usando este link {link}. Esta URL é única e expirará em breve.",
+        "passwordChanged": "A senha foi atualizada",
+        "userCantBeEmpty": "O nome de usuário deve ser informado",
+        "wrongUsernamePasword": "Usuário / senha incorretos",
+        "emailAddressCantBeEmpty": "O endereço de e-mail deve ser informado",
+        "userNameEmailAddressNotFound": "Usuário / E-mail não localizados",
+        "forbidden": "Proibido, por favor tente mais tarde",
+        "uniqueLinkHasBeenSent": "Um link único foi enviado para o endereço de e-mail informado.",
+        "passwordChangedByRequest": "A senha foi atualizada."
     }
 }

@@ -26,12 +26,13 @@
         }
     },
     "labels": {
-        "Create Task": "Criar Tarefa"
+        "Create Task": "Criar Tarefa",
+        "Complete": "Concluída"
     },
-    "presetFilters": {
-        "active": "Ativa",
-        "completed": "Completa",
-        "todays": "Hoje",
-        "overdue": "Atrasada"
-    }
+	"presetFilters": {
+		"actual": "Atual",
+		"completed": "Completa",
+		"todays": "Hoje",
+		"overdue": "Atrasada"
+	}
 }
