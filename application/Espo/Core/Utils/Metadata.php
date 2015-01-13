@@ -111,19 +111,26 @@ class Metadata
         return false;
     }
 
+    /**
+     * Init metadata
+     *
+     * @param  boolean $reload
+     * @return void
+     */
     public function init($reload = false)
     {
-        $data = $this->getMetadataOnly(false, $reload);
-        if ($data === false) {
-            $GLOBALS['log']->emergency('Metadata:init() - metadata has not been created');
+        if (!$this->getConfig()->get('useCache')) {
+            $reload = true;
         }
 
-        $this->meta = $data;
+        if (file_exists($this->cacheFile) && !$reload) {
+            $this->meta = $this->getFileManager()->getContents($this->cacheFile);
+        } else {
+            $this->meta = $this->getUnifier()->unify($this->name, $this->paths, true);
+            $this->meta = $this->setLanguageFromConfig($this->meta);
 
-        if ($reload) {
-            //save medatada to a cache file
             if ($this->getConfig()->get('useCache')) {
-                $isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $data);
+                $isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->meta);
                 if ($isSaved === false) {
                     $GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
                 }
@@ -132,14 +139,14 @@ class Metadata
     }
 
     /**
-     * Get unified metadata
+     * Get metadata array
      *
      * @return array
      */
     protected function getData()
     {
         if (empty($this->meta) || !is_array($this->meta)) {
-            $this->init(!$this->isCached());
+            $this->init();
         }
 
         return $this->meta;
@@ -179,37 +186,6 @@ class Metadata
     }
 
     /**
-    * Get Metadata only without saving it to the a file and database sync
-    *
-    * @param $isJSON
-    * @param bool $reload
-    *
-    * @return json | array
-    */
-    public function getMetadataOnly($isJSON = true, $reload = false)
-    {
-        $data = false;
-        if (!file_exists($this->cacheFile) || $reload) {
-            $data = $this->getUnifier()->unify($this->name, $this->paths, true);
-
-            if ($data === false) {
-                $GLOBALS['log']->emergency('Metadata:getMetadata() - metadata unite file cannot be created');
-            }
-
-            $data = $this->setLanguageFromConfig($data);
-        }
-        else if (file_exists($this->cacheFile)) {
-            $data = $this->getFileManager()->getContents($this->cacheFile);
-        }
-
-        if ($isJSON) {
-            $data = Json::encode($data);
-        }
-
-        return $data;
-    }
-
-    /**
      * Set language list and default for Settings, Preferences metadata
      *
      * @param array $data Meta
@@ -234,7 +210,6 @@ class Metadata
 
         return $data;
     }
-
 
     /**
     * Set Metadata data
@@ -348,14 +323,15 @@ class Metadata
             return $this->scopes;
         }
 
-        $metadata = $this->getMetadataOnly(false);
-        if (!is_array($metadata)) {
-            $metadata = $this->getMetadataOnly(false, true);
+        $scopeList = $this->get('scopes');
+        if (!is_array($scopeList)) {
+            $this->init(true);
+            $scopeList = $this->get('scopes');
         }
 
         $scopes = array();
-        if (is_array($metadata['scopes'])) {
-            foreach ($metadata['scopes'] as $name => $details) {
+        if (is_array($scopeList)) {
+            foreach ($scopeList as $name => $details) {
                 $scopes[$name] = isset($details['module']) ? $details['module'] : false;
             }
         }

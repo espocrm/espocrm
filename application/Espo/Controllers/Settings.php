@@ -57,6 +57,10 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new Forbidden();
         }
 
+        if (isset($data['useCache']) && $data['useCache'] != $this->getConfig()->get('useCache')) {
+            $this->getContainer()->get('dataManager')->clearCache();
+        }
+
         $this->getConfig()->setData($data, $this->getUser()->isAdmin());
         $result = $this->getConfig()->save();
         if ($result === false) {
