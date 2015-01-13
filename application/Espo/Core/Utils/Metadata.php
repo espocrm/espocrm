@@ -34,6 +34,7 @@ class Metadata
     private $unifier;
     private $fileManager;
     private $converter;
+    private $moduleConfig;
 
     /**
      * @var string - uses for loading default values
@@ -48,12 +49,17 @@ class Metadata
         'customPath' => 'custom/Espo/Custom/Resources/metadata',
     );
 
-
     protected $ormMeta = null;
 
     private $ormCacheFile = 'data/cache/application/ormMetadata.php';
 
     private $moduleList = null;
+
+    /**
+     * Default module order
+     * @var integer
+     */
+    protected $defaultModuleOrder = 10;
 
     public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
     {
@@ -63,6 +69,8 @@ class Metadata
         $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
+
+        $this->moduleConfig = new \Espo\Core\Utils\Module($this->config, $this->fileManager);
     }
 
     protected function getConfig()
@@ -83,6 +91,11 @@ class Metadata
     protected function getConverter()
     {
         return $this->converter;
+    }
+
+    protected function getModuleConfig()
+    {
+        return $this->moduleConfig;
     }
 
     public function isCached()
@@ -357,22 +370,26 @@ class Metadata
      */
     public function getModuleList()
     {
-        if (is_null($this->moduleList)) {
-            $this->moduleList = array();
-            $scopes = $this->getScopes();
+        if (!empty($this->moduleList)) {
+            return $this->moduleList;
+        }
 
-            // TODO order
-            foreach ($scopes as $moduleName) {
-                if (!empty($moduleName)) {
-                    if (!in_array($moduleName, $this->moduleList)) {
-                        $this->moduleList[] = $moduleName;
-                    }
-                }
+        $scopes = $this->getScopes();
+
+        $modulesToSort = array();
+        foreach ($scopes as $moduleName) {
+            if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
+                $modulesToSort[$moduleName] = $this->getModuleConfig()->get($moduleName . '.order', $this->defaultModuleOrder);
             }
         }
+
+        krsort($modulesToSort);
+        asort($modulesToSort);
+
+        $this->moduleList = array_keys($modulesToSort);
+
         return $this->moduleList;
     }
-
 
     /**
      * Get module name if it's a custom module or empty string for core entity
@@ -385,7 +402,6 @@ class Metadata
     {
         return $this->get('scopes.' . $scopeName . '.module', false);
     }
-
 
     /**
      * Get Scope path, ex. "Modules/Crm" for Account
