@@ -139,7 +139,7 @@ Lang.prototype.run = function () {
                     }
 
                     var escapedKey = this.escape(key);
-                    contents = contents.replace(new RegExp('(' + escapedKey  + ')', 'g'), '' + translationHash[key].replace(/\\"/g, '"') + '');
+                     contents = contents.replace(new RegExp('(' + escapedKey.replace(/\\"/g, '"')  + ')', 'g'), '' + translationHash[key].replace(/\\"/g, '"') + '');
                 }
             }
 
