@@ -178,6 +178,8 @@
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
         "assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you.\n\n{recordUrl}",
+        "mentionEmailNotificationSubject": "EspoCRM Note: {assignerUserName} mentioned you",
+        "mentionEmailNotificationBody": "{assignerUserName} has mentioned you in relation to {entityType} '{Entity.name}'\n\n{recordUrl}",
         "confirmation": "Are you sure?",
         "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
         "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",

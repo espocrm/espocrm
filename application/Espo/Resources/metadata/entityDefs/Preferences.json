@@ -102,6 +102,10 @@
         "defaultReminders": {
             "type": "jsonArray",
             "view": "Crm:Meeting.Fields.Reminders"
+        },
+        "receiveMentionEmailNotifications": {
+            "type": "bool",
+            "default": false
         }
     }
 }

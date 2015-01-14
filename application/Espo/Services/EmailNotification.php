@@ -68,6 +68,53 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $text;
     }
 
+    public function notifyAboutMentionJob($data)
+    {
+        $userId = $data['userId'];
+        $mentionerUserId = $data['mentionerUserId'];
+        $entityId = $data['entityId'];
+        $entityType = $data['entityType'];
+
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        $prefs = $this->getEntityManager()->getEntity('Preferences', $userId);
+
+        if (!$prefs) {
+            return true;
+        }
+
+        if (!$prefs->get('receiveMentionEmailNotifications')) {
+            return true;
+        }
+
+        $mentionerUser = $this->getEntityManager()->getEntity('User', $mentionerUserId);
+        $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
+
+        if ($user && $entity && $mentionerUser) {
+            $emailAddress = $user->get('emailAddress');
+            if (!empty($emailAddress)) {
+                $email = $this->getEntityManager()->getEntity('Email');
+
+                $subject = $this->getLanguage()->translate('mentionEmailNotificationSubject', 'messages');
+                $body = $this->getLanguage()->translate('mentionEmailNotificationBody', 'messages', $entity->getEntityName());
+
+                $subject = $this->replaceMessageVariables($subject, $entity, $user, $mentionerUser);
+                $body = $this->replaceMessageVariables($body, $entity, $user, $mentionerUser);
+
+                $email->set(array(
+                    'subject' => $subject,
+                    'body' => $body,
+                    'isHtml' => false,
+                    'to' => $emailAddress
+                ));
+
+                $this->getMailSender()->send($email);
+            }
+        }
+
+        return true;
+    }
+
     public function notifyAboutAssignmentJob($data)
     {
         $userId = $data['userId'];

@@ -106,6 +106,19 @@ class Mentions extends \Espo\Core\Hooks\Base
     protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user)
     {
         $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
+        $job = $this->getEntityManager()->getEntity('Job');
+        $job->set(array(
+            'serviceName' => 'EmailNotification',
+            'method' => 'notifyAboutMentionJob',
+            'data' => json_encode(array(
+                'userId' => $user->id,
+                'mentionerUserId' => $this->getUser()->id,
+                'entityId' => $entity->get('parentId'),
+                'entityType' => $entity->get('parentType')
+            )),
+            'executeTime' => date('Y-m-d H:i:s'),
+        ));
+        $this->getEntityManager()->saveEntity($job);
     }
 
     protected function getNotificationService()
