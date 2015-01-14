@@ -445,6 +445,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 };
                 if ('customLabel' in this.listLayout[i]) {
                     item.customLabel = this.listLayout[i].customLabel;
+                    item.hasCustomLabel = true;
                 }
                 if (item.sortable) {
                     item.sorted = this.collection.sortBy === this.listLayout[i].name;
