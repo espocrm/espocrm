@@ -441,8 +441,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     name: this.listLayout[i].name,
                     sortable: !(this.listLayout[i].notSortable || false),
                     width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false,
-                    align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false
+                    align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
+                if ('customLabel' in this.listLayout[i]) {
+                    item.customLabel = this.listLayout[i].customLabel;
+                }
                 if (item.sortable) {
                     item.sorted = this.collection.sortBy === this.listLayout[i].name;
                     if (item.sorted) {

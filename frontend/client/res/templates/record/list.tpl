@@ -37,30 +37,40 @@
                 {{#each headerDefs}}
                 <th {{#if width}} width="{{width}}%"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}> 
                     {{#if this.sortable}}
-                        <a href="javascript:" class="sort" data-name="{{this.name}}">{{translate this.name scope=../../../collection.name category='fields'}}</a>
-                        {{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}                                
+                        <a href="javascript:" class="sort" data-name="{{this.name}}">
+                        {{#if this.customLabel}}
+                            {{this.customLabel}}
+                        {{else}}
+                            {{translate this.name scope=../../../collection.name category='fields'}}
+                        {{/if}}
+                        </a>
+                        {{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}
                     {{else}}
-                        {{translate this.name scope=../../../collection.name category='fields'}}
+                        {{#if this.customLabel}}
+                            {{this.customLabel}}
+                        {{else}}
+                            {{translate this.name scope=../../../collection.name category='fields'}}
+                        {{/if}}
                     {{/if}}
                 </th>
                 {{/each}}
             </tr>
         </thead>
-        {{/if}} 
+        {{/if}}
         <tbody>
         {{#each rows}}
-            {{{var this ../this}}} 
+            {{{var this ../this}}}
         {{/each}}
         </tbody>
     </table>
     {{#unless paginationEnabled}}
-    {{#if showMoreEnabled}}    
+    {{#if showMoreEnabled}}
     <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
         <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore">
             {{#if showCount}}
             <div class="pull-right text-muted more-count">{{moreCount}}</div>
             {{/if}}
-            <span>{{translate 'Show more'}}</span>        
+            <span>{{translate 'Show more'}}</span>
         </a>
     </div>
     {{/if}}
