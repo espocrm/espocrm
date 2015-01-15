@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.DateTime = function () {
 
@@ -40,7 +40,7 @@ _.extend(Espo.DateTime.prototype, {
     hasMeridian: function () {
         return (new RegExp('A', 'i')).test(this.timeFormat);
     },
-    
+
     getDateFormat: function () {
         return this.dateFormat;
     },
@@ -60,30 +60,30 @@ _.extend(Espo.DateTime.prototype, {
         return m.format(this.internalDateFormat);
     },
 
-    toDisplayDate: function (string) {        
+    toDisplayDate: function (string) {
         if (!string || (typeof string != 'string')) {
             return '';
         }
-        
+
         var m = moment(string, this.internalDateFormat);
         if (!m.isValid()) {
             return '';
         }
-        
+
         return m.format(this.dateFormat);
     },
 
     fromDisplay: function (string) {
         if (!string) {
             return null;
-        }        
+        }
         var m;
-        if (this.timeZone) {    
+        if (this.timeZone) {
             m = moment.tz(string, this.getDateTimeFormat(), this.timeZone).utc();
         } else {
             m = moment.utc(string, this.getDateTimeFormat());
         }
-        
+
         if (!m.isValid()) {
             return -1;
         }
@@ -96,7 +96,7 @@ _.extend(Espo.DateTime.prototype, {
         }
         return this.toMoment(string).format(this.getDateTimeFormat());
     },
-    
+
     getNowMoment: function () {
         var m = moment();
         if (this.timeZone) {
@@ -143,7 +143,7 @@ _.extend(Espo.DateTime.prototype, {
     },
 
     setSettingsAndPreferences: function (settings, preferences) {
-        
+
         if (settings.has('dateFormat')) {
             this.dateFormat = settings.get('dateFormat');
         }
@@ -159,7 +159,7 @@ _.extend(Espo.DateTime.prototype, {
         if (settings.has('weekStart')) {
             this.weekStart = settings.get('weekStart');
         }
-        
+
         preferences.on('change', function (model) {
             this.dateFormat = model.get('dateFormat');
             this.timeFormat = model.get('timeFormat');
@@ -167,19 +167,19 @@ _.extend(Espo.DateTime.prototype, {
             this.weekStart = model.get('weekStart');
             if (this.timeZone == 'UTC') {
                 this.timeZone = null;
-            }    
+            }
         }, this);
     },
-    
+
     setLanguage: function (language) {
-        moment.lang('en', {
+        moment.locale('en', {
             months: language.translate('monthNames', 'lists'),
             monthsShort: language.translate('monthNamesShort', 'lists'),
-            weekdays: language.translate('dayNames', 'lists'), 
+            weekdays: language.translate('dayNames', 'lists'),
             weekdaysShort: language.translate('dayNamesShort', 'lists'),
             weekdaysMin: language.translate('dayNamesMin', 'lists'),
         });
-        moment.lang('en');
+        moment.locale('en');
     },
 });
 
