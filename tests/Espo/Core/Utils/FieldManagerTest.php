@@ -55,7 +55,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->objects['language']
             ->expects($this->once())
-            ->method('set')
+            ->method('save')
             ->will($this->returnValue(true));
 
         $data = array(
