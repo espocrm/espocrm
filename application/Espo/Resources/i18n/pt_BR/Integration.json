@@ -1,14 +1,14 @@
 {
-    "fields": {
-        "enabled": "Habilitado",
-        "clientId": "Client ID",
-        "clientSecret": "Client Secret",
-        "redirectUri": "URL de Redirecionamento"
-    },
-    "messages": {
-        "selectIntegration": "Selecione uma integração no menu."
-    },
-    "help": {
-        "Google": "<p><b>Obtenha as credenciais OAuth 2.0 do Google Developers Console.</b></p><p>Visite o <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> para obter as credenciais OAuth 2.0 como Client ID e Client Secret comuns ao Google e ao EspoCRM.</p>"
-    }
+	"fields": {
+		"enabled": "Habilitado",
+		"clientId": "Client ID",
+		"clientSecret": "Client Secret",
+		"redirectUri": "URL de Redirecionamento"
+	},
+	"messages": {
+		"selectIntegration": "Selecione uma integração no menu."
+	},
+	"help": {
+		"Google": "<p><b>Obtenha as credenciais OAuth 2.0 do Google Developers Console.</b></p><p>Visite o <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> para obter as credenciais OAuth 2.0 como Client ID e Client Secret comuns ao Google e ao EspoCRM.</p>"
+	}
 }

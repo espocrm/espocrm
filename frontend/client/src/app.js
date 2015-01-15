@@ -189,11 +189,11 @@ _.extend(Espo.App.prototype, {
     },
 
     _initBaseController: function () {
-        this.baseController = new Espo['Controllers.Base']({}, this._getControllerInjection());
+        this.baseController = new Espo['Controllers.Base']({}, this.getControllerInjection());
         this._viewHelper.baseController = this.baseController;
     },
 
-    _getControllerInjection: function () {
+    getControllerInjection: function () {
         return {
             viewFactory: this._viewFactory,
             modelFactory: this._modelFactory,
@@ -224,7 +224,7 @@ _.extend(Espo.App.prototype, {
                 }
 
                 this.loader.load(className, function (controllerClass) {
-                    this.controllers[name] = new controllerClass(this.baseController.params, this._getControllerInjection());
+                    this.controllers[name] = new controllerClass(this.baseController.params, this.getControllerInjection());
                     this.controllers[name].name = name;
                     callback(this.controllers[name]);
                 }.bind(this),

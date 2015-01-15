@@ -1,6 +1,6 @@
 {
-	"fields": {
-		"post": "Post",
-		"attachments": "Bijlagen"
-	}
+    "fields": {
+        "post": "Post",
+        "attachments": "Bijlagen"
+    }
 }

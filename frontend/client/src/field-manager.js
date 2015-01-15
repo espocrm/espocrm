@@ -20,7 +20,7 @@
  ************************************************************************/ 
 
 Espo.FieldManager = function (defs, metadata) {
-    this.defs = defs;
+    this.defs = defs || {};
     this.metadata = metadata;
 };
 

@@ -5,10 +5,14 @@
         "Team": "Time",
         "Role": "Regra",
         "EmailTemplate": "Template de E-mail",
-        "EmailAccount": "Conta de e-mail",
+		"EmailAccount": "Conta de e-mail",
+        "EmailAccountScope": "Conta de e-mail",
         "OutboundEmail": "E-mail de Saída",
         "ScheduledJob": "Tarefa Agendada",
-        "ExternalAccount": "Conta externa"
+		"ExternalAccount": "Conta externa",
+		"Extension": "Extensão",
+        "Dashboard": "Dashboard",
+        "Stream": "Fluxo"
     },
     "scopeNamesPlural": {
         "Email": "E-mails",
@@ -16,10 +20,14 @@
         "Team": "Times",
         "Role": "Regras",
         "EmailTemplate": "Templates de E-mail",
-        "EmailAccount": "Contas de e-mail",
+		"EmailAccount": "Contas de e-mail",
+        "EmailAccountScope": "Contas de e-mail",
         "OutboundEmail": "E-mails de Saída",
         "ScheduledJob": "Tarefas Agendadas",
-        "ExternalAccount": "Contas externas"
+		"ExternalAccount": "Contas externas",
+		"Extension": "Extensões",
+        "Dashboard": "Dashboard",
+        "Stream": "Fluxo"
     },
     "labels": {
         "Misc": "Misc",
@@ -95,7 +103,8 @@
         "Unlink": "Remover ligação",
         "Mass Update": "Atualização em Massa",
         "Export": "Exportar",
-        "No Data": "Nenhum Dado",
+        "No Data": "Sem dados",
+        "No Access": "Sem acesso",
         "All": "Tudo",
         "Active": "Ativo",
         "Inactive": "Inativo",
@@ -113,14 +122,22 @@
         "You": "Você",
         "you": "você",
         "change": "modificar",
+		"Change": "Modificar",
         "Primary": "Primário",
-        "Save Filters": "Salvar Filtros",
-        "Administration": "Administração",
-        "Run Import": "Executar Importação",
-        "Duplicate": "Duplicar",
-        "Notifications": "Notificações",
-        "Mark all read": "Marcar tudo como lido",
-        "See more": "Ver mais"
+		"Save Filters": "Salvar Filtros",
+		"Administration": "Administração",
+		"Run Import": "Executar Importação",
+		"Duplicate": "Duplicar",
+		"Notifications": "Notificações",
+		"Mark all read": "Marcar tudo como lido",
+		"See more": "Ver mais",
+		"Today": "Hoje",
+		"Tomorrow": "Amanhã",
+		"Yesterday": "Ontem",
+        "Submit": "Enviar",
+        "Close": "Fechar",
+        "Yes": "Sim",
+        "No": "Não"
     },
     "messages": {
         "notModified": "Você não modificou o registro",
@@ -137,12 +154,20 @@
         "fieldShouldBeLess": "{field} deve ser menos que {value}",
         "fieldShouldBeGreater": "{field} deve ser maior que {value}",
         "fieldBadPasswordConfirm": "{field} confirmado impropriamente",
-        "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-        "assignmentEmailNotificationBody": "{assignerUserName} designou {entityType} '{Entity.name}' para você\n\n{recordUrl}",
-        "confirmation": "Você tem certeza?",
-        "removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",
-        "unlinkRecordConfirmation": "Você gostaria mesmo de desfazer este relacionamento?",
-        "removeSelectedRecordsConfirmation": "Você gostaria mesmo de remover os registros selecionados?"
+		"resetPreferencesDone": "As preferências foram redefinidas para o padrão",
+		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
+		"assignmentEmailNotificationBody": "{assignerUserName} designou {entityType} '{Entity.name}' para você\n\n{recordUrl}",
+		"confirmation": "Você tem certeza?",
+        "resetPreferencesConfirmation": "Você gostaria mesmo de redefenir as preferências para o padrão?",
+		"removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",
+		"unlinkRecordConfirmation": "Você gostaria mesmo de desfazer este relacionamento?",
+		"removeSelectedRecordsConfirmation": "Você gostaria mesmo de remover os registros selecionados?",
+        "massUpdateResult": "{count} registros foram atualizados",
+        "massUpdateResultSingle": "{count} registro foi atualizado",
+        "noRecordsUpdated": "Nenhum registro foi atualizado",
+        "massRemoveResult": "{count} registros foram removidos",
+        "massRemoveResultSingle": "{count} registro foi removido",
+        "noRecordsRemoved": "Nenhum registro foi removido"
     },
     "boolFilters": {
         "onlyMy": "Meus",
@@ -158,17 +183,17 @@
         "emailAddress": "E-mail",
         "assignedUserName": "Nome de Usuário Designado",
         "teams": "Times",
-        "createdAt": "Criado Em",
-        "modifiedAt": "Modificado Em",
-        "createdBy": "Criado Por",
-        "modifiedBy": "Modificado Por",
-        "title": "Títle",
-        "dateFrom": "De",
-        "dateTo": "Até",
-        "autorefreshInterval": "Intervalo para auto-atualização",
-        "displayRecords": "Exibir registros"
+        "createdAt": "Criado em",
+        "modifiedAt": "Modificado em",
+        "createdBy": "Criado por",
+        "modifiedBy": "Modificado por"
     },
     "links": {
+        "assignedUser": "Usuário designado",
+        "createdBy": "Criado por",
+        "modifiedBy": "Modificado por",
+        "team": "Time",
+        "roles": "Regras",
         "teams": "Times",
         "users": "Usuários"
     },
@@ -185,6 +210,8 @@
         "update": "{user} atualizou {entityType} {entity}",
         "createRelated": "{user} criou {relatedEntityType} {relatedEntity} atribuido a {entityType} {entity}",
         "emailReceived": "{entity} foi recebido por {entityType} {entity}",
+		"emailReceivedInitial": "O e-mail {email} foi recebido e criou {entityType} {entity}",
+		"mentionInPost": "{user} mencionado {mentioned} em {entityType} {entity}",
 
         "createThis": "{user} criou {entityType}",
         "createAssignedThis": "{user} criou {entityType} atribuído a {assignee}",
@@ -194,7 +221,8 @@
         "statusThis": "{user} atualilou {field}",
         "updateThis": "{user} atualizou {entityType}",
         "createRelatedThis": "{user} criou {relatedEntityType} {relatedEntity} relacionado a {entityType}",
-        "emailReceivedThis": "{entity} foi recebido"
+        "emailReceivedThis": "{entity} foi recebido",
+        "emailReceivedInitialThis": "O E-mail {email} foi recebido e criou este {entityType}"
     },
     "lists": {
         "monthNames": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
@@ -289,9 +317,15 @@
             "after": "Anterior",
             "before": "Posterior",
             "between": "Entre",
-            "today": "Hoje",
-            "past": "Passado",
-            "future": "Futuro"
+			"today": "Hoje",
+			"past": "Passado",
+			"future": "Futuro",
+			"currentMonth": "Mês corrente",
+			"lastMonth": "Último mês",
+			"currentQuarter": "Trimestre corrente",
+			"lastQuarter": "Último trimestre",
+			"currentYear": "Ano corrente",
+			"lastYear": "Último ano"
         },
         "intSearchRanges": {
             "equals": "Igual",
@@ -310,13 +344,13 @@
             "5": "5 minutos",
             "10": "10 minutos"
         },
-        "phoneNumber": {
-            "Mobile": "Celular",
-            "Office": "Escritório",
-            "Fax": "Fax",
-            "Home": "Residencial",
-            "Other": "Outro"
-        }
+		"phoneNumber": {
+			"Mobile": "Celular",
+			"Office": "Comercial",
+			"Fax": "Fax",
+			"Home": "Residencial",
+			"Other": "Outro"
+		}
     },
     "sets": {
         "summernote": {

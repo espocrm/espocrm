@@ -16,7 +16,7 @@
         "status": "Status",
         "source": "Origem",
         "opportunityAmount": "Valor da Oportunidade",
-        "opportunityAmountConverted": "Valor da Oportunidade (convertido)",
+		"opportunityAmountConverted": "Valor da Oportunidade (convertido)",
         "description": "Descrição",
         "createdAccount": "Conta",
         "createdContact": "Contato",
@@ -44,7 +44,7 @@
             "Other": "Outro"
         }
     },
-    "presetFilters": {
-        "active": "Ativo"
-    }
+	"presetFilters": {
+		"active": "Ativo"
+	}
 }

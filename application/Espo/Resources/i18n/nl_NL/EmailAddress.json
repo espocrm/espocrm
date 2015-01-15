@@ -1,7 +1,7 @@
 {
-	"labels": {
-		"Primary": "Primair",
-		"Opted Out": "Opted Out",
-		"Invalid": "Onjuist"
-	}
+    "labels": {
+        "Primary": "Primair",
+        "Opted Out": "Opted Out",
+        "Invalid": "Onjuist"
+    }
 }

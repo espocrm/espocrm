@@ -20,8 +20,8 @@
         "smtpEmailAddress": "Endereço de E-mail",
 
         "exportDelimiter": "Delimitador de Exportação",
-        
-        "receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado"
+		
+		"receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado"
     },
     "links": {
     },
@@ -31,7 +31,7 @@
             "1": "Segunda"
         }
     },
-    "labels": {
-        "Notifications": "Notificações"
-    }
+	"labels": {
+		"Notifications": "Notificações"
+	}
 }

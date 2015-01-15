@@ -1,42 +1,42 @@
 {
-	"fields": {
-		"name": "Record Naam",
-		"number": "Nummer",
-		"status": "Status",
-		"account": "Klant",
-		"contact": "Contact",
-		"priority": "Prioriteit",
-		"type": "Type",
-		"description": "Beschrijving"
-	},
-	"links": {
-	},
-	"options": {
-		"status": {
-			"New": "Nieuw",
-			"Assigned": "Toegewezen",
-			"Pending": "In afwachting",
-			"Closed": "Gesloten",
-			"Rejected": "Geweigerd",
-			"Duplicate": "Dupliceer"
-		},
-		"priority" : {
-			"Low": "Laag",
-			"Normal": "Standaard",
-			"High": "Hoog",
-			"Urgent": "Urgent"
-		},
-		"type": {
-			"Question": "Vraag",
-			"Incident": "Incident",
-			"Problem": "Probleem"
-		}
-	},
-	"labels": {
-		"Create Case": "Casus Aanmaken"
-	},
-	"presetFilters": {
-		"open": "Open",
-		"closed": "Gesloten"
-	}
+    "fields": {
+        "name": "Record Naam",
+        "number": "Nummer",
+        "status": "Status",
+        "account": "Account",
+        "contact": "Contact",
+        "priority": "Prioriteit",
+        "type": "Type",
+        "description": "Beschrijving"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nieuw",
+            "Assigned": "Toegewezen",
+            "Pending": "In afwachting",
+            "Closed": "Gesloten",
+            "Rejected": "Afgewezen",
+            "Duplicate": "Dupliceer"
+        },
+        "priority" : {
+            "Low": "Laag",
+            "Normal": "Normaal",
+            "High": "Hoog",
+            "Urgent": "Urgent"
+        },
+        "type": {
+            "Question": "Vraag",
+            "Incident": "Incident",
+            "Problem": "Probleem"
+        }
+    },
+    "labels": {
+        "Create Case": "Casus Aanmaken"
+    },
+    "presetFilters": {
+        "open": "Open",
+        "closed": "Gesloten"
+    }
 }
