@@ -115,8 +115,9 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             var data = this.popupNotificationsData[name] || {};
             var url = data.url;
             var interval = data.interval;
+            var disabled = data.disabled || false;
 
-            if (!url || !interval) return;
+            if (disabled || !url || !interval) return;
 
             var isFirstCheck = false;
             if (this.popupCheckIteration == 0) {
