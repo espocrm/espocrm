@@ -40,7 +40,14 @@ Espo.define('Views.GlobalSearch.Panel', 'View', function (Dep) {
                                     params: {
                                         containerEl: this.options.el
                                     },
-                                }                            
+                                },
+                                {
+                                    name: 'accountName',
+                                    view: 'GlobalSearch.AccountField',
+                                    params: {
+                                        containerEl: this.options.el
+                                    },
+                                }
                             ]
                         ],
                         right: {
