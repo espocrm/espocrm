@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014  Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -115,8 +115,9 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             var data = this.popupNotificationsData[name] || {};
             var url = data.url;
             var interval = data.interval;
+            var disabled = data.disabled || false;
 
-            if (!url || !interval) return;
+            if (disabled || !url || !interval) return;
 
             var isFirstCheck = false;
             if (this.popupCheckIteration == 0) {
