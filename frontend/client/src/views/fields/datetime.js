@@ -50,49 +50,49 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
         },
 
         getValueForDisplay: function () {
-            var value = this.model.get(this.name);            
+            var value = this.model.get(this.name);
             if (!value) {
                 if (this.mode == 'edit' || this.mode == 'search') {
                     return '';
                 }
                 return this.translate('None');
             }
-            
-            if (this.mode == 'list' || this.mode == 'detail') {            
+
+            if (this.mode == 'list' || this.mode == 'detail') {
                 var d = this.getDateTime().toMoment(value);
-                var now = moment().tz(this.getDateTime().timeZone || 'UTC');                
-                var dt = now.clone().startOf('day');                    
-                    
+                var now = moment().tz(this.getDateTime().timeZone || 'UTC');
+                var dt = now.clone().startOf('day');
+
                 var ranges = {
-                    'today': [dt.unix(), dt.add('days', 1).unix()],
-                    'tomorrow': [dt.unix(), dt.add('days', 1).unix()],
-                    'yesterday': [dt.add('days', -3).unix(), dt.add('days', 1).unix()]
+                    'today': [dt.unix(), dt.add(1, 'days').unix()],
+                    'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
+                    'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
                 };
-                    
+
                 if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
                     return this.translate('Today') + ' ' + d.format(this.getDateTime().timeFormat);
                 } else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
                     return this.translate('Tomorrow') + ' ' + d.format(this.getDateTime().timeFormat);
                 } else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
                     return this.translate('Yesterday') + ' ' + d.format(this.getDateTime().timeFormat);
-                } 
-                    
+                }
+
                 if (d.format('YYYY') == now.format('YYYY')) {
                     return d.format('MMM DD') + ' ' + d.format(this.getDateTime().timeFormat);
                 } else {
                     return d.format('MMM DD, YYYY') + ' ' + d.format(this.getDateTime().timeFormat);
                 }
             }
-            
+
             return this.getDateTime().toDisplay(value);
         },
 
         afterRender: function () {
             var self = this;
             Dep.prototype.afterRender.call(this);
-            
+
             if (this.mode == 'edit') {
-                var $date = this.$date = this.$element;                
+                var $date = this.$date = this.$element;
                 var $time = this.$time = this.$el.find('input[name="' + this.name + '-time"]');
                 $time.timepicker({
                     step: 30,
@@ -102,7 +102,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
                 $time.parent().find('button.time-picker-btn').on('click', function () {
                     $time.timepicker('show');
                 });
-                
+
                 this.$element.on('change.datetime', function (e) {
                     if (this.$element.val() && !$time.val()) {
                         var d = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
@@ -110,7 +110,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
                         if (~index) {
                             $time.val(d.substr(index + 1));
                         }
-                        
+
                     }
                 }.bind(this));
 
@@ -127,7 +127,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
                 $time.on('change', changeCallback);
             }
         },
-        
+
         update: function (value) {
             if (this.mode == 'edit') {
                 var formatedValue = this.getDateTime().toDisplay(value);
@@ -165,16 +165,16 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
                 return true;
             }
         },
-        
-        fetchSearch: function () {        
+
+        fetchSearch: function () {
             var data = Dep.prototype.fetchSearch.call(this);
-            
+
             if (data) {
                 data.dateTime = true;
             }
             return data;
         },
-        
+
     });
 });
 

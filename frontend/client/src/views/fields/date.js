@@ -22,21 +22,21 @@
 Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
-    
+
         type: 'date',
-        
+
         editTemplate: 'fields.date.edit',
-        
+
         searchTemplate: 'fields.date.search',
-        
+
         validations: ['required', 'date', 'after', 'before'],
-        
+
         searchTypeOptions: ['currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'on', 'after', 'before', 'between'],
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
         },
-        
+
         setupSearch: function () {
             this.searchParams.typeOptions = this.searchTypeOptions;
             this.events = _.extend({
@@ -45,11 +45,11 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                     this.handleSearchType(type);
                 },
             }, this.events || {});
-            
+
             this.searchParams.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
             this.searchParams.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
         },
-        
+
         getValueForDisplay: function () {
             var value = this.model.get(this.name);
             if (!value) {
@@ -58,7 +58,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                 }
                 return this.translate('None');
             }
-            
+
             if (this.mode == 'list' || this.mode == 'detail') {
                 var d = moment.utc(value, this.getDateTime().internalDateFormat);
 
@@ -67,13 +67,13 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                 var dt = today.clone();
 
                 var ranges = {
-                    'today': [dt.unix(), dt.add('days', 1).unix()],
-                    'tomorrow': [dt.unix(), dt.add('days', 1).unix()],
-                    'yesterday': [dt.add('days', -3).unix(), dt.add('days', 1).unix()]
+                    'today': [dt.unix(), dt.add(1, 'days').unix()],
+                    'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
+                    'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
                 };
 
 
-                    
+
                 if (d.unix() >= ranges['today'][0] && d.unix() < ranges['today'][1]) {
                     return this.translate('Today');
                 } else if (d.unix() >= ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
@@ -81,21 +81,21 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                 } else if (d.unix() >= ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
                     return this.translate('Yesterday');
                 }
-                    
+
                 if (d.format('YYYY') == today.format('YYYY')) {
                     return d.format('MMM DD');
                 } else {
                     return d.format('MMM DD, YYYY');
                 }
             }
-            
+
             return this.getDateTime().toDisplayDate(value);
         },
-        
+
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element = this.$el.find('[name="' + this.name + '"]');
-                
+
                 var wait = false;
                 this.$element.on('change', function () {
                     if (!wait) {
@@ -106,16 +106,16 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                         }, 100);
                     }
                 }.bind(this));
-            
+
                 var options = {
                     format: this.getDateTime().dateFormat.toLowerCase(),
                     weekStart: this.getDateTime().weekStart,
                     autoclose: true,
                     todayHighlight: true,
                 };
-                
+
                 var language = this.getConfig().get('language');
-                
+
                 if (!(language in $.fn.datepicker.dates)) {
                     $.fn.datepicker.dates[language] = {
                         days: this.translate('dayNames', 'lists'),
@@ -127,7 +127,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                         clear: this.translate('Clear'),
                     };
                 }
-            
+
                 var options = {
                     format: this.getDateTime().dateFormat.toLowerCase(),
                     weekStart: this.getDateTime().weekStart,
@@ -135,12 +135,11 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                     todayHighlight: true,
                     language: language
                 };
-                
+
                 var $datePicker = this.$element.datepicker(options).on('show', function (e) {
                     $('body > .datepicker.datepicker-dropdown').css('z-index', 1200);
                 }.bind(this));
-                
-                
+
                 if (this.mode == 'search') {
                     var $elAdd = this.$el.find('input[name="' + this.name + '-additional"]');
                     $elAdd.datepicker(options).on('show', function (e) {
@@ -150,16 +149,16 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                         $elAdd.datepicker('show');
                     });
                 }
-                
+
                 this.$element.parent().find('button.date-picker-btn').on('click', function (e) {
                     this.$element.datepicker('show');
                 }.bind(this));
-                
+
                 var $searchType = this.$el.find('select.search-type');
                 this.handleSearchType($searchType.val());
             }
         },
-        
+
         handleSearchType: function (type) {
             if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
@@ -172,27 +171,27 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                 this.$el.find('div.additional').addClass('hidden');
             }
         },
-        
+
         parseDate: function (string) {
             return this.getDateTime().fromDisplayDate(string);
         },
-        
+
         parse: function (string) {
             return this.parseDate(string);
         },
-        
+
         fetch: function () {
             var data = {};
             data[this.name] = this.parse(this.$element.val());
             return data;
         },
-        
+
         fetchSearch: function () {
             var value = this.parseDate(this.$element.val());
 
             var type = this.$el.find('[name="'+this.name+'-type"]').val();
             var data;
-            
+
             if (type == 'between') {
                 if (!value) {
                     return false;
@@ -223,7 +222,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
             }
             return data;
         },
-        
+
         validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 if (this.model.get(this.name) === null) {
@@ -233,7 +232,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                 }
             }
         },
-        
+
         validateDate: function () {
             if (this.model.get(this.name) === -1) {
                 var msg = this.translate('fieldShouldBeDate', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
@@ -241,7 +240,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                 return true;
             }
         },
-        
+
         validateAfter: function () {
             var field = this.model.getFieldParam(this.name, 'after');
             if (field) {
@@ -251,14 +250,14 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                     if (moment(value).unix() <= moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
-                        
+
                         this.showValidationMessage(msg);
                         return true;
                     }
                 }
             }
         },
-        
+
         validateBefore: function () {
             var field = this.model.getFieldParam(this.name, 'before');
             if (field) {
