@@ -235,8 +235,7 @@
         "salutationName": {
             "Mr.": "Mr.",
             "Mrs.": "Mrs.",
-            "Dr.": "Dr.",
-            "Drs.": "Drs."
+            "Dr.": "Dr."
         },
         "language":     {
             "af_ZA":"Afrikaans",
