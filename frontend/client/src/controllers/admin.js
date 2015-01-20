@@ -17,52 +17,52 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Controllers.Admin', 'Controller', function (Dep) {
-    
+
     return Dep.extend({
-    
+
         checkAccessGlobal: function () {
             if (this.getUser().isAdmin()) {
                 return true;
             }
             return false;
         },
-        
-        index: function () {        
+
+        index: function () {
             this.main('Admin.Index', null);
         },
-                
+
         layouts: function (options) {
             var scope = options.scope || null;
-            var type = options.type || null;        
-        
+            var type = options.type || null;
+
             this.main('Admin.Layouts.Index', {scope: scope, type: type});
         },
-        
+
         fieldManager: function (options) {
             var scope = options.scope || null;
-            var field = options.field || null;        
+            var field = options.field || null;
 
             this.main('Admin.FieldManager.Index', {scope: scope, field: field});
         },
-        
+
         upgrade: function (options) {
             this.main('Admin.Upgrade.Index');
         },
-        
+
         getSettingsModel: function () {
             var model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
-        
+
             return model;
         },
-        
+
         settings: function () {
             var model = this.getSettingsModel();
-                                            
+
             model.once('sync', function () {
-                model.id = '1';                    
+                model.id = '1';
                 this.main('Edit', {
                     model: model,
                     views: {
@@ -70,13 +70,13 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                         body: {view: 'Admin.Settings'},
                     },
                 });
-            }, this);                
+            }, this);
             model.fetch();    
         },
-        
-        outboundEmail: function () {            
-            var model = this.getSettingsModel();                        
-            
+
+        outboundEmail: function () {
+            var model = this.getSettingsModel();
+
             model.once('sync', function () {
                 model.id = '1';
                 this.main('Edit', {
@@ -86,13 +86,13 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                         body: {view: 'Admin.OutboundEmail'},
                     },
                 });
-            }, this);                
+            }, this);
             model.fetch();
         },
-        
-        currency: function () {        
-            var model = this.getSettingsModel();                        
-            
+
+        currency: function () {
+            var model = this.getSettingsModel();
+
             model.once('sync', function () {
                 model.id = '1';
                 this.main('Edit', {
@@ -102,28 +102,28 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                         body: {view: 'Admin.Currency'},
                     },
                 });
-            }, this);                
+            }, this);
             model.fetch();
         },
-        
-        authTokens: function () {            
+
+        authTokens: function () {
             this.collectionFactory.create('AuthToken', function (collection) {
                 var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
-                collection.where = searchManager.getWhere();                
+                collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
                 this.main('Admin.AuthToken.List', {
                     scope: 'AuthToken',
                     collection: collection,
                     searchManager: searchManager,
-                });        
+                });
             }, this);
         },
-        
+
         userInterface: function () {
-            var model = this.getSettingsModel();                        
-            
+            var model = this.getSettingsModel();
+
             model.once('sync', function () {
                 model.id = '1';
                 this.main('Edit', {
@@ -133,13 +133,13 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                         body: {view: 'Admin.UserInterface'},
                     },
                 });
-            }, this);                
+            }, this);
             model.fetch();
         },
-        
+
         authentication: function () {
-            var model = this.getSettingsModel();                        
-            
+            var model = this.getSettingsModel();
+
             model.once('sync', function () {
                 model.id = '1';
                 this.main('Edit', {
@@ -149,45 +149,45 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                         body: {view: 'Admin.Authentication'},
                     },
                 });
-            }, this);                
+            }, this);
             model.fetch();
         },
-        
+
         integrations: function (options) {
             var integration = options.name || null;
-            
+
             this.main('Admin.Integrations.Index', {integration: integration});
         },
-        
-        extensions: function (options) {            
+
+        extensions: function (options) {
             this.main('Admin.Extensions.Index');
         },
-        
+
         rebuild: function (options) {
-            var master = this.get('master');        
+            var master = this.get('master');
             Espo.Ui.notify(master.translate('Please wait...'));
-            this.getRouter().navigate('#Admin');    
+            this.getRouter().navigate('#Admin');
             $.ajax({
                 url: 'Admin/rebuild',
                 success: function () {
                     var msg = master.translate('Rebuild has been done', 'labels', 'Admin');
-                    Espo.Ui.success(msg);                    
+                    Espo.Ui.success(msg);
                 }.bind(this)
-            });        
+            });
         },
-        
+
         clearCache: function (options) {
-            var master = this.get('master');        
+            var master = this.get('master');
             Espo.Ui.notify(master.translate('Please wait...'));
-            this.getRouter().navigate('#Admin');            
+            this.getRouter().navigate('#Admin');
             $.ajax({
                 url: 'Admin/clearCache',
                 success: function () {
                     var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
-                    Espo.Ui.success(msg);                    
+                    Espo.Ui.success(msg);
                 }.bind(this)
-            });    
-        },    
+            });
+        }
     });
-    
+
 });
