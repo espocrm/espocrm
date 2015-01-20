@@ -95,12 +95,12 @@ class Route
     protected function init()
     {
         if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
-            $this->data = $this->getFileManager()->getContents($this->cacheFile);
+            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
         } else {
             $this->data = $this->unify();
 
             if ($this->getConfig()->get('useCache')) {
-                $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
+                $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
                 if ($result == false) {
                     throw new \Espo\Core\Exceptions\Error('Route - Cannot save unified routes');
                 }
@@ -127,7 +127,7 @@ class Route
     protected function getAddData($currData, $routeFile)
     {
         if (file_exists($routeFile)) {
-            $content= $this->getFileManager()->getContents($routeFile);
+            $content = $this->getFileManager()->getContents($routeFile);
             $arrayContent = Json::getArrayData($content);
             if (empty($arrayContent)) {
                 $GLOBALS['log']->error('Route::unify() - Empty file or syntax error - ['.$routeFile.']');

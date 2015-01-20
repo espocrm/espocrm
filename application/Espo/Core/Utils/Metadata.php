@@ -124,13 +124,13 @@ class Metadata
         }
 
         if (file_exists($this->cacheFile) && !$reload) {
-            $this->meta = $this->getFileManager()->getContents($this->cacheFile);
+            $this->meta = $this->getFileManager()->getPhpContents($this->cacheFile);
         } else {
             $this->meta = $this->getUnifier()->unify($this->name, $this->paths, true);
             $this->meta = $this->setLanguageFromConfig($this->meta);
 
             if ($this->getConfig()->get('useCache')) {
-                $isSaved = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->meta);
+                $isSaved = $this->getFileManager()->putPhpContents($this->cacheFile, $this->meta);
                 if ($isSaved === false) {
                     $GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
                 }
@@ -270,7 +270,7 @@ class Metadata
         }
 
         if (empty($this->ormMeta)) {
-            $this->ormMeta = $this->getFileManager()->getContents($this->ormCacheFile);
+            $this->ormMeta = $this->getFileManager()->getPhpContents($this->ormCacheFile);
         }
 
         return $this->ormMeta;
@@ -279,7 +279,7 @@ class Metadata
     public function setOrmMetadata(array $ormMeta)
     {
         if ($this->getConfig()->get('useCache')) {
-            $result = $this->getFileManager()->putContentsPHP($this->ormCacheFile, $ormMeta);
+            $result = $this->getFileManager()->putPhpContents($this->ormCacheFile, $ormMeta);
             if ($result == false) {
                 throw new \Espo\Core\Exceptions\Error('Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
             }
