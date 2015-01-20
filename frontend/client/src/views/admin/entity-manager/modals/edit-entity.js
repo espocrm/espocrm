@@ -133,6 +133,26 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
             });
         },
 
+        afterRender: function () {
+            this.getView('name').on('change', function (m) {
+                var name = this.model.get('name');
+
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+                
+                this.model.set('labelSingular', name);
+                this.model.set('labelPlural', name + 's') ;
+                if (name) {
+                    name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
+                        return g.toUpperCase();
+                    }).replace(' ', '');
+                    if (name.length) {
+                         name = name.charAt(0).toUpperCase() + name.slice(1);
+                    }
+                }
+                this.model.set('name', name);
+            }, this);
+        },
+
         save: function () {
             var arr = [
                 'name',

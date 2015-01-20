@@ -24,6 +24,7 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\Error;
 
 class EntityManager extends \Espo\Core\Controllers\Base
 {
@@ -47,6 +48,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         $name = $data['name'];
         $type = $data['type'];
 
+        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+        $type = filter_var($type, \FILTER_SANITIZE_STRING);
+
         $params = array();
 
         if (!empty($data['labelSingular'])) {
@@ -59,7 +63,41 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['stream'] = $data['stream'];
         }
 
-        return $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
+        $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
+
+        if ($result) {
+            $this->getContainer()->get('dataManager')->rebuild();
+        } else {
+            throw new Error();
+        }
+
+        return true;
+    }
+
+    public function actionRemoveEntity($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (empty($data['name'])) {
+            throw new BadRequest();
+        }
+
+        $name = $data['name'];
+
+        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+
+
+        $result = $this->getContainer()->get('entityManagerUtil')->delete($name);
+
+        if ($result) {
+            $this->getContainer()->get('dataManager')->clearCache();
+        } else {
+            throw new Error();
+        }
+
+        return true;
     }
 }
 

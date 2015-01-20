@@ -79,6 +79,28 @@ class Container
         return $className;
     }
 
+    protected function loadLog()
+    {
+        $logConfig = $this->get('config')->get('logger');
+
+        $log = new \Espo\Core\Utils\Log('Espo');
+
+        $levelCode = $log->getLevelCode($logConfig['level']);
+
+        if ($logConfig['isRotate']) {
+            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
+        } else {
+            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\StreamHandler($logConfig['path'], $levelCode);
+        }
+        $log->pushHandler($handler);
+
+        $errorHandler = new \Monolog\ErrorHandler($log);
+        $errorHandler->registerExceptionHandler(null, false);
+        $errorHandler->registerErrorHandler(array(), false);
+
+        return $log;
+    }
+
     protected function loadContainer()
     {
         return $this;

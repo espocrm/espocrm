@@ -20,33 +20,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Templates\Services;
 
-use Espo\Core\Utils,
-    Espo\Core\Utils\Log\Monolog\Handler;
 
-class Log extends Base
+class Person extends \Espo\Services\Record
 {
-    public function load()
-    {
-        $logConfig = $this->getContainer()->get('config')->get('logger');
 
-        $log = new Utils\Log('Espo');
-
-        $levelCode = $log->getLevelCode($logConfig['level']);
-
-        if ($logConfig['isRotate']) {
-            $handler = new Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
-        } else {
-            $handler = new Handler\StreamHandler($logConfig['path'], $levelCode);
-        }
-        $log->pushHandler($handler);
-
-        $errorHandler = new \Monolog\ErrorHandler($log);
-        $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->registerErrorHandler(array(), false);
-
-        return $log;
-    }
 }
 

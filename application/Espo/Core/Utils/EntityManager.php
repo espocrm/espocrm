@@ -23,6 +23,7 @@
 namespace Espo\Core\Utils;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Utils\Json;
 
@@ -78,8 +79,11 @@ class EntityManager
 
     public function create($name, $type)
     {
-        if ($this->getMetadata()->get('scope.' . $name)) {
+        if ($this->getMetadata()->get('scopes.' . $name)) {
             throw new Conflict('Entity ['.$name.'] already exists.');
+        }
+        if (empty($name) || empty($type)) {
+            throw new Error();
         }
 
         $contents = "<" . "?" . "php\n".
@@ -136,12 +140,14 @@ class EntityManager
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/clientDefs.json";
         $clientDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
         $this->getMetadata()->set($clientDefsData, 'clientDefs', $name);
+
+        return true;
     }
 
     public function update($name, $fieldDef, $scope)
     {
         /*Add option to metadata to identify the custom field*/
-        if (!$this->isCore($name, $scope)) {
+        if ($this->isCustom($name, $scope)) {
             $fieldDef['isCustom'] = true;
         }
 
@@ -167,21 +173,29 @@ class EntityManager
         return (bool) $res;
     }
 
-    public function delete($name, $scope)
+    public function delete($name)
     {
-        if ($this->isCore($name, $scope)) {
-            throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
+        if (!$this->isCustom($name)) {
+            throw new Forbidden;
         }
 
         $unsets = array(
-            'fields.'.$name,
-            'links.'.$name,
+            'entityDefs',
+            'clientDefs',
+            'scopes'
         );
+        $res = $this->getMetadata()->delete($unsets, $this->metadataType, $name);
 
-        $res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
-        $res &= $this->deleteLabel($name, $scope);
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/{$name}.json");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/clientDefs/{$name}.json");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/scopes/{$name}.json");
 
-        return (bool) $res;
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Entities/{$name}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Services/{$name}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$name}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$name}.php");
+
+        return true;
     }
 
     protected function setEntityDefs($name, $fieldDef, $scope)
@@ -316,21 +330,8 @@ class EntityManager
         return $this->isChanged;
     }
 
-    /**
-     * Check if a field is core field
-     *
-     * @param  string  $name
-     * @param  string  $scope
-     * @return boolean
-     */
-    protected function isCore($name, $scope)
+    protected function isCustom($name)
     {
-        $existingField = $this->getFieldDef($name, $scope);
-        if (isset($existingField) && (!isset($existingField['isCustom']) || !$existingField['isCustom'])) {
-            return true;
-        }
-
-        return false;
+        return $this->getMetadata()->get('scopes.' . $name . '.isCustom');
     }
-
 }

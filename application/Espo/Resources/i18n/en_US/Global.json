@@ -186,7 +186,8 @@
         "createdAt": "Created At",
         "modifiedAt": "Modified At",
         "createdBy": "Created By",
-        "modifiedBy": "Modified By"
+        "modifiedBy": "Modified By",
+        "description": "Description"
     },
     "links": {
         "assignedUser": "Assigned User",
@@ -198,10 +199,10 @@
         "users": "Users"
     },
     "dashlets": {
-        "Stream": "Stream"        
+        "Stream": "Stream"
     },
     "streamMessages": {
-        "create": "{user} created {entityType} {entity}",        
+        "create": "{user} created {entityType} {entity}",
         "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
         "assign": "{user} assigned {entityType} {entity} to {assignee}",
         "post": "{user} posted on {entityType} {entity}",

@@ -109,7 +109,7 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 url: 'EntityManager/action/removeEntity',
                 type: 'POST',
                 data: JSON.stringify({
-                    scope: scope
+                    name: scope
                 })
             }).done(function () {
                 this.$el.find('table tr[data-scope="'+scope+'"]').remove();
