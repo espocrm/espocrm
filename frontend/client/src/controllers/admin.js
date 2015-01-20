@@ -47,6 +47,19 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
             this.main('Admin.FieldManager.Index', {scope: scope, field: field});
         },
 
+        entityManager: function (options) {
+            var scope = options.scope || null;
+
+            this.main('Admin.EntityManager.Index', {scope: scope});
+        },
+
+        relationshipManager: function (options) {
+            var scope = options.scope || null;
+            var link = options.link || null;
+
+            this.main('Admin.RelationshipManager.Index', {scope: scope, link: link});
+        },
+
         upgrade: function (options) {
             this.main('Admin.Upgrade.Index');
         },
@@ -71,7 +84,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                     },
                 });
             }, this);
-            model.fetch();    
+            model.fetch();
         },
 
         outboundEmail: function () {

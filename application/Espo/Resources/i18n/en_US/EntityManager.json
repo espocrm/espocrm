@@ -1,0 +1,24 @@
+{
+    "labels": {
+        "Fields": "Fields",
+        "Relationships": "Relationships"
+    },
+    "fields": {
+        "systemName": "System Name",
+        "name": "Name",
+        "type": "Type",
+        "labelSingular": "Label Singular",
+        "labelPlural": "Label Plural",
+        "stream": "Stream"
+    },
+    "options": {
+        "type": {
+            "": "None",
+            "Base": "Base",
+            "Person": "Person"
+        }
+    },
+    "messages": {
+        "entityCreated": "Entity has been created"
+    }
+}

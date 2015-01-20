@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
 
@@ -43,16 +43,16 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 var scope = $(e.currentTarget).data('scope');
                 this.openScope(scope);
             },
-            
+
             'click #fields-content a.field-link': function (e) {
                 var scope = $(e.currentTarget).data('scope');
                 var field = $(e.currentTarget).data('field');
                 this.openField(scope, field);
             },
-            
+
             'click a[data-action="addField"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
-                var type = $(e.currentTarget).data('type');                                
+                var type = $(e.currentTarget).data('type');
                 this.createField(scope, type);
             },
         },
@@ -68,15 +68,15 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 if (this.getMetadata().get('scopes.' + scope + '.entity')) {
                     if (this.getMetadata().get('scopes.' + scope + '.customizable')) {
                         this.scopeList.push(scope);
-                    }                    
+                    }
                 }
             }.bind(this));
 
             this.scope = this.options.scope || null;
-            this.field = this.options.field || null;        
-            
-            this.on('after:render', function () {                
-                this.renderFieldsHeader();                
+            this.field = this.options.field || null;
+
+            this.on('after:render', function () {
+                this.renderFieldsHeader();
                 if (!this.scope) {
                     this.renderDefaultPage();
                 } else {
@@ -85,35 +85,35 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                     } else {
                         this.openField(this.scope, this.field);
                     }
-                }                
-            });            
+                }
+            });
         },
 
         openScope: function (scope) {
             this.scope = scope;
             this.field = null;
-            
+
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope, {trigger: false});
-            
-            this.notify('Loading...');            
+
+            this.notify('Loading...');
             this.createView('content', 'Admin.FieldManager.List', {
                 el: '#fields-content',
                 scope: scope,
             }, function (view) {
                 this.renderFieldsHeader();
                 view.render();
-                this.notify(false);                
+                this.notify(false);
                 $(window).scrollTop(0);
             }.bind(this));
         },
-        
+
         openField: function (scope, field) {
             this.scope = scope;
             this.field = field
-            
+
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope + '&field=' + field, {trigger: false});
-            
-            this.notify('Loading...');            
+
+            this.notify('Loading...');
             this.createView('content', 'Admin.FieldManager.Edit', {
                 el: '#fields-content',
                 scope: scope,
@@ -125,14 +125,14 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 $(window).scrollTop(0);
             }.bind(this));
         },
-        
+
         createField: function (scope, type) {
             this.scope = scope;
             this.type = type;
-            
+
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
-            
-            this.notify('Loading...');            
+
+            this.notify('Loading...');
             this.createView('content', 'Admin.FieldManager.Edit', {
                 el: '#fields-content',
                 scope: scope,
@@ -155,7 +155,7 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 $('#fields-header').html('');
                 return;
             }
-            
+
             if (this.field) {
                 $('#fields-header').show().html('<a href="#Admin/fieldManager/scope='+this.scope+'">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a> » ' + this.field);
             } else {
@@ -164,7 +164,7 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Field Manager'));
+            this.setPageTitle(this.getLanguage().translate('Field Manager', 'labels', 'Admin'));
         },
     });
 });

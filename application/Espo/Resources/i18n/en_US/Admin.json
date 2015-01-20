@@ -9,6 +9,8 @@
         "Customization": "Customization",
         "Available Fields": "Available Fields",
         "Layout": "Layout",
+        "Entity Manager": "Entity Manager",
+        "Relationship Manager": "Relationship Manager",
         "Add Panel": "Add Panel",
         "Add Field": "Add Field",
         "Settings": "Settings",
@@ -40,7 +42,9 @@
         "Install": "Install",
         "Ready for installation": "Ready for installation",
         "Uninstalling...": "Uninstalling...",
-        "Uninstalled": "Uninstalled"
+        "Uninstalled": "Uninstalled",
+        "Create Entity": "Create Entity",
+        "Edit Entity": "Edit Entity"
     },
     "layouts": {
         "list": "List",
@@ -128,6 +132,8 @@
         "import": "Import data from CSV file.",
         "layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
         "fieldManager": "Create new fields or customize existing ones.",
+        "entityManager": "Create custom entities. Edit existing ones.",
+        "relationshipManager": "Manage relationships between entities.",
         "userInterface": "Configure UI.",
         "authTokens": "Active auth sessions. IP address and last access date.",
         "authentication": "Authentication settings.",

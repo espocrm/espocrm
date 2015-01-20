@@ -108,6 +108,16 @@
             "description":"fieldManager"
          },
          {
+            "url":"#Admin/entityManager",
+            "label":"Entity Manager",
+            "description":"entityManager"
+         },
+         {
+            "url":"#Admin/relationshipManager",
+            "label":"Relationship Manager",
+            "description":"relationshipManager"
+         },
+         {
             "url":"#Admin/userInterface",
             "label":"User Interface",
             "description":"userInterface"

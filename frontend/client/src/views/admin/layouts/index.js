@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
@@ -28,7 +28,7 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
         scopeList: null,
 
         typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships'],
-        
+
         additionalLayouts: {
             'Opportunity': ['detailConvert'],
             'Contact': ['detailConvert'],
@@ -53,9 +53,9 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
                         (this.additionalLayouts[scope] || []).forEach(function (item) {
                             d.typeList.push(item);
                         });
-                        
+
                         dataList.push(d);
-                    }, this);                    
+                    }, this);
                     return dataList;
                 }).call(this)
             };
@@ -77,7 +77,7 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
         },
 
         setup: function () {
-            this.scopeList = [];  
+            this.scopeList = [];
 
             var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
@@ -88,7 +88,7 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
                     this.getMetadata().get('scopes.' + scope + '.layouts')) {
                     this.scopeList.push(scope);
                 }
-            }.bind(this));    
+            }.bind(this));
 
             this.on('after:render', function () {
                 $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');
@@ -139,7 +139,7 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Layout Manager'));
+            this.setPageTitle(this.getLanguage().translate('Layout Manager', 'labels', 'Admin'));
         },
     });
 });
