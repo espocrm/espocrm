@@ -54,7 +54,7 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
             }
         },
 
-        setup: function () {
+        setupScopeData: function () {
             this.scopeDataList = [];
 
             var scopeList = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
@@ -73,27 +73,27 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
 
                 }
             }, this);
+        },
 
+        setup: function () {
             this.scope = this.options.scope || null;
+
+            this.setupScopeData();
 
             this.on('after:render', function () {
                 this.renderHeader();
-                if (!this.scope) {
-                    this.renderDefaultPage();
-                } else {
-                    if (!this.field) {
-                        this.openScope(this.scope);
-                    } else {
-                        this.openField(this.scope, this.field);
-                    }
-                }
             });
         },
 
         createEntity: function () {
             this.createView('edit', 'Admin.EntityManager.Modals.EditEntity', {}, function (view) {
                 view.render();
-            });
+
+                this.listenTo(view, 'after:save', function () {
+                    this.setupScopeData();
+                    this.render();
+                }, this);
+            }.bind(this));
         },
 
         editEntity: function (scope) {
@@ -101,7 +101,12 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 scope: scope
             }, function (view) {
                 view.render();
-            });
+
+                this.listenTo(view, 'after:save', function () {
+                    this.setupScopeData();
+                    this.render();
+                }, this);
+            }.bind(this));
         },
 
         removeEntity: function (scope) {
@@ -113,6 +118,12 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 })
             }).done(function () {
                 this.$el.find('table tr[data-scope="'+scope+'"]').remove();
+                this.getMetadata().load(function () {
+                    this.getConfig().load(function () {
+                        this.setupScopeData();
+                        this.render();
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
         },
 

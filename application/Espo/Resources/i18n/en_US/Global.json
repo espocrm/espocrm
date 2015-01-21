@@ -187,7 +187,9 @@
         "modifiedAt": "Modified At",
         "createdBy": "Created By",
         "modifiedBy": "Modified By",
-        "description": "Description"
+        "description": "Description",
+        "address": "Address",
+        "phoneNumber": "Phone"
     },
     "links": {
         "assignedUser": "Assigned User",

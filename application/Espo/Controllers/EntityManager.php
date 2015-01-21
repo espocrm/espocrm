@@ -66,6 +66,11 @@ class EntityManager extends \Espo\Core\Controllers\Base
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 
         if ($result) {
+            $tabList = $this->getConfig()->get('tabList', []);
+            $tabList[] = $name;
+            $this->getConfig()->set('tabList', $tabList);
+            $this->getConfig()->save();
+
             $this->getContainer()->get('dataManager')->rebuild();
         } else {
             throw new Error();
@@ -92,6 +97,14 @@ class EntityManager extends \Espo\Core\Controllers\Base
         $result = $this->getContainer()->get('entityManagerUtil')->delete($name);
 
         if ($result) {
+            $tabList = $this->getConfig()->get('tabList', []);
+            if (($key = array_search($name, $tabList)) !== false) {
+                unset($tabList[$key]);
+                $tabList = array_values($tabList);
+            }
+            $this->getConfig()->set('tabList', $tabList);
+            $this->getConfig()->save();
+
             $this->getContainer()->get('dataManager')->clearCache();
         } else {
             throw new Error();

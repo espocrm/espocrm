@@ -138,11 +138,11 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 var name = this.model.get('name');
 
                 name = name.charAt(0).toUpperCase() + name.slice(1);
-                
+
                 this.model.set('labelSingular', name);
                 this.model.set('labelPlural', name + 's') ;
                 if (name) {
-                    name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
+                    name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
                         return g.toUpperCase();
                     }).replace(' ', '');
                     if (name.length) {
@@ -187,14 +187,17 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 url = 'EntityManager/action/updateEntity';
             }
 
+            var name = this.model.get('name');
+
             $.ajax({
                 url: url,
                 type: 'POST',
                 data: JSON.stringify({
-                    name: this.model.get('name'),
+                    name: name,
                     labelSingular: this.model.get('labelSingular'),
                     labelPlural: this.model.get('labelPlural'),
-                    type: this.model.get('type')
+                    type: this.model.get('type'),
+                    stream: this.model.get('stream')
                 }),
                 error: function () {
                     this.$el.find('button[data-name="save"]').removeClass('disabled');
@@ -205,8 +208,16 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 } else {
                     Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
                 }
-                this.trigger('saved');
-                this.close();
+                var global = (this.getLanguage().data || {}) || {};
+                (global.scopeNames || {})[name] = this.model.get('labelSingular');
+                (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
+
+                this.getMetadata().load(function () {
+                    this.getConfig().load(function () {
+                        this.trigger('after:save');
+                        this.close();
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
         },
 

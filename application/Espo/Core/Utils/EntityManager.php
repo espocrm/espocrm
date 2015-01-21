@@ -37,8 +37,6 @@ class EntityManager
 
     private $metadataUtils;
 
-    protected $isChanged = null;
-
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager)
     {
         $this->metadata = $metadata;
@@ -68,16 +66,7 @@ class EntityManager
         return $this->metadataUtils;
     }
 
-    public function read($name, $scope)
-    {
-        $fieldDef = $this->getFieldDef($name, $scope);
-
-        $fieldDef['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
-
-        return $fieldDef;
-    }
-
-    public function create($name, $type)
+    public function create($name, $type, $params = array())
     {
         if ($this->getMetadata()->get('scopes.' . $name)) {
             throw new Conflict('Entity ['.$name.'] already exists.');
@@ -120,6 +109,20 @@ class EntityManager
         $filePath = "custom/Espo/Custom/Repositories/{$name}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
+        $stream = false;
+        if (!empty($params['stream'])) {
+            $stream = $params['stream'];
+        }
+        $labelSingular = $name;
+        if (!empty($params['labelSingular'])) {
+            $labelSingular = $params['labelSingular'];
+        }
+        $labelPlural = $name;
+        if (!empty($params['labelPlural'])) {
+            $labelPlural = $params['labelPlural'];
+        }
+        $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
+
         $scopeData = array(
             'entity' => true,
             'layouts' => true,
@@ -129,7 +132,8 @@ class EntityManager
             'isCustom' => true,
             'customizable' => true,
             'importable' => true,
-            'type' => $type
+            'type' => $type,
+            'stream' => $stream
         );
         $this->getMetadata()->set($scopeData, 'scopes', $name);
 
@@ -141,36 +145,19 @@ class EntityManager
         $clientDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
         $this->getMetadata()->set($clientDefsData, 'clientDefs', $name);
 
+        $this->getLanguage()->set($name, $labelSingular, 'scopeNames', 'Global');
+        $this->getLanguage()->set($name, $labelPlural, 'scopeNamesPlural', 'Global');
+        $this->getLanguage()->set('Create ' . $name, $labelCreate, 'labels', $name);
+        $this->getLanguage()->save();
+
+
         return true;
     }
 
     public function update($name, $fieldDef, $scope)
     {
-        /*Add option to metadata to identify the custom field*/
-        if ($this->isCustom($name, $scope)) {
-            $fieldDef['isCustom'] = true;
-        }
 
-        $res = true;
-        if (isset($fieldDef['label'])) {
-            $this->setLabel($name, $fieldDef['label'], $scope);
-        }
-
-        if (isset($fieldDef['type']) && $fieldDef['type'] == 'enum') {
-            if (isset($fieldDef['translatedOptions'])) {
-                $this->setTranslatedOptions($name, $fieldDef['translatedOptions'], $scope);
-            }
-        }
-
-        if (isset($fieldDef['label']) || isset($fieldDef['translatedOptions'])) {
-            $res &= $this->getLanguage()->save();
-        }
-
-        if ($this->isDefsChanged($name, $fieldDef, $scope)) {
-            $res &= $this->setEntityDefs($name, $fieldDef, $scope);
-        }
-
-        return (bool) $res;
+        return true;
     }
 
     public function delete($name)
@@ -195,139 +182,14 @@ class EntityManager
         $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$name}.php");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$name}.php");
 
+        try {
+            $this->getLanguage()->delete($name, 'scopeNames', 'Global');
+            $this->getLanguage()->delete($name, 'scopeNamesPlural', 'Global');
+        } catch (\Exception $e) {}
+
+        $this->getLanguage()->save();
+
         return true;
-    }
-
-    protected function setEntityDefs($name, $fieldDef, $scope)
-    {
-        $fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
-
-        $data = Json::encode($fieldDef);
-        $res = $this->getMetadata()->set($data, $this->metadataType, $scope);
-
-        return $res;
-    }
-
-    protected function setTranslatedOptions($name, $value, $scope)
-    {
-        return $this->getLanguage()->set($name, $value, 'options', $scope);
-    }
-
-    protected function setLabel($name, $value, $scope)
-    {
-        return $this->getLanguage()->set($name, $value, 'fields', $scope);
-    }
-
-    protected function deleteLabel($name, $scope)
-    {
-        $this->getLanguage()->delete($name, 'fields', $scope);
-        return $this->getLanguage()->save();
-    }
-
-    protected function getFieldDef($name, $scope)
-    {
-        return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
-    }
-
-    protected function getLinkDef($name, $scope)
-    {
-        return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.links.'.$name);
-    }
-
-    /**
-     * Prepare input fieldDefs, remove unnecessary fields
-     *
-     * @param string $fieldName
-     * @param array $fieldDef
-     * @param string $scope
-     * @return array
-     */
-    protected function prepareFieldDef($name, $fieldDef, $scope)
-    {
-        $unnecessaryFields = array(
-            'name',
-            'label',
-        );
-
-        foreach ($unnecessaryFields as $fieldName) {
-            if (isset($fieldDef[$fieldName])) {
-                unset($fieldDef[$fieldName]);
-            }
-        }
-
-        if (isset($fieldDef['linkDefs'])) {
-            $linkDefs = $fieldDef['linkDefs'];
-            unset($fieldDef['linkDefs']);
-        }
-
-        $currentOptionList = array_keys((array) $this->getFieldDef($name, $scope));
-        foreach ($fieldDef as $defName => $defValue) {
-            if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
-                unset($fieldDef[$defName]);
-            }
-        }
-
-        return $fieldDef;
-    }
-
-    /**
-     * Add all needed block for a field defenition
-     *
-     * @param string $fieldName
-     * @param array $fieldDef
-     * @param string $scope
-     * @return array
-     */
-    protected function normalizeDefs($fieldName, array $fieldDef, $scope)
-    {
-        $fieldDef = $this->prepareFieldDef($fieldName, $fieldDef, $scope);
-
-        $metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
-        if (isset($metaFieldDef)) {
-            $fieldDef = Util::merge($metaFieldDef, $fieldDef);
-        }
-
-        $defs = array(
-            'fields' => array(
-                $fieldName => $fieldDef,
-            ),
-        );
-
-        /** Save links for a field. */
-        $metaLinkDef = $this->getMetadataUtils()->getLinkDefsInFieldMeta($scope, $fieldDef);
-        if (isset($linkDefs) || isset($metaLinkDef)) {
-            $linkDefs = Util::merge((array) $metaLinkDef, (array) $linkDefs);
-            $defs['links'] = array(
-                $fieldName => $linkDefs,
-            );
-        }
-
-        return $defs;
-    }
-
-    /**
-     * Check if changed metadata defenition for a field except 'label'
-     *
-     * @return boolean
-     */
-    protected function isDefsChanged($name, $fieldDef, $scope)
-    {
-        $fieldDef = $this->prepareFieldDef($name, $fieldDef, $scope);
-        $currentFieldDef = $this->getFieldDef($name, $scope);
-
-        $this->isChanged = Util::isEquals($fieldDef, $currentFieldDef) ? false : true;
-
-        return $this->isChanged;
-    }
-
-    /**
-     * Only for update method
-     *
-     * @return boolean
-     */
-    public function isChanged()
-    {
-        return $this->isChanged;
     }
 
     protected function isCustom($name)

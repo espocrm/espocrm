@@ -12,15 +12,13 @@
     </tr>
 {{#each scopeDataList}}
     <tr data-scope="{{name}}">
-        <td width="20%">
-            <a href="javascript:" data-action="editEntity" data-scope="{{name}}">
+        <td width="25%">
             {{name}}
-            </a>
         </td>
-        <td width="20%">
+        <td width="25%">
             {{translate name category='scopeNames'}}
         </td>
-        <td width="15%">
+        <td width="10%">
             {{#if type}}
             {{translateOption type field='type' scope='EntityManager'}}
             {{/if}}
@@ -36,8 +34,15 @@
             {{/if}}
         </td>
         <td align="right" width="10%">
+            <a href="javascript:" data-action="editEntity" data-scope="{{name}}" title="{{translate 'Edit'}}">
+                {{translate 'Edit'}}
+            </a>
+        </td>
+        <td align="right" width="10%">
             {{#if isCustom}}
-            <a href="javascript:" class="btn btn-danger btn-sm" data-action="removeEntity" data-scope="{{name}}">{{translate 'Remove'}}</a>
+            <a href="javascript:" data-action="removeEntity" data-scope="{{name}}">
+                {{translate 'Remove'}}
+            </a>
             {{/if}}
         </td>
     </tr>
