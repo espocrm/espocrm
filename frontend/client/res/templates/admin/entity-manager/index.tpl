@@ -6,8 +6,8 @@
 
 <table class="table table-bordered table-hover">
     <tr>
-        <th>{{translate 'systemName' scope='EntityManager' category='fields'}}</th>
         <th>{{translate 'name' scope='EntityManager' category='fields'}}</th>
+        <th>{{translate 'label' scope='EntityManager' category='fields'}}</th>
         <th>{{translate 'type' scope='EntityManager' category='fields'}}</th>
     </tr>
 {{#each scopeDataList}}
@@ -34,9 +34,11 @@
             {{/if}}
         </td>
         <td align="right" width="10%">
+            {{#if customizable}}
             <a href="javascript:" data-action="editEntity" data-scope="{{name}}" title="{{translate 'Edit'}}">
                 {{translate 'Edit'}}
             </a>
+            {{/if}}
         </td>
         <td align="right" width="10%">
             {{#if isCustom}}

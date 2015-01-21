@@ -79,6 +79,28 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
+    public function actionUpdateEntity($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if (empty($data['name'])) {
+            throw new BadRequest();
+        }
+        $name = $data['name'];
+        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+
+        $result = $this->getContainer()->get('entityManagerUtil')->update($name, $data);
+
+        if ($result) {
+            $this->getContainer()->get('dataManager')->clearCache();
+        } else {
+            throw new Error();
+        }
+
+        return true;
+    }
+
     public function actionRemoveEntity($params, $data, $request)
     {
         if (!$request->isPost()) {
@@ -88,11 +110,8 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (empty($data['name'])) {
             throw new BadRequest();
         }
-
         $name = $data['name'];
-
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
-
 
         $result = $this->getContainer()->get('entityManagerUtil')->delete($name);
 

@@ -4,12 +4,12 @@
         "Relationships": "Relationships"
     },
     "fields": {
-        "systemName": "System Name",
         "name": "Name",
         "type": "Type",
         "labelSingular": "Label Singular",
         "labelPlural": "Label Plural",
-        "stream": "Stream"
+        "stream": "Stream",
+        "label": "Label"
     },
     "options": {
         "type": {
