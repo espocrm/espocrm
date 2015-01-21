@@ -73,7 +73,7 @@ class HookManager
     protected function loadHooks()
     {
         if ($this->getConfig()->get('useCache') && file_exists($this->cacheFile)) {
-            $this->data = $this->getFileManager()->getContents($this->cacheFile);
+            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
             return;
         }
 
@@ -89,7 +89,7 @@ class HookManager
         $this->data = array_merge_recursive($this->data, $this->getHookData($this->paths['customPath']));
 
         if ($this->getConfig()->get('useCache')) {
-            $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
+            $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
         }
     }
 

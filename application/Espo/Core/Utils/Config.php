@@ -150,7 +150,8 @@ class Config
 
         $removeData = empty($this->removeData) ? null : $this->removeData;
 
-        $result = $this->getFileManager()->mergeContentsPHP($this->configPath, $values, $removeData);
+        $result = $this->getFileManager()->mergePhpContents($this->configPath, $values, $removeData);
+
         if ($result) {
             $this->changedData = array();
             $this->removeData = array();
@@ -162,7 +163,7 @@ class Config
 
     public function getDefaults()
     {
-        return $this->getFileManager()->getContents($this->defaultConfigPath);
+        return $this->getFileManager()->getPhpContents($this->defaultConfigPath);
     }
 
     /**
@@ -178,9 +179,9 @@ class Config
 
         $configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
 
-        $this->data = $this->getFileManager()->getContents($configPath);
+        $this->data = $this->getFileManager()->getPhpContents($configPath);
 
-        $systemConfig = $this->getFileManager()->getContents($this->systemConfigPath);
+        $systemConfig = $this->getFileManager()->getPhpContents($this->systemConfigPath);
         $this->data = Util::merge($systemConfig, $this->data);
 
         return $this->data;

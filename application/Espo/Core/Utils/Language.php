@@ -319,7 +319,7 @@ class Language
 
                 if ($this->getConfig()->get('useCache')) {
                     $i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
-                    $result &= $this->getFileManager()->putContentsPHP($i18nCacheFile, $i18nData);
+                    $result &= $this->getFileManager()->putPhpContents($i18nCacheFile, $i18nData);
                 }
             }
 
@@ -330,7 +330,7 @@ class Language
 
         $currentLanguage = $this->getLanguage();
         if (empty($this->data[$currentLanguage])) {
-            $this->data[$currentLanguage] = $this->getFileManager()->getContents($this->getLangCacheFile());
+            $this->data[$currentLanguage] = $this->getFileManager()->getPhpContents($this->getLangCacheFile());
         }
     }
 }

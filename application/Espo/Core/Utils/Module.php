@@ -84,12 +84,12 @@ class Module
     protected function init()
     {
         if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
-            $this->data = $this->getFileManager()->getContents($this->cacheFile);
+            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
         } else {
             $this->data = $this->getUnifier()->unify($this->paths, true);
 
             if ($this->getConfig()->get('useCache')) {
-                $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
+                $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
                 if ($result == false) {
                     throw new \Espo\Core\Exceptions\Error('Module - Cannot save unified modules.');
                 }

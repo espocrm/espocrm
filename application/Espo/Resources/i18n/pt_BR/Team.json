@@ -8,7 +8,7 @@
         "users": "Usuários"
     },
 	"tooltips": {
-		"roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas."
+		"roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas.",
 		"positionList": "Posições disponíveis neste time. E.g. Vendedor, Gerente."
 	},
     "labels": {

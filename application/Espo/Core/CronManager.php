@@ -94,7 +94,7 @@ class CronManager
 
     protected function getLastRunTime()
     {
-        $lastRunTime = $this->getFileManager()->getContents($this->lastRunTime);
+        $lastRunTime = $this->getFileManager()->getPhpContents($this->lastRunTime);
         if (!is_int($lastRunTime)) {
             $lastRunTime = time() - (intval($this->getConfig()->get('cron.minExecutionTime')) + 60);
         }
@@ -104,7 +104,7 @@ class CronManager
 
     protected function setLastRunTime($time)
     {
-        return $this->getFileManager()->putContentsPHP($this->lastRunTime, $time);
+        return $this->getFileManager()->putPhpContents($this->lastRunTime, $time);
     }
 
     protected function checkLastRunTime()

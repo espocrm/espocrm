@@ -33,7 +33,7 @@ class Layout extends \Espo\Core\Controllers\Base
     {
         $data = $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
         if (empty($data)) {
-            throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found');
+            throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found.');
         }
         return $data;
     }
@@ -43,16 +43,18 @@ class Layout extends \Espo\Core\Controllers\Base
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
-        
-        $result = $this->getContainer()->get('layout')->set($data, $params['scope'], $params['name']);
+
+        $layoutManager = $this->getContainer()->get('layout');
+        $layoutManager->set($data, $params['scope'], $params['name']);
+        $result = $layoutManager->save();
 
         if ($result === false) {
-            throw new Error("Error while saving layout");
+            throw new Error("Error while saving layout.");
         }
 
         $this->getContainer()->get('dataManager')->updateCacheTimestamp();
 
-        return $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
+        return $layoutManager->get($params['scope'], $params['name']);
     }
 
     public function actionPatch($params, $data)

@@ -17,18 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
-    
+
     return Dep.extend({
-    
+
         template: 'external-account.oauth2',
-        
+
         events: {
 
         },
-        
+
         data: function () {
             return {
                 integration: this.integration,
@@ -36,9 +36,9 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 isConnected: this.isConnected
             };
         },
-        
+
         isConnected: false,
-        
+
         events: {
             'click button[data-action="cancel"]': function () {
                 this.getRouter().navigate('#ExternalAccount', {trigger: true});
@@ -50,26 +50,25 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 this.connect();
             }
         },
-        
+
         setup: function () {
             this.integration = this.options.integration;
             this.id = this.options.id;
-                            
-        
+
             this.helpText = false;
             if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
                 this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
             }
-            
+
             this.fieldList = [];
-            
-            this.dataFieldList = [];        
-            
+
+            this.dataFieldList = [];
+
             this.model = new Espo.Model();
             this.model.id = this.id;
             this.model.name = 'ExternalAccount';
             this.model.urlRoot = 'ExternalAccount';
-            
+
             this.model.defs = {
                 fields: {
                     enabled: {
@@ -77,32 +76,32 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                         type: 'bool'
                     },
                 }
-            };            
-            
-            this.wait(true);            
-                
+            };
+
+            this.wait(true);
+
             this.model.populateDefaults();
-            
+
             this.listenToOnce(this.model, 'sync', function () {
                 this.createFieldView('bool', 'enabled');
-                
+
                 $.ajax({
                     url: 'ExternalAccount/action/getOAuth2Info?id=' + this.id,
                     dataType: 'json'
                 }).done(function (respose) {
                     this.clientId = respose.clientId;
-                    this.redirectUri = respose.redirectUri;                    
-                    if (respose.isConnected) {    
+                    this.redirectUri = respose.redirectUri;
+                    if (respose.isConnected) {
                         this.isConnected = true;
-                    }                    
-                    this.wait(false);                    
+                    }
+                    this.wait(false);
                 }.bind(this));
-                
+
             }, this);
-            
-            this.model.fetch();             
+
+            this.model.fetch();
         },
-        
+
         hideField: function (name) {
             this.$el.find('label.field-label-' + name).addClass('hide');
             this.$el.find('div.field-' + name).addClass('hide');
@@ -111,7 +110,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 view.enabled = false;
             }
         },
-        
+
         showField: function (name) {
             this.$el.find('label.field-label-' + name).removeClass('hide');
             this.$el.find('div.field-' + name).removeClass('hide');
@@ -120,12 +119,12 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 view.enabled = true;
             }
         },
-        
+
         afterRender: function () {
             if (!this.model.get('enabled')) {
                 this.$el.find('.data-panel').addClass('hidden');
             }
-            
+
             this.listenTo(this.model, 'change:enabled', function () {
                 if (this.model.get('enabled')) {
                     this.$el.find('.data-panel').removeClass('hidden');
@@ -134,7 +133,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 }
             }, this);
         },
-        
+
         createFieldView: function (type, name, readOnly, params) {
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
@@ -148,45 +147,45 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
             });
             this.fieldList.push(name);
         },
-        
+
         save: function () {
             this.fieldList.forEach(function (field) {
                 var view = this.getView(field);
                 if (!view.readOnly) {
                     view.fetchToModel();
                 }
-            }, this);                        
-            
+            }, this);
+
             var notValid = false;
             this.fieldList.forEach(function (field) {
                 notValid = this.getView(field).validate() || notValid;
             }, this);
-            
+
             if (notValid) {
                 this.notify('Not valid', 'error');
                 return;
-            }                    
-            
-            this.listenToOnce(this.model, 'sync', function () {    
+            }
+
+            this.listenToOnce(this.model, 'sync', function () {
                 this.notify('Saved', 'success');
-                if (!this.model.get('enabled')) {                    
+                if (!this.model.get('enabled')) {
                     this.setNotConnected();
                 }
             }, this);
-            
+
             this.notify('Saving...');
             this.model.save();
         },
-        
+
         popup: function (options, callback) {
             options.windowName = options.windowName ||  'ConnectWithOAuth';
             options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
             options.callback = options.callback || function(){ window.location.reload(); };
-            
+
             var self = this;
-            
+
             var path = options.path;
-            
+
             var arr = [];
             var params = (options.params || {});
             for (var name in params) {
@@ -195,17 +194,17 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 }
             }
             path += '?' + arr.join('&');
-            
+
             var parseUrl = function (str) {
                 var code = null;
                 var error = null;
-                
+
                 str = str.substr(str.indexOf('?') + 1, str.length);
                 str.split('&').forEach(function (part) {
                     var arr = part.split('=');
                     var name = decodeURI(arr[0]);
                     var value = decodeURI(arr[1] || '');
-                    
+
                     if (name == 'code') {
                         code = value;
                     }
@@ -223,14 +222,14 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                     }
                 }
             }
-            
+
             popup = window.open(path, options.windowName, options.windowOptions);
             interval = window.setInterval(function () {
                 if (popup.closed) {
                     window.clearInterval(interval);
                 } else {
                     var res = parseUrl(popup.location.href.toString());
-                    if (res) {    
+                    if (res) {
                         callback.call(self, res);
                         popup.close();
                         window.clearInterval(interval);
@@ -238,9 +237,8 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                 }
             }, 500);
         },
-        
+
         connect: function () {
-            this.notify('Please wait...');            
             this.popup({
                 path: this.getMetadata().get('integrations.' + this.integration + '.params.endpoint'),
                 params: {
@@ -250,7 +248,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                     response_type: 'code',
                     access_type: 'offline',
                     approval_prompt: 'force'
-                }        
+                }
             }, function (res) {
                 if (res.errror) {
                     this.notify(false);
@@ -268,35 +266,35 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
                         dataType: 'json',
                         error: function () {
                             this.$el.find('[data-action="connect"]').removeClass('disabled');
-                        }.bind(this)                        
+                        }.bind(this)
                     }).done(function (response) {
                         this.notify(false);
                         if (response === true) {
                             this.setConneted();
                         } else {
-                            this.setNotConneted();                            
+                            this.setNotConneted();
                         }
-                        this.$el.find('[data-action="connect"]').removeClass('disabled');                
+                        this.$el.find('[data-action="connect"]').removeClass('disabled');
                     }.bind(this));
-                    
+
                 } else {
                     this.notify('Error occured', 'error');
                 }
             });
         },
-        
+
         setConneted: function () {
             this.isConnected = true;
             this.$el.find('[data-action="connect"]').addClass('hidden');;
             this.$el.find('.connected-label').removeClass('hidden');
         },
-        
+
         setNotConnected: function () {
             this.isConnected = false;
             this.$el.find('[data-action="connect"]').removeClass('hidden');;
             this.$el.find('.connected-label').addClass('hidden');
         },
-        
+
     });
 
 });

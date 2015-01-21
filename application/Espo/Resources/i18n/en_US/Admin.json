@@ -136,7 +136,8 @@
         "authTokens": "Active auth sessions. IP address and last access date.",
         "authentication": "Authentication settings.",
         "currency": "Currency settings and rates.",
-        "extensions": "Install or uninstall extensions."
+        "extensions": "Install or uninstall extensions.",
+        "integrations": "Integration with third-party services."
     },
     "options": {
         "previewSize": {

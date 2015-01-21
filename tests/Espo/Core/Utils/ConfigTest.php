@@ -150,7 +150,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testSystemConfigMerge()
     {
-        $configDataWithoutSystem = $this->objects['fileManager']->getContents($this->configPath);
+        $configDataWithoutSystem = $this->objects['fileManager']->getPhpContents($this->configPath);
         $this->assertArrayNotHasKey('systemItems', $configDataWithoutSystem);
         $this->assertArrayNotHasKey('adminItems', $configDataWithoutSystem);
 

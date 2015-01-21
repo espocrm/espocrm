@@ -82,14 +82,14 @@ class Autoload
     protected function init()
     {
         if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
-            $this->data = $this->getFileManager()->getContents($this->cacheFile);
+            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
             return;
         }
 
         $this->data = $this->unify();
 
         if ($this->getConfig()->get('useCache')) {
-            $result = $this->getFileManager()->putContentsPHP($this->cacheFile, $this->data);
+            $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
             if ($result == false) {
                  throw new \Espo\Core\Exceptions\Error('Autoload: Cannot save unified autoload.');
             }

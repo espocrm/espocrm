@@ -156,17 +156,31 @@ class Manager
         $fullPath = $this->concatPaths($path);
 
         if (file_exists($fullPath)) {
-
-            if (strtolower(substr($fullPath, -4))=='.php') {
-                return include($fullPath);
+            if (isset($maxlen)) {
+                return file_get_contents($fullPath, $useIncludePath, $context, $offset, $maxlen);
             } else {
-                if (isset($maxlen)) {
-                    return file_get_contents($fullPath, $useIncludePath, $context, $offset, $maxlen);
-                } else {
-                    return file_get_contents($fullPath, $useIncludePath, $context, $offset);
-                }
+                return file_get_contents($fullPath, $useIncludePath, $context, $offset);
             }
+        }
 
+        return false;
+    }
+
+    /**
+     * Get PHP array from PHP file
+     *
+     * @param  string | array $path
+     * @return array | bool
+     */
+    public function getPhpContents($path)
+    {
+        $fullPath = $this->concatPaths($path);
+
+        if (file_exists($fullPath) && strtolower(substr($fullPath, -4)) == '.php') {
+            $phpContents = include($fullPath);
+            if (is_array($phpContents)) {
+                return $phpContents;
+            }
         }
 
         return false;
@@ -206,7 +220,7 @@ class Manager
      *
      * @return bool
      */
-    public function putContentsPHP($path, $data)
+    public function putPhpContents($path, $data)
     {
         return $this->putContents($path, $this->getPHPFormat($data), LOCK_EX);
     }
@@ -235,19 +249,23 @@ class Manager
      *
      * @param string | array $path
      * @param string $content JSON string
-     * @param bool $isJSON
+     * @param bool $isReturnJson
      * @param string | array $removeOptions - List of unset keys from content
-     * @param bool $isReturn - Is result to be returned or stored
+     * @param bool $isPhp - Is merge php files
      *
      * @return bool | array
      */
-    public function mergeContents($path, $content, $isJSON = false, $removeOptions = null, $isReturn = false)
+    public function mergeContents($path, $content, $isReturnJson = false, $removeOptions = null, $isPhp = false)
     {
-        $fileContent = $this->getContents($path);
+        if ($isPhp) {
+            $fileContent = $this->getPhpContents($path);
+        } else {
+            $fileContent = $this->getContents($path);
+        }
 
         $fullPath = $this->concatPaths($path);
         if (file_exists($fullPath) && ($fileContent === false || empty($fileContent))) {
-            throw new Error('Failed to read file [' . $fullPath .'].');
+            throw new Error('FileManager: Failed to read file [' . $fullPath .'].');
         }
 
         $savedDataArray = Utils\Json::getArrayData($fileContent);
@@ -259,12 +277,13 @@ class Manager
         }
 
         $data = Utils\Util::merge($savedDataArray, $newDataArray);
-        if ($isJSON) {
+
+        if ($isReturnJson) {
             $data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
         }
 
-        if ($isReturn) {
-            return $data;
+        if ($isPhp) {
+            return $this->putPhpContents($path, $data);
         }
 
         return $this->putContents($path, $data);
@@ -278,11 +297,9 @@ class Manager
      * @param string | array $removeOptions - List of unset keys from content
      * @return bool
      */
-    public function mergeContentsPHP($path, $content, $removeOptions = null)
+    public function mergePhpContents($path, $content, $removeOptions = null)
     {
-        $data = $this->mergeContents($path, $content, false, $removeOptions, true);
-
-        return $this->putContentsPHP($path, $data);
+        return $this->mergeContents($path, $content, false, $removeOptions, true);
     }
 
     /**
