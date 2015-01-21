@@ -40,38 +40,38 @@ Espo.define('Views.ExternalAccount.Index', 'View', function (Dep) {
             },
         },
 
-        setup: function () {            
+        setup: function () {
             this.externalAccountList = this.collection.toJSON();
-            
+
             this.userId = this.getUser().id;
-            this.id = this.options.id || null;            
+            this.id = this.options.id || null;
             if (this.id) {
                 this.userId = this.id.split('__')[1];
             }
-            
-            this.on('after:render', function () {                
-                this.renderHeader();                
+
+            this.on('after:render', function () {
+                this.renderHeader();
                 if (!this.id) {
                     this.renderDefaultPage();
                 } else {
                     this.openExternalAccount(this.id);
-                }                
-            });            
+                }
+            });
         },
 
         openExternalAccount: function (id) {
             this.id = id;
-            
+
             var integration = this.integration = id.split('__')[0];
             this.userId = id.split('__')[1];
-            
-            this.getRouter().navigate('#ExternalAccount/edit/' + id, {trigger: false});
-            
-            var viewName = 
-                    this.getMetadata().get('integrations.' + integration + '.userView') || 
-                    'ExternalAccount.' + this.getMetadata().get('integrations.' + integration + '.authMethod');    
 
-            this.notify('Loading...');            
+            this.getRouter().navigate('#ExternalAccount/edit/' + id, {trigger: false});
+
+            var viewName =
+                    this.getMetadata().get('integrations.' + integration + '.userView') ||
+                    'ExternalAccount.' + this.getMetadata().get('integrations.' + integration + '.authMethod');
+
+            this.notify('Loading...');
             this.createView('content', viewName, {
                 el: '#external-account-content',
                 id: id,
@@ -79,10 +79,10 @@ Espo.define('Views.ExternalAccount.Index', 'View', function (Dep) {
             }, function (view) {
                 this.renderHeader();
                 view.render();
-                this.notify(false);                
+                this.notify(false);
                 $(window).scrollTop(0);
             }.bind(this));
-        },        
+        },
 
         renderDefaultPage: function () {
             $('#external-account-header').html('').hide();
