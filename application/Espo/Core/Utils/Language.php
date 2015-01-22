@@ -220,7 +220,6 @@ class Language
         }
 
         $this->clearChanges();
-        $this->init(true);
 
         return (bool) $result;
     }
@@ -234,6 +233,7 @@ class Language
     {
         $this->changedData = array();
         $this->deletedData = array();
+        $this->init(true);
     }
 
     /**
@@ -253,53 +253,76 @@ class Language
 
     /**
      * Set/change a label
-     * @param string | array $label
-     * @param mixed $value
-     * @param string $category
+     *
      * @param string $scope
+     * @param string $category
+     * @param string | array $name
+     * @param mixed $value
+     *
+     * @return void
      */
-    public function set($label, $value, $category = 'labels', $scope = 'Global')
+    public function set($scope, $category, $name, $value)
     {
-        if (is_array($label)) {
-            foreach ($label as $rowLabel => $rowValue) {
-                $this->set($rowLabel, $rowValue, $category, $scope);
+        if (is_array($name)) {
+            foreach ($name as $rowLabel => $rowValue) {
+                $this->set($scope, $category, $rowLabel, $rowValue);
             }
             return;
         }
 
-        $this->changedData[$scope][$category][$label] = $value;
+        $this->changedData[$scope][$category][$name] = $value;
 
         $currentLanguage = $this->getLanguage();
-        $this->data[$currentLanguage][$scope][$category][$label] = $value;
+        if (!isset($this->data[$currentLanguage])) {
+            $this->init();
+        }
+        $this->data[$currentLanguage][$scope][$category][$name] = $value;
+
+        $this->undelete($scope, $category, $name);
     }
 
     /**
      * Remove a label
      *
-     * @param  string $label
+     * @param  string $name
      * @param  string $category
      * @param  string $scope
      *
      * @return void
      */
-    public function delete($label, $category = 'labels', $scope = 'Global')
+    public function delete($scope, $category, $name)
     {
-        if (is_array($label)) {
-            foreach ($label as $rowLabel) {
-                $this->delete($rowLabel, $category, $scope);
+        if (is_array($name)) {
+            foreach ($name as $rowLabel) {
+                $this->delete($scope, $category, $rowLabel);
             }
             return;
         }
 
-        $this->deletedData[$scope][$category][] = $label;
+        $this->deletedData[$scope][$category][] = $name;
 
         $currentLanguage = $this->getLanguage();
-        if (isset($this->data[$currentLanguage][$scope][$category][$label])) {
-            unset($this->data[$currentLanguage][$scope][$category][$label]);
+        if (!isset($this->data[$currentLanguage])) {
+            $this->init();
         }
 
-        if (isset($this->changedData[$scope][$category][$label])) {
-            unset($this->changedData[$scope][$category][$label]);
+        if (isset($this->data[$currentLanguage][$scope][$category][$name])) {
+            unset($this->data[$currentLanguage][$scope][$category][$name]);
+        }
+
+        if (isset($this->changedData[$scope][$category][$name])) {
+            unset($this->changedData[$scope][$category][$name]);
+        }
+    }
+
+    protected function undelete($scope, $category, $name)
+    {
+        if (isset($this->deletedData[$scope][$category])) {
+            foreach ($this->deletedData[$scope][$category] as $key => $labelName) {
+                if ($name === $labelName) {
+                    unset($this->deletedData[$scope][$category][$key]);
+                }
+            }
         }
     }
 
