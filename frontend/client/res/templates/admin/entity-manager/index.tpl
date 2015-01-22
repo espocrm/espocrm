@@ -16,7 +16,7 @@
             {{name}}
         </td>
         <td width="25%">
-            {{translate name category='scopeNames'}}
+            {{label}}
         </td>
         <td width="10%">
             {{#if type}}

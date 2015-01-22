@@ -154,8 +154,28 @@ class EntityManager
         return true;
     }
 
-    public function update($name, $fieldDef, $scope)
+    public function update($name, $data)
     {
+        if (isset($data['stream'])) {
+            $scopeData = array(
+                'stream' => (true == $data['stream'])
+            );
+            $this->getMetadata()->set($scopeData, 'scopes', $name);
+        }
+
+        if (!empty($data['labelSingular'])) {
+            $labelSingular = $data['labelSingular'];
+            $this->getLanguage()->set($name, $labelSingular, 'scopeNames', 'Global');
+            $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
+            $this->getLanguage()->set('Create ' . $name, $labelCreate, 'labels', $name);
+        }
+
+        if (!empty($data['labelPlural'])) {
+            $labelPlural = $data['labelPlural'];
+            $this->getLanguage()->set($name, $labelPlural, 'scopeNamesPlural', 'Global');
+        }
+
+        $this->getLanguage()->save();
 
         return true;
     }

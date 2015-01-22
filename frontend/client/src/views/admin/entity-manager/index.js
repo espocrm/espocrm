@@ -58,7 +58,7 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
             this.scopeDataList = [];
 
             var scopeList = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
+                return v1.localeCompare(v2);
             }.bind(this));
 
             scopeList.forEach(function (scope) {
@@ -68,7 +68,8 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                         name: scope,
                         isCustom: d.isCustom,
                         customizable: d.customizable,
-                        type: d.type
+                        type: d.type,
+                        label: this.getLanguage().translate(scope, 'scopeNames')
                     });
 
                 }

@@ -208,7 +208,7 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 } else {
                     Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
                 }
-                var global = (this.getLanguage().data || {}) || {};
+                var global = ((this.getLanguage().data || {}) || {}).Global;
                 (global.scopeNames || {})[name] = this.model.get('labelSingular');
                 (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
 
