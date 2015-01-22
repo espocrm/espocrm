@@ -278,9 +278,9 @@ class Metadata
     /**
      * Undelete the deleted items
      *
-     * @param  string $key1 [description]
-     * @param  string $key2 [description]
-     * @param  array $data [description]
+     * @param  string $key1
+     * @param  string $key2
+     * @param  array $data
      * @return void
      */
     protected function undelete($key1, $key2, $data)
