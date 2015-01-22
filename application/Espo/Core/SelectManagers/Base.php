@@ -132,14 +132,16 @@ class Base
                                 $d[$field . '*'] = $item['value'] . '%';
                             }
                         }
-                        $where['OR'] = $d;
+                        $where[] = array(
+                            'OR' => $d
+                        );
                     }
                 }
             }
 
             $linkedWith = array();
             $ignoreList = array('linkedWith', 'boolFilters');
-            foreach    ($params['where'] as $item) {
+            foreach ($params['where'] as $item) {
                 if (!in_array($item['type'], $ignoreList)) {
                     $part = $this->getWherePart($item);
                     if (!empty($part)) {
@@ -160,7 +162,6 @@ class Base
                     if (is_array($idsValue) && count($idsValue) == 1) {
                         $idsValue = $idsValue[0];
                     }
-                    
 
                     $relDefs = $this->getSeed()->getRelations();
 
@@ -180,8 +181,6 @@ class Base
                             }
                         }
                     }
-
-
                 }
 
                 if (!empty($part)) {
@@ -221,7 +220,9 @@ class Base
                 }
             }
 
-            $result['whereClause']['OR'] = $d;
+            $result['whereClause'][] = array(
+                'OR' => $d
+            );
         }
     }
 
@@ -246,9 +247,11 @@ class Base
                 $result['leftJoins'][] = 'teams';
             }
 
-            $result['whereClause']['OR'] = array(
-                'Team.id' => $this->user->get('teamsIds'),
-                'assignedUserId' => $this->user->id
+            $result['whereClause'][] = array(
+                'OR' => array(
+                    'Team.id' => $this->user->get('teamsIds'),
+                    'assignedUserId' => $this->user->id
+                )
             );
         }
     }

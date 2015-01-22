@@ -23,6 +23,11 @@
             "description":"currency"
          },
          {
+            "url":"#Admin/integrations",
+            "label":"Integrations",
+            "description":"integrations"
+         },
+         {
             "url":"#Admin/upgrade",
             "label":"Upgrade",
             "description":"upgrade"

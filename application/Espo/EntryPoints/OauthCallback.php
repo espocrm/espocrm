@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,20 +20,19 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Integrations.OAuth2', 'Views.Admin.Integrations.Edit', function (Dep) {
+namespace Espo\EntryPoints;
 
-    return Dep.extend({
+use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
-        template: 'admin.integrations.oauth2',
+class OauthCallback extends \Espo\Core\EntryPoints\Base
+{
+    public static $authRequired = false;
 
-        data: function () {
+    public function run()
+    {
+        echo "EspoCRM rocks !!!";
+    }
+}
 
-            return _.extend({
-                // TODO fetch from server
-                redirectUri: this.getConfig().get('siteUrl') + '?entryPoint=oauthCallback'
-            }, Dep.prototype.data.call(this));
-        },
-
-    });
-
-});
