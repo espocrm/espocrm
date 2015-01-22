@@ -24,52 +24,209 @@ namespace tests\Espo\Core\Utils;
 
 use tests\ReflectionHelper;
 
-
 class MetadataTest extends \PHPUnit_Framework_TestCase
 {
     protected $object;
-    
+
     protected $objects;
 
     protected $reflection;
 
+    protected $defaultCacheFile = 'tests/testData/Utils/Metadata/metadata.php';
+
+    protected $cacheFile = 'tests/testData/cache/metadata.php';
+    protected $ormCacheFile = 'tests/testData/Utils/Metadata/ormMetadata.php';
 
     protected function setUp()
-    {     
+    {
+        /*copy defaultCacheFile file to cache*/
+        if (!file_exists($this->cacheFile)) {
+            copy($this->defaultCacheFile, $this->cacheFile);
+        }
+
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();     
+        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->objects['Unifier'] = $this->getMockBuilder('\Espo\Core\Utils\File\Unifier')->disableOriginalConstructor()->getMock();
 
         //set to use cache
         $this->objects['config']
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue(true));        
-                     
+            ->will($this->returnValue(true));
+
 
         $this->object = new \Espo\Core\Utils\Metadata($this->objects['config'], $this->objects['fileManager']);
 
-        $this->reflection = new ReflectionHelper($this->object);  
-        $this->reflection->setProperty('cacheFile', 'tests/testData/Utils/Metadata/metadata.php');       
-        $this->reflection->setProperty('ormCacheFile', 'tests/testData/Utils/Metadata/ormMetadata.php');     
+        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection->setProperty('cacheFile', $this->cacheFile);
+        $this->reflection->setProperty('ormCacheFile', $this->ormCacheFile);
     }
 
     protected function tearDown()
     {
         $this->object = NULL;
     }
-    
-    
-    function testGet()
-    {          
+
+    public function testGet()
+    {
         $result = 'System';
-        $this->assertEquals($result, $this->object->get('app.adminPanel.system.label'));          
+        $this->assertEquals($result, $this->object->get('app.adminPanel.system.label'));
 
         $result = 'fields';
-        $this->assertArrayHasKey($result, $this->object->get('entityDefs.User')); 
-    }      
+        $this->assertArrayHasKey($result, $this->object->get('entityDefs.User'));
+    }
 
+    public function testSet()
+    {
+        $data = array (
+          'fields' =>
+          array (
+            'name' =>
+            array (
+              'required' => false,
+              'maxLength' => 150,
+              'view' => 'Views.Test.Custom',
+            ),
+          ),
+        );
+        $this->object->set('entityDefs', 'Attachment', $data);
+        $this->assertEquals('Views.Test.Custom', $this->object->get('entityDefs.Attachment.fields.name.view'));
+        $this->assertEquals(150, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
 
+        $result = array(
+            'entityDefs' => array(
+                'Attachment' => $data
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('changedData'));
+
+        $data = array (
+          'fields' =>
+          array (
+            'name' =>
+            array (
+              'maxLength' => 200,
+            ),
+          ),
+        );
+        $this->object->set('entityDefs', 'Attachment', $data);
+        $this->assertEquals(200, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
+        $this->assertEquals('Views.Test.Custom', $this->object->get('entityDefs.Attachment.fields.name.view'));
+
+        $result = array(
+            'entityDefs' => array(
+                'Attachment' => array (
+                  'fields' =>
+                  array (
+                    'name' =>
+                    array (
+                      'required' => false,
+                      'maxLength' => 200,
+                      'view' => 'Views.Test.Custom',
+                    ),
+                  ),
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('changedData'));
+
+        $this->object->clearChanges();
+
+        $this->assertEquals(array(), $this->reflection->getProperty('changedData'));
+        $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.view'));
+    }
+
+    public function testDelete()
+    {
+        $data = array (
+            'fields.name.type',
+        );
+        $this->object->delete('entityDefs', 'Attachment', $data);
+        $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
+
+        $result = array(
+            'entityDefs' => array(
+                'Attachment' => array(
+                    'fields.name.type',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+
+        $data = array (
+            'fields.name.required',
+        );
+        $this->object->delete('entityDefs', 'Attachment', $data);
+        $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.required'));
+
+        $result = array(
+            'entityDefs' => array(
+                'Attachment' => array(
+                    'fields.name.type',
+                    'fields.name.required',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+
+        $this->object->init(false);
+
+        $this->assertNotNull($this->object->get('entityDefs.Attachment.fields.name.type'));
+        $this->assertNotNull($this->object->get('entityDefs.Attachment.fields.name.required'));
+
+        $this->object->clearChanges();
+        $this->assertEquals(array(), $this->reflection->getProperty('deletedData'));
+    }
+
+    public function testUndelete()
+    {
+        $data = array (
+            'fields.name.type',
+            'fields.name.required',
+        );
+        $this->object->delete('entityDefs', 'Attachment', $data);
+        $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
+
+        $data = array (
+          'fields' =>
+          array (
+            'name' =>
+            array (
+              'type' => 'enum',
+            ),
+          ),
+        );
+        $this->object->set('entityDefs', 'Attachment', $data);
+        $this->assertEquals('enum', $this->object->get('entityDefs.Attachment.fields.name.type'));
+
+        $result = array(
+            'entityDefs' => array(
+                'Attachment' => array(
+                    1 => 'fields.name.required',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+
+        $data = array (
+          'fields' =>
+          array (
+            'name' =>
+            array (
+              'required' => true,
+            ),
+          ),
+        );
+        $this->object->set('entityDefs', 'Attachment', $data);
+        $this->assertEquals(true, $this->object->get('entityDefs.Attachment.fields.name.required'));
+
+        $result = array(
+            'entityDefs' => array(
+                'Attachment' => array(
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+    }
 
 }
-
-?>
