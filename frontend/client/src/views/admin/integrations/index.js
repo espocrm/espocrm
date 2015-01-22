@@ -78,7 +78,12 @@ Espo.define('Views.Admin.Integrations.Index', 'View', function (Dep) {
 
         renderDefaultPage: function () {
             $('#integration-header').html('').hide();
-            $('#integration-content').html(this.translate('selectIntegration', 'messages', 'Integration'));
+            if (this.integrationList.length) {
+            	var msg = this.translate('selectIntegration', 'messages', 'Integration');
+            } else {
+            	var msg = '<p class="lead">' + this.translate('noIntegrations', 'messages', 'Integration') + '</p>';
+            }
+            $('#integration-content').html(msg);
         },
 
         renderHeader: function () {
