@@ -61,6 +61,10 @@ class Metadata
      */
     protected $defaultModuleOrder = 10;
 
+    private $deletedData = array();
+
+    private $changedData = array();
+
     public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
     {
         $this->config = $config;
@@ -213,51 +217,138 @@ class Metadata
 
     /**
     * Set Metadata data
-    * Ex. $type= menu, $scope= Account then will be created a file metadataFolder/menu/Account.json
+    * Ex. $key1 = menu, $key2 = Account then will be created a file metadataFolder/menu/Account.json
     *
+    * @param  string $key1
+    * @param  string $key2
     * @param JSON string $data
-    * @param string $type - ex. menu
-    * @param string $scope - Account
     *
     * @return bool
     */
-    public function set($data, $type, $scope)
+    public function set($key1, $key2, $data)
     {
-        $path = $this->paths['customPath'];
+        $newData = array(
+            $key1 => array(
+                $key2 => $data,
+            ),
+        );
 
-        $result = $this->getFileManager()->mergeContents(array($path, $type, $scope.'.json'), $data, true);
-        if ($result === false) {
-            throw new Error("Error saving metadata. See log file for details.");
-        }
+        $this->changedData = Util::merge($this->changedData, $newData);
+        $this->meta = Util::merge($this->getData(), $newData);
 
-        $this->init(true);
-
-        return $result;
+        $this->undelete($key1, $key2, $data);
     }
 
     /**
      * Unset some fields and other stuff in metadat
      *
+     * @param  string $key1
+     * @param  string $key2
      * @param  array | string $unsets Ex. 'fields.name'
-     * @param  string $type Ex. 'entityDefs'
-     * @param  string $scope
+     *
      * @return bool
      */
-    public function delete($unsets, $type, $scope)
+    public function delete($key1, $key2, $unsets)
+    {
+        if (!is_array($unsets)) {
+            $unsets = (array) $unsets;
+        }
+
+        $normalizedData = array(
+            '__APPEND__',
+        );
+        $metaUnsetData = array();
+        foreach ($unsets as $unsetItem) {
+            $normalizedData[] = $unsetItem;
+            $metaUnsetData[] = implode('.', array($key1, $key2, $unsetItem));
+        }
+
+        $unsetData = array(
+            $key1 => array(
+                $key2 => $normalizedData,
+            ),
+        );
+
+        $this->deletedData = Util::merge($this->deletedData, $unsetData);
+        $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData);
+
+        $this->meta = Util::unsetInArray($this->getData(), $metaUnsetData);
+    }
+
+    /**
+     * Undelete the deleted items
+     *
+     * @param  string $key1 [description]
+     * @param  string $key2 [description]
+     * @param  array $data [description]
+     * @return void
+     */
+    protected function undelete($key1, $key2, $data)
+    {
+        if (isset($this->deletedData[$key1][$key2])) {
+            foreach ($this->deletedData[$key1][$key2] as $unsetIndex => $unsetItem) {
+                $value = Util::getValueByKey($data, $unsetItem);
+                if (isset($value)) {
+                    unset($this->deletedData[$key1][$key2][$unsetIndex]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Clear unsaved changes
+     *
+     * @return void
+     */
+    public function clearChanges()
+    {
+        $this->changedData = array();
+        $this->deletedData = array();
+        $this->init(true);
+    }
+
+    /**
+     * Save changes
+     *
+     * @return bool
+     */
+    public function save()
     {
         $path = $this->paths['customPath'];
 
-        $result = $this->getFileManager()->unsetContents(array($path, $type, $scope.'.json'), $unsets, true);
-
-        if ($result == false) {
-            $GLOBALS['log']->warning('Delete metadata items available only for custom code.');
+        $result = true;
+        if (!empty($this->changedData)) {
+            foreach ($this->changedData as $key1 => $keyData) {
+                foreach ($keyData as $key2 => $data) {
+                    if (!empty($data)) {
+                        $result &= $this->getFileManager()->mergeContents(array($path, $key1, $key2.'.json'), $data, true);
+                    }
+                }
+            }
         }
 
-        $this->init(true);
+        if (!empty($this->deletedData)) {
+            foreach ($this->deletedData as $key1 => $keyData) {
+                foreach ($keyData as $key2 => $unsetData) {
+                    if (!empty($unsetData)) {
+                        $rowResult = $this->getFileManager()->unsetContents(array($path, $key1, $key2.'.json'), $unsetData, true);
+                        if ($rowResult == false) {
+                            $GLOBALS['log']->warning('Metadata items ['.$key1.'.'.$key2.'] can be deleted for custom code only.');
+                        }
+                        $result &= $rowResult;
+                    }
+                }
+            }
+        }
 
-        return $result;
+        if ($result == false) {
+            throw new Error("Error saving metadata. See log file for details.");
+        }
+
+        $this->clearChanges();
+
+        return (bool) $result;
     }
-
 
     public function getOrmMetadata($reload = false)
     {

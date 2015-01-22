@@ -122,7 +122,8 @@ class FieldManager
             'links.'.$name,
         );
 
-        $res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
+        $this->getMetadata()->delete($this->metadataType, $scope, $unsets);
+        $res = $this->getMetadata()->save();
         $res &= $this->deleteLabel($name, $scope);
 
         return (bool) $res;
@@ -132,8 +133,9 @@ class FieldManager
     {
         $fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
 
-        $data = Json::encode($fieldDef);
-        $res = $this->getMetadata()->set($data, $this->metadataType, $scope);
+        //$data = Json::encode($fieldDef);
+        $this->getMetadata()->set($this->metadataType, $scope, $fieldDef);
+        $res = $this->getMetadata()->save();
 
         return $res;
     }
