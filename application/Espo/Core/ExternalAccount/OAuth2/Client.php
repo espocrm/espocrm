@@ -32,8 +32,9 @@ class Client
     const TOKEN_TYPE_BEARER = 'Bearer';
     const TOKEN_TYPE_OAUTH = 'OAuth';
 
-    const CONTENT_TYPE_APPLICATION = 0;
-    const CONTENT_TYPE_MULTIPART = 1;
+    const CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENENCODED = 'application/x-www-form-urlencoded';
+    const CONTENT_TYPE_MULTIPART_FORM_DATA = 'multipart/form-data';
+    const CONTENT_TYPE_APPLICATION_JSON = 'application/json';
 
     const HTTP_METHOD_GET = 'GET';
     const HTTP_METHOD_POST = 'POST';
@@ -118,7 +119,7 @@ class Client
         $this->accessTokenSecret = $accessTokenSecret;
     }
 
-    public function request($url, $params = array(), $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = array(), $contentType = self::CONTENT_TYPE_MULTIPART)
+    public function request($url, $params = null, $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = array())
     {
         if ($this->accessToken) {
             switch ($this->tokenType) {
@@ -137,10 +138,10 @@ class Client
             }
         }
 
-        return $this->execute($url, $params, $httpMethod, $httpHeaders, $contentType);
+        return $this->execute($url, $params, $httpMethod, $httpHeaders);
     }
 
-    private function execute($url, $params = array(), $httpMethod, array $httpHeaders = array(), $contentType = self::CONTENT_TYPE_MULTIPART)
+    private function execute($url, $params = null, $httpMethod, array $httpHeaders = array())
     {
         $curlOptions = array(
             CURLOPT_RETURNTRANSFER => true,
@@ -153,8 +154,10 @@ class Client
                 $curlOptions[CURLOPT_POST] = true;
             case self::HTTP_METHOD_PUT:
             case self::HTTP_METHOD_PATCH:
-                if (self::CONTENT_TYPE_APPLICATION === $contentType) {
+                if (is_array($params)) {
                     $postFields = http_build_query($params, null, '&');
+                } else {
+                    $postFields = $params;
                 }
                 $curlOptions[CURLOPT_POSTFIELDS] = $postFields;
                 break;
@@ -165,7 +168,9 @@ class Client
                 if (strpos($url, '?') === false) {
                     $url .= '?';
                 }
-                $url .= http_build_query($params, null, '&');
+                if (is_array($params)) {
+                    $url .= http_build_query($params, null, '&');
+                }
                 break;
             default:
                 break;
@@ -242,7 +247,7 @@ class Client
                 throw new \Exception();
         }
 
-        return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders, self::CONTENT_TYPE_APPLICATION);
+        return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders);
     }
 }
 

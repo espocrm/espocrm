@@ -39,7 +39,6 @@ class FieldManager
 
     protected $customOptionName = 'isCustom';
 
-
     public function __construct(Metadata $metadata, Language $language)
     {
         $this->metadata = $metadata;
@@ -122,7 +121,8 @@ class FieldManager
             'links.'.$name,
         );
 
-        $res = $this->getMetadata()->delete($unsets, $this->metadataType, $scope);
+        $this->getMetadata()->delete($this->metadataType, $scope, $unsets);
+        $res = $this->getMetadata()->save();
         $res &= $this->deleteLabel($name, $scope);
 
         return (bool) $res;
@@ -132,25 +132,25 @@ class FieldManager
     {
         $fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
 
-        $data = Json::encode($fieldDef);
-        $res = $this->getMetadata()->set($data, $this->metadataType, $scope);
+        $this->getMetadata()->set($this->metadataType, $scope, $fieldDef);
+        $res = $this->getMetadata()->save();
 
         return $res;
     }
 
     protected function setTranslatedOptions($name, $value, $scope)
     {
-        return $this->getLanguage()->set($name, $value, 'options', $scope);
+        return $this->getLanguage()->set($scope, 'options', $name, $value);
     }
 
     protected function setLabel($name, $value, $scope)
     {
-        return $this->getLanguage()->set($name, $value, 'fields', $scope);
+        return $this->getLanguage()->set($scope, 'fields', $name, $value);
     }
 
     protected function deleteLabel($name, $scope)
     {
-        $this->getLanguage()->delete($name, 'fields', $scope);
+        $this->getLanguage()->delete($scope, 'fields', $name);
         return $this->getLanguage()->save();
     }
 

@@ -29,9 +29,9 @@ use \Espo\Core\ExternalAccount\OAuth2\Client;
 abstract class OAuth2Abstract implements IClient
 {
     protected $client = null;
-    
+
     protected $manager = null;
-    
+
     protected $paramList = array(
         'endpoint',
         'tokenEndpoint',
@@ -42,33 +42,33 @@ abstract class OAuth2Abstract implements IClient
         'refreshToken',
         'redirectUri',
     );
-    
+
     protected $clientId = null;
-    
+
     protected $clientSecret = null;
-    
+
     protected $accessToken = null;
-    
+
     protected $refreshToken = null;
-    
+
     protected $redirectUri = null;
-    
+
     public function __construct($client, array $params = array(), $manager = null)
     {
         $this->client = $client;
 
         $this->setParams($params);
-        
+
         $this->manager = $manager;
     }
-    
+
     public function getParam($name)
     {
         if (in_array($name, $this->paramList)) {
             return $this->$name;
         }
     }
-    
+
     public function setParam($name, $value)
     {
         if (in_array($name, $this->paramList)) {
@@ -79,7 +79,7 @@ abstract class OAuth2Abstract implements IClient
             $this->$name = $value;
         }
     }
-    
+
     public function setParams(array $params)
     {
         foreach ($this->paramList as $name) {
@@ -88,42 +88,41 @@ abstract class OAuth2Abstract implements IClient
             }
         }
     }
-    
+
     protected function afterTokenRefreshed($data)
     {
         if ($this->manager) {
             $this->manager->storeAccessToken(spl_object_hash($this), $data);
         }
     }
-    
+
     public function getAccessTokenFromAuthorizationCode($code)
     {
         $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_AUTHORIZATION_CODE, array(
             'code' => $code,
             'redirect_uri' => $this->getParam('redirectUri')
         ));
-        
-        
+
         if ($r['code'] == 200) {
             $data = array();
             if (!empty($r['result'])) {
                 $data['accessToken'] = $r['result']['access_token'];
                 $data['tokenType'] = $r['result']['token_type'];
-                $data['refreshToken'] = $r['result']['refresh_token'];        
+                $data['refreshToken'] = $r['result']['refresh_token'];
             }
             return $data;
         }
         return null;
     }
-    
+
     abstract protected function getPingUrl();
-    
+
     public function ping()
     {
         if (empty($this->accessToken) || empty($this->clientId) || empty($this->clientSecret)) {
             return false;
         }
-        
+
         $url = $this->getPingUrl();
 
         try {
@@ -133,35 +132,48 @@ abstract class OAuth2Abstract implements IClient
             return false;
         }
     }
-    
-    public function request($url, $params = array(), $httpMethod = Client::HTTP_METHOD_GET, $allowRenew = true)
+
+    public function request($url, $params = null, $httpMethod = Client::HTTP_METHOD_GET, $contentType = null, $allowRenew = true)
     {
-        $r = $this->client->request($url, $params, $httpMethod);
-        
+        $httpHeaders = array();
+        if (!empty($contentType)) {
+            $httpHeaders['Content-Type'] = $contentType;
+            switch ($contentType) {
+                case Client::CONTENT_TYPE_MULTIPART_FORM_DATA:
+                    $httpHeaders['Content-Length'] = strlen($params);
+                    break;
+                case Client::CONTENT_TYPE_APPLICATION_JSON:
+                    $httpHeaders['Content-Length'] = strlen($params);
+                    break;
+            }
+        }
+
+        $r = $this->client->request($url, $params, $httpMethod, $httpHeaders);
+
         $code = null;
         if (!empty($r['code'])) {
             $code = $r['code'];
-        }        
-        
+        }
+
         if ($code == 200) {
             return $r['result'];
         } else {
             $handledData = $this->handleErrorResponse($r);
-            
+
             if ($allowRenew && is_array($handledData)) {
                 if ($handledData['action'] == 'refreshToken') {
-                    if ($this->refreshToken()) {                
-                        return $this->request($url, $params, $httpMethod, false);                        
+                    if ($this->refreshToken()) {
+                        return $this->request($url, $params, $httpMethod, $contentType, false);
                     }
                 } else if ($handledData['action'] == 'renew') {
-                    return $this->request($url, $params, $httpMethod, false);    
+                    return $this->request($url, $params, $httpMethod, $contentType, false);
                 }
             }
         }
-        
+
         throw new Error("Error after requesting {$httpMethod} {$url}.", $code);
     }
-    
+
     protected function refreshToken()
     {
         if (!empty($this->refreshToken)) {
@@ -183,11 +195,11 @@ abstract class OAuth2Abstract implements IClient
             }
         }
     }
-    
+
     protected function handleErrorResponse($r)
     {
         if ($r['code'] == 401 && !empty($r['result'])) {
-            $result = $r['result'];            
+            $result = $r['result'];
             if (strpos($r['header'], 'error=invalid_token') !== false) {
                 return array(
                     'action' => 'refreshToken'
@@ -198,7 +210,7 @@ abstract class OAuth2Abstract implements IClient
                 );
             }
         } else if ($r['code'] == 400 && !empty($r['result'])) {
-            if ($r['result']['error'] == 'invalid_token') {                
+            if ($r['result']['error'] == 'invalid_token') {
                 return array(
                     'action' => 'refreshToken'
                 );

@@ -80,7 +80,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->object->setLanguage($originalLang);
     }
 
-
     public function testGetLangCacheFile()
     {
         $cacheFile = $this->cacheFile;
@@ -95,7 +94,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
         $this->object->setLanguage($originalLang);
     }
-
 
     public function testGetData()
     {
@@ -141,7 +139,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getData', array()));
     }
-
 
     public function testGet()
     {
@@ -204,7 +201,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $this->object->translate('language', 'options', 'Global', $requiredOptions));
     }
 
-
     public function testTranslateArray()
     {
         $input = array(
@@ -227,20 +223,124 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
     public function testSet()
     {
         $label = 'TEST';
-        $this->object->set('label', $label, 'fields', 'User');
+        $this->object->set('User', 'fields', 'label', $label);
         $this->assertEquals($label, $this->object->translate('label', 'fields', 'User'));
 
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                    'label' => 'TEST',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('changedData'));
+
         $label2 = 'TEST2';
-        $this->object->set('name', $label2, 'fields', 'User');
+        $this->object->set('User', 'fields', 'name', $label2);
         $this->assertEquals($label2, $this->object->translate('name', 'fields', 'User'));
 
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                    'label' => 'TEST',
+                    'name' => 'TEST2',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('changedData'));
+
         $label3 = 'TEST3';
-        $this->object->set('name', $label3, 'fields', 'Account');
+        $this->object->set('Account', 'fields', 'name', $label3);
         $this->assertEquals($label3, $this->object->translate('name', 'fields', 'Account'));
 
-        $this->reflection->invokeMethod('init', array(true));
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                    'label' => 'TEST',
+                    'name' => 'TEST2',
+                ),
+            ),
+            'Account' => array(
+                'fields' => array(
+                    'name' => 'TEST3',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('changedData'));
+
+        $this->object->clearChanges();
+
+        $this->assertEquals(array(), $this->reflection->getProperty('changedData'));
+        $this->assertNotEquals('TEST', $this->object->get('User', 'fields', 'label'));
+    }
+
+    public function testDelete()
+    {
+        $this->object->delete('User', 'fields', 'label');
+        $this->assertNull($this->object->get('User.fields.label'));
+
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                    'label',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+
+        $this->object->delete('User', 'fields', 'name');
+        $this->assertNull($this->object->get('User.fields.name'));
+
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                    'label',
+                    'name',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+
+        $this->object->clearChanges();
+
+        $this->assertNotNull($this->object->get('User.fields.label'));
+        $this->assertNotNull($this->object->get('User.fields.name'));
+
+        $this->assertEquals(array(), $this->reflection->getProperty('deletedData'));
+    }
+
+    public function testUndelete()
+    {
+        $this->object->delete('User', 'fields', 'label');
+        $this->assertNull($this->object->get('User.fields.label'));
+
+        $this->object->delete('User', 'fields', 'name');
+        $this->assertNull($this->object->get('User.fields.name'));
+
+        $label = 'TEST';
+        $this->object->set('User', 'fields', 'label', $label);
+        $this->assertEquals($label, $this->object->translate('label', 'fields', 'User'));
+
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                    1 => 'name',
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
+
+        $label2 = 'TEST2';
+        $this->object->set('User', 'fields', 'name', $label2);
+        $this->assertEquals($label2, $this->object->translate('name', 'fields', 'User'));
+
+        $result = array(
+            'User' => array(
+                'fields' => array(
+                ),
+            ),
+        );
+        $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
     }
 
 }
-
-?>

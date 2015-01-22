@@ -89,7 +89,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($data));
 
-        $this->assertTrue($this->object->update('name', $data, 'Account'));
+        $this->object->update('name', $data, 'Account');
     }
 
     public function testUpdateCustomFieldIsNotChanged()
@@ -138,9 +138,8 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "isCustom" => true,
         );
 
-        $this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));
+        $this->object->update('varName', $data, 'CustomEntity');
     }
-
 
     public function testRead()
     {
