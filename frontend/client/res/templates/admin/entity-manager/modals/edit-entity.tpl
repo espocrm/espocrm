@@ -1,14 +1,14 @@
 <div class="row">
-	<div class="cell cell-type form-group col-md-6">
-		<label class="field-label-type control-label">{{translate 'type' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-type">
-			{{{type}}}
-		</div>
-	</div>
 	<div class="cell cell-name form-group col-md-6">
 		<label class="field-label-name control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
 		<div class="field field-name">
 			{{{name}}}
+		</div>
+	</div>
+	<div class="cell cell-type form-group col-md-6">
+		<label class="field-label-type control-label">{{translate 'type' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-type">
+			{{{type}}}
 		</div>
 	</div>
 </div>

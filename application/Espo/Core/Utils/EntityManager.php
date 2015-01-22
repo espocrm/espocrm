@@ -135,21 +135,22 @@ class EntityManager
             'type' => $type,
             'stream' => $stream
         );
-        $this->getMetadata()->set($scopeData, 'scopes', $name);
+        $this->getMetadata()->set('scopes', $name, $scopeData);
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
         $entityDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
-        $this->getMetadata()->set($entityDefsData, 'entityDefs', $name);
+        $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/clientDefs.json";
         $clientDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
-        $this->getMetadata()->set($clientDefsData, 'clientDefs', $name);
+        $this->getMetadata()->set('clientDefs', $name, $entityDefsData);
 
-        $this->getLanguage()->set($name, $labelSingular, 'scopeNames', 'Global');
-        $this->getLanguage()->set($name, $labelPlural, 'scopeNamesPlural', 'Global');
-        $this->getLanguage()->set('Create ' . $name, $labelCreate, 'labels', $name);
+        $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
+        $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
+        $this->getLanguage()->set($name, 'labels', 'Create ' . $name, $labelCreate);
+
+        $this->getMetadata()->save();
         $this->getLanguage()->save();
-
 
         return true;
     }
@@ -160,21 +161,22 @@ class EntityManager
             $scopeData = array(
                 'stream' => (true == $data['stream'])
             );
-            $this->getMetadata()->set($scopeData, 'scopes', $name);
+            $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 
         if (!empty($data['labelSingular'])) {
             $labelSingular = $data['labelSingular'];
-            $this->getLanguage()->set($name, $labelSingular, 'scopeNames', 'Global');
+            $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
             $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
-            $this->getLanguage()->set('Create ' . $name, $labelCreate, 'labels', $name);
+            $this->getLanguage()->set($name, 'labels', 'Create ' . $name, $labelCreate);
         }
 
         if (!empty($data['labelPlural'])) {
             $labelPlural = $data['labelPlural'];
-            $this->getLanguage()->set($name, $labelPlural, 'scopeNamesPlural', 'Global');
+            $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
         }
 
+        $this->getMetadata()->save();
         $this->getLanguage()->save();
 
         return true;
@@ -191,7 +193,9 @@ class EntityManager
             'clientDefs',
             'scopes'
         );
-        $res = $this->getMetadata()->delete($unsets, $this->metadataType, $name);
+        $res = $this->getMetadata()->delete('entityDefs', $name);
+        $res = $this->getMetadata()->delete('clientDefs', $name);
+        $res = $this->getMetadata()->delete('scopes', $name);
 
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/{$name}.json");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/clientDefs/{$name}.json");
@@ -203,10 +207,11 @@ class EntityManager
         $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$name}.php");
 
         try {
-            $this->getLanguage()->delete($name, 'scopeNames', 'Global');
-            $this->getLanguage()->delete($name, 'scopeNamesPlural', 'Global');
+            $this->getLanguage()->delete('Global', 'scopeNames', $name);
+            $this->getLanguage()->delete('Global', 'scopeNamesPlural', $name);
         } catch (\Exception $e) {}
 
+        $this->getMetadata()->save();
         $this->getLanguage()->save();
 
         return true;
