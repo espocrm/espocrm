@@ -3,6 +3,7 @@
     "options": {
         "job": {
             "CheckInboundEmails": "Check Inbound Emails",
+            "CheckEmailAccounts": "Check Personal Email Accounts",
             "SendEmailReminders": "Send Email Reminders"
         }
     }
