@@ -1,1 +1,6 @@
-[{"name":"name","width":30,"link":true},{"name":"host"},{"name":"status"}]
+[
+	{"name":"name","width":30,"link":true},
+	{"name":"host"},
+	{"name":"status"},
+	{"name": "assignedUser"}
+]

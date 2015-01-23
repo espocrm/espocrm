@@ -40,17 +40,22 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
 
         searchPanel: true,
 
-        searchManager: true,
+        searchManager: null,
 
         createButton: true,
 
         setup: function () {
-            this.setupSearchManager();
-            this.setupSorting();
+            this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
             if (this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
                 this.searchPanel = false;
             }
+
+            if (this.searchPanel) {
+                this.setupSearchManager();
+            }
+
+            this.setupSorting();
 
             if (this.searchPanel) {
                 this.createView('search', 'Record.Search', {
@@ -86,8 +91,6 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
             var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
             searchManager.loadStored();
             collection.where = searchManager.getWhere();
-            collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-
             this.searchManager = searchManager;
         },
 

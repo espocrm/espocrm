@@ -22,7 +22,7 @@
 Espo.define('Views.Email.List', 'Views.List', function (Dep) {
 
     return Dep.extend({
-    
+
         createButton: false,
 
         setup: function () {
@@ -34,7 +34,6 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
                    "link": "#EmailAccount"
                 });
             }
-
         },
 
         actionComposeEmail: function () {
@@ -48,7 +47,7 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
                 view.notify(false);
             });
         },
-        
+
         getSearchDefaultData: function () {
             return {
                 bool: {
@@ -56,7 +55,7 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
                 }
             };
         },
-        
+
     });
 });
 
