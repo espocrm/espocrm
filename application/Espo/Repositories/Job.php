@@ -20,13 +20,28 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Repositories;
 
 use \PDO;
 use \Espo\Core\CronManager;
 
-class Job extends Record
+class Job extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        $this->dependencies[] = 'config';
+    }
+
+    protected function getConfig()
+    {
+        return $this->getInjection('config');
+    }
+
+    /**
+     * Get Pending Jobs
+     *
+     * @return array
+     */
     public function getPendingJobs()
     {
         /** Mark Failed old jobs and remove pending duplicates */
@@ -52,9 +67,10 @@ class Job extends Record
      *
      * @param  string $displayColumns
      * @param  string $status
+     *
      * @return array
      */
-    protected function getActiveJobs($displayColumns = '*', $status = CronManager::PENDING, $fetchMode = PDO::FETCH_ASSOC)
+    public function getActiveJobs($displayColumns = '*', $status = CronManager::PENDING, $fetchMode = PDO::FETCH_ASSOC)
     {
         $jobConfigs = $this->getConfig()->get('cron');
 
@@ -66,7 +82,7 @@ class Job extends Record
                     `status` = '" . $status . "'
                     AND execute_time BETWEEN '".date('Y-m-d H:i:s', $periodTime)."' AND '".date('Y-m-d H:i:s', $currentTime)."'
                     AND deleted = 0
-                    ORDER BY execute_time DESC ".$limit;
+                    ORDER BY execute_time ASC ".$limit;
 
         $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
@@ -77,6 +93,14 @@ class Job extends Record
         return $rows;
     }
 
+    /**
+     * Get Jobs by ScheduledJobId and date
+     *
+     * @param  string $scheduledJobId
+     * @param  string $date
+     *
+     * @return array
+     */
     public function getJobByScheduledJob($scheduledJobId, $date)
     {
         $query = "SELECT * FROM job WHERE
@@ -146,7 +170,4 @@ class Job extends Record
             }
         }
     }
-
-
 }
-
