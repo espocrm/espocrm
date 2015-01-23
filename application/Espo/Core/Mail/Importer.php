@@ -27,18 +27,18 @@ use \Zend\Mime\Mime as Mime;
 class Importer
 {
     private $entityManager;
-    
+
     private $fileManager;
 
     private $config;
-    
+
     public function __construct($entityManager, $fileManager, $config)
     {
         $this->entityManager = $entityManager;
         $this->fileManager = $fileManager;
         $this->config = $config;
     }
-    
+
     protected function getEntityManager()
     {
         return $this->entityManager;
@@ -47,29 +47,29 @@ class Importer
     {
         return $this->config;
     }
-    
+
     protected function getFileManager()
     {
         return $this->fileManager;
     }
-    
+
     public function importMessage($message, $userId, $teamsIds = array())
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
-            
+
             $subject = $message->subject;
             if ($subject !== '0' && empty($subject)) {
                 $subject = '--empty--';
             }
-            
+
             $email->set('isHtml', false);
             $email->set('name', $subject);
             $email->set('status', 'Archived');
             $email->set('attachmentsIds', array());
             $email->set('assignedUserId', $userId);
             $email->set('teamsIds', $teamsIds);
-            
+
             $fromArr = $this->getAddressListFromMessage($message, 'from');
             if (isset($message->from)) {
                 $email->set('fromName', $message->from);
@@ -77,14 +77,14 @@ class Importer
             $email->set('from', $fromArr[0]);
             $email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));
             $email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
-            
+
             if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
                 if (isset($message->deliveredTo)) {
                     $email->set('messageIdInternal', $message->messageId . '-' . $message->deliveredTo);
                 }
             }
-            
+
             if ($this->checkIsDuplicate($email)) {
                 return false;
             }
@@ -103,17 +103,19 @@ class Importer
                     $email->set('deliveryDate', $deliveryDate);
                 }
             }
-            
+
             $inlineIds = array();
-    
+
             if ($message->isMultipart()) {
-                foreach (new \RecursiveIteratorIterator($message) as $part) {
+                $count = $message->countParts();
+                for ($i = 0; $i < $count; $i++) {
+                    $part = $message->getPart($i + 1);
                     $this->importPartDataToEmail($email, $part, $inlineIds);
                 }
             } else {
                 $this->importPartDataToEmail($email, $message, $inlineIds);
             }
-            
+
             $body = $email->get('body');
             if (!empty($body)) {
                 foreach ($inlineIds as $cid => $attachmentId) {
@@ -156,12 +158,12 @@ class Importer
             }
 
             $this->getEntityManager()->saveEntity($email);
-            
+
             return $email;
-                    
+
         } catch (\Exception $e) {}
     }
-    
+
     protected function checkIsDuplicate($email)
     {
         if ($email->get('messageIdInternal')) {
@@ -173,12 +175,12 @@ class Importer
             }
         }
     }
-    
+
     protected function getAddressListFromMessage($message, $type)
     {
         $addressList = array();
         if (isset($message->$type)) {
-            
+
             $list = $message->getHeader($type)->getAddressList();
             foreach ($list as $address) {
                 $addressList[] = $address->getEmail();
@@ -186,13 +188,17 @@ class Importer
         }
         return $addressList;
     }
-    
+
     protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array())
     {
         try {
+            if (!$part->getHeaders() || !isset($part->contentType)) {
+                return;
+            }
+
             $type = strtok($part->contentType, ';');
             $encoding = null;
-            
+
             switch ($type) {
                 case 'text/plain':
                     $content = $this->getContentFromPart($part);
@@ -209,10 +215,10 @@ class Importer
                 default:
                     $content = $part->getContent();
                     $disposition = null;
-                    
+
                     $fileName = null;
                     $contentId = null;
-                            
+
                     if (isset($part->ContentDisposition)) {
                         if (strpos($part->ContentDisposition, 'attachment') === 0) {
                             if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
@@ -225,32 +231,32 @@ class Importer
                             $disposition = 'inline';
                         }
                     }
-                    
+
                     if (isset($part->contentTransferEncoding)) {
                         $encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
                     }
-                    
+
                     $attachment = $this->getEntityManager()->getEntity('Attachment');
                     $attachment->set('name', $fileName);
                     $attachment->set('type', $type);
-                    
+
                     if ($disposition == 'inline') {
                         $attachment->set('role', 'Inline Attachment');
                     } else {
                         $attachment->set('role', 'Attachment');
                     }
-                    
+
                     if ($encoding == 'base64') {
                         $content = base64_decode($content);
                     }
-                    
+
                     $attachment->set('size', strlen($content));
-                            
+
                     $this->getEntityManager()->saveEntity($attachment);
-                                                
+
                     $path = 'data/upload/' . $attachment->id;
                     $this->getFileManager()->putContents($path, $content);
-                    
+
                     if ($disposition == 'attachment') {
                         $attachmentsIds = $email->get('attachmentsIds');
                         $attachmentsIds[] = $attachment->id;
@@ -261,7 +267,7 @@ class Importer
             }
         } catch (\Exception $e) {}
     }
-    
+
     protected function getContentFromPart($part)
     {
         if ($part instanceof \Zend\Mime\Part) {
@@ -271,20 +277,20 @@ class Importer
             }
         } else {
             $content = $part->getContent();
-            
+
             $encoding = null;
-            
+
             if (isset($part->contentTransferEncoding)) {
                 $cteHeader = $part->getHeader('Content-Transfer-Encoding');
                 $encoding = strtolower($cteHeader->getTransferEncoding());
             }
-            
+
             if ($encoding == 'base64') {
                 $content = base64_decode($content);
             }
-            
+
             $charset = 'UTF-8';
-            
+
             if (isset($part->contentType)) {
                 $ctHeader = $part->getHeader('Content-Type');
                 $charsetParamValue = $ctHeader->getParameter('charset');
@@ -292,11 +298,11 @@ class Importer
                     $charset = strtoupper($charsetParamValue);
                 }
             }
-            
+
             if ($charset !== 'UTF-8') {
                 $content = mb_convert_encoding($content, 'UTF-8', $charset);
             }
-            
+
             if (isset($part->contentTransferEncoding)) {
                 $cteHeader = $part->getHeader('Content-Transfer-Encoding');
                 if ($cteHeader->getTransferEncoding() == 'quoted-printable') {
