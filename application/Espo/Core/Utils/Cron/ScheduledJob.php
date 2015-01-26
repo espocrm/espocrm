@@ -20,12 +20,34 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Core\Utils\Cron;
 
 use \PDO;
+use \Espo\Core\Utils\Config;
+use \Espo\Core\ORM\EntityManager;
 
-class ScheduledJob extends \Espo\Core\ORM\Repositories\RDB
+class ScheduledJob
 {
+    private $config;
+
+    private $entityManager;
+
+    public function __construct(Config $config, EntityManager $entityManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
     /**
      * Get active Scheduler Jobs
      *

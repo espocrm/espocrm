@@ -24,7 +24,6 @@ namespace Espo\Core\Jobs;
 
 use \Espo\Core\Container;
 
-
 abstract class Base
 {
     private $container;

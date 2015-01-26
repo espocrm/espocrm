@@ -221,7 +221,7 @@ class Container
 
     private function loadScheduledJob()
     {
-        return new \Espo\Core\Cron\ScheduledJob(
+        return new \Espo\Core\Utils\ScheduledJob(
             $this
         );
     }

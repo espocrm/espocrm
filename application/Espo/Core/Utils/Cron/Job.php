@@ -20,21 +20,33 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Core\Utils\Cron;
 
 use \PDO;
 use \Espo\Core\CronManager;
+use \Espo\Core\Utils\Config;
+use \Espo\Core\ORM\EntityManager;
 
-class Job extends \Espo\Core\ORM\Repositories\RDB
+class Job
 {
-    protected function init()
+    private $config;
+
+    private $entityManager;
+
+    public function __construct(Config $config, EntityManager $entityManager)
     {
-        $this->dependencies[] = 'config';
+        $this->config = $config;
+        $this->entityManager = $entityManager;
     }
 
     protected function getConfig()
     {
-        return $this->getInjection('config');
+        return $this->config;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 
     /**
