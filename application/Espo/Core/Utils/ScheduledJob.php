@@ -20,14 +20,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Cron;
+namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\NotFound,
-    Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\NotFound;
 
 class ScheduledJob
 {
     private $container;
+
     private $systemUtil;
 
     protected $data = null;
@@ -54,7 +54,6 @@ class ScheduledJob
         'default' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE}',
     );
 
-
     public function __construct(\Espo\Core\Container $container)
     {
         $this->container = $container;
@@ -76,19 +75,9 @@ class ScheduledJob
         return $this->systemUtil;
     }
 
-    public function run(array $job)
+    public function getMethodName()
     {
-        $jobName = $job['method'];
-
-        $className = $this->getClassName($jobName);
-        if ($className === false) {
-            throw new NotFound();
-        }
-
-        $jobClass = new $className($this->container);
-        $method = $this->allowedMethod;
-
-        $jobClass->$method();
+        return $this->allowedMethod;
     }
 
     /**
@@ -160,7 +149,6 @@ class ScheduledJob
         $classParser->setAllowedMethods( array($this->allowedMethod) );
         $this->data = $classParser->getData($this->paths, $this->cacheFile);
     }
-
 
     public function getSetupMessage()
     {
