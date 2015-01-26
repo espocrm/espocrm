@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Repositories;
 
@@ -27,8 +27,8 @@ use Espo\ORM\Entity;
 class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 {
     public function getIds($arr = array())
-    {        
-        $ids = array();        
+    {
+        $ids = array();
         if (!empty($arr)) {
             $a = array_map(function ($item) {
                     return strtolower($item);
@@ -58,20 +58,20 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         }
         return $ids;
     }
-    
+
     public function getEmailAddressData(Entity $entity)
     {
         $data = array();
-        
-        $pdo = $this->getEntityManager()->getPDO();        
+
+        $pdo = $this->getEntityManager()->getPDO();
         $sql = "
-            SELECT email_address.name, email_address.invalid, email_address.opt_out AS optOut, entity_email_address.primary 
+            SELECT email_address.name, email_address.invalid, email_address.opt_out AS optOut, entity_email_address.primary
             FROM entity_email_address
             JOIN email_address ON email_address.id = entity_email_address.email_address_id AND email_address.deleted = 0
-            WHERE 
-            entity_email_address.entity_id = ".$pdo->quote($entity->id)." AND 
-            entity_email_address.entity_type = ".$pdo->quote($entity->getEntityName())." AND 
-            entity_email_address.deleted = 0
+            WHERE
+                entity_email_address.entity_id = ".$pdo->quote($entity->id)." AND
+                entity_email_address.entity_type = ".$pdo->quote($entity->getEntityName())." AND
+                entity_email_address.deleted = 0
             ORDER BY entity_email_address.primary DESC
         ";
         $sth = $pdo->prepare($sql);
@@ -82,27 +82,56 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                 $obj->emailAddress = $row['name'];
                 $obj->primary = ($row['primary'] == '1') ? true : false;
                 $obj->optOut = ($row['optOut'] == '1') ? true : false;
-                $obj->invalid = ($row['invalid'] == '1') ? true : false;                
+                $obj->invalid = ($row['invalid'] == '1') ? true : false;
                 $data[] = $obj;
             }
         }
-        
+
         return $data;
     }
-    
+
     public function getByAddress($address)
     {
         return $this->where(array('lower' => strtolower($address)))->findOne();
     }
-    
-    public function getEntityByAddress($address)
+
+    public function getEntityByAddressId($emailAddressId, $entityType = null)
     {
-        $pdo = $this->getEntityManager()->getPDO();        
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            SELECT entity_email_address.entity_type AS 'entityType', entity_email_address.entity_id AS 'entityId'
+            FROM entity_email_address
+            WHERE
+                entity_email_address.email_address_id = ".$pdo->quote($emailAddressId)." AND
+                entity_email_address.deleted = 0
+            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
+        ";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        while ($row = $sth->fetch()) {
+            if (!empty($row['entityType']) && !empty($row['entityId'])) {
+                if (!empty($entityType)) {
+                    if ($entityType != $row['entityType']) {
+                        continue;
+                    }
+                }
+                $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+                if ($entity) {
+                    return $entity;
+                }
+            }
+        }
+    }
+
+    public function getEntityByAddress($address, $entityType = null)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             SELECT entity_email_address.entity_type AS 'entityType', entity_email_address.entity_id AS 'entityId'
             FROM entity_email_address
             JOIN email_address ON email_address.id = entity_email_address.email_address_id AND email_address.deleted = 0
-            WHERE 
+            WHERE
                 email_address.lower = ".$pdo->quote(strtolower($address))." AND
                 entity_email_address.deleted = 0
             ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
@@ -112,6 +141,11 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
+                if (!empty($entityType)) {
+                    if ($entityType != $row['entityType']) {
+                        continue;
+                    }
+                }
                 $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
                 if ($entity) {
                     return $entity;
@@ -119,24 +153,24 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             }
         }
     }
-    
+
     public function storeEntityEmailAddress(Entity $entity)
     {
             $email = trim($entity->get('emailAddress'));
             $emailAddressData = null;
-            
+
             if ($entity->has('emailAddressData')) {
                 $emailAddressData = $entity->get('emailAddressData');
             }
-            
-            $pdo = $this->getEntityManager()->getPDO();            
-            
+
+            $pdo = $this->getEntityManager()->getPDO();
+
             if ($emailAddressData !== null && is_array($emailAddressData)) {
                 $previousEmailAddressData = array();
                 if (!$entity->isNew()) {
                     $previousEmailAddressData = $this->getEmailAddressData($entity);
                 }
-                
+
                 $hash = array();
                 foreach ($emailAddressData as $row) {
                     $key = $row->emailAddress;
@@ -144,11 +178,11 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $hash[$key] = array(
                             'primary' => $row->primary ? true : false,
                             'optOut' => $row->optOut ? true : false,
-                            'invalid' => $row->invalid ? true : false,                            
+                            'invalid' => $row->invalid ? true : false,
                         );
                     }
                 }
-                                
+
                 $hashPrev = array();
                 foreach ($previousEmailAddressData as $row) {
                     $key = $row->emailAddress;
@@ -156,25 +190,25 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $hashPrev[$key] = array(
                             'primary' => $row->primary ? true : false,
                             'optOut' => $row->optOut ? true : false,
-                            'invalid' => $row->invalid ? true : false,                            
+                            'invalid' => $row->invalid ? true : false,
                         );
                     }
-                }                
-                
-                $primary = false;                
+                }
+
+                $primary = false;
                 $toCreate = array();
-                $toUpdate = array();                
+                $toUpdate = array();
                 $toRemove = array();
 
-                
+
                 foreach ($hash as $key => $data) {
                     $new = true;
                     $changed = false;
-                    
+
                     if ($hash[$key]['primary']) {
                         $primary = $key;
                     }
-                    
+
                     if (array_key_exists($key, $hashPrev)) {
                         $new = false;
                         $changed = $hash[$key]['optOut'] != $hashPrev[$key]['optOut'] || $hash[$key]['invalid'] != $hashPrev[$key]['invalid'];                        
@@ -182,23 +216,23 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                             if ($hash[$key]['primary'] == $hashPrev[$key]['primary']) {
                                 $primary = false;
                             }
-                        }                        
+                        }
                     }
-                    
+
                     if ($new) {
                         $toCreate[] = $key;
-                    }                    
+                    }
                     if ($changed) {
                         $toUpdate[] = $key;
-                    }                     
+                    }
                 }
-                
-                foreach ($hashPrev as $key => $data) {                
+
+                foreach ($hashPrev as $key => $data) {
                     if (!array_key_exists($key, $hash)) {
                         $toRemove[] = $key;
                     }
                 }
-                
+
                 foreach ($toRemove as $address) {
                     $emailAddress = $this->getByAddress($address);
                     if ($emailAddress) {
@@ -211,10 +245,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                                 email_address_id = ".$pdo->quote($emailAddress->id)."
                         ";
                         $sth = $pdo->prepare($query);
-                        $sth->execute();    
+                        $sth->execute();
                     }
                 }
-                
+
                 foreach ($toUpdate as $address) {
                     $emailAddress = $this->getByAddress($address);
                     if ($emailAddress) {
@@ -225,17 +259,17 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $this->save($emailAddress);
                     }
                 }
-                
+
                 foreach ($toCreate as $address) {
                     $emailAddress = $this->getByAddress($address);
                     if (!$emailAddress) {
                         $emailAddress = $this->get();
-                        
+
                         $emailAddress->set(array(
                             'name' => $address,
                             'optOut' => $hash[$address]['optOut'],
                             'invalid' => $hash[$address]['invalid'],
-                        ));                        
+                        ));
                         $this->save($emailAddress);
                     } else {
                         if ($emailAddress->get('optOut') != $hash[$address]['optOut'] || $emailAddress->get('invalid') != $hash[$address]['invalid']) {
@@ -246,9 +280,9 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                             $this->save($emailAddress);
                         }
                     }
-                    
+
                     $query = "
-                        INSERT entity_email_address 
+                        INSERT entity_email_address
                             (entity_id, entity_type, email_address_id, `primary`)
                             VALUES
                             (
@@ -261,7 +295,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                     $sth = $pdo->prepare($query);
                     $sth->execute();
                 }
-                
+
                 if ($primary) {
                     $emailAddress = $this->getByAddress($primary);
                     if ($emailAddress) {
@@ -271,27 +305,26 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                             WHERE
                                 entity_id = ".$pdo->quote($entity->id)." AND
                                 entity_type = ".$pdo->quote($entity->getEntityName())." AND
-                                `primary` = 1 AND 
+                                `primary` = 1 AND
                                 deleted = 0
                         ";
                         $sth = $pdo->prepare($query);
                         $sth->execute();
-                        
+
                         $query = "
                             UPDATE entity_email_address
                             SET `primary` = 1
                             WHERE
                                 entity_id = ".$pdo->quote($entity->id)." AND
                                 entity_type = ".$pdo->quote($entity->getEntityName())." AND
-                                email_address_id = ".$pdo->quote($emailAddress->id)." AND 
+                                email_address_id = ".$pdo->quote($emailAddress->id)." AND
                                 deleted = 0
                         ";
                         $sth = $pdo->prepare($query);
                         $sth->execute();
                     }
-                }            
-                                
-            
+                }
+
             } else {
                 $entityRepository = $this->getEntityManager()->getRepository($entity->getEntityName());
                 if (!empty($email)) {

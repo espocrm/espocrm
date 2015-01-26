@@ -28,7 +28,6 @@ use \Espo\Core\Exceptions\Error;
 
 class Email extends Record
 {
-
     protected function init()
     {
         $this->dependencies[] = 'mailSender';
@@ -36,7 +35,9 @@ class Email extends Record
         $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'crypt';
     }
-    
+
+    protected $fetchEntityBeforeUpdate = true;
+
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
@@ -50,7 +51,7 @@ class Email extends Record
     protected function getPreferences()
     {
         return $this->injections['preferences'];
-    }    
+    }
 
     protected function getCrypt()
     {
@@ -69,7 +70,7 @@ class Email extends Record
                 if (array_key_exists('password', $smtpParams)) {
                     $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
                 }
-                
+
                 if ($smtpParams) {
                     $smtpParams['fromName'] = $this->getUser()->get('name');
                     $emailSender->useSmtp($smtpParams);
@@ -130,7 +131,7 @@ class Email extends Record
                 }
                 $entity->set('bcc', implode(';', $arr));
             }
-            
+
             $this->loadNameHash($entity);
 
             $this->loadAttachmentsTypes($entity);
@@ -155,28 +156,28 @@ class Email extends Record
 
         $entity->set('attachmentsTypes', $types);
     }
-    
+
     public function loadNameHash(Entity $entity)
     {
         $addressList = array();
         if ($entity->get('from')) {
             $addressList[] = $entity->get('from');
         }
-        
+
         $arr = explode(';', $entity->get('to'));
         foreach ($arr as $address) {
             if (!in_array($address, $addressList)) {
                 $addressList[] = $address;
             }
         }
-        
+
         $arr = explode(';', $entity->get('cc'));
         foreach ($arr as $address) {
             if (!in_array($address, $addressList)) {
                 $addressList[] = $address;
             }
         }
-        
+
         $nameHash = array();
         $typeHash = array();
         $idHash = array();
@@ -188,65 +189,65 @@ class Email extends Record
                 $idHash[$address] = $p->id;
             }
         }
-        
+
         $entity->set('nameHash', $nameHash);
         $entity->set('typeHash', $typeHash);
         $entity->set('idHash', $idHash);
     }
-    
+
     public function findEntities($params)
     {
         $searchByEmailAddress = false;
         if (!empty($params['where']) && is_array($params['where'])) {
             foreach ($params['where'] as $i => $p) {
                 if (!empty($p['field']) && $p['field'] == 'emailAddress') {
-                    $searchByEmailAddress = true;                
+                    $searchByEmailAddress = true;
                     $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
                         'lower' => strtolower($p['value'])
                     ))->findOne();
-                    unset($params['where'][$i]);                    
+                    unset($params['where'][$i]);
                     $emailAddressId = null;
                     if ($emailAddress) {
                         $emailAddressId = $emailAddress->id;
                     }
                 }
-        
+
             }
         }
-        
+
         $selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
-        
+
         if ($searchByEmailAddress) {
             if ($emailAddressId) {
                 $pdo = $this->getEntityManager()->getPDO();
-        
+
                 $selectParams['distinct'] = true;
-                 
+
                 $selectParams['customJoin'] = "
-                    LEFT JOIN email_email_address 
-                        ON 
-                        email_email_address.email_id = email.id AND 
+                    LEFT JOIN email_email_address
+                        ON
+                        email_email_address.email_id = email.id AND
                         email_email_address.deleted = 0
                 ";
-                $selectParams['customWhere'] = " 
+                $selectParams['customWhere'] = "
                     AND
                     (
-                        email.from_email_address_id = ".$pdo->quote($emailAddressId)." OR 
+                        email.from_email_address_id = ".$pdo->quote($emailAddressId)." OR
                         email_email_address.email_address_id = ".$pdo->quote($emailAddressId)."
                     )
                 ";
             } else {
                 $selectParams['customWhere'] = ' AND 0';
             }
-        
-        }        
-        
-        $collection = $this->getRepository()->find($selectParams);    
-        
+
+        }
+
+        $collection = $this->getRepository()->find($selectParams);
+
         foreach ($collection as $e) {
             $this->loadParentNameFields($e);
         }
-        
+
         return array(
             'total' => $this->getRepository()->count($selectParams),
             'collection' => $collection,
@@ -257,21 +258,21 @@ class Email extends Record
     {
         return $this->getCopiedAttachments($emailId, $parentType, $parentId);
     }
-    
+
     public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
-        $ids = array();        
+        $ids = array();
         $names = new \stdClass();
-        
+
         if (!empty($id)) {
             $email = $this->getEntityManager()->getEntity('Email', $id);
             if ($email && $this->getAcl()->check($email, 'read')) {
                 $email->loadLinkMultipleField('attachments');
                 $attachmentsIds = $email->get('attachmentsIds');
-                
+
                 foreach ($attachmentsIds as $attachmentId) {
                     $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
-                    if ($source) {                
+                    if ($source) {
                         $attachment = $this->getEntityManager()->getEntity('Attachment');
                         $attachment->set('role', 'Attachment');
                         $attachment->set('type', $source->get('type'));
@@ -283,9 +284,9 @@ class Email extends Record
                             $attachment->set('parentType', $parentType);
                             $attachment->set('parentId', $parentId);
                         }
-                        
+
                         $this->getEntityManager()->saveEntity($attachment);
-                        
+
                         $contents = $this->getFileManager()->getContents('data/upload/' . $source->id);
                         if (!empty($contents)) {
                             $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
@@ -293,29 +294,29 @@ class Email extends Record
                             $names->{$attachment->id} = $attachment->get('name');
                         }
                     }
-                }            
+                }
             }
         }
-        
+
         return array(
             'ids' => $ids,
             'names' => $names
         );
     }
-    
+
     public function sendTestEmail($data)
     {
         $email = $this->getEntityManager()->getEntity('Email');
-        
+
         $email->set(array(
             'subject' => 'EspoCRM: Test Email',
             'isHtml' => false,
-            'to' => $data['emailAddress']        
-        ));        
-                
+            'to' => $data['emailAddress']
+        ));
+
         $emailSender = $this->getMailSender();
         $emailSender->useSmtp($data)->send($email);
-     
+
         return true;
     }
 }

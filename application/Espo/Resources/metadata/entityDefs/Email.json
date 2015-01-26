@@ -131,6 +131,9 @@
         },
         "teams": {
             "type": "linkMultiple"
+        },
+        "users": {
+            "type": "linkMultiple"
         }
     },
     "links": {
@@ -150,6 +153,11 @@
             "type": "hasMany",
             "entity": "Team",
             "relationName": "EntityTeam"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "emails"
         },
         "attachments": {
             "type": "hasChildren",
@@ -176,7 +184,7 @@
             "additionalColumns": {
                 "addressType": {
                     "type": "varchar",
-                    "len": "4" 
+                    "len": "4"
                 }
             }
         },
@@ -190,7 +198,7 @@
             "additionalColumns": {
                 "addressType": {
                     "type": "varchar",
-                    "len": "4" 
+                    "len": "4"
                 }
             }
         },

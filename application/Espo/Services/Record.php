@@ -47,6 +47,8 @@ class Record extends \Espo\Core\Services\Base
         'preferences'
     );
 
+    protected $fetchEntityBeforeUpdate = false;
+
     protected $entityName;
 
     private $streamService;
@@ -330,7 +332,11 @@ class Record extends \Espo\Core\Services\Base
         $this->filterInput($data);
         $this->handleInput($data);
 
-        $entity = $this->getRepository()->get($id);
+        if ($this->fetchEntityBeforeUpdate) {
+            $entity = $this->getEntity($id);
+        } else {
+            $entity = $this->getRepository()->get($id);
+        }
 
         if (!$entity) {
             throw new NotFound();

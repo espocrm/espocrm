@@ -173,10 +173,12 @@ class Base
         }
 
         if (empty($params['aggregation'])) {
-            return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
+            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
         } else {
-            return $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
+            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
         }
+
+        return $sql;
     }
 
     protected function getFunctionPart($function, $part, $entityName, $distinct = false)

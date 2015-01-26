@@ -20,9 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\SelectManagers;
 
-class Call extends \Espo\Core\SelectManagers\Base
+class Email extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOnlyMy(&$result)
     {
@@ -30,8 +30,13 @@ class Call extends \Espo\Core\SelectManagers\Base
         	$result['joins'][] = 'users';
         }
         $result['whereClause'][] = array(
-        	'user.id' => $this->getUser()->id
+        	'emailUser.userId' => $this->getUser()->id
         );
+    }
+
+    protected function accessOnlyOwn(&$result)
+    {
+        $this->boolFilterOnlyMy($result);
     }
 }
 

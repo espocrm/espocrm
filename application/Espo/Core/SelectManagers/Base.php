@@ -52,6 +52,11 @@ class Base
         $this->metadata = $metadata;
     }
 
+    protected function getUser()
+    {
+        return $this->user;
+    }
+
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
@@ -112,12 +117,10 @@ class Base
                         if (!empty($p)) {
                             $params['where'][] = $p;
                         }
+                        $this->boolFilter($filter, $result);
                     }
                 } else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
                     if (!empty($item['value'])) {
-                        if (empty($result['whereClause'])) {
-                            $result['whereClause'] = array();
-                        }
                         $fieldDefs = $this->getSeed()->getFields();
                         $fieldList = $this->getTextFilterFields();
                         $d = array();
@@ -191,17 +194,13 @@ class Base
 
             }
 
-            $result['whereClause'] = $where;
+            $result['whereClause'] = array_merge($result['whereClause'], $where);
         }
     }
 
     protected function q($params, &$result)
     {
         if (!empty($params['q'])) {
-            if (empty($result['whereClause'])) {
-                $result['whereClause'] = array();
-            }
-
             $fieldDefs = $this->getSeed()->getFields();
 
             $value = $params['q'];
@@ -229,31 +228,32 @@ class Base
     protected function access(&$result)
     {
         if ($this->acl->checkReadOnlyOwn($this->entityName)) {
-
-            if (!array_key_exists('whereClause', $result)) {
-                $result['whereClause'] = array();
-            }
-            $result['whereClause']['assignedUserId'] = $this->user->id;
+            $this->accessOnlyOwn($result);
         }
         if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityName)) {
-            if (!array_key_exists('whereClause', $result)) {
-                $result['whereClause'] = array();
-            }
-            $result['distinct'] = true;
-            if (!array_key_exists('joins', $result)) {
-                $result['joins'] = array();
-            }
-            if (!in_array('teams', $result['joins'])) {
-                $result['leftJoins'][] = 'teams';
-            }
-
-            $result['whereClause'][] = array(
-                'OR' => array(
-                    'Team.id' => $this->user->get('teamsIds'),
-                    'assignedUserId' => $this->user->id
-                )
-            );
+            $this->accessOnlyTeam($result);
         }
+    }
+
+    protected function accessOnlyOwn(&$result)
+    {
+        $result['whereClause'][] = array(
+            'assignedUserId' => $this->getUser()->id
+        );
+    }
+
+    protected function accessOnlyTeam(&$result)
+    {
+        $result['distinct'] = true;
+        if (!in_array('teams', $result['joins'])) {
+            $result['leftJoins'][] = 'teams';
+        }
+        $result['whereClause'][] = array(
+            'OR' => array(
+                'Team.id' => $this->user->get('teamsIds'),
+                'assignedUserId' => $this->getUser()->id
+            )
+        );
     }
 
     public function getAclParams()
@@ -265,7 +265,11 @@ class Base
 
     public function getSelectParams(array $params, $withAcl = false)
     {
-        $result = array();
+        $result = array(
+            'joins' => array(),
+            'leftJoins' => array(),
+            'whereClause' => array()
+        );
 
         $this->order($params, $result);
         $this->limit($params, $result);
@@ -411,6 +415,14 @@ class Base
         return $part;
     }
 
+    protected function boolFilter($filterName, &$result)
+    {
+        $method = 'boolFilter' . ucfirst($filterName);
+        if (method_exists($this, $method)) {
+            $this->$method($result);
+        }
+    }
+
     protected function getBoolFilterWhere($filterName)
     {
         $method = 'getBoolFilterWhere' . ucfirst($filterName);
@@ -419,12 +431,10 @@ class Base
         }
     }
 
-    protected function getBoolFilterWhereOnlyMy()
+    protected function boolFilterOnlyMy(&$result)
     {
-        return array(
-            'type' => 'equals',
-            'field' => 'assignedUserId',
-            'value' => $this->user->id,
+        $result['whereClause'][] = array(
+            'assignedUserId' => $this->getUser()->id
         );
     }
 }

@@ -119,6 +119,11 @@
             "type": "hasMany",
             "entity": "Call",
             "foreign": "users"
+        },
+        "emails": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "users"
         }
     },
     "collection": {

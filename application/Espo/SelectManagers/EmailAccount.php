@@ -26,11 +26,10 @@ class EmailAccount extends \Espo\Core\SelectManagers\Base
 {
     protected function access(&$result)
     {
-        if (!array_key_exists('whereClause', $result)) {
-            $result['whereClause'] = array();
-        }
         if (!$this->user->isAdmin()) {
-        	$result['whereClause']['assignedUserId'] = $this->user->id;
+        	$result['whereClause'][] = array(
+        		'assignedUserId' => $this->user->id
+        	);
         }
     }
 }
