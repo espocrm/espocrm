@@ -48,6 +48,12 @@ return array(
 			'status' => 'Active',
 			'scheduling' => '/2 * * * *',
 		),
+		3 => array(
+			'name' => 'Clean-up',
+			'job' => 'Cleanup',
+			'status' => 'Active',
+			'scheduling' => '1 1 * * 0',
+		),
 
 	),
 );
