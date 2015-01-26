@@ -31,7 +31,7 @@ class EmailAccount extends Record
 {    
     protected $internalFields = array('password');
     
-    protected $readOnlyFields = array('assignedUserId', 'fetchData');
+    protected $readOnlyFields = array('fetchData');
     
     const PORTION_LIMIT = 10;
     
@@ -91,39 +91,41 @@ class EmailAccount extends Record
         }
         return $foldersArr;
     }
-    
+
     public function createEntity($data)
     {
         $entity = parent::createEntity($data);
         if ($entity) {
-            $entity->set('assignedUserId', $this->getUser()->id);
+            if (!$this->getUser()->isAdmin()) {
+                $entity->set('assignedUserId', $this->getUser()->id);
+            }
             $this->getEntityManager()->saveEntity($entity);
         }
         return $entity;
     }
-    
+
     public function fetchFromMailServer(Entity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active') {
             throw new Error();
         }
-        
+
         $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager(), $this->getConfig());
-        
+
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
-        
+
         $user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
-        
+
         if (!$user) {
             throw new Error();
         }
-        
+
         $userId = $user->id;
-        $teamId = $user->get('defaultTeam');        
-    
+        $teamId = $user->get('defaultTeam');
+
         $fetchData = json_decode($emailAccount->get('fetchData'), true);
         if (empty($fetchData)) {
-            $fetchData = array();            
+            $fetchData = array();
         }
         if (!array_key_exists('lastUID', $fetchData)) {
             $fetchData['lastUID'] = array();
@@ -131,31 +133,31 @@ class EmailAccount extends Record
         if (!array_key_exists('lastUID', $fetchData)) {
             $fetchData['lastDate'] = array();
         }
-        
+
         $imapParams = array(
             'host' => $emailAccount->get('host'),
             'port' => $emailAccount->get('port'),
             'user' => $emailAccount->get('username'),
             'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
         );
-        
+
         if ($emailAccount->get('ssl')) {
             $imapParams['ssl'] = 'SSL';
         }
-        
+
         $storage = new \Espo\Core\Mail\Storage\Imap($imapParams);
-        
-        $monitoredFolders = $emailAccount->get('monitoredFolders');        
+
+        $monitoredFolders = $emailAccount->get('monitoredFolders');
         if (empty($monitoredFolders)) {
-            throw new Error();        
+            throw new Error();
         }
-        
-        $monitoredFoldersArr = explode(',', $monitoredFolders);                
+
+        $monitoredFoldersArr = explode(',', $monitoredFolders);
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
-            
+
             $storage->selectFolder($folder);
-            
+
             $lastUID = 0;
             $lastDate = 0;
             if (!empty($fetchData['lastUID'][$folder])) {

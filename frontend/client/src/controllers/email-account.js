@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,29 +19,29 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('Controllers.EmailAccount', 'Controllers.Record', function (Dep) {
 
-use \Espo\Core\Exceptions\Forbidden;
+    return Dep.extend({
 
-class EmailAccount extends \Espo\Core\Controllers\Record
-{
-    public function actionGetFolders($params, $data, $request)
-    {
-        return $this->getRecordService()->getFolders(array(
-            'host' => $request->get('host'),
-            'port' => $request->get('port'),
-            'ssl' => $request->get('ssl'),
-            'username' => $request->get('username'),
-            'password' => $request->get('password'),
-            'id' => $request->get('id')
-        ));
-    }
+        list: function (options) {
+        	var userId = (options || {}).userId;
+        	if (!userId) {
+        		Dep.prototype.list.call(this, options);
+        	} else {
+	            this.getCollection(function (collection) {
+	            	collection.where = [{
+	            		type: 'equals',
+	            		field: 'assignedUserId',
+	            		value: userId
+	            	}];
 
-    protected function checkControllerAccess()
-    {
-        if (!$this->getAcl()->check('EmailAccountScope')) {
-            throw new Forbidden();
-        }
-    }
-}
+	                this.main(this.getViewName('list'), {
+	                    scope: this.name,
+	                    collection: collection,
+	                });
+	            });
+	        }
+        },
 
+    });
+});

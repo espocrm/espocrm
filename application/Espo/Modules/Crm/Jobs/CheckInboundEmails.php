@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Jobs;
 
@@ -27,8 +27,8 @@ use \Espo\Core\Exceptions;
 class CheckInboundEmails extends \Espo\Core\Jobs\Base
 {
     public function run()
-    {    
-        $service = $this->getServiceFactory()->create('InboundEmail');        
+    {
+        $service = $this->getServiceFactory()->create('InboundEmail');
         $collection = $this->getEntityManager()->getRepository('InboundEmail')->where(array('status' => 'Active'))->find();
         foreach ($collection as $entity) {
             try {
@@ -36,15 +36,7 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
             } catch (\Exception $e) {}
         }
         
-        $service = $this->getServiceFactory()->create('EmailAccount');        
-        $collection = $this->getEntityManager()->getRepository('EmailAccount')->where(array('status' => 'Active'))->find();
-        foreach ($collection as $entity) {
-            try {
-                $service->fetchFromMailServer($entity);
-            } catch (\Exception $e) {}
-        }
-        
         return true;
-    }    
+    }
 }
 

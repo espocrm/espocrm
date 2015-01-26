@@ -54,6 +54,14 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                     });
                 }
 
+                if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
+                    this.buttons.push({
+                        name: 'emailAccounts',
+                        label: "Email Accounts",
+                        style: 'default'
+                    });
+                }
+
                 if (this.model.id == this.getUser().id) {
                     this.buttons.push({
                         name: 'externalAccounts',
@@ -90,6 +98,10 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
         actionPreferences: function () {
             this.getRouter().navigate('#Preferences/edit/' + this.model.id, {trigger: true});
+        },
+
+        actionEmailAccounts: function () {
+            this.getRouter().navigate('#EmailAccount/list/userId=' + this.model.id, {trigger: true});
         },
 
         actionExternalAccounts: function () {

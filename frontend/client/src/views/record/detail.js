@@ -279,7 +279,7 @@ Espo.define('Views.Record.Detail', 'View', function (Dep) {
         getFieldView: function (name) {
             var view = this.getView('record').getView(name) || null;
             if (!view && this.getView('side')) {
-                view = this.getView('side').getView(name);
+                view = (this.getView('side').getFields() || {})[name];
             }
             return view || null;
         },

@@ -20,29 +20,23 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Modules\Crm\Jobs;
 
-use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions;
 
-class EmailAccount extends \Espo\Core\Controllers\Record
+class CheckEmailAccounts extends \Espo\Core\Jobs\Base
 {
-    public function actionGetFolders($params, $data, $request)
+    public function run()
     {
-        return $this->getRecordService()->getFolders(array(
-            'host' => $request->get('host'),
-            'port' => $request->get('port'),
-            'ssl' => $request->get('ssl'),
-            'username' => $request->get('username'),
-            'password' => $request->get('password'),
-            'id' => $request->get('id')
-        ));
-    }
-
-    protected function checkControllerAccess()
-    {
-        if (!$this->getAcl()->check('EmailAccountScope')) {
-            throw new Forbidden();
+        $service = $this->getServiceFactory()->create('EmailAccount');
+        $collection = $this->getEntityManager()->getRepository('EmailAccount')->where(array('status' => 'Active'))->find();
+        foreach ($collection as $entity) {
+            try {
+                $service->fetchFromMailServer($entity);
+            } catch (\Exception $e) {}
         }
+
+        return true;
     }
 }
 

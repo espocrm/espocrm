@@ -39,9 +39,14 @@ class Service
         return $this->serviceFactory;
     }
 
-
-
-    public function run($job)
+    /**
+     * Run the service defined in Scheduler Job
+     *
+     * @param  array $job
+     *
+     * @return void
+     */
+    public function run(array $job)
     {
         $serviceName = $job['service_name'];
 

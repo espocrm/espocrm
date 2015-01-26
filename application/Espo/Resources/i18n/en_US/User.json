@@ -29,7 +29,8 @@
         "Forgot Password?": "Forgot Password?",
         "Password Change Request": "Password Change Request",
         "Email Address": "Email Address",
-        "External Accounts": "External Accounts"
+        "External Accounts": "External Accounts",
+        "Email Accounts": "Email Accounts"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

@@ -18,41 +18,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Repositories;
 
 use \PDO;
 
-class ScheduledJob extends \Espo\Services\Record
-{    
-
+class ScheduledJob extends \Espo\Core\ORM\Repositories\RDB
+{
+    /**
+     * Get active Scheduler Jobs
+     *
+     * @return array
+     */
     public function getActiveJobs()
     {
         $query = "SELECT * FROM scheduled_job WHERE
                     `status` = 'Active'
-                    AND deleted = 0";    
+                    AND deleted = 0";
 
         $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($query);        
+        $sth = $pdo->prepare($query);
         $sth->execute();
 
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
-        
+
         $list = array();
         foreach ($rows as $row) {
             $list[] = $row;
         }
 
-        return $list;                    
-    } 
+        return $list;
+    }
 
     /**
      * Add record to ScheduledJobLogRecord about executed job
-     * @param string $scheduledJobId 
-     * @param string $status         
      *
-     * @return string Id of created ScheduledJobLogRecord
+     * @param string $scheduledJobId
+     * @param string $status
+     *
+     * @return string ID of created ScheduledJobLogRecord
      */
     public function addLogRecord($scheduledJobId, $status)
     {
@@ -72,12 +77,7 @@ class ScheduledJob extends \Espo\Services\Record
             'executionTime' => $lastRun,
         ));
         $scheduledJobLogId = $entityManager->saveEntity($scheduledJobLog);
-        //$entityManager->getRepository('ScheduledJobLogRecord')->relate($scheduledJobLog, 'scheduledJob', $scheduledJob);        
 
-        return $scheduledJobLogId;        
-    }  
-    
-    
-    
+        return $scheduledJobLogId;
+    }
 }
-
