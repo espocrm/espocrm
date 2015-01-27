@@ -82,10 +82,10 @@ return array (
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' =>
     array (
-        0 => 'Account',
-        1 => 'Contact',
-        2 => 'Lead',
-        3 => 'Opportunity',
+        'Account',
+        'Contact',
+        'Lead',
+        'Opportunity',
     ),
     "tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email"),
     "quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"),
