@@ -9,7 +9,12 @@
         "labelSingular": "Label Singular",
         "labelPlural": "Label Plural",
         "stream": "Stream",
-        "label": "Label"
+        "label": "Label",
+        "linkType": "Link Type",
+        "entityForeign": "Foreign Entity",
+        "linkForeign": "Foreign Link",
+        "link": "Link",
+        "labelForeign": "Foreign Label"
     },
     "options": {
         "type": {

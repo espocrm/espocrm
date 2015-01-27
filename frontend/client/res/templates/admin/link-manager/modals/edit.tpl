@@ -1,38 +1,47 @@
 <div class="row">
-	<div class="cell cell-name form-group col-md-6">
-		<label class="field-label-name control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-name">
-			{{{name}}}
-		</div>
-	</div>
-	<div class="cell cell-type form-group col-md-6">
-		<label class="field-label-type control-label">{{translate 'type' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-type">
-			{{{type}}}
+	<div class="cell cell-linkType form-group col-md-4 col-md-offset-4">
+		<label class="field-label-linkType control-label">{{translate 'linkType' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-linkType">
+			{{{linkType}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="cell cell-labelSingular form-group col-md-6">
-		<label class="field-label-labelSingular control-label">{{translate 'labelSingular' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-labelSingular">
-			{{{labelSingular}}}
-		</div>
-	</div>
-	<div class="cell cell-labelPlural form-group col-md-6">
-		<label class="field-label-labelPlural control-label">{{translate 'labelPlural' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-labelPlural">
-			{{{labelPlural}}}
+	<div class="cell cell-entityForeign form-group col-md-4 col-md-offset-4">
+		<label class="field-label-entityForeign control-label">{{translate 'entityForeign' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-entityForeign">
+			{{{entityForeign}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	{{#if stream}}
-	<div class="cell cell-stream form-group col-md-6">
-		<label class="field-label-stream control-label">{{translate 'stream' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-stream">
-			{{{stream}}}
+	<div class="cell cell-linkForeign form-group col-md-4">
+		<label class="field-label-linkForeign control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-linkForeign">
+			{{{linkForeign}}}
 		</div>
 	</div>
-	{{/if}}
+	<div class="cell form-group col-md-4"></div>
+	<div class="cell cell-link form-group col-md-4">
+		<label class="field-label-link control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-link">
+			{{{link}}}
+		</div>
+	</div>
 </div>
+<div class="row">
+	<div class="cell cell-labelForeign form-group col-md-4">
+		<label class="field-label-labelForeign control-label">{{translate 'label' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-labelForeign">
+			{{{labelForeign}}}
+		</div>
+	</div>
+	<div class="cell form-group col-md-4"></div>
+	<div class="cell cell-label form-group col-md-4">
+		<label class="field-label-label control-label">{{translate 'label' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-label">
+			{{{label}}}
+		</div>
+	</div>
+</div>
+

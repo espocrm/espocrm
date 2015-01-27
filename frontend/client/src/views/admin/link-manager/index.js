@@ -60,8 +60,8 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                 return v1.localeCompare(v2);
             }.bind(this));
 
-            linkList.forEach(function (name) {
-                var d = links[name];
+            linkList.forEach(function (link) {
+                var d = links[link];
 
                 if (!d.foreign) return;
                 if (!d.entity) return;
@@ -89,14 +89,14 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                 }
 
                 this.linkDataList.push({
-                    name: name,
+                    link: link,
                     isCustom: d.isCustom,
                     customizable: d.customizable,
                     type: type,
-                    foreignEntity: d.entity,
+                    entityForeign: d.entity,
                     entity: this.scope,
-                    nameForeign: d.foreign,
-                    label: this.getLanguage().translate(name, 'links', this.scope),
+                    linkForeign: d.foreign,
+                    label: this.getLanguage().translate(link, 'links', this.scope),
                     labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity)
                 });
 
@@ -151,10 +151,8 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
             }).done(function () {
                 this.$el.find('table tr[data-link="'+link+'"]').remove();
                 this.getMetadata().load(function () {
-                    this.getConfig().load(function () {
-                        this.setupLinkData();
-                        this.render();
-                    }.bind(this));
+                    this.setupLinkData();
+                    this.render();
                 }.bind(this));
             }.bind(this));
         },

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Enum', 'Views.Fields.Base', function (Dep) {
 
@@ -48,9 +48,34 @@ Espo.define('Views.Fields.Enum', 'Views.Fields.Base', function (Dep) {
                     this.params.options = this.model[methodName].call(this.model);
                 }
             }
+
+            if (this.params.translation) {
+                var data = this.getLanguage().data;
+                var arr = this.params.translation.split('.');
+                var pointer = this.getLanguage().data;
+                arr.forEach(function (key) {
+                    if (key in pointer) {
+                        pointer = pointer[key];
+                        t = pointer;
+                    }
+                }, this);
+
+                this.translatedOptions = null;
+                var translatedOptions = {};
+                if (this.params.options) {
+                    this.params.options.forEach(function (o) {
+                        if (typeof t === 'object' && o in t) {
+                            translatedOptions[o] = t[o];
+                        } else {
+                            translatedOptions[o] = o;
+                        }
+                    }, this);
+                    this.translatedOptions = translatedOptions;
+                }
+            }
         },
-        
-        validateRequired: function () {                
+
+        validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 if (!this.model.get(this.name)) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
@@ -72,11 +97,11 @@ Espo.define('Views.Fields.Enum', 'Views.Fields.Base', function (Dep) {
             $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
                 arr.push($(el).val());
             });
-            
+
             if (arr.length == 0) {
                 return false;
             }
-            
+
             var data = {
                 type: 'in',
                 value: arr

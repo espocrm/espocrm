@@ -22,7 +22,7 @@
             {{translate entity category='scopeNames'}}
         </td>
         <td width="15%" align="left">
-            {{nameForeign}}
+            {{linkForeign}}
         </td>
         <td width="10%" align="center">
             <strong>
@@ -30,10 +30,10 @@
             </strong>
         </td>
         <td width="15%" align="right">
-            {{name}}
+            {{link}}
         </td>
         <td width="15%" align="right">
-            {{translate foreignEntity category='scopeNames'}}
+            {{translate entityForeign category='scopeNames'}}
         </td>
         <td align="right" width="10%">
             {{#if isCustom}}
