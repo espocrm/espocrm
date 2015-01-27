@@ -53,11 +53,10 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
             this.main('Admin.EntityManager.Index', {scope: scope});
         },
 
-        relationshipManager: function (options) {
+        linkManager: function (options) {
             var scope = options.scope || null;
-            var link = options.link || null;
 
-            this.main('Admin.RelationshipManager.Index', {scope: scope, link: link});
+            this.main('Admin.LinkManager.Index', {scope: scope});
         },
 
         upgrade: function (options) {

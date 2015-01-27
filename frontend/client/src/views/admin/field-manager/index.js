@@ -76,7 +76,6 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
             this.field = this.options.field || null;
 
             this.on('after:render', function () {
-                this.renderFieldsHeader();
                 if (!this.scope) {
                     this.renderDefaultPage();
                 } else {
@@ -100,7 +99,6 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 el: '#fields-content',
                 scope: scope,
             }, function (view) {
-                this.renderFieldsHeader();
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
@@ -119,7 +117,6 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 scope: scope,
                 field: field,
             }, function (view) {
-                this.renderFieldsHeader();
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
@@ -138,7 +135,6 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 scope: scope,
                 type: type,
             }, function (view) {
-                this.renderFieldsHeader();
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
@@ -146,21 +142,7 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
         },
 
         renderDefaultPage: function () {
-            $('#fields-header').html('').hide();
             $('#fields-content').html(this.translate('selectEntityType', 'messages', 'Admin'));
-        },
-
-        renderFieldsHeader: function () {
-            if (!this.scope) {
-                $('#fields-header').html('');
-                return;
-            }
-
-            if (this.field) {
-                $('#fields-header').show().html('<a href="#Admin/fieldManager/scope='+this.scope+'">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a> » ' + this.field);
-            } else {
-                $('#fields-header').show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
-            }
         },
 
         updatePageTitle: function () {

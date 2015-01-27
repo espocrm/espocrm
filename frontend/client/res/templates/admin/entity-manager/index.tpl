@@ -4,11 +4,15 @@
     <button class="btn btn-primary" data-action="createEntity">{{translate 'Create Entity' scope='Admin'}}</button>
 </div>
 
-<table class="table table-bordered table-hover">
+<table class="table table-hover">
     <tr>
         <th>{{translate 'name' scope='EntityManager' category='fields'}}</th>
         <th>{{translate 'label' scope='EntityManager' category='fields'}}</th>
         <th>{{translate 'type' scope='EntityManager' category='fields'}}</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
     </tr>
 {{#each scopeDataList}}
     <tr data-scope="{{name}}">
@@ -30,7 +34,7 @@
         </td>
         <td width="10%">
             {{#if customizable}}
-            <a href="#Admin/relationshipManager/scope={{name}}">{{translate 'Relationships' scope='EntityManager'}}</a>
+            <a href="#Admin/linkManager/scope={{name}}">{{translate 'Relationships' scope='EntityManager'}}</a>
             {{/if}}
         </td>
         <td align="right" width="10%">

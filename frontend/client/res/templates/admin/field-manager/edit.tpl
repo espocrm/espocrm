@@ -5,6 +5,8 @@
 
 <div class="row">
     <div class="col-sm-6">
+    <div class="panel panel-default">
+    <div class="panel-body">
         <div class="cell cell-type form-group">
             <label class="control-label">{{translate 'type' scope='Admin' category='fields'}}</label>
             <div class="field field-type">{{translate type scope='Admin' category='fieldTypes'}}</div>
@@ -17,7 +19,6 @@
             <label class="control-label">{{translate 'label' scope='Admin' category='fields'}}</label>
             <div class="field field-label">{{{label}}}</div>
         </div>
-        
         {{#each params}}
             {{#unless hidden}}
             <div class="cell cell-{{../name}} form-group">
@@ -26,5 +27,7 @@
             </div>
             {{/unless}}
         {{/each}}
+    </div>
+    </div>
     </div>
 </div>

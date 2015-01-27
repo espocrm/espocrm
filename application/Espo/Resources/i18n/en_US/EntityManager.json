@@ -16,6 +16,11 @@
             "": "None",
             "Base": "Base",
             "Person": "Person"
+        },
+        "linkType": {
+            "manyToMany": "Many-to-Many",
+            "oneToMany": "One-to-Many",
+            "manyToOne": "Many-to-One"
         }
     },
     "messages": {

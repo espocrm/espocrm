@@ -108,11 +108,6 @@
             "description":"layoutManager"
          },
          {
-            "url":"#Admin/fieldManager",
-            "label":"Field Manager",
-            "description":"fieldManager"
-         },
-         {
             "url":"#Admin/entityManager",
             "label":"Entity Manager",
             "description":"entityManager"

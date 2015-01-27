@@ -29,8 +29,6 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
 
         scope: null,
 
-        type: null,
-
         data: function () {
             return {
                 scopeDataList: this.scopeDataList,
@@ -44,7 +42,7 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 this.editEntity(scope);
             },
             'click button[data-action="createEntity"]': function (e) {
-                this.editEntity();
+                this.createEntity();
             },
             'click [data-action="removeEntity"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
@@ -81,9 +79,6 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
 
             this.setupScopeData();
 
-            this.on('after:render', function () {
-                this.renderHeader();
-            });
         },
 
         createEntity: function () {
@@ -126,20 +121,6 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                     }.bind(this));
                 }.bind(this));
             }.bind(this));
-        },
-
-        renderDefaultPage: function () {
-            $('#fields-header').html('').hide();
-            $('#fields-content').html(this.translate('selectEntityType', 'messages', 'Admin'));
-        },
-
-        renderHeader: function () {
-            if (!this.scope) {
-                $('#scope-header').html('');
-                return;
-            }
-
-            $('#scope-header').show().html(this.getLanguage().translate(this.scope, 'scopeNames'));
         },
 
         updatePageTitle: function () {
