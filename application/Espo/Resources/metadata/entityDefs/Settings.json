@@ -126,6 +126,11 @@
             "options": ["en_US"],
             "default": "en_US"
         },
+        "globalSearchEntityList": {
+            "type": "multiEnum",
+            "translation": "Global.scopeNames",
+            "view": "Settings.Fields.GlobalSearchEntityList"
+        },
         "exportDelimiter": {
             "type": "varchar",
             "default": ",",

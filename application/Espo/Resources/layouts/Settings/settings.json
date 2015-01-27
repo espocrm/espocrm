@@ -3,14 +3,14 @@
         "label": "System",
         "rows": [
             [{"name": "useCache"},{"name": "companyLogo"}],
-            [{"name": "disableExport"}]        
+            [{"name": "disableExport"},{"name": "globalSearchEntityList"}]
         ]
     },
     {
         "label": "Locale",
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
-            [{"name": "timeFormat"}, {"name": "weekStart"}],        
+            [{"name": "timeFormat"}, {"name": "weekStart"}],
             [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
             [{"name": "language"}]
         ]
