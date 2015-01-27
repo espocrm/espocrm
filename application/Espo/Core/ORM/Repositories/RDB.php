@@ -161,12 +161,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function beforeSave(Entity $entity)
     {
         parent::beforeSave($entity);
+
         $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity);
     }
 
     protected function afterSave(Entity $entity)
     {
         parent::afterSave($entity);
+
+        $this->handleEmailAddressSave($entity);
+        $this->handlePhoneNumberSave($entity);
+        $this->handleSpecifiedRelations($entity);
+
         $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
     }
 
@@ -218,9 +224,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         $entity->set($restoreData);
 
-        $this->handleEmailAddressSave($entity);
-        $this->handlePhoneNumberSave($entity);
-        $this->handleSpecifiedRelations($entity);
+
 
         return $result;
     }
