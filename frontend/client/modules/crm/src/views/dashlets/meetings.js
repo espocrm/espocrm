@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
@@ -40,9 +40,6 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
                         }
                     ],
                     [
-                        {
-                            name: 'status'
-                        },
                         {
                             name: 'dateStart'
                         }
