@@ -25,10 +25,13 @@
         "linkType": {
             "manyToMany": "Many-to-Many",
             "oneToMany": "One-to-Many",
-            "manyToOne": "Many-to-One"
+            "manyToOne": "Many-to-One",
+            "parentToChildren": "Parent-to-Children",
+            "childrenToParent": "Children-to-Parent"
         }
     },
     "messages": {
-        "entityCreated": "Entity has been created"
+        "entityCreated": "Entity has been created",
+        "linkAlreadyExists": "Conflict: link already exists."
     }
 }

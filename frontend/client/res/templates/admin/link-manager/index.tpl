@@ -16,8 +16,15 @@
 
 
 <table class="table">
+    {{#unless linkDataList.length}}
+     <tr>
+        <td>
+            {{translate 'No Data'}}
+        </td>
+     </tr>
+    {{/unless}}
     {{#each linkDataList}}
-    <tr data-scope="{{name}}">
+    <tr data-link="{{link}}">
         <td width="15%" align="left">
             {{translate entity category='scopeNames'}}
         </td>
@@ -36,15 +43,13 @@
             {{translate entityForeign category='scopeNames'}}
         </td>
         <td align="right" width="10%">
-            {{#if isCustom}}
-            <a href="javascript:" data-action="editLink" data-link="{{name}}">
+            <a href="javascript:" data-action="editLink" data-link="{{link}}">
                 {{translate 'Edit'}}
             </a>
-            {{/if}}
         </td>
         <td align="right" width="10%">
             {{#if isCustom}}
-            <a href="javascript:" data-action="removeLink" data-link="{{name}}">
+            <a href="javascript:" data-action="removeLink" data-link="{{link}}">
                 {{translate 'Remove'}}
             </a>
             {{/if}}

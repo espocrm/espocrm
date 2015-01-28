@@ -52,6 +52,34 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
             }
         },
 
+        computeRelationshipType: function (type, foreignType) {
+            if (type == 'hasMany') {
+                if (foreignType == 'hasMany') {
+                    return 'manyToMany';
+                } else if (foreignType == 'belongsTo') {
+                    return 'oneToMany';
+                } else {
+                    return;
+                }
+            } else if (type == 'belongsTo') {
+                if (foreignType == 'hasMany') {
+                    return 'manyToOne';
+                } else {
+                    return;
+                }
+            } else if (type == 'belongsToParent') {
+                if (foreignType == 'hasChildren') {
+                    return 'childrenToParent'
+                }
+                return;
+            } else if (type == 'hasChildren') {
+                if (foreignType == 'belongsToParent') {
+                    return 'parentToChildren'
+                }
+                return;
+            }
+        },
+
         setupLinkData: function () {
             this.linkDataList = [];
 
@@ -68,25 +96,9 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
 
                 var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
 
-                var type;
+                var type = this.computeRelationshipType(d.type, foreignType);
 
-                if (d.type == 'hasMany') {
-                    if (foreignType == 'hasMany') {
-                        type = 'manyToMany';
-                    } else if (foreignType == 'belongsTo') {
-                        type = 'oneToMany';
-                    } else {
-                        return;
-                    }
-                } else if (d.type == 'belongsTo') {
-                    if (foreignType == 'hasMany') {
-                        type = 'manyToOne';
-                    } else {
-                        return;
-                    }
-                } else {
-                    return;
-                }
+                if (!type) return;
 
                 this.linkDataList.push({
                     link: link,
@@ -140,12 +152,12 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
             }.bind(this));
         },
 
-        removeEntity: function (link) {
+        removeLink: function (link) {
             $.ajax({
                 url: 'EntityManager/action/removeLink',
                 type: 'POST',
                 data: JSON.stringify({
-                    scope: this.scope,
+                    entity: this.scope,
                     link: link
                 })
             }).done(function () {

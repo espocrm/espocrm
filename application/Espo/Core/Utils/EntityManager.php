@@ -221,4 +221,191 @@ class EntityManager
     {
         return $this->getMetadata()->get('scopes.' . $name . '.isCustom');
     }
+
+    public function createLink(array $params)
+    {
+        $linkType = $params['linkType'];
+
+        $entity = $params['entity'];
+        $link = $params['link'];
+        $entityForeign = $params['entityForeign'];
+        $linkForeign = $params['linkForeign'];
+
+        $label = $params['label'];
+        $labelForeign = $params['labelForeign'];
+
+        if (empty($linkType)) {
+            throw new Error();
+        }
+        if (empty($entity) || empty($entityForeign)) {
+            throw new Error();
+        }
+        if (empty($entityForeign) || empty($linkForeign)) {
+            throw new Error();
+        }
+
+        if ($this->getMetadata()->get('entityDefs.' . $entity . '.links.' . $link)) {
+            throw new Conflict('Link ['.$entity.'::'.$link.'] already exists.');
+        }
+        if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.links.' . $linkForeign)) {
+            throw new Conflict('Link ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+        }
+
+        switch ($linkType) {
+            case 'oneToMany':
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.field.' . $linkForeign)) {
+                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                }
+                $dataLeft = array(
+                    'links' => array(
+                        $link => array(
+                            'type' => 'hasMany',
+                            'foreign' => $linkForeign,
+                            'entity' => $entityForeign,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                $dataRight = array(
+                    'fields' => array(
+                        $linkForeign => array(
+                            'type' => 'link'
+                        )
+                    ),
+                    'links' => array(
+                        $linkForeign => array(
+                            'type' => 'belongsTo',
+                            'foreign' => $link,
+                            'entity' => $entity,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                break;
+            case 'manyToOne':
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.field.' . $link)) {
+                    throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
+                }
+                $dataLeft = array(
+                    'fields' => array(
+                        $link => array(
+                            'type' => 'link'
+                        )
+                    ),
+                    'links' => array(
+                        $link => array(
+                            'type' => 'belongsTo',
+                            'foreign' => $linkForeign,
+                            'entity' => $entityForeign,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                $dataRight = array(
+                    'links' => array(
+                        $linkForeign => array(
+                            'type' => 'hasMany',
+                            'foreign' => $link,
+                            'entity' => $entity,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                break;
+            case 'manyToMany':
+                $dataLeft = array(
+                    'links' => array(
+                        $link => array(
+                            'type' => 'hasMany',
+                            'foreign' => $linkForeign,
+                            'entity' => $entityForeign,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                $dataRight = array(
+                    'links' => array(
+                        $linkForeign => array(
+                            'type' => 'hasMany',
+                            'foreign' => $link,
+                            'entity' => $entity,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                break;
+        }
+
+        $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
+        $this->getMetadata()->set('entityDefs', $entityForeign, $dataRight);
+        $this->getMetadata()->save();
+
+        $this->getLanguage()->set($entity, 'fields', $link, $label);
+        $this->getLanguage()->set($entity, 'links', $link, $label);
+        $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+        $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+
+        $this->getLanguage()->save();
+
+        return true;
+    }
+
+    public function updateLink(array $params)
+    {
+        $entity = $params['entity'];
+        $link = $params['link'];
+        $entityForeign = $params['entityForeign'];
+        $linkForeign = $params['linkForeign'];
+
+        $label = $params['label'];
+        $labelForeign = $params['labelForeign'];
+
+        if (empty($entity) || empty($entityForeign)) {
+            throw new Error();
+        }
+        if (empty($entityForeign) || empty($linkForeign)) {
+            throw new Error();
+        }
+
+        $this->getLanguage()->set($entity, 'fields', $link, $label);
+        $this->getLanguage()->set($entity, 'links', $link, $label);
+        $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+        $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+
+        $this->getLanguage()->save();
+
+        return true;
+    }
+
+    public function deleteLink(array $params)
+    {
+        $entity = $params['entity'];
+        $link = $params['link'];
+
+        if (!$this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom")) {
+            throw new Error();
+        }
+
+        $entityForeign = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.entity");
+        $linkForeign = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.foreign");
+
+        if (empty($entity) || empty($entityForeign)) {
+            throw new Error();
+        }
+        if (empty($entityForeign) || empty($linkForeign)) {
+            throw new Error();
+        }
+
+        $this->getMetadata()->delete('entityDefs', $entity, array(
+            'fields.' . $link,
+            'links.' . $link
+        ));
+        $this->getMetadata()->delete('entityDefs', $entityForeign, array(
+            'fields.' . $linkForeign,
+            'links.' . $linkForeign
+        ));
+        $this->getMetadata()->save();
+
+        return true;
+    }
 }
