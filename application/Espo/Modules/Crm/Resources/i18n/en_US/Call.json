@@ -29,7 +29,8 @@
         "acceptanceStatus": {
             "None": "None",
             "Accepted": "Accepted",
-            "Declined": "Declined"
+            "Declined": "Declined",
+            "Tentative": "Tentative"
         }
     },
     "labels": {
