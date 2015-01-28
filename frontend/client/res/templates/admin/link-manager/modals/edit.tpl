@@ -1,16 +1,16 @@
 <div class="row">
-	<div class="cell cell-linkType form-group col-md-4 col-md-offset-4">
-		<label class="field-label-linkType control-label">{{translate 'linkType' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-linkType">
-			{{{linkType}}}
-		</div>
-	</div>
-</div>
-<div class="row">
 	<div class="cell cell-entityForeign form-group col-md-4 col-md-offset-4">
 		<label class="field-label-entityForeign control-label">{{translate 'entityForeign' category='fields' scope='EntityManager'}}</label>
 		<div class="field field-entityForeign">
 			{{{entityForeign}}}
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="cell cell-linkType form-group col-md-4 col-md-offset-4">
+		<label class="field-label-linkType control-label">{{translate 'linkType' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-linkType">
+			{{{linkType}}}
 		</div>
 	</div>
 </div>
