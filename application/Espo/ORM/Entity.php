@@ -28,8 +28,10 @@ abstract class Entity implements IEntity
 
     private $isNew = false;
 
+    private $isSaved = false;
+
     /**
-     * Entity name.
+     * Entity name (entity type).
      * @var string
      */
     protected $entityName;
@@ -224,6 +226,16 @@ abstract class Entity implements IEntity
     public function setIsNew($isNew)
     {
         $this->isNew = $isNew;
+    }
+
+    public function isSaved()
+    {
+        return $this->isSaved;
+    }
+
+    public function setIsSaved($isSaved)
+    {
+        $this->isSaved = $isSaved;
     }
 
     public function getEntityName()
