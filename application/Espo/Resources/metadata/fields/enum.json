@@ -13,6 +13,11 @@
       {
          "name":"default",
          "type":"varchar"
+      },
+      {
+         "name":"translation",
+         "type":"varchar",
+         "hidden": true
       }
    ],
    "filter": true,

@@ -27,21 +27,21 @@ use \Espo\ORM\Entity;
 class Invitations
 {
     protected $entityManager;
-    
+
     protected $smtpParams;
 
     protected $mailSender;
-    
+
     protected $config;
-    
+
     protected $dateTime;
-    
+
     protected $language;
-    
+
     protected $fileManager;
-    
+
     protected $ics;
-    
+
     public function __construct($entityManager, $smtpParams, $mailSender, $config, $dateTime, $language, $fileManager)
     {
         $this->entityManager = $entityManager;
@@ -52,17 +52,17 @@ class Invitations
         $this->language = $language;
         $this->fileManager = $fileManager;
     }
-    
+
     protected function getEntityManager()
     {
         return $this->entityManager;
     }
-    
+
     protected function parseInvitationTemplate($contents, $entity, $invitee = null, $uid = null)
     {
-        
+
         $contents = str_replace('{eventType}', strtolower($this->language->translate($entity->getEntityName(), 'scopeNames')), $contents);
-        
+
         foreach ($entity->getFields() as $field => $d) {
             if (empty($d['type'])) continue;
             $key = '{'.$field.'}';
@@ -97,6 +97,7 @@ class Invitations
         if ($uid) {
             $contents = str_replace('{acceptLink}', $siteUrl . '?entryPoint=eventConfirmation&action=accept&uid=' . $uid->get('name'), $contents);
             $contents = str_replace('{declineLink}', $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name'), $contents);
+            $contents = str_replace('{tentativeLink}', $siteUrl . '?entryPoint=eventConfirmation&action=tentativeLink&uid=' . $uid->get('name'), $contents);
         }
         return $contents;
     }
@@ -118,7 +119,7 @@ class Invitations
 
         return file_get_contents($fileName);
     }
-    
+
     public function sendInvitation(Entity $entity, Entity $invitee, $link)
     {
         $uid = $this->getEntityManager()->getEntity('UniqueId');
@@ -144,14 +145,14 @@ class Invitations
 
         $subject = $this->parseInvitationTemplate($subjectTpl, $entity, $invitee, $uid);
         $subject = str_replace(array("\n", "\r"), '', $subject);
-        
+
         $body = $this->parseInvitationTemplate($bodyTpl, $entity, $invitee, $uid);
 
         $email->set('subject', $subject);
         $email->set('body', $body);
         $email->set('isHtml', true);
         $this->getEntityManager()->saveEntity($email);
-        
+
         $attachmentName = ucwords($this->language->translate($entity->getEntityName(), 'scopeNames')).'.ics';
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set(array(
@@ -159,7 +160,7 @@ class Invitations
             'type' => 'text/calendar',
             'contents' => $this->getIscContents($entity),
         ));
-        
+
         $email->addAttachment($attachment);
 
         $emailSender = $this->mailSender;
@@ -168,21 +169,21 @@ class Invitations
             $emailSender->useSmtp($this->smtpParams);
         }
         $emailSender->send($email);
-        
+
         $this->getEntityManager()->removeEntity($email);
     }
-    
+
     protected function getIscContents(Entity $entity)
     {
         $user = $entity->get('assignedUser');
-        
+
         $who = '';
         $email = '';
         if ($user) {
             $who = $user->get('name');
             $email = $user->get('emailAddress');
         }
-        
+
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', array(
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
@@ -192,9 +193,9 @@ class Invitations
             'email' => $email,
             'description' => $entity->get('description'),
         ));
-        
+
         return $ics->get();
     }
-    
+
 }
 

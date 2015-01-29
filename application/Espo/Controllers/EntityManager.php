@@ -131,5 +131,97 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         return true;
     }
+
+    public function actionCreateLink($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        $paramList = [
+        	'entity',
+        	'entityForeign',
+        	'link',
+        	'linkForeign',
+        	'label',
+        	'labelForeign',
+        	'linkType'
+        ];
+
+        $d = array();
+        foreach ($paramList as $item) {
+        	if (empty($data[$item])) {
+        		throw new BadRequest();
+        	}
+        	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        }
+
+        $result = $this->getContainer()->get('entityManagerUtil')->createLink($d);
+
+        if ($result) {
+            $this->getContainer()->get('dataManager')->rebuild();
+        } else {
+            throw new Error();
+        }
+
+        return true;
+    }
+
+    public function actionUpdateLink($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        $paramList = [
+        	'entity',
+        	'entityForeign',
+        	'link',
+        	'linkForeign',
+        	'label',
+        	'labelForeign'
+        ];
+
+        $d = array();
+        foreach ($paramList as $item) {
+        	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        }
+
+        $result = $this->getContainer()->get('entityManagerUtil')->updateLink($d);
+
+        if ($result) {
+            $this->getContainer()->get('dataManager')->clearCache();
+        } else {
+            throw new Error();
+        }
+
+        return true;
+    }
+
+    public function actionRemoveLink($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        $paramList = [
+        	'entity',
+        	'link',
+        ];
+        $d = array();
+        foreach ($paramList as $item) {
+        	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        }
+
+        $result = $this->getContainer()->get('entityManagerUtil')->deleteLink($d);
+
+        if ($result) {
+            $this->getContainer()->get('dataManager')->clearCache();
+        } else {
+            throw new Error();
+        }
+
+        return true;
+    }
 }
 

@@ -43,7 +43,8 @@
         "Uninstalled": "Uninstalled",
         "Create Entity": "Create Entity",
         "Edit Entity": "Edit Entity",
-        "Create Link": "Create Link"
+        "Create Link": "Create Link",
+        "Edit Link": "Edit Link"
     },
     "layouts": {
         "list": "List",

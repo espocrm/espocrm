@@ -54,7 +54,7 @@
             "type": "enum",
             "notStorable": true,
             "disabled": true,
-            "options": ["None", "Accepted", "Declined"]
+            "options": ["None", "Accepted", "Tentative", "Declined"]
         },
         "users": {
             "type": "linkMultiple",

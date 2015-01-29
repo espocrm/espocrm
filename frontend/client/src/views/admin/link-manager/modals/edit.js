@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.LinkManager.Modals.Edit', 'Views.Modal', function (Dep) {
+Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.LinkManager.Index'], function (Dep, Index) {
 
     return Dep.extend({
 
@@ -47,11 +47,16 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', 'Views.Modal', function (Dep)
                 }
             ];
 
-            var scope = this.scope = this.options.scope || false;
+            var scope = this.scope = this.options.scope;
+            var link = this.link = this.options.link || false;
 
-            var header = 'Create Entity';
-            if (scope) {
-                header = 'Edit Entity';
+            var entity = scope;
+
+            var isNew = this.isNew = (false == link);
+
+            var header = 'Create Link';
+            if (!isNew) {
+                header = 'Edit Link';
             }
 
             this.header = this.translate(header, 'labels', 'Admin');
@@ -59,73 +64,119 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', 'Views.Modal', function (Dep)
             var model = this.model = new Espo.Model();
             model.name = 'EntityManager';
 
-            this.hasStreamField = true;
-            if (scope) {
-                this.hasStreamField = this.getMetadata().get('scopes.' + scope + '.customizable') || false;
+            this.model.set('entity', scope);
+
+            if (!isNew) {
+                var entityForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.entity');
+                var linkForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.foreign');
+                var label = this.getLanguage().translate(link, 'links', scope);
+                var labelForeign = this.getLanguage().translate(linkForeign, 'links', entityForeign);
+
+                var type = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.type');
+                var foreignType = this.getMetadata().get('entityDefs.' + entityForeign + '.links.' + linkForeign + '.type');
+
+                var linkType = Index.prototype.computeRelationshipType.call(this, type, foreignType);
+
+                this.model.set('linkType', linkType);
+                this.model.set('entityForeign', entityForeign);
+                this.model.set('link', link);
+                this.model.set('linkForeign', linkForeign);
+                this.model.set('label', label);
+                this.model.set('labelForeign', labelForeign);
             }
 
-            if (scope) {
-                this.model.set('name', scope);
-                this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
-                this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
-                this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
-                this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
-            }
 
-            this.createView('type', 'Fields.Enum', {
+            var scopes = this.getMetadata().get('scopes') || null;
+            var entityList = (Object.keys(scopes) || []).filter(function (item) {
+                var d = scopes[item];
+                return d.customizable && d.entity;
+            }, this).sort(function (v1, v2) {
+                var t1 = this.translate(v1, 'scopeNames');
+                var t2 = this.translate(v2, 'scopeNames');
+                return t1.localeCompare(t2);
+            }.bind(this));
+
+            entityList.unshift('');
+
+
+            this.createView('entity', 'Fields.Varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-type',
+                el: this.options.el + ' .field-entity',
                 defs: {
-                    name: 'type',
+                    name: 'entity'
+                },
+                readOnly: true
+            });
+            this.createView('entityForeign', 'Fields.Enum', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-entityForeign',
+                defs: {
+                    name: 'entityForeign',
                     params: {
                         required: true,
-                        options: ['Base', 'Person']
+                        options: entityList,
+                        translation: 'Global.scopeNames'
                     }
                 },
-                readOnly: scope != false
+                readOnly: !isNew
             });
-
-            if (this.hasStreamField) {
-                this.createView('stream', 'Fields.Bool', {
-                    model: model,
-                    mode: 'edit',
-                    el: this.options.el + ' .field-stream',
-                    defs: {
-                        name: 'stream'
-                    }
-                });
-            }
-
-            this.createView('name', 'Fields.Varchar', {
+            this.createView('linkType', 'Fields.Enum', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-name',
+                el: this.options.el + ' .field-linkType',
                 defs: {
-                    name: 'name',
+                    name: 'linkType',
+                    params: {
+                        required: true,
+                        options: ['', 'oneToMany', 'manyToOne', 'manyToMany']
+                    }
+                },
+                readOnly: !isNew
+            });
+
+            this.createView('link', 'Fields.Varchar', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-link',
+                defs: {
+                    name: 'link',
                     params: {
                         required: true
                     }
                 },
-                readOnly: scope != false
+                readOnly: !isNew
             });
-            this.createView('labelSingular', 'Fields.Varchar', {
+            this.createView('linkForeign', 'Fields.Varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-labelSingular',
+                el: this.options.el + ' .field-linkForeign',
                 defs: {
-                    name: 'labelSingular',
+                    name: 'linkForeign',
+                    params: {
+                        required: true
+                    }
+                },
+                readOnly: !isNew
+            });
+            this.createView('label', 'Fields.Varchar', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-label',
+                defs: {
+                    name: 'label',
                     params: {
                         required: true
                     }
                 }
             });
-            this.createView('labelPlural', 'Fields.Varchar', {
+            this.createView('labelForeign', 'Fields.Varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-labelPlural',
+                el: this.options.el + ' .field-labelForeign',
                 defs: {
-                    name: 'labelPlural',
+                    name: 'labelForeign',
                     params: {
                         required: true
                     }
@@ -133,33 +184,92 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', 'Views.Modal', function (Dep)
             });
         },
 
-        afterRender: function () {
-            this.getView('name').on('change', function (m) {
-                var name = this.model.get('name');
+        toPlural: function (string) {
+            if (string.slice(-1) == 'y') {
+                return string.substr(0, string.length - 1) + 'ies';
+            } else {
+                return string + 's';
+            }
 
-                name = name.charAt(0).toUpperCase() + name.slice(1);
+        },
 
-                this.model.set('labelSingular', name);
-                this.model.set('labelPlural', name + 's') ;
-                if (name) {
-                    name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
-                        return g.toUpperCase();
-                    }).replace(' ', '');
-                    if (name.length) {
-                         name = name.charAt(0).toUpperCase() + name.slice(1);
-                    }
+        populateFields: function () {
+            var entityForeign = this.model.get('entityForeign');
+            var linkType = this.model.get('linkType');
+
+            if (!entityForeign || !linkType) {
+                this.model.set('link', '');
+                this.model.set('linkForeign', '');
+
+                this.model.set('label', '');
+                this.model.set('labelForeign', '');
+                return;
+            }
+
+            var link;
+            var linkForeign;
+
+            switch (linkType) {
+                case 'oneToMany':
+                    linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
+                    link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign))
+                    break;
+                case 'manyToOne':
+                    linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
+                    link = Espo.Utils.lowerCaseFirst(entityForeign);
+                    break;
+                case 'manyToMany':
+                    linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
+                    link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign));
+                    break;
+            }
+
+            this.model.set('link', link);
+            this.model.set('linkForeign', linkForeign);
+
+            this.model.set('label', Espo.Utils.upperCaseFirst(link));
+            this.model.set('labelForeign', Espo.Utils.upperCaseFirst(linkForeign));
+
+            return;
+        },
+
+        handleLinkChange: function (field) {
+            var value = this.model.get(field);
+            if (value) {
+                value = value.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
+                    return g.toUpperCase();
+                }).replace(' ', '');
+                if (value.length) {
+                     value = Espo.Utils.lowerCaseFirst(value);
                 }
-                this.model.set('name', name);
+            }
+            this.model.set(field, value);
+        },
+
+        afterRender: function () {
+            this.getView('linkType').on('change', function (m) {
+                this.populateFields();
+            }, this);
+            this.getView('entityForeign').on('change', function (m) {
+                this.populateFields();
+            }, this);
+
+            this.getView('link').on('change', function (m) {
+                this.handleLinkChange('link');
+            }, this);
+            this.getView('linkForeign').on('change', function (m) {
+                this.handleLinkChange('linkForeign');
             }, this);
         },
 
         save: function () {
             var arr = [
-                'name',
-                'type',
-                'labelSingular',
-                'labelPlural',
-                'stream'
+                'link',
+                'linkForeign',
+                'label',
+                'labelForeign',
+                'linkType',
+                'entityForeign'
             ];
 
             var notValid = false;
@@ -182,41 +292,57 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', 'Views.Modal', function (Dep)
 
             this.$el.find('button[data-name="save"]').addClass('disabled');
 
-            var url = 'EntityManager/action/createEntity';
-            if (this.scope) {
-                url = 'EntityManager/action/updateEntity';
+            var url = 'EntityManager/action/createLink';
+            if (!this.isNew) {
+                url = 'EntityManager/action/updateLink';
             }
 
-            var name = this.model.get('name');
+            var entity = this.scope;
+            var entityForeign = this.model.get('entityForeign');
+            var link = this.model.get('link');
+            var linkForeign = this.model.get('linkForeign');
+            var label = this.model.get('label');
+            var labelForeign = this.model.get('labelForeign');
 
             $.ajax({
                 url: url,
                 type: 'POST',
                 data: JSON.stringify({
-                    name: name,
-                    labelSingular: this.model.get('labelSingular'),
-                    labelPlural: this.model.get('labelPlural'),
-                    type: this.model.get('type'),
-                    stream: this.model.get('stream')
+                    entity: entity,
+                    entityForeign: entityForeign,
+                    link: link,
+                    linkForeign: linkForeign,
+                    label: label,
+                    labelForeign: labelForeign,
+                    linkType: this.model.get('linkType')
                 }),
-                error: function () {
+                error: function (x) {
+                    if (x.status == 409) {
+                        Espo.Ui.error(this.translate('linkAlreadyExists', 'messages', 'EntityManager'));
+                        x.errorIsHandled = true;
+                    }
                     this.$el.find('button[data-name="save"]').removeClass('disabled');
                 }.bind(this)
             }).done(function () {
-                if (this.scope) {
+                if (!this.isNew) {
                     Espo.Ui.success(this.translate('Saved'));
                 } else {
-                    Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
+                    Espo.Ui.success(this.translate('Created'));
                 }
-                var global = ((this.getLanguage().data || {}) || {}).Global;
-                (global.scopeNames || {})[name] = this.model.get('labelSingular');
-                (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
+
+                var data;
+
+                data = ((this.getLanguage().data || {}) || {})[entity];
+                (data.fields || {})[link] = label;
+                (data.links || {})[link] = label;
+
+                data = ((this.getLanguage().data || {}) || {})[entityForeign];
+                (data.fields || {})[linkForeign] = labelForeign;
+                (data.links || {})[linkForeign] = labelForeign;
 
                 this.getMetadata().load(function () {
-                    this.getConfig().load(function () {
-                        this.trigger('after:save');
-                        this.close();
-                    }.bind(this));
+                    this.trigger('after:save');
+                    this.close();
                 }.bind(this));
             }.bind(this));
         },

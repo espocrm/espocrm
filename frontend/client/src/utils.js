@@ -114,6 +114,13 @@
             return Espo.Utils.convert(string, 'c-h').split('.').join('-');
         },
 
+        lowerCaseFirst: function (string) {
+            if (string == null) {
+                return string;
+            }
+            return string.charAt(0).toLowerCase() + string.slice(1);
+        },
+
         upperCaseFirst: function (string) {
             if (string == null) {
                 return string;

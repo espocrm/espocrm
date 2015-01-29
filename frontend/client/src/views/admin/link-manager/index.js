@@ -52,6 +52,34 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
             }
         },
 
+        computeRelationshipType: function (type, foreignType) {
+            if (type == 'hasMany') {
+                if (foreignType == 'hasMany') {
+                    return 'manyToMany';
+                } else if (foreignType == 'belongsTo') {
+                    return 'oneToMany';
+                } else {
+                    return;
+                }
+            } else if (type == 'belongsTo') {
+                if (foreignType == 'hasMany') {
+                    return 'manyToOne';
+                } else {
+                    return;
+                }
+            } else if (type == 'belongsToParent') {
+                if (foreignType == 'hasChildren') {
+                    return 'childrenToParent'
+                }
+                return;
+            } else if (type == 'hasChildren') {
+                if (foreignType == 'belongsToParent') {
+                    return 'parentToChildren'
+                }
+                return;
+            }
+        },
+
         setupLinkData: function () {
             this.linkDataList = [];
 
@@ -60,43 +88,27 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                 return v1.localeCompare(v2);
             }.bind(this));
 
-            linkList.forEach(function (name) {
-                var d = links[name];
+            linkList.forEach(function (link) {
+                var d = links[link];
 
                 if (!d.foreign) return;
                 if (!d.entity) return;
 
                 var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
 
-                var type;
+                var type = this.computeRelationshipType(d.type, foreignType);
 
-                if (d.type == 'hasMany') {
-                    if (foreignType == 'hasMany') {
-                        type = 'manyToMany';
-                    } else if (foreignType == 'belongsTo') {
-                        type = 'oneToMany';
-                    } else {
-                        return;
-                    }
-                } else if (d.type == 'belongsTo') {
-                    if (foreignType == 'hasMany') {
-                        type = 'manyToOne';
-                    } else {
-                        return;
-                    }
-                } else {
-                    return;
-                }
+                if (!type) return;
 
                 this.linkDataList.push({
-                    name: name,
+                    link: link,
                     isCustom: d.isCustom,
                     customizable: d.customizable,
                     type: type,
-                    foreignEntity: d.entity,
+                    entityForeign: d.entity,
                     entity: this.scope,
-                    nameForeign: d.foreign,
-                    label: this.getLanguage().translate(name, 'links', this.scope),
+                    linkForeign: d.foreign,
+                    label: this.getLanguage().translate(link, 'links', this.scope),
                     labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity)
                 });
 
@@ -140,21 +152,19 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
             }.bind(this));
         },
 
-        removeEntity: function (link) {
+        removeLink: function (link) {
             $.ajax({
                 url: 'EntityManager/action/removeLink',
                 type: 'POST',
                 data: JSON.stringify({
-                    scope: this.scope,
+                    entity: this.scope,
                     link: link
                 })
             }).done(function () {
                 this.$el.find('table tr[data-link="'+link+'"]').remove();
                 this.getMetadata().load(function () {
-                    this.getConfig().load(function () {
-                        this.setupLinkData();
-                        this.render();
-                    }.bind(this));
+                    this.setupLinkData();
+                    this.render();
                 }.bind(this));
             }.bind(this));
         },

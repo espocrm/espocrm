@@ -132,12 +132,13 @@ class RDB extends \Espo\ORM\Repository
     public function save(Entity $entity)
     {
         $this->beforeSave($entity);
-        if ($entity->isNew()) {
+        if ($entity->isNew() && !$entity->isSaved()) {
             $result = $this->getMapper()->insert($entity);
         } else {
             $result = $this->getMapper()->update($entity);
         }
         if ($result) {
+            $entity->setIsSaved(true);
             $this->afterSave($entity);
             if ($entity->isNew()) {
                 $entity->setIsNew(false);
