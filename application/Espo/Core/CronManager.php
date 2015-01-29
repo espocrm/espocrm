@@ -274,7 +274,7 @@ class CronManager
             }
 
             if ($cronExpression->isDue()) {
-                $prevDate = date('Y-m-d H:i:00');
+                $prevDate = date('Y-m-d H:i:s');
             }
 
             $existsJob = $cronJob->getJobByScheduledJob($scheduledJob['id'], $prevDate);
