@@ -107,9 +107,8 @@ class Importer
             $inlineIds = array();
 
             if ($message->isMultipart()) {
-                $count = $message->countParts();
-                for ($i = 0; $i < $count; $i++) {
-                    $part = $message->getPart($i + 1);
+                foreach (new \RecursiveIteratorIterator($message) as $part) {
+                    echo "-";
                     $this->importPartDataToEmail($email, $part, $inlineIds);
                 }
             } else {

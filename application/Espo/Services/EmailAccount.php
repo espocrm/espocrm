@@ -28,65 +28,65 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
 class EmailAccount extends Record
-{    
+{
     protected $internalFields = array('password');
-    
+
     protected $readOnlyFields = array('fetchData');
-    
+
     const PORTION_LIMIT = 10;
-    
+
     protected function init()
     {
         $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'crypt';
     }
-    
+
     protected function getFileManager()
     {
         return $this->injections['fileManager'];
     }
-    
+
     protected function getCrypt()
     {
         return $this->injections['crypt'];
     }
-    
+
     protected function handleInput(&$data)
-    {    
-        parent::handleInput($data);        
+    {
+        parent::handleInput($data);
         if (array_key_exists('password', $data)) {
             $data['password'] = $this->getCrypt()->encrypt($data['password']);
         }
     }
-    
+
     public function getFolders($params)
-    {        
+    {
         $password = $params['password'];
-        
+
         if (!empty($params['id'])) {
             $entity = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
             if ($entity) {
                 $password = $this->getCrypt()->decrypt($entity->get('password'));
             }
-        }        
-        
+        }
+
         $imapParams = array(
             'host' => $params['host'],
             'port' => $params['port'],
             'user' => $params['username'],
             'password' => $password,
         );
-        
+
         if (!empty($params['ssl'])) {
             $imapParams['ssl'] = 'SSL';
-        }    
-        
-        $foldersArr = array();    
-    
-        $storage = new \Zend\Mail\Storage\Imap($imapParams);    
-        
+        }
+
+        $foldersArr = array();
+
+        $storage = new \Zend\Mail\Storage\Imap($imapParams);
+
         $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($folders as $name => $folder) {        
+        foreach ($folders as $name => $folder) {
             $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
         return $foldersArr;
@@ -177,32 +177,32 @@ class EmailAccount extends Record
                     return false;
                 }
             }
-            
+
             if ((count($ids) == 1) && !empty($lastUID)) {
                 if ($storage->getUniqueId($ids[0]) == $lastUID) {
                     continue;
                 }
             }
-            
-            $k = 0;    
-            foreach ($ids as $i => $id) {            
+
+            $k = 0;
+            foreach ($ids as $i => $id) {
                 if ($k == count($ids) - 1) {
                     $lastUID = $storage->getUniqueId($id);
                 }
-                                
+
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
                         continue;
                     }
                 }
-            
+
                 $message = $storage->getMessage($id);
-                
+
                 $email = $importer->importMessage($message, $userId, array($teamId));
-                                
+
                 if ($k == count($ids) - 1) {
                     $lastUID = $storage->getUniqueId($id);
-                    
+
                     if ($message) {
                         $dt = new \DateTime($message->date);
                         if ($dt) {
@@ -211,22 +211,22 @@ class EmailAccount extends Record
                         }
                     }
                 }
-                
+
                 if ($k == self::PORTION_LIMIT - 1) {
                     $lastUID = $storage->getUniqueId($id);
                     break;
                 }
                 $k++;
-            }        
-            
+            }
+
             $fetchData['lastUID'][$folder] = $lastUID;
             $fetchData['lastDate'][$folder] = $lastDate;
-            
+
             $emailAccount->set('fetchData', json_encode($fetchData));
-            $this->getEntityManager()->saveEntity($emailAccount);            
+            $this->getEntityManager()->saveEntity($emailAccount);
         }
-        
-        return true;        
+
+        return true;
     }
 
 }

@@ -22,20 +22,19 @@
 
 namespace Espo\Core\Mail\Storage;
 
-class Imap extends \Zend\Mail\Storage\Imap
+class Message extends \Zend\Mail\Storage\Message
 {
-	protected $messageClass = '\\Espo\\Core\\Mail\\Storage\\Message';
-
-    public function getIdsFromUID($uid)
+    public function isMultipart()
     {
-        $uid = intval($uid) + 1;
-        return $this->protocol->search(array('UID ' . $uid . ':*'));
-    }
+        if (!isset($this->contentType)) {
+            return false;
+        }
 
-    public function getIdsFromDate($date)
-    {
-        return $this->protocol->search(array('SINCE "' . $date . '"'));
+        try {
+            return stripos($this->contentType, 'multipart/') === 0;
+        } catch (Exception\ExceptionInterface $e) {
+            return false;
+        }
     }
-
 }
 
