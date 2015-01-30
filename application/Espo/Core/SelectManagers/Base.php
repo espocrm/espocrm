@@ -237,6 +237,9 @@ class Base
 
     protected function accessOnlyOwn(&$result)
     {
+        if (!$this->getSeed()->hasField('assignedUserId')) {
+            return;
+        }
         $result['whereClause'][] = array(
             'assignedUserId' => $this->getUser()->id
         );
@@ -244,6 +247,9 @@ class Base
 
     protected function accessOnlyTeam(&$result)
     {
+        if (!$this->getSeed()->hasField('teamsIds')) {
+            return;
+        }
         $result['distinct'] = true;
         if (!in_array('teams', $result['joins'])) {
             $result['leftJoins'][] = 'teams';
