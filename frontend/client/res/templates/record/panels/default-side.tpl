@@ -7,25 +7,24 @@
     </div>
 </div>
 {{/each}}
-</div>    
-    
-    
+</div>
+
 <div class="row">
     {{#ifAttrNotEmpty model 'createdById'}}
     <div class="cell form-group col-sm-6 col-md-12">
         <label class="control-label">{{translate 'Created'}}</label>
         <div class="field">
-        
-            <span class="field-createdAt">{{{createdAt}}}</span> <span class="text-muted">&raquo;</span> <span class="field-createdBy">{{{createdBy}}}</span>        
+
+            <span class="field-createdAt">{{{createdAt}}}</span> <span class="text-muted">&raquo;</span> <span class="field-createdBy">{{{createdBy}}}</span>
         </div>
     </div>
     {{/ifAttrNotEmpty}}
-    
+
     {{#ifAttrNotEmpty model 'modifiedById'}}
     <div class="cell form-group col-sm-6 col-md-12">
         <label class="control-label">{{translate 'Modified'}}</label>
-        <div class="field">        
-            <span class="field-modifiedAt">{{{modifiedAt}}}</span> <span class="text-muted">&raquo;</span> <span class="field-modifiedBy">{{{modifiedBy}}}</span>        
+        <div class="field">
+            <span class="field-modifiedAt">{{{modifiedAt}}}</span> <span class="text-muted">&raquo;</span> <span class="field-modifiedBy">{{{modifiedBy}}}</span>
         </div>
     </div>
     {{/ifAttrNotEmpty}}

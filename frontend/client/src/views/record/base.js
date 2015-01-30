@@ -53,6 +53,14 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
             }
         },
 
+        showPanel: function (name) {
+            this.$el.find('.panel[data-panel-name="'+name+'"]').removeClass('hidden');
+        },
+
+        hidePanel: function (name) {
+            this.$el.find('.panel[data-panel-name="'+name+'"]').addClass('hidden');
+        },
+
         getFields: function () {
             var fields = {};
             this.fieldList.forEach(function (item) {
@@ -273,16 +281,23 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
             }
 
             var fields = data.fields || [];
+            var panels = data.panels || [];
 
             switch (action) {
                 case 'hide':
-                    fields.forEach(function (field) {
-                        this.hideField(field);
+                    fields.forEach(function (item) {
+                        this.hideField(item);
+                    }, this);
+                    panels.forEach(function (item) {
+                        this.hidePanel(item);
                     }, this);
                     break;
                 case 'show':
-                    fields.forEach(function (field) {
-                        this.showField(field);
+                    fields.forEach(function (item) {
+                        this.showField(item);
+                    }, this);
+                    panels.forEach(function (item) {
+                        this.showPanel(item);
                     }, this);
                     break;
                 case 'setRequired':

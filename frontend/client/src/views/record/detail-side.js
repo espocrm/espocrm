@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
     Espo.define('Views.Record.DetailSide', 'View', function (Dep) {
 
     return Dep.extend({
@@ -25,7 +25,7 @@
         template: 'record.side',
 
         mode: 'detail',
-        
+
         readOnly: false,
 
         panels: [
@@ -90,7 +90,7 @@
             this.panels.forEach(function (p) {
                 var o = {
                     model: this.options.model,
-                    el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(p.name),
+                    el: this.options.el + ' .panel-body-' + p.name,
                     readOnly: this.readOnly
                 };
                 o = _.extend(o, p.options);
