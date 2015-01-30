@@ -38,5 +38,84 @@ class Email extends \Espo\Core\SelectManagers\Base
     {
         $this->boolFilterOnlyMy($result);
     }
+
+    protected function textFilter($value, &$result)
+    {
+        $d = array();
+
+        $d['name*'] = '%' . $value . '%';
+
+        if (strlen($value) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
+            $d['bodyPlain*'] = '%' . $value . '%';
+            $d['body*'] = '%' . $value . '%';
+
+            $emailAddressId = $this->getEmailAddressIdByValue($value);
+            if ($emailAddressId) {
+                $this->leftJoinEmailAddress($result);
+                $d['fromEmailAddressId'] = $emailAddressId;
+                $d['emailEmailAddress.emailAddressId'] = $emailAddressId;
+            }
+        }
+
+        $result['whereClause'][] = array(
+            'OR' => $d
+        );
+
+    }
+
+    protected function getEmailAddressIdByValue($value)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
+            'lower' => strtolower($value)
+        ))->findOne();
+
+        $emailAddressId = null;
+        if ($emailAddress) {
+            $emailAddressId = $emailAddress->id;
+        }
+
+        return $emailAddressId;
+    }
+
+    protected function leftJoinEmailAddress(&$result)
+    {
+        if (empty($result['customJoin'])) {
+            $result['customJoin'] = '';
+        }
+        if (stripos($result['customJoin'], 'email_email_address') === false) {
+            $result['customJoin'] .= "
+                LEFT JOIN email_email_address
+                    ON
+                    email_email_address.email_id = email.id AND
+                    email_email_address.deleted = 0
+            ";
+        }
+    }
+
+
+    public function whereEmailAddress($value, &$result)
+    {
+        $d = array();
+
+        $emailAddressId = $this->getEmailAddressIdByValue($value);
+
+        if ($emailAddressId) {
+            $this->leftJoinEmailAddress($result);
+
+            $d['fromEmailAddressId'] = $emailAddressId;
+            $d['emailEmailAddress.emailAddressId'] = $emailAddressId;
+            $result['whereClause'][] = array(
+                'OR' => $d
+            );
+        } else {
+            if (empty($result['customWhere'])) {
+                $result['customWhere'] = '';
+            }
+            $result['customWhere'] .= ' AND 0';
+        }
+
+    }
 }
 
