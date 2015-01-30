@@ -593,6 +593,24 @@ class Manager
             $items = (array) $items;
         }
 
+        $permissionDeniedList = array();
+        foreach ($items as $item) {
+            if (isset($dirPath)) {
+                $item = Utils\Util::concatPath($dirPath, $item);
+            }
+
+            if (!is_writable($item)) {
+                $permissionDeniedList[] = $item;
+            } else if (!is_writable(dirname($item))) {
+                $permissionDeniedList[] = dirname($item);
+            }
+        }
+
+        if (!empty($permissionDeniedList)) {
+            $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
+            throw new Error("Permission denied in <br>". implode(", <br>", $betterPermissionList));
+        }
+
         $result = true;
         foreach ($items as $item) {
             if (isset($dirPath)) {
