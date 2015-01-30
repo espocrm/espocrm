@@ -105,6 +105,7 @@ class Application
         $container = $this->getContainer();
 
         $slim->get('/', function() {});
+        $slim->post('/', function() {});
 
         $entryPointManager = new \Espo\Core\EntryPointManager($container);
 
