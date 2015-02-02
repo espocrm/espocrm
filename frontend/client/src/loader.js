@@ -134,37 +134,37 @@
                 });
             }.bind(this));
         },
-        
+
         _addLoadCallback: function (name, callback) {
             if (!(name in this._loadCallbacks)) {
                 this._loadCallbacks[name] = [];
             }
-            this._loadCallbacks[name].push(callback);            
+            this._loadCallbacks[name].push(callback);
         },
-        
-        dataLoaded: {},        
-        
-        load: function (name, callback, error) {        
-            var dataType, type, path, fetchObject;            
+
+        dataLoaded: {},
+
+        load: function (name, callback, error) {
+            var dataType, type, path, fetchObject;
             var realName = name;
-            
-            if (name.indexOf('lib!') === 0) {                
+
+            if (name.indexOf('lib!') === 0) {
                 dataType = 'script';
-                type = 'lib';                
-                                        
-                realName = name.substr(4);                
+                type = 'lib';
+
+                realName = name.substr(4);
                 path = realName;
-                
+
                 var exportsTo = 'window';
                 var exportsAs = realName;
-                
+
                 if (realName in this.libsConfig) {
                     path = this.libsConfig[realName].path || path;
                     exportsTo = this.libsConfig[realName].exportsTo || exportsTo;
                     exportsAs = this.libsConfig[realName].exportsAs || exportsAs;
                 }
-                
-                fetchObject = function (name, d) {                    
+
+                fetchObject = function (name, d) {
                     var from = root;
                     if (exportsTo == 'window') {
                         from = root;
@@ -177,38 +177,38 @@
                         return from[exportsAs];
                     }
                 }
-                
+
             } else if (name.indexOf('res!') === 0) {
                 dataType = 'text';
                 type = 'res';
-            
-                realName = name.substr(4);                
-                path = realName;            
+
+                realName = name.substr(4);
+                path = realName;
             } else {
-                dataType = 'script';            
+                dataType = 'script';
                 type = 'class';
-                
+
                 if (!name || name == '') {
                     throw new Error("Can not load empty class name");
                 }
 
-                var c = this._getClass(name);            
+                var c = this._getClass(name);
                 if (c) {
                     callback(c);
                     return;
                 }
 
-                path = this._nameToPath(name);                
+                path = this._nameToPath(name);
             }
-            
+
             if (name in this.dataLoaded) {
                 callback(this.dataLoaded[name]);
                 return;
-            } 
-            
+            }
+
             if (this.cache) {
                 var cached = this.cache.get(type, name);
-                if (cached) {    
+                if (cached) {
                     if (dataType == 'script') {
                         this._execute(cached);
                     }
@@ -216,7 +216,7 @@
                         var c = this._getClass(name);
                         if (c) {
                             callback(c);
-                            return;                        
+                            return;
                         }
                         this._addLoadCallback(name, callback);
                     } else {
@@ -227,16 +227,16 @@
                         this.dataLoaded[name] = d;
                         callback(d);
                     }
-                    
+
                     return;
                 }
-            }            
-            
+            }
+
             if (path in this.pathsBeingLoaded) {
                 this._addLoadCallback(name, callback);
                 return;
             }
-            this.pathsBeingLoaded[path] = true;            
+            this.pathsBeingLoaded[path] = true;
 
             $.ajax({
                 type: 'GET',
@@ -250,11 +250,11 @@
                     }
 
                     this._addLoadCallback(name, callback);
-                    
-                    if (dataType == 'script') {                    
+
+                    if (dataType == 'script') {
                         this._execute(response);
                     }
-                    
+
                     if (type == 'class') {
                         // TODO remove this and use define for all classes
                         var c = this._getClass(name);
@@ -266,7 +266,7 @@
                         if (typeof fetchObject == 'function') {
                             d = fetchObject(realName, response);
                         }
-                        this.dataLoaded[name] = d;    
+                        this.dataLoaded[name] = d;
                         this._executeLoadCallback(name, d);
                     }
                     return;
@@ -279,12 +279,12 @@
                 }
             });
         },
-        
-        
+
+
         loadLib: function (url, callback) {
             if (this.cache) {
                 var script = this.cache.get('script', url);
-                if (script) {                    
+                if (script) {
                     this._execute(script);
                     if (typeof callback == 'function') {
                         callback();
@@ -292,7 +292,7 @@
                     return;
                 }
             }
-            
+
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -307,9 +307,9 @@
                     throw new Error("Could not load file '" + url + "'");
                 },
             });
-            
+
         },
-        
+
         loadLibsConfig: function (callback) {
             $.ajax({
                 url: this.libsConfigUrl,
@@ -321,10 +321,10 @@
                 }.bind(this)
             });
         },
-        
+
         addLibsConfig: function (data) {
             this.libsConfig = _.extend(this.libsConfig, data);
-        },        
+        },
     });
 
     Espo.loader = new Espo.Loader();
@@ -333,7 +333,7 @@
     }
     Espo.define = function (subject, dependency, callback) {
         Espo.loader.define(subject, dependency, callback);
-    }    
+    }
     Espo.loadLib = function (url, callback) {
         Espo.loader.loadLib(url, callback);
     }
