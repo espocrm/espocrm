@@ -1,5 +1,6 @@
 [
     {"name":"name","width":30,"link":true},
     {"name":"userName"},
-    {"name":"emailAddress"}
+    {"name":"emailAddress"},
+    {"name":"isActive", "width":10}
 ]
