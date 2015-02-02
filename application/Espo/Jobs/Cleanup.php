@@ -32,6 +32,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
     {
         $this->cleanupJobs();
         $this->cleanupScheduledJobLog();
+        $this->cleanupAttachments();
     }
 
     protected function cleanupJobs()
@@ -67,6 +68,23 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $datetime = new \DateTime();
         $datetime->modify($this->period);
         return $datetime->format($format);
+    }
+
+    protected function cleanupAttachments()
+    {
+        $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24);
+
+        $collection = $this->getEntityManager()->getRepository('Attachment')->where(array(
+            'role' => array(
+                'Import File',
+                'Export File'
+            ),
+            'createdAt<' => $dateBefore
+        ))->limit(0, 100)->find();
+
+        foreach ($collection as $e) {
+            $this->getEntityManager()->removeEntity($e);
+        }
     }
 }
 

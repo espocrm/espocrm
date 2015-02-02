@@ -30,29 +30,29 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     {
         $this->dependencies[] = 'fileManager';
     }
-    
+
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
     }
-    
+
     public function save(Entity $entity)
     {
         $isNew = $entity->isNew();
         $result = parent::save($entity);
-        
+
         if ($isNew) {
             if (!empty($entity->id) && $entity->has('contents')) {
                 $contents = $entity->get('contents');
                 $this->getFileManager()->putContents('data/upload/' . $entity->id, $contents);
             }
         }
-        
+
         return $result;
     }
-    
+
     protected function afterRemove(Entity $entity)
-    {        
+    {
         parent::afterRemove($entity);
         $this->getFileManager()->removeFile('data/upload/' . $entity->id);
     }

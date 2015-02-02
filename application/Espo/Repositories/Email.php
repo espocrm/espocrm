@@ -119,5 +119,6 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             $this->getEntityManager()->removeEntity($attachment);
         }
     }
+
 }
 
