@@ -25,7 +25,7 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
 
         getActions: function () {
             if (this.options.acl.edit) {
-                return [
+                var list = [
                     {
                         action: 'editRelated',
                         label: 'Edit',
@@ -47,10 +47,14 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
                             id: this.model.id
                         }
                     }
-                ];
+                ]
+                if (this.model.name == 'User') {
+                    return [];
+                }
+                return list;
             }
         },
- 
+
     });
 
 });
