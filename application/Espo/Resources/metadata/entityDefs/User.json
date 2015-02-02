@@ -35,6 +35,11 @@
             "required": true,
             "default":""
         },
+        "isActive": {
+            "type": "bool",
+            "tooltip": true,
+            "default": true
+        },
         "title": {
             "type": "varchar",
             "maxLength": 100

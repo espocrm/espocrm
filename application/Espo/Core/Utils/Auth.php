@@ -23,6 +23,7 @@
 namespace Espo\Core\Utils;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 
 class Auth
 {
@@ -72,6 +73,10 @@ class Auth
         $user = $this->authentication->login($username, $password, $authToken);
 
         if ($user) {
+            if (!$user->isActive()) {
+                $GLOBALS['log']->debug("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
+                return false;
+            }
             $entityManager->setUser($user);
             $this->container->setUser($user);
             $GLOBALS['log']->debug('AUTH: Result of authenticate is [true]');

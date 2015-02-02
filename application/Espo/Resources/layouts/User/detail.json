@@ -10,8 +10,9 @@
     {
         "label": "Teams and Access Control",
         "rows": [
-            [{"name":"defaultTeam"}, {"name":"isAdmin"}],
-            [{"name":"teams"}, {"name":"roles"}]
+            [{"name":"defaultTeam"}, {"name":"isActive"}],
+            [{"name":"teams"}, {"name":"isAdmin"}],
+            [{"name":"roles"}, false]
         ]
     }
 ]

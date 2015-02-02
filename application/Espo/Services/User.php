@@ -135,7 +135,7 @@ class User extends Record
 
         $dt = new \DateTime();
         $dt->add(new \DateInterval('PT'. self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'M'));
-        
+
         $job = $this->getEntityManager()->getEntity('Job');
 
         $job->set(array(
@@ -199,6 +199,10 @@ class User extends Record
         if (array_key_exists('password', $data)) {
             $newPassword = $data['password'];
             $data['password'] = $this->hashPassword($data['password']);
+        }
+
+        if ($id == $this->getUser()->id) {
+            unset($data['isActive']);
         }
         $user = parent::updateEntity($id, $data);
 
