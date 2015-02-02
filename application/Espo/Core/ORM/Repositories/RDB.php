@@ -139,6 +139,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeRemove($entity);
         $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
+
+        $nowString = date('Y-m-d H:i:s', time());
+        if ($entity->hasField('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
+        }
     }
 
     protected function afterRemove(Entity $entity)
