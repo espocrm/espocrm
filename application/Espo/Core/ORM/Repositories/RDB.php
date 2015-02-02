@@ -144,6 +144,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if ($entity->hasField('modifiedAt')) {
             $entity->set('modifiedAt', $nowString);
         }
+        if ($entity->hasField('modifiedById')) {
+            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+        }
     }
 
     protected function afterRemove(Entity $entity)
