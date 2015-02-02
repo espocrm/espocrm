@@ -49,7 +49,13 @@ class Base
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;
+
         $this->metadata = $metadata;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 
     protected function getUser()
@@ -105,6 +111,28 @@ class Base
         return $this->seed;
     }
 
+    protected function textFilter($value, &$result)
+    {
+        $fieldDefs = $this->getSeed()->getFields();
+        $fieldList = $this->getTextFilterFields();
+        $d = array();
+
+        foreach ($fieldList as $field) {
+            if (
+                strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+                &&
+                !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+            ) {
+                $d[$field . '*'] = '%' . $value . '%';
+            } else {
+                $d[$field . '*'] = $value . '%';
+            }
+        }
+        $result['whereClause'][] = array(
+            'OR' => $d
+        );
+    }
+
     protected function where($params, &$result)
     {
         if (!empty($params['where']) && is_array($params['where'])) {
@@ -121,23 +149,7 @@ class Base
                     }
                 } else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
                     if (!empty($item['value'])) {
-                        $fieldDefs = $this->getSeed()->getFields();
-                        $fieldList = $this->getTextFilterFields();
-                        $d = array();
-                        foreach ($fieldList as $field) {
-                            if (
-                                strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
-                                &&
-                                !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
-                            ) {
-                                $d[$field . '*'] = '%' . $item['value'] . '%';
-                            } else {
-                                $d[$field . '*'] = $item['value'] . '%';
-                            }
-                        }
-                        $where[] = array(
-                            'OR' => $d
-                        );
+                        $this->textFilter($item['value'], $result);
                     }
                 }
             }
@@ -237,6 +249,9 @@ class Base
 
     protected function accessOnlyOwn(&$result)
     {
+        if (!$this->getSeed()->hasField('assignedUserId')) {
+            return;
+        }
         $result['whereClause'][] = array(
             'assignedUserId' => $this->getUser()->id
         );
@@ -244,6 +259,9 @@ class Base
 
     protected function accessOnlyTeam(&$result)
     {
+        if (!$this->getSeed()->hasField('teamsIds')) {
+            return;
+        }
         $result['distinct'] = true;
         if (!in_array('teams', $result['joins'])) {
             $result['leftJoins'][] = 'teams';

@@ -219,8 +219,7 @@
     },
     "collection": {
         "sortBy": "dateSent",
-        "asc": false,
-        "textFilterFields": ["name", "body", "bodyPlain"]
+        "asc": false
     },
     "indexes": {
         "dateSentAssignedUser": {

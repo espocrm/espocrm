@@ -5,7 +5,7 @@
         <div class="panel-heading"><h4 class="panel-title"><%= "{{translate \"" + panel.label + "\" scope=\""+model.name+"\"}}" %></h4></div>
         {{/if}}
         <div class="panel-body">
-        <% _.each(panel.rows, function (row, rowNumber) { %>        
+        <% _.each(panel.rows, function (row, rowNumber) { %>
             <div class="row">
             <% _.each(row, function (cell, cellNumber) { %>
                 <% if (cell != false) { %>
@@ -30,10 +30,10 @@
                         </div>
                     </div>
                 <% } else { %>
-                    <div class="col-sm-6"></div>            
+                    <div class="col-sm-6"></div>
                 <% } %>
             <% }); %>
-            </div>            
+            </div>
         <% }); %>
         </div>
     </div>

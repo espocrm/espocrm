@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Admin.Authentication', 'Views.Settings.Record.Edit', function (Dep) {        
+Espo.define('Views.Admin.Authentication', 'Views.Settings.Record.Edit', function (Dep) {
 
     return Dep.extend({
-        
+
         layoutName: 'authentication',
-        
+
         dependencyDefs: {
             'ldapAuth': {
                 map: {
@@ -58,65 +58,65 @@ Espo.define('Views.Admin.Authentication', 'Views.Settings.Record.Edit', function
                     ]
                 },
                 default: [
-                    {                    
+                    {
                         action: 'hide',
-                    fields: ['ldapAccountDomainName', 'ldapAccountDomainNameShort']
+                        fields: ['ldapAccountDomainName', 'ldapAccountDomainNameShort']
                     }
                 ]
             }
-        },    
-    
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.methodList = this.getMetadata().get('entityDefs.Settings.fields.authenticationMethod.options') || [];
-            
+
             this.authFields = {
                 'LDAP': [
                     'ldapHost', 'ldapPort', 'ldapAuth', 'ldapSecurity',
                     'ldapUsername', 'ldapPassword', 'ldapBindRequiresDn',
-                    'ldapUserLoginFilter', 'ldapBaseDn', 'ldapAccountCanonicalForm', 
+                    'ldapUserLoginFilter', 'ldapBaseDn', 'ldapAccountCanonicalForm',
                     'ldapAccountDomainName', 'ldapAccountDomainNameShort', 'ldapAccountDomainName',
                     'ldapAccountDomainNameShort', 'ldapTryUsernameSplit', 'ldapOptReferrals',
                     'ldapCreateEspoUser'
                 ]
-            };            
+            };
         },
 
-        
-        afterRender: function () {        
-            this.handlePanelsVisibility();            
+
+        afterRender: function () {
+            this.handlePanelsVisibility();
             this.listenTo(this.model, 'change:authenticationMethod', function () {
-                this.handlePanelsVisibility();    
-            }, this);        
+                this.handlePanelsVisibility();
+            }, this);
         },
-        
+
         handlePanelsVisibility: function () {
-            var authenticationMethod = this.model.get('authenticationMethod');            
+            var authenticationMethod = this.model.get('authenticationMethod');
 
             this.methodList.forEach(function (method) {
                 var list = (this.authFields[method] || []);
                 if (method != authenticationMethod) {
-                    this.$el.find('.panel[data-panel-name="'+method+'"]').addClass('hidden');
+                    this.hidePanel(method);
                     list.forEach(function (field) {
                         this.hideField(field);
                     }, this);
                 } else {
-                    this.$el.find('.panel[data-panel-name="'+method+'"]').removeClass('hidden');
-                    
+                    this.showPanel(method);
+
                     list.forEach(function (field) {
-                        this.showField(field);                        
+                        this.showField(field);
                     }, this);
                     Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
                         if (~list.indexOf(attr)) {
                             this._handleDependencyAttribute(attr);
-                        }            
+                        }
                     }, this);
                 }
-            }, this);            
+            }, this);
         },
-        
-    });        
-    
+
+    });
+
 });
 

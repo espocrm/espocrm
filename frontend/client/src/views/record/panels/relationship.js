@@ -47,7 +47,7 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             }
 
             this.buttons = {};
-            if (this.getAcl().check(this.scope, 'edit')) {
+            if (this.getAcl().check(this.scope, 'edit') && !~['User', 'Team'].indexOf()) {
                 this.buttons.create = this.defs.create;
             }
 
@@ -76,7 +76,6 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
              }
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
-
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {

@@ -93,8 +93,17 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
             this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
 
                 var panelList = layout;
-                panelList.forEach(function (name) {
-                    var p = {name: name};
+                panelList.forEach(function (item) {
+                    var p;
+                    if (typeof item == 'string' || item instanceof String) {
+                        p = {name: item};
+                    } else {
+                        p = item || {};
+                    }
+                    if (!p.name) {
+                        return;
+                    }
+
                     var name = p.name;
 
                     var foreignScope = this.model.defs.links[name].entity;

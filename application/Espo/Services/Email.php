@@ -202,44 +202,19 @@ class Email extends Record
             foreach ($params['where'] as $i => $p) {
                 if (!empty($p['field']) && $p['field'] == 'emailAddress') {
                     $searchByEmailAddress = true;
-                    $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
-                        'lower' => strtolower($p['value'])
-                    ))->findOne();
+                    $emailAddress = $p['value'];
                     unset($params['where'][$i]);
-                    $emailAddressId = null;
-                    if ($emailAddress) {
-                        $emailAddressId = $emailAddress->id;
-                    }
                 }
 
             }
         }
 
-        $selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
+        $selectManager = $this->getSelectManager($this->entityName);
+
+        $selectParams = $selectManager->getSelectParams($params, true);
 
         if ($searchByEmailAddress) {
-            if ($emailAddressId) {
-                $pdo = $this->getEntityManager()->getPDO();
-
-                $selectParams['distinct'] = true;
-
-                $selectParams['customJoin'] = "
-                    LEFT JOIN email_email_address
-                        ON
-                        email_email_address.email_id = email.id AND
-                        email_email_address.deleted = 0
-                ";
-                $selectParams['customWhere'] = "
-                    AND
-                    (
-                        email.from_email_address_id = ".$pdo->quote($emailAddressId)." OR
-                        email_email_address.email_address_id = ".$pdo->quote($emailAddressId)."
-                    )
-                ";
-            } else {
-                $selectParams['customWhere'] = ' AND 0';
-            }
-
+            $selectManager->whereEmailAddress($emailAddress, $selectParams);
         }
 
         $collection = $this->getRepository()->find($selectParams);

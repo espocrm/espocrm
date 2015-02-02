@@ -1,5 +1,5 @@
 {{#each panels}}
-<div class="panel panel-default">
+<div class="panel panel-default panel-{{name}}">
     {{#if label}}
     <div class="panel-heading">
         <div class="pull-right btn-group">
@@ -17,7 +17,7 @@
         <h4 class="panel-title">{{translate label scope=../../scope}}</h4>
     </div>
     {{/if}}
-    <div class="panel-body panel-body-{{toDom name}}">
+    <div class="panel-body panel-body-{{name}}">
         {{{var name ../this}}}
     </div>
 </div>
