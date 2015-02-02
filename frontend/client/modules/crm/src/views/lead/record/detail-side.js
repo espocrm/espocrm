@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {
 
@@ -29,6 +29,7 @@ Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', funct
                     name: 'convertedTo',
                     label: 'Converted To',
                     view: 'Record.Panels.Side',
+                    notRefreshable: true,
                     options: {
                         fields: [],
                         mode: 'detail',

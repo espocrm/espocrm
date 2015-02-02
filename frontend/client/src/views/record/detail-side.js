@@ -98,6 +98,11 @@
                     if ('getActions' in view) {
                         p.actions = this.filterActions(view.getActions());
                     }
+                    if (p.label) {
+                        p.title = this.translate(p.label, 'labels', this.scope);
+                    } else {
+                        p.title = view.title;
+                    }
                 }.bind(this));
             }.bind(this));
         },

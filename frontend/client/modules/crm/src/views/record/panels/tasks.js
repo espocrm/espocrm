@@ -116,7 +116,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                 this.$el.find('.list-container').html(this.translate('No Access'));
                 this.$el.find('.button-container').remove();
                 return;
-            };                  
+            };
 
             this.getCollectionFactory().create('Task', function (collection) {
                 this.collection = collection;
@@ -139,11 +139,11 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                     }, function (view) {
                         view.render();
                     });
-                }.bind(this));            
-                this.collection.fetch();            
+                }.bind(this));
+                this.collection.fetch();
             }, this);
         },
-        
+
         actionCreateTask: function (data) {
             var self = this;
             var link = 'tasks';
@@ -166,7 +166,11 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                     });
                 });
             }.bind(this));
-        },    
+        },
+
+        actionRefresh: function () {
+            this.collection.fetch();
+        }
 
     });
 });

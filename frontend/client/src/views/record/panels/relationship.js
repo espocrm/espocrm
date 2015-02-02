@@ -134,6 +134,10 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             return [];
         },
 
+        actionRefresh: function () {
+            this.collection.fetch();
+        },
+
         actionEditRelated: function (id) {
             this.notify('Loading...');
             this.createView('quickEdit', 'Modals.Edit', {

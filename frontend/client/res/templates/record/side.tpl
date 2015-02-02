@@ -14,7 +14,15 @@
                 </ul>
             {{/if}}
         </div>
-        <h4 class="panel-title">{{translate label scope=../../scope}}</h4>
+        <h4 class="panel-title">
+            {{#unless notRefreshable}}
+            <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">
+            {{/unless}}
+            {{title}}
+            {{#unless notRefreshable}}
+            </span>
+            {{/unless}}
+        </h4>
     </div>
     {{/if}}
     <div class="panel-body panel-body-{{name}}">

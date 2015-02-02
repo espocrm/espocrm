@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
@@ -35,9 +35,9 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         },
 
         mode: 'detail',
-        
+
         actions: null,
-        
+
         readOnly: false,
 
         setup: function () {
@@ -49,7 +49,7 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
             }
             this.createFields();
         },
-        
+
         getFieldList: function () {
             var fields = [];
             this.fields.forEach(function (item) {
@@ -107,7 +107,7 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
             }, this);
             return fields;
         },
-        
+
         getActions: function () {
             return this.actions || [];
         },

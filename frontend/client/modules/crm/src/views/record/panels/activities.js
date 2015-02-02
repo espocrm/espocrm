@@ -287,6 +287,10 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             });
 
         },
+
+        actionRefresh: function () {
+            this.collection.fetch();
+        }
     });
 });
 

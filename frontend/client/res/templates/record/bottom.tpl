@@ -18,7 +18,15 @@
                     </ul>
                 {{/if}}
             </div>
-            <h4 class="panel-title">{{title}}</h4>
+            <h4 class="panel-title">
+            {{#unless notRefreshable}}
+            <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">
+            {{/unless}}
+            {{title}}
+            {{#unless notRefreshable}}
+            </span>
+            {{/unless}}
+            </h4>
         </div>
         <div class="panel-body panel-body-{{toDom name}}">
             {{{var name ../this}}}
