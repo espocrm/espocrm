@@ -159,7 +159,7 @@ class Util
                 if ($appendKey !== false) {
                     unset($newValue[$appendKey]);
                     $newValue = array_merge($currentArray[$newName], $newValue);
-                } else if (!static::isSingleArray($newValue)) {
+                } else if (!static::isSingleArray($newValue) || !static::isSingleArray($currentArray[$newName])) {
                     $newValue = static::merge($currentArray[$newName], $newValue);
                 }
 
