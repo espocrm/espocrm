@@ -382,6 +382,14 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
+    protected function beforeDelete(Entity $entity)
+    {
+    }
+
+    protected function afterDelete(Entity $entity)
+    {
+    }
+
     public function deleteEntity($id)
     {
         if (empty($id)) {
@@ -398,7 +406,13 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        return $this->getRepository()->remove($entity);
+        $this->beforeDelete($entity);
+
+        $result = $this->getRepository()->remove($entity);
+        if ($result) {
+            $this->afterDelete($entity);
+            return $result;
+        }
     }
 
     public function findEntities($params)
