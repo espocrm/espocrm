@@ -17,18 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Note', 'View', function (Dep) {
 
     return Dep.extend({
-    
+
         messageName: null,
-        
+
         messageTemplate: null,
-        
+
         messageData: null,
-    
+
         data: function () {
             return {
                 isUserStream: this.isUserStream,
@@ -38,28 +38,28 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                 avatar: this.getAvatarHtml()
             };
         },
-    
+
         init: function () {
             this.createField('createdAt', null, null, 'Fields.DatetimeShort');
             this.isUserStream = this.options.isUserStream;
-            
+
             if (this.isUserStream) {
                 this.createField('parent');
             }
-            
+
             if (this.messageName) {
                 if (!this.isUserStream) {
                     this.messageName += 'This';
                 }
             }
-            
+
             this.messageData = {
                 'user': 'field:createdBy',
                 'entity': 'field:parent',
                 'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase(),
             };
         },
-        
+
         createField: function (name, type, params, view) {
             type = type || this.model.getFieldType(name) || 'base';
             this.createView(name, view || this.getFieldManager().getViewName(type), {
@@ -71,15 +71,14 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                 el: this.options.el + ' .cell-' + name,
                 mode: 'list'
             });
-            
+
         },
-        
-        
+
         createMessage: function () {
             if (!this.messageTemplate) {
                 this.messageTemplate = this.translate(this.messageName, 'streamMessages') || '';
             }
-            
+
             this.createView('message', 'Stream.Message', {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',
@@ -100,9 +99,8 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                 t = Date.now();
             }
             return '<img class="avatar" width="20" src="?entryPoint=avatar&size=small&id=' + this.model.get('createdById') + '&t='+t+'">';
-        },
+        }
         
-
     });
 });
 

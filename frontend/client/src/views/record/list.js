@@ -130,13 +130,17 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 }
             },
             'click [data-action="quickEdit"]': function (e) {
-                var id = $(e.currentTarget).data('id');
-                this.quickEdit(id);
+                var $target = $(e.currentTarget);
+                var id = $target.data('id');
+                var data = $target.data();
+                this.quickEdit(id, data);
 
             },
             'click [data-action="quickRemove"]': function (e) {
-                var id = $(e.currentTarget).data('id');
-                this.quickRemove(id);
+                var $target = $(e.currentTarget);
+                var id = $target.data('id');
+                var data = $target.data();
+                this.quickRemove(id, data);
             },
         },
 
@@ -737,12 +741,14 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             });
         },
 
-        quickEdit: function (id) {
+        quickEdit: function (id, d) {
+            d = d || {}
             if (this.allowQuickEdit) {
                 this.notify('Loading...');
                 this.createView('quickEdit', 'Modals.Edit', {
                     scope: this.scope,
-                    id: id
+                    id: id,
+                    fullFormButton: !d.noFullForm
                 }, function (view) {
                     view.once('after:render', function () {
                         Espo.Ui.notify(false);

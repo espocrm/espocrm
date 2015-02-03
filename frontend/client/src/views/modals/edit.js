@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
@@ -28,21 +28,21 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
         header: false,
 
         template: 'modals.edit',
-        
+
         saveButton: true,
-        
+
         fullFormButton: true,
-        
+
         editViewName: null,
-        
+
         columnCount: 1,
 
         setup: function () {
-        
+
             var self = this;
-            
+
             this.buttons = [];
-            
+
             if (this.options.saveButton !== false && this.saveButton) {
                 this.buttons.push({
                     name: 'save',
@@ -50,26 +50,26 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                     style: 'primary',
                     onClick: function (dialog) {
                         var editView = this.getView('edit');
-                                                
-                        var model = editView.model;                        
+
+                        var model = editView.model;
                         editView.once('after:save', function () {
                             this.trigger('after:save', model);
-                            dialog.close();                            
+                            dialog.close();
                         }, this);
-                        
-                        var $buttons = dialog.$el.find('.modal-footer button');        
-                        $buttons.addClass('disabled');    
-                            
+
+                        var $buttons = dialog.$el.find('.modal-footer button');
+                        $buttons.addClass('disabled');
+
                         editView.once('cancel:save', function () {
-                            $buttons.removeClass('disabled');    
+                            $buttons.removeClass('disabled');
                         }, this);
-                                                
+
                         editView.save();
 
                     }.bind(this)
                 });
             }
-            
+
             if ('fullFormButton' in this.options) {
                 this.fullFormButton = this.options.fullFormButton;
             }
@@ -80,14 +80,14 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                     text: this.getLanguage().translate('Full Form'),
                     onClick: function (dialog) {
                         var url;
-                        var router = this.getRouter();                            
+                        var router = this.getRouter();
                         if (!this.id) {
                             url = '#' + this.scope + '/create';
-                            
-                            var attributes = this.getView('edit').fetch();                                                        
-                            var model = this.getView('edit').model;                            
+
+                            var attributes = this.getView('edit').fetch();
+                            var model = this.getView('edit').model;
                             attributes = _.extend(attributes, model.getClonedAttributes());
-                            
+
                             setTimeout(function () {
                                 router.dispatch(this.scope, 'create', {
                                     attributes: attributes,
@@ -98,11 +98,11 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                             }.bind(this), 10);
                         } else {
                             url = '#' + this.scope + '/edit/' + this.id;
-                            
-                            var attributes = this.getView('edit').fetch();                                                        
-                            var model = this.getView('edit').model;                            
-                            attributes = _.extend(attributes, model.getClonedAttributes());                            
-                            
+
+                            var attributes = this.getView('edit').fetch();
+                            var model = this.getView('edit').model;
+                            attributes = _.extend(attributes, model.getClonedAttributes());
+
                             setTimeout(function () {
                                 router.dispatch(this.scope, 'edit', {
                                     attributes: attributes,
@@ -112,10 +112,10 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                                 router.navigate(url, {trigger: false});
                             }.bind(this), 10);
                         }
-                        
+
                         this.trigger('leave');
                         dialog.close();
-                                                            
+
                     }.bind(this)
                 });
             }
@@ -154,7 +154,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                     }
                     if (this.options.attributes) {
                         model.set(this.options.attributes);
-                    }                        
+                    }
                     this.createEdit(model);
                 }
             }.bind(this));

@@ -17,20 +17,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
 
     return Dep.extend({
-    
+
         type: 'listStream',
-        
+
         showCount: false,
-    
+
         buildRow: function (i, model, callback) {
             var key = 'row-' + model.id;
             this.rows.push(key);
-            
+
             var type = model.get('type');
             var viewName = 'Stream.Notes.' + type;
 
@@ -47,14 +47,14 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
             }, callback);
 
         },
-    
+
         buildRows: function (callback) {
             this.checkedList = [];
             this.rows = [];
 
             if (this.collection.length > 0) {
                 this.wait(true);
-                                    
+
                 var count = this.collection.models.length;
                 var built = 0;
                 for (var i in this.collection.models) {
@@ -75,11 +75,11 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
                 }
             }
         },
-        
+
         showNewRecords: function () {
             var collection = this.collection;
             var initialCount = collection.length;
-            
+
             var $list = this.$el.find(this.listContainerEl);
 
             var success = function () {
@@ -87,7 +87,7 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
                 var rowsReady = 0;
                 for (var i = rowCount - 1; i >= 0; i--) {
                     var model = collection.at(i);
-                    
+
                     this.buildRow(i, model, function (view) {
                         view.getHtml(function (html) {
                             $list.prepend(html);
@@ -101,12 +101,12 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
                 }
                 this.noRebuild = true;
             }.bind(this);
-            
+
             collection.fetchNew({
                 success: success,
             });
         },
-    
+
     });
-    
+
 });

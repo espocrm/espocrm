@@ -17,12 +17,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Note.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
     return Dep.extend({
-    
+
         sideView: null,
 
         isWide: true,
