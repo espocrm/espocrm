@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], function (Dep, Select2) {
 
@@ -29,17 +29,17 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
 
         detailTemplate: 'fields.array.detail',
 
-        editTemplate: 'fields.multi-enum.edit',        
-        
+        editTemplate: 'fields.multi-enum.edit',
+
         events: {
         },
-        
+
         data: function () {
             return _.extend({
                 optionList: this.params.options || []
             }, Dep.prototype.data.call(this));
         },
-        
+
         getTranslatedOptions: function () {
             return (this.params.options || []).map(function (item) {
                 if (this.translatedOptions != null) {
@@ -49,14 +49,14 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
                 }
                 return item;
             });
-        },        
-        
+        },
+
 
         setup: function () {
             Dep.prototype.setup.call(this);
         },
-        
-        afterRender: function () {             
+
+        afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
                 this.$element.val(this.selected.join(','));
@@ -64,7 +64,7 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
                 this.on('remove', function () {
                     $('.select2-hidden-accessible').remove();
                 });
-                
+
                 this.$element.select2({
                     data: (this.params.options || []).map(function (item) {
                         var text = item;
@@ -85,12 +85,12 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
                         return text.toUpperCase().indexOf(term.toUpperCase()) == 0;
                     }
                 });
-                
+
                 this.$element.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
 
-                
+
                 this.$element.select2('container').find('ul.select2-choices').sortable({
                     containment: 'parent',
                     start: function () {
@@ -107,13 +107,13 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
             var list = this.$element.val().split(',');
             if (list.length == 1 && list[0] == '') {
                 list = [];
-            } 
+            }
             var data = {};
             data[this.name] = list;
             return data;
         },
 
-        validateRequired: function () {                
+        validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {

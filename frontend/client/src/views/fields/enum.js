@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Enum', 'Views.Fields.Base', function (Dep) {
+Espo.define('Views.Fields.Enum', ['Views.Fields.Base'], function (Dep) {
 
     return Dep.extend({
 

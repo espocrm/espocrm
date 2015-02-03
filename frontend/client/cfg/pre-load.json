@@ -2,7 +2,7 @@
 	"templates": [
 		"dashlet",
 		"detail",
-		"edit",		
+		"edit",
 		"header",
 		"list",
 		"login",
@@ -20,7 +20,7 @@
 	"classes": [
 		"Views.Base",
 		"Views.Dashlet",
-		"Views.Edit",		
+		"Views.Edit",
 		"Views.Header",
 		"Views.List",
 		"Views.Login",
@@ -35,24 +35,24 @@
 		"Views.Home",
 		"Views.Dashboard",
 		"Views.Search.Filter",
-		
+
 		"Views.Fields.Address",
-		"Views.Fields.Bool",				
-		"Views.Fields.Datetime",		
+		"Views.Fields.Bool",
+		"Views.Fields.Datetime",
 		"Views.Fields.Email",
 		"Views.Fields.Enum",
-		"Views.Fields.Float",		
+		"Views.Fields.Float",
 		"Views.Fields.LinkMultiple",
 		"Views.Fields.LinkParent",
 		"Views.Fields.PersonName",
 		"Views.Fields.Phone",
 		"Views.Fields.Text",
-		
+
 		"Controllers.Home",
 		"Controllers.Record",
-		
+
 		"Models.Settings",
 		"Models.User",
-		"Models.Preferences"	
+		"Models.Preferences"
 	]
 }

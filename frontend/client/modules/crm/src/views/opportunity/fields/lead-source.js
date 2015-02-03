@@ -17,25 +17,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Opportunity.Fields.LeadSource', 'Views.Fields.Enum', function (Dep) {
 
     return Dep.extend({
-    
-        listTemplate: 'crm:opportunity.fields.lead-source.detail',
 
-        detailTemplate: 'crm:opportunity.fields.lead-source.detail',
 
-        editTemplate: 'crm:opportunity.fields.lead-source.edit',
+        setup: function () {
+            this.params.options = this.getMetadata().get('entityDefs.Lead.fields.source.options');
+            this.params.translation = 'Lead.options.source';
 
-        searchTemplate: 'crm:opportunity.fields.lead-source.search',
-    
-        setup: function () {        
-            Dep.prototype.setup.call(this);            
-            this.params.options = this.getMetadata().get('entityDefs.Lead.fields.source.options');            
+            Dep.prototype.setup.call(this);
+
         },
-        
+
     });
 
 });
