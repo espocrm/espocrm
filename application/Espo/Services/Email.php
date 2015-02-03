@@ -36,7 +36,7 @@ class Email extends Record
         $this->dependencies[] = 'crypt';
     }
 
-    protected $fetchEntityBeforeUpdate = true;
+    protected $getEntityBeforeUpdate = true;
 
     protected function getFileManager()
     {
