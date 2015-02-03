@@ -169,12 +169,12 @@ if (typeof jQuery === 'undefined') {
 
     destroy: function () {
       this.$el.off('.' + this.id);
-      if (this.adapter) {
+      if (this.adapter) { // espocrm fix
         this.adapter.destroy();
-      }
-      if (this.dropdown) {
+      } // espocrm fix
+      if (this.dropdown) { // espocrm fix
         this.dropdown.destroy();
-      }
+      } // espocrm fix
       this.$el = this.adapter = this.dropdown = null;
     },
 
@@ -523,6 +523,7 @@ if (typeof jQuery === 'undefined') {
       var datum = this.data[parseInt(this._getActiveElement().data('index'), 10)];
       this.completer.select(datum.value, datum.strategy);
       this._setScroll();
+      this.deactivate();
     },
 
     _pageup: function () {
@@ -804,6 +805,8 @@ if (typeof jQuery === 'undefined') {
       switch (clickEvent.keyCode) {
         case 40: // DOWN
         case 38: // UP
+        case 13: // expocrm fix
+        case 9: // expocrm fix
           return true;
       }
       if (clickEvent.ctrlKey) switch (clickEvent.keyCode) {
