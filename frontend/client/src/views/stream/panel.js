@@ -24,7 +24,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
     return Dep.extend({
 
         template: 'stream.panel',
-        
+
         postingMode: false,
 
         events: _.extend({
@@ -48,7 +48,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 var $text = $(e.currentTarget);
                 var numberOfLines = e.currentTarget.value.split("\n").length;
                 var numberOfRows = $text.prop('rows');
-                
+
                 if (numberOfRows < numberOfLines) {
                     $text.prop('rows', numberOfLines);
                 } else if (numberOfRows > numberOfLines) {
@@ -56,10 +56,10 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 }
             },
         }, Dep.prototype.events),
-        
+
         enablePostingMode: function () {
             this.$el.find('.buttons-panel').removeClass('hide');
-            
+
             if (!this.postingMode) {
                 $('body').on('click.stream-panel', function (e) {
                     if (!$.contains(this.$el.get(0), e.target)) {
@@ -73,13 +73,13 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                     }
                 }.bind(this));
             }
-            
+
             this.postingMode = true;
         },
-        
+
         disablePostingMode: function () {
             this.postingMode = false;
-            
+
             this.$textarea.val('');
             this.getView('attachments').empty();
             this.$el.find('.buttons-panel').addClass('hide');
@@ -99,25 +99,25 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 
         createCollection: function (callback) {
             this.getCollectionFactory().create('Note', function (collection) {
-            
+
                 this.collection = collection;
                 collection.url = this.model.name + '/' + this.model.id + '/stream';
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-            
+
                 callback();
             }, this);
         },
-        
+
         afterRender: function () {
             this.$textarea = this.$el.find('textarea.note');
             this.$attachments = this.$el.find('div.attachments');
-        
+
             var collection = this.collection;
-            
+
             this.listenTo(this.model, 'sync', function () {
                 collection.fetchNew();
             }.bind(this));
-            
+
             this.listenToOnce(collection, 'sync', function () {
                 this.createView('list', 'Stream.List', {
                     el: this.options.el + ' > .list-container',
@@ -127,9 +127,9 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 });
             }.bind(this));
             collection.fetch();
-            
+
             var self = this;
-            
+
             this.$textarea.textcomplete([{
                 match: /(^|\s)@(\w*)$/,
                 index: 2,
@@ -140,7 +140,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                     }
                     $.ajax({
                         url: 'User?orderBy=name&limit=7&q=' + term,
-                    
+
                     }).done(function (data) {
                         callback(data.list)
                     });
@@ -152,8 +152,13 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                     return '$1@' + o.userName + '';
                 }
             }]);
-            
-            
+
+            this.once('remove', function () {
+                if (this.$textarea.size()) {
+                    this.$textarea.textcomplete('destroy');
+                }
+            }, this);
+
             this.createView('attachments', 'Stream.Fields.AttachmentMultiple', {
                 model: this.seed,
                 mode: 'edit',
@@ -165,14 +170,14 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 view.render();
             });
         },
-        
+
         afterPost: function () {
             this.$el.find('textarea.note').prop('rows', 1);
         },
 
         post: function () {
             var message = this.$textarea.val();
-            
+
             this.$textarea.prop('disabled', true);
 
             this.getModelFactory().create('Note', function (model) {
@@ -181,22 +186,22 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                     this.$textarea.prop('disabled', false);
                     return;
                 }
-                                
+
                 model.once('sync', function () {
                     this.notify('Posted', 'success');
                     this.collection.fetchNew();
-                    
+
                     this.$textarea.prop('disabled', false);
                     this.disablePostingMode();
                     this.afterPost();
                 }, this);
-                
+
                 model.set('post', message);
                 model.set('attachmentsIds', _.clone(this.seed.get('attachmentsIds')));
                 model.set('parentId', this.model.id);
                 model.set('parentType', this.model.name);
                 model.set('type', 'Post');
-                                
+
                 this.notify('Posting...');
                 model.save(null, {
                     error: function () {
@@ -205,11 +210,11 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 });
             }.bind(this));
         },
-        
+
         getButtons: function () {
             return [];
         },
-        
+
     });
 });
 
