@@ -24,7 +24,7 @@
     Espo.ViewHelper = function (options) {
         this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
         this._registerHandlebarsHelpers();
-        
+
         this.mdSearch = [
             /\("?(.*?)"?\)\[(.*?)\]/g,
             /\&\#x60;(([\s\S]*?)\&\#x60;)/,
@@ -39,7 +39,7 @@
             '<em>$2</em>',
             '<del>$1</del>',
         ];
-            
+
     }
 
     _.extend(Espo.ViewHelper.prototype, {
@@ -53,6 +53,44 @@
         preferences: null,
 
         language: null,
+
+        tranformTextMarkdown: function (text) {
+            var newline = text.indexOf('\r\n') != -1 ? '\r\n' : text.indexOf('\n') != -1 ? '\n' : '';
+
+            if (newline != '') {
+                var d = [];
+                var r = [];
+
+                var p = text.split(newline);
+                p.push('');
+
+                var isBlockLevel = false;
+                p.forEach(function (item, i) {
+                    if (item.length >= 5 && item.indexOf('&gt; ') === 0) {
+                        if (!isBlockLevel) {
+                            d = [];
+                            isBlockLevel = true;
+                        }
+                        d.push(item.replace(/&gt; /gm, ''));
+                    } else {
+                        if (isBlockLevel) {
+                            r.push('<blockquote>' + d.join(newline) + '</blockquote>' + item)
+                        } else {
+                            r.push(item);
+                        }
+                        isBlockLevel = false;
+                    }
+                }, this);
+
+                r.pop();
+
+                var t = r.join(newline);
+
+                return t;
+            }
+
+            return text;
+        },
 
         _registerHandlebarsHelpers: function () {
             var self = this;
@@ -95,14 +133,14 @@
                 }
                 return options.inverse(this);
             });
-            
+
             Handlebars.registerHelper('ifAttrEquals', function (model, attr, value, options) {
                 if (model.get(attr) == value) {
                     return options.fn(this);
                 }
                 return options.inverse(this);
             });
-            
+
             Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
                 if (model.get(attr)) {
                     return options.fn(this);
@@ -147,18 +185,20 @@
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
                 return new Handlebars.SafeString(text);
             });
-            
+
             Handlebars.registerHelper('complexText', function (text) {
                 text = Handlebars.Utils.escapeExpression(text || '');
-                
+
                 text = text.replace(self.urlRegex, '$1($2)[$2]');
-                
+
                 self.mdSearch.forEach(function (re, i) {
                     text = text.replace(re, self.mdReplace[i]);
                 });
-                
+
+                text = self.tranformTextMarkdown(text);
+
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-                
+
                 text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
                 return new Handlebars.SafeString(text);
             });
