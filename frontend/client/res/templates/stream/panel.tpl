@@ -6,7 +6,10 @@
         </div>
         <div class="attachments-container">
             {{{attachments}}}
-        </div>    
+        </div>
+        <a href="javascript:" class="text-muted pull-right stream-post-info">
+        <span class="glyphicon glyphicon-info-sign"></span>
+        </a>
     </div>
 </div>
 

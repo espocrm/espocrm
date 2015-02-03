@@ -159,6 +159,20 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 }
             }, this);
 
+            $a = this.$el.find('.buttons-panel a.stream-post-info');
+
+            $a.popover({
+                placement: 'bottom',
+                container: 'body',
+                content: this.translate('streamPostInfo', 'messages').replace(/(\r\n|\n|\r)/gm, '<br>'),
+                trigger: 'click',
+                html: true
+            }).on('shown.bs.popover', function () {
+                $('body').one('click', function () {
+                    $a.popover('hide');
+                });
+            });
+
             this.createView('attachments', 'Stream.Fields.AttachmentMultiple', {
                 model: this.seed,
                 mode: 'edit',
