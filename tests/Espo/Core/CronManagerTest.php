@@ -24,7 +24,6 @@ namespace tests\Espo\Core;
 
 use tests\ReflectionHelper;
 
-
 class CronManagerTest extends \PHPUnit_Framework_TestCase
 {
     protected $object;
@@ -35,17 +34,20 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+        $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
-        $this->objects['serviceFactory'] = $this->getMockBuilder('\Espo\Core\ServiceFactory')->disableOriginalConstructor()->getMock();
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
-
+        $this->objects['serviceFactory'] = $this->getMockBuilder('\\Espo\\Core\\ServiceFactory')->disableOriginalConstructor()->getMock();
+        $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
+        $this->objects['scheduledJob'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\ScheduledJob')->disableOriginalConstructor()->getMock();
+        $this->objects['entityManager'] = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
 
         $map = array(
           array('config', $this->objects['config']),
           array('fileManager', $this->objects['fileManager']),
           array('serviceFactory', $this->objects['serviceFactory']),
+          array('entityManager', $this->objects['entityManager']),
+          array('scheduledJob', $this->objects['scheduledJob']),
         );
 
         $this->objects['container']
@@ -63,7 +65,6 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
         $this->object = NULL;
     }
 
-
     function testCheckLastRunTimeFileDoesnotExist()
     {
         $this->objects['fileManager']
@@ -79,8 +80,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()) );
     }
 
-
-    function testCheckLastRunTime()
+    public function testCheckLastRunTime()
     {
         $this->objects['fileManager']
             ->expects($this->once())
@@ -95,8 +95,7 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()) );
     }
 
-
-    function testCheckLastRunTimeTooFrequency()
+    public function testCheckLastRunTimeTooFrequency()
     {
         $this->objects['fileManager']
             ->expects($this->once())
@@ -110,9 +109,4 @@ class CronManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse( $this->reflection->invokeMethod('checkLastRunTime', array()) );
     }
-
-
-
 }
-
-?>

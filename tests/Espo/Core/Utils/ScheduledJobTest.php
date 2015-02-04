@@ -54,7 +54,7 @@ class ScheduledJobTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->object = new \Espo\Core\Cron\ScheduledJob( $this->objects['container'] );
+        $this->object = new \Espo\Core\Utils\ScheduledJob( $this->objects['container'] );
 
         $this->reflection = new ReflectionHelper($this->object);
 
