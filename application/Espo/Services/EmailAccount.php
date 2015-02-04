@@ -200,13 +200,17 @@ class EmailAccount extends Record
 
                 $email = $importer->importMessage($message, $userId, array($teamId));
 
+                if ($email) {
+                    $this->noteAboutEmail($email);
+                }
+
                 if ($k == count($ids) - 1) {
                     $lastUID = $storage->getUniqueId($id);
 
                     if ($message) {
                         $dt = new \DateTime($message->date);
                         if ($dt) {
-                            $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');        
+                            $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                             $lastDate = $dateSent;
                         }
                     }
@@ -227,6 +231,17 @@ class EmailAccount extends Record
         }
 
         return true;
+    }
+
+    protected function noteAboutEmail($email)
+    {
+        if ($email->get('parentType') && $email->get('parentId')) {
+            $parent = $this->getEntityManager()->getEntity($email->get('parentType'), $email->get('parentId'));
+            if ($parent) {
+                $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
+                return;
+            }
+        }
     }
 
 }

@@ -7,8 +7,8 @@
                 {"name":"status"}
             ],
             [
-                {"name":"team"}
-                
+                {"name":"team"},
+                {"name":"replyToAddress"}
             ],
             [
                 {"name":"assignToUser"}
@@ -41,10 +41,6 @@
             ],
             [
                 {"name":"targetUserPosition"},
-                {"name":"replyToAddress"}
-            ],
-            [
-                false,
                 {"name":"replyFromAddress"}
             ],
             [

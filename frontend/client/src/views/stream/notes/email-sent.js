@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (Dep) {
+Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) {
 
     return Dep.extend({
 
@@ -37,23 +37,16 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
 
             this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
 
-            this.messageName = 'emailReceived';
+            this.messageName = 'emailSent';
 
-            if (data.isInitial) {
-                this.messageName += 'Initial';
-            }
+            this.messageData['by'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
 
-            if (data.personEntityId) {
-                this.messageName += 'From';
-                this.messageData['from'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
-            }
 
             if (!this.isUserStream) {
                 this.messageName += 'This';
             }
 
             this.createMessage();
-
         },
 
     });

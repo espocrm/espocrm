@@ -48,7 +48,7 @@
                 "true" : [
                     {
                         "action": "show",
-                        "fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName", "replyToAddress"]
+                        "fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName"]
                     }, {
                         "action": "setRequired",
                         "fields": ["replyEmailTemplate"]
@@ -58,7 +58,7 @@
             "default": [
                 {
                     "action": "hide",
-                    "fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName", "replyToAddress"]
+                    "fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName"]
                 }, {
                     "action": "setNotRequired",
                     "fields": ["replyEmailTemplate"]
