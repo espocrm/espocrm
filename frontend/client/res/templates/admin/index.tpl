@@ -17,7 +17,7 @@
 		{{/each}}
 	</div>
 	<div class="col-md-5">
-		<iframe src="//news.espocrm.com" style="width: 100%; height: 400px;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+		<iframe src="//news.espocrm.com" style="width: 100%; height: 600px;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 	</div>
 </div>
 
