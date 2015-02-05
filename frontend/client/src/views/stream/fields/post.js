@@ -17,15 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Fields.Post', 'Views.Fields.Text', function (Dep) {
 
     return Dep.extend({
-    
+
         getValueForDisplay: function () {
             var text = Dep.prototype.getValueForDisplay.call(this);
-            
+
             if (this.mode == 'detail' || this.mode == 'list') {
                 var mentionData = (this.model.get('data') || {}).mentions || {};
 
@@ -36,10 +36,10 @@ Espo.define('Views.Stream.Fields.Post', 'Views.Fields.Text', function (Dep) {
                     text = text.replace(new RegExp(item, 'g'), part);
                 });
             }
-                        
+
             return text;
         },
-        
+
     });
-    
+
 });
