@@ -24,35 +24,15 @@ namespace Espo\Modules\Crm\Services;
 
 use \Espo\ORM\Entity;
 
-class Account extends \Espo\Services\Record
+class CaseObj extends \Espo\Services\Record
 {
-    protected $linkSelectParams = array(
-        'contacts' => array(
-            'additionalColumns' => array(
-                'role' => 'accountRole'
-            )
-        )
-    );
 
     protected $mergeLinkList = array(
-        'opportunities',
-        'cases',
-        'documents',
-        'contacts',
         'tasks',
         'meetings',
         'calls',
-        'emails',
-        'meetingsPrimary',
-        'callsPrimary',
-        'emailsPrimary'
+        'emails'
     );
 
-    protected function getDuplicateWhereClause(Entity $entity)
-    {
-        return array(
-            'name' => $entity->get('name')
-        );
-    }
 }
 

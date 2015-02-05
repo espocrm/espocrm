@@ -138,6 +138,21 @@
             "entity": "Document",
             "foreign": "accounts"
         },
+        "meetingsPrimary": {
+            "type": "hasMany",
+            "entity": "Meeting",
+            "foreign": "account"
+        },
+        "emailsPrimary": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "account"
+        },
+        "callsPrimary": {
+            "type": "hasMany",
+            "entity": "Call",
+            "foreign": "account"
+        },
         "meetings": {
             "type": "hasChildren",
             "entity": "Meeting",

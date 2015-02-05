@@ -25,6 +25,7 @@ namespace Espo\Core\Controllers;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Utils\Util;
 
 class Record extends Base
@@ -300,6 +301,25 @@ class Record extends Base
         }
         $id = $params['id'];
         return $this->getRecordService()->unfollow($id);
+    }
+
+    public function actionMerge($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (empty($data['targetId']) || empty($data['sourceIds']) || !is_array($data['sourceIds'])) {
+            throw new BadRequest();
+        }
+        $targetId = $data['targetId'];
+        $sourceIds = $data['sourceIds'];
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->merge($targetId, $sourceIds);
     }
 }
 
