@@ -172,7 +172,7 @@ class Stream extends \Espo\Core\Services\Base
         $selectParams = array(
             'offset' => $params['offset'],
             'limit' => $params['maxSize'],
-            'orderBy' => 'createdAt',
+            'orderBy' => 'number',
             'order' => 'DESC',
             'customJoin' => "
                 JOIN subscription ON
@@ -242,7 +242,7 @@ class Stream extends \Espo\Core\Services\Base
             'whereClause' => $where,
             'offset' => $params['offset'],
             'limit' => $params['maxSize'],
-            'orderBy' => 'createdAt',
+            'orderBy' => 'number',
             'order' => 'DESC'
         ));
 
