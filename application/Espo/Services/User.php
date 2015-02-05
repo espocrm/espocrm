@@ -188,7 +188,9 @@ class User extends Record
         $user = parent::createEntity($data);
 
         if (!is_null($newPassword)) {
-            $this->sendPassword($user, $newPassword);
+            if ($user->isActive()) {
+                $this->sendPassword($user, $newPassword);
+            }
         }
 
         return $user;
@@ -212,7 +214,9 @@ class User extends Record
 
         if (!is_null($newPassword)) {
             try {
-                $this->sendPassword($user, $newPassword);
+                if ($user->isActive()) {
+                    $this->sendPassword($user, $newPassword);
+                }
             } catch (\Exception $e) {}
         }
 
