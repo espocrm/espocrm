@@ -21,7 +21,7 @@
         },
         "industry": {
             "type": "enum",
-            "options": ["", "Apparel", "Banking", "Computer Software", "Education", "Electronics", "Finance", "Insurance"]
+            "options": ["", "Apparel", "Banking", "Computer Software", "Education", "Electronics", "Finance", "Insurance", "Real Estate"]
         },
         "sicCode": {
             "type": "varchar",

@@ -214,11 +214,10 @@
         "status": "{user} updated {field} on {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
         "createRelated": "{user} created {relatedEntityType} {relatedEntity} linked to {entityType} {entity}",
-        "emailReceived": "Email {email} has been received for {entityType} {entity}",
-        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
+
         "mentionInPost": "{user} mentioned {mentioned} on {entityType} {entity}",
-        
-        "createThis": "{user} created this {entityType}",        
+
+        "createThis": "{user} created this {entityType}",
         "createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
         "assignThis": "{user} assigned this {entityType} to {assignee}",
         "postThis": "{user} posted",
@@ -226,8 +225,22 @@
         "statusThis": "{user} updated {field}",
         "updateThis": "{user} updated this {entityType}",
         "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} linked to this {entityType}",
+
+        "emailReceivedFromThis": "Email {email} has been received from {from}",
+        "emailReceivedInitialFromThis": "Email {email} has been received from {from} and created this {entityType}",
+
         "emailReceivedThis": "Email {email} has been received",
-        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}"
+        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}",
+
+        "emailReceivedFrom": "Email {email} related to {entityType} {entity} has been received from {from}",
+        "emailReceivedFromInitial": "Email {email} has been received from {from} and created {entityType} {entity}",
+
+        "emailReceived": "Email {email} related to {entityType} {entity} has been received",
+        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
+        "emailReceivedInitialFrom": "Email {email} has been received from {from} and created {entityType} {entity}",
+
+        "emailSent": "{by} has sent email {email} related to {entityType} {entity}",
+        "emailSentThis": "{by} has sent email {email}"
     },
     "lists": {
         "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

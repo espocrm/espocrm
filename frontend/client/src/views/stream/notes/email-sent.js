@@ -19,44 +19,34 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
+Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) {
 
     return Dep.extend({
 
-        name: 'Meetings',
+        template: 'stream.notes.email-received',
 
-        scope: 'Meeting',
+        setup: function () {
+            var data = this.model.get('data') || {};
 
-        defaultOptions: {
-            sortBy: 'dateStart',
-            asc: false,
-            displayRecords: 5,
-            expandedLayout: {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true,
-                        }
-                    ],
-                    [
-                        {
-                            name: 'dateStart'
-                        }
-                    ]
-                ]
-            },
-            searchData: {
-                bool: {
-                    onlyMy: true,
-                },
-                advanced: {
-                    status: {
-                        type: 'notIn',
-                        value: ['Held', 'Not Held']
-                    }
-                }
-            },
+            if (this.model.get('post')) {
+                this.createField('post', null, null, 'Stream.Fields.Post');
+            }
+            if ((this.model.get('attachmentsIds') || []).length) {
+                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+            }
+
+            this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
+
+            this.messageName = 'emailSent';
+
+            this.messageData['by'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+
+
+            if (!this.isUserStream) {
+                this.messageName += 'This';
+            }
+
+            this.createMessage();
         },
 
     });

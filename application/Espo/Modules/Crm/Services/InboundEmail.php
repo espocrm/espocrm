@@ -207,6 +207,8 @@ class InboundEmail extends \Espo\Services\Record
                 $email = $importer->importMessage($message, $userId, array($teamId));
 
                 if ($email) {
+                    $this->noteAboutEmail($email);
+
                     if ($inboundEmail->get('createCase')) {
                         $this->createCase($inboundEmail, $email);
                     } else {
@@ -244,8 +246,23 @@ class InboundEmail extends \Espo\Services\Record
         return true;
     }
 
+    protected function noteAboutEmail($email)
+    {
+        if ($email->get('parentType') && $email->get('parentId')) {
+            $parent = $this->getEntityManager()->getEntity($email->get('parentType'), $email->get('parentId'));
+            if ($parent) {
+                $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
+                return;
+            }
+        }
+    }
+
     protected function createCase($inboundEmail, $email)
     {
+        if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
+            return;
+        }
+
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
             $case = $this->getEntityManager()->getRepository('Case')->where(array(
@@ -262,7 +279,8 @@ class InboundEmail extends \Espo\Services\Record
                 'caseDistribution' => $inboundEmail->get('caseDistribution'),
                 'teamId' => $inboundEmail->get('teamId'),
                 'userId' => $inboundEmail->get('assignToUserId'),
-                'targetUserPosition' => $inboundEmail->get('targetUserPosition')
+                'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
+                'inboundEmailId' => $inboundEmail->id
             );
             $case = $this->emailToCase($email, $params);
             $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
@@ -302,6 +320,10 @@ class InboundEmail extends \Espo\Services\Record
             $userId = $params['userId'];
         }
         $case->set('assignedUserId', $userId);
+
+        if (!empty($params['inboundEmailId'])) {
+            $case->set('inboundEmailId', $params['inboundEmailId']);
+        }
 
         $teamId = false;
         if (!empty($params['teamId'])) {

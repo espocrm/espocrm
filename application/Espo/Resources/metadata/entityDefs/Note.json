@@ -16,6 +16,10 @@
             "type": "linkMultiple",
             "view": "Stream.Fields.AttachmentMultiple"
         },
+        "number": {
+            "type": "autoincrement",
+            "index": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -54,7 +58,7 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
+        "sortBy": "number",
         "asc": false
     },
     "streamRelated": {

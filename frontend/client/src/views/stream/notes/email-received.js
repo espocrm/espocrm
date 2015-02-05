@@ -17,22 +17,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (Dep) {
 
     return Dep.extend({
 
         template: 'stream.notes.email-received',
-        
+
         setup: function () {
             var data = this.model.get('data') || {};
 
             if (this.model.get('post')) {
-                this.createField('post', null, null, 'Stream.Fields.Post');                
-            }            
+                this.createField('post', null, null, 'Stream.Fields.Post');
+            }
             if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');                
+                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
             }
 
             this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
@@ -42,14 +42,20 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
             if (data.isInitial) {
                 this.messageName += 'Initial';
             }
+
+            if (data.personEntityId) {
+                this.messageName += 'From';
+                this.messageData['from'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+            }
+
             if (!this.isUserStream) {
-                this.messageName += 'This';    
+                this.messageName += 'This';
             }
 
             this.createMessage();
 
         },
-        
+
     });
 });
 

@@ -40,6 +40,10 @@
             "type": "link",
             "view": "Crm:Case.Fields.Contact"
         },
+        "inboundEmail": {
+            "type": "link",
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -81,6 +85,10 @@
             "type": "hasMany",
             "entity": "Team",
             "relationName": "EntityTeam"
+        },
+        "inboundEmail": {
+            "type": "belongsTo",
+            "entity": "InboundEmail"
         },
         "account": {
             "type": "belongsTo",

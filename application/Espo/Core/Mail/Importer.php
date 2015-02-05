@@ -297,15 +297,15 @@ class Importer
                 }
             }
 
-            if ($charset !== 'UTF-8') {
-                $content = mb_convert_encoding($content, 'UTF-8', $charset);
-            }
-
             if (isset($part->contentTransferEncoding)) {
                 $cteHeader = $part->getHeader('Content-Transfer-Encoding');
                 if ($cteHeader->getTransferEncoding() == 'quoted-printable') {
                     $content = quoted_printable_decode($content);
                 }
+            }
+
+            if ($charset !== 'UTF-8') {
+                $content = mb_convert_encoding($content, 'UTF-8', $charset);
             }
         }
         return $content;

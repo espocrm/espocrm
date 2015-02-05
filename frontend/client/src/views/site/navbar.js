@@ -165,13 +165,24 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             };
 
-            updateWidth();
 
-            setTimeout(function () {
-                if ($('#navbar .navbar').height() > 45) {
+            var $navbar = $('#navbar .navbar');
+
+            var processMaxCount = 20;
+            var processCount = 0;
+            var processUpdateWidth = function () {
+                processCount++;
+                if (processCount > processMaxCount) return;
+                if ($navbar.height() > 45) {
                     updateWidth();
+                    setTimeout(function () {
+                        processUpdateWidth();
+                    }, 400);
                 }
-            }.bind(this), 200);
+            };
+
+            processUpdateWidth();
+
         },
 
         selectTab: function (name) {

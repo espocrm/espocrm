@@ -23,6 +23,7 @@
 namespace Espo\Services;
 
 use \Espo\ORM\Entity;
+use \Espo\Entities;
 
 use \Espo\Core\Exceptions\Error;
 
@@ -34,7 +35,10 @@ class Email extends Record
         $this->dependencies[] = 'preferences';
         $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'crypt';
+        $this->dependencies[] = 'serviceFactory';
     }
+
+    private $streamService = null;
 
     protected $getEntityBeforeUpdate = true;
 
@@ -58,35 +62,68 @@ class Email extends Record
         return $this->injections['crypt'];
     }
 
+    protected function getServiceFactory()
+    {
+        return $this->injections['serviceFactory'];
+    }
+
+    protected function send(Entities\Email $entity)
+    {
+        $emailSender = $this->getMailSender();
+
+        if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {
+            $smtpParams = $this->getPreferences()->getSmtpParams();
+            if (array_key_exists('password', $smtpParams)) {
+                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+            }
+
+            if ($smtpParams) {
+                $smtpParams['fromName'] = $this->getUser()->get('name');
+                $emailSender->useSmtp($smtpParams);
+            }
+        } else {
+            if (!$this->getConfig()->get('outboundEmailIsShared')) {
+                throw new Error('Can not use system smtp. outboundEmailIsShared is false.');
+            }
+            $emailSender->setParams(array(
+                'fromName' => $this->getUser()->get('name')
+            ));
+        }
+
+        $params = array();
+
+        if ($entity->get('parentType') && $entity->get('parentId')) {
+            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+            if ($parent) {
+                if ($entity->get('parentType') == 'Case' && $parent->get('inboundEmailId')) {
+                    $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $parent->get('inboundEmailId'));
+                    if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
+                        $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
+                    }
+                    $this->getStreamService()->noteEmailSent($parent, $entity);
+                }
+            }
+        }
+
+        $emailSender->send($entity, $params);
+
+        $this->getEntityManager()->saveEntity($entity);
+    }
+
+    protected function getStreamService()
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->getServiceFactory()->create('Stream');
+        }
+        return $this->streamService;
+    }
+
     public function createEntity($data)
     {
         $entity = parent::createEntity($data);
 
         if ($entity && $entity->get('status') == 'Sending') {
-            $emailSender = $this->getMailSender();
-
-            if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {
-                $smtpParams = $this->getPreferences()->getSmtpParams();
-                if (array_key_exists('password', $smtpParams)) {
-                    $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
-                }
-
-                if ($smtpParams) {
-                    $smtpParams['fromName'] = $this->getUser()->get('name');
-                    $emailSender->useSmtp($smtpParams);
-                }
-            } else {
-                if (!$this->getConfig()->get('outboundEmailIsShared')) {
-                    throw new Error('Can not use system smtp. outboundEmailIsShared is false.');
-                }
-                $emailSender->setParams(array(
-                    'fromName' => $this->getUser()->get('name')
-                ));
-            }
-
-            $emailSender->send($entity);
-
-            $this->getEntityManager()->saveEntity($entity);
+            $this->send($entity);
         }
 
         return $entity;
