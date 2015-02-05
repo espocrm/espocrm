@@ -22,9 +22,10 @@
 
 namespace Espo\Core\Upgrades\Actions;
 
-use Espo\Core\Utils\Util,
-    Espo\Core\Utils\Json,
-    Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
+use Espo\Core\Exceptions\Error;
+use vierbergenlars\SemVer;
 
 abstract class Base
 {
@@ -195,25 +196,24 @@ abstract class Base
             return true;
         }
 
-        $currentVersion = $this->getConfig()->get('version');
-
         if (is_string($version)) {
             $version = (array) $version;
         }
 
+        $currentVersion = $this->getConfig()->get('version');
+
+        $semver = new SemVer\version($currentVersion);
+
         foreach ($version as $strVersion) {
 
-            $strVersion = trim($strVersion);
-
-            if ($strVersion == $currentVersion) {
-                return true;
+            $isInRange = false;
+            try {
+                $isInRange = $semver->satisfies(new SemVer\expression($strVersion));
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('Installer [acceptableVersions]: '.$e->getMessage().'.');
             }
 
-            $strVersion = str_replace('\\', '', $strVersion);
-            $strVersion = preg_quote($strVersion);
-            $strVersion = str_replace('\\*', '+', $strVersion);
-
-            if (preg_match('/^'.$strVersion.'/', $currentVersion)) {
+            if ($isInRange) {
                 return true;
             }
         }

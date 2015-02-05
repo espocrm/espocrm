@@ -48,6 +48,8 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         )
     );
 
+    protected $currentVersion = '11.5.2';
+
     protected function setUp()
     {
         $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
@@ -55,6 +57,8 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
         $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
+
+        $GLOBALS['log'] = $this->getMockBuilder('\Espo\Core\Utils\Log')->disableOriginalConstructor()->getMock();
 
         $map = array(
           array('config', $this->objects['config']),
@@ -163,23 +167,33 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         return array(
           array( '11.5.2' ),
           array( array('11.5.2') ),
-          array( array('1.4', '11.5.2') ),
-          array( '11.*' ),
-          array( '11\.*' ),
-          array( '11.5*' ),
-         // array( ),
+          array( array('1.4', '11.5.2')),
+          array( '11.*', ),
+          array( '11.5.*', ),
+          array( '~11.5', ),
+          array( '~11', ),
+          array( '^11.1', ),
+          array( '^11', ),
+          array( '11.1 - 11.9', ),
+          array( '>=11.1', ),
+          array( '<=12', ),
+          array( '>=11 <=12', ),
         );
     }
 
     /**
      * @dataProvider acceptableData
      */
-    public function testIsAcceptable($version)
+    public function testIsAcceptable($version, $currentVersion = null)
     {
+        if (!isset($currentVersion)) {
+            $currentVersion = $this->currentVersion;
+        }
+
         $this->objects['config']
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('11.5.2'));
+            ->will($this->returnValue($currentVersion));
 
         $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
         $this->assertTrue( $this->reflection->invokeMethod('isAcceptable') );
@@ -196,21 +210,29 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     public function acceptableDataFalse()
     {
         return array(
-          array( '1.*' ),
+          array( '1.*', ),
+          array( '11\.*', ),
+          array( '11\.5\.2', ),
+          array( '11.5*', ),
+          array( '11.1-11.9', ),
         );
     }
 
     /**
      * @dataProvider acceptableDataFalse
      */
-    public function testIsAcceptableFalse($version)
+    public function testIsAcceptableFalse($version, $currentVersion = null)
     {
+        if (!isset($currentVersion)) {
+            $currentVersion = $this->currentVersion;
+        }
+
         $this->setExpectedException('\Espo\Core\Exceptions\Error');
 
         $this->objects['config']
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('11.5.2'));
+            ->will($this->returnValue($currentVersion));
 
         $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
         $this->assertFalse( $this->reflection->invokeMethod('isAcceptable', array()) );

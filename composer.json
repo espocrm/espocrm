@@ -7,7 +7,8 @@
 		"zendframework/zend-mail": "2.*",
 		"zendframework/zend-ldap": "2.*",
 		"monolog/monolog": "1.*",
-		"yzalis/identicon": "*"
+		"yzalis/identicon": "*",
+        "vierbergenlars/php-semver": "~3.0"
 	},
 	"autoload": {
 		"psr-0": {
