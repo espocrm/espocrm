@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
@@ -30,7 +30,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
         detailTemplate: 'fields.link-multiple.detail',
 
         editTemplate: 'fields.link-multiple.edit',
-        
+
         searchTemplate: 'fields.link-multiple.search',
 
         nameHashName: null,
@@ -51,8 +51,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                 foreignScope: this.foreignScope,
             }, Dep.prototype.data.call(this));
         },
-        
-        getSelectFilters: function () {},    
+
+        getSelectFilters: function () {},
 
         setup: function () {
             this.nameHashName = this.name + 'Names';
@@ -60,20 +60,20 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             this.foreignScope = this.model.defs.links[this.name].entity;
 
             var self = this;
-            
+
             this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
             this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
-                        
+
             if (this.mode == 'search') {
                 this.nameHash = Espo.Utils.clone(this.searchParams.nameHash) || {};
                 this.ids = Espo.Utils.clone(this.searchParams.value) || [];
-            }            
-            
+            }
+
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
                 this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
             }.bind(this));
-            
+
 
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
@@ -87,7 +87,10 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                         dialog.render();
                         self.notify(false);
                         dialog.once('select', function (models) {
-                            models.forEach(function (model) {                            
+                            if (Object.prototype.toString.call(models) !== '[object Array]') {
+                                models = [models];
+                            }
+                            models.forEach(function (model) {
                                 self.addLink(model.id, model.get('name'));
                             });
                         });
@@ -95,16 +98,16 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                 });
 
                 this.events['click a[data-action="clearLink"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id').toString();                    
+                    var id = $(e.currentTarget).data('id').toString();
                     this.deleteLink(id);
                 };
             }
         },
-        
-        afterRender: function () {    
-            if (this.mode == 'edit' || this.mode == 'search') {            
-                this.$element = this.$el.find('input.main-element');                
-                
+
+        afterRender: function () {
+            if (this.mode == 'edit' || this.mode == 'search') {
+                this.$element = this.$el.find('input.main-element');
+
                 this.$element.autocomplete({
                     serviceUrl: function (q) {
                         return this.foreignScope + '?orderBy=name&limit=7';
@@ -115,8 +118,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                         return suggestion.name;
                     },
                     transformResult: function (response) {
-                        var response = JSON.parse(response);                
-                        var list = [];                        
+                        var response = JSON.parse(response);
+                        var list = [];
                         response.list.forEach(function(item) {
                             list.push({
                                 id: item.id,
@@ -127,44 +130,43 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                         }, this);
                         return {
                             suggestions: list
-                        };                        
+                        };
                     }.bind(this),
                     onSelect: function (s) {
                         this.addLink(s.id, s.name);
-                        this.$element.val('');                    
+                        this.$element.val('');
                     }.bind(this)
                 });
-                
+
                 var $element = this.$element;
                 this.once('render', function () {
                     $element.autocomplete('dispose');
-                }, this);            
-                
+                }, this);
+
                 this.once('remove', function () {
                     $element.autocomplete('dispose');
                 }, this);
-                
-                                
+
                 this.renderLinks();
 
             }
         },
-        
-        renderLinks: function () {                
+
+        renderLinks: function () {
             this.ids.forEach(function (id) {
                 this.addLinkHtml(id, this.nameHash[id]);
             }, this);
         },
 
-        deleteLink: function (id) {            
+        deleteLink: function (id) {
             this.deleteLinkHtml(id);
-                    
+
             var index = this.ids.indexOf(id);
             if (index > -1) {
                 this.ids.splice(index, 1);
             }
             delete this.nameHash[id];
-            this.trigger('change');        
+            this.trigger('change');
         },
 
         addLink: function (id, name) {
@@ -175,21 +177,21 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             }
             this.trigger('change');
         },
-        
+
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
-        },        
-        
+        },
+
         addLinkHtml: function (id, name) {
             var conteiner = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');
             $el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
             conteiner.append($el);
-            
+
             return $el;
         },
-        
+
         getDetailLinkHtml: function (id) {
             return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.nameHash[id] + '</a>';
         },
@@ -216,19 +218,19 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.idsName] = this.ids;        
+            data[this.idsName] = this.ids;
             data[this.nameHashName] = this.nameHash;
 
             return data;
         },
-        
+
         fetchSearch: function () {
-            var    values = this.ids || [];
-            
+            var values = this.ids || [];
+
             var data = {
                 type: 'linkedWith',
                 value: values,
-                nameHash: this.nameHash 
+                nameHash: this.nameHash
             };
             return data;
         },

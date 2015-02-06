@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core;
 
@@ -29,11 +29,11 @@ use \Espo\Core\Utils\Util;
 class SelectManagerFactory
 {
     private $entityManager;
-    
+
     private $user;
-    
+
     private $acl;
-    
+
     private $metadata;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -43,26 +43,28 @@ class SelectManagerFactory
         $this->acl = $acl;
         $this->metadata = $metadata;
     }
-    
+
     public function create($entityName)
     {
-        $className = '\\Espo\\Custom\\SelectManagers\\' . Util::normilizeClassName($entityName);
+        $normalizedName = Util::normilizeClassName($entityName);
+
+        $className = '\\Espo\\Custom\\SelectManagers\\' . $normalizedName;
         if (!class_exists($className)) {
             $moduleName = $this->metadata->getScopeModuleName($entityName);
             if ($moduleName) {
-                $className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . Util::normilizeClassName($entityName);
+                $className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . $normalizedName;
             } else {
-                $className = '\\Espo\\SelectManagers\\' . Util::normilizeClassName($entityName);
-            }        
+                $className = '\\Espo\\SelectManagers\\' . $normalizedName;
+            }
             if (!class_exists($className)) {
                 $className = '\\Espo\\Core\\SelectManagers\\Base';
             }
         }
-        
+
         $selectManager = new $className($this->entityManager, $this->user, $this->acl, $this->metadata);
         $selectManager->setEntityName($entityName);
-                
+
         return $selectManager;
-    }    
+    }
 }
 

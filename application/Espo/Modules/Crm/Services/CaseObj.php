@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,27 +20,19 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Fields.Post', 'Views.Fields.Text', function (Dep) {
+namespace Espo\Modules\Crm\Services;
 
-    return Dep.extend({
+use \Espo\ORM\Entity;
 
-        getValueForDisplay: function () {
-            var text = Dep.prototype.getValueForDisplay.call(this);
+class CaseObj extends \Espo\Services\Record
+{
 
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var mentionData = (this.model.get('data') || {}).mentions || {};
+    protected $mergeLinkList = array(
+        'tasks',
+        'meetings',
+        'calls',
+        'emails'
+    );
 
-                Object.keys(mentionData).sort(function (a, b) {
-                    return a.length < b.length
-                }).forEach(function (item) {
-                    var part = '(' + mentionData[item].name + ')[#User/view/'+mentionData[item].id + ']';
-                    text = text.replace(new RegExp(item, 'g'), part);
-                });
-            }
+}
 
-            return text;
-        },
-
-    });
-
-});

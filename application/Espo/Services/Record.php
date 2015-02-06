@@ -61,6 +61,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $linkSelectParams = array();
 
+    protected $mergeLinkList = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -727,6 +729,66 @@ class Record extends \Espo\Core\Services\Base
         foreach ($this->internalFields as $field) {
             $entity->clear($field);
         }
+    }
+
+    public function merge($id, array $sourceIds = array())
+    {
+        if (empty($id)) {
+            throw new Error();
+        }
+
+        $entity = $this->getEntity($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sourceList = array();
+        foreach ($sourceIds as $sourceId) {
+            $source = $this->getEntity($sourceId);
+            $sourceList[] = $source;
+            if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
+                throw new Forbidden();
+            }
+        }
+
+        foreach ($sourceList as $source) {
+            $sql = "
+                UPDATE `note`
+                    SET
+                        `parent_id` = " . $pdo->quote($entity->id) . ",
+                        `parent_type` = " . $pdo->quote($entity->getEntityName()) . ",
+
+                WHERE
+                    `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
+                    `parent_id` = " . $pdo->quote($source->id) . " AND
+                    `parent_type` = ".$pdo->quote($source->getEntityName())." AND
+                    `deleted` = 0
+            ";
+            $pdo->query($sql);
+        }
+
+        foreach ($sourceList as $source) {
+            foreach ($this->mergeLinkList as $link) {
+                $linkedList = $this->getEntityManager()->getRepository($this->name)->findRelated($source, $link);
+                foreach ($linkedList as $linked) {
+                    $this->getEntityManager()->getRepository()->relate($entity, $link, $linked);
+                    $this->getEntityManager()->getRepository()->unrelate($source, $link, $linked);
+                }
+            }
+        }
+
+        foreach ($sourceList as $source) {
+            $this->getEntityManager()->removeEntity($source);
+        }
+
+        return true;
     }
 }
 

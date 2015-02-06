@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Services;
 
@@ -29,6 +29,13 @@ use \Espo\ORM\Entity;
 
 class Lead extends \Espo\Services\Record
 {
+    protected $mergeLinkList = array(
+        'tasks',
+        'meetings',
+        'calls',
+        'emails'
+    );
+
     protected function getDuplicateWhereClause(Entity $entity)
     {
         $data = array(
@@ -47,11 +54,11 @@ class Lead extends \Espo\Services\Record
 
         return $data;
     }
-    
+
     public function convert($id, $recordsData)
     {
         $lead = $this->getEntity($id);
-        
+
         if (!$this->getAcl()->check($lead, 'edit')) {
             throw new Forbidden();
         }
@@ -89,13 +96,13 @@ class Lead extends \Espo\Services\Record
 
         $lead->set('status', 'Converted');
         $entityManager->saveEntity($lead);
-        
+
         if ($meetings = $lead->get('meetings')) {
             foreach ($meetings as $meeting) {
                 if (!empty($contact)) {
                     $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
                 }
-                
+
                 if (!empty($opportunity)) {
                     $meeting->set('parentId', $opportunity->id);
                     $meeting->set('parentType', 'Opportunity');

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Services;
 
@@ -33,7 +33,21 @@ class Account extends \Espo\Services\Record
             )
         )
     );
-    
+
+    protected $mergeLinkList = array(
+        'opportunities',
+        'cases',
+        'documents',
+        'contacts',
+        'tasks',
+        'meetings',
+        'calls',
+        'emails',
+        'meetingsPrimary',
+        'callsPrimary',
+        'emailsPrimary'
+    );
+
     protected function getDuplicateWhereClause(Entity $entity)
     {
         return array(

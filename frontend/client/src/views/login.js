@@ -17,21 +17,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
+ ************************************************************************/
+
 Espo.define('Views.Login', 'View', function (Dep) {
 
     return Dep.extend({
-    
+
         template: 'login',
-        
+
         views: {
             footer: {
                 el: 'body > footer',
                 view: 'Site.Footer'
             },
         },
-    
+
         events: {
             'submit #login-form': function (e) {
                 this.login();
@@ -41,13 +41,13 @@ Espo.define('Views.Login', 'View', function (Dep) {
                 this.showPasswordChangeRequest();
             }
         },
-        
+
         data: function () {
             return {
                 logoSrc: this.getLogoSrc()
             };
         },
-        
+
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
             if (!companyLogoId) {
@@ -55,23 +55,23 @@ Espo.define('Views.Login', 'View', function (Dep) {
             }
             return '?entryPoint=LogoImage&size=small-logo';
         },
-        
+
         login: function () {
                 var userName = $("#field-userName").val();
                 var password = $("#field-password").val();
 
                 var $submit = this.$el.find('#btn-login');
-                
+
                 if (userName == '') {
                     var $el = $("#field-userName");
-                
+
                     var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
                     $el.popover({
                         placement: 'bottom',
                         content: message,
                         trigger: 'manual',
                     }).popover('show');
-                    
+
                     var $cell = $el.closest('.form-group');
                     $cell.addClass('has-error');
                     this.$el.one('mousedown click', function () {
@@ -80,11 +80,11 @@ Espo.define('Views.Login', 'View', function (Dep) {
                     });
                     return;
                 }
-                
+
                 $submit.addClass('disabled');
 
                 this.notify('Please wait...');
-                
+
                 $.ajax({
                     url: 'App/user',
                     headers: {
@@ -112,7 +112,7 @@ Espo.define('Views.Login', 'View', function (Dep) {
                     login: true,
                 });
         },
-        
+
         onWrong: function () {
             var cell = $('#login .form-group');
             cell.addClass('has-error');

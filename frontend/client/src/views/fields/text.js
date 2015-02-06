@@ -17,39 +17,39 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
-    return Dep.extend({    
-    
+    return Dep.extend({
+
         type: 'text',
-        
+
         listTemplate: 'fields.text.detail',
-        
+
         detailTemplate: 'fields.text.detail',
-        
+
         editTemplate: 'fields.text.edit',
-        
+
         detailMaxLength: 400,
-        
+
         seeMoreText: false,
-        
+
         events: {
-            'click a[data-action="seeMoreText"]': function (e) {        
+            'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
                 this.render();
             }
         },
-        
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
         },
-        
+
         setup: function () {
-            this.params.rows = this.params.rows || 4; 
+            this.params.rows = this.params.rows || 4;
         },
-        
+
         getValueForDisplay: function () {
             var text = this.model.get(this.name);
             if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
@@ -59,7 +59,7 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
             }
             return text;
         },
-        
+
         fetchSearch: function () {
             var value = this.$element.val();
             if (value) {
@@ -70,7 +70,7 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
                 };
                 return data;
             }
-            return false;                
+            return false;
         },
 
     });

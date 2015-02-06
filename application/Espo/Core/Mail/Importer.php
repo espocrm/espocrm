@@ -197,71 +197,82 @@ class Importer
             $type = strtok($part->contentType, ';');
             $encoding = null;
 
-            switch ($type) {
-                case 'text/plain':
-                    $content = $this->getContentFromPart($part);
-                    if (!$email->get('body')) {
-                        $email->set('body', $content);
-                    }
-                    $email->set('bodyPlain', $content);
-                    break;
-                case 'text/html':
-                    $content = $this->getContentFromPart($part);
-                    $email->set('body', $content);
-                    $email->set('isHtml', true);
-                    break;
-                default:
-                    $content = $part->getContent();
-                    $disposition = null;
+            $isAttachment = true;
 
-                    $fileName = null;
-                    $contentId = null;
-
-                    if (isset($part->ContentDisposition)) {
-                        if (strpos($part->ContentDisposition, 'attachment') === 0) {
-                            if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
-                                $fileName = $m[1];
-                                $disposition = 'attachment';
-                            }
-                        } else if (strpos($part->ContentDisposition, 'inline') === 0) {
-                            $contentId = trim($part->contentID, '<>');
-                            $fileName = $contentId;
-                            $disposition = 'inline';
+            if ($type == 'text/plain' || $type == 'text/html') {
+                $isAttachment = false;
+                $content = $this->getContentFromPart($part);
+                if ($type == 'text/plain') {
+                    if ($email->get('bodyPlain')) {
+                        $isAttachment = true;
+                    } else {
+                        $email->set('bodyPlain', $content);
+                        if (!$email->get('body')) {
+                            $email->set('body', $content);
                         }
                     }
-
-                    if (isset($part->contentTransferEncoding)) {
-                        $encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
-                    }
-
-                    $attachment = $this->getEntityManager()->getEntity('Attachment');
-                    $attachment->set('name', $fileName);
-                    $attachment->set('type', $type);
-
-                    if ($disposition == 'inline') {
-                        $attachment->set('role', 'Inline Attachment');
+                } else if ($type == 'text/html') {
+                    if ($email->get('isHtml')) {
+                        $isAttachment = true;
                     } else {
-                        $attachment->set('role', 'Attachment');
+                        $email->set('body', $content);
+                        $email->set('isHtml', true);
                     }
+                }
+            }
 
-                    if ($encoding == 'base64') {
-                        $content = base64_decode($content);
+            if ($isAttachment) {
+                $content = $part->getContent();
+                $disposition = null;
+
+                $fileName = null;
+                $contentId = null;
+
+                if (isset($part->ContentDisposition)) {
+                    if (strpos($part->ContentDisposition, 'attachment') === 0) {
+                        if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
+                            $fileName = $m[1];
+                            $disposition = 'attachment';
+                        }
+                    } else if (strpos($part->ContentDisposition, 'inline') === 0) {
+                        $contentId = trim($part->contentID, '<>');
+                        $fileName = $contentId;
+                        $disposition = 'inline';
                     }
+                }
 
-                    $attachment->set('size', strlen($content));
+                if (isset($part->contentTransferEncoding)) {
+                    $encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
+                }
 
-                    $this->getEntityManager()->saveEntity($attachment);
+                $attachment = $this->getEntityManager()->getEntity('Attachment');
+                $attachment->set('name', $fileName);
+                $attachment->set('type', $type);
 
-                    $path = 'data/upload/' . $attachment->id;
-                    $this->getFileManager()->putContents($path, $content);
+                if ($disposition == 'inline') {
+                    $attachment->set('role', 'Inline Attachment');
+                } else {
+                    $attachment->set('role', 'Attachment');
+                }
 
-                    if ($disposition == 'attachment') {
-                        $attachmentsIds = $email->get('attachmentsIds');
-                        $attachmentsIds[] = $attachment->id;
-                        $email->set('attachmentsIds', $attachmentsIds);
-                    } else if ($disposition == 'inline') {
-                        $inlineIds[$contentId] = $attachment->id;
-                    }
+                if ($encoding == 'base64') {
+                    $content = base64_decode($content);
+                }
+
+                $attachment->set('size', strlen($content));
+
+                $this->getEntityManager()->saveEntity($attachment);
+
+                $path = 'data/upload/' . $attachment->id;
+                $this->getFileManager()->putContents($path, $content);
+
+                if ($disposition == 'attachment') {
+                    $attachmentsIds = $email->get('attachmentsIds');
+                    $attachmentsIds[] = $attachment->id;
+                    $email->set('attachmentsIds', $attachmentsIds);
+                } else if ($disposition == 'inline') {
+                    $inlineIds[$contentId] = $attachment->id;
+                }
             }
         } catch (\Exception $e) {}
     }
