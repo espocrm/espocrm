@@ -491,5 +491,8 @@ abstract class Base
 
     }
 
-
+    protected function clearCache()
+    {
+        return $this->getContainer()->get('dataManager')->clearCache();
+    }
 }
