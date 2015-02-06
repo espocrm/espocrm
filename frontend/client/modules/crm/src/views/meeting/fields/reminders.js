@@ -22,7 +22,7 @@
 Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
-        
+
         detailTemplate: 'crm:meeting.fields.reminders.detail',
 
         listTemplate: 'crm:meeting.fields.reminders.detail',
@@ -33,7 +33,7 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
             'click [data-action="addReminder"]': function () {
                 var type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
                 var seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default');
-                
+
                 var item = {
                     type: type,
                     seconds: seconds
@@ -66,7 +66,7 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
             }, this);
 
             this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options');
-            this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options');;
+            this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options');
         },
 
         afterRender: function () {
