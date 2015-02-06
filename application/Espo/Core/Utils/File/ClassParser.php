@@ -129,11 +129,18 @@ class ClassParser
                     $filePath = Util::concatPath($dir, $file);
                     $className = Util::getClassName($filePath);
                     $fileName = $this->getFileManager()->getFileName($filePath);
-                    $fileName = ucfirst($fileName);
+
+                    $scopeName = ucfirst($fileName);
+                    $normalizedScopeName = Util::normilizeScopeName($scopeName);
+
+                    if (empty($this->allowedMethods)) {
+                        $data[$normalizedScopeName] = $className;
+                        continue;
+                    }
 
                     foreach ($this->allowedMethods as $methodName) {
                         if (method_exists($className, $methodName)) {
-                            $data[$fileName] = $className;
+                            $data[$normalizedScopeName] = $className;
                         }
                     }
 

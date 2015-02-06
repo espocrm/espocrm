@@ -170,7 +170,9 @@ class HookManager
                             $sortedHookList = array_merge($sortedHookList, $hookDetails);
                         }
 
-                        $hooks[$scopeName][$hookName] = isset($hooks[$scopeName][$hookName]) ? array_merge($hooks[$scopeName][$hookName], $sortedHookList) : $sortedHookList;
+                        $normalizedScopeName = Util::normilizeScopeName($scopeName);
+
+                        $hooks[$normalizedScopeName][$hookName] = isset($hooks[$normalizedScopeName][$hookName]) ? array_merge($hooks[$normalizedScopeName][$hookName], $sortedHookList) : $sortedHookList;
                     }
                 }
             }

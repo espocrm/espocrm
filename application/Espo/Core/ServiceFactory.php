@@ -48,31 +48,6 @@ class ServiceFactory
         $this->container = $container;
     }
 
-    protected function init()
-    {
-        $config = $this->getContainer()->get('config');
-
-        if (file_exists($this->cacheFile) && $config->get('useCache')) {
-            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
-        } else {
-            $this->data = $this->getClassNameHash($this->paths['corePath']);
-
-            foreach ($this->getContainer()->get('metadata')->getModuleList() as $moduleName) {
-                $path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-                $this->data = array_merge($this->data, $this->getClassNameHash($path));
-            }
-
-            $this->data = array_merge($this->data, $this->getClassNameHash($this->paths['customPath']));
-
-            if ($config->get('useCache')) {
-                $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
-                if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error();
-                }
-            }
-        }
-    }
-
     protected function getFileManager()
     {
         return $this->container->get('fileManager');
@@ -81,6 +56,13 @@ class ServiceFactory
     protected function getContainer()
     {
         return $this->container;
+    }
+
+    protected function init()
+    {
+        $classParser = $this->getContainer()->get('classParser');
+        $classParser->setAllowedMethods(null);
+        $this->data = $classParser->getData($this->paths, $this->cacheFile);
     }
 
     protected function getClassName($name)
@@ -126,29 +108,6 @@ class ServiceFactory
             return $service;
         }
         throw new Error("Class '$className' does not exist");
-    }
-
-    // TODO delegate to another class
-    protected function getClassNameHash($dirs)
-    {
-        if (is_string($dirs)) {
-            $dirs = (array) $dirs;
-        }
-
-        $data = array();
-
-        foreach ($dirs as $dir) {
-            if (file_exists($dir)) {
-                $fileList = $this->getFileManager()->getFileList($dir, false, '\.php$', true);
-                foreach ($fileList as $file) {
-                    $filePath = Util::concatPath($dir, $file);
-                    $className = Util::getClassName($filePath);
-                    $fileName = $this->getFileManager()->getFileName($filePath);
-                    $data[$fileName] = $className;
-                }
-            }
-        }
-        return $data;
     }
 }
 

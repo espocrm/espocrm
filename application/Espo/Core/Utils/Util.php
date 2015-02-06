@@ -289,6 +289,23 @@ class Util
     }
 
     /**
+     * Remove 'Obj' if name is reserved PHP word.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function normilizeScopeName($name)
+    {
+        foreach (self::$reservedWords as $reservedWord) {
+            if ($reservedWord.'Obj' == $name) {
+                return $reservedWord;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
     * Get Naming according to prefix or postfix type
     *
     * @param string $name
