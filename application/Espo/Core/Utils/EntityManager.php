@@ -75,38 +75,40 @@ class EntityManager
             throw new Error();
         }
 
+        $normalizedName = Util::normilizeClassName($name);
+
         $contents = "<" . "?" . "php\n".
             "namespace Espo\Custom\Entities;\n".
-            "class {$name} extends \Espo\Core\Templates\Entities\\{$type}\n".
+            "class {$normalizedName} extends \Espo\Core\Templates\Entities\\{$type}\n".
             "{\n".
             "}\n";
 
-        $filePath = "custom/Espo/Custom/Entities/{$name}.php";
+        $filePath = "custom/Espo/Custom/Entities/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
         $contents = "<" . "?" . "php\n".
             "namespace Espo\Custom\Controllers;\n".
-            "class {$name} extends \Espo\Core\Templates\Controllers\\{$type}\n".
+            "class {$normalizedName} extends \Espo\Core\Templates\Controllers\\{$type}\n".
             "{\n".
             "}\n";
-        $filePath = "custom/Espo/Custom/Controllers/{$name}.php";
+        $filePath = "custom/Espo/Custom/Controllers/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
         $contents = "<" . "?" . "php\n".
             "namespace Espo\Custom\Services;\n".
-            "class {$name} extends \Espo\Core\Templates\Services\\{$type}\n".
+            "class {$normalizedName} extends \Espo\Core\Templates\Services\\{$type}\n".
             "{\n".
             "}\n";
-        $filePath = "custom/Espo/Custom/Services/{$name}.php";
+        $filePath = "custom/Espo/Custom/Services/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
         $contents = "<" . "?" . "php\n".
             "namespace Espo\Custom\Repositories;\n".
-            "class {$name} extends \Espo\Core\Templates\Repositories\\{$type}\n".
+            "class {$normalizedName} extends \Espo\Core\Templates\Repositories\\{$type}\n".
             "{\n".
             "}\n";
 
-        $filePath = "custom/Espo/Custom/Repositories/{$name}.php";
+        $filePath = "custom/Espo/Custom/Repositories/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
         $stream = false;
@@ -143,7 +145,7 @@ class EntityManager
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/clientDefs.json";
         $clientDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
-        $this->getMetadata()->set('clientDefs', $name, $entityDefsData);
+        $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
         $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
         $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
@@ -188,6 +190,8 @@ class EntityManager
             throw new Forbidden;
         }
 
+        $normalizedName = Util::normilizeClassName($name);
+
         $unsets = array(
             'entityDefs',
             'clientDefs',
@@ -201,10 +205,10 @@ class EntityManager
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/clientDefs/{$name}.json");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/scopes/{$name}.json");
 
-        $this->getFileManager()->removeFile("custom/Espo/Custom/Entities/{$name}.php");
-        $this->getFileManager()->removeFile("custom/Espo/Custom/Services/{$name}.php");
-        $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$name}.php");
-        $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$name}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Entities/{$normalizedName}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Services/{$normalizedName}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$normalizedName}.php");
+        $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$normalizedName}.php");
 
         try {
             $this->getLanguage()->delete('Global', 'scopeNames', $name);
