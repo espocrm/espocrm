@@ -164,9 +164,10 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
             }
 
             this.listenToOnce(this.model, 'sync', function () {
-                this.getMetadata().data['entityDefs'][this.scope]['fields'][this.model.get('name')] = this.model.toJSON();
-                this.getMetadata().storeToCache();
-                this.notify('Saved', 'success');
+                this.getMetadata().load(function () {
+                    this.getMetadata().storeToCache();
+                    this.notify('Saved', 'success');
+                }.bind(this));
 
                 var data = this.getLanguage().data;
                 if (this.scope in data) {
