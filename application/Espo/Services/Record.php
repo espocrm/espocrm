@@ -72,7 +72,7 @@ class Record extends \Espo\Core\Services\Base
                 $name = $matches[1];
             }
             if ($name != 'Record') {
-                $this->entityName = $name;
+                $this->entityName = Util::normilizeScopeName($name);
             }
         }
     }
@@ -763,29 +763,34 @@ class Record extends \Espo\Core\Services\Base
                 UPDATE `note`
                     SET
                         `parent_id` = " . $pdo->quote($entity->id) . ",
-                        `parent_type` = " . $pdo->quote($entity->getEntityName()) . ",
-
+                        `parent_type` = " . $pdo->quote($entity->getEntityName()) . "
                 WHERE
                     `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
                     `parent_id` = " . $pdo->quote($source->id) . " AND
                     `parent_type` = ".$pdo->quote($source->getEntityName())." AND
                     `deleted` = 0
             ";
-            $pdo->query($sql);
+            //$pdo->query($sql);
         }
+
+        $repository = $this->getEntityManager()->getRepository($entity->getEntityName());
 
         foreach ($sourceList as $source) {
             foreach ($this->mergeLinkList as $link) {
-                $linkedList = $this->getEntityManager()->getRepository($this->name)->findRelated($source, $link);
+                $linkedList = $repository->findRelated($source, $link);
+                echo $link . ' ';
                 foreach ($linkedList as $linked) {
-                    $this->getEntityManager()->getRepository()->relate($entity, $link, $linked);
-                    $this->getEntityManager()->getRepository()->unrelate($source, $link, $linked);
+                    echo $linked->get('name') . ' ';
+
+                    //$repository->relate($entity, $link, $linked);
                 }
             }
         }
 
+        die;
+
         foreach ($sourceList as $source) {
-            $this->getEntityManager()->removeEntity($source);
+            //$this->getEntityManager()->removeEntity($source);
         }
 
         return true;

@@ -67,13 +67,10 @@ class ServiceFactory
 
     protected function getClassName($name)
     {
-        $name = Util::normilizeClassName($name);
-
         if (!isset($this->data)) {
             $this->init();
         }
 
-        $name = ucfirst($name);
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
