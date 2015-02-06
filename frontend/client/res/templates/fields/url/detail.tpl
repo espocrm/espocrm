@@ -1,1 +1,1 @@
-<a href="{{url}}">{{value}}</a>
+<a href="{{url}}" target="_blank">{{value}}</a>

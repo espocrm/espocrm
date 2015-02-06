@@ -72,7 +72,7 @@ class Record extends \Espo\Core\Services\Base
                 $name = $matches[1];
             }
             if ($name != 'Record') {
-                $this->entityName = $name;
+                $this->entityName = Util::normilizeScopeName($name);
             }
         }
     }
@@ -763,8 +763,7 @@ class Record extends \Espo\Core\Services\Base
                 UPDATE `note`
                     SET
                         `parent_id` = " . $pdo->quote($entity->id) . ",
-                        `parent_type` = " . $pdo->quote($entity->getEntityName()) . ",
-
+                        `parent_type` = " . $pdo->quote($entity->getEntityName()) . "
                 WHERE
                     `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
                     `parent_id` = " . $pdo->quote($source->id) . " AND
@@ -774,15 +773,17 @@ class Record extends \Espo\Core\Services\Base
             $pdo->query($sql);
         }
 
+        $repository = $this->getEntityManager()->getRepository($entity->getEntityName());
+
         foreach ($sourceList as $source) {
             foreach ($this->mergeLinkList as $link) {
-                $linkedList = $this->getEntityManager()->getRepository($this->name)->findRelated($source, $link);
+                $linkedList = $repository->findRelated($source, $link);
                 foreach ($linkedList as $linked) {
-                    $this->getEntityManager()->getRepository()->relate($entity, $link, $linked);
-                    $this->getEntityManager()->getRepository()->unrelate($source, $link, $linked);
+                    $repository->relate($entity, $link, $linked);
                 }
             }
         }
+
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);

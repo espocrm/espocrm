@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\EntryPoints;
 
@@ -29,45 +29,49 @@ use \Espo\Core\Exceptions\BadRequest;
 class Download extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = true;
-    
+
     protected $fileTypesToShowInline = array(
         'application/pdf',
+        'application/vnd.ms-word',
+        'application/vnd.ms-excel',
+        'application/vnd.oasis.opendocument.text',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'text/plain',
     );
-    
+
     public function run()
-    {    
+    {
         $id = $_GET['id'];
         if (empty($id)) {
             throw new BadRequest();
         }
-        
+
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-        
+
         if (!$attachment) {
             throw new NotFound();
-        }        
-        
+        }
+
         if ($attachment->get('parentId') && $attachment->get('parentType')) {
-            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));            
+            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));
             if (!$this->getAcl()->check($parent)) {
                 throw new Forbidden();
             }
         }
-        
+
         $fileName = "data/upload/{$attachment->id}";
-        
+
         if (!file_exists($fileName)) {
             throw new NotFound();
         }
-        
+
         $type = $attachment->get('type');
-        
+
         $disposition = 'attachment';
         if (in_array($type, $this->fileTypesToShowInline)) {
             $disposition = 'inline';
         }
-            
-        
+
         header('Content-Description: File Transfer');
         if ($type) {
             header('Content-Type: ' . $type);
@@ -80,7 +84,7 @@ class Download extends \Espo\Core\EntryPoints\Base
         ob_clean();
         flush();
         readfile($fileName);
-        exit;        
-    }    
+        exit;
+    }
 }
 

@@ -26,7 +26,6 @@ use \Espo\ORM\Entity;
 
 class CaseObj extends \Espo\Services\Record
 {
-
     protected $mergeLinkList = array(
         'tasks',
         'meetings',
