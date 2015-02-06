@@ -770,7 +770,7 @@ class Record extends \Espo\Core\Services\Base
                     `parent_type` = ".$pdo->quote($source->getEntityName())." AND
                     `deleted` = 0
             ";
-            //$pdo->query($sql);
+            $pdo->query($sql);
         }
 
         $repository = $this->getEntityManager()->getRepository($entity->getEntityName());
@@ -778,19 +778,15 @@ class Record extends \Espo\Core\Services\Base
         foreach ($sourceList as $source) {
             foreach ($this->mergeLinkList as $link) {
                 $linkedList = $repository->findRelated($source, $link);
-                echo $link . ' ';
                 foreach ($linkedList as $linked) {
-                    echo $linked->get('name') . ' ';
-
-                    //$repository->relate($entity, $link, $linked);
+                    $repository->relate($entity, $link, $linked);
                 }
             }
         }
 
-        die;
 
         foreach ($sourceList as $source) {
-            //$this->getEntityManager()->removeEntity($source);
+            $this->getEntityManager()->removeEntity($source);
         }
 
         return true;
