@@ -56,10 +56,6 @@ Espo.App = function (options, callback) {
         this.preferences.settings = this.settings;
         this.acl = new Espo.Acl(this.user);
 
-        this.preferences.on('update', function (model) {
-            this.storage.set('user', 'preferences', this.preferences.toJSON());
-        }, this);
-
         this._modelFactory = new Espo.ModelFactory(this.loader, this.metadata, this.user);
         this._collectionFactory = new Espo.CollectionFactory(this.loader, this._modelFactory);
 
@@ -327,9 +323,6 @@ _.extend(Espo.App.prototype, {
         this.baseController.on('login', function (data) {
             this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);
             this.storage.set('user', 'auth', this.auth);
-            this.storage.set('user', 'user', data.user);
-            this.storage.set('user', 'preferences', data.preferences);
-            this.storage.set('user', 'acl', data.acl || {});
 
             this._initUserData(data, function () {
                 this.trigger('auth');
@@ -362,9 +355,6 @@ _.extend(Espo.App.prototype, {
         this.preferences.clear();
         this.acl.clear();
         this.storage.clear('user', 'auth');
-        this.storage.clear('user', 'user');
-        this.storage.clear('user', 'preferences');
-        this.storage.clear('user', 'acl');
         this.doAction({action: 'login'});
         this.language.clearCache();
 
@@ -377,36 +367,56 @@ _.extend(Espo.App.prototype, {
     _initUserData: function (options, callback) {
         options = options || {};
 
+
+        var userIsLoaded = false;
+        var langIsLoaded = false;
+
+        if (options.user) {
+            userIsLoaded = true;
+        }
+
+        var process = function () {
+            this.dateTime.setLanguage(this.language);
+
+            var userData = options.user || null;
+            var preferencesData = options.preferences || null;
+            var aclData = options.acl || null;
+
+            this.user.set(userData);
+            this.preferences.set(preferencesData);
+            this.acl.set(aclData);
+
+            if (!this.auth) {
+                return;
+            }
+
+            var arr = Base64.decode(this.auth).split(':');
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', this.url + '/', false, arr[0], arr[1]);
+            xhr.send('');
+
+            if (callback) {
+                callback();
+            }
+        }.bind(this);
+
         if (this.auth !== null) {
             this.language.load(function () {
-                this.dateTime.setLanguage(this.language);
+                langIsLoaded = true;
+                process();
 
-                var userData = options.user || this.storage.get('user', 'user') || null;
-                var preferencesData = options.preferences || this.storage.get('user', 'preferences') || null;
-                var aclData = options.acl || this.storage.get('user', 'acl') || null;
-
-                this.user.set(userData);
-                this.preferences.set(preferencesData);
-                this.acl.set(aclData);
-
-                this.user.on('change', function () {
-                    this.storage.set('user', 'user', this.user.toJSON());
-                }, this);
-
-                if (!this.auth) {
-                    return;
-                }
-
-                var arr = Base64.decode(this.auth).split(':');
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', this.url + '/', false, arr[0], arr[1]);
-                xhr.send('');
-
-                if (callback) {
-                    callback();
-                }
             }.bind(this));
 
+
+            if (!userIsLoaded) {
+                $.ajax({
+                    url: 'App/user',
+                }).done(function (data) {
+                    userIsLoaded = true;
+                    options = data;
+                    process();
+                });
+            }
         }
     },
 
