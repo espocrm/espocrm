@@ -65,6 +65,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->afterRunAction();
 
+        $this->clearCache();
+
         /* delete backup files */
         $this->deletePackageFiles();
 

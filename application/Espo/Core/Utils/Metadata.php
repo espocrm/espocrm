@@ -369,6 +369,8 @@ class Metadata
 
     public function setOrmMetadata(array $ormMeta)
     {
+        $result = true;
+
         if ($this->getConfig()->get('useCache')) {
             $result = $this->getFileManager()->putPhpContents($this->ormCacheFile, $ormMeta);
             if ($result == false) {

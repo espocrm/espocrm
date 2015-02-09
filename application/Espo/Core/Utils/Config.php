@@ -262,7 +262,7 @@ class Config
         }
 
         if (empty($this->adminItems)) {
-            $this->adminItems= Util::merge($data['systemItems'], $data['adminItems']);
+            $this->adminItems = array_merge($data['systemItems'], $data['adminItems']);
         }
 
         return $this->adminItems;

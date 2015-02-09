@@ -83,6 +83,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->afterRunAction();
 
+        $this->clearCache();
+
         /* delete unziped files */
         $this->deletePackageFiles();
 
