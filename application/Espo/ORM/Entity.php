@@ -291,6 +291,11 @@ abstract class Entity implements IEntity
         return $this->has($fieldName) && ($this->get($fieldName) != $this->getFetched($fieldName));
     }
 
+    public function setFetched($fieldName, $value)
+    {
+        $this->fetchedValuesContainer[$fieldName] = $value;
+    }
+
     public function getFetched($fieldName)
     {
         if (isset($this->fetchedValuesContainer[$fieldName])) {

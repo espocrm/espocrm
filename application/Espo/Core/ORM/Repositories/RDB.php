@@ -291,9 +291,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                     $data->$columnName = $foreignEntity->get($columnField);
                                 }
                                 $existingColumnsData->$foreignId = $data;
+                                $entity->setFetched($columnsFieldsName, $existingColumnsData);
                             }
 
                         }
+
+                        if ($entity->has($fieldName)) {
+                            $entity->setFetched($fieldName, $existingIds);
+                        }
+                        if ($entity->has($columnsFieldsName) && !empty($columns)) {
+                            $entity->setFetched($columnsFieldsName, $existingColumnsData);
+                        }
+
                         foreach ($existingIds as $id) {
                             if (!in_array($id, $specifiedIds)) {
                                 $toRemoveIds[] = $id;
