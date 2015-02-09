@@ -60,7 +60,7 @@ class ClassParser
         return $this->metadata;
     }
 
-    public function setAllowedMethods(array $methods)
+    public function setAllowedMethods($methods)
     {
         $this->allowedMethods = $methods;
     }
