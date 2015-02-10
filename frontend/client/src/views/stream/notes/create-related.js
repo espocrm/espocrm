@@ -17,18 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (Dep) {
 
     return Dep.extend({
 
         template: 'stream.notes.create-related',
-        
+
         messageName: 'createRelated',
-        
+
         data: function () {
-            return _.extend({                
+            return _.extend({
                 entityType: this.entityType,
                 entityId: this.entityId,
                 entityName: this.entityName,
@@ -36,23 +36,29 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
                 relatedTypeString: this.translate(this.entityType, 'scopeNames').toLowerCase()
             }, Dep.prototype.data.call(this));
         },
-        
+
+        init: function () {
+            if (this.getUser().isAdmin()) {
+                this.isRemovable = true;
+            }
+            Dep.prototype.init.call(this);
+        },
+
         setup: function () {
             if (this.model.get('data')) {
                 var data = this.model.get('data');
-    
+
                 this.entityType = data.entityType || null;
                 this.entityId = data.entityId || null;
                 this.entityName = data.entityName || null;
                 this.action = data.action || null;
-                
+
                 this.messageData['relatedEntityType'] = this.translate(this.entityType, 'scopeNames').toLowerCase();
                 this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
             }
-            
-            
-            this.createMessage();            
-        },        
+
+            this.createMessage();
+        },
     });
 });
 

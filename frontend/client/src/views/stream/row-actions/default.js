@@ -19,35 +19,21 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
+Espo.define('Views.Stream.RowActions.Default', 'View', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.post',
+        template: 'stream.row-actions.default',
 
-        messageName: 'post',
-
-        isEditable: true,
-
-        isRemovable: true,
-
-        setup: function () {
-            if (this.model.get('post')) {
-                this.createField('post', null, null, 'Stream.Fields.Post');
+        data: function () {
+            return {
+                acl: this.options.acl,
+                isEditable: this.options.isEditable,
+                isRemovable: this.options.isRemovable,
+                isEnabled: this.options.isEditable || this.options.isRemovable
             }
-            if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+        }
 
-                if (!this.model.get('post')) {
-                    this.messageName = 'attach';
-                    if (!this.isUserStream) {
-                        this.messageName += 'This';
-                    }
-                }
-            }
-
-            this.createMessage();
-        },
     });
 });
 

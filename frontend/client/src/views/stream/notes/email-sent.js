@@ -25,6 +25,8 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
 
         template: 'stream.notes.email-received',
 
+        isRemovable: true,
+
         setup: function () {
             var data = this.model.get('data') || {};
 
