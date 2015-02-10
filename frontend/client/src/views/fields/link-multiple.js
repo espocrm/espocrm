@@ -138,7 +138,13 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                     }.bind(this)
                 });
 
+
                 var $element = this.$element;
+
+                $element.on('change', function () {
+                    $element.val('');
+                });
+
                 this.once('render', function () {
                     $element.autocomplete('dispose');
                 }, this);
