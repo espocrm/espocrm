@@ -319,7 +319,7 @@ class Manager
      * Unset some element of content data
      *
      * @param  string | array $path
-     * @param  array | string $unsets [description]
+     * @param  array | string $unsets
      * @return bool
      */
     public function unsetContents($path, $unsets, $isJSON = true)
@@ -332,7 +332,12 @@ class Manager
 
         $currentDataArray = Utils\Json::getArrayData($currentData);
 
-        $unsettedData = Utils\Util::unsetInArray($currentDataArray, $unsets);
+        $unsettedData = Utils\Util::unsetInArray($currentDataArray, $unsets, true);
+
+        if (is_null($unsettedData) || (is_array($unsettedData) && empty($unsettedData))) {
+            $fullPath = $this->concatPaths($path);
+            return $this->unlink($fullPath);
+        }
 
         if ($isJSON) {
             return $this->putContentsJson($path, $unsettedData);
