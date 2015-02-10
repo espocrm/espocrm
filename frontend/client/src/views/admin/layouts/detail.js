@@ -17,40 +17,40 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
-Espo.define('Views.Admin.Layouts.Detail', 'Views.Admin.Layouts.Grid', function (Dep) {        
+ ************************************************************************/
+
+Espo.define('Views.Admin.Layouts.Detail', 'Views.Admin.Layouts.Grid', function (Dep) {
 
     return Dep.extend({
-    
+
         dataAttributes: ['name', 'fullWidth'],
-        
+
         dataAttributesDefs: {
             fullWidth: 'bool',
         },
-        
+
         ignoreList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
-    
+
         setup: function () {
-            Dep.prototype.setup.call(this);                
-        
+            Dep.prototype.setup.call(this);
+
             this.wait(true);
             this.loadLayout(function () {
                 this.wait(false);
-            }.bind(this));            
+            }.bind(this));
         },
-        
+
         loadLayout: function (callback) {
             this.getModelFactory().create(this.scope, function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {                    
-                    this.readDataFromLayout(model, layout);                        
+                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+                    this.readDataFromLayout(model, layout);
                     if (callback) {
                         callback();
-                    }                
+                    }
                 }.bind(this), false);
-            }.bind(this));    
+            }.bind(this));
         },
-        
+
         readDataFromLayout: function (model, layout) {
             var allFields = [];
             for (var field in model.defs.fields) {
@@ -58,39 +58,38 @@ Espo.define('Views.Admin.Layouts.Detail', 'Views.Admin.Layouts.Grid', function (
                     allFields.push(field);
                 }
             }
-                
+
             this.enabledFields = [];
             this.disabledFields = [];
-                    
+
             this.panels = layout;
-                    
+
             layout.forEach(function (panel) {
-                panel.rows.forEach(function (row) {    
+                panel.rows.forEach(function (row) {
                     row.forEach(function (cell, i) {
                         if (i == this.columnCount) {
                             return;
-                        }                            
+                        }
                         this.enabledFields.push(cell.name);
                     }.bind(this));
                 }.bind(this));
             }.bind(this));
-                    
-                    
-            allFields.sort();                    
-                
+
+            allFields.sort();
+
             for (var i in allFields) {
                 if (!_.contains(this.enabledFields, allFields[i])) {
                     this.disabledFields.push(allFields[i]);
                 }
-            }    
+            }
         },
-        
+
         isFieldEnabled: function (model, name) {
             if (this.ignoreList.indexOf(name) != -1) {
                 return false;
             }
-            return !model.getFieldParam(name, 'disabled');
-        }                
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
+        }
     });
 });
 

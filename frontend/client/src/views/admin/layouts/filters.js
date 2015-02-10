@@ -18,34 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/ 
-    
+
 Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function (Dep) {        
 
     return Dep.extend({
-    
+
         dataAttributes: ['name'],
-        
+
         editable: false,
-        
+
         ignoreList: [],
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.wait(true);
-            
+
             this.getModelFactory().create(this.scope, function (model) {
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
-                
+
                     var allFields = [];
                     for (var field in model.defs.fields) {
                         if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
                             allFields.push(field);
-                        }                            
+                        }
                     }
-                    
+
                     this.enabledFieldsList = [];
-                    
+
                     this.enabledFields = [];
                     this.disabledFields = [];
                     for (var i in layout) {
@@ -55,7 +55,7 @@ Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function 
                         });
                         this.enabledFieldsList.push(layout[i]);
                     }
-                
+
                     for (var i in allFields) {
                         if (!_.contains(this.enabledFieldsList, allFields[i])) {
                             this.disabledFields.push({
@@ -65,39 +65,39 @@ Espo.define('Views.Admin.Layouts.Filters', 'Views.Admin.Layouts.Rows', function 
                         }
                     }
                     this.rowLayout = this.enabledFields;
-                    
+
                     for (var i in this.rowLayout) {
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
                     }
-                    
-                    this.wait(false);                    
+
+                    this.wait(false);
                 }.bind(this), false);
-            }.bind(this));                
+            }.bind(this));
         },
-        
+
         fetch: function () {
             var layout = [];
-            $("#layout ul.enabled > li").each(function (i, el) {                
+            $("#layout ul.enabled > li").each(function (i, el) {
                 layout.push($(el).data('name'));
             }.bind(this));
             return layout;
         },
-        
+
         checkFieldType: function (type) {
             return this.getFieldManager().checkFilter(type);
         },
-        
+
         validate: function () {
             return true;
         },
-        
+
         isFieldEnabled: function (model, name) {
             if (this.ignoreList.indexOf(name) != -1) {
                 return false;
             }
-            return !model.getFieldParam(name, 'disabled');
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutFiltersDisabled');
         }
-                        
+
     });
 });
 

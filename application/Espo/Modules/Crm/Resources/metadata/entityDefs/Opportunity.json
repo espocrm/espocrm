@@ -104,7 +104,8 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
         },
         "account": {
             "type": "belongsTo",
@@ -125,22 +126,26 @@
         "meetings": {
             "type": "hasChildren",
             "entity": "Meeting",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "calls": {
             "type": "hasChildren",
             "entity": "Call",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "emails": {
             "type": "hasChildren",
             "entity": "Email",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "documents": {
             "type": "hasMany",

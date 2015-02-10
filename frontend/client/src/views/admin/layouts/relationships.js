@@ -38,7 +38,9 @@ Espo.define('Views.Admin.Layouts.Relationships', 'Views.Admin.Layouts.Rows', fun
                     var allFields = [];
                     for (var field in model.defs.links) {
                         if (['hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) != -1) {
-                            allFields.push(field);
+                            if (this.isLinkEnabled(model, field)) {
+                                allFields.push(field);
+                            }
                         }
                     }
 
@@ -84,6 +86,10 @@ Espo.define('Views.Admin.Layouts.Relationships', 'Views.Admin.Layouts.Rows', fun
         validate: function () {
             return true;
         },
+
+        isLinkEnabled: function (model, name) {
+            return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
+        }
     });
 });
 

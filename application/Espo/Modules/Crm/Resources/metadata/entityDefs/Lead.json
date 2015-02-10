@@ -145,7 +145,8 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
         },
         "opportunities": {
             "type": "hasMany",
@@ -155,17 +156,20 @@
         "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
-            "foreign": "leads"
+            "foreign": "leads",
+            "layoutRelationshipsDisabled": true
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
-            "foreign": "leads"
+            "foreign": "leads",
+            "layoutRelationshipsDisabled": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "createdAccount": {
             "type": "belongsTo",

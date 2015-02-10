@@ -160,6 +160,15 @@
             return null;
         },
 
+        getLinkParam: function (link, param) {
+            if (('defs' in this) && ('links' in this.defs) && (link in this.defs.links)) {
+                if (param in this.defs.links[link]) {
+                    return this.defs.links[link][param];
+                }
+            }
+            return null;
+        },
+
         isFieldReadOnly: function (field) {
             return this.getFieldParam(field, 'readOnly') || false;
         },

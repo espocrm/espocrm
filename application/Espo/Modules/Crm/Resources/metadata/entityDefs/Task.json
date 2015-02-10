@@ -78,7 +78,8 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
         },
         "parent": {
             "type": "belongsToParent",

@@ -16,7 +16,10 @@
         "contacts": "Contacts",
         "opportunities": "Opportunities",
         "cases": "Cases",
-        "documents": "Documents"
+        "documents": "Documents",
+        "meetingsPrimary": "Meetings (Internal)",
+        "callsPrimary": "Calls (Internal)",
+        "tasksPrimary": "Tasks (Internal)"
     },
     "options": {
         "type": {

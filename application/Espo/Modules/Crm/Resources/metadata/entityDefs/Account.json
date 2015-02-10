@@ -116,7 +116,8 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
         },
         "contacts": {
             "type": "hasMany",
@@ -141,37 +142,44 @@
         "meetingsPrimary": {
             "type": "hasMany",
             "entity": "Meeting",
-            "foreign": "account"
+            "foreign": "account",
+            "layoutRelationshipsDisabled": true
         },
         "emailsPrimary": {
             "type": "hasMany",
             "entity": "Email",
-            "foreign": "account"
+            "foreign": "account",
+            "layoutRelationshipsDisabled": true
         },
         "callsPrimary": {
             "type": "hasMany",
             "entity": "Call",
-            "foreign": "account"
+            "foreign": "account",
+            "layoutRelationshipsDisabled": true
         },
         "meetings": {
             "type": "hasChildren",
             "entity": "Meeting",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "calls": {
             "type": "hasChildren",
             "entity": "Call",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
         "emails": {
             "type": "hasChildren",
             "entity": "Email",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         }
     },
     "collection": {

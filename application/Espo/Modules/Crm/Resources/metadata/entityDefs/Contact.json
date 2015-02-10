@@ -140,7 +140,8 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
         },
         "account": {
             "type": "belongsTo",
@@ -155,7 +156,8 @@
                     "type": "varchar",
                     "len": 50
                 }
-            }
+            },
+            "layoutRelationshipsDisabled": true
         },
         "opportunities": {
             "type": "hasMany",
@@ -170,21 +172,26 @@
         "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
-            "foreign": "contacts"
+            "foreign": "contacts",
+            "layoutRelationshipsDisabled": true
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
-            "foreign": "contacts"
+            "foreign": "contacts",
+            "layoutRelationshipsDisabled": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
-            "foreign": "parent"
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         },
-        "activities": {
-            "type": "joint",
-            "links": ["meetings", "calls", "tasks"]
+        "emails": {
+            "type": "hasChildren",
+            "entity": "Task",
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
         }
     },
     "collection": {

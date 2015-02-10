@@ -18,34 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-    
+
 Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (Dep) {
 
     return Dep.extend({
-    
+
         dataAttributes: ['name', 'width', 'link', 'notSortable'],
-        
+
         dataAttributesDefs: {
             link: 'bool',
             width: 'text',
             notSortable: 'bool',
         },
-        
+
         editable: true,
-        
+
         ignoreList: [],
 
         ignoreTypeList: [],
-    
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.wait(true);
             this.loadLayout(function () {
                 this.wait(false);
             }.bind(this));
         },
-        
+
         loadLayout: function (callback) {
             this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), function (model) {
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
@@ -56,21 +56,21 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                 }.bind(this), false);
             }.bind(this));
         },
-        
+
         readDataFromLayout: function (model, layout) {
             var allFields = [];
             for (var field in model.defs.fields) {
                 if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
-                
+
                     allFields.push(field);
                 }
             }
-                    
+
             this.enabledFieldsList = [];
-            
+
             this.enabledFields = [];
             this.disabledFields = [];
-                    
+
             for (var i in layout) {
                 this.enabledFields.push({
                     name: layout[i].name,
@@ -78,7 +78,7 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                 });
                 this.enabledFieldsList.push(layout[i].name);
             }
-                
+
             for (var i in allFields) {
                 if (!_.contains(this.enabledFieldsList, allFields[i])) {
                     this.disabledFields.push({
@@ -87,14 +87,14 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                     });
                 }
             }
-            
+
             this.rowLayout = layout;
-                    
+
             for (var i in this.rowLayout) {
                 this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
             }
         },
-        
+
         parseDataAttributes: function (dialog) {
             var width = parseFloat(dialog.$el.find("[name='width']").val());
             if (isNaN(width) || width > 100 || width < 0) {
@@ -105,14 +105,14 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                 link: dialog.$el.find("[name='link']").val()
             };
         },
-        
+
         checkFieldType: function (type) {
             if (['linkMultiple'].indexOf(type) != -1) {
                 return false;
             }
             return true;
         },
-        
+
         isFieldEnabled: function (model, name) {
             if (this.ignoreList.indexOf(name) != -1) {
                 return false;
@@ -120,9 +120,9 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
             if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
-            return !model.getFieldParam(name, 'disabled');
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutListDisabled');
         }
-        
+
     });
 });
 

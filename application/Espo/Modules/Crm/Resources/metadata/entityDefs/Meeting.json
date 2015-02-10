@@ -54,14 +54,16 @@
         "users": {
             "type": "linkMultiple",
             "view": "Crm:Meeting.Fields.Attendees",
-            "disabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
             "columns": {
                 "status": "acceptanceStatus"
             }
         },
         "contacts": {
             "type": "linkMultiple",
-            "disabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
             "view": "Crm:Meeting.Fields.Contacts",
             "columns": {
                 "status": "acceptanceStatus"
@@ -70,7 +72,8 @@
         "leads": {
             "type": "linkMultiple",
             "view": "Crm:Meeting.Fields.Attendees",
-            "disabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
             "columns": {
                 "status": "acceptanceStatus"
             }
@@ -119,7 +122,8 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
         },
         "users": {
             "type": "hasMany",
@@ -129,9 +133,10 @@
                 "status": {
                     "type": "varchar",
                     "len": "36",
-                    "default": "None" 
+                    "default": "None"
                 }
-            }
+            },
+            "layoutRelationshipsDisabled": true
         },
         "contacts": {
             "type": "hasMany",
@@ -143,7 +148,8 @@
                     "len": "36",
                     "default": "None"
                 }
-            }
+            },
+            "layoutRelationshipsDisabled": true
         },
         "leads": {
             "type": "hasMany",
@@ -153,9 +159,10 @@
                 "status": {
                     "type": "varchar",
                     "len": "36",
-                    "default": "None" 
+                    "default": "None"
                 }
-            }
+            },
+            "layoutRelationshipsDisabled": true
         },
         "parent": {
             "type": "belongsToParent",
