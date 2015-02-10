@@ -104,12 +104,14 @@
                     "type": "varchar",
                     "len": 100
                 }
-            }
+            },
+            "layoutRelationshipsDisabled": true
         },
         "roles": {
             "type": "hasMany",
             "entity": "Role",
-            "foreign": "users"
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
         },
         "preferences": {
             "type": "hasOne",
