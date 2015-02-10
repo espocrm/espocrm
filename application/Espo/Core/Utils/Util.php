@@ -368,10 +368,11 @@ class Util
      *  array('EntityName1.unset1', 'EntityName1.unset2', .....)
      *  OR
      *  'EntityName1.unset1'
+     * @param bool $unsetParentEmptyArray - If unset empty parent array after unsets
      *
      * @return array
      */
-    public static function unsetInArray(array $content, $unsets)
+    public static function unsetInArray(array $content, $unsets, $unsetParentEmptyArray = false)
     {
         if (empty($unsets)) {
             return $content;
@@ -396,11 +397,19 @@ class Util
 
                     $unsetElem = $currVal . "['{$lastKey}']";
 
-                    $currVal = "
+                    $evalString = "
                     if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists('{$lastKey}', {$currVal}) )) {
                         unset({$unsetElem});
                     } ";
-                    eval($currVal);
+                    eval($evalString);
+
+                    if ($unsetParentEmptyArray) {
+                        $evalString = "
+                        if (is_array({$currVal}) && empty({$currVal})) {
+                            unset({$currVal});
+                        } ";
+                        eval($evalString);
+                    }
                 }
             }
         }

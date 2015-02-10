@@ -151,6 +151,7 @@ class FieldManager
     protected function deleteLabel($name, $scope)
     {
         $this->getLanguage()->delete($scope, 'fields', $name);
+        $this->getLanguage()->delete($scope, 'options', $name);
         return $this->getLanguage()->save();
     }
 
@@ -177,6 +178,7 @@ class FieldManager
         $unnecessaryFields = array(
             'name',
             'label',
+            'translatedOptions',
         );
 
         foreach ($unnecessaryFields as $fieldName) {
