@@ -25,6 +25,8 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
 
         template: 'stream.notes.email-received',
 
+        isRemovable: true,
+
         setup: function () {
             var data = this.model.get('data') || {};
 
@@ -53,7 +55,6 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
             }
 
             this.createMessage();
-
         },
 
     });

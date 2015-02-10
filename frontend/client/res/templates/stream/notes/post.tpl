@@ -3,18 +3,8 @@
 {{/unless}}
 
     {{#unless noEdit}}
-    <div class="list-row-buttons pull-right right">
-        {{#if acl.edit}}
-        <div class="btn-group">
-        <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu pull-right">
-            <li><a href="javascript:" class="action" data-action="quickEdit" data-id="{{model.id}}" data-no-full-form="true">{{translate 'Edit'}}</a></li>
-            <li><a href="javascript:" class="action" data-action="quickRemove" data-id="{{model.id}}">{{translate 'Remove'}}</a></li>
-        </ul>
-        </div>
-        {{/if}}
+    <div class="pull-right right-container">
+    {{{right}}}
     </div>
     {{/unless}}
 

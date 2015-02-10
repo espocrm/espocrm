@@ -29,6 +29,10 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 
         messageData: null,
 
+        isEditable: false,
+
+        isRemovable: false,
+
         data: function () {
             return {
                 isUserStream: this.isUserStream,
@@ -58,6 +62,16 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                 'entity': 'field:parent',
                 'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase(),
             };
+
+            if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
+                this.createView('right', 'Stream.RowActions.Default', {
+                    el: this.options.el + ' .right-container',
+                    acl: this.options.acl,
+                    model: this.model,
+                    isEditable: this.isEditable,
+                    isRemovable: this.isRemovable
+                });
+            }
         },
 
         createField: function (name, type, params, view) {
@@ -100,7 +114,7 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             }
             return '<img class="avatar" width="20" src="?entryPoint=avatar&size=small&id=' + this.model.get('createdById') + '&t='+t+'">';
         }
-        
+
     });
 });
 
