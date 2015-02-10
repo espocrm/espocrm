@@ -166,7 +166,7 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
             this.listenToOnce(this.model, 'sync', function () {
                 this.getMetadata().load(function () {
                     this.getMetadata().storeToCache();
-                    this.notify('Saved', 'success');
+                    this.trigger('after:save');
                 }.bind(this));
 
                 var data = this.getLanguage().data;
@@ -184,8 +184,6 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
                         data[this.scope]['options'][this.model.get('name')] = this.model.get('translatedOptions') || {};
                     }
                 }
-
-                this.getRouter().navigate('#Admin/fieldManager/scope=' + this.scope + '&field=' + this.model.get('name'), {trigger: true});
             }.bind(this));
 
             this.notify('Saving...');

@@ -120,6 +120,11 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
+
+                view.once('after:save', function () {
+                    this.openScope(this.scope);
+                    this.notify('Saved', 'success');
+                }, this);
             }.bind(this));
         },
 
@@ -138,6 +143,11 @@ Espo.define('Views.Admin.FieldManager.Index', 'View', function (Dep) {
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
+
+                view.once('after:save', function () {
+                    this.openScope(this.scope);
+                    this.notify('Created', 'success');
+                }, this);
             }.bind(this));
         },
 
