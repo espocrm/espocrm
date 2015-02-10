@@ -101,4 +101,20 @@ class System
     {
         return (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
     }
+
+    /**
+     * Get php version (only digits and dots)
+     *
+     * @return string
+     */
+    public static function getPhpVersion()
+    {
+        $version = phpversion();
+
+        if (preg_match('/^[0-9\.]+[0-9]/', $version, $matches)) {
+            return $matches[0];
+        }
+
+        return $version;
+    }
 }

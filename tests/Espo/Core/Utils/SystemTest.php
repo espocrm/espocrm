@@ -23,6 +23,7 @@
 namespace tests\Espo\Core\Utils;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\System;
 
 class SystemTest extends \PHPUnit_Framework_TestCase
 {
@@ -85,5 +86,10 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         if (isset($phpBin)) {
             $this->assertEquals($phpBin, $this->object->getPhpBin());
         }
+    }
+
+    public function testGetPhpVersion()
+    {
+        $this->assertTrue( (bool) preg_match('/^[0-9\.]+$/', System::getPhpVersion()) );
     }
 }

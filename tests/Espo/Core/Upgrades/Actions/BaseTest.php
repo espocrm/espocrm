@@ -162,7 +162,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( json_decode($manifest,true), $this->reflection->invokeMethod('getManifest') );
     }
 
-    public function acceptableData()
+    public function acceptableVersions()
     {
         return array(
           array( '11.5.2' ),
@@ -182,32 +182,18 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider acceptableData
+     * @dataProvider acceptableVersions
      */
-    public function testIsAcceptable($version, $currentVersion = null)
+    public function testCheckVersions($versions, $currentVersion = null)
     {
         if (!isset($currentVersion)) {
             $currentVersion = $this->currentVersion;
         }
 
-        $this->objects['config']
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($currentVersion));
-
-        $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
-        $this->assertTrue( $this->reflection->invokeMethod('isAcceptable') );
+        $this->assertTrue( $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error') ) );
     }
 
-    public function testIsAcceptableEmpty()
-    {
-        $version = array();
-
-        $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
-        $this->assertTrue( $this->reflection->invokeMethod('isAcceptable') );
-    }
-
-    public function acceptableDataFalse()
+    public function unacceptableVersions()
     {
         return array(
           array( '1.*', ),
@@ -219,9 +205,9 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider acceptableDataFalse
+     * @dataProvider unacceptableVersions
      */
-    public function testIsAcceptableFalse($version, $currentVersion = null)
+    public function testCheckVersionsException($versions, $currentVersion = null)
     {
         if (!isset($currentVersion)) {
             $currentVersion = $this->currentVersion;
@@ -229,13 +215,15 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\Espo\Core\Exceptions\Error');
 
-        $this->objects['config']
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($currentVersion));
+        $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
+    }
+
+    public function testIsAcceptableEmpty()
+    {
+        $version = array();
 
         $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
-        $this->assertFalse( $this->reflection->invokeMethod('isAcceptable', array()) );
+        $this->assertTrue( $this->reflection->invokeMethod('isAcceptable') );
     }
 
     public function testGetPath()

@@ -23,6 +23,7 @@
 namespace Espo\Core\Upgrades\Actions;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
 use vierbergenlars\SemVer;
@@ -180,37 +181,47 @@ abstract class Base
      */
     protected function isAcceptable()
     {
+        $manifest = $this->getManifest();
+
         $res = $this->checkPackageType();
-        $res &= $this->checkVersions();
+
+        //check php version
+        if (isset($manifest['php'])) {
+            $res &= $this->checkVersions($manifest['php'], System::getPhpVersion(), 'Your PHP version does not support this installation package.');
+        }
+
+        //check acceptableVersions
+        if (isset($manifest['acceptableVersions'])) {
+            $res &= $this->checkVersions($manifest['acceptableVersions'], $this->getConfig()->get('version'), 'Your EspoCRM version doesn\'t match for this installation package.');
+        }
 
         return (bool) $res;
     }
 
-    protected function checkVersions()
+    protected function checkVersions($versionList, $currentVersion, $errorMessage = '')
     {
-        $manifest = $this->getManifest();
-
-        /** check acceptable versions */
-        $version = $manifest['acceptableVersions'];
-        if (empty($version)) {
+        if (empty($versionList)) {
             return true;
         }
 
-        if (is_string($version)) {
-            $version = (array) $version;
+        if (is_string($versionList)) {
+            $versionList = (array) $versionList;
         }
 
-        $currentVersion = $this->getConfig()->get('version');
+        try {
+            $semver = new SemVer\version($currentVersion);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('Cannot recognize currentVersion ['.$currentVersion.'], error: '.$e->getMessage().'.');
+            return;
+        }
 
-        $semver = new SemVer\version($currentVersion);
-
-        foreach ($version as $strVersion) {
+        foreach ($versionList as $version) {
 
             $isInRange = false;
             try {
-                $isInRange = $semver->satisfies(new SemVer\expression($strVersion));
+                $isInRange = $semver->satisfies(new SemVer\expression($version));
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Installer [acceptableVersions]: '.$e->getMessage().'.');
+                $GLOBALS['log']->error('Version identification error: '.$e->getMessage().'.');
             }
 
             if ($isInRange) {
@@ -218,7 +229,7 @@ abstract class Base
             }
         }
 
-        $this->throwErrorAndRemovePackage('Your EspoCRM version doesn\'t match for this installation package.');
+        $this->throwErrorAndRemovePackage($errorMessage);
     }
 
     protected function checkPackageType()
