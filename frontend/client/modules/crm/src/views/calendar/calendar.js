@@ -171,8 +171,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         convertToFcEvents: function (list) {
             var events = [];
             list.forEach(function (o) {
-                event = this.convertToFcEvent(o);
-                events.push(event)
+                var event = this.convertToFcEvent(o);
+                events.push(event);
             }.bind(this));
             return events;
         },
