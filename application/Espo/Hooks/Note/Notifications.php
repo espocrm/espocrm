@@ -78,17 +78,7 @@ class Notifications extends \Espo\Core\Hooks\Base
                     }
                 }
                 if (!empty($userIdList)) {
-                    $job = $this->getEntityManager()->getEntity('Job');
-                    $job->set(array(
-                        'serviceName' => 'Notification',
-                        'method' => 'notifyAboutNoteFromJob',
-                        'data' => array(
-                            'userIdList' => $userIdList,
-                            'noteId' => $entity->id
-                        ),
-                        'executeTime' => date('Y-m-d H:i:s'),
-                    ));
-                    $this->getEntityManager()->saveEntity($job);
+                	$this->getNotificationService()->notifyAboutNote($userIdList, $entity);
                 }
             }
         }

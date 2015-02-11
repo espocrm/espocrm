@@ -1,5 +1,9 @@
 {
     "fields": {
+        "number": {
+            "type": "autoincrement",
+            "index": true
+        },
         "data": {
             "type": "jsonObject"
         },
@@ -28,7 +32,7 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
+        "sortBy": "number",
         "asc": false
     },
     "indexes": {

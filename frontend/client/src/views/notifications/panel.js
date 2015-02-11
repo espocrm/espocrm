@@ -17,17 +17,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
 
     return Dep.extend({
 
         template: 'notifications.panel',
-        
+
         events: {
             'click [data-action="markAllNotificationsRead"]': function () {
-                $.ajax({                
+                $.ajax({
                     url: 'Notification/action/markAllRead',
                     type: 'POST'
                 }).done(function (count) {
@@ -35,17 +35,17 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                 }.bind(this));
             },
         },
-        
+
         setup: function () {
             this.wait(true);
             this.getCollectionFactory().create('Notification', function (collection) {
                 this.collection = collection;
                 collection.maxSize = 5;
                 this.wait(false);
-            }, this);            
+            }, this);
         },
-        
-        afterRender: function () {            
+
+        afterRender: function () {
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'Record.ListExpanded', {
                     el: this.options.el + ' .list-container',
@@ -60,7 +60,7 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                                     params: {
                                         containerEl: this.options.el
                                     },
-                                }                            
+                                }
                             ]
                         ],
                         right: {
@@ -72,10 +72,10 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                 }, function (view) {
                     view.render();
                 });
-            }.bind(this));            
+            }.bind(this));
             this.collection.fetch();
         },
-        
+
     });
-    
+
 });

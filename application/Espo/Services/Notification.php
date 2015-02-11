@@ -27,6 +27,8 @@ use \Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Utils\Json;
+
 class Notification extends \Espo\Core\Services\Base
 {
     protected $dependencies = array(
@@ -61,26 +63,28 @@ class Notification extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    public function notifyAboutNote($userId, $noteId)
+    public function notifyAboutNote(array $userIds, \Espo\Entities\Note $note)
     {
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set(array(
-            'type' => 'Note',
-            'data' => array('noteId' => $noteId),
-            'userId' => $userId
-        ));
-        $this->getEntityManager()->saveEntity($notification);
-    }
+        $data = array('noteId' => $note->id);
+        $encodedData = Json::encode($data);
 
-    public function notifyAboutNoteFromJob($data)
-    {
-        $userIdList = $data['userIdList'];
-        $noteId = $data['noteId'];
+        $now = date('Y-m-d H:i:s');
 
-        foreach ($userIdList as $userId) {
-            $this->notifyAboutNote($userId, $noteId);
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`) VALUES ";
+        $arr = [];
+        foreach ($userIds as $userId) {
+            $id = uniqid();
+            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).")";
         }
-        return true;
+
+        if (empty($arr)) {
+            return;
+        }
+
+        $sql .= implode(", ", $arr);
+        $pdo->query($sql);
     }
 
     public function getNotReadCount($userId)
