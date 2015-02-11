@@ -150,6 +150,16 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         },
 
         handleAllDay: function (event) {
+            if (event.scope == 'Task') {
+                event.allDay = true;
+                if (!event.start || !event.end) {
+                    if (event.end) {
+                        event.start = event.end;
+                    }
+                }
+                return;
+            }
+
             if (!event.start || !event.end) {
                 event.allDay = true;
                 if (event.end) {
