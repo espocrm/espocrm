@@ -1,1 +1,7 @@
-["billingAddress","sicCode","industry","type"]
+[
+	"assignedUser",
+	"billingAddress",
+	"emailAddress",
+	"industry",
+	"type"
+]

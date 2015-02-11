@@ -1,1 +1,10 @@
-["number","status","priority","account","contact","description"]
+[
+	"account",
+	"assignedUser",
+	"contact",
+	"number",
+	"status",
+	"priority",
+	"description",
+	"teams"
+]

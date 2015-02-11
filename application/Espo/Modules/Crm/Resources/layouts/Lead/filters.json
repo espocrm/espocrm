@@ -1,7 +1,8 @@
 [
+    "assignedUser",
+    "address",
     "status",
     "source",
     "opportunityAmountConverted",
-    "teams",
-    "address"
+    "teams"
 ]

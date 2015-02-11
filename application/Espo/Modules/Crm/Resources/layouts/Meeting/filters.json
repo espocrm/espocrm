@@ -1,1 +1,9 @@
-["status","dateStart","parent", "users", "contacts", "leads"]
+[
+	"assignedUser",
+	"dateStart",
+	"status",
+	"parent",
+	"users",
+	"contacts",
+	"leads"
+]

@@ -1,1 +1,7 @@
-["account","emailAddress","address", "title"]
+[
+	"account",
+	"assignedUser",
+	"emailAddress",
+	"address",
+	"title"
+]
