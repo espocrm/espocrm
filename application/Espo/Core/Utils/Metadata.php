@@ -41,6 +41,13 @@ class Metadata
      */
     private $name = 'metadata';
 
+    /**
+     * Path to modules
+     *
+     * @var string
+     */
+    private $pathToModules = 'application/Espo/Modules';
+
     private $cacheFile = 'data/cache/application/metadata.php';
 
     private $paths = array(
@@ -406,30 +413,27 @@ class Metadata
     }
 
     /**
-     * Get Scopes
+     * Load modules
      *
-     * @return array
+     * @return void
      */
-    public function getScopes()
+    protected function loadModuleList()
     {
-        if (!empty($this->scopes)) {
-            return $this->scopes;
-        }
+        $modules = $this->getFileManager()->getFileList($this->pathToModules, false, '', false);
 
-        $scopeList = $this->get('scopes');
-        if (!is_array($scopeList)) {
-            $this->init(true);
-            $scopeList = $this->get('scopes');
-        }
-
-        $scopes = array();
-        if (is_array($scopeList)) {
-            foreach ($scopeList as $name => $details) {
-                $scopes[$name] = isset($details['module']) ? $details['module'] : false;
+        $modulesToSort = array();
+        if (is_array($modules)) {
+            foreach ($modules as $moduleName) {
+                if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
+                    $modulesToSort[$moduleName] = $this->getModuleConfig()->get($moduleName . '.order', $this->defaultModuleOrder);
+                }
             }
         }
 
-        return $this->scopes = $scopes;
+        krsort($modulesToSort);
+        asort($modulesToSort);
+
+        $this->moduleList = array_keys($modulesToSort);
     }
 
     /**
@@ -439,23 +443,9 @@ class Metadata
      */
     public function getModuleList()
     {
-        if (!empty($this->moduleList)) {
-            return $this->moduleList;
+        if (!isset($this->moduleList)) {
+            $this->loadModuleList();
         }
-
-        $scopes = $this->getScopes();
-
-        $modulesToSort = array();
-        foreach ($scopes as $moduleName) {
-            if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
-                $modulesToSort[$moduleName] = $this->getModuleConfig()->get($moduleName . '.order', $this->defaultModuleOrder);
-            }
-        }
-
-        krsort($modulesToSort);
-        asort($modulesToSort);
-
-        $this->moduleList = array_keys($modulesToSort);
 
         return $this->moduleList;
     }
@@ -492,26 +482,4 @@ class Metadata
 
         return $path;
     }
-
-    /**
-      * Check if scope exists
-      *
-      * @param string $scopeName
-      *
-      * @return bool
-      */
-    public function isScopeExists($scopeName)
-    {
-        $scopeModuleMap = $this->getScopes();
-
-        $lowerEntityName = strtolower($scopeName);
-        foreach($scopeModuleMap as $rowEntityName => $rowModuleName) {
-            if ($lowerEntityName == strtolower($rowEntityName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 }
