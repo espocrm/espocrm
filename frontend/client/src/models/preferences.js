@@ -17,51 +17,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Models.Preferences', 'Model', function (Dep) {
-    
+
     return Dep.extend({
-    
+
         name: "Preferences",
-        
+
         settings: null,
-    
+
         getTimeZoneOptions: function () {
             if (this.settings) {
                 return this.settings.getFieldParam('timeZone', 'options');
             }
         },
-        
+
         getLanguageOptions: function () {
             if (this.settings) {
                 return this.settings.getFieldParam('language', 'options');
             }
         },
-        
+
         getDefaultCurrencyOptions: function () {
             if (this.settings) {
                 return this.settings.getDefaultCurrencyOptions();
             }
         },
-        
-        setDashletOptions: function (id, attributes) {
-            var value = this.get('dashletOptions') || {};
-            value[id] = attributes;
-            this.set('dashletOptions', value);
-        },
-        
+
         getDashletOptions: function (id) {
             var value = this.get('dashletOptions') || {};
             return value[id] || false;
-        },
-        
-        unsetDashletOptions: function (id) {
-            var value = this.get('dashletOptions') || {};
-            delete value[id];
-            if (Object.getOwnPropertyNames(value).length == 0) {
-                value = null;
-            }
-            this.set('dashletOptions', value);
         },
 
     });

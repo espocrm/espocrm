@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'], function (Dep, Detail) {
 
@@ -82,7 +82,7 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
 
         setup: function (dialog) {
             this.id = 'dashlet-options';
-        
+
             self = this;
             var model = this.model = new Espo.Model();
             model.name = 'DashletOptions';
@@ -110,49 +110,55 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
         fetchAttributes: function () {
             var attributes = {};
             this.fieldList.forEach(function (field) {
-                var fieldView = this.getView('record').getView(field);    
+                var fieldView = this.getView('record').getView(field);
                 _.extend(attributes, fieldView.fetch());
             }, this);
-            
-            this.model.set(attributes, {silent: true});                
-            
+
+            this.model.set(attributes, {silent: true});
+
             var valid = true;
             this.fieldList.forEach(function (field) {
-                var fieldView = this.getView('record').getView(field);    
+                var fieldView = this.getView('record').getView(field);
                 valid = !fieldView.validate() && valid;
             }, this);
-            
+
             if (!valid) {
                 this.notify('Not Valid', 'error');
                 return null;
             }
             return attributes;
         },
-        
+
         save: function (dialog) {
             var attributes = this.fetchAttributes();
             if (attributes == null) {
                 return;
             }
-            
-            var id = this.getParentView().id;            
-    
-            this.notify('Saving...');            
-            this.getPreferences().setDashletOptions(id, attributes);
-                                    
+
+            var id = this.getParentView().id;
+
+            this.notify('Saving...');
+
             this.getPreferences().once('sync', function () {
+                this.getPreferences().trigger('update');
+
                 this.notify(false);
                 var dashlet = this.getParentView();
-                
+
                 this.close();
-                
+
                 dashlet.setup();
                 dashlet.render();
-                
+
             }, this);
-            
-            this.getPreferences().save();
-            this.getPreferences().trigger('update');
+
+            var o = this.getPreferences().get('dashletOptions') || {};
+            o[id] = attributes;
+
+            this.getPreferences().save({
+                dashletOptions: o
+            }, {patch: true});
+
         },
     });
 });
