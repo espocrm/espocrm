@@ -29,14 +29,15 @@ Espo.define('Views.EmailAccount.Record.Edit', ['Views.Record.Edit', 'Views.Email
             Detail.prototype.initSslFieldListening.call(this);
 
             if (this.getUser().isAdmin()) {
-            	var fieldView = this.getFieldView('assignedUser');
-            	if (fieldView) {
-	            	fieldView.readOnly = false;
-	            	fieldView.setMode('edit');
-	            	fieldView.render();
-	            }
+                var fieldView = this.getFieldView('assignedUser');
+                if (fieldView) {
+                    fieldView.readOnly = false;
+                    fieldView.setMode('edit');
+                    fieldView.render();
+                }
 
             }
+
         },
 
     });

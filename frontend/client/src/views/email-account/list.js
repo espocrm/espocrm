@@ -19,30 +19,40 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Controllers.EmailAccount', 'Controllers.Record', function (Dep) {
+Espo.define('Views.EmailAccount.List', 'Views.List', function (Dep) {
 
     return Dep.extend({
 
-        list: function (options) {
-        	var userId = (options || {}).userId;
-        	if (!userId) {
-        		Dep.prototype.list.call(this, options);
-        	} else {
-	            this.getCollection(function (collection) {
-	            	collection.where = [{
-	            		type: 'equals',
-	            		field: 'assignedUserId',
-	            		value: userId
-	            	}];
+        createButton: false,
 
-	                this.main(this.getViewName('list'), {
-	                    scope: this.name,
-	                    collection: collection,
-	                    userId: userId
-	                });
-	            });
-	        }
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.menu.buttons.unshift({
+                action: 'createEmailAccount',
+                label: 'Create ' +  this.scope,
+                style: 'primary',
+                acl: 'edit'
+            });
         },
+
+        actionCreateEmailAccount: function () {
+            if (this.options.userId) {
+                this.getRouter().dispatch('EmailAccount', 'create', {
+                    attributes: {
+                        assignedUserId: this.options.userId,
+                        assignedUserName: this.options.userId
+                    }
+                });
+                this.getRouter().navigate('#EmailAccount/create', {trigger: false});
+            } else {
+                this.getRouter().navigate('#EmailAccount/create', {trigger: true});
+            }
+
+
+        },
+
 
     });
 });
+
