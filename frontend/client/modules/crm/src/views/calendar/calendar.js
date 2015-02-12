@@ -309,7 +309,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     }
 
                     if (!event.end) {
-                        event.end = event.start.clone().add(event.duration, 's');
+                        if (event.scope != 'Task') {
+                            event.end = event.start.clone().add(event.duration, 's');
+                        }
                     }
 
                     event.allDay = false;
