@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 (function (Espo, _, $, Backbone) {
 
     Espo.Metadata = function (cache) {
@@ -35,15 +35,17 @@
 
         url: 'Metadata',
 
-        load: function (callback, sync) {
+        load: function (callback, disableCache, sync) {
             var sync = (typeof sync == 'undefined') ? false: sync;
             this.off('sync');
             this.once('sync', callback);
-            if (!this.loadFromCache()) {                
-                this.fetch(sync);
-                return;
+            if (!disableCache) {
+                 if (this.loadFromCache()) {
+                    this.trigger('sync');
+                    return;
+                }
             }
-            this.trigger('sync');
+            this.fetch(sync);
         },
 
         fetch: function (sync) {

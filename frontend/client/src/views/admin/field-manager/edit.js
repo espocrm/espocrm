@@ -167,7 +167,7 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
                 this.getMetadata().load(function () {
                     this.getMetadata().storeToCache();
                     this.trigger('after:save');
-                }.bind(this));
+                }.bind(this), true);
 
                 var data = this.getLanguage().data;
                 if (this.scope in data) {

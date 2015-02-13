@@ -159,6 +159,10 @@ class EntityManager
 
     public function update($name, $data)
     {
+        if (!$this->getMetadata()->get('scopes.' . $name)) {
+            throw new Error('Entity ['.$name.'] does not exist.');
+        }
+
         if (isset($data['stream'])) {
             $scopeData = array(
                 'stream' => (true == $data['stream'])

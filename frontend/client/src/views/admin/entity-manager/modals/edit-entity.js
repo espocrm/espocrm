@@ -215,9 +215,8 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 this.getMetadata().load(function () {
                     this.getConfig().load(function () {
                         this.trigger('after:save');
-                        this.close();
-                    }.bind(this));
-                }.bind(this));
+                    }.bind(this), true);
+                }.bind(this), true);
             }.bind(this));
         },
 
