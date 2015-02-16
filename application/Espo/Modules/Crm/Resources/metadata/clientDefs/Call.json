@@ -9,7 +9,7 @@
     },
     "menu": {
         "detail": {
-            "dropdown": [
+            "actions": [
                 {
                     "label": "Duplicate",
                     "action": "duplicate",

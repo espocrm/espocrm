@@ -17,17 +17,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 (function (Espo, _) {
 
     Espo.Utils = {
-    
-        checkActionAccess: function (acl, model, item) {
+
+        checkActionAccess: function (acl, obj, item) {
             var hasAccess = true;
             if (item.acl) {
                 if (!item.aclScope) {
-                    if (model) {
-                        hasAccess = acl.checkModel(model, item.acl);
+                    if (obj) {
+                        if (typeof obj == 'string' || obj instanceof String) {
+                           hasAccess = acl.check(obj, item.acl);
+                        } else {
+                            hasAccess = acl.checkModel(obj, item.acl);
+                        }
                     } else {
                         hasAccess = acl.check(item.scope, item.acl);
                     }
@@ -58,29 +62,29 @@
             }
             return result;
         },
-        
+
         isObject: function (obj) {
             if (obj === null) {
                 return false;
             }
             return typeof obj === 'object';
         },
-        
+
         clone: function (obj) {
             if (!Espo.Utils.isObject(obj)) {
                 return obj;
             }
             return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
         },
-        
+
         cloneDeep: function (data) {
             data = Espo.Utils.clone(data);
-            
-            if (Espo.Utils.isObject(data) || _.isArray(data)) {                
+
+            if (Espo.Utils.isObject(data) || _.isArray(data)) {
                 for (var i in data) {
                     data[i] = this.cloneDeep(data[i]);
-                }                    
-            } 
+                }
+            }
             return data;
         },
 

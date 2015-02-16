@@ -48,32 +48,44 @@ Espo.define('Views.Main', 'View', function (Dep) {
         init: function () {
             this.scope = this.options.scope || this.scope;
             this.menu = {};
-            
-            if (this.name && this.scope) {                    
+
+            if (this.name && this.scope) {
                 var menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
-                this.menu = _.clone(menu);
+                this.menu = Espo.Utils.cloneDeep(menu);
             }
-            
-            this.menu.buttons = [];
-            this.menu.dropdown = [];                
-            
-            if (menu) {                
-                (menu.buttons || []).forEach(function (item) {
-                    if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
-                        this.menu.buttons.push(item);
-                    }
-                }, this);
-            
-                (menu.dropdown || []).forEach(function (item) {
-                    if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
-                        this.menu.dropdown.push(item);
-                    }
-                }, this);
-            }
+
+            ['buttons', 'actions', 'dropdown'].forEach(function (type) {
+                this.menu[type] = this.menu[type] || [];
+            }, this);
         },
 
         getMenu: function () {
-            return this.menu;
+            var menu = {};
+
+            if (this.menu) {
+                ['buttons', 'actions', 'dropdown'].forEach(function (type) {
+                    (this.menu[type] || []).forEach(function (item) {
+                        menu[type] = menu[type] || [];
+                        if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
+                            menu[type].push(item);
+                        }
+                    }, this);
+                }, this);
+
+                /*var defaultMenu = this.getMetadata().get('clientDefs.' + scope + '.menu.default') || {};
+                types.forEach(function (type) {
+                    if (defaultMenu[type]) {
+                        if (!items[type]) {
+                            items[type] = [];
+                        }
+                        defaultMenu[type].forEach(function (i) {
+                            items[type].push(i);
+                        });
+                    }
+                }.bind(this));*/
+            }
+
+            return menu;
         },
 
         getHeader: function () {},
