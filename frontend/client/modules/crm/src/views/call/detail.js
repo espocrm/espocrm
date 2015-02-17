@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-  
+
  Espo.define('Crm:Views.Call.Detail', 'Views.Detail', function (Dep) {
 
     return Dep.extend({
@@ -33,12 +33,12 @@
                         icon: 'glyphicon glyphicon-send',
                         'acl': 'edit',
                     });
-                    this.menu.dropdown.push({
+                    this.menu.actions.push({
                         'label': 'Set Held',
                         'action': 'setHeld',
                         'acl': 'edit'
                     });
-                    this.menu.dropdown.push({
+                    this.menu.actions.push({
                         'label': 'Set Not Held',
                         'action': 'setNotHeld',
                         'acl': 'edit'
@@ -46,7 +46,7 @@
                 }
             }
         },
-        
+
         actionSendInvitations: function () {
             if (confirm(this.translate('confirmation', 'messages'))) {
                 this.$el.find('[data-action="sendInvitations"]').addClass('disabled');
@@ -67,7 +67,7 @@
                 });
             }
         },
-        
+
         actionSetHeld: function () {
             this.model.save({
                 status: 'Held'
@@ -81,7 +81,7 @@
                 }.bind(this),
             });
         },
-        
+
         actionSetNotHeld: function () {
             this.model.save({
                 status: 'Not Held'

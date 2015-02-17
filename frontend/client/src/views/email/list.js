@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Email.List', 'Views.List', function (Dep) {
 
@@ -45,7 +45,10 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
             }, function (view) {
                 view.render();
                 view.notify(false);
-            });
+                this.listenToOnce(view, 'after:save', function () {
+                    this.collection.fetch();
+                }, this);
+            }.bind(this));
         },
 
         getSearchDefaultData: function () {

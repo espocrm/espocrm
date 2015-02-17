@@ -26,7 +26,7 @@
                "label": "Archive Email",
                "link": "#Email/create",
                "acl": "edit"
-             }             
+             }
          ]
       },
       "detail": {
@@ -34,16 +34,11 @@
             {
                "label": "Reply",
                "action": "reply",
-               "style": "default",
+               "style": "danger",
                "acl": "read"
             }
          ],
          "dropdown": [
-             {
-               "label": "Reply",
-               "action": "reply",
-               "acl": "read"
-             },
              {
                "label": "Reply to All",
                "action": "replyToAll",

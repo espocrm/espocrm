@@ -376,6 +376,9 @@ _.extend(Espo.App.prototype, {
         }
 
         var process = function () {
+            if (!userIsLoaded) {
+                return;
+            }
             this.dateTime.setLanguage(this.language);
 
             var userData = options.user || null;
@@ -400,11 +403,16 @@ _.extend(Espo.App.prototype, {
             }
         }.bind(this);
 
+        var handleProcess = function () {
+            if (langIsLoaded && userIsLoaded) {
+                process();
+            }
+        };
+
         if (this.auth !== null) {
             this.language.load(function () {
                 langIsLoaded = true;
-                process();
-
+                handleProcess();
             }.bind(this));
 
 
@@ -414,7 +422,7 @@ _.extend(Espo.App.prototype, {
                 }).done(function (data) {
                     userIsLoaded = true;
                     options = data;
-                    process();
+                    handleProcess();
                 });
             }
         }

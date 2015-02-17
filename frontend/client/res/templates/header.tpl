@@ -12,18 +12,33 @@
                         {{#if icon}}<span class="{{icon}}"></span>{{/if}}
                         {{translate label scope=../../scope}}
                     </button>
-                {{/if}}    
+                {{/if}}
             {{/each}}
-        
-            {{#if items.dropdown}}
+
+            {{#if items.actions}}
+                <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     {{translate 'Actions'}} <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu pull-right">
+                    {{#each items.actions}}
+                    <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../../scope}}</a></li>
+                    {{/each}}
+                </ul>
+                </div>
+            {{/if}}
+
+            {{#if items.dropdown}}
+                <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right">
                     {{#each items.dropdown}}
                     <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../../scope}}</a></li>
                     {{/each}}
                 </ul>
+                </div>
             {{/if}}
         </div>
     </div>

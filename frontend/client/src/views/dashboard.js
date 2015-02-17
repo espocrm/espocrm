@@ -22,11 +22,11 @@
 Espo.define('Views.Dashboard', 'View', function (Dep) {
 
     return Dep.extend({
-    
+
         template: 'dashboard',
-    
+
         dashboardLayout: null,
-        
+
         events: {
             'click button.add-dashlet': function () {
                 this.createView('addDashlet', 'Modals.AddDashlet', {}, function (view) {
@@ -40,14 +40,14 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 displayTitle: this.options.displayTitle
             };
         },
-    
+
         getDashletsLayout: function (callback) {
             var dashboardLayout = this.dashboardLayout = this.getPreferences().get('dashboardLayout') || [[],[]];
-            
+
             if (this.dashboardLayout.length == 0) {
                 this.dashboardLayout = dashboardLayout = [[], []];
             }
-        
+
             var layout = {
                 type: 'columns-2',
                 layout: [],
@@ -72,10 +72,10 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
             });
             callback(layout);
         },
-    
+
         setup: function () {
         },
-        
+
         afterRender: function () {
             this.getDashletsLayout(function (layout) {
                 this.createView('dashlets', 'Base', {
@@ -83,7 +83,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                     el: '#dashlets',
                     noCache: true,
                 }, function (view) {
-                    
+
                     view.once('after:render', function () {
                         this.makeSortable();
                     }.bind(this));
@@ -91,7 +91,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 }.bind(this));
             }.bind(this));
         },
-    
+
         makeSortable: function () {
             $('#dashlets > div').css('min-height', '100px');
             $('#dashlets > div').sortable({
@@ -108,7 +108,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 }.bind(this)
             });
         },
-        
+
         updateDom: function () {
             var layout = [];
             $('#dashlets > div').each(function (i, col) {
@@ -125,14 +125,14 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
             });
             this.dashboardLayout = layout;
         },
-        
+
         updateDashletsLayout: function () {
             this.getPreferences().save({
                 dashboardLayout: this.dashboardLayout
             }, {patch: true});
             this.getPreferences().trigger('update');
         },
-    
+
         removeDashlet: function (id) {
             this.dashboardLayout.forEach(function (col, i) {
                 col.forEach(function (o, j) {
@@ -142,23 +142,22 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                     }
                 });
             });
-            
-            this.getPreferences().unsetDashletOptions(id);
+
             this.updateDashletsLayout();
         },
-        
+
         addDashlet: function (name) {
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
-            
+
             this.dashboardLayout[0].unshift({
                 name: name,
                 id: id
             });
-            
+
             this.updateDashletsLayout();
-        
+
             $('#dashlets').children().first().prepend('<div id="dashlet-container-' + id + '"></div>');
-            
+
             this.getView('dashlets').createView('dashlet-' + id, 'Dashlet', {
                 label: name,
                 name: name,

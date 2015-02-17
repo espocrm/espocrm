@@ -164,9 +164,9 @@ class Importer
 
     protected function checkIsDuplicate($email)
     {
-        if ($email->get('messageIdInternal')) {
+        if ($email->get('messageId')) {
             $duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
-                'messageIdInternal' => $email->get('messageIdInternal')
+                'messageId' => $email->get('messageId')
             ))->findOne();
             if ($duplicate) {
                 return true;

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Header', 'View', function (Dep) {
 
@@ -34,9 +34,9 @@ Espo.define('Views.Header', 'View', function (Dep) {
             data.items = this.getItems();
             return data;
         },
-        
+
         afterRender: function () {
-            if (this.model) {    
+            if (this.model) {
                 this.listenTo(this.model, 'after:save', function () {
                     this.render();
                 }.bind(this));
@@ -44,53 +44,8 @@ Espo.define('Views.Header', 'View', function (Dep) {
         },
 
         getItems: function () {
-            var name = this.getParentView().name || null;
-            var scope = this.getParentView().scope;
+            var items = this.getParentView().getMenu() || {};
 
-            var items = {};
-
-            if (name) {
-                var types = ['buttons', 'dropdown'];
-                var menu = this.getParentView().getMenu() || {};
-
-                types.forEach(function (type) {
-                    var filtered = [];
-                    if (menu[type]) {
-                        menu[type].forEach(function (item, i) {
-                            var hasAccess = true;
-                            if (item.acl) {
-                                if (this.model && !item.aclScope) {
-                                    if (!this.getAcl().checkModel(this.model, item.acl)) {
-                                        hasAccess = false;
-                                    }
-                                } else {
-                                    if (!this.getAcl().check(item.aclScope || scope, item.acl)) {
-                                        hasAccess = false;
-                                    }
-                                }
-                            }
-                            if (hasAccess) {
-                                filtered.push(item);
-                            }
-                        }.bind(this));
-                        items[type] = filtered;
-                    }
-                }.bind(this));
-
-                if (name != 'default') {
-                    var defaultMenu = this.getMetadata().get('clientDefs.' + scope + '.menu.default') || {};
-                    types.forEach(function (type) {
-                        if (defaultMenu[type]) {
-                            if (!items[type]) {
-                                items[type] = [];
-                            }
-                            defaultMenu[type].forEach(function (i) {
-                                items[type].push(i);
-                            });
-                        }
-                    }.bind(this));
-                }
-            }
             return items;
         },
     });

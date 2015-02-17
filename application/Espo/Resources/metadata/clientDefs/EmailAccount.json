@@ -1,9 +1,12 @@
 {
     "controller": "Controllers.EmailAccount",
-    "recordViews":{
+    "recordViews": {
         "list":"EmailAccount.Record.List",
         "detail": "EmailAccount.Record.Detail",
         "edit": "EmailAccount.Record.Edit"
+    },
+    "views": {
+    	"list": "EmailAccount.List"
     },
     "disableSearchPanel": true
 }

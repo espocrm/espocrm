@@ -86,6 +86,7 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 view.render();
 
                 this.listenTo(view, 'after:save', function () {
+                    this.clearView('edit');
                     this.setupScopeData();
                     this.render();
                 }, this);
@@ -99,6 +100,7 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 view.render();
 
                 this.listenTo(view, 'after:save', function () {
+                    this.clearView('edit');
                     this.setupScopeData();
                     this.render();
                 }, this);
@@ -118,8 +120,8 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                     this.getConfig().load(function () {
                         this.setupScopeData();
                         this.render();
-                    }.bind(this));
-                }.bind(this));
+                    }.bind(this), true);
+                }.bind(this), true);
             }.bind(this));
         },
 

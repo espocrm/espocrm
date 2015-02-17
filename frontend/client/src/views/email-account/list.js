@@ -18,37 +18,41 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Models.Preferences', 'Model', function (Dep) {
+
+Espo.define('Views.EmailAccount.List', 'Views.List', function (Dep) {
 
     return Dep.extend({
 
-        name: "Preferences",
+        createButton: false,
 
-        settings: null,
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-        getTimeZoneOptions: function () {
-            if (this.settings) {
-                return this.settings.getFieldParam('timeZone', 'options');
+            this.menu.buttons.unshift({
+                action: 'createEmailAccount',
+                label: 'Create ' +  this.scope,
+                style: 'primary',
+                acl: 'edit'
+            });
+        },
+
+        actionCreateEmailAccount: function () {
+            if (this.options.userId) {
+                this.getRouter().dispatch('EmailAccount', 'create', {
+                    attributes: {
+                        assignedUserId: this.options.userId,
+                        assignedUserName: this.options.userId
+                    }
+                });
+                this.getRouter().navigate('#EmailAccount/create', {trigger: false});
+            } else {
+                this.getRouter().navigate('#EmailAccount/create', {trigger: true});
             }
+
+
         },
 
-        getLanguageOptions: function () {
-            if (this.settings) {
-                return this.settings.getFieldParam('language', 'options');
-            }
-        },
-
-        getDefaultCurrencyOptions: function () {
-            if (this.settings) {
-                return this.settings.getDefaultCurrencyOptions();
-            }
-        },
-
-        getDashletOptions: function (id) {
-            var value = this.get('dashletOptions') || {};
-            return value[id] || false;
-        },
 
     });
-
 });
+

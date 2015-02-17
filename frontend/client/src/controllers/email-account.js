@@ -38,6 +38,7 @@ Espo.define('Controllers.EmailAccount', 'Controllers.Record', function (Dep) {
 	                this.main(this.getViewName('list'), {
 	                    scope: this.name,
 	                    collection: collection,
+	                    userId: userId
 	                });
 	            });
 	        }

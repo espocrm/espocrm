@@ -38,6 +38,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected $injections = array();
 
+    private $restoreData = null;
+
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
@@ -175,6 +177,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function afterSave(Entity $entity)
     {
+        if (!empty($this->restoreData)) {
+            $entity->set($this->restoreData);
+            $this->restoreData = null;
+        }
         parent::afterSave($entity);
 
         $this->handleEmailAddressSave($entity);
@@ -228,11 +234,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $entity->clear('createdById');
             $entity->clear('createdAt');
         }
+        $this->restoreData = $restoreData;
+
         $result = parent::save($entity);
-
-        $entity->set($restoreData);
-
-
 
         return $result;
     }

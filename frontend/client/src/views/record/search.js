@@ -253,9 +253,14 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
             this.presetFilters.push(data);
 
-            this.getPreferences().set('presetFilters', presetFilters);
-            this.getPreferences().save({patch: true});
-            this.getPreferences().trigger('update');
+            this.getPreferences().once('sync', function () {
+                this.getPreferences().trigger('update');
+                this.updateSearch()
+            }, this);
+
+            this.getPreferences().save({
+                'presetFilters': presetFilters
+            }, {patch: true});
 
             this.presetName = id;
         },

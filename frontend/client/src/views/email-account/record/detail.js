@@ -26,7 +26,17 @@ Espo.define('Views.EmailAccount.Record.Detail', 'Views.Record.Detail', function 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             this.initSslFieldListening();
+
+            if (this.getUser().isAdmin()) {
+                var fieldView = this.getFieldView('assignedUser');
+                if (fieldView) {
+                    fieldView.readOnly = false;
+                    fieldView.render();
+                }
+
+            }
         },
+
 
         initSslFieldListening: function () {
             var sslField = this.getFieldView('ssl');
