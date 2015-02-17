@@ -22,8 +22,9 @@
 
 namespace Espo\Core\Upgrades\Actions\Base;
 
-use Espo\Core\Exceptions\Error,
-    Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
@@ -89,6 +90,13 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         }
 
         $res = $this->copy($filesPath, '', true);
+
+        $manifestJson = $this->getFileManager()->getContents(array($packagePath, $this->manifestName));
+        $manifest = Json::decode($manifestJson, true);
+        if (!empty($manifest['delete'])) {
+            $res &= $this->getFileManager()->remove($manifest['delete'], null, true);
+        }
+
         $res &= $this->getFileManager()->removeInDir($packagePath, true);
 
         return $res;
