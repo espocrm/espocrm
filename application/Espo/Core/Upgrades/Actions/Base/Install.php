@@ -66,10 +66,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->backupExistingFiles();
 
+        $this->beforeRunAction();
+
         /* run before install script */
         $this->runScript('before');
-
-        $this->beforeRunAction();
 
         /* copy files from directory "Files" to EspoCRM files */
         if (!$this->copyFiles()) {
@@ -84,10 +84,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
 
-        $this->afterRunAction();
-
         /* run before install script */
         $this->runScript('after');
+
+        $this->afterRunAction();
 
         $this->clearCache();
 

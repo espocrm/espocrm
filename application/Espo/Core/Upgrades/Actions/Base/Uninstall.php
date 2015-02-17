@@ -41,10 +41,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->checkIsWritable();
 
+        $this->beforeRunAction();
+
         /* run before install script */
         $this->runScript('beforeUninstall');
-
-        $this->beforeRunAction();
 
         $backupPath = $this->getPath('backupPath');
         if (file_exists($backupPath)) {
@@ -64,10 +64,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
             throw new $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
 
-        $this->afterRunAction();
-
         /* run before install script */
         $this->runScript('afterUninstall');
+
+        $this->afterRunAction();
 
         $this->clearCache();
 

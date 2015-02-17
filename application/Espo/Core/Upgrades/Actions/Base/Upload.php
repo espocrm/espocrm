@@ -40,6 +40,8 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
 
         $this->initialize();
 
+        $this->beforeRunAction();
+
         $packagePath = $this->getPackagePath();
         $packageArchivePath = $this->getPackagePath(true);
 
@@ -56,6 +58,8 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
         $this->unzipArchive();
 
         $this->isAcceptable();
+
+        $this->afterRunAction();
 
         $this->finalize();
 
