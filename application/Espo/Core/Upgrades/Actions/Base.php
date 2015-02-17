@@ -504,6 +504,16 @@ abstract class Base
         $this->getActionManager()->setAction($currentAction);
     }
 
+    protected function initialize()
+    {
+
+    }
+
+    protected function finalize()
+    {
+
+    }
+
     protected function beforeRunAction()
     {
 

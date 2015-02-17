@@ -50,6 +50,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        $this->initialize();
+
         $this->isCopied = false;
 
         /** check if an archive is unzipped, if no then unzip */
@@ -76,7 +78,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->isCopied = true;
 
         /* remove files defined in a manifest */
-        $this->deleteFiles();
+        $this->deleteFiles(true);
 
         if (!$this->systemRebuild()) {
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
@@ -91,6 +93,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         /* delete unziped files */
         $this->deletePackageFiles();
+
+        $this->finalize();
 
         $GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
     }

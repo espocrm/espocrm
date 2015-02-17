@@ -32,6 +32,8 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
             throw new Error('Delete package package ID was not specified.');
         }
 
+        $this->initialize();
+
         $this->setProcessId($processId);
 
         $this->beforeRunAction();
@@ -40,6 +42,8 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
         $this->deletePackage();
 
         $this->afterRunAction();
+
+        $this->finalize();
 
         $GLOBALS['log']->debug('Delete package process ['.$processId.']: end run.');
     }
