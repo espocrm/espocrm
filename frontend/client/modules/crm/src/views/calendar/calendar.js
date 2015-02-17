@@ -145,8 +145,23 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
             this.handleAllDay(event);
 
-            event.color = this.colors[o.scope];
+            this.fillColor(event);
+
             return event;
+        },
+
+        fillColor: function (event) {
+            var color = this.colors[event.scope];
+            var d = event.end || event.start;
+            if (d.unix() < this.now.unix()) {
+                color = this.shadeColor(color, 0.4);
+            }
+            event.color = color;
+        },
+
+        shadeColor: function (color, percent) {
+            var f = parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+            return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
         },
 
         handleAllDay: function (event) {
@@ -179,6 +194,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         },
 
         convertToFcEvents: function (list) {
+            this.now = moment().utc();
             var events = [];
             list.forEach(function (o) {
                 var event = this.convertToFcEvent(o);
@@ -318,6 +334,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
                     this.handleAllDay(event);
 
+                    this.fillColor(event);
+
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
                         model.once('sync', function () {
@@ -332,6 +350,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         dateEnd: this.convertTime(event.end)
                     };
                     event.duration = event.end.unix() - event.start.unix();
+
+                    this.fillColor(event);
 
                     this.notify('Saving...');
                     this.getModelFactory().create(event.scope, function (model) {
