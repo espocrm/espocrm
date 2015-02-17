@@ -17,20 +17,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Email.Record.Edit', ['Views.Record.Edit', 'Views.Email.Record.Detail'], function (Dep, Detail) {
 
     return Dep.extend({
-    
+
         init: function () {
             Dep.prototype.init.call(this);
 
-            
-            Detail.prototype.layoutNameConfigure.call(this);            
-            
+            Detail.prototype.layoutNameConfigure.call(this);
+
         },
-        
+
     });
 });
 

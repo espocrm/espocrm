@@ -17,88 +17,94 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], function (Dep, Summernote) {
 
-    return Dep.extend({    
-    
-        type: 'wysiwyg',    
-        
+    return Dep.extend({
+
+        type: 'wysiwyg',
+
         detailTemplate: 'fields.wysiwyg.detail',
-        
+
         editTemplate: 'fields.wysiwyg.edit',
-        
-        setup: function () {            
-            Dep.prototype.setup.call(this);            
-            
-            this.listenTo(this.model, 'change:isHtml', function (model) {                        
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:isHtml', function (model) {
                 if (!model.has('isHtml') || model.get('isHtml')) {
                     this.enableWysiwygMode();
                 } else {
                     this.disableWysiwygMode();
                 }
             }.bind(this));
-            
+
             this.once('remove', function () {
                 $('body > .tooltip').remove();
-            });            
+            });
         },
-        
+
         afterRender: function () {
-            Dep.prototype.afterRender.call(this);    
-            
+            Dep.prototype.afterRender.call(this);
+
             var language = this.getConfig().get('language');
-            
+
             if (!(language in $.summernote.lang)) {
                 $.summernote.lang[language] = this.getLanguage().translate('summernote', 'sets');
             }
-            
+
             if (this.mode == 'edit') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.enableWysiwygMode();
                 }
             }
-            
+
             if (this.mode == 'detail') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.$el.find('iframe').removeClass('hidden');
-                    var iframe = this.$el.find('iframe').get(0);                
-                    var document = iframe.contentWindow.document;                
-                
+                    var iframe = this.iframe = this.$el.find('iframe').get(0);
+                    var iframeDocument = this.iframeDocument = iframe.contentWindow.document;
+
                     var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>'
-                
-                    document.open('text/html', 'replace');                
+
+                    iframeDocument.open('text/html', 'replace');
                     var body = this.model.get('body');
                     body += link;
-                                
-                    document.write(body);                
-                
-                    document.close();
-                    iframe.style.height = document.body.scrollHeight + 'px';
+
+                    iframeDocument.write(body);
+                    iframeDocument.close();
+
+                    this.handleIframeHeight();
+
                 } else {
                     this.$el.find('.plain').removeClass('hidden');
                 }
             }
         },
-        
+
+        handleIframeHeight: function () {
+            console.log(this.iframeDocument.body.scrollHeight);
+            this.iframe.style.height = this.iframeDocument.body.scrollHeight + 'px';
+        },
+
         enableWysiwygMode: function () {
             this.$summernote = this.$element.summernote({
                 height: 250,
                 lang: this.getConfig().get('language'),
                 onImageUpload: function (files, editor, welEditable) {
                     var file = files[0];
-                    this.notify('Uploading...');                    
-                    this.getModelFactory().create('Attachment', function (attachment) {                    
+                    this.notify('Uploading...');
+                    this.getModelFactory().create('Attachment', function (attachment) {
                         var fileReader = new FileReader();
-                        fileReader.onload = function (e) {                    
+                        fileReader.onload = function (e) {
                             $.ajax({
                                 type: 'POST',
                                 url: 'Attachment/action/upload',
                                 data: e.target.result,
                                 contentType: 'multipart/encrypted',
-                            }).done(function (data) {                                
-                                attachment.id = data.attachmentId;                            
+                            }).done(function (data) {
+                                attachment.id = data.attachmentId;
                                 attachment.set('name', file.name);
                                 attachment.set('type', file.type);
                                 attachment.set('role', 'Inline Attachment');
@@ -108,12 +114,12 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                                     var url = '?entryPoint=attachment&id=' + attachment.id;
                                     editor.insertImage(welEditable, url);
                                     this.notify(false);
-                                }, this);                        
+                                }, this);
                                 attachment.save();
                             }.bind(this));
                         }.bind(this);
                         fileReader.readAsDataURL(file);
-                    
+
                     }, this);
                 }.bind(this),
                 toolbar: [
@@ -121,23 +127,23 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                     ['style', ['bold', 'italic', 'underline', 'clear']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],                    
+                    ['height', ['height']],
                     ['table', ['table', 'link', 'picture']],
                     ['misc',['codeview']]
                 ]
             });
         },
-        
+
         disableWysiwygMode: function () {
             this.$element.destroy();
         },
-        
+
         fetch: function () {
             var data = {};
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                 data[this.name] = this.$element.code();
             } else {
-                data[this.name] = this.$element.val();    
+                data[this.name] = this.$element.val();
             }
             return data;
         }

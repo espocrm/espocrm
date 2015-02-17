@@ -2,13 +2,13 @@
     {
         "label":"",
         "rows":[
-            [{"name":"dateSent"}],
-            [{"name":"parent"}],
-            [{"name":"from"}],
+            [{"name":"dateSent"}, {"name":"assignedUser"}],
+            [{"name":"parent"}, {"name":"teams"}],
+            [{"name":"from"}, {"name":"cc"}],
             [{"name":"to"}],
-            [{"name":"name"}],            
-            [{"name":"body"}],
-            [{"name":"attachments"}]
+            [{"name":"name", "fullWidth": true}],
+            [{"name":"body", "fullWidth": true}],
+            [{"name":"attachments", "fullWidth": true}]
         ]
     }
 ]
