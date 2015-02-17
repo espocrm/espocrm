@@ -28,7 +28,6 @@ class ExtensionManager extends Upgrades\Base
 
     protected $params = array(
         'packagePath' => 'data/upload/extensions',
-
         'backupPath' => 'data/.backup/extensions',
 
         'scriptNames' => array(

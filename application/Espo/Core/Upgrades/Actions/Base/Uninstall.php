@@ -22,8 +22,9 @@
 
 namespace Espo\Core\Upgrades\Actions\Base;
 
-use Espo\Core\Exceptions\Error,
-    Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
@@ -37,6 +38,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        $this->initialize();
+
+        $this->checkIsWritable();
+
         $this->beforeRunAction();
 
         /* run before install script */
@@ -45,19 +50,19 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $backupPath = $this->getPath('backupPath');
         if (file_exists($backupPath)) {
 
-            /* remove extension files, saved in fileList */
-            if (!$this->deleteFiles(true)) {
-                throw new Error('Permission denied to delete files.');
-            }
-
             /* copy core files */
             if (!$this->copyFiles()) {
-                throw new Error('Cannot copy files.');
+                throw new $this->throwErrorAndRemovePackage('Cannot copy files.');
+            }
+
+            /* remove extension files, saved in fileList */
+            if (!$this->deleteFiles(true)) {
+                throw new $this->throwErrorAndRemovePackage('Permission denied to delete files.');
             }
         }
 
         if (!$this->systemRebuild()) {
-            throw new Error('Error occurred while EspoCRM rebuild.');
+            throw new $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
 
         /* run before install script */
@@ -70,13 +75,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         /* delete backup files */
         $this->deletePackageFiles();
 
-        $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
-    }
+        $this->finalize();
 
-    protected function getDeleteFileList()
-    {
-        $extensionEntity = $this->getExtensionEntity();
-        return $extensionEntity->get('fileList');
+        $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
     }
 
     protected function restoreFiles()
@@ -89,6 +90,13 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         }
 
         $res = $this->copy($filesPath, '', true);
+
+        $manifestJson = $this->getFileManager()->getContents(array($packagePath, $this->manifestName));
+        $manifest = Json::decode($manifestJson, true);
+        if (!empty($manifest['delete'])) {
+            $res &= $this->getFileManager()->remove($manifest['delete'], null, true);
+        }
+
         $res &= $this->getFileManager()->removeInDir($packagePath, true);
 
         return $res;
@@ -131,4 +139,41 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         throw new Error($errorMessage);
     }
 
+    protected function getCopyFileList()
+    {
+        if (!isset($this->data['fileList'])) {
+            $backupPath = $this->getPath('backupPath');
+            $filesPath = Util::concatPath($backupPath, self::FILES);
+
+            $this->data['fileList'] = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+        }
+
+        return $this->data['fileList'];
+    }
+
+    protected function getRestoreFileList()
+    {
+        if (!isset($this->data['restoreFileList'])) {
+            $packagePath = $this->getPackagePath();
+            $filesPath = Util::concatPath($packagePath, self::FILES);
+
+            if (!file_exists($filesPath)) {
+                $this->unzipArchive($packagePath);
+            }
+
+            $this->data['restoreFileList'] = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+        }
+
+        return $this->data['restoreFileList'];
+    }
+
+    protected function getDeleteFileList()
+    {
+        $packageFileList = $this->getRestoreFileList();
+        $backupFileList = $this->getCopyFileList();
+
+        $deleteFileList = array_diff($packageFileList, $backupFileList);
+
+        return $deleteFileList;
+    }
 }

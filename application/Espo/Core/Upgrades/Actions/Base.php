@@ -304,7 +304,7 @@ abstract class Base
     /**
      * Get a list of files defined in manifest.json
      *
-     * @return [type] [description]
+     * @return array
      */
     protected function getDeleteFileList()
     {
@@ -350,6 +350,18 @@ abstract class Base
         }
 
         return $this->data['fileList'];
+    }
+
+    protected function getRestoreFileList()
+    {
+        if (!isset($this->data['restoreFileList'])) {
+            $backupPath = $this->getPath('backupPath');
+            $backupFilePath = Util::concatPath($backupPath, self::FILES);
+
+            $this->data['restoreFileList'] = $this->getFileManager()->getFileList($backupFilePath, true, '', true, true);
+        }
+
+        return $this->data['restoreFileList'];
     }
 
     protected function copy($sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false)
@@ -492,6 +504,16 @@ abstract class Base
         $this->getActionManager()->setAction($currentAction);
     }
 
+    protected function initialize()
+    {
+
+    }
+
+    protected function finalize()
+    {
+
+    }
+
     protected function beforeRunAction()
     {
 
@@ -505,5 +527,24 @@ abstract class Base
     protected function clearCache()
     {
         return $this->getContainer()->get('dataManager')->clearCache();
+    }
+
+    protected function checkIsWritable()
+    {
+        $fullFileList = array_merge($this->getDeleteFileList(), $this->getCopyFileList());
+
+        $result = $this->getFileManager()->isWritableList($fullFileList);
+        if (!$result) {
+            $permissionDeniedList = $this->getFileManager()->getLastPermissionDeniedList();
+            throw new Error("Permission denied in <br>". implode(", <br>", $permissionDeniedList));
+        }
+    }
+
+    protected function backupExistingFiles()
+    {
+        $fullFileList = array_merge($this->getDeleteFileList(), $this->getCopyFileList());
+
+        $backupPath = $this->getPath('backupPath');
+        return $this->copy('', array($backupPath, self::FILES), false, $fullFileList);
     }
 }

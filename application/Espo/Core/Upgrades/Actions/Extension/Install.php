@@ -37,8 +37,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
             $this->uninstallExtension();
             $this->deleteExtension();
         }
-
-        $this->copyExistingFiles();
     }
 
     protected function afterRunAction()
@@ -51,29 +49,15 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      *
      * @return bool
      */
-    protected function copyExistingFiles()
+    protected function backupExistingFiles()
     {
-        $fileList = $this->getCopyFileList();
-        $backupPath = $this->getPath('backupPath');
+        parent::backupExistingFiles();
 
-        $res = $this->copy('', array($backupPath, self::FILES), false, $fileList);
+        $backupPath = $this->getPath('backupPath');
 
         /** copy scripts files */
         $packagePath = $this->getPackagePath();
         $res &= $this->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
-
-        return $res;
-    }
-
-    protected function restoreFiles()
-    {
-        $res = true;
-        if ($this->isCopied) {
-            $extensionFileList = $this->getCopyFileList();
-            $res &= $this->getFileManager()->remove($extensionFileList);
-        }
-
-        $res &= parent::restoreFiles();
 
         return $res;
     }

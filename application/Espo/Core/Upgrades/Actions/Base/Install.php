@@ -23,6 +23,7 @@
 namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base
 {
@@ -49,6 +50,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        $this->initialize();
+
         $this->isCopied = false;
 
         /** check if an archive is unzipped, if no then unzip */
@@ -58,21 +61,24 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             $this->isAcceptable();
         }
 
+        //check permissions copied and deleted files
+        $this->checkIsWritable();
+
+        $this->backupExistingFiles();
+
         $this->beforeRunAction();
 
         /* run before install script */
         $this->runScript('before');
-
-        /* remove files defined in a manifest */
-        if (!$this->deleteFiles()) {
-            $this->throwErrorAndRemovePackage('Permission denied to delete files.');
-        }
 
         /* copy files from directory "Files" to EspoCRM files */
         if (!$this->copyFiles()) {
             $this->throwErrorAndRemovePackage('Cannot copy files.');
         }
         $this->isCopied = true;
+
+        /* remove files defined in a manifest */
+        $this->deleteFiles(true);
 
         if (!$this->systemRebuild()) {
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
@@ -88,20 +94,32 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         /* delete unziped files */
         $this->deletePackageFiles();
 
+        $this->finalize();
+
         $GLOBALS['log']->debug('Installation process ['.$processId.']: end run.');
     }
 
     protected function restoreFiles()
     {
-        $backupPath = $this->getPath('backupPath');
-
-        $res = true;
-        if ($this->isCopied) {
-            $res &= $this->copy(array($backupPath, self::FILES), '', true);
-            $GLOBALS['log']->info('Restore: copy back');
+        if (!$this->isCopied) {
+            return;
         }
 
-        $res &= $this->getFileManager()->removeInDir($backupPath, true);
+        $GLOBALS['log']->info('Installer: Restore previous files.');
+
+        $backupPath = $this->getPath('backupPath');
+        $backupFilePath = Util::concatPath($backupPath, self::FILES);
+
+        $backupFileList = $this->getRestoreFileList();
+        $copyFileList = $this->getCopyFileList();
+        $deleteFileList = array_diff($copyFileList, $backupFileList);
+
+        $res = $this->copy($backupFilePath, '', true);
+        $res &= $this->getFileManager()->remove($deleteFileList, null, true);
+
+        if ($res) {
+            $this->getFileManager()->removeInDir($backupPath, true);
+        }
 
         return $res;
     }

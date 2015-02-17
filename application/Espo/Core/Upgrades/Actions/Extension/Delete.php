@@ -35,29 +35,15 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
      */
     protected function getExtensionEntity()
     {
-        return $this->extensionEntity;
-    }
-
-    /**
-     * Set Extension Entity
-     *
-     * @param \Espo\Entities\Extension $extensionEntity
-     */
-    protected function setExtensionEntity(\Espo\Entities\Extension $extensionEntity)
-    {
-        $this->extensionEntity = $extensionEntity;
-    }
-
-    protected function beforeRunAction()
-    {
-        $processId = $this->getProcessId();
-
-        /** get extension entity */
-        $extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
-        if (!isset($extensionEntity)) {
-            throw new Error('Extension Entity not found.');
+        if (!isset($this->extensionEntity)) {
+            $processId = $this->getProcessId();
+            $this->extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
+            if (!isset($this->extensionEntity)) {
+                throw new Error('Extension Entity not found.');
+            }
         }
-        $this->setExtensionEntity($extensionEntity);
+
+        return $this->extensionEntity;
     }
 
     protected function afterRunAction()
