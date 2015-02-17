@@ -37,6 +37,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
+        $this->initialize();
+
         $this->checkIsWritable();
 
         /* run before install script */
@@ -71,6 +73,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         /* delete backup files */
         $this->deletePackageFiles();
+
+        $this->finalize();
 
         $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
     }

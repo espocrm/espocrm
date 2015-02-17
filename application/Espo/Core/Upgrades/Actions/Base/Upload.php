@@ -38,6 +38,8 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
 
         $GLOBALS['log']->debug('Installation process ['.$processId.']: start upload the package.');
 
+        $this->initialize();
+
         $packagePath = $this->getPackagePath();
         $packageArchivePath = $this->getPackagePath(true);
 
@@ -54,6 +56,8 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
         $this->unzipArchive();
 
         $this->isAcceptable();
+
+        $this->finalize();
 
         $GLOBALS['log']->debug('Installation process ['.$processId.']: end upload the package.');
 

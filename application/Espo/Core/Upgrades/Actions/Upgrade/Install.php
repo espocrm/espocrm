@@ -24,7 +24,7 @@ namespace Espo\Core\Upgrades\Actions\Upgrade;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
-    protected function afterRunAction()
+    protected function finalize()
     {
         $manifest = $this->getManifest();
 
