@@ -839,7 +839,7 @@ return '.var_export($content, true).';
         $fullPath = $this->concatPaths($path);
 
         if (!file_exists($fullPath)) {
-            $fullPath = $this->getExistsPath($fullPath, PATHINFO_DIRNAME);
+            $fullPath = $this->getExistsPath(pathinfo($fullPath, PATHINFO_DIRNAME));
         }
 
         return $fullPath;
