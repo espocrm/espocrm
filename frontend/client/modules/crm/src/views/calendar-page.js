@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.CalendarPage', 'View', function (Dep) {
 
     return Dep.extend({
 
         template: 'crm:calendar-page',
-        
+
         el: '#main',
 
         setup: function () {
@@ -42,7 +42,7 @@ Espo.define('Crm:Views.CalendarPage', 'View', function (Dep) {
                 }.bind(this));
             }.bind(this));
         },
-        
+
         updatePageTitle: function () {
             this.setPageTitle(this.translate('Calendar', 'scopeNames'));
         },

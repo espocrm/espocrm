@@ -75,6 +75,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 this.$calendar.fullCalendar('changeView', mode);
                 this.updateDate();
             },
+            'click [data-action="refresh"]': function (e) {
+            	this.$calendar.fullCalendar('refetchEvents');
+            }
         },
 
         setup: function () {
@@ -113,7 +116,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             } else {
                 title = view.intervalStart.format(this.titleFormat[viewName]);
             }
-            this.$el.find('.date-title h4').text(title);
+            this.$el.find('.date-title h4 span').text(title);
         },
 
         convertToFcEvent: function (o) {
