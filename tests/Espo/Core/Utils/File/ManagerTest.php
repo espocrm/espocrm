@@ -389,7 +389,23 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function existsPathSet()
+    {
+        return array(
+          array( 'application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ),
+          array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
+          array( array('application', 'Espo/Core', 'NotRealApplication.php'), 'application/Espo/Core'),
+          array( 'application/NoEspo/Core/Application.php', 'application'),
+          array( 'notRealPath/Espo/Core/Application.php', '.'),
+        );
+    }
 
+    /**
+     * @dataProvider existsPathSet
+     */
+    public function testGetExistsPath($input, $result)
+    {
+        $this->assertEquals($result, $this->reflection->invokeMethod('getExistsPath', array($input)) );
+    }
 }
 
-?>
