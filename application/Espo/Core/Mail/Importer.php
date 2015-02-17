@@ -24,6 +24,8 @@ namespace Espo\Core\Mail;
 
 use \Zend\Mime\Mime as Mime;
 
+use \Espo\ORM\Entity;
+
 class Importer
 {
     private $entityManager;
@@ -74,9 +76,13 @@ class Importer
             if (isset($message->from)) {
                 $email->set('fromName', $message->from);
             }
+
+            $toArr = $this->getAddressListFromMessage($message, 'to');
+            $ccArr = $this->getAddressListFromMessage($message, 'cc');
+
             $email->set('from', $fromArr[0]);
-            $email->set('to', implode(';', $this->getAddressListFromMessage($message, 'to')));
-            $email->set('cc', implode(';', $this->getAddressListFromMessage($message, 'cc')));
+            $email->set('to', implode(';', $toArr));
+            $email->set('cc', implode(';', $ccArr));
 
             if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
@@ -122,6 +128,8 @@ class Importer
                 $email->set('body', $body);
             }
 
+            $parentFound = false;
+
             if (isset($message->references) && !empty($message->references)) {
                 $reference = str_replace(array('/', '@'), " ", trim($message->references, '<>'));
                 $parentType = $parentId = null;
@@ -131,26 +139,19 @@ class Importer
                     if (!empty($parentType) && !empty($parentId)) {
                         $email->set('parentType', $parentType);
                         $email->set('parentId', $parentId);
+                        $parentFound = true;
                     }
                 }
             }
 
-            if (!$email->has('parentId')) {
+            if (!$parentFound) {
                 $from = $email->get('from');
                 if ($from) {
-                    $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
-                        'emailAddress' => $from
-                    ))->findOne();
-                    if ($contact) {
-                        if (!$this->getConfig()->get('b2cMode')) {
-                            if ($contact->get('accountId')) {
-                                $email->set('parentType', 'Account');
-                                $email->set('parentId', $contact->get('accountId'));
-                            }
-                        } else {
-                            $email->set('parentType', 'Contact');
-                            $email->set('parentId', $contact->id);
-                        }
+                    $parentFound = $this->findParent($email, $from);
+                }
+                if (!$parentFound) {
+                    if (!empty($toArr)) {
+                        $parentFound = $this->findParent($email, $toArr[0]);
                     }
                 }
             }
@@ -162,7 +163,36 @@ class Importer
         } catch (\Exception $e) {}
     }
 
-    protected function checkIsDuplicate($email)
+    protected function findParent(Entity $email, $emailAddress)
+    {
+        $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
+            'emailAddress' => $emailAddress
+        ))->findOne();
+        if ($contact) {
+            if (!$this->getConfig()->get('b2cMode')) {
+                if ($contact->get('accountId')) {
+                    $email->set('parentType', 'Account');
+                    $email->set('parentId', $contact->get('accountId'));
+                    return true;
+                }
+            } else {
+                $email->set('parentType', 'Contact');
+                $email->set('parentId', $contact->id);
+                return true;
+            }
+        } else {
+            $account = $this->getEntityManager()->getRepository('Account')->where(array(
+                'emailAddress' => $emailAddress
+            ))->findOne();
+            if ($account) {
+                $email->set('parentType', 'Account');
+                $email->set('parentId', $account->id);
+                return true;
+            }
+        }
+    }
+
+    protected function checkIsDuplicate(Entity $email)
     {
         if ($email->get('messageId')) {
             $duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
