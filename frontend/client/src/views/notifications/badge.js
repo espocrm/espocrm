@@ -25,7 +25,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 
         template: 'notifications.badge',
 
-        updateFrequency: 10,
+        notificationsCheckInterval: 10,
 
         timeout: null,
 
@@ -34,6 +34,9 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
         events: {
             'click a[data-action="showNotifications"]': function (e) {
                 this.showNotifications();
+                setTimeout(function () {
+                    this.checkUpdates();
+                }.bind(this), 100);
             },
         },
 
@@ -46,6 +49,8 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
                     clearTimeout(this.popoupTimeouts[name]);
                 }
             }, this);
+
+            this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') || this.notificationsCheckInterval;
 
             this.popupCheckIteration = 0;
             this.lastId = 0;
@@ -74,7 +79,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             this.$badge = this.$el.find('.notifications-button');
             this.$icon = this.$el.find('.notifications-button .icon');
 
-            this.checkUpdates();
+            this.runCheckUpdates();
 
             this.$popupContainer = $('#popup-notifications-container');
             if (!$(this.$popupContainer).size()) {
@@ -105,10 +110,14 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
                     this.hideNotRead();
                 }
             }.bind(this));
+        },
+
+        runCheckUpdates: function () {
+            this.checkUpdates();
 
             this.timeout = setTimeout(function () {
-                this.checkUpdates();
-            }.bind(this), this.updateFrequency * 1000);
+                this.runCheckUpdates();
+            }.bind(this), this.notificationsCheckInterval * 1000);
         },
 
         checkPopupNotifications: function (name) {
