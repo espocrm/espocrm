@@ -37,33 +37,35 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->setProcessId($processId);
 
-        $this->beforeRunAction();
+        $this->checkIsWritable();
 
         /* run before install script */
         $this->runScript('beforeUninstall');
 
+        $this->beforeRunAction();
+
         $backupPath = $this->getPath('backupPath');
         if (file_exists($backupPath)) {
 
-            /* remove extension files, saved in fileList */
-            if (!$this->deleteFiles(true)) {
-                throw new Error('Permission denied to delete files.');
-            }
-
             /* copy core files */
             if (!$this->copyFiles()) {
-                throw new Error('Cannot copy files.');
+                throw new $this->throwErrorAndRemovePackage('Cannot copy files.');
+            }
+
+            /* remove extension files, saved in fileList */
+            if (!$this->deleteFiles(true)) {
+                throw new $this->throwErrorAndRemovePackage('Permission denied to delete files.');
             }
         }
 
         if (!$this->systemRebuild()) {
-            throw new Error('Error occurred while EspoCRM rebuild.');
+            throw new $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
+
+        $this->afterRunAction();
 
         /* run before install script */
         $this->runScript('afterUninstall');
-
-        $this->afterRunAction();
 
         $this->clearCache();
 
@@ -71,12 +73,6 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $this->deletePackageFiles();
 
         $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
-    }
-
-    protected function getDeleteFileList()
-    {
-        $extensionEntity = $this->getExtensionEntity();
-        return $extensionEntity->get('fileList');
     }
 
     protected function restoreFiles()
@@ -131,4 +127,41 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         throw new Error($errorMessage);
     }
 
+    protected function getCopyFileList()
+    {
+        if (!isset($this->data['fileList'])) {
+            $backupPath = $this->getPath('backupPath');
+            $filesPath = Util::concatPath($backupPath, self::FILES);
+
+            $this->data['fileList'] = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+        }
+
+        return $this->data['fileList'];
+    }
+
+    protected function getRestoreFileList()
+    {
+        if (!isset($this->data['restoreFileList'])) {
+            $packagePath = $this->getPackagePath();
+            $filesPath = Util::concatPath($packagePath, self::FILES);
+
+            if (!file_exists($filesPath)) {
+                $this->unzipArchive($packagePath);
+            }
+
+            $this->data['restoreFileList'] = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+        }
+
+        return $this->data['restoreFileList'];
+    }
+
+    protected function getDeleteFileList()
+    {
+        $packageFileList = $this->getRestoreFileList();
+        $backupFileList = $this->getCopyFileList();
+
+        $deleteFileList = array_diff($packageFileList, $backupFileList);
+
+        return $deleteFileList;
+    }
 }

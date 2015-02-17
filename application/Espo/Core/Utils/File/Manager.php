@@ -29,6 +29,8 @@ class Manager
 {
     private $permission;
 
+    private $permissionDeniedList = array();
+
     public function __construct(\Espo\Core\Utils\Config $config = null)
     {
         $params = null;
@@ -774,5 +776,73 @@ return '.var_export($content, true).';
 ?>';
     }
 
+    /**
+     * Check if $paths are writable. Permission denied list are defined in getLastPermissionDeniedList()
+     *
+     * @param  array   $paths
+     *
+     * @return boolean
+     */
+    public function isWritableList(array $paths)
+    {
+        $permissionDeniedList = array();
+
+        $result = true;
+        foreach ($paths as $path) {
+            $rowResult = $this->isWritable($path);
+            if (!$rowResult) {
+                $permissionDeniedList[] = $path;
+            }
+            $result &= $rowResult;
+        }
+
+        if (!empty($permissionDeniedList)) {
+            $this->permissionDeniedList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
+        }
+
+        return (bool) $result;
+    }
+
+    /**
+     * Get last permission denied list
+     *
+     * @return array
+     */
+    public function getLastPermissionDeniedList()
+    {
+        return $this->permissionDeniedList;
+    }
+
+    /**
+     * Check if $path is writable
+     *
+     * @param  string | array  $path
+     *
+     * @return boolean
+     */
+    public function isWritable($path)
+    {
+        $existFile = $this->getExistsPath($path);
+
+        return is_writable($existFile);
+    }
+
+    /**
+     * Get exists path. Ex. if check /var/www/espocrm/custom/someFile.php and this file doesn't extist, result will be /var/www/espocrm/custom
+     *
+     * @param  string | array $path
+     *
+     * @return string
+     */
+    protected function getExistsPath($path)
+    {
+        $fullPath = $this->concatPaths($path);
+
+        if (!file_exists($fullPath)) {
+            $fullPath = $this->getExistsPath($fullPath, PATHINFO_DIRNAME);
+        }
+
+        return $fullPath;
+    }
 }
 

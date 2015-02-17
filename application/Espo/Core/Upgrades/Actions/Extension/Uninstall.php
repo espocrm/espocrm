@@ -68,4 +68,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
         $extensionEntity->set('isInstalled', false);
         $this->getEntityManager()->saveEntity($extensionEntity);
     }
+
+    protected function getRestoreFileList()
+    {
+        if (!isset($this->data['restoreFileList'])) {
+            $extensionEntity = $this->getExtensionEntity();
+            $this->data['restoreFileList'] = $extensionEntity->get('fileList');
+        }
+
+        return $this->data['restoreFileList'];
+    }
 }

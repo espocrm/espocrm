@@ -30,6 +30,7 @@ class UpgradeManager extends Upgrades\Base
 
     protected $params = array(
         'packagePath' => 'data/upload/upgrades',
+        'backupPath' => 'data/.backup/upgrades',
 
         'scriptNames' => array(
             'before' => 'BeforeUpgrade',
