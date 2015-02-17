@@ -64,28 +64,27 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.$el.find('iframe').removeClass('hidden');
                     var iframe = this.iframe = this.$el.find('iframe').get(0);
-                    var iframeDocument = this.iframeDocument = iframe.contentWindow.document;
 
-                    var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>'
+                    iframe.onload = function () {
+                        var height = $(iframe).contents().find('html body').height();
+                        iframe.style.height = height + 'px';
+                    };
 
-                    iframeDocument.open('text/html', 'replace');
+                    var doc = iframe.contentWindow.document;
+
+                    var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
+
+                    doc.open('text/html', 'replace');
                     var body = this.model.get('body');
                     body += link;
 
-                    iframeDocument.write(body);
-                    iframeDocument.close();
-
-                    this.handleIframeHeight();
+                    doc.write(body);
+                    doc.close();
 
                 } else {
                     this.$el.find('.plain').removeClass('hidden');
                 }
             }
-        },
-
-        handleIframeHeight: function () {
-            console.log(this.iframeDocument.body.scrollHeight);
-            this.iframe.style.height = this.iframeDocument.body.scrollHeight + 'px';
         },
 
         enableWysiwygMode: function () {
