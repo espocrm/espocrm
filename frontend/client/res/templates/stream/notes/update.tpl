@@ -9,8 +9,12 @@
     {{/unless}}
 
     <div class="stream-head-container">
-        {{{avatar}}}
-        <span class="text-muted message">{{{message}}}</span> <a href="javascript:" data-action="expandDetails"><span class="glyphicon glyphicon-chevron-down"></span></a>
+        <div class="pull-left">
+            {{{avatar}}}
+        </div>
+        <div class="stream-head-text-container">
+            <span class="text-muted message">{{{message}}}</span> <a href="javascript:" data-action="expandDetails"><span class="glyphicon glyphicon-chevron-down"></span></a>
+        </div>
     </div>
 
     <div class="hidden details stream-details-container">
