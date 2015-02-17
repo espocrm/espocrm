@@ -204,9 +204,13 @@ class InboundEmail extends \Espo\Services\Record
 
                 $message = $storage->getMessage($id);
 
-                $email = $importer->importMessage($message, $userId, array($teamId));
+                try {
+                    $email = $importer->importMessage($message, $userId, array($teamId));
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                }
 
-                if ($email) {
+                if (!empty($email)) {
                     $this->noteAboutEmail($email);
 
                     if ($inboundEmail->get('createCase')) {

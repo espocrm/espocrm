@@ -17,34 +17,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
-    
+
         layoutNameConfigure: function () {
             if (!this.model.isNew()) {
                 var isRestricted = false;
-                            
+
                 if (this.model.get('status') == 'Sent') {
                     this.layoutName += 'Restricted';
                     isRestricted = true;
                 }
-            
-                if (this.model.get('status') == 'Archived' && this.model.get('createdById') == 'system') {                
+
+                if (this.model.get('status') == 'Archived' && this.model.get('createdById') == 'system') {
                     this.layoutName += 'Restricted';
                     isRestricted = true;
                 }
             }
         },
-    
+
         init: function () {
             Dep.prototype.init.call(this);
-            
+
             this.layoutNameConfigure();
         },
-        
+
     });
 });
 

@@ -9,10 +9,14 @@
     {{/unless}}
 
     <div class="stream-head-container">
-        {{{avatar}}}
-        <span class="text-muted"><span class="glyphicon glyphicon-envelope "></span>
-            {{{message}}}
-        </span>
+        <div class="pull-left">
+            {{{avatar}}}
+        </div>
+        <div class="stream-head-text-container">
+            <span class="text-muted"><span class="glyphicon glyphicon-envelope "></span>
+                {{{message}}}
+            </span>
+        </div>
     </div>
 
 

@@ -47,7 +47,6 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
                           .addClass(className)
                           .addClass('popup-notification-' + this.style)
                           .appendTo('#popup-notifications-container');
-                                
                 this.setElement(containerSelector);
             }, this);
 
@@ -60,7 +59,7 @@ Espo.define('Views.PopupNotification', 'View', function (Dep) {
             this.once('after:render', function () {
                 this.onShow();
             }.bind(this));
-            
+
             this.once('remove', function () {
                 $(containerSelector).remove();
             });
