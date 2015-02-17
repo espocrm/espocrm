@@ -31,6 +31,8 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 
         popupNotificationsData: null,
 
+        soundPath: 'client/sounds/pop_cork',
+
         events: {
             'click a[data-action="showNotifications"]': function (e) {
                 this.showNotifications();
@@ -79,7 +81,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             this.$badge = this.$el.find('.notifications-button');
             this.$icon = this.$el.find('.notifications-button .icon');
 
-            this.runCheckUpdates();
+            this.runCheckUpdates(true);
 
             this.$popupContainer = $('#popup-notifications-container');
             if (!$(this.$popupContainer).size()) {
@@ -92,6 +94,17 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             }
         },
 
+        playSound: function () {
+            var html = '' +
+                '<audio autoplay="autoplay">'+
+                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
+                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />'+
+                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />'+
+                '</audio>';
+            $(html).get(0).volume = 0.3;
+            $(html).get(0).play();
+        },
+
         showNotRead: function (count) {
             this.$icon.addClass('warning');
             this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
@@ -102,8 +115,12 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             this.$badge.attr('title', '');
         },
 
-        checkUpdates: function () {
+        checkUpdates: function (isFirstCheck) {
             $.ajax('Notification/action/notReadCount').done(function (count) {
+                if (!isFirstCheck && count > this.unreadCount) {
+                    this.playSound();
+                }
+                this.unreadCount = count;
                 if (count) {
                     this.showNotRead(count);
                 } else {
@@ -112,8 +129,8 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             }.bind(this));
         },
 
-        runCheckUpdates: function () {
-            this.checkUpdates();
+        runCheckUpdates: function (isFirstCheck) {
+            this.checkUpdates(isFirstCheck);
 
             this.timeout = setTimeout(function () {
                 this.runCheckUpdates();
