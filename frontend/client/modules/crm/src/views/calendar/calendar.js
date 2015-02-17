@@ -152,8 +152,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
         fillColor: function (event) {
             var color = this.colors[event.scope];
-            var d = event.end || event.start;
-            if (d.unix() < this.now.unix()) {
+            var d = event.dateEnd;
+
+            if (d && this.getDateTime().toMoment(d).unix() < this.now.unix()) {
                 color = this.shadeColor(color, 0.4);
             }
             event.color = color;
@@ -194,7 +195,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         },
 
         convertToFcEvents: function (list) {
-            this.now = moment().utc();
+            this.now = moment.tz(this.getDateTime().timeZone);
+
             var events = [];
             list.forEach(function (o) {
                 var event = this.convertToFcEvent(o);
