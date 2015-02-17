@@ -211,7 +211,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 
             var $container = $('<div>').attr('id', 'notifications-panel').css({
                 'position': 'absolute',
-                'width': '500px',
+                'width': '600px',
                 'z-index': 1001,
                 'right': 0,
                 'left': 'auto'
