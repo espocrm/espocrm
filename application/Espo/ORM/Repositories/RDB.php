@@ -196,6 +196,19 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
+    public function findByQuery($sql)
+    {
+        $this->handleSelectParams($params);
+        $params = $this->getSelectParams($params);
+
+        $dataArr = $this->getMapper()->selectByQuery($this->seed, $sql);
+
+        $collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
+        $this->reset();
+
+        return $collection;
+    }
+
     public function findRelated(Entity $entity, $relationName, array $params = array())
     {
         $entityName = $entity->relations[$relationName]['entity'];
