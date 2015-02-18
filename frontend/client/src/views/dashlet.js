@@ -40,6 +40,12 @@ Espo.define('Views.Dashlet', 'View', function (Dep) {
             };
         },
 
+        events: {
+            'click .panel-heading [data-action="refresh"]': function () {
+                this.refresh();
+            }
+        },
+
         setup: function () {
             this.events = this.events || {};
             this.name = this.options.name;
@@ -57,13 +63,13 @@ Espo.define('Views.Dashlet', 'View', function (Dep) {
 
             var bodySelector = '#dashlet-' + this.id + ' .dashlet-body';
             var view = this.getMetadata().get('dashlets.' + this.name + '.view') || 'Dashlets.' + this.name;
-                        
+
             this.createView('body', view, {el: bodySelector, id: this.id});
         },
-        
+
         refresh: function () {
             this.getView('body').actionRefresh();
-        },        
+        },
 
         actionRefresh: function () {
             this.refresh();
