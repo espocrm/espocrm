@@ -354,6 +354,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     var attributes = {
                         dateEnd: this.convertTime(event.end)
                     };
+                    event.dateEnd = attributes.dateEnd;
                     event.duration = event.end.unix() - event.start.unix();
 
                     this.fillColor(event);
