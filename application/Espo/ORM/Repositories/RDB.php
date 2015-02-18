@@ -198,9 +198,6 @@ class RDB extends \Espo\ORM\Repository
 
     public function findByQuery($sql)
     {
-        $this->handleSelectParams($params);
-        $params = $this->getSelectParams($params);
-
         $dataArr = $this->getMapper()->selectByQuery($this->seed, $sql);
 
         $collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
