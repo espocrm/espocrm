@@ -28,8 +28,10 @@ use Espo\Core\Utils\Json;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
-    public function run($processId)
+    public function run($data)
     {
+        $processId = $data['id'];
+
         $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: start run.');
 
         if (empty($processId)) {
@@ -45,7 +47,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $this->beforeRunAction();
 
         /* run before install script */
-        $this->runScript('beforeUninstall');
+        if (!isset($data['isNotRunScriptBefore']) || !$data['isNotRunScriptBefore']) {
+            $this->runScript('beforeUninstall');
+        }
 
         $backupPath = $this->getPath('backupPath');
         if (file_exists($backupPath)) {
@@ -65,8 +69,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
             throw new $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
 
-        /* run before install script */
-        $this->runScript('afterUninstall');
+        /* run after uninstall script */
+        if (!isset($data['isNotRunScriptAfter']) || !$data['isNotRunScriptAfter']) {
+            $this->runScript('afterUninstall');
+        }
 
         $this->afterRunAction();
 

@@ -192,7 +192,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $extensionEntity = $this->getExtensionEntity();
 
-        $this->executeAction(ExtensionManager::UNINSTALL, $extensionEntity->get('id'));
+        $this->executeAction(ExtensionManager::UNINSTALL, array(
+                'id' => $extensionEntity->get('id'),
+                'isNotRunScriptAfter' => true,
+            )
+        );
     }
 
     /**
@@ -204,7 +208,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $extensionEntity = $this->getExtensionEntity();
 
-        $this->executeAction(ExtensionManager::DELETE, $extensionEntity->get('id'));
+        $this->executeAction(ExtensionManager::DELETE, array('id' => $extensionEntity->get('id')));
     }
 
 

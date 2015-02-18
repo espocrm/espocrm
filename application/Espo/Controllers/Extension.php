@@ -61,7 +61,7 @@ class Extension extends \Espo\Core\Controllers\Record
 
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-        $manager->install($data['id']);
+        $manager->install($data);
 
         return true;
     }
@@ -74,7 +74,7 @@ class Extension extends \Espo\Core\Controllers\Record
 
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-        $manager->uninstall($data['id']);
+        $manager->uninstall($data);
 
         return true;
     }
@@ -103,7 +103,7 @@ class Extension extends \Espo\Core\Controllers\Record
     {
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
-        $manager->delete($params['id']);
+        $manager->delete($params);
 
         return true;
     }
