@@ -208,9 +208,6 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        unset($selectParams['whereClause']['createdAt>']);
-        //$total = $this->getEntityManager()->getRepository('Note')->count($selectParams);
-
         if (count($collection) > $maxSize) {
             $total = -1;
             unset($collection[count($collection) - 1]);
