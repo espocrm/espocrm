@@ -33,6 +33,10 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             'Task': '#76BA4E',
         },
 
+        canceledStatusList: ['Not Held', 'Canceled'],
+
+        completedStatusList: ['Held', 'Completed'],
+
         header: true,
 
         modeList: ['month', 'agendaWeek', 'agendaDay'],
@@ -127,7 +131,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 recordId: o.id,
                 dateStart: o.dateStart,
                 dateEnd: o.dateEnd,
+                status: o.status
             };
+
             this.eventAttributes.forEach(function (attr) {
                 event[attr] = o[attr];
             });
@@ -150,6 +156,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
 
             this.fillColor(event);
 
+            this.handleStatus(event);
+
             return event;
         },
 
@@ -157,10 +165,19 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             var color = this.colors[event.scope];
             var d = event.dateEnd;
 
-            if (d && this.getDateTime().toMoment(d).unix() < this.now.unix()) {
+            /*if (d && this.getDateTime().toMoment(d).unix() < this.now.unix()) {
                 color = this.shadeColor(color, 0.4);
+            }*/
+            if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
+            	color = this.shadeColor(color, 0.4);
             }
             event.color = color;
+        },
+
+        handleStatus: function (event) {
+        	if (~this.canceledStatusList.indexOf(event.status)) {
+        		event.className = 'event-canceled';
+        	}
         },
 
         shadeColor: function (color, percent) {
