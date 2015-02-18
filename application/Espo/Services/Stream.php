@@ -169,9 +169,12 @@ class Stream extends \Espo\Core\Services\Base
 
     public function findUserStream($params = array())
     {
+        $offset = intval($params['offset']);
+        $maxSize = intval($params['maxSize']);
+
         $selectParams = array(
-            'offset' => $params['offset'],
-            'limit' => $params['maxSize'],
+            'offset' => $offset,
+            'limit' => $maxSize + 1,
             'orderBy' => 'number',
             'order' => 'DESC',
             'customJoin' => "
@@ -206,10 +209,17 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         unset($selectParams['whereClause']['createdAt>']);
-        $count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
+        //$total = $this->getEntityManager()->getRepository('Note')->count($selectParams);
+
+        if (count($collection) > $maxSize) {
+            $total = -1;
+            unset($collection[count($collection) - 1]);
+        } else {
+            $total = -2;
+        }
 
         return array(
-            'total' => $count,
+            'total' => $total,
             'collection' => $collection,
         );
     }

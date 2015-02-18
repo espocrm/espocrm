@@ -30,11 +30,11 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
         selectable: false,
 
         rowActionsView: false,
-        
+
         _internalLayoutType: 'list-row-expanded',
-        
+
         presentationType: 'expanded',
-        
+
         pagination: false,
 
         header: false,
@@ -42,7 +42,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
         _internalLayout: null,
 
         checkedList: null,
-        
+
         listContainerEl: '.list > ul',
 
         _loadListLayout: function (callback) {
@@ -54,7 +54,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
-            
+
             var layout = {
                 rows: [],
                 right: false,
@@ -64,10 +64,10 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
                 var row = listLayout.rows[i];
                 var layoutRow = [];
                 for (var j in row) {
-                
+
                     var e = row[j];
                     var type = e.type || model.getFieldType(e.name) || 'base';
-                    
+
                     var item = {
                         name: e.name,
                         view: e.view || model.getFieldParam(e.name, 'view') || this.getFieldManager().getViewName(type),
@@ -86,7 +86,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
                 }
                 layout.rows.push(layoutRow);
             }
-            
+
             if ('right' in listLayout) {
                 if (listLayout.right != false) {
                     layout.right = {

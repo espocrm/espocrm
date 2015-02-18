@@ -187,9 +187,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 paginationEnabled: this.pagination,
                 paginationTop: paginationTop,
                 paginationBottom: paginationBottom,
-                showMoreActive: this.collection.total > this.collection.length,
+                showMoreActive: this.collection.total > this.collection.length || this.collection.total == -1,
                 showMoreEnabled: this.showMore,
-                showCount: this.showCount,
+                showCount: this.showCount && this.collection.total > 0,
                 moreCount: this.collection.total - this.collection.length,
 
                 checkboxes: this.checkboxes,
@@ -278,7 +278,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                                     })
                                 }).done(function (idsRemoved) {
                                     var count = idsRemoved.length;
-                                    this.collection.total = this.collection.total - count;
+                                    if (this.collection.total > 0) {
+                                        this.collection.total = this.collection.total - count;
+                                    }
                                     if (count) {
                                         idsRemoved.forEach(function (id) {
                                             Espo.Ui.notify(false);
@@ -695,7 +697,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             var final = function () {
                 $showMore.parent().append($showMore);
-                if (collection.total > collection.length) {
+                if (
+                    (collection.total > collection.length || collection.total == -1)
+                ) {
                     this.$el.find('.more-count').text(collection.total - this.collection.length);
                     $showMore.removeClass('hide');
                 }
@@ -716,7 +720,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 var rowsReady = 0;
                 for (var i = initialCount; i < collection.length; i++) {
                     var model = collection.at(i);
-
                     this.buildRow(i, model, function (view) {
                         view.getHtml(function (html) {
                             $list.append(html);
@@ -781,7 +784,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     success: function () {
                         self.notify('Removed', 'success');
                         self.$el.find(self.getRowSelector(id)).remove();
-                        self.collection.total--;
+                        if (self.collection.total > 0) {
+                            self.collection.total--;
+                        }
                         if (self.collection.length == 0 && self.collection.total == 0) {
                             self.render();
                         }
