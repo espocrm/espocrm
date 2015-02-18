@@ -40,8 +40,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
      * @param  string $processId Upgrade/Extension ID, gotten in upload stage
      * @return bool
      */
-    public function run($processId)
+    public function run($data)
     {
+        $processId = $data['id'];
+
         $GLOBALS['log']->debug('Installation process ['.$processId.']: start run.');
 
         if (empty($processId)) {

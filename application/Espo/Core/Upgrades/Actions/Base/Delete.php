@@ -24,8 +24,10 @@ namespace Espo\Core\Upgrades\Actions\Base;
 
 class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
-    public function run($processId)
+    public function run($data)
     {
+        $processId = $data['id'];
+
         $GLOBALS['log']->debug('Delete package process ['.$processId.']: start run.');
 
         if (empty($processId)) {

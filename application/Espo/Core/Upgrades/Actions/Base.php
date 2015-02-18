@@ -490,18 +490,21 @@ abstract class Base
     /**
      * Execute an action. For ex., execute uninstall action in install
      *
-     * @param  [type] $actionName [description]
-     * @param  [type] $data       [description]
-     * @return [type]             [description]
+     * @param  string $actionName
+     * @param  string $data
+     *
+     * @return void
      */
     protected function executeAction($actionName, $data)
     {
-        $currentAction = $this->getActionManager()->getAction();
+        $actionManager = $this->getActionManager();
 
-        $this->getActionManager()->setAction($actionName);
-        $this->getActionManager()->run($data);
+        $currentAction = $actionManager->getAction();
 
-        $this->getActionManager()->setAction($currentAction);
+        $actionManager->setAction($actionName);
+        $actionManager->run($data);
+
+        $actionManager->setAction($currentAction);
     }
 
     protected function initialize()
