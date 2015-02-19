@@ -144,6 +144,13 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                 });
 
                 var $elementName = this.$elementName;
+
+                $elementName.on('change', function () {
+                    if (!this.model.get(this.idName)) {
+                        $elementName.val(this.model.get(this.nameName));
+                    }
+                }.bind(this));
+
                 this.once('render', function () {
                     $elementName.autocomplete('dispose');
                 }, this);
