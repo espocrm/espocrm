@@ -42,7 +42,7 @@ Espo.Collection = Backbone.Collection.extend({
         this.name = options.name || this.name;
         this.urlRoot = this.urlRoot || this.name;
         this.url = this.url || this.urlRoot;
-        
+
         this.sortBy = options.sortBy || this.sortBy;
         this.asc = ('asc' in options) ? options.asc : this.asc;
 
@@ -104,12 +104,12 @@ Espo.Collection = Backbone.Collection.extend({
         } else {
             options.data.maxSize = options.maxSize;
         }
-        
+
         options.data.offset = options.more ? this.length : this.offset;
         options.data.sortBy = this.sortBy;
         options.data.asc = this.asc;
         options.data.where = this.where;
-        
+
         return Backbone.Collection.prototype.fetch.call(this, options);
     },
 

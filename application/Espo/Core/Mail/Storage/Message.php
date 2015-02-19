@@ -24,6 +24,15 @@ namespace Espo\Core\Mail\Storage;
 
 class Message extends \Zend\Mail\Storage\Message
 {
+    public function __isset($name)
+    {
+        $headers = $this->getHeaders();
+        if (empty($headers) || !is_object($headers)) {
+            return false;
+        }
+        return $this->getHeaders()->has($name);
+    }
+
     public function isMultipart()
     {
         if (!isset($this->contentType)) {

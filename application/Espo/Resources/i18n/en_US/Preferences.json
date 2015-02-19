@@ -9,7 +9,6 @@
         "defaultCurrency": "Default Currency",
         "currencyList": "Currency List",
         "language": "Language",
-        
         "smtpServer": "Server",
         "smtpPort": "Port",
         "smtpAuth": "Auth",
@@ -18,10 +17,9 @@
         "emailAddress": "Email",
         "smtpPassword": "Password",
         "smtpEmailAddress": "Email Address",
-        
         "exportDelimiter": "Export Delimiter",
-        
-        "receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment"
+        "receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment",
+        "autoFollowEntityTypeList": "Auto-Follow"
     },
     "links": {
     },
@@ -33,5 +31,8 @@
     },
     "labels": {
         "Notifications": "Notifications"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications."
     }
 }

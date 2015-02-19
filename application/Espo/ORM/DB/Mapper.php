@@ -128,6 +128,12 @@ abstract class Mapper implements IMapper
     {
         $sql = $this->query->createSelectQuery($entity->getEntityName(), $params);
 
+        return $this->selectByQuery($entity, $sql);
+    }
+
+    /* TODO ability to pass offset and limit */
+    public function selectByQuery(IEntity $entity, $sql)
+    {
         $dataArr = array();
         $ps = $this->pdo->query($sql);
         if ($ps) {

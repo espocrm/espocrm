@@ -109,6 +109,49 @@ class Stream extends \Espo\Core\Services\Base
         return false;
     }
 
+    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    {
+        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+            throw new Error();
+        }
+
+        $userIdList = [];
+        foreach ($sourceUserIdList as $id) {
+            if ($id == 'system') {
+                continue;
+            }
+            $userIdList[] = $id;
+        }
+
+        $userIdList = array_unique($userIdList);
+
+        if (empty($userIdList)) {
+            return;
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sql = "
+            DELETE FROM subscription WHERE user_id IN ('".implode("', '", $userIdList)."') AND entity_id = ".$pdo->quote($entity->id) . "
+        ";
+        $pdo->query($sql);
+
+        $sql = "
+            INSERT INTO subscription
+            (entity_id, entity_type, user_id)
+            VALUES
+        ";
+        foreach ($userIdList as $userId) {
+            $arr[] = "
+                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
+            ";
+        }
+
+        $sql .= implode(", ", $arr);
+
+        $pdo->query($sql);
+    }
+
     public function followEntity(Entity $entity, $userId)
     {
         if ($userId == 'system') {
@@ -169,9 +212,12 @@ class Stream extends \Espo\Core\Services\Base
 
     public function findUserStream($params = array())
     {
+        $offset = intval($params['offset']);
+        $maxSize = intval($params['maxSize']);
+
         $selectParams = array(
-            'offset' => $params['offset'],
-            'limit' => $params['maxSize'],
+            'offset' => $offset,
+            'limit' => $maxSize + 1,
             'orderBy' => 'number',
             'order' => 'DESC',
             'customJoin' => "
@@ -205,11 +251,15 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
-        unset($selectParams['whereClause']['createdAt>']);
-        $count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
+        if (count($collection) > $maxSize) {
+            $total = -1;
+            unset($collection[count($collection) - 1]);
+        } else {
+            $total = -2;
+        }
 
         return array(
-            'total' => $count,
+            'total' => $total,
             'collection' => $collection,
         );
     }

@@ -27,7 +27,7 @@ use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 use PDO;
 
-class Base
+abstract class Base
 {
     protected static $selectParamList = array(
         'select',
@@ -733,14 +733,12 @@ class Base
             $offset = 0;
         }
 
-        if (!is_null($offset) && !is_null($limit)) {
-            $offset = intval($offset);
-            $limit = intval($limit);
-            $sql .= " LIMIT {$offset}, {$limit}";
-        }
+        $sql = $this->limit($sql, $offset, $limit);
 
         return $sql;
     }
+
+    abstract public function limit($sql, $offset, $limit);
 
     public function getKeys(IEntity $entity, $relationName)
     {

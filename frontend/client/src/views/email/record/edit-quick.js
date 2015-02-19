@@ -17,19 +17,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Email.Record.EditQuick', 'Views.Email.Record.Edit', function (Dep, Detail) {
 
     return Dep.extend({
-    
-    
+
+    	isWide: true,
+
+        sideView: false,
+
         init: function () {
-            Dep.prototype.init.call(this);            
-                
-            
+            Dep.prototype.init.call(this);
+            this.columnCount = 2;
         },
-        
+
+        setup: function () {
+        	Dep.prototype.setup.call(this);
+        },
+
     });
 });
 

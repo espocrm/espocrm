@@ -198,9 +198,13 @@ class EmailAccount extends Record
 
                 $message = $storage->getMessage($id);
 
-                $email = $importer->importMessage($message, $userId, array($teamId));
+                try {
+                	$email = $importer->importMessage($message, $userId, array($teamId));
+	            } catch (\Exception $e) {
+	                $GLOBALS['log']->error('EmailAccount (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+	            }
 
-                if ($email) {
+                if (!empty($email)) {
                     $this->noteAboutEmail($email);
                 }
 

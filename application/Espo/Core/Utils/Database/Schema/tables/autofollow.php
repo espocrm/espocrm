@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,17 +20,29 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Email.Record.Edit', ['Views.Record.Edit', 'Views.Email.Record.Detail'], function (Dep, Detail) {
+return array(
 
-    return Dep.extend({
+    'Autofollow' => array(
+        'fields' => array(
+            'id' => array(
+                'type' => 'id',
+                'dbType' => 'int',
+                'len' => '11',
+                'autoincrement' => true,
+                'unique' => true,
+            ),
+            'entityType' => array(
+                'type' => 'varchar',
+                'len' => '100',
+                'index' => 'entityType',
+            ),
+            'userId' => array(
+                'type' => 'varchar',
+                'len' => '24',
+                'index' => true,
+            )
+        )
+    )
 
-        init: function () {
-            Dep.prototype.init.call(this);
-
-            Detail.prototype.layoutNameConfigure.call(this);
-
-        },
-
-    });
-});
+);
 
