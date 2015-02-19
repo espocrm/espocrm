@@ -131,6 +131,36 @@ class Stream extends \Espo\Core\Hooks\Base
         }
     }
 
+    protected function getAutofollowUserIdList(Entity $entity)
+    {
+        $entityType = $entity->getEntityName();
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $userIdList = [];
+
+        $sql = "
+            SELECT user_id AS 'userId' FROM autofollow WHERE entity_type = ".$pdo->quote($entityType)."
+        ";
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $rows = $sth->fetchAll();
+        foreach ($rows as $row) {
+            $userId = $row['userId'];
+            $user = $this->getEntityManager()->getEntity('User', $userId);
+            if (!$user) {
+                continue;
+            }
+            $acl = new \Espo\Core\Acl($user, $this->getConfig(), null, $this->getMetadata());
+
+            if ($acl->check($entity, 'read')) {
+                $userIdList[] = $userId;
+            }
+        }
+
+        return $userIdList;
+    }
+
     public function afterSave(Entity $entity)
     {
         $entityName = $entity->getEntityName();
@@ -141,13 +171,25 @@ class Stream extends \Espo\Core\Hooks\Base
                 $assignedUserId = $entity->get('assignedUserId');
                 $createdById = $entity->get('createdById');
 
+                $userIdList = [];
                 if (!empty($createdById)) {
-                    $this->getStreamService()->followEntity($entity, $createdById);
+                    $userIdList[] = $createdById;
+                }
+                if (!empty($assignedUserId) && $createdById != $assignedUserId) {
+                    $userIdList[] = $assignedUserId;
                 }
 
-                if (!empty($assignedUserId) && $createdById != $assignedUserId) {
-                    $this->getStreamService()->followEntity($entity, $assignedUserId);
+                $autofollowUserIdList = $this->getAutofollowUserIdList($entity);
+                foreach ($autofollowUserIdList as $userId) {
+                    if (!in_array($userId, $userIdList)) {
+                        $userIdList[] = $userId;
+                    }
                 }
+
+                if (!empty($userIdList)) {
+                    $this->getStreamService()->followEntityMass($entity, $userIdList);
+                }
+
                 $this->getStreamService()->noteCreate($entity);
 
             } else {

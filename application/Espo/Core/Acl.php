@@ -234,6 +234,10 @@ class Acl
 
     private function initSolid()
     {
+        if (!$this->metadata) {
+            return;
+        }
+
         $data = $this->metadata->get('app.acl.solid', array());
 
         foreach ($data as $entityName => $item) {

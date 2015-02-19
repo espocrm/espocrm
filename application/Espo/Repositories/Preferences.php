@@ -18,11 +18,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\Core\Utils\Json;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
@@ -30,12 +31,13 @@ class Preferences extends \Espo\Core\ORM\Repository
         'fileManager',
         'metadata',
         'config',
+        'entityManager'
     );
-    
+
     protected $defaultAttributesFromSettings = array(
         'defaultCurrency',
         'dateFormat',
-        'timeFormat',        
+        'timeFormat',
         'decimalMark',
         'thousandSeparator',
         'weekStart',
@@ -43,39 +45,44 @@ class Preferences extends \Espo\Core\ORM\Repository
         'language',
         'exportDelimiter'
     );
-    
+
     protected $data = array();
-    
+
     protected $entityName = 'Preferences';
-    
+
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
     }
-    
+
+    protected function getEntityManger()
+    {
+        return $this->getInjection('entityManager');
+    }
+
     protected function getMetadata()
     {
         return $this->getInjection('metadata');
     }
-    
+
     protected function getConfig()
     {
         return $this->getInjection('config');
     }
-    
+
     protected function getFilePath($id)
     {
         return 'data/preferences/' . $id . '.json';
     }
-    
+
     public function get($id = null)
-    {                
+    {
         if ($id) {
             $entity = $this->entityFactory->create('Preferences');
             $entity->id = $id;
             if (empty($this->data[$id])) {
                 $fileName = $this->getFilePath($id);
-                
+
                 if (file_exists($fileName)) {
                     $this->data[$id] = json_decode($this->getFileManager()->getContents($fileName), true);
                 } else {
@@ -84,34 +91,108 @@ class Preferences extends \Espo\Core\ORM\Repository
                     $defaults['dashboardLayout'] = $this->getMetadata()->get('app.defaultDashboardLayout');
                     foreach ($fields as $field => $d) {
                         if (array_key_exists('default', $d)) {
-                            $defaults[$field] = $d['default'];                            
-                        }                        
+                            $defaults[$field] = $d['default'];
+                        }
                     }
                     foreach ($this->defaultAttributesFromSettings as $attr) {
                         $defaults[$attr] = $this->getConfig()->get($attr);
                     }
-                    
+
                     $this->data[$id] = $defaults;
-                }            
+                }
+
             }
-            
+
             $entity->set($this->data[$id]);
+
+            $this->fetchAutoFollowEntityTypeList($entity);
+
+            $entity->setAsFetched($this->data[$id]);
+
             $d = $entity->toArray();
             return $entity;
-        }        
+        }
     }
-    
+
+    protected function fetchAutoFollowEntityTypeList(Entity $entity)
+    {
+        $id = $entity->id;
+
+        $autoFollowEntityTypeList = [];
+        $pdo = $this->getEntityManger()->getPDO();
+        $sql = "
+            SELECT `entity_type` AS 'entityType' FROM `autofollow`
+            WHERE `user_id` = ".$pdo->quote($id)."
+            ORDER BY `entity_type`
+        ";
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $rows = $sth->fetchAll();
+        foreach ($rows as $row) {
+            $autoFollowEntityTypeList[] = $row['entityType'];
+        }
+        $this->data[$id]['autoFollowEntityTypeList'] = $autoFollowEntityTypeList;
+        $entity->set('autoFollowEntityTypeList', $autoFollowEntityTypeList);
+    }
+
+    protected function storeAutoFollowEntityTypeList(Entity $entity)
+    {
+        $id = $entity->id;
+
+        $isChanged = false;
+
+        $was = $entity->getFetched('autoFollowEntityTypeList');
+        $became = $entity->get('autoFollowEntityTypeList');
+
+        if (!is_array($was)) {
+            $was = [];
+        }
+        if (!is_array($became)) {
+            $became = [];
+        }
+
+        if ($was == $became) {
+            return;
+        }
+        $pdo = $this->getEntityManger()->getPDO();
+        $sql = "DELETE FROM autofollow WHERE user_id = ".$pdo->quote($id)."";
+        $pdo->query($sql);
+
+        $scopes = $this->getMetadata()->get('scopes');
+        foreach ($became as $entityType) {
+            if (isset($scopes[$entityType]) && !empty($scopes[$entityType]['stream'])) {
+                $sql = "
+                    INSERT INTO autofollow (user_id, entity_type)
+                    VALUES (".$pdo->quote($id).", ".$pdo->quote($entityType).")
+                ";
+                $pdo->query($sql);
+            }
+        }
+    }
+
     public function save(Entity $entity)
     {
         if ($entity->id) {
             $this->data[$entity->id] = $entity->toArray();
-            
+
+            $fields = $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
+
+            $data = array();
+            foreach ($this->data[$entity->id] as $field => $value) {
+                if (empty($fields[$field]['notStorable'])) {
+                    $data[$field] = $value;
+                }
+            }
+
             $fileName = $this->getFilePath($entity->id);
-            $this->getFileManager()->putContents($fileName, json_encode($this->data[$entity->id]));
+            $this->getFileManager()->putContents($fileName, Json::encode($data, \JSON_PRETTY_PRINT));
+
+            $this->storeAutoFollowEntityTypeList($entity);
+
             return $entity;
         }
     }
-        
+
     public function remove(Entity $entity)
     {
         $fileName = $this->getFilePath($id);
@@ -120,7 +201,7 @@ class Preferences extends \Espo\Core\ORM\Repository
             return true;
         }
     }
-    
+
     public function resetToDefaults($userId)
     {
         $fileName = $this->getFilePath($userId);
@@ -133,7 +214,7 @@ class Preferences extends \Espo\Core\ORM\Repository
     public function find(array $params)
     {
     }
-    
+
     public function findOne(array $params)
     {
     }
@@ -141,7 +222,7 @@ class Preferences extends \Espo\Core\ORM\Repository
     public function getAll()
     {
     }
-    
+
     public function count(array $params)
     {
     }

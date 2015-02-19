@@ -109,6 +109,49 @@ class Stream extends \Espo\Core\Services\Base
         return false;
     }
 
+    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    {
+        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+            throw new Error();
+        }
+
+        $userIdList = [];
+        foreach ($sourceUserIdList as $id) {
+            if ($id == 'system') {
+                continue;
+            }
+            $userIdList[] = $id;
+        }
+
+        $userIdList = array_unique($userIdList);
+
+        if (empty($userIdList)) {
+            return;
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sql = "
+            DELETE FROM subscription WHERE user_id IN ('".implode("', '", $userIdList)."') AND entity_id = ".$pdo->quote($entity->id) . "
+        ";
+        $pdo->query($sql);
+
+        $sql = "
+            INSERT INTO subscription
+            (entity_id, entity_type, user_id)
+            VALUES
+        ";
+        foreach ($userIdList as $userId) {
+            $arr[] = "
+                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
+            ";
+        }
+
+        $sql .= implode(", ", $arr);
+
+        $pdo->query($sql);
+    }
+
     public function followEntity(Entity $entity, $userId)
     {
         if ($userId == 'system') {

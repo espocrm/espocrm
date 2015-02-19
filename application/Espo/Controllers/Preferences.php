@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -28,22 +28,22 @@ use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\NotFound;
 
 class Preferences extends \Espo\Core\Controllers\Base
-{    
+{
     protected function getPreferences()
     {
         return $this->getContainer()->get('preferences');
     }
-    
+
     protected function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
     }
-    
+
     protected function getCrypt()
     {
         return $this->getContainer()->get('crypt');
     }
-    
+
     protected function handleUserAccess($userId)
     {
         if (!$this->getUser()->isAdmin()) {
@@ -52,7 +52,7 @@ class Preferences extends \Espo\Core\Controllers\Base
             }
         }
     }
-    
+
     public function actionDelete($params, $data)
     {
         $userId = $params['id'];
@@ -60,38 +60,38 @@ class Preferences extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
         $this->handleUserAccess($userId);
-        
-        return $this->getEntityManager()->getRepository('Preferences')->resetToDefaults($userId);        
+
+        return $this->getEntityManager()->getRepository('Preferences')->resetToDefaults($userId);
     }
-    
+
     public function actionPatch($params, $data)
     {
         return $this->actionUpdate($params, $data);
-    }    
+    }
 
     public function actionUpdate($params, $data)
     {
         $userId = $params['id'];
         $this->handleUserAccess($userId);
-        
+
         if (array_key_exists('smtpPassword', $data)) {
             $data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);
         }
-        
-        $user = $this->getEntityManager()->getEntity('User', $userId);        
+
+        $user = $this->getEntityManager()->getEntity('User', $userId);
 
         $entity = $this->getEntityManager()->getEntity('Preferences', $userId);
-        
-        if ($entity) {
+
+        if ($entity && $user) {
             $entity->set($data);
             $this->getEntityManager()->saveEntity($entity);
-            
-            $entity->set('smtpEmailAddress', $user->get('emailAddress'));            
+
+            $entity->set('smtpEmailAddress', $user->get('emailAddress'));
             $entity->set('name', $user->get('name'));
-            
+
             $entity->clear('smtpPassword');
-            
-            return $entity->toArray();        
+
+            return $entity->toArray();
         }
         throw new Error();
     }
@@ -101,18 +101,19 @@ class Preferences extends \Espo\Core\Controllers\Base
         $userId = $params['id'];
         $this->handleUserAccess($userId);
 
-        $entity = $this->getEntityManager()->getEntity('Preferences', $userId);        
+        $entity = $this->getEntityManager()->getEntity('Preferences', $userId);
         $user = $this->getEntityManager()->getEntity('User', $userId);
-        
+
+        if (!$entity || !$user) {
+            throw new NotFound();
+        }
+
         $entity->set('smtpEmailAddress', $user->get('emailAddress'));
         $entity->set('name', $user->get('name'));
-        
+
         $entity->clear('smtpPassword');
-        
-        if ($entity) {
-            return $entity->toArray();        
-        }
-        throw new NotFound();
+
+        return $entity->toArray();
     }
 }
 
