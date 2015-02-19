@@ -131,7 +131,7 @@ class Stream extends \Espo\Core\Hooks\Base
         }
     }
 
-    protected function getAutofollowUserIdList(Entity $entity)
+    protected function getAutofollowUserIdList(Entity $entity, array $ignoreList = array())
     {
         $entityType = $entity->getEntityName();
 
@@ -147,6 +147,9 @@ class Stream extends \Espo\Core\Hooks\Base
         $rows = $sth->fetchAll();
         foreach ($rows as $row) {
             $userId = $row['userId'];
+            if (in_array($userId, $ignoreList)) {
+                continue;
+            }
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (!$user) {
                 continue;
@@ -179,7 +182,7 @@ class Stream extends \Espo\Core\Hooks\Base
                     $userIdList[] = $assignedUserId;
                 }
 
-                $autofollowUserIdList = $this->getAutofollowUserIdList($entity);
+                $autofollowUserIdList = $this->getAutofollowUserIdList($entity, $userIdList);
                 foreach ($autofollowUserIdList as $userId) {
                     if (!in_array($userId, $userIdList)) {
                         $userIdList[] = $userId;
