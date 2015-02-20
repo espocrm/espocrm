@@ -232,7 +232,7 @@ class Email extends Record
         $entity->set('idHash', $idHash);
     }
 
-    public function findEntities($params)
+    protected function getSelectParams($params)
     {
         $searchByEmailAddress = false;
         if (!empty($params['where']) && is_array($params['where'])) {
@@ -254,16 +254,7 @@ class Email extends Record
             $selectManager->whereEmailAddress($emailAddress, $selectParams);
         }
 
-        $collection = $this->getRepository()->find($selectParams);
-
-        foreach ($collection as $e) {
-            $this->loadParentNameFields($e);
-        }
-
-        return array(
-            'total' => $this->getRepository()->count($selectParams),
-            'collection' => $collection,
-        );
+        return $selectParams;
     }
 
     public function copyAttachments($emailId, $parentType, $parentId)

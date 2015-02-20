@@ -417,9 +417,30 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function getSelectParams($params)
+    {
+    	$selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
+
+    	return $selectParams;
+    }
+
     public function findEntities($params)
     {
-        $selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
+        $disableCount = false;
+        if (in_array($this->entityName, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
+        	$disableCount = true;
+    	}
+
+    	$maxSize = 0;
+    	if ($disableCount) {
+    		if (!empty($params['maxSize'])) {
+    			$maxSize = $params['maxSize'];
+    			$params['maxSize'] = $params['maxSize'] + 1;
+    		}
+    	}
+
+    	$selectParams = $this->getSelectParams($params);
+
         $collection = $this->getRepository()->find($selectParams);
 
         foreach ($collection as $e) {
@@ -427,8 +448,19 @@ class Record extends \Espo\Core\Services\Base
             $this->prepareEntityForOutput($e);
         }
 
+        if (!$disableCount) {
+        	$total = $this->getRepository()->count($selectParams);
+    	} else {
+	        if ($maxSize && count($collection) > $maxSize) {
+	            $total = -1;
+	            unset($collection[count($collection) - 1]);
+	        } else {
+	            $total = -2;
+	        }
+    	}
+
         return array(
-            'total' => $this->getRepository()->count($selectParams),
+            'total' => $total,
             'collection' => $collection,
         );
     }
@@ -445,6 +477,19 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        $disableCount = false;
+        if (in_array($foreignEntityName, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
+        	$disableCount = true;
+    	}
+
+    	$maxSize = 0;
+    	if ($disableCount) {
+    		if (!empty($params['maxSize'])) {
+    			$maxSize = $params['maxSize'];
+    			$params['maxSize'] = $params['maxSize'] + 1;
+    		}
+    	}
+
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
@@ -460,9 +505,20 @@ class Record extends \Espo\Core\Services\Base
             $recordService->prepareEntityForOutput($e);
         }
 
+        if (!$disableCount) {
+        	$total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+    	} else {
+	        if ($maxSize && count($collection) > $maxSize) {
+	            $total = -1;
+	            unset($collection[count($collection) - 1]);
+	        } else {
+	            $total = -2;
+	        }
+    	}
+
         return array(
-            'total' => $this->getRepository()->countRelated($entity, $link, $selectParams),
-            'collection' => $collection,
+            'total' => $total,
+            'collection' => $collection
         );
     }
 

@@ -95,6 +95,7 @@ return array (
     'assignmentEmailNotificationsEntityList' => array('Lead', 'Opportunity', 'Task', 'Case'),
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
+    'disabledCountQueryEntityList' => array('Email'),
     'isInstalled' => false,
 );
 
