@@ -134,9 +134,7 @@ class Stream extends \Espo\Core\Hooks\Base
     protected function getAutofollowUserIdList(Entity $entity, array $ignoreList = array())
     {
         $entityType = $entity->getEntityName();
-
         $pdo = $this->getEntityManager()->getPDO();
-
         $userIdList = [];
 
         $sql = "
@@ -150,15 +148,7 @@ class Stream extends \Espo\Core\Hooks\Base
             if (in_array($userId, $ignoreList)) {
                 continue;
             }
-            $user = $this->getEntityManager()->getEntity('User', $userId);
-            if (!$user) {
-                continue;
-            }
-            $acl = new \Espo\Core\Acl($user, $this->getConfig(), null, $this->getMetadata());
-
-            if ($acl->check($entity, 'read')) {
-                $userIdList[] = $userId;
-            }
+            $userIdList[] = $userId;
         }
 
         return $userIdList;
@@ -182,18 +172,35 @@ class Stream extends \Espo\Core\Hooks\Base
                     $userIdList[] = $assignedUserId;
                 }
 
-                $autofollowUserIdList = $this->getAutofollowUserIdList($entity, $userIdList);
-                foreach ($autofollowUserIdList as $userId) {
-                    if (!in_array($userId, $userIdList)) {
-                        $userIdList[] = $userId;
-                    }
-                }
 
                 if (!empty($userIdList)) {
                     $this->getStreamService()->followEntityMass($entity, $userIdList);
                 }
 
                 $this->getStreamService()->noteCreate($entity);
+
+
+                $autofollowUserIdList = $this->getAutofollowUserIdList($entity, $userIdList);
+                foreach ($autofollowUserIdList as $i => $userId) {
+                    if (in_array($userId, $userIdList)) {
+                        unset($autofollowUserIdList[$i]);
+                    }
+                }
+                $autofollowUserIdList = array_values($autofollowUserIdList);
+
+                if (!empty($autofollowUserIdList)) {
+                    $job = $this->getEntityManager()->getEntity('Job');
+                    $job->set(array(
+                        'serviceName' => 'Stream',
+                        'method' => 'afterRecordCreatedJob',
+                        'data' => array(
+                            'userIdList' => $autofollowUserIdList,
+                            'entityType' => $entity->getEntityName(),
+                            'entityId' => $entity->id
+                        )
+                    ));
+                    $this->getEntityManager()->saveEntity($job);
+                }
 
             } else {
                 if ($entity->isFieldChanged('assignedUserId')) {

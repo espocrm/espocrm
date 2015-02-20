@@ -72,6 +72,8 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $auditedFieldsCache = array();
 
+    private $notificationService = null;
+
     protected function getServiceFactory()
     {
         return $this->injections['container']->get('serviceFactory');
@@ -85,6 +87,66 @@ class Stream extends \Espo\Core\Services\Base
     protected function getMetadata()
     {
         return $this->injections['metadata'];
+    }
+
+    protected function getNotificationService()
+    {
+        if (empty($this->notificationService)) {
+            $this->notificationService = $this->getServiceFactory()->create('Notification');
+        }
+        return $this->notificationService;
+    }
+
+    public function afterRecordCreatedJob($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+        if (empty($data['entityId']) || empty($data['entityType']) || empty($data['userIdList'])) {
+            return;
+        }
+        $userIdList = $data['userIdList'];
+        $entityType = $data['entityType'];
+        $entityId = $data['entityId'];
+
+        $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
+        if (!$entity) {
+            return;
+        }
+
+        foreach ($userIdList as $i => $userId) {
+            $user = $this->getEntityManager()->getEntity('User', $userId);
+            if (!$user){
+                continue;
+            }
+            $acl = new \Espo\Core\Acl($user, $this->getConfig(), null, $this->getMetadata());
+            if (!$acl->check($entity, 'read')) {
+                unset($userIdList[$i]);
+            }
+        }
+        $userIdList = array_values($userIdList);
+
+        foreach ($userIdList as $i => $userId) {
+            if ($this->checkIsFollowed($entity, $userId)) {
+                unset($userIdList[$i]);
+            }
+        }
+        $userIdList = array_values($userIdList);
+
+        if (empty($userIdList)) {
+            return;
+        }
+
+        $this->followEntityMass($entity, $userIdList);
+
+        $noteList = $this->getEntityManager()->getRepository('Note')->where(array(
+            'parentType' => $entityType,
+            'parentId' => $entityId
+        ))->order('number', 'ASC')->find();
+
+        foreach ($noteList as $note) {
+            $this->getNotificationService()->notifyAboutNote($userIdList, $note);
+        }
     }
 
     public function checkIsFollowed(Entity $entity, $userId = null)
