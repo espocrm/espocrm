@@ -92,7 +92,7 @@ class Job
 
         $query = "SELECT " . $displayColumns . " FROM job WHERE
                     `status` = '" . $status . "'
-                    AND execute_time BETWEEN '".date('Y-m-d H:i:s', $periodTime)."' AND '".date('Y-m-d H:i:s', $currentTime)."'
+                    AND execute_time <= '".date('Y-m-d H:i:s', $currentTime)."'
                     AND deleted = 0
                     ORDER BY execute_time ASC ".$limit;
 
