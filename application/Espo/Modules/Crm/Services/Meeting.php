@@ -63,7 +63,7 @@ class Meeting extends \Espo\Services\Record
     {
         return $this->injections['dateTime'];
     }
-    
+
     protected function getInvitationManager()
     {
         $smtpParams = $this->getPreferences()->getSmtpParams();
@@ -80,7 +80,7 @@ class Meeting extends \Espo\Services\Record
     public function sendInvitations(Entity $entity)
     {
         $invitationManager = $this->getInvitationManager();
-        
+
         $users = $entity->get('users');
         foreach ($users as $user) {
             $invitationManager->sendInvitation($entity, $user, 'users');

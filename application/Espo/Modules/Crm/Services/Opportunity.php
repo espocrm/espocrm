@@ -97,67 +97,67 @@ class Opportunity extends \Espo\Services\Record
 
         return $result;
     }
-    
+
     public function reportByStage($dateFrom, $dateTo)
     {
         $pdo = $this->getEntityManager()->getPDO();
-        
+
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
-        
+
         $sql = "
             SELECT opportunity.stage AS `stage`, SUM(opportunity.amount * currency.rate) as `amount`
             FROM opportunity
             JOIN currency ON currency.id = opportunity.amount_currency
-            WHERE 
+            WHERE
                 opportunity.deleted = 0 AND
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
                 opportunity.stage <> 'Closed Lost'
             GROUP BY opportunity.stage
-            ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')        
+            ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')
         ";
-        
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
-        
+
         $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        
+
         $result = array();
         foreach ($rows as $row) {
             $result[$row['stage']] = floatval($row['amount']);
-        }    
-                
+        }
+
         return $result;
     }
-    
+
     public function reportSalesByMonth($dateFrom, $dateTo)
     {
         $pdo = $this->getEntityManager()->getPDO();
-        
+
         $sql = "
             SELECT DATE_FORMAT(opportunity.close_date, '%Y-%m') AS `month`, SUM(opportunity.amount * currency.rate) as `amount`
             FROM opportunity
             JOIN currency ON currency.id = opportunity.amount_currency
-            WHERE 
+            WHERE
                 opportunity.deleted = 0 AND
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
                 opportunity.stage = 'Closed Won'
-            
+
             GROUP BY DATE_FORMAT(opportunity.close_date, '%Y-%m')
-            ORDER BY opportunity.close_date                        
+            ORDER BY opportunity.close_date
         ";
-        
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
-        
+
         $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        
+
         $result = array();
         foreach ($rows as $row) {
             $result[$row['month']] = floatval($row['amount']);
-        }    
-                
+        }
+        
         return $result;
     }
 

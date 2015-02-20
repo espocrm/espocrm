@@ -204,11 +204,11 @@ class Activities extends \Espo\Core\Services\Base
             $sql .= "
                 WHERE
                     (
-                        call.parent_type <> ".$this->getPDO()->quote($scope)." OR 
+                        call.parent_type <> ".$this->getPDO()->quote($scope)." OR
                         call.parent_id <> ".$this->getPDO()->quote($id)." OR
                         call.parent_type IS NULL OR
                         call.parent_id IS NULL
-                    ) AND 
+                    ) AND
                     call.deleted = 0
             ";
             if (!empty($notIn)) {
