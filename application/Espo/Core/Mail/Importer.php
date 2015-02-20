@@ -62,7 +62,7 @@ class Importer
 
             $subject = $message->subject;
             if ($subject !== '0' && empty($subject)) {
-                $subject = '--empty--';
+                $subject = '(No Subject)';
             }
 
             $email->set('isHtml', false);
