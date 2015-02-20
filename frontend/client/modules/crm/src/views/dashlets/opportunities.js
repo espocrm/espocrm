@@ -38,9 +38,7 @@ Espo.define('Crm:Views.Dashlets.Opportunities', 'Views.Dashlets.Abstract.RecordL
                             name: 'name',
                             link: true,
                         },
-                        {
-                            name: 'account'
-                        }
+
                     ],
                     [
                         {
