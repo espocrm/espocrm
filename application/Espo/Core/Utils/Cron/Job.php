@@ -143,7 +143,7 @@ class Job
         $periodTime = $currentTime - intval($jobConfigs['jobPeriod']);
 
         $update = "UPDATE job SET `status` = '" . CronManager::FAILED ."' WHERE
-                    (`status` = '" . CronManager::PENDING ."' OR `status` = '" . CronManager::RUNNING ."')
+                    (`status` = '" . CronManager::RUNNING ."')
                     AND execute_time < '".date('Y-m-d H:i:s', $periodTime)."' ";
 
         $pdo = $this->getEntityManager()->getPDO();
