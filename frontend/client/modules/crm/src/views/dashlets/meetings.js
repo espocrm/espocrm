@@ -29,7 +29,7 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
 
         defaultOptions: {
             sortBy: 'dateStart',
-            asc: false,
+            asc: true,
             displayRecords: 5,
             expandedLayout: {
                 rows: [
@@ -54,6 +54,10 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
                     status: {
                         type: 'notIn',
                         value: ['Held', 'Not Held']
+                    },
+                    "dateEnd": {
+                        type: "future",
+                        dateTime: true
                     }
                 }
             },
