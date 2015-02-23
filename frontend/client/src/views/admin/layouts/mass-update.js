@@ -96,7 +96,7 @@ Espo.define('Views.Admin.Layouts.MassUpdate', 'Views.Admin.Layouts.Rows', functi
             if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
-            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutMassUpdateDisabled');
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutMassUpdateDisabled') && !model.getFieldParam(name, 'readOnly');
         }
 
     });
