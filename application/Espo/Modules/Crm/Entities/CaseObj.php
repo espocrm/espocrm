@@ -18,13 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Entities;
 
 class CaseObj extends \Espo\Core\ORM\Entity
 {
 
-    protected $entityName = 'Case';
+    protected $entityType = 'Case';
 
 }

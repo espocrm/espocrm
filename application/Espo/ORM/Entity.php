@@ -31,10 +31,10 @@ abstract class Entity implements IEntity
     private $isSaved = false;
 
     /**
-     * Entity name (entity type).
+     * Entity type.
      * @var string
      */
-    protected $entityName;
+    protected $entityType;
 
     /**
      * @var array Defenition of fields.
@@ -67,9 +67,9 @@ abstract class Entity implements IEntity
 
     public function __construct($defs = array(), EntityManager $entityManager = null)
     {
-        if (empty($this->entityName)) {
+        if (empty($this->entityType)) {
             $classNames = explode('\\', get_class($this));
-            $this->entityName = end($classNames);
+            $this->entityType = end($classNames);
         }
 
         $this->entityManager = $entityManager;
@@ -140,7 +140,7 @@ abstract class Entity implements IEntity
         }
 
         if (!empty($this->relations[$name])) {
-            $value = $this->entityManager->getRepository($this->entityName)->findRelated($this, $name, $params);
+            $value = $this->entityManager->getRepository($this->getEntityType())->findRelated($this, $name, $params);
             return $value;
         }
 
@@ -240,7 +240,12 @@ abstract class Entity implements IEntity
 
     public function getEntityName()
     {
-        return $this->entityName;
+        return $this->getEntityType();
+    }
+
+    public function getEntityType()
+    {
+        return $this->entityType;
     }
 
     public function hasField($fieldName)
