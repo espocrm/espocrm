@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base', function (Dep) {
 
@@ -34,21 +34,21 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
         _template: '<div class="list-container">{{{list}}}</div>',
 
         layoutType: 'expanded',
-        
+
         optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
             'displayRecords': {
                 type: 'enumInt',
-                options: [3,4,5,10,15],                            
+                options: [3,4,5,10,15],
             },
             'isDoubleHeight': {
-                type: 'bool',                            
+                type: 'bool',
             }
-        }),            
+        }),
 
         afterRender: function () {
-            this.getCollectionFactory().create(this.scope, function (collection) {            
-                var searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
-                
+            this.getCollectionFactory().create(this.scope, function (collection) {
+                var searchManager = this.searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
+
                 if (!this.getAcl().check(this.scope, 'read')) {
                     this.$el.find('.list-container').html(this.translate('No Access'));
                     return;
@@ -58,8 +58,8 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
                 collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
                 collection.asc = this.getOption('asc') || this.collection.asc;
                 collection.maxSize = this.getOption('displayRecords');
-                collection.where = searchManager.getWhere();            
-                
+                collection.where = searchManager.getWhere();
+
                 var viewName = (this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn;
 
                 this.listenToOnce(collection, 'sync', function () {
@@ -76,13 +76,14 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
                         view.render();
                     });
                 }, this);
-                
+
                 collection.fetch();
 
             }, this);
         },
-        
-        actionRefresh: function () {            
+
+        actionRefresh: function () {
+            this.collection.where = this.searchManager.getWhere();
             this.collection.fetch();
         },
     });
