@@ -51,13 +51,24 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
                     onlyMy: true,
                 },
                 advanced: {
-                    status: {
+                    'status': {
                         type: 'notIn',
                         value: ['Held', 'Not Held']
                     },
-                    "dateEnd": {
-                        type: "future",
-                        dateTime: true
+                    '1': {
+                        type: 'or',
+                        value: {
+                            '1': {
+                                type: 'today',
+                                field: 'dateStart',
+                                dateTime: true
+                            },
+                            '2': {
+                                type: 'future',
+                                field: 'dateEnd',
+                                dateTime: true
+                            }
+                        }
                     }
                 }
             },

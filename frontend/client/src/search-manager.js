@@ -79,35 +79,51 @@
 
             if (this.data.advanced) {
                 for (var name in this.data.advanced) {
-                    var field = name;
                     var defs = this.data.advanced[name];
-
                     if (!defs) {
                         continue;
                     }
-
-                    if ('where' in defs) {
-                        where.push(defs.where);
-                    } else {
-                        if ('field' in defs) {
-                            field = defs.field;
-                        }
-                        var type = defs.type;
-                        if (defs.dateTime) {
-                            where.push(this.getDateTimeWhere(type, field, defs.value));
-                        } else {
-                            value = defs.value;
-                            where.push({
-                                type: type,
-                                field: field,
-                                value: value,
-                            });
-                        }
-
-                    }
+                    var part = this.getWherePart(name, defs);
+                    where.push(part);
                 }
             }
             return where;
+        },
+
+        getWherePart: function (name, defs) {
+            var field = name;
+
+            if ('where' in defs) {
+                where.push(defs.where);
+            } else {
+                var type = defs.type;
+
+                if (type == 'or' || type == 'and') {
+
+                    var a = [];
+                    var value = defs.value || {};
+                    for (var n in value) {
+                        a.push(this.getWherePart(n, value[n]));
+                    }
+                    return {
+                        type: type,
+                        value: a
+                    };
+                }
+                if ('field' in defs) {
+                    field = defs.field;
+                }
+                if (defs.dateTime) {
+                    return this.getDateTimeWhere(type, field, defs.value);
+                } else {
+                    value = defs.value;
+                    return {
+                        type: type,
+                        field: field,
+                        value: value,
+                    };
+                }
+            }
         },
 
         loadStored: function () {
@@ -152,7 +168,7 @@
                     var start = this.dateTime.getNowMoment().startOf('day').utc();
 
                     var from = start.format(this.dateTime.internalDateTimeFormat);
-                    var to = start.add('days', 1).format(this.dateTime.internalDateTimeFormat);
+                    var to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
                     where.value = [from, to];
                     break;
                 case 'past':
@@ -168,7 +184,7 @@
                     var start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
 
                     var from = start.format(this.dateTime.internalDateTimeFormat);
-                    var to = start.add('days', 1).format(this.dateTime.internalDateTimeFormat);
+                    var to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
 
                     where.value = [from, to];
                     break;
