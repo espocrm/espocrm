@@ -37,7 +37,7 @@ Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', funct
                 };
                 if (this.model.get('createdAccountId') && this.model.get('createdAccountName')) {
                     panel.options.fields.push('createdAccount');
-                }
+                }git
                 if (this.model.get('createdContactId') && this.model.get('createdContactName')) {
                     panel.options.fields.push('createdContact');
                 }
