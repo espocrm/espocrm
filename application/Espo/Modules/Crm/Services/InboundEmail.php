@@ -112,7 +112,7 @@ class InboundEmail extends \Espo\Services\Record
 
         $foldersArr = array();
 
-        $storage = new \Zend\Mail\Storage\Imap($imapParams);
+        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
 
         $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($folders as $name => $folder) {

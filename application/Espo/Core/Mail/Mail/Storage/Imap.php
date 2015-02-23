@@ -20,11 +20,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Storage;
+namespace Espo\Core\Mail\Mail\Storage;
 
 class Imap extends \Zend\Mail\Storage\Imap
 {
-	protected $messageClass = '\\Espo\\Core\\Mail\\Storage\\Message';
+	protected $messageClass = '\\Espo\\Core\\Mail\\Mail\\Storage\\Message';
 
     public function getIdsFromUID($uid)
     {

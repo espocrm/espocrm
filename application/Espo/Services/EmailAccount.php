@@ -83,7 +83,7 @@ class EmailAccount extends Record
 
         $foldersArr = array();
 
-        $storage = new \Zend\Mail\Storage\Imap($imapParams);
+        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
 
         $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($folders as $name => $folder) {
@@ -145,7 +145,7 @@ class EmailAccount extends Record
             $imapParams['ssl'] = 'SSL';
         }
 
-        $storage = new \Espo\Core\Mail\Storage\Imap($imapParams);
+        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
         if (empty($monitoredFolders)) {
