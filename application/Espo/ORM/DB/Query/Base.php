@@ -167,15 +167,15 @@ abstract class Base
         if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
             $arr = array();
             foreach ($params['groupBy'] as $field) {
-                $arr[] = $this->convertComplexExpression($entity, $field, $entity->getEntityName());
+                $arr[] = $this->convertComplexExpression($entity, $field, $entity->getEntityType());
             }
             $groupByPart = implode(', ', $arr);
         }
 
         if (empty($params['aggregation'])) {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
+            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
         } else {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityName()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
+            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
         }
 
         return $sql;
@@ -257,7 +257,7 @@ abstract class Base
             if (array_key_exists($field, $entity->fields)) {
                 $fieldDefs = $entity->fields[$field];
             } else {
-                $part = $this->convertComplexExpression($entity, $field, $entity->getEntityName(), $distinct);
+                $part = $this->convertComplexExpression($entity, $field, $entity->getEntityType(), $distinct);
                 $arr[] = $part . ' AS `' . $field . '`';
                 continue;
             }
@@ -293,7 +293,7 @@ abstract class Base
 
         if ($alias) {
             return "JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
-                   $this->toDb($entity->getEntityName()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+                   $this->toDb($entity->getEntityType()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
         }
     }
 
@@ -422,7 +422,7 @@ abstract class Base
             $distinctPart = 'DISTINCT ';
         }
 
-        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityName()) . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
+        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityType()) . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
         return $selectPart;
     }
 
@@ -447,12 +447,12 @@ abstract class Base
 
     protected function getAlias(IEntity $entity, $relationName)
     {
-        if (!isset($this->aliasesCache[$entity->getEntityName()])) {
-            $this->aliasesCache[$entity->getEntityName()] = $this->getTableAliases($entity);
+        if (!isset($this->aliasesCache[$entity->getEntityType()])) {
+            $this->aliasesCache[$entity->getEntityType()] = $this->getTableAliases($entity);
         }
 
-        if (isset($this->aliasesCache[$entity->getEntityName()][$relationName])) {
-            return $this->aliasesCache[$entity->getEntityName()][$relationName];
+        if (isset($this->aliasesCache[$entity->getEntityType()][$relationName])) {
+            return $this->aliasesCache[$entity->getEntityType()][$relationName];
         } else {
             return false;
         }
@@ -528,7 +528,7 @@ abstract class Base
                     }
                     break;
                 default:
-                    $fieldPath = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($this->sanitize($field));
+                    $fieldPath = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
             }
 
             return $fieldPath;
@@ -594,7 +594,7 @@ abstract class Base
                                 }
                             }
                         } else {                            
-                            $leftPart = $this->toDb($entity->getEntityName()) . '.' . $this->toDb($this->sanitize($field));
+                            $leftPart = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
                         }
                     }
                 }
@@ -662,7 +662,7 @@ abstract class Base
             $distantTable = $this->toDb($relOpt['entity']);
 
             $join =
-                "{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
+                "{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
                 . " AND "
                 . "{$relTable}.deleted = " . $this->pdo->quote(0);
 
@@ -688,7 +688,7 @@ abstract class Base
             // TODO conditions
 
             $join =
-                "{$pre}JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityName())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
+                "{$pre}JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
                 . " AND "
                 . "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
 
@@ -751,7 +751,7 @@ abstract class Base
         switch ($relType) {
 
             case IEntity::BELONGS_TO:
-                $key = $this->toDb($entity->getEntityName()) . 'Id';
+                $key = $this->toDb($entity->getEntityType()) . 'Id';
                 if (isset($relOpt['key'])) {
                     $key = $relOpt['key'];
                 }
@@ -769,7 +769,7 @@ abstract class Base
                 if (isset($relOpt['key'])){
                     $key = $relOpt['key'];
                 }
-                $foreignKey = $this->toDb($entity->getEntityName()) . 'Id';
+                $foreignKey = $this->toDb($entity->getEntityType()) . 'Id';
                 if (isset($relOpt['foreignKey'])) {
                     $foreignKey = $relOpt['foreignKey'];
                 }
@@ -805,7 +805,7 @@ abstract class Base
                 if(isset($relOpt['foreignKey'])){
                     $foreignKey = $relOpt['foreignKey'];
                 }
-                $nearKey = $this->toDb($entity->getEntityName()) . 'Id';
+                $nearKey = $this->toDb($entity->getEntityType()) . 'Id';
                 $distantKey = $this->toDb($relOpt['entity']) . 'Id';
                 if (isset($relOpt['midKeys']) && is_array($relOpt['midKeys'])){
                     $nearKey = $relOpt['midKeys'][0];

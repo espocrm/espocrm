@@ -91,7 +91,7 @@ abstract class Mapper implements IMapper
         $params['whereClause']['id'] = $id;
         $params['whereClause']['deleted'] = 0;
 
-        $sql = $this->query->createSelectQuery($entity->getEntityName(), $params);
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
 
         $ps = $this->pdo->query($sql);
 
@@ -126,7 +126,7 @@ abstract class Mapper implements IMapper
 
     public function select(IEntity $entity, $params = array())
     {
-        $sql = $this->query->createSelectQuery($entity->getEntityName(), $params);
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
 
         return $this->selectByQuery($entity, $sql);
     }
@@ -142,7 +142,7 @@ abstract class Mapper implements IMapper
 
         if ($this->returnCollection) {
             $collectionClass = $this->collectionClass;
-            $entityArr = new $collectionClass($dataArr, $entity->getEntityName(), $this->entityFactory);
+            $entityArr = new $collectionClass($dataArr, $entity->getEntityType(), $this->entityFactory);
             return $entityArr;
         } else {
             return $dataArr;
@@ -158,7 +158,7 @@ abstract class Mapper implements IMapper
         $params['aggregation'] = $aggregation;
         $params['aggregationBy'] = $aggregationBy;
 
-        $sql = $this->query->createSelectQuery($entity->getEntityName(), $params, $deleted);
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, $deleted);
 
         $ps = $this->pdo->query($sql);
 
@@ -175,7 +175,7 @@ abstract class Mapper implements IMapper
         $relOpt = $entity->relations[$relationName];
 
         if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityName() . " entity");
+            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
@@ -209,7 +209,7 @@ abstract class Mapper implements IMapper
                 $params['offset'] = 0;
                 $params['limit'] = 1;
 
-                $sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
+                $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
                 $ps = $this->pdo->query($sql);
 
@@ -232,12 +232,12 @@ abstract class Mapper implements IMapper
 
                 if ($relType == IEntity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'];
-                    $params['whereClause'][$foreignType] = $entity->getEntityName();
+                    $params['whereClause'][$foreignType] = $entity->getEntityType();
                 }
 
                 $dataArr = array();
 
-                $sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
+                $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
                 $ps = $this->pdo->query($sql);
                 if ($ps) {
@@ -252,7 +252,7 @@ abstract class Mapper implements IMapper
                 }
                 if ($this->returnCollection) {
                     $collectionClass = $this->collectionClass;
-                    return new $collectionClass($dataArr, $relEntity->getEntityName(), $this->entityFactory);
+                    return new $collectionClass($dataArr, $relEntity->getEntityType(), $this->entityFactory);
                 } else {
                     return $dataArr;
                 }
@@ -280,7 +280,7 @@ abstract class Mapper implements IMapper
                 // TODO total
 
 
-                $sql = $this->query->createSelectQuery($relEntity->getEntityName(), $params);
+                $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
                 $dataArr = array();
 
@@ -298,7 +298,7 @@ abstract class Mapper implements IMapper
                 }
                 if ($this->returnCollection) {
                     $collectionClass = $this->collectionClass;
-                    return new $collectionClass($dataArr, $relEntity->getEntityName(), $this->entityFactory);
+                    return new $collectionClass($dataArr, $relEntity->getEntityType(), $this->entityFactory);
                 } else {
                     return $dataArr;
                 }
@@ -385,7 +385,7 @@ abstract class Mapper implements IMapper
         $relOpt = $entity->relations[$relationName];
 
         if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityName() . " entity");
+            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         $relType = $relOpt['type'];
@@ -419,11 +419,11 @@ abstract class Mapper implements IMapper
 
                     if ($relType == IEntity::HAS_CHILDREN) {
                         $foreignType = $keySet['foreignType'];
-                        $setPart .= ", " . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityName());
+                        $setPart .= ", " . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType());
                     }
 
                     $wherePart = $this->query->getWhere($relEntity, array('id' => $id, 'deleted' => 0));
-                    $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityName()), $setPart, $wherePart);
+                    $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
 
                     if ($this->pdo->query($sql)) {
                         return true;
@@ -525,7 +525,7 @@ abstract class Mapper implements IMapper
         $relOpt = $entity->relations[$relationName];
 
         if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityName() . " entity");
+            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         $relType = $relOpt['type'];
@@ -570,11 +570,11 @@ abstract class Mapper implements IMapper
 
                 if ($relType == IEntity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'];
-                    $whereClause[$foreignType] = $entity->getEntityName();
+                    $whereClause[$foreignType] = $entity->getEntityType();
                 }
 
                 $wherePart = $this->query->getWhere($relEntity, $whereClause);
-                $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityName()), $setPart, $wherePart);
+                $sql = $this->composeUpdateQuery($this->toDb($relEntity->getEntityType()), $setPart, $wherePart);
                 if ($this->pdo->query($sql)) {
                     return true;
                 }
@@ -643,7 +643,7 @@ abstract class Mapper implements IMapper
         $fieldsPart = "`" . implode("`, `", $fieldArr) . "`";
         $valuesPart = implode(", ", $valArr);
 
-        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityName()), $fieldsPart, $valuesPart);
+        $sql = $this->composeInsertQuery($this->toDb($entity->getEntityType()), $fieldsPart, $valuesPart);
 
         if ($this->pdo->query($sql)) {
             return $entity->id;
@@ -682,7 +682,7 @@ abstract class Mapper implements IMapper
         $setPart = implode(', ', $setArr);
         $wherePart = $this->query->getWhere($entity, array('id' => $entity->id, 'deleted' => 0));
 
-        $sql = $this->composeUpdateQuery($this->toDb($entity->getEntityName()), $setPart, $wherePart);
+        $sql = $this->composeUpdateQuery($this->toDb($entity->getEntityType()), $setPart, $wherePart);
 
         if ($this->pdo->query($sql)) {
             return $entity->id;
