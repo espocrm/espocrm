@@ -314,6 +314,9 @@ abstract class Base
 
         foreach ($entity->relations as $relationName => $r) {
             if ($r['type'] == IEntity::BELONGS_TO) {
+                if (!empty($r['noJoin'])) {
+                    continue;
+                }
                 if (in_array($relationName, $skipList)) {
                     continue;
                 }
@@ -503,7 +506,7 @@ abstract class Base
 
             $fieldPath = '';
 
-            switch($f['type']) {
+            switch ($f['type']) {
                 case 'foreign':
                     if (isset($f['relation'])) {
                         $relationName = $f['relation'];

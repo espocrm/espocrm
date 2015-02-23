@@ -115,17 +115,23 @@
         },
         "createdAccount": {
             "type": "link",
-            "disabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
             "readOnly": true
         },
         "createdContact": {
             "type": "link",
-            "disabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
             "readOnly": true
         },
         "createdOpportunity": {
             "type": "link",
-            "disabled": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
             "readOnly": true
         }
     },
@@ -173,15 +179,18 @@
         },
         "createdAccount": {
             "type": "belongsTo",
-            "entity": "Account"
+            "entity": "Account",
+            "noJoin": true
         },
         "createdContact": {
             "type": "belongsTo",
-            "entity": "Contact"
+            "entity": "Contact",
+            "noJoin": true
         },
         "createdOpportunity": {
             "type": "belongsTo",
-            "entity": "Opportunity"
+            "entity": "Opportunity",
+            "noJoin": true
         }
     },
     "convertFields": {

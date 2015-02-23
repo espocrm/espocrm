@@ -198,6 +198,27 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function loadNotJoinedLinkFields(Entity $entity)
+    {
+        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.links', array());
+        foreach ($linkDefs as $link => $defs) {
+            if (isset($defs['type']) && $defs['type'] == 'belongsTo') {
+                if (!empty($defs['noJoin']) && !empty($defs['entity'])) {
+                    $nameField = $link . 'Name';
+                    $idField = $link . 'Id';
+                    if ($entity->hasField($nameField) && $entity->hasField($idField)) {
+                        $id = $entity->get($idField);
+                    }
+
+                    $scope = $defs['entity'];
+                    if (!empty($scope) && $foreignEntity = $this->getEntityManager()->getEntity($scope, $id)) {
+                        $entity->set($nameField, $foreignEntity->get('name'));
+                    }
+                }
+            }
+        }
+    }
+
     protected function loadAdditionalFields($entity)
     {
         $this->loadLinkMultipleFields($entity);
@@ -205,6 +226,7 @@ class Record extends \Espo\Core\Services\Base
         $this->loadIsFollowed($entity);
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
+        $this->loadNotJoinedLinkFields($entity);
     }
 
     protected function loadEmailAddressField(Entity $entity)
