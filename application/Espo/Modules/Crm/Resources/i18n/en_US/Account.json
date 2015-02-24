@@ -10,7 +10,8 @@
         "sicCode": "Sic Code",
         "industry": "Industry",
         "type": "Type",
-        "contactRole": "Role"
+        "contactRole": "Role",
+        "campaign": "Campaign"
     },
     "links": {
         "contacts": "Contacts",
@@ -19,7 +20,8 @@
         "documents": "Documents",
         "meetingsPrimary": "Meetings (Internal)",
         "callsPrimary": "Calls (Internal)",
-        "tasksPrimary": "Tasks (Internal)"
+        "tasksPrimary": "Tasks (Internal)",
+        "targetLists": "Target Lists"
     },
     "options": {
         "type": {

@@ -1,0 +1,11 @@
+[
+    {
+        "label":"Overview",
+        "rows":[
+            [{"name":"name"}, {"name":"status"}],
+            [{"name":"type"}, false],
+            [{"name":"endDate"}, false],
+            [{"name":"description", "fullWidth": true}]
+        ]
+    }
+]

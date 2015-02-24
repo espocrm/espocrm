@@ -113,6 +113,10 @@
         "teams": {
             "type": "linkMultiple"
         },
+        "campaign": {
+            "type": "link",
+            "layoutListDisabled": true
+        },
         "createdAccount": {
             "type": "link",
             "layoutDetailDisabled": true,
@@ -190,6 +194,12 @@
         "createdOpportunity": {
             "type": "belongsTo",
             "entity": "Opportunity",
+            "noJoin": true
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "leads",
             "noJoin": true
         }
     },

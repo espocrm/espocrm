@@ -1,0 +1,29 @@
+{
+   "controller": "Controllers.Record",
+    "menu": {
+        "list": {
+            "buttons": [
+                {
+                    "label": "Target Lists",
+                    "link": "#TargetList",
+                    "acl": "read",
+                    "style": "link",
+                    "aclScope": "TargetList"
+                }
+            ]
+        }
+    },
+   "presetFilters": [
+      {
+         "name":"active",
+         "style": "primary",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Active"]
+            }
+         }
+      }
+   ],
+   "boolFilters": ["onlyMy"]
+}
