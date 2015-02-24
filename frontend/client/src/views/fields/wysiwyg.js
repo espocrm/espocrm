@@ -48,6 +48,7 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
+
             var language = this.getConfig().get('language');
 
             if (!(language in $.summernote.lang)) {
@@ -128,6 +129,9 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
                     }, this);
                 }.bind(this),
+                onblur: function () {
+                    this.trigger('change')
+                }.bind(this),
                 toolbar: [
                     ['style', ['style']],
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -141,6 +145,9 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
         },
 
         disableWysiwygMode: function () {
+            var value = this.model.get(this.name);
+            value = $('<div>').html(value).text();
+            this.model.set(this.name, value);
             this.$element.destroy();
         },
 
