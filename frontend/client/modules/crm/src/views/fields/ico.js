@@ -17,29 +17,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Crm:Views.Fields.Ico', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
-    
-        //detailTemplate: '',
 
         setup: function () {
             var tpl;
-            
+
+            var icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="viewRelated" data-id="'+this.model.id+'"></span>';
+
             switch (this.model.name) {
                 case 'Meeting':
-                    tpl = '<span class="glyphicon glyphicon-briefcase text-muted"></span>';
+                    tpl = icoTpl.replace('{icoName}', 'briefcase');
                     break;
                 case 'Call':
-                    tpl = '<span class="glyphicon glyphicon-phone-alt text-muted"></span>';
+                    tpl = icoTpl.replace('{icoName}', 'phone-alt');
                     break;
                 case 'Email':
-                    tpl = '<span class="glyphicon glyphicon-envelope text-muted"></span>';
-                    break;            
+                    tpl = icoTpl.replace('{icoName}', 'envelope');
+                    break;
             }
+
             this._template = tpl;
         },
+
 
     });
 

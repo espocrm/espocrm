@@ -613,16 +613,22 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             }.bind(this));
         },
 
+        getItemEl: function (model, item) {
+            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
+        },
+
+        prepareInterbalLayout: function (internalLayout, model) {
+            internalLayout.forEach(function (item) {
+                item.el = this.getItemEl(model, item);
+            }, this);
+        },
+
         buildRow: function (i, model, callback) {
             var key = 'row-' + model.id;
 
             this.rows.push(key);
             this.getInternalLayout(function (internalLayout) {
-                if (this.presentationType == 'table' && Object.prototype.toString.call(internalLayout) === '[object Array]') {
-                    internalLayout.forEach(function (item) {
-                        item.el = this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
-                    }, this);
-                }
+                this.prepareInterbalLayout(internalLayout, model);
 
                 this.createView(key, 'Base', {
                     model: model,

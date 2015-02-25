@@ -9,7 +9,8 @@
       "list":"Email.Record.List",
       "detail":"Email.Record.Detail",
       "edit":"Email.Record.Edit",
-      "editQuick":"Email.Record.EditQuick"
+      "editQuick":"Email.Record.EditQuick",
+      "detailQuick":"Email.Record.DetailQuick"
    },
    "menu": {
       "list": {

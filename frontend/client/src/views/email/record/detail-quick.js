@@ -19,43 +19,21 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
+Espo.define('Views.Email.Record.DetailQuick', 'Views.Email.Record.Detail', function (Dep, Detail) {
 
     return Dep.extend({
 
-        actions: null,
+    	isWide: true,
 
-        defs: null,
-
-        events: {
-            'click .action': function (e) {
-                $el = $(e.currentTarget);
-                var action = $el.data('action');
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                if (typeof this[method] == 'function') {
-                    this[method]($el.data('id'));
-                }
-            }
-        },
-
-        data: function () {
-            return {
-                scope: this.scope,
-                name: this.panelName,
-            };
-        },
+        sideView: false,
 
         init: function () {
-            this.panelName = this.options.panelName;
-            this.defs = this.options.defs || {};
+            Dep.prototype.init.call(this);
+            this.columnCount = 2;
         },
 
-        getButtons: function () {
-            return [];
-        },
-
-        getActions: function () {
-            return [];
+        setup: function () {
+        	Dep.prototype.setup.call(this);
         },
 
     });

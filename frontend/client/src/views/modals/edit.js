@@ -43,7 +43,11 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
             this.buttons = [];
 
-            if (this.options.saveButton !== false && this.saveButton) {
+            if ('saveButton' in this.options) {
+                this.saveButton = this.options.saveButton;
+            }
+
+            if (this.saveButton) {
                 this.buttons.push({
                     name: 'save',
                     text: this.getLanguage().translate('Save'),
@@ -141,6 +145,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             this.waitForView('edit');
 
             this.getModelFactory().create(this.scope, function (model) {
+                this.model = model;
                 if (this.id) {
                     model.id = this.id;
                     model.once('sync', function () {

@@ -276,7 +276,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.type == 'editSmall'
+                isSmall: this.type == 'editSmall' || this.type == 'detailSmall'
             }
         },
 
