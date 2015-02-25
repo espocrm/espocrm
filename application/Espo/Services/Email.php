@@ -102,8 +102,8 @@ class Email extends Record
                             $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
                         }
                     }
-                    $this->getStreamService()->noteEmailSent($parent, $entity);
                 }
+                $this->getStreamService()->noteEmailSent($parent, $entity);
             }
         }
 

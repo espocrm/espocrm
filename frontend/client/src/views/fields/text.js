@@ -33,6 +33,8 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
         detailMaxLength: 400,
 
+        detailMaxNewLineCount: 7,
+
         seeMoreText: false,
 
         events: {
@@ -53,8 +55,24 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
         getValueForDisplay: function () {
             var text = this.model.get(this.name);
             if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
+                var maxLength = this.detailMaxLength;
+
+                var isCut = false;
+
                 if (text.length > this.detailMaxLength) {
-                    text = text.substr(0, this.detailMaxLength) + ' ...\n[#see-more-text]';
+                    text = text.substr(0, this.detailMaxLength);
+                    isCut = true;
+                }
+
+                var nlCount = (text.match(/\n/g) || []).length;
+                if (nlCount > this.detailMaxNewLineCount) {
+                    var a = text.split('\n').slice(0, this.detailMaxNewLineCount);
+                    text = a.join('\n');
+                    isCut = true;
+                }
+
+                if (isCut) {
+                    text += ' ...\n[#see-more-text]';
                 }
             }
             return text;

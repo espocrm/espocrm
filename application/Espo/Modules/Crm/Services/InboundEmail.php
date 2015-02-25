@@ -159,7 +159,7 @@ class InboundEmail extends \Espo\Services\Record
             $imapParams['ssl'] = 'SSL';
         }
 
-        $storage = new \Espo\Core\Mail\Storage\Imap($imapParams);
+        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
 
         $monitoredFolders = $inboundEmail->get('monitoredFolders');
         if (empty($monitoredFolders)) {
