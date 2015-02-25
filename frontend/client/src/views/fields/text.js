@@ -33,7 +33,7 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
         detailMaxLength: 400,
 
-        detailMaxNewLineCount: 7,
+        detailMaxNewLineCount: 10,
 
         seeMoreText: false,
 
