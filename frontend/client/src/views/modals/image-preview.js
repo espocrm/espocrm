@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
 
@@ -28,7 +28,7 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
         header: true,
 
         template: 'modals.image-preview',
-        
+
         size: 'x-large',
 
         backdrop: true,
@@ -45,11 +45,11 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
             this.buttons = [];
             this.header = '&nbsp;';
         },
-        
+
         afterRender: function () {
             $container = this.$el.find('.image-container');
             $img = this.$el.find('.image-container img');
-            
+
             var manageSize = function () {
                 var width = this.$el.width();
                 if (width < 868) {
@@ -58,15 +58,15 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
                     $img.removeAttr('width');
                 }
             }.bind(this);
-            
+
             $(window).on('resize', function () {
                 manageSize();
             });
-            
+
             setTimeout(function () {
                 manageSize();
             }, 100);
-            
+
         },
 
     });

@@ -37,6 +37,8 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
         columnCount: 1,
 
+        backdrop: true,
+
         setup: function () {
 
             var self = this;
