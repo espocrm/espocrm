@@ -265,7 +265,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                 $list.each(function (i, d) {
                     var row = {};
                     var $d = $(d);
-                    row.emailAddress = $d.find('input.email-address').val();
+                    row.emailAddress = $d.find('input.email-address').val().trim();
                     if (row.emailAddress == '') {
                         return;
                     }

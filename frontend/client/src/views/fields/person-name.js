@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
 
@@ -38,7 +38,7 @@ Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
             data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
             return data;
         },
-        
+
         init: function () {
             var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name)
             this.salutationField = 'salutation' + ucName;
@@ -62,7 +62,7 @@ Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
                 }.bind(this));
                 this.$last.on('change', function () {
                     this.trigger('change');
-                }.bind(this));    
+                }.bind(this));
             }
         },
 
@@ -93,8 +93,8 @@ Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
         fetch: function (form) {
             var data = {};
             data[this.salutationField] = this.$salutation.val();
-            data[this.firstField] = this.$first.val();
-            data[this.lastField] = this.$last.val();
+            data[this.firstField] = this.$first.val().trim();
+            data[this.lastField] = this.$last.val().trim();
             return data;
         },
     });
