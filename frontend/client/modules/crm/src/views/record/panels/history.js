@@ -103,7 +103,6 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                         },
                     ],
                     [
-                        {name: 'assignedUser'},
                         {name: 'status'},
                         {name: 'dateSent'},
                     ]
