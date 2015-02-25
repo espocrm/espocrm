@@ -146,7 +146,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.Detail'; 
             var options = {
                 model: model,
-                el: this.containerSelector + ' .detail-container',
+                el: this.containerSelector + ' .record-container',
                 type: 'detailSmall',
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
