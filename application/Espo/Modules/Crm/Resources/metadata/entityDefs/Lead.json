@@ -201,6 +201,11 @@
             "entity": "Campaign",
             "foreign": "leads",
             "noJoin": true
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "leads"
         }
     },
     "convertFields": {

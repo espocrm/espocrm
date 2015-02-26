@@ -202,6 +202,11 @@
             "entity": "Campaign",
             "foreign": "contacts",
             "noJoin": true
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "users"
         }
     },
     "collection": {
