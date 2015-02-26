@@ -48,6 +48,7 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
+
             var language = this.getConfig().get('language');
 
             if (!(language in $.summernote.lang)) {
@@ -63,12 +64,14 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
             if (this.mode == 'detail') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.$el.find('iframe').removeClass('hidden');
-                    var iframe = this.iframe = this.$el.find('iframe').get(0);
 
-                    iframe.onload = function () {
-                        var height = $(iframe).contents().find('html body').height();
+                    var $iframe = this.$el.find('iframe');
+                    var iframe = this.iframe = $iframe.get(0);
+
+                    $iframe.load(function () {
+                        var height = $iframe.contents().find('html body').height();
                         iframe.style.height = height + 'px';
-                    };
+                    });
 
                     var doc = iframe.contentWindow.document;
 
@@ -80,6 +83,11 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
                     doc.write(body);
                     doc.close();
+
+                    setTimeout(function () {
+                        var height = $iframe.contents().find('html body').height();
+                        iframe.style.height = height + 'px';
+                    }, 50);
 
                 } else {
                     this.$el.find('.plain').removeClass('hidden');
@@ -121,6 +129,9 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
                     }, this);
                 }.bind(this),
+                onblur: function () {
+                    this.trigger('change')
+                }.bind(this),
                 toolbar: [
                     ['style', ['style']],
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -134,6 +145,9 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
         },
 
         disableWysiwygMode: function () {
+            var value = this.model.get(this.name);
+            value = $('<div>').html(value).text();
+            this.model.set(this.name, value);
             this.$element.destroy();
         },
 

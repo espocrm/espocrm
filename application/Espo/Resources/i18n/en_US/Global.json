@@ -139,7 +139,8 @@
         "Submit": "Submit",
         "Close": "Close",
         "Yes": "Yes",
-        "No": "No"
+        "No": "No",
+        "View": "View"
     },
     "messages": {
         "notModified": "You have not modified the record",

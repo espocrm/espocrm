@@ -115,6 +115,7 @@ return array (
         'ldapTryUsernameSplit',
         'ldapOptReferrals',
         'ldapCreateEspoUser',
+        'maxEmailAccountCount'
     ),
     'isInstalled' => false,
 );

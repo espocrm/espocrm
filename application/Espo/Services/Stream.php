@@ -40,6 +40,8 @@ class Stream extends \Espo\Core\Services\Base
         'container',
     );
 
+    protected $emailsWithContentEntityList = array('Case');
+
     protected $auditedFieldsCache = array();
 
     private $notificationService = null;
@@ -363,22 +365,29 @@ class Stream extends \Espo\Core\Services\Base
 
     public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false)
     {
-        $entityName = $entity->getEntityName();
+        $entityType = $entity->getEntityType();
 
         $note = $this->getEntityManager()->getEntity('Note');
 
         $note->set('type', 'EmailReceived');
         $note->set('parentId', $entity->id);
-        $note->set('parentType', $entityName);
+        $note->set('parentType', $entityType);
 
-        $note->set('post', $email->getBodyPlain());
+        $withContent = in_array($entityType, $this->emailsWithContentEntityList);
+
+        if ($withContent) {
+            $note->set('post', $email->getBodyPlain());
+        }
 
         $data = array();
 
         $data['emailId'] = $email->id;
         $data['emailName'] = $email->get('name');
         $data['isInitial'] = $isInitial;
-        $data['attachmentsIds'] = $email->get('attachmentsIds');
+
+        if ($withContent) {
+            $data['attachmentsIds'] = $email->get('attachmentsIds');
+        }
 
         $from = $email->get('from');
         if ($from) {
@@ -391,39 +400,54 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $note->set('data', $data);
+
 
         $this->getEntityManager()->saveEntity($note);
     }
 
     public function noteEmailSent(Entity $entity, Entity $email)
     {
-        $entityName = $entity->getEntityName();
+        $entityType = $entity->getEntityType();
 
         $note = $this->getEntityManager()->getEntity('Note');
 
         $note->set('type', 'EmailSent');
         $note->set('parentId', $entity->id);
-        $note->set('parentType', $entityName);
+        $note->set('parentType', $entityType);
 
-        $note->set('post', $email->getBodyPlain());
+        $withContent = in_array($entityType, $this->emailsWithContentEntityList);
+
+        if ($withContent) {
+            $note->set('post', $email->getBodyPlain());
+        }
 
         $data = array();
-
         $data['emailId'] = $email->id;
         $data['emailName'] = $email->get('name');
-        $data['attachmentsIds'] = $email->get('attachmentsIds');
 
-        $from = $email->get('from');
-        if ($from) {
-            $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from);
-            if ($person) {
-                $data['personEntityType'] = $person->getEntityName();
-                $data['personEntityName'] = $person->get('name');
-                $data['personEntityId'] = $person->id;
+        if ($withContent) {
+            $data['attachmentsIds'] = $email->get('attachmentsIds');
+        }
+
+        $user = $this->getUser();
+
+        if ($user->id != 'system') {
+            $person = $user;
+        } else {
+            $from = $email->get('from');
+            if ($from) {
+                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from);
             }
         }
 
+        if ($person) {
+            $data['personEntityType'] = $person->getEntityName();
+            $data['personEntityName'] = $person->get('name');
+            $data['personEntityId'] = $person->id;
+        }
+
         $note->set('data', $data);
+
 
         $this->getEntityManager()->saveEntity($note);
     }

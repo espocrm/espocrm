@@ -95,13 +95,15 @@ class Email extends Record
         if ($entity->get('parentType') && $entity->get('parentId')) {
             $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
             if ($parent) {
-                if ($entity->get('parentType') == 'Case' && $parent->get('inboundEmailId')) {
-                    $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $parent->get('inboundEmailId'));
-                    if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
-                        $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
+                if ($entity->get('parentType') == 'Case') {
+                    if ($parent->get('inboundEmailId')) {
+                        $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $parent->get('inboundEmailId'));
+                        if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
+                            $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
+                        }
                     }
-                    $this->getStreamService()->noteEmailSent($parent, $entity);
                 }
+                $this->getStreamService()->noteEmailSent($parent, $entity);
             }
         }
 

@@ -13,12 +13,12 @@
     </div>
 
     <div class="row">
-        <div class="{{#if isWide}} col-md-12{{else}} col-md-8{{/if}}">
+        <div class="{{#if isWide}} col-md-12{{else}}{{#if isSmall}} col-md-7{{else}} col-md-8{{/if}}{{/if}}">
             <div class="record">{{{record}}}</div>
             <div class="extra">{{{extra}}}</div>
             <div class="bottom">{{{bottom}}}</div>
         </div>
-        <div class="side col-md-4">
+        <div class="side {{#if isSmall}} col-md-5{{else}} col-md-4{{/if}}">
         {{{side}}}
         </div>
     </div>

@@ -203,7 +203,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                 $list.each(function (i, d) {
                     var row = {};
                     var $d = $(d);
-                    row.phoneNumber = $d.find('input.phone-number').val();
+                    row.phoneNumber = $d.find('input.phone-number').val().trim();
                     if (row.phoneNumber == '') {
                         return;
                     }

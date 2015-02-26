@@ -138,6 +138,22 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             this.collection.fetch();
         },
 
+        actionViewRelated: function (id) {
+            this.notify('Loading...');
+            this.createView('quickDetail', 'Modals.Detail', {
+                scope: this.collection.get(id).name,
+                id: id
+            }, function (view) {
+                view.once('after:render', function () {
+                    Espo.Ui.notify(false);
+                });
+                view.render();
+                view.once('after:save', function () {
+                    this.collection.fetch();
+                }, this);
+            }.bind(this));
+        },
+
         actionEditRelated: function (id) {
             this.notify('Loading...');
             this.createView('quickEdit', 'Modals.Edit', {

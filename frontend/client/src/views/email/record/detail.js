@@ -45,6 +45,29 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
             this.layoutNameConfigure();
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.listenTo(this.model, 'change:attachmentsIds', function () {
+                this.handleAttachmentField();
+            }, this);
+        },
+
+        handleAttachmentField: function () {
+            if ((this.model.get('attachmentsIds') || []).length == 0) {
+                this.hideField('attachments');
+            } else {
+                this.showField('attachments');
+            }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            this.handleAttachmentField();
+
+
+        },
+
     });
 });
 

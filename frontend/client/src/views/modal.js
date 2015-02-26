@@ -22,17 +22,17 @@
 Espo.define('Views.Modal', 'View', function (Dep) {
 
     return Dep.extend({
-        
+
         cssName: 'modal-dialog',
-        
+
         header: false,
-        
+
         dialog: null,
-        
+
         containerSelector: null,
 
         backdrop: 'static',
-                    
+
         buttons: [
             {
                 name: 'cancel',
@@ -42,28 +42,28 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 }
             }
         ],
-        
+
         width: false,
-        
+
         init: function () {
             var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
             var containerSelector = this.containerSelector = '#' + id;
-            
+
             this.options = this.options || {};
             this.options.el = this.containerSelector;
-            
+
             this.on('render', function () {
                 $(containerSelector).remove();
                 $('<div />').css('display', 'none').attr('id', id).appendTo('body');
-                
+
                 var buttons = _.clone(this.buttons);
-                
+
                 for (var i in buttons) {
                     if (!('text' in buttons[i]) && ('label' in buttons[i])) {
                         buttons[i].text = this.getLanguage().translate(buttons[i].label);
                     }
                 }
-                                
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: this.header,
@@ -77,12 +77,12 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 });
                 this.setElement(containerSelector + ' .body');
             }, this);
-            
+
             this.on('after:render', function () {
                 $(containerSelector).show();
                 this.dialog.show();
             });
-            
+
             this.once('remove', function () {
                 if (this.dialog) {
                     this.dialog.close();
@@ -90,7 +90,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 $(containerSelector).remove();
             });
         },
-        
+
         close: function () {
             this.dialog.close();
         },

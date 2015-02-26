@@ -17,18 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
 
     return Dep.extend({
-    
+
         actions: null,
-        
-        defs: null,            
-        
+
+        defs: null,
+
         events: {
-            'click .action': function (e) {            
+            'click .action': function (e) {
                 $el = $(e.currentTarget);
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
@@ -37,27 +37,27 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
                 }
             }
         },
-        
+
         data: function () {
             return {
                 scope: this.scope,
                 name: this.panelName,
             };
         },
-        
+
         init: function () {
             this.panelName = this.options.panelName;
             this.defs = this.options.defs || {};
         },
-        
+
         getButtons: function () {
             return [];
-        },            
-        
+        },
+
         getActions: function () {
             return [];
         },
-        
+
     });
 });
 

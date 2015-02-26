@@ -68,7 +68,7 @@ class Sender
         $this->params = $params;
 
         $this->transport = new SmtpTransport();
-        
+
         $opts = array(
             'name' => 'admin',
             'host' => $params['server'],
@@ -83,14 +83,14 @@ class Sender
         if ($params['security']) {
             $opts['connection_config']['ssl'] = strtolower($params['security']);
         }
-        
+
         if (in_array('fromName', $params)) {
             $this->params['fromName'] = $params['fromName'];
         }
         if (in_array('fromAddress', $params)) {
             $this->params['fromAddress'] = $params['fromAddress'];
         }
-        
+
         $options = new SmtpOptions($opts);
         $this->transport->setOptions($options);
 
@@ -160,10 +160,10 @@ class Sender
             } else {
                 $fromName = $config->get('outboundEmailFromName');
             }
-            
+
             $message->addFrom($fromAddress, $fromName);
         }
-        
+
         if (!empty($params['replyToAddress'])) {
             $replyToName = null;
             if (!empty($params['replyToName'])) {
@@ -220,7 +220,7 @@ class Sender
                 $attachmentPartList[] = $attachment;
             }
         }
-        
+
         if (!empty($attachmentInlineCollection)) {
             foreach ($attachmentInlineCollection as $a) {
                 $fileName = 'data/upload/' . $a->id;
@@ -239,12 +239,12 @@ class Sender
         $message->setSubject($email->get('name'));
 
         $body = new MimeMessage();
-        
+
         $textPart = new MimePart($email->getBodyPlainForSending());
         $textPart->type = 'text/plain';
         $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
         $textPart->charset = 'utf-8';
-        
+
         if ($email->get('isHtml')) {
             $htmlPart = new MimePart($email->getBodyForSending());
             $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
