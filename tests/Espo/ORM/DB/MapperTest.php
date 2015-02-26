@@ -52,7 +52,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
                     $args = func_get_args();
                     return "'" . $args[0] . "'";
                 }));
-                
+
 
         $this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
         $this->entityFactory->expects($this->any())
@@ -64,7 +64,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
                             }));
 
         $this->query = new Query($this->pdo, $this->entityFactory);
-        
+
         $this->db = new MysqlMapper($this->pdo, $this->entityFactory, $this->query);
         $this->db->setReturnCollection(true);
 
@@ -431,6 +431,21 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
         $value = $this->db->max($this->post, array(), 'id', true);
 
         $this->assertEquals($value, 10);
+    }
+
+    public function testMassRelate()
+    {
+        $query = "INSERT INTO `post_tag` (post_id, tag_id) (SELECT '1', tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = '0') ON DUPLICATE KEY UPDATE deleted = '0'";
+        $return = true;
+        $this->mockQuery($query, $return);
+
+        $this->post->id = '1';
+
+        $this->db->massRelate($this->post, 'tags', array(
+            'whereClause' => array(
+                'name' => 'test'
+            )
+        ));
     }
 }
 
