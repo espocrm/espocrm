@@ -33,7 +33,7 @@
             <tr>
                 {{#if checkboxes}}
                 <th width="5%">
-                    <input type="checkbox" class="selectAll">
+                    <input type="checkbox" class="select-all">
                     {{#if checkAllResultEnabled}}
                     <div class="btn-group checkbox-dropdown">
                         <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">

@@ -268,7 +268,12 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                         });
                         data.ids = ids;
                     } else {
-                        data.id = selectObj.id;
+                        if (selectObj.massRelate) {
+                            data.massRelate = true;
+                            data.where = selectObj.where;
+                        } else {
+                            data.id = selectObj.id;
+                        }
                     }
                     $.ajax({
                         url: self.scope + '/' + self.model.id + '/' + link,
