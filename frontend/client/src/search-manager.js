@@ -143,6 +143,7 @@
         },
 
         setAdvanced: function (advanced) {
+            this.data = Espo.Utils.clone(this.data);
             this.data.advanced = advanced;
         },
 

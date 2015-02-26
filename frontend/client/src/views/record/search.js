@@ -65,14 +65,14 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                 return this.fields != null && this.moreFields != null;
             }.bind(this));
 
-            this.boolFilters = this.getMetadata().get('clientDefs.' + this.scope + '.boolFilters') || [];
+            this.boolFilters = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilters') || []);
 
             this._helper.layoutManager.get(this.scope, 'filters', function (list) {
                 this.moreFields = list;
                 this.tryReady();
             }.bind(this));
 
-            this.presetFilters = _.clone(this.getMetadata().get('clientDefs.' + this.scope + '.presetFilters') || []);
+            this.presetFilters = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.presetFilters') || []);
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
                 this.presetFilters.push(item);
             }, this);
