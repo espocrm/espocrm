@@ -94,6 +94,15 @@ class EmailAccount extends Record
 
     public function createEntity($data)
     {
+        if (!$this->getUser()->isAdmin()) {
+            $count = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
+                'assignedUserId' => $this->getUser()->id
+            ))->count();
+            if ($count >= $this->getConfig()->get('maxEmailAccountCount', \PHP_INT_MAX)) {
+                throw new Forbidden();
+            }
+        }
+
         $entity = parent::createEntity($data);
         if ($entity) {
             if (!$this->getUser()->isAdmin()) {

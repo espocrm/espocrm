@@ -96,6 +96,7 @@ return array (
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
     'disabledCountQueryEntityList' => array('Email'),
+    'maxEmailAccountCount' => 2,
     'isInstalled' => false,
 );
 
