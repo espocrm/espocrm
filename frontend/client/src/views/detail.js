@@ -229,7 +229,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
             var attributes = {};
 
-            var filters = this.selectRelatedFilters[link] || null;
+            var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || null;
 
             for (var filterName in filters) {
                 if (typeof filters[filterName] == 'function') {
