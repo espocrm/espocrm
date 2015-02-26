@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Record.Search', 'View', function (Dep) {
 
@@ -224,7 +224,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
             this.presetName = null;
 
-            this.searchManager.reset();
+            this.searchManager.empty();
             this.loadSearchData();
 
             this.render();

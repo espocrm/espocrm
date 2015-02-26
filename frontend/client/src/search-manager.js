@@ -27,11 +27,17 @@
         this.type = type || 'list';
         this.dateTime = dateTime;
 
-        this.data = this.defaultData = defaultData || {
+        this.emptyData = {
             textFilter: '',
             bool: {},
             advanced: {},
         };
+
+        if (defaultData) {
+            defaultData = Espo.Utils.clone(defaultData);
+        }
+
+        this.data = this.defaultData = defaultData || this.emptyData;
 
         this.sanitizeData();
     };
@@ -127,7 +133,7 @@
         },
 
         loadStored: function () {
-            this.data = this.storage.get(this.type + 'Search', this.scope) || _.clone(this.defaultData);
+            this.data = this.storage.get(this.type + 'Search', this.scope) || Espo.Utils.clone(this.defaultData);
             this.sanitizeData();
             return this;
         },
@@ -147,8 +153,15 @@
             }
         },
 
+        empty: function () {
+            this.data = Espo.Utils.clone(this.emptyData);
+            if (this.storage) {
+                this.storage.clear(this.type + 'Search', this.scope);
+            }
+        },
+
         reset: function () {
-            this.data = _.clone(this.defaultData);
+            this.data = Espo.Utils.clone(this.defaultData);
             if (this.storage) {
                 this.storage.clear(this.type + 'Search', this.scope);
             }

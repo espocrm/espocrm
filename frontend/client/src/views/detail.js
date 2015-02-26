@@ -223,14 +223,25 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
         actionSelectRelated: function (data) {
             var link = data.link;
+
+            if (!this.model.defs['links'][link]) {
+                throw new Error('Link ' + link + ' does not exist.');
+            }
             var scope = this.model.defs['links'][link].entity;
+            var foreign = this.model.defs['links'][link].foreign;
+
+            var massRelateEnabled = false;
+            if (foreign) {
+                var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
+                if (foreignType == 'hasMany') {
+                    massRelateEnabled = true;
+                }
+            }
 
             var self = this;
-
             var attributes = {};
 
             var filters = this.selectRelatedFilters[link] || null;
-
             for (var filterName in filters) {
                 if (typeof filters[filterName] == 'function') {
                     filters[filterName] = filters[filterName].call(this);
@@ -243,6 +254,7 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 multiple: true,
                 createButton: false,
                 filters: filters,
+                massRelateEnabled: massRelateEnabled
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);

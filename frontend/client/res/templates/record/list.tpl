@@ -32,10 +32,22 @@
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="5%"><input type="checkbox" class="selectAll"></th>
+                <th width="5%">
+                    <input type="checkbox" class="selectAll">
+                    {{#if checkAllResultEnabled}}
+                    <div class="btn-group checkbox-dropdown">
+                        <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:" data-action="selectAllResult">{{translate 'Select All Result'}}</a></li>
+                        </ul>
+                    </div>
+                    {{/if}}
+                </th>
                 {{/if}}
                 {{#each headerDefs}}
-                <th {{#if width}} width="{{width}}%"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}> 
+                <th {{#if width}} width="{{width}}%"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
                     {{#if this.sortable}}
                         <a href="javascript:" class="sort" data-name="{{this.name}}">
                         {{#if this.hasCustomLabel}}

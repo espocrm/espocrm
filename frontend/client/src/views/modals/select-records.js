@@ -59,6 +59,8 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                 this.createButton = this.options.createButton;
             }
 
+            this.massRelateEnabled = this.options.massRelateEnabled;
+
             this.buttons = [
                 {
                     name: 'cancel',
@@ -66,7 +68,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                     onClick: function (dialog) {
                         dialog.close();
                     }
-                } 
+                }
             ];
 
             if (this.multiple) {
@@ -121,6 +123,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                             rowActionsView: false,
                             type: 'listSmall',
                             searchManager: searchManager,
+                            checkAllResultEnabled: this.massRelateEnabled
                         }, function (list) {
                             list.once('select', function (model) {
                                 this.trigger('select', model);
