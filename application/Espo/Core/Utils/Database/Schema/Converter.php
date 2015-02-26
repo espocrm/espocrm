@@ -241,13 +241,20 @@ class Converter
         $table->addColumn('id', 'int', array('length'=>$this->defaultLength['int'], 'autoincrement' => true, 'notnull' => true,));  //'unique' => true,
 
         //add midKeys to a schema
+        $uniqueIndex = array();
         foreach($relationParams['midKeys'] as $index => $midKey) {
 
             $usMidKey = Util::toUnderScore($midKey);
             $table->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
             $table->addIndex(array($usMidKey));
 
-        } //END: add midKeys to a schema
+            $uniqueIndex[] = $usMidKey;
+        }
+
+        if (!empty($uniqueIndex)) {
+            $table->addUniqueIndex($uniqueIndex);
+        }
+        //END: add midKeys to a schema
 
         //add additionalColumns
         if (isset($relationParams['additionalColumns'])) {
