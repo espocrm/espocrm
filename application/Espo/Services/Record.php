@@ -229,6 +229,11 @@ class Record extends \Espo\Core\Services\Base
         $this->loadNotJoinedLinkFields($entity);
     }
 
+    protected function loadAdditionalFieldsForList($entity)
+    {
+        $this->loadParentNameFields($entity);
+    }
+
     protected function loadEmailAddressField(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
@@ -466,7 +471,7 @@ class Record extends \Espo\Core\Services\Base
         $collection = $this->getRepository()->find($selectParams);
 
         foreach ($collection as $e) {
-            $this->loadParentNameFields($e);
+            $this->loadAdditionalFieldsForList($e);
             $this->prepareEntityForOutput($e);
         }
 
@@ -523,7 +528,7 @@ class Record extends \Espo\Core\Services\Base
         $recordService = $this->getRecordService($foreignEntityName);
 
         foreach ($collection as $e) {
-            $this->loadParentNameFields($e);
+            $this->loadAdditionalFieldsForList($e);
             $recordService->prepareEntityForOutput($e);
         }
 
