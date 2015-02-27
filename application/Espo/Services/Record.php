@@ -598,6 +598,34 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    public function linkEntityMass($id, $link, $where)
+    {
+        $entity = $this->getEntity($id);
+
+        $entityType = $entity->getEntityType();
+        $foreignEntityType = $entity->relations[$link]['entity'];
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+        if (empty($foreignEntityType)) {
+            throw new Error();
+        }
+        if (!$this->getAcl()->check($foreignEntityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (!is_array($where)) {
+        	$where = array();
+        }
+        $params['where'] = $where;
+
+
+        $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams($params);
+
+        return $this->getRepository()->massRelate($entity, $link, $selectParams);
+    }
+
     public function massUpdate($attributes = array(), $ids = array(), $where = array())
     {
         $idsUpdated = array();

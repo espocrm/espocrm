@@ -274,6 +274,10 @@ class RDB extends \Espo\ORM\Repository
         return false;
     }
 
+    public function massRelate(Entity $entity, $relationName, array $params = array())
+    {
+        return $this->getMapper()->massRelate($entity, $relationName, $params);
+    }
 
     public function getAll()
     {

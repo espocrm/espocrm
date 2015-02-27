@@ -231,27 +231,39 @@ class Record extends Base
 
     public function actionCreateLink($params, $data)
     {
+        if (empty($params['id']) || empty($params['link'])) {
+            throw BadRequest();
+        }
+
         $id = $params['id'];
         $link = $params['link'];
 
-        $foreignIds = array();
-        if (isset($data['id'])) {
-            $foreignIds[] = $data['id'];
-        }
-        if (isset($data['ids']) && is_array($data['ids'])) {
-            foreach ($data['ids'] as $foreignId) {
-                $foreignIds[] = $foreignId;
+        if (!empty($data['massRelate'])) {
+            if (empty($data['where'])) {
+                throw new BadRequest();
             }
-        }
+            $where = json_decode(json_encode($data['where']), true);
+            return $this->getRecordService()->linkEntityMass($id, $link, $where);
+        } else {
+            $foreignIds = array();
+            if (isset($data['id'])) {
+                $foreignIds[] = $data['id'];
+            }
+            if (isset($data['ids']) && is_array($data['ids'])) {
+                foreach ($data['ids'] as $foreignId) {
+                    $foreignIds[] = $foreignId;
+                }
+            }
 
-        $result = false;
-        foreach ($foreignIds as $foreignId) {
-            if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
-                $result = $result || true;
+            $result = false;
+            foreach ($foreignIds as $foreignId) {
+                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
+                    $result = true;
+                }
             }
-        }
-        if ($result) {
-            return true;
+            if ($result) {
+                return true;
+            }
         }
 
         throw new Error();
@@ -261,6 +273,10 @@ class Record extends Base
     {
         $id = $params['id'];
         $link = $params['link'];
+
+        if (empty($params['id']) || empty($params['link'])) {
+            throw BadRequest();
+        }
 
         $foreignIds = array();
         if (isset($data['id'])) {

@@ -372,6 +372,69 @@ abstract class Mapper implements IMapper
         }
     }
 
+    public function massRelate(IEntity $entity, $relationName, array $params = array())
+    {
+        if (!$entity) {
+            return false;
+        }
+        $id = $entity->id;
+
+        if (empty($id) || empty($relationName)) {
+            return false;
+        }
+
+        $relOpt = $entity->relations[$relationName];
+
+        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
+            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+        }
+
+        $relType = $relOpt['type'];
+
+        $className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+        $relEntity = $this->entityFactory->create($className);
+        $foreignEntityType = $relEntity->getEntityType();
+
+        $keySet = $this->query->getKeys($entity, $relationName);
+
+        switch ($relType) {
+            case IEntity::MANY_MANY:
+                $key = $keySet['key'];
+                $foreignKey = $keySet['foreignKey'];
+                $nearKey = $keySet['nearKey'];
+                $distantKey = $keySet['distantKey'];
+
+                $relTable = $this->toDb($relOpt['relationName']);
+
+
+                $params['select'] = array('id');
+                $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
+
+                $fieldsPart = $this->toDb($nearKey);
+                $valuesPart = $this->pdo->quote($entity->id);
+
+                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                    foreach ($relOpt['conditions'] as $f => $v) {
+                        $fieldsPart .= ", " . $this->toDb($f);
+                        $valuesPart .= ", " . $this->pdo->quote($v);
+                    }
+                }
+                $fieldsPart .= ", " . $this->toDb($distantKey);
+
+                $subSql = substr($subSql, 7);
+
+                $subSql = "SELECT " . $valuesPart . ", " . $subSql;
+
+                $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+
+                break;
+        }
+    }
+
     public function addRelation(IEntity $entity, $relationName, $id = null, $relEntity = null, $data = null)
     {
         if (!is_null($relEntity)) {

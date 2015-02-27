@@ -59,6 +59,8 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                 this.createButton = this.options.createButton;
             }
 
+            this.massRelateEnabled = this.options.massRelateEnabled;
+
             this.buttons = [
                 {
                     name: 'cancel',
@@ -66,7 +68,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                     onClick: function (dialog) {
                         dialog.close();
                     }
-                } 
+                }
             ];
 
             if (this.multiple) {
@@ -75,9 +77,19 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                     style: 'primary',
                     label: 'Select',
                     onClick: function (dialog) {
-                        var list = this.getView('list').getSelected();
-                        if (list.length) {
-                            this.trigger('select', list);
+                        var listView = this.getView('list');
+
+                        if (listView.allResultIsChecked) {
+                            var where = this.collection.where;
+                            this.trigger('select', {
+                                massRelate: true,
+                                where: where
+                            });
+                        } else {
+                            var list = listView.getSelected();
+                            if (list.length) {
+                                this.trigger('select', list);
+                            }
                         }
                         dialog.close();
                     }.bind(this),
@@ -100,6 +112,8 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 
                     collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
+                    this.collection = collection;
+
                     var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
                     searchManager.setAdvanced(this.filters);
                     collection.where = searchManager.getWhere();
@@ -121,6 +135,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                             rowActionsView: false,
                             type: 'listSmall',
                             searchManager: searchManager,
+                            checkAllResultEnabled: this.massRelateEnabled
                         }, function (list) {
                             list.once('select', function (model) {
                                 this.trigger('select', model);

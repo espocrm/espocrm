@@ -140,7 +140,8 @@
         "Close": "Close",
         "Yes": "Yes",
         "No": "No",
-        "View": "View"
+        "View": "View",
+        "Select All Result": "Select All Result"
     },
     "messages": {
         "notModified": "You have not modified the record",

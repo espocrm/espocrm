@@ -237,8 +237,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                     $emailAddress = $this->getByAddress($address);
                     if ($emailAddress) {
                         $query = "
-                            UPDATE entity_email_address
-                            SET `deleted` = 1, `primary` = 0
+                            DELETE FROM entity_email_address
                             WHERE
                                 entity_id = ".$pdo->quote($entity->id)." AND
                                 entity_type = ".$pdo->quote($entity->getEntityName())." AND
