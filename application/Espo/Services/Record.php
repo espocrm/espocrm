@@ -219,7 +219,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function loadAdditionalFields($entity)
+    public function loadAdditionalFields($entity)
     {
         $this->loadLinkMultipleFields($entity);
         $this->loadParentNameFields($entity);
@@ -229,7 +229,7 @@ class Record extends \Espo\Core\Services\Base
         $this->loadNotJoinedLinkFields($entity);
     }
 
-    protected function loadAdditionalFieldsForList($entity)
+    public function loadAdditionalFieldsForList($entity)
     {
         $this->loadParentNameFields($entity);
     }
@@ -528,7 +528,7 @@ class Record extends \Espo\Core\Services\Base
         $recordService = $this->getRecordService($foreignEntityName);
 
         foreach ($collection as $e) {
-            $this->loadAdditionalFieldsForList($e);
+            $recordService->loadAdditionalFieldsForList($e);
             $recordService->prepareEntityForOutput($e);
         }
 
