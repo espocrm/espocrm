@@ -244,20 +244,16 @@ class Converter
         $uniqueIndex = array();
         foreach($relationParams['midKeys'] as $index => $midKey) {
 
-            $usMidKey = Util::toUnderScore($midKey);
-            $table->addColumn($usMidKey, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
-            $table->addIndex(array($usMidKey));
+            $columnName = Util::toUnderScore($midKey);
+            $table->addColumn($columnName, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+            $table->addIndex(array($columnName));
 
-            $uniqueIndex[] = $usMidKey;
-        }
-
-        if (!empty($uniqueIndex)) {
-            $table->addUniqueIndex($uniqueIndex);
+            $uniqueIndex[] = $columnName;
         }
         //END: add midKeys to a schema
 
         //add additionalColumns
-        if (isset($relationParams['additionalColumns'])) {
+        if (!empty($relationParams['additionalColumns'])) {
             foreach($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
 
                 if (!isset($fieldParams['type'])) {
@@ -271,13 +267,23 @@ class Converter
             }
         } //END: add additionalColumns
 
+        //add unique indexes
+        if (!empty($relationParams['conditions'])) {
+            foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
+                $uniqueIndex[] = Util::toUnderScore($fieldName);
+            }
+        }
+
+        if (!empty($uniqueIndex)) {
+            $table->addUniqueIndex($uniqueIndex);
+        }
+        //END: add unique indexes
 
         $table->addColumn('deleted', 'bool', array('default' => 0));
         $table->setPrimaryKey(array("id"));
 
         return $table;
     }
-
 
     protected function getDbFieldParams($fieldParams)
     {
