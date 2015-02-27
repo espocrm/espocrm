@@ -206,7 +206,7 @@
         "targetLists": {
             "type": "hasMany",
             "entity": "TargetList",
-            "foreign": "users"
+            "foreign": "contacts"
         }
     },
     "collection": {
