@@ -13,6 +13,9 @@
             "type": "enum",
             "options": ["Email", "Web", "Television", "Radio", "Newsletter"]
         },
+        "startDate": {
+            "type": "date"
+        },
         "endDate": {
             "type": "date"
         },
@@ -43,7 +46,7 @@
             "type": "linkMultiple"
         },
         "targetLists": {
-            "type": "link"
+            "type": "linkMultiple"
         }
     },
     "links": {

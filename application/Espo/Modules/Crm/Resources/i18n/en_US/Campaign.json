@@ -4,6 +4,7 @@
         "description": "Description",
         "status": "Status",
         "type": "Type",
+        "startDate": "Start Date",
         "endDate": "End Date",
         "targetLists": "Target Lists"
     },
