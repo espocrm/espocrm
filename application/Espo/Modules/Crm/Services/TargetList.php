@@ -32,7 +32,7 @@ class TargetList extends \Espo\Services\Record
         $this->loadEntryCountField($entity);
     }
 
-    protected function loadAdditionalFieldsForList(Entity $entity)
+    public function loadAdditionalFieldsForList(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
         $this->loadEntryCountField($entity);
