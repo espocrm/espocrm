@@ -427,7 +427,9 @@ abstract class Mapper implements IMapper
 
                 $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
 
-                return $this->pdo->query($sql);
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
 
                 break;
         }
