@@ -239,7 +239,7 @@ class Record extends Base
         $link = $params['link'];
 
         if (!empty($data['massRelate'])) {
-            if (empty($data['where'])) {
+            if (!is_array($data['where'])) {
                 throw new BadRequest();
             }
             $where = json_decode(json_encode($data['where']), true);
