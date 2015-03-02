@@ -212,8 +212,8 @@
         "emailReceived": "E-Mail {email} wurde empfangen für {entityType} {entity}",
         "emailReceivedInitial": "E-Mail {email} wurde empfangen und hat {entityType} {entity} erstellt",
         "mentionInPost": "{user} erwähnte {mentioned} zu {entityType} {entity}",
-        
-        "createThis": "{user} hat {entityType} erstellt",        
+
+        "createThis": "{user} hat {entityType} erstellt",
         "createAssignedThis": "{user} hat {entityType} erstellt und an {assignee} zugewiesen",
         "assignThis": "{user} hat {entityType} an {assignee} zugewiesen",
         "postThis": "{user} hat notiert",
@@ -233,10 +233,9 @@
     },
     "options": {
         "salutationName": {
-            "Mr.": "Mr.",
-            "Mrs.": "Mrs.",
-            "Dr.": "Dr.",
-            "Drs.": "Drs."
+            "Mr.": "Herr.",
+            "Mrs.": "Frau",
+            "Dr.": "Dr."
         },
         "language":     {
             "af_ZA": "Afrikaans",
