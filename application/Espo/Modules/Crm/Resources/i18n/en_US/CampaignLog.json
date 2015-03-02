@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "action": "Action",
+        "actionDate": "Action Date",
+        "data": "Data",
+        "campaign": "Campaign",
+        "parent": "Parent",
+        "object": "Object"
+    }
+}

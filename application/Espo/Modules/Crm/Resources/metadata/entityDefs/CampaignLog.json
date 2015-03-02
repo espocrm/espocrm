@@ -1,0 +1,70 @@
+{
+    "fields": {
+        "action": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 50
+        },
+        "actionDate": {
+            "type": "datetime",
+            "required": true
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "application": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 36,
+            "default": "EspoCRM"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "campaign": {
+            "type": "link"
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "object": {
+            "type": "linkParent"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "campaignLogs"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entityList": ["Account", "Contact", "Lead", "Opportunity", "User"]
+        },
+        "object": {
+            "type": "belongsToParent",
+            "entityList": ["Email"]
+        }
+    },
+    "collection": {
+        "sortBy": "actionDate",
+        "asc": false
+    },
+    "indexes": {
+        "actionDate": {
+            "columns": ["actionDate", "deleted"]
+        },
+        "action": {
+            "columns": ["action", "deleted"]
+        }
+    }
+}

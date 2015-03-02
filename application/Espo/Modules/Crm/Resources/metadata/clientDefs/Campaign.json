@@ -1,5 +1,5 @@
 {
-   "controller": "Controllers.Record",
+    "controller": "Controllers.Record",
     "menu": {
         "list": {
             "buttons": [
@@ -12,6 +12,9 @@
                 }
             ]
         }
+    },
+    "recordViews": {
+      "detail": "Crm:Campaign.Record.Detail"
     },
    "presetFilters": [
       {

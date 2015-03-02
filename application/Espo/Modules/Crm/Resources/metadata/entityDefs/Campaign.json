@@ -92,6 +92,11 @@
             "type": "hasMany",
             "entity": "Opportunity",
             "foreign": "campaign"
+        },
+        "campaignLogs": {
+            "type": "hasMany",
+            "entity": "CampaignLog",
+            "foreign": "campaign"
         }
     },
     "collection": {
