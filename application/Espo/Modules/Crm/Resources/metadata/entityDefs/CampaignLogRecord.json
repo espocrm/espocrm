@@ -44,7 +44,7 @@
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "campaignLogs"
+            "foreign": "campaignLogRecords"
         },
         "parent": {
             "type": "belongsToParent",

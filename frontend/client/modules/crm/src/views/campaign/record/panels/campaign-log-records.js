@@ -20,11 +20,10 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Campaign.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('Crm:Views.Campaign.Record.Panels.CampaignLogRecords', 'Views.Record.Panels.Relationship', function (Dep) {
 
     return Dep.extend({
 
-        bottomView: 'Crm:Campaign.Record.DetailBottom',
 
     });
 });

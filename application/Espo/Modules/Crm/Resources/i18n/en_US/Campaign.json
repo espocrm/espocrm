@@ -14,7 +14,7 @@
         "contacts": "Contacts",
         "leads": "Leads",
         "opportunities": "Opportunities",
-        "campaignLogs": "Log"
+        "campaignLogRecords": "Log"
     },
     "options": {
         "type": {

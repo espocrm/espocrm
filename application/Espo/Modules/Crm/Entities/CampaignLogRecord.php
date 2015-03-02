@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,20 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
+namespace Espo\Modules\Crm\Entities;
 
-Espo.define('Crm:Views.Campaign.Record.DetailBottom', 'Views.Record.DetailBottom', function (Dep) {
+class CampaignLogRecord extends \Espo\Core\ORM\Entity
+{
 
-    return Dep.extend({
-
-        setup: function () {
-        	Dep.prototype.setup.call(this);
-
-        	this.panels.unshift({
-        		
-        	});
-        }
-
-    });
-});
-
-
+}

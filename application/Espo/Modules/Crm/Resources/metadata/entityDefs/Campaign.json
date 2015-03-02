@@ -93,9 +93,9 @@
             "entity": "Opportunity",
             "foreign": "campaign"
         },
-        "campaignLogs": {
+        "campaignLogRecords": {
             "type": "hasMany",
-            "entity": "CampaignLog",
+            "entity": "CampaignLogRecord",
             "foreign": "campaign"
         }
     },

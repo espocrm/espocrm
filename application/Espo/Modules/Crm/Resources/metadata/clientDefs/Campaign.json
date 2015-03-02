@@ -16,7 +16,14 @@
     "recordViews": {
       "detail": "Crm:Campaign.Record.Detail"
     },
-   "presetFilters": [
+    "relationshipPanels": {
+      "campaignLogRecords": {
+        "view": "Crm:Campaign.Record.Panels.CampaignLogRecords",
+        "select": false,
+        "create": false
+      }
+    },
+    "presetFilters": [
       {
          "name":"active",
          "style": "primary",
