@@ -86,7 +86,7 @@
         "leads": {
             "type": "hasMany",
             "entity": "Lead",
-            "foreign": "campaigns"
+            "foreign": "campaign"
         },
         "opportunities": {
             "type": "hasMany",
