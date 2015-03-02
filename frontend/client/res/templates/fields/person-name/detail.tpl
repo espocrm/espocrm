@@ -1,1 +1,1 @@
-{{translateOption salutationValue field='salutation'}} {{firstValue}} {{lastValue}}
+{{translateOption salutationValue field='salutationName'}} {{firstValue}} {{lastValue}}

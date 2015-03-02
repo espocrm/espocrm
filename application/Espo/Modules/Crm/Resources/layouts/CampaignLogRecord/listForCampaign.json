@@ -1,0 +1,6 @@
+[
+    {"name": "parent", "width": 30},
+    {"name": "action", "width": 30},
+    {"name": "actionDate"},
+    {"name": "application"}
+]
