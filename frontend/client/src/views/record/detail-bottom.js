@@ -52,13 +52,10 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
             }
         },
 
-        setup: function () {
-            this.panels = [];
-            var scope = this.model.name;
+        setupPanels: function () {
+            var scope = this.scope;
 
-            this.wait(true);
-
-            var panels = _.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
+            var panels = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 
             if (this.mode == 'detail' && this.getMetadata().get('scopes.' + scope + '.stream')) {
                 panels.unshift({
@@ -88,10 +85,18 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                         p.title = view.title;
                     }
                 }.bind(this));
-            }.bind(this));
+            }, this);
+        },
+
+        setup: function () {
+            this.panels = [];
+            var scope = this.scope = this.model.name;
+
+            this.setupPanels();
+
+            this.wait(true);
 
             this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
-
                 var panelList = layout;
                 panelList.forEach(function (item) {
                     var p;
