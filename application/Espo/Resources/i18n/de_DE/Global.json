@@ -234,7 +234,7 @@
     "options": {
         "salutationName": {
             "Mr.": "Herr.",
-            "Mrs.": "Frau",
+            "Ms.": "Frau",
             "Dr.": "Dr."
         },
         "language":     {
