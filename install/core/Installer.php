@@ -175,6 +175,16 @@ class Installer
 			'passwordSalt' => $this->getPasswordHash()->generateSalt(),
 		);
 
+		$owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
+		$group = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);
+
+		if (!empty($owner)) {
+			$data['defaultPermissions']['user'] = $owner;
+		}
+		if (!empty($group)) {
+			$data['defaultPermissions']['group'] = $group;
+		}
+
 		$data = array_merge($data, $initData);
 		$result = $this->saveConfig($data);
 
@@ -207,7 +217,7 @@ class Installer
 
 	public function setPreferences($preferences)
 	{
-		$currencyList = $this->getConfig()->get('currencyList');
+		$currencyList = $this->getConfig()->get('currencyList', array());
 		if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
 
 			$preferences['currencyList'] = array($preferences['defaultCurrency']);

@@ -92,7 +92,6 @@ class Permission
         return $this->params;
     }
 
-
     /**
      * Get default settings
      *
@@ -136,7 +135,6 @@ class Permission
 
         return $result;
     }
-
 
     /**
      * Get current permissions
@@ -216,7 +214,6 @@ class Permission
         return $this->chmodRecurse($path, $permission['file'], $permission['dir']);
     }
 
-
     /**
      * Change permissions recursive
      *
@@ -232,26 +229,19 @@ class Permission
             return false;
         }
 
-        if (is_file($path)) {
+        if (!is_dir($path)) {
             return $this->chmodReal($path, $fileOctal);
         }
 
-        if (is_dir($path)) {
-            $allFiles = $this->getFileManager()->getFileList($path);
+        $result = $this->chmodReal($path, $dirOctal);
 
-            foreach ($items as $item) {
-                $this->chmodRecurse($path. Utils\Util::getSeparator() .$item, $fileOctal, $dirOctal);
-            }
-
-            return $this->chmodReal($path, $dirOctal);
+        $allFiles = $this->getFileManager()->getFileList($path);
+        foreach ($allFiles as $item) {
+            $result &= $this->chmodRecurse($path . Utils\Util::getSeparator() . $item, $fileOctal, $dirOctal);
         }
 
-        return false;
+        return (bool) $result;
     }
-
-
-
-
 
     /**
      * Change owner permission
@@ -262,7 +252,7 @@ class Permission
      *
      * @return bool
      */
-    public function chown($path, $user='', $recurse=false)
+    public function chown($path, $user = '', $recurse = false)
     {
         if (!file_exists($path)) {
             return false;
@@ -295,13 +285,18 @@ class Permission
             return false;
         }
 
-        $allFiles = $this->getFileManager()->getFileList($path);
-
-        foreach ($items as $item) {
-            $this->chownRecurse($path. Utils\Util::getSeparator() .$item, $user);
+        if (!is_dir($path)) {
+            return $this->chownReal($path, $user);
         }
 
-        return $this->chownReal($path, $user);
+        $result = $this->chownReal($path, $user);
+
+        $allFiles = $this->getFileManager()->getFileList($path);
+        foreach ($allFiles as $item) {
+            $result &= $this->chownRecurse($path . Utils\Util::getSeparator() . $item, $user);
+        }
+
+        return (bool) $result;
     }
 
     /**
@@ -347,15 +342,19 @@ class Permission
             return false;
         }
 
-        $allFiles = $this->getFileManager()->getFileList($path);
-
-        foreach ($items as $item) {
-            $this->chgrpRecurse($path. Utils\Util::getSeparator() .$item, $group);
+        if (!is_dir($path)) {
+            return $this->chgrpReal($path, $group);
         }
 
-        return $this->chgrpReal($path, $group);
-    }
+        $result = $this->chgrpReal($path, $group);
 
+        $allFiles = $this->getFileManager()->getFileList($path);
+        foreach ($allFiles as $item) {
+            $result &= $this->chgrpRecurse($path . Utils\Util::getSeparator() . $item, $group);
+        }
+
+        return (bool) $result;
+    }
 
     /**
      * Change permissions recursive
