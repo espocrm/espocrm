@@ -44,7 +44,27 @@ Espo.define('Crm:Views.Campaign.Record.Panels.CampaignLogRecords', 'Views.Record
     	},
 
     	setup: function () {
-    		this.addEvent();
+    		Dep.prototype.setup.call(this);
+    		this.events = Espo.Utils.clone(this.events || {});
+
+    		this.events['change select[name="filter"]'] = function (e) {
+    			var value = $(e.currentTarget).val();
+    			this.setFilter(value);
+    		};
+    	},
+
+    	setFilter: function (value) {
+    		this.filterValue = value;
+    		if (value && value != 'All') {
+    			this.collection.where = [{
+    				field: 'action',
+    				type: 'equals',
+    				value: value
+    			}];
+    		} else {
+    			this.collection.where = [];
+    		}
+    		this.collection.fetch();
 
     	}
 
