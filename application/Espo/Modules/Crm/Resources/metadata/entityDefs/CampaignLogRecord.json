@@ -18,6 +18,10 @@
             "type": "varchar",
             "maxLength": 100
         },
+        "stringAdditionalData": {
+            "type": "varchar",
+            "maxLength": 100
+        },
         "application": {
             "type": "varchar",
             "required": true,

@@ -25,6 +25,13 @@
          }
       ]
    },
+   "relationshipPanels": {
+      "campaignLogRecords": {
+        "rowActionsView": "Record.RowActions.Empty",
+        "select": false,
+        "create": false
+      }
+   },
    "presetFilters": [
       {
          "name":"active",
@@ -35,7 +42,7 @@
                "value": ["New", "Assigned", "In Process"]
             }
          }
-      }  
+      }
    ],
     "boolFilters": ["onlyMy"]
 }

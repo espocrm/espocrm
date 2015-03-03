@@ -33,7 +33,9 @@
     },
     "labels": {
         "Create Campaign": "Create Campaign",
-        "Target Lists": "Target Lists"
+        "Target Lists": "Target Lists",
+        "hard": "hard",
+        "soft": "soft"
     },
     "presetFilters": {
         "active": "Active"

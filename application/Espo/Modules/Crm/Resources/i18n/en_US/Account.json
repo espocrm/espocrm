@@ -21,7 +21,8 @@
         "meetingsPrimary": "Meetings (Internal)",
         "callsPrimary": "Calls (Internal)",
         "tasksPrimary": "Tasks (Internal)",
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log"
     },
     "options": {
         "type": {

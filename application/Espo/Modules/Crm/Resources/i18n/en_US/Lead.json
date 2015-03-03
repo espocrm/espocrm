@@ -24,7 +24,8 @@
         "campaign": "Campaign"
     },
     "links": {
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log"
     },
     "options": {
         "status": {

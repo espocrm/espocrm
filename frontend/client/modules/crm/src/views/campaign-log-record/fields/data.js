@@ -24,6 +24,8 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
 
     return Dep.extend({
 
+        listTemplate: 'crm:campaign-log-record.fields.data.detail',
+
     	getValueForDisplay: function () {
     		var action = this.model.get('action');
 
@@ -32,6 +34,16 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
     				return this.model.get('stringData');
     			case 'Clicked':
     				return this.model.get('stringData');
+                case 'Opted Out':
+                    return '<span class="text-muted">' + this.model.get('stringData') + '</span>';
+                case 'Bounced':
+                    var emailAddress = this.model.get('stringData');
+                    var type = this.model.get('stringAdditionalData');
+                    if (type == 'Hard') {
+                        return '<s class="text-danger">' + emailAddress + '</s>';
+                    } else {
+                        return '<s class="text-muted">' + emailAddress + '</s>';
+                    }
     		}
     		return '';
     	}

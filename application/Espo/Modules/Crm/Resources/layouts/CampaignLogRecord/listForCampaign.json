@@ -1,6 +1,6 @@
 [
-    {"name": "action", "notSortable": true, "width": 14},
+    {"name": "action", "notSortable": true, "width": 15},
     {"name": "parent", "notSortable": true},
-    {"name": "actionDate", "width": 18},
-    {"name": "data", "notSortable": true, "customLabel": ""}
+    {"name": "data", "notSortable": true, "customLabel": ""},
+    {"name": "actionDate", "width": 18}
 ]

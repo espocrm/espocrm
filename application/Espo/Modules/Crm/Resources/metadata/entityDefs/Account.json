@@ -219,6 +219,11 @@
             "foreign": "accounts",
             "noJoin": true
         },
+        "campaignLogRecords": {
+            "type": "hasChildren",
+            "entity": "CampaignLogRecord",
+            "foreign": "parent"
+        },
         "targetLists": {
             "type": "hasMany",
             "entity": "TargetList",
