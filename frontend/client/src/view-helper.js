@@ -231,6 +231,8 @@
                     }
                 };
 
+                options.hash = options.hash || {};
+
                 var scope = options.hash.scope || false;
                 var category = options.hash.category || false;
                 var field = options.hash.field || false;
@@ -243,7 +245,7 @@
                 }
 
                 var translate = function (name) {
-                    if (!category && field) {
+                    if (!category) {
                         if (typeof translationHash === 'object' && name in translationHash) {
                             return translationHash[name];
                         }
