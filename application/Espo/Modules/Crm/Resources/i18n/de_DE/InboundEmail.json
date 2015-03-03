@@ -12,7 +12,7 @@
         "trashFolder": "Papierkorb Ordner",
         "ssl": "SSL",
         "createCase": "Fall erstellen",
-        "reply": "Antworten",
+        "reply": "Autoantwort",
         "caseDistribution": "Fall Verteilung",
         "replyEmailTemplate": "Vorlage E-Mail Antwort",
         "replyFromAddress": "Von Adresse antworten",
@@ -25,11 +25,11 @@
         "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
         "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
         "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
-        "assignToUser": "Benutzer E-Mails/Fälle werden zugewiesen an",
-        "team": "Team E-Mails/Fälle werden verknüpft mit"
+        "assignToUser": "Benutzer E-Mails\/Fälle werden zugewiesen an",
+        "team": "Team E-Mails\/Fälle werden verknüpft mit",
+        "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen."
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "Active": "Aktiv",

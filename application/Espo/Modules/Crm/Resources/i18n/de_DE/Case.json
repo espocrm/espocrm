@@ -9,8 +9,7 @@
         "type": "Typ",
         "description": "Beschreibung"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "New": "Neu",
@@ -20,7 +19,7 @@
             "Rejected": "Abgelehnt",
             "Duplicate": "Duplizieren"
         },
-        "priority" : {
+        "priority": {
             "Low": "Niedrig",
             "Normal": "Normal",
             "High": "Hoch",

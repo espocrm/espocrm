@@ -10,8 +10,7 @@
         "address": "Adresse",
         "description": "Beschreibung"
     },
-    "links": {
-    },
+    "links": {},
     "labels": {
         "Create Target": "Zielkontakt erstellen",
         "Convert to Lead": "Zu Interessent umwandeln"
