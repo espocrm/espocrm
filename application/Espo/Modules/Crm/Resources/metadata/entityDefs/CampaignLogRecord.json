@@ -1,9 +1,10 @@
 {
     "fields": {
         "action": {
-            "type": "varchar",
+            "type": "enum",
             "required": true,
-            "maxLength": 50
+            "maxLength": 50,
+            "options": ["Sent", "Viewed", "Opted Out", "Bounced", "Link Clicked", "Lead Created"]
         },
         "actionDate": {
             "type": "datetime",
@@ -11,6 +12,10 @@
         },
         "data": {
             "type": "jsonObject"
+        },
+        "stringData": {
+            "type": "varchar",
+            "maxLength": 100
         },
         "application": {
             "type": "varchar",
