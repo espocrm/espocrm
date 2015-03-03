@@ -24,6 +24,29 @@ Espo.define('Crm:Views.Campaign.Record.Panels.CampaignLogRecords', 'Views.Record
 
     return Dep.extend({
 
+    	template: 'crm:campaign.record.panels.campaign-log-records',
+
+    	filterList: ["All", "Sent", "Viewed", "Opted Out", "Bounced", "Clicked", "Lead Created"],
+
+    	data: function () {
+    		return _.extend({
+    			filterList: this.filterList,
+    			filterValue: this.filterValue,
+    			filterTranslatedOptions: this.getFilterTranslatedOptions()
+    		}, Dep.prototype.data.call(this));
+    	},
+
+    	getFilterTranslatedOptions: function () {
+    		var o = Espo.Utils.clone(this.getLanguage().get('CampaignLogRecord', 'options', 'action'));
+    		o['All'] = this.translate('All', 'labels', 'CampaignLogRecord');
+
+    		return o;
+    	},
+
+    	setup: function () {
+    		this.addEvent();
+
+    	}
 
     });
 });

@@ -10,6 +10,15 @@
     },
     "options": {
     	"action": {
+            "Sent": "Sent",
+            "Viewed": "Viewed",
+            "Opted Out": "Opted Out",
+            "Bounced": "Bounced",
+            "Clicked": "Clicked",
+            "Lead Created": "Lead Created"
     	}
+    },
+    "labels": {
+        "All": "All"
     }
 }
