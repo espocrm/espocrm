@@ -1,0 +1,1 @@
+Einladung zu {eventType} '{name}'

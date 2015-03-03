@@ -10,8 +10,7 @@
         "ssl": "SSL",
         "fetchSince": "Holen seit"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "Active": "Aktiv",

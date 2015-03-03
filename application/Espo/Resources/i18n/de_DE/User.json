@@ -13,7 +13,8 @@
         "passwordConfirm": "Passwort bestätigen",
         "newPassword": "Neues Passwort",
         "newPasswordConfirm": "Neues Passwort bestätigen",
-        "avatar": "Avatar"
+        "avatar": "Avatar",
+        "isActive": "Ist aktiv"
     },
     "links": {
         "teams": "Teams",
@@ -28,24 +29,27 @@
         "Teams and Access Control": "Teams und Zugriffsberechtigung",
         "Forgot Password?": "Passwort vergessen?",
         "Password Change Request": "Anforderung zur Passwortänderung",
-        "Email Address": "E-Mail Adresse"
+        "Email Address": "E-Mail Adresse",
+        "External Accounts": "Externe Konten",
+        "Email Accounts": "E-Mail Konten"
     },
     "tooltips": {
         "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
         "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
         "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
-        "teams": "Das Team zu dem dieser Benutzer gehört Zugriffsberechtigung ist von der Team Rolle vererbt",
-        "roles": "Zusätzliche Zugriffsrollen Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
+        "isActive": "Wenn nicht markiert kann der Benutzer nicht einloggen",
+        "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
+        "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
     },
     "messages": {
         "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
-        "accountInfoEmailSubject": "Kontoinformation",
-        "accountInfoEmailBody": "Ihre Kontoinformation: Benutzername: {userName} - Passwort: {password} {siteUrl}",
+        "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
+        "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
         "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
-        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern Diese eindeutige URL ist nur für kurze Zeit gültig",
+        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern Diese eindeutige URL ist nur für kurze Zeit gültig.",
         "passwordChanged": "Das Passwort wurde geändert",
         "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
-        "wrongUsernamePasword": "Falscher Benutzername/Passwort",
+        "wrongUsernamePasword": "Falscher Benutzername\/Passwort",
         "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
         "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
         "forbidden": "Verboten, bitte später nochmals versuchen",

@@ -9,8 +9,7 @@
         "description": "Beschreibung",
         "isOverdue": "Ist überfällig"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "Not Started": "Nicht begonnen",
@@ -18,7 +17,7 @@
             "Completed": "Abgeschlossen",
             "Canceled": "Storniert"
         },
-        "priority" : {
+        "priority": {
             "Low": "Niedrig",
             "Normal": "Normal",
             "High": "Hoch",
