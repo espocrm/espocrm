@@ -25,7 +25,7 @@ Espo.define('Crm:Views.Lead.Detail', 'Views.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             if (['Converted', 'Dead'].indexOf(this.model.get('status')) == -1) {
                 this.menu.buttons.push({
                     label: 'Convert',
@@ -34,7 +34,7 @@ Espo.define('Crm:Views.Lead.Detail', 'Views.Detail', function (Dep) {
                 });
             }
         },
-        
+
         actionConvert: function () {
             this.getRouter().navigate(this.model.name + '/convert/' + this.model.id , {trigger: true});
         },
