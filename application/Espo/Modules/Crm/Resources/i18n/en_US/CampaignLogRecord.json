@@ -11,7 +11,7 @@
     "options": {
     	"action": {
             "Sent": "Sent",
-            "Viewed": "Viewed",
+            "Opened": "Opened",
             "Opted Out": "Opted Out",
             "Bounced": "Bounced",
             "Clicked": "Clicked",

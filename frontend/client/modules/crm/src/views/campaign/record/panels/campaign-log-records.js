@@ -26,7 +26,7 @@ Espo.define('Crm:Views.Campaign.Record.Panels.CampaignLogRecords', 'Views.Record
 
     	template: 'crm:campaign.record.panels.campaign-log-records',
 
-    	filterList: ["All", "Sent", "Viewed", "Opted Out", "Bounced", "Clicked", "Lead Created"],
+    	filterList: ["All", "Sent", "Opened", "Opted Out", "Bounced", "Clicked", "Lead Created"],
 
     	data: function () {
     		return _.extend({

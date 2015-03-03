@@ -33,7 +33,7 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
     			case 'Sent':
     				return this.model.get('stringData');
     			case 'Clicked':
-    				return this.model.get('stringData');
+    				return '<span class="text-success">' + this.model.get('stringData') + '</span>';
                 case 'Opted Out':
                     return '<span class="text-muted">' + this.model.get('stringData') + '</span>';
                 case 'Bounced':
