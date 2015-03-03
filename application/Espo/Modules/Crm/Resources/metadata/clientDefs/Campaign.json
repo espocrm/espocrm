@@ -20,7 +20,7 @@
       "campaignLogRecords": {
         "view": "Crm:Campaign.Record.Panels.CampaignLogRecords",
         "layout": "listForCampaign",
-        "rowActionsView": "Record.RowActions.RelationshipRemoveOnly",
+        "rowActionsView": false,
         "select": false,
         "create": false
       }
