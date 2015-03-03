@@ -19,6 +19,8 @@
     "relationshipPanels": {
       "campaignLogRecords": {
         "view": "Crm:Campaign.Record.Panels.CampaignLogRecords",
+        "layout": "listForCampaign",
+        "rowActionsView": "Record.RowActions.RelationshipRemoveOnly",
         "select": false,
         "create": false
       }

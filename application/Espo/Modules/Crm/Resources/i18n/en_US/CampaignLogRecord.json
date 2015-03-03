@@ -5,6 +5,11 @@
         "data": "Data",
         "campaign": "Campaign",
         "parent": "Parent",
-        "object": "Object"
+        "object": "Object",
+        "application": "Application"
+    },
+    "options": {
+    	"action": {
+    	}
     }
 }
