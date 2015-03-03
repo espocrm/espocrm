@@ -22,8 +22,7 @@
         "createdContact": "Kontakt",
         "createdOpportunity": "Verkaufschance"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "New": "Neu",

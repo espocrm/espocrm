@@ -1,0 +1,37 @@
+{
+    "labels": {
+        "Fields": "Felder",
+        "Relationships": "Beziehungen"
+    },
+    "fields": {
+        "name": "Name",
+        "type": "Typ",
+        "labelSingular": "Bezeichnung Einzahl",
+        "labelPlural": "Bezeichnung Mehrzahl",
+        "stream": "Vorgänge",
+        "label": "Bezeichnung",
+        "linkType": "Relationstyp",
+        "entityForeign": "Fremdentität\/-modul",
+        "linkForeign": "Remdrelation\/-modul",
+        "link": "Link",
+        "labelForeign": "Fremdbezeichnung"
+    },
+    "options": {
+        "type": {
+            "": "Kein(e)",
+            "Base": "Basis",
+            "Person": "Person"
+        },
+        "linkType": {
+            "manyToMany": "Viele zu Viele",
+            "oneToMany": "Eins zu Viele",
+            "manyToOne": "Viele zu EIns",
+            "parentToChildren": "Vater zu KInd",
+            "childrenToParent": "Kind zu Vater"
+        }
+    },
+    "messages": {
+        "entityCreated": "Entität wurde erstellt",
+        "linkAlreadyExists": "Konflikt: Relation besteht bereits"
+    }
+}

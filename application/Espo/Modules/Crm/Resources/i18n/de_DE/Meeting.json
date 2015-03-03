@@ -10,10 +10,10 @@
         "users": "Benutzer",
         "contacts": "Kontakte",
         "leads": "Interessenten",
-        "reminders": "Erinnerungen"
+        "reminders": "Erinnerungen",
+        "account": "Firma"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "Planned": "Geplant",
@@ -23,7 +23,8 @@
         "acceptanceStatus": {
             "None": "Kein(e)",
             "Accepted": "Akzeptiert",
-            "Declined": "Abgelehnt"
+            "Declined": "Abgelehnt",
+            "Tentative": "Mit Vorbehalt"
         }
     },
     "labels": {

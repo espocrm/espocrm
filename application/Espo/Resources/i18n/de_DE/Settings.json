@@ -10,12 +10,12 @@
         "defaultCurrency": "Standardwährung",
         "baseCurrency": "Basiswährung",
         "currencyRates": "Wechselkurse",
-        
+
         "currencyList": "Währungsliste",
         "language": "Sprache",
-        
+
         "companyLogo": "Firmenlogo",
-        
+
         "smtpServer": "Server",
         "smtpPort": "Port",
         "smtpAuth": "Autorisierung",
@@ -26,14 +26,16 @@
         "outboundEmailFromName": "Von Name",
         "outboundEmailFromAddress": "Von Adresse",
         "outboundEmailIsShared": "Kann von allen Benutzern verwendet werden",
-        
+
         "recordsPerPage": "Datensätze pro Seite",
-        "recordsPerPageSmall": "Datensätze pro Seite (Klein)",        
+        "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
         "tabList": "Reiter Liste",
         "quickCreateList": "Liste Schnellerstellung",
-        
+
         "exportDelimiter": "Export Trennzeichen",
-        
+
+        "globalSearchEntityList": "Modul-\/Entitätsliste globale Suche",
+
         "authenticationMethod": "Authentifizierungs Methode",
         "ldapHost": "Host",
         "ldapPort": "Port",

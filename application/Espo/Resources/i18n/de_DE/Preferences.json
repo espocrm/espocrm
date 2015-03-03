@@ -23,8 +23,7 @@
         
         "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "weekStart": {
             "0": "Sonntag",

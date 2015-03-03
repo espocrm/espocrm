@@ -16,7 +16,10 @@
         "contacts": "Kontakte",
         "opportunities": "Verkaufschancen",
         "cases": "Fälle",
-        "documents": "Dokumente"
+        "documents": "Dokumente",
+        "meetingsPrimary": "Meetings (intern)",
+        "callsPrimary": "Anrufe (intern)",
+        "tasksPrimary": "Aufgaben (intern)"
     },
     "options": {
         "type": {
@@ -26,13 +29,32 @@
             "Reseller": "Wiederverkäufer"
         },
         "industry": {
-            "Apparel": "Bekleidungsindustrie",
+            "Agriculture": "Landwirtschaft",
+            "Advertising": "Werbewirtschaft",
+            "Apparel & Accessories": "Bekleidungsindustrie",
+            "Automotive": "Automobilindustrie",
             "Banking": "Bankwesen",
-            "Computer Software": "Computer Software",
+            "Biotechnology": "Biotechnologie",
+            "Chemical": "Chemieindustrie",
+            "Computer": "Informationstechnologie",
             "Education": "Bildungswesen",
             "Electronics": "Elektronik",
+            "Entertainment & Leisure": "Freizeit- und Unterhaltungsindustrie",
             "Finance": "Finanzsektor",
-            "Insurance": "Versicherung"
+            "Food & Beverage": "Speisen und Getränke",
+            "Grocery": "Einzelhandel",
+            "Insurance": "Versicherung",
+            "Legal": "Rechtswesen",
+            "Publishing": "Medien",
+            "Real Estate": "Immobilien",
+            "Service": "Dienstleistung",
+            "Sports": "Sport",
+            "Sofware": "Software",
+            "Technology": "Technologie",
+            "Telecommunications": "Telekommunikation",
+            "Television": "Fernsehen",
+            "Transportation": "Transportwesen",
+            "Venture Capital": "Risikokapital"
         }
     },
     "labels": {
