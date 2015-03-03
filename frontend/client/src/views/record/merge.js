@@ -47,6 +47,7 @@ Espo.define('Views.Record.Merge', 'View', function (Dep) {
                 rows: rows,
                 models: this.models,
                 scope: this.scope,
+                width: Math.round(((80 - this.models.length * 5) / this.models.length * 10)) / 10
             };
         },
 
