@@ -20,28 +20,20 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Campaign.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.Side', function (Dep) {
 
     return Dep.extend({
 
-        bottomView: 'Crm:Campaign.Record.DetailBottom',
+    	template: 'crm:campaign.record.panels.statistics',
 
-        handleStatisticsPanelAppearance: function() {
-            if (this.model.get('status') == 'Planning') {
-                this.hidePanel('statistics');
-            } else {
-                this.showPanel('statistics');
-            }
-        },
+    	data: function () {
+    		return {};
+    	},
 
-        afterRender: function () {
-        	Dep.prototype.afterRender.call(this);
+    	setup: function () {
+            Dep.prototype.setup.call(this);
+    	}
 
-            this.handleStatisticsPanelAppearance();
-            this.listenTo(this.model, 'change:status', function () {
-                this.handleStatisticsPanelAppearance();
-            }, this);
-        },
 
     });
 });

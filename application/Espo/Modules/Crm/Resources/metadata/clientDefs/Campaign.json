@@ -16,6 +16,15 @@
     "recordViews": {
       "detail": "Crm:Campaign.Record.Detail"
     },
+    "sidePanels":{
+      "detail":[
+         {
+            "name":"statistics",
+            "label":"Statistics",
+            "view":"Crm:Campaign.Record.Panels.Statistics"
+         }
+      ]
+    },
     "relationshipPanels": {
       "campaignLogRecords": {
         "view": "Crm:Campaign.Record.Panels.CampaignLogRecords",
