@@ -47,9 +47,6 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change:attachmentsIds', function () {
-                this.handleAttachmentField();
-            }, this);
         },
 
         handleAttachmentField: function () {
@@ -64,8 +61,9 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
             Dep.prototype.afterRender.call(this);
 
             this.handleAttachmentField();
-
-
+            this.listenTo(this.model, 'change:attachmentsIds', function () {
+                this.handleAttachmentField();
+            }, this);
         },
 
     });
