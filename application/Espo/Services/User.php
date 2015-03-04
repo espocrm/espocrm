@@ -271,7 +271,7 @@ class User extends Record
         $body = $this->getLanguage()->translate('passwordChangeLinkEmailBody', 'messages', 'User');
 
         $link = $this->getConfig()->get('siteUrl') . '?entryPoint=changePassword&id=' . $requestId;
-        
+
         $body = str_replace('{link}', $link, $body);
 
         $email->set(array(
@@ -287,6 +287,9 @@ class User extends Record
     public function deleteEntity($id)
     {
         if ($id == 'system') {
+            throw new Forbidden();
+        }
+        if ($id == $this->getUser()->id) {
             throw new Forbidden();
         }
         return parent::deleteEntity($id);
