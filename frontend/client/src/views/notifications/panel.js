@@ -47,7 +47,7 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
 
         afterRender: function () {
             this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', 'Record.ListExpanded', {
+                this.createView('list', 'Notifications.List', {
                     el: this.options.el + ' .list-container',
                     collection: this.collection,
                     showCount: false,
@@ -74,7 +74,7 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                 });
             }.bind(this));
             this.collection.fetch();
-        },
+        }
 
     });
 
