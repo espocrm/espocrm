@@ -37,6 +37,8 @@ class Download extends \Espo\Core\EntryPoints\Base
         'application/vnd.oasis.opendocument.text',
         'application/vnd.oasis.opendocument.spreadsheet',
         'text/plain',
+        'application/msword',
+        'application/msexcel'
     );
 
     public function run()
