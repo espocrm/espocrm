@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Main', 'View', function (Dep) {
 
@@ -71,24 +71,33 @@ Espo.define('Views.Main', 'View', function (Dep) {
                         }
                     }, this);
                 }, this);
-
-                /*var defaultMenu = this.getMetadata().get('clientDefs.' + scope + '.menu.default') || {};
-                types.forEach(function (type) {
-                    if (defaultMenu[type]) {
-                        if (!items[type]) {
-                            items[type] = [];
-                        }
-                        defaultMenu[type].forEach(function (i) {
-                            items[type].push(i);
-                        });
-                    }
-                }.bind(this));*/
             }
 
             return menu;
         },
 
         getHeader: function () {},
+
+        actionShowModal: function (data) {
+            var view = data.view;
+            if (!view) {
+                return;
+            };
+            this.createView('modal', view, {
+                model: this.model,
+                collection: this.collection
+            }, function (view) {
+                view.render();
+                this.listenTo(view, 'after:save', function () {
+                    if (this.model) {
+                        this.model.fetch();
+                    }
+                    if (this.collection) {
+                        this.collection.fetch();
+                    }
+                }, this);
+            }.bind(this));
+        }
     });
 });
 
