@@ -132,18 +132,15 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     this.$el.find('.list > table tbody tr').removeClass('active');
                 }
             },
-            'click [data-action="quickEdit"]': function (e) {
-                var $target = $(e.currentTarget);
-                var id = $target.data('id');
-                var data = $target.data();
-                this.quickEdit(id, data);
-
-            },
-            'click [data-action="quickRemove"]': function (e) {
-                var $target = $(e.currentTarget);
-                var id = $target.data('id');
-                var data = $target.data();
-                this.quickRemove(id, data);
+            'click .action': function (e) {
+                $el = $(e.currentTarget);
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                if (typeof this[method] == 'function') {
+                    var data = $el.data();
+                    this[method](data);
+                    e.stopPropagation();
+                }
             },
             'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
                 this.selectAllResult();
@@ -785,8 +782,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             });
         },
 
-        quickEdit: function (id, d) {
+        actionQuickEdit: function (d) {
             d = d || {}
+            var id = d.id;
+            if (!id) return;
+
             if (this.allowQuickEdit) {
                 this.notify('Loading...');
                 this.createView('quickEdit', 'Modals.Edit', {
@@ -811,7 +811,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             return 'tr[data-id="' + id + '"]';
         },
 
-        quickRemove: function (id) {
+        actionQuickRemove: function (data) {
+            data = data || {}
+            var id = data.id;
+            if (!id) return;
+
             var model = this.collection.get(id);
             if (!this.getAcl().checkModel(model, 'delete')) {
                 this.notify('Access denied', 'error');

@@ -13,7 +13,7 @@
             {{{avatar}}}
         </div>
         <div class="stream-head-text-container">
-            <span class="text-muted"><span class="glyphicon glyphicon-envelope "></span>
+            <span class="text-muted"><span class="glyphicon glyphicon-envelope action" style="cursor: pointer;" title="{{translate 'View'}}" data-action="viewRecord" data-id="{{emailId}}" data-scope="Email"></span>
                 {{{message}}}
             </span>
         </div>

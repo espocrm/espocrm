@@ -33,7 +33,9 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {
-                    this[method]($el.data('id'));
+                    var data = $el.data();
+                    this[method](data);
+                    e.stopPropagation();
                 }
             }
         },
@@ -57,6 +59,22 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
         getActions: function () {
             return [];
         },
+
+        actionViewRecord: function (data) {
+            var id = data.id;
+            var scope = data.scope;
+
+            this.notify('Loading...');
+            this.createView('quickDetail', 'Modals.Detail', {
+                scope: scope,
+                id: id
+            }, function (view) {
+                view.once('after:render', function () {
+                    Espo.Ui.notify(false);
+                });
+                view.render();
+            }.bind(this));
+        }
 
     });
 });

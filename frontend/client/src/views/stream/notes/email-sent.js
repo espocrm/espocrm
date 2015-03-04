@@ -27,8 +27,16 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
 
         isRemovable: true,
 
+        data: function () {
+            return _.extend({
+                emailId: this.emailId
+            }, Dep.prototype.data.call(this));
+        },
+
         setup: function () {
             var data = this.model.get('data') || {};
+
+            this.emailId = data.emailId;
 
             if (this.model.get('post')) {
                 this.createField('post', null, null, 'Stream.Fields.Post');

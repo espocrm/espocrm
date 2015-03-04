@@ -107,6 +107,22 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
             });
         },
 
+        actionViewRecord: function (data) {
+            var id = data.id;
+            var scope = data.scope;
+
+            this.notify('Loading...');
+            this.createView('quickDetail', 'Modals.Detail', {
+                scope: scope,
+                id: id
+            }, function (view) {
+                view.once('after:render', function () {
+                    Espo.Ui.notify(false);
+                });
+                view.render();
+            }.bind(this));
+        }
+
     });
 
 });

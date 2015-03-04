@@ -138,7 +138,9 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             this.collection.fetch();
         },
 
-        actionViewRelated: function (id) {
+        actionViewRelated: function (data) {
+            var id = data.id;
+
             this.notify('Loading...');
             this.createView('quickDetail', 'Modals.Detail', {
                 scope: this.collection.get(id).name,
@@ -154,7 +156,9 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             }.bind(this));
         },
 
-        actionEditRelated: function (id) {
+        actionEditRelated: function (data) {
+            var id = data.id;
+
             this.notify('Loading...');
             this.createView('quickEdit', 'Modals.Edit', {
                 scope: this.collection.get(id).name,
@@ -170,7 +174,9 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             }.bind(this));
         },
 
-        actionUnlinkRelated: function (id) {
+        actionUnlinkRelated: function (data) {
+            var id = data.id;
+
             var self = this;
             if (confirm(this.translate('unlinkRecordConfirmation', 'messages'))) {
                 var model = this.collection.get(id);
@@ -193,7 +199,9 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             }
         },
 
-        actionRemoveRelated: function (id) {
+        actionRemoveRelated: function (data) {
+            var id = data.id;
+
             var self = this;
             if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
                 var model = this.collection.get(id);

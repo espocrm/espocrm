@@ -135,8 +135,7 @@
                     "len": "36",
                     "default": "None"
                 }
-            },
-            "layoutRelationshipsDisabled": true
+            }
         },
         "contacts": {
             "type": "hasMany",
@@ -148,8 +147,7 @@
                     "len": "36",
                     "default": "None"
                 }
-            },
-            "layoutRelationshipsDisabled": true
+            }
         },
         "leads": {
             "type": "hasMany",
@@ -161,8 +159,7 @@
                     "len": "36",
                     "default": "None"
                 }
-            },
-            "layoutRelationshipsDisabled": true
+            }
         },
         "parent": {
             "type": "belongsToParent",
