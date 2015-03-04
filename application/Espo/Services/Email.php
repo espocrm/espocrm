@@ -26,6 +26,7 @@ use \Espo\ORM\Entity;
 use \Espo\Entities;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 
 class Email extends Record
 {
@@ -133,7 +134,22 @@ class Email extends Record
 
     public function getEntity($id = null)
     {
-        $entity = parent::getEntity($id);
+
+        $entity = $this->getRepository()->get($id);
+        if (!empty($entity) && !empty($id)) {
+            $this->loadAdditionalFields($entity);
+
+            if (!$this->getAcl()->check($entity, 'read')) {
+                $userIdList = $entity->get('usersIds');
+                if (!is_array($userIdList) || !in_array($this->getUser()->id, $userIdList)) {
+                    throw new Forbidden();
+                }
+            }
+        }
+        if (!empty($entity)) {
+            $this->prepareEntityForOutput($entity);
+        }
+
         if (!empty($entity) && !empty($id)) {
 
             if ($entity->get('fromEmailAddressName')) {
