@@ -30,23 +30,23 @@ Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.
     		switch (type) {
     			case 'Email':
     			case 'Newsletter':
-    				this.fields = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'revenue'];
+    				this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'revenue'];
     				break;
     			case 'Web':
     			case 'Television':
     			case 'Radio':
-    				this.fields = ['leadCreatedCount', 'revenue'];
+    				this.fieldList = ['leadCreatedCount', 'revenue'];
     				break;
     			case 'Mail':
-    				this.fields = ['sentCount', 'leadCreatedCount', 'revenue'];
+    				this.fieldList = ['sentCount', 'leadCreatedCount', 'revenue'];
     				break;
     			default:
-    				this.fields = ['leadCreatedCount', 'revenue'];
+    				this.fieldList = ['leadCreatedCount', 'revenue'];
     		}
     	},
 
     	setup: function () {
-    		this.fields = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
+    		this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
             Dep.prototype.setup.call(this);
             this.setupFieldList();
 
