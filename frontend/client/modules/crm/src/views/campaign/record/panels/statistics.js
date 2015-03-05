@@ -25,10 +25,6 @@ Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.
     return Dep.extend({
 
 
-    	/*data: function () {
-    		return {};
-    	},*/
-
     	setupFieldList: function () {
     		var type = this.model.get('type');
     		switch (type) {
@@ -60,8 +56,11 @@ Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.
             		this.render();
             	}
             }, this);
-    	}
+    	},
 
+        actionRefresh: function () {
+            this.model.fetch();
+        },
 
 
     });
