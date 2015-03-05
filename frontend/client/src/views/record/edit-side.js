@@ -31,7 +31,7 @@ Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
                 label: false,
                 view: 'Record.Panels.Side',
                 options: {
-                    fields: ['assignedUser', 'teams'],
+                    fieldList: ['assignedUser', 'teams'],
                     mode: 'edit',
                 }
             }

@@ -34,7 +34,7 @@
                 label: false,
                 view: 'Record.Panels.DefaultSide',
                 options: {
-                    fields: [
+                    fieldList: [
                         {
                             name: 'assignedUser',
                             view: 'Fields.UserWithAvatar'
@@ -81,7 +81,13 @@
             }
         },
 
+        setupPanels: function () {
+
+        },
+
         setup: function () {
+            this.setupPanels();
+
             var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.mode) || [];
             additionalPanels.forEach(function (panel) {
                 this.panels.push(panel);

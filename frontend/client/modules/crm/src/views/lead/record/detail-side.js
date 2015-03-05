@@ -23,7 +23,7 @@ Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', funct
 
     return Dep.extend({
 
-        setup: function () {
+        setupPanels: function () {
             if (this.model.get('status') == 'Converted') {
                 var panel = {
                     name: 'convertedTo',
@@ -31,25 +31,27 @@ Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', funct
                     view: 'Record.Panels.Side',
                     notRefreshable: true,
                     options: {
-                        fields: [],
+                        fieldList: [],
                         mode: 'detail',
                     }
                 };
-                if (this.model.get('createdAccountId') && this.model.get('createdAccountName')) {
-                    panel.options.fields.push('createdAccount');
+
+                if (this.model.get('createdAccountId')) {
+                    panel.options.fieldList.push('createdAccount');
                 }
-                if (this.model.get('createdContactId') && this.model.get('createdContactName')) {
-                    panel.options.fields.push('createdContact');
+                if (this.model.get('createdContactId')) {
+                    panel.options.fieldList.push('createdContact');
                 }
-                if (this.model.get('createdOpportunityId') && this.model.get('createdOpportunityName')) {
-                    panel.options.fields.push('createdOpportunity');
+                if (this.model.get('createdOpportunityId')) {
+                    panel.options.fieldList.push('createdOpportunity');
                 }
-                if (panel.options.fields.length) {
+                if (panel.options.fieldList.length) {
+                    this.panels = Espo.Utils.clone(this.panels);
                     this.panels.splice(1, 0, panel);
                 }
             }
-            Dep.prototype.setup.call(this);
-        },
+        }
+
     });
 });
 
