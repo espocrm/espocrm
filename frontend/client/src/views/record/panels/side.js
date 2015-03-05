@@ -25,11 +25,11 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
         template: 'record.panels.side',
 
-        fields: null,
+        fieldList: null,
 
         data: function () {
             return {
-                fields: this.getFieldList(),
+                fieldList: this.getFieldList(),
                 dates: this.dates,
             };
         },
@@ -41,7 +41,7 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         readOnly: false,
 
         setup: function () {
-            this.fields = this.options.fields || this.fields || [];
+            this.fieldList = this.options.fieldList || this.fieldList || [];
             this.dates = ('dates' in this.options) ? this.options.dates : false;
             this.mode = this.options.mode || this.mode;
             if ('readOnly' in this.options)    {
@@ -51,8 +51,8 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         },
 
         getFieldList: function () {
-            var fields = [];
-            this.fields.forEach(function (item) {
+            var fieldList = [];
+            this.fieldList.forEach(function (item) {
                 var field;
                 if (typeof item === 'object') {
                     field = item.name;
@@ -60,10 +60,10 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
                    field = item;
                 }
                 if (field in this.model.defs.fields) {
-                    fields.push(field);
+                    fieldList.push(field);
                 }
             }, this);
-            return fields;
+            return fieldList;
         },
 
         createField: function (field, readOnly, viewName) {
@@ -82,7 +82,7 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         },
 
         createFields: function () {
-            this.fields.forEach(function (item) {
+            this.fieldList.forEach(function (item) {
                 var view = null;
                 var field;
                 if (typeof item === 'object') {
