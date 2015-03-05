@@ -111,6 +111,11 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         getActions: function () {
             return this.actions || [];
         },
+
+        actionRefresh: function () {
+            this.model.fetch();
+        }
+
     });
 });
 
