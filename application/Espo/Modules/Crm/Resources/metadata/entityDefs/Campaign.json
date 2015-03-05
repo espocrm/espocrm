@@ -11,7 +11,7 @@
         },
         "type": {
             "type": "enum",
-            "options": ["Email", "Web", "Television", "Radio", "Newsletter"]
+            "options": ["Email", "Newsletter", "Web", "Television", "Radio", "Mail"]
         },
         "startDate": {
             "type": "date"
@@ -47,6 +47,78 @@
         },
         "targetLists": {
             "type": "linkMultiple"
+        },
+        "sentCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "openedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "clickedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "optedOutCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "bouncedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "hardBouncedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "softBouncedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "leadCreatedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "revenue": {
+            "type": "currency",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
         }
     },
     "links": {

@@ -24,15 +24,44 @@ Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.
 
     return Dep.extend({
 
-    	template: 'crm:campaign.record.panels.statistics',
 
-    	data: function () {
+    	/*data: function () {
     		return {};
+    	},*/
+
+    	setupFieldList: function () {
+    		var type = this.model.get('type');
+    		switch (type) {
+    			case 'Email':
+    			case 'Newsletter':
+    				this.fields = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'revenue'];
+    				break;
+    			case 'Web':
+    			case 'Television':
+    			case 'Radio':
+    				this.fields = ['leadCreatedCount', 'revenue'];
+    				break;
+    			case 'Mail':
+    				this.fields = ['sentCount', 'leadCreatedCount', 'revenue'];
+    				break;
+    			default:
+    				this.fields = ['leadCreatedCount', 'revenue'];
+    		}
     	},
 
     	setup: function () {
+    		this.fields = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
             Dep.prototype.setup.call(this);
+            this.setupFieldList();
+
+            this.listenTo(this.model, 'change:type', function () {
+            	this.setupFieldList();
+            	if (this.isRendered()) {
+            		this.render();
+            	}
+            }, this);
     	}
+
 
 
     });

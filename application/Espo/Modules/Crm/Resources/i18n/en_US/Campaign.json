@@ -6,7 +6,16 @@
         "type": "Type",
         "startDate": "Start Date",
         "endDate": "End Date",
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "sentCount": "Sent",
+        "openedCount": "Opened",
+        "clickedCount": "Clicked",
+        "optedOutCount": "Opted Out",
+        "bouncedCount": "Bounced",
+        "hardBouncedCount": "Hard Bounced",
+        "softBouncedCount": "Soft Bounced",
+        "leadCreatedCount": "Leads Created",
+        "revenue": "Revenue"
     },
     "links": {
         "targetLists": "Target Lists",
@@ -22,7 +31,8 @@
             "Web": "Web",
             "Television": "Television",
             "Radio": "Radio",
-            "Newsletter": "Newsletter"
+            "Newsletter": "Newsletter",
+            "Mail": "Mail"
         },
         "status": {
             "Planning": "Planning",
