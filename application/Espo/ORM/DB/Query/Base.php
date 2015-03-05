@@ -167,7 +167,7 @@ abstract class Base
         if (!empty($params['groupBy']) && is_array($params['groupBy'])) {
             $arr = array();
             foreach ($params['groupBy'] as $field) {
-                $arr[] = $this->convertComplexExpression($entity, $field, $entity->getEntityType());
+                $arr[] = $this->convertComplexExpression($entity, $field);
             }
             $groupByPart = implode(', ', $arr);
         }
@@ -201,10 +201,12 @@ abstract class Base
     }
 
 
-    protected function convertComplexExpression($entity, $field, $entityName = null, $distinct = false)
+    protected function convertComplexExpression($entity, $field, $distinct = false)
     {
         $function = null;
         $relName = null;
+
+        $entityType = $entity->getEntityType();
 
         if (strpos($field, ':')) {
             list($function, $field) = explode(':', $field);
@@ -230,13 +232,11 @@ abstract class Base
             if (!empty($entity->fields[$field]['select'])) {
                 $part = $entity->fields[$field]['select'];
             } else {
-                if ($entityName) {
-                    $part = $this->toDb($entityName) . '.' . $part;
-                }
+                $part = $this->toDb($entityType) . '.' . $part;
             }
         }
         if ($function) {
-            $part = $this->getFunctionPart(strtoupper($function), $part, $entityName, $distinct);
+            $part = $this->getFunctionPart(strtoupper($function), $part, $entityType, $distinct);
         }
         return $part;
     }
@@ -257,7 +257,7 @@ abstract class Base
             if (array_key_exists($field, $entity->fields)) {
                 $fieldDefs = $entity->fields[$field];
             } else {
-                $part = $this->convertComplexExpression($entity, $field, $entity->getEntityType(), $distinct);
+                $part = $this->convertComplexExpression($entity, $field, $distinct);
                 $arr[] = $part . ' AS `' . $field . '`';
                 continue;
             }
