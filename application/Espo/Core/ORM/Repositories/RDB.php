@@ -81,6 +81,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         foreach ($defs['fields'] as $field => $d) {
             if (isset($d['type']) && $d['type'] == 'currency') {
+                if (!empty($d['notStorable'])) {
+                    continue;
+                }
                 if (empty($params['customJoin'])) {
                     $params['customJoin'] = '';
                 }
