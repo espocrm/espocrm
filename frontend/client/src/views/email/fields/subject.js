@@ -18,45 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
-Espo.define('Views.Email.Record.List', 'Views.Record.List', function (Dep) {
+Espo.define('Views.Email.Fields.Subject', 'Views.Fields.Varchar', function (Dep) {
 
     return Dep.extend({
 
-        mergeAction: false,
+        listLinkTemplate: 'email.fields.subject.list-link',
 
-        massUpdateAction: false,
+        data: function () {
+            return _.extend({
+                'isRead': this.model.get('isRead')
+            }, Dep.prototype.data.call(this));
+        },
 
-        exportAction: false,
+        getValueForDisplay: function () {
+            return this.model.get('name');
+        },
+
+        getAttributeList: function () {
+            return ['name', 'isRead'];
+        },
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
-            this.actions.push({
-                name: 'markAsRead',
-                label: 'Mark Read',
-                action: function (e) {
-                    var ids = [];
-                    for (var i in this.checkedList) {
-                        ids.push(this.checkedList[i]);
-                    }
-                    $.ajax({
-                        url: 'Email/action/markAsRead',
-                        type: 'POST',
-                        data: JSON.stringify({
-                            ids: ids
-                        })
-                    });
-                    ids.forEach(function (id) {
-                    	var model = this.collection.get(id);
-                    	if (model) {
-                    		model.set('isRead', true);
-                    	}
-                    }, this);
-                }.bind(this)
-            });
-        },
+            this.listenTo(this.model, 'change:isRead', function () {
+                this.reRender();
+            }, this);
+        }
 
     });
-});
 
+});

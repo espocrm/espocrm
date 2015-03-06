@@ -6,7 +6,7 @@
         {{{pagination}}}
     </div>
     {{/if}}
-    
+
     {{#if checkboxes}}
     <div class="btn-group actions">
         <button type="button" class="btn btn-default btn-sm dropdown-toggle actions-button" data-toggle="dropdown" disabled>
@@ -14,12 +14,12 @@
         </button>
         <ul class="dropdown-menu">
             {{#each actions}}
-            <li><a href="javascript:" data-action="{{name}}">{{translate label scope=../scope}}</a></li>
+            <li><a href="javascript:" data-action="{{name}}" class='mass-action'>{{translate label scope=../scope}}</a></li>
             {{/each}}
         </ul>
     </div>
     {{/if}}
-</div> 
+</div>
 {{/if}}
 
 <div class="list list-expanded">
@@ -35,7 +35,7 @@
             {{#if showCount}}
             <div class="pull-right text-muted more-count">{{moreCount}}</div>
             {{/if}}
-            <span>{{translate 'Show more'}}</span>        
+            <span>{{translate 'Show more'}}</span>
         </a>
     </div>
     {{/if}}

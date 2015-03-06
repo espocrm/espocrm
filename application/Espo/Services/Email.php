@@ -206,8 +206,32 @@ class Email extends Record
 
             $this->loadAttachmentsTypes($entity);
 
+            $this->markAsRead($entity->id);
         }
         return $entity;
+    }
+
+    public function markAsReadByIds(array $ids)
+    {
+        foreach ($ids as $id) {
+            $this->markAsRead($id);
+        }
+        return true;
+    }
+
+    public function markAsRead($id)
+    {
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET is_read = 1
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
@@ -246,8 +270,26 @@ class Email extends Record
                 }
                 $entity->set('personStringData', 'To: ' . implode(', ', $arr));
             }
-
         }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sql = "
+            SELECT is_read AS 'isRead' FROM email_user
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                email_id = " . $pdo->quote($entity->id) . "
+        ";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $isRead = !empty($row['isRead']) ? true : false;
+        } else {
+            $isRead = true;
+        }
+        $entity->set('isRead', $isRead);
     }
 
     protected function loadAttachmentsTypes(Entity $entity)

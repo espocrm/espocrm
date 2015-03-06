@@ -24,7 +24,8 @@
         "Draft": "Draft",
         "Sending": "Sending",
         "Sent": "Sent",
-        "Archived": "Archived"
+        "Archived": "Archived",
+        "Received": "Received"
     },
     "labels": {
         "Create Email": "Archive Email",
@@ -38,7 +39,8 @@
         "Email Accounts": "Email Accounts",
         "Send Test Email": "Send Test Email",
         "Send": "Send",
-        "Email Address": "Email Address"
+        "Email Address": "Email Address",
+        "Mark Read": "Mark Read"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",

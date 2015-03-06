@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 (function (Espo, Backbone, _, Bull, $) {
 
     Espo.View = Bull.View.extend({
@@ -43,6 +43,15 @@
             Espo.Ui.notify(text, type, timeout);
         },
 
+        reRender: function () {
+            if (this.isRendered()) {
+                this.render();
+            } else if (this.isBeingRendered()) {
+                this.once('after:render', function () {
+                    this.render();
+                }, this);
+            }
+        },
 
         getHelper: function () {
             return this._helper;
@@ -131,7 +140,7 @@
                 return this._helper.fieldManager;
             }
         },
-        
+
         getBaseController: function () {
             if (this._helper) {
                 return this._helper.baseController;

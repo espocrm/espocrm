@@ -280,13 +280,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                         });
 
                         if (changed) {
-                            if (this.isRendered()) {
-                                this.render();
-                            } else if (this.isBeingRendered()) {
-                                this.once('after:render', function () {
-                                    this.render();
-                                }, this);
-                            }
+                            this.reRender();
                         }
                     }
                 }.bind(this));

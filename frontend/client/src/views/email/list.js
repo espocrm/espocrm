@@ -59,6 +59,7 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
             };
         },
 
+
     });
 });
 

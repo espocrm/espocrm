@@ -17,7 +17,7 @@
         </button>
         <ul class="dropdown-menu">
             {{#each actions}}
-            <li><a href="javascript:" data-action="{{name}}">{{translate label scope=../scope}}</a></li>
+            <li><a href="javascript:" data-action="{{name}}" class='mass-action'>{{translate label scope=../scope}}</a></li>
             {{/each}}
         </ul>
     </div>

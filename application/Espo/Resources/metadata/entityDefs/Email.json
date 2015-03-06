@@ -8,7 +8,8 @@
             "type": "varchar",
             "required": true,
             "db": false,
-            "notStorable": true
+            "notStorable": true,
+            "view": "Email.Fields.Subject"
         },
         "fromName": {
             "type": "varchar"
@@ -43,6 +44,11 @@
             "type": "varchar",
             "notStorable": true,
             "disabled": true
+        },
+        "isRead": {
+            "type": "bool",
+            "notStorable": true,
+            "default": true
         },
         "nameHash": {
             "type": "text",
@@ -101,7 +107,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Draft", "Sending", "Sent", "Archived"],
+            "options": ["Draft", "Sending", "Sent", "Received", "Archived"],
             "readOnly": true,
             "default": "Archived"
         },
@@ -167,7 +173,13 @@
         "users": {
             "type": "hasMany",
             "entity": "User",
-            "foreign": "emails"
+            "foreign": "emails",
+            "additionalColumns": {
+                "isRead": {
+                    "type": "bool",
+                    "default": false
+                }
+            }
         },
         "attachments": {
             "type": "hasChildren",

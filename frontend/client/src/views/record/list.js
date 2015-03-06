@@ -145,6 +145,15 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
                 this.selectAllResult();
             },
+            'click .actions a.mass-action': function (e) {
+                $el = $(e.currentTarget);
+                var action = $el.data('action');
+                this.actions.forEach(function (item) {
+                    if (item.name == action) {
+                        item.action.call(this, e);
+                    }
+                }, this);
+            }
         },
 
         actions: [],
@@ -430,13 +439,13 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.actions = [];
             }
 
-            if (this.checkboxes) {
+            /*if (this.checkboxes) {
                 this.actions.forEach(function (item) {
                     this.events['click .actions a[data-action="' + item.name + '"]'] = function (e) {
                         item.action.call(this, e);
                     }.bind(this);
                 }.bind(this));
-            }
+            }*/
 
             this.listenTo(this.collection, 'sync', function () {
                 if (this.noRebuild) {
