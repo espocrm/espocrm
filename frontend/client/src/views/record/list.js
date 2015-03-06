@@ -439,14 +439,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.actions = [];
             }
 
-            /*if (this.checkboxes) {
-                this.actions.forEach(function (item) {
-                    this.events['click .actions a[data-action="' + item.name + '"]'] = function (e) {
-                        item.action.call(this, e);
-                    }.bind(this);
-                }.bind(this));
-            }*/
-
             this.listenTo(this.collection, 'sync', function () {
                 if (this.noRebuild) {
                     this.noRebuild = null;
