@@ -11,7 +11,8 @@
         "contacts": "Contacts",
         "description": "Description",
         "amountConverted": "Amount (converted)",
-        "amountWeightedConverted": "Amount Weighted"
+        "amountWeightedConverted": "Amount Weighted",
+        "campaign": "Campaign"
     },
     "links": {
         "contacts": "Contacts",
@@ -28,7 +29,7 @@
             "Proposal/Price Quote": "Proposal/Price Quote",
             "Negotiation/Review": "Negotiation/Review",
             "Closed Won": "Closed Won",
-            "Closed Lost": "Closed Lost" 
+            "Closed Lost": "Closed Lost"
         }
     },
     "labels": {

@@ -1,6 +1,7 @@
 [
     "assignedUser",
     "address",
+    "campaign",
     "status",
     "source",
     "opportunityAmountConverted",

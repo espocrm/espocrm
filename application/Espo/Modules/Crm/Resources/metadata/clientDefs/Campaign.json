@@ -1,0 +1,50 @@
+{
+    "controller": "Controllers.Record",
+    "menu": {
+        "list": {
+            "buttons": [
+                {
+                    "label": "Target Lists",
+                    "link": "#TargetList",
+                    "acl": "read",
+                    "style": "link",
+                    "aclScope": "TargetList"
+                }
+            ]
+        }
+    },
+    "recordViews": {
+      "detail": "Crm:Campaign.Record.Detail"
+    },
+    "sidePanels":{
+      "detail":[
+         {
+            "name":"statistics",
+            "label":"Statistics",
+            "view":"Crm:Campaign.Record.Panels.Statistics"
+         }
+      ]
+    },
+    "relationshipPanels": {
+      "campaignLogRecords": {
+        "view": "Crm:Campaign.Record.Panels.CampaignLogRecords",
+        "layout": "listForCampaign",
+        "rowActionsView": "Record.RowActions.Empty",
+        "select": false,
+        "create": false
+      }
+    },
+    "presetFilters": [
+      {
+         "name":"active",
+         "style": "primary",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Active"]
+            }
+         }
+      }
+   ],
+   "boolFilters": ["onlyMy"]
+}

@@ -64,6 +64,9 @@
         "description": {
             "type": "text"
         },
+        "campaign": {
+            "type": "link"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -151,6 +154,12 @@
             "type": "hasMany",
             "entity": "Document",
             "foreign": "opportunities"
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "opportunities",
+            "noJoin": true
         }
     },
     "collection": {

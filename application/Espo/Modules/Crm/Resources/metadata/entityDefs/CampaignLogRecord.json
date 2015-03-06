@@ -1,0 +1,80 @@
+{
+    "fields": {
+        "action": {
+            "type": "enum",
+            "required": true,
+            "maxLength": 50,
+            "options": ["Sent", "Opened", "Opted Out", "Bounced", "Clicked", "Lead Created"]
+        },
+        "actionDate": {
+            "type": "datetime",
+            "required": true
+        },
+        "data": {
+            "type": "jsonObject",
+            "view": "Crm:CampaignLogRecord.Fields.Data"
+        },
+        "stringData": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "stringAdditionalData": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "application": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 36,
+            "default": "EspoCRM"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "campaign": {
+            "type": "link"
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "object": {
+            "type": "linkParent"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "campaignLogRecords"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entityList": ["Account", "Contact", "Lead", "Opportunity", "User"]
+        },
+        "object": {
+            "type": "belongsToParent",
+            "entityList": ["Email"]
+        }
+    },
+    "collection": {
+        "sortBy": "actionDate",
+        "asc": false
+    },
+    "indexes": {
+        "actionDate": {
+            "columns": ["actionDate", "deleted"]
+        },
+        "action": {
+            "columns": ["action", "deleted"]
+        }
+    }
+}

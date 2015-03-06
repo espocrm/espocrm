@@ -11,11 +11,14 @@
         "address": "Address",
         "opportunityRole": "Opportunity Role",
         "accountRole": "Role",
-        "description": "Description"
+        "description": "Description",
+        "campaign": "Campaign"
     },
     "links": {
         "opportunities": "Opportunities",
-        "cases": "Cases"
+        "cases": "Cases",
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log"
     },
     "labels": {
         "Create Contact": "Create Contact"

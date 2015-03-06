@@ -1,0 +1,9 @@
+{
+    "links": {
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "users"
+        }
+    }
+}

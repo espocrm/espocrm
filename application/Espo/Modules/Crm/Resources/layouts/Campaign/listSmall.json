@@ -1,0 +1,5 @@
+[
+    {"name": "name", "width": 40,"link": true},
+    {"name": "type", "width": 30},
+    {"name": "status", "width": 30}
+]

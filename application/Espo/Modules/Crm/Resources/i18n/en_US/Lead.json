@@ -20,9 +20,12 @@
         "description": "Description",
         "createdAccount": "Account",
         "createdContact": "Contact",
-        "createdOpportunity": "Opportunity"
+        "createdOpportunity": "Opportunity",
+        "campaign": "Campaign"
     },
     "links": {
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log"
     },
     "options": {
         "status": {

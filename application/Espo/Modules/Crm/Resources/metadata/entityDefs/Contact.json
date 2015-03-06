@@ -100,6 +100,10 @@
             "notStorable": true,
             "disabled": true
         },
+        "campaign": {
+            "type": "link",
+            "layoutListDisabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -192,6 +196,22 @@
             "entity": "Task",
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "contacts",
+            "noJoin": true
+        },
+        "campaignLogRecords": {
+            "type": "hasChildren",
+            "entity": "CampaignLogRecord",
+            "foreign": "parent"
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "contacts"
         }
     },
     "collection": {

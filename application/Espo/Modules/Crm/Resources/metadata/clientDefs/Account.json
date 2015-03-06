@@ -28,6 +28,11 @@
 
          ],
          "layout":"listForAccount"
+      },
+      "campaignLogRecords": {
+        "rowActionsView": "Record.RowActions.Empty",
+        "select": false,
+        "create": false
       }
    },
    "boolFilters": ["onlyMy"]

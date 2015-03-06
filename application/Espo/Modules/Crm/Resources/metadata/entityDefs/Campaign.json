@@ -1,0 +1,183 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Planning", "Active", "Inactive", "Complete"],
+            "default": "Planning"
+        },
+        "type": {
+            "type": "enum",
+            "options": ["Email", "Newsletter", "Web", "Television", "Radio", "Mail"]
+        },
+        "startDate": {
+            "type": "date"
+        },
+        "endDate": {
+            "type": "date"
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "targetLists": {
+            "type": "linkMultiple"
+        },
+        "sentCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "openedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "clickedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "optedOutCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "bouncedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "hardBouncedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "softBouncedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "leadCreatedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        },
+        "revenue": {
+            "type": "currency",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutSearchDisabled": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "campaigns"
+        },
+        "accounts": {
+            "type": "hasMany",
+            "entity": "Account",
+            "foreign": "campaign"
+        },
+        "contacts": {
+            "type": "hasMany",
+            "entity": "Contact",
+            "foreign": "campaign"
+        },
+        "leads": {
+            "type": "hasMany",
+            "entity": "Lead",
+            "foreign": "campaign"
+        },
+        "opportunities": {
+            "type": "hasMany",
+            "entity": "Opportunity",
+            "foreign": "campaign"
+        },
+        "campaignLogRecords": {
+            "type": "hasMany",
+            "entity": "CampaignLogRecord",
+            "foreign": "campaign"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    },
+    "indexes": {
+        "createdAt": {
+            "columns": ["createdAt", "deleted"]
+        }
+    }
+}

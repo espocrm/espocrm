@@ -113,6 +113,10 @@
         "teams": {
             "type": "linkMultiple"
         },
+        "campaign": {
+            "type": "link",
+            "layoutListDisabled": true
+        },
         "createdAccount": {
             "type": "link",
             "layoutDetailDisabled": true,
@@ -191,6 +195,22 @@
             "type": "belongsTo",
             "entity": "Opportunity",
             "noJoin": true
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "leads",
+            "noJoin": true
+        },
+        "campaignLogRecords": {
+            "type": "hasChildren",
+            "entity": "CampaignLogRecord",
+            "foreign": "parent"
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "leads"
         }
     },
     "convertFields": {

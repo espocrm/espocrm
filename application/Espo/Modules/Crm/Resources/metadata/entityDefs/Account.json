@@ -104,6 +104,10 @@
         "description": {
             "type": "text"
         },
+        "campaign": {
+            "type": "link",
+            "layoutListDisabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -208,6 +212,22 @@
             "entity": "Email",
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "accounts",
+            "noJoin": true
+        },
+        "campaignLogRecords": {
+            "type": "hasChildren",
+            "entity": "CampaignLogRecord",
+            "foreign": "parent"
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "accounts"
         }
     },
     "collection": {
