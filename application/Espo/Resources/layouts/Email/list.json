@@ -1,6 +1,6 @@
 [
     {"name":"personStringData","width":16,"notSortable": true, "customLabel": ""},
-    {"name":"subject","width":32,"link":true,"notSortable": true},
+    {"name":"subject","width":35,"link":true,"notSortable": true},
     {"name":"status","notSortable": true, "width":10},
     {"name":"parent","notSortable": true},
     {"name":"dateSent","view": "Fields.DatetimeShort", "notSortable": true, "width":10, "align": "right"}

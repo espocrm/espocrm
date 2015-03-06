@@ -51,15 +51,6 @@ Espo.define('Views.Email.List', 'Views.List', function (Dep) {
             }.bind(this));
         },
 
-        getSearchDefaultData: function () {
-            return {
-                bool: {
-                    'onlyMy': true
-                }
-            };
-        },
-
-
     });
 });
 

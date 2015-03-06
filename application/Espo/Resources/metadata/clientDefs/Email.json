@@ -73,5 +73,17 @@
          }
       }
    ],
+   "defaultFilterData": {
+       "bool": {
+           "onlyMy": true
+       },
+       "presetName": "archived",
+       "advanced": {
+           "status": {
+              "type": "in",
+              "value": ["Archived"]
+           }
+       }
+   },
    "boolFilters": ["onlyMy"]
 }

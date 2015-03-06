@@ -82,13 +82,14 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
         },
 
         getSearchDefaultData: function () {
-            return null;
+            return this.getMetadata().get('clientDefs.' + this.scope + '.defaultFilterData');
         },
 
         setupSearchManager: function () {
             var collection = this.collection;
 
             var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+
             searchManager.loadStored();
             collection.where = searchManager.getWhere();
             this.searchManager = searchManager;

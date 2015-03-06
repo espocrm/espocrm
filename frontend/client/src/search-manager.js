@@ -20,12 +20,13 @@
  ************************************************************************/
 (function (Espo, _) {
 
-    Espo.SearchManager = function (collection, type, storage, dateTime, defaultData) {
+    Espo.SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
         this.collection = collection;
         this.scope = collection.name;
         this.storage = storage;
         this.type = type || 'list';
         this.dateTime = dateTime;
+        this.emptyOnReset = emptyOnReset;
 
         this.emptyData = {
             textFilter: '',
@@ -34,10 +35,15 @@
         };
 
         if (defaultData) {
-            defaultData = Espo.Utils.clone(defaultData);
+            this.defaultData = defaultData;
+            for (var p in this.emptyData) {
+                if (!(p in defaultData)) {
+                    defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
+                }
+            }
         }
 
-        this.data = this.defaultData = defaultData || this.emptyData;
+        this.data = Espo.Utils.clone(defaultData) || this.emptyData;
 
         this.sanitizeData();
     };
@@ -133,7 +139,7 @@
         },
 
         loadStored: function () {
-            this.data = this.storage.get(this.type + 'Search', this.scope) || Espo.Utils.clone(this.defaultData);
+            this.data = this.storage.get(this.type + 'Search', this.scope) || Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
             this.sanitizeData();
             return this;
         },
@@ -162,7 +168,11 @@
         },
 
         reset: function () {
-            this.data = Espo.Utils.clone(this.defaultData);
+            if (this.emptyOnReset) {
+                this.empty();
+                return;
+            }
+            this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
             if (this.storage) {
                 this.storage.clear(this.type + 'Search', this.scope);
             }

@@ -224,10 +224,13 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
             this.presetName = null;
 
-            this.searchManager.empty();
+            this.searchManager.reset();
             this.loadSearchData();
 
-            this.render();
+            this.createFilters(function () {
+                this.render();
+            }.bind(this));
+
             this.updateCollection();
         },
 
@@ -417,7 +420,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             if (this.presetName) {
                 this.advanced = this.getPresetData();
             } else {
-                this.advanced = _.clone(searchData.advanced);
+                this.advanced = Espo.Utils.clone(searchData.advanced);
             }
             this.bool = searchData.bool;
         },

@@ -115,6 +115,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                     this.collection = collection;
 
                     var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
+                    searchManager.emptyOnReset = true;
                     searchManager.setAdvanced(this.filters);
                     collection.where = searchManager.getWhere();
 
