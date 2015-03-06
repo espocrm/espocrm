@@ -17,55 +17,54 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', function (Dep) {
 
     return Dep.extend({
-    
-        detailTemplate: 'email.fields.email-address-varchar.detail',        
 
-        
+        detailTemplate: 'email.fields.email-address-varchar.detail',
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.nameHash = {};
-            
-            this.initAddressList();            
+
+            this.initAddressList();
             this.listenTo(this.model, 'change:' + this.name, function () {
                 this.initAddressList();
-            }, this);            
+            }, this);
 
         },
-        
-        initAddressList: function () {        
+
+        initAddressList: function () {
             this.typeHash = this.model.get('typeHash') || {};
             this.idHash = this.model.get('idHash') || {};
-            
-            _.extend(this.nameHash, this.model.get('nameHash') || {});            
+
+            _.extend(this.nameHash, this.model.get('nameHash') || {});
         },
-        
+
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
             list.push('nameHash');
             return list;
         },
-        
-        getValueForDisplay: function () {            
+
+        getValueForDisplay: function () {
             if (this.mode == 'detail') {
                 var address = this.model.get(this.name);
                 return this.getDetailAddressHtml(address);
             }
             return Dep.prototype.getValueForDisplay.call(this);
         },
-        
-        getDetailAddressHtml: function (address) {    
+
+        getDetailAddressHtml: function (address) {
             if (!address) {
                 return '';
             }
-                            
+
             var name = this.nameHash[address] || null;
             var entityType = this.typeHash[address] || null;
-            var id = this.idHash[address] || null;            
+            var id = this.idHash[address] || null;
 
             var addressHtml = '<span class="">' + address + '</span>';
 
@@ -76,8 +75,8 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
                 lineHtml = '<div>' + addressHtml + '</div>';
             }
             return lineHtml;
-        },    
-        
+        },
+
     });
-    
+
 });

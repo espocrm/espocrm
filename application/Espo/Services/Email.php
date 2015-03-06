@@ -132,6 +132,52 @@ class Email extends Record
         return $entity;
     }
 
+    public function loadFromField(Entity $entity)
+    {
+        if ($entity->get('fromEmailAddressName')) {
+            $entity->set('from', $entity->get('fromEmailAddressName'));
+        }
+    }
+
+    public function loadToField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('toEmailAddresses');
+        $names = $entity->get('toEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('to', implode(';', $arr));
+        }
+    }
+
+    public function loadCcField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('ccEmailAddresses');
+        $names = $entity->get('ccEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('cc', implode(';', $arr));
+        }
+    }
+
+    public function loadBccField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('bccEmailAddresses');
+        $names = $entity->get('bccEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('bcc', implode(';', $arr));
+        }
+    }
+
     public function getEntity($id = null)
     {
 
@@ -151,41 +197,10 @@ class Email extends Record
         }
 
         if (!empty($entity) && !empty($id)) {
-
-            if ($entity->get('fromEmailAddressName')) {
-                $entity->set('from', $entity->get('fromEmailAddressName'));
-            }
-
-            $entity->loadLinkMultipleField('toEmailAddresses');
-            $entity->loadLinkMultipleField('ccEmailAddresses');
-            $entity->loadLinkMultipleField('bccEmailAddresses');
-
-            $names = $entity->get('toEmailAddressesNames');
-            if (!empty($names)) {
-                $arr = array();
-                foreach ($names as $id => $address) {
-                    $arr[] = $address;
-                }
-                $entity->set('to', implode(';', $arr));
-            }
-
-            $names = $entity->get('ccEmailAddressesNames');
-            if (!empty($names)) {
-                $arr = array();
-                foreach ($names as $id => $address) {
-                    $arr[] = $address;
-                }
-                $entity->set('cc', implode(';', $arr));
-            }
-
-            $names = $entity->get('bccEmailAddressesNames');
-            if (!empty($names)) {
-                $arr = array();
-                foreach ($names as $id => $address) {
-                    $arr[] = $address;
-                }
-                $entity->set('bcc', implode(';', $arr));
-            }
+            $this->loadFromField($entity);
+            $this->loadToField($entity);
+            $this->loadCcField($entity);
+            $this->loadBccField($entity);
 
             $this->loadNameHash($entity);
 
@@ -193,6 +208,46 @@ class Email extends Record
 
         }
         return $entity;
+    }
+
+    public function loadAdditionalFieldsForList(Entity $entity)
+    {
+        parent::loadAdditionalFieldsForList($entity);
+
+        $status = $entity->get('status');
+        if (in_array($status, ['Archived', 'Received'])) {
+            $this->loadFromField($entity);
+            $this->loadNameHash($entity, array('from'));
+
+            $fromEmailAddressId = $entity->get('fromEmailAddressId');
+            if (!empty($fromEmailAddressId)) {
+                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId);
+                if ($person) {
+                    $entity->set('personStringData', $person->get('name'));
+                } else {
+                    $entity->set('personStringData', $entity->get('fromEmailAddressName'));
+                }
+            }
+        } else if (in_array($status, ['Sent', 'Draft', 'Sending'])) {
+
+            $entity->loadLinkMultipleField('toEmailAddresses');
+            $idList = $entity->get('toEmailAddressesIds');
+            $names = $entity->get('toEmailAddressesNames');
+
+            if (!empty($idList)) {
+                $arr = [];
+                foreach ($idList as $emailAddressId) {
+                    $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId);
+                    if ($person) {
+                        $arr[] = $person->get('name');
+                    } else {
+                        $arr[] = $names->$emailAddressId;
+                    }
+                }
+                $entity->set('personStringData', 'To: ' . implode(', ', $arr));
+            }
+
+        }
     }
 
     protected function loadAttachmentsTypes(Entity $entity)
@@ -212,24 +267,28 @@ class Email extends Record
         $entity->set('attachmentsTypes', $types);
     }
 
-    public function loadNameHash(Entity $entity)
+    public function loadNameHash(Entity $entity, array $fieldList = array('from', 'to', 'cc'))
     {
         $addressList = array();
-        if ($entity->get('from')) {
+        if (in_array('from', $fieldList) && $entity->get('from')) {
             $addressList[] = $entity->get('from');
         }
 
-        $arr = explode(';', $entity->get('to'));
-        foreach ($arr as $address) {
-            if (!in_array($address, $addressList)) {
-                $addressList[] = $address;
+        if (in_array('to', $fieldList)) {
+            $arr = explode(';', $entity->get('to'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
             }
         }
 
-        $arr = explode(';', $entity->get('cc'));
-        foreach ($arr as $address) {
-            if (!in_array($address, $addressList)) {
-                $addressList[] = $address;
+        if (in_array('cc', $fieldList)) {
+            $arr = explode(';', $entity->get('cc'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
             }
         }
 

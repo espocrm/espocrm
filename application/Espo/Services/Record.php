@@ -219,7 +219,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function loadAdditionalFields($entity)
+    protected function loadAdditionalFields(Entity $entity)
     {
         $this->loadLinkMultipleFields($entity);
         $this->loadParentNameFields($entity);
@@ -229,7 +229,7 @@ class Record extends \Espo\Core\Services\Base
         $this->loadNotJoinedLinkFields($entity);
     }
 
-    public function loadAdditionalFieldsForList($entity)
+    public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
     }

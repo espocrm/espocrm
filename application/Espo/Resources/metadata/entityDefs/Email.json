@@ -7,7 +7,8 @@
         "subject": {
             "type": "varchar",
             "required": true,
-            "db": false
+            "db": false,
+            "notStorable": true
         },
         "fromName": {
             "type": "varchar"
@@ -15,24 +16,33 @@
         "from": {
             "type": "varchar",
             "db": false,
+            "notStorable": true,
             "required": true,
             "view": "Email.Fields.FromAddressVarchar"
         },
         "to": {
             "type": "varchar",
             "db": false,
+            "notStorable": true,
             "required": true,
             "view": "Email.Fields.EmailAddressVarchar"
         },
         "cc": {
             "type": "varchar",
             "db": false,
+            "notStorable": true,
             "view": "Email.Fields.EmailAddressVarchar"
         },
         "bcc": {
             "type": "varchar",
             "db": false,
+            "notStorable": true,
             "view": "Email.Fields.EmailAddressVarchar"
+        },
+        "personStringData": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
         },
         "nameHash": {
             "type": "text",
