@@ -91,7 +91,13 @@ class Importer
                 }
             }
 
-            if ($this->checkIsDuplicate($email)) {
+            if ($duplicate = $this->findDuplicate($email)) {
+                $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'users', $userId);
+                if (!empty($teamsIds)) {
+                    foreach ($teamsIds as $teamId) {
+                        $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
+                    }
+                }
                 return false;
             }
 
@@ -192,14 +198,14 @@ class Importer
         }
     }
 
-    protected function checkIsDuplicate(Entity $email)
+    protected function findDuplicate(Entity $email)
     {
         if ($email->get('messageId')) {
             $duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
                 'messageId' => $email->get('messageId')
             ))->findOne();
             if ($duplicate) {
-                return true;
+                return $duplicate;
             }
         }
     }

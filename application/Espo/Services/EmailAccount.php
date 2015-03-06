@@ -130,7 +130,11 @@ class EmailAccount extends Record
         }
 
         $userId = $user->id;
-        $teamId = $user->get('defaultTeam');
+        $teamId = $user->get('defaultTeamId');
+        $teamIds = array();
+        if (!empty($teamId)) {
+            $teamIds[] = $teamId;
+        }
 
         $fetchData = json_decode($emailAccount->get('fetchData'), true);
         if (empty($fetchData)) {
@@ -208,7 +212,7 @@ class EmailAccount extends Record
                 $message = $storage->getMessage($id);
 
                 try {
-                	$email = $importer->importMessage($message, $userId, array($teamId));
+                	$email = $importer->importMessage($message, $userId, $teamIds);
 	            } catch (\Exception $e) {
 	                $GLOBALS['log']->error('EmailAccount (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
 	            }

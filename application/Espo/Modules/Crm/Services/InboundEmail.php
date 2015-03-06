@@ -136,6 +136,10 @@ class InboundEmail extends \Espo\Services\Record
         if ($inboundEmail->get('assignToUserId')) {
             $userId = $inboundEmail->get('assignToUserId');
         }
+        $teamIds = array();
+        if (!empty($teamId)) {
+            $teamIds[] = $teamId;
+        }
 
         $fetchData = json_decode($inboundEmail->get('fetchData'), true);
         if (empty($fetchData)) {
@@ -205,7 +209,7 @@ class InboundEmail extends \Espo\Services\Record
                 $message = $storage->getMessage($id);
 
                 try {
-                    $email = $importer->importMessage($message, $userId, array($teamId));
+                    $email = $importer->importMessage($message, $userId, $teamIds);
                 } catch (\Exception $e) {
                     $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
