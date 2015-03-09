@@ -25,8 +25,10 @@ Espo.define('Views.Email.Fields.Subject', 'Views.Fields.Varchar', function (Dep)
         listLinkTemplate: 'email.fields.subject.list-link',
 
         data: function () {
+            var status = this.model.get('status');
+
             return _.extend({
-                'isRead': this.model.get('isRead')
+                'isRead': !(~['Archived', 'Received'].indexOf(status)) || this.model.get('isRead')
             }, Dep.prototype.data.call(this));
         },
 
