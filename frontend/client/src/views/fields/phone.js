@@ -125,6 +125,12 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                 this.manageAddButton();
             },
 
+            'paste input.phone-number': function (e) {
+                setTimeout(function () {
+                    this.manageAddButton();
+                }.bind(this), 10);
+            },
+
             'click [data-action="addPhoneNumber"]': function () {
                 var data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
 
