@@ -181,6 +181,12 @@
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
         },
+        "emails": {
+            "type": "hasChildren",
+            "entity": "Email",
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
+        },
         "createdAccount": {
             "type": "belongsTo",
             "entity": "Account",

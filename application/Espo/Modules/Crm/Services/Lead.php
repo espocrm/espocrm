@@ -130,6 +130,19 @@ class Lead extends \Espo\Services\Record
                 }
             }
         }
+        if ($emails = $lead->get('emails')) {
+            foreach ($emails as $email) {
+                if (!empty($opportunity)) {
+                    $email->set('parentId', $opportunity->id);
+                    $email->set('parentType', 'Opportunity');
+                    $entityManager->saveEntity($email);
+                } else if (!empty($account)) {
+                    $email->set('parentId', $account->id);
+                    $email->set('parentType', 'Account');
+                    $entityManager->saveEntity($email);
+                }
+            }
+        }
 
         return $lead;
     }
