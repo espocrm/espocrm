@@ -71,6 +71,15 @@
                "value": ["Sent"]
             }
          }
+      },
+      {
+         "name":"draft",
+         "data": {
+            "status": {
+               "type": "in",
+               "value": ["Draft"]
+            }
+         }
       }
    ],
    "defaultFilterData": {

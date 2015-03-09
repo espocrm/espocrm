@@ -132,6 +132,15 @@ class Email extends Record
         return $entity;
     }
 
+    protected function afterUpdate(Entity $entity)
+    {
+        if ($entity && $entity->get('status') == 'Sending') {
+            $this->send($entity);
+        }
+
+        return $entity;
+    }
+
     public function loadFromField(Entity $entity)
     {
         if ($entity->get('fromEmailAddressName')) {

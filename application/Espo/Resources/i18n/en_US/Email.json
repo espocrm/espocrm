@@ -40,14 +40,18 @@
         "Send Test Email": "Send Test Email",
         "Send": "Send",
         "Email Address": "Email Address",
-        "Mark Read": "Mark Read"
+        "Mark Read": "Mark Read",
+        "Sending...": "Sending...",
+        "Save Draft": "Save Draft"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
-        "testEmailSent": "Test email has been sent"
+        "testEmailSent": "Test email has been sent",
+        "emailSent": "Email has been sent"
     },
     "presetFilters": {
         "sent": "Sent",
-        "archived": "Archived"
+        "archived": "Archived",
+        "draft": "Draft"
     }
 }

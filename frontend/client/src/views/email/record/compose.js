@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Email.Record.Compose', 'Views.Record.Edit', function (Dep) {
+Espo.define('Views.Email.Record.Compose', ['Views.Record.Edit', 'Views.Email.Record.Detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -37,6 +37,17 @@ Espo.define('Views.Email.Record.Compose', 'Views.Record.Edit', function (Dep) {
 	        	this.model.set('body', body);
 	        }
         },
+
+        send: function () {
+            Detail.prototype.send.call(this);
+        },
+
+        saveDraft: function () {
+            var model = this.model;
+            model.set('status', 'Draft');
+
+            this.save();
+        }
 
     });
 

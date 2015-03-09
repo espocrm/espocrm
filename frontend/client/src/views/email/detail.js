@@ -23,6 +23,44 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
 
     return Dep.extend({
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            if (this.model.get('status') == 'Draft') {
+                this.backedMenu = this.menu;
+                this.menu = {
+                    'buttons': [
+                        {
+                           "label": "Send",
+                           "action": "send",
+                           "style": "danger",
+                           "acl": "edit"
+                        }
+                    ]
+                };
+            }
+        },
+
+        actionSend: function () {
+            var record = this.getView('body');
+
+            var $send = this.$el.find('.header-buttons [data-action="send"]');
+            $send.addClass('disabled');
+
+
+            this.listenToOnce(record, 'after:send', function () {
+                this.model.set('status', 'Sent');
+                $send.remove();
+                this.menu = this.backedMenu;
+            }, this);
+
+            this.listenToOnce(record, 'cancel:save', function () {
+                $send.removeClass('disabled');
+            }, this);
+
+            record.send();
+        },
+
+
         addReplyBodyAttrbutes: function (attributes) {
             if (this.model.get('isHtml')) {
                 var body = this.model.get('body');

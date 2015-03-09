@@ -66,6 +66,27 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
             }, this);
         },
 
+        send: function () {
+            var model = this.model;
+            model.set('status', 'Sending');
+
+            var afterSend = function () {
+                Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
+                this.trigger('after:send');
+            };
+
+            this.once('after:save', afterSend, this);
+            this.once('cancel:save', function () {
+                this.off('after:save', afterSend);
+            }, this);
+
+            this.once('before:save', function () {
+                Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
+            }, this);
+
+            this.save();
+        },
+
     });
 });
 

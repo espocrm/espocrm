@@ -17,58 +17,87 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
     return Dep.extend({
-    
+
         scope: 'Email',
-        
+
         layoutName: 'composeSmall',
-    
+
         saveButton: false,
-        
+
         fullFormButton: false,
-        
+
         editViewName: 'Email.Record.Compose',
-        
+
         columnCount: 2,
 
-        setup: function () {        
+        setup: function () {
             Dep.prototype.setup.call(this);
             var self = this;
-            
+
+            this.buttons.unshift({
+                name: 'saveDraft',
+                text: this.getLanguage().translate('Save Draft'),
+                onClick: function (dialog) {
+                    var editView = this.getView('edit');
+
+                    var model = editView.model;
+
+                    var afterSave = function () {
+                        this.trigger('after:save', model);
+                        dialog.close();
+                    };
+
+                    editView.once('after:save', afterSave , this);
+
+                    var $send = dialog.$el.find('button[data-name="send"]');
+                    $send.addClass('disabled');
+                    var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
+                    $saveDraft.addClass('disabled');
+                    editView.once('cancel:save', function () {
+                        $send.removeClass('disabled');
+                        $saveDraft.removeClass('disabled');
+                        editView.off('after:save', afterSave);
+                    }, this);
+
+                    editView.saveDraft();
+                }.bind(this)
+            });
+
             this.buttons.unshift({
                 name: 'send',
                 text: this.getLanguage().translate('Send'),
                 style: 'primary',
                 onClick: function (dialog) {
                     var editView = this.getView('edit');
+
                     var model = editView.model;
-                    model.set('status', 'Sending');    
-                                    
-                    editView.once('after:save', function () {
+
+                    var afterSend = function () {
                         this.trigger('after:save', model);
-                        this.notify('Email has been sent', 'success');
                         dialog.close();
-                    }, this);
-                    
-                    editView.once('before:save', function () {
-                        this.notify('Sending...');
-                    }, this);                    
-                    
-                    var $button = dialog.$el.find('button[data-name="send"]');        
-                    $button.addClass('disabled');
+                    };
+
+                    editView.once('after:send', afterSend, this);
+
+                    var $send = dialog.$el.find('button[data-name="send"]');
+                    $send.addClass('disabled');
+                    var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
+                    $saveDraft.addClass('disabled');
                     editView.once('cancel:save', function () {
-                        $button.removeClass('disabled');    
+                        $send.removeClass('disabled');
+                        $saveDraft.removeClass('disabled');
+                        editView.off('after:save', afterSend);
                     }, this);
-                                                        
-                    editView.save();
-                    
+
+                    editView.send();
                 }.bind(this)
             });
-            
+
             this.header = this.getLanguage().translate('Compose Email');
         },
 
