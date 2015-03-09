@@ -60,6 +60,7 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             this.closedNotificationIds = [];
             this.popoupTimeouts = {};
 
+            delete localStorage['blockPlayNotificationSound'];
             delete localStorage['closePopupNotificationId'];
 
             window.addEventListener('storage', function (e) {
@@ -118,7 +119,15 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
         checkUpdates: function (isFirstCheck) {
             $.ajax('Notification/action/notReadCount').done(function (count) {
                 if (!isFirstCheck && count > this.unreadCount) {
-                    this.playSound();
+
+                    var blockPlayNotificationSound = localStorage.getItem('blockPlayNotificationSound');
+                    if (!blockPlayNotificationSound) {
+                        this.playSound();
+                        localStorage.setItem('blockPlayNotificationSound', true);
+                        setTimeout(function () {
+                            delete localStorage['blockPlayNotificationSound'];
+                        }, this.notificationsCheckInterval * 1000);
+                    }
                 }
                 this.unreadCount = count;
                 if (count) {
