@@ -94,6 +94,10 @@
             "translation": "Global.scopeNamesPlural",
             "notStorable": true,
             "tooltip": true
+        },
+        "signature": {
+            "type": "text",
+            "view": "Fields.Wysiwyg"
         }
     }
 }

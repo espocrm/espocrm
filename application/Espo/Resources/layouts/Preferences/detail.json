@@ -26,7 +26,19 @@
     {
         "label": "Misc",
         "rows": [
-            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}]
+            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}],
+            [{
+                "name": "signature",
+                "params": {
+                    "height": 70,
+                    "toolbar": [
+                        ["style", ["bold", "italic", "underline", "clear"]],
+                        ["color", ["color"]],
+                        ["height", ["height"]],
+                        ["misc",["codeview"]]
+                    ]
+                }
+            }]
         ]
     },
     {

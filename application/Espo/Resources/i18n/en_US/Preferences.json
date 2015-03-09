@@ -19,7 +19,8 @@
         "smtpEmailAddress": "Email Address",
         "exportDelimiter": "Export Delimiter",
         "receiveAssignmentEmailNotifications": "Receive Email Notifications upon Assignment",
-        "autoFollowEntityTypeList": "Auto-Follow"
+        "autoFollowEntityTypeList": "Auto-Follow",
+        "signature": "Email Signature"
     },
     "links": {
     },

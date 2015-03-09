@@ -29,8 +29,21 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
         editTemplate: 'fields.wysiwyg.edit',
 
+        height: 250,
+
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.height = this.params.height || this.height;
+            this.toolbar = this.params.toolbar || [
+                ['style', ['style']],
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table', 'link', 'picture']],
+                ['misc',['codeview']]
+            ];
 
             this.listenTo(this.model, 'change:isHtml', function (model) {
                 if (!model.has('isHtml') || model.get('isHtml')) {
@@ -97,7 +110,7 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
         enableWysiwygMode: function () {
             this.$summernote = this.$element.summernote({
-                height: 250,
+                height: this.height,
                 lang: this.getConfig().get('language'),
                 onImageUpload: function (files, editor, welEditable) {
                     var file = files[0];
@@ -132,20 +145,12 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                 onblur: function () {
                     this.trigger('change')
                 }.bind(this),
-                toolbar: [
-                    ['style', ['style']],
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],
-                    ['table', ['table', 'link', 'picture']],
-                    ['misc',['codeview']]
-                ]
+                toolbar: this.toolbar
             });
         },
 
         disableWysiwygMode: function () {
-            var value = this.model.get(this.name);
+            var value = this.model.get(this.name).replace(/<br\s*\/?>/mg,"\n");
             value = $('<div>').html(value).text();
             this.model.set(this.name, value);
             this.$element.destroy();

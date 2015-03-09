@@ -27,6 +27,17 @@ Espo.define('Views.Email.Record.Compose', 'Views.Record.Edit', function (Dep) {
 
         sideView: false,
 
+        setup: function () {
+        	Dep.prototype.setup.call(this);
+
+        	var signature = this.getPreferences().get('signature');
+        	if (signature) {
+	        	var body = this.model.get('body') || '';
+	        	body = '<br><p>' + signature + '</p>' + body;
+	        	this.model.set('body', body);
+	        }
+        },
+
     });
 
 });
