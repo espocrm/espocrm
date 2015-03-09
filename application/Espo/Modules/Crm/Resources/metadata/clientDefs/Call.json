@@ -1,8 +1,7 @@
 {
     "controller": "Controllers.Record",
     "views":{
-        "detail":"Crm:Call.Detail",
-        "list": "Crm:Call.List"
+        "detail":"Crm:Call.Detail"
     },
     "recordViews":{
         "list":"Crm:Call.Record.List"

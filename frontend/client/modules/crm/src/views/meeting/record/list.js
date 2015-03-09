@@ -19,9 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Call.List', 'Views.List', function (Dep) {
+Espo.define('Crm:Views.Meeting.Record.List', 'Views.Record.List', function (Dep) {
 
     return Dep.extend({
+
+        rowActionsView: 'Crm:Meeting.Record.RowActions.Default',
 
         actionSetHeld: function (data) {
             var id = data.id;

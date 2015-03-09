@@ -17,14 +17,58 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
+ ************************************************************************/
+
 Espo.define('Crm:Views.Call.Record.List', 'Views.Record.List', function (Dep) {
 
     return Dep.extend({
-    
+
         rowActionsView: 'Crm:Call.Record.RowActions.Default',
-    
+
+
+        actionSetHeld: function (data) {
+            var id = data.id;
+            if (!id) {
+                return;
+            }
+            var model = this.collection.get(id);
+            if (!model) {
+                return;
+            }
+
+            model.set('status', 'Held');
+
+            this.listenToOnce(model, 'sync', function () {
+                this.notify(false);
+                this.collection.fetch();
+            }, this);
+
+            this.notify('Saving...');
+            model.save();
+
+        },
+
+        actionSetNotHeld: function (data) {
+            var id = data.id;
+            if (!id) {
+                return;
+            }
+            var model = this.collection.get(id);
+            if (!model) {
+                return;
+            }
+
+            model.set('status', 'Not Held');
+
+            this.listenToOnce(model, 'sync', function () {
+                this.notify(false);
+                this.collection.fetch();
+            }, this);
+
+            this.notify('Saving...');
+            model.save();
+        },
+
     });
-    
+
 });

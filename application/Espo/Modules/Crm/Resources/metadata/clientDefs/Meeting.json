@@ -3,6 +3,9 @@
     "views":{
         "detail":"Crm:Meeting.Detail"
     },
+    "recordViews":{
+        "list":"Crm:Meeting.Record.List"
+    },
     "menu": {
         "detail": {
             "actions": [
