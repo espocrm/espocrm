@@ -215,10 +215,6 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
                         }
                     }
 
-                    if (xhr.status == 400) {
-                        this.model.set(attrsInitialy);
-                    }
-
                     if (response) {
                         if (response.reason == 'Duplicate') {
                             xhr.errorIsHandled = true;
