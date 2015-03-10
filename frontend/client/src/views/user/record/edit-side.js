@@ -22,20 +22,20 @@
 Espo.define('Views.User.Record.EditSide', 'Views.Record.EditSide', function (Dep) {
 
     return Dep.extend({
-    
+
         panels: [
             {
                 name: 'default',
                 label: false,
                 view: 'Record.Panels.Side',
                 options: {
-                    fields: ['avatar'],
+                    fieldList: ['avatar'],
                     mode: 'edit',
                 }
             }
         ],
-            
+
     });
-    
+
 });
 
