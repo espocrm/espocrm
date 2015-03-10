@@ -155,7 +155,7 @@ abstract class OAuth2Abstract implements IClient
             $code = $r['code'];
         }
 
-        if ($code == 200) {
+        if ($code >= 200 && $code < 300) {
             return $r['result'];
         } else {
             $handledData = $this->handleErrorResponse($r);

@@ -233,7 +233,7 @@ class Client
         $params['grant_type'] = $grantType;
 
         $httpHeaders = array();
-        switch ($this->clientAuth) {
+        switch ($this->tokenType) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
                 $params['client_id'] = $this->clientId;
