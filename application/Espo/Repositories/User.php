@@ -35,11 +35,11 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             if (empty($userName)) {
                 throw new Error();
             }
-            
+
             $user = $this->where(array(
                 'userName' => $userName
             ))->findOne();
-            
+
             if ($user) {
                 throw new Error();
             }
@@ -49,7 +49,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 if (empty($userName)) {
                     throw new Error();
                 }
-            
+
                 $user = $this->where(array(
                     'userName' => $userName,
                     'id!=' => $entity->id
@@ -59,6 +59,31 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+    }
+
+    public function checkBelongsToAnyOfTeams($userId, array $teamIds)
+    {
+        if (empty($teamIds)) {
+            return false;
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $arr = [];
+        foreach ($teamIds as $teamId) {
+            $arr[] = $pdo->quote($teamId);
+        }
+
+        $sql = "SELECT * FROM team_user WHERE deleted = 0 AND user_id = :userId AND team_id IN (".implode(", ", $arr).")";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute(array(
+            ':userId' => $userId
+        ));
+        if ($row = $sth->fetch()) {
+            return true;
+        }
+        return false;
     }
 }
 

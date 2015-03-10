@@ -2,7 +2,8 @@
     {
         "rows": [
             [
-                {"name": "name"}
+                {"name": "name"},
+                {"name": "assignmentPermission"}
             ]
         ]
     }

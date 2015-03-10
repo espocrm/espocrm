@@ -1,7 +1,8 @@
 {
     "fields": {
         "name": "Name",
-        "roles": "Roles"
+        "roles": "Roles",
+        "assignmentPermission": "Assignment Permission"
     },
     "links": {
         "users": "Users",
@@ -22,6 +23,11 @@
             "team": "team",
             "own": "own",
             "no": "no"
+        },
+        "assignmentPermission": {
+            "all": "all",
+            "team": "team",
+            "not-set": "not-set"
         }
     },
     "actions": {

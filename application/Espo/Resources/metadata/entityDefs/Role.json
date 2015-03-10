@@ -5,6 +5,11 @@
             "required": true,
             "type": "varchar"
         },
+        "assignmentPermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set"
+        },
         "data": {
             "type": "jsonObject"
         }

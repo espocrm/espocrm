@@ -28,7 +28,9 @@ use \Espo\ORM\Entity;
 
 class Acl
 {
-    private $data = array();
+    private $data = array(
+        'table' => array()
+    );
 
     private $cacheFile;
 
@@ -74,16 +76,16 @@ class Acl
 
     public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
     {
-        if (array_key_exists($scope, $this->data)) {
-            if ($this->data[$scope] === false) {
+        if (array_key_exists($scope, $this->data['table'])) {
+            if ($this->data['table'][$scope] === false) {
                 return false;
             }
-            if ($this->data[$scope] === true) {
+            if ($this->data['table'][$scope] === true) {
                 return true;
             }
             if (!is_null($action)) {
-                if (array_key_exists($action, $this->data[$scope])) {
-                    $value = $this->data[$scope][$action];
+                if (array_key_exists($action, $this->data['table'][$scope])) {
+                    $value = $this->data['table'][$scope][$action];
 
                     if ($value === 'all' || $value === true) {
                         return true;
@@ -125,14 +127,29 @@ class Acl
         return $this->data;
     }
 
+    public function get($permission)
+    {
+        if ($this->user->isAdmin()) {
+            return true;
+        }
+        if ($permission == 'table') {
+            return null;
+        }
+
+        if (array_key_exists($permission, $this->data)) {
+            return $this->data[$permission];
+        }
+        return null;
+    }
+
     public function getLevel($scope, $action)
     {
         if ($this->user->isAdmin()) {
             return 'all';
         }
-        if (array_key_exists($scope, $this->data)) {
-            if (array_key_exists($action, $this->data[$scope])) {
-                return $this->data[$scope][$action];
+        if (array_key_exists($scope, $this->data['table'])) {
+            if (array_key_exists($action, $this->data['table'][$scope])) {
+                return $this->data['table'][$scope][$action];
             }
         }
         return false;
@@ -156,8 +173,8 @@ class Acl
 
     public function checkReadOnlyTeam($scope)
     {
-        if (isset($this->data[$scope]) && isset($this->data[$scope]['read'])) {
-            return $this->data[$scope]['read'] === 'team';
+        if (isset($this->data['table'][$scope]) && isset($this->data['table'][$scope]['read'])) {
+            return $this->data['table'][$scope]['read'] === 'team';
         }
         return false;
     }
@@ -167,8 +184,8 @@ class Acl
         if ($this->user->isAdmin()) {
             return false;
         }
-        if (isset($this->data[$scope]) && isset($this->data[$scope]['read'])) {
-            return $this->data[$scope]['read'] === 'own';
+        if (isset($this->data['table'][$scope]) && isset($this->data['table'][$scope]['read'])) {
+            return $this->data['table'][$scope]['read'] === 'own';
         }
         return false;
     }
@@ -213,12 +230,14 @@ class Acl
 
     private function load()
     {
-        $aclTables = array();
+        $aclTables = [];
+        $assignmentPermissionList = [];
 
         $userRoles = $this->user->get('roles');
 
         foreach ($userRoles as $role) {
             $aclTables[] = $role->get('data');
+            $assignmentPermissionList[] = $role->get('assignmentPermission');
         }
 
         $teams = $this->user->get('teams');
@@ -226,10 +245,12 @@ class Acl
             $teamRoles = $team->get('roles');
             foreach ($teamRoles as $role) {
                 $aclTables[] = $role->get('data');
+                $assignmentPermissionList[] = $role->get('assignmentPermission');
             }
         }
 
-        $this->data = $this->merge($aclTables);
+        $this->data['table'] = $this->merge($aclTables);
+        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList);
     }
 
     private function initSolid()
@@ -241,8 +262,25 @@ class Acl
         $data = $this->metadata->get('app.acl.solid', array());
 
         foreach ($data as $entityName => $item) {
-            $this->data[$entityName] = $item;
+            $this->data['table'][$entityName] = $item;
         }
+    }
+
+    private function mergeValues(array $list)
+    {
+        $result = null;
+        foreach ($list as $level) {
+            if ($level != 'not-set') {
+                if (is_null($result)) {
+                    $result = $level;
+                    continue;
+                }
+                if (array_search($result, $this->levelList) > array_search($level, $this->levelList)) {
+                    $result = $level;
+                }
+            }
+        }
+        return $result;
     }
 
     private function merge($tables)

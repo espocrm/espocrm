@@ -270,6 +270,105 @@ class Record extends \Espo\Core\Services\Base
                 return false;
             }
         }
+
+        if (!$this->isPermittedAssignedUser($entity)) {
+            return false;
+        }
+
+        if (!$this->isPermittedTeams($entity)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isPermittedAssignedUser(Entity $entity)
+    {
+        if (!$entity->hasField('assignedUserId')) {
+            return true;
+        }
+
+        $assignedUserId = $entity->get('assignedUserId');
+
+        if (empty($assignedUserId)) {
+            return true;
+        }
+
+        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+
+        if (empty($assignmentPermission) || $assignmentPermission === true || !in_array($assignmentPermission, ['team', 'no'])) {
+            return true;
+        }
+
+        $toProcess = false;
+
+        if (!$entity->isNew()) {
+            if ($entity->isFieldChanged('assignedUserId')) {
+                $toProcess = true;
+            }
+        } else {
+            $toProcess = true;
+        }
+
+        if ($toProcess) {
+            if ($assignmentPermission == 'no') {
+                if ($this->getUser()->id != $assignedUserId) {
+                    return false;
+                }
+            } else if ($assignmentPermission == 'team') {
+                $teamIds = $this->getUser()->get('teamsIds');
+                if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($assignedUserId, $teamIds)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function isPermittedTeams(Entity $entity)
+    {
+        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+
+        if (empty($assignmentPermission) || $assignmentPermission === true || !in_array($assignmentPermission, ['team', 'no'])) {
+            return true;
+        }
+
+        if (!$entity->hasField('teamsIds')) {
+            return true;
+        }
+        $teamIds = $entity->get('teamsIds');
+        if (empty($teamIds)) {
+            return true;
+        }
+
+        $newIds = [];
+
+        if (!$entity->isNew()) {
+            $existingIds = [];
+            foreach ($entity->get('teams') as $team) {
+                $existingIds[] = $team->id;
+            }
+            foreach ($teamIds as $id) {
+                if (!in_array($id, $existingIds)) {
+                    $newIds[] = $id;
+                }
+            }
+        } else {
+            $newIds = $teamIds;
+        }
+
+        if (empty($newIds)) {
+            return true;
+        }
+
+        $userTeamIds = $this->getUser()->get('teamsIds');
+
+        foreach ($newIds as $id) {
+            if (!in_array($id, $userTeamIds)) {
+                return false;
+            }
+        }
         return true;
     }
 
