@@ -34,19 +34,19 @@ return array(
 			'name' => 'Check Inbound Emails',
 			'job' => 'CheckInboundEmails',
 			'status' => 'Active',
-			'scheduling' => '/5 * * * *',
+			'scheduling' => '*/5 * * * *',
 		),
 		1 => array(
 			'name' => 'Check Personal Email Accounts',
 			'job' => 'CheckEmailAccounts',
 			'status' => 'Active',
-			'scheduling' => '/10 * * * *',
+			'scheduling' => '*/10 * * * *',
 		),
 		2 => array(
 			'name' => 'Send Email Reminders',
 			'job' => 'SendEmailReminders',
 			'status' => 'Active',
-			'scheduling' => '/2 * * * *',
+			'scheduling' => '*/2 * * * *',
 		),
 		3 => array(
 			'name' => 'Clean-up',
