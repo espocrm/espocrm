@@ -77,7 +77,7 @@
         "Refresh": "Обновить",
         "Remove": "Удалить",
         "Options": "Options",
-        "Username": "Username",
+        "Username": "Имя пользователя",
         "Password": "Пароль",
         "Login": "Войти",
         "Log Out": "Выйти",
@@ -112,7 +112,7 @@
         "Full Form": "Раширенная форма",
         "Insert": "Вставить",
         "Person": "Личность",
-        "First Name": "First Name",
+        "First Name": "Имя",
         "Last Name": "Фамилия",
         "Original": "Оригинальный",
         "You": "Вы",
@@ -168,8 +168,8 @@
         "active": "Активный"
     },
     "fields": {
-        "name": "Name",
-        "firstName": "First Name",
+        "name": "Имя",
+        "firstName": "Имя",
         "lastName": "Фамилия",
         "salutationName": "Пол",
         "assignedUser": "Ответственный пользователь",

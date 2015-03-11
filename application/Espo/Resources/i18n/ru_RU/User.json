@@ -2,7 +2,7 @@
     "fields": {
         "name": "Имя",
         "userName": "Имя пользователя",
-        "title": "Название",
+        "title": "Должность",
         "isAdmin": "Права администратора",
         "defaultTeam": "Группа по умолчанию",
         "emailAddress": "Email",
