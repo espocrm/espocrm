@@ -353,21 +353,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         attributes.dateEnd = event.dateEnd;
                     }
 
-
-                    /*if (!event.dateStart && event.dateEnd) {
-                        attributes.dateEnd = dateStart;
-                        event.dateEnd = attributes.dateEnd;
-                    } else {
-                        if (event.dateStart) {
-                            attributes.dateStart = dateStart;
-                            event.dateStart = dateStart;
-                        }
-                        if (event.dateEnd) {
-                            attributes.dateEnd = dateEnd;
-                            event.dateEnd = dateEnd;
-                        }
-                    }*/
-
                     if (!event.end) {
                         if (event.scope != 'Task') {
                             event.end = event.start.clone().add(event.duration, 's');
