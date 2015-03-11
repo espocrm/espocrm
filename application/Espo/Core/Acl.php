@@ -250,7 +250,7 @@ class Acl
         }
 
         $this->data['table'] = $this->merge($aclTables);
-        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList);
+        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, 'all');
     }
 
     private function initSolid()
@@ -266,7 +266,7 @@ class Acl
         }
     }
 
-    private function mergeValues(array $list)
+    private function mergeValues(array $list, $defaultValue)
     {
         $result = null;
         foreach ($list as $level) {
@@ -279,6 +279,9 @@ class Acl
                     $result = $level;
                 }
             }
+        }
+        if (is_null($result)) {
+            $result = $defaultValue;
         }
         return $result;
     }

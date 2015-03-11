@@ -118,7 +118,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                     id: this.model.id,
                 }
             }).done(function (aclData) {
-                this.createView('access', 'User.Access', {
+                this.createView('access', 'User.Modals.Access', {
                     aclData: aclData,
                     model: this.model,
                 }, function (view) {

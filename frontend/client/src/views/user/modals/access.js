@@ -17,21 +17,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.User.Access', 'Views.Modal', function (Dep) {
+Espo.define('Views.User.Modals.Access', 'Views.Modal', function (Dep) {
 
     return Dep.extend({
-    
-        cssName: 'user-access',    
-        
+
+        cssName: 'user-access',
+
         multiple: false,
-        
-        _template: '<div class="user-access-table">{{{table}}}</div>',
-        
+
+        template: 'user.modals.access',
+
         header: false,
-        
-        setup: function () {            
+
+        data: function () {
+            return {
+                assignmentPermission: this.options.aclData.assignmentPermission
+            };
+        },
+
+        setup: function () {
             this.buttons = [
                 {
                     name: 'cancel',
@@ -39,18 +45,17 @@ Espo.define('Views.User.Access', 'Views.Modal', function (Dep) {
                     onClick: function (dialog) {
                         dialog.close();
                     }
-                } 
+                }
             ];
-                        
+
             this.createView('table', 'Role.Record.Table', {
-                aclData: this.options.aclData,
-                final: true,                
+                aclData: this.options.aclData.table,
+                final: true,
             });
-            
+
             this.header = this.translate('Access');
-            
+
         },
-        
 
     });
 });
