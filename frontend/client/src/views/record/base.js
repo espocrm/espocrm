@@ -326,16 +326,19 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
         },
 
         createField: function (name, view, params, mode, readOnly) {
-            this.createView(name, view, {
+            var o = {
                 model: this.model,
                 mode: mode || 'edit',
                 el: this.options.el + ' .field-' + name,
                 defs: {
                     name: name,
                     params: params || {}
-                },
-                readOnly: readOnly || false
-            });
+                }
+            };
+            if (readOnly) {
+                o.readOnly = true;
+            }
+            this.createView(name, view, o);
 
             if (!~this.fieldList.indexOf(name)) {
                 this.fieldList.push(name);

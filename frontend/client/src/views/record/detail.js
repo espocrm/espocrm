@@ -439,9 +439,21 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                         var viewName = cellDefs.view || this.model.getFieldParam(cellDefs.name, 'view') || this.getFieldManager().getViewName(type);
 
 
-                        var readOnly = this.readOnly;
-                        if (!readOnly) {
-                            readOnly = cellDefs.readOnly || false;
+                        var o = {
+                            el: '#' + this.id + ' .record .field-' + cellDefs.name,
+                            defs: {
+                                name: cellDefs.name,
+                                params: cellDefs.params || {}
+                            },
+                            mode: this.fieldsMode
+                        };
+
+                        if (this.readOnly) {
+                            o.readOnly = true;
+                        } else {
+                            if (cellDefs.readOnly) {
+                                o.readOnly = true;
+                            }
                         }
 
                         var cell = {
@@ -449,15 +461,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                             view: viewName,
                             el: '#' + this.id + ' .record .field-' + cellDefs.name,
                             fullWidth: cellDefs.fullWidth || false,
-                            options: {
-                                el: '#' + this.id + ' .record .field-' + cellDefs.name,
-                                defs: {
-                                    name: cellDefs.name,
-                                    params: cellDefs.params || {}
-                                },
-                                mode: this.fieldsMode,
-                                readOnly: readOnly
-                            }
+                            options: o
                         };
 
                         if ('customLabel' in cellDefs) {
