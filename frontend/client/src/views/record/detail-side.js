@@ -37,9 +37,12 @@
                     fieldList: [
                         {
                             name: 'assignedUser',
-                            view: 'Fields.UserWithAvatar'
+                            view: 'Fields.AssignedUser'
                         },
-                        'teams'
+                        {
+                            name: 'teams',
+                            view: 'Fields.Teams'
+                        }
                     ],
                     mode: 'detail',
                 }

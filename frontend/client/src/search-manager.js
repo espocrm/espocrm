@@ -153,6 +153,11 @@
             this.data.advanced = advanced;
         },
 
+        setBool: function (bool) {
+            this.data = Espo.Utils.clone(this.data);
+            this.data.bool = bool;
+        },
+
         set: function (data) {
             this.data = data;
             if (this.storage) {

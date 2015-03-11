@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,34 +20,20 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
+namespace Espo\SelectManagers;
 
-    return Dep.extend({
+class Team extends \Espo\Core\SelectManagers\Base
+{
 
-        mode: 'edit',
-
-        panels: [
-            {
-                name: 'default',
-                label: false,
-                view: 'Record.Panels.Side',
-                options: {
-                    fieldList: [
-                        {
-                            name: 'assignedUser',
-                            view: 'Fields.AssignedUser'
-                        },
-                        {
-                            name: 'teams',
-                            view: 'Fields.Teams'
-                        }
-                    ],
-                    mode: 'edit',
-                }
-            }
-        ]
-
-    });
-});
-
+    protected function boolFilterOnlyMy(&$result)
+    {
+        if (!in_array('users', $result['joins'])) {
+        	$result['joins'][] = 'users';
+        }
+        $result['whereClause'][] = array(
+        	'teamUser.userId' => $this->getUser()->id
+        );
+        $result['distinct'] = true;
+    }
+}
 

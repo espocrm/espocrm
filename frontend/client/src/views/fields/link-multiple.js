@@ -54,6 +54,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         getSelectFilters: function () {},
 
+        getSelectBoolFilters: function () {},
+
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name + 'Ids';
@@ -82,6 +84,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                         scope: this.foreignScope,
                         createButton: this.mode != 'search',
                         filters: this.getSelectFilters(),
+                        boolFilters: this.getSelectBoolFilters(),
                         multiple: true
                     }, function (dialog) {
                         dialog.render();

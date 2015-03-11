@@ -52,6 +52,10 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
+        getSelectFilters: function () {},
+
+        getSelectBoolFilters: function () {},
+
         setup: function () {
             this.nameName = this.name + 'Name';
             this.typeName = this.name + 'Type';
@@ -76,9 +80,11 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                 this.addActionHandler('selectLink', function () {
                     this.notify('Loading...');
                     this.createView('dialog', 'Modals.SelectRecords', {
-                            scope: this.foreignScope,
-                            createButton: this.mode != 'search'
-                        }, function (dialog) {
+                        scope: this.foreignScope,
+                        createButton: this.mode != 'search',
+                        filters: this.getSelectFilters(),
+                        boolFilters: this.getSelectBoolFilters(),
+                    }, function (dialog) {
                         dialog.render();
                         Espo.Ui.notify(false);
                         dialog.once('select', function (model) {

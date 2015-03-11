@@ -8,7 +8,8 @@
         "assignmentPermission": {
             "type": "enum",
             "options": ["not-set", "all", "team", "no"],
-            "default": "not-set"
+            "default": "not-set",
+            "tooltip": true
         },
         "data": {
             "type": "jsonObject"

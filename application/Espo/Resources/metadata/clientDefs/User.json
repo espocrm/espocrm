@@ -4,5 +4,6 @@
       "edit":"User.Record.Edit",
       "editQuick":"User.Record.Edit",
       "list":"User.Record.List"
-   }
+   },
+   "boolFilters": ["onlyMyTeam"]
 }

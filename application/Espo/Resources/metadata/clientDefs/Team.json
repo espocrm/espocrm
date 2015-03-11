@@ -10,5 +10,6 @@
       "detail":"Team.Record.Detail",
       "edit":"Team.Record.Edit",
       "list":"Team.Record.List"
-   }
+   },
+   "boolFilters": ["onlyMy"]
 }

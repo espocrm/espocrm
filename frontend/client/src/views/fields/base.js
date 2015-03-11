@@ -212,7 +212,8 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                     $a.popover({
                         placement: 'bottom',
                         container: 'body',
-                        content: this.translate(this.name, 'tooltips', this.model.name),
+                        html: true,
+                        content: this.translate(this.name, 'tooltips', this.model.name).replace(/\n/g, "<br />"),
                         trigger: 'click',
                     }).on('shown.bs.popover', function () {
                         $('body').one('click', function () {

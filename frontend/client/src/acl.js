@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 
 /**
@@ -46,6 +46,13 @@ _.extend(Espo.Acl.prototype, {
         data = data || {};
         this.data = data;
         this.data.table = this.data.table || {};
+    },
+
+    get: function (name) {
+        if (this.user.isAdmin()) {
+            return true;
+        }
+        return this.data[name] || null;
     },
 
     check: function (controller, action, isOwner, inTeam) {

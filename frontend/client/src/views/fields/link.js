@@ -51,6 +51,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
         getSelectFilters: function () {},
 
+        getSelectBoolFilters: function () {},
+
         setup: function () {
             this.nameName = this.name + 'Name';
             this.idName = this.name + 'Id';
@@ -67,7 +69,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                     this.createView('dialog', 'Modals.SelectRecords', {
                             scope: this.foreignScope,
                             createButton: this.mode != 'search',
-                            filters: this.getSelectFilters()
+                            filters: this.getSelectFilters(),
+                            boolFilters: this.getSelectBoolFilters(),
                         }, function (dialog) {
                         dialog.render();
                         self.notify(false);

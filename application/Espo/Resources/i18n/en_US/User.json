@@ -55,5 +55,8 @@
         "forbidden": "Forbidden, please try later",
         "uniqueLinkHasBeenSent": "The unique link has been sent to the specified email address.",
         "passwordChangedByRequest": "Password has been changed."
+    },
+    "boolFilters": {
+        "onlyMyTeam": "Only My Team"
     }
 }

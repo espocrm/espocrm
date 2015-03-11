@@ -8,6 +8,9 @@
         "users": "Users",
         "teams": "Teams"
     },
+    "tooltips": {
+        "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign users from own teams\n\nno - can assign only to self"
+    },
     "labels": {
         "Access": "Access",
         "Create Role": "Create Role"

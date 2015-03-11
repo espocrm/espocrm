@@ -19,34 +19,29 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
+Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function (Dep) {
 
     return Dep.extend({
 
-        mode: 'edit',
+        init: function () {
 
-        panels: [
-            {
-                name: 'default',
-                label: false,
-                view: 'Record.Panels.Side',
-                options: {
-                    fieldList: [
-                        {
-                            name: 'assignedUser',
-                            view: 'Fields.AssignedUser'
-                        },
-                        {
-                            name: 'teams',
-                            view: 'Fields.Teams'
-                        }
-                    ],
-                    mode: 'edit',
-                }
+            if (this.getAcl().get('assignmentPermission') == 'no') {
+                this.readOnly = true;
+
+                /*if (this.mode == 'edit') {
+                    this.mode = 'detail';
+                }*/
             }
-        ]
+            Dep.prototype.init.call(this);
+        },
+
+        getSelectBoolFilters: function () {
+            var assignmentPermission = this.getAcl().get('assignmentPermission');
+            if (assignmentPermission == 'team') {
+                return {'onlyMyTeam': true};
+            }
+        },
 
     });
 });
-
 
