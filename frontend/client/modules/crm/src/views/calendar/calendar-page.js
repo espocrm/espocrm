@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.CalendarPage', 'View', function (Dep) {
+Espo.define('Crm:Views.Calendar.CalendarPage', 'View', function (Dep) {
 
     return Dep.extend({
 
-        template: 'crm:calendar-page',
+        template: 'crm:calendar.calendar-page',
 
         el: '#main',
 

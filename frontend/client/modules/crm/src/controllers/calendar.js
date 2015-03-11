@@ -20,9 +20,9 @@
  ************************************************************************/
 
 Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
-    
+
     return Dep.extend({
-    
+
         checkAccess: function () {
             if (this.getAcl().check('Calendar')) {
                 return true;
@@ -33,11 +33,11 @@ Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
         show: function (options) {
             this.index(options);
         },
-    
+
         index: function (options) {
             this.handleCheckAccess();
 
-            this.main('Crm:CalendarPage', {
+            this.main('Crm:Calendar.CalendarPage', {
                 date: options.date,
                 mode: options.mode,
             });
