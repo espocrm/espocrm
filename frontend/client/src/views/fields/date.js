@@ -50,8 +50,7 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
             this.searchParams.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
         },
 
-        getValueForDisplay: function () {
-            var value = this.model.get(this.name);
+        stringifyDateValue: function (value) {
             if (!value) {
                 if (this.mode == 'edit' || this.mode == 'search') {
                     return '';
@@ -72,8 +71,6 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                     'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
                 };
 
-
-
                 if (d.unix() >= ranges['today'][0] && d.unix() < ranges['today'][1]) {
                     return this.translate('Today');
                 } else if (d.unix() >= ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
@@ -90,6 +87,11 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
             }
 
             return this.getDateTime().toDisplayDate(value);
+        },
+
+        getValueForDisplay: function () {
+            var value = this.model.get(this.name);
+            return this.stringifyDateValue(value);
         },
 
         afterRender: function () {

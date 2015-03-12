@@ -37,5 +37,41 @@ class Task extends \Espo\Core\SelectManagers\Base
             'status' => array('Completed')
         );
     }
+
+    protected function convertDateTimeWhere($item)
+    {
+        $result = parent::convertDateTimeWhere($item);
+
+        if (empty($result)) {
+            return null;
+        }
+        $field = $item['field'];
+
+        if ($field != 'dateStart' && $field != 'dateEnd') {
+            return $result;
+        }
+
+        $fieldDate = $field . 'Date';
+
+        $dateItem = array(
+            'field' => $fieldDate,
+            'type' => $item['type']
+        );
+        if (!empty($item['value'])) {
+            $dateItem['value'] = $item['value'];
+        }
+
+        $result = array(
+            'OR' => array(
+                'AND' => [
+                    $result,
+                    $fieldDate . '=' => null
+                ],
+                $this->getWherePart($dateItem)
+            )
+        );
+
+        return $result;
+    }
 }
 

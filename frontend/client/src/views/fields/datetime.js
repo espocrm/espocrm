@@ -28,7 +28,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
         editTemplate: 'fields.datetime.edit',
 
         validations: ['required', 'datetime', 'after', 'before'],
-        
+
         searchTypeOptions: ['currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'on', 'after', 'before', 'between'],
 
         timeFormatMap: {
@@ -87,6 +87,26 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
             return this.getDateTime().toDisplay(value);
         },
 
+        initTimepicker: function () {
+            var $time = this.$time;
+            $time.timepicker({
+                step: 30,
+                scrollDefaultNow: true,
+                timeFormat: this.timeFormatMap[this.getDateTime().timeFormat]
+            });
+            $time.parent().find('button.time-picker-btn').on('click', function () {
+                $time.timepicker('show');
+            });
+        },
+
+        setDefaultTime: function () {
+            var d = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
+            var index = d.indexOf(' ');
+            if (~index) {
+                this.$time.val(d.substr(index + 1));
+            }
+        },
+
         afterRender: function () {
             var self = this;
             Dep.prototype.afterRender.call(this);
@@ -94,23 +114,11 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
             if (this.mode == 'edit') {
                 var $date = this.$date = this.$element;
                 var $time = this.$time = this.$el.find('input[name="' + this.name + '-time"]');
-                $time.timepicker({
-                    step: 30,
-                    scrollDefaultNow: true,
-                    timeFormat: this.timeFormatMap[this.getDateTime().timeFormat]
-                });
-                $time.parent().find('button.time-picker-btn').on('click', function () {
-                    $time.timepicker('show');
-                });
+                this.initTimepicker();
 
                 this.$element.on('change.datetime', function (e) {
                     if (this.$element.val() && !$time.val()) {
-                        var d = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
-                        var index = d.indexOf(' ');
-                        if (~index) {
-                            $time.val(d.substr(index + 1));
-                        }
-
+                        this.setDefaultTime();
                     }
                 }.bind(this));
 

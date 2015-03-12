@@ -301,9 +301,109 @@ class Base
         return $result;
     }
 
+    protected function convertDateTimeWhere($item)
+    {
+        $format = 'Y-m-d H:i:s';
+
+        $value = null;
+        $timeZone = 'UTC';
+
+        if (empty($item['field'])) {
+            return null;
+        }
+        if (empty($item['type'])) {
+            return null;
+        }
+        if (!empty($item['value'])) {
+            $value = $item['value'];
+        }
+        if (!empty($item['timeZone'])) {
+            $timeZone = $item['timeZone'];
+        }
+        $type = $item['type'];
+        $field = $item['field'];
+
+        if (empty($value) && in_array($type, array('on', 'before', 'after'))) {
+            return null;
+        }
+
+        $where = array();
+        $where['field'] = $field;
+
+        $dt = new \DateTime('now', new \DateTimeZone($timeZone));
+
+        switch ($type) {
+            case 'today':
+                $where['type'] = 'between';
+                $dt->setTime(0, 0, 0);
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $from = $dt->format($format);
+                $dt->modify('+1 day');
+                $to = $dt->format($format);
+                $where['value'] = [$from, $to];
+                break;
+            case 'past':
+                $where['type'] = 'before';
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
+                break;
+            case 'future':
+                $where['type'] = 'after';
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
+                break;
+            case 'on':
+                $where['type'] = 'between';
+
+                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $from = $dt->format($format);
+
+                $dt->modify('+1 day');
+                $to = $dt->format($format);
+                $where['value'] = [$from, $to];
+                break;
+            case 'before':
+                $where['type'] = 'before';
+                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
+                break;
+            case 'after':
+                $where['type'] = 'after';
+                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
+                break;
+            case 'between':
+                $where['type'] = 'between';
+                if (is_array($value)) {
+                    $dt = new \DateTime($value[0], new \DateTimeZone($timeZone));
+                    $dt->setTimezone(new \DateTimeZone('UTC'));
+                    $from = $dt->format($format);
+
+                    $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
+                    $dt->setTimezone(new \DateTimeZone('UTC'));
+                    $to = $dt->format($format);
+
+                    $where['value'] = [$from, $to];
+                }
+               break;
+            default:
+                $where['type'] = $type;
+        }
+        $result = $this->getWherePart($where);
+
+        return $result;
+    }
+
     protected function getWherePart($item)
     {
         $part = array();
+
+        if (!empty($item['dateTime'])) {
+            return $this->convertDateTimeWhere($item);
+        }
 
         if (!empty($item['type'])) {
             switch ($item['type']) {
@@ -366,7 +466,7 @@ class Base
                     $part[$item['field'] . '<'] = date('Y-m-d');
                     break;
                 case 'future':
-                    $part[$item['field'] . '>'] = date('Y-m-d');
+                    $part[$item['field'] . '>='] = date('Y-m-d');
                     break;
                 case 'currentMonth':
                     $dt = new \DateTime();

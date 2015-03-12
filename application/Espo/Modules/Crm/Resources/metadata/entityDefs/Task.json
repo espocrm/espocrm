@@ -19,12 +19,21 @@
         },
         "dateStart": {
             "type": "datetime",
-            "before": "dateEnd"
+            "before": "dateEnd",
+            "view": "Fields.DatetimeOptional"
         },
         "dateEnd": {
             "type": "datetime",
             "after": "dateStart",
             "view": "Crm:Task.Fields.DateEnd"
+        },
+        "dateStartDate": {
+            "type": "date",
+            "disabled": true
+        },
+        "dateEndDate": {
+            "type": "date",
+            "disabled": true
         },
         "isOverdue": {
             "type": "bool",

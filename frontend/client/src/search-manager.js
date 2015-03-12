@@ -111,7 +111,6 @@
                 var type = defs.type;
 
                 if (type == 'or' || type == 'and') {
-
                     var a = [];
                     var value = defs.value || {};
                     for (var n in value) {
@@ -126,7 +125,13 @@
                     field = defs.field;
                 }
                 if (defs.dateTime) {
-                    return this.getDateTimeWhere(type, field, defs.value);
+                    return {
+                        type: type,
+                        field: field,
+                        value: defs.value,
+                        dateTime: true,
+                        timeZone: this.dateTime.timeZone || 'UTC'
+                    };
                 } else {
                     value = defs.value;
                     return {

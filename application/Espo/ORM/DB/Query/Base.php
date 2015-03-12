@@ -593,7 +593,7 @@ abstract class Base
                                     }
                                 }
                             }
-                        } else {                            
+                        } else {
                             $leftPart = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
                         }
                     }
@@ -601,7 +601,15 @@ abstract class Base
 
                 if (!empty($leftPart)) {
                     if (!is_array($value)) {
-                        $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                        if (!is_null($value)) {
+                            $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                        } else {
+                            if ($operator == '=') {
+                                $whereParts[] = $leftPart . " IS NULL";
+                            } else if ($operator == '<>') {
+                                $whereParts[] = $leftPart . " IS NOT NULL";
+                            }
+                        }
 
                     } else {
                         $valArr = $value;
