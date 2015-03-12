@@ -33,6 +33,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             'Task': '#76BA4E',
         },
 
+        allDayScopeList: ['Task'],
+
         canceledStatusList: ['Not Held', 'Canceled'],
 
         completedStatusList: ['Held', 'Completed'],
@@ -131,6 +133,8 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 recordId: o.id,
                 dateStart: o.dateStart,
                 dateEnd: o.dateEnd,
+                dateStartDate: o.dateStartDate,
+                dateEndDate: o.dateEndDate,
                 status: o.status
             };
 
@@ -138,10 +142,18 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 event[attr] = o[attr];
             });
             if (o.dateStart) {
-                event.start = this.getDateTime().toMoment(o.dateStart);
+                if (!o.dateStartDate) {
+                    event.start = this.getDateTime().toMoment(o.dateStart);
+                } else {
+                    event.start = this.getDateTime().toMoment(o.dateStartDate);
+                }
             }
             if (o.dateEnd) {
-                event.end = this.getDateTime().toMoment(o.dateEnd);
+                if (!o.dateEndDate) {
+                    event.end = this.getDateTime().toMoment(o.dateEnd);
+                } else {
+                    event.end = this.getDateTime().toMoment(o.dateEndDate);
+                }
             }
             if (event.end && event.start) {
                 event.duration = event.end.unix() - event.start.unix();
@@ -186,19 +198,13 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         },
 
         handleAllDay: function (event, notInitial) {
-            if (event.scope == 'Task') {
+            if (~this.allDayScopeList.indexOf(event.scope)) {
                 event.allDay = true;
                 if (!notInitial) {
                     if (event.end) {
                         event.start = event.end;
                     }
-                } /*else {
-                    if (!event.start || !event.end) {
-                        if (event.end) {
-                            event.start = event.end;
-                        }
-                    }
-                }*/
+                }
                 return;
             }
 
@@ -352,9 +358,21 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         event.dateEnd = this.convertTime(this.getDateTime().toMoment(event.dateEnd).add(delta));
                         attributes.dateEnd = event.dateEnd;
                     }
+                    if (event.dateStartDate) {
+                        console.log(event.dateStartDate);
+                        var d = this.getDateTime().toMoment(event.dateStartDate).add(delta);
+                        event.dateStartDate = d.format(this.getDateTime().internalDateFormat);
+                        attributes.dateStartDate = event.dateStartDate;
+                    }
+                    if (event.dateEndDate) {
+                        var d = this.getDateTime().toMoment(event.dateEndDate).add(delta);
+                        event.dateEndDate = d.format(this.getDateTime().internalDateFormat);
+                        attributes.dateEndDate = event.dateEndDate;
+                        console.log(event.dateEndDate);
+                    }
 
                     if (!event.end) {
-                        if (event.scope != 'Task') {
+                        if (!~this.allDayScopeList.indexOf(event.scope)) {
                             event.end = event.start.clone().add(event.duration, 's');
                         }
                     }
