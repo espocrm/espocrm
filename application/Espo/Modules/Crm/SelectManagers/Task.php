@@ -18,23 +18,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\SelectManagers;
 
 class Task extends \Espo\Core\SelectManagers\Base
 {
-    protected function boolFilterActive(&$result)
+    protected function boolFilterActual(&$result)
     {
         $result['whereClause'][] = array(
             'status!=' => array('Completed', 'Canceled')
         );
     }
 
-    protected function boolFilterInative(&$result)
+    protected function boolFilterCompleted(&$result)
     {
         $result['whereClause'][] = array(
-            'status' => array('Completed', 'Canceled')
+            'status' => array('Completed')
         );
     }
 }

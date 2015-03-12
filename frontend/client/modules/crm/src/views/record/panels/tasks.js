@@ -27,7 +27,9 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
         template: 'crm:record.panels.tasks',
 
-        tabList: ['Active', 'Inactive'],
+        tabList: ['Actual', 'Completed'],
+
+        defaultTab: 'Actual',
 
         sortBy: 'createdAt',
 
@@ -99,7 +101,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
         },
 
         setup: function () {
-            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'Active';
+            this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
 
             this.where = [
                 {
