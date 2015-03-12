@@ -326,7 +326,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         foreach ($specifiedIds as $id) {
                             if (!in_array($id, $existingIds)) {
                                 $data = null;
-                                if (!empty($columns)) {
+                                if (!empty($columns) && isset($columnData->$id)) {
                                     $data = $columnData->$id;
                                 }
                                 $this->relate($entity, $name, $id, $data);
