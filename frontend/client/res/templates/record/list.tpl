@@ -9,15 +9,15 @@
     {{/if}}
 
     {{#if checkboxes}}
-    {{#if actions}}
+    {{#if massActionList}}
     <div class="btn-group actions">
         <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
         {{translate 'Actions'}}
         <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            {{#each actions}}
-            <li><a href="javascript:" data-action="{{name}}" class='mass-action'>{{translate label scope=../scope}}</a></li>
+            {{#each massActionList}}
+            <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
             {{/each}}
         </ul>
     </div>
@@ -34,7 +34,7 @@
                 {{#if checkboxes}}
                 <th width="5%">
                     <input type="checkbox" class="select-all">
-                    {{#if checkAllResultEnabled}}
+                    {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
                         <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
@@ -43,7 +43,7 @@
                             <li><a href="javascript:" data-action="selectAllResult">{{translate 'Select All Result'}}</a></li>
                         </ul>
                     </div>
-                    {{/if}}
+                    {{/unless}}
                 </th>
                 {{/if}}
                 {{#each headerDefs}}

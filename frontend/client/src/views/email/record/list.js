@@ -23,11 +23,7 @@ Espo.define('Views.Email.Record.List', 'Views.Record.List', function (Dep) {
 
     return Dep.extend({
 
-        mergeAction: false,
-
-        massUpdateAction: false,
-
-        exportAction: false,
+        massActionList: ['remove'],
 
         setup: function () {
             Dep.prototype.setup.call(this);

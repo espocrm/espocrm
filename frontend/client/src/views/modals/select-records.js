@@ -138,11 +138,11 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                             el: this.containerSelector + ' .list-container',
                             selectable: true,
                             checkboxes: this.multiple,
-                            actions: false,
+                            massActionsDisabled: true,
                             rowActionsView: false,
                             type: 'listSmall',
                             searchManager: searchManager,
-                            checkAllResultEnabled: this.massRelateEnabled
+                            checkAllResultDisabled: !this.massRelateEnabled
                         }, function (list) {
                             list.once('select', function (model) {
                                 this.trigger('select', model);

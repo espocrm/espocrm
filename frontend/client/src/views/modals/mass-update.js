@@ -72,6 +72,8 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
 
             this.scope = this.options.scope;
             this.ids = this.options.ids;
+            this.where = this.options.where;
+            this.byWhere = this.options.byWhere;
 
             this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
 
@@ -140,19 +142,13 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
                         attributes: attributes,
                         ids: self.ids || null,
                         where: (self.ids.length == 0) ? self.options.where : null,
+                        byWhere: this.byWhere
                     }),
-                    success: function (idsUpdated) {
-                        var count = idsUpdated.length;
-                        if (count) {
-                            var msg = 'massUpdateResult';
-                            if (count == 1) {                            
-                                msg = 'massUpdateResultSingle'
-                            }              
-                            Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
-                        } else {
-                            Espo.Ui.success(self.translate('noRecordsUpdated', 'messages'));
-                        }                        
-                        self.trigger('after:update');
+                    success: function (result) {
+                        var result = result || {};
+                        var count = result.count;
+
+                        self.trigger('after:update', count);
                     },
                     error: function () {
                         self.notify('Error occurred', 'error');

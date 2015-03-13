@@ -194,9 +194,17 @@ class Record extends Base
 
         $ids = $request->get('ids');
         $where = $request->get('where');
+        $byWhere = $request->get('byWhere');
+
+        $params = array();
+        if ($byWhere) {
+            $params['where'] = $where;
+        } else {
+            $params['ids'] = $ids;
+        }
 
         return array(
-            'id' => $this->getRecordService()->export($ids, $where)
+            'id' => $this->getRecordService()->export($params)
         );
     }
 
@@ -205,12 +213,20 @@ class Record extends Base
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
+        if (empty($data['attributes'])) {
+            throw new BadRequest();
+        }
 
-        $ids = $data['ids'];
-        $where = $data['where'];
+        $params = array();
+        if (array_key_exists('where', $data) && !empty($data['byWhere'])) {
+            $params['where'] = json_decode(json_encode($data['where']), true);
+        } else if (array_key_exists('ids', $data)) {
+            $params['ids'] = $data['ids'];
+        }
+
         $attributes = $data['attributes'];
 
-        $idsUpdated = $this->getRecordService()->massUpdate($attributes, $ids, $where);
+        $idsUpdated = $this->getRecordService()->massUpdate($attributes, $params);
 
         return $idsUpdated;
     }
@@ -221,10 +237,17 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $ids = $data['ids'];
-        $where = $data['where'];
+        $params = array();
+        if (array_key_exists('where', $data) && !empty($data['byWhere'])) {
+            $where = json_decode(json_encode($data['where']), true);
+            $params['where'] = $where;
+        }
+        if (array_key_exists('ids', $data)) {
+            $where = json_decode(json_encode($data['where']), true);
+            $params['ids'] = $data['ids'];
+        }
 
-        $idsRemoved = $this->getRecordService()->massRemove($ids, $where);
+        $idsRemoved = $this->getRecordService()->massRemove($params);
 
         return $idsRemoved;
     }

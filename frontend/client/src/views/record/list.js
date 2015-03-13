@@ -148,15 +148,13 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             'click .actions a.mass-action': function (e) {
                 $el = $(e.currentTarget);
                 var action = $el.data('action');
-                this.actions.forEach(function (item) {
-                    if (item.name == action) {
-                        item.action.call(this, e);
-                    }
-                }, this);
+
+                var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
+                if (method in this) {
+                	this[method]();
+                }
             }
         },
-
-        actions: [],
 
         /**
          * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
@@ -169,6 +167,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         header: true,
 
         showMore: true,
+
+        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
+
+        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 
         removeAction: true,
 
@@ -189,7 +191,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         checkedList: null,
 
-        checkAllResultEnabled: false,
+        checkAllResultDisabled: false,
 
         allResultIsChecked: false,
 
@@ -209,11 +211,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 moreCount: this.collection.total - this.collection.length,
 
                 checkboxes: this.checkboxes,
-                actions: this._getActions(),
+                massActionList: this.massActionList,
                 rows: this.rows,
                 topBar: paginationTop || this.checkboxes,
                 bottomBar: paginationBottom,
-                checkAllResultEnabled: this.checkAllResultEnabled
+                checkAllResultDisabled: this.checkAllResultDisabled
             };
         },
 
@@ -227,8 +229,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
 
-            if ('checkAllResultEnabled' in this.options) {
-                this.checkAllResultEnabled = this.options.checkAllResultEnabled;
+            if ('checkAllResultDisabled' in this.options) {
+                this.checkAllResultDisabled = this.options.checkAllResultDisabled;
             }
         },
 
@@ -237,6 +239,15 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
+
+            this.massActionList.forEach(function(item) {
+            	if (!~this.checkAllResultMassActionList.indexOf(item)) {
+            		this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
+            	}
+            }, this);
+
+            this.$el.find('.actions-button').removeAttr('disabled');
+            this.$el.find('.list > table tbody tr').removeClass('active');
         },
 
         unselectAllResult: function () {
@@ -244,6 +255,13 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
+
+
+            this.massActionList.forEach(function(item) {
+            	if (!~this.checkAllResultMassActionList.indexOf(item)) {
+            		this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
+            	}
+            }, this);
         },
 
         deactivate: function () {
@@ -254,22 +272,178 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         },
 
         export: function () {
-            var ids = this.checkedList;
-            var where = this.collection.where;
+            var data = {};
+            if (this.allResultIsChecked) {
+            	data.where = this.collection.where;
+            	data.byWhere = true;
+            } else {
+            	data.ids = this.checkedList;
+            }
 
             $.ajax({
                 url: this.scope + '/action/export',
                 type: 'GET',
-                data: {
-                    ids: ids || null,
-                    where: (ids.length == 0) ? where : null,
-                },
+                data: data,
                 success: function (data) {
                     if ('id' in data) {
                         window.location = '?entryPoint=download&id=' + data.id;
                     }
                 },
             });
+        },
+
+        massActionRemove: function () {
+            if (!this.getAcl().check(this.scope, 'delete')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            var count = this.checkedList.length;
+            var deletedCount = 0;
+
+            var self = this;
+
+            if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
+                this.notify('Removing...');
+
+                var ids = [];
+                var data = {};
+                if (this.allResultIsChecked) {
+                	data.where = this.collection.where;
+                	data.byWhere = true;
+                } else {
+                	data.ids = ids;
+                }
+
+                for (var i in this.checkedList) {
+                    ids.push(this.checkedList[i]);
+                }
+
+                $.ajax({
+                    url: this.collection.url + '/action/massDelete',
+                    type: 'POST',
+                    data: JSON.stringify(data)
+                }).done(function (result) {
+            		result = result || {};
+            		var count = result.count;
+                	if (this.allResultIsChecked) {
+
+                		if (count) {
+                			this.unselectAllResult();
+                			this.listenToOnce(this.collection, 'sync', function () {
+		                        var msg = 'massRemoveResult';
+		                        if (count == 1) {
+		                            msg = 'massRemoveResultSingle'
+		                        }
+                				Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                			}, this);
+                			this.collection.fetch();
+                			Espo.Ui.notify(false);
+                		} else {
+                			Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
+                		}
+                	} else {
+                		var idsRemoved = result.idsRemoved || [];
+	                    if (this.collection.total > 0) {
+	                        this.collection.total = this.collection.total - count;
+	                    }
+	                    if (count) {
+	                        idsRemoved.forEach(function (id) {
+	                            Espo.Ui.notify(false);
+	                            this.checkedList = [];
+	                            var model = this.collection.get(id);
+	                            this.collection.remove(model);
+
+	                            this.$el.find('tr[data-id="' + id + '"]').remove();
+	                            if (this.collection.length == 0 && this.collection.total == 0) {
+	                                this.render();
+	                            }
+	                        }, this);
+	                        var msg = 'massRemoveResult';
+	                        if (count == 1) {
+	                            msg = 'massRemoveResultSingle'
+	                        }
+	                        Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
+	                    } else {
+	                        Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
+	                    }
+	                }
+                }.bind(this));
+			}
+        },
+
+        massActionMerge: function () {
+            if (!this.getAcl().check(this.scope, 'edit')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            if (this.checkedList.length < 2) {
+                this.notify('Select 2 or more records', 'error');
+                return;
+            }
+            if (this.checkedList.length > 4) {
+                this.notify('Select not more than 4 records', 'error');
+                return;
+            }
+            this.checkedList.sort();
+            var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
+            this.getRouter().navigate(url, {trigger: true});
+        },
+
+        massActionMassUpdate: function () {
+            if (!this.getAcl().check(this.scope, 'edit')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            this.notify('Loading...');
+            var ids = this.checkedList;
+            var allResultIsChecked = this.allResultIsChecked;
+            this.createView('massUpdate', 'Modals.MassUpdate', {
+                scope: this.scope,
+                ids: ids,
+                where: this.collection.where,
+                byWhere: this.allResultIsChecked
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                view.once('after:update', function (count) {
+                    view.close();
+                    this.listenToOnce(this.collection, 'sync', function () {
+                        if (count) {
+                            var msg = 'massUpdateResult';
+                            if (count == 1) {
+                                msg = 'massUpdateResultSingle'
+                            }
+                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                        } else {
+                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
+                        }
+                        if (allResultIsChecked) {
+                        	this.selectAllResult();
+	                    } else {
+	                        ids.forEach(function (id) {
+	                            this.checkRecord(id);
+	                        }, this);
+	                    }
+                    }.bind(this));
+                    this.collection.fetch();
+                }, this);
+            }.bind(this));
+        },
+
+        massActionExport: function () {
+	        if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
+	            this.export();
+	        }
+        },
+
+        removeMassAction: function (item) {
+			var index = this.massActionList.indexOf(item);
+			if (~index) {
+				this.massActionList.splice(index, 1);
+			}
         },
 
         setup: function () {
@@ -279,127 +453,20 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             this.scope = this.collection.name || null;
             this.events = Espo.Utils.clone(this.events);
-            this.actions = Espo.Utils.clone(this.actions);
+            this.massActionList = Espo.Utils.clone(this.massActionList);
 
-            if (this.checkboxes) {
+            var checkAllResultMassActionList = [];
+            this.checkAllResultMassActionList.forEach(function (item) {
+            	if (~this.massActionList.indexOf(item)) {
+            		checkAllResultMassActionList.push(item);
+            	}
+            }, this);
+            this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-                if (this.removeAction) {
-                    this.actions.push({
-                        name: 'remove',
-                        label: 'Remove',
-                        action: function (e) {
-                            if (!this.getAcl().check(this.scope, 'delete')) {
-                                this.notify('Access denied', 'error');
-                                return false;
-                            }
+            Espo.Utils.clone(this.massActionList);
 
-                            var count = this.checkedList.length;
-                            var deletedCount = 0;
-
-                            var self = this;
-
-                            if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
-                                this.notify('Removing...');
-                                var ids = [];
-                                for (var i in this.checkedList) {
-                                    ids.push(this.checkedList[i]);
-                                }
-
-                                $.ajax({
-                                    url: this.collection.url + '/action/massDelete',
-                                    type: 'POST',
-                                    data: JSON.stringify({
-                                        ids: ids
-                                    })
-                                }).done(function (idsRemoved) {
-                                    var count = idsRemoved.length;
-                                    if (this.collection.total > 0) {
-                                        this.collection.total = this.collection.total - count;
-                                    }
-                                    if (count) {
-                                        idsRemoved.forEach(function (id) {
-                                            Espo.Ui.notify(false);
-                                            this.checkedList = [];
-                                            var model = this.collection.get(id);
-                                            this.collection.remove(model);
-
-                                            this.$el.find('tr[data-id="' + id + '"]').remove();
-                                            if (this.collection.length == 0 && this.collection.total == 0) {
-                                                this.render();
-                                            }
-                                        }, this);
-                                        var msg = 'massRemoveResult';
-                                        if (count == 1) {
-                                            msg = 'massRemoveResultSingle'
-                                        }
-                                        Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
-                                    } else {
-                                        Espo.Ui.success(self.translate('noRecordsRemoved', 'messages'));
-                                    }
-                                }.bind(this));
-
-                            }
-                        }
-                    });
-                }
-
-                if (this.mergeAction) {
-                    this.actions.push({
-                        name: 'merge',
-                        label: 'Merge',
-                        action: function (e) {
-                            if (!this.getAcl().check(this.scope, 'edit')) {
-                                this.notify('Access denied', 'error');
-                                return false;
-                            }
-
-                            if (this.checkedList.length < 2) {
-                                this.notify('Select 2 or more records', 'error');
-                                return;
-                            }
-                            if (this.checkedList.length > 4) {
-                                this.notify('Select not more than 4 records', 'error');
-                                return;
-                            }
-                            this.checkedList.sort();
-                            var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
-                            this.getRouter().navigate(url, {trigger: true});
-                        }
-                    });
-                }
-
-                if (this.massUpdateAction) {
-                    this.actions.push({
-                        name: 'massUpdate',
-                        label: 'Mass Update',
-                        action: function (e) {
-                            if (!this.getAcl().check(this.scope, 'edit')) {
-                                this.notify('Access denied', 'error');
-                                return false;
-                            }
-
-                            this.notify('Loading...');
-                            var ids = this.checkedList;
-                            this.createView('massUpdate', 'Modals.MassUpdate', {
-                                scope: this.scope,
-                                ids: ids,
-                                where: this.collection.where
-                            }, function (view) {
-                                view.render();
-                                view.notify(false);
-                                view.once('after:update', function () {
-                                    view.close();
-                                    this.listenToOnce(this.collection, 'sync', function () {
-                                        ids.forEach(function (id) {
-                                            this.checkRecord(id);
-                                        }, this);
-                                    }.bind(this));
-                                    this.collection.fetch();
-                                }, this);
-                            }.bind(this));
-                        }
-                    });
-                }
+            if (this.getConfig().get('disableExport') && !this.getUser().get('isAdmin')) {
+            	this.removeMassAction('export');
             }
 
             if (this.selectable) {
@@ -423,20 +490,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.showCount = this.options.showCount;
             }
 
-            if (this.exportAction) {
-                if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
-                    this.actions.push({
-                        name: 'export',
-                        label: 'Export',
-                        action: function (e) {
-                            this.export();
-                        }.bind(this)
-                    });
-                }
-            }
 
-            if (this.options.actions === false) {
-                this.actions = [];
+            if (this.options.massActionsDisabled) {
+                this.massActionList = [];
             }
 
             this.listenTo(this.collection, 'sync', function () {
@@ -453,12 +509,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             this.checkedList = [];
             this.buildRows();
-        },
-
-        _getActions: function () {
-            if (this.checkboxes) {
-                return this.actions;
-            }
         },
 
         _loadListLayout: function (callback) {

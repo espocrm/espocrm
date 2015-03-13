@@ -730,47 +730,103 @@ class Record extends \Espo\Core\Services\Base
         return $this->getRepository()->massRelate($entity, $link, $selectParams);
     }
 
-    public function massUpdate($attributes = array(), $ids = array(), $where = array())
+    public function massUpdate($attributes = array(), array $params)
     {
         $idsUpdated = array();
         $repository = $this->getRepository();
 
-        if (!empty($ids)) {
+        $count = 0;
+
+        if (array_key_exists('ids', $params)) {
+            $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
                 if ($this->getAcl()->check($entity, 'edit')) {
                     $entity->set(get_object_vars($attributes));
                     if ($repository->save($entity)) {
                         $idsUpdated[] = $id;
+                        $count++;
                     }
                 }
             }
         }
 
-        return $idsUpdated;
+        if (array_key_exists('where', $params)) {
+            $where = $params['where'];
+            $p = array();
+            $p['where'] = $where;
+            $selectParams = $this->getSelectParams($p, true);
+            print_r($where);
+            print_r($selectParams);
 
-        // TODO update $where
+            $collection = $repository->find($selectParams);
+
+            foreach ($collection as $entity) {
+                if ($this->getAcl()->check($entity, 'edit')) {
+                    $entity->set(get_object_vars($attributes));
+                    if ($repository->save($entity)) {
+                        $idsUpdated[] = $id;
+                        $count++;
+                    }
+                }
+            }
+
+            return array(
+                'count' => $count
+            );
+
+        }
+
+        return array(
+            'count' => $count,
+            'ids' => $idsUpdated
+        );
     }
 
-    public function massRemove($ids = array(), $where = array())
+    public function massRemove(array $params)
     {
         $idsRemoved = array();
         $repository = $this->getRepository();
 
-        if (!empty($ids)) {
+        $count = 0;
+
+        if (array_key_exists('ids',$params)) {
+            $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
-                if ($this->getAcl()->check($entity, 'remove')) {
+                if ($entity && $this->getAcl()->check($entity, 'remove')) {
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $id;
+                        $count++;
                     }
                 }
             }
         }
 
-        return $idsRemoved;
+        if (array_key_exists('where',$params)) {
+            $where = $params['where'];
+            $p = array();
+            $p['where'] = $where;
+            $selectParams = $this->getSelectParams($p, true);
+            $collection = $repository->find($selectParams);
 
-        // TODO update $where
+            foreach ($collection as $entity) {
+                if ($this->getAcl()->check($entity, 'remove')) {
+                    if ($repository->remove($entity)) {
+                        $idsRemoved[] = $id;
+                        $count++;
+                    }
+                }
+            }
+            return array(
+                'count' => $count
+            );
+        }
+
+        return array(
+            'count' => $count,
+            'ids' => $idsRemoved
+        );
     }
 
     public function follow($id, $userId = null)
@@ -823,9 +879,10 @@ class Record extends \Espo\Core\Services\Base
         return false;
     }
 
-    public function export($ids, $where)
+    public function export(array $params)
     {
-        if (!empty($ids)) {
+        if (array_key_exists('ids', $params)) {
+            $ids = $params['ids'];
             $where = array(
                 array(
                     'type' => 'in',
@@ -833,9 +890,17 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
+            $selectParams = $this->getSelectManager($this->entityName)->getSelectParams(array('where' => $where), true);
+        } else if (array_key_exists('where', $params)) {
+            $where = $params['where'];
+
+            $p = array();
+            $p['where'] = $where;
+            $selectParams = $this->getSelectParams($p, true);
+        } else {
+            throw new BadRequest();
         }
 
-        $selectParams = $this->getSelectManager($this->entityName)->getSelectParams(array('where' => $where), true);
         $collection = $this->getRepository()->find($selectParams);
 
         $arr = array();
