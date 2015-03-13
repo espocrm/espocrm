@@ -224,7 +224,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                                 ".$pdo->quote($entity->id).",
                                 ".$pdo->quote($entity->getEntityName()).",
                                 ".$pdo->quote($phoneNumber->id).",
-                                ".$pdo->quote($number === $primary)."
+                                ".$pdo->quote((int)($number === $primary))."
                             )
                     ";
                     $sth = $pdo->prepare($query);
