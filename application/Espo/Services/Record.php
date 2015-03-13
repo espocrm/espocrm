@@ -756,8 +756,6 @@ class Record extends \Espo\Core\Services\Base
             $p = array();
             $p['where'] = $where;
             $selectParams = $this->getSelectParams($p, true);
-            print_r($where);
-            print_r($selectParams);
 
             $collection = $repository->find($selectParams);
 
