@@ -245,6 +245,8 @@
                 if (translationHash === null) {
                     if (!category && field) {
                         translationHash = self.language.translate(field, 'options', scope) || {};
+                    } else {
+                        translationHash = {};
                     }
                 }
 
