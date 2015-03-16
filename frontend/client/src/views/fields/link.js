@@ -39,6 +39,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
         foreignScope: null,
 
+        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -89,6 +91,10 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
             }
         },
 
+        getAutocompleteUrl: function () {
+            return this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+        },
+
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
@@ -116,7 +122,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
                 this.$elementName.autocomplete({
                     serviceUrl: function (q) {
-                        return this.foreignScope + '?orderBy=name&limit=7';
+                        return this.getAutocompleteUrl(q);
                     }.bind(this),
                     paramName: 'q',
                     minChars: 1,

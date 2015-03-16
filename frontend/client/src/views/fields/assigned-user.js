@@ -24,22 +24,26 @@ Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function
     return Dep.extend({
 
         init: function () {
-
-            if (this.getAcl().get('assignmentPermission') == 'no') {
+            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+            if (this.assignmentPermission == 'no') {
                 this.readOnly = true;
-
-                /*if (this.mode == 'edit') {
-                    this.mode = 'detail';
-                }*/
             }
             Dep.prototype.init.call(this);
         },
 
         getSelectBoolFilters: function () {
-            var assignmentPermission = this.getAcl().get('assignmentPermission');
-            if (assignmentPermission == 'team') {
+            if (this.assignmentPermission == 'team') {
                 return {'onlyMyTeam': true};
             }
+        },
+
+        getAutocompleteUrl: function () {
+            var url = Dep.prototype.getAutocompleteUrl.call(this);
+            if (this.assignmentPermission == 'team') {
+                url += '&where%5B0%5D%5Btype%5D=boolFilters&where%5B0%5D%5Bvalue%5D%5B%5D=onlyMyTeam';
+            }
+
+            return url;
         },
 
     });

@@ -23,12 +23,26 @@ Espo.define('Views.Fields.Teams', 'Views.Fields.LinkMultiple', function (Dep) {
 
     return Dep.extend({
 
+        init: function () {
+            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+            Dep.prototype.init.call(this);
+        },
+
         getSelectBoolFilters: function () {
-            var assignmentPermission = this.getAcl().get('assignmentPermission');
-            if (assignmentPermission == 'team' || assignmentPermission == 'no') {
+            if (this.assignmentPermission == 'team' || this.assignmentPermission == 'no') {
                 return {'onlyMy': true};
             }
         },
+
+        getAutocompleteUrl: function () {
+            var url = Dep.prototype.getAutocompleteUrl.call(this);
+            if (this.assignmentPermission == 'team' || this.assignmentPermission == 'no') {
+                url += '&where%5B0%5D%5Btype%5D=boolFilters&where%5B0%5D%5Bvalue%5D%5B%5D=onlyMy';
+            }
+
+            return url;
+        },
+
 
 
     });

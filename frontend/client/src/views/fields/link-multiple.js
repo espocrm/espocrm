@@ -41,6 +41,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         foreignScope: null,
 
+        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -107,13 +109,17 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             }
         },
 
+        getAutocompleteUrl: function () {
+            return this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+        },
+
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element = this.$el.find('input.main-element');
 
                 this.$element.autocomplete({
                     serviceUrl: function (q) {
-                        return this.foreignScope + '?orderBy=name&limit=7';
+                        return this.getAutocompleteUrl(q);
                     }.bind(this),
                     minChars: 1,
                     paramName: 'q',
