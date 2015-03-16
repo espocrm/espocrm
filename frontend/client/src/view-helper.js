@@ -240,7 +240,8 @@
                 var category = options.hash.category || false;
                 var field = options.hash.field || false;
 
-                var translationHash = options.hash.translatedOptions || null;
+                var translationHash = options.hash.translationHash || null;
+
                 if (translationHash === null) {
                     if (!category && field) {
                         translationHash = self.language.translate(field, 'options', scope) || {};
@@ -249,10 +250,7 @@
 
                 var translate = function (name) {
                     if (!category) {
-                        if (typeof translationHash === 'object' && name in translationHash) {
-                            return translationHash[name];
-                        }
-                        return name;
+                        return translationHash[name] || name;
                     }
                     return self.language.translate(name, category, scope);
                 };
