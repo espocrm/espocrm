@@ -140,7 +140,6 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
         },
 
         addAddress: function (address, name, type, id) {
-            console.log(address, name, type, id);
             if (!~this.addressList.indexOf(address)) {
                 this.addressList.push(address);
                 this.nameHash[address] = name;
@@ -148,7 +147,6 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
                 if (type) {
                     this.typeHash[address] = type;
                 }
-                console.log(id);
                 if (id) {
                     this.idHash[address] = id;
                 }
