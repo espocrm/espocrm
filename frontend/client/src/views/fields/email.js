@@ -73,7 +73,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                 if (this.model.isNew() || !this.model.get(this.name)) {
                     if (!emailAddressData || !emailAddressData.length) {
                          emailAddressData = [{
-                            emailAddress: '',
+                            emailAddress: this.model.get(this.name) || '',
                             primary: true,
                             optOut: false,
                             invalid: false

@@ -56,7 +56,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                     }
                     if (!phoneNumberData || !phoneNumberData.length) {
                          phoneNumberData = [{
-                            phoneNumber: '',
+                            phoneNumber: this.model.get(this.name) || '',
                             primary: true,
                             type: this.defaultType,
                         }];
