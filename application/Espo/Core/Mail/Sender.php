@@ -203,7 +203,6 @@ class Sender
         }
 
         $attachmentPartList = array();
-
         $attachmentCollection = $email->get('attachments');
         $attachmentInlineCollection = $email->getInlineAttachments();
 
