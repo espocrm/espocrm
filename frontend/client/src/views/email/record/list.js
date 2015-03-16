@@ -28,29 +28,27 @@ Espo.define('Views.Email.Record.List', 'Views.Record.List', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.actions.push({
-                name: 'markAsRead',
-                label: 'Mark Read',
-                action: function (e) {
-                    var ids = [];
-                    for (var i in this.checkedList) {
-                        ids.push(this.checkedList[i]);
-                    }
-                    $.ajax({
-                        url: 'Email/action/markAsRead',
-                        type: 'POST',
-                        data: JSON.stringify({
-                            ids: ids
-                        })
-                    });
-                    ids.forEach(function (id) {
-                    	var model = this.collection.get(id);
-                    	if (model) {
-                    		model.set('isRead', true);
-                    	}
-                    }, this);
-                }.bind(this)
+            this.massActionList.push('markAsRead');
+        },
+
+        massActionMarkAsRead: function () {
+            var ids = [];
+            for (var i in this.checkedList) {
+                ids.push(this.checkedList[i]);
+            }
+            $.ajax({
+                url: 'Email/action/markAsRead',
+                type: 'POST',
+                data: JSON.stringify({
+                    ids: ids
+                })
             });
+            ids.forEach(function (id) {
+                var model = this.collection.get(id);
+                if (model) {
+                    model.set('isRead', true);
+                }
+            }, this);
         },
 
     });

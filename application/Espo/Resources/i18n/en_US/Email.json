@@ -53,5 +53,8 @@
         "sent": "Sent",
         "archived": "Archived",
         "draft": "Draft"
+    },
+    "massActions": {
+        "markAsRead": "Mark As Read"
     }
 }
