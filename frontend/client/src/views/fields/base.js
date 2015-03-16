@@ -293,14 +293,18 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             }
         },
 
-        afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
-                this.$element = this.$el.find('[name="' + this.name + '"]');
-            }
+        initElement: function () {
+            this.$element = this.$el.find('[name="' + this.name + '"]');
             if (this.mode == 'edit') {
                 this.$element.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
+            }
+        },
+
+        afterRender: function () {
+            if (this.mode == 'edit' || this.mode == 'search') {
+                this.initElement();
             }
         },
 

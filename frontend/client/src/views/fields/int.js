@@ -17,25 +17,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
 
         type: 'int',
-        
+
         editTemplate: 'fields.int.edit',
-        
+
         searchTemplate: 'fields.int.search',
-        
+
         validations: ['required', 'int', 'range'],
-    
+
         setup: function () {
             Dep.prototype.setup.call(this);
             this.defineMaxLength();
         },
-        
+
         setupSearch: function () {
             this.searchParams.typeOptions = ['equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'];
             this.events = _.extend({
@@ -49,14 +49,14 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
                 },
             }, this.events || {});
         },
-    
+
         defineMaxLength: function () {
-            var maxValue = this.model.getFieldParam(this.name, 'max');            
+            var maxValue = this.model.getFieldParam(this.name, 'max');
             if (maxValue) {
-                this.params.maxLength = maxValue.toString().length;    
-            }    
-        },        
-    
+                this.params.maxLength = maxValue.toString().length;
+            }
+        },
+
         validateInt: function () {
             var value = this.model.get(this.name);
             if (isNaN(value)) {
@@ -65,17 +65,17 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
                 return true;
             }
         },
-    
+
         validateRange: function () {
             var value = this.model.get(this.name);
-        
+
             if (value === null) {
                 return false;
             }
-                
+
             var minValue = this.model.getFieldParam(this.name, 'min');
             var maxValue = this.model.getFieldParam(this.name, 'max');
-        
+
             if (minValue !== null && maxValue !== null) {
                 if (value < minValue || value > maxValue ) {
                     var msg = this.translate('fieldShouldBeBetween', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
@@ -102,7 +102,7 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
                 }
             }
         },
-    
+
         validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 var value = this.model.get(this.name);
@@ -113,7 +113,7 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
                 }
             }
         },
-        
+
         parse: function (value) {
             value = (value !== '') ? value : null;
             if (value !== null) {
@@ -125,29 +125,29 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
             }
             return value;
         },
-    
+
         fetch: function () {
             var value = this.$el.find('[name="'+this.name+'"]').val();
-            value = this.parse(value);            
+            value = this.parse(value);
             var data = {};
             data[this.name] = value;
-            return data; 
-        },        
-        
+            return data;
+        },
+
         fetchSearch: function () {
             var value = this.parse(this.$element.val());
             var type = this.$el.find('[name="'+this.name+'-type"]').val();
             var data;
-            
+
             if (isNaN(value)) {
                 return false;
             }
-            
+
             if (type != 'between') {
                 data = {
                     type: type,
                     value: value,
-                    value1: value                                    
+                    value1: value
                 };
             } else {
                 var valueTo = this.parse(this.$el.find('[name="' + this.name + '-additional"]').val());
@@ -158,12 +158,12 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
                     type: type,
                     value: [value, valueTo],
                     value1: value,
-                    value2: valueTo                                
+                    value2: valueTo
                 };
             }
-            return data;                
+            return data;
         },
-        
+
     });
 });
 

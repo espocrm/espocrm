@@ -78,6 +78,16 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
             return text;
         },
 
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            var text = this.model.get(this.name);
+            if (this.mode == 'edit') {
+                if (text) {
+                    this.$element.val(text);
+                }
+            }
+        },
+
         fetchSearch: function () {
             var value = this.$element.val();
             if (value) {

@@ -72,6 +72,7 @@
                             isBlockLevel = true;
                         }
                         d.push(item.replace(/&gt; /gm, ''));
+
                     } else {
                         if (isBlockLevel) {
                             r.push('<blockquote>' + d.join(newline) + '</blockquote>' + item)
@@ -82,7 +83,9 @@
                     }
                 }, this);
 
-                r.pop();
+                if (r.slice(-1)[0] == '') {
+                    r.pop();
+                }
 
                 var t = r.join(newline);
 
