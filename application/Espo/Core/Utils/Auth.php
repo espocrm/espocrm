@@ -64,8 +64,6 @@ class Auth
 
     public function login($username, $password)
     {
-        $GLOBALS['log']->debug('AUTH: Try to authenticate');
-
         $entityManager = $this->entityManager;
 
         $authToken = $entityManager->getRepository('AuthToken')->where(array('token' => $password))->findOne();
@@ -79,7 +77,6 @@ class Auth
             }
             $entityManager->setUser($user);
             $this->container->setUser($user);
-            $GLOBALS['log']->debug('AUTH: Result of authenticate is [true]');
 
             if (!$authToken) {
                 $authToken = $entityManager->getEntity('AuthToken');
