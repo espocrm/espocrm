@@ -135,6 +135,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             var $record = this.getView('record').$el;
             var $window = $(window);
 
+            $window.off('scroll.detail');
             $window.on('scroll.detail', function (e) {
                 if ($(window.document).width() < 758) {
                     $container.removeClass('stick-sub');

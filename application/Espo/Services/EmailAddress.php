@@ -45,10 +45,10 @@ class EmailAddress extends Record
 
             $result[] = array(
                 'emailAddress' => $emailAddress,
-                'name' => $entity->get('name'),
-                'entityType' => $entityType
+                'entityName' => $entity->get('name'),
+                'entityType' => $entityType,
+                'entityId' => $entity->id
             );
-
 
             $c = $service->getEntity($entity->id);
             $emailAddressData = $c->get('emailAddressData');
@@ -57,8 +57,9 @@ class EmailAddress extends Record
                     $emailAddress = $d->emailAddress;
                     $result[] = array(
                         'emailAddress' => $emailAddress,
-                        'name' => $entity->get('name'),
-                        'entityType' => $entityType
+                        'entityName' => $entity->get('name'),
+                        'entityType' => $entityType,
+                        'entityId' => $entity->id
                     );
                     break;
                 }

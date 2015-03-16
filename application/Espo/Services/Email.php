@@ -138,7 +138,7 @@ class Email extends Record
             $this->send($entity);
         }
 
-        return $entity;
+        $this->loadAdditionalFields($entity);
     }
 
     public function loadFromField(Entity $entity)
@@ -189,7 +189,6 @@ class Email extends Record
 
     public function getEntity($id = null)
     {
-
         $entity = $this->getRepository()->get($id);
         if (!empty($entity) && !empty($id)) {
             $this->loadAdditionalFields($entity);
@@ -206,18 +205,25 @@ class Email extends Record
         }
 
         if (!empty($entity) && !empty($id)) {
-            $this->loadFromField($entity);
-            $this->loadToField($entity);
-            $this->loadCcField($entity);
-            $this->loadBccField($entity);
-
-            $this->loadNameHash($entity);
-
-            $this->loadAttachmentsTypes($entity);
-
             $this->markAsRead($entity->id);
         }
         return $entity;
+    }
+
+    protected function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+
+        $this->loadFromField($entity);
+        $this->loadToField($entity);
+        $this->loadCcField($entity);
+        $this->loadBccField($entity);
+
+        $this->loadNameHash($entity);
+
+        if ($entity->id) {
+            $this->loadAttachmentsTypes($entity);
+        }
     }
 
     public function markAsReadByIds(array $ids)

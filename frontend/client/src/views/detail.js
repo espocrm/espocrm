@@ -203,22 +203,21 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             }, this);
 
             this.notify('Loading...');
-            this.getModelFactory().create(scope, function (model) {
-                this.createView('quickCreate', 'Modals.Edit', {
-                    scope: scope,
-                    relate: {
-                        model: this.model,
-                        link: foreignLink,
-                    },
-                    attributes: attributes,
-                }, function (view) {
-                    view.render();
-                    view.notify(false);
-                    view.once('after:save', function () {
-                        self.updateRelationshipPanel(link);
-                    });
+
+            this.createView('quickCreate', 'Modals.Edit', {
+                scope: scope,
+                relate: {
+                    model: this.model,
+                    link: foreignLink,
+                },
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                view.once('after:save', function () {
+                    self.updateRelationshipPanel(link);
                 });
-            }.bind(this));
+            });
         },
 
         actionSelectRelated: function (data) {

@@ -28,10 +28,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 {
     protected function prepareAddressess(Entity $entity, $type)
     {
+        if (!$entity->has($type)) {
+            return;
+        }
+
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
         $address = $entity->get($type);
-        $ids = array();
+        $ids = [];
         if (!empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
             $arr = array_map(function ($e) {
                 return trim($e);
@@ -64,30 +68,45 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
-        $entity->set('usersIds', array());
 
-        $from = trim($entity->get('from'));
-        if (!empty($from)) {
-            $ids = $eaRepositoty->getIds(array($from));
-            if (!empty($ids)) {
-                $entity->set('fromEmailAddressId', $ids[0]);
-                $this->setUsersIdsByEmailAddressId($entity, $ids[0]);
+        if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc')) {
+
+            if (!$entity->has('usersIds')) {
+                $entity->loadLinkMultipleField('users');
             }
-        } else {
-            $entity->set('fromEmailAddressId', null);
+
+            if ($entity->has('from')) {
+                $from = trim($entity->get('from'));
+                if (!empty($from)) {
+                    $ids = $eaRepositoty->getIds(array($from));
+                    if (!empty($ids)) {
+                        $entity->set('fromEmailAddressId', $ids[0]);
+                        $this->setUsersIdsByEmailAddressId($entity, $ids[0]);
+                    }
+                } else {
+                    $entity->set('fromEmailAddressId', null);
+                }
+            }
+
+            if ($entity->has('to')) {
+                $this->prepareAddressess($entity, 'to');
+            }
+            if ($entity->has('cc')) {
+                $this->prepareAddressess($entity, 'cc');
+            }
+            if ($entity->has('bcc')) {
+                $this->prepareAddressess($entity, 'bcc');
+            }
+
+            $usersIds = $entity->get('usersIds');
+            $assignedUserId = $entity->get('assignedUserId');
+
+            if (!empty($assignedUserId) && !in_array($assignedUserId, $usersIds)) {
+                $usersIds[] = $assignedUserId;
+            }
+            $entity->set('usersIds', $usersIds);
+
         }
-
-        $this->prepareAddressess($entity, 'to');
-        $this->prepareAddressess($entity, 'cc');
-        $this->prepareAddressess($entity, 'bcc');
-
-        $usersIds = $entity->get('usersIds');
-        $assignedUserId = $entity->get('assignedUserId');
-
-        if (!empty($assignedUserId) && !in_array($assignedUserId, $usersIds)) {
-            $usersIds[] = $assignedUserId;
-        }
-        $entity->set('usersIds', $usersIds);
 
         parent::beforeSave($entity);
 

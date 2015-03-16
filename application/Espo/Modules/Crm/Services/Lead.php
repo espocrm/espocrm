@@ -55,6 +55,21 @@ class Lead extends \Espo\Services\Record
         return $data;
     }
 
+    public function afterCreate($entity, array $data)
+    {
+        parent::afterCreate($entity, $data);
+        if (!empty($data['emailId'])) {
+            $email = $this->getEntityManager()->getEntity('Email', $data['emailId']);
+            if ($email && !$email->get('parentId')) {
+                $email->set(array(
+                    'parentType' => 'Lead',
+                    'parentId' => $entity->id
+                ));
+                $this->getEntityManager()->saveEntity($email);
+            }
+        }
+    }
+
     public function convert($id, $recordsData)
     {
         $lead = $this->getEntity($id);

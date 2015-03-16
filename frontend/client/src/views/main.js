@@ -50,9 +50,10 @@ Espo.define('Views.Main', 'View', function (Dep) {
             this.menu = {};
 
             if (this.name && this.scope) {
-                var menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
-                this.menu = Espo.Utils.cloneDeep(menu);
+                this.menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
             }
+
+            this.menu = Espo.Utils.cloneDeep(this.menu);
 
             ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                 this.menu[type] = this.menu[type] || [];
@@ -97,6 +98,28 @@ Espo.define('Views.Main', 'View', function (Dep) {
                     }
                 }, this);
             }.bind(this));
+        },
+
+        removeMenuItem: function (name) {
+            var index = -1;
+            var type = false;
+
+            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
+                this.menu[t].forEach(function (item, i) {
+                    if (item.action == name) {
+                        index = i;
+                        type = t;
+                    }
+                }, this);
+            }, this);
+
+            if (~index && type) {
+                this.menu[type].splice(index, 1);
+            }
+
+            if (this.isRendered()) {
+                this.getView('header').render();
+            }
         }
     });
 });

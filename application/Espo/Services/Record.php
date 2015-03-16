@@ -425,7 +425,7 @@ class Record extends \Espo\Core\Services\Base
 
         $entity->set($data);
 
-        $this->beforeCreate($entity);
+        $this->beforeCreate($entity, $data);
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
@@ -443,7 +443,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($this->storeEntity($entity)) {
-            $this->afterCreate($entity);
+            $this->afterCreate($entity, $data);
             $this->prepareEntityForOutput($entity);
             return $entity;
         }
@@ -479,14 +479,14 @@ class Record extends \Espo\Core\Services\Base
 
         $entity->set($data);
 
-        $this->beforeUpdate($entity);
+        $this->beforeUpdate($entity, $data);
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
         }
 
         if ($this->storeEntity($entity)) {
-            $this->afterUpdate($entity);
+            $this->afterUpdate($entity, $data);
             $this->prepareEntityForOutput($entity);
             return $entity;
         }
@@ -494,19 +494,19 @@ class Record extends \Espo\Core\Services\Base
         throw new Error();
     }
 
-    protected function beforeCreate(Entity $entity)
+    protected function beforeCreate(Entity $entity, array $data = array())
     {
     }
 
-    protected function afterCreate(Entity $entity)
+    protected function afterCreate(Entity $entity, array $data = array())
     {
     }
 
-    protected function beforeUpdate(Entity $entity)
+    protected function beforeUpdate(Entity $entity, array $data = array())
     {
     }
 
-    protected function afterUpdate(Entity $entity)
+    protected function afterUpdate(Entity $entity, array $data = array())
     {
     }
 
