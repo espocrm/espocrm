@@ -57,6 +57,9 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
             var list = Dep.prototype.getAttributeList.call(this);
             list.push('nameHash');
             list.push('typeHash');
+            list.push('idHash');
+            list.push(this.name + 'EmailAddressesNames');
+            list.push(this.name + 'EmailAddressesIds');
             return list;
         },
 
@@ -66,7 +69,7 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
             this.nameHash = {};
 
             this.initAddressList();
-            this.listenTo(this.model, 'change', function (model) {
+            this.listenTo(this.model, 'change:' + this.name, function (model) {
                 this.initAddressList();
             }, this);
         },
@@ -77,7 +80,6 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
             }).map(function (item) {
                 return item.trim();
             });
-
 
             this.idHash = this.idHash || {};
             this.typeHash = this.typeHash || {};
@@ -206,7 +208,7 @@ Espo.define('Views.Email.Fields.EmailAddressVarchar', 'Views.Fields.Varchar', fu
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
-            var addressHtml = '<span class="">' + address + '</span>';
+            var addressHtml = '<span>' + address + '</span>';
 
             var lineHtml;
             if (id) {
