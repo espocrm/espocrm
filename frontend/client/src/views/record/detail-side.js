@@ -89,9 +89,14 @@
         },
 
         setup: function () {
+            this.type = this.mode;
+            if ('type' in this.options) {
+                this.type = this.options.type;
+            }
+
             this.setupPanels();
 
-            var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.mode) || [];
+            var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.type) || [];
             additionalPanels.forEach(function (panel) {
                 this.panels.push(panel);
             }.bind(this));
@@ -100,7 +105,8 @@
                 var o = {
                     model: this.options.model,
                     el: this.options.el + ' .panel-body-' + p.name,
-                    readOnly: this.readOnly
+                    readOnly: this.readOnly,
+                    mode: this.mode
                 };
                 o = _.extend(o, p.options);
                 this.createView(p.name, p.view, o, function (view) {

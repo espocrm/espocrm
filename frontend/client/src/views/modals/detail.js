@@ -143,7 +143,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
         },
 
         createRecord: function (model, callback) {
-            var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.Detail'; 
+            var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.DetailSmall'; 
             var options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',

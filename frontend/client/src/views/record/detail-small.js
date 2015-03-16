@@ -18,48 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-
-Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
+Espo.define('Views.Record.DetailSmall', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.edit',
-
-        type: 'edit',
-
-        name: 'edit',
-
-        fieldsMode: 'edit',
-
-        buttons: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            }
-        ],
-
-        sideView: 'Record.EditSide',
-
         bottomView: null,
 
-        actionSave: function () {
-            this.save();
-        },
-
-        actionCancel: function () {
-            this.cancel();
-        },
-
-        cancel: function () {
-            this.exit('cancel');
-        },
-
     });
-});
 
+});
 

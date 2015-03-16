@@ -27,6 +27,13 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
             if (this.options.acl.edit) {
                 var list = [
                     {
+                        action: 'viewRelated',
+                        label: 'View',
+                        data: {
+                            id: this.model.id
+                        }
+                    },
+                    {
                         action: 'editRelated',
                         label: 'Edit',
                         data: {

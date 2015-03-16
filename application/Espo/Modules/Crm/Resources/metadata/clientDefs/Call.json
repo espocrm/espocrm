@@ -28,8 +28,21 @@
                         "users",
                         "contacts",
                         "leads"
-                    ],
-                    "mode":"detail"
+                    ]
+                }
+            }
+        ],
+        "detailSmall":[
+            {
+                "name":"attendees",
+                "label":"Attendees",
+                "view":"Record.Panels.Side",
+                "options":{
+                    "fieldList":[
+                        "users",
+                        "contacts",
+                        "leads"
+                    ]
                 }
             }
         ],
@@ -43,8 +56,21 @@
                         "users",
                         "contacts",
                         "leads"
-                    ],
-                    "mode":"edit"
+                    ]
+                }
+            }
+        ],
+        "editSmall":[
+            {
+                "name":"attendees",
+                "label":"Attendees",
+                "view":"Record.Panels.Side",
+                "options":{
+                    "fieldList":[
+                        "users",
+                        "contacts",
+                        "leads"
+                    ]
                 }
             }
         ]

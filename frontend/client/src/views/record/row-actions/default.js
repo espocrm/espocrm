@@ -24,10 +24,17 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
     return Dep.extend({
 
         template: 'record.row-actions.default',
-        
+
         getActions: function () {
             if (this.options.acl.edit) {
                 return [
+                    {
+                        action: 'quickView',
+                        label: 'View',
+                        data: {
+                            id: this.model.id
+                        }
+                    },
                     {
                         action: 'quickEdit',
                         label: 'Edit',
@@ -45,7 +52,7 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
                 ];
             }
         },
-        
+
         data: function () {
             return {
                 acl: this.options.acl,

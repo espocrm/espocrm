@@ -327,7 +327,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             		result = result || {};
             		var count = result.count;
                 	if (this.allResultIsChecked) {
-
                 		if (count) {
                 			this.unselectAllResult();
                 			this.listenToOnce(this.collection, 'sync', function () {
@@ -343,7 +342,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 			Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
                 		}
                 	} else {
-                		var idsRemoved = result.idsRemoved || [];
+                		var idsRemoved = result.ids || [];
 	                    if (this.collection.total > 0) {
 	                        this.collection.total = this.collection.total - count;
 	                    }
@@ -354,7 +353,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 	                            var model = this.collection.get(id);
 	                            this.collection.remove(model);
 
-	                            this.$el.find('tr[data-id="' + id + '"]').remove();
+	                            this.$el.find(this.getRowSelector(id)).remove();
 	                            if (this.collection.length == 0 && this.collection.total == 0) {
 	                                this.render();
 	                            }
@@ -833,6 +832,29 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             });
         },
 
+        actionQuickView: function (data) {
+            data = data || {};
+            var id = data.id;
+            if (!id) return;
+
+            this.notify('Loading...');
+            this.createView('quickDetail', 'Modals.Detail', {
+                scope: this.scope,
+                id: id
+            }, function (view) {
+                view.once('after:render', function () {
+                    Espo.Ui.notify(false);
+                });
+                view.render();
+                view.once('after:save', function () {
+                    var model = this.collection.get(id);
+                    if (model) {
+                        model.fetch();
+                    }
+                }, this);
+            }.bind(this));
+        },
+
         actionQuickEdit: function (d) {
             d = d || {}
             var id = d.id;
@@ -850,7 +872,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     });
                     view.render();
                     view.once('after:save', function () {
-                        this.collection.get(id).fetch();
+                        var model = this.collection.get(id);
+                        if (model) {
+                            model.fetch();
+                        }
                     }, this);
                 }.bind(this));
             } else {

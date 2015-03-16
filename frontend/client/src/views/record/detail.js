@@ -318,6 +318,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.sideView = this.options.sideView;
             }
 
+            if ('bottomView' in this.options) {
+                this.bottomView = this.options.bottomView;
+            }
+
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
@@ -505,7 +509,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.createView('side', this.sideView, {
                     model: this.model,
                     el: '#' + this.id + ' .side',
-                    readOnly: this.readOnly
+                    readOnly: this.readOnly,
+                    type: this.type
                 });
             }
 
