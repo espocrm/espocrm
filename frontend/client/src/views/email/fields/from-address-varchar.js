@@ -62,7 +62,7 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
                 return '';
             }
 
-            var name = this.nameHash[address] || null;
+            var name = this.nameHash[address] || this.getFromNameValue() || null;
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
@@ -71,10 +71,22 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
             var lineHtml;
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
+            } else if (name) {
+                lineHtml = '<div>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
                 lineHtml = '<div>' + addressHtml + '</div>';
             }
             return lineHtml;
+        },
+
+        getFromNameValue: function () {
+            var fromName = this.model.get('fromName');
+            if (!fromName) {
+                return '';
+            }
+
+            fromName = fromName.replace(/<(.*)>/, '').trim();
+            return fromName;
         },
 
     });
