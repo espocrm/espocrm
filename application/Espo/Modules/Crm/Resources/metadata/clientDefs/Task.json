@@ -30,6 +30,7 @@
       },
       {
          "name":"todays",
+         "style": "info",
          "data": {
             "dateEnd": {
                "type": "today",

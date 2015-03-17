@@ -98,6 +98,7 @@
         },
         {
             "name":"todays",
+            "style": "info",
             "data": {
                 "dateStart": {
                     "type": "today",
