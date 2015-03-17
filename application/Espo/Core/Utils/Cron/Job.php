@@ -58,6 +58,7 @@ class Job
     {
         /** Mark Failed old jobs and remove pending duplicates */
         $this->markFailedJobs();
+        $this->markJobAttempts();
         $this->removePendingJobDuplicates();
 
         $jobList = $this->getActiveJobs();
@@ -87,7 +88,6 @@ class Job
         $jobConfigs = $this->getConfig()->get('cron');
 
         $currentTime = time();
-        $periodTime = $currentTime - intval($jobConfigs['jobPeriod']);
         $limit = empty($jobConfigs['maxJobNumber']) ? '' : 'LIMIT '.$jobConfigs['maxJobNumber'];
 
         $query = "SELECT " . $displayColumns . " FROM job WHERE
@@ -158,9 +158,21 @@ class Job
      */
     protected function removePendingJobDuplicates()
     {
-        $duplicateJobs = $this->getActiveJobs('DISTINCT scheduled_job_id');
-
         $pdo = $this->getEntityManager()->getPDO();
+
+        $query = "SELECT scheduled_job_id FROM job
+                    WHERE
+                    scheduled_job_id IS NOT NULL
+                    AND `status` = '".CronManager::PENDING."'
+                    AND execute_time <= '".date('Y-m-d H:i:s')."'
+                    AND deleted = 0
+                    GROUP BY scheduled_job_id
+                    HAVING count( * ) > 1
+                    ORDER BY execute_time ASC";
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+
+        $duplicateJobs = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($duplicateJobs as $row) {
             if (!empty($row['scheduled_job_id'])) {
@@ -179,6 +191,43 @@ class Job
 
                 $sth = $pdo->prepare($update);
                 $sth->execute();
+            }
+        }
+    }
+
+    /**
+     * Mark job attempts
+     *
+     * @return void
+     */
+    protected function markJobAttempts()
+    {
+        $query = "SELECT * FROM job WHERE
+                    `status` = '" . CronManager::FAILED . "'
+                    AND deleted = 0
+                    AND execute_time <= '".date('Y-m-d H:i:s')."'
+                    AND attempts > 0";
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+
+        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        if ($rows) {
+            foreach ($rows as $row) {
+                $row['failed_attempts'] = isset($row['failed_attempts']) ? $row['failed_attempts'] : 0;
+
+                $attempts = $row['attempts'] - 1;
+                $failedAttempts = $row['failed_attempts'] + 1;
+
+                $update = "UPDATE job SET
+                            `status` = '" . CronManager::PENDING ."',
+                            attempts = '".$attempts."',
+                            failed_attempts = '".$failedAttempts."'
+                            WHERE
+                            id = '".$row['id']."'
+                ";
+                $pdo->prepare($update)->execute();
             }
         }
     }
