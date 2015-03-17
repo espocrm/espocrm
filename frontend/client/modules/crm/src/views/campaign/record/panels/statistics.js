@@ -30,7 +30,7 @@ Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.
     		switch (type) {
     			case 'Email':
     			case 'Newsletter':
-    				this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'revenue'];
+    				this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
     				break;
     			case 'Web':
     			case 'Television':
