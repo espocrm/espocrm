@@ -130,14 +130,20 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                     }, function (view) {
                         view.once('after:render', function () {
                             Espo.Ui.notify(false);
+                            dialog.hide();
                         });
-                        view.render();
-                        view.once('after:save', function () {
+
+                        this.listenToOnce(view, 'remove', function () {
+                            this.close();
+                        }, this);
+
+                        this.listenToOnce(view, 'after:save', function () {
                             this.trigger('after:save');
                         }, this);
+
+                        view.render();
                     }.bind(this));
 
-                    dialog.close();
                 }.bind(this)
             });
         },

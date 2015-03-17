@@ -847,6 +847,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 });
                 view.render();
                 view.once('after:save', function () {
+                    console.log(2);
                     var model = this.collection.get(id);
                     if (model) {
                         model.fetch();
@@ -870,13 +871,16 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     view.once('after:render', function () {
                         Espo.Ui.notify(false);
                     });
+
                     view.render();
-                    view.once('after:save', function () {
+
+                    this.listenToOnce(view, 'after:save', function () {
                         var model = this.collection.get(id);
                         if (model) {
                             model.fetch();
                         }
                     }, this);
+
                 }.bind(this));
             } else {
                 this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: true});
