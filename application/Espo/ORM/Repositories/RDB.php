@@ -208,22 +208,28 @@ class RDB extends \Espo\ORM\Repository
 
     public function findRelated(Entity $entity, $relationName, array $params = array())
     {
+        if ($entity->isNew()) {
+            return;
+        }
         $entityName = $entity->relations[$relationName]['entity'];
         $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
-
         if (is_array($result)) {
+
             $collection = new EntityCollection($result, $entityName, $this->entityFactory);
+
             return $collection;
         } else {
             return $result;
         }
-
     }
 
     public function countRelated(Entity $entity, $relationName, array $params = array())
     {
+        if (!$entity->id) {
+            return;
+        }
         $entityName = $entity->relations[$relationName]['entity'];
         $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
 
@@ -232,6 +238,9 @@ class RDB extends \Espo\ORM\Repository
 
     public function relate(Entity $entity, $relationName, $foreign, $data = null)
     {
+        if (!$entity->id) {
+            return;
+        }
         if ($data instanceof \stdClass) {
             $data = get_object_vars($data);
         }
@@ -246,6 +255,9 @@ class RDB extends \Espo\ORM\Repository
 
     public function unrelate(Entity $entity, $relationName, $foreign)
     {
+        if (!$entity->id) {
+            return;
+        }
         if ($foreign instanceof Entity) {
             return $this->getMapper()->unrelate($entity, $relationName, $foreign);
         }
@@ -260,6 +272,9 @@ class RDB extends \Espo\ORM\Repository
 
     public function updateRelation(Entity $entity, $relationName, $foreign, $data)
     {
+        if (!$entity->id) {
+            return;
+        }
         if ($data instanceof \stdClass) {
             $data = get_object_vars($data);
         }
@@ -276,6 +291,9 @@ class RDB extends \Espo\ORM\Repository
 
     public function massRelate(Entity $entity, $relationName, array $params = array())
     {
+        if (!$entity->id) {
+            return;
+        }
         return $this->getMapper()->massRelate($entity, $relationName, $params);
     }
 

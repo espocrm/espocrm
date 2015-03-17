@@ -18,23 +18,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
 class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
-{    
-    
+{
+
     public function afterSave(Entity $entity)
     {
         if (
             $this->getConfig()->get('assignmentEmailNotifications')
-            && 
+            &&
             in_array($entity->getEntityName(), $this->getConfig()->get('assignmentEmailNotificationsEntityList', array()))
-        ) {        
-        
+        ) {
+
             $userId = $entity->get('assignedUserId');
             if (!empty($userId) && $userId != $this->getUser()->id && $entity->isFieldChanged('assignedUserId')) {
                 $job = $this->getEntityManager()->getEntity('Job');
@@ -50,7 +50,7 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
                     'executeTime' => date('Y-m-d H:i:s'),
                 ));
                 $this->getEntityManager()->saveEntity($job);
-            }            
+            }
         }
     }
 

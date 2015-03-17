@@ -139,7 +139,7 @@ abstract class Entity implements IEntity
             return $this->valuesContainer[$name];
         }
 
-        if (!empty($this->relations[$name])) {
+        if (!empty($this->relations[$name]) && $this->id) {
             $value = $this->entityManager->getRepository($this->getEntityType())->findRelated($this, $name, $params);
             return $value;
         }

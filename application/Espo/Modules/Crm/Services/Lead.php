@@ -68,6 +68,23 @@ class Lead extends \Espo\Services\Record
                 $this->getEntityManager()->saveEntity($email);
             }
         }
+        if (!empty($data['targetListId'])) {
+        	$this->getEntityManager()->getRepository('Lead')->relate($entity, 'targetLists', $data['targetListId']);
+        }
+        if ($entity->get('campaignId')) {
+        	$campaign = $this->getEntityManager()->getEntity('Campaign', $entity->get('campaignId'));
+        	if ($campaign) {
+        		$log = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        		$log->set(array(
+        			'action' => 'Lead Created',
+        			'actionDate' => date('Y-m-d H:i:s'),
+        			'parentType' => 'Lead',
+        			'parentId' => $entity->id,
+        			'campaignId' => $campaign->id
+        		));
+        		$this->getEntityManager()->saveEntity($log);
+        	}
+        }
     }
 
     public function convert($id, $recordsData)

@@ -36,12 +36,13 @@ class User extends \Espo\Core\SelectManagers\Base
 
     protected function boolFilterOnlyMyTeam(&$result)
     {
-        if (!in_array('teams', $result['joins'])) {
-        	$result['joins'][] = 'teams';
-        }
         $teamIds = $this->getUser()->get('teamsIds');
         if (empty($teamIds)) {
-        	$teamIds = [];
+            $teamIds = [];
+        }
+
+        if (!in_array('teams', $result['joins'])) {
+        	$result['joins'][] = 'teams';
         }
         $result['whereClause'][] = array(
         	'teamUser.teamId' => $teamIds

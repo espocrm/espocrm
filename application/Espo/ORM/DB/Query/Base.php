@@ -621,8 +621,11 @@ abstract class Base
                             $oppose = 'NOT';
                         }
                         if (!empty($valArr)) {
-                        $whereParts[] = $leftPart . " {$oppose} IN " . "(" . implode(',', $valArr) . ")";
+                            $whereParts[] = $leftPart . " {$oppose} IN " . "(" . implode(',', $valArr) . ")";
+                        } else {
+                            $whereParts[] = " 0";
                         }
+
                     }
                 }
             } else {

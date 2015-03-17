@@ -323,6 +323,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                 }
                             }
                         }
+
+
                         foreach ($specifiedIds as $id) {
                             if (!in_array($id, $existingIds)) {
                                 $data = null;
