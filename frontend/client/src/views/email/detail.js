@@ -25,7 +25,8 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            if (this.model.get('status') == 'Draft') {
+            var status = this.model.get('status');
+            if (status == 'Draft') {
                 this.backedMenu = this.menu;
                 this.menu = {
                     'buttons': [
@@ -38,13 +39,15 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
                     ]
                 };
             } else {
-                if (!this.model.get('parentId')) {
-                    this.menu.dropdown.push({
-                        label: 'Create Lead',
-                        action: 'createLead',
-                        acl: 'edit',
-                        aclScope: 'Lead'
-                    });
+                if (status == 'Archived' || status == 'Recieved') {
+                    if (!this.model.get('parentId')) {
+                        this.menu.dropdown.push({
+                            label: 'Create Lead',
+                            action: 'createLead',
+                            acl: 'edit',
+                            aclScope: 'Lead'
+                        });
+                    }
                 }
             }
         },
@@ -53,22 +56,18 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
             var attributes = {};
 
             var fromName = this.model.get('fromName');
-            if (!fromName) {
-                return '';
+            if (fromName) {
+                fromName = fromName.replace(/<(.*)>/, '').trim();
+                var firstName = fromName.split(' ').slice(0, -1).join(' ');
+                var lastName = fromName.split(' ').slice(-1).join(' ');
+                attributes.firstName = firstName;
+                attributes.lastName = lastName;
             }
 
-            fromName = fromName.replace(/<(.*)>/, '').trim();
-
-            var firstName = fromName.split(' ').slice(0, -1).join(' ');
-            var lastName = fromName.split(' ').slice(-1).join(' ');
-
-            attributes.firstName = firstName;
-            attributes.lastName = lastName;
             attributes.emailAddress = this.model.get('from');
             attributes.emailId = this.model.id;
 
             this.notify('Loading...');
-
             this.createView('quickCreate', 'Modals.Edit', {
                 scope: 'Lead',
                 attributes: attributes,
