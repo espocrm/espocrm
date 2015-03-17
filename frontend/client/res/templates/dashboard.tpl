@@ -6,8 +6,14 @@
             {{/if}}
         </div>
         <div class="col-sm-5">
-            <div class="pull-right">
-                <button class="btn btn-default add-dashlet">{{translate 'Add Dashlet'}}</button>
+            <div class="btn-group pull-right">
+                {{#ifNotEqual dashboardLayout.length 1}}
+                {{#each dashboardLayout}}
+                    <button class="btn btn-default{{#ifEqual @index ../currentTab}} active{{/ifEqual}}" data-action="selectTab" data-tab="{{@index}}">{{name}}</button>
+                {{/each}}
+                {{/ifNotEqual}}
+                <button class="btn btn-default" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="glyphicon glyphicon-pencil"></span></button>
+                <button class="btn btn-default" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><span class="glyphicon glyphicon-plus"></span></button>
             </div>
         </div>
     </div>

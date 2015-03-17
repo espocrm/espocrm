@@ -27,32 +27,99 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
 
         dashboardLayout: null,
 
+        currentTab: null,
+
         events: {
-            'click button.add-dashlet': function () {
+            'click button[data-action="selectTab"]': function (e) {
+                var tab = parseInt($(e.currentTarget).data('tab'));
+                this.selectTab(tab);
+            },
+            'click button[data-action="addDashlet"]': function () {
                 this.createView('addDashlet', 'Modals.AddDashlet', {}, function (view) {
                     view.render();
                 });
+            },
+            'click button[data-action="editTabs"]': function () {
+                this.createView('editTabs', 'Modals.EditDashboard', {
+                    dashboardLayout: this.dashboardLayout
+                }, function (view) {
+                    view.render();
+
+                    this.listenToOnce(view, 'after:save', function (data) {
+                        view.close();
+                        var dashboardLayout = [];
+
+                        dashboardLayout = dashboardLayout.filter(function (item, i) {
+                            return dashboardLayout.indexOf(item) == i;
+                        });
+
+                        (data.dashboardTabList).forEach(function (name) {
+                            var isExisting = false;
+                            var layout = [[],[]];
+                            this.dashboardLayout.forEach(function (d) {
+                                if (d.name == name) {
+                                    isExisting = true;
+                                    layout = d.layout;
+                                }
+                            }, this);
+                            dashboardLayout.push({
+                                name: name,
+                                layout: layout
+                            });
+                        }, this);
+
+                        this.dashboardLayout = dashboardLayout;
+                        this.updateDashletsLayout();
+
+                        this.storeCurrentTab(0);
+                        this.currentTab = 0;
+
+                        this.setupDashlets(function () {
+                            this.reRender();
+                        }.bind(this));
+                    }, this);
+                }.bind(this));
             },
         },
 
         data: function () {
             return {
-                displayTitle: this.options.displayTitle
+                displayTitle: this.options.displayTitle,
+                currentTab: this.currentTab,
+                tabCount: this.dashboardLayout.length,
+                dashboardLayout: this.dashboardLayout
             };
         },
 
-        getDashletsLayout: function (callback) {
-            var dashboardLayout = this.dashboardLayout = this.getPreferences().get('dashboardLayout') || [[],[]];
+        getDashletsLayout: function (callback, context) {
+            if (!this.dashboardLayout) {
+                var defaultLayout = [
+                    {
+                        "name": "Main",
+                        "layout": [[],[]]
+                    }
+                ];
+                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
 
-            if (this.dashboardLayout.length == 0) {
-                this.dashboardLayout = dashboardLayout = [[], []];
+                if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
+                    this.dashboardLayout = defaultLayout;
+                }
             }
+            var dashboardLayout = this.dashboardLayout;
 
+            var tabLayout = dashboardLayout[this.currentTab].layout || [];
+
+            var layout = this.convertLayout(tabLayout);
+
+            callback.call(context, layout);
+        },
+
+        convertLayout: function (tabLayout) {
             var layout = {
                 type: 'columns-2',
                 layout: [],
             };
-            dashboardLayout.forEach(function (col) {
+            tabLayout.forEach(function (col) {
                 var c = [];
                 col.forEach(function (defs) {
                     if (defs && defs.name && defs.id) {
@@ -70,26 +137,51 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 });
                 layout.layout.push(c);
             });
-            callback(layout);
+            return layout;
         },
 
-        setup: function () {
+        storeCurrentTab: function (tab) {
+            this.getStorage().set('state', 'dashboardTab', tab);
         },
 
-        afterRender: function () {
+        selectTab: function (tab) {
+            this.$el.find('.page-header button[data-action="selectTab"]').removeClass('active');
+            this.$el.find('.page-header button[data-action="selectTab"][data-tab="'+tab+'"]').addClass('active');
+
+            this.currentTab = tab;
+            this.storeCurrentTab(tab);
+            this.setupDashlets(function (view) {
+                view.render();
+                this.makeSortable();
+            }.bind(this));
+        },
+
+        setupDashlets: function (callback1, callback2) {
+            this.clearView('dashlets');
             this.getDashletsLayout(function (layout) {
                 this.createView('dashlets', 'Base', {
                     _layout: layout,
                     el: '#dashlets',
                     noCache: true,
-                }, function (view) {
+                }, callback1);
+                if (callback2) {
+                    callback2();
+                }
+            }, this);
+        },
 
-                    view.once('after:render', function () {
-                        this.makeSortable();
-                    }.bind(this));
-                    view.render();
-                }.bind(this));
+        setup: function () {
+            this.wait(true);
+
+            this.currentTab = this.getStorage().get('state', 'dashboardTab') || 0;
+
+            this.setupDashlets(null, function () {
+                this.wait(false);
             }.bind(this));
+        },
+
+        afterRender: function () {
+            this.makeSortable();
         },
 
         makeSortable: function () {
@@ -123,7 +215,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 });
                 layout.push(c);
             });
-            this.dashboardLayout = layout;
+            this.dashboardLayout[this.currentTab].layout = layout;
         },
 
         updateDashletsLayout: function () {
@@ -134,7 +226,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
         },
 
         removeDashlet: function (id) {
-            this.dashboardLayout.forEach(function (col, i) {
+            this.dashboardLayout[this.currentTab].layout.forEach(function (col, i) {
                 col.forEach(function (o, j) {
                     if (o.id == id) {
                         col.splice(j, 1);
@@ -149,7 +241,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
         addDashlet: function (name) {
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
-            this.dashboardLayout[0].unshift({
+            this.dashboardLayout[this.currentTab].layout[0].unshift({
                 name: name,
                 id: id
             });
