@@ -181,7 +181,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
             if (this.translatedOptions) {
                 label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
             }
-            var html = '<div class="list-group-item" data-value="' + value + '">' + label +
+            var html = '<div class="list-group-item" data-value="' + value + '" style="cursor: default;">' + label +
             '&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
             '</div>';
 
