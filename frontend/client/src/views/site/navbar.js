@@ -151,7 +151,9 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                     return;
                 }
 
-                var maxWidth = self.$el.width() - 577 - moreWidth;
+                var headerWidth = this.$el.width();
+
+                var maxWidth = headerWidth - 557 - moreWidth;
 
                 var width = $tabs.width();
                 while (width > maxWidth) {
@@ -162,7 +164,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 if ($more.children().size() > 0) {
                     $more.parent().removeClass('hide');
                 }
-            };
+            }.bind(this);
 
 
             var $navbar = $('#navbar .navbar');

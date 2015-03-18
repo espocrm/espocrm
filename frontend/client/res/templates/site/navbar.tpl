@@ -39,7 +39,7 @@
             </li>
             {{/if}}
             <li class="dropdown">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'Menu'}} <b class="caret"></b></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     <li><a href="#User/view/{{userId}}">{{userName}}</a></li>
                     <li class="divider"></li>
