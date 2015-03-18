@@ -28,8 +28,8 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
         scope: 'Task',
 
         defaultOptions: {
-            sortBy: 'createdAt',
-            asc: false,
+            sortBy: 'dateEnd',
+            asc: true,
             displayRecords: 5,
             expandedLayout: {
                 rows: [
@@ -52,15 +52,8 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
             searchData: {
                 bool: {
                     onlyMy: true,
-                    open: true,
-                },
-                advanced: {
-                    status: {
-                        type: 'notIn',
-                        value: ['Completed', 'Canceled']
-                    },
-                },
-
+                    actual: true
+                }
             },
         },
 
