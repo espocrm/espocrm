@@ -109,15 +109,18 @@ class Job
      * Get Jobs by ScheduledJobId and date
      *
      * @param  string $scheduledJobId
-     * @param  string $date
+     * @param  string $time
      *
      * @return array
      */
-    public function getJobByScheduledJob($scheduledJobId, $date)
+    public function getJobByScheduledJob($scheduledJobId, $time)
     {
+        $dateObj = new \DateTime($time);
+        $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
+
         $query = "SELECT * FROM job WHERE
                     scheduled_job_id = '".$scheduledJobId."'
-                    AND execute_time = '".$date."'
+                    AND execute_time LIKE '".$timeWithoutSeconds."%'
                     AND deleted = 0
                     LIMIT 1";
 

@@ -62,11 +62,13 @@ class Manager
      */
     public function getFileList($path, $recursively = false, $filter = '', $onlyFileType = null, $isReturnSingleArray = false)
     {
-        if (!file_exists($path)) {
-            return false;
-        }
+        $path = $this->concatPaths($path);
 
         $result = array();
+
+        if (!file_exists($path) || !is_dir($path)) {
+            return $result;
+        }
 
         $cdir = scandir($path);
         foreach ($cdir as $key => $value)
@@ -373,9 +375,11 @@ class Manager
      *
      * @param  string | array $path
      * @param  int $permission - ex. 0755
+     * @param  bool $recursive
+     *
      * @return bool
      */
-    public function mkdir($path, $permission = null)
+    public function mkdir($path, $permission = null, $recursive = false)
     {
         $fullPath = $this->concatPaths($path);
 
@@ -383,14 +387,23 @@ class Manager
             return true;
         }
 
+        $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
+
         if (!isset($permission)) {
-            $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
             $permission = (string) $defaultPermissions['dir'];
             $permission = base_convert($permission, 8, 10);
         }
 
         try {
             $result = mkdir($fullPath, $permission, true);
+
+            if (!empty($defaultPermissions['user'])) {
+                $this->getPermissionUtils()->chown($fullPath);
+            }
+
+            if (!empty($defaultPermissions['group'])) {
+                $this->getPermissionUtils()->chgrp($fullPath);
+            }
         } catch (\Exception $e) {
             $GLOBALS['log']->critical('Permission denied: unable to create the folder on the server - '.$fullPath);
         }
@@ -490,8 +503,8 @@ class Manager
             $dirPermission = $defaultPermissions['dir'];
             $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
-            if (!mkdir($pathParts['dirname'], $dirPermission, true)) {
-                throw new Error('Permission denied: unable to create a folder on the server - '.$pathParts['dirname']);
+            if (!$this->mkdir($pathParts['dirname'], $dirPermission, true)) {
+                throw new Error('Permission denied: unable to create a folder on the server - ' . $pathParts['dirname']);
             }
         }
 
