@@ -36,11 +36,11 @@ Espo.define('Crm:Views.Dashlets.Cases', 'Views.Dashlets.Abstract.RecordList', fu
                 rows: [
                     [
                         {
-                            name: 'name',
-                            link: true,
+                            name: 'number',
                         },
                         {
-                            name: 'number',
+                            name: 'name',
+                            link: true,
                         },
                         {
                             name: 'type',
@@ -58,8 +58,7 @@ Espo.define('Crm:Views.Dashlets.Cases', 'Views.Dashlets.Abstract.RecordList', fu
             },
             searchData: {
                 bool: {
-                    onlyMy: true,
-                    open: true,
+                    onlyMy: true
                 },
                 advanced: {
                     status: {
