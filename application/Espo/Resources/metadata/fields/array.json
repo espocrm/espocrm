@@ -13,7 +13,13 @@
          "name":"translation",
          "type":"varchar",
          "hidden": true
-      }
+      },
+      {
+         "name": "noEmptyString",
+         "type": "bool",
+         "default": false
+      },
+
    ],
    "filter": true,
    "notCreatable": false,

@@ -81,7 +81,8 @@ Espo.define('Views.Modals.EditDashboard', 'Views.Modal', function (Dep) {
                 defs: {
                     name: 'dashboardTabList',
                     params: {
-                        required: true
+                        required: true,
+                        noEmptyString: true,
                     }
                 },
                 mode: 'edit',

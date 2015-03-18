@@ -74,6 +74,10 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+
+            this.noEmptyString = this.params.noEmptyString;
+
+
             var t = {};
 
             if (this.params.translation) {
@@ -124,6 +128,11 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
                     $select.on('keypress', function (e) {
                         if (e.keyCode == 13) {
                             var value = $select.val();
+                            if (this.noEmptyString) {
+                                if (value == '') {
+                                    return;
+                                }
+                            }
                             this.addValue(value);
                             $select.val('');
                         }
