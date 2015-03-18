@@ -95,7 +95,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
             if (!this.dashboardLayout) {
                 var defaultLayout = [
                     {
-                        "name": "Main",
+                        "name": "My Espo",
                         "layout": [[],[]]
                     }
                 ];
