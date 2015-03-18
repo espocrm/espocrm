@@ -18,8 +18,7 @@
          "name": "noEmptyString",
          "type": "bool",
          "default": false
-      },
-
+      }
    ],
    "filter": true,
    "notCreatable": false,
