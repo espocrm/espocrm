@@ -486,7 +486,7 @@ class Manager
      * @param string $filePath
      * @return string
      */
-    protected function checkCreateFile($filePath)
+    public function checkCreateFile($filePath)
     {
         $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
 

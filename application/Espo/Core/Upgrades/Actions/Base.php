@@ -517,16 +517,6 @@ abstract class Base
 
     }
 
-    protected function initialize()
-    {
-
-    }
-
-    protected function finalize()
-    {
-
-    }
-
     protected function beforeRunAction()
     {
 

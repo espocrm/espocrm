@@ -51,9 +51,15 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
 
         $this->errorMessage = null;
 
-        set_error_handler(array($this, 'customErrorHandler'));
-        $this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
-        restore_error_handler();
+        if (!is_writable($this->url)) {
+            $this->getFileManager()->checkCreateFile($this->url);
+        }
+
+        if (is_writable($this->url)) {
+            set_error_handler(array($this, 'customErrorHandler'));
+            $this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
+            restore_error_handler();
+        }
 
         if (isset($this->errorMessage)) {
             throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: '.$this->errorMessage, $this->url));
