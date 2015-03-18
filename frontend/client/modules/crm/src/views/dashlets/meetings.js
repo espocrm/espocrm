@@ -52,8 +52,8 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
                 },
                 advanced: {
                     'status': {
-                        type: 'notIn',
-                        value: ['Held', 'Not Held']
+                        type: 'in',
+                        value: ['Planned']
                     },
                     '1': {
                         type: 'or',
