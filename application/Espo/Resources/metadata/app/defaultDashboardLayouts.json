@@ -1,0 +1,29 @@
+{
+	"Standard": [
+	    {
+	    	"name": "My Espo",
+		    "layout": [
+		    	[
+			        {
+			            "name": "Stream",
+			            "id": "d0004"
+			        },
+			        {
+			            "name": "Calls",
+			            "id": "d0001"
+			        }
+			    ],
+			    [
+			        {
+			            "name": "Tasks",
+			            "id": "d0003"
+			        },
+			        {
+			            "name": "Meetings",
+			            "id": "d0002"
+			        }
+			    ]
+			]
+		}
+	]
+}

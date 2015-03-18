@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 
 Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
@@ -37,7 +37,7 @@ Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
         events: {
             'click button.add': function (e) {
                 var name = $(e.currentTarget).data('name');
-                this.getParentView().addDashlet(name);                    
+                this.getParentView().addDashlet(name);
                 this.close();
             },
         },
@@ -52,10 +52,12 @@ Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
                     }
                 }
             ];
-            
+
             this.header = this.translate('Add Dashlet');
-            
-            this.dashletList = Object.keys(this.getMetadata().get('dashlets') || {});                
+
+            this.dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {
+                return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
+            }.bind(this));
         },
     });
 });
