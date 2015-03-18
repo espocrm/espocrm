@@ -245,11 +245,13 @@
                 if (translationHash === null) {
                     if (!category && field) {
                         translationHash = self.language.translate(field, 'options', scope) || {};
+                        if (typeof translationHash !== 'object') {
+                            translationHash = {};
+                        }
                     } else {
                         translationHash = {};
                     }
                 }
-
                 var translate = function (name) {
                     if (!category) {
                         return translationHash[name] || name;
