@@ -32,7 +32,7 @@
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="5%">
+                <th width="6%">
                     <input type="checkbox" class="select-all">
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
