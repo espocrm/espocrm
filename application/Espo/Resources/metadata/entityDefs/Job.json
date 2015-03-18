@@ -24,10 +24,16 @@
             "len":100
         },
         "data": {
-            "type": "jsonObject" 
+            "type": "jsonObject"
         },
         "scheduledJob": {
             "type": "link"
+        },
+        "attempts": {
+            "type": "int"
+        },
+        "failedAttempts": {
+            "type": "int"
         },
         "createdAt": {
             "type": "datetime",
