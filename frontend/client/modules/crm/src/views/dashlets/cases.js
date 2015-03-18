@@ -58,15 +58,9 @@ Espo.define('Crm:Views.Dashlets.Cases', 'Views.Dashlets.Abstract.RecordList', fu
             },
             searchData: {
                 bool: {
-                    onlyMy: true
-                },
-                advanced: {
-                    status: {
-                        type: 'notIn',
-                        value: ['Duplicate', 'Rejected', 'Closed']
-                    },
-                },
-
+                    onlyMy: true,
+                    open: true
+                }
             },
         },
 
