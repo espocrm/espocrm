@@ -27,11 +27,10 @@
                 "<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
             },
             "orderBy": "amountWeightedConverted {direction}",
-            "view": "Fields.CurrencyConverted" 
+            "view": "Fields.CurrencyConverted"
         },
         "account": {
-            "type": "link",
-            "required": true
+            "type": "link"
         },
         "contacts": {
             "type": "linkMultiple",
