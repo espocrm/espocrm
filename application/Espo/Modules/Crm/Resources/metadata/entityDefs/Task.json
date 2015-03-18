@@ -6,7 +6,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Not Started", "Started", "Completed", "Canceled"],
+            "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
             "view": "Fields.EnumStyled",
             "style": {
                 "Completed": "success"

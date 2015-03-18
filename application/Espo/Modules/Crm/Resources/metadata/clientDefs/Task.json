@@ -14,7 +14,7 @@
          "data": {
             "status": {
                "type": "in",
-               "value": ["Not Started", "Started"]
+               "value": ["Not Started", "Started", "Deferred"]
             }
          }
       },

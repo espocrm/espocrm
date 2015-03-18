@@ -16,7 +16,8 @@
             "Not Started": "Not Started",
             "Started": "Started",
             "Completed": "Completed",
-            "Canceled": "Canceled"
+            "Canceled": "Canceled",
+            "Deferred": "Deferred"
         },
         "priority" : {
             "Low": "Low",
