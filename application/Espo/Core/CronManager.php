@@ -98,9 +98,11 @@ class CronManager
 
     protected function getLastRunTime()
     {
-        $lastRunTime = $this->getFileManager()->getPhpContents($this->lastRunTime);
-        if (!is_int($lastRunTime)) {
-            $lastRunTime = time() - (intval($this->getConfig()->get('cron.minExecutionTime')) + 60);
+        $lastRunData = $this->getFileManager()->getPhpContents($this->lastRunTime);
+
+        $lastRunTime = time() - intval($this->getConfig()->get('cron.minExecutionTime')) - 1;
+        if (is_array($lastRunData) && !empty($lastRunData['time'])) {
+            $lastRunTime = $lastRunData['time'];
         }
 
         return $lastRunTime;
@@ -108,7 +110,10 @@ class CronManager
 
     protected function setLastRunTime($time)
     {
-        return $this->getFileManager()->putPhpContents($this->lastRunTime, $time);
+        $data = array(
+            'time' => $time,
+        );
+        return $this->getFileManager()->putPhpContents($this->lastRunTime, $data);
     }
 
     protected function checkLastRunTime()
@@ -183,7 +188,6 @@ class CronManager
                 $cronScheduledJob->addLogRecord($job['scheduled_job_id'], $status);
             }
         }
-
     }
 
     /**
