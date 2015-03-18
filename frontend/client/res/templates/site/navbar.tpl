@@ -8,7 +8,7 @@
               <span class="icon-bar"></span>
          </button>
     </div>
-    
+
     <div class="collapse navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
             {{#each tabs}}

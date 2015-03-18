@@ -147,12 +147,11 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
                 $more.parent().addClass('hide');
 
-                if (documentWidth <= 768) {
+                if (documentWidth < 768) {
                     return;
                 }
 
-
-                var maxWidth = self.$el.width() - 596 - moreWidth;
+                var maxWidth = self.$el.width() - 577 - moreWidth;
 
                 var width = $tabs.width();
                 while (width > maxWidth) {
