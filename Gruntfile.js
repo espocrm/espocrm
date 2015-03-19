@@ -65,10 +65,10 @@ module.exports = function (grunt) {
         'client/src/controllers/base.js',
         'client/src/view.js',
     ];
-    
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        
+
         mkdir: {
             tmp: {
                 options: {
@@ -154,6 +154,7 @@ module.exports = function (grunt) {
                     'bootstrap.php',
                     'cron.php',
                     'rebuild.php',
+                    'upgrade.php',
                     'index.php',
                     'LICENSE.txt',
                     '.htaccess',
