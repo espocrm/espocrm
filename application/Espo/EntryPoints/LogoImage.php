@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\EntryPoints;
 
@@ -30,23 +30,23 @@ use \Espo\Core\Exceptions\Error;
 class LogoImage extends Image
 {
     public static $authRequired = false;
-    
+
     public function run()
-    {    
-        $this->imageSizes['small-logo'] = array(173, 38);
-        
+    {
+        $this->imageSizes['small-logo'] = array(181, 44);
+
         $id = $this->getConfig()->get('companyLogoId');
-        
+
         if (empty($id)) {
             throw new NotFound();
         }
-        
-        $size = null;        
+
+        $size = null;
         if (!empty($_GET['size'])) {
             $size = $_GET['size'];
-        } 
-                
-        $this->show($id, $size);        
+        }
+
+        $this->show($id, $size);
     }
 }
 
