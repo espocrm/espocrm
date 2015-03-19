@@ -54,6 +54,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         showCount: true,
 
+        rowActionsColumnWidth: 25,
+
         events: {
             'click a.link': function (e) {
                 if (!this.scope || this.selectable) {
@@ -520,11 +522,17 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var defs = [];
 
             for (var i in this.listLayout) {
+            	var width = false;
+            	if ('width' in this.listLayout[i]) {
+					width = this.listLayout[i].width += '%';
+				} else if ('widthPx' in this.listLayout[i]) {
+					width = this.listLayout[i].width;
+				}
 
                 var item = {
                     name: this.listLayout[i].name,
                     sortable: !(this.listLayout[i].notSortable || false),
-                    width: ('width' in this.listLayout[i]) ? this.listLayout[i].width : false,
+                    width: width,
                     align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
                 if ('customLabel' in this.listLayout[i]) {
@@ -541,7 +549,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             };
             if (this.rowActionsView) {
                 defs.push({
-                    width: '5%',
+                    width: this.rowActionsColumnWidth,
                 });
             }
             return defs;
@@ -632,7 +640,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 options: {
                     defs: {
                         params: {
-                            width: '5%'
                         }
                     },
                 },

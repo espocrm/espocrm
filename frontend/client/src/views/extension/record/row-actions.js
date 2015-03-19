@@ -17,15 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Extension.Record.RowActions', 'Views.Record.RowActions.Default', function (Dep) {
 
     return Dep.extend({
-        
+
         getActions: function () {
             if (this.options.acl.edit) {
-            
+
                 if (this.model.get('isInstalled')) {
                     return [
                         {
@@ -33,7 +33,7 @@ Espo.define('Views.Extension.Record.RowActions', 'Views.Record.RowActions.Defaul
                             label: 'Uninstall',
                             data: {
                                 id: this.model.id
-                            }                    
+                            }
                         },
 
                     ];
@@ -44,21 +44,21 @@ Espo.define('Views.Extension.Record.RowActions', 'Views.Record.RowActions.Defaul
                             label: 'Install',
                             data: {
                                 id: this.model.id
-                            }                    
+                            }
                         },
                         {
                             action: 'quickRemove',
                             label: 'Remove',
                             data: {
                                 id: this.model.id
-                            }                    
+                            }
                         }
                     ];
                 }
             }
         },
-    
+
     });
-    
+
 });
 
