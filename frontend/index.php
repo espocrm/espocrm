@@ -24,12 +24,12 @@ include "../bootstrap.php";
 
 $app = new \Espo\Core\Application();
 
-
 if (!empty($_GET['entryPoint'])) {
     $app->runEntryPoint($_GET['entryPoint']);
     exit;
 }
 
-$html = include("main.html");
+$html = file_get_contents("frontend/main.html");
 echo $html;
+exit;
 
