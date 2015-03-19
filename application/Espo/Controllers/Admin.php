@@ -72,7 +72,7 @@ class Admin extends \Espo\Core\Controllers\Base
     {
         $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
 
-        $upgradeManager->install($data['id']);
+        $upgradeManager->install($data);
 
         return true;
     }
