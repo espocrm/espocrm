@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Edit', 'Views.Main', function (Dep) {
 
@@ -28,11 +28,11 @@ Espo.define('Views.Edit', 'Views.Main', function (Dep) {
         el: '#main',
 
         scope: null,
-        
+
         name: 'Edit',
-        
+
         menu: null,
-        
+
         optionsToPass: ['returnUrl'],
 
         views: {
@@ -51,25 +51,26 @@ Espo.define('Views.Edit', 'Views.Main', function (Dep) {
 
         getHeader: function () {
             var html = '';
-            
+
+            var arr = [];
+
             if (this.options.noHeaderLinks) {
-                html += this.getLanguage().translate(this.model.name, 'scopeNamesPlural');
+                arr.push(this.getLanguage().translate(this.model.name, 'scopeNamesPlural'));
             } else {
-                html += '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>';
+                arr.push('<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>');
             }
-            
-            html += ' &raquo ';
+
             if (this.model.isNew()) {
-                html += this.getLanguage().translate('create');
+                arr.push(this.getLanguage().translate('create'));
             } else {
                 var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
                 if (this.options.noHeaderLinks) {
-                    html += name;
+                    arr.push(name);
                 } else {
-                    html += '<a href="#' + this.model.name + '/view/' + this.model.id + '">' + name + '</a>';
+                    arr.push('<a href="#' + this.model.name + '/view/' + this.model.id + '">' + name + '</a>');
                 }
             }
-            return html;
+            return this.buildHeaderHtml(arr);
         },
 
         updatePageTitle: function () {

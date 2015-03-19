@@ -138,7 +138,9 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
         },
 
         getHeader: function () {
-            return this.getLanguage().translate(this.collection.name, 'scopeNamesPlural');
+            return this.buildHeaderHtml([
+                this.getLanguage().translate(this.collection.name, 'scopeNamesPlural')
+            ]);
         },
 
         updatePageTitle: function () {

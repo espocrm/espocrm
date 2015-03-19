@@ -79,6 +79,15 @@ Espo.define('Views.Main', 'View', function (Dep) {
 
         getHeader: function () {},
 
+        buildHeaderHtml: function (arr) {
+            var a = [];
+            arr.forEach(function (item) {
+                a.push('<div class="pull-left">' + item + '</div>');
+            }, this);
+
+            return '<div class="clearfix">' + a.join('<div class="pull-left breadcrumb-separator"> &raquo </div>') + '</div>';
+        },
+
         actionShowModal: function (data) {
             var view = data.view;
             if (!view) {
