@@ -34,6 +34,8 @@ abstract class Base
 
     private $entityManager;
 
+    private $helper;
+
     protected $data;
 
     protected $params = null;
@@ -131,7 +133,7 @@ abstract class Base
         return $this->config;
     }
 
-    protected function getEntityManager()
+    public function getEntityManager()
     {
         if (!isset($this->entityManager)) {
             $this->entityManager = $this->getContainer()->get('entityManager');
@@ -195,10 +197,15 @@ abstract class Base
             $res &= $this->checkVersions($manifest['acceptableVersions'], $this->getConfig()->get('version'), 'Your EspoCRM version doesn\'t match for this installation package.');
         }
 
+        //check dependencies
+        if (!empty($manifest['dependencies'])) {
+            $res &= $this->checkDependencies($manifest['dependencies']);
+        }
+
         return (bool) $res;
     }
 
-    protected function checkVersions($versionList, $currentVersion, $errorMessage = '')
+    public function checkVersions($versionList, $currentVersion, $errorMessage = '')
     {
         if (empty($versionList)) {
             return true;
@@ -212,7 +219,7 @@ abstract class Base
             $semver = new SemVer\version($currentVersion);
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Cannot recognize currentVersion ['.$currentVersion.'], error: '.$e->getMessage().'.');
-            return;
+            return false;
         }
 
         foreach ($versionList as $version) {
@@ -248,6 +255,11 @@ abstract class Base
             $this->throwErrorAndRemovePackage('Wrong package type. You cannot install '.$manifestType.' package via '.ucfirst($type).' Manager.');
         }
 
+        return true;
+    }
+
+    protected function checkDependencies($dependencyList)
+    {
         return true;
     }
 
@@ -549,5 +561,16 @@ abstract class Base
 
         $backupPath = $this->getPath('backupPath');
         return $this->copy('', array($backupPath, self::FILES), false, $fullFileList);
+    }
+
+    protected function getHelper()
+    {
+        if (!isset($this->helper)) {
+            $this->helper = new Helper();
+        }
+
+        $this->helper->setActionObject($this);
+
+        return $this->helper;
     }
 }

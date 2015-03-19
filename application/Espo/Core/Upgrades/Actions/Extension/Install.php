@@ -138,7 +138,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         $data = array(
             'id' => $this->getProcessId(),
-            'name' => $manifest['name'],
+            'name' => trim($manifest['name']),
             'isInstalled' => true,
             'version' => $manifest['version'],
             'fileList' => $fileList,
@@ -171,8 +171,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Throw an exception and remove package files.
      * Redeclared to prevent of deleting a package of installed extension.
      *
-     * @param  string $errorMessage [description]
-     * @return [type]               [description]
+     * @param  string $errorMessage
+     * @return void
      */
     protected function throwErrorAndRemovePackage($errorMessage = '')
     {
@@ -211,7 +211,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         $this->executeAction(ExtensionManager::DELETE, array('id' => $extensionEntity->get('id')));
     }
 
-
-
-
+    protected function checkDependencies($dependencyList)
+    {
+        return $this->getHelper()->checkDependencies($dependencyList);
+    }
 }
