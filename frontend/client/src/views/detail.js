@@ -171,10 +171,6 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 name
             ]);
-
-            var html = '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>';
-            html += ' &raquo ' + name;
-            return html;
         },
 
         updatePageTitle: function () {
