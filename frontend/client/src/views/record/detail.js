@@ -45,7 +45,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
         isNew: false,
 
-        buttons: [
+        buttonList: [
             {
                 name: 'edit',
                 label: 'Edit',
@@ -58,7 +58,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             },
         ],
 
-        buttonsEdit: [
+        buttonEditList: [
             {
                 name: 'save',
                 label: 'Save',
@@ -270,8 +270,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         data: function () {
             return {
                 scope: this.scope,
-                buttons: (typeof this.buttons === 'function') ? this.buttons() : this.buttons,
-                buttonsEdit: this.buttonsEdit,
+                buttonList: (typeof this.buttons === 'function') ? this.buttons() : this.buttonList,
+                buttonEditList: this.buttonEditList,
                 buttonsTop: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'top',
                 buttonsBottom: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'bottom',
                 name: this.name,
@@ -287,8 +287,11 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             this.layoutName = this.options.layoutName || this.layoutName;
 
             this.type = this.options.type || this.type;
+
             this.buttons = this.options.buttons || this.buttons;
-            this.buttons = _.clone(this.buttons);
+            this.buttonList = this.options.buttonList || this.buttonList;
+            this.buttonList = _.clone(this.buttonList);
+
             this.returnUrl = this.options.returnUrl || this.returnUrl;
             this.exit = this.options.exit || this.exit;
             this.columnCount = this.options.columnCount || this.columnCount;
@@ -422,9 +425,9 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         },
 
         removeButton: function (name) {
-            for (var i in this.buttons) {
-                if (this.buttons[i].name == name) {
-                    this.buttons.splice(i, 1);
+            for (var i in this.buttonList) {
+                if (this.buttonList[i].name == name) {
+                    this.buttonList.splice(i, 1);
                     break;
                 }
             }

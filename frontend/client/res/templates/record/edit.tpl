@@ -1,9 +1,7 @@
 <div class="edit" id="{{id}}">
     {{#if buttonsTop}}
         <div class="detail-button-container button-container record-buttons">
-            {{#each buttons}}
-                {{button name scope=../../scope label=label style=style}}
-            {{/each}}
+            {{#each buttonList}}{{button name scope=../../scope label=label style=style}}{{/each}}
         </div>
     {{/if}}
 
@@ -26,7 +24,7 @@
 
     {{#if buttonsBottom}}
         <div class="button-container record-buttons">
-            {{#each buttons}}
+            {{#each buttonList}}
                 {{button name scope=../../scope label=label style=style}}
             {{/each}}
         </div>

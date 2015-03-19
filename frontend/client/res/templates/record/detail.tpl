@@ -1,15 +1,11 @@
 <div class="detail" id="{{id}}">
     {{#if buttonsTop}}
     <div class="detail-button-container button-container record-buttons">
-        {{#each buttons}}
-            {{button name scope=../../scope label=label style=style}}
-        {{/each}}
+        {{#each buttonList}}{{button name scope=../../scope label=label style=style}}{{/each}}
     </div>
     {{/if}}
     <div class="detail-button-container button-container edit-buttons hidden">
-        {{#each buttonsEdit}}
-            {{button name scope=../scope label=label style=style}}
-        {{/each}}
+        {{#each buttonEditList}}{{button name scope=../scope label=label style=style}}{{/each}}
     </div>
 
     <div class="row">
@@ -25,7 +21,7 @@
 
     {{#if buttonsBottom}}
     <div class="button-container record-buttons">
-        {{#each buttons}}
+        {{#each buttonList}}
             {{button name scope=../../scope label=label style=style}}
         {{/each}}
     </div>

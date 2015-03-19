@@ -17,24 +17,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Preferences.Edit', 'Views.Edit', function (Dep) {
 
     return Dep.extend({
-    
+
         userName: '',
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
             this.userName = this.model.get('name');
         },
-    
+
         getHeader: function () {
-            var html = '';            
-            html += this.translate('Preferences');            
-            html += ' &raquo ';            
-            html += this.userName;            
+            var html = '';
+            html += this.translate('Preferences');
+            html += ' &raquo ';
+            html += this.userName;
             return html;
         },
 

@@ -29,17 +29,17 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.buttons = _.clone(this.buttons);
+            this.buttonList = _.clone(this.buttonList);
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                this.buttons.push({
+                this.buttonList.push({
                     name: 'preferences',
                     label: 'Preferences',
                     style: 'default'
                 });
 
                 if (!this.model.get('isAdmin')) {
-                    this.buttons.push({
+                    this.buttonList.push({
                         name: 'access',
                         label: 'Access',
                         style: 'default'
@@ -47,7 +47,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                 }
 
                 if (this.model.id == this.getUser().id) {
-                    this.buttons.push({
+                    this.buttonList.push({
                         name: 'changePassword',
                         label: 'Change Password',
                         style: 'default'
@@ -55,7 +55,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                 }
 
                 if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
-                    this.buttons.push({
+                    this.buttonList.push({
                         name: 'emailAccounts',
                         label: "Email Accounts",
                         style: 'default'
@@ -63,7 +63,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                 }
 
                 if (this.model.id == this.getUser().id) {
-                    this.buttons.push({
+                    this.buttonList.push({
                         name: 'externalAccounts',
                         label: 'External Accounts',
                         style: 'default'

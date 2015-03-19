@@ -31,7 +31,7 @@ Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
 
         fieldsMode: 'edit',
 
-        buttons: [
+        buttonList: [
             {
                 name: 'save',
                 label: 'Save',

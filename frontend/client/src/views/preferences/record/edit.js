@@ -25,7 +25,7 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
 
         sideView: null,
 
-        buttons: [
+        buttonList: [
             {
                 name: 'save',
                 label: 'Save',
