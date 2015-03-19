@@ -35,12 +35,12 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
         views: {
             header: {
-                selector: '> .page-header',
+                el: '#main > .page-header',
                 view: 'Header'
             },
             body: {
                 view: 'Record.Detail',
-                selector: '> .body',
+                el: '#main > .body',
             }
         },
 
