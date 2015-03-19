@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,33 +20,15 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Autoincrement', 'Views.Fields.Int', function (Dep) {
+namespace Espo\Modules\Crm\SelectManagers;
 
-    return Dep.extend({
-
-        type: 'autoincrement',
-
-        editTemplate: 'fields.base.detail',
-
-        validations: [],
-
-        inlineEditDisabled: true,
-
-        parse: function (value) {
-            value = (value !== '') ? value : null;
-            if (value !== null) {
-                 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
-                     value = NaN;
-                 } else {
-                     value = parseInt(value);
-                 }
-            }
-            return value;
-        },
-
-        fetch: function () {
-            return {};
-        },
-    });
-});
+class CaseObj extends \Espo\Core\SelectManagers\Base
+{
+    protected function boolFilterOpen(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status!=' => array('Duplicate', 'Rejected', 'Closed')
+        );
+    }
+}
 

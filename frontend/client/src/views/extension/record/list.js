@@ -17,27 +17,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Extension.Record.List', 'Views.Record.List', function (Dep) {
 
     return Dep.extend({
-        
+
         rowActionsView: 'Extension.Record.RowActions',
-        
+
         checkboxes: false,
-        
-        removeAction: false,
-        
-        mergeAction: false,
-        
-        massUpdateAction: false,
-        
-        exportAction: false,
-        
+
         allowQuickEdit: false,
-    
+
+        massActionList: []
+
     });
-    
+
 });
 

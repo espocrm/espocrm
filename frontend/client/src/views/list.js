@@ -33,7 +33,7 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
 
         views: {
             header: {
-                selector: '> .page-header',
+                el: '#main > .page-header',
                 view: 'Header'
             }
         },

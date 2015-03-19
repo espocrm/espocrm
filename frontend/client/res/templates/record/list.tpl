@@ -32,7 +32,7 @@
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="5%">
+                <th width="40">
                     <input type="checkbox" class="select-all">
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
@@ -47,7 +47,7 @@
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
-                <th {{#if width}} width="{{width}}%"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
+                <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
                     {{#if this.sortable}}
                         <a href="javascript:" class="sort" data-name="{{this.name}}">
                         {{#if this.hasCustomLabel}}

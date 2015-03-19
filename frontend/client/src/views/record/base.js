@@ -84,7 +84,9 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
 
             this.scope = this.model.name;
             this.fieldList = this.options.fieldList || this.fieldList || [];
-            this.id = Espo.Utils.toDom(this.scope) + '-' + Espo.Utils.toDom(this.type);
+
+            this.numId = Math.floor((Math.random() * 10000) + 1);
+            this.id = Espo.Utils.toDom(this.scope) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             if (this.model.isNew()) {
                 this.isNew = true;

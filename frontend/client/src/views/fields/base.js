@@ -49,7 +49,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
 
         _timeout: null,
 
-        editableInline: true,
+        inlineEditDisabled: false,
 
         enabled: true,
 
@@ -171,11 +171,11 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                 this.mode = 'detail';
             }
 
-            if ('editableInline' in this.options) {
-                this.editableInline = this.options.editableInline;
+            if ('inlineEditDisabled' in this.options) {
+                this.inlineEditDisabled = this.options.inlineEditDisabled;
             } else {
-                if ('editableInline' in this.params) {
-                    this.editableInline = this.params.editableInline;
+                if ('inlineEditDisabled' in this.params) {
+                    this.inlineEditDisabled = this.params.inlineEditDisabled;
                 }
             }
 
@@ -226,7 +226,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             if (this.mode == 'detail') {
                 var self = this;
 
-                if (!this.readOnly && this.editableInline) {
+                if (!this.readOnly && !this.inlineEditDisabled) {
                     var initInlineEdit = function () {
 
                         var $cell = this.getCellElement();

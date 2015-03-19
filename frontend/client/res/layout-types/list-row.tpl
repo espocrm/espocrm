@@ -14,7 +14,7 @@
     <%
             var tag = 'tag' in defs ? defs.tag : false;
             if (tag) {
-                print( '<' + tag);        
+                print( '<' + tag);
                 if ('id' in defs) {
                     print(' id="'+defs.id+'"');
                 }
@@ -22,12 +22,12 @@
                     print(' class="'+defs.class+'"');
                 };
                 print('>');
-            }            
+            }
         %>{{{<%= defs.name %>}}}<%
             if (tag) {
                 print( '</' + tag + '>');
             }
     %>
-    </td>    
+    </td>
 <% }); %>
 </tr>

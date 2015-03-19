@@ -40,12 +40,21 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
         readOnly: false,
 
+        inlineEditDisabled: false,
+
         setup: function () {
             this.fieldList = this.options.fieldList || this.fieldList || [];
             this.dates = ('dates' in this.options) ? this.options.dates : false;
             this.mode = this.options.mode || this.mode;
-            if ('readOnly' in this.options)    {
-                this.readOnly = this.options.readOnly;
+            if (!this.readOnly) {
+                if ('readOnly' in this.options) {
+                    this.readOnly = this.options.readOnly;
+                }
+            }
+            if (!this.inlineEditDisabled) {
+                if ('inlineEditDisabled' in this.options) {
+                    this.inlineEditDisabled = this.options.inlineEditDisabled;
+                }
             }
             this.createFields();
         },
@@ -85,6 +94,9 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
                 if (readOnly !== null) {
                     o.readOnly = readOnly
                 }
+            }
+            if (this.inlineEditDisabled) {
+                o.inlineEditDisabled = true;
             }
 
             this.createView(field, viewName, o);

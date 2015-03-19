@@ -135,8 +135,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             var $record = this.getView('record').$el;
             var $window = $(window);
 
-            $window.off('scroll.detail');
-            $window.on('scroll.detail', function (e) {
+            $window.off('scroll.detail-' + this.numId);
+            $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < 758) {
                     $container.removeClass('stick-sub');
                     $block.hide();
@@ -301,7 +301,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 throw new Error('Model has not been injected into record view.');
             }
 
-            this.id = Espo.Utils.toDom(this.model.name) + '-' + Espo.Utils.toDom(this.type);
+            this.numId = Math.floor((Math.random() * 10000) + 1);
+            this.id = Espo.Utils.toDom(this.scope) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             if (_.isUndefined(this.events)) {
                 this.events = {};
@@ -321,6 +322,18 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
             if ('bottomView' in this.options) {
                 this.bottomView = this.options.bottomView;
+            }
+
+            if (!this.readOnly) {
+                if ('readOnly' in this.options) {
+                    this.readOnly = this.options.readOnly;
+                }
+            }
+
+            if (!this.inlineEditDisabled) {
+                if ('inlineEditDisabled' in this.options) {
+                    this.inlineEditDisabled = this.options.inlineEditDisabled;
+                }
             }
 
             if (this.model.isNew()) {
@@ -420,6 +433,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         convertDetailLayout: function (simplifiedLayout) {
             var layout = [];
 
+            var el = this.options.el || '#' + (this.id);
+
             for (var p in simplifiedLayout) {
                 var panel = {};
                 panel.label = simplifiedLayout[p].label || null;
@@ -443,9 +458,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                         var type = cellDefs.type || this.model.getFieldType(cellDefs.name) || 'base';
                         var viewName = cellDefs.view || this.model.getFieldParam(cellDefs.name, 'view') || this.getFieldManager().getViewName(type);
 
-
                         var o = {
-                            el: '#' + this.id + ' .record .field-' + cellDefs.name,
+                            el: el + ' .record .field-' + cellDefs.name,
                             defs: {
                                 name: cellDefs.name,
                                 params: cellDefs.params || {}
@@ -461,10 +475,14 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                             }
                         }
 
+                        if (this.inlineEditDisabled || cellDefs.inlineEditDisabled) {
+                            o.inlineEditDisabled = true;
+                        }
+
                         var cell = {
                             name: cellDefs.name,
                             view: viewName,
-                            el: '#' + this.id + ' .record .field-' + cellDefs.name,
+                            el: el + ' .record .field-' + cellDefs.name,
                             fullWidth: cellDefs.fullWidth || false,
                             options: o
                         };
@@ -506,12 +524,15 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
             var self = this;
 
+            var el = this.options.el || '#' + (this.id);
+
             if (this.sideView) {
                 this.createView('side', this.sideView, {
                     model: this.model,
-                    el: '#' + this.id + ' .side',
+                    el: el + ' .side',
+                    type: this.type,
                     readOnly: this.readOnly,
-                    type: this.type
+                    inlineEditDisabled: this.inlineEditDisabled
                 });
             }
 
@@ -519,7 +540,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.createView('record', 'Base', {
                     model: this.model,
                     _layout: layout,
-                    el: '#' + this.id + ' .record',
+                    el: el + ' .record',
                     layoutData: {
                         model: this.model,
                         columnCount: this.columnCount,
@@ -532,9 +553,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.once('after:render', function () {
                     this.createView('bottom', this.bottomView, {
                         model: this.model,
-                        el: '#' + this.id + ' .bottom',
+                        el: el + ' .bottom',
                         notToRender: true,
-                        readOnly: this.readOnly
+                        readOnly: this.readOnly,
+                        inlineEditDisabled: this.inlineEditDisabled
                     }, function (view) {
                         view.render();
                     }, false);

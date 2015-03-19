@@ -85,6 +85,12 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     border-left: 0;
 }
 
+
+.list .checkbox-dropdown {
+    margin-right: -10px;
+    margin-top: 2px;
+}
+
 .list .checkbox-dropdown > a {
     padding: 0;
 }
@@ -140,8 +146,9 @@ body {
 }
 
 #global-search-input {
-    width: 165px;
+    width: 145px;
     margin-top: 1px;
+    padding-right: 10px;
 }
 
 .progress.pre-loading {
@@ -301,7 +308,13 @@ table.table > tbody td > .list-row-buttons button {
 .list > table th input[type="checkbox"] {
     margin: 0;
     position: relative;
-    top: 3px;
+    top: 2px;
+}
+
+.list > table th input[type="checkbox"] {
+    margin: 0;
+    position: relative;
+    top: 5px !important;
 }
 
 .list > table th span.caret {
@@ -628,6 +641,10 @@ body > footer > p a:hover,
 body > footer > p a:active,
 body > footer > p a:visited {
     color: @gray;
+}
+
+.navbar-right {
+    margin-right: -2px !important;
 }
 
 .navbar-collapse {

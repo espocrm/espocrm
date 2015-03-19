@@ -28,6 +28,8 @@
 
         readOnly: false,
 
+        inlineEditDisabled: false,
+
         panels: [
             {
                 name: 'default',
@@ -79,8 +81,15 @@
             this.panels = this.options.panels || this.panels;
             this.scope = this.options.model.name;
             this.panels = _.clone(this.panels);
-            if ('readOnly' in this.options)    {
-                this.readOnly = this.options.readOnly;
+            if (!this.readOnly) {
+                if ('readOnly' in this.options)    {
+                    this.readOnly = this.options.readOnly;
+                }
+            }
+            if (!this.inlineEditDisabled) {
+                if ('inlineEditDisabled' in this.options) {
+                    this.inlineEditDisabled = this.options.inlineEditDisabled;
+                }
             }
         },
 
@@ -106,6 +115,7 @@
                     model: this.options.model,
                     el: this.options.el + ' .panel-body-' + p.name,
                     readOnly: this.readOnly,
+                    inlineEditDisabled: this.inlineEditDisabled,
                     mode: this.mode
                 };
                 o = _.extend(o, p.options);
