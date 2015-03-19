@@ -323,6 +323,18 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.bottomView = this.options.bottomView;
             }
 
+            if (!this.readOnly) {
+                if ('readOnly' in this.options) {
+                    this.readOnly = this.options.readOnly;
+                }
+            }
+
+            if (!this.inlineEditDisabled) {
+                if ('inlineEditDisabled' in this.options) {
+                    this.inlineEditDisabled = this.options.inlineEditDisabled;
+                }
+            }
+
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
@@ -461,6 +473,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                             }
                         }
 
+                        if (this.inlineEditDisabled || cellDefs.inlineEditDisabled) {
+                            o.inlineEditDisabled = true;
+                        }
+
                         var cell = {
                             name: cellDefs.name,
                             view: viewName,
@@ -510,8 +526,9 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.createView('side', this.sideView, {
                     model: this.model,
                     el: '#' + this.id + ' .side',
+                    type: this.type,
                     readOnly: this.readOnly,
-                    type: this.type
+                    inlineEditDisabled: this.inlineEditDisabled
                 });
             }
 
@@ -534,7 +551,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                         model: this.model,
                         el: '#' + this.id + ' .bottom',
                         notToRender: true,
-                        readOnly: this.readOnly
+                        readOnly: this.readOnly,
+                        inlineEditDisabled: this.inlineEditDisabled
                     }, function (view) {
                         view.render();
                     }, false);

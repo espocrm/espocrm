@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Autoincrement', 'Views.Fields.Int', function (Dep) {
 
@@ -29,7 +29,7 @@ Espo.define('Views.Fields.Autoincrement', 'Views.Fields.Int', function (Dep) {
 
         validations: [],
 
-        editableInline: false,
+        inlineEditDisabled: true,
 
         parse: function (value) {
             value = (value !== '') ? value : null;

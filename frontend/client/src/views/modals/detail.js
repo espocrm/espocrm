@@ -157,6 +157,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
                 buttonsPosition: false,
+                inlineEditDisabled: true,
                 exit: function () {},
             };
             this.createView('record', viewName, options, callback);
