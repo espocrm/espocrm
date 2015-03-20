@@ -240,7 +240,7 @@
                 var category = options.hash.category || false;
                 var field = options.hash.field || false;
 
-                var translationHash = options.hash.translationHash || null;
+                var translationHash = options.hash.translationHash || options.hash.translatedOptions || null;
 
                 if (translationHash === null) {
                     if (!category && field) {
