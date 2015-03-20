@@ -85,6 +85,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 return true;
             }, this);
 
+            this.tabList = Object.keys(this.tabs);
 
             this.quickCreateList = (this.getConfig().get('quickCreateList') || []).filter(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.acl')) {
@@ -134,12 +135,19 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             };
 
+            var tabCount = this.tabList.length;
+
+            var $navbar = $('#navbar .navbar');
+
+            var navbarNeededHeight = 45;
+
             var moreWidth = $('#nav-more-tabs-dropdown').width();
 
-            var updateWidth = function () {
-                var documentWidth = $(window.document).width();
 
-                var documentWidth = window.outerWidth;
+            var updateWidth = function () {
+                var windowWidth = $(window.document).width();
+
+                var windowWidth = window.innerWidth;
 
                 $more.children('li').each(function (i, li) {
                     unhideOneTab();
@@ -147,13 +155,13 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
                 $more.parent().addClass('hide');
 
-                if (documentWidth < 768) {
+                if (windowWidth < 768) {
                     return;
                 }
 
                 var headerWidth = this.$el.width();
 
-                var maxWidth = headerWidth - 549 - moreWidth;
+                var maxWidth = headerWidth - 546 - moreWidth;
 
                 var width = $tabs.width();
                 while (width > maxWidth) {
@@ -166,15 +174,41 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             }.bind(this);
 
+            /*var updateWidth = function () {
+                $more.children('li').each(function (i, li) {
+                    unhideOneTab();
+                });
 
-            var $navbar = $('#navbar .navbar');
+                $more.parent().addClass('hide');
+
+                var i = 0;
+                while ($navbar.height() > navbarNeededHeight && i < tabCount) {
+                	hideOneTab();
+                	i++;
+                }
+
+                if ($more.children().size() > 0) {
+                    $more.parent().removeClass('hide');
+	                if ($navbar.height() > navbarNeededHeight) {
+		                var i = 0;
+		                while ($navbar.height() > navbarNeededHeight && i < tabCount) {
+		                	hideOneTab();
+		                	i++;
+		                }
+	                }
+                }
+            }.bind(this);*/
 
             var processUpdateWidth = function () {
-                if ($navbar.height() > 45) {
+                if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
                     setTimeout(function () {
                         processUpdateWidth();
                     }, 200);
+                } else {
+                    setTimeout(function () {
+                        processUpdateWidth();
+                    }, 1000);
                 }
             };
 
