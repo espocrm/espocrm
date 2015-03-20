@@ -174,31 +174,6 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             }.bind(this);
 
-            /*var updateWidth = function () {
-                $more.children('li').each(function (i, li) {
-                    unhideOneTab();
-                });
-
-                $more.parent().addClass('hide');
-
-                var i = 0;
-                while ($navbar.height() > navbarNeededHeight && i < tabCount) {
-                	hideOneTab();
-                	i++;
-                }
-
-                if ($more.children().size() > 0) {
-                    $more.parent().removeClass('hide');
-	                if ($navbar.height() > navbarNeededHeight) {
-		                var i = 0;
-		                while ($navbar.height() > navbarNeededHeight && i < tabCount) {
-		                	hideOneTab();
-		                	i++;
-		                }
-	                }
-                }
-            }.bind(this);*/
-
             var processUpdateWidth = function () {
                 if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
