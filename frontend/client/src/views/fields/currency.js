@@ -42,26 +42,26 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.currencyFieldName = this.name + 'Currency';
-            
+
             var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getConfig().get('defaultCurrency');
-        
+
             this.listenTo(this.model, 'change:' + this.currencyFieldName, function () {
                 this.currencyValue = this.model.get(this.currencyFieldName);
                 this.updateCurrency();
             }.bind(this));
-            
+
             if (this.mode == 'edit' || this.mode == 'detail') {
                 this.updateCurrency();
             }
         },
-        
+
         updateCurrency: function () {
-            this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];    
+            this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];
             var currencyOptions = '';
             this.currencyList.forEach(function (code) {
                 currencyOptions += '<option value="' + code + '"' + ((this.currencyValue == code) ? ' selected' : '') + '>' + code + '</option>';
             }, this);
-            this.currencyOptions = currencyOptions;            
+            this.currencyOptions = currencyOptions;
         },
 
         afterRender: function () {
@@ -79,8 +79,14 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
             value = this.parse(value);
 
             var data = {};
+
+            var currencyValue = this.$currency.val();
+            if (value === null) {
+                currencyValue = null;
+            }
+
             data[this.name] = value;
-            data[this.currencyFieldName] = this.$currency.val();
+            data[this.currencyFieldName] = currencyValue
             return data;
         },
     });
