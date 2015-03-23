@@ -162,6 +162,14 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             };
             this.createView('record', viewName, options, callback);
         },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            setTimeout(function () {
+                this.$el.children(0).scrollTop(0);
+            }.bind(this), 50);
+        }
     });
 });
 

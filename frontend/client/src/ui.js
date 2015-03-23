@@ -109,11 +109,7 @@
             }.bind(this));
         }
 
-        this.$el.on('show.bs.modal', function (event) {
-            var idx = $('.modal:visible').length;
-        });
         this.$el.on('shown.bs.modal', function (event) {
-            var idx = ($('.modal:visible').length) - 1;
             $('.modal-backdrop').not('.stacked').addClass('stacked');
         });
         this.$el.on('hidden.bs.modal', function (event) {
