@@ -1,6 +1,6 @@
 [
-    {"name":"number","width":18},
     {"name":"name","width":35,"link":true},
+    {"name":"number","width":18},
     {"name":"status"},
     {"name":"priority"}
 ]

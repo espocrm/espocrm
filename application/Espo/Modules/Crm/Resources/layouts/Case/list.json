@@ -1,8 +1,8 @@
 [
-    {"name":"number","width":12},
     {"name":"name","width":30,"link":true},
-    {"name":"status"},
-    {"name":"priority"},
+    {"name":"number","width":12},
+    {"name":"status", "width":11},
+    {"name":"priority", "width":11},
     {"name":"account"},
     {"name":"assignedUser"}
 ]
