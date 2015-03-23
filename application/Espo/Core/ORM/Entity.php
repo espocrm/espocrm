@@ -41,17 +41,20 @@ class Entity extends \Espo\ORM\Entity
                 $columnsData = new \stdClass();
             }
 
-            foreach ($collection as $e) {
-                $id = $e->id;
-                $ids[] = $id;
-                $names->$id = $e->get('name');
-                if (!empty($columns)) {
-                    $columnsData->$id = new \stdClass();
-                    foreach ($columns as $column => $f) {
-                        $columnsData->$id->$column = $e->get($f);
+            if ($collection) {
+                foreach ($collection as $e) {
+                    $id = $e->id;
+                    $ids[] = $id;
+                    $names->$id = $e->get('name');
+                    if (!empty($columns)) {
+                        $columnsData->$id = new \stdClass();
+                        foreach ($columns as $column => $f) {
+                            $columnsData->$id->$column = $e->get($f);
+                        }
                     }
                 }
             }
+
             $this->set($field . 'Ids', $ids);
             $this->set($field . 'Names', $names);
             if (!empty($columns)) {

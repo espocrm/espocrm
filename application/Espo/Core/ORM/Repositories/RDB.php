@@ -289,18 +289,21 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             $defs['additionalColumns'] = $columns;
                         }
 
-                        foreach ($entity->get($name, $defs) as $foreignEntity) {
-                            $existingIds[] = $foreignEntity->id;
-                            if (!empty($columns)) {
-                                $data = new \stdClass();
-                                foreach ($columns as $columnName => $columnField) {
-                                    $foreignId = $foreignEntity->id;
-                                    $data->$columnName = $foreignEntity->get($columnField);
+                        $foreignCollection = $entity->get($name, $defs);
+                        if ($foreignCollection) {
+                            foreach ($foreignCollection as $foreignEntity) {
+                                $existingIds[] = $foreignEntity->id;
+                                if (!empty($columns)) {
+                                    $data = new \stdClass();
+                                    foreach ($columns as $columnName => $columnField) {
+                                        $foreignId = $foreignEntity->id;
+                                        $data->$columnName = $foreignEntity->get($columnField);
+                                    }
+                                    $existingColumnsData->$foreignId = $data;
+                                    $entity->setFetched($columnsFieldsName, $existingColumnsData);
                                 }
-                                $existingColumnsData->$foreignId = $data;
-                                $entity->setFetched($columnsFieldsName, $existingColumnsData);
-                            }
 
+                            }
                         }
 
                         if ($entity->has($fieldName)) {
