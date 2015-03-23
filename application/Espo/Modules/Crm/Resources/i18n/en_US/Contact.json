@@ -12,7 +12,8 @@
         "opportunityRole": "Opportunity Role",
         "accountRole": "Title",
         "description": "Description",
-        "campaign": "Campaign"
+        "campaign": "Campaign",
+        "targetLists": "Target Lists"
     },
     "links": {
         "opportunities": "Opportunities",

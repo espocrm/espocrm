@@ -126,6 +126,14 @@
         },
         "teams": {
             "type": "linkMultiple"
+        },
+        "targetLists": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "noLoad": true,
+            "noSave": true
         }
     },
     "links": {

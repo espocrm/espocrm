@@ -120,23 +120,28 @@
         "createdAccount": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "readOnly": true
         },
         "createdContact": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "readOnly": true
         },
         "createdOpportunity": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "readOnly": true
+        },
+        "targetLists": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "noLoad": true,
+            "noSave": true
         }
     },
     "links": {

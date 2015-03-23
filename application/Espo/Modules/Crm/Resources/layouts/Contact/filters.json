@@ -2,6 +2,7 @@
 	"account",
 	"assignedUser",
 	"emailAddress",
+	"title",
 	"address",
-	"title"
+	"targetLists"
 ]

@@ -268,6 +268,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
                 if ($entity->has($fieldName) || $entity->has($columnsFieldsName)) {
 
+                    if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
+                        continue;
+                    }
+
                     if ($entity->has($fieldName)) {
                         $specifiedIds = $entity->get($fieldName);
                     } else {
@@ -283,7 +287,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         $existingColumnsData = new \stdClass();
 
                         $defs = array();
-                        $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityName() . ".fields.{$name}.columns");
+                        $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
                         if (!empty($columns)) {
                             $columnData = $entity->get($columnsFieldsName);
                             $defs['additionalColumns'] = $columns;
