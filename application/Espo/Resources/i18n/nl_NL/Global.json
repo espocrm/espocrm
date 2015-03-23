@@ -198,10 +198,10 @@
         "users": "Gebruikers"
     },
     "dashlets": {
-        "Stream": "Gestroomlijnd"        
+        "Stream": "Gestroomlijnd"
     },
     "streamMessages": {
-        "create": "{user} creërde {entityType} {entity} ",        
+        "create": "{user} creërde {entityType} {entity} ",
         "createAssigned": "{user} creërde {entityType} {entity} en wees toe aan {assignee}",
         "assign": "{user} wees {entityType} {entity} toe aan {assignee}",
         "post": "{user} geplaatst op {entityType} {entity}",
@@ -210,10 +210,10 @@
         "update": "{user} paste {entityType} {entity} aan",
         "createRelated": "{user} creërde {relatedEntityType} {relatedEntity} gekoppeld aan {entityType} {entity}",
         "emailReceived": "{entity} is ontvangen voor {entityType} {entity}",
-        "emailReceivedInitial": "Email {email} is ontvangen en gemaakt met {entityType} {entity}",
+        "emailReceivedInitial": "Email is ontvangen en gemaakt met {entityType} {entity}",
         "mentionInPost": "{user} vermeldde {mentioned} op {entityType} {entity}",
-        
-        "createThis": "{user} creërde deze {entityType} ",        
+
+        "createThis": "{user} creërde deze {entityType} ",
         "createAssignedThis": "{user} maakte deze {entityType} toegewezen aan {assignee}",
         "assignThis": "{user} wees deze {entityType} toe aan {assignee}",
         "postThis": "{user} gepost",
@@ -222,7 +222,7 @@
         "updateThis": "{user} paste dit {entityType} aan",
         "createRelatedThis": "{user} maakte {relatedEntityType} {relatedEntity} en koppelde dit aan {entityType}",
         "emailReceivedThis": "{entity} is ontvangen",
-        "emailReceivedInitialThis": "{email} bericht ontvangen en maakte deze {entityType}"
+        "emailReceivedInitialThis": "Email bericht ontvangen en maakte deze {entityType}"
     },
     "lists": {
         "monthNames": ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "October", "November", "December"],

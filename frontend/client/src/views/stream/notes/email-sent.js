@@ -29,7 +29,8 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
 
         data: function () {
             return _.extend({
-                emailId: this.emailId
+                emailId: this.emailId,
+                emailName: this.emailName
             }, Dep.prototype.data.call(this));
         },
 
@@ -37,6 +38,7 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
             var data = this.model.get('data') || {};
 
             this.emailId = data.emailId;
+            this.emailName = data.emailName;
 
             if (this.model.get('post')) {
                 this.createField('post', null, null, 'Stream.Fields.Post');

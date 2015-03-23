@@ -19,6 +19,9 @@
         </div>
     </div>
 
+    <div class="stream-subject-container">
+        <span class="cell cell-name"><a href="#Email/view/{{emailId}}">{{emailName}}</a></span>
+    </div>
 
     {{#if post}}
     <div class="stream-post-container">

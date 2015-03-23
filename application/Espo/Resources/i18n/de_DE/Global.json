@@ -228,21 +228,21 @@
         "updateThis": "{user} hat diese(s\/n) {entityType} aktualisiert",
         "createRelatedThis": "{user} hat {relatedEntityType} {relatedEntity} verbunden mit diesem (r) {entityType} hinzugefügt",
 
-        "emailReceivedFromThis": "{email} wurde empfangen von {from}",
-        "emailReceivedInitialFromThis": "E-Mail {email} wurde empfangen von {from} und {entityType} wurde erstellt",
+        "emailReceivedFromThis": "E-Mail wurde empfangen von {from}",
+        "emailReceivedInitialFromThis": "E-Mail wurde empfangen von {from} und {entityType} wurde erstellt",
 
         "emailReceivedThis": "{entity} wurde empfangen",
-        "emailReceivedInitialThis": "E-Mail {email} wurde empfangen und {entityType} wurde erstellt",
+        "emailReceivedInitialThis": "E-Mail wurde empfangen und {entityType} wurde erstellt",
 
-        "emailReceivedFrom": "E-Mail {email} verbunden mit {entityType} {entity} wurde von {from} empfangen",
-        "emailReceivedFromInitial": "E-Mail {email} wurde empfangen von {from} und hat {entityType} {entity} erstellt",
+        "emailReceivedFrom": "E-Mail verbunden mit {entityType} {entity} wurde von {from} empfangen",
+        "emailReceivedFromInitial": "E-Mail wurde empfangen von {from} und hat {entityType} {entity} erstellt",
 
-        "emailReceived": "E-Mail {email} verbunden mit {entityType} {entity} wurde empfangen",
-        "emailReceivedInitial": "E-Mail {email} wurde empfangen und hat {entityType} {entity} erstellt",
-        "emailReceivedInitialFrom": "E-Mail {email} wurde empfangen von {from} und hat {entityType} {entity} erstellt",
+        "emailReceived": "E-Mail verbunden mit {entityType} {entity} wurde empfangen",
+        "emailReceivedInitial": "E-Mail wurde empfangen und hat {entityType} {entity} erstellt",
+        "emailReceivedInitialFrom": "E-Mail wurde empfangen von {from} und hat {entityType} {entity} erstellt",
 
-        "emailSent": "{by} hat E-Mail {email} verbunden mit {entityType} {entity} gesendet",
-        "emailSentThis": "{by} hat E-Mail {email} gesendet"
+        "emailSent": "{by} hat E-Mail  verbunden mit {entityType} {entity} gesendet",
+        "emailSentThis": "{by} hat E-Mail gesendet"
     },
 	"lists": {
 		"monthNames": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
