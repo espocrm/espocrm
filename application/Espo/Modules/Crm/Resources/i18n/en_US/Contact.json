@@ -10,7 +10,7 @@
         "doNotCall": "Do Not Call",
         "address": "Address",
         "opportunityRole": "Opportunity Role",
-        "accountRole": "Role",
+        "accountRole": "Title",
         "description": "Description",
         "campaign": "Campaign"
     },
