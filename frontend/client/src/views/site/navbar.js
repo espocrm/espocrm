@@ -29,7 +29,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
         data: function () {
             return {
-                tabs: this.tabsDefs,
+                tabs: this.tabDefs,
                 title: this.options.title,
                 menu: this.getMenuDefs(),
                 quickCreateList: this.quickCreateList,
@@ -78,14 +78,12 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             }.bind(this));
 
-            this.tabs = this.getConfig().get('tabList').filter(function (scope) {
+            this.tabList = this.getConfig().get('tabList').filter(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.acl')) {
                     return this.getAcl().check(scope);
                 }
                 return true;
             }, this);
-
-            this.tabList = Object.keys(this.tabs);
 
             this.quickCreateList = (this.getConfig().get('quickCreateList') || []).filter(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.acl')) {
@@ -102,7 +100,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 el: this.options.el + ' .global-search-container'
             });
 
-            this.tabsDefs = this.getTabDefs();
+            this.tabDefs = this.getTabDefs();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -201,20 +199,20 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             }
         },
 
-        getTabs: function () {
-            return this.tabs;
+        getTabList: function () {
+            return this.tabList;
         },
 
         getTabDefs: function () {
             var tabDefs = [];
-            this.getTabs().forEach(function (tab, i) {
+            this.getTabList().forEach(function (tab, i) {
                 var o = {
                     link: '#' + tab,
                     label: this.getLanguage().translate(tab, 'scopeNamesPlural'),
                     name: tab
                 };
                 tabDefs.push(o);
-            }.bind(this));
+            }, this);
             return tabDefs;
         },
 

@@ -60,7 +60,7 @@ _.extend(Espo.Acl.prototype, {
             return true;
         }
 
-        if (controller in this.data) {
+        if (controller in this.data.table) {
             if (this.data.table[controller] === false) {
                 return false;
             }
