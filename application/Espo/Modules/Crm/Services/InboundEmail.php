@@ -409,7 +409,7 @@ class InboundEmail extends \Espo\Services\Record
                 }
                 if (empty($contact)) {
                     $contact = $this->getEntityManager()->getEntity('Contact');
-                    $contact->set('name', $email->get('fromName'));
+                    $contact->set('name', $email->get('fromString'));
                 }
 
 

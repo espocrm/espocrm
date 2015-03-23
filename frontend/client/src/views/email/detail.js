@@ -55,13 +55,15 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
         actionCreateLead: function () {
             var attributes = {};
 
-            var fromName = this.model.get('fromName');
-            if (fromName) {
-                fromName = fromName.replace(/<(.*)>/, '').trim();
-                var firstName = fromName.split(' ').slice(0, -1).join(' ');
-                var lastName = fromName.split(' ').slice(-1).join(' ');
-                attributes.firstName = firstName;
-                attributes.lastName = lastName;
+            var fromString = this.model.get('fromString') || this.model.get('fromName');
+            if (fromString) {
+                var fromName = this.parseNameFromStringAddress(fromString);
+                if (fromName) {
+                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    attributes.firstName = firstName;
+                    attributes.lastName = lastName;
+                }
             }
 
             attributes.emailAddress = this.model.get('from');
@@ -142,6 +144,29 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
             }
         },
 
+        parseNameFromStringAddress: function (value) {
+            if (~value.indexOf('<')) {
+                var name = value.replace(/<(.*)>/, '').trim();
+                if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
+                    name = name.substr(1, name.length - 2);
+                }
+                return name;
+            }
+            return null;
+        },
+
+        parseAddressFromStringAddress: function (value) {
+            var r = value.match(/<(.*)>/);
+            var address = null;
+            if (r && r.length > 1) {
+                address = r[1];
+            } else {
+                address = value.trim();
+            }
+            return address;
+        },
+
+
         actionReply: function (data, cc) {
             var attributes = {
                 status: 'Draft',
@@ -155,19 +180,55 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
                 attributes['name'] = subject;
             }
 
-            if (this.model.get('from')) {
-                attributes['to'] = this.model.get('from');
+            var to = null;
+
+            var nameHash = this.model.get('nameHash') || {};
+
+            if (this.model.get('replyToString')) {
+                var str = this.model.get('replyToString');
+
+                var a = [];
+                str.split(';').forEach(function (item) {
+                    var part = item.trim();
+                    var address = this.parseAddressFromStringAddress(item);
+
+                    if (address) {
+                        a.push(address);
+                        var name = this.parseNameFromStringAddress(part);
+                        if (name && name !== address) {
+                            nameHash[address] = name;
+                        }
+
+                    }
+                }, this);
+                to = a.join('; ');
+            }
+            if (!to || !~to.indexOf('@')) {
+                if (this.model.get('from')) {
+                    to = this.model.get('from');
+                    if (!nameHash[to]) {
+                        var fromString = this.model.get('fromString') || this.model.get('fromName');
+                        if (fromString) {
+                            var name = this.parseNameFromStringAddress(fromString);
+                            if (name != to) {
+                                nameHash[to] = name;
+                            }
+                        }
+                    }
+                }
             }
 
+            attributes.to = to;
+
             if (cc) {
-                attributes['cc'] = this.model.get('cc');
+                attributes.cc = this.model.get('cc');
                 (this.model.get('to')).split(';').forEach(function (item) {
                    item = item.trim();
                    if (item != this.getUser().get('emailAddress')) {
-                       attributes['cc'] += '; ' + item;
+                       attributes.cc += '; ' + item;
                    }
                 }, this);
-                attributes['cc'] = attributes['cc'].replace(/^(\; )/,"");
+                attributes.cc = attributes.cc.replace(/^(\; )/,"");
             }
 
             if (this.model.get('parentId')) {
@@ -175,6 +236,8 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
                 attributes['parentName'] = this.model.get('parentName');
                 attributes['parentType'] = this.model.get('parentType');
             }
+
+            attributes.nameHash = nameHash;
 
             this.addReplyBodyAttrbutes(attributes);
 

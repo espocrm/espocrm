@@ -62,7 +62,9 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
                 return '';
             }
 
-            var name = this.nameHash[address] || this.getFromNameValue() || null;
+            var fromString = this.model.get('fromString') || this.model.get('fromName');
+
+            var name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
@@ -79,15 +81,16 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
             return lineHtml;
         },
 
-        getFromNameValue: function () {
-            var fromName = this.model.get('fromName');
-            if (!fromName) {
-                return '';
+        parseNameFromStringAddress: function (value) {
+            if (~value.indexOf('<')) {
+                var name = value.replace(/<(.*)>/, '').trim();
+                if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
+                    name = name.substr(1, name.length - 2);
+                }
+                return name;
             }
-
-            fromName = fromName.replace(/<(.*)>/, '').trim();
-            return fromName;
-        },
+            return null;
+        }
 
     });
 

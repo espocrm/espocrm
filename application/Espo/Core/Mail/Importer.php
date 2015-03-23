@@ -74,7 +74,10 @@ class Importer
 
             $fromArr = $this->getAddressListFromMessage($message, 'from');
             if (isset($message->from)) {
-                $email->set('fromName', $message->from);
+                $email->set('fromString', $message->from);
+            }
+            if (isset($message->replyTo)) {
+                $email->set('replyToString', $message->replyTo);
             }
 
             $toArr = $this->getAddressListFromMessage($message, 'to');

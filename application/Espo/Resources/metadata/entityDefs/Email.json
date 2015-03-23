@@ -14,6 +14,12 @@
         "fromName": {
             "type": "varchar"
         },
+        "fromString": {
+            "type": "varchar"
+        },
+        "replyToString": {
+            "type": "varchar"
+        },
         "from": {
             "type": "varchar",
             "db": false,
