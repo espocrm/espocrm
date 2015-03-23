@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
 
@@ -50,33 +50,34 @@ Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
             this.defaultOptions = _.extend({
                 title: this.getLanguage().translate(this.name, 'dashlets'),
             }, this.defaultOptions || {});
-            
-            
-            var options = _.clone(this.defaultOptions);
-            
+
+            this.optionsFields = Espo.Utils.clone(this.optionsFields);
+
+            var options = Espo.Utils.clone(this.defaultOptions);
+
             for (var key in options) {
                 if (typeof options[key] == 'function') {
                     options[key] = options[key].call(this);
-                } 
+                }
             }
 
             var storedOptions = this.getPreferences().getDashletOptions(this.options.id) || {};
-            
+
             this.optionsData = _.extend(options, storedOptions);
-            
+
             if (this.optionsData.autorefreshInterval || false) {
-                var interval = this.optionsData.autorefreshInterval * 60000;                
-                
-                var t;                
+                var interval = this.optionsData.autorefreshInterval * 60000;
+
+                var t;
                 var process = function () {
                     t = setTimeout(function () {
                         this.actionRefresh();
-                        process();                                    
+                        process();
                     }.bind(this), interval);
                 }.bind(this);
-                
+
                 process();
-                
+
                 this.once('remove', function () {
                     clearTimeout(t);
                 }, this);
