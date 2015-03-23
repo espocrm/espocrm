@@ -17,20 +17,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 (function (Espo, _, Handlebars) {
 
     Espo.ViewHelper = function (options) {
-        this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+        this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         this._registerHandlebarsHelpers();
 
         this.mdSearch = [
             /\("?(.*?)"?\)\[(.*?)\]/g,
-            /\&\#x60;(([\s\S]*?)\&\#x60;)/,
-            /(\*\*|__)(.*?)\1/,
-            /(\*|_)(.*?)\1/,
-            /\~\~(.*?)\~\~/
+            /\&\#x60;(([\s\S]*?)\&\#x60;)/g,
+            /(\*\*)(.*?)\1/g,
+            /(\*)(.*?)\1/g,
+            /\~\~(.*?)\~\~/g
         ];
         this.mdReplace = [
             '<a href="$2">$1</a>',
