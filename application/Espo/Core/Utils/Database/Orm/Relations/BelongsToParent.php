@@ -20,35 +20,40 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\Core\Utils\Database\Orm\Relations;
 
-class LinkParent extends Base
+class BelongsToParent extends Base
 {
-    protected function load($fieldName, $entityName)
+    protected function load($linkName, $entityName)
     {
+        $linkParams = $this->getLinkParams();
+
         return array(
             $entityName => array (
                 'fields' => array(
-                    $fieldName.'Id' => array(
+                    $linkName.'Id' => array(
                         'type' => 'foreignId',
-                        'index' => $fieldName,
+                        'index' => $linkName,
                     ),
-                    $fieldName.'Type' => array(
+                    $linkName.'Type' => array(
                         'type' => 'foreignType',
                         'notNull' => false,
-                        'index' => $fieldName,
+                        'index' => $linkName,
                     ),
-                    $fieldName.'Name' => array(
+                    $linkName.'Name' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
                     ),
                 ),
-            ),
-            'unset' => array(
-                $entityName => array(
-                    'fields.'.$fieldName,
+                'relations' => array(
+                    $linkName => array(
+                        'type' => 'belongsToParent',
+                        'key' => $linkName.'Id',
+                    ),
                 ),
             ),
         );
+
     }
+
 }

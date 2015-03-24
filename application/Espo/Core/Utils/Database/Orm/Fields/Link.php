@@ -22,20 +22,17 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class LinkParent extends Base
+class Link extends Base
 {
     protected function load($fieldName, $entityName)
     {
-        return array(
+        $fieldParams = $this->getFieldParams();
+
+        $data = array(
             $entityName => array (
                 'fields' => array(
                     $fieldName.'Id' => array(
                         'type' => 'foreignId',
-                        'index' => $fieldName,
-                    ),
-                    $fieldName.'Type' => array(
-                        'type' => 'foreignType',
-                        'notNull' => false,
                         'index' => $fieldName,
                     ),
                     $fieldName.'Name' => array(
@@ -50,5 +47,11 @@ class LinkParent extends Base
                 ),
             ),
         );
+        if (!empty($fieldParams['notStorable'])) {
+            $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
+        }
+
+
+        return $data;
     }
 }
