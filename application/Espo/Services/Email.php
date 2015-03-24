@@ -249,6 +249,17 @@ class Email extends Record
         return true;
     }
 
+    static public function parseFromName($string)
+    {
+        $fromName = '';
+        if ($string) {
+            if (stripos($string, '<') !== false) {
+                $fromName = trim(preg_replace('/(<.*>)/', '', $string), '" ');
+            }
+        }
+        return $fromName;
+    }
+
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         parent::loadAdditionalFieldsForList($entity);
@@ -264,7 +275,12 @@ class Email extends Record
                 if ($person) {
                     $entity->set('personStringData', $person->get('name'));
                 } else {
-                    $entity->set('personStringData', $entity->get('fromEmailAddressName'));
+                    $fromName = self::parseFromName($entity->get('fromString'));
+                    if (!empty($fromName)) {
+                        $entity->set('personStringData', $fromName);
+                    } else {
+                        $entity->set('personStringData', $entity->get('fromEmailAddressName'));
+                    }
                 }
             }
         } else if (in_array($status, ['Sent', 'Draft', 'Sending'])) {

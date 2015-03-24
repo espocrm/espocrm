@@ -395,6 +395,7 @@ class InboundEmail extends \Espo\Services\Record
         return $case;
     }
 
+
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
     {
         try {
@@ -409,9 +410,11 @@ class InboundEmail extends \Espo\Services\Record
                 }
                 if (empty($contact)) {
                     $contact = $this->getEntityManager()->getEntity('Contact');
-                    $contact->set('name', $email->get('fromString'));
+                    $fromName = \Espo\Services\Email::parseFromName($email->get('fromString'));
+                    if (!empty($fromName)) {
+                        $contact->set('name', $fromName);
+                    }
                 }
-
 
                 $entityHash['Person'] = $contact;
                 $entityHash['Contact'] = $contact;
