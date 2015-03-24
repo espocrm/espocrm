@@ -54,7 +54,7 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
             this.messageData['by'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
 
 
-            if (!this.isUserStream) {
+            if (this.isThis) {
                 this.messageName += 'This';
             }
 

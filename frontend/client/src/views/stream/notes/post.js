@@ -40,7 +40,7 @@ Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
 
                 if (!this.model.get('post')) {
                     this.messageName = 'attach';
-                    if (!this.isUserStream) {
+                    if (this.isThis) {
                         this.messageName += 'This';
                     }
                 }

@@ -36,6 +36,7 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
 
             this.createView(key, viewName, {
                 model: model,
+                parentModel: this.model,
                 acl: {
                     edit: this.getAcl().checkModel(model)
                 },

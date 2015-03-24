@@ -55,6 +55,9 @@
         "parent": {
             "type": "belongsToParent",
             "foreign": "notes"
+        },
+        "superParent": {
+            "type": "belongsToParent"
         }
     },
     "collection": {

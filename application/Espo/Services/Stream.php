@@ -264,8 +264,16 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC',
             'customJoin' => "
                 JOIN subscription ON
-                    note.parent_type = subscription.entity_type AND
-                    note.parent_id = subscription.entity_id AND
+                    (
+                        (
+                            note.parent_type = subscription.entity_type AND
+                            note.parent_id = subscription.entity_id
+                        ) OR
+                        (
+                            note.super_parent_type = subscription.entity_type AND
+                            note.super_parent_id = subscription.entity_id
+                        )
+                    ) AND
                     subscription.user_id = '" . $this->getUser()->id . "'
             "
         );
@@ -322,8 +330,16 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $where = array(
-            'parentType' => $scope,
-            'parentId' => $id
+            'OR' => array(
+                array(
+                    'parentType' => $scope,
+                    'parentId' => $id
+                ),
+                array(
+                    'superParentType' => $scope,
+                    'superParentId' => $id
+                )
+            )
         );
 
         if (!empty($params['after'])) {
@@ -342,6 +358,20 @@ class Stream extends \Espo\Core\Services\Base
             if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
                 $e->loadAttachments();
             }
+
+            if ($e->get('parentId') && $e->get('parentType')) {
+                if (
+                    ($e->get('parentId') != $id) ||
+                    ($e->get('parentType') != $scope)
+                ) {
+                    $parent = $this->getEntityManager()->getEntity($e->get('parentType'), $e->get('parentId'));
+                    if ($parent) {
+                        $e->set('parentName', $parent->get('name'));
+                    }
+                }
+
+            }
+
         }
 
         unset($where['createdAt>']);

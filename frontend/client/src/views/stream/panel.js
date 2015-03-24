@@ -122,6 +122,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 this.createView('list', 'Stream.List', {
                     el: this.options.el + ' > .list-container',
                     collection: collection,
+                    model: this.model
                 }, function (view) {
                     view.render();
                 });

@@ -46,15 +46,30 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
         init: function () {
             this.createField('createdAt', null, null, 'Fields.DatetimeShort');
             this.isUserStream = this.options.isUserStream;
+            this.isThis = !this.isUserStream;
 
-            if (this.isUserStream) {
-                this.createField('parent');
-            }
+            this.parentModel = this.options.parentModel;
+
+
 
             if (this.messageName) {
                 if (!this.isUserStream) {
-                    this.messageName += 'This';
+                    if (this.parentModel) {
+                        if (
+                            this.parentModel.name != this.model.get('parentType') ||
+                            this.parentModel.id != this.model.get('parentId')
+                        ) {
+                            this.isThis = false;
+                        }
+                    }
+                    if (this.isThis) {
+                        this.messageName += 'This';
+                    }
                 }
+            }
+
+            if (!this.isThis) {
+                this.createField('parent');
             }
 
             this.messageData = {
