@@ -255,6 +255,9 @@
         },
         "dateSent": {
             "columns": ["dateSent", "deleted"]
+        },
+        "dateSentStatus": {
+            "columns": ["dateSent", "status", "deleted"]
         }
     }
 }
