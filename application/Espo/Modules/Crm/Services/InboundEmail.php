@@ -215,7 +215,9 @@ class InboundEmail extends \Espo\Services\Record
                 }
 
                 if (!empty($email)) {
-                    $this->noteAboutEmail($email);
+                    if (!$inboundEmail->get('createCase')) {
+                        $this->noteAboutEmail($email);
+                    }
 
                     if ($inboundEmail->get('createCase')) {
                         $this->createCase($inboundEmail, $email);
@@ -268,6 +270,10 @@ class InboundEmail extends \Espo\Services\Record
     protected function createCase($inboundEmail, $email)
     {
         if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
+            $case = $this->getEntityManager()->getEntity('Case', $email->get('parentId'));
+            if ($case) {
+                $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+            }
             return;
         }
 
