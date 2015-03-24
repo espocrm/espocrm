@@ -242,7 +242,7 @@
         "emailReceivedThis": "Email received",
         "emailReceivedInitialThis": "Email received, this {entityType} created",
 
-        "emailReceivedFrom": "Email received from {from} related to {entityType} {entity}",
+        "emailReceivedFrom": "Email received from {from}, related to {entityType} {entity}",
         "emailReceivedFromInitial": "Email received from {from}, {entityType} {entity} created",
 
         "emailReceived": "Email received related to {entityType} {entity}",
