@@ -510,6 +510,11 @@ class Util
         return true;
     }
 
+    public static function generateId()
+    {
+        return uniqid() . substr(md5(rand()), 0, 4);
+    }
+
 }
 
 

@@ -176,9 +176,12 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                     self.close();
                 });
                 self.listenToOnce(view, 'after:save', function (model) {
-                    self.trigger('select', model);
                     view.close();
-                    self.close();
+                    self.trigger('select', model);
+                    setTimeout(function () {
+                        self.close();
+                    }, 10);
+
                 }.bind(this));
             });
         },
