@@ -112,7 +112,8 @@ class Opportunity extends \Espo\Services\Record
                 opportunity.deleted = 0 AND
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
-                opportunity.stage <> 'Closed Lost'
+                opportunity.stage <> 'Closed Lost' AND
+                opportunity.stage <> 'Closed Won'
             GROUP BY opportunity.stage
             ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')
         ";
