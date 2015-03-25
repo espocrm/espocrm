@@ -238,6 +238,7 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
             var o = {};
             o.dashletOptions = this.getPreferences().get('dashletOptions') || {};
             delete o.dashletOptions[id];
+
             o.dashboardLayout = this.dashboardLayout;
 
             this.getPreferences().save(o, {patch: true});
