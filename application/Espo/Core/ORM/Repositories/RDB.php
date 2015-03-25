@@ -200,7 +200,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
-                $entity->set('id', uniqid());
+                $entity->set('id', Util::generateId());
             }
 
             if ($entity->hasField('createdAt')) {
