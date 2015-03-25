@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Dashlets.Calendar', 'Views.Dashlets.Abstract.Base', function (Dep) {
 
@@ -27,14 +27,35 @@ Espo.define('Crm:Views.Dashlets.Calendar', 'Views.Dashlets.Abstract.Base', funct
 
         _template: '<div class="calendar-container">{{{calendar}}}</div>',
 
+        defaultOptions: {
+            mode: 'basicWeek',
+            isDoubleHeight: false
+        },
+
         setup: function () {
+            this.optionsFields['mode'] = {
+                type: 'enum',
+                options: ['basicWeek', 'agendaWeek', 'month'],
+            };
+            this.optionsFields['isDoubleHeight'] = {
+                type: 'bool',
+            };
+        },
+
+        afterRender: function () {
+            var height = 296;
+            if (this.getOption('isDoubleHeight')) {
+                height = 643;
+            }
             this.createView('calendar', 'Crm:Calendar.Calendar', {
-                mode: 'agendaWeek',
+                mode: this.getOption('mode'),
                 el: this.$el.selector + ' > .calendar-container',
                 header: false,
-                height: 296,
-            });                
-        },            
+                height: height ,
+            }, function (view) {
+                view.render();
+            });
+        }
 
     });
 });
