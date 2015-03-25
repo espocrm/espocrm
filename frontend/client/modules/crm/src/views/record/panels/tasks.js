@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship', function (Dep) {
 
@@ -101,6 +101,8 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
         },
 
         setup: function () {
+            this.scope = this.model.name;
+
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
 
             this.where = [
@@ -112,7 +114,12 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
         },
 
         afterRender: function () {
-            var url = this.model.name + '/' + this.model.id + '/tasks';
+            var link = 'tasks';
+
+            if (this.scope == 'Account') {
+                link = 'tasksPrimary';
+            }
+            var url = this.model.name + '/' + this.model.id + '/' + link;
 
             if (!this.getAcl().check('Task', 'read')) {
                 this.$el.find('.list-container').html(this.translate('No Access'));

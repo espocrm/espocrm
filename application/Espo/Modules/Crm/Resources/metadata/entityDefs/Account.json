@@ -189,6 +189,12 @@
             "foreign": "account",
             "layoutRelationshipsDisabled": true
         },
+        "tasksPrimary": {
+            "type": "hasMany",
+            "entity": "Task",
+            "foreign": "account",
+            "layoutRelationshipsDisabled": true
+        },
         "meetings": {
             "type": "hasChildren",
             "entity": "Meeting",

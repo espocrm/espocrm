@@ -29,13 +29,13 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
     protected function beforeSave(Entity $entity)
     {
         parent::beforeSave($entity);
-        
+
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
         if (!empty($parentId) || !empty($parentType)) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!empty($parent)) {
-                if ($parent->getEntityName() == 'Account') {
+                if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
                 } else if ($parent->has('accountId')) {
                     $accountId = $parent->get('accountId');
@@ -73,7 +73,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
             SELECT id, `seconds`, `type`
             FROM `reminder`
             WHERE
-                `entity_type` = ".$pdo->quote($entity->getEntityName())." AND
+                `entity_type` = ".$pdo->quote($entity->getEntityType())." AND
                 `entity_id` = ".$pdo->quote($entity->id)." AND
                 `deleted` = 0
                 ORDER BY `seconds` ASC

@@ -84,6 +84,22 @@ class Task extends \Espo\Core\ORM\Repositories\RDB
                 $entity->set('dateEndDate', null);
             }
         }
+
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+        if (!empty($parentId) || !empty($parentType)) {
+            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+            if (!empty($parent)) {
+                if ($parent->getEntityType() == 'Account') {
+                    $accountId = $parent->id;
+                } else if ($parent->has('accountId')) {
+                    $accountId = $parent->get('accountId');
+                }
+                if (!empty($accountId)) {
+                    $entity->set('accountId', $accountId);
+                }
+            }
+        }
     }
 
 }

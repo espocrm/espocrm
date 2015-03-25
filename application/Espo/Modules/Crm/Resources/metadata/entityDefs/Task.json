@@ -98,6 +98,10 @@
             "type": "belongsToParent",
             "entityList": ["Account", "Contact", "Lead", "Opportunity", "Case"],
             "foreign": "tasks"
+        },
+        "account": {
+            "type": "belongsTo",
+            "entity": "Account"
         }
     },
     "collection": {

@@ -18,9 +18,10 @@
         "opportunities": "Opportunities",
         "cases": "Cases",
         "documents": "Documents",
-        "meetingsPrimary": "Meetings (Internal)",
-        "callsPrimary": "Calls (Internal)",
-        "tasksPrimary": "Tasks (Internal)",
+        "meetingsPrimary": "Meetings (expanded)",
+        "callsPrimary": "Calls (expanded)",
+        "tasksPrimary": "Tasks (expanded)",
+        "emailsPrimary": "Emails (expanded)",
         "targetLists": "Target Lists",
         "campaignLogRecords": "Campaign Log"
     },
