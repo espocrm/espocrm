@@ -235,7 +235,13 @@ Espo.define('Views.Dashboard', 'View', function (Dep) {
                 });
             });
 
-            this.updateDashletsLayout();
+            var o = {};
+            o.dashletOptions = this.getPreferences().get('dashletOptions') || {};
+            delete o.dashletOptions[id];
+            o.dashboardLayout = this.dashboardLayout;
+
+            this.getPreferences().save(o, {patch: true});
+            this.getPreferences().trigger('update');
         },
 
         addDashlet: function (name) {
