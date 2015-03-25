@@ -29,6 +29,8 @@ Espo.define('Views.Stream.Notes.Create', 'Views.Stream.Note', function (Dep) {
 
         messageName: 'create',
 
+        isRemovable: true,
+
         data: function () {
             return _.extend({
                 statusText: this.statusText,

@@ -40,7 +40,7 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $this->getInjection('serviceFactory');
     }
 
-    protected function getMentionedUserList($entity)
+    protected function getMentionedUserIdList($entity)
     {
         $mentionedUserList = array();
         $data = $entity->get('data');
@@ -53,33 +53,49 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $mentionedUserList;
     }
 
+    protected function getSubscriberIdList($parentType, $parentId)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            SELECT user_id AS userId
+            FROM subscription
+            WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $userIdList = [];
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            if ($this->getUser()->id != $row['userId']) {
+                $userIdList[] = $row['userId'];
+            }
+        }
+        return $userIdList;
+    }
+
     public function afterSave(Entity $entity)
     {
         if ($entity->isNew()) {
-
             $parentType = $entity->get('parentType');
             $parentId = $entity->get('parentId');
 
+            $superParentType = $entity->get('superParentType');
+            $superParentTypeId = $entity->get('superParentTypeId');
+
+            $userIdList = [];
+
             if ($parentType && $parentId) {
+				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($parentType, $parentId));
+            }
 
-                $mentionedUserList = $this->getMentionedUserList($entity);
+            if ($superParentType && $superParentTypeId) {
+				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentTypeId));
+            }
 
-                $pdo = $this->getEntityManager()->getPDO();
-                $sql = "
-                    SELECT user_id AS userId
-                    FROM subscription
-                    WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
-                $userIdList = array();
-                while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                    if ($this->getUser()->id != $row['userId'] && !in_array($row['userId'], $mentionedUserList)) {
-                        $userIdList[] = $row['userId'];
-                    }
-                }
-                if (!empty($userIdList)) {
-                	$this->getNotificationService()->notifyAboutNote($userIdList, $entity);
-                }
+            //$userIdList = array_merge($userIdList, $this->getMentionedUserIdList($entity));
+
+            $userIdList = array_unique($userIdList);
+
+            if (!empty($userIdList)) {
+            	$this->getNotificationService()->notifyAboutNote($userIdList, $entity);
             }
         }
     }

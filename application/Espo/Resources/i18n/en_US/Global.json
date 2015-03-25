@@ -223,7 +223,7 @@
         "attach": "{user} attached on {entityType} {entity}",
         "status": "{user} updated {field} of {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
-        "createRelated": "{user} created {relatedEntityType} {relatedEntity} linked to {entityType} {entity}",
+        "createRelated": "{user} created {relatedEntityType} {relatedEntity} related to {entityType} {entity}",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
 
@@ -234,7 +234,7 @@
         "attachThis": "{user} attached",
         "statusThis": "{user} updated {field}",
         "updateThis": "{user} updated this {entityType}",
-        "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} linked to this {entityType}",
+        "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} related to this {entityType}",
 
         "emailReceivedFromThis": "Email received from {from}",
         "emailReceivedInitialFromThis": "Email received from {from}, this {entityType} created",

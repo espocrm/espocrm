@@ -125,6 +125,11 @@
             }
         }
     },
+    "statusFields": {
+        "Lead": "status",
+        "Case": "status",
+        "Opportunity": "stage"
+    },
     "indexes": {
         "createdAt": {
             "type": "index",
@@ -133,6 +138,10 @@
         "parent": {
             "type": "index",
             "columns": ["parentId", "parentType"]
+        },
+        "parentAndSuperParent": {
+            "type": "index",
+            "columns": ["parentId", "parentType", "superParentId", "superParentType"]
         }
     }
 }

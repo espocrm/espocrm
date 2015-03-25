@@ -47,6 +47,10 @@
         "parent": {
             "type": "linkParent"
         },
+        "account": {
+            "type": "link",
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

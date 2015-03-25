@@ -262,6 +262,7 @@ class Stream extends \Espo\Core\Services\Base
             'limit' => $maxSize + 1,
             'orderBy' => 'number',
             'order' => 'DESC',
+            'distinct' => true,
             'customJoin' => "
                 JOIN subscription ON
                     (
@@ -403,6 +404,11 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('parentId', $entity->id);
         $note->set('parentType', $entityType);
 
+        if ($email->get('accountId')) {
+            $note->set('superParentId', $email->get('accountId'));
+            $note->set('superParentType', 'Account');
+        }
+
         $withContent = in_array($entityType, $this->emailsWithContentEntityList);
 
         if ($withContent) {
@@ -444,6 +450,11 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('type', 'EmailSent');
         $note->set('parentId', $entity->id);
         $note->set('parentType', $entityType);
+
+        if ($email->get('accountId')) {
+            $note->set('superParentId', $email->get('accountId'));
+            $note->set('superParentType', 'Account');
+        }
 
         $withContent = in_array($entityType, $this->emailsWithContentEntityList);
 
@@ -492,6 +503,11 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('parentId', $entity->id);
         $note->set('parentType', $entityName);
 
+        if ($entity->has('accountId') && $entity->get('accountId')) {
+            $note->set('superParentId', $entity->get('accountId'));
+            $note->set('superParentType', 'Account');
+        }
+
         $data = array();
 
         if ($entity->get('assignedUserId') != $entity->get('createdById')) {
@@ -531,6 +547,11 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('parentId', $id);
         $note->set('parentType', $entityType);
 
+        if ($entity->has('accountId') && $entity->get('accountId')) {
+            $note->set('superParentId', $entity->get('accountId'));
+            $note->set('superParentType', 'Account');
+        }
+
         $note->set('data', array(
             'action' => $action,
             'entityType' => $entity->getEntityName(),
@@ -547,7 +568,12 @@ class Stream extends \Espo\Core\Services\Base
 
         $note->set('type', 'Assign');
         $note->set('parentId', $entity->id);
-        $note->set('parentType', $entity->getEntityName());
+        $note->set('parentType', $entity->getEntityType());
+
+        if ($entity->has('accountId') && $entity->get('accountId')) {
+            $note->set('superParentId', $entity->get('accountId'));
+            $note->set('superParentType', 'Account');
+        }
 
         if (!$entity->has('assignedUserName')) {
             $this->loadAssignedUserName($entity);
@@ -566,7 +592,12 @@ class Stream extends \Espo\Core\Services\Base
 
         $note->set('type', 'Status');
         $note->set('parentId', $entity->id);
-        $note->set('parentType', $entity->getEntityName());
+        $note->set('parentType', $entity->getEntityType());
+
+        if ($entity->has('accountId') && $entity->get('accountId')) {
+            $note->set('superParentId', $entity->get('accountId'));
+            $note->set('superParentType', 'Account');
+        }
 
         $style = 'default';
         $entityName = $entity->getEntityName();

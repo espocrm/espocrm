@@ -34,11 +34,7 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected $isLinkObservableInStreamCache = array();
 
-    protected $statusDefs = array(
-        'Lead' => 'status',
-        'Case' => 'status',
-        'Opportunity' => 'stage',
-    );
+    protected $statusFields = null;
 
     protected function init()
     {
@@ -212,8 +208,10 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
                 $this->getStreamService()->handleAudited($entity);
 
-                if (array_key_exists($entityName, $this->statusDefs)) {
-                    $field = $this->statusDefs[$entityName];
+                $statusFields = $this->getStatusFields();
+
+                if (array_key_exists($entityName, $this->statusFields)) {
+                    $field = $this->statusFields[$entityName];
                     $value = $entity->get($field);
                     if (!empty($value) && $value != $entity->getFetched($field)) {
                         $this->getStreamService()->noteStatus($entity, $field);
@@ -226,6 +224,14 @@ class Stream extends \Espo\Core\Hooks\Base
         if ($entity->isNew() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
             $this->handleCreateRelated($entity);
         }
+    }
+
+    protected function getStatusFields()
+    {
+        if (is_null($this->statusFields)) {
+            $this->statusFields = $this->getMetadata()->get("entityDefs.Note.statusFields", array());
+        }
+        return $this->statusFields;
     }
 
     protected function getStreamService()

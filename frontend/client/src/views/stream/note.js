@@ -50,22 +50,20 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 
             this.parentModel = this.options.parentModel;
 
-
-
-            if (this.messageName) {
-                if (!this.isUserStream) {
-                    if (this.parentModel) {
-                        if (
-                            this.parentModel.name != this.model.get('parentType') ||
-                            this.parentModel.id != this.model.get('parentId')
-                        ) {
-                            this.isThis = false;
-                        }
-                    }
-                    if (this.isThis) {
-                        this.messageName += 'This';
+            if (!this.isUserStream) {
+                if (this.parentModel) {
+                    if (
+                        this.parentModel.name != this.model.get('parentType') ||
+                        this.parentModel.id != this.model.get('parentId')
+                    ) {
+                        this.isThis = false;
                     }
                 }
+            }
+
+
+            if (this.messageName && this.isThis) {
+                this.messageName += 'This';
             }
 
             if (!this.isThis) {
