@@ -365,7 +365,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
                 if (Object.keys(this.advanced).length !== 0) {
                     if (!this.disableSavePreset) {
-                        var barHtml = '<a href="javascript:" class="small" data-action="savePreset">' + this.translate('Save Filters') + '</a>';
+                        var barHtml = '<span style="margin-right: 10px;"><a href="javascript:" class="small" data-action="savePreset">' + this.translate('Save Filters') + '</a></span>';
                         this.$advancedFiltersBar.removeClass('hidden').html(barHtml);
                     } else {
                         this.$advancedFiltersBar.addClass('hidden').empty();
