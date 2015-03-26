@@ -4,5 +4,5 @@
       "edit": "EmailTemplate.Record.Edit",
       "detail": "EmailTemplate.Record.Detail"
    },
-   "boolFilters": ["onlyMy"]
+   "boolFilterList": ["onlyMy"]
 }

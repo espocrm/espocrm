@@ -26,16 +26,42 @@ class Task extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterActual(&$result)
     {
+        $this->filterActual($result);
+    }
+
+    protected function boolFilterCompleted(&$result)
+    {
+        $this->filterCompleted($result);
+    }
+
+    protected function filterActual(&$result)
+    {
         $result['whereClause'][] = array(
             'status!=' => array('Completed', 'Canceled')
         );
     }
 
-    protected function boolFilterCompleted(&$result)
+    protected function filterCompleted(&$result)
     {
         $result['whereClause'][] = array(
             'status' => array('Completed')
         );
+    }
+
+    protected function filterOverdue(&$result)
+    {
+        $result['whereClause'][] = [
+            $this->convertDateTimeWhere(array(
+                'type' => 'past',
+                'field' => 'dateEnd',
+                'timeZone' => $this->getUserTimeZone()
+            )),
+            [
+                array(
+                    'status!=' => ['Completed', 'Canceled']
+                )
+            ]
+        ];
     }
 
     protected function convertDateTimeWhere($item)

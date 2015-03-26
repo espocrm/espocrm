@@ -32,17 +32,11 @@
         "create": false
       }
    },
-   "presetFilters": [
+   "filterList": [
       {
          "name":"active",
-         "style": "primary",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["New", "Assigned", "In Process"]
-            }
-         }
+         "style": "primary"
       }
    ],
-    "boolFilters": ["onlyMy"]
+   "boolFilterList": ["onlyMy"]
 }

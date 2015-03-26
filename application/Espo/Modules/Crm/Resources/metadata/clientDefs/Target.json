@@ -14,5 +14,5 @@
          ]
       }
    },
-    "boolFilters": ["onlyMy"]
+    "boolFilterList": ["onlyMy"]
 }

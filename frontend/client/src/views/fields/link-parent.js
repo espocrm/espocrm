@@ -56,7 +56,9 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 
         getSelectFilters: function () {},
 
-        getSelectBoolFilters: function () {},
+        getSelectBoolFilterList: function () {},
+
+        getPrimaryFilterName: function () {},
 
         setup: function () {
             this.nameName = this.name + 'Name';
@@ -85,7 +87,8 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                         scope: this.foreignScope,
                         createButton: this.mode != 'search',
                         filters: this.getSelectFilters(),
-                        boolFilters: this.getSelectBoolFilters(),
+                        boolFilterList: this.getSelectBoolFilterList(),
+                        primaryFilterName: this.getPrimaryFilterName(),
                     }, function (dialog) {
                         dialog.render();
                         Espo.Ui.notify(false);

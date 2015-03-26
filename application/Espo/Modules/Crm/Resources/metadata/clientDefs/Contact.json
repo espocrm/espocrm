@@ -29,5 +29,5 @@
         "create": false
       }
    },
-   "boolFilters": ["onlyMy"]
+   "boolFilterList": ["onlyMy"]
 }

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
 
@@ -51,9 +51,9 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
             },
             searchData: {
                 bool: {
-                    onlyMy: true,
-                    actual: true
-                }
+                    onlyMy: true
+                },
+                primary: 'actual'
             },
         },
 

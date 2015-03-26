@@ -42,6 +42,8 @@ class Base
 
     private $seed = null;
 
+    private $userTimeZone = null;
+
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -139,7 +141,7 @@ class Base
             $where = array();
 
             foreach ($params['where'] as $item) {
-                if ($item['type'] == 'boolFilters' && !empty($item['value']) && is_array($item['value'])) {
+                if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
                     foreach ($item['value'] as $filter) {
                         $p = $this->getBoolFilterWhere($filter);
                         if (!empty($p)) {
@@ -151,11 +153,13 @@ class Base
                     if (!empty($item['value'])) {
                         $this->textFilter($item['value'], $result);
                     }
+                } else if ($item['type'] == 'primary' && !empty($item['value'])) {
+                    $this->primaryFilter($item['value'], $result);
                 }
             }
 
             $linkedWith = array();
-            $ignoreList = array('linkedWith', 'boolFilters');
+            $ignoreList = array('linkedWith', 'bool', 'primary');
             foreach ($params['where'] as $item) {
                 if (!in_array($item['type'], $ignoreList)) {
                     $part = $this->getWherePart($item);
@@ -299,6 +303,17 @@ class Base
         }
 
         return $result;
+    }
+
+    protected function getUserTimeZone()
+    {
+        if (empty($this->userTimeZone)) {
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
+            $timeZone = $preferences->get('timeZone');
+            $this->userTimeZone = $timeZone;
+        }
+
+        return $this->userTimeZone;
     }
 
     protected function convertDateTimeWhere($item)
@@ -536,6 +551,14 @@ class Base
     protected function boolFilter($filterName, &$result)
     {
         $method = 'boolFilter' . ucfirst($filterName);
+        if (method_exists($this, $method)) {
+            $this->$method($result);
+        }
+    }
+
+    protected function primaryFilter($filterName, &$result)
+    {
+        $method = 'filter' . ucfirst($filterName);
         if (method_exists($this, $method)) {
             $this->$method($result);
         }

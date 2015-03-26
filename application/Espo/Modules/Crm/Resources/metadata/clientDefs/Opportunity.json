@@ -22,27 +22,15 @@
          }
       ]
    },
-   "presetFilters": [
+   "filterList": [
       {
          "name":"open",
-         "style": "primary",
-         "data": {
-            "stage": {
-               "type": "in",
-               "value": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis","Proposal/Price Quote","Negotiation/Review"]
-            }
-         }
+         "style": "primary"
       },
       {
          "name":"won",
-         "style": "success",
-         "data": {
-            "stage": {
-               "type": "in",
-               "value": ["Closed Won"]
-            }
-         }
+         "style": "success"
       }
    ],
-    "boolFilters": ["onlyMy"]
+    "boolFilterList": ["onlyMy"]
 }

@@ -53,36 +53,18 @@
          ]
       }
    },
-   "presetFilters": [
+   "filterList": [
       {
          "name":"archived",
-         "style": "primary",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Archived"]
-            }
-         }
+         "style": "primary"
       },
       {
          "name":"sent",
-         "style": "info",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Sent"]
-            }
-         }
+         "style": "info"
       },
       {
          "name":"draft",
-         "style": "default",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Draft"]
-            }
-         }
+         "style": "default"
       }
    ],
    "defaultFilterData": {
@@ -90,12 +72,7 @@
            "onlyMy": true
        },
        "presetName": "archived",
-       "advanced": {
-           "status": {
-              "type": "in",
-              "value": ["Archived"]
-           }
-       }
+       "primary": "archived"
    },
-   "boolFilters": ["onlyMy"]
+   "boolFilterList": ["onlyMy"]
 }

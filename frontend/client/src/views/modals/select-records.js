@@ -50,7 +50,8 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 
         setup: function () {
             this.filters = this.options.filters || {};
-            this.boolFilters = this.options.boolFilters || {};
+            this.boolFilterList = this.options.boolFilterList || {};
+            this.primaryFilterName = this.options.primaryFilterName || null;
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
@@ -120,9 +121,13 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                     if (this.filters) {
                         searchManager.setAdvanced(this.filters);
                     }
-                    if (this.boolFilters) {
-                        searchManager.setBool(this.boolFilters);
+                    if (this.boolFilterList) {
+                        searchManager.setBool(this.boolFilterList);
                     }
+                    if (this.primaryFilterName) {
+                        searchManager.setPrimary(this.primaryFilterName);
+                    }
+
                     collection.where = searchManager.getWhere();
 
                     this.createView('search', 'Record.Search', {

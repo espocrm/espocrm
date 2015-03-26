@@ -75,37 +75,19 @@
             }
         ]
     },
-    "presetFilters": [
+    "filterList": [
         {
             "name":"planned",
-            "style": "primary",
-            "data": {
-                "status": {
-                    "type": "in",
-                    "value": ["Planned"]
-                }
-            }
+            "style": "primary"
         },
         {
             "name":"held",
-            "style": "success",
-            "data": {
-                "status": {
-                    "type": "in",
-                    "value": ["Held"]
-                }
-            }
+            "style": "success"
         },
         {
             "name":"todays",
-            "style": "info",
-            "data": {
-                "dateStart": {
-                    "type": "today",
-                    "dateTime": true
-                }
-            }
+            "style": "info"
         }
     ],
-    "boolFilters": ["onlyMy"]
+    "boolFilterList": ["onlyMy"]
 }

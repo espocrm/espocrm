@@ -32,6 +32,7 @@
             textFilter: '',
             bool: {},
             advanced: {},
+            primary: null,
         };
 
         if (defaultData) {
@@ -76,7 +77,7 @@
 
             if (this.data.bool) {
                 var o = {
-                    type: 'boolFilters',
+                    type: 'bool',
                     value: [],
                 };
                 for (var name in this.data.bool) {
@@ -84,6 +85,16 @@
                         o.value.push(name);
                     }
                 }
+                if (o.value.length) {
+                    where.push(o);
+                }
+            }
+
+            if (this.data.primary) {
+                var o = {
+                    type: 'primary',
+                    value: this.data.primary,
+                };
                 if (o.value.length) {
                     where.push(o);
                 }
@@ -99,6 +110,7 @@
                     where.push(part);
                 }
             }
+
             return where;
         },
 
@@ -161,6 +173,11 @@
         setBool: function (bool) {
             this.data = Espo.Utils.clone(this.data);
             this.data.bool = bool;
+        },
+
+        setPrimary: function (primary) {
+            this.data = Espo.Utils.clone(this.data);
+            this.data.primary = primary;
         },
 
         set: function (data) {

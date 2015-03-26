@@ -33,5 +33,28 @@ class Call extends \Espo\Core\SelectManagers\Base
         	'user.id' => $this->getUser()->id
         );
     }
+
+    protected function filterPlanned(&$result)
+    {
+        $result['whereClause'][] = array(
+        	'status' => 'Planned'
+        );
+    }
+
+    protected function filterHeld(&$result)
+    {
+        $result['whereClause'][] = array(
+        	'status' => 'Held'
+        );
+    }
+
+    protected function filterTodays(&$result)
+    {
+        $result['whereClause'][] = $this->convertDateTimeWhere(array(
+        	'type' => 'today',
+        	'field' => 'dateStart',
+        	'timeZone' => $this->getUserTimeZone()
+        ));
+    }
 }
 

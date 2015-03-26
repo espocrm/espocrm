@@ -59,8 +59,8 @@ Espo.define('Crm:Views.Dashlets.Cases', 'Views.Dashlets.Abstract.RecordList', fu
             searchData: {
                 bool: {
                     onlyMy: true,
-                    open: true
-                }
+                },
+                primary: 'open'
             },
         },
 

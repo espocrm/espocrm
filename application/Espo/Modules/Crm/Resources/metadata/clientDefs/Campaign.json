@@ -34,7 +34,7 @@
         "create": false
       }
     },
-    "presetFilters": [
+    "filterList": [
       {
          "name":"active",
          "style": "primary",
@@ -46,5 +46,5 @@
          }
       }
    ],
-   "boolFilters": ["onlyMy"]
+   "boolFilterList": ["onlyMy"]
 }

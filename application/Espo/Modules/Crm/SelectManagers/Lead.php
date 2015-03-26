@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,33 +20,16 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Teams', 'Views.Fields.LinkMultiple', function (Dep) {
+namespace Espo\Modules\Crm\SelectManagers;
 
-    return Dep.extend({
+class Lead extends \Espo\Core\SelectManagers\Base
+{
+    protected function filterActive(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status!=' => ['Converted', 'Recycled', 'Dead']
+        );
+    }
 
-        init: function () {
-            this.assignmentPermission = this.getAcl().get('assignmentPermission');
-            Dep.prototype.init.call(this);
-        },
-
-        getSelectBoolFilterList: function () {
-            if (this.assignmentPermission == 'team' || this.assignmentPermission == 'no') {
-                return {'onlyMy': true};
-            }
-        },
-
-        getAutocompleteUrl: function () {
-            var url = Dep.prototype.getAutocompleteUrl.call(this);
-            if (this.assignmentPermission == 'team' || this.assignmentPermission == 'no') {
-                url += '&where%5B0%5D%5Btype%5D=bool&where%5B0%5D%5Bvalue%5D%5B%5D=onlyMy';
-            }
-
-            return url;
-        },
-
-
-
-    });
-});
-
+ }
 

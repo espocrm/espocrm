@@ -23,27 +23,15 @@
          }
       ]
    },
-   "presetFilters": [
+   "filterList": [
       {
          "name":"open",
-         "style": "primary",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["New", "Assigned", "Pending"]
-            }
-         }
+         "style": "primary"
       },
       {
          "name":"closed",
-         "style": "success",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Closed"]
-            }
-         }
+         "style": "success"
       }
    ],
-    "boolFilters": ["onlyMy"]
+    "boolFilterList": ["onlyMy"]
 }

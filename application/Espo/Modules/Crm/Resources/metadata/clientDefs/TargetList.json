@@ -1,4 +1,4 @@
 {
    "controller": "Controllers.Record",
-   "boolFilters": ["onlyMy"]
+   "boolFilterList": ["onlyMy"]
 }

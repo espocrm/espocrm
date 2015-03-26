@@ -5,5 +5,5 @@
       "editQuick":"User.Record.Edit",
       "list":"User.Record.List"
    },
-   "boolFilters": ["onlyMyTeam"]
+   "boolFilterList": ["onlyMyTeam"]
 }

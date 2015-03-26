@@ -34,6 +34,27 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function filterArchived(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Archived'
+        );
+    }
+
+    protected function filterSent(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Sent'
+        );
+    }
+
+    protected function filterDraft(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Draft'
+        );
+    }
+
     protected function accessOnlyOwn(&$result)
     {
         $this->boolFilterOnlyMy($result);

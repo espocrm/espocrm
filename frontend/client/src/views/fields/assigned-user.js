@@ -31,7 +31,7 @@ Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function
             Dep.prototype.init.call(this);
         },
 
-        getSelectBoolFilters: function () {
+        getSelectBoolFilterList: function () {
             if (this.assignmentPermission == 'team') {
                 return {'onlyMyTeam': true};
             }
@@ -40,7 +40,7 @@ Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function
         getAutocompleteUrl: function () {
             var url = Dep.prototype.getAutocompleteUrl.call(this);
             if (this.assignmentPermission == 'team') {
-                url += '&where%5B0%5D%5Btype%5D=boolFilters&where%5B0%5D%5Bvalue%5D%5B%5D=onlyMyTeam';
+                url += '&where%5B0%5D%5Btype%5D=bool&where%5B0%5D%5Bvalue%5D%5B%5D=onlyMyTeam';
             }
 
             return url;

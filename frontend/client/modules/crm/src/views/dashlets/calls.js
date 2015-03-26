@@ -50,11 +50,8 @@ Espo.define('Crm:Views.Dashlets.Calls', 'Views.Dashlets.Abstract.RecordList', fu
                 bool: {
                     onlyMy: true,
                 },
+                primary: 'planned',
                 advanced: {
-                    'status': {
-                        type: 'in',
-                        value: ['Planned']
-                    },
                     '1': {
                         type: 'or',
                         value: {

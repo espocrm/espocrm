@@ -54,12 +54,7 @@ Espo.define('Crm:Views.Dashlets.Opportunities', 'Views.Dashlets.Abstract.RecordL
                 bool: {
                     onlyMy: true
                 },
-                advanced: {
-                    "stage": {
-                        type: 'notIn',
-                        value: ['Closed Won', 'Closed Lost']
-                    }
-                }
+                primary: 'open'
             },
         },
 
