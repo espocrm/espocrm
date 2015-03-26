@@ -545,27 +545,27 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getSelectParams($params)
     {
-    	$selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
 
-    	return $selectParams;
+        return $selectParams;
     }
 
     public function findEntities($params)
     {
         $disableCount = false;
         if (in_array($this->entityName, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
-        	$disableCount = true;
-    	}
+            $disableCount = true;
+        }
 
-    	$maxSize = 0;
-    	if ($disableCount) {
-    		if (!empty($params['maxSize'])) {
-    			$maxSize = $params['maxSize'];
-    			$params['maxSize'] = $params['maxSize'] + 1;
-    		}
-    	}
+        $maxSize = 0;
+        if ($disableCount) {
+           if (!empty($params['maxSize'])) {
+               $maxSize = $params['maxSize'];
+               $params['maxSize'] = $params['maxSize'] + 1;
+           }
+        }
 
-    	$selectParams = $this->getSelectParams($params);
+        $selectParams = $this->getSelectParams($params);
 
         $collection = $this->getRepository()->find($selectParams);
 
@@ -575,15 +575,15 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!$disableCount) {
-        	$total = $this->getRepository()->count($selectParams);
-    	} else {
-	        if ($maxSize && count($collection) > $maxSize) {
-	            $total = -1;
-	            unset($collection[count($collection) - 1]);
-	        } else {
-	            $total = -2;
-	        }
-    	}
+            $total = $this->getRepository()->count($selectParams);
+        } else {
+            if ($maxSize && count($collection) > $maxSize) {
+                $total = -1;
+                unset($collection[count($collection) - 1]);
+            } else {
+                $total = -2;
+            }
+        }
 
         return array(
             'total' => $total,
@@ -605,16 +605,16 @@ class Record extends \Espo\Core\Services\Base
 
         $disableCount = false;
         if (in_array($foreignEntityName, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
-        	$disableCount = true;
-    	}
+            $disableCount = true;
+        }
 
-    	$maxSize = 0;
-    	if ($disableCount) {
-    		if (!empty($params['maxSize'])) {
-    			$maxSize = $params['maxSize'];
-    			$params['maxSize'] = $params['maxSize'] + 1;
-    		}
-    	}
+        $maxSize = 0;
+        if ($disableCount) {
+            if (!empty($params['maxSize'])) {
+                $maxSize = $params['maxSize'];
+                $params['maxSize'] = $params['maxSize'] + 1;
+            }
+        }
 
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 
@@ -632,15 +632,15 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!$disableCount) {
-        	$total = $this->getRepository()->countRelated($entity, $link, $selectParams);
-    	} else {
-	        if ($maxSize && count($collection) > $maxSize) {
-	            $total = -1;
-	            unset($collection[count($collection) - 1]);
-	        } else {
-	            $total = -2;
-	        }
-    	}
+            $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+        } else {
+            if ($maxSize && count($collection) > $maxSize) {
+                $total = -1;
+                unset($collection[count($collection) - 1]);
+            } else {
+                $total = -2;
+            }
+        }
 
         return array(
             'total' => $total,
@@ -720,7 +720,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!is_array($where)) {
-        	$where = array();
+            $where = array();
         }
         $params['where'] = $where;
 
@@ -946,7 +946,7 @@ class Record extends \Espo\Core\Services\Base
 
         $delimiter = $this->getPreferences()->get('exportDelimiter');
         if (empty($delimiter)) {
-        	$delimiter = $this->getConfig()->get('exportDelimiter', ';');
+            $delimiter = $this->getConfig()->get('exportDelimiter', ';');
         }
 
         $fp = fopen('php://temp', 'w');
