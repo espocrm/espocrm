@@ -1,0 +1,11 @@
+{
+    "controller": "Controllers.Import",
+    "recordViews": {
+        "list":"Import.Record.List",
+        "detail": "Import.Record.Detail"
+    },
+    "views": {
+    	"list": "Import.List"
+    },
+    "disableSearchPanel": true
+}

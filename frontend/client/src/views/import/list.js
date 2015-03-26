@@ -18,23 +18,40 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Controllers.Import', 'Controllers.Record', function (Dep) {
+
+Espo.define('Views.Import.List', 'Views.List', function (Dep) {
 
     return Dep.extend({
 
-        defaultAction: 'index',
+        createButton: false,
 
-        checkAccess: function () {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-            return false;
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.menu.buttons.unshift({
+                label: this.translate('Import', 'scopeNames'),
+                link: '#Import',
+                style: 'danger',
+                acl: 'edit'
+            });
         },
 
-        index: function () {
-            this.main('Import.Index', null);
-        }
+        actionCreateEmailAccount: function () {
+            if (this.options.userId) {
+                this.getRouter().dispatch('EmailAccount', 'create', {
+                    attributes: {
+                        assignedUserId: this.options.userId,
+                        assignedUserName: this.options.userId
+                    }
+                });
+                this.getRouter().navigate('#EmailAccount/create', {trigger: false});
+            } else {
+                this.getRouter().navigate('#EmailAccount/create', {trigger: true});
+            }
+
+        },
+
 
     });
-
 });
+

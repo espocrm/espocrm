@@ -12,7 +12,8 @@
         "ExternalAccount": "External Account",
         "Extension": "Extension",
         "Dashboard": "Dashboard",
-        "Stream": "Stream"
+        "Stream": "Stream",
+        "Import": "Import"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -27,7 +28,8 @@
         "ExternalAccount": "External Accounts",
         "Extension": "Extensions",
         "Dashboard": "Dashboard",
-        "Stream": "Stream"
+        "Stream": "Stream",
+        "Import": "Import Results"
     },
     "labels": {
         "Misc": "Misc",

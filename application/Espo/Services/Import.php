@@ -28,18 +28,14 @@ use \Espo\Core\Exceptions\Error;
 
 use Espo\ORM\Entity;
 
-class Import extends \Espo\Core\Services\Base
+class Import extends \Espo\Services\Record
 {
-    protected $dependencies = array(
-        'entityManager',
-        'user',
-        'metadata',
-        'acl',
-        'selectManagerFactory',
-        'config',
-        'serviceFactory',
-        'fileManager',
-    );
+    protected function init()
+    {
+        $this->dependencies[] = 'serviceFactory';
+        $this->dependencies[] = 'fileManager';
+        $this->dependencies[] = 'selectManagerFactory';
+    }
 
     protected $dateFormatsMap = array(
         'YYYY-MM-DD' => 'Y-m-d',
@@ -59,6 +55,8 @@ class Import extends \Espo\Core\Services\Base
         'hh:mm A' => 'h:iA',
         'hh:mmA' => 'h:iA',
     );
+
+    protected $services = array();
 
     protected function getSelectManagerFactory()
     {
@@ -84,7 +82,6 @@ class Import extends \Espo\Core\Services\Base
     {
         return $this->injections['serviceFactory'];
     }
-
 
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
     {
@@ -174,12 +171,20 @@ class Import extends \Espo\Core\Services\Base
         }
 
         $contents = $this->getFileManager()->getContents('data/upload/' . $attachmentId);
-
         if (empty($contents)) {
             throw new Error('Import error');
         }
 
-        $result    = array(
+        $import = $this->getEntityManager()->getEntity('Import');
+        $import->set(array(
+            'enityType' => $scope
+        ));
+        $this->getEntityManager()->saveEntity($import);
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+
+        $result = array(
             'importedIds' => array(),
             'updatedIds' => array(),
             'duplicateIds' => array(),
@@ -194,22 +199,36 @@ class Import extends \Espo\Core\Services\Base
                 continue;
             }
             $r = $this->importRow($scope, $fields, $arr, $params);
-            if (!empty($r['imported'])) {
+            if (!empty($r['isImported'])) {
                 $result['importedIds'][] = $r['id'];
             }
-            if (!empty($r['updated'])) {
+            if (!empty($r['isUpdated'])) {
                 $result['updatedIds'][] = $r['id'];
             }
-            if (!empty($r['duplicate'])) {
+            if (!empty($r['isDuplicate'])) {
                 $result['duplicateIds'][] = $r['id'];
             }
+            $sql = "
+                INSERT INTO import_entity (entity_type, entity_id, import_id, is_imported, is_updated, is_duplicate)
+                (:entityType, :entityId, :importId, :isImported, :isUpdated, :isDuplicate)
+            ";
+            $sth = $pdo->prepare($sql);
+            $sth->execute(array(
+                ':entityType' => $scope,
+                ':entityId' => $r['id'],
+                ':importId' => $import->id,
+                ':isImported' => !empty($r['isImported']),
+                ':isUpdated' => !empty($r['isUpdated']),
+                ':isDuplicate' => !empty($r['isDuplicate']),
+            ));
 
         }
         return array(
+            'id' => $import->id,
             'countCreated' => count($result['importedIds']),
             'countUpdated' => count($result['updatedIds']),
-            'importedIds' => $result['importedIds'],
-            'duplicateIds' => $result['duplicateIds'],
+            //'importedIds' => $result['importedIds'],
+            //'duplicateIds' => $result['duplicateIds'],
         );
     }
 
@@ -229,6 +248,7 @@ class Import extends \Espo\Core\Services\Base
             }
         }
 
+        $recordService = $this->getRecordService($scope);
 
         $entity = $this->getEntityManager()->getEntity($scope, $id);
 
@@ -260,7 +280,6 @@ class Import extends \Espo\Core\Services\Base
                             $firstName = '';
                             $lastName = $value;
                             switch ($params['personNameFormat']) {
-
                                 case 'f l':
                                     $pos = strpos($value, ' ');
                                     if ($pos) {
@@ -298,8 +317,6 @@ class Import extends \Espo\Core\Services\Base
             }
         }
 
-
-
         foreach ($fields as $i => $field) {
             if (array_key_exists($field, $fieldsDefs) && $fieldsDefs[$field]['type'] == Entity::FOREIGN) {
                 if ($entity->has($field)) {
@@ -314,7 +331,6 @@ class Import extends \Espo\Core\Services\Base
                                 $entity->set($relation . 'Id', $found->id);
                             } else {
                                 if (!in_array($scope, 'User', 'Team')) {
-
                                     // TODO create related record with name $name and relate
                                 }
                             }
@@ -330,15 +346,21 @@ class Import extends \Espo\Core\Services\Base
         $a = $entity->toArray();
 
         try {
+            $isDuplicate = $recordService->checkEntityForDuplicate($entity);
             if ($this->getEntityManager()->saveEntity($entity)) {
                 $result['id'] = $entity->id;
                 if (empty($id)) {
-                    $result['imported'] = true;
+                    $result['isImported'] = true;
+                    if ($isDuplicate) {
+                        $result['isDuplicate'] = true;
+                    }
                 } else {
-                    $result['updated'] = true;
+                    $result['isUpdated'] = true;
                 }
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('Import: [' . $e->getCode() . '] ' .$e->getMessage());
+        }
 
         return $result;
     }
@@ -401,9 +423,16 @@ class Import extends \Espo\Core\Services\Base
                     }
                     break;
             }
-
         }
         return $value;
+    }
+
+    protected function getRecordService($scope)
+    {
+        if (empty($this->services[$scope])) {
+            $this->services[$scope] = $this->getServiceFactory()->create($scope);
+        }
+        return $this->services[$scope];
     }
 }
 

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -18,23 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Controllers.Import', 'Controllers.Record', function (Dep) {
 
-    return Dep.extend({
+namespace Espo\Entities;
 
-        defaultAction: 'index',
+class Import extends \Espo\Core\ORM\Entity
+{
 
-        checkAccess: function () {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-            return false;
-        },
-
-        index: function () {
-            this.main('Import.Index', null);
-        }
-
-    });
-
-});
+}

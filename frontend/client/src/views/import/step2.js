@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Views.Import.Step2', 'View', function (Dep) {
-    
+
     return Dep.extend({
-        
+
         template: 'import.step-2',
-        
-        events: {    
+
+        events: {
             'click button[data-action="back"]': function () {
                 this.back();
             },
@@ -36,36 +36,36 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 $(e.currentTarget).parent().addClass('hidden');
                 this.addField(field);
             },
-            
+
             'click a[data-action="removeField"]': function (e) {
                 var field = $(e.currentTarget).data('name');
-                
-                this.$el.find('a[data-action="addField"]').parent().removeClass('hidden');            
 
-                var index = this.additionalFields.indexOf(field);                
+                this.$el.find('a[data-action="addField"]').parent().removeClass('hidden');
+
+                var index = this.additionalFields.indexOf(field);
                 if (~index) {
                     this.additionalFields.splice(index, 1);
                 }
                 this.$el.find('.field-' + field).parent().remove();
             },
-        },        
-        
+        },
+
         data: function () {
             return {
                 scope: this.scope,
                 fieldList: this.getFieldList(),
             };
         },
-        
-        setup: function () {        
+
+        setup: function () {
             this.formData = this.options.formData;
-            
+
             this.scope = this.formData.entityType;
-            
+
             var mapping = [];
-            
+
             this.additionalFields = [];
-            
+
             if (this.formData.previewArray) {
                 var index = 0;
                 if (this.formData.headerRow) {
@@ -81,23 +81,23 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                         }
                         mapping.push(d);
                     }, this);
-                }                
+                }
             }
-            
+
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
-                this.wait(false);                
+                this.wait(false);
             }, this);
-            
-            this.mapping = mapping;            
+
+            this.mapping = mapping;
         },
-        
+
         afterRender: function () {
             $container = $('#mapping-container');
-            
+
             $table = $('<table>').addClass('table').addClass('table-bordered');
-            
+
             $row = $('<tr>');
             if (this.formData.headerRow) {
                 $cell = $('<th>').html(this.translate('Header Row Value', 'labels', 'Import'));
@@ -108,7 +108,7 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
             $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
             $row.append($cell);
             $table.append($row);
-            
+
             this.mapping.forEach(function (d, i) {
                 $row = $('<tr>');
                 if (this.formData.headerRow) {
@@ -117,59 +117,59 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 }
                 $select = this.getFieldDropdown(i, d.name);
                 $cell = $('<td>').append($select);
-                $row.append($cell);                
-                
+                $row.append($cell);
+
                 $cell = $('<td>').html(d.value);
                 $row.append($cell);
-                
+
                 $table.append($row);
             }, this);
-            
+
             $container.empty();
             $container.append($table);
 
         },
-        
+
         getFieldList: function () {
             var defs = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
-            
+
             var fieldList = [];
             for (var field in defs) {
                 fieldList.push(field);
             }
-            
-            return fieldList;            
+
+            return fieldList;
         },
-        
+
         getFieldDropdown: function (num, name) {
             name = name || false;
-            
+
             var fields = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
-            
+
             var fieldList = [];
             fieldList.push('id');
-            
+
             for (var field in fields) {
                 var d = fields[field];
-                
+
                 if (['modifiedBy', 'createdBy', 'modifiedAt', 'createdAt'].indexOf(field) !== -1) {
                     continue;
                 }
-                
+
                 if (d.type == 'link') {
                     fieldList.push(field + 'Name');
                     fieldList.push(field + 'Id');
                 }
-                
+
                 if (['linkMultiple', 'foreign'].indexOf(d.type) !== -1) {
                     continue;
                 }
-                
+
                 if (d.type == 'personName') {
                     fieldList.push(field);
                 }
-                
-                var type = d.type;                
+
+                var type = d.type;
                 var actualFields = this.getFieldManager().getActualAttributes(type, field);
                 actualFields.forEach(function (f) {
                     if (fieldList.indexOf(f) === -1) {
@@ -177,14 +177,14 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                     }
                 }, this);
             }
-            
+
             $select = $('<select>').addClass('form-control').attr('id', 'column-' + num.toString());
             $option = $('<option>').val('').html('-' + this.translate('Skip', 'labels', 'Import') + '-');
-            
+
             $select.append($option);
             fieldList.forEach(function (field) {
                 $option = $('<option>').val(field).html(this.translate(field, 'fields', this.formData.entityType));
-                
+
                 if (name) {
                     if (field == name) {
                         $option.prop('selected', true);
@@ -196,18 +196,18 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 }
                 $select.append($option);
             }, this);
-            
+
             return $select;
         },
-        
+
         addField: function (name) {
             $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
 
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
-            
+
             var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'"><span class="glyphicon glyphicon-remove"></span></a>';
-            
+
             var html = '<div class="cell form-group col-sm-3">'+removeLink+'<label class="control-label">' + label + '</label><div class="field field-'+name+'" /></div>';
             $('#default-values-container').append(html);
 
@@ -225,19 +225,19 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 view.notify(false);
             }.bind(this));
         },
-        
+
         disableButtons: function () {
             this.$el.find('button[data-action="next"]').addClass('disabled');
             this.$el.find('button[data-action="back"]').addClass('disabled');
         },
-        
+
         enableButtons: function () {
             this.$el.find('button[data-action="next"]').removeClass('disabled');
             this.$el.find('button[data-action="back"]').removeClass('disabled');
         },
-        
+
         fetch: function () {
-            
+
             var attributes = {};
             this.additionalFields.forEach(function (field) {
                 var view = this.getView(field);
@@ -245,45 +245,44 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
             }, this);
 
             this.model.set(attributes);
-            
+
             var notValid = false;
             this.additionalFields.forEach(function (field) {
                 var view = this.getView(field);
                 notValid = view.validate() || notValid;
             }, this);
-            
+
             if (!notValid) {
                 this.formData.defaultValues = attributes;
                 return true;
             }
-        },        
-        
-        back: function () {
-            this.getParentView().changeStep(1);    
         },
-        
-        
-        next: function () {            
+
+        back: function () {
+            this.getParentView().changeStep(1);
+        },
+
+
+        next: function () {
             if (!this.fetch()) {
                 return;
             }
-            
+
             var fields = [];
-            
+
             this.mapping.forEach(function (d, i) {
                 fields.push($('#column-' + i).val());
             }, this);
-            
-            
+
+
             this.formData.fields = fields;
-            
-                    
+
             this.getParentView().formData = this.formData;
-            
+
             this.disableButtons();
-            
+
             this.notify('File uploading...');
-            
+
             $.ajax({
                 type: 'POST',
                 url: 'Import/action/uploadFile',
@@ -291,20 +290,20 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 data: this.getParentView().fileContents,
                 timeout: 0,
                 success: function (data) {
-                    if (data.attachmentId) {                        
+                    if (data.attachmentId) {
                         this.runImport(data.attachmentId);
                     } else {
                         this.notify('Bad response', 'error');
                     }
                 }.bind(this)
-            });            
+            });
         },
-        
+
         runImport: function (attachmentId) {
             this.formData.attachmentId = attachmentId;
-            
+
             this.notify('Import running...');
-            
+
             $.ajax({
                 type: 'POST',
                 url: 'Import',
@@ -317,8 +316,8 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 error: function () {
                     this.enableButtons();
                 }.bind(this),
-            });    
+            });
         }
-                    
+
     });
 });

@@ -18,23 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Controllers.Import', 'Controllers.Record', function (Dep) {
+
+Espo.define('Views.Import.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
 
-        defaultAction: 'index',
-
-        checkAccess: function () {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-            return false;
-        },
-
-        index: function () {
-            this.main('Import.Index', null);
-        }
+        readOnly: true
 
     });
 
 });
+
