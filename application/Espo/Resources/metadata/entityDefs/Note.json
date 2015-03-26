@@ -68,8 +68,7 @@
         "Account": [
             "meetings",
             "calls",
-            "tasks",
-            "opportunities"
+            "tasks"
         ],
         "Contact": [
             "meetings",
