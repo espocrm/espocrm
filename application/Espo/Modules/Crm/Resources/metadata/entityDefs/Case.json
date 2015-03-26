@@ -128,8 +128,7 @@
     },
     "collection": {
         "sortBy": "number",
-        "asc": false,
-        "boolFilters": ["onlyMy"]
+        "asc": false
     },
     "indexes": {
         "status": {
