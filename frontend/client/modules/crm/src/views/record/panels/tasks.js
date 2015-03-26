@@ -74,8 +74,8 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
                 this.collection.where = this.where = [
                     {
-                        type: 'boolFilters',
-                        value: [this.currentTab]
+                        type: 'primary',
+                        value: this.currentTab
                     }
                 ];
 
@@ -107,8 +107,8 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
             this.where = [
                 {
-                    type: 'boolFilters',
-                    value: [this.currentTab]
+                    type: 'primary',
+                    value: this.currentTab
                 }
             ];
         },
