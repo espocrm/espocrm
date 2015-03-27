@@ -6,5 +6,6 @@
 	"status",
 	"priority",
 	"description",
-	"teams"
+	"teams",
+	"createdAt"
 ]

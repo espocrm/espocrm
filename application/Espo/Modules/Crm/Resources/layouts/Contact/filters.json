@@ -4,5 +4,6 @@
 	"emailAddress",
 	"title",
 	"address",
-	"targetLists"
+	"targetLists",
+	"createdAt"
 ]

@@ -3,5 +3,6 @@
 	"billingAddress",
 	"emailAddress",
 	"industry",
-	"type"
+	"type",
+	"createdAt"
 ]

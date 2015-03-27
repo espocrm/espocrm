@@ -8,5 +8,6 @@
     "leadSource",
     "probability",
     "stage",
-    "teams"
+    "teams",
+    "createdAt"
 ]

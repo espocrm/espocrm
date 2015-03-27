@@ -6,5 +6,6 @@
     "source",
     "opportunityAmountConverted",
     "targetLists",
-    "teams"
+    "teams",
+	"createdAt"
 ]

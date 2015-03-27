@@ -1,4 +1,5 @@
 [
 	"address",
-	"emailAddress"
+	"emailAddress",
+	"createdAt"
 ]
