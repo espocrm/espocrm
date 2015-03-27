@@ -1,7 +1,12 @@
 {
     "fields": {
         "entityType": {
-            "type": "varchar",
+            "type": "enum",
+            "translation": "Global.scopeNames",
+            "required": true
+        },
+        "file": {
+            "type": "file",
             "required": true
         },
         "createdAt": {

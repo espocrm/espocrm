@@ -1,0 +1,5 @@
+[
+    {"name":"createdAt", "width":50, "link": true},
+    {"name":"entityType"},
+    {"name":"createdBy"}
+]
