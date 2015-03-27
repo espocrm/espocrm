@@ -30,12 +30,34 @@ Espo.define('Views.Email.Record.Compose', ['Views.Record.Edit', 'Views.Email.Rec
         setup: function () {
         	Dep.prototype.setup.call(this);
 
-        	var signature = this.getPreferences().get('signature');
-        	if (signature) {
+        	if (this.hasSignature()) {
 	        	var body = this.model.get('body') || '';
-	        	body = '<br><p>' + signature + '</p>' + body;
+                if (this.model.get('isHtml')) {
+                    var signature = this.getSignature();
+	                body = '<br><p>' + signature + '</p>' + body;
+                } else {
+                    var signature = this.getPlainTextSignature();
+                    if (body) {
+                        signature += '\n';
+                    }
+                    body = '\n' + signature + body;
+                }
 	        	this.model.set('body', body);
 	        }
+        },
+
+        hasSignature: function () {
+            return !!this.getPreferences().get('signature');
+        },
+
+        getSignature: function () {
+            return this.getPreferences().get('signature');
+        },
+
+        getPlainTextSignature: function () {
+            var value = this.getSignature().replace(/<br\s*\/?>/mg, '\n');
+            value = $('<div>').html(value).text();
+            return value;
         },
 
         send: function () {
