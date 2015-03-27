@@ -46,6 +46,21 @@ class Import extends \Espo\Core\Controllers\Record
         throw new BadRequest();
     }
 
+    public function actionMassUpdate($params, $data, $request)
+    {
+        throw new BadRequest();
+    }
+
+    public function actionCreateLink($params, $data)
+    {
+        throw new BadRequest();
+    }
+
+    public function actionRemoveLink($params, $data)
+    {
+        throw new BadRequest();
+    }
+
     protected function getFileManager()
     {
         return $this->getContainer()->get('fileManager');
@@ -63,6 +78,7 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');
         $attachment->set('role', 'Import File');
+        $attachment->set('name', 'import-batch-file.csv');
         $this->getEntityManager()->saveEntity($attachment);
 
         $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);

@@ -5,7 +5,27 @@
         "detail": "Import.Record.Detail"
     },
     "views": {
-    	"list": "Import.List"
+    	"list": "Import.List",
+    	"detail": "Import.Detail"
+    },
+    "bottomPanels": {
+    	"detail": [
+	    	{
+	    		"name": "imported",
+	    		"label": "Imported",
+	    		"view": "Import.Record.Panels.Imported"
+	    	},
+	    	{
+	    		"name": "duplicates",
+	    		"label": "Duplicates",
+	    		"view": "Import.Record.Panels.Duplicates"
+	    	},
+	    	{
+	    		"name": "updated",
+	    		"label": "Updated",
+	    		"view": "Import.Record.Panels.Updated"
+	    	}
+	    ]
     },
     "disableSearchPanel": true
 }

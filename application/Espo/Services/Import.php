@@ -83,6 +83,42 @@ class Import extends \Espo\Services\Record
         return $this->injections['serviceFactory'];
     }
 
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $entity = $this->getRepository()->get($id);
+        $foreignEntityName = $entity->get('entityType');
+
+        if (!$this->getAcl()->check($entity, 'read')) {
+            throw new Forbidden();
+        }
+        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+            throw new Forbidden();
+        }
+
+
+        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+
+        if (array_key_exists($link, $this->linkSelectParams)) {
+            $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
+        }
+
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+
+        $recordService = $this->getRecordService($foreignEntityName);
+
+        foreach ($collection as $e) {
+            $recordService->loadAdditionalFieldsForList($e);
+            $recordService->prepareEntityForOutput($e);
+        }
+
+        $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+
+        return array(
+            'total' => $total,
+            'collection' => $collection
+        );
+    }
+
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
     {
         $o = array();
@@ -177,7 +213,8 @@ class Import extends \Espo\Services\Record
 
         $import = $this->getEntityManager()->getEntity('Import');
         $import->set(array(
-            'enityType' => $scope
+            'entityType' => $scope,
+            'fileId' => $attachmentId
         ));
         $this->getEntityManager()->saveEntity($import);
 
@@ -209,18 +246,20 @@ class Import extends \Espo\Services\Record
                 $result['duplicateIds'][] = $r['id'];
             }
             $sql = "
-                INSERT INTO import_entity (entity_type, entity_id, import_id, is_imported, is_updated, is_duplicate)
+                INSERT INTO import_entity
+                (entity_type, entity_id, import_id, is_imported, is_updated, is_duplicate)
+                VALUES
                 (:entityType, :entityId, :importId, :isImported, :isUpdated, :isDuplicate)
             ";
             $sth = $pdo->prepare($sql);
-            $sth->execute(array(
-                ':entityType' => $scope,
-                ':entityId' => $r['id'],
-                ':importId' => $import->id,
-                ':isImported' => !empty($r['isImported']),
-                ':isUpdated' => !empty($r['isUpdated']),
-                ':isDuplicate' => !empty($r['isDuplicate']),
-            ));
+            $sth->bindValue(':entityType', $scope);
+            $sth->bindValue(':entityId', $r['id']);
+            $sth->bindValue(':importId', $import->id);
+            $sth->bindValue(':isImported', !empty($r['isImported']), \PDO::PARAM_BOOL);
+            $sth->bindValue(':isUpdated', !empty($r['isUpdated']), \PDO::PARAM_BOOL);
+            $sth->bindValue(':isDuplicate', !empty($r['isDuplicate']), \PDO::PARAM_BOOL);
+
+            $sth->execute();
 
         }
         return array(

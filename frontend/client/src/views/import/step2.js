@@ -308,9 +308,15 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 type: 'POST',
                 url: 'Import',
                 data: JSON.stringify(this.formData),
-                timeout: 150000,
+                timeout: 0,
                 success: function (result) {
-                    this.getParentView().changeStep(3, result);
+                    var id = result.id;
+                    if (id) {
+                        this.getRouter().navigate('#Import/view/' + id, {trigger: true});
+                    } else {
+                        this.notify('Error', 'error');
+                        this.enableButtons();
+                    }
                     this.notify(false);
                 }.bind(this),
                 error: function () {

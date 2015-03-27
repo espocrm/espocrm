@@ -27,17 +27,24 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
 
         rowActionsView: 'Record.RowActions.Relationship',
 
+        url: null,
+
+        scope: null,
+
+        readOlny: false,
+
         setup: function () {
             this.link = this.panelName;
-            if (!(this.link in this.model.defs.links)) {
+            if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
-            this.scope = this.model.defs.links[this.link].entity;
+            this.scope = this.scope || this.model.defs.links[this.link].entity;
 
             this.title = this.translate(this.link, 'links', this.model.name);
-            var url = this.model.name + '/' + this.model.id + '/' + this.link;
 
-            if (!this.defs.readOnly) {
+            var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+
+            if (!this.readOlny && !this.defs.readOnly) {
                 if (!('create' in this.defs)) {
                     this.defs.create = true;
                 }
@@ -96,9 +103,11 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                 }
                 this.collection = collection;
 
+                var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+
                 this.once('after:render', function () {
                     collection.once('sync', function () {
-                        this.createView('list', 'Record.List', {
+                        this.createView('list', viewName, {
                             collection: collection,
                             type: type,
                             listLayout: listLayout,
