@@ -48,7 +48,6 @@ Espo.define('Views.Import.List', 'Views.List', function (Dep) {
             } else {
                 this.getRouter().navigate('#EmailAccount/create', {trigger: true});
             }
-
         },
 
 

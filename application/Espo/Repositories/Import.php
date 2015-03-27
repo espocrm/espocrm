@@ -86,6 +86,8 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
                 $this->getEntityManager()->removeEntity($attachment);
             }
         }
+
+        $pdo = $this->getEntityManager()->getPDO();
         $sql = "DELETE FROM import_entity WHERE import_id = :importId";
         $sth = $pdo->prepare($sql);
         $sth->bindValue(':importId', $entity->id);

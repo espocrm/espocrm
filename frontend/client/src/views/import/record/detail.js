@@ -23,7 +23,9 @@ Espo.define('Views.Import.Record.Detail', 'Views.Record.Detail', function (Dep) 
 
     return Dep.extend({
 
-        readOnly: true
+        readOnly: true,
+
+        returnUrl: '#Import/list'
 
     });
 

@@ -3,11 +3,11 @@
     <div class="panel panel-default">
         <div class="panel-heading"><h5 class="panel-title">{{translate 'Field Mapping' scope='Import'}}</h5></div>
         <div class="panel-body">
-            <div id="mapping-container">            
+            <div id="mapping-container">
             </div>
         </div>
     </div>
-    
+
     <div class="panel panel-default">
         <div class="panel-heading"><h5 class="panel-title">{{translate 'Default Values' scope='Import'}}</h5></div>
         <div class="panel-body">
@@ -24,11 +24,11 @@
                     </ul>
                 </div>
             </div>
-            <div id="default-values-container">            
+            <div id="default-values-container">
             </div>
         </div>
     </div>
-    
+
     <div style="padding-bottom: 10px;" class="clearfix">
         <button class="btn btn-default pull-left" data-action="back">{{translate 'Back' scope='Import'}}</button>
         <button class="btn btn-danger pull-right" data-action="next">{{translate 'Run Import' scope='Import'}}</button>

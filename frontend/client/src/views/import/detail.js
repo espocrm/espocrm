@@ -24,13 +24,43 @@ Espo.define('Views.Import.Detail', 'Views.Detail', function (Dep) {
     return Dep.extend({
 
         getHeader: function () {
-            var name = Handlebars.Utils.escapeExpression(this.model.get('createdAt'));
+        	var dt = this.model.get('createdAt');
+        	dt = this.getDateTime().toDisplay(dt);
+            var name = Handlebars.Utils.escapeExpression(dt);
 
             return this.buildHeaderHtml([
                 '<a href="#' + this.model.name + '/list">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 name
             ]);
         },
+
+        actionRevert: function () {
+        	if (confirm(this.translate('confirmation', 'messages'))) {
+	        	$.ajax({
+	        		type: 'POST',
+	        		url: 'Import/action/revert',
+	        		data: JSON.stringify({
+	        			id: this.model.id
+	        		})
+	        	}).done(function () {
+	        		this.getRouter().navigate('#Import/list', {trigger: true});
+	        	});
+        	}
+        },
+
+        actionRemoveDuplicates: function () {
+        	if (confirm(this.translate('confirmation', 'messages'))) {
+	        	$.ajax({
+	        		type: 'POST',
+	        		url: 'Import/action/removeDuplicates',
+	        		data: JSON.stringify({
+	        			id: this.model.id
+	        		})
+	        	}).done(function () {
+	        		this.getRouter().navigate('#Import/list', {trigger: true});
+	        	});
+        	}
+        }
 
     });
 });

@@ -8,6 +8,24 @@
     	"list": "Import.List",
     	"detail": "Import.Detail"
     },
+   "menu": {
+      "detail": {
+         "buttons": [
+            {
+               "label": "Revert Import",
+               "action": "revert",
+               "style": "danger",
+               "acl": "edit"
+            },
+            {
+               "label": "Remove Duplicates",
+               "action": "removeDuplicates",
+               "style": "default",
+               "acl": "edit"
+            }
+         ]
+      }
+    },
     "bottomPanels": {
     	"detail": [
 	    	{
