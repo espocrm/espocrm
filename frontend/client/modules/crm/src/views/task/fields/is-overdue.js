@@ -17,32 +17,59 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Task.Fields.IsOverdue', 'Views.Fields.Base', function (Dep) {
-    
+
     return Dep.extend({
-        
+
         readOnly: true,
-    
+
         _template: '{{#if isOverdue}}<span class="label label-danger">{{translate "overdue"}}</span>{{/if}}',
-        
+
         data: function () {
-            var isOverdue = false;            
-            if (['Completed', 'Canceled'].indexOf(this.model.get('status')) == -1) {                    
+            var isOverdue = false;
+            if (['Completed', 'Canceled'].indexOf(this.model.get('status')) == -1) {
                 if (this.model.has('dateEnd')) {
-                    isOverdue = moment.utc().unix() > moment.utc(this.model.get('dateEnd')).unix();
+                    if (!this.isDate()) {
+                        var value = this.model.get('dateEnd');
+                        if (value) {
+                            var d = this.getDateTime().toMoment(value);
+                            var now = moment().tz(this.getDateTime().timeZone || 'UTC');
+                            if (d.unix() < now.unix()) {
+                                isOverdue = true;
+                            }
+                        }
+                    } else {
+                        var value = this.model.get('dateEndDate');
+                        if (value) {
+                            var d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
+                            var now = this.getDateTime().getNowMoment();
+                            if (d.unix() < now.unix()) {
+                                isOverdue = true;
+                            }
+                        }
+                    }
+
                 }
-            }            
+            }
             return {
                 isOverdue: isOverdue
             };
         },
-    
+
         setup: function () {
-            this.mode = 'detail';    
+            this.mode = 'detail';
         },
-    
+
+        isDate: function () {
+            var dateValue = this.model.get('dateEnd');
+            if (dateValue && dateValue != '') {
+                return true;
+            }
+            return false;
+        },
+
     });
 
 });
