@@ -593,7 +593,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function findLinkedEntities($id, $link, $params)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
         $foreignEntityName = $entity->relations[$link]['entity'];
 
         if (!$this->getAcl()->check($entity, 'read')) {
@@ -650,9 +650,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntity($id, $link, $foreignId)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
 
-        $entityName = $entity->getEntityName($entity);
         $foreignEntityName = $entity->relations[$link]['entity'];
 
         if (!$this->getAcl()->check($entity, 'edit')) {
@@ -677,9 +676,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
 
-        $entityName = $entity->getEntityName($entity);
         $foreignEntityName = $entity->relations[$link]['entity'];
 
         if (!$this->getAcl()->check($entity, 'edit')) {
@@ -704,7 +702,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntityMass($id, $link, $where)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
 
         $entityType = $entity->getEntityType();
         $foreignEntityType = $entity->relations[$link]['entity'];
@@ -829,7 +827,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function follow($id, $userId = null)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
+
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
@@ -843,7 +842,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function unfollow($id, $userId = null)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->getRepository()->get($id);
+
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
@@ -1036,17 +1036,17 @@ class Record extends \Espo\Core\Services\Base
                 UPDATE `note`
                     SET
                         `parent_id` = " . $pdo->quote($entity->id) . ",
-                        `parent_type` = " . $pdo->quote($entity->getEntityName()) . "
+                        `parent_type` = " . $pdo->quote($entity->getEntityType()) . "
                 WHERE
                     `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
                     `parent_id` = " . $pdo->quote($source->id) . " AND
-                    `parent_type` = ".$pdo->quote($source->getEntityName())." AND
+                    `parent_type` = ".$pdo->quote($source->getEntityType())." AND
                     `deleted` = 0
             ";
             $pdo->query($sql);
         }
 
-        $repository = $this->getEntityManager()->getRepository($entity->getEntityName());
+        $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
 
         foreach ($sourceList as $source) {
             foreach ($this->mergeLinkList as $link) {
