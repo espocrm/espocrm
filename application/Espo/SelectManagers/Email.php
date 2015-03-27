@@ -27,10 +27,10 @@ class Email extends \Espo\Core\SelectManagers\Base
     protected function boolFilterOnlyMy(&$result)
     {
         if (!in_array('users', $result['joins'])) {
-        	$result['joins'][] = 'users';
+            $result['joins'][] = 'users';
         }
         $result['whereClause'][] = array(
-        	'emailUser.userId' => $this->getUser()->id
+            'emailUser.userId' => $this->getUser()->id
         );
     }
 
