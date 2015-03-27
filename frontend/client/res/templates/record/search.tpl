@@ -13,11 +13,11 @@
                         {{#each ../presetFilterList}}
                         <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../../scope}}{{/if}}</a></li>
                         {{/each}}
+                        {{#if boolFilterList.length}}
+                            <li class="divider"></li>
+                        {{/if}}
                     {{/if}}
 
-                    {{#if boolFilterList.length}}
-                        <li class="divider"></li>
-                    {{/if}}
                     {{#each boolFilterList}}
                         <li class="checkbox"><label><input type="checkbox" data-role="boolFilterCheckbox" name="{{./this}}" {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}> {{translate this scope=../scope category='boolFilters'}}</label></li>
                     {{/each}}
