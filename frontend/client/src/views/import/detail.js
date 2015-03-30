@@ -34,8 +34,32 @@ Espo.define('Views.Import.Detail', 'Views.Detail', function (Dep) {
             ]);
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            if (this.model.get('importedCount')) {
+                this.menu.buttons.unshift({
+                   "label": "Revert Import",
+                   "action": "revert",
+                   "style": "danger",
+                   "acl": "edit"
+                });
+            }
+            if (this.model.get('duplicateCount')) {
+                this.menu.buttons.unshift({
+                   "label": "Remove Duplicates",
+                   "action": "removeDuplicates",
+                   "style": "default",
+                   "acl": "edit"
+                });
+            }
+        },
+
         actionRevert: function () {
         	if (confirm(this.translate('confirmation', 'messages'))) {
+                $btn = this.$el.find('button[data-action="revert"]');
+                $btn.addClass('disabled');
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
 	        	$.ajax({
 	        		type: 'POST',
 	        		url: 'Import/action/revert',
@@ -43,13 +67,20 @@ Espo.define('Views.Import.Detail', 'Views.Detail', function (Dep) {
 	        			id: this.model.id
 	        		})
 	        	}).done(function () {
+                    Espo.Ui.notify(false);
+
 	        		this.getRouter().navigate('#Import/list', {trigger: true});
-	        	});
+	        	}.bind(this));
         	}
         },
 
         actionRemoveDuplicates: function () {
+
         	if (confirm(this.translate('confirmation', 'messages'))) {
+                $btn = this.$el.find('button[data-action="removeDuplicates"]');
+                $btn.addClass('disabled');
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
 	        	$.ajax({
 	        		type: 'POST',
 	        		url: 'Import/action/removeDuplicates',
@@ -57,8 +88,10 @@ Espo.define('Views.Import.Detail', 'Views.Detail', function (Dep) {
 	        			id: this.model.id
 	        		})
 	        	}).done(function () {
-	        		this.getRouter().navigate('#Import/list', {trigger: true});
-	        	});
+                    $btn.remove();
+                    this.model.fetch();
+                    Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'))
+	        	}.bind(this));
         	}
         }
 

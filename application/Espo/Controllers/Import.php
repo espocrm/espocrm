@@ -90,7 +90,18 @@ class Import extends \Espo\Core\Controllers\Record
 
     public function actionRevert($params, $data)
     {
-        return $this->getService('Import')->revert($data['entityType'], $data['idsToRemove']);
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        return $this->getService('Import')->revert($data['id']);
+    }
+
+    public function actionRemoveDuplicates($params, $data)
+    {
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        return $this->getService('Import')->removeDuplicates($data['id']);
     }
 
     public function actionCreate($params, $data)

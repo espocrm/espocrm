@@ -25,6 +25,7 @@ namespace Espo\Services;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\BadRequest;
 
 use Espo\ORM\Entity;
 
@@ -81,6 +82,20 @@ class Import extends \Espo\Services\Record
     protected function getServiceFactory()
     {
         return $this->injections['serviceFactory'];
+    }
+
+    protected function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+
+        $importedCount = $this->getRepository()->countRelated($entity, 'imported');
+        $duplicateCount = $this->getRepository()->countRelated($entity, 'duplicates');
+        $updatedCount = $this->getRepository()->countRelated($entity, 'updated');
+        $entity->set(array(
+            'importedCount' => $importedCount,
+            'duplicateCount' => $duplicateCount,
+            'updatedCount' => $updatedCount,
+        ));
     }
 
     public function findLinkedEntities($id, $link, $params)
@@ -178,21 +193,68 @@ class Import extends \Espo\Services\Record
         return $o;
     }
 
-    public function revert($scope, array $idsToRemove)
+    public function revert($id)
     {
-        $ids = array();
-        if (!empty($scope) && !empty($idsToRemove)) {
-            foreach ($idsToRemove as $id) {
-                $entity = $this->getEntityManager()->getEntity($scope, $id);
-                if ($entity) {
-                    if ($this->getEntityManager()->removeEntity($entity)) {
-                        $ids[] = $id;
-                    }
-                }
-                $this->getEntityManager()->getRepository($scope)->deleteFromDb($id);
-            }
+        $import = $this->getEntityManager()->getEntity('Import', $id);
+        if (empty($import)) {
+            throw new NotFound();
         }
-        return $ids;
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+
+        $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_imported = 1";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            if (empty($row['entity_type']) || empty($row['entity_id'])) {
+                continue;
+            }
+            $entityType = $row['entity_type'];
+            $entityId = $row['entity_id'];
+
+            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
+            if ($entity) {
+                $this->getEntityManager()->removeEntity($entity);
+            }
+            $this->getEntityManager()->getRepository($scope)->deleteFromDb($entityId);
+        }
+
+        $this->getEntityManager()->removeEntity($import);
+
+        return true;
+    }
+
+    public function removeDuplicates($id)
+    {
+        $import = $this->getEntityManager()->getEntity('Import', $id);
+        if (empty($import)) {
+            throw new NotFound();
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+
+        $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_duplicate = 1";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            if (empty($row['entity_type']) || empty($row['entity_id'])) {
+                continue;
+            }
+            $entityType = $row['entity_type'];
+            $entityId = $row['entity_id'];
+
+            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
+            if ($entity) {
+                $this->getEntityManager()->removeEntity($entity);
+            }
+            $this->getEntityManager()->getRepository($scope)->deleteFromDb($entityId);
+        }
+
+        return true;
     }
 
     public function import($scope, array $fields, $attachmentId, array $params = array())

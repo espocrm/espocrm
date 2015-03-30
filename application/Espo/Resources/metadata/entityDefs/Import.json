@@ -9,6 +9,21 @@
             "type": "file",
             "required": true
         },
+        "importedCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "duplicateCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "updatedCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

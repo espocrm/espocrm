@@ -11,10 +11,14 @@
         "Updated": "Updated",
         "Result": "Result",
         "Show records": "Show records",
-        "Remove Duplicates": "Remove Duplicates"
+        "Remove Duplicates": "Remove Duplicates",
+        "importedCount": "Imported (count)",
+        "duplicateCount": "Duplicates (count)",
+        "updatedCount": "Updated (count)"
     },
     "messages": {
-        "utf8": "Should be UTF-8 encoded"
+        "utf8": "Should be UTF-8 encoded",
+        "duplicatesRemoved": "Duplicates removed"
     },
     "fields": {
         "file": "File",
