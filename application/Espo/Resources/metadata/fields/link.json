@@ -13,8 +13,5 @@
       "name"
    ],
    "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "skip":true
-   }
+   "notCreatable": true
 }

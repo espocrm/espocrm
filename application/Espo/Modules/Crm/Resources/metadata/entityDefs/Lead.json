@@ -140,6 +140,7 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "importDisabled": true,
             "noLoad": true,
             "noSave": true
         },

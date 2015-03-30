@@ -18,9 +18,6 @@
    "notActualFields":[
       "name"
    ],
-   "fieldDefs":{
-      "skip":true
-   },
    "filter": false,
    "linkDefs": {
       "type": "belongsTo",
