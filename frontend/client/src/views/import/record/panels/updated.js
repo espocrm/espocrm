@@ -25,6 +25,8 @@ Espo.define('Views.Import.Record.Panels.Updated', 'Views.Import.Record.Panels.Im
 
         link: 'updated',
 
+        rowActionsView: 'Record.RowActions.RelationshipViewAndEdit',
+
     });
 });
 
