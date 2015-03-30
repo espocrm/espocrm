@@ -24,15 +24,15 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
     return Dep.extend({
 
         getActions: function () {
+            var list = [{
+                action: 'viewRelated',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                }
+            }];
             if (this.options.acl.edit) {
-                var list = [
-                    {
-                        action: 'viewRelated',
-                        label: 'View',
-                        data: {
-                            id: this.model.id
-                        }
-                    },
+                list = list.concat([
                     {
                         action: 'editRelated',
                         label: 'Edit',
@@ -54,12 +54,9 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
                             id: this.model.id
                         }
                     }
-                ]
-                if (this.model.name == 'User') {
-                    return [];
-                }
-                return list;
+                ]);
             }
+            return list;
         },
 
     });

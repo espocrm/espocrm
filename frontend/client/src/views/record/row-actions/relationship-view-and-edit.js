@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.RowActions.RelationshipNoUnlink', 'Views.Record.RowActions.Relationship', function (Dep) {
+Espo.define('Views.Record.RowActions.RelationshipViewAndEdit', 'Views.Record.RowActions.Relationship', function (Dep) {
 
     return Dep.extend({
 
@@ -32,25 +32,16 @@ Espo.define('Views.Record.RowActions.RelationshipNoUnlink', 'Views.Record.RowAct
                 }
             }];
             if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'editRelated',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        }
-                    },
-                    {
-                        action: 'removeRelated',
-                        label: 'Remove',
-                        data: {
-                            id: this.model.id
-                        }
+                list.push({
+                    action: 'editRelated',
+                    label: 'Edit',
+                    data: {
+                        id: this.model.id
                     }
-                ]);
+                });
             }
             return list;
-        }
+        },
 
     });
 

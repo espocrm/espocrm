@@ -26,15 +26,15 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
         template: 'record.row-actions.default',
 
         getActions: function () {
+            var list = [{
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                }
+            }];
             if (this.options.acl.edit) {
-                return [
-                    {
-                        action: 'quickView',
-                        label: 'View',
-                        data: {
-                            id: this.model.id
-                        }
-                    },
+                list = list.concat([
                     {
                         action: 'quickEdit',
                         label: 'Edit',
@@ -49,8 +49,9 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
                             id: this.model.id
                         }
                     }
-                ];
+                ]);
             }
+            return list;
         },
 
         data: function () {
