@@ -1,1 +1,1 @@
-["teams", "emailAddress", "title"]
+["teams", "emailAddress", "title", "isAdmin", "isActive"]
