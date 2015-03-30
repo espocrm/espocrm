@@ -34,7 +34,7 @@ Espo.define('Views.Email.Record.Compose', ['Views.Record.Edit', 'Views.Email.Rec
 	        	var body = this.model.get('body') || '';
                 if (this.model.get('isHtml')) {
                     var signature = this.getSignature();
-	                body = '<br><p>' + signature + '</p>' + body;
+	                body = '<p><br></p><br>' + signature + '<br>' + body;
                 } else {
                     var signature = this.getPlainTextSignature();
                     if (body) {

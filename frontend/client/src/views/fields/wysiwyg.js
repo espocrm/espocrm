@@ -81,7 +81,9 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                     var $iframe = this.$el.find('iframe');
                     var iframe = this.iframe = $iframe.get(0);
 
-
+                    $iframe.load(function () {
+                        $iframe.contents().find('a').attr('target', '_blank');
+                    });
 
                     var doc = iframe.contentWindow.document;
 
@@ -93,6 +95,8 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
                     doc.write(body);
                     doc.close();
+
+
 
                     setTimeout(function () {
                         var height = $iframe.contents().find('html body').height();
