@@ -36,10 +36,10 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         return $this->getInjection('fileManager');
     }
 
-    public function save(Entity $entity)
+    public function save(Entity $entity, array $options = array())
     {
         $isNew = $entity->isNew();
-        $result = parent::save($entity);
+        $result = parent::save($entity, $options);
 
         if ($isNew) {
             if (!empty($entity->id) && $entity->has('contents')) {
@@ -51,9 +51,9 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         return $result;
     }
 
-    protected function afterRemove(Entity $entity)
+    protected function afterRemove(Entity $entity, array $options = array())
     {
-        parent::afterRemove($entity);
+        parent::afterRemove($entity, $options);
         $this->getFileManager()->removeFile('data/upload/' . $entity->id);
     }
 

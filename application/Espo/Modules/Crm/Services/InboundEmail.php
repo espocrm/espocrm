@@ -250,7 +250,7 @@ class InboundEmail extends \Espo\Services\Record
             $fetchData['lastDate'][$folder] = $lastDate;
 
             $inboundEmail->set('fetchData', json_encode($fetchData));
-            $this->getEntityManager()->saveEntity($inboundEmail);
+            $this->getEntityManager()->saveEntity($inboundEmail, array('silent' => true));
         }
 
         return true;

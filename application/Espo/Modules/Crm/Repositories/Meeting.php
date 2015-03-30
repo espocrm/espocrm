@@ -26,9 +26,9 @@ use Espo\ORM\Entity;
 
 class Meeting extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function beforeSave(Entity $entity)
+    protected function beforeSave(Entity $entity, array $options)
     {
-        parent::beforeSave($entity);
+        parent::beforeSave($entity, $options);
 
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
@@ -95,9 +95,9 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
         $entity->set('reminders', $reminders);
     }
 
-    protected function afterSave(Entity $entity)
+    protected function afterSave(Entity $entity, array $options)
     {
-        parent::afterSave($entity);
+        parent::afterSave($entity, $options);
 
         if (
             $entity->isNew() ||
@@ -125,7 +125,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                 ";
                 $pdo->query($sql);
             }
-            
+
             if (empty($reminders) || !is_array($reminders)) return;
 
             $entityType = $entity->getEntityName();

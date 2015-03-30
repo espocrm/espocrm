@@ -150,7 +150,7 @@ class Stream extends \Espo\Core\Hooks\Base
         return $userIdList;
     }
 
-    public function afterSave(Entity $entity)
+    public function afterSave(Entity $entity, array $options = array())
     {
         $entityName = $entity->getEntityName();
 
@@ -161,6 +161,7 @@ class Stream extends \Espo\Core\Hooks\Base
                 $createdById = $entity->get('createdById');
 
                 $userIdList = [];
+
                 if (!empty($createdById)) {
                     $userIdList[] = $createdById;
                 }
@@ -168,13 +169,13 @@ class Stream extends \Espo\Core\Hooks\Base
                     $userIdList[] = $assignedUserId;
                 }
 
-
                 if (!empty($userIdList)) {
                     $this->getStreamService()->followEntityMass($entity, $userIdList);
                 }
 
-                $this->getStreamService()->noteCreate($entity);
-
+                if (empty($options['noStream'])) {
+                    $this->getStreamService()->noteCreate($entity);
+                }
 
                 $autofollowUserIdList = $this->getAutofollowUserIdList($entity, $userIdList);
                 foreach ($autofollowUserIdList as $i => $userId) {
@@ -191,7 +192,7 @@ class Stream extends \Espo\Core\Hooks\Base
                         'method' => 'afterRecordCreatedJob',
                         'data' => array(
                             'userIdList' => $autofollowUserIdList,
-                            'entityType' => $entity->getEntityName(),
+                            'entityType' => $entity->getEntityType(),
                             'entityId' => $entity->id
                         )
                     ));
@@ -199,29 +200,31 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
 
             } else {
-                if ($entity->isFieldChanged('assignedUserId')) {
-                    $assignedUserId = $entity->get('assignedUserId');
-                    if (!empty($assignedUserId)) {
-                        $this->getStreamService()->followEntity($entity, $assignedUserId);
-                        $this->getStreamService()->noteAssign($entity);
+                if (empty($options['noStream'])) {
+                    if ($entity->isFieldChanged('assignedUserId')) {
+                        $assignedUserId = $entity->get('assignedUserId');
+                        if (!empty($assignedUserId)) {
+                            $this->getStreamService()->followEntity($entity, $assignedUserId);
+                            $this->getStreamService()->noteAssign($entity);
+                        }
                     }
-                }
-                $this->getStreamService()->handleAudited($entity);
+                    $this->getStreamService()->handleAudited($entity);
 
-                $statusFields = $this->getStatusFields();
+                    $statusFields = $this->getStatusFields();
 
-                if (array_key_exists($entityName, $this->statusFields)) {
-                    $field = $this->statusFields[$entityName];
-                    $value = $entity->get($field);
-                    if (!empty($value) && $value != $entity->getFetched($field)) {
-                        $this->getStreamService()->noteStatus($entity, $field);
+                    if (array_key_exists($entityName, $this->statusFields)) {
+                        $field = $this->statusFields[$entityName];
+                        $value = $entity->get($field);
+                        if (!empty($value) && $value != $entity->getFetched($field)) {
+                            $this->getStreamService()->noteStatus($entity, $field);
+                        }
                     }
                 }
             }
 
         }
 
-        if ($entity->isNew() && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
+        if ($entity->isNew() && empty($options['noStream']) && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
             $this->handleCreateRelated($entity);
         }
     }

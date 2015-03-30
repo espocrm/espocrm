@@ -57,9 +57,9 @@ class Task extends \Espo\Core\ORM\Repositories\RDB
         return null;
     }
 
-    protected function beforeSave(Entity $entity)
+    protected function beforeSave(Entity $entity, array $options)
     {
-        parent::beforeSave($entity);
+        parent::beforeSave($entity, $options);
 
         if ($entity->has('dateStartDate')) {
             $dateStartDate = $entity->get('dateStartDate');

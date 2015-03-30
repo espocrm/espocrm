@@ -93,7 +93,7 @@ class HookManager
         }
     }
 
-    public function process($scope, $hookName, $injection = null)
+    public function process($scope, $hookName, $injection = null, array $options = array())
     {
         if ($scope != 'Common') {
             $this->process('Common', $hookName, $injection);
@@ -106,7 +106,7 @@ class HookManager
                         $this->hooks[$className] = $this->createHookByClassName($className);
                     }
                     $hook = $this->hooks[$className];
-                    $hook->$hookName($injection);
+                    $hook->$hookName($injection, $options);
                 }
             }
         }

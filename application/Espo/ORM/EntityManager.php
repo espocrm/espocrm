@@ -137,16 +137,16 @@ class EntityManager
         return $this->getRepository($name)->get($id);
     }
 
-    public function saveEntity(Entity $entity)
+    public function saveEntity(Entity $entity, array $options = array())
     {
         $entityName = $entity->getEntityName();
-        return $this->getRepository($entityName)->save($entity);
+        return $this->getRepository($entityName)->save($entity, $options);
     }
 
-    public function removeEntity(Entity $entity)
+    public function removeEntity(Entity $entity, array $options = array())
     {
         $entityName = $entity->getEntityName();
-        return $this->getRepository($entityName)->remove($entity);
+        return $this->getRepository($entityName)->remove($entity, $options);
     }
 
     public function getRepository($name)

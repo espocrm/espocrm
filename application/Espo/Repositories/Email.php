@@ -64,7 +64,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function beforeSave(Entity $entity)
+    protected function beforeSave(Entity $entity, array $options)
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
@@ -108,7 +108,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         }
 
-        parent::beforeSave($entity);
+        parent::beforeSave($entity, $options);
 
 
         $parentId = $entity->get('parentId');
@@ -130,9 +130,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function beforeRemove(Entity $entity)
+    protected function beforeRemove(Entity $entity, array $options)
     {
-        parent::beforeRemove($entity);
+        parent::beforeRemove($entity, $options);
         $attachments = $entity->get('attachments');
         foreach ($attachments as $attachment) {
             $this->getEntityManager()->removeEntity($attachment);

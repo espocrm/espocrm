@@ -244,7 +244,7 @@ class EmailAccount extends Record
             $fetchData['lastDate'][$folder] = $lastDate;
 
             $emailAccount->set('fetchData', json_encode($fetchData));
-            $this->getEntityManager()->saveEntity($emailAccount);
+            $this->getEntityManager()->saveEntity($emailAccount, array('silent' => true));
         }
 
         return true;

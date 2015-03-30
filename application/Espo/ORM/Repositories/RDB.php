@@ -121,17 +121,17 @@ class RDB extends \Espo\ORM\Repository
         return $this->getEntityById($id);
     }
 
-    protected function beforeSave(Entity $entity)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
     }
 
-    protected function afterSave(Entity $entity)
+    protected function afterSave(Entity $entity, array $options = array())
     {
     }
 
-    public function save(Entity $entity)
+    public function save(Entity $entity, array $options = array())
     {
-        $this->beforeSave($entity);
+        $this->beforeSave($entity, $options);
         if ($entity->isNew() && !$entity->isSaved()) {
             $result = $this->getMapper()->insert($entity);
         } else {
@@ -139,7 +139,7 @@ class RDB extends \Espo\ORM\Repository
         }
         if ($result) {
             $entity->setIsSaved(true);
-            $this->afterSave($entity);
+            $this->afterSave($entity, $options);
             if ($entity->isNew()) {
                 $entity->setIsNew(false);
             } else {
@@ -151,20 +151,20 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    protected function beforeRemove(Entity $entity)
+    protected function beforeRemove(Entity $entity, array $options = array())
     {
     }
 
-    protected function afterRemove(Entity $entity)
+    protected function afterRemove(Entity $entity, array $options = array())
     {
     }
 
-    public function remove(Entity $entity)
+    public function remove(Entity $entity, array $options = array())
     {
-        $this->beforeRemove($entity);
+        $this->beforeRemove($entity, $options);
         $result = $this->getMapper()->delete($entity);
         if ($result) {
-            $this->afterRemove($entity);
+            $this->afterRemove($entity, $options);
         }
         return $result;
     }

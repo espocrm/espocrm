@@ -18,15 +18,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
 class Lead extends \Espo\Core\ORM\Repositories\RDB
-{    
-    
+{
 
 }
 

@@ -78,7 +78,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $this->getEntityManager()->getRepository($entityType)->count($selectParams);
     }
 
-    protected function afterRemove(Entity $entity)
+    protected function afterRemove(Entity $entity, array $options)
     {
         if ($entity->get('fileId')) {
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('fileId'));
@@ -93,7 +93,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         $sth->bindValue(':importId', $entity->id);
         $sth->execute();
 
-        parent::afterRemove($entity);
+        parent::afterRemove($entity, $options);
 
     }
 

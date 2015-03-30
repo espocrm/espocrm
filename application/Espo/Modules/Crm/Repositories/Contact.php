@@ -29,24 +29,24 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
     public function handleSelectParams(&$params)
     {
         parent::handleSelectParams($params);
-        
+
         if (empty($params['customJoin'])) {
             $params['customJoin'] = '';
         }
-        
+
         $params['customJoin'] .= "
             LEFT JOIN `account_contact` AS accountContact
             ON accountContact.contact_id = contact.id AND accountContact.account_id = contact.account_id AND accountContact.deleted = 0
         ";
     }
-    
-    public function afterSave(Entity $entity)
+
+    public function afterSave(Entity $entity, array $options)
     {
-        $result = parent::afterSave($entity);
-        
+        $result = parent::afterSave($entity, $options);
+
         $accountIdChanged = $entity->has('accountId') && $entity->get('accountId') != $entity->getFetched('accountId');
         $titleChanged = $entity->has('title') && $entity->get('title') != $entity->getFetched('title');
-            
+
         if ($accountIdChanged) {
             $accountId = $entity->get('accountId');
             if (empty($accountId)) {
@@ -54,7 +54,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
                 return $result;
             }
         }
-            
+
         if ($titleChanged) {
             if (empty($accountId)) {
                 $accountId = $entity->getFetched('accountId');
@@ -63,11 +63,10 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
-            
-                
+
         if ($accountIdChanged || $titleChanged) {
             $pdo = $this->getEntityManager()->getPDO();
-            
+
             $sql = "
                 SELECT id, role FROM account_contact
                 WHERE
@@ -92,7 +91,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
-        
+
         return $result;
     }
 }

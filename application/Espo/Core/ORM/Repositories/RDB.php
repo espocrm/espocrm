@@ -140,10 +140,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function beforeRemove(Entity $entity)
+    protected function beforeRemove(Entity $entity, array $options = array())
     {
-        parent::beforeRemove($entity);
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
+        parent::beforeRemove($entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity, $options);
 
         $nowString = date('Y-m-d H:i:s', time());
         if ($entity->hasField('modifiedAt')) {
@@ -154,46 +154,46 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function afterRemove(Entity $entity)
+    protected function afterRemove(Entity $entity, array $options = array())
     {
-        parent::afterRemove($entity);
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
+        parent::afterRemove($entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity, $options);
     }
 
-    public function remove(Entity $entity)
+    public function remove(Entity $entity, array $options = array())
     {
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity);
+        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity, $options);
 
-        $result = parent::remove($entity);
+        $result = parent::remove($entity, $options);
         if ($result) {
-            $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity);
+            $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity, $options);
         }
         return $result;
     }
 
-    protected function beforeSave(Entity $entity)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
-        parent::beforeSave($entity);
+        parent::beforeSave($entity, $options);
 
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity);
+        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity, $options);
     }
 
-    protected function afterSave(Entity $entity)
+    protected function afterSave(Entity $entity, array $options = array())
     {
         if (!empty($this->restoreData)) {
             $entity->set($this->restoreData);
             $this->restoreData = null;
         }
-        parent::afterSave($entity);
+        parent::afterSave($entity, $options);
 
         $this->handleEmailAddressSave($entity);
         $this->handlePhoneNumberSave($entity);
         $this->handleSpecifiedRelations($entity);
 
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity);
+        $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity, $options);
     }
 
-    public function save(Entity $entity)
+    public function save(Entity $entity, array $options = array())
     {
         $nowString = date('Y-m-d H:i:s', time());
         $restoreData = array();
@@ -221,11 +221,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
             $entity->clear('modifiedById');
         } else {
-            if ($entity->hasField('modifiedAt')) {
-                $entity->set('modifiedAt', $nowString);
-            }
-            if ($entity->hasField('modifiedById')) {
-                $entity->set('modifiedById', $this->entityManager->getUser()->id);
+            if (empty($options['silent'])) {
+                if ($entity->hasField('modifiedAt')) {
+                    $entity->set('modifiedAt', $nowString);
+                }
+                if ($entity->hasField('modifiedById')) {
+                    $entity->set('modifiedById', $this->entityManager->getUser()->id);
+                }
             }
 
             if ($entity->has('createdById')) {
