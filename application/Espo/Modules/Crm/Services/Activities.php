@@ -441,12 +441,16 @@ class Activities extends \Espo\Core\Services\Base
                 task.deleted = 0 AND
                 (
                     (
+                        task.date_end IS NULL AND
                         task.date_start >= ".$pdo->quote($from)." AND
                         task.date_start < ".$pdo->quote($to)."
                     ) OR (
-                        (task.date_start IS NULL OR task.date_start = '') AND
                         task.date_end >= ".$pdo->quote($from)." AND
                         task.date_end < ".$pdo->quote($to)."
+                    ) OR (
+                        task.date_end_date IS NOT NULL AND
+                        task.date_end_date >= ".$pdo->quote($from)." AND
+                        task.date_end_date < ".$pdo->quote($to)."
                     )
                 ) AND
                 task.assigned_user_id = ".$pdo->quote($userId)."
