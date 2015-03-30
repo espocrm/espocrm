@@ -22,7 +22,8 @@
         "createdContact": "Contact",
         "createdOpportunity": "Opportunity",
         "campaign": "Campaign",
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "targetList": "Target List"
     },
     "links": {
         "targetLists": "Target Lists",

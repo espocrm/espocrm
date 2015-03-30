@@ -26,6 +26,13 @@ use Espo\ORM\Entity;
 
 class Lead extends \Espo\Core\ORM\Repositories\RDB
 {
+    public function afterSave(Entity $entity, array $options)
+    {
+        parent::afterSave($entity, $options);
 
+        if ($entity->has('targetListId') && $entity->isNew()) {
+        	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
+        }
+    }
 }
 

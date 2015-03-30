@@ -142,6 +142,15 @@
             "layoutMassUpdateDisabled": true,
             "noLoad": true,
             "noSave": true
+        },
+        "targetList": {
+            "type": "link",
+            "notStorable": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutSearchDisabled": true,
+            "entity": "TargetList"
         }
     },
     "links": {

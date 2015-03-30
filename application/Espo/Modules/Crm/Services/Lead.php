@@ -68,9 +68,6 @@ class Lead extends \Espo\Services\Record
                 $this->getEntityManager()->saveEntity($email);
             }
         }
-        if (!empty($data['targetListId'])) {
-        	$this->getEntityManager()->getRepository('Lead')->relate($entity, 'targetLists', $data['targetListId']);
-        }
         if ($entity->get('campaignId')) {
         	$campaign = $this->getEntityManager()->getEntity('Campaign', $entity->get('campaignId'));
         	if ($campaign) {
