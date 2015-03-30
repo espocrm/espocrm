@@ -1,7 +1,7 @@
 {
    "params":[
    ],
-   "notCreatable": true,
+   "notCreatable": false,
    "filter": true,
    "fieldDefs":{
       "type":"int",
