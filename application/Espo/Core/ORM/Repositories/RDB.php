@@ -241,7 +241,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
         $this->restoreData = $restoreData;
 
-        $result = parent::save($entity);
+        $result = parent::save($entity, $options);
 
         return $result;
     }

@@ -96,7 +96,7 @@ class HookManager
     public function process($scope, $hookName, $injection = null, array $options = array())
     {
         if ($scope != 'Common') {
-            $this->process('Common', $hookName, $injection);
+            $this->process('Common', $hookName, $injection, $options);
         }
 
         if (!empty($this->data[$scope])) {
