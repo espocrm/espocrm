@@ -356,8 +356,13 @@ class Import extends \Espo\Services\Record
         $entity->set('assignedUserId', $this->getUser()->id);
 
         if (!empty($params['defaultValues'])) {
-            $entity->set(get_object_vars($params['defaultValues']));
+            $v = get_object_vars($params['defaultValues']);
+            $entity->set($v);
         }
+
+
+        echo $entity->get('targetListId');
+        die;
 
         $fieldsDefs = $entity->getFields();
         $relDefs = $entity->getRelations();

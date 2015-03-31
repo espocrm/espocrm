@@ -136,7 +136,7 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
             var fieldList = [];
             for (var field in defs) {
                 var d = defs[field];
-                if (d.readOnly) {
+                if (d.readOnly || d.disabled || d.importDisabled) {
                     continue;
                 }
                 fieldList.push(field);
@@ -155,8 +155,7 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 
             for (var field in fields) {
                 var d = fields[field];
-
-                if (d.readOnly) {
+                if (d.readOnly || d.disabled || d.importDisabled) {
                     continue;
                 }
 
@@ -185,8 +184,6 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                     }
                 }, this);
             }
-
-            console.log(fieldList);
 
             $select = $('<select>').addClass('form-control').attr('id', 'column-' + num.toString());
             $option = $('<option>').val('').html('-' + this.translate('Skip', 'labels', 'Import') + '-');

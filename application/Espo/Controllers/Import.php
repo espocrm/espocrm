@@ -78,7 +78,7 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');
         $attachment->set('role', 'Import File');
-        $attachment->set('name', 'import-batch-file.csv');
+        $attachment->set('name', 'import-file.csv');
         $this->getEntityManager()->saveEntity($attachment);
 
         $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
