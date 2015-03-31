@@ -197,7 +197,16 @@ class Importer
                 $email->set('parentType', 'Account');
                 $email->set('parentId', $account->id);
                 return true;
-            }
+            } else {
+	            $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
+	                'emailAddress' => $emailAddress
+	            ))->findOne();
+	            if ($lead) {
+	                $email->set('parentType', 'Lead');
+	                $email->set('parentId', $lead->id);
+	                return true;
+	            }
+	       	}
         }
     }
 
