@@ -13,7 +13,8 @@
         "accountRole": "Title",
         "description": "Description",
         "campaign": "Campaign",
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "targetList": "Target List"
     },
     "links": {
         "opportunities": "Opportunities",

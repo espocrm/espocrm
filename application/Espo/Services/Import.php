@@ -328,16 +328,11 @@ class Import extends \Espo\Services\Record
             'id' => $import->id,
             'countCreated' => count($result['importedIds']),
             'countUpdated' => count($result['updatedIds']),
-            //'importedIds' => $result['importedIds'],
-            //'duplicateIds' => $result['duplicateIds'],
         );
     }
 
     public function importRow($scope, array $fields, array $row, array $params = array())
     {
-        // TODO create related records or related if exists, e.g. Account from accountName (skip users)
-        // Duplicate check
-
         $id = null;
         if (!empty($params['action'])) {
             if ($params['action'] == 'createAndUpdate' && in_array('id', $fields)) {
@@ -360,12 +355,17 @@ class Import extends \Espo\Services\Record
             $entity->set($v);
         }
 
-
-        echo $entity->get('targetListId');
-        die;
-
         $fieldsDefs = $entity->getFields();
         $relDefs = $entity->getRelations();
+
+        $phoneFieldList = [];
+        if (!empty($fieldsDefs['phoneNumber']) && !empty($fieldsDefs['phoneNumber']['type']) && $fieldsDefs['phoneNumber']['type'] == 'phone') {
+            $typeList = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.phoneNumber.typeList', []);
+            foreach ($typeList as $type) {
+                $attr = $field . str_replace(' ', '_', ucfirst($type));
+                $phoneFieldList[] = 'phoneNumber' . $attr;
+            }
+        }
 
         foreach ($fields as $i => $field) {
             if (!empty($field)) {
@@ -419,6 +419,24 @@ class Import extends \Espo\Services\Record
                         }
                         $entity->set($field, $this->parseValue($entity, $field, $value, $params));
                     }
+                } else {
+                    if (in_array($field, $phoneFieldList) && !empty($value)) {
+                        $phoneNumberData = $entity->get('phoneNumberData');
+                        $isPrimary = false;
+                        if (empty($phoneNumberData)) {
+                            $phoneNumberData = [];
+                            $isPrimary = true;
+                        }
+                        $type = str_replace('phoneNumber', '', $field);
+                        $type = str_replace('_', ' ', $type);
+                        $o = new \StdClass();
+                        $o->phoneNumber = $value;
+                        $o->type = $type;
+                        $o->primary = $isPrimary;
+                        $phoneNumberData[] = $o;
+
+                        $entity->set('phoneNumberData', $phoneNumberData);
+                    }
                 }
             }
         }
@@ -444,7 +462,6 @@ class Import extends \Espo\Services\Record
                     }
                 }
             }
-
         }
 
         $result = array();

@@ -100,10 +100,10 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 
             $row = $('<tr>');
             if (this.formData.headerRow) {
-                $cell = $('<th>').html(this.translate('Header Row Value', 'labels', 'Import'));
+                $cell = $('<th>').attr('width', '27%').html(this.translate('Header Row Value', 'labels', 'Import'));
                 $row.append($cell);
             }
-            $cell = $('<th>').html(this.translate('Field', 'labels', 'Import'));
+            $cell = $('<th>').attr('width', '33%').html(this.translate('Field', 'labels', 'Import'));
             $row.append($cell);
             $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
             $row.append($cell);
@@ -142,12 +142,14 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 fieldList.push(field);
             }
 
+            fieldList = fieldList.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
             return fieldList;
         },
 
-        getFieldDropdown: function (num, name) {
-            name = name || false;
-
+        getAttributeList: function () {
             var fields = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
 
             var fieldList = [];
@@ -161,6 +163,14 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 
                 if (~['modifiedBy', 'createdBy', 'modifiedAt', 'createdAt'].indexOf(field)) {
                     continue;
+                }
+
+                if (d.type == 'phone') {
+                    (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList' ) || []).map(function (item) {
+                        return item.replace(/\s/g, '_');
+                    }, this).forEach(function (item) {
+                        fieldList.push(field + Espo.Utils.upperCaseFirst(item));
+                    }, this);
                 }
 
                 if (d.type == 'link') {
@@ -184,6 +194,18 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                     }
                 }, this);
             }
+
+            fieldList = fieldList.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
+            return fieldList
+        },
+
+        getFieldDropdown: function (num, name) {
+            name = name || false;
+
+            var fieldList = this.getAttributeList();
 
             $select = $('<select>').addClass('form-control').attr('id', 'column-' + num.toString());
             $option = $('<option>').val('').html('-' + this.translate('Skip', 'labels', 'Import') + '-');

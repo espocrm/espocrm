@@ -204,7 +204,13 @@
         "modifiedBy": "Modified By",
         "description": "Description",
         "address": "Address",
-        "phoneNumber": "Phone"
+        "phoneNumber": "Phone",
+        "phoneNumberMobile": "Phone (Mobile)",
+        "phoneNumberHome": "Phone (Home)",
+        "phoneNumberFax": "Phone (Fax)",
+        "phoneNumberOffice": "Phone (Office)",
+        "phoneNumberOther": "Phone (Other)"
+
     },
     "links": {
         "assignedUser": "Assigned User",
