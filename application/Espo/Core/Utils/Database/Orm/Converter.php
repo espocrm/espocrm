@@ -158,6 +158,7 @@ class Converter
         }
 
         $ormMeta[$entityName]['fields'] = $this->convertFields($entityName, $entityMeta);
+        $ormMeta = $this->correctFields($ormMeta);
 
         $convertedLinks = $this->convertLinks($entityName, $entityMeta, $ormMeta);
 
@@ -168,47 +169,6 @@ class Converter
 
     public function afterProcess(array $ormMeta)
     {
-        $entityDefs = $this->getEntityDefs();
-
-        $currentOrmMeta = $ormMeta;
-        //load custom field definitions and customCodes
-        foreach($currentOrmMeta as $entityName => $entityParams) {
-            foreach($entityParams['fields'] as $fieldName => $fieldParams) {
-
-                //load custom field definitions
-                $fieldType = ucfirst($fieldParams['type']);
-                $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\'.$fieldType;
-                if (!class_exists($className)) {
-                    $className = '\Espo\Core\Utils\Database\Orm\Fields\\'.$fieldType;
-                }
-
-                if (class_exists($className) && method_exists($className, 'load')) {
-                    $helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
-                    $fieldResult = $helperClass->process( $fieldName, $entityName );
-                    if (isset($fieldResult['unset'])) {
-                        $ormMeta = Util::unsetInArray($ormMeta, $fieldResult['unset']);
-                        unset($fieldResult['unset']);
-                    }
-
-                    $ormMeta = Util::merge($ormMeta, $fieldResult);
-
-                } //END: load custom field definitions
-
-                //todo move to separate file
-                //add a field 'isFollowed' for scopes with 'stream => true'
-                $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
-                if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
-                    if (!isset($entityParams['fields']['isFollowed'])) {
-                        $ormMeta[$entityName]['fields']['isFollowed'] = array(
-                            'type' => 'varchar',
-                            'notStorable' => true,
-                        );
-                    }
-                } //END: add a field 'isFollowed' for stream => true
-
-            }
-        }
-
         foreach($ormMeta as $entityName => &$entityParams) {
             foreach($entityParams['fields'] as $fieldName => &$fieldParams) {
 
@@ -234,7 +194,6 @@ class Converter
                         break;
                 }
             }
-
         }
 
         return $ormMeta;
@@ -306,6 +265,59 @@ class Converter
         }
 
         return $outputMeta;
+    }
+
+    /**
+     * Correct fields defenitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
+     *
+     * @param  array  $ormMeta
+     *
+     * @return array
+     */
+    protected function correctFields(array $ormMeta)
+    {
+        $entityDefs = $this->getEntityDefs();
+
+        $currentOrmMeta = $ormMeta;
+        //load custom field definitions and customCodes
+        foreach($currentOrmMeta as $entityName => $entityParams) {
+            foreach($entityParams['fields'] as $fieldName => $fieldParams) {
+
+                //load custom field definitions
+                $fieldType = ucfirst($fieldParams['type']);
+                $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\'.$fieldType;
+                if (!class_exists($className)) {
+                    $className = '\Espo\Core\Utils\Database\Orm\Fields\\'.$fieldType;
+                }
+
+                if (class_exists($className) && method_exists($className, 'load')) {
+                    $helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
+                    $fieldResult = $helperClass->process( $fieldName, $entityName );
+                    if (isset($fieldResult['unset'])) {
+                        $ormMeta = Util::unsetInArray($ormMeta, $fieldResult['unset']);
+                        unset($fieldResult['unset']);
+                    }
+
+                    $ormMeta = Util::merge($ormMeta, $fieldResult);
+
+                } //END: load custom field definitions
+
+                //todo move to separate file
+                //add a field 'isFollowed' for scopes with 'stream => true'
+                $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
+                if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
+                    if (!isset($entityParams['fields']['isFollowed'])) {
+                        $ormMeta[$entityName]['fields']['isFollowed'] = array(
+                            'type' => 'varchar',
+                            'notStorable' => true,
+                        );
+                    }
+                } //END: add a field 'isFollowed' for stream => true
+
+            }
+        }
+
+        return $ormMeta;
     }
 
     protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta = null)
