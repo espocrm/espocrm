@@ -16,5 +16,8 @@
    "linkDefs": {
       "type": "belongsTo",
       "entity": "Attachment"
+   },
+   "fieldDefs":{
+      "skip": true
    }
 }

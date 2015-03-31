@@ -42,6 +42,7 @@ class BelongsTo extends Base
                 'type' => 'foreign',
                 'relation' => $linkName,
                 'foreign' => $this->getForeignField('name', $foreignEntityName),
+                'notStorable' => false,
             );
         }
 
