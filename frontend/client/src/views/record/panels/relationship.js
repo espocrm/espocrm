@@ -113,6 +113,7 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                             listLayout: listLayout,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                            disableButtons: true,
                             el: this.options.el + ' .list-container',
                         }, function (view) {
                             view.render();

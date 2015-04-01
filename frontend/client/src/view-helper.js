@@ -172,7 +172,7 @@
                 var style = options.hash.style || 'default';
                 var scope = options.hash.scope || null;
                 var label = options.hash.label || name;
-                return new Handlebars.SafeString('<button class="btn btn-'+style+'" data-action="'+name+'" type="button">'+self.language.translate(label, 'labels', scope)+'</button>');
+                return new Handlebars.SafeString('<button class="btn btn-'+style+' action" data-action="'+name+'" type="button">'+self.language.translate(label, 'labels', scope)+'</button>');
             });
 
             Handlebars.registerHelper('hyphen', function (string) {

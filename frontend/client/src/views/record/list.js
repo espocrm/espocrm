@@ -56,6 +56,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         rowActionsColumnWidth: 25,
 
+        buttonList: [],
+
         events: {
             'click a.link': function (e) {
                 if (!this.scope || this.selectable) {
@@ -211,13 +213,13 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: this.collection.total - this.collection.length,
-
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rows: this.rows,
-                topBar: paginationTop || this.checkboxes,
+                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.disableButtons),
                 bottomBar: paginationBottom,
-                checkAllResultDisabled: this.checkAllResultDisabled
+                checkAllResultDisabled: this.checkAllResultDisabled,
+                buttonList: this.buttonList
             };
         },
 
@@ -230,6 +232,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
+
+            this.disableButtons = this.options.disableButtons || false;
 
             if ('checkAllResultDisabled' in this.options) {
                 this.checkAllResultDisabled = this.options.checkAllResultDisabled;
@@ -455,6 +459,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.scope = this.collection.name || null;
             this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
+            this.buttonList = Espo.Utils.clone(this.buttonList);
 
             var checkAllResultMassActionList = [];
             this.checkAllResultMassActionList.forEach(function (item) {
@@ -463,8 +468,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             	}
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
-
-            Espo.Utils.clone(this.massActionList);
 
             if (this.getConfig().get('disableExport') && !this.getUser().get('isAdmin')) {
             	this.removeMassAction('export');

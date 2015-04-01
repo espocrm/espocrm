@@ -43,7 +43,8 @@
         "Email Address": "Email Address",
         "Mark Read": "Mark Read",
         "Sending...": "Sending...",
-        "Save Draft": "Save Draft"
+        "Save Draft": "Save Draft",
+        "Mark all as read": "Mark all as read"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",

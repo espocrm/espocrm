@@ -234,6 +234,19 @@ class Email extends Record
         return true;
     }
 
+    public function markAllAsRead()
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET is_read = 1
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($this->getUser()->id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
     public function markAsRead($id)
     {
 

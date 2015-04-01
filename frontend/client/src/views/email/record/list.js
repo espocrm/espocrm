@@ -25,6 +25,14 @@ Espo.define('Views.Email.Record.List', 'Views.Record.List', function (Dep) {
 
         massActionList: ['remove'],
 
+        buttonList: [
+            {
+                name: 'markAllAsRead',
+                label: 'Mark all as read',
+                style: 'default'
+            }
+        ],
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -50,6 +58,16 @@ Espo.define('Views.Email.Record.List', 'Views.Record.List', function (Dep) {
                 }
             }, this);
         },
+
+        actionMarkAllAsRead: function () {
+            $.ajax({
+                url: 'Email/action/markAllAsRead',
+                type: 'POST'
+            });
+            this.collection.forEach(function (model) {
+                model.set('isRead', true);
+            }, this);
+        }
 
     });
 });

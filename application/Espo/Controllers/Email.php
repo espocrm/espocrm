@@ -75,5 +75,13 @@ class Email extends \Espo\Core\Controllers\Record
 
         return $this->getRecordService()->markAsReadByIds($ids);
     }
+
+    public function actionMarkAllAsRead($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        return $this->getRecordService()->markAllAsRead();
+    }
 }
 
