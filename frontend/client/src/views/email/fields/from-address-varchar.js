@@ -82,6 +82,7 @@ Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', fun
         },
 
         parseNameFromStringAddress: function (value) {
+            value = value || '';
             if (~value.indexOf('<')) {
                 var name = value.replace(/<(.*)>/, '').trim();
                 if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {

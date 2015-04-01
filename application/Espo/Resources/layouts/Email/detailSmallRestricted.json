@@ -2,10 +2,9 @@
     {
         "label":"",
         "rows":[
-            [{"name":"dateSent", "readOnly": true}, {"name":"assignedUser"}],
-            [{"name":"parent"}, {"name":"teams"}],
-            [{"name":"from", "readOnly": true}, {"name":"cc", "readOnly": true}],
-            [{"name":"to", "readOnly": true}],
+            [{"name":"dateSent", "readOnly": true}, {"name":"to", "readOnly": true}],
+            [{"name":"parent"}, {"name":"from", "readOnly": true}],
+            [false, {"name":"cc", "readOnly": true}],
             [{"name":"name", "readOnly": true, "fullWidth": true}],
             [{"name":"body", "readOnly": true, "fullWidth": true}],
             [{"name":"attachments", "readOnly": true, "fullWidth": true}]
