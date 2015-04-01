@@ -33,6 +33,21 @@ You need to have nodejs and Grunt CLI installed.
 
 The build will be created in the `build` directory.
 
+### How to make translation
+
+Build po file with command:
+`node po.js en_EN`
+(specify needed language instead of en_EN)
+
+After that tranlate the generated po file.
+
+Build json files from the translated po file:
+
+1. Put your po file espocrm-en_EN.po to the `build` directory
+2. Run `node lang.js en_EN`
+
+The files will be created in build directory.
+
 ### License
 
 EspoCRM is published under the GNU GPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
