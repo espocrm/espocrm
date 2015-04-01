@@ -17,40 +17,55 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 (function (Espo, _, Backbone) {
 
     Espo.Router = Backbone.Router.extend({
 
         routes: {
-
             "logout": "logout",
-            
             "clearCache": "clearCache",
-
             "search/:text": "search",
-
             ":controller/view/:id/:options": "view",
             ":controller/view/:id": "view",
             ":controller/edit/:id/:options": "edit",
             ":controller/edit/:id": "edit",
             ":controller/create": "create",
-
             ":controller/:action/:options": "action",
             ":controller/:action": "action",
-
             ":controller": "defaultAction",
-
             "*actions": "home",
         },
 
         _last: null,
+
+        confirmLayout: false,
+
+        confirmLeaveOutMessage: 'Are you sure?', 
 
         initialize: function () {
             this.history = [];
             this.on('route', function () {
                 this.history.push(Backbone.history.fragment);
             });
+        },
+
+        execute: function (callback, args, name) {
+            if (this.confirmLayout) {
+                if (confirm(this.confirmLeaveOutMessage)) {
+                    this.confirmLayout = false;
+                    Backbone.Router.prototype.execute.call(this, callback, args, name);
+                } else {
+                    this.navigateBack({trigger: false});
+                }
+            } else {
+                Backbone.Router.prototype.execute.call(this, callback, args, name);
+            }
+        },
+
+        navigate: function (fragment, options) {
+            this.history.push(fragment);
+            return Backbone.Router.prototype.navigate.call(this, fragment, options);
         },
 
         navigateBack: function (options) {
@@ -86,12 +101,12 @@
         },
 
         record: function (controller, action, id, options) {
-            var options = this._parseOptionsParams(options);            
-            options.id = id;            
+            var options = this._parseOptionsParams(options);
+            options.id = id;
             this.dispatch(controller, action, options);
         },
 
-        view: function (controller, id, options) {            
+        view: function (controller, id, options) {
             this.record(controller, 'view', id, options);
         },
 
@@ -123,7 +138,7 @@
             this.dispatch(null, 'logout');
             this.navigate('', {trigger: false});
         },
-        
+
         clearCache: function () {
             this.dispatch(null, 'clearCache');
         },
@@ -140,7 +155,7 @@
 
         getLast: function () {
             return this._last;
-        },
+        }
     });
 
 

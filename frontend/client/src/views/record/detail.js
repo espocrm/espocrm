@@ -102,6 +102,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             }
         },
 
+        setConfirmLayout: function (value) {
+            this.getRouter().confirmLayout = value;
+        },
+
         actionEdit: function () {
             if (this.editModeEnabled) {
                 this.setEditMode();
@@ -208,6 +212,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                     fieldView.render();
                 }
             }
+            this.mode = 'edit';
         },
 
         setDetailMode: function () {
@@ -222,11 +227,13 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                     fieldView.render();
                 }
             }
+            this.mode = 'detail';
         },
 
         cancelEdit: function () {
             this.model.set(this.attributes);
             this.setDetailMode();
+            this.setConfirmLayout(false);
         },
 
         delete: function () {
@@ -304,6 +311,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 throw new Error('Model has not been injected into record view.');
             }
 
+            this.on('remove', function () {
+                this.setConfirmLayout(false);
+            }, this);
+
             this.numId = Math.floor((Math.random() * 10000) + 1);
             this.id = Espo.Utils.toDom(this.scope) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
@@ -358,6 +369,12 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.attributes = this.model.getClonedAttributes();
             }.bind(this));
 
+            this.listenTo(this.model, 'change', function () {
+                if (this.mode == 'edit') {
+                    this.setConfirmLayout(true);
+                }
+            }, this);
+
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this._initDependancy();
         },
@@ -370,6 +387,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.notify('Saved', 'success');
             }
             this.enableButtons();
+            this.setConfirmLayout(false);
         },
 
         beforeSave: function () {

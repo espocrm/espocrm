@@ -52,11 +52,17 @@ Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
         },
 
         actionCancel: function () {
+            this.setConfirmLayout(false);
             this.cancel();
         },
 
         cancel: function () {
             this.exit('cancel');
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.setConfirmLayout(true);
         },
 
     });

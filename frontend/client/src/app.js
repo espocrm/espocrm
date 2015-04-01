@@ -152,6 +152,7 @@ _.extend(Espo.App.prototype, {
         this.router = new Espo.Router();
         this._viewHelper.router = this.router;
         this.baseController._router = this.router;
+        this.router.confirmLeaveOutMessage = this.language.translate('confirmLeaveOutMessage', 'messages');
         this.router.on('routed', function (params) {
             this.doAction(params);
         }.bind(this));
