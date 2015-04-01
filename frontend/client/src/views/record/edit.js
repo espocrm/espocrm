@@ -64,7 +64,6 @@ Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.setConfirmLayout(true);
         },
 
     });
