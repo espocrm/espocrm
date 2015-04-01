@@ -57,12 +57,24 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
             }
         },
 
+        handleCcField: function () {
+            if (!this.model.get('cc')) {
+                this.hideField('cc');
+            } else {
+                this.showField('cc');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
             this.handleAttachmentField();
             this.listenTo(this.model, 'change:attachmentsIds', function () {
                 this.handleAttachmentField();
+            }, this);
+            this.handleCcField();
+            this.listenTo(this.model, 'change:cc', function () {
+                this.handleCcField();
             }, this);
         },
 
