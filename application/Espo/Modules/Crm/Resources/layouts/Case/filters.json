@@ -2,10 +2,10 @@
 	"account",
 	"assignedUser",
 	"contact",
+	"createdAt",
 	"number",
 	"status",
 	"priority",
 	"description",
-	"teams",
-	"createdAt"
+	"teams"
 ]

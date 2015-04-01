@@ -1,6 +1,7 @@
 [
 	"account",
 	"assignedUser",
+	"createdAt",
 	"dateStart",
 	"status",
 	"parent",

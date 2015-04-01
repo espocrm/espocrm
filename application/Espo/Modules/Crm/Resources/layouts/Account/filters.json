@@ -1,8 +1,8 @@
 [
 	"assignedUser",
 	"billingAddress",
+	"createdAt",
 	"emailAddress",
 	"industry",
-	"type",
-	"createdAt"
+	"type"
 ]

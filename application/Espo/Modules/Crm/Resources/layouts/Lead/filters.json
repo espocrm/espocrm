@@ -2,10 +2,10 @@
     "assignedUser",
     "address",
     "campaign",
+    "createdAt",
     "status",
     "source",
     "opportunityAmountConverted",
     "targetLists",
-    "teams",
-	"createdAt"
+    "teams"
 ]

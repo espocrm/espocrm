@@ -1,8 +1,9 @@
 [
 	"account",
 	"assignedUser",
-	"status",
-	"priority",
+	"createdAt",
 	"dateStart",
-	"dateEnd"
+	"dateEnd",
+	"status",
+	"priority"
 ]

@@ -1,6 +1,7 @@
 [
+    "createdAt",
+    "expirationDate",
     "type",
     "status",
-    "publishDate",
-    "expirationDate"
+    "publishDate"
 ]

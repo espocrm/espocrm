@@ -1,9 +1,9 @@
 [
 	"account",
 	"assignedUser",
+	"createdAt",
 	"emailAddress",
 	"title",
 	"address",
-	"targetLists",
-	"createdAt"
+	"targetLists"
 ]
