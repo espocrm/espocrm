@@ -158,7 +158,7 @@ class Converter
         }
 
         $ormMeta[$entityName]['fields'] = $this->convertFields($entityName, $entityMeta);
-        $ormMeta = $this->correctFields($ormMeta);
+        $ormMeta = $this->correctFields($entityName, $ormMeta);
 
         $convertedLinks = $this->convertLinks($entityName, $entityMeta, $ormMeta);
 
@@ -274,48 +274,45 @@ class Converter
      *
      * @return array
      */
-    protected function correctFields(array $ormMeta)
+    protected function correctFields($entityName, array $ormMeta)
     {
         $entityDefs = $this->getEntityDefs();
 
-        $currentOrmMeta = $ormMeta;
+        $entityMeta = $ormMeta[$entityName];
         //load custom field definitions and customCodes
-        foreach($currentOrmMeta as $entityName => $entityParams) {
-            foreach($entityParams['fields'] as $fieldName => $fieldParams) {
+        foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
 
-                //load custom field definitions
-                $fieldType = ucfirst($fieldParams['type']);
-                $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\'.$fieldType;
-                if (!class_exists($className)) {
-                    $className = '\Espo\Core\Utils\Database\Orm\Fields\\'.$fieldType;
+            //load custom field definitions
+            $fieldType = ucfirst($fieldParams['type']);
+            $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\' . $fieldType;
+            if (!class_exists($className)) {
+                $className = '\Espo\Core\Utils\Database\Orm\Fields\\' . $fieldType;
+            }
+
+            if (class_exists($className) && method_exists($className, 'load')) {
+                $helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
+                $fieldResult = $helperClass->process( $fieldName, $entityName );
+                if (isset($fieldResult['unset'])) {
+                    $ormMeta = Util::unsetInArray($ormMeta, $fieldResult['unset']);
+                    unset($fieldResult['unset']);
                 }
 
-                if (class_exists($className) && method_exists($className, 'load')) {
-                    $helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
-                    $fieldResult = $helperClass->process( $fieldName, $entityName );
-                    if (isset($fieldResult['unset'])) {
-                        $ormMeta = Util::unsetInArray($ormMeta, $fieldResult['unset']);
-                        unset($fieldResult['unset']);
-                    }
+                $ormMeta = Util::merge($ormMeta, $fieldResult);
 
-                    $ormMeta = Util::merge($ormMeta, $fieldResult);
-
-                } //END: load custom field definitions
-
-                //todo move to separate file
-                //add a field 'isFollowed' for scopes with 'stream => true'
-                $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
-                if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
-                    if (!isset($entityParams['fields']['isFollowed'])) {
-                        $ormMeta[$entityName]['fields']['isFollowed'] = array(
-                            'type' => 'varchar',
-                            'notStorable' => true,
-                        );
-                    }
-                } //END: add a field 'isFollowed' for stream => true
-
-            }
+            } //END: load custom field definitions
         }
+
+        //todo move to separate file
+        //add a field 'isFollowed' for scopes with 'stream => true'
+        $scopeDefs = $this->getMetadata()->get('scopes.'.$entityName);
+        if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
+            if (!isset($entityMeta['fields']['isFollowed'])) {
+                $ormMeta[$entityName]['fields']['isFollowed'] = array(
+                    'type' => 'varchar',
+                    'notStorable' => true,
+                );
+            }
+        } //END: add a field 'isFollowed' for stream => true
 
         return $ormMeta;
     }
