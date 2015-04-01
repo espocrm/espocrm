@@ -114,6 +114,8 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
                 data: JSON.stringify({
                     id: id
                 }),
+                timeout: 0,
+                async: false,
                 error: function (xhr) {
                     this.$el.find('.panel.upload').removeClass('hidden');
                     var msg = xhr.getResponseHeader('X-Status-Reason');

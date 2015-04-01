@@ -63,6 +63,8 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
                         data: JSON.stringify({
                             id: id
                         }),
+                        timeout: 0,
+                        async: false,
                         error: function (xhr) {
                             var msg = xhr.getResponseHeader('X-Status-Reason');
                             this.showErrorNotification(this.translate('Error') + ': ' + msg);
@@ -174,6 +176,8 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
                 data: JSON.stringify({
                     id: id
                 }),
+                timeout: 0,
+                async: false,
                 error: function (xhr) {
                     this.$el.find('.panel.upload').removeClass('hidden');
                     var msg = xhr.getResponseHeader('X-Status-Reason');
