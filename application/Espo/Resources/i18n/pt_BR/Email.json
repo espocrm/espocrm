@@ -24,7 +24,8 @@
 		"Draft": "Rascunho",
 		"Sending": "Enviando",
 		"Sent": "Enviado",
-		"Archived": "Arquivado"
+		"Archived": "Arquivado",
+        "Received": "Recebido"
 	},
 	"labels": {
 		"Create Email": "Criar e-mail",
@@ -38,14 +39,22 @@
 		"Email Accounts": "Contas de e-mail",
         "Send Test Email": "Enviar e-mail de teste",
         "Send": "Enviar",
-        "Email Address": "Endereço de E-mail"
+        "Email Address": "Endereço de E-mail",
+        "Mark Read": "Marcar como lido",
+        "Sending...": "Enviando...",
+        "Save Draft": "Salvar rascunho"
 	},
     "messages": {
         "noSmtpSetup": "Nenhuma configuração SMTP. {link}.",
-        "testEmailSent": "O e-mail de teste enviado"
+        "testEmailSent": "O e-mail de teste enviado",
+        "emailSent": "O e-mail foi enviado"
     },
 	"presetFilters": {
 		"sent": "Enviado",
-		"archived": "Arquivado"
-	}
+		"archived": "Arquivado",
+        "draft": "Rascunho"
+    },
+    "massActions": {
+        "markAsRead": "Marcar como lido"
+    }
 }

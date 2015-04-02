@@ -13,7 +13,8 @@
         "passwordConfirm": "Confirmação da Senha",
         "newPassword": "Nova senha",
         "newPasswordConfirm": "Confirme a nova senha",
-        "avatar": "Avatar"
+        "avatar": "Avatar",
+        "isActive": "Está ativo"
     },
     "links": {
         "teams": "Times",
@@ -28,12 +29,15 @@
         "Teams and Access Control": "Times e controle de acesso",
         "Forgot Password?": "Esqueceu a senha?",
         "Password Change Request": "Solicitar troca da senha",
-        "Email Address": "Endereço de e-mail"
+        "Email Address": "Endereço de e-mail",
+        "External Accounts": "Contas externas",
+        "Email Accounts": "Contas de e-mail"
     },
 	"tooltips": {
 		"defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão.",
 		"userName": "Letras a-z, números 0-9 e underscores são permitidos.",
         "isAdmin": "Usuário Admin pode acessar tudo.",
+        "isActive": "Se desmarcado, o usuário não conseguirá logar.",
         "teams": "Times aos quais este usuário pertence. O controle de acesso é herdado das regras do time.",
         "roles": "Regras de acesso adicionais. Use se o usuário não pertence a nenhum time ou se for necessário extender o controle de acesso deste usuário."
 	},
@@ -51,5 +55,8 @@
         "forbidden": "Proibido, por favor tente mais tarde",
         "uniqueLinkHasBeenSent": "Um link único foi enviado para o endereço de e-mail informado.",
         "passwordChangedByRequest": "A senha foi atualizada."
+    },
+    "boolFilters": {
+        "onlyMyTeam": "Apenas meus time"
     }
 }

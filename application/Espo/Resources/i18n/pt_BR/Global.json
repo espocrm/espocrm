@@ -43,6 +43,8 @@
         "Loading...": "Carregando...",
         "Uploading...": "Enviando...",
         "Sending...": "Enviando...",
+		"Merging...": "Mesclando...",
+        "Merged": "Mesclado",
         "Removed": "Removido",
         "Posted": "Postado",
         "Linked": "Relacionado",
@@ -69,6 +71,7 @@
         "Details": "Detalhes",
         "Add Filter": "Adicionar filtro",
         "Add Dashlet": "Adicionar Dashlet",
+        "Edit Dashboard": "Editar Dashboard",
         "Add": "Adicionar",
         "Reset": "Resetar",
         "Menu": "Menu",
@@ -99,6 +102,7 @@
         "Update": "Atualizar",
         "Save": "Salvar",
         "Edit": "Editar",
+        "View": "Ver",
         "Cancel": "Cancelar",
         "Unlink": "Remover ligação",
         "Mass Update": "Atualização em Massa",
@@ -137,7 +141,9 @@
         "Submit": "Enviar",
         "Close": "Fechar",
         "Yes": "Sim",
-        "No": "Não"
+        "No": "Não",
+        "View": "Ver",
+        "Select All Result": "Selecionar todos"
     },
     "messages": {
         "notModified": "Você não modificou o registro",
@@ -167,12 +173,18 @@
         "noRecordsUpdated": "Nenhum registro foi atualizado",
         "massRemoveResult": "{count} registros foram removidos",
         "massRemoveResultSingle": "{count} registro foi removido",
-        "noRecordsRemoved": "Nenhum registro foi removido"
+        "noRecordsRemoved": "Nenhum registro foi removido",
+        "clickToRefresh": "Clique para atualizar",
+        "streamPostInfo": "Digite <strong>@usuario</strong> para mencionar usuários na postagem.\n\nSintaxe markdown disponível::\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]"
     },
     "boolFilters": {
-        "onlyMy": "Meus",
-        "open": "Aberto",
-        "active": "Ativo"
+        "onlyMy": "Meus"
+    },
+    "massActions": {
+        "remove": "Remover",
+        "merge": "Mesclar",
+        "massUpdate": "Atualização em Massa",
+        "export": "Exportar"
     },
     "fields": {
         "name": "Nome",
@@ -186,7 +198,10 @@
         "createdAt": "Criado em",
         "modifiedAt": "Modificado em",
         "createdBy": "Criado por",
-        "modifiedBy": "Modificado por"
+        "modifiedBy": "Modificado por",
+        "description": "Descrção",
+        "address": "Endereço",
+        "phoneNumber": "Telefone"
     },
     "links": {
         "assignedUser": "Usuário designado",
@@ -209,8 +224,7 @@
         "status": "{user} atualizou {field} em {entityType} {entity}",
         "update": "{user} atualizou {entityType} {entity}",
         "createRelated": "{user} criou {relatedEntityType} {relatedEntity} atribuido a {entityType} {entity}",
-        "emailReceived": "{entity} foi recebido por {entityType} {entity}",
-		"emailReceivedInitial": "O e-mail {email} foi recebido e criou {entityType} {entity}",
+
 		"mentionInPost": "{user} mencionado {mentioned} em {entityType} {entity}",
 
         "createThis": "{user} criou {entityType}",
@@ -218,11 +232,25 @@
         "assignThis": "{user} atribuiu {entityType} a {assignee}",
         "postThis": "{user} postou",
         "attachThis": "{user} anexou",
-        "statusThis": "{user} atualilou {field}",
+        "statusThis": "{user} atualizou {field}",
         "updateThis": "{user} atualizou {entityType}",
         "createRelatedThis": "{user} criou {relatedEntityType} {relatedEntity} relacionado a {entityType}",
-        "emailReceivedThis": "{entity} foi recebido",
-        "emailReceivedInitialThis": "O E-mail {email} foi recebido e criou este {entityType}"
+        
+		"emailReceivedFromThis": "O e-mail {email} foi recebido de {from}",
+        "emailReceivedInitialFromThis": "O e-mail {email} foi recebido de e {from} e criou um(a) {entityType}",
+
+        "emailReceivedThis": "O e-mail {email} foi recebido",
+        "emailReceivedInitialThis": "O e-mail {email} foi recebido e criou um(a) {entityType}",
+
+        "emailReceivedFrom": "O e-mail {email} relacionado a {entityType} {entity} foi recebido por {from}",
+        "emailReceivedFromInitial": "O e-mail {email} foi recebido de {from} e criou {entityType} {entity}",
+
+        "emailReceived": "O e-mail {email} relacionado a {entityType} {entity} foi recebido",
+        "emailReceivedInitial": "O e-mail {email} foi recebido e criou {entityType} {entity}",
+        "emailReceivedInitialFrom": "O e-mail {email} foi recebido de {from} e criou {entityType} {entity}",
+
+        "emailSent": "{by} enviou o e-mail {email} relacionado a {entityType} {entity}",
+        "emailSentThis": "{by} enviou o e-mail {email}"
     },
     "lists": {
         "monthNames": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
@@ -235,8 +263,8 @@
         "salutationName": {
             "Mr.": "Sr.",
             "Mrs.": "Sra.",
-            "Dr.": "Dr.",
-            "Drs.": "Drs."
+            "Ms.": "Srta.",
+            "Dr.": "Dr."
         },
         "language": {
             "af_ZA": "Afrikaans",

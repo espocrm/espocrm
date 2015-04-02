@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "action": "Ação",
+        "actionDate": "Data",
+        "data": "Dados",
+        "campaign": "Campanha",
+        "parent": "Alvo",
+        "object": "Objeto",
+        "application": "Aplicação"
+    },
+    "options": {
+    	"action": {
+            "Sent": "Enviado",
+            "Opened": "Aberto",
+            "Opted Out": "Cancelado",
+            "Bounced": "Bounced",
+            "Clicked": "Clicado",
+            "Lead Created": "Lead Criado"
+    	}
+    },
+    "labels": {
+        "All": "Tudo"
+    }
+}

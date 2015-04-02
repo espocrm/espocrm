@@ -11,7 +11,9 @@
         "Task": "Tarefa",
         "Case": "Atendimento",
         "InboundEmail": "E-mail de Entrada",
-		"Document": "Documento"
+		"Document": "Documento",
+        "Campaign": "Campanha",
+        "TargetList": "Lista de Alvos"
     },
     "scopeNamesPlural": {
         "Account": "Contas",
@@ -25,7 +27,9 @@
         "Task": "Tarefas",
         "Case": "Atendimentos",
         "InboundEmail": "E-mails de Entrada",
-		"Document": "Documentos"
+		"Document": "Documentos",
+        "Campaign": "Campaign",
+        "TargetList": "Target List"
     },
     "dashlets": {
         "Leads": "Meus Leads",

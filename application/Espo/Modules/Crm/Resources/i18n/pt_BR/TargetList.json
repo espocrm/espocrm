@@ -1,0 +1,28 @@
+{
+    "fields": {
+        "name": "Nome",
+        "description": "Descrção",
+        "entryCount": "Contagem de entrada",
+        "campaigns": "Campanhas",
+        "endDate": "Data final",
+        "targetLists": "Lista de alvos"
+    },
+    "links": {
+        "accounts": "Contas",
+        "contacts": "Contatos",
+        "leads": "Leads",
+        "campaigns": "Campanhas"
+    },
+    "options": {
+        "type": {
+            "Email": "E-mail",
+            "Web": "Web",
+            "Television": "Televisão",
+            "Radio": "Rádio",
+            "Newsletter": "Newsletter"
+        }
+    },
+    "labels": {
+        "Create TargetList": "Criar Lista de Alvos"
+    }
+}

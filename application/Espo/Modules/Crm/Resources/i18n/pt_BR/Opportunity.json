@@ -5,13 +5,14 @@
         "stage": "Estágio",
         "amount": "Valor",
         "probability": "Probabilidade, %",
-        "leadSource": "Lead de Origem",
+        "leadSource": "Origem do Lead",
         "doNotCall": "Não ligar",
         "closeDate": "Data de Fechamento",
 		"contacts": "Contatos",
         "description": "Descrição",
 		"amountConverted": "Valor (convertido)",
-		"amountWeightedConverted": "Valor Quantificado"
+		"amountWeightedConverted": "Valor Quantificado",
+        "campaign": "Campanha"
     },
     "links": {
         "contacts": "Contatos",
