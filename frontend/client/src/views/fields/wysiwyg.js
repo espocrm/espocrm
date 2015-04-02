@@ -47,8 +47,12 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
             this.listenTo(this.model, 'change:isHtml', function (model) {
                 if (!model.has('isHtml') || model.get('isHtml')) {
+		            var value = this.plainToHtml(this.model.get(this.name));
+		            this.model.set(this.name, value);
                     this.enableWysiwygMode();
                 } else {
+		            var value = this.htmlToPlain(this.model.get(this.name));
+		            this.model.set(this.name, value);
                     this.disableWysiwygMode();
                 }
             }.bind(this));
@@ -95,8 +99,6 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
                     doc.write(body);
                     doc.close();
-
-
 
                     setTimeout(function () {
                         var height = $iframe.contents().find('html body').height();
@@ -156,10 +158,20 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
             });
         },
 
-        disableWysiwygMode: function () {
-            var value = this.model.get(this.name).replace(/<br\s*\/?>/mg,"\n");
+        plainToHtml: function (html) {
+        	html = html || '';
+        	var value = html.replace(/\n/g, '<br>');
+        	return value;
+        },
+
+        htmlToPlain: function (text) {
+        	text = text || '';
+            var value = text.replace(/<br\s*\/?>/mg, '\n');
             value = $('<div>').html(value).text();
-            this.model.set(this.name, value);
+            return value;
+        },
+
+        disableWysiwygMode: function () {
             this.$element.destroy();
         },
 
@@ -169,6 +181,14 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                 data[this.name] = this.$element.code();
             } else {
                 data[this.name] = this.$element.val();
+            }
+
+            if (this.model.has('isHtml')) {
+            	if (this.model.get('isHtml')) {
+            		data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
+            	} else {
+            		data[this.name + 'Plain'] = data[this.name];
+            	}
             }
             return data;
         }

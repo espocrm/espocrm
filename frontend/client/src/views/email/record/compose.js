@@ -34,13 +34,16 @@ Espo.define('Views.Email.Record.Compose', ['Views.Record.Edit', 'Views.Email.Rec
 	        	var body = this.model.get('body') || '';
                 if (this.model.get('isHtml')) {
                     var signature = this.getSignature();
-	                body = '<p><br></p><br>' + signature + '<br>' + body;
+                    if (body) {
+                        signature += '<br>';
+                    }
+	                body = '<p><br></p><br>' + signature + body;
                 } else {
                     var signature = this.getPlainTextSignature();
                     if (body) {
                         signature += '\n';
                     }
-                    body = '\n' + signature + body;
+                    body = '\n\n' + signature + body;
                 }
 	        	this.model.set('body', body);
 	        }
