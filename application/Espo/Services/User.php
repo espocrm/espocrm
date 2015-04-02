@@ -104,11 +104,11 @@ class User extends Record
             'emailAddress' => $emailAddress
         ))->findOne();
 
-        if (!$user->isActive()) {
+        if (empty($user)) {
             throw new NotFound();
         }
 
-        if (empty($user)) {
+        if (!$user->isActive()) {
             throw new NotFound();
         }
 
