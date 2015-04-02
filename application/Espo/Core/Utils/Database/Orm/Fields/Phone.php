@@ -30,7 +30,7 @@ class Phone extends Base
             $entityName => array(
                 'fields' => array(
                     $fieldName => array(
-                        'select' => 'phone_number.name',
+                        'select' => 'phoneNumbers.name',
                         'where' =>
                         array (
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
@@ -58,7 +58,7 @@ class Phone extends Base
                                     phone_number.deleted = 0 AND phone_number.name <> {value}
                             )"
                         ),
-                        'orderBy' => 'phone_number.name {direction}',
+                        'orderBy' => 'phoneNumbers.name {direction}',
                     ),
                     $fieldName .'Data' => array(
                         'type' => 'text',

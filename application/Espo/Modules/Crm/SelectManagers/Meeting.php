@@ -30,7 +30,7 @@ class Meeting extends \Espo\Core\SelectManagers\Base
         	$result['joins'][] = 'users';
         }
         $result['whereClause'][] = array(
-        	'user.id' => $this->getUser()->id
+        	'users.id' => $this->getUser()->id
         );
     }
 

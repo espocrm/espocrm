@@ -30,7 +30,7 @@ class Email extends Base
             $entityName => array(
                 'fields' => array(
                     $fieldName => array(
-                        'select' => 'email_address.name',
+                        'select' => 'emailAddresses.name',
                         'where' =>
                         array (
                             'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
@@ -58,7 +58,7 @@ class Email extends Base
                                     email_address.deleted = 0 AND email_address.name <> {value}
                             )"
                         ),
-                        'orderBy' => 'email_address.name {direction}',
+                        'orderBy' => 'emailAddresses.name {direction}',
                     ),
                     $fieldName .'Data' => array(
                         'type' => 'text',

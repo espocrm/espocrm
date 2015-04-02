@@ -45,7 +45,7 @@ class User extends \Espo\Core\SelectManagers\Base
         	$result['joins'][] = 'teams';
         }
         $result['whereClause'][] = array(
-        	'teamUser.teamId' => $teamIds
+        	'team_user.teamId' => $teamIds
         );
         $result['distinct'] = true;
     }

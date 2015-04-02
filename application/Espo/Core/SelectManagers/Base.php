@@ -272,7 +272,7 @@ class Base
         }
         $result['whereClause'][] = array(
             'OR' => array(
-                'Team.id' => $this->user->get('teamsIds'),
+                'teams.id' => $this->user->get('teamsIds'),
                 'assignedUserId' => $this->getUser()->id
             )
         );

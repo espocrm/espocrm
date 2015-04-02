@@ -227,7 +227,7 @@ abstract class Base
 
         $part = $this->toDb($field);
         if ($relName) {
-            $part = $this->toDb($relName) . '.' . $part;
+            $part = $relName . '.' . $part;
         } else {
             if (!empty($entity->fields[$field]['select'])) {
                 $part = $entity->fields[$field]['select'];
@@ -672,6 +672,8 @@ abstract class Base
             $relTable = $this->toDb($relOpt['relationName']);
             $distantTable = $this->toDb($relOpt['entity']);
 
+            $alias = $this->sanitize($relationName);
+
             $join =
                 "{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
                 . " AND "
@@ -684,9 +686,9 @@ abstract class Base
                 $join .= " AND {$relTable}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
             }
 
-            $join .= " {$pre}JOIN `{$distantTable}` ON {$distantTable}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
+            $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
                 . " AND "
-                . "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
+                . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
             return $join;
         }
@@ -696,12 +698,14 @@ abstract class Base
             $foreignKey = $keySet['foreignKey'];
             $distantTable = $this->toDb($relOpt['entity']);
 
+            $alias = $this->sanitize($relationName);
+
             // TODO conditions
 
             $join =
-                "{$pre}JOIN `{$distantTable}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$distantTable}." . $this->toDb($foreignKey)
+                "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                 . " AND "
-                . "{$distantTable}.deleted = " . $this->pdo->quote(0) . "";
+                . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
             return $join;
         }
