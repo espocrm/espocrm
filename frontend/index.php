@@ -29,7 +29,9 @@ if (!empty($_GET['entryPoint'])) {
     exit;
 }
 
+$runScript = "app.start();";
 $html = file_get_contents("frontend/main.html");
+$html = str_replace('{{runScript}}', $runScript , $html);
 echo $html;
 exit;
 
