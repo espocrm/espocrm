@@ -3,7 +3,7 @@
 		"title": "Título",
 		"dateFrom": "Desde",
 		"dateTo": "Até a data",
-		"autorefreshInterval": "Intervalo de auto-atualização",
+		"autorefreshInterval": "Intervalo para auto-atualização",
 		"displayRecords": "Exibir registros",
 		"isDoubleHeight": "Altura 2x"
 	}

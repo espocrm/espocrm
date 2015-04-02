@@ -10,13 +10,19 @@
 		"sicCode": "CNPJ",
 		"industry": "Indústria",
 		"type": "Tipo",
-		"contactRole": "Regra"
+		"contactRole": "Regra",
+        "campaign": "Campanha"
 	},
 	"links": {
 		"contacts": "Contatos",
 		"opportunities": "Oportunidades",
 		"cases": "Atendimentos",
-		"documents": "Documentos"
+		"documents": "Documentos",
+        "meetingsPrimary": "Reuniões (Interno)",
+        "callsPrimary": "Ligações (Interno)",
+        "tasksPrimary": "Tarefas (Interno)",
+        "targetLists": "Lista de alvos",
+        "campaignLogRecords": "Log da Campanha"
 	},
 	"options": {
 		"type": {
@@ -26,13 +32,32 @@
 			"Reseller": "Revendedor"
 		},
 		"industry": {
-			"Apparel": "Vestuário",
-			"Banking": "Banco",
-			"Computer Software": "Software",
-			"Education": "Educação",
-			"Electronics": "Eletrônicos",
-			"Finance": "Finanças",
-			"Insurance": "Seguros"
+			"Agriculture": "Agricultura",
+            "Advertising": "Publicidade",
+            "Apparel & Accessories": "Apparel & Accessories",
+            "Automotive": "Automotiva",
+            "Banking": "Banco",
+            "Biotechnology": "Biotecnologia",
+            "Chemical": "Química",
+            "Computer": "Computadores",
+            "Education": "Educação",
+            "Electronics": "Electrônicos",
+            "Entertainment & Leisure": "Entertainment & Leisure",
+            "Finance": "Finanças",
+            "Food & Beverage": "Alimentação",
+            "Grocery": "Grocery",
+            "Insurance": "Insurance",
+            "Legal": "Legal",
+            "Publishing": "Publishing",
+            "Real Estate": "Real Estate",
+            "Service": "Service",
+            "Sports": "Sports",
+            "Software": "Software",
+            "Technology": "Technology",
+            "Telecommunications": "Telecommunications",
+            "Television": "Television",
+            "Transportation": "Transportation",
+            "Venture Capital": "Venture Capital"
 		}
 	},
 	"labels": {

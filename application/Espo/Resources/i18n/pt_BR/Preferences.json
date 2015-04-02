@@ -9,7 +9,6 @@
         "defaultCurrency": "Moeda Padrão",
         "currencyList": "Moedas Disponíveis",
         "language": "Idioma",
-
         "smtpServer": "Servidor",
         "smtpPort": "Porta",
         "smtpAuth": "Autenticação",
@@ -18,10 +17,11 @@
         "emailAddress": "E-mail",
         "smtpPassword": "Senha",
         "smtpEmailAddress": "Endereço de E-mail",
-
         "exportDelimiter": "Delimitador de Exportação",
-		
-		"receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado"
+		"receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado",
+        "autoFollowEntityTypeList": "Auto-Seguir",
+        "signature": "Assinatura do E-mail",
+        "dashboardTabList": "Lista em abas"
     },
     "links": {
     },
@@ -33,5 +33,8 @@
     },
 	"labels": {
 		"Notifications": "Notificações"
-	}
+	},
+    "tooltips": {
+        "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações."
+    }
 }

@@ -20,9 +20,12 @@
         "description": "Descrição",
         "createdAccount": "Conta",
         "createdContact": "Contato",
-        "createdOpportunity": "Oportunidade"
+        "createdOpportunity": "Oportunidade",
+        "campaign": "Campanha"
     },
     "links": {
+        "targetLists": "Lista de Alvos",
+        "campaignLogRecords": "Logs das Camapnhas"
     },
     "options": {
         "status": {

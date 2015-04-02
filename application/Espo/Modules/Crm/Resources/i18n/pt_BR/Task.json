@@ -16,7 +16,8 @@
             "Not Started": "Não Iniciada",
             "Started": "Iniciada",
             "Completed": "Completa",
-            "Canceled": "Cancelada"
+            "Canceled": "Cancelada",
+            "Deferred": "Adiada"
         },
         "priority": {
             "Low": "Baixa",

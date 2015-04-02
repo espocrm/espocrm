@@ -34,6 +34,8 @@
 
         "exportDelimiter": "Delimitador de exportação",
 		
+		"globalSearchEntityList": "Pesquisa Global de Entidades",
+		
 		"authenticationMethod": "Método de Autenticação",
 		"ldapHost": "Host",
 		"ldapPort": "Porta",

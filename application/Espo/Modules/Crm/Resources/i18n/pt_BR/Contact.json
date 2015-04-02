@@ -11,11 +11,14 @@
         "address": "Endereço",
         "opportunityRole": "Regra de Oportunidade",
 		"accountRole": "Regra",
-        "description": "Descrição"
+        "description": "Descrição",
+        "campaign": "Campanha"
     },
     "links": {
         "opportunities": "Oportunidades",
-        "cases": "Atendimento"
+        "cases": "Atendimento",
+        "targetLists": "Lista de Alvos",
+        "campaignLogRecords": "Log das Campanhas"
     },
     "labels": {
         "Create Contact": "Criar Contato"

@@ -1,11 +1,15 @@
 {
     "fields": {
         "name": "Nome",
-        "roles": "Regras"
+        "roles": "Regras",
+        "assignmentPermission": "Atribuição de Permissões"
     },
     "links": {
         "users": "Usuários",
         "teams": "Times"
+    },
+    "tooltips": {
+        "assignmentPermission": "Premite restringir a habilidade para usuários atribuírem registros para outros usuários.\n\ntudo - nenhuma restrição\n\ntime - pode atribuir para usuários do seu time\n\nenhum - pode atribuir apenas para si mesmo"
     },
     "labels": {
         "Access": "Acesso",
@@ -22,6 +26,11 @@
             "team": "time",
             "own": "próprio",
             "no": "nenhum"
+        },
+        "assignmentPermission": {
+            "all": "tudo",
+            "team": "time",
+            "not-set": "não definido"
         }
     },
     "actions": {

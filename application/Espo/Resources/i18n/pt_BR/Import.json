@@ -11,5 +11,8 @@
 		"Updated": "Atualizado",
 		"Result": "Resultado",
 		"Show records": "Exibir Registros"
-	}
+	},
+    "messages": {
+        "utf8": "Deve estar codificado com UTF-8"
+    }
 }

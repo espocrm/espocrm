@@ -11,7 +11,8 @@
         "users": "Usuários",
         "contacts": "Contatos",
         "leads": "Leads",
-        "reminders": "Lembretes"
+        "reminders": "Lembretes",
+        "account": "Conta"
     },
     "links": {
     },
@@ -28,7 +29,8 @@
 		"acceptanceStatus": {
 			"None": "Nenhum",
 			"Accepted": "Aceita",
-			"Declined": "Rejeitada"
+			"Declined": "Rejeitada",
+            "Tentative": "Tentativa"
 		}
     },
     "labels": {

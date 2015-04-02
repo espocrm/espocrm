@@ -1,0 +1,37 @@
+{
+    "labels": {
+        "Fields": "Campos",
+        "Relationships": "Relacionamentos"
+    },
+    "fields": {
+        "name": "Nome",
+        "type": "Tipo",
+        "labelSingular": "Rótulo Singular",
+        "labelPlural": "Rótulo Plural",
+        "stream": "Fluxo",
+        "label": "Rótulo",
+        "linkType": "Tipo de Link",
+        "entityForeign": "Entidade Estrangeira",
+        "linkForeign": "Link Estrangeiro",
+        "link": "Link",
+        "labelForeign": "Rótulo Estrangeiro"
+    },
+    "options": {
+        "type": {
+            "": "Nenhum",
+            "Base": "Base",
+            "Person": "Pessoa"
+        },
+        "linkType": {
+            "manyToMany": "Many-to-Many",
+            "oneToMany": "One-to-Many",
+            "manyToOne": "Many-to-One",
+            "parentToChildren": "Parent-to-Children",
+            "childrenToParent": "Children-to-Parent"
+        }
+    },
+    "messages": {
+        "entityCreated": "A entidade foi criada",
+        "linkAlreadyExists": "Conflito: o link já existe."
+    }
+}
