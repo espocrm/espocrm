@@ -5,6 +5,8 @@
         "status": "Status",
         "dateStart": "Date Start",
         "dateEnd": "Date Due",
+        "dateStartDate": "Date Start (all day)",
+        "dateEndDate": "Date End (all day)",
         "priority": "Priority",
         "description": "Description",
         "isOverdue": "Is Overdue",
