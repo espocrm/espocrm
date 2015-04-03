@@ -52,7 +52,7 @@
             "max": 100
         },
         "leadSource": {
-            "type": "enum",
+            "type": "varchar",
             "view": "Crm:Opportunity.Fields.LeadSource"
         },
         "closeDate": {
