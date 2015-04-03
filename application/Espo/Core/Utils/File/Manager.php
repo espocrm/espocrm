@@ -205,7 +205,7 @@ class Manager
         $fullPath = $this->concatPaths($path); //todo remove after changing the params
 
         if ($this->checkCreateFile($fullPath) === false) {
-            throw new Error('Permission denied in '. $fullPath);
+            throw new Error('Permission denied for '. $fullPath);
         }
 
         $res = (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
@@ -459,7 +459,7 @@ class Manager
 
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
-            throw new Error("Permission denied in <br>". implode(", <br>", $betterPermissionList));
+            throw new Error("Permission denied for <br>". implode(", <br>", $betterPermissionList));
         }
 
         $res = true;
@@ -628,7 +628,7 @@ class Manager
 
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
-            throw new Error("Permission denied in <br>". implode(", <br>", $betterPermissionList));
+            throw new Error("Permission denied for <br>". implode(", <br>", $betterPermissionList));
         }
 
         $result = true;

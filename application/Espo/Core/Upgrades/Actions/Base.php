@@ -551,7 +551,7 @@ abstract class Base
         $result = $this->getFileManager()->isWritableList($fullFileList);
         if (!$result) {
             $permissionDeniedList = $this->getFileManager()->getLastPermissionDeniedList();
-            throw new Error("Permission denied in <br>". implode(", <br>", $permissionDeniedList));
+            throw new Error("Permission denied for <br>". implode(", <br>", $permissionDeniedList));
         }
     }
 
