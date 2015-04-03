@@ -190,7 +190,7 @@ class Base
                             $joins[] = $link;
                             if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
                                 $key = $defs['midKeys'][1];
-                                $relationName = $defs['relationName'];
+                                $relationName = lcfirst($defs['relationName']);
                                 $part[$relationName . '.' . $key] = $idsValue;
                             }
                         } else if ($defs['type'] == 'belongsTo') {

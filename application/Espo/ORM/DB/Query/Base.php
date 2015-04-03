@@ -670,23 +670,25 @@ abstract class Base
             $distantKey = $keySet['distantKey'];
 
             $relTable = $this->toDb($relOpt['relationName']);
+            $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
+
             $distantTable = $this->toDb($relOpt['entity']);
 
             $alias = $this->sanitize($relationName);
 
             $join =
-                "{$pre}JOIN `{$relTable}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$relTable}." . $this->toDb($nearKey)
+                "{$pre}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                 . " AND "
-                . "{$relTable}.deleted = " . $this->pdo->quote(0);
+                . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 
             if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                 $conditions = array_merge($conditions, $relOpt['conditions']);
             }
             foreach ($conditions as $f => $v) {
-                $join .= " AND {$relTable}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
+                $join .= " AND {$midAlias}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
             }
 
-            $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$relTable}." . $this->toDb($distantKey)
+            $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
                 . " AND "
                 . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 

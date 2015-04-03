@@ -123,10 +123,10 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
             "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(created_by.salutation_name, created_by.first_name, ' ', created_by.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `created_by` ON post.created_by_id = created_by.id " .
-            "JOIN `post_tag` ON post.id = post_tag.post_id AND post_tag.deleted = '0' ".
-            "JOIN `tag` ON tag.id = post_tag.tag_id AND tag.deleted = '0' ".
-            "JOIN `comment` ON post.id = comment.post_id AND comment.deleted = '0' ".
-            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tag.name = 'yoTag' AND post.deleted = '0' ".
+            "JOIN `post_tag` AS `postTag` ON post.id = postTag.post_id AND postTag.deleted = '0' ".
+            "JOIN `tag` AS `tags` ON tags.id = postTag.tag_id AND tags.deleted = '0' ".
+            "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = '0' ".
+            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = '0' ".
             "ORDER BY post.name DESC ".
             "LIMIT 0, 10";
         $return = new MockDBResult(array(
@@ -150,7 +150,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
                     'id' => '100',
                     'name*' => 'test_%',
                 ),
-                'Tag.name' => 'yoTag',
+                'tags.name' => 'yoTag',
             ),
             'order' => 'DESC',
             'orderBy' => 'name',

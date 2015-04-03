@@ -30,7 +30,7 @@ class Email extends \Espo\Core\SelectManagers\Base
             $result['joins'][] = 'users';
         }
         $result['whereClause'][] = array(
-            'email_user.userId' => $this->getUser()->id
+            'emailUser.userId' => $this->getUser()->id
         );
     }
 
