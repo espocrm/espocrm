@@ -45,6 +45,8 @@ class Auth
         $authenticationMethod = $this->config->get('authenticationMethod', 'Espo');
         $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
         $this->authentication = new $authenticationClassName($this->config, $this->entityManager, $this);
+
+        $this->request = $this->container->get('slim')->request();
     }
 
     public function useNoAuth($isAdmin = false)
@@ -78,19 +80,20 @@ class Auth
             $entityManager->setUser($user);
             $this->container->setUser($user);
 
-            if (!$authToken) {
-                $authToken = $entityManager->getEntity('AuthToken');
-                $token = $this->createToken($user);
-                $authToken->set('token', $token);
-                $authToken->set('hash', $user->get('password'));
-                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
-                $authToken->set('userId', $user->id);
+            if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION')) {
+	            if (!$authToken) {
+	                $authToken = $entityManager->getEntity('AuthToken');
+	                $token = $this->createToken($user);
+	                $authToken->set('token', $token);
+	                $authToken->set('hash', $user->get('password'));
+	                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+	                $authToken->set('userId', $user->id);
+	            }
+            	$authToken->set('lastAccess', date('Y-m-d H:i:s'));
+
+            	$entityManager->saveEntity($authToken);
+            	$user->set('token', $authToken->get('token'));
             }
-
-            $authToken->set('lastAccess', date('Y-m-d H:i:s'));
-
-            $entityManager->saveEntity($authToken);
-            $user->set('token', $authToken->get('token'));
 
             return true;
         }
