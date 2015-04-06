@@ -10,7 +10,8 @@
             "view": "Fields.EnumStyled",
             "style": {
                 "Completed": "success"
-            }
+            },
+            "default": "Not Started"
         },
         "priority": {
             "type": "enum",
