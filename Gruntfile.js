@@ -126,7 +126,8 @@ module.exports = function (grunt) {
                     'modules/**',
                     'img/**',
                     'css/**',
-                    'sounds/**'
+                    'sounds/**',
+                    'custom/**'
                 ],
                 dest: 'build/tmp/client',
             },
