@@ -132,6 +132,7 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                 view.render();
 
                 this.listenTo(view, 'after:save', function () {
+                    this.clearView('edit');
                     this.setupLinkData();
                     this.render();
                 }, this);
@@ -146,6 +147,7 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                 view.render();
 
                 this.listenTo(view, 'after:save', function () {
+                    this.clearView('edit');
                     this.setupLinkData();
                     this.render();
                 }, this);
