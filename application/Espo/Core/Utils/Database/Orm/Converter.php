@@ -186,7 +186,9 @@ class Converter
 
                     case 'foreignType':
                         $fieldParams['dbType'] = Entity::VARCHAR;
-                        $fieldParams['len'] = $this->defaultLength['varchar'];
+                        if (empty($fieldParams['len'])) {
+                            $fieldParams['len'] = $this->defaultLength['varchar'];
+                        }
                         break;
 
                     case 'bool':
