@@ -160,21 +160,21 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
             var foreignLink = this.model.defs['links'][link].foreign;
 
             this.notify('Loading...');
-            this.getModelFactory().create(scope, function (model) {
-                this.createView('quickCreate', 'Modals.Edit', {
-                    scope: scope,
-                    relate: {
-                        model: this.model,
-                        link: foreignLink,
-                    }
-                }, function (view) {
-                    view.render();
-                    view.notify(false);
-                    view.once('after:save', function () {
-                        self.collection.fetch();
-                    });
+
+            this.createView('quickCreate', 'Modals.Edit', {
+                scope: scope,
+                relate: {
+                    model: this.model,
+                    link: foreignLink,
+                }
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                view.once('after:save', function () {
+                    self.collection.fetch();
                 });
-            }.bind(this));
+            });
+
         },
 
         actionRefresh: function () {
