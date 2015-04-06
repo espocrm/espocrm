@@ -39,6 +39,7 @@ class BelongsToParent extends Base
                         'type' => 'foreignType',
                         'notNull' => false,
                         'index' => $linkName,
+                        'len' => 100
                     ),
                     $linkName.'Name' => array(
                         'type' => 'varchar',
