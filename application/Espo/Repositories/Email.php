@@ -129,15 +129,5 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             // TODO find account by from address
         }
     }
-
-    protected function beforeRemove(Entity $entity, array $options)
-    {
-        parent::beforeRemove($entity, $options);
-        $attachments = $entity->get('attachments');
-        foreach ($attachments as $attachment) {
-            $this->getEntityManager()->removeEntity($attachment);
-        }
-    }
-
 }
 
