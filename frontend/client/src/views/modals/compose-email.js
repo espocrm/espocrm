@@ -47,17 +47,21 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
                     var model = editView.model;
 
-                    var afterSave = function () {
-                        this.trigger('after:save', model);
-                        dialog.close();
-                    };
-
-                    editView.once('after:save', afterSave , this);
-
                     var $send = dialog.$el.find('button[data-name="send"]');
                     $send.addClass('disabled');
                     var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
                     $saveDraft.addClass('disabled');
+
+                    var afterSave = function () {
+                        $saveDraft.removeClass('disabled');
+                        $send.removeClass('disabled');
+                        Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'));
+                        //this.trigger('after:save', model);
+                        //dialog.close();
+                    }.bind(this);
+
+                    editView.once('after:save', afterSave , this);
+
                     editView.once('cancel:save', function () {
                         $send.removeClass('disabled');
                         $saveDraft.removeClass('disabled');

@@ -49,7 +49,8 @@
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
         "testEmailSent": "Test email has been sent",
-        "emailSent": "Email has been sent"
+        "emailSent": "Email has been sent",
+        "savedAsDraft": "Saved as draft"
     },
     "presetFilters": {
         "sent": "Sent",
