@@ -5,14 +5,14 @@
             [{"name":"name"},false],
             [{"name":"website"},{"name":"phoneNumber"}],
             [{"name":"emailAddress"},false],
-            [{"name":"billingAddress"},{"name":"shippingAddress"}],
-            [{"name":"description", "fullWidth": true}]
+            [{"name":"billingAddress"},{"name":"shippingAddress"}]
         ]
     }, {
         "label":"Details",
         "rows":[
             [{"name":"type"},{"name":"sicCode"}],
-            [{"name":"industry"},false]
+            [{"name":"industry"},false],
+            [{"name":"description", "fullWidth": true}]
         ]
     }
 ]

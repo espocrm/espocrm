@@ -5,15 +5,15 @@
             [{"name":"name"},{"name":"accountName"}],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
             [{"name":"title"},{"name":"doNotCall"}],
-            [{"name":"address"},{"name":"website"}],
-            [{"name":"description", "fullWidth": true}]
+            [{"name":"address"},{"name":"website"}]
         ]
-    }, 
+    },
     {
         "label":"Details",
         "rows": [
             [{"name":"status"},{"name":"source"}],
-            [{"name":"opportunityAmount"},false]
+            [{"name":"opportunityAmount"},{"name":"campaign"}],
+            [{"name":"description", "fullWidth": true}]
         ]
     }
 ]

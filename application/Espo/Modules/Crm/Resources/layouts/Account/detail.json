@@ -2,18 +2,18 @@
     {
         "label":"Overview",
         "rows": [
-            [{"name":"name"},false],            
+            [{"name":"name"},false],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
             [{"name":"website"},false],
-            [{"name":"billingAddress"},{"name":"shippingAddress"}],
-            [{"name":"description", "fullWidth": true}]
+            [{"name":"billingAddress"},{"name":"shippingAddress"}]
         ]
     },
     {
         "label":"Details",
         "rows": [
             [{"name":"type"},{"name":"sicCode"}],
-            [{"name":"industry"},false]
+            [{"name":"industry"},false],
+            [{"name":"description","fullWidth": true}]
         ]
     }
 ]

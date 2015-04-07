@@ -4,8 +4,8 @@
         "rows":[
             [{"name":"name"},{"name":"account"}],
             [{"name":"stage"},{"name":"amount"}],
-            [{"name":"probability"},{"name":"leadSource"}],
-            [{"name":"contacts"},{"name":"closeDate"}],
+            [{"name":"probability"},{"name":"closeDate"}],
+            [{"name":"contacts"},{"name":"leadSource"}],
             [{"name":"description", "fullWidth": true}]
         ]
     }
