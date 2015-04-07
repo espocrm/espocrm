@@ -143,9 +143,7 @@ class Email extends Record
 
     public function loadFromField(Entity $entity)
     {
-        if ($entity->get('fromEmailAddressName')) {
-            $entity->set('from', $entity->get('fromEmailAddressName'));
-        }
+        $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
     }
 
     public function loadToField(Entity $entity)
@@ -279,9 +277,6 @@ class Email extends Record
 
         $status = $entity->get('status');
         if (in_array($status, ['Archived', 'Received'])) {
-            $this->loadFromField($entity);
-            $this->loadNameHash($entity, array('from'));
-
             $fromEmailAddressId = $entity->get('fromEmailAddressId');
             if (!empty($fromEmailAddressId)) {
                 $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId);
@@ -297,7 +292,6 @@ class Email extends Record
                 }
             }
         } else if (in_array($status, ['Sent', 'Draft', 'Sending'])) {
-
             $entity->loadLinkMultipleField('toEmailAddresses');
             $idList = $entity->get('toEmailAddressesIds');
             $names = $entity->get('toEmailAddressesNames');
@@ -353,46 +347,9 @@ class Email extends Record
         $entity->set('attachmentsTypes', $types);
     }
 
-    public function loadNameHash(Entity $entity, array $fieldList = array('from', 'to', 'cc'))
+    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])
     {
-        $addressList = array();
-        if (in_array('from', $fieldList) && $entity->get('from')) {
-            $addressList[] = $entity->get('from');
-        }
-
-        if (in_array('to', $fieldList)) {
-            $arr = explode(';', $entity->get('to'));
-            foreach ($arr as $address) {
-                if (!in_array($address, $addressList)) {
-                    $addressList[] = $address;
-                }
-            }
-        }
-
-        if (in_array('cc', $fieldList)) {
-            $arr = explode(';', $entity->get('cc'));
-            foreach ($arr as $address) {
-                if (!in_array($address, $addressList)) {
-                    $addressList[] = $address;
-                }
-            }
-        }
-
-        $nameHash = array();
-        $typeHash = array();
-        $idHash = array();
-        foreach ($addressList as $address) {
-            $p = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($address);
-            if ($p) {
-                $nameHash[$address] = $p->get('name');
-                $typeHash[$address] = $p->getEntityName();
-                $idHash[$address] = $p->id;
-            }
-        }
-
-        $entity->set('nameHash', $nameHash);
-        $entity->set('typeHash', $typeHash);
-        $entity->set('idHash', $idHash);
+        $this->getEntityManager()->getRepository('Email')->loadNameHash($entity, $fieldList);
     }
 
     protected function getSelectParams($params)

@@ -64,13 +64,60 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
+    public function loadFromField(Entity $entity)
+    {
+        if ($entity->get('fromEmailAddressName')) {
+            $entity->set('from', $entity->get('fromEmailAddressName'));
+        }
+    }
+
+    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])
+    {
+        $addressList = array();
+        if (in_array('from', $fieldList) && $entity->get('from')) {
+            $addressList[] = $entity->get('from');
+        }
+
+        if (in_array('to', $fieldList)) {
+            $arr = explode(';', $entity->get('to'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
+            }
+        }
+
+        if (in_array('cc', $fieldList)) {
+            $arr = explode(';', $entity->get('cc'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
+            }
+        }
+
+        $nameHash = array();
+        $typeHash = array();
+        $idHash = array();
+        foreach ($addressList as $address) {
+            $p = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($address);
+            if ($p) {
+                $nameHash[$address] = $p->get('name');
+                $typeHash[$address] = $p->getEntityName();
+                $idHash[$address] = $p->id;
+            }
+        }
+
+        $entity->set('nameHash', $nameHash);
+        $entity->set('typeHash', $typeHash);
+        $entity->set('idHash', $idHash);
+    }
+
     protected function beforeSave(Entity $entity, array $options)
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
-
         if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc')) {
-
             if (!$entity->has('usersIds')) {
                 $entity->loadLinkMultipleField('users');
             }
@@ -105,11 +152,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 $usersIds[] = $assignedUserId;
             }
             $entity->set('usersIds', $usersIds);
-
         }
 
         parent::beforeSave($entity, $options);
-
 
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
@@ -125,9 +170,8 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $entity->set('accountId', $accountId);
                 }
             }
-        } else {
-            // TODO find account by from address
         }
     }
+
 }
 
