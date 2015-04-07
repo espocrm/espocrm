@@ -67,7 +67,9 @@ class Output
         $currentRoute = $this->getSlim()->router()->getCurrentRoute();
 
         if (isset($currentRoute)) {
-            $GLOBALS['log']->error('API ['.$this->getSlim()->request()->getMethod().']:'.$currentRoute->getPattern().', Params:'.print_r($currentRoute->getParams(), true).', InputData: '.$this->getSlim()->request()->getBody().' - '.$message);
+            $inputData = $this->getSlim()->request()->getBody();
+            $inputData = $this->clearPasswords($inputData);
+            $GLOBALS['log']->error('API ['.$this->getSlim()->request()->getMethod().']:'.$currentRoute->getPattern().', Params:'.print_r($currentRoute->getParams(), true).', InputData: '.$inputData.' - '.$message);
         }
 
         $this->displayError($message, $code, $isPrint);
@@ -117,6 +119,18 @@ class Output
         }
 
         return null;
+    }
+
+    /**
+     * Clear passwords for inputData
+     *
+     * @param  string $inputData
+     *
+     * @return string
+     */
+    protected function clearPasswords($inputData)
+    {
+        return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $inputData);
     }
 }
 
