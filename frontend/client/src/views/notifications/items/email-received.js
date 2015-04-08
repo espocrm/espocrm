@@ -19,13 +19,20 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Notifications.Items.Assign', 'Views.Notifications.Notification', function (Dep) {
+Espo.define('Views.Notifications.Items.EmailReceived', 'Views.Notifications.Notification', function (Dep) {
 
     return Dep.extend({
 
-        messageName: 'assign',
+        messageName: 'emailReceived',
 
-        template: 'notifications.items.assign',
+        template: 'notifications.items.email-received',
+
+        data: function () {
+            return _.extend({
+                emailId: this.emailId,
+                emailName: this.emailName
+            }, Dep.prototype.data.call(this));
+        },
 
         setup: function () {
             var data = this.model.get('data') || {};
@@ -33,10 +40,13 @@ Espo.define('Views.Notifications.Items.Assign', 'Views.Notifications.Notificatio
             this.userId = data.userId;
 
             this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
-            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>';
+            this.messageData['from'] = '<a href="#' + data.personEntityType + '/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+
+            this.emailId = data.emailId;
+            this.emailName = data.emailName;
 
             this.createMessage();
-        },
+        }
 
     });
 });

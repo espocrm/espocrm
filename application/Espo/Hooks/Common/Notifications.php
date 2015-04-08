@@ -94,9 +94,9 @@ class Notifications extends \Espo\Core\Hooks\Base
             return;
         }
 
-        if (!$this->checkHasStream($entity)) {
+        if (!$this->checkHasStream($entityType)) {
             if (in_array($entityType, $this->getConfig()->get('assignmentNotificationsEntityList', []))) {
-                $notificator = $this->getNotificator();
+                $notificator = $this->getNotificator($entityType);
                 $notificator->process($entity);
             }
         }

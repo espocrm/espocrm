@@ -39,10 +39,10 @@ class Email extends \Espo\Core\Notificators\Base
                 $userIdList[] = $assignedUserId;
             }
         }
-        $emailUserIdList = $email->get('usersIds');
+        $emailUserIdList = $entity->get('usersIds');
         if (is_null($emailUserIdList)) {
-            $email->loadLinkMultipleField('from');
-            $emailUserIdList = $email->get('usersIds');
+            $entity->loadLinkMultipleField('from');
+            $emailUserIdList = $entity->get('usersIds');
         }
         if (!is_array($emailUserIdList)) {
             $emailUserIdList = [];
@@ -62,7 +62,7 @@ class Email extends \Espo\Core\Notificators\Base
         if ($from) {
             $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from);
             if ($person) {
-                $data['personEntityType'] = $person->getEntityName();
+                $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
                 $data['personEntityId'] = $person->id;
             }
