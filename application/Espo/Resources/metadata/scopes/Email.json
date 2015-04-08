@@ -2,5 +2,6 @@
     "entity": true,
     "layouts": false,
     "tab": true,
-    "acl": true
+    "acl": true,
+    "notifications": true
 }

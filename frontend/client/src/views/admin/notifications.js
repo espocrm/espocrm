@@ -19,26 +19,26 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.OutboundEmail', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('Views.Admin.Notifications', 'Views.Settings.Record.Edit', function (Dep) {
 
     return Dep.extend({
 
-        layoutName: 'outboundEmail',
+        layoutName: 'notifications',
 
         dependencyDefs: {
-            'smtpAuth': {
+            'assignmentEmailNotifications': {
                 map: {
                     true: [
                         {
                             action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword']
+                            fields: ['assignmentEmailNotificationsEntityList']
                         }
                     ]
                 },
                 default: [
                     {
                         action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword']
+                        fields: ['assignmentEmailNotificationsEntityList']
                     }
                 ]
             }
@@ -46,23 +46,7 @@ Espo.define('Views.Admin.OutboundEmail', 'Views.Settings.Record.Edit', function 
 
         setup: function () {
             Dep.prototype.setup.call(this);
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            var smtpSecurityField = this.getFieldView('smtpSecurity');
-            this.listenTo(smtpSecurityField, 'change', function () {
-                var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
-                if (smtpSecurity == 'SSL') {
-                    this.model.set('smtpPort', '465');
-                } else if (smtpSecurity == 'TLS') {
-                    this.model.set('smtpPort', '587');
-                } else {
-                    this.model.set('smtpPort', '25');
-                }
-            }.bind(this));
-        },
+        }
 
     });
 

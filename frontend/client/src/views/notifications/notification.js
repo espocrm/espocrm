@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Note', 'View', function (Dep) {
+Espo.define('Views.Notifications.Notification', 'View', function (Dep) {
 
     return Dep.extend({
 
@@ -29,64 +29,18 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
 
         messageData: null,
 
-        isEditable: false,
-
-        isRemovable: false,
-
-        isSystemAvatar: false,
+        isSystemAvatar: true,
 
         data: function () {
             return {
-                isUserStream: this.isUserStream,
-                noEdit: this.options.noEdit,
-                acl: this.options.acl,
-                onlyContent: this.options.onlyContent,
                 avatar: this.getAvatarHtml()
             };
         },
 
         init: function () {
             this.createField('createdAt', null, null, 'Fields.DatetimeShort');
-            this.isUserStream = this.options.isUserStream;
-            this.isThis = !this.isUserStream;
 
-            this.parentModel = this.options.parentModel;
-
-            if (!this.isUserStream) {
-                if (this.parentModel) {
-                    if (
-                        this.parentModel.name != this.model.get('parentType') ||
-                        this.parentModel.id != this.model.get('parentId')
-                    ) {
-                        this.isThis = false;
-                    }
-                }
-            }
-
-
-            if (this.messageName && this.isThis) {
-                this.messageName += 'This';
-            }
-
-            if (!this.isThis) {
-                this.createField('parent');
-            }
-
-            this.messageData = {
-                'user': 'field:createdBy',
-                'entity': 'field:parent',
-                'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase(),
-            };
-
-            if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
-                this.createView('right', 'Stream.RowActions.Default', {
-                    el: this.options.el + ' .right-container',
-                    acl: this.options.acl,
-                    model: this.model,
-                    isEditable: this.isEditable,
-                    isRemovable: this.isRemovable
-                });
-            }
+            this.messageData = {};
         },
 
         createField: function (name, type, params, view) {
@@ -100,12 +54,11 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                 el: this.options.el + ' .cell-' + name,
                 mode: 'list'
             });
-
         },
 
         createMessage: function () {
             if (!this.messageTemplate) {
-                this.messageTemplate = this.translate(this.messageName, 'streamMessages') || '';
+                this.messageTemplate = this.translate(this.messageName, 'notificationMessages') || '';
             }
 
             this.createView('message', 'Stream.Message', {
@@ -127,9 +80,12 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             } else {
                 t = Date.now();
             }
-            var id = this.model.get('createdById');
+            var id = this.userId;
             if (this.isSystemAvatar) {
                 id = 'system';
+            }
+            if (!id) {
+                return '';
             }
             return '<img class="avatar" width="20" src="?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
         }

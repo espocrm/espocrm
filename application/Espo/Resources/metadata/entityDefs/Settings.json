@@ -214,6 +214,11 @@
             "translation": "Global.scopeNamesPlural",
             "view": "Settings.Fields.AssignmentEmailNotificationsEntityList"
         },
+        "assignmentNotificationsEntityList": {
+            "type": "multiEnum",
+            "translation": "Global.scopeNamesPlural",
+            "view": "Settings.Fields.AssignmentNotificationsEntityList"
+        },
         "b2cMode": {
             "type": "bool",
             "default": false

@@ -36,6 +36,8 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected $statusFields = null;
 
+    public static $order = 9;
+
     protected function init()
     {
         $this->dependencies[] = 'serviceFactory';

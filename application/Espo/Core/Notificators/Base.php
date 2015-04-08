@@ -20,18 +20,17 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Hooks;
+namespace Espo\Core\Notificators;
 
 use \Espo\Core\Interfaces\Injectable;
 
-abstract class Base implements Injectable
+use \Espo\ORM\Entity;
+
+class Base implements Injectable
 {
     protected $dependencies = array(
-        'entityManager',
-        'config',
-        'metadata',
-        'acl',
         'user',
+        'entityManager',
     );
 
     protected $injections = array();
@@ -72,24 +71,28 @@ abstract class Base implements Injectable
         return $this->injections['user'];
     }
 
-    protected function getAcl()
+    public function process(Entity $entity)
     {
-        return $this->injections['acl'];
+        if ($entity->has('assignedUserId') && $entity->get('assignedUserId')) {
+            $assignedUserId = $entity->get('assignedUserId');
+            if ($assignedUserId != $this->getUser()->id && $entity->isFieldChanged('assignedUserId')) {
+                $notification = $this->getEntityManager()->getEntity('Notification');
+                $notification->set(array(
+                    'type' => 'Assign',
+                    'userId' => $assignedUserId,
+                    'data' => array(
+                        'entityType' => $entity->getEntityType(),
+                        'entityId' => $entity->id,
+                        'entityName' => $entity->get('name'),
+                        'isNew' => $entity->isNew(),
+                        'userId' => $this->getUser()->id,
+                        'userName' => $this->getUser()->get('name')
+                    )
+                ));
+                $this->getEntityManager()->saveEntity($notification);
+            }
+        }
     }
 
-    protected function getConfig()
-    {
-        return $this->injections['config'];
-    }
-
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
-    }
-
-    protected function getRepository()
-    {
-        return $this->getEntityManager()->getRepository($this->entityName);
-    }
 }
 

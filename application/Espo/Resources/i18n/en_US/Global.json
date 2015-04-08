@@ -225,6 +225,10 @@
     "dashlets": {
         "Stream": "Stream"
     },
+    "notificationMessages": {
+        "assign": "{entityType} {entity} has been assigned to you",
+        "emailReceived": "Email received from {from}"
+    },
     "streamMessages": {
         "create": "{user} created {entityType} {entity}",
         "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",

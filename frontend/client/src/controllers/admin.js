@@ -86,6 +86,22 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
             model.fetch();
         },
 
+        notifications: function () {
+            var model = this.getSettingsModel();
+
+            model.once('sync', function () {
+                model.id = '1';
+                this.main('Edit', {
+                    model: model,
+                    views: {
+                        header: {template: 'admin.settings.header-notifications'},
+                        body: {view: 'Admin.Notifications'}
+                    },
+                });
+            }, this);
+            model.fetch();
+        },
+
         outboundEmail: function () {
             var model = this.getSettingsModel();
 

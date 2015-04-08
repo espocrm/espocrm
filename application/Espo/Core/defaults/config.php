@@ -93,6 +93,7 @@ return array (
     'disableExport' => false,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => array('Lead', 'Opportunity', 'Task', 'Case'),
+    'assignmentNotificationsEntityList' => array('Meeting', 'Call', 'Task', 'Email'),
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
     'disabledCountQueryEntityList' => array('Email'),

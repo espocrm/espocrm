@@ -1,0 +1,15 @@
+[
+    {
+        "label": "In-app Notifications",
+        "rows": [
+            [{"name": "assignmentNotificationsEntityList"}]
+        ]
+    },
+    {
+        "label": "Email Notifications",
+        "rows": [
+            [{"name": "assignmentEmailNotifications"}],
+            [{"name": "assignmentEmailNotificationsEntityList"}]
+        ]
+    }
+]

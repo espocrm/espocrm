@@ -26,11 +26,12 @@ use Espo\ORM\Entity;
 
 class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
 {
-
     public function afterSave(Entity $entity)
     {
         if (
             $this->getConfig()->get('assignmentEmailNotifications')
+            &&
+            $entity->has('assignedUserId')
             &&
             in_array($entity->getEntityName(), $this->getConfig()->get('assignmentEmailNotificationsEntityList', array()))
         ) {

@@ -27,6 +27,8 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
 
         isRemovable: true,
 
+        isSystemAvatar: true,
+
         data: function () {
             return _.extend({
                 emailId: this.emailId,

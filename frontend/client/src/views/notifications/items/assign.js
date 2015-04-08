@@ -18,21 +18,27 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Settings.Fields.AssignmentEmailNotificationsEntityList', 'Views.Fields.MultiEnum', function (Dep) {
+
+Espo.define('Views.Notifications.Items.Assign', 'Views.Notifications.Notification', function (Dep) {
 
     return Dep.extend({
 
+        messageName: 'assign',
+
+        template: 'notifications.items.assign',
+
         setup: function () {
+            var data = this.model.get('data') || {};
 
-            this.params.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-                return this.getMetadata().get('scopes.' + scope + '.notifications') && this.getMetadata().get('scopes.' + scope + '.entity');
-            }, this).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+            this.userId = data.userId;
 
-            Dep.prototype.setup.call(this);
+            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>';
+            this.messageData['user'] = '<a href="#User/view/' + data.userId + '">' + data.userName + '</a>';
+
+            this.createMessage();
         },
 
     });
-
 });
+

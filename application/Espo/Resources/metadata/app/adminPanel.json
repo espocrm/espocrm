@@ -23,6 +23,11 @@
             "description":"currency"
          },
          {
+            "url":"#Admin/notifications",
+            "label":"Notifications",
+            "description":"notifications"
+         },
+         {
             "url":"#Admin/integrations",
             "label":"Integrations",
             "description":"integrations"

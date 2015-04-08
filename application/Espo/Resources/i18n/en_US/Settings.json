@@ -53,8 +53,9 @@
         "ldapAccountDomainNameShort": "Account Domain Name Short",
         "ldapOptReferrals": "Opt Referrals",
         "disableExport": "Disable Export (only admin is allowed)",
+        "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
         "assignmentEmailNotifications": "Send Email Notifications upon Assignment",
-        "assignmentEmailNotificationsEntityList": "Entities to Notify About",
+        "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
         "b2cMode": "B2C Mode",
         "disableAvatars": "Disable Avatars"
     },
@@ -72,7 +73,8 @@
         "Locale": "Locale",
         "SMTP": "SMTP",
         "Configuration": "Configuration",
-        "Notifications": "Notifications",
+        "In-app Notifications": "In-app Notifications",
+        "Email Notifications": "Email Notifications",
         "Currency Settings": "Currency Settings",
         "Currency Rtes": "Currency Rates"
     }

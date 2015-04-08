@@ -136,7 +136,8 @@ class EntityManager
             'customizable' => true,
             'importable' => true,
             'type' => $type,
-            'stream' => $stream
+            'stream' => $stream,
+            'notifications' => true
         );
         $this->getMetadata()->set('scopes', $name, $scopeData);
 

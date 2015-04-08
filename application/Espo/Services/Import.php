@@ -470,7 +470,7 @@ class Import extends \Espo\Services\Record
 
         try {
             $isDuplicate = $recordService->checkEntityForDuplicate($entity);
-            if ($this->getEntityManager()->saveEntity($entity, array('noStream' => true))) {
+            if ($this->getEntityManager()->saveEntity($entity, array('noStream' => true, 'noNotifications' => true))) {
                 $result['id'] = $entity->id;
                 if (empty($id)) {
                     $result['isImported'] = true;

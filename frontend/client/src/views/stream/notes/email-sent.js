@@ -23,7 +23,7 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
 
     return Dep.extend({
 
-        template: 'stream.notes.email-received',
+        template: 'stream.notes.email-sent',
 
         isRemovable: true,
 

@@ -44,7 +44,8 @@
         "Create Entity": "Create Entity",
         "Edit Entity": "Edit Entity",
         "Create Link": "Create Link",
-        "Edit Link": "Edit Link"
+        "Edit Link": "Edit Link",
+        "Notifications": "Notifications"
     },
     "layouts": {
         "list": "List",
@@ -138,7 +139,8 @@
         "authentication": "Authentication settings.",
         "currency": "Currency settings and rates.",
         "extensions": "Install or uninstall extensions.",
-        "integrations": "Integration with third-party services."
+        "integrations": "Integration with third-party services.",
+        "notifications": "In-app and email notification settings."
     },
     "options": {
         "previewSize": {

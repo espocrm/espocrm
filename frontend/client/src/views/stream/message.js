@@ -17,34 +17,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Stream.Message', 'View', function (Dep) {
 
     return Dep.extend({
-    
+
         setup: function () {
-            var template = this.options.messageTemplate; 
+            var template = this.options.messageTemplate;
             var data = this.options.messageData;
-            
+
             for (var key in data) {
                 var value = data[key] || '';
-                
+
                 if (value.indexOf('field:') === 0) {
                     var field = value.substr(6);
                     this.createField(key, field);
-                    
-                    template = template.replace('{' + key +'}', '{{{' + key +'}}}');                
+
+                    template = template.replace('{' + key +'}', '{{{' + key +'}}}');
                 } else {
                     template = template.replace('{' + key +'}', value);
                 }
             }
-            
-            this._template = template;        
+
+            this._template = template;
         },
-    
-        createField: function (key, name, type, params) {            
-            type = type || this.model.getFieldType(name) || 'base';        
+
+        createField: function (key, name, type, params) {
+            type = type || this.model.getFieldType(name) || 'base';
             this.createView(key, this.getFieldManager().getViewName(type), {
                 model: this.model,
                 defs: {
@@ -53,8 +53,7 @@ Espo.define('Views.Stream.Message', 'View', function (Dep) {
                 },
                 mode: 'list'
             });
-        },
-        
+        }
 
     });
 });
