@@ -66,6 +66,10 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
                 }
             }
 
+            allFields.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
             this.enabledFieldsList = [];
 
             this.enabledFields = [];

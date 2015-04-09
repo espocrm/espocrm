@@ -43,6 +43,9 @@ Espo.define('Views.Admin.Layouts.Relationships', 'Views.Admin.Layouts.Rows', fun
                             }
                         }
                     }
+                    allFields.sort(function (v1, v2) {
+                        return this.translate(v1, 'links', this.scope).localeCompare(this.translate(v2, 'links', this.scope));
+                    }.bind(this));
 
                     this.enabledFieldsList = [];
 

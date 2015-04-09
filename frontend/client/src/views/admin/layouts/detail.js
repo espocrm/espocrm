@@ -75,7 +75,10 @@ Espo.define('Views.Admin.Layouts.Detail', 'Views.Admin.Layouts.Grid', function (
                 }.bind(this));
             }.bind(this));
 
-            allFields.sort();
+            allFields.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
 
             for (var i in allFields) {
                 if (!_.contains(this.enabledFields, allFields[i])) {
