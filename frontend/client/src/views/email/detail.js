@@ -66,7 +66,22 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
                 }
             }
 
-            attributes.emailAddress = this.model.get('from');
+            if (this.model.get('replyToString')) {
+                var str = this.model.get('replyToString');
+                var p = (str.split(';'))[0];
+                attributes.emailAddress = this.parseAddressFromStringAddress(p);
+                var fromName = this.parseNameFromStringAddress(p);
+                if (fromName) {
+                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    attributes.firstName = firstName;
+                    attributes.lastName = lastName;
+                }
+            }
+
+            if (!attributes.emailAddress) {
+                attributes.emailAddress = this.model.get('from');
+            }
             attributes.emailId = this.model.id;
 
             this.notify('Loading...');
