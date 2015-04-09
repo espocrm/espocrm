@@ -98,6 +98,7 @@ return array (
     'notificationsCheckInterval' => 10,
     'disabledCountQueryEntityList' => array('Email'),
     'maxEmailAccountCount' => 2,
+    'followCreatedEntities' => false,
     'isInstalled' => false,
 );
 

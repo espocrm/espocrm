@@ -226,6 +226,10 @@
         "disableAvatars": {
             "type": "bool",
             "default": false
+        },
+        "followCreatedEntities": {
+            "type": "bool",
+            "default": false
         }
     }
 }

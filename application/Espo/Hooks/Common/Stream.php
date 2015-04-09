@@ -158,16 +158,15 @@ class Stream extends \Espo\Core\Hooks\Base
 
         if ($this->checkHasStream($entity)) {
             if ($entity->isNew()) {
+                $userIdList = [];
 
                 $assignedUserId = $entity->get('assignedUserId');
                 $createdById = $entity->get('createdById');
 
-                $userIdList = [];
-
-                if (!empty($createdById)) {
+                if ($this->getConfig()->get('followCreatedEntities') && !empty($createdById)) {
                     $userIdList[] = $createdById;
                 }
-                if (!empty($assignedUserId) && $createdById != $assignedUserId) {
+                if (!empty($assignedUserId) && !in_array($assignedUserId, $userIdList)) {
                     $userIdList[] = $assignedUserId;
                 }
 
