@@ -26,29 +26,41 @@ use \Espo\ORM\Entity;
 
 class Email extends \Espo\Core\Notificators\Base
 {
+    protected function init()
+    {
+        $this->addDependency('serviceFactory');
+    }
+
+    private $streamService = null;
+
+    protected function getStreamService()
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->getInjection('serviceFactory')->create('Stream');
+        }
+        return $this->streamService;
+    }
+
     public function process(Entity $entity)
     {
-        if (!$entity->isNew()) {
+        if ($entity->get('status') != 'Archived') {
+            return;
+        }
+
+        $previousUserIdList = $entity->getFetched('usersIds');
+        if (!is_array($previousUserIdList)) {
+            $previousUserIdList = [];
+        }
+
+        $emailUserIdList = $entity->get('usersIds');
+
+        if (is_null($emailUserIdList) || !is_array($emailUserIdList)) {
             return;
         }
 
         $userIdList = [];
-        if ($entity->has('assignedUserId') && $entity->get('assignedUserId')) {
-            $assignedUserId = $entity->get('assignedUserId');
-            if ($assignedUserId != $this->getUser()->id && $entity->isFieldChanged('assignedUserId')) {
-                $userIdList[] = $assignedUserId;
-            }
-        }
-        $emailUserIdList = $entity->get('usersIds');
-        if (is_null($emailUserIdList)) {
-            $entity->loadLinkMultipleField('from');
-            $emailUserIdList = $entity->get('usersIds');
-        }
-        if (!is_array($emailUserIdList)) {
-            $emailUserIdList = [];
-        }
         foreach ($emailUserIdList as $userId) {
-            if (!in_array($userId, $userIdList)) {
+            if (!in_array($userId, $userIdList) && !in_array() && $userId != $this->getUser()->id) {
                 $userIdList[] = $userId;
             }
         }
@@ -68,7 +80,26 @@ class Email extends \Espo\Core\Notificators\Base
             }
         }
 
+        $parent = null;
+        if ($entity->get('parentId') && $entity->get('parentType')) {
+            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        }
+        $account = null;
+        if ($entity->get('accountId')) {
+            $account = $this->getEntityManager()->getEntity('Account', $entity->get('accountId'));
+        }
+
         foreach ($userIdList as $userId) {
+            if ($parent) {
+                if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
+                    continue;
+                }
+            }
+            if ($account) {
+                if ($this->getStreamService()->checkIsFollowed($account, $userId)) {
+                    continue;
+                }
+            }
             $notification = $this->getEntityManager()->getEntity('Notification');
             $notification->set(array(
                 'type' => 'EmailReceived',

@@ -46,6 +46,11 @@ class Base implements Injectable
     {
     }
 
+    protected function addDependency($name)
+    {
+        $this->dependencies[] = $name;
+    }
+
     public function getDependencyList()
     {
         return $this->dependencies;

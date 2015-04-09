@@ -53,6 +53,11 @@ abstract class Base implements Injectable
         return $this->injections[$name];
     }
 
+    protected function addDependency($name)
+    {
+        $this->dependencies[] = $name;
+    }
+
     public function getDependencyList()
     {
         return $this->dependencies;
