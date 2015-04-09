@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "Revert Import": "Revert Import",
+        "Return to Import": "Повернутися до імпорту",
+        "Run Import": "Запустити імпорт",
+        "Back": "Назад",
+        "Field Mapping": "Зіставлення полів",
+        "Default Values": "Замовчувані значення",
+        "Add Field": "Додати поле",
+        "Created": "Створено",
+        "Updated": "Поновлено",
+        "Result": "Результат",
+        "Show records": "Показати записи",
+        "Remove Duplicates": "Remove Duplicates",
+        "importedCount": "Imported (count)",
+        "duplicateCount": "Duplicates (count)",
+        "updatedCount": "Updated (count)"
+    },
+    "messages": {
+        "utf8": "Мусить бути в кодуванні utf-8",
+        "duplicatesRemoved": "Duplicates removed"
+    },
+    "fields": {
+        "file": "Файл",
+        "entityType": "Entity Type",
+        "imported": "Imported Records",
+        "duplicates": "Duplicate Records",
+        "updated": "Updated Records"
+    }
+}

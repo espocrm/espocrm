@@ -1,0 +1,81 @@
+{
+    "fields": {
+        "useCache": "Використовувати кеш",
+        "dateFormat": "Формат дати",
+        "timeFormat": "Формат часу",
+        "timeZone": "Часовий пояс",
+        "weekStart": "Перший день тижня",
+        "thousandSeparator": "Розділювач ґруп розрядів",
+        "decimalMark": "Розділювач десяткових",
+        "defaultCurrency": "Валюта за замовчуванням",
+        "baseCurrency": "Базова валюта",
+        "currencyRates": "Курси обміну",
+
+        "currencyList": "Список валют",
+        "language": "Мова",
+
+        "companyLogo": "Лоґотип компанії",
+
+        "smtpServer": "Сервер",
+        "smtpPort": "Порт",
+        "smtpAuth": "Авторизація",
+        "smtpSecurity": "Безпека",
+        "smtpUsername": "Ім'я користувача",
+        "emailAddress": "Електронна пошта",
+        "smtpPassword": "Пароль",
+        "outboundEmailFromName": "Від імені",
+        "outboundEmailFromAddress": "З адреси",
+        "outboundEmailIsShared": "Розшарене",
+
+        "recordsPerPage": "Запис на сторінку",
+        "recordsPerPageSmall": "Запис на сторінку (дрібно)",
+        "tabList": "Вкладка Список",
+        "quickCreateList": "Швидке створення списку",
+
+        "exportDelimiter": "Експортувати роздільник даних",
+
+        "globalSearchEntityList": "Ґлобальний пошук списку сутностей",
+
+        "authenticationMethod": "Метод автентифікації",
+        "ldapHost": "Хост",
+        "ldapPort": "Порт",
+        "ldapAuth": "Авторизація",
+        "ldapUsername": "Ім'я користувача",
+        "ldapPassword": "Пароль",
+        "ldapBindRequiresDn": "Прив'язка по домену",
+        "ldapBaseDn": "Базовий домен",
+        "ldapAccountCanonicalForm": "Усталена форма облікового запису",
+        "ldapAccountDomainName": "Доменне ім'я облікового запису",
+        "ldapTryUsernameSplit": "Спробувати відділити ім'я користувача",
+        "ldapCreateEspoUser": "Створити користувача в EspoCRM",
+        "ldapSecurity": "Безпека",
+        "ldapUserLoginFilter": "Фільтр лоґіну користувача",
+        "ldapAccountDomainNameShort": "Обліковий запис доменного імені (коротко)",
+        "ldapOptReferrals": "Оптові реферали",
+        "disableExport": "Вимкнути експортування (доступно лише адміністраторові)",
+        "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
+        "assignmentEmailNotifications": "Посилати сповіщення на емейл при пов'язуванні",
+        "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
+        "b2cMode": "Режим В2С",
+        "disableAvatars": "Вимкнути аватари"
+    },
+    "options": {
+        "weekStart": {
+            "0": "Неділя",
+            "1": "Понеділок"
+        }
+    },
+    "tooltips": {
+        "recordsPerPageSmall": "Число записів в панелях зв'язків."
+    },
+    "labels": {
+        "System": "Система",
+        "Locale": "Локаль",
+        "SMTP": "Протокол SMTP",
+        "Configuration": "Конфіґурація",
+        "In-app Notifications": "In-app Notifications",
+        "Email Notifications": "Email Notifications",
+        "Currency Settings": "Установки валюти",
+        "Currency Rtes": "Курси обміну валют"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "parent": "Джерело",
+        "status": "статус",
+        "dateStart": "Дата початку",
+        "dateEnd": "Дата закінчення",
+        "duration": "Тривалість",
+        "description": "Опис",
+        "users": "Користувачі",
+        "contacts": "Контакти",
+        "leads": "Потенційні клієнти",
+        "reminders": "Нагадування",
+        "account": "Контрагент"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Запланований",
+            "Held": "Виконаний",
+            "Not Held": "Не відбувся"
+        },
+        "acceptanceStatus": {
+            "None": "Нема",
+            "Accepted": "Прийнятий",
+            "Declined": "Відхилений",
+            "Tentative": "Попередній"
+        }
+    },
+    "labels": {
+        "Create Meeting": "Створити зустріч",
+        "Set Held": "Був виконаний",
+        "Set Not Held": "Набір Не Проводиться",
+        "Send Invitations": "Відправити запрошення",
+        "on time": "на час",
+        "before": "перед"
+    },
+    "presetFilters": {
+        "planned": "Запланований",
+        "held": "Виконаний",
+        "todays": "На сьогодні"
+    }
+}

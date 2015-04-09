@@ -1,0 +1,37 @@
+{
+    "labels": {
+        "Fields": "Поля",
+        "Relationships": "Відносини"
+    },
+    "fields": {
+        "name": "Ім'я",
+        "type": "Тип",
+        "labelSingular": "Одиночна мітка",
+        "labelPlural": "Множинна мітка",
+        "stream": "Потік",
+        "label": "Мітка",
+        "linkType": "Тип линви",
+        "entityForeign": "Іноземна орґанізація",
+        "linkForeign": "Іноземна линва",
+        "link": "Линва",
+        "labelForeign": "Іноземна мітка"
+    },
+    "options": {
+        "type": {
+            "": "Нема",
+            "Base": "База",
+            "Person": "Особа"
+        },
+        "linkType": {
+            "manyToMany": "Багато-до-багатьох",
+            "oneToMany": "Один-до-багатьох",
+            "manyToOne": "Багато-до-одного",
+            "parentToChildren": "Батьки-дітям",
+            "childrenToParent": "Діти-батькам"
+        }
+    },
+    "messages": {
+        "entityCreated": "Підрозділ було створено",
+        "linkAlreadyExists": "Конфлікт: линва вже існує."
+    }
+}

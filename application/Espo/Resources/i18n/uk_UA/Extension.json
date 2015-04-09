@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "version": "Версія",
+        "description": "Опис",
+        "isInstalled": "Встановлено"
+    },
+    "labels": {
+        "Uninstall": "Видалити",
+        "Install": "Установити"
+    },
+    "messages": {
+        "uninstalled": "Розширення {name} видалено"
+    }
+}

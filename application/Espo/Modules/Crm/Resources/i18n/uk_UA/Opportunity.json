@@ -1,0 +1,42 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "account": "Контрагент",
+        "stage": "Стадія",
+        "amount": "Сума",
+        "probability": "Ймовірність успіху, %",
+        "leadSource": "Джерело потенційного клієнта",
+        "doNotCall": "Не дзвонити",
+        "closeDate": "Дата закриття",
+        "contacts": "Контакти",
+        "description": "Опис",
+        "amountConverted": "Сума (сконвертирована)",
+        "amountWeightedConverted": "Сума Зважених",
+        "campaign": "Кампанія"
+    },
+    "links": {
+        "contacts": "Контакти",
+        "documents": "Документи"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Залучення клієнта",
+            "Qualification": "Оцінка можливості",
+            "Needs Analysis": "Вимагає аналізу",
+            "Value Proposition": "Вибір пропозиції/оферти",
+            "Id. Decision Makers": "Визначення відповідальної особи",
+            "Perception Analysis": "Проведення аналізу",
+            "Proposal/Price Quote": "Відправлено пропозиція/оферта",
+            "Negotiation/Review": "Узгодження/розгляд",
+            "Closed Won": "Закрито - Успіх",
+            "Closed Lost": "Закрито - Провал"
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Створити угоду"
+    },
+    "presetFilters": {
+        "open": "Відкрити",
+        "won": "Успішні"
+    }
+}

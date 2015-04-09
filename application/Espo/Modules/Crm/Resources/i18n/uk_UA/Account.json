@@ -1,0 +1,68 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "emailAddress": "Електронна пошта",
+        "website": "Інтернет сайт",
+        "phoneNumber": "Телефон",
+        "billingAddress": "Платіжний адреса",
+        "shippingAddress": "Поштова адреса",
+        "description": "Опис",
+        "sicCode": "SicCode",
+        "industry": "Промисловість",
+        "type": "Тип",
+        "contactRole": "Назва",
+        "campaign": "Кампанія"
+    },
+    "links": {
+        "contacts": "Контакти",
+        "opportunities": "Угоди",
+        "cases": "Звернення",
+        "documents": "Документи",
+        "meetingsPrimary": "Meetings (expanded)",
+        "callsPrimary": "Calls (expanded)",
+        "tasksPrimary": "Tasks (expanded)",
+        "emailsPrimary": "Emails (expanded)",
+        "targetLists": "Цільові Списки",
+        "campaignLogRecords": "Кампанія Журналу"
+    },
+    "options": {
+        "type": {
+            "Customer": "Замовник",
+            "Investor": "Вкладник",
+            "Partner": "Партнер",
+            "Reseller": "Посередник"
+        },
+        "industry": {
+            "Agriculture": "Сільське господарство",
+            "Advertising": "Реклама",
+            "Apparel & Accessories": "Одяг Та Аксесуари",
+            "Automotive": "Автомобільні",
+            "Banking": "Банківська справа",
+            "Biotechnology": "Біотехнології",
+            "Chemical": "Хімічний",
+            "Computer": "Комп'ютер",
+            "Education": "Освіта",
+            "Electronics": "Електроніка",
+            "Entertainment & Leisure": "Розваги Та Відпочинок",
+            "Finance": "Фінанси",
+            "Food & Beverage": "Їжа І Напої",
+            "Grocery": "Доставка",
+            "Insurance": "Страхування",
+            "Legal": "Юридичні",
+            "Publishing": "Публікації",
+            "Real Estate": "Нерухомість",
+            "Service": "Сервіс",
+            "Sports": "Спорт",
+            "Software": "Програмне забезпечення",
+            "Technology": "Технологія",
+            "Telecommunications": "Телекомунікації",
+            "Television": "Телебачення",
+            "Transportation": "Транспорт",
+            "Venture Capital": "Венчурний Капітал"
+        }
+    },
+    "labels": {
+        "Create Account": "Створити контрагента",
+        "Copy Billing": "Копію Білінгу"
+    }
+}

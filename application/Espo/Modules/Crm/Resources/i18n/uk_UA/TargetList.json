@@ -1,0 +1,28 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "description": "Опис",
+        "entryCount": "Запис Графа",
+        "campaigns": "Кампаній",
+        "endDate": "Дата Закінчення",
+        "targetLists": "Цільові Списки"
+    },
+    "links": {
+        "accounts": "Рахунки",
+        "contacts": "Контакти",
+        "leads": "Потенційні клієнти",
+        "campaigns": "Кампаній"
+    },
+    "options": {
+        "type": {
+            "Email": "Електронна пошта",
+            "Web": "Веб -",
+            "Television": "Телебачення",
+            "Radio": "Радіо",
+            "Newsletter": "Розсилку"
+        }
+    },
+    "labels": {
+        "Create TargetList": "Створити Цільовий Список"
+    }
+}

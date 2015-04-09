@@ -1,0 +1,63 @@
+{
+    "fields": {
+        "name": "Тема",
+        "parent": "Джерело",
+        "status": "статус",
+        "dateSent": "Дата відправки",
+        "from": "Від",
+        "to": "До",
+        "cc": "ГГ",
+        "bcc": "СК",
+        "isHtml": "HTML-код",
+        "body": "Тіло",
+        "subject": "Тема",
+        "attachments": "Вкладення",
+        "selectTemplate": "Обрати шаблон",
+        "fromEmailAddress": "З адреси",
+        "toEmailAddresses": "На адресу",
+        "emailAddress": "Поштова скринька",
+        "deliveryDate": "Дата доставки",
+        "account": "Контрагент"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Чернетка",
+        "Sending": "Відправляється",
+        "Sent": "Відправлено",
+        "Archived": "В архіві",
+        "Received": "Отримав"
+    },
+    "labels": {
+        "Create Email": "Архівувати листа",
+        "Archive Email": "Архівувати листа",
+        "Compose": "Написати",
+        "Reply": "Відповісти",
+        "Reply to All": "Відповісти всим",
+        "Forward": "Переслати",
+        "Original message": "Ориґінал повідомлення",
+        "Forwarded message": "Переслане повідомлення",
+        "Email Accounts": "Акаунти емейлів",
+        "Send Test Email": "Відправити тестове повідомлення",
+        "Send": "Відправити",
+        "Email Address": "Поштова скринька",
+        "Mark Read": "Прочитане",
+        "Sending...": "Шле...",
+        "Save Draft": "Зберегти чернетку",
+        "Mark all as read": "Mark all as read"
+    },
+    "messages": {
+        "noSmtpSetup": "Не налаштовано SMTP. {посилання}.",
+        "testEmailSent": "Тестового листа було відправлено",
+        "emailSent": "Листа було відправлено",
+        "savedAsDraft": "Saved as draft"
+    },
+    "presetFilters": {
+        "sent": "Відправлено",
+        "archived": "В архіві",
+        "draft": "Чернетка"
+    },
+    "massActions": {
+        "markAsRead": "Позначити прочитаним"
+    }
+}

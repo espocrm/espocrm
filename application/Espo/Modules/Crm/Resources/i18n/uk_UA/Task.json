@@ -1,0 +1,42 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "parent": "Джерело",
+        "status": "статус",
+        "dateStart": "Дата початку",
+        "dateEnd": "Дата Зв'язку",
+        "dateStartDate": "Date Start (all day)",
+        "dateEndDate": "Date End (all day)",
+        "priority": "Пріоритет",
+        "description": "Опис",
+        "isOverdue": "Прострочена",
+        "account": "Контрагент"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Not Started": "Не почалася",
+            "Started": "Почалася",
+            "Completed": "Завершено",
+            "Canceled": "Скасовано",
+            "Deferred": "Відстрочені"
+        },
+        "priority" : {
+            "Low": "Низький",
+            "Normal": "Нормальний",
+            "High": "Високий",
+            "Urgent": "Терміново"
+        }
+    },
+    "labels": {
+        "Create Task": "Створити завдання",
+        "Complete": "Повне"
+    },
+    "presetFilters": {
+        "actual": "Фактичні",
+        "completed": "Завершено",
+        "todays": "На сьогодні",
+        "overdue": "Прострочені"
+    }
+}

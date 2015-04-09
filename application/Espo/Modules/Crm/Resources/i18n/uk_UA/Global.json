@@ -1,0 +1,100 @@
+{
+    "scopeNames": {
+        "Account": "Контрагент",
+        "Contact": "Контакт",
+        "Lead": "Потенційний клієнт",
+        "Target": "Цільовий",
+        "Opportunity": "Угода",
+        "Meeting": "Зустріч",
+        "Calendar": "Календар",
+        "Call": "Виклик",
+        "Task": "Завдання",
+        "Case": "Звернення",
+        "InboundEmail": "Вхідна пошта",
+        "Document": "Документ",
+        "Campaign": "Кампанія",
+        "TargetList": "Цільовий Список"
+    },
+    "scopeNamesPlural": {
+        "Account": "Рахунки",
+        "Contact": "Контакти",
+        "Lead": "Потенційні клієнти",
+        "Target": "Цілі",
+        "Opportunity": "Угоди",
+        "Meeting": "Зустрічі",
+        "Calendar": "Календар",
+        "Call": "Дзвінки",
+        "Task": "Завдання",
+        "Case": "Звернення",
+        "InboundEmail": "Вхідні повідомлення",
+        "Document": "Документи",
+        "Campaign": "Кампаній",
+        "TargetList": "Цільові Списки"
+    },
+    "dashlets": {
+        "Leads": "Мої потенційні клієнти",
+        "Opportunities": "Мої угоди",
+        "Tasks": "Мої завдання",
+        "Cases": "Мої звернення",
+        "Calendar": "Календар",
+        "Calls": "Мої дзвінки",
+        "Meetings": "Мої зустрічі",
+        "OpportunitiesByStage": "Угоди на стадії",
+        "OpportunitiesByLeadSource": "Операції з джерела потенційного клієнта",
+        "SalesByMonth": "Продажу по місяцях",
+        "SalesPipeline": "Джерела продажу"    
+    },
+    "labels": {
+        "Create InboundEmail": "Створити вхідну пошту",
+        "Activities": "Заходи",
+        "History": "Історія",
+        "Attendees": "Учасники",
+        "Schedule Meeting": "Запланувати зустріч",
+        "Schedule Call": "Запланувати дзвінок",
+        "Compose Email": "Створити e-mail",
+        "Log Meeting": "Записати зустріч",
+        "Log Call": "Записати дзвінок",
+        "Archive Email": "Архівувати листа",
+        "Create Task": "Створити завдання",
+        "Tasks": "Завдання"        
+    },
+    "fields": {
+        "billingAddressCity": "Місто",
+        "billingAddressCountry": "Країна",
+        "billingAddressPostalCode": "Поштовий індекс",
+        "billingAddressState": "Реґіон",
+        "billingAddressStreet": "Вулиця",
+        "addressCity": "Місто",
+        "addressStreet": "Вулиця",
+        "addressCountry": "Країна",
+        "addressState": "Реґіон",
+        "addressPostalCode": "Поштовий індекс",        
+        "shippingAddressCity": "Місто доставки",
+        "shippingAddressStreet": "Вулиця доставки",
+        "shippingAddressCountry": "Країна доставки",
+        "shippingAddressState": "Регіон доставки",
+        "shippingAddressPostalCode": "Поштовий код доставки"
+    },
+    "links": {
+        "contacts": "Контакти",
+        "opportunities": "Угоди",
+        "leads": "Потенційні клієнти",        
+        "meetings": "Зустрічі",
+        "calls": "Дзвінки",
+        "tasks": "Завдання",
+        "emails": "Листи",
+        "accounts": "Рахунки",
+        "cases": "Звернення",
+        "documents": "Документи",
+        "account": "Контрагент",
+        "opportunity": "Угода",        
+        "contact": "Контакт",
+        "parent": "Джерело"
+    },
+    "options": {
+        "reminderTypes": {
+            "Popup": "Спливаюче вікно",
+            "Email": "Електронна пошта"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "number": "Номер",
+        "status": "статус",
+        "account": "Контрагент",
+        "contact": "Контакт",
+        "priority": "Пріоритет",
+        "type": "Тип",
+        "description": "Опис"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Новий",
+            "Assigned": "На розгляді",
+            "Pending": "Поточне",
+            "Closed": "Закрито",
+            "Rejected": "Відмовлено",
+            "Duplicate": "Дуплікат"
+        },
+        "priority" : {
+            "Low": "Низький",
+            "Normal": "Нормальний",
+            "High": "Високий",
+            "Urgent": "Терміново"
+        },
+        "type": {
+            "Question": "Питання",
+            "Incident": "Подія",
+            "Problem": "Проблема"
+        }
+    },
+    "labels": {
+        "Create Case": "Створити звернення"
+    },
+    "presetFilters": {
+        "open": "Відкрити",
+        "closed": "Закрито"
+    }
+}

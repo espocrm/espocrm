@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "title": "Назва",
+        "dateFrom": "Дата від",
+        "dateTo": "Дата до",
+        "autorefreshInterval": "Інтервал авто-оновлення",
+        "displayRecords": "Відобразити записи",
+        "isDoubleHeight": "Висота 2x",
+        "mode": "Mode"
+    },
+    "options": {
+    	"mode": {
+    		"agendaWeek": "Week (agenda)",
+    		"basicWeek": "тиждень",
+    		"month": "місяць"
+    	}
+    }
+}

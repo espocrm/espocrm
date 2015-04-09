@@ -1,0 +1,32 @@
+{
+    "labels": {
+        "Create Document": "Створити Документ",
+        "Details": "Деталі"
+    },
+    "fields": {
+        "name": "Ім'я",
+        "status": "статус",
+        "file": "Файл",
+        "type": "Тип",
+        "source": "Джерело",
+        "publishDate": "Дата Публікації",
+        "expirationDate": "Термін Придатності",
+        "description": "Опис"
+    },
+    "links": {
+        "accounts": "Рахунки",
+        "opportunities": "Угоди"
+    },
+    "options": {
+        "status": {
+            "Active": "Активний",
+            "Draft": "Чернетка",
+            "Expired": "Закінчився",
+            "Canceled": "Скасовано"
+        }
+    },
+    "presetFilters": {
+        "active": "Активний",
+        "draft": "Чернетка"
+    }
+}

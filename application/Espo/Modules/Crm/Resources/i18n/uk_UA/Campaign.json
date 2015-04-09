@@ -1,0 +1,54 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "description": "Опис",
+        "status": "статус",
+        "type": "Тип",
+        "startDate": "Дата Початку",
+        "endDate": "Дата Закінчення",
+        "targetLists": "Цільові Списки",
+        "sentCount": "Відправлено",
+        "openedCount": "Відкритий",
+        "clickedCount": "Натиснув",
+        "optedOutCount": "Відмовлено",
+        "bouncedCount": "Відскочив",
+        "hardBouncedCount": "Жорсткий Відскочив",
+        "softBouncedCount": "М'яка Відскочив",
+        "leadCreatedCount": "Призводить Створена",
+        "revenue": "Виручка"
+    },
+    "links": {
+        "targetLists": "Цільові Списки",
+        "accounts": "Рахунки",
+        "contacts": "Контакти",
+        "leads": "Потенційні клієнти",
+        "opportunities": "Угоди",
+        "campaignLogRecords": "Лоґ"
+    },
+    "options": {
+        "type": {
+            "Email": "Електронна пошта",
+            "Web": "Веб -",
+            "Television": "Телебачення",
+            "Radio": "Радіо",
+            "Newsletter": "Розсилку",
+            "Mail": "Пошта"
+        },
+        "status": {
+            "Planning": "Планування",
+            "Active": "Активний",
+            "Inactive": "Неактивний",
+            "Complete": "Повне"
+        }
+    },
+    "labels": {
+        "Create Campaign": "Створити Кампанію",
+        "Target Lists": "Цільові Списки",
+        "Statistics": "Статистика",
+        "hard": "жорсткий",
+        "soft": "м'який"
+    },
+    "presetFilters": {
+        "active": "Активний"
+    }
+}

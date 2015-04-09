@@ -69,6 +69,7 @@ return array (
         'ru_RU',
         'pl_PL',
         'pt_BR',
+        'uk_UA',
         'vi_VN'
     ),
     'language' => 'en_US',

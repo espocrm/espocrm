@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "dateFormat": "Формат дати",
+        "timeFormat": "Формат часу",
+        "timeZone": "Часовий пояс",
+        "weekStart": "Перший день тижня",
+        "thousandSeparator": "Розділювач ґруп розрядів",
+        "decimalMark": "Розділювач десяткових",
+        "defaultCurrency": "Валюта за замовчуванням",
+        "currencyList": "Список валют",
+        "language": "Мова",
+        "smtpServer": "Сервер",
+        "smtpPort": "Порт",
+        "smtpAuth": "Авторизація",
+        "smtpSecurity": "Безпека",
+        "smtpUsername": "Ім'я користувача",
+        "emailAddress": "Електронна пошта",
+        "smtpPassword": "Пароль",
+        "smtpEmailAddress": "Поштова скринька",
+        "exportDelimiter": "Експортувати роздільник даних",
+        "receiveAssignmentEmailNotifications": "Отримувати повідомлення при призначенні",
+        "autoFollowEntityTypeList": "Авто-підписка",
+        "signature": "Підпис емейла",
+        "dashboardTabList": "Вкладка Список"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Неділя",
+            "1": "Понеділок"
+        }
+    },
+    "labels": {
+        "Notifications": "Оповіщення"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "Користувач буде автоматично підписаний на всі нові записи із вибраних типів сутностей, бачитиме інформацію у потоці й отримувати сповіщення."
+    }
+}

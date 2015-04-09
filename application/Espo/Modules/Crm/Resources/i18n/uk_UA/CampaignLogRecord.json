@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "action": "Дія",
+        "actionDate": "Дата",
+        "data": "Дані",
+        "campaign": "Кампанія",
+        "parent": "Цільовий",
+        "object": "Об'єкт",
+        "application": "Додаток"
+    },
+    "options": {
+    	"action": {
+            "Sent": "Відправлено",
+            "Opened": "Відкритий",
+            "Opted Out": "Відмовлено",
+            "Bounced": "Відскочив",
+            "Clicked": "Натиснув",
+            "Lead Created": "Привести Створена"
+    	}
+    },
+    "labels": {
+        "All": "Все"
+    }
+}

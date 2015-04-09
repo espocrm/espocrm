@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "enabled": "Увімкнено",
+        "clientId": "Клієнтський ID",
+        "clientSecret": "Секрет Клієнта",
+        "redirectUri": "URI перенаправлення"
+    },
+    "messages": {
+        "selectIntegration": "Виберіть втулку з меню.",
+        "noIntegrations": "Жодних втулок не доступну."
+    },
+    "help": {
+        "Google": "<p><b>Отримати посвідчення OAuth 2.0 з Google Developers Console.</b></p><p>Відвідайте <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> для отримання посвідчення OAuth 2.0, таких як Клієнтський ID та Секрет Клієнта, що йдуть однаково для Google та EspoCRM додатків.</p>"
+    }
+}

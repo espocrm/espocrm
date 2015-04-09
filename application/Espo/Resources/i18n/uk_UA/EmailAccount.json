@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "status": "статус",
+        "host": "Хост",
+        "username": "Ім'я користувача",
+        "password": "Пароль",
+        "port": "Порт",
+        "monitoredFolders": "Відслідковувані теки",
+        "ssl": "SSL",
+        "fetchSince": "Вибірки з"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Активний",
+            "Inactive": "Неактивний"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Створити емейл-акаунт",
+        "IMAP": "IMAP",
+        "Main": "Основне"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "Не вдається підключитися до сервера IMAP"
+    }
+}

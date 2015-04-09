@@ -1,0 +1,55 @@
+{
+    "labels": {
+        "Converted To": "Перетворений в",
+        "Create Lead": "Створити потенційного клієнта",
+        "Convert": "Перетворити"
+    },
+    "fields": {
+        "name": "Ім'я",
+        "emailAddress": "Електронна пошта",
+        "title": "Назва",
+        "website": "Інтернет сайт",
+        "phoneNumber": "Телефон",
+        "accountName": "Ім'я контрагента",
+        "doNotCall": "Не дзвонити",
+        "address": "Адреса",
+        "status": "статус",
+        "source": "Джерело",
+        "opportunityAmount": "Сума угоди",
+        "opportunityAmountConverted": "Сума угоди (конвертований)",
+        "description": "Опис",
+        "createdAccount": "Контрагент",
+        "createdContact": "Контакт",
+        "createdOpportunity": "Угода",
+        "campaign": "Кампанія",
+        "targetLists": "Цільові Списки",
+        "targetList": "Цільовий Список"
+    },
+    "links": {
+        "targetLists": "Цільові Списки",
+        "campaignLogRecords": "Кампанія Журналу"
+    },
+    "options": {
+        "status": {
+            "New": "Новий",
+            "Assigned": "На розгляді",
+            "In Process": "У процесі",
+            "Converted": "Перетворене",
+            "Recycled": "Відновлений",
+            "Dead": "Мертвий"
+        },
+        "source": {
+            "Call": "Виклик",
+            "Email": "Електронна пошта",
+            "Existing Customer": "Існуючі Служби",
+            "Partner": "Партнер",
+            "Public Relations": "Зв'язки З Громадськістю",
+            "Web Site": "Веб-Сайт",
+            "Campaign": "Кампанія",
+            "Other": "Додатково"
+        }
+    },
+    "presetFilters": {
+        "active": "Активний"
+    }
+}
