@@ -126,7 +126,7 @@ class Importer
                     $this->importPartDataToEmail($email, $part, $inlineIds);
                 }
             } else {
-                $this->importPartDataToEmail($email, $message, $inlineIds);
+                $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
             }
 
             $body = $email->get('body');
@@ -235,19 +235,29 @@ class Importer
         return $addressList;
     }
 
-    protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array())
+    protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array(), $defaultContentType = null)
     {
         try {
-            if (!$part->getHeaders() || !isset($part->contentType)) {
-                return;
+            $type = null;
+
+            if ($part->getHeaders() && isset($part->contentType)) {
+                $type = strtok($part->contentType, ';');
             }
 
-            $type = strtok($part->contentType, ';');
+            if (empty($type)) {
+                if (!empty($defaultContentType)) {
+                    $type = $defaultContentType;
+                } else {
+                    return;
+                }
+            }
+
             $encoding = null;
 
             $isAttachment = true;
 
             if ($type == 'text/plain' || $type == 'text/html') {
+
                 $isAttachment = false;
                 $content = $this->getContentFromPart($part);
                 if ($type == 'text/plain') {

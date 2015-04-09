@@ -284,9 +284,12 @@ class Sender
 
         $message->setBody($body);
 
-        if ($message->getHeaders()->has('content-type')) {
-            $message->getHeaders()->get('content-type')->setType($messageType);
+        if (!$message->getHeaders()->has('content-type')) {
+            $contentTypeHeader = new \Zend\Mail\Header\ContentType();
+            $message->getHeaders()->addHeader($contentTypeHeader);
         }
+        $message->getHeaders()->get('content-type')->setType($messageType);
+
         $message->setEncoding('UTF-8');
 
         try {
