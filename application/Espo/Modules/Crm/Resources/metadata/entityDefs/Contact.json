@@ -141,7 +141,7 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "layoutSearchDisabled": true,
+            "layoutFiltersDisabled": true,
             "entity": "TargetList"
         }
     },

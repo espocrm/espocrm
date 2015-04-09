@@ -40,7 +40,8 @@
             "type": "bool",
             "readOnly": true,
             "notStorable": true,
-            "view": "Crm:Task.Fields.IsOverdue"
+            "view": "Crm:Task.Fields.IsOverdue",
+            "layoutFiltersDisabled": true
         },
         "description": {
             "type": "text"

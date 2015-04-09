@@ -54,7 +54,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "openedCount": {
             "type": "int",
@@ -62,7 +62,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "clickedCount": {
             "type": "int",
@@ -70,7 +70,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "optedOutCount": {
             "type": "int",
@@ -78,7 +78,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "bouncedCount": {
             "type": "int",
@@ -86,7 +86,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "hardBouncedCount": {
             "type": "int",
@@ -94,7 +94,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "softBouncedCount": {
             "type": "int",
@@ -102,7 +102,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "leadCreatedCount": {
             "type": "int",
@@ -110,7 +110,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         },
         "revenue": {
             "type": "currency",
@@ -118,7 +118,7 @@
             "readOnly": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutSearchDisabled": true
+            "layoutFiltersDisabled": true
         }
     },
     "links": {
