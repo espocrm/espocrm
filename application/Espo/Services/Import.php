@@ -218,7 +218,7 @@ class Import extends \Espo\Services\Record
             if ($entity) {
                 $this->getEntityManager()->removeEntity($entity);
             }
-            $this->getEntityManager()->getRepository($scope)->deleteFromDb($entityId);
+            $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
         }
 
         $this->getEntityManager()->removeEntity($import);
@@ -347,6 +347,12 @@ class Import extends \Espo\Services\Record
         $recordService = $this->getRecordService($scope);
 
         $entity = $this->getEntityManager()->getEntity($scope, $id);
+        if (!$entity) {
+            $entity = $this->getEntityManager()->getEntity($scope);
+            $entity->set('id', $id);
+        }
+
+        $isNew = $entity->isNew();
 
         $entity->set('assignedUserId', $this->getUser()->id);
 
@@ -469,10 +475,12 @@ class Import extends \Espo\Services\Record
         $a = $entity->toArray();
 
         try {
-            $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+            if ($isNew) {
+                $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+            }
             if ($this->getEntityManager()->saveEntity($entity, array('noStream' => true, 'noNotifications' => true))) {
                 $result['id'] = $entity->id;
-                if (empty($id)) {
+                if ($isNew) {
                     $result['isImported'] = true;
                     if ($isDuplicate) {
                         $result['isDuplicate'] = true;

@@ -51,7 +51,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
             case 'duplicates':
                 $part = "import_entity.is_duplicate = 1";
                 break;
-            case 'updates':
+            case 'updated':
                 $part = "import_entity.is_updated = 1";
                 break;
         }
