@@ -16,7 +16,7 @@
         "TargetList": "Цільовий Список"
     },
     "scopeNamesPlural": {
-        "Account": "Рахунки",
+        "Account": "Контрагенти",
         "Contact": "Контакти",
         "Lead": "Потенційні клієнти",
         "Target": "Цілі",
@@ -83,7 +83,7 @@
         "calls": "Дзвінки",
         "tasks": "Завдання",
         "emails": "Листи",
-        "accounts": "Рахунки",
+        "accounts": "Контрагенти",
         "cases": "Звернення",
         "documents": "Документи",
         "account": "Контрагент",
