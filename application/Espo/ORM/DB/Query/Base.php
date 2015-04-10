@@ -128,7 +128,7 @@ abstract class Base
             $params['leftJoins'] = array();
         }
 
-        $joinsPart = $this->getBelongsToJoins($entity, $params['select'], $params['joins'] + $params['leftJoins']);
+        $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
 
         $wherePart = $this->getWhere($entity, $whereClause);
 
