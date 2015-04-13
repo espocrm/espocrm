@@ -184,7 +184,9 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         exportAction: true,
 
-        allowQuickEdit: true,
+        quickDetailDisabled: false,
+
+        quickEditDisabled: false,
 
         /**
          * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
@@ -847,23 +849,27 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var id = data.id;
             if (!id) return;
 
-            this.notify('Loading...');
-            this.createView('quickDetail', 'Modals.Detail', {
-                scope: this.scope,
-                id: id
-            }, function (view) {
-                view.once('after:render', function () {
-                    Espo.Ui.notify(false);
-                });
-                view.render();
-                view.once('after:save', function () {
-                    console.log(2);
-                    var model = this.collection.get(id);
-                    if (model) {
-                        model.fetch();
-                    }
-                }, this);
-            }.bind(this));
+            if (!this.quickDetailDisabled) {
+                this.notify('Loading...');
+                this.createView('quickDetail', 'Modals.Detail', {
+                    scope: this.scope,
+                    id: id
+                }, function (view) {
+                    view.once('after:render', function () {
+                        Espo.Ui.notify(false);
+                    });
+                    view.render();
+                    view.once('after:save', function () {
+                        console.log(2);
+                        var model = this.collection.get(id);
+                        if (model) {
+                            model.fetch();
+                        }
+                    }, this);
+                }.bind(this));
+            } else {
+                this.getRouter().navigate('#' + this.scope + '/view/' + id, {trigger: true});
+            }
         },
 
         actionQuickEdit: function (d) {
@@ -871,7 +877,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var id = d.id;
             if (!id) return;
 
-            if (this.allowQuickEdit) {
+            if (!this.quickEditDisabled) {
                 this.notify('Loading...');
                 this.createView('quickEdit', 'Modals.Edit', {
                     scope: this.scope,

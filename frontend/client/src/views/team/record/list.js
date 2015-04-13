@@ -23,7 +23,9 @@ Espo.define('Views.Team.Record.List', 'Views.Record.List', function (Dep) {
 
     return Dep.extend({
 
-        allowQuickEdit: false,
+    	quickDetailDisabled: true,
+
+        quickEditDisabled: true,
 
         massActionList: ['remove'],
 

@@ -23,7 +23,7 @@ Espo.define('Views.User.Record.List', 'Views.Record.List', function (Dep) {
 
     return Dep.extend({
 
-        allowQuickEdit: false,
+        quickEditDisabled: true,
 
         massActionList: ['remove', 'massUpdate', 'export'],
 

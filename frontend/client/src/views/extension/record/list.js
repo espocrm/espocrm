@@ -27,7 +27,9 @@ Espo.define('Views.Extension.Record.List', 'Views.Record.List', function (Dep) {
 
         checkboxes: false,
 
-        allowQuickEdit: false,
+    	quickDetailDisabled: true,
+
+        quickEditDisabled: true,
 
         massActionList: []
 

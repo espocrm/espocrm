@@ -23,7 +23,9 @@ Espo.define('Crm:Views.InboundEmail.Record.List', 'Views.Record.List', function 
 
     return Dep.extend({
 
-        allowQuickEdit: false,
+    	quickDetailDisabled: true,
+
+        quickEditDisabled: true,
 
         massActionList: ['remove'],
 
