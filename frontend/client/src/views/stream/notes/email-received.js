@@ -65,6 +65,10 @@ Espo.define('Views.Stream.Notes.EmailReceived', 'Views.Stream.Note', function (D
                 this.messageName += 'This';
             }
 
+            if (this.model.get('parentType') === data.personEntityType && this.model.get('parentId') == data.personEntityId) {
+                this.messageName += 'This';
+            }
+
             this.createMessage();
         },
 
