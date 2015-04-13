@@ -40,7 +40,11 @@ Espo.define('Views.Notifications.Items.EmailReceived', 'Views.Notifications.Noti
             this.userId = data.userId;
 
             this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
-            this.messageData['from'] = '<a href="#' + data.personEntityType + '/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+            if (data.personEntityId) {
+                this.messageData['from'] = '<a href="#' + data.personEntityType + '/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+            } else {
+                this.messageData['from'] = data.fromString || this.translate('empty address');
+            }
 
             this.emailId = data.emailId;
             this.emailName = data.emailName;

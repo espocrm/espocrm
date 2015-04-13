@@ -80,6 +80,13 @@ class Email extends \Espo\Core\Notificators\Base
             }
         }
 
+        if (empty($data['personEntityId'])) {
+            $data['fromString'] = \Espo\Services\Email::parseFromName($entity->get('fromString'));
+            if (empty($data['fromString']) && $from) {
+                $data['fromString'] = $from;
+            }
+        }
+
         $parent = null;
         if ($entity->get('parentId') && $entity->get('parentType')) {
             $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
