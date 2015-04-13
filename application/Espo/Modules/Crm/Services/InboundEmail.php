@@ -230,7 +230,7 @@ class InboundEmail extends \Espo\Services\Record
                 }
 
                 if ($k == count($ids) - 1) {
-                    if ($message) {
+                    if ($message && isset($message->date)) {
                         $dt = new \DateTime($message->date);
                         if ($dt) {
                             $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');

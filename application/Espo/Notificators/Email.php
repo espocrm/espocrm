@@ -60,7 +60,7 @@ class Email extends \Espo\Core\Notificators\Base
 
         $userIdList = [];
         foreach ($emailUserIdList as $userId) {
-            if (!in_array($userId, $userIdList) && !in_array() && $userId != $this->getUser()->id) {
+            if (!in_array($userId, $userIdList) && $userId != $this->getUser()->id) {
                 $userIdList[] = $userId;
             }
         }

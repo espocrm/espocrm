@@ -110,7 +110,9 @@ class Importer
                     $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('dateSent', $dateSent);
                 }
-            }
+            } else {
+				$email->set('dateSent', date('Y-m-d H:i:s'));
+			}
             if (isset($message->deliveryDate)) {
                 $dt = new \DateTime($message->deliveryDate);
                 if ($dt) {

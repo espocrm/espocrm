@@ -224,7 +224,7 @@ class EmailAccount extends Record
                 if ($k == count($ids) - 1) {
                     $lastUID = $storage->getUniqueId($id);
 
-                    if ($message) {
+                    if ($message && isset($message->date)) {
                         $dt = new \DateTime($message->date);
                         if ($dt) {
                             $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
