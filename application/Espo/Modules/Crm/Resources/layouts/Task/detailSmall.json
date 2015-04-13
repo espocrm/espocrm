@@ -1,1 +1,14 @@
-[{"label":"","rows":[[{"name":"name"}],[{"name":"status"}],[{"name":"priority"}],[{"name":"dateStart"}],[{"name":"dateEnd"}],[{"name":"parent"}]]}]
+[
+	{
+		"label":"",
+		"rows":[
+			[{"name":"name"}],
+			[{"name":"status"}],
+			[{"name":"priority"}],
+			[{"name":"dateStart"}],
+			[{"name":"dateEnd"}],
+			[{"name":"parent"}],
+			[{"name":"description"}]
+		]
+	}
+]
