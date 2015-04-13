@@ -29,9 +29,9 @@ _.extend(Espo.Language.prototype, {
     data: null,
 
     cache: null,
-    
+
     url: 'I18n',
-    
+
     has: function (name, category, scope) {
         if (scope in this.data) {
             if (category in this.data[scope]) {
@@ -65,7 +65,7 @@ _.extend(Espo.Language.prototype, {
         }
         return res;
     },
-    
+
     translateOption: function (value, field, scope) {
         var translation = this.translate(field, 'options', scope);
         if (typeof translation != 'object') {
@@ -73,9 +73,9 @@ _.extend(Espo.Language.prototype, {
         }
         return translation[value] || value;
     },
-    
+
     loadFromCache: function () {
-        
+
         if (this.cache) {
             var cached = this.cache.get('app', 'language');
             if (cached) {
@@ -85,19 +85,19 @@ _.extend(Espo.Language.prototype, {
         }
         return null;
     },
-    
+
     clearCache: function () {
         if (this.cache) {
             this.cache.clear('app', 'language');
         }
     },
-    
+
     storeToCache: function () {
         if (this.cache) {
             this.cache.set('app', 'language', this.data);
         }
     },
-    
+
     load: function (callback, disableCache) {
         this.once('sync', callback);
 
@@ -125,7 +125,7 @@ _.extend(Espo.Language.prototype, {
             }
         });
     },
-    
+
 }, Backbone.Events);
 
 

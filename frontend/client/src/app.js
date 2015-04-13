@@ -414,7 +414,7 @@ _.extend(Espo.App.prototype, {
             this.language.load(function () {
                 langIsLoaded = true;
                 handleProcess();
-            }.bind(this));
+            }.bind(this), true);
 
 
             if (!userIsLoaded) {
