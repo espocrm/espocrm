@@ -45,6 +45,8 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 
         width: false,
 
+        escapeDisabled: false,
+
         init: function () {
             var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
             var containerSelector = this.containerSelector = '#' + id;
@@ -71,6 +73,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                     body: '',
                     buttons: buttons,
                     width: this.width,
+                    keyboard: !this.escapeDisabled,
                     onRemove: function () {
                         this.remove();
                     }.bind(this)

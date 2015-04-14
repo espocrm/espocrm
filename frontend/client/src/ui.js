@@ -36,7 +36,7 @@
         this.container = 'body'
         this.onRemove = function () {};
 
-        var params = ['className', 'backdrop', 'closeButton', 'header', 'body', 'width', 'height', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
+        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
         params.forEach(function (param) {
             if (param in options) {
                 this[param] = options[param];
@@ -124,6 +124,7 @@
     Dialog.prototype.show = function () {
         this.$el.modal({
              backdrop: this.backdrop,
+             keyboard: this.keyboard
         });
     };
     Dialog.prototype.hide = function () {
