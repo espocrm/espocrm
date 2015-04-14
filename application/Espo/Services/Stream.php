@@ -257,35 +257,83 @@ class Stream extends \Espo\Core\Services\Base
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
 
-        $selectParams = array(
-            'offset' => $offset,
-            'limit' => $maxSize + 1,
-            'orderBy' => 'number',
-            'order' => 'DESC',
-            'distinct' => true,
-            'customJoin' => "
-                JOIN subscription ON
+        $pdo = $this->getEntityManager()->getPDO();
+
+
+        $sql = "
+	        	(
+	        		SELECT
+		        		note.id AS 'id',
+		        		note.number AS 'number',
+		        		note.type AS 'type',
+		        		note.post AS 'post',
+		        		note.data AS 'data',
+		        		note.parent_type AS 'parentType',
+		        		note.parent_id AS 'parentId',
+		        		note.created_at AS 'createdAt',
+		        		note.created_by_id AS 'createdById',
+		        		TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+		        	FROM `note` AS `note`
+		            JOIN subscription AS `subscription` ON
+		                (
+		                    (
+		                        note.parent_type = subscription.entity_type AND
+		                        note.parent_id = subscription.entity_id
+		                    )
+		                ) AND
+						subscription.user_id = ".$pdo->quote($this->getUser()->id)."
+					LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+					WHERE note.deleted = 0 {where}
+					ORDER BY number DESC
+				)
+				UNION
+	        	(
+	        		SELECT
+		        		note.id AS 'id',
+		        		note.number AS 'number',
+		        		note.type AS 'type',
+		        		note.post AS 'post',
+		        		note.data AS 'data',
+		        		note.parent_type AS 'parentType',
+		        		note.parent_id AS 'parentId',
+		        		note.created_at AS 'createdAt',
+		        		note.created_by_id AS 'createdById',
+		        		TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+		        	FROM `note` AS `note`
+		            JOIN subscription AS `subscription` ON
+		                (
+		                    (
+	                            note.super_parent_type = subscription.entity_type AND
+	                            note.super_parent_id = subscription.entity_id
+		                    )
+		                ) AND
+						subscription.user_id = ".$pdo->quote($this->getUser()->id)."
+					LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+					WHERE note.deleted = 0 AND
                     (
-                        (
-                            note.parent_type = subscription.entity_type AND
-                            note.parent_id = subscription.entity_id
-                        ) OR
-                        (
-                            note.super_parent_type = subscription.entity_type AND
-                            note.super_parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = '" . $this->getUser()->id . "'
-            "
-        );
+                        note.parent_id <> note.super_parent_id
+                        OR
+                        note.parent_type <> note.super_parent_type
+                    )
+					{where}
+					ORDER BY number DESC
+				)
+			ORDER BY number DESC
+        ";
 
         if (!empty($params['after'])) {
             $where = array();
             $where['createdAt>'] = $params['after'];
             $selectParams['whereClause'] = $where;
+            $sql = str_replace('{where}', "AND note.created_at > ".$pdo->quote($params['after']), $sql);
+        } else {
+        	$sql = str_replace('{where}', '', $sql);
         }
 
-        $collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
+        $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
+
+
+        $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
 
         foreach ($collection as $e) {
             if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {

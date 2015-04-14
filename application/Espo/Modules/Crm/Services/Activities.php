@@ -266,6 +266,28 @@ class Activities extends \Espo\Core\Services\Base
                     entity_email_address_2.entity_type = " . $this->getPDO()->quote($scope) . " AND
                     entity_email_address_2.deleted = 0
 
+            ";
+            $sql .= "
+                WHERE
+                    email.deleted = 0 AND
+                    (
+                        email.parent_type <> ".$this->getPDO()->quote($scope)." OR
+                        email.parent_id <> ".$this->getPDO()->quote($id)." OR
+                        email.parent_type IS NULL OR
+                        email.parent_id IS NULL
+                    ) AND
+                    (entity_email_address_2.entity_id = ".$this->getPDO()->quote($id).")
+            ";
+            if (!empty($notIn)) {
+                $sql .= "
+                    AND email.status {$op} ('". implode("', '", $notIn) . "')
+                ";
+            }
+
+            $sql = $sql . "
+                UNION
+            " . $baseSql;
+            $sql .= "
                 LEFT JOIN email_email_address ON
                     email_email_address.email_id = email.id AND
                     email_email_address.deleted = 0
@@ -284,7 +306,7 @@ class Activities extends \Espo\Core\Services\Base
                         email.parent_type IS NULL OR
                         email.parent_id IS NULL
                     ) AND
-                    (entity_email_address_1.entity_id = ".$this->getPDO()->quote($id)." OR entity_email_address_2.entity_id = ".$this->getPDO()->quote($id).")
+                    (entity_email_address_1.entity_id = ".$this->getPDO()->quote($id).")
             ";
             if (!empty($notIn)) {
                 $sql .= "
