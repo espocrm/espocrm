@@ -64,7 +64,7 @@ class Notifications extends \Espo\Core\Hooks\Base
 
             $className = '\\Espo\\Custom\\Notificators\\' . $normalizedName;
             if (!class_exists($className)) {
-                $moduleName = $this->getMetadata()->getScopeModuleName($entityName);
+                $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
                 if ($moduleName) {
                     $className = '\\Espo\\Modules\\' . $moduleName . '\\Notificators\\' . $normalizedName;
                 } else {
