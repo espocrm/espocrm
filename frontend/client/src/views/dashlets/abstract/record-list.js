@@ -45,6 +45,8 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
             }
         }),
 
+        rowActionsView: 'Record.RowActions.ViewAndEdit',
+
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {
                 var searchManager = this.searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
@@ -68,7 +70,7 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
                         el: this.$el.selector + ' .list-container',
                         pagination: this.getOption('pagination') ? 'bottom' : false,
                         type: 'listDashlet',
-                        rowActionsView: 'Record.RowActions.ViewAndEdit',
+                        rowActionsView: this.rowActionsView,
                         checkboxes: false,
                         showMore: true,
                         listLayout: this.getOption(this.layoutType + 'Layout')
