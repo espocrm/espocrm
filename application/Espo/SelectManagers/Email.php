@@ -105,12 +105,12 @@ class Email extends \Espo\Core\SelectManagers\Base
         if (empty($result['customJoin'])) {
             $result['customJoin'] = '';
         }
-        if (stripos($result['customJoin'], 'email_email_address') === false) {
+        if (stripos($result['customJoin'], 'emailEmailAddress') === false) {
             $result['customJoin'] .= "
-                LEFT JOIN email_email_address
+                LEFT JOIN email_email_address AS `emailEmailAddress`
                     ON
-                    email_email_address.email_id = email.id AND
-                    email_email_address.deleted = 0
+                    emailEmailAddress.email_id = email.id AND
+                    emailEmailAddress.deleted = 0
             ";
         }
     }
