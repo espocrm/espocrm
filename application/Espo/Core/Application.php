@@ -138,6 +138,12 @@ class Application
         $dataManager->rebuild();
     }
 
+    public function runClearCache()
+    {
+        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager->clearCache();
+    }
+
     public function isInstalled()
     {
         $config = $this->getContainer()->get('config');

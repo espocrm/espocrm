@@ -155,6 +155,7 @@ module.exports = function (grunt) {
                     'bootstrap.php',
                     'cron.php',
                     'rebuild.php',
+                    'clear_cache.php',
                     'upgrade.php',
                     'index.php',
                     'LICENSE.txt',
