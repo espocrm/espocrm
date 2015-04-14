@@ -145,7 +145,8 @@
         "Yes": "Yes",
         "No": "No",
         "View": "View",
-        "Select All Result": "Select All Result"
+        "Select All Result": "Select All Result",
+        "Value": "Value"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -376,7 +377,9 @@
             "lessThan": "Less Than",
             "greaterThanOrEquals": "Greater Than or Equals",
             "lessThanOrEquals": "Less Than or Equals",
-            "between": "Between"
+            "between": "Between",
+            "startsWith": "Starts With",
+            "contains": "Contains"
         },
         "autorefreshInterval": {
             "0": "None",

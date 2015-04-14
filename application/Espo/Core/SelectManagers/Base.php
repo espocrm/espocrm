@@ -444,6 +444,12 @@ class Base
                 case 'on':
                     $part[$item['field'] . '='] = $item['value'];
                     break;
+                case 'startsWith':
+                    $part[$item['field'] . '*'] = $item['value'] . '%';
+                    break;
+                case 'contains':
+                    $part[$item['field'] . '*'] = '%' . $item['value'] . '%';
+                    break;
                 case 'notEquals':
                 case 'notOn':
                     $part[$item['field'] . '!='] = $item['value'];

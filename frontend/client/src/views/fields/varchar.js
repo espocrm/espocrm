@@ -17,27 +17,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Varchar', 'Views.Fields.Base', function (Dep) {
 
-    return Dep.extend({    
-    
+    return Dep.extend({
+
         type: 'varchar',
-        
+
         searchTemplate: 'fields.varchar.search',
-        
+
+        setupSearch: function () {
+            this.searchParams.typeOptions = ['startsWith', 'contains', 'equals'];
+        },
+
         fetchSearch: function () {
             var value = this.$element.val();
+            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
             if (value) {
                 var data = {
-                    type: 'like',
+                    value: value,
+                    type: type,
+                }
+                /*    type: 'like',
                     value: '%' + value + '%',
-                    valueText: value
-                };
+
+                };*/
                 return data;
             }
-            return false;                
+            return false;
         },
 
     });
