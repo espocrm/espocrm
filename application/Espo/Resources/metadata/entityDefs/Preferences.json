@@ -98,6 +98,10 @@
         "signature": {
             "type": "text",
             "view": "Fields.Wysiwyg"
+        },
+        "defaultReminders": {
+            "type": "jsonArray",
+            "view": "Crm:Meeting.Fields.Reminders"
         }
     }
 }

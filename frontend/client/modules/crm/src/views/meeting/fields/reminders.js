@@ -59,7 +59,11 @@ Espo.define('Crm:Views.Meeting.Fields.Reminders', 'Views.Fields.Base', function 
         },
 
         setup: function () {
-            this.reminderList = this.model.get(this.name) || [];
+            if (this.model.isNew() && !this.model.get(this.name) && this.model.name != 'Preferences') {
+                this.reminderList = this.getPreferences().get('defaultReminders') || [];
+            } else {
+                this.reminderList = this.model.get(this.name) || [];
+            }
 
             this.listenTo(this.model, 'change:' + this.name, function () {
                 this.reminderList = this.model.get(this.name) || [];
