@@ -307,7 +307,7 @@ class Sender
 
             $this->transport->send($message);
 
-            $email->set('messageId', $messageId);
+            $email->set('messageId', '<' . $messageId . '>');
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));
         } catch (\Exception $e) {
