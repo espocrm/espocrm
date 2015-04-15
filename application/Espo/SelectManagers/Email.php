@@ -34,24 +34,43 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function filterArchived(&$result)
+    protected function filterInbox(&$result)
     {
+        $eaList = $this->getUser()->get('emailAddresses');
+        $idList = [];
+        foreach ($eaList as $ea) {
+            $idList[] = $ea->id;
+        }
         $result['whereClause'][] = array(
-            'status' => 'Archived'
+            'fromEmailAddressId!=' => $idList
         );
+        $this->boolFilterOnlyMy();
     }
 
     protected function filterSent(&$result)
     {
+        $eaList = $this->getUser()->get('emailAddresses');
+        $idList = [];
+        foreach ($eaList as $ea) {
+            $idList[] = $ea->id;
+        }
         $result['whereClause'][] = array(
-            'status' => 'Sent'
+            'fromEmailAddressId=' => $idList
         );
     }
 
     protected function filterDraft(&$result)
     {
         $result['whereClause'][] = array(
-            'status' => 'Draft'
+            'status' => 'Draft',
+            'createdById' => $this->getUser()->id
+        );
+    }
+
+    protected function filterArchived(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Archived'
         );
     }
 

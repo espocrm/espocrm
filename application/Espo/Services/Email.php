@@ -275,23 +275,13 @@ class Email extends Record
     {
         parent::loadAdditionalFieldsForList($entity);
 
+        $userEmailAdddressIdList = [];
+        foreach ($this->getUser()->get('emailAddresses') as $ea) {
+            $userEmailAdddressIdList[] = $ea->id;
+        }
+
         $status = $entity->get('status');
-        if (in_array($status, ['Archived', 'Received'])) {
-            $fromEmailAddressId = $entity->get('fromEmailAddressId');
-            if (!empty($fromEmailAddressId)) {
-                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId);
-                if ($person) {
-                    $entity->set('personStringData', $person->get('name'));
-                } else {
-                    $fromName = self::parseFromName($entity->get('fromString'));
-                    if (!empty($fromName)) {
-                        $entity->set('personStringData', $fromName);
-                    } else {
-                        $entity->set('personStringData', $entity->get('fromEmailAddressName'));
-                    }
-                }
-            }
-        } else if (in_array($status, ['Sent', 'Draft', 'Sending'])) {
+        if (in_array($entity->get('fromEmailAddressId'), $userEmailAdddressIdList)) {
             $entity->loadLinkMultipleField('toEmailAddresses');
             $idList = $entity->get('toEmailAddressesIds');
             $names = $entity->get('toEmailAddressesNames');
@@ -307,6 +297,21 @@ class Email extends Record
                     }
                 }
                 $entity->set('personStringData', 'To: ' . implode(', ', $arr));
+            }
+        } else {
+            $fromEmailAddressId = $entity->get('fromEmailAddressId');
+            if (!empty($fromEmailAddressId)) {
+                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId);
+                if ($person) {
+                    $entity->set('personStringData', $person->get('name'));
+                } else {
+                    $fromName = self::parseFromName($entity->get('fromString'));
+                    if (!empty($fromName)) {
+                        $entity->set('personStringData', $fromName);
+                    } else {
+                        $entity->set('personStringData', $entity->get('fromEmailAddressName'));
+                    }
+                }
             }
         }
 

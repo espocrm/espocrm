@@ -55,6 +55,7 @@
     "presetFilters": {
         "sent": "Sent",
         "archived": "Archived",
+        "inbox": "Inbox",
         "draft": "Draft"
     },
     "massActions": {

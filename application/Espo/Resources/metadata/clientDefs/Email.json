@@ -55,7 +55,7 @@
    },
    "filterList": [
       {
-         "name":"archived",
+         "name":"inbox",
          "style": "primary"
       },
       {
@@ -68,11 +68,8 @@
       }
    ],
    "defaultFilterData": {
-       "bool": {
-           "onlyMy": true
-       },
-       "presetName": "archived",
-       "primary": "archived"
+       "presetName": "inbox",
+       "primary": "inbox"
    },
-   "boolFilterList": ["onlyMy"]
+   "boolFilterList": []
 }
