@@ -21,9 +21,11 @@
     "labels": {
         "Create EmailAccount": "Create Email Account",
         "IMAP": "IMAP",
-        "Main": "Main"        
+        "Main": "Main",
+        "Test Connection": "Test Connection"
     },
     "messages": {
-        "couldNotConnectToImap": "Could not connect to IMAP server"
+        "couldNotConnectToImap": "Could not connect to IMAP server",
+        "connectionIsOk": "Connection is Ok"
     }
 }
