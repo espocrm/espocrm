@@ -105,14 +105,16 @@ class Email extends \Espo\Core\Notificators\Base
             if ($userIdFrom == $userId) {
                 continue;
             }
-            if ($parent) {
-                if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
-                    continue;
+            if ($entity->get('status') == 'Archived') {
+                if ($parent) {
+                    if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
+                        continue;
+                    }
                 }
-            }
-            if ($account) {
-                if ($this->getStreamService()->checkIsFollowed($account, $userId)) {
-                    continue;
+                if ($account) {
+                    if ($this->getStreamService()->checkIsFollowed($account, $userId)) {
+                        continue;
+                    }
                 }
             }
             $notification = $this->getEntityManager()->getEntity('Notification');
