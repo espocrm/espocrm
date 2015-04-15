@@ -45,26 +45,37 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
         },
 
         addUnfollowButtonToMenu: function () {
-            this.menu.buttons.unshift({
-                name: 'unfollow',
-                label: 'Followed',
-                style: 'success',
-                action: 'unfollow'
-            });
-
             var index = -1;
             this.menu.buttons.forEach(function (data, i) {
                 if (data.name == 'follow') {
-                    var index = i;
+                    index = i;
                     return;
                 }
             }, this);
             if (~index) {
                 this.menu.buttons.splice(index, 1);
             }
+
+            this.menu.buttons.unshift({
+                name: 'unfollow',
+                label: 'Followed',
+                style: 'success',
+                action: 'unfollow'
+            });
         },
 
         addFollowButtonToMenu: function () {
+            var index = -1;
+            this.menu.buttons.forEach(function (data, i) {
+                if (data.name == 'unfollow') {
+                    index = i;
+                    return;
+                }
+            }, this);
+            if (~index) {
+                this.menu.buttons.splice(index, 1);
+            }
+
             this.menu.buttons.unshift({
                 name: 'follow',
                 label: 'Follow',
@@ -72,17 +83,6 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 icon: 'glyphicon glyphicon-share-alt',
                 action: 'follow'
             });
-
-            var index = -1;
-            this.menu.buttons.forEach(function (data, i) {
-                if (data.name == 'unfollow') {
-                    var index = i;
-                    return;
-                }
-            }, this);
-            if (~index) {
-                this.menu.buttons.splice(index, 1);
-            }
         },
 
         setup: function () {
@@ -90,36 +90,34 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
-                    if (this.model.get('isFollowed')) {
-                        this.addUnfollowButtonToMenu();
-                    } else {
-                        this.addFollowButtonToMenu();
-                    }
+                    this.handleFollowButton();
                 } else {
                     this.once('after:render', function () {
-                        var proceed = function () {
-                            if (this.model.get('isFollowed')) {
-                                this.addUnfollowButton();
-                                this.addUnfollowButtonToMenu();
-                            } else {
-                                this.addFollowButton();
-                                this.addFollowButtonToMenu();
-
-                            }
-                        }.bind(this);
-
                         if (this.model.has('isFollowed')) {
-                            proceed();
+                            this.handleFollowButton();
                         } else {
                             this.listenToOnce(this.model, 'sync', function () {
                                 if (this.model.has('isFollowed')) {
-                                    proceed();
+                                    this.handleFollowButton();
                                 }
-                            }.bind(this));
+                            }, this);
                         }
-
                     }, this);
                 }
+            }
+        },
+
+        handleFollowButton: function () {
+            if (this.model.get('isFollowed')) {
+                if (this.isRendered()) {
+                    this.addUnfollowButton();
+                }
+                this.addUnfollowButtonToMenu();
+            } else {
+                if (this.isRendered()) {
+                    this.addFollowButton();
+                }
+                this.addFollowButtonToMenu();
             }
         },
 
@@ -145,7 +143,11 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 type: 'PUT',
                 success: function () {
                     $el.remove();
-                    this.addUnfollowButton();
+                    this.model.set('isFollowed', true);
+                    this.handleFollowButton();
+                }.bind(this),
+                error: function () {
+                    $el.removeClass('disabled');
                 }.bind(this)
             });
         },
@@ -158,7 +160,11 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 type: 'DELETE',
                 success: function () {
                     $el.remove();
-                    this.addFollowButton();
+                    this.model.set('isFollowed', false);
+                    this.handleFollowButton();
+                }.bind(this),
+                error: function () {
+                    $el.removeClass('disabled');
                 }.bind(this)
             });
 
