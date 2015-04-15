@@ -43,7 +43,7 @@ class Email extends \Espo\Core\Notificators\Base
 
     public function process(Entity $entity)
     {
-        if ($entity->get('status') != 'Archived') {
+        if ($entity->get('status') != 'Archived' && $entity->get('status') != 'Sent') {
             return;
         }
 
@@ -72,12 +72,17 @@ class Email extends \Espo\Core\Notificators\Base
 
         $from = $entity->get('from');
         if ($from) {
-            $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from);
+            $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
                 $data['personEntityId'] = $person->id;
             }
+        }
+
+        $userIdFrom = null;
+        if ($person && $person->getEntityType() == 'User') {
+            $userIdFrom = $person->id;
         }
 
         if (empty($data['personEntityId'])) {
@@ -97,6 +102,9 @@ class Email extends \Espo\Core\Notificators\Base
         }
 
         foreach ($userIdList as $userId) {
+            if ($userIdFrom == $userId) {
+                continue;
+            }
             if ($parent) {
                 if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
                     continue;

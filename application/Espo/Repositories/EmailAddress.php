@@ -124,9 +124,14 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    public function getEntityByAddress($address, $entityType = null)
+    public function getEntityByAddress($address, $entityType = null, $order = ['User', 'Contact', 'Lead', 'Account'])
     {
         $pdo = $this->getEntityManager()->getPDO();
+        $a = [];
+        foreach ($order as $item) {
+            $a[] = $pdo->quote($item);
+        }
+
         $sql = "
             SELECT entity_email_address.entity_type AS 'entityType', entity_email_address.entity_id AS 'entityId'
             FROM entity_email_address
@@ -134,7 +139,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             WHERE
                 email_address.lower = ".$pdo->quote(strtolower($address))." AND
                 entity_email_address.deleted = 0
-            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
+            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, ".join(',', $a).")
         ";
 
         $sth = $pdo->prepare($sql);
