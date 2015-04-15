@@ -90,7 +90,7 @@ Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function
                         type: 'POST',
                         data: JSON.stringify(data),
                         error: function (xhr, status) {
-                            var statusReason = xhr.getResponseHeader('X-Status-Reason');
+                            var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                             statusReason = statusReason.replace(/ $/, '');
                             statusReason = statusReason.replace(/,$/, '');
 

@@ -44,5 +44,27 @@ class EmailAccount extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
     }
+
+    public function actionTestConnection($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (is_null($data['password'])) {
+            $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $data['id']);
+            if (!$emailAccount) {
+                throw new Error();
+            }
+
+            if ($emailAccount->get('assignedUserId') != $this->getUser()->id && !$this->getUser()->isAdmin()) {
+                throw new Forbidden();
+            }
+
+            $data['password'] = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('password'));
+        }
+
+        return $this->getRecordService()->testConnection($data);
+    }
 }
 

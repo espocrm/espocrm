@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Controllers;
 
@@ -30,9 +30,9 @@ class InboundEmail extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
     }
-    
+
     public function actionGetFolders($params, $data, $request)
-    {        
+    {
         return $this->getRecordService()->getFolders(array(
             'host' => $request->get('host'),
             'port' => $request->get('port'),
@@ -41,7 +41,23 @@ class InboundEmail extends \Espo\Core\Controllers\Record
             'password' => $request->get('password'),
             'id' => $request->get('id')
         ));
+    }
 
+    public function actionTestConnection($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (is_null($data['password'])) {
+            $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $data['id']);
+            if (!$inboundEmail) {
+                throw new Error();
+            }
+            $data['password'] = $this->getContainer()->get('crypt')->decrypt($inboundEmail->get('password'));
+        }
+
+        return $this->getRecordService()->testConnection($data);
     }
 
 }

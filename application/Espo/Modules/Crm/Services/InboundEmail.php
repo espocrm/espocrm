@@ -121,6 +121,27 @@ class InboundEmail extends \Espo\Services\Record
         return $foldersArr;
     }
 
+    public function testConnection(array $params)
+    {
+        $imapParams = array(
+            'host' => $params['host'],
+            'port' => $params['port'],
+            'user' => $params['username'],
+            'password' => $params['password']
+        );
+
+        if (!empty($params['ssl'])) {
+            $imapParams['ssl'] = 'SSL';
+        }
+
+        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+
+        if ($storage->getFolders()) {
+            return true;
+        }
+        throw new Error();
+    }
+
     public function fetchFromMailServer(Entity $inboundEmail)
     {
         if ($inboundEmail->get('status') != 'Active') {

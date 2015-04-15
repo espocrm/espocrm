@@ -41,7 +41,7 @@ class Email extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (empty($data['password'])) {
+        if (is_null($data['password'])) {
             if ($data['type'] == 'preferences') {
                 if (!$this->getUser()->isAdmin() && $data['id'] != $this->getUser()->id) {
                     throw new Forbidden();

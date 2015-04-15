@@ -26,7 +26,8 @@
             ],
             [
                 {"name":"monitoredFolders"},{"name":"password"}
-            ]
+            ],
+            [{"name": "testConnection", "customLabel": null, "view": "Crm:InboundEmail.Fields.TestConnection"}]
         ]
     },
     {
