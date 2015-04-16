@@ -34,6 +34,15 @@ class Email extends \Espo\Core\Acl\Base
             return true;
         }
 
+        if ($data === false) {
+            return false;
+        }
+        if (is_array($data)) {
+            if (empty($data['read']) || $data['read'] == 'no') {
+                return false;
+            }
+        }
+
         if (!$entity->has('usersIds')) {
             $entity->loadLinkMultipleField('users');
         }
@@ -41,17 +50,16 @@ class Email extends \Espo\Core\Acl\Base
         if (is_array($userIdList) && in_array($user->id, $userIdList)) {
             return true;
         }
-
         return false;
     }
 
     public function checkIsOwner(User $user, Entity $entity)
     {
-        /*if ($entity->has('assignedUserId')) {
+        if ($entity->has('assignedUserId')) {
             if ($user->id === $entity->get('assignedUserId')) {
                 return true;
             }
-        }*/
+        }
 
         if ($user->id === $entity->get('createdById')) {
             return true;
