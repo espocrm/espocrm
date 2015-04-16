@@ -22,305 +22,61 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
-
-use \Espo\ORM\Entity;
-
 class Acl
 {
-    private $data = array(
-        'table' => array()
-    );
+    private $user;
 
-    private $cacheFile;
+    private $aclManager;
 
-    private $actionList = array('read', 'edit', 'delete');
-
-    private $levelList = array('all', 'team', 'own', 'no');
-
-    protected $fileManager;
-
-    protected $metadata;
-
-    public function __construct(\Espo\Entities\User $user, $config = null, $fileManager = null, $metadata = null)
+    public function __construct(AclManager $aclManager, \Espo\Entities\User $user)
     {
+        $this->aclManager = $aclManager;
         $this->user = $user;
-
-        $this->metadata = $metadata;
-
-        if (!$this->user->isFetched()) {
-            throw new Error();
-        }
-
-        $this->user->loadLinkMultipleField('teams');
-
-        if ($fileManager) {
-            $this->fileManager = $fileManager;
-        }
-
-        $this->cacheFile = 'data/cache/application/acl/' . $user->id . '.php';
-
-        if ($config && $config->get('useCache') && file_exists($this->cacheFile)) {
-            $cached = include $this->cacheFile;
-            $this->data = $cached;
-            $this->initSolid();
-        } else {
-            $this->load();
-            $this->initSolid();
-            if ($config && $fileManager && $config->get('useCache')) {
-                $this->buildCache();
-            }
-        }
-
     }
 
-    public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
+    protected function getAclManager()
     {
-        if (array_key_exists($scope, $this->data['table'])) {
-            if ($this->data['table'][$scope] === false) {
-                return false;
-            }
-            if ($this->data['table'][$scope] === true) {
-                return true;
-            }
-            if (!is_null($action)) {
-                if (array_key_exists($action, $this->data['table'][$scope])) {
-                    $value = $this->data['table'][$scope][$action];
-
-                    if ($value === 'all' || $value === true) {
-                        return true;
-                    }
-
-                    if (!$value || $value === 'no') {
-                        return false;
-                    }
-
-                    if (is_null($isOwner)) {
-                        return true;
-                    }
-
-                    if ($isOwner) {
-                        if ($value === 'own' || $value === 'team') {
-                            return true;
-                        }
-                    }
-                    if ($inTeam === null && $entity) {
-                        $inTeam = $this->checkInTeam($entity);
-                    }
-
-                    if ($inTeam) {
-                        if ($value === 'team') {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-            }
-            return true;
-        }
-        return true;
+        return $this->aclManager;
     }
 
-    public function toArray()
+    protected function getUser()
     {
-        return $this->data;
+        return $this->user;
     }
 
-    public function get($permission)
+    public function getMap()
     {
-        if ($this->user->isAdmin()) {
-            return true;
-        }
-        if ($permission == 'table') {
-            return null;
-        }
-
-        if (array_key_exists($permission, $this->data)) {
-            return $this->data[$permission];
-        }
-        return null;
+        return $this->getAclManager()->getMap($this->getUser());
     }
 
     public function getLevel($scope, $action)
     {
-        if ($this->user->isAdmin()) {
-            return 'all';
-        }
-        if (array_key_exists($scope, $this->data['table'])) {
-            if (array_key_exists($action, $this->data['table'][$scope])) {
-                return $this->data['table'][$scope][$action];
-            }
-        }
-        return false;
+        return $this->getAclManager()->getLevel($this->getUser(), $scope, $action);
     }
 
-    public function check($subject, $action = null, $isOwner = null, $inTeam = null)
+    public function get($permission)
     {
-        if ($this->user->isAdmin()) {
-            return true;
-        }
-        if (is_string($subject)) {
-            return $this->checkScope($subject, $action, $isOwner, $inTeam);
-        } else {
-            $entity = $subject;
-            if ($entity instanceof Entity) {
-                $entityName = $entity->getEntityName();
-                return $this->checkScope($entityName, $action, $this->checkIsOwner($entity), $inTeam, $entity);
-            }
-        }
+        return $this->getAclManager()->get($this->getUser(), $permission);
     }
 
     public function checkReadOnlyTeam($scope)
     {
-        if (isset($this->data['table'][$scope]) && isset($this->data['table'][$scope]['read'])) {
-            return $this->data['table'][$scope]['read'] === 'team';
-        }
-        return false;
+        return $this->getAclManager()->checkReadOnlyTeam($this->getUser(), $scope);
     }
 
     public function checkReadOnlyOwn($scope)
     {
-        if ($this->user->isAdmin()) {
-            return false;
-        }
-        if (isset($this->data['table'][$scope]) && isset($this->data['table'][$scope]['read'])) {
-            return $this->data['table'][$scope]['read'] === 'own';
-        }
-        return false;
+        return $this->getAclManager()->checkReadOnlyOwn($this->getUser(), $scope);
     }
 
-    public function checkIsOwner($entity)
+    public function check($subject, $action = null, $isOwner = null, $inTeam = null)
     {
-        if ($this->user->isAdmin()) {
-            return false;
-        }
-        $userId = $this->user->id;
-        if ($userId === $entity->get('assignedUserId') || $userId === $entity->get('createdById')) {
-            return true;
-        }
-        return false;
+        return $this->getAclManager()->check($this->getUser(), $subject, $action, $isOwner, $inTeam) ;
     }
 
-    public function checkInTeam($entity)
+    public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
     {
-        $userTeamIds = $this->user->get('teamsIds');
-
-        if (!$entity->hasRelation('teams') || !$entity->hasField('teamsIds')) {
-            return false;
-        }
-
-        if (!$entity->has('teamsIds')) {
-            $entity->loadLinkMultipleField('teams');
-        }
-
-        $teamIds = $entity->get('teamsIds');
-
-        if (empty($teamIds)) {
-            return false;
-        }
-
-        foreach ($userTeamIds as $id) {
-            if (in_array($id, $teamIds)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function load()
-    {
-        $aclTables = [];
-        $assignmentPermissionList = [];
-
-        $userRoles = $this->user->get('roles');
-
-        foreach ($userRoles as $role) {
-            $aclTables[] = $role->get('data');
-            $assignmentPermissionList[] = $role->get('assignmentPermission');
-        }
-
-        $teams = $this->user->get('teams');
-        foreach ($teams as $team) {
-            $teamRoles = $team->get('roles');
-            foreach ($teamRoles as $role) {
-                $aclTables[] = $role->get('data');
-                $assignmentPermissionList[] = $role->get('assignmentPermission');
-            }
-        }
-
-        $this->data['table'] = $this->merge($aclTables);
-        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, 'all');
-    }
-
-    private function initSolid()
-    {
-        if (!$this->metadata) {
-            return;
-        }
-
-        $data = $this->metadata->get('app.acl.solid', array());
-
-        foreach ($data as $entityName => $item) {
-            $this->data['table'][$entityName] = $item;
-        }
-    }
-
-    private function mergeValues(array $list, $defaultValue)
-    {
-        $result = null;
-        foreach ($list as $level) {
-            if ($level != 'not-set') {
-                if (is_null($result)) {
-                    $result = $level;
-                    continue;
-                }
-                if (array_search($result, $this->levelList) > array_search($level, $this->levelList)) {
-                    $result = $level;
-                }
-            }
-        }
-        if (is_null($result)) {
-            $result = $defaultValue;
-        }
-        return $result;
-    }
-
-    private function merge($tables)
-    {
-        $data = array();
-        foreach ($tables as $table) {
-            foreach ($table as $scope => $row) {
-                if ($row == false) {
-                    if (!isset($data[$scope])) {
-                        $data[$scope] = false;
-                    }
-                } else {
-                    if (!isset($data[$scope])) {
-                        $data[$scope] = array();
-                    }
-                    if ($data[$scope] == false) {
-                        $data[$scope] = array();
-                    }
-                    foreach ($row as $action => $level) {
-                        if (!isset($data[$scope][$action])) {
-                            $data[$scope][$action] = $level;
-                        } else {
-                            if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
-                                $data[$scope][$action] = $level;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return $data;
-    }
-
-    private function buildCache()
-    {
-        $contents = '<' . '?'. 'php return ' .  var_export($this->data, true)  . ';';
-        $this->fileManager->putContents($this->cacheFile, $contents);
+        return $this->getAclManager()->checkScope($this->getUser(), $subject, $action, $isOwner, $inTeam, $entity) ;
     }
 }
 

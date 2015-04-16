@@ -33,7 +33,7 @@ class App extends \Espo\Core\Controllers\Base
 
         return array(
             'user' => $this->getUser()->toArray(),
-            'acl' => $this->getAcl()->toArray(),
+            'acl' => $this->getAcl()->getMap(),
             'preferences' => $preferences,
             'token' => $this->getUser()->get('token')
         );

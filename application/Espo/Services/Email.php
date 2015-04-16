@@ -104,11 +104,14 @@ class Email extends Record
                         }
                     }
                 }
-                $this->getStreamService()->noteEmailSent($parent, $entity);
             }
         }
 
         $emailSender->send($entity, $params);
+
+        if ($parent) {
+            $this->getStreamService()->noteEmailSent($parent, $entity);
+        }
 
         $this->getEntityManager()->saveEntity($entity);
     }

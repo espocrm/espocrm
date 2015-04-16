@@ -194,14 +194,20 @@ class Container
         );
     }
 
+    private function loadAclManager()
+    {
+        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclManager');
+        return new $className(
+            $this->get('container')
+        );
+    }
+
     private function loadAcl()
     {
         $className = $this->getServiceClassName('acl', '\\Espo\\Core\\Acl');
         return new $className(
-            $this->get('user'),
-            $this->get('config'),
-            $this->get('fileManager'),
-            $this->get('metadata')
+            $this->get('aclManager'),
+            $this->get('user')
         );
     }
 

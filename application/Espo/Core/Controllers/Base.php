@@ -90,6 +90,11 @@ abstract class Base
         return $this->container->get('acl');
     }
 
+    protected function getAclManager()
+    {
+        return $this->container->get('aclManager');
+    }
+
     protected function getConfig()
     {
         return $this->container->get('config');
