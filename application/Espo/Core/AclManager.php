@@ -147,9 +147,26 @@ class AclManager
             $entity = $subject;
             if ($entity instanceof Entity) {
                 $entityType = $entity->getEntityType();
-                return $this->checkScope($user, $entityType, $action, $isOwner, $inTeam, $entity);
+
+                $impl = $this->getImplementation($entityType);
+                $methodName = 'check' . ucfirst($action);
+                if (method_exists($impl, $methodName)) {
+                    $data = $this->getTable($user)->getScopeData($entityType);
+                    return $impl->$methodName($user, $entity, $data);
+                }
+
+                return $this->checkEntity($user, $entity, $action, $isOwner, $inTeam, $entity);
             }
         }
+    }
+
+    public function checkEntity(User $user, Entity $entity, $action)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+        $data = $this->getTable($user)->getScopeData($entity->getEntityType());
+        return $this->getImplementation($scope)->checkEntity($user, $entity, $data, $action);
     }
 
     public function checkScope(User $user, $scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
@@ -157,7 +174,7 @@ class AclManager
         if ($user->isAdmin()) {
             return true;
         }
-        $data = $this->getTable($user)->getScopeData($user, $scope);
+        $data = $this->getTable($user)->getScopeData($scope);
         return $this->getImplementation($scope)->checkScope($user, $data, $scope, $action, $isOwner, $inTeam, $entity);
     }
 }

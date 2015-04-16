@@ -31,6 +31,8 @@ class Base implements Injectable
 {
     protected $dependencies = array(
         'config',
+        'entityManager',
+        'aclManager'
     );
 
     protected $injections = array();
@@ -69,6 +71,16 @@ class Base implements Injectable
         return $this->getInjection('config');
     }
 
+    protected function getEntityManager()
+    {
+        return $this->getInjection('entityManager');
+    }
+
+    protected function getAclManager()
+    {
+        return $this->getInjection('aclManager');
+    }
+
     public function checkReadOnlyTeam(User $user, $scope, $data)
     {
         if (empty($data) || !is_array($data) || !isset($data['read'])) {
@@ -79,14 +91,18 @@ class Base implements Injectable
 
     public function checkReadOnlyOwn(User $user, $scope, $data)
     {
-
         if (empty($data) || !is_array($data) || !isset($data['read'])) {
             return false;
         }
         return $data['read'] === 'own';
     }
 
-    public function checkScope(User $user, $data, $scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
+    public function checkEntity(User $user, Entity $entity, $data, $action)
+    {
+        return $this->checkScope($user, $data, $entity->getEntityType(), $action, null, null, $entity);
+    }
+
+    public function checkScope(User $user, $data, $scope, $action = null, $isOwner = null, $inTeam = null, Entity $entity = null)
     {
         if (is_null($data)) {
             return true;
@@ -97,6 +113,7 @@ class Base implements Injectable
         if ($data === true) {
             return true;
         }
+
         if (!is_null($action)) {
             if (array_key_exists($action, $data)) {
                 $value = $data[$action];
@@ -109,8 +126,12 @@ class Base implements Injectable
                     return false;
                 }
 
-                if (is_null($isOwner) && $entity) {
-                    $isOwner = $this->checkIsOwner($user, $entity);
+                if (is_null($isOwner)) {
+                    if ($entity) {
+                        $isOwner = $this->checkIsOwner($user, $entity);
+                    } else {
+                        return true;
+                    }
                 }
 
                 if ($isOwner) {
@@ -135,14 +156,13 @@ class Base implements Injectable
 
     public function checkIsOwner(User $user, Entity $entity)
     {
-        $userId = $user->id;
         if ($entity->has('assignedUserId')) {
-            if ($userId === $entity->get('assignedUserId')) {
+            if ($user->id === $entity->get('assignedUserId')) {
                 return true;
             }
         }
         if ($entity->has('createdById')) {
-            if ($userId === $entity->get('createdById')) {
+            if ($user->id === $entity->get('createdById')) {
                 return true;
             }
         }

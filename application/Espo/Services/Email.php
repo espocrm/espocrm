@@ -195,10 +195,7 @@ class Email extends Record
             $this->loadAdditionalFields($entity);
 
             if (!$this->getAcl()->check($entity, 'read')) {
-                $userIdList = $entity->get('usersIds');
-                if (!is_array($userIdList) || !in_array($this->getUser()->id, $userIdList)) {
-                    throw new Forbidden();
-                }
+                throw new Forbidden();
             }
         }
         if (!empty($entity)) {
