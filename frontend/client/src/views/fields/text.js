@@ -80,8 +80,8 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            var text = this.model.get(this.name);
             if (this.mode == 'edit') {
+                var text = this.getValueForDisplay();
                 if (text) {
                     this.$element.val(text);
                 }

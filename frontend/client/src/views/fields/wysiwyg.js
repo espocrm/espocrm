@@ -62,6 +62,14 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
             });
         },
 
+        getValueForDisplay: function () {
+            var value = Dep.prototype.getValueForDisplay.call(this);
+            if (this.mode == 'edit' && value) {
+                value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
+            }
+            return value;
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
