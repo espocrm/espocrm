@@ -287,20 +287,26 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
         fetch: function () {
             var data = {};
 
-            var adderssData = this.fetchEmailAddressData();
+            var adderssData = this.fetchEmailAddressData() || [];
             data[this.dataFieldName] = adderssData;
             data[this.name] = null;
 
             var primaryIndex = 0;
-            (adderssData || []).forEach(function (item, i) {
+            adderssData.forEach(function (item, i) {
                 if (item.primary) {
                     primaryIndex = i;
                     return;
                 }
             });
 
+            if (adderssData.length && primaryIndex > 0) {
+                var t = adderssData[0];
+                adderssData[0] = adderssData[primaryIndex];
+                adderssData[primaryIndex] = t;
+            }
+
             if (adderssData.length) {
-                data[this.name] = adderssData[primaryIndex].emailAddress;
+                data[this.name] = adderssData[0].emailAddress;
             }
 
             return data;

@@ -225,19 +225,26 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
         fetch: function () {
             var data = {};
 
-            var adderssData = this.fetchPhoneNumberData();
+            var adderssData = this.fetchPhoneNumberData() || [];
             data[this.dataFieldName] = adderssData;
             data[this.name] = null;
 
             var primaryIndex = 0;
-            (adderssData || []).forEach(function (item, i) {
+            adderssData.forEach(function (item, i) {
                 if (item.primary) {
                     primaryIndex = i;
                     return;
                 }
             });
+
+            if (adderssData.length && primaryIndex > 0) {
+                var t = adderssData[0];
+                adderssData[0] = adderssData[primaryIndex];
+                adderssData[primaryIndex] = t;
+            }
+
             if (adderssData.length) {
-                data[this.name] = adderssData[primaryIndex].phoneNumber;
+                data[this.name] = adderssData[0].phoneNumber;
             }
 
             return data;
