@@ -73,7 +73,8 @@
         },
         "outboundEmailIsShared": {
             "type": "bool",
-            "default": false
+            "default": false,
+            "tooltip": true
         },
         "outboundEmailFromName": {
             "type": "varchar",

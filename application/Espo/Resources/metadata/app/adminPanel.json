@@ -78,7 +78,7 @@
       "label":"Email",
       "items":[
          {
-            "url":"#Admin/outboundEmail",
+            "url":"#Admin/outboundEmails",
             "label":"Outbound Emails",
             "description":"outboundEmails"
          },

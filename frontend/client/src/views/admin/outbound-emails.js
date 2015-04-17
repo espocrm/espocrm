@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.OutboundEmail', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('Views.Admin.OutboundEmails', 'Views.Settings.Record.Edit', function (Dep) {
 
     return Dep.extend({
 
-        layoutName: 'outboundEmail',
+        layoutName: 'outboundEmails',
 
         dependencyDefs: {
             'smtpAuth': {

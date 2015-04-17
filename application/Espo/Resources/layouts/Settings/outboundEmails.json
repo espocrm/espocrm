@@ -11,8 +11,8 @@
     {
         "label": "Configuration",
         "rows": [
-            [{"name": "outboundEmailFromName"}, {"name": "outboundEmailFromAddress"}],
-            [{"name": "outboundEmailIsShared"}]
+            [{"name": "outboundEmailFromAddress"}, {"name": "outboundEmailIsShared"}],
+            [{"name": "outboundEmailFromName"}]
         ]
     }
 ]

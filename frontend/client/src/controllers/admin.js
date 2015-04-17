@@ -102,7 +102,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
             model.fetch();
         },
 
-        outboundEmail: function () {
+        outboundEmails: function () {
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
@@ -110,8 +110,8 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
                 this.main('Edit', {
                     model: model,
                     views: {
-                        header: {template: 'admin.settings.header-outbound-email'},
-                        body: {view: 'Admin.OutboundEmail'},
+                        header: {template: 'admin.settings.header-outbound-emails'},
+                        body: {view: 'Admin.OutboundEmails'},
                     },
                 });
             }, this);

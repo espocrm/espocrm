@@ -10,12 +10,9 @@
         "defaultCurrency": "Default Currency",
         "baseCurrency": "Base Currency",
         "currencyRates": "Rate Values",
-
         "currencyList": "Currency List",
         "language": "Language",
-
         "companyLogo": "Company Logo",
-
         "smtpServer": "Server",
         "smtpPort": "Port",
         "smtpAuth": "Auth",
@@ -26,16 +23,12 @@
         "outboundEmailFromName": "From Name",
         "outboundEmailFromAddress": "From Address",
         "outboundEmailIsShared": "Is Shared",
-
         "recordsPerPage": "Records Per Page",
         "recordsPerPageSmall": "Records Per Page (Small)",
         "tabList": "Tab List",
         "quickCreateList": "Quick Create List",
-
         "exportDelimiter": "Export Delimiter",
-
         "globalSearchEntityList": "Global Search Entity List",
-
         "authenticationMethod": "Authentication Method",
         "ldapHost": "Host",
         "ldapPort": "Port",
@@ -66,7 +59,8 @@
         }
     },
     "tooltips": {
-        "recordsPerPageSmall": "Count of records in relatinship panels."
+        "recordsPerPageSmall": "Count of records in relatinship panels.",
+        "outboundEmailIsShared": "Allow users to sent emails via this SMTP."
     },
     "labels": {
         "System": "System",
