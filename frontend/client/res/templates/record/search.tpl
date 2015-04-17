@@ -4,7 +4,7 @@
         <div class="input-group">
             {{#if leftDropdown}}
             <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+                <button type="button" class="btn btn-default dropdown-toggle" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
@@ -24,7 +24,7 @@
                 </ul>
             </div>
             {{/if}}
-            <input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}">
+            <input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon" data-action="search">
                     <span class="glyphicon glyphicon-search"></span>
