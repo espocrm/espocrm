@@ -1,6 +1,6 @@
 [
     {"name":"name","width":40,"link":true},
-    {"name":"file","width":10, "view": "Crm:Document.Fields.FileShort","notSortable": true},
+    {"name":"file","width":10, "notSortable": true},
     {"name":"type"},
     {"name":"createdAt"}
 ]
