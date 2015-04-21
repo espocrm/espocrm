@@ -279,7 +279,7 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
             };
 
             var subject = this.model.get('name');
-            if (subject.indexOf('Fwd:') !== 0) {
+            if (~!subject.toUpperCase().indexOf('FWD:') && ~!subject.toUpperCase().indexOf('FW:')) {
                 attributes['name'] = 'Fwd: ' + subject;
             } else {
                 attributes['name'] = subject;
