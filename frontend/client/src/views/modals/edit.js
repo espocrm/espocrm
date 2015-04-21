@@ -43,36 +43,17 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
             var self = this;
 
-            this.buttons = [];
+            this.buttonList = [];
 
             if ('saveButton' in this.options) {
                 this.saveButton = this.options.saveButton;
             }
 
             if (this.saveButton) {
-                this.buttons.push({
+                this.buttonList.push({
                     name: 'save',
-                    text: this.getLanguage().translate('Save'),
+                    label: 'Save',
                     style: 'primary',
-                    onClick: function (dialog) {
-                        var editView = this.getView('edit');
-
-                        var model = editView.model;
-                        editView.once('after:save', function () {
-                            this.trigger('after:save', model);
-                            dialog.close();
-                        }, this);
-
-                        var $buttons = dialog.$el.find('.modal-footer button');
-                        $buttons.addClass('disabled');
-
-                        editView.once('cancel:save', function () {
-                            $buttons.removeClass('disabled');
-                        }, this);
-
-                        editView.save();
-
-                    }.bind(this)
                 });
             }
 
@@ -81,57 +62,15 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             }
 
             if (this.fullFormButton) {
-                this.buttons.push({
+                this.buttonList.push({
                     name: 'fullForm',
-                    text: this.getLanguage().translate('Full Form'),
-                    onClick: function (dialog) {
-                        var url;
-                        var router = this.getRouter();
-                        if (!this.id) {
-                            url = '#' + this.scope + '/create';
-
-                            var attributes = this.getView('edit').fetch();
-                            var model = this.getView('edit').model;
-                            attributes = _.extend(attributes, model.getClonedAttributes());
-
-                            setTimeout(function () {
-                                router.dispatch(this.scope, 'create', {
-                                    attributes: attributes,
-                                    relate: this.options.relate,
-                                    returnUrl: Backbone.history.fragment,
-                                });
-                                router.navigate(url, {trigger: false});
-                            }.bind(this), 10);
-                        } else {
-                            url = '#' + this.scope + '/edit/' + this.id;
-
-                            var attributes = this.getView('edit').fetch();
-                            var model = this.getView('edit').model;
-                            attributes = _.extend(attributes, model.getClonedAttributes());
-
-                            setTimeout(function () {
-                                router.dispatch(this.scope, 'edit', {
-                                    attributes: attributes,
-                                    returnUrl: Backbone.history.fragment,
-                                    id: this.id
-                                });
-                                router.navigate(url, {trigger: false});
-                            }.bind(this), 10);
-                        }
-
-                        this.trigger('leave');
-                        dialog.close();
-
-                    }.bind(this)
+                    label: 'Full Form'
                 });
             }
 
-            this.buttons.push({
+            this.buttonList.push({
                 name: 'cancel',
-                text: this.getLanguage().translate('Cancel'),
-                onClick: function (dialog) {
-                    dialog.close();
-                }
+                label: 'Cancel'
             });
 
             this.scope = this.scope || this.options.scope;
@@ -180,6 +119,64 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             };
             this.createView('edit', viewName, options, callback);
         },
+
+        modalActionSave: function (dialog) {
+            var editView = this.getView('edit');
+
+            var model = editView.model;
+            editView.once('after:save', function () {
+                this.trigger('after:save', model);
+                dialog.close();
+            }, this);
+
+            var $buttons = dialog.$el.find('.modal-footer button');
+            $buttons.addClass('disabled');
+
+            editView.once('cancel:save', function () {
+                $buttons.removeClass('disabled');
+            }, this);
+
+            editView.save();
+        },
+
+        modalActionFullForm: function (dialog) {
+            var url;
+            var router = this.getRouter();
+            if (!this.id) {
+                url = '#' + this.scope + '/create';
+
+                var attributes = this.getView('edit').fetch();
+                var model = this.getView('edit').model;
+                attributes = _.extend(attributes, model.getClonedAttributes());
+
+                setTimeout(function () {
+                    router.dispatch(this.scope, 'create', {
+                        attributes: attributes,
+                        relate: this.options.relate,
+                        returnUrl: Backbone.history.fragment,
+                    });
+                    router.navigate(url, {trigger: false});
+                }.bind(this), 10);
+            } else {
+                url = '#' + this.scope + '/edit/' + this.id;
+
+                var attributes = this.getView('edit').fetch();
+                var model = this.getView('edit').model;
+                attributes = _.extend(attributes, model.getClonedAttributes());
+
+                setTimeout(function () {
+                    router.dispatch(this.scope, 'edit', {
+                        attributes: attributes,
+                        returnUrl: Backbone.history.fragment,
+                        id: this.id
+                    });
+                    router.navigate(url, {trigger: false});
+                }.bind(this), 10);
+            }
+
+            this.trigger('leave');
+            dialog.close();
+        }
     });
 });
 

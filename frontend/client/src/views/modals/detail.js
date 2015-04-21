@@ -43,7 +43,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
             var self = this;
 
-            this.buttons = [];
+            this.buttonList = [];
 
             if ('editButton' in this.options) {
                 this.editButton = this.options.editButton;
@@ -54,42 +54,15 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             }
 
             if (this.fullFormButton) {
-                this.buttons.push({
+                this.buttonList.push({
                     name: 'fullForm',
-                    text: this.getLanguage().translate('Full Form'),
-                    onClick: function (dialog) {
-                        var url;
-                        var router = this.getRouter();
-
-                        url = '#' + this.scope + '/view/' + this.id;
-
-                        var attributes = this.getView('record').fetch();
-                        var model = this.getView('record').model;
-                        attributes = _.extend(attributes, model.getClonedAttributes());
-
-                        setTimeout(function () {
-                            router.dispatch(this.scope, 'view', {
-                                attributes: attributes,
-                                returnUrl: Backbone.history.fragment,
-                                id: this.id
-                            });
-                            router.navigate(url, {trigger: false});
-                        }.bind(this), 10);
-
-
-                        this.trigger('leave');
-                        dialog.close();
-
-                    }.bind(this)
+                    label: 'Full Form'
                 });
             }
 
-            this.buttons.push({
-                name: 'close',
-                text: this.getLanguage().translate('Close'),
-                onClick: function (dialog) {
-                    dialog.close();
-                }
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Close'
             });
 
             this.scope = this.scope || this.options.scope;
@@ -118,33 +91,10 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
         },
 
         addEditButton: function () {
-            this.buttons.unshift({
+            this.buttonList.unshift({
                 name: 'edit',
-                text: this.getLanguage().translate('Edit'),
-                style: 'primary',
-                onClick: function (dialog) {
-                    this.createView('quickEdit', 'Modals.Edit', {
-                        scope: this.scope,
-                        id: this.id,
-                        fullFormButton: this.fullFormButton
-                    }, function (view) {
-                        view.once('after:render', function () {
-                            Espo.Ui.notify(false);
-                            dialog.hide();
-                        });
-
-                        this.listenToOnce(view, 'remove', function () {
-                            this.close();
-                        }, this);
-
-                        this.listenToOnce(view, 'after:save', function () {
-                            this.trigger('after:save');
-                        }, this);
-
-                        view.render();
-                    }.bind(this));
-
-                }.bind(this)
+                label: 'Edit',
+                style: 'primary'
             });
         },
 
@@ -169,6 +119,54 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             setTimeout(function () {
                 this.$el.children(0).scrollTop(0);
             }.bind(this), 50);
+        },
+
+        modalActionEdit: function (dialog) {
+            this.createView('quickEdit', 'Modals.Edit', {
+                scope: this.scope,
+                id: this.id,
+                fullFormButton: this.fullFormButton
+            }, function (view) {
+                view.once('after:render', function () {
+                    Espo.Ui.notify(false);
+                    dialog.hide();
+                });
+
+                this.listenToOnce(view, 'remove', function () {
+                    this.close();
+                }, this);
+
+                this.listenToOnce(view, 'after:save', function () {
+                    this.trigger('after:save');
+                }, this);
+
+                view.render();
+            }.bind(this));
+        },
+
+        modalActionFullForm: function (dialog) {
+            var url;
+            var router = this.getRouter();
+
+            url = '#' + this.scope + '/view/' + this.id;
+
+            var attributes = this.getView('record').fetch();
+            var model = this.getView('record').model;
+            attributes = _.extend(attributes, model.getClonedAttributes());
+
+            setTimeout(function () {
+                router.dispatch(this.scope, 'view', {
+                    attributes: attributes,
+                    returnUrl: Backbone.history.fragment,
+                    id: this.id
+                });
+                router.navigate(url, {trigger: false});
+            }.bind(this), 10);
+
+
+            this.trigger('leave');
+            dialog.close();
+
         }
     });
 });

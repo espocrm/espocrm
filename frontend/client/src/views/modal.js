@@ -31,17 +31,11 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 
         containerSelector: null,
 
+        scope: null,
+
         backdrop: 'static',
 
-        buttons: [
-            {
-                name: 'cancel',
-                label: 'Cancel',
-                onClick: function (dialog) {
-                    dialog.close();
-                }
-            }
-        ],
+        buttonList: [],
 
         width: false,
 
@@ -54,24 +48,52 @@ Espo.define('Views.Modal', 'View', function (Dep) {
             this.options = this.options || {};
             this.options.el = this.containerSelector;
 
+            this.buttonList = Espo.Utils.clone(this.buttonList);
+
             this.on('render', function () {
                 $(containerSelector).remove();
                 $('<div />').css('display', 'none').attr('id', id).appendTo('body');
 
-                var buttons = _.clone(this.buttons);
+                var buttons = Espo.Utils.clone(this.buttons || []);
 
-                for (var i in buttons) {
-                    if (!('text' in buttons[i]) && ('label' in buttons[i])) {
-                        buttons[i].text = this.getLanguage().translate(buttons[i].label);
+                var buttonListExt = [];
+
+                buttons.forEach(function (item) {
+                    var o = Espo.Utils.clone(item);
+                    if (!('text' in o) && ('label' in o)) {
+                        o.text = this.getLanguage().translate(o.label);
                     }
-                }
+                    buttonListExt.push(o);
+                }, this);
+
+                this.buttonList.forEach(function (item) {
+                    var o = {};
+
+                    if (typeof item == 'string') {
+                        o.name = item;
+                    } else {
+                        o = item;
+                    }
+
+                    var text = o.text;
+                    if (!o.text) {
+                        if ('label' in o) {
+                            o.text = this.translate(o.label, 'labels', this.scope)
+                        } else {
+                            o.text = this.translate(o.name, 'modalActions', this.scope);
+                        }
+                    }
+                    o.onClick = o.onClick || this['modalAction' + Espo.Utils.upperCaseFirst(o.name)].bind(this);
+
+                    buttonListExt.push(o);
+                }, this);
 
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: this.header,
                     container: containerSelector,
                     body: '',
-                    buttons: buttons,
+                    buttons: buttonListExt,
                     width: this.width,
                     keyboard: !this.escapeDisabled,
                     onRemove: function () {
@@ -92,6 +114,10 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 }
                 $(containerSelector).remove();
             });
+        },
+
+        modalActionCancel: function (dialog) {
+            dialog.close();
         },
 
         close: function () {
