@@ -23,13 +23,13 @@
         <span class="cell cell-name"><a href="#Email/view/{{emailId}}">{{emailName}}</a></span>
     </div>
 
-    {{#if post}}
+    {{#if hasPost}}
     <div class="stream-post-container">
         <span class="cell cell-post">{{{post}}}</span>
     </div>
     {{/if}}
 
-    {{#if attachments}}
+    {{#if hasAttachments}}
     <div class="stream-attachments-container">
         <span class="cell cell-attachments">{{{attachments}}}</span>
     </div>

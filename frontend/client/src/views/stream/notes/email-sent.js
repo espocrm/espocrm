@@ -30,7 +30,9 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
         data: function () {
             return _.extend({
                 emailId: this.emailId,
-                emailName: this.emailName
+                emailName: this.emailName,
+                hasPost: this.hasPost,
+                hasAttachments: this.hasAttachments
             }, Dep.prototype.data.call(this));
         },
 
@@ -40,11 +42,19 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
             this.emailId = data.emailId;
             this.emailName = data.emailName;
 
-            if (this.model.get('post')) {
-                this.createField('post', null, null, 'Stream.Fields.Post');
-            }
-            if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+            if (
+                this.parentModel
+                &&
+                (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
+            ) {
+                if (this.model.get('post')) {
+                    this.createField('post', null, null, 'Stream.Fields.Post');
+                    this.hasPost = true;
+                }
+                if ((this.model.get('attachmentsIds') || []).length) {
+                    this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+                    this.hasAttachments = true;
+                }
             }
 
             this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
