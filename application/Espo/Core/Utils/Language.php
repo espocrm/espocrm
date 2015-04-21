@@ -163,7 +163,7 @@ class Language
         return $translated;
     }
 
-    public function translateOption($value, $field, $scope)
+    public function translateOption($value, $field, $scope = 'Global')
     {
         $options = $this->get($scope. '.options.' . $field);
         if (array_key_exists($value, $options)) {
