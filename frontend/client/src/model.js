@@ -196,6 +196,10 @@
         isEditable: function () {
             return true;
         },
+
+        isRemovable: function () {
+            return true;
+        }
     });
 
 }).call(this, Espo, _, Backbone);

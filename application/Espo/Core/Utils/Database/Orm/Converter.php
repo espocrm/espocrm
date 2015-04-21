@@ -310,11 +310,16 @@ class Converter
         if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
             if (!isset($entityMeta['fields']['isFollowed'])) {
                 $ormMeta[$entityName]['fields']['isFollowed'] = array(
-                    'type' => 'varchar',
+                    'type' => 'bool',
                     'notStorable' => true,
                 );
             }
         } //END: add a field 'isFollowed' for stream => true
+
+        $ormMeta[$entityName]['fields']['isEditable'] = array(
+            'type' => 'bool',
+            'notStorable' => true
+        );
 
         return $ormMeta;
     }

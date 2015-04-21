@@ -167,6 +167,11 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function loadIsEditable(Entity $entity)
+    {
+        $entity->set('isEditable', $this->getAcl()->check($entity, 'edit'));
+    }
+
     protected function loadLinkMultipleFields(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
@@ -227,6 +232,7 @@ class Record extends \Espo\Core\Services\Base
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);
+        $this->loadIsEditable($entity);
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)

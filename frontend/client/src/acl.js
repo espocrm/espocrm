@@ -109,8 +109,23 @@ _.extend(Espo.Acl.prototype, {
                 return false;
             }
         }
+        if (action == 'delete') {
+            if (!model.isRemovable()) {
+                return false;
+            }
+        }
         if (this.user.isAdmin()) {
             return true;
+        }
+        if (action == 'edit') {
+            if (model.has('isEditable')) {
+                return model.get('isEditable');
+            }
+        }
+        if (action == 'delete') {
+            if (model.has('isRemovable')) {
+                return model.get('isRemovable');
+            }
         }
         return this.check(model.name, action, this.user.isOwner(model), this.user.inTeam(model));
     },
