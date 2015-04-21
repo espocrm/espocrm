@@ -37,6 +37,8 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 
         buttonList: [],
 
+        buttons: [],
+
         width: false,
 
         escapeDisabled: false,
@@ -49,16 +51,15 @@ Espo.define('Views.Modal', 'View', function (Dep) {
             this.options.el = this.containerSelector;
 
             this.buttonList = Espo.Utils.clone(this.buttonList);
+            this.buttons = Espo.Utils.clone(this.buttons);
 
             this.on('render', function () {
                 $(containerSelector).remove();
                 $('<div />').css('display', 'none').attr('id', id).appendTo('body');
 
-                var buttons = Espo.Utils.clone(this.buttons || []);
-
                 var buttonListExt = [];
 
-                buttons.forEach(function (item) {
+                this.buttons.forEach(function (item) {
                     var o = Espo.Utils.clone(item);
                     if (!('text' in o) && ('label' in o)) {
                         o.text = this.getLanguage().translate(o.label);
