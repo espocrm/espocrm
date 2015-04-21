@@ -24,8 +24,7 @@
    },
    "filterList": [
       {
-         "name":"open",
-         "style": "primary"
+         "name":"open"
       },
       {
          "name":"won",

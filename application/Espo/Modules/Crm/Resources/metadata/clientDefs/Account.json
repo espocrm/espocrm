@@ -35,5 +35,9 @@
         "create": false
       }
    },
+   "filterList": [
+      "customers",
+      "partners"
+   ],
    "boolFilterList": ["onlyMy"]
 }

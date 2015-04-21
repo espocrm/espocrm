@@ -34,8 +34,11 @@
    },
    "filterList": [
       {
-         "name":"active",
-         "style": "primary"
+         "name":"active"
+      },
+      {
+         "name":"converted",
+         "style": "success"
       }
    ],
    "boolFilterList": ["onlyMy"]

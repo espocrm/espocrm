@@ -50,6 +50,7 @@
         }
     },
     "presetFilters": {
-        "active": "Active"
+        "active": "Active",
+        "converted": "Converted"
     }
 }

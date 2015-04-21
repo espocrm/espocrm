@@ -55,16 +55,13 @@
    },
    "filterList": [
       {
-         "name":"inbox",
-         "style": "primary"
+         "name":"inbox"
       },
       {
-         "name":"sent",
-         "style": "info"
+         "name":"sent"
       },
       {
-         "name":"draft",
-         "style": "default"
+         "name":"draft"
       }
    ],
    "defaultFilterData": {

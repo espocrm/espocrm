@@ -22,20 +22,28 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class Lead extends \Espo\Core\SelectManagers\Base
+class Account extends \Espo\Core\SelectManagers\Base
 {
-    protected function filterActive(&$result)
+    protected function filterPartners(&$result)
     {
         $result['whereClause'][] = array(
-            'status!=' => ['Converted', 'Recycled', 'Dead']
+            'type' => 'Partnter'
         );
     }
 
-    protected function filterConverted(&$result)
+    protected function filterCustomers(&$result)
     {
         $result['whereClause'][] = array(
-            'status=' => 'Converted'
+            'type' => 'Customer'
         );
     }
+
+    protected function filterResellers(&$result)
+    {
+        $result['whereClause'][] = array(
+            'type' => 'Reseller'
+        );
+    }
+
  }
 

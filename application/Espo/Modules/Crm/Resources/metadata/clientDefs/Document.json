@@ -3,7 +3,6 @@
    "filterList": [
       {
          "name":"active",
-         "style": "primary",
          "data": {
             "status": {
                "type": "in",
@@ -13,7 +12,6 @@
       },
       {
          "name":"draft",
-         "style": "default",
          "data": {
             "status": {
                "type": "in",

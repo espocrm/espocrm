@@ -64,5 +64,9 @@
     "labels": {
         "Create Account": "Create Account",
         "Copy Billing": "Copy Billing"
+    },
+    "presetFilters": {
+        "customers": "Customers",
+        "partners": "Partners"
     }
 }

@@ -1,10 +1,11 @@
 
 <div class="row search-row">
-    <div class="form-group col-sm-6">
+    <div class="form-group col-md-6 col-sm-8">
         <div class="input-group">
             {{#if leftDropdown}}
             <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
+                <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
+                    <span class="filters-label"></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
@@ -13,6 +14,9 @@
                         {{#each ../presetFilterList}}
                         <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../../scope}}{{/if}}</a></li>
                         {{/each}}
+                        <li class="divider preset-control hidden"></li>
+                        <li class="preset-control remove-preset hidden"><a tabindex="-1" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a></li>
+                        <li class="preset-control save-preset hidden"><a tabindex="-1" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a></li>
                         {{#if boolFilterList.length}}
                             <li class="divider"></li>
                         {{/if}}
@@ -32,13 +36,13 @@
             </div>
         </div>
     </div>
-    <div class="form-group col-sm-6">
+    <div class="form-group col-md-6 col-sm-4">
         <div class="btn-group">
             <button type="button" class="btn btn-default" data-action="reset">
                 <span class="glyphicon glyphicon-repeat"></span>&nbsp;{{translate 'Reset'}}
             </button>
             <button type="button" class="btn btn-default dropdown-toggle add-filter-button" data-toggle="dropdown" tabindex="-1">
-                {{translate 'Add Filter'}} <span class="caret"></span>
+                {{translate 'Add Field'}} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu pull-right filter-list">
                 {{#each advancedFields}}

@@ -8,17 +8,13 @@
       "detail": "Crm:Task.Detail"
    },
    "filterList": [
-      {
-         "name":"actual",
-         "style": "primary"
-      },
+      "actual",
       {
          "name":"completed",
          "style": "success"
       },
       {
-         "name":"todays",
-         "style": "info"
+         "name":"todays"
       },
       {
          "name":"overdue",

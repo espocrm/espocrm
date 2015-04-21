@@ -77,16 +77,14 @@
     },
     "filterList": [
         {
-            "name":"planned",
-            "style": "primary"
+            "name":"planned"
         },
         {
             "name":"held",
             "style": "success"
         },
         {
-            "name":"todays",
-            "style": "info"
+            "name":"todays"
         }
     ],
     "boolFilterList": ["onlyMy"]
