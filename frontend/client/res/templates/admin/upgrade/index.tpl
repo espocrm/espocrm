@@ -3,6 +3,8 @@
 <div class="panel panel-danger notify">
     <div class="panel-body">
         <p class="text-danger notify-text">
+            {{versionMsg}}
+            <br><br>
             {{backupsMsg}}
         </p>
     </div>
@@ -11,9 +13,9 @@
 <div class="panel panel-default upload">
     <div class="panel-heading">
         <h4 class="panel-title">{{translate 'selectUpgradePackage' scope='Admin' category="messages"}}</h4>
-    </div>    
+    </div>
     <div class="panel-body">
-        
+
         <p class="text-muted">
             {{{translate 'downloadUpgradePackage' scope='Admin' category="messages"}}}
         </p>

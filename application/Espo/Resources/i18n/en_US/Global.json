@@ -147,7 +147,8 @@
         "No": "No",
         "View": "View",
         "Select All Result": "Select All Result",
-        "Value": "Value"
+        "Value": "Value",
+        "Current version": "Current version"
     },
     "messages": {
         "pleaseWait": "Please wait...",
