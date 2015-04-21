@@ -37,73 +37,72 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            var self = this;
 
-            this.buttons.unshift({
+            this.buttonList.unshift({
                 name: 'saveDraft',
-                text: this.getLanguage().translate('Save Draft'),
-                onClick: function (dialog) {
-                    var editView = this.getView('edit');
-
-                    var model = editView.model;
-
-                    var $send = dialog.$el.find('button[data-name="send"]');
-                    $send.addClass('disabled');
-                    var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
-                    $saveDraft.addClass('disabled');
-
-                    var afterSave = function () {
-                        $saveDraft.removeClass('disabled');
-                        $send.removeClass('disabled');
-                        Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'));
-                        //this.trigger('after:save', model);
-                        //dialog.close();
-                    }.bind(this);
-
-                    editView.once('after:save', afterSave , this);
-
-                    editView.once('cancel:save', function () {
-                        $send.removeClass('disabled');
-                        $saveDraft.removeClass('disabled');
-                        editView.off('after:save', afterSave);
-                    }, this);
-
-                    editView.saveDraft();
-                }.bind(this)
+                text: this.translate('Save Draft'),
             });
 
-            this.buttons.unshift({
+            this.buttonList.unshift({
                 name: 'send',
                 text: this.getLanguage().translate('Send'),
-                style: 'primary',
-                onClick: function (dialog) {
-                    var editView = this.getView('edit');
-
-                    var model = editView.model;
-
-                    var afterSend = function () {
-                        this.trigger('after:save', model);
-                        dialog.close();
-                    };
-
-                    editView.once('after:send', afterSend, this);
-
-                    var $send = dialog.$el.find('button[data-name="send"]');
-                    $send.addClass('disabled');
-                    var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
-                    $saveDraft.addClass('disabled');
-                    editView.once('cancel:save', function () {
-                        $send.removeClass('disabled');
-                        $saveDraft.removeClass('disabled');
-                        editView.off('after:save', afterSend);
-                    }, this);
-
-                    editView.send();
-                }.bind(this)
+                style: 'primary'
             });
 
             this.header = this.getLanguage().translate('Compose Email');
         },
+
+        modalActionSend: function (dialog) {
+            var editView = this.getView('edit');
+
+            var model = editView.model;
+
+            var afterSend = function () {
+                this.trigger('after:save', model);
+                dialog.close();
+            };
+
+            editView.once('after:send', afterSend, this);
+
+            var $send = dialog.$el.find('button[data-name="send"]');
+            $send.addClass('disabled');
+            var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
+            $saveDraft.addClass('disabled');
+            editView.once('cancel:save', function () {
+                $send.removeClass('disabled');
+                $saveDraft.removeClass('disabled');
+                editView.off('after:save', afterSend);
+            }, this);
+
+            editView.send();
+        },
+
+        modalActionSaveDraft: function (dialog) {
+            var editView = this.getView('edit');
+
+            var model = editView.model;
+
+            var $send = dialog.$el.find('button[data-name="send"]');
+            $send.addClass('disabled');
+            var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
+            $saveDraft.addClass('disabled');
+
+            var afterSave = function () {
+                $saveDraft.removeClass('disabled');
+                $send.removeClass('disabled');
+                Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'));
+            }.bind(this);
+
+            editView.once('after:save', afterSave , this);
+
+            editView.once('cancel:save', function () {
+                $send.removeClass('disabled');
+                $saveDraft.removeClass('disabled');
+                editView.off('after:save', afterSave);
+            }, this);
+
+            editView.saveDraft();
+        }
 
     });
 });
