@@ -59,7 +59,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function filterDraft(&$result)
+    protected function filterDrafts(&$result)
     {
         $result['whereClause'][] = array(
             'status' => 'Draft',

@@ -54,15 +54,9 @@
       }
    },
    "filterList": [
-      {
-         "name":"inbox"
-      },
-      {
-         "name":"sent"
-      },
-      {
-         "name":"draft"
-      }
+      "inbox",
+      "sent",
+      "drafts"
    ],
    "defaultFilterData": {
        "presetName": "inbox",

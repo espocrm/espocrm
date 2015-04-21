@@ -56,7 +56,7 @@
         "sent": "Sent",
         "archived": "Archived",
         "inbox": "Inbox",
-        "draft": "Draft"
+        "drafts": "Drafts"
     },
     "massActions": {
         "markAsRead": "Mark As Read"
