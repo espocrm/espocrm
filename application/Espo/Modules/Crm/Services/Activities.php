@@ -396,8 +396,8 @@ class Activities extends \Espo\Core\Services\Base
         $fetchAll = empty($params['scope']);
 
         $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', array('Held')) : array(),
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', array('Held')) : array(),
+            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', array('Held', 'Not Held')) : array(),
+            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', array('Held', 'Not Held')) : array(),
             'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', array('Archived', 'Sent')) : array(),
         );
         $result = $this->getResult($parts, $scope, $id, $params);
