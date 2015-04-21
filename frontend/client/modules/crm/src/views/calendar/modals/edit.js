@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep) {
 
@@ -30,7 +30,7 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
             'Call',
             'Task',
         ],
-        
+
         data: function () {
             return {
                 scopeList: this.scopeList,
@@ -38,32 +38,32 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
                 isNew: !(this.id)
             };
         },
-        
+
         events: {
-            'change .scope-switcher input[name="scope"]': function () {                    
+            'change .scope-switcher input[name="scope"]': function () {
                 this.notify('Loading...');
                 var scope = $('.scope-switcher input[name="scope"]:checked').val();
                 this.scope = scope;
                 this.getModelFactory().create(this.scope, function (model) {
-                    model.populateDefaults();                        
+                    model.populateDefaults();
                     var attributes = this.getView('edit').fetch();
                     attributes = _.extend(attributes, this.getView('edit').model.toJSON());
                     model.set(attributes);
-                    this.createEdit(model, function (view) {                                                
+                    this.createEdit(model, function (view) {
                         view.render();
                         view.notify(false);
                     });
-                    this.handleAccess(model);                  
+                    this.handleAccess(model);
                 }.bind(this));
             },
         },
 
         handleAccess: function (model) {
             if (!this.getAcl().checkModel(model, 'edit')) {
-                this.$el.find('button[data-name="save"]').addClass('hidden');                
+                this.$el.find('button[data-name="save"]').addClass('hidden');
                 this.$el.find('button[data-name="fullForm"]').addClass('hidden');
             } else {
-                this.$el.find('button[data-name="save"]').removeClass('hidden');                
+                this.$el.find('button[data-name="save"]').removeClass('hidden');
                 this.$el.find('button[data-name="fullForm"]').removeClass('hidden');
             }
 
@@ -79,14 +79,14 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
             if (this.hasView('edit')) {
                 var model = this.getView('edit').model;
                 if (model) {
-                    this.handleAccess(model);  
+                    this.handleAccess(model);
                 }
             }
-            
+
         },
-        
+
         disableButtons: function () {
-        
+
         },
 
         setup: function () {
@@ -113,22 +113,22 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
                 }
             }
             Dep.prototype.setup.call(this);
-            
+
             if (!this.id) {
                 this.header = this.translate('Create', 'labels', 'Calendar');
             }
-            
-            if (this.id) {          
+
+            if (this.id) {
                 this.buttonList.splice(1, 0, {
                     name: 'remove',
                     text: this.translate('Remove'),
                     style: 'danger',
-                    onClick: function (dialog) {                                    
+                    onClick: function (dialog) {
                         var model = this.getView('edit').model;
-                                            
-                        if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {    
-                            var $buttons = dialog.$el.find('.modal-footer button');        
-                            $buttons.addClass('disabled');        
+
+                        if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+                            var $buttons = dialog.$el.find('.modal-footer button');
+                            $buttons.addClass('disabled');
                             model.destroy({
                                 success: function () {
                                     this.trigger('after:destroy', model);
@@ -142,19 +142,19 @@ Espo.define('Crm:Views.Calendar.Modals.Edit', 'Views.Modals.Edit', function (Dep
                     }.bind(this)
                 });
             }
-            
+
             this.once('after:save', function (model) {
-                var parentView = this.getParentView(); 
+                var parentView = this.getParentView();
                 if (!this.id) {
                     parentView.addModel.call(parentView, model);
                 } else {
                     parentView.updateModel.call(parentView, model);
                 }
             }, this);
-            
+
             this.once('after:destroy', function (model) {
                 var parentView = this.getParentView();
-                parentView.removeModel.call(parentView, model);                
+                parentView.removeModel.call(parentView, model);
             }, this);
         },
     });
