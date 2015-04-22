@@ -102,8 +102,7 @@
             "type": "varchar"
         },
         "assignedUser": {
-            "type": "link",
-            "required": true
+            "type": "link"
         },
         "acceptanceStatus": {
             "type": "varchar",
