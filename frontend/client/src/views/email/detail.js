@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
+Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep, EmailHelper) {
 
     return Dep.extend({
 
@@ -55,9 +55,11 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
         actionCreateLead: function () {
             var attributes = {};
 
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
+
             var fromString = this.model.get('fromString') || this.model.get('fromName');
             if (fromString) {
-                var fromName = this.parseNameFromStringAddress(fromString);
+                var fromName = emailHelper.parseNameFromStringAddress(fromString);
                 if (fromName) {
                     var firstName = fromName.split(' ').slice(0, -1).join(' ');
                     var lastName = fromName.split(' ').slice(-1).join(' ');
@@ -69,8 +71,8 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
             if (this.model.get('replyToString')) {
                 var str = this.model.get('replyToString');
                 var p = (str.split(';'))[0];
-                attributes.emailAddress = this.parseAddressFromStringAddress(p);
-                var fromName = this.parseNameFromStringAddress(p);
+                attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
+                var fromName = emailHelper.parseNameFromStringAddress(p);
                 if (fromName) {
                     var firstName = fromName.split(' ').slice(0, -1).join(' ');
                     var lastName = fromName.split(' ').slice(-1).join(' ');
@@ -121,28 +123,6 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
         },
 
 
-        addReplyBodyAttrbutes: function (attributes) {
-            if (this.model.get('isHtml')) {
-                var body = this.model.get('body');
-                body = '<br><blockquote>' + '------' + this.translate('Original message', 'labels', 'Email') + '------<br>' + body + '</blockquote>';
-
-                attributes['body'] = body;
-            } else {
-                var bodyPlain = this.model.get('body') || this.model.get('bodyPlain') || '';
-
-                var b = '\n\n';
-                b += '------' + this.translate('Original message', 'labels', 'Email') + '------' + '\n';
-
-                bodyPlain.split('\n').forEach(function (line) {
-                    b += '> ' + line + '\n';
-                });
-                bodyPlain = b;
-
-                attributes['body'] = bodyPlain;
-                attributes['bodyPlain'] = bodyPlain;
-            }
-        },
-
         addForwardBodyAttrbutes: function (attributes) {
             if (this.model.get('isHtml')) {
                 var body = this.model.get('body');
@@ -159,102 +139,10 @@ Espo.define('Views.Email.Detail', 'Views.Detail', function (Dep) {
             }
         },
 
-        parseNameFromStringAddress: function (value) {
-            if (~value.indexOf('<')) {
-                var name = value.replace(/<(.*)>/, '').trim();
-                if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
-                    name = name.substr(1, name.length - 2);
-                }
-                return name;
-            }
-            return null;
-        },
-
-        parseAddressFromStringAddress: function (value) {
-            var r = value.match(/<(.*)>/);
-            var address = null;
-            if (r && r.length > 1) {
-                address = r[1];
-            } else {
-                address = value.trim();
-            }
-            return address;
-        },
-
-
         actionReply: function (data, cc) {
-            var attributes = {
-                status: 'Draft',
-                isHtml: this.model.get('isHtml')
-            };
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
 
-            var subject = this.model.get('name');
-            if (subject.toUpperCase().indexOf('RE:') !== 0) {
-                attributes['name'] = 'Re: ' + subject;
-            } else {
-                attributes['name'] = subject;
-            }
-
-            var to = null;
-
-            var nameHash = this.model.get('nameHash') || {};
-
-            if (this.model.get('replyToString')) {
-                var str = this.model.get('replyToString');
-
-                var a = [];
-                str.split(';').forEach(function (item) {
-                    var part = item.trim();
-                    var address = this.parseAddressFromStringAddress(item);
-
-                    if (address) {
-                        a.push(address);
-                        var name = this.parseNameFromStringAddress(part);
-                        if (name && name !== address) {
-                            nameHash[address] = name;
-                        }
-
-                    }
-                }, this);
-                to = a.join('; ');
-            }
-            if (!to || !~to.indexOf('@')) {
-                if (this.model.get('from')) {
-                    to = this.model.get('from');
-                    if (!nameHash[to]) {
-                        var fromString = this.model.get('fromString') || this.model.get('fromName');
-                        if (fromString) {
-                            var name = this.parseNameFromStringAddress(fromString);
-                            if (name != to) {
-                                nameHash[to] = name;
-                            }
-                        }
-                    }
-                }
-            }
-
-            attributes.to = to;
-
-            if (cc) {
-                attributes.cc = this.model.get('cc');
-                (this.model.get('to')).split(';').forEach(function (item) {
-                   item = item.trim();
-                   if (item != this.getUser().get('emailAddress')) {
-                       attributes.cc += '; ' + item;
-                   }
-                }, this);
-                attributes.cc = attributes.cc.replace(/^(\; )/,"");
-            }
-
-            if (this.model.get('parentId')) {
-                attributes['parentId'] = this.model.get('parentId');
-                attributes['parentName'] = this.model.get('parentName');
-                attributes['parentType'] = this.model.get('parentType');
-            }
-
-            attributes.nameHash = nameHash;
-
-            this.addReplyBodyAttrbutes(attributes);
+            var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
             this.notify('Loading...');
             this.createView('quickCreate', 'Modals.ComposeEmail', {

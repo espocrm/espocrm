@@ -849,9 +849,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var id = data.id;
             if (!id) return;
 
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.detail') || 'Modals.Detail';
+
             if (!this.quickDetailDisabled) {
                 this.notify('Loading...');
-                this.createView('quickDetail', 'Modals.Detail', {
+                this.createView('quickDetail', viewName, {
                     scope: this.scope,
                     id: id
                 }, function (view) {
@@ -876,9 +878,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var id = d.id;
             if (!id) return;
 
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'Modals.Edit';
+
             if (!this.quickEditDisabled) {
                 this.notify('Loading...');
-                this.createView('quickEdit', 'Modals.Edit', {
+                this.createView('quickEdit', viewName, {
                     scope: this.scope,
                     id: id,
                     fullFormButton: !d.noFullForm

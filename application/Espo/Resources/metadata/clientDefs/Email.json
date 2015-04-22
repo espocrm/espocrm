@@ -12,6 +12,9 @@
       "editQuick":"Email.Record.EditQuick",
       "detailQuick":"Email.Record.DetailQuick"
    },
+   "modalViews": {
+      "detail": "Email.Modals.Detail"
+   },
    "menu": {
       "list": {
          "buttons": [

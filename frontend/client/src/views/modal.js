@@ -84,7 +84,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                             o.text = this.translate(o.name, 'modalActions', this.scope);
                         }
                     }
-                    o.onClick = o.onClick || this['modalAction' + Espo.Utils.upperCaseFirst(o.name)].bind(this);
+                    o.onClick = o.onClick || this['action' + Espo.Utils.upperCaseFirst(o.name)].bind(this);
 
                     buttonListExt.push(o);
                 }, this);
@@ -117,7 +117,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
             });
         },
 
-        modalActionCancel: function (dialog) {
+        actionCancel: function (dialog) {
             dialog.close();
         },
 

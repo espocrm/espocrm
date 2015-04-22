@@ -150,10 +150,13 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
 
         actionViewRelated: function (data) {
             var id = data.id;
+            var scope = this.collection.get(id).name;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
 
             this.notify('Loading...');
-            this.createView('quickDetail', 'Modals.Detail', {
-                scope: this.collection.get(id).name,
+            this.createView('quickDetail', viewName, {
+                scope: scope,
                 id: id
             }, function (view) {
                 view.once('after:render', function () {
@@ -168,10 +171,13 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
 
         actionEditRelated: function (data) {
             var id = data.id;
+            var scope = this.collection.get(id).name;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
 
             this.notify('Loading...');
-            this.createView('quickEdit', 'Modals.Edit', {
-                scope: this.collection.get(id).name,
+            this.createView('quickEdit', viewName, {
+                scope: scope,
                 id: id
             }, function (view) {
                 view.once('after:render', function () {

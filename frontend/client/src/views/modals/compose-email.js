@@ -52,7 +52,7 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
             this.header = this.getLanguage().translate('Compose Email');
         },
 
-        modalActionSend: function (dialog) {
+        actionSend: function (dialog) {
             var editView = this.getView('edit');
 
             var model = editView.model;
@@ -77,7 +77,7 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
             editView.send();
         },
 
-        modalActionSaveDraft: function (dialog) {
+        actionSaveDraft: function (dialog) {
             var editView = this.getView('edit');
 
             var model = editView.model;

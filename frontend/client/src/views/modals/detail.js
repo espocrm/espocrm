@@ -121,7 +121,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             }.bind(this), 50);
         },
 
-        modalActionEdit: function (dialog) {
+        actionEdit: function (dialog) {
             this.createView('quickEdit', 'Modals.Edit', {
                 scope: this.scope,
                 id: this.id,
@@ -144,7 +144,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             }.bind(this));
         },
 
-        modalActionFullForm: function (dialog) {
+        actionFullForm: function (dialog) {
             var url;
             var router = this.getRouter();
 

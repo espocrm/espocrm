@@ -64,8 +64,10 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
             var id = data.id;
             var scope = data.scope;
 
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
+
             this.notify('Loading...');
-            this.createView('quickDetail', 'Modals.Detail', {
+            this.createView('quickDetail', viewName, {
                 scope: scope,
                 id: id
             }, function (view) {

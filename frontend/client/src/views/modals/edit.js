@@ -120,7 +120,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             this.createView('edit', viewName, options, callback);
         },
 
-        modalActionSave: function (dialog) {
+        actionSave: function (dialog) {
             var editView = this.getView('edit');
 
             var model = editView.model;
@@ -139,7 +139,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             editView.save();
         },
 
-        modalActionFullForm: function (dialog) {
+        actionFullForm: function (dialog) {
             var url;
             var router = this.getRouter();
             if (!this.id) {
