@@ -34,12 +34,17 @@
          "buttons": [
             {
                "label": "Reply",
-               "action": "reply",
+               "action": "replyToAll",
                "style": "danger",
                "acl": "read"
             }
          ],
          "dropdown": [
+             {
+               "label": "Reply",
+               "action": "reply",
+               "acl": "read"
+             },
              {
                "label": "Reply to All",
                "action": "replyToAll",
