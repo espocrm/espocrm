@@ -860,7 +860,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     });
                     view.render();
                     view.once('after:save', function () {
-                        console.log(2);
                         var model = this.collection.get(id);
                         if (model) {
                             model.fetch();
