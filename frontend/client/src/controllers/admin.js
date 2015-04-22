@@ -197,6 +197,7 @@ Espo.define('Controllers.Admin', 'Controller', function (Dep) {
             this.getRouter().navigate('#Admin');
             $.ajax({
                 url: 'Admin/rebuild',
+                timeout: 0,
                 success: function () {
                     var msg = master.translate('Rebuild has been done', 'labels', 'Admin');
                     Espo.Ui.success(msg);

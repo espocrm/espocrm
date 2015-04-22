@@ -64,7 +64,6 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
                             id: id
                         }),
                         timeout: 0,
-                        async: false,
                         error: function (xhr) {
                             var msg = xhr.getResponseHeader('X-Status-Reason');
                             this.showErrorNotification(this.translate('Error') + ': ' + msg);
