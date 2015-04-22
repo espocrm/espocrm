@@ -44,5 +44,29 @@ class Contact extends \Espo\Services\Record
 
         return $data;
     }
+
+    public function afterCreate($entity, array $data)
+    {
+        parent::afterCreate($entity, $data);
+        if (!empty($data['emailId'])) {
+            $email = $this->getEntityManager()->getEntity('Email', $data['emailId']);
+            if ($email && !$email->get('parentId')) {
+                if ($this->getConfig()->get('b2cMode')) {
+                    $email->set(array(
+                        'parentType' => 'Contact',
+                        'parentId' => $entity->id
+                    ));
+                } else {
+                    if ($entity->get('accountId')) {
+                        $email->set(array(
+                            'parentType' => 'Account',
+                            'parentId' => $entity->get('accountId')
+                        ));
+                    }
+                }
+                $this->getEntityManager()->saveEntity($email);
+            }
+        }
+    }
 }
 

@@ -47,7 +47,12 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                             acl: 'edit',
                             aclScope: 'Lead'
                         });
-                    }
+                                                this.menu.dropdown.push({
+                            label: 'Create Contact',
+                            action: 'createContact',
+                            acl: 'edit',
+                            aclScope: 'Contact'
+                        });                    }
                 }
             }
         },
@@ -86,8 +91,10 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
             }
             attributes.emailId = this.model.id;
 
+            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.detail') || 'Modals.Edit';
+
             this.notify('Loading...');
-            this.createView('quickCreate', 'Modals.Edit', {
+            this.createView('quickCreate', viewName, {
                 scope: 'Lead',
                 attributes: attributes,
             }, function (view) {
@@ -95,6 +102,60 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                 view.notify(false);
                 view.once('after:save', function () {
                     this.model.fetch();
+                    this.removeMenuItem('createContact');
+                    this.removeMenuItem('createLead');
+                    view.close();
+                }.bind(this));
+            }.bind(this));
+
+        },
+
+        actionCreateContact: function () {
+            var attributes = {};
+
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
+
+            var fromString = this.model.get('fromString') || this.model.get('fromName');
+            if (fromString) {
+                var fromName = emailHelper.parseNameFromStringAddress(fromString);
+                if (fromName) {
+                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    attributes.firstName = firstName;
+                    attributes.lastName = lastName;
+                }
+            }
+
+            if (this.model.get('replyToString')) {
+                var str = this.model.get('replyToString');
+                var p = (str.split(';'))[0];
+                attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
+                var fromName = emailHelper.parseNameFromStringAddress(p);
+                if (fromName) {
+                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    attributes.firstName = firstName;
+                    attributes.lastName = lastName;
+                }
+            }
+
+            if (!attributes.emailAddress) {
+                attributes.emailAddress = this.model.get('from');
+            }
+            attributes.emailId = this.model.id;
+
+            var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.detail') || 'Modals.Edit';
+
+            this.notify('Loading...');
+            this.createView('quickCreate', viewName, {
+                scope: 'Contact',
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                view.once('after:save', function () {
+                    this.model.fetch();
+                    this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
                     view.close();
                 }.bind(this));

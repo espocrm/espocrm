@@ -100,6 +100,7 @@ return array (
     'disabledCountQueryEntityList' => array('Email'),
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,
+    'b2cMode' => false,
     'isInstalled' => false,
 );
 
