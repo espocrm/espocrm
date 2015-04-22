@@ -39,7 +39,10 @@ Espo.define('Views.Email.Modals.BodyPlain', 'Views.Modal', function (Dep) {
                 model: this.model,
                 defs: {
                     name: 'bodyPlain',
-                    readOnly: true
+                    params: {
+                        readOnly: true,
+                        inlineEditDisabled: true
+                    }
                 }
             });
         }
