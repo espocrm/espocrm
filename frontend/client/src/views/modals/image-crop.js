@@ -77,12 +77,15 @@ Espo.define('Views.Modals.ImageCrop', ['Views.Modal', 'lib!Cropper'], function (
 
             this.$el.find('.image-container').append($img);
 
-            $img.cropper({
-                aspectRatio: 1,
-                movable: true,
-                resizable: true,
-                rotatable: false,
-            });
+            setTimeout(function () {
+                $img.cropper({
+                    aspectRatio: 1,
+                    movable: true,
+                    resizable: true,
+                    rotatable: false,
+                });
+            }, 50);
+
         },
 
         crop: function () {
