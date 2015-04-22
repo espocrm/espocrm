@@ -362,7 +362,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 	                            this.collection.remove(model);
 
 	                            this.$el.find(this.getRowSelector(id)).remove();
-	                            if (this.collection.length == 0 && this.collection.total == 0) {
+	                            if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total == -2)) {
 	                                this.render();
 	                            }
 	                        }, this);
