@@ -4,6 +4,7 @@
 	"createdAt",
 	"dateStart",
 	"direction",
+	"modifiedAt",
 	"status",
 	"parent",
 	"users",

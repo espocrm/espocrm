@@ -3,6 +3,7 @@
 	"assignedUser",
 	"createdAt",
 	"dateStart",
+	"modifiedAt",
 	"status",
 	"parent",
 	"users",

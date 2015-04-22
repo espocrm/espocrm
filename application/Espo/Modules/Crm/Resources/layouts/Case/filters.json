@@ -4,6 +4,7 @@
 	"contact",
 	"createdAt",
 	"number",
+	"modifiedAt",
 	"status",
 	"priority",
 	"description",

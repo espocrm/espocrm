@@ -4,6 +4,7 @@
 	"createdAt",
 	"dateStart",
 	"dateEnd",
+	"modifiedAt",
 	"status",
 	"priority"
 ]
