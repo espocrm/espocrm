@@ -47,7 +47,7 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                             acl: 'edit',
                             aclScope: 'Lead'
                         });
-                                                this.menu.dropdown.push({
+                        this.menu.dropdown.push({
                             label: 'Create Contact',
                             action: 'createContact',
                             acl: 'edit',
@@ -55,6 +55,21 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                         });                    }
                 }
             }
+
+            if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
+                this.menu.dropdown.push({
+                    label: 'Show Plain Text',
+                    action: 'showBodyPlain'
+                });
+            }
+        },
+
+        actionShowBodyPlain: function () {
+            this.createView('bodyPlain', 'Email.Modals.BodyPlain', {
+                model: this.model
+            }, function (view) {
+                view.render();
+            }.bind(this));
         },
 
         actionCreateLead: function () {

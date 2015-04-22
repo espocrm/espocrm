@@ -44,7 +44,8 @@
         "Mark Read": "Mark Read",
         "Sending...": "Sending...",
         "Save Draft": "Save Draft",
-        "Mark all as read": "Mark all as read"
+        "Mark all as read": "Mark all as read",
+        "Show Plain Text": "Show Plain Text"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
