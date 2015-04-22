@@ -175,6 +175,8 @@ class Table
                     if (!isset($data[$scope])) {
                         $data[$scope] = false;
                     }
+                } else if ($row === true) {
+                    $data[$scope] = true;
                 } else {
                     if (!isset($data[$scope])) {
                         $data[$scope] = array();
@@ -182,12 +184,14 @@ class Table
                     if ($data[$scope] == false) {
                         $data[$scope] = array();
                     }
-                    foreach ($row as $action => $level) {
-                        if (!isset($data[$scope][$action])) {
-                            $data[$scope][$action] = $level;
-                        } else {
-                            if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
+                    if (is_array($row)) {
+                        foreach ($row as $action => $level) {
+                            if (!isset($data[$scope][$action])) {
                                 $data[$scope][$action] = $level;
+                            } else {
+                                if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
+                                    $data[$scope][$action] = $level;
+                                }
                             }
                         }
                     }
