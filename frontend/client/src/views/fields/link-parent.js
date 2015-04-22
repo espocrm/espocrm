@@ -131,6 +131,12 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                     }
                 }.bind(this));
 
+                this.$elementType.on('change', function () {
+                    this.$elementName.val('');
+                    this.$elementId.val('');
+                    this.trigger('change');
+                }.bind(this));
+
                 if (this.mode == 'edit') {
                     this.$elementName.on('blur', function (e) {
                         if (this.model.has(this.nameName)) {
