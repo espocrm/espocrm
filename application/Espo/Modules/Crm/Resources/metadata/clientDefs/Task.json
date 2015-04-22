@@ -7,6 +7,24 @@
       "list": "Crm:Task.List",
       "detail": "Crm:Task.Detail"
    },
+   "formDependency": {
+      "status": {
+         "map": {
+            "Completed": [
+               {
+                  "action": "show",
+                  "fields": ["dateCompleted"]
+               }
+            ]
+         },
+         "default": [
+            {
+               "action": "hide",
+               "fields": ["dateCompleted"]
+            }
+         ]
+      }
+   },
    "filterList": [
       "actual",
       {

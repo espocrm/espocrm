@@ -61,6 +61,14 @@ class Task extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::beforeSave($entity, $options);
 
+        if ($entity->isFieldChanged('status')) {
+            if ($entity->get('status') == 'Completed') {
+                $entity->set('dateCompleted', date('Y-m-d H:i:s'));
+            } else {
+                $entity->set('dateCompleted', null);
+            }
+        }
+
         if ($entity->has('dateStartDate')) {
             $dateStartDate = $entity->get('dateStartDate');
             if (!empty($dateStartDate)) {

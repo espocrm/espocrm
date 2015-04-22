@@ -10,7 +10,8 @@
         "priority": "Priority",
         "description": "Description",
         "isOverdue": "Is Overdue",
-        "account": "Account"
+        "account": "Account",
+        "dateCompleted": "Date Completed"
     },
     "links": {
     },

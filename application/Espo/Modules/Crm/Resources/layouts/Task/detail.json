@@ -5,7 +5,7 @@
             [{"name":"name"},{"name":"parent"}],
             [{"name":"status"},
             {"name":"priority"}],
-            [{"name":"dateStart"},false],
+            [{"name":"dateStart"},{"name":"dateCompleted"}],
             [{"name":"dateEnd"},false],
             [{"name":"description", "fullWidth": true}]
         ]

@@ -36,6 +36,10 @@
             "type": "date",
             "disabled": true
         },
+        "dateCompleted": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "isOverdue": {
             "type": "bool",
             "readOnly": true,
