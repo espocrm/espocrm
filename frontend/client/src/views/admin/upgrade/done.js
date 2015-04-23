@@ -39,6 +39,10 @@ Espo.define('Views.Admin.Upgrade.Done', 'Views.Modal', function (Dep) {
         },
 
         setup: function () {
+            this.on('remove', function () {
+                window.location.reload();
+            });
+
             this.buttons = [
                 {
                     name: 'close',

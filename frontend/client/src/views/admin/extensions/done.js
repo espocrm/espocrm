@@ -17,21 +17,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
 
     return Dep.extend({
-    
-        cssName: 'done-modal',    
-        
+
+        cssName: 'done-modal',
+
         header: false,
-        
+
         template: 'admin.extensions.done',
-        
+
         createButton: true,
-        
-        data: function () {        
+
+        data: function () {
             return {
                 version: this.options.version,
                 name: this.options.name,
@@ -39,22 +39,25 @@ Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
                                                                                .replace('{name}', this.options.name)
             };
         },
-                
-        setup: function () {            
+
+        setup: function () {
+            this.on('remove', function () {
+                window.location.reload();
+            });
+
             this.buttons = [
                 {
                     name: 'close',
                     label: 'Close',
                     onClick: function (dialog) {
-                        dialog.close();                                        
+                        dialog.close();
                     }.bind(this)
-                } 
+                }
             ];
-                    
-            this.header = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');            
-            
-        },
-        
+
+            this.header = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');
+        }
+
     });
 });
 

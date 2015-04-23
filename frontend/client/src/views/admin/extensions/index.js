@@ -69,10 +69,12 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
                             this.showErrorNotification(this.translate('Error') + ': ' + msg);
                         }.bind(this)
                     }).done(function () {
-                        this.listenToOnce(this.collection, 'sync', function () {
+                        window.location.reload();
+                        /*this.listenToOnce(this.collection, 'sync', function () {
                              Espo.Ui.success(this.translate('uninstalled', 'messages', 'Extension').replace('{name}', name));
+
                         }, this);
-                        this.collection.fetch();
+                        this.collection.fetch();*/
 
                     }.bind(this));
                 }
