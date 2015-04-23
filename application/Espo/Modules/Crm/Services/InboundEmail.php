@@ -406,7 +406,7 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
-            'EmailAddress.id' => $email->get('fromEmailAddressId')
+            'emailAddresses.id' => $email->get('fromEmailAddressId')
         ))->findOne();
         if ($contact) {
             $case->set('contactId', $contact->id);
