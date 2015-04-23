@@ -34,6 +34,13 @@ Espo.define('Crm:Views.Meeting.Record.RowActions.Default', 'Views.Record.RowActi
                         id: this.model.id
                     }
                 });
+                actions.push({
+                    action: 'setNotHeld',
+                    label: 'Set Not Held',
+                    data: {
+                        id: this.model.id
+                    }
+                });
             }
 
             return actions;
