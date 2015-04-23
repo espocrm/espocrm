@@ -84,7 +84,8 @@ class Preferences extends \Espo\Core\ORM\Repository
                 $fileName = $this->getFilePath($id);
 
                 if (file_exists($fileName)) {
-                    $this->data[$id] = json_decode($this->getFileManager()->getContents($fileName), true);
+                    $d = Json::decode($this->getFileManager()->getContents($fileName));
+                    $this->data[$id] = get_object_vars($d);
                 } else {
                     $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
                     $defaults = array();
