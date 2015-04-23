@@ -156,8 +156,11 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                     this.$element.datepicker('show');
                 }.bind(this));
 
-                var $searchType = this.$el.find('select.search-type');
-                this.handleSearchType($searchType.val());
+
+                if (this.mode == 'search') {
+                    var $searchType = this.$el.find('select.search-type');
+                    this.handleSearchType($searchType.val());
+                }
             }
         },
 

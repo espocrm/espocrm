@@ -474,6 +474,12 @@ class Base
                 case 'notIn':
                     $part[$item['field'] . '!='] = $item['value'];
                     break;
+                case 'isNull':
+                    $part[$item['field'] . '='] = null;
+                    break;
+                case 'isNotNull':
+                    $part[$item['field'] . '!='] = null;
+                    break;
                 case 'isTrue':
                     $part[$item['field'] . '='] = true;
                     break;

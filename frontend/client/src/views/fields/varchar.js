@@ -39,10 +39,6 @@ Espo.define('Views.Fields.Varchar', 'Views.Fields.Base', function (Dep) {
                     value: value,
                     type: type,
                 }
-                /*    type: 'like',
-                    value: '%' + value + '%',
-
-                };*/
                 return data;
             }
             return false;

@@ -94,6 +94,24 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
             }
         },
 
+        setupSearch: function () {
+            this.searchParams.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    var type = $(e.currentTarget).val();
+                    this.handleSearchType(type);
+                },
+            }, this.events || {});
+        },
+
+        handleSearchType: function (type) {
+            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+                this.$el.find('div.primary').addClass('hidden');
+            } else {
+                this.$el.find('div.primary').removeClass('hidden');
+            }
+        },
+
         getAutocompleteUrl: function () {
             return this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
         },
@@ -171,6 +189,11 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                     $elementName.autocomplete('dispose');
                 }, this);
             }
+
+            if (this.mode == 'search') {
+                var type = this.$el.find('select.search-type').val();
+                this.handleSearchType(type);
+            }
         },
 
         getValueForDisplay: function () {
@@ -196,20 +219,37 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
         },
 
         fetchSearch: function () {
+            var type = this.$el.find('select.search-type').val();
             var value = this.$el.find('[name="' + this.idName + '"]').val();
 
-            if (!value) {
-                return false;
+            if (type == 'isEmpty') {
+                var data = {
+                    type: 'isNull',
+                    typeFront: type,
+                    field: this.idName
+                };
+                return data;
+            } else if (type == 'isNotEmpty') {
+                var data = {
+                    type: 'isNotNull',
+                    typeFront: type,
+                    field: this.idName
+                };
+                return data;
+            } else {
+                if (!value) {
+                    return false;
+                }
+                var data = {
+                    type: 'equals',
+                    typeFront: type,
+                    field: this.idName,
+                    value: value,
+                    valueName: this.$el.find('[name="' + this.nameName + '"]').val(),
+                };
+                return data;
             }
-
-            var data = {
-                type: 'equals',
-                field: this.idName,
-                value: value,
-                valueName: this.$el.find('[name="' + this.nameName + '"]').val(),
-            };
-            return data;
-        },
+        }
     });
 });
 

@@ -372,6 +372,16 @@
             "currentYear": "Current Year",
             "lastYear": "Last Year"
         },
+        "searchRanges": {
+            "is": "Is",
+            "isEmpty": "Is Empty",
+            "isNotEmpty": "Is Not Empty"
+        },
+        "varcharSearchRanges": {
+            "equals": "Equals",
+            "startsWith": "Starts With",
+            "contains": "Contains"
+        },
         "intSearchRanges": {
             "equals": "Equals",
             "notEquals": "Not Equals",
@@ -379,9 +389,7 @@
             "lessThan": "Less Than",
             "greaterThanOrEquals": "Greater Than or Equals",
             "lessThanOrEquals": "Less Than or Equals",
-            "between": "Between",
-            "startsWith": "Starts With",
-            "contains": "Contains"
+            "between": "Between"
         },
         "autorefreshInterval": {
             "0": "None",
