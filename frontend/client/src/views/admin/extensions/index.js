@@ -70,11 +70,6 @@ Espo.define('Views.Admin.Extensions.Index', 'View', function (Dep) {
                         }.bind(this)
                     }).done(function () {
                         window.location.reload();
-                        /*this.listenToOnce(this.collection, 'sync', function () {
-                             Espo.Ui.success(this.translate('uninstalled', 'messages', 'Extension').replace('{name}', name));
-
-                        }, this);
-                        this.collection.fetch();*/
 
                     }.bind(this));
                 }
