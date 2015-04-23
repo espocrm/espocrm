@@ -99,8 +99,7 @@ class Stream extends \Espo\Core\Services\Base
             if (!$user){
                 continue;
             }
-            $acl = new \Espo\Core\Acl($user, $this->getConfig(), null, $this->getMetadata());
-            if (!$acl->check($entity, 'read')) {
+            if (!$this->getAclManager()->check($user, $entity, 'read')) {
                 unset($userIdList[$i]);
             }
         }
