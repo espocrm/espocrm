@@ -2,7 +2,7 @@
 
 	<div id="msg-box" class="alert hide"></div>
 
-	<form id="nav">
+	<form id="nav" autocomplete="off">
 		<div class="row">
 			<div class=" col-md-6">
 				<div class="row">
