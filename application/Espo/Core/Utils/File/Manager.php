@@ -472,7 +472,7 @@ class Manager
             $sourceFile = is_file($sourcePath) ? $sourcePath : $this->concatPaths(array($sourcePath, $file));
             $destFile = $this->concatPaths(array($destPath, $file));
 
-            if (file_exists($sourceFile)) {
+            if (file_exists($sourceFile) && is_file($sourceFile)) {
                 $res &= copy($sourceFile, $destFile);
             }
         }

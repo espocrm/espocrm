@@ -1,7 +1,7 @@
 <div class="panel-body body">
 	<div id="msg-box" class="alert hide"></div>
 	<div class="loading-icon hide"></div>
-	<form id="nav">
+	<form id="nav" autocomplete="off">
 		<div class="row">
 			<div class="col-md-8" style="width:100%" >
 
