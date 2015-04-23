@@ -28,13 +28,6 @@ use Espo\Core\Utils\Util;
 class Install extends \Espo\Core\Upgrades\Actions\Base
 {
     /**
-     * Is copied extension files to Espo
-     *
-     * @var [type]
-     */
-    protected $isCopied = null;
-
-    /**
      * Main installation process
      *
      * @param  string $processId Upgrade/Extension ID, gotten in upload stage
@@ -53,8 +46,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->setProcessId($processId);
 
         $this->initialize();
-
-        $this->isCopied = false;
 
         /** check if an archive is unzipped, if no then unzip */
         $packagePath = $this->getPackagePath();
@@ -77,7 +68,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         if (!$this->copyFiles()) {
             $this->throwErrorAndRemovePackage('Cannot copy files.');
         }
-        $this->isCopied = true;
 
         /* remove files defined in a manifest */
         $this->deleteFiles(true);
@@ -103,10 +93,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
     protected function restoreFiles()
     {
-        if (!$this->isCopied) {
-            return;
-        }
-
         $GLOBALS['log']->info('Installer: Restore previous files.');
 
         $backupPath = $this->getPath('backupPath');
