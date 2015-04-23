@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Controllers;
 
@@ -30,22 +30,40 @@ class Call extends \Espo\Core\Controllers\Record
 {
 
     public function actionSendInvitations($params, $data)
-    {        
+    {
         if (empty($data['id'])) {
             throw new BadRequest();
         }
-        
+
         $entity = $this->getRecordService()->getEntity($data['id']);
-        
+
         if (!$entity) {
             throw new NotFound();
-        }    
-        
+        }
+
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
-        
+
         return $this->getRecordService()->sendInvitations($entity);
+    }
+
+    public function actionMassSetHeld($params, $data)
+    {
+        if (empty($data['ids']) && !is_array($data['ids'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->massSetHeld($data['ids']);
+    }
+
+    public function actionMassSetNotHeld($params, $data)
+    {
+        if (empty($data['ids']) && !is_array($data['ids'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->massSetNotHeld($data['ids']);
     }
 
 }

@@ -33,6 +33,10 @@
             "Tentative": "Tentative"
         }
     },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
+    },
     "labels": {
         "Create Call": "Create Call",
         "Set Held": "Set Held",

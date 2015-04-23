@@ -25,6 +25,11 @@ Espo.define('Crm:Views.Call.Record.List', 'Views.Record.List', function (Dep) {
 
         rowActionsView: 'Crm:Call.Record.RowActions.Default',
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.massActionList.push('setHeld');
+            this.massActionList.push('setNotHeld');
+        },
 
         actionSetHeld: function (data) {
             var id = data.id;
@@ -67,6 +72,48 @@ Espo.define('Crm:Views.Call.Record.List', 'Views.Record.List', function (Dep) {
 
             this.notify('Saving...');
             model.save();
+        },
+
+        massActionSetHeld: function () {
+            this.notify('Please wait...');
+            var data = {};
+            data.ids = this.checkedList;
+            $.ajax({
+                url: this.collection.url + '/action/massSetHeld',
+                type: 'POST',
+                data: JSON.stringify(data)
+            }).done(function (result) {
+                this.notify(false);
+                this.listenToOnce(this.collection, 'sync', function () {
+                    data.ids.forEach(function (id) {
+                        if (this.collection.get(id)) {
+                            this.checkRecord(id);
+                        }
+                    }, this);
+                }, this);
+                this.collection.fetch();
+            }.bind(this));
+        },
+
+        massActionSetNotHeld: function () {
+            this.notify('Please wait...');
+            var data = {};
+            data.ids = this.checkedList;
+            $.ajax({
+                url: this.collection.url + '/action/massSetNotHeld',
+                type: 'POST',
+                data: JSON.stringify(data)
+            }).done(function (result) {
+                this.notify(false);
+                this.listenToOnce(this.collection, 'sync', function () {
+                    data.ids.forEach(function (id) {
+                        if (this.collection.get(id)) {
+                            this.checkRecord(id);
+                        }
+                    }, this);
+                }, this);
+                this.collection.fetch();
+            }.bind(this));
         },
 
     });

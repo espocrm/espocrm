@@ -111,5 +111,29 @@ class Meeting extends \Espo\Services\Record
         $entity->set('reminders', $reminders);
     }
 
+    public function massSetHeld(array $ids)
+    {
+        foreach ($ids as $id) {
+            $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+            if ($entity && $this->getAcl()->check($entity, 'edit')) {
+                $entity->set('status', 'Held');
+                $this->getEntityManager()->saveEntity($entity);
+            }
+        }
+        return true;
+    }
+
+    public function massSetNotHeld(array $ids)
+    {
+        foreach ($ids as $id) {
+            $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+            if ($entity && $this->getAcl()->check($entity, 'edit')) {
+                $entity->set('status', 'Not Held');
+                $this->getEntityManager()->saveEntity($entity);
+            }
+        }
+        return true;
+    }
+
 }
 

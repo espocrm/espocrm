@@ -28,6 +28,10 @@
             "Tentative": "Tentative"
         }
     },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
+    },
     "labels": {
         "Create Meeting": "Create Meeting",
         "Set Held": "Set Held",

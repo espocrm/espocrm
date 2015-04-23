@@ -75,11 +75,13 @@ class Record extends \Espo\Core\Services\Base
                 $this->entityName = Util::normilizeScopeName($name);
             }
         }
+        $this->entityType = $this->entityName;
     }
 
-    public function setEntityName($entityName)
+    public function setEntityName($entityType)
     {
-        $this->entityName = $entityName;
+        $this->entityName = $entityType;
+        $this->entityType = $entityType;
     }
 
     protected function getServiceFactory()
