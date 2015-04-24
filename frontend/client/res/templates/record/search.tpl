@@ -2,24 +2,24 @@
 <div class="row search-row">
     <div class="form-group col-md-6 col-sm-8">
         <div class="input-group">
-            {{#if leftDropdown}}
-            <div class="input-group-btn">
+            <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
                 <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
                     <span class="filters-label"></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
-                    {{#if presetFilterList.length}}
-                        <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset">{{translate 'All'}}</a></li>
-                        {{#each ../presetFilterList}}
-                        <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../../scope}}{{/if}}</a></li>
-                        {{/each}}
-                        <li class="divider preset-control hidden"></li>
-                        <li class="preset-control remove-preset hidden"><a tabindex="-1" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a></li>
-                        <li class="preset-control save-preset hidden"><a tabindex="-1" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a></li>
-                        {{#if boolFilterList.length}}
-                            <li class="divider"></li>
-                        {{/if}}
+
+                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset">{{translate 'All'}}</a></li>
+                    {{#each presetFilterList}}
+                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../scope}}{{/if}}</a></li>
+                    {{/each}}
+                    <li class="divider preset-control hidden"></li>
+
+
+                    <li class="preset-control remove-preset hidden"><a tabindex="-1" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a></li>
+                    <li class="preset-control save-preset hidden"><a tabindex="-1" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a></li>
+                    {{#if boolFilterList.length}}
+                        <li class="divider"></li>
                     {{/if}}
 
                     {{#each boolFilterList}}
@@ -27,7 +27,6 @@
                     {{/each}}
                 </ul>
             </div>
-            {{/if}}
             <input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon" data-action="search">

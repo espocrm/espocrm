@@ -53,7 +53,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                 filterList: this.getFilterList(),
                 presetName: this.presetName,
                 presetFilterList: this.getPresetFilterList(),
-                leftDropdown: this.presetFilterList.length || this.boolFilterList.length
+                leftDropdown: this.isLeftDropdown()
             };
         },
 
@@ -87,6 +87,18 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.model.clear();
 
             this.createFilters();
+        },
+
+        isLeftDropdown: function () {
+            return this.presetFilterList.length || this.boolFilterList.length || Object.keys(this.advanced || {}).length;
+        },
+
+        handleLeftDropdownVisibility: function () {
+            if (this.isLeftDropdown()) {
+                this.$leftDropdown.removeClass('hidden');
+            } else {
+                this.$leftDropdown.addClass('hidden');
+            }
         },
 
         createFilters: function (callback) {
@@ -134,6 +146,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                     this.updateSearch();
                 }.bind(this));
                 this.updateAddFilterButton();
+                this.handleLeftDropdownVisibility();
 
                 this.manageLabels();
             },
@@ -156,6 +169,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                 this.updateSearch();
 
                 this.manageLabels();
+                this.handleLeftDropdownVisibility();
             },
             'click button[data-action="reset"]': function (e) {
                 this.resetFilters();
@@ -341,6 +355,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
         afterRender: function () {
         	this.$filtersLabel = this.$el.find('.search-row span.filters-label');
         	this.$filtersButton = this.$el.find('.search-row button.filters-button');
+            this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
 
             this.updateAddFilterButton();
 
