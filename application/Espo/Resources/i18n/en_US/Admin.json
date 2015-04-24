@@ -106,7 +106,7 @@
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
-        "upgradeDone": "Your EspoCRM has been upgraded to version <strong>{version}</strong>. Refresh your browser window.",
+        "upgradeDone": "Your EspoCRM has been upgraded to version <strong>{version}</strong>.",
         "upgradeBackup": "We recommend you to make backup of your EspoCRM files and data before upgrade.",
         "thousandSeparatorEqualsDecimalMark": "Thousand separator can not be same as decimal mark",
         "userHasNoEmailAddress": "User has not email address.",
