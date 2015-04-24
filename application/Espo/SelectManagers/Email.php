@@ -44,7 +44,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = array(
             'fromEmailAddressId!=' => $idList
         );
-        $this->boolFilterOnlyMy();
+        $this->boolFilterOnlyMy($result);
     }
 
     protected function filterSent(&$result)
