@@ -73,21 +73,26 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             this.waitForView('record');
 
             this.getModelFactory().create(this.scope, function (model) {
-                this.model = model;
-
-                model.id = this.id;
-                model.once('sync', function () {
-                    if (model.get('name')) {
-                        this.header += ' &raquo; ' + model.get('name');
-                    }
-                    if (this.editButton && this.getAcl().check(model, 'edit')) {
-                        this.addEditButton();
-                    }
+                if (!this.model) {
+                    this.model = model;
+                    model.id = this.id;
+                    model.once('sync', function () {
+                        this.createRecord(model);
+                    }, this);
+                    model.fetch();
+                } else {
+                    var sourceModel = this.model;
+                    model = this.model = this.model.clone();
+                    this.once('after:render', function () {
+                        model.fetch();
+                    });
                     this.createRecord(model);
-                }, this);
-                model.fetch();
 
-            }.bind(this));
+                    this.listenTo(model, 'change', function () {
+                        sourceModel.set(model.getClonedAttributes());
+                    }, this);
+                }
+            }, this);
         },
 
         addEditButton: function () {
@@ -99,6 +104,13 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
         },
 
         createRecord: function (model, callback) {
+            if (model.get('name')) {
+                this.header += ' &raquo; ' + model.get('name');
+            }
+            if (this.editButton && this.getAcl().check(model, 'edit')) {
+                this.addEditButton();
+            }
+
             var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.DetailSmall'; 
             var options = {
                 model: model,

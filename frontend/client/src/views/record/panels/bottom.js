@@ -69,7 +69,8 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
             this.notify('Loading...');
             this.createView('quickDetail', viewName, {
                 scope: scope,
-                id: id
+                id: id,
+                model: this.collection.get(id),
             }, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);

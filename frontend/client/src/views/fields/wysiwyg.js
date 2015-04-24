@@ -126,6 +126,9 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
         },
 
         enableWysiwygMode: function () {
+            if (!this.$element) {
+                return;
+            }
             this.$summernote = this.$element.summernote({
                 height: this.height,
                 lang: this.getConfig().get('language'),

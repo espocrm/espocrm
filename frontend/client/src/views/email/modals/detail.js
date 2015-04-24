@@ -31,6 +31,12 @@ Espo.define('Views.Email.Modals.Detail', ['Views.Modals.Detail', 'Views.Email.De
                 'label': 'Reply',
                 'style': 'danger'
             });
+            this.listenToOnce(this.model, 'sync', function () {
+                setTimeout(function () {
+                    this.model.set('isRead', true);
+                }.bind(this), 50);
+            }, this);
+
         },
 
         actionReply: function () {
