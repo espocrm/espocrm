@@ -467,8 +467,6 @@ abstract class Base
 
         foreach ($entity->relations as $name => $r) {
             if ($r['type'] == IEntity::BELONGS_TO) {
-                $table = $this->toDb($r['entity']);
-
 
                 if (!array_key_exists($name, $aliases)) {
                     if (array_key_exists($name, $occuranceHash)) {
@@ -481,7 +479,7 @@ abstract class Base
                         $suffix .= '_' . $occuranceHash[$name];
                     }
 
-                    $aliases[$name] = $this->toDb($name) . $suffix;
+                    $aliases[$name] = $name . $suffix;
                 }
             }
         }

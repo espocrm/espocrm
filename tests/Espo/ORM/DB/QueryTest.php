@@ -35,7 +35,7 @@ require_once 'tests/testData/DB/MockDBResult.php';
 class QueryTest extends PHPUnit_Framework_TestCase
 {
     protected $query;
-    
+
     protected $pdo;
 
     protected $entityFactory;
@@ -50,7 +50,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
                     $args = func_get_args();
                     return "'" . $args[0] . "'";
                 }));
-                
+
 
         $this->entityFactory = $this->getMockBuilder('\\Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
         $this->entityFactory->expects($this->any())
@@ -62,7 +62,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
                             }));
 
         $this->query = new Query($this->pdo, $this->entityFactory);
-        
+
         $this->post = new \Espo\Entities\Post();
         $this->comment = new \Espo\Entities\Comment();
         $this->tag = new \Espo\Entities\Tag();
@@ -82,7 +82,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
         unset($this->contact);
         unset($this->account);
     }
-    
+
     public function testSelectAllColumns()
     {
         $sql = $this->query->createSelectQuery('Account', array(
@@ -91,72 +91,72 @@ class QueryTest extends PHPUnit_Framework_TestCase
             'offset' => 10,
             'limit' => 20
         ));
-        
+
         $expectedSql = 
             "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted` FROM `account` " .
             "WHERE account.deleted = '0' ORDER BY account.name ASC LIMIT 10, 20";
-        
+
         $this->assertEquals($expectedSql, $sql);
     }
-    
+
     public function testSelectWithBelongsToJoin()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
 
         ));
-        
+
         $expectedSql = 
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0'";
-        
+
         $this->assertEquals($expectedSql, $sql);
     }
-    
+
     public function testSelectWithSpecifiedColumns()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('id', 'name')
-        ));        
+        ));
         $expectedSql = 
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
             "WHERE comment.deleted = '0'";
-        
+
         $this->assertEquals($expectedSql, $sql);
-        
+
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('id', 'name', 'postName')
-        ));        
-        $expectedSql = 
+        ));
+        $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0'";
-        
+
         $this->assertEquals($expectedSql, $sql);
-        
+
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('id', 'name', 'postName'),
             'leftJoins' => array('post')
-        ));        
-        $expectedSql = 
+        ));
+        $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0'";
-        
+
         $this->assertEquals($expectedSql, $sql);
-        
+
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('id', 'name'),
             'leftJoins' => array('post')
-        ));        
-        $expectedSql = 
+        ));
+        $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0'";
-        
+
         $this->assertEquals($expectedSql, $sql);
     }
-    
+
     public function testWithSpecifiedFunction()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -164,27 +164,27 @@ class QueryTest extends PHPUnit_Framework_TestCase
             'leftJoins' => array('post'),
             'groupBy' => array('postId', 'post.name')
         ));
-        $expectedSql = 
+        $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
-            "GROUP BY comment.post_id, post.name";        
+            "GROUP BY comment.post_id, post.name";
         $this->assertEquals($expectedSql, $sql);
-        
-        
+
+
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('id', 'COUNT:id', 'MONTH:post.createdAt'),
             'leftJoins' => array('post'),
             'groupBy' => array('MONTH:post.createdAt')
         ));
-        $expectedSql = 
+        $expectedSql =
             "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
-            "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";        
+            "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";
         $this->assertEquals($expectedSql, $sql);
     }
-    
+
     public function testOrderBy()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -193,29 +193,29 @@ class QueryTest extends PHPUnit_Framework_TestCase
             'groupBy' => array('YEAR:post.createdAt'),
             'orderBy' => 2
         ));
-        $expectedSql = 
+        $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
             "GROUP BY YEAR(post.created_at) ".
             "ORDER BY 2 ASC";
         $this->assertEquals($expectedSql, $sql);
-        
+
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('COUNT:id', 'post.name'),
             'leftJoins' => array('post'),
             'groupBy' => array('post.name'),
             'orderBy' => 'LIST:post.name:Test,Hello',
         ));
-        
-        $expectedSql = 
+
+        $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
             "GROUP BY post.name ".
             "ORDER BY FIELD(post.name, 'Test', 'Hello')";
         $this->assertEquals($expectedSql, $sql);
-        
+
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('COUNT:id', 'YEAR:post.createdAt', 'post.name'),
             'leftJoins' => array('post'),
@@ -225,15 +225,15 @@ class QueryTest extends PHPUnit_Framework_TestCase
                 array('LIST:post.name:Test,Hello')
             )
         ));
-        $expectedSql = 
+        $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, post.name AS `post.name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
             "GROUP BY YEAR(post.created_at), post.name ".
             "ORDER BY 2 DESC, FIELD(post.name, 'Test', 'Hello')";
-        $this->assertEquals($expectedSql, $sql);        
+        $this->assertEquals($expectedSql, $sql);
     }
-    
+
     public function testForeign()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -244,12 +244,12 @@ class QueryTest extends PHPUnit_Framework_TestCase
                 'post.createdById' => 'id_1'
             ),
         ));
-        $expectedSql = 
+        $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = '0' " .
-            "GROUP BY comment.post_id";        
-        $this->assertEquals($expectedSql, $sql);        
+            "GROUP BY comment.post_id";
+        $this->assertEquals($expectedSql, $sql);
     }
 
 }
