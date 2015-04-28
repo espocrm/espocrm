@@ -27,5 +27,8 @@
    },
    "mergable":false,
    "notCreatable": false,
-   "filter": true
+   "filter": true,
+   "fieldDefs":{
+      "skip":true
+   }
 }

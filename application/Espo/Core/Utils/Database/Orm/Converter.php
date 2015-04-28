@@ -82,7 +82,6 @@ class Converter
         'len' => '24',
     );
 
-
     public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
     {
         $this->metadata = $metadata;
@@ -92,7 +91,6 @@ class Converter
 
         $this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
     }
-
 
     protected function getMetadata()
     {
@@ -227,24 +225,9 @@ class Converter
             /** check if "fields" option exists in $fieldMeta */
             $fieldTypeMeta = $this->getMetadataUtils()->getFieldDefsByType($fieldParams);
 
-            if (isset($fieldTypeMeta['fields']) && is_array($fieldTypeMeta['fields'])) {
-
-                foreach($fieldTypeMeta['actualFields'] as $subFieldName) {
-
-                    $subField = $this->convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta);
-
-                    if (!isset($outputMeta[ $subField['naming'] ])) {
-                        $subFieldDefs = $this->convertField($entityName, $subField['name'], $subField['params']);
-                        if ($subFieldDefs !== false) {
-                            $outputMeta[ $subField['naming'] ] = $subFieldDefs; //push fieldDefs to the main array
-                        }
-                    }
-                }
-            } else {
-                $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
-                if ($fieldDefs !== false) {
-                    $outputMeta[$fieldName] = $fieldDefs; //push fieldDefs to the main array
-                }
+            $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
+            if ($fieldDefs !== false) {
+                $outputMeta[$fieldName] = $fieldDefs; //push fieldDefs to the main array
             }
 
             /** check and set the linkDefs from 'fields' metadata */
@@ -310,16 +293,11 @@ class Converter
         if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
             if (!isset($entityMeta['fields']['isFollowed'])) {
                 $ormMeta[$entityName]['fields']['isFollowed'] = array(
-                    'type' => 'bool',
+                    'type' => 'varchar',
                     'notStorable' => true,
                 );
             }
         } //END: add a field 'isFollowed' for stream => true
-
-        $ormMeta[$entityName]['fields']['isEditable'] = array(
-            'type' => 'bool',
-            'notStorable' => true
-        );
 
         return $ormMeta;
     }
@@ -364,37 +342,6 @@ class Converter
         }
 
         return $fieldDefs;
-    }
-
-    protected function convertActualFields($entityName, $fieldName, $fieldParams, $subFieldName, $fieldTypeMeta)
-    {
-        $subField = array();
-
-        $subField['params'] = $this->getInitValues($fieldParams);
-
-        if (isset($fieldTypeMeta['fieldDefs'])) {
-            $subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['fieldDefs']);
-        }
-
-        //if empty field name, then use the main field
-        if (trim($subFieldName) == '') {
-
-            $subField['name'] = $fieldName;
-            $subField['naming'] = $fieldName;
-
-        } else {
-
-            $namingType = isset($fieldTypeMeta['naming']) ? $fieldTypeMeta['naming'] : $this->defaultNaming;
-
-            $subField['name'] = $subFieldName;
-            $subField['naming'] = Util::getNaming($fieldName, $subFieldName, $namingType);
-            if (isset($fieldTypeMeta['fields'][$subFieldName])) {
-                $subField['params'] = Util::merge($subField['params'], $fieldTypeMeta['fields'][$subFieldName]);
-            }
-
-        }
-
-        return $subField;
     }
 
     protected function convertLinks($entityName, $entityMeta, $ormMeta)

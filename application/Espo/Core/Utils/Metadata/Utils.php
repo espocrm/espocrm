@@ -22,9 +22,25 @@
 
 namespace Espo\Core\Utils\Metadata;
 
+use Espo\Core\Utils\Util;
+
 class Utils
 {
     private $metadata;
+
+    protected $defaultNaming = 'postfix';
+
+    /**
+     * List of copied params for metadata -> 'fields' from parent items
+     */
+    protected $copiedDefParams = array(
+        'readOnly',
+        'notStorable',
+        'layoutListDisabled',
+        'layoutDetailDisabled',
+        'layoutMassUpdateDisabled',
+        'layoutFiltersDisabled',
+    );
 
     public function __construct(\Espo\Core\Utils\Metadata $metadata)
     {
@@ -102,7 +118,41 @@ class Utils
         return $linkFieldDefsByType;
     }
 
+    /**
+     * Get additional field list based on field definition in metadata 'fields'
+     *
+     * @param  string     $fieldName
+     * @param  array     $fieldParams
+     * @param  array|null $definitionList
+     *
+     * @return array
+     */
+    public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList = null)
+    {
+        if (empty($fieldParams['type'])) {
+            return;
+        }
+
+        $fieldType = $fieldParams['type'];
+        $fieldDefinition = isset($definitionList[$fieldType]) ? $definitionList[$fieldType] : $this->getMetadata()->get('fields.'.$fieldType);
+
+        if (!empty($fieldDefinition['fields']) && is_array($fieldDefinition['fields'])) {
+
+            $copiedParams = array_intersect_key($fieldParams, array_flip($this->copiedDefParams));
+
+            $additionalFields = array();
+
+            //add additional fields
+            foreach ($fieldDefinition['fields'] as $subFieldName => $subFieldParams) {
+                $namingType = isset($fieldDefinition['naming']) ? $fieldDefinition['naming'] : $this->defaultNaming;
+
+                $subFieldNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
+                $additionalFields[$subFieldNaming] = array_merge($copiedParams, $subFieldParams);
+            }
+
+            return $additionalFields;
+        }
+
+    }
+
 }
-
-
-?>

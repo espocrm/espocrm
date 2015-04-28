@@ -35,6 +35,7 @@ class Metadata
     private $fileManager;
     private $converter;
     private $moduleConfig;
+    private $metadataUtils;
 
     /**
      * @var string - uses for loading default values
@@ -109,6 +110,15 @@ class Metadata
         return $this->moduleConfig;
     }
 
+    protected function getMetadataUtils()
+    {
+        if (!isset($this->metadataUtils)) {
+            $this->metadataUtils = new Metadata\Utils($this);
+        }
+
+        return $this->metadataUtils;
+    }
+
     public function isCached()
     {
         if (!$this->getConfig()->get('useCache')) {
@@ -139,6 +149,7 @@ class Metadata
         } else {
             $this->meta = $this->getUnifier()->unify($this->name, $this->paths, true);
             $this->meta = $this->setLanguageFromConfig($this->meta);
+            $this->meta = $this->addAdditionalFields($this->meta);
 
             if ($this->getConfig()->get('useCache')) {
                 $isSaved = $this->getFileManager()->putPhpContents($this->cacheFile, $this->meta);
@@ -197,6 +208,7 @@ class Metadata
     }
 
     /**
+     * todo: move to a separate file
      * Set language list and default for Settings, Preferences metadata
      *
      * @param array $data Meta
@@ -220,6 +232,37 @@ class Metadata
         }
 
         return $data;
+    }
+
+    /**
+     * todo: move to a separate file
+     * Add additional fields defined from metadata -> fields
+     *
+     * @param array $meta
+     */
+    protected function addAdditionalFields(array $meta)
+    {
+        $metaCopy = $meta;
+        $definitionList = $meta['fields'];
+
+        foreach ($metaCopy['entityDefs'] as $entityName => $entityParams) {
+            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
+
+                $additionalFields = $this->getMetadataUtils()->getAdditionalFieldList($fieldName, $fieldParams, $definitionList);
+                if (!empty($additionalFields)) {
+                    //merge or add to the end of meta array
+                    foreach ($additionalFields as $subFieldName => $subFieldParams) {
+                        if (isset($entityParams['fields'][$subFieldName])) {
+                            $meta['entityDefs'][$entityName]['fields'][$subFieldName] = Util::merge($subFieldParams, $entityParams['fields'][$subFieldName]);
+                        } else {
+                            $meta['entityDefs'][$entityName]['fields'][$subFieldName] = $subFieldParams;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $meta;
     }
 
     /**
