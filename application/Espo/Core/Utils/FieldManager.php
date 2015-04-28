@@ -31,7 +31,7 @@ class FieldManager
 
     private $language;
 
-    private $metadataUtils;
+    private $metadataHelper;
 
     protected $isChanged = null;
 
@@ -44,7 +44,7 @@ class FieldManager
         $this->metadata = $metadata;
         $this->language = $language;
 
-        $this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
+        $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
     }
 
     protected function getMetadata()
@@ -57,9 +57,9 @@ class FieldManager
         return $this->language;
     }
 
-    protected function getMetadataUtils()
+    protected function getMetadataHelper()
     {
-        return $this->metadataUtils;
+        return $this->metadataHelper;
     }
 
     public function read($name, $scope)
@@ -209,7 +209,7 @@ class FieldManager
     {
         $fieldDef = $this->prepareFieldDef($fieldName, $fieldDef, $scope);
 
-        $metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
+        $metaFieldDef = $this->getMetadataHelper()->getFieldDefsInFieldMeta($fieldDef);
         if (isset($metaFieldDef)) {
             $fieldDef = Util::merge($metaFieldDef, $fieldDef);
         }
@@ -226,7 +226,7 @@ class FieldManager
         );
 
         /** Save links for a field. */
-        $metaLinkDef = $this->getMetadataUtils()->getLinkDefsInFieldMeta($scope, $fieldDef);
+        $metaLinkDef = $this->getMetadataHelper()->getLinkDefsInFieldMeta($scope, $fieldDef);
         if (isset($linkDefs) || isset($metaLinkDef)) {
             $linkDefs = Util::merge((array) $metaLinkDef, (array) $linkDefs);
             $defs['links'] = array(

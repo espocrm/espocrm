@@ -24,7 +24,7 @@ namespace Espo\Core\Utils\Metadata;
 
 use Espo\Core\Utils\Util;
 
-class Utils
+class Helper
 {
     private $metadata;
 

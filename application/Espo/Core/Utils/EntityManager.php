@@ -35,7 +35,7 @@ class EntityManager
 
     private $fileManager;
 
-    private $metadataUtils;
+    private $metadataHelper;
 
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager)
     {
@@ -43,7 +43,7 @@ class EntityManager
         $this->language = $language;
         $this->fileManager = $fileManager;
 
-        $this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
+        $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
     }
 
     protected function getMetadata()
@@ -61,9 +61,9 @@ class EntityManager
         return $this->fileManager;
     }
 
-    protected function getMetadataUtils()
+    protected function getMetadataHelper()
     {
-        return $this->metadataUtils;
+        return $this->metadataHelper;
     }
 
     public function create($name, $type, $params = array())

@@ -35,7 +35,7 @@ class Metadata
     private $fileManager;
     private $converter;
     private $moduleConfig;
-    private $metadataUtils;
+    private $metadataHelper;
 
     /**
      * @var string - uses for loading default values
@@ -110,13 +110,13 @@ class Metadata
         return $this->moduleConfig;
     }
 
-    protected function getMetadataUtils()
+    protected function getMetadataHelper()
     {
-        if (!isset($this->metadataUtils)) {
-            $this->metadataUtils = new Metadata\Utils($this);
+        if (!isset($this->metadataHelper)) {
+            $this->metadataHelper = new Metadata\Helper($this);
         }
 
-        return $this->metadataUtils;
+        return $this->metadataHelper;
     }
 
     public function isCached()
@@ -248,7 +248,7 @@ class Metadata
         foreach ($metaCopy['entityDefs'] as $entityName => $entityParams) {
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
-                $additionalFields = $this->getMetadataUtils()->getAdditionalFieldList($fieldName, $fieldParams, $definitionList);
+                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $fieldParams, $definitionList);
                 if (!empty($additionalFields)) {
                     //merge or add to the end of meta array
                     foreach ($additionalFields as $subFieldName => $subFieldParams) {

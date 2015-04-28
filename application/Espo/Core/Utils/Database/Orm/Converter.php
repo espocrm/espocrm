@@ -29,7 +29,7 @@ class Converter
 {
     private $metadata;
     private $fileManager;
-    private $metadataUtils;
+    private $metadataHelper;
 
     private $relationManager;
 
@@ -89,7 +89,7 @@ class Converter
 
         $this->relationManager = new RelationManager($this->metadata);
 
-        $this->metadataUtils = new \Espo\Core\Utils\Metadata\Utils($this->metadata);
+        $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
     }
 
     protected function getMetadata()
@@ -116,9 +116,9 @@ class Converter
         return $this->relationManager;
     }
 
-    protected function getMetadataUtils()
+    protected function getMetadataHelper()
     {
-        return $this->metadataUtils;
+        return $this->metadataHelper;
     }
 
     public function process()
@@ -223,7 +223,7 @@ class Converter
         foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
 
             /** check if "fields" option exists in $fieldMeta */
-            $fieldTypeMeta = $this->getMetadataUtils()->getFieldDefsByType($fieldParams);
+            $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
             $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
             if ($fieldDefs !== false) {
@@ -232,7 +232,7 @@ class Converter
 
             /** check and set the linkDefs from 'fields' metadata */
             if (isset($fieldTypeMeta['linkDefs'])) {
-                $linkDefs = $this->getMetadataUtils()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMeta['linkDefs']);
+                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMeta['linkDefs']);
                 if (isset($linkDefs)) {
                     if (!isset($entityMeta['links'])) {
                         $entityMeta['links'] = array();
@@ -312,7 +312,7 @@ class Converter
 
         /** merge fieldDefs option from field definition */
         if (!isset($fieldTypeMeta)) {
-            $fieldTypeMeta = $this->getMetadataUtils()->getFieldDefsByType($fieldParams);
+            $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
         }
 
         if (isset($fieldTypeMeta['fieldDefs'])) {
