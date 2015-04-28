@@ -1,8 +1,8 @@
-<li data-id="{{model.id}}" class="list-group-item">    
+<li data-id="{{model.id}}" class="list-group-item">
 <% if (layout.right) { %>
 <div class="pull-right right">
     {{{<%= layout.right.name %>}}}
-</div>    
+</div>
 <% } %>
 <% _.each(layout.rows, function (row, key) { %>
     <div class="expanded-row">
@@ -10,7 +10,7 @@
         <span class="cell cell-<%= defs.name %>"><%
                 var tag = 'tag' in defs ? defs.tag : false;
                 if (tag) {
-                    print( '<' + tag);        
+                    print( '<' + tag);
                     if ('id' in defs) {
                         print(' id="'+defs.id+'"');
                     }
@@ -18,7 +18,7 @@
                         print(' class="'+defs.class+'"');
                     };
                     print('>');
-                }            
+                }
             %>{{{<%= defs.name %>}}}<%
                 if (tag) {
                     print( '</' + tag + '>');

@@ -113,10 +113,14 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
             }
         },
 
+        getRecordViewName: function () {
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+        },
+
         afterRender: function () {
             this.notify('Loading...');
 
-            var listViewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+            var listViewName = this.getRecordViewName();
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', listViewName, {

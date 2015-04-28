@@ -34,6 +34,8 @@ class Record extends Base
 
     public static $defaultAction = 'list';
 
+    protected $defaultRecordServiceName = 'Record';
+
     protected function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
@@ -48,7 +50,7 @@ class Record extends Base
         if ($this->getServiceFactory()->checkExists($name)) {
             $service = $this->getServiceFactory()->create($name);
         } else {
-            $service = $this->getServiceFactory()->create('Record');
+            $service = $this->getServiceFactory()->create($this->defaultRecordServiceName);
             $service->setEntityName($name);
         }
 

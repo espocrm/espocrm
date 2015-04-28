@@ -740,9 +740,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.checkedList = [];
             this.rows = [];
 
-
             if (this.collection.length > 0) {
-
                 var i = 0;
                 var c = !this.pagination ? 1 : 2;
                 var func = function () {
@@ -756,10 +754,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
                 this.wait(true);
                 this.getInternalLayout(function (internalLayout) {
-                    var count = this.collection.models.length;
+                    var modelList = this.collection.models;
+                    var count = modelList.length;
                     var built = 0;
-                    for (var i in this.collection.models) {
-                        var model = this.collection.models[i];
+                    modelList.forEach(function (model) {
                         this.buildRow(i, model, function () {
                             built++;
                             if (built == count) {
@@ -767,7 +765,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                                 this.wait(false);
                             }
                         }.bind(this));
-                    }
+                    }, this);
                 }.bind(this));
 
                 if (this.pagination) {
