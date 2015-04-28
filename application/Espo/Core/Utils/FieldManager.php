@@ -187,11 +187,6 @@ class FieldManager
             }
         }
 
-        if (isset($fieldDef['linkDefs'])) {
-            $linkDefs = $fieldDef['linkDefs'];
-            unset($fieldDef['linkDefs']);
-        }
-
         $currentOptionList = array_keys((array) $this->getFieldDef($name, $scope));
         foreach ($fieldDef as $defName => $defValue) {
             if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
@@ -217,6 +212,11 @@ class FieldManager
         $metaFieldDef = $this->getMetadataUtils()->getFieldDefsInFieldMeta($fieldDef);
         if (isset($metaFieldDef)) {
             $fieldDef = Util::merge($metaFieldDef, $fieldDef);
+        }
+
+        if (isset($fieldDef['linkDefs'])) {
+            $linkDefs = $fieldDef['linkDefs'];
+            unset($fieldDef['linkDefs']);
         }
 
         $defs = array(
