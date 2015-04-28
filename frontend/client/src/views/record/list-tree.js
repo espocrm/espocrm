@@ -31,7 +31,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         rowActionsView: false,
 
-        _internalLayoutType: 'list-row-expanded',
+        _internalLayoutType: 'list-row-tree',
 
         presentationType: 'tree',
 
@@ -52,6 +52,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
             var layout = {
                 rows: [],
                 right: false,
+                depth: model.depth || 0
             };
 
             for (var i in listLayout.rows) {
