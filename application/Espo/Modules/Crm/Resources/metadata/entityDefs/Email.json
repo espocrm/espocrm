@@ -11,7 +11,7 @@
             "entity": "Account"
         },
         "parent": {
-            "entityList": ["Account", "Lead", "Opportunity", "Case"]
+            "entityList": ["Account", "Contact", "Lead", "Opportunity", "Case"]
         }
     }
 }
