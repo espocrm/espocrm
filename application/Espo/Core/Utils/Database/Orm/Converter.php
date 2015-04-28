@@ -319,8 +319,8 @@ class Converter
             $fieldParams = Util::merge($fieldParams, $fieldTypeMeta['fieldDefs']);
         }
 
-        /** check if need to skip this field in ORM metadata */
-        if (isset($fieldParams['skip']) && $fieldParams['skip'] === true) {
+        /** check if need to skipOrmDefs this field in ORM metadata */
+        if (isset($fieldParams['skipOrmDefs']) && $fieldParams['skipOrmDefs'] === true) {
             return false;
         }
 

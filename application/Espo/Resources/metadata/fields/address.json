@@ -29,6 +29,6 @@
    "notCreatable": false,
    "filter": true,
    "fieldDefs":{
-      "skip":true
+      "skipOrmDefs":true
    }
 }

@@ -10,8 +10,5 @@
       }
    ],
    "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "skip": false
-   }
+   "notCreatable": true
 }

@@ -24,6 +24,6 @@
       "entity": "Attachment"
    },
    "fieldDefs":{
-      "skip": true
+      "skipOrmDefs": true
    }
 }
