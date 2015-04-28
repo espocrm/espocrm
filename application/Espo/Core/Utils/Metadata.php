@@ -77,12 +77,6 @@ class Metadata
     {
         $this->config = $config;
         $this->fileManager = $fileManager;
-
-        $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
-
-        $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
-
-        $this->moduleConfig = new \Espo\Core\Utils\Module($this->config, $this->fileManager);
     }
 
     protected function getConfig()
@@ -90,23 +84,35 @@ class Metadata
         return $this->config;
     }
 
-    protected function getUnifier()
-    {
-        return $this->unifier;
-    }
-
     protected function getFileManager()
     {
         return $this->fileManager;
     }
 
+    protected function getUnifier()
+    {
+        if (!isset($this->unifier)) {
+            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
+        }
+
+        return $this->unifier;
+    }
+
     protected function getConverter()
     {
+        if (!isset($this->converter)) {
+            $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
+        }
+
         return $this->converter;
     }
 
     protected function getModuleConfig()
     {
+        if (!isset($this->moduleConfig)) {
+            $this->moduleConfig = new \Espo\Core\Utils\Module($this->config, $this->fileManager);
+        }
+
         return $this->moduleConfig;
     }
 
