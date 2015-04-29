@@ -25,83 +25,64 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         template: 'record.list-tree',
 
+        showMore: false,
+
+        showCount: false,
+
         checkboxes: false,
 
         selectable: false,
 
         rowActionsView: false,
 
-        _internalLayoutType: 'list-row-tree',
-
         presentationType: 'tree',
 
         header: false,
 
-        listContainerEl: '.list > ul',
+        listContainerEl: ' > .list > ul',
 
-        _loadListLayout: function (callback) {
-            var type = this.type + 'Expanded';
-            this._helper.layoutManager.get(this.collection.name, type, function (listLayout) {
-                callback(listLayout);
-            });
+        checkAllResultDisabled: true,
+
+        massActionList: ['remove'],
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+
+            return data;
         },
 
-        _convertLayout: function (listLayout, model) {
-            model = model || this.collection.model.prototype;
+        buildRows: function (callback) {
+            this.checkedList = [];
+            this.rows = [];
 
-            var layout = {
-                rows: [],
-                right: false,
-                depth: model.depth || 0
-            };
+            if (this.collection.length > 0) {
+                this.wait(true);
 
-            for (var i in listLayout.rows) {
-                var row = listLayout.rows[i];
-                var layoutRow = [];
-                for (var j in row) {
-
-                    var e = row[j];
-                    var type = e.type || model.getFieldType(e.name) || 'base';
-
-                    var item = {
-                        name: e.name,
-                        view: e.view || model.getFieldParam(e.name, 'view') || this.getFieldManager().getViewName(type),
-                        options: {
-                            defs: {
-                                name: e.name,
-                                params: e.params || {}
-                            },
-                            mode: 'list'
-                        }
-                    };
-                    if (e.link) {
-                        item.options.mode = 'listLink';
-                    }
-                    layoutRow.push(item);
-                }
-                layout.rows.push(layoutRow);
-            }
-
-            if ('right' in listLayout) {
-                if (listLayout.right != false) {
-                    layout.right = {
-                        name: listLayout.right.name || 'right',
-                        view: listLayout.right.view,
-                        options: {
-                            defs: {
-                                params: {
-                                    width: listLayout.right.width || '7%'
-                                }
+                var modelList = this.collection.models;
+                var count = modelList.length;
+                var built = 0;
+                modelList.forEach(function (model, i) {
+                    this.createView('row-' + i, 'Record.ListTreeItem', {
+                        model: model,
+                        collection: this.collection,
+                        el: this.options.el + ' ' + this.getRowSelector(model.id)
+                    }, function () {
+                        this.rows.push('row-' + i);
+                        built++;
+                        if (built == count) {
+                            if (typeof callback == 'function') {
+                                callback();
                             }
-                        }
-                    };
-                }
+                            this.wait(false);
+                        };
+                    }.bind(this));
+                }, this);
+
             } else {
-                if (this.rowActionsView) {
-                    layout.right = this.getRowActionsDefs();
+                if (typeof callback == 'function') {
+                    callback();
                 }
             }
-            return layout;
         },
 
         getRowSelector: function (id) {
@@ -110,15 +91,6 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         getItemEl: function (model, item) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
-        },
-
-        prepareInterbalLayout: function (internalLayout, model) {
-            var rows = internalLayout.rows || [];
-            rows.forEach(function (row) {
-                row.forEach(function (col) {
-                    col.el = this.getItemEl(model, col);
-                }, this);
-            }, this);
         },
 
     });

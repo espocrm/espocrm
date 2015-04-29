@@ -677,7 +677,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         },
 
         getInternalLayout: function (callback, model) {
-            if (this.scope == null) {
+            if (this.scope == null || this.rowHasOwnLayout) {
                 if (!model) {
                     callback(null);
                     return;
@@ -707,7 +707,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             return this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
         },
 
-        prepareInterbalLayout: function (internalLayout, model) {
+        prepareInternalLayout: function (internalLayout, model) {
             internalLayout.forEach(function (item) {
                 item.el = this.getItemEl(model, item);
             }, this);
@@ -718,7 +718,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             this.rows.push(key);
             this.getInternalLayout(function (internalLayout) {
-                this.prepareInterbalLayout(internalLayout, model);
+                this.prepareInternalLayout(internalLayout, model);
 
                 this.createView(key, 'Base', {
                     model: model,

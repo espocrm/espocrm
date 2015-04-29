@@ -45,12 +45,13 @@ class RecordTree extends Record
         $parentId = $request->get('parentId');
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
+        $maxDepth = $request->get('maxDepth');
 
         $collection = $this->getRecordService()->getTree($parentId, array(
             'where' => $where,
             'asc' => $asc,
             'sortBy' => $sortBy,
-        ));
+        ), 0, $maxDepth);
         return array(
             'list' => $collection->toArray(),
             'path' => $this->getRecordService()->getTreeItemPath($parentId)

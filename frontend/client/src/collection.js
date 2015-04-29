@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.Collection = Backbone.Collection.extend({
 
@@ -48,6 +48,7 @@ Espo.Collection = Backbone.Collection.extend({
 
         Backbone.Collection.prototype.initialize.call(this);
     },
+
 
     sort: function (field, asc) {
         this.sortBy = field;

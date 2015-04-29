@@ -30,12 +30,13 @@ Espo.define('Controllers.RecordTree', 'Controllers.Record', function (Dep) {
 
         listTree: function (options) {
             this.getCollection(function (collection) {
+                collection.url = collection.name + '/action/listTree';
                 this.main(this.getViewName('listTree'), {
                     scope: this.name,
                     collection: collection
                 });
             });
-        }
+        },
 
     });
 

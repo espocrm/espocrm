@@ -33,16 +33,20 @@ class RecordTree extends Record
 {
     const MAX_DEPTH = 2;
 
-    public function getTree($parentId = null, $params = array(), $level = 0)
+    public function getTree($parentId = null, $params = array(), $level = 0, $maxDepth = null)
     {
+        if (!$maxDepth) {
+            $maxDepth = self::MAX_DEPTH;
+        }
+
         if ($level == self::MAX_DEPTH) {
             return null;
         }
+
         $selectParams = $this->getSelectParams($params);
         $selectParams['whereClause'][] = array(
             'parentId' => $parentId
         );
-
 
         $collection = $this->getRepository()->find($selectParams);
         foreach ($collection as $entity) {

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.CollectionFactory = function (loader, modelFactory) {
     this.loader = loader;
@@ -32,12 +32,12 @@ _.extend(Espo.CollectionFactory.prototype, {
 
     create: function (name, callback, context) {
         context = context || this;
-        
+
         this.modelFactory.getSeed(name, function (seed) {
-            
+
             var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
             var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
-            
+
             var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
 
             Espo.loader.load(className, function (collectionClass) {

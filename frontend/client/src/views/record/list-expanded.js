@@ -117,7 +117,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
         },
 
-        prepareInterbalLayout: function (internalLayout, model) {
+        prepareInternalLayout: function (internalLayout, model) {
             var rows = internalLayout.rows || [];
             rows.forEach(function (row) {
                 row.forEach(function (col) {
