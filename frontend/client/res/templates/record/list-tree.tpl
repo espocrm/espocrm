@@ -1,4 +1,4 @@
-{{#if collection.models.length}}
+
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
     {{#if checkboxes}}
@@ -23,13 +23,20 @@
 {{/if}}
 
 <div class="list list-expanded">
-    <ul class="list-group">
+    <ul class="list-group list-group-no-border">
     {{#each rows}}
         {{{var this ../this}}}
     {{/each}}
+    {{#unless createDisabled}}
+    <li class="list-group-item">
+        <div>
+            <a href="javascript:" data-action="create" class="action" title="{{translate 'Add'}}"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+    </li>
+    {{/unless}}
     </ul>
 </div>
 
-{{else}}
-    {{translate 'No Data'}}
-{{/if}}
+
+
+

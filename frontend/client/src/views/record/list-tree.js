@@ -45,10 +45,20 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         massActionList: ['remove'],
 
+        createDisabled: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
+            data.createDisabled = this.createDisabled;
 
             return data;
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            if ('createDisabled' in this.options) {
+                this.createDisabled = this.options.createDisabled;
+            }
         },
 
         buildRows: function (callback) {
@@ -65,7 +75,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                     this.createView('row-' + i, 'Record.ListTreeItem', {
                         model: model,
                         collection: this.collection,
-                        el: this.options.el + ' ' + this.getRowSelector(model.id)
+                        el: this.options.el + ' ' + this.getRowSelector(model.id),
+                        createDisabled: this.createDisabled
                     }, function () {
                         this.rows.push('row-' + i);
                         built++;
@@ -91,7 +102,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         getItemEl: function (model, item) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
-        },
+        }
 
     });
 });

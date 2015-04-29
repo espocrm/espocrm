@@ -65,7 +65,8 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             }
             this.createView('children', 'Record.ListTree', {
                 collection: childCollection,
-                el: this.options.el + ' > .children'
+                el: this.options.el + ' > .children',
+                createDisabled: this.options.createDisabled
             }, callback);
         },
 
@@ -92,7 +93,6 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                         }, this);
                         collection.fetch()
                     }, this);
-
                 }
             }
         },
@@ -105,11 +105,13 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
         afterFold: function () {
             this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').addClass('hidden');
             this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').removeClass('hidden');
+            this.$el.find(' > .children').addClass('hidden');
         },
 
         afterUnfold: function () {
             this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
             this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').removeClass('hidden');
+            this.$el.find(' > .children').removeClass('hidden');
         },
 
     });
