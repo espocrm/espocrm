@@ -45,7 +45,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         massActionList: ['remove'],
 
-        createDisabled: false,
+        createDisabled: true,
 
         data: function () {
             var data = Dep.prototype.data.call(this);

@@ -42,14 +42,18 @@ Espo.define('Collections.Tree', 'Collection', function (Dep) {
                     d.depth = depth;
                     var c = this.createSeed();
                     if (d.childList) {
-                        f(d.childList, depth + 1);
+                        if (d.childList.length) {
+                            f(d.childList, depth + 1);
 
-                        c.set(d.childList);
-                        d.childCollection = c;
+                            c.set(d.childList);
+                            d.childCollection = c;
+                        } else {
+                            d.childCollection = false;
+                        }
                     } else if (d.childList === null) {
                         d.childCollection = null;
                     } else {
-                        d.childCollection = c;
+                        d.childCollection = false;
                     }
                 }, this);
             }.bind(this);

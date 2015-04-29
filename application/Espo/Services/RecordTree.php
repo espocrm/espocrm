@@ -52,7 +52,6 @@ class RecordTree extends Record
         foreach ($collection as $entity) {
             $childList = $this->getTree($entity->id, $params, $level + 1);
             $entity->set('childList', $childList);
-
         }
         return $collection;
     }

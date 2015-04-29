@@ -25,10 +25,13 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
 
         template: 'record.list-tree-item',
 
+        isEnd: false,
+
         data: function () {
             return {
                 name: this.model.get('name'),
-                isUnfolded: this.isUnfolded
+                isUnfolded: this.isUnfolded,
+                isEnd: this.isEnd
             };
         },
 
@@ -47,10 +50,15 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             this.isUnfolded = false;
             this.scope = this.model.name;
 
+            var childCollection = this.model.get('childCollection');
+
             if (this.isUnfolded) {
-                var childCollection = this.model.get('childCollection');
                 if (childCollection) {
                     this.createChildren();
+                }
+            } else {
+                if (childCollection === false) {
+                    this.isEnd = true;
                 }
             }
         },
@@ -86,10 +94,16 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                         this.notify('Please wait...');
                         this.listenToOnce(collection, 'sync', function () {
                             this.notify(false);
-                            this.model.set('childCollection', collection);
-                            this.createChildren();
-                            this.isUnfolded = true;
-                            this.afterUnfold();
+                            if (collection.length) {
+                                this.model.set('childCollection', collection);
+                                this.createChildren();
+                                this.isUnfolded = true;
+                                this.afterUnfold();
+                            } else {
+                                this.isEnd = true;
+                                this.model.set('childCollection', false);
+                                this.afterIsEnd();
+                            }
                         }, this);
                         collection.fetch()
                     }, this);
@@ -112,6 +126,11 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
             this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').removeClass('hidden');
             this.$el.find(' > .children').removeClass('hidden');
+        },
+
+        afterIsEnd: function () {
+            this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
+            this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').addClass('hidden');
         },
 
     });

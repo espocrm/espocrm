@@ -23,14 +23,14 @@
 {{/if}}
 
 <div class="list list-expanded">
-    <ul class="list-group list-group-no-border">
+    <ul class="list-group list-group-tree list-group-no-border">
     {{#each rows}}
         {{{var this ../this}}}
     {{/each}}
     {{#unless createDisabled}}
     <li class="list-group-item">
-        <div>
-            <a href="javascript:" data-action="create" class="action" title="{{translate 'Add'}}"><span class="glyphicon glyphicon-plus"></span></a>
+        <div style="margin-left: 2px;">
+            <a href="javascript:" data-action="create" class="action small" title="{{translate 'Add'}}"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
     </li>
     {{/unless}}
