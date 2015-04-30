@@ -45,7 +45,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         massActionList: ['remove'],
 
-        createDisabled: true,
+        createDisabled: false,
 
         selectedData: null,
 
@@ -151,7 +151,29 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         getItemEl: function (model, item) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
-        }
+        },
+
+        actionCreate: function () {
+            var parentId = null;
+            var parentName = null;
+            if (this.model) {
+                parentId = this.model.id;
+                parentName = this.model.get('name');
+            }
+
+            var scope = this.collection.name;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+            this.createView('quickCreate', viewName, {
+                scope: scope,
+                attributes: {
+                    parentId: parentId,
+                    parentName: parentName
+                }
+            }, function (view) {
+                view.render();
+            }.bind(this));
+        },
 
     });
 });

@@ -80,16 +80,20 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             if ('selectedData' in this.options) {
                 this.selectedData = this.options.selectedData;
             }
+            if ('createDisabled' in this.options) {
+                this.createDisabled = this.options.createDisabled;
+            }
 
             this.scope = this.model.name;
 
             this.isUnfolded = false;
 
-
             var childCollection = this.model.get('childCollection');
 
-            if (childCollection === false) {
-                this.isEnd = true;
+            if (childCollection && childCollection.length == 0) {
+                if (this.createDisabled) {
+                    this.isEnd = true;
+                }
             } else {
                 if (childCollection) {
                     childCollection.models.forEach(function (model) {
@@ -121,13 +125,15 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                 el: this.options.el + ' > .children',
                 createDisabled: this.options.createDisabled,
                 level: this.level + 1,
-                selectedData: this.selectedData
+                selectedData: this.selectedData,
+                model: this.model
             }, callback);
         },
 
         unfold: function () {
             var childCollection = this.model.get('childCollection');
-            if (childCollection !== false) {
+
+
                 if (childCollection !== null) {
                     this.createChildren();
                     this.isUnfolded = true;
@@ -140,22 +146,23 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
 
                         this.notify('Please wait...');
                         this.listenToOnce(collection, 'sync', function () {
-                            this.notify(false);
-                            if (collection.length) {
-                                this.model.set('childCollection', collection);
-                                this.createChildren();
-                                this.isUnfolded = true;
+                        this.notify(false);
+                            //if (collection.length || !this.createDisabled) {
+                            this.model.set('childCollection', collection);
+                            this.createChildren();
+                            this.isUnfolded = true;
+
+                            if (collection.length && !this.createDisabled) {
                                 this.afterUnfold();
                             } else {
                                 this.isEnd = true;
-                                this.model.set('childCollection', false);
                                 this.afterIsEnd();
                             }
                         }, this);
                         collection.fetch()
                     }, this);
                 }
-            }
+
         },
 
         fold: function () {

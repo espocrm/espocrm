@@ -27,6 +27,7 @@ Espo.define('Collections.Tree', 'Collection', function (Dep) {
             seed.url = this.url;
             seed.model = this.model;
             seed._user = this._user;
+            seed.name = this.name;
 
             return seed;
         },
@@ -48,12 +49,12 @@ Espo.define('Collections.Tree', 'Collection', function (Dep) {
                             c.set(d.childList);
                             d.childCollection = c;
                         } else {
-                            d.childCollection = false;
+                            d.childCollection = c;
                         }
                     } else if (d.childList === null) {
                         d.childCollection = null;
                     } else {
-                        d.childCollection = false;
+                        d.childCollection = c;
                     }
                 }, this);
             }.bind(this);
