@@ -47,7 +47,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         createDisabled: true,
 
-        selectedId: null,
+        selectedData: null,
 
         level: 0,
 
@@ -65,11 +65,17 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
             if ('level' in this.options) {
                 this.level = this.options.level;
             }
-            if ('selectedId' in this.options) {
-                this.selectedId = this.options.selectedId;
+            if (this.level == 0) {
+                this.selectedData = {
+                    id: null,
+                    path: [],
+                    names: {}
+                };
+            }
+            if ('selectedData' in this.options) {
+                this.selectedData = this.options.selectedData;
             }
             Dep.prototype.setup.call(this);
-
 
             this.on('select', function (o) {
                 if (o.id) {
@@ -87,13 +93,11 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         },
 
         setSelected: function (id) {
-            this.selectedId = id;
-
             this.rows.forEach(function (key) {
                 var view = this.getView(key);
 
                 if (view.model.id == id) {
-                    view.isSelected = true;
+                    view.setIsSelected();
                 } else {
                     view.isSelected = false;
                 }
@@ -106,7 +110,6 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         buildRows: function (callback) {
             this.checkedList = [];
             this.rows = [];
-
 
             if (this.collection.length > 0) {
                 this.wait(true);
@@ -121,8 +124,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                         el: this.options.el + ' ' + this.getRowSelector(model.id),
                         createDisabled: this.createDisabled,
                         level: this.level,
-                        isSelected: model.id == this.selectedId,
-                        selectedId: this.selectedId
+                        isSelected: model.id == this.selectedData.id,
+                        selectedData: this.selectedData
                     }, function () {
                         this.rows.push('row-' + i);
                         built++;

@@ -51,26 +51,55 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             }
         },
 
-        setup: function () {
-            this.isUnfolded = false;
-            this.scope = this.model.name;
+        setIsSelected: function () {
+            this.isSelected = true;
+            this.selectedData.id = this.model.id;
 
+            var path = this.selectedData.path;
+            var names = this.selectedData.names;
+            path.length = 0;
+            var view = this;
+            while (1) {
+                path.unshift(view.model.id);
+                names[view.model.id] = view.model.get('name');
+                if (view.getParentView().level) {
+                    view = view.getParentView().getParentView();
+                } else {
+                    break;
+                }
+            }
+        },
+
+        setup: function () {
             if ('level' in this.options) {
                 this.level = this.options.level;
             }
             if ('isSelected' in this.options) {
                 this.isSelected = this.options.isSelected;
             }
+            if ('selectedData' in this.options) {
+                this.selectedData = this.options.selectedData;
+            }
+
+            this.scope = this.model.name;
+
+            this.isUnfolded = false;
+
 
             var childCollection = this.model.get('childCollection');
 
-            if (this.isUnfolded) {
-                if (childCollection) {
-                    this.createChildren();
-                }
+            if (childCollection === false) {
+                this.isEnd = true;
             } else {
-                if (childCollection === false) {
-                    this.isEnd = true;
+                if (childCollection) {
+                    childCollection.models.forEach(function (model) {
+                        if (~this.selectedData.path.indexOf(model.id)) {
+                            this.isUnfolded = true;
+                        }
+                    }, this);
+                    if (this.isUnfolded) {
+                        this.createChildren();
+                    }
                 }
             }
 
@@ -92,7 +121,7 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                 el: this.options.el + ' > .children',
                 createDisabled: this.options.createDisabled,
                 level: this.level + 1,
-                selectedId: this.getParentView().selectedId
+                selectedData: this.selectedData
             }, callback);
         },
 
