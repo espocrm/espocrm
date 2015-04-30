@@ -33,10 +33,14 @@ class Job
 
     private $entityManager;
 
+    private $cronScheduledJob;
+
     public function __construct(Config $config, EntityManager $entityManager)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;
+
+        $this->cronScheduledJob = new ScheduledJob($this->config, $this->entityManager);
     }
 
     protected function getConfig()
@@ -47,6 +51,11 @@ class Job
     protected function getEntityManager()
     {
         return $this->entityManager;
+    }
+
+    protected function getCronScheduledJob()
+    {
+        return $this->cronScheduledJob;
     }
 
     /**
@@ -145,13 +154,27 @@ class Job
         $currentTime = time();
         $periodTime = $currentTime - intval($jobConfigs['jobPeriod']);
 
-        $update = "UPDATE job SET `status` = '" . CronManager::FAILED ."' WHERE
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $select = "SELECT id, scheduled_job_id FROM `job` WHERE
                     (`status` = '" . CronManager::RUNNING ."')
                     AND execute_time < '".date('Y-m-d H:i:s', $periodTime)."' ";
+        $sth = $pdo->prepare($select);
+        $sth->execute();
+        $jobData = $sth->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $update = "UPDATE job SET `status` = '". CronManager::FAILED ."' WHERE id IN ('".implode("', '", array_keys($jobData))."')";
         $sth = $pdo->prepare($update);
         $sth->execute();
+
+        //add status 'Failed' to SchediledJobLog
+        $cronScheduledJob = $this->getCronScheduledJob();
+        foreach ($jobData as $jobId => $jobRowData) {
+            $scheduledJobId = $jobRowData[0];
+            if (!empty($scheduledJobId)) {
+                $cronScheduledJob->addLogRecord($scheduledJobId, CronManager::FAILED);
+            }
+        }
     }
 
     /**
