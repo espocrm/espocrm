@@ -489,6 +489,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                             this.trigger('select', model);
                         }
                     }
+                    e.stopPropagation();
                 };
             }
 

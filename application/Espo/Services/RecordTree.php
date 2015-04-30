@@ -31,7 +31,7 @@ use \Espo\Core\Exceptions\NotFound;
 
 class RecordTree extends Record
 {
-    const MAX_DEPTH = 2;
+    const MAX_DEPTH = 3;
 
     public function getTree($parentId = null, $params = array(), $level = 0, $maxDepth = null)
     {

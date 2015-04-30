@@ -31,7 +31,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         checkboxes: false,
 
-        selectable: false,
+        selectable: true,
 
         rowActionsView: false,
 
@@ -47,6 +47,10 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         createDisabled: true,
 
+        selectedId: null,
+
+        level: 0,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.createDisabled = this.createDisabled;
@@ -55,15 +59,54 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         },
 
         setup: function () {
-            Dep.prototype.setup.call(this);
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
+            if ('level' in this.options) {
+                this.level = this.options.level;
+            }
+            if ('selectedId' in this.options) {
+                this.selectedId = this.options.selectedId;
+            }
+            Dep.prototype.setup.call(this);
+
+
+            this.on('select', function (o) {
+                if (o.id) {
+                    this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
+
+                    if (this.level == 0) {
+                        this.$el.find('a.link').removeClass('text-bold');
+                        this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
+
+                        this.setSelected(o.id);
+                    }
+                }
+                this.getParentView().trigger('select', o);
+            }, this);
+        },
+
+        setSelected: function (id) {
+            this.selectedId = id;
+
+            this.rows.forEach(function (key) {
+                var view = this.getView(key);
+
+                if (view.model.id == id) {
+                    view.isSelected = true;
+                } else {
+                    view.isSelected = false;
+                }
+                if (view.hasView('children')) {
+                    view.getView('children').setSelected(id);
+                }
+            }, this);
         },
 
         buildRows: function (callback) {
             this.checkedList = [];
             this.rows = [];
+
 
             if (this.collection.length > 0) {
                 this.wait(true);
@@ -76,7 +119,10 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                         model: model,
                         collection: this.collection,
                         el: this.options.el + ' ' + this.getRowSelector(model.id),
-                        createDisabled: this.createDisabled
+                        createDisabled: this.createDisabled,
+                        level: this.level,
+                        isSelected: model.id == this.selectedId,
+                        selectedId: this.selectedId
                     }, function () {
                         this.rows.push('row-' + i);
                         built++;

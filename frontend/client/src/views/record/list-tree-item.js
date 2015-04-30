@@ -27,11 +27,16 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
 
         isEnd: false,
 
+        level: 0,
+
         data: function () {
             return {
                 name: this.model.get('name'),
                 isUnfolded: this.isUnfolded,
-                isEnd: this.isEnd
+                showFold: this.isUnfolded && !this.isEnd,
+                showUnfold: !this.isUnfolded && !this.isEnd,
+                isEnd: this.isEnd,
+                isSelected: this.isSelected
             };
         },
 
@@ -50,6 +55,13 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             this.isUnfolded = false;
             this.scope = this.model.name;
 
+            if ('level' in this.options) {
+                this.level = this.options.level;
+            }
+            if ('isSelected' in this.options) {
+                this.isSelected = this.options.isSelected;
+            }
+
             var childCollection = this.model.get('childCollection');
 
             if (this.isUnfolded) {
@@ -61,6 +73,10 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                     this.isEnd = true;
                 }
             }
+
+            this.on('select', function (o) {
+                this.getParentView().trigger('select', o);
+            }, this);
         },
 
         createChildren: function () {
@@ -74,7 +90,9 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
             this.createView('children', 'Record.ListTree', {
                 collection: childCollection,
                 el: this.options.el + ' > .children',
-                createDisabled: this.options.createDisabled
+                createDisabled: this.options.createDisabled,
+                level: this.level + 1,
+                selectedId: this.getParentView().selectedId
             }, callback);
         },
 
@@ -131,6 +149,7 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
         afterIsEnd: function () {
             this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
             this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').addClass('hidden');
+            this.$el.find('span[data-name="white-space"][data-id="'+this.model.id+'"]').removeClass('hidden');
         },
 
     });
