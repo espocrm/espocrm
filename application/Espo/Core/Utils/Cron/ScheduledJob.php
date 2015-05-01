@@ -81,14 +81,16 @@ class ScheduledJob
      *
      * @return string ID of created ScheduledJobLogRecord
      */
-    public function addLogRecord($scheduledJobId, $status)
+    public function addLogRecord($scheduledJobId, $status, $runTime = null)
     {
-        $lastRun = date('Y-m-d H:i:s');
+        if (!isset($runTime)) {
+            $runTime = date('Y-m-d H:i:s');
+        }
 
         $entityManager = $this->getEntityManager();
 
         $scheduledJob = $entityManager->getEntity('ScheduledJob', $scheduledJobId);
-        $scheduledJob->set('lastRun', $lastRun);
+        $scheduledJob->set('lastRun', $runTime);
         $entityManager->saveEntity($scheduledJob);
 
         $scheduledJobLog = $entityManager->getEntity('ScheduledJobLogRecord');
@@ -96,7 +98,7 @@ class ScheduledJob
             'scheduledJobId' => $scheduledJobId,
             'name' => $scheduledJob->get('name'),
             'status' => $status,
-            'executionTime' => $lastRun,
+            'executionTime' => $runTime,
         ));
         $scheduledJobLogId = $entityManager->saveEntity($scheduledJobLog);
 
