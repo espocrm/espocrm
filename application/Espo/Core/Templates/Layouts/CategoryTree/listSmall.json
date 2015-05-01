@@ -1,0 +1,14 @@
+[
+    {
+        "name": "name",
+        "width": 40,
+        "link": true
+    },
+    {
+        "name": "order",
+        "width": 15
+    },
+    {
+        "name": "parent"
+    }
+]

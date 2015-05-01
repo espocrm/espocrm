@@ -77,8 +77,8 @@ class EntityManager
 
         $normalizedName = Util::normilizeClassName($name);
 
-        $contents = "<" . "?" . "php\n".
-            "namespace Espo\Custom\Entities;\n".
+        $contents = "<" . "?" . "php\n\n".
+            "namespace Espo\Custom\Entities;\n\n".
             "class {$normalizedName} extends \Espo\Core\Templates\Entities\\{$type}\n".
             "{\n".
             "    protected \$entityType = \"$name\";\n".
@@ -87,24 +87,24 @@ class EntityManager
         $filePath = "custom/Espo/Custom/Entities/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n".
-            "namespace Espo\Custom\Controllers;\n".
+        $contents = "<" . "?" . "php\n\n".
+            "namespace Espo\Custom\Controllers;\n\n".
             "class {$normalizedName} extends \Espo\Core\Templates\Controllers\\{$type}\n".
             "{\n".
             "}\n";
         $filePath = "custom/Espo/Custom/Controllers/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n".
-            "namespace Espo\Custom\Services;\n".
+        $contents = "<" . "?" . "php\n\n".
+            "namespace Espo\Custom\Services;\n\n".
             "class {$normalizedName} extends \Espo\Core\Templates\Services\\{$type}\n".
             "{\n".
             "}\n";
         $filePath = "custom/Espo/Custom/Services/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n".
-            "namespace Espo\Custom\Repositories;\n".
+        $contents = "<" . "?" . "php\n\n".
+            "namespace Espo\Custom\Repositories;\n\n".
             "class {$normalizedName} extends \Espo\Core\Templates\Repositories\\{$type}\n".
             "{\n".
             "}\n";
@@ -142,11 +142,15 @@ class EntityManager
         $this->getMetadata()->set('scopes', $name, $scopeData);
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
-        $entityDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
+        $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
+        $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
+        $entityDefsData = Json::decode($entityDefsDataContents, true);
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/clientDefs.json";
-        $clientDefsData = Json::decode($this->getFileManager()->getContents($filePath), true);
+        $clientDefsContents = $this->getFileManager()->getContents($filePath);
+        $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
+        $clientDefsData = Json::decode($clientDefsContents, true);
         $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
         $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
@@ -155,6 +159,11 @@ class EntityManager
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
+
+        $layoutsPath = "application/Espo/Core/Templates/Layouts/{$type}";
+        if ($this->getFileManager()->isDir($layoutsPath)) {
+            $this->getFileManager()->copy($layoutsPath, 'custom/Espo/Custom/Resources/layouts/' . $name);
+        }
 
         return true;
     }

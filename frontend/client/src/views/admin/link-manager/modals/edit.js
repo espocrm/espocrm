@@ -332,7 +332,7 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.
 
                 var data;
 
-                data = ((this.getLanguage().data || {}) || {})[entity];
+                data = ((this.getLanguage().data || {}) || {})[entity] || {};
                 (data.fields || {})[link] = label;
                 (data.links || {})[link] = label;
 

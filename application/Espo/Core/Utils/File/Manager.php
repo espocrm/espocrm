@@ -670,6 +670,17 @@ class Manager
     }
 
     /**
+     * Check if $dirname is directory.
+     *
+     * @param  string  $dirname
+     * @return boolean
+     */
+    public function isDir($dirname)
+    {
+        return is_dir($dirname);
+    }
+
+    /**
      * Check if $filename is file. If $filename doesn'ot exist, check by pathinfo
      *
      * @param  string  $filename

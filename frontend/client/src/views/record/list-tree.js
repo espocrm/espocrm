@@ -59,6 +59,9 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         },
 
         setup: function () {
+            if ('selectable' in this.options) {
+                this.selectable = this.options.selectable;
+            }
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
@@ -177,6 +180,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 view.render();
                 this.listenToOnce(view, 'after:save', function (model) {
                     view.close();
+                    model.set('childCollection', this.collection.createSeed());
                     this.collection.push(model);
                     this.buildRows(function () {
                         this.render();

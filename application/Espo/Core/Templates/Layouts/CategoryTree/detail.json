@@ -1,0 +1,21 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "order"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "parent"
+                }
+            ]
+        ]
+    }
+]

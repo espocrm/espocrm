@@ -20,7 +20,8 @@
         "type": {
             "": "None",
             "Base": "Base",
-            "Person": "Person"
+            "Person": "Person",
+            "CategoryTree": "Category Tree"
         },
         "linkType": {
             "manyToMany": "Many-to-Many",

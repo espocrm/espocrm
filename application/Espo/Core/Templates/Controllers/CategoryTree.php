@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,20 +20,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.ListTree', 'Views.List', function (Dep) {
+namespace Espo\Core\Templates\Controllers;
 
-    return Dep.extend({
 
-        searchPanel: false,
+class CategoryTree extends \Espo\Core\Controllers\RecordTree
+{
 
-        createButton: false,
-
-        name: 'listTree',
-
-        getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listTree') || 'Record.ListTree';
-        }
-
-    });
-});
+}
 

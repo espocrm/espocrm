@@ -137,8 +137,12 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                         disableSavePreset: true,
                     });
 
+                    var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+                                   this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+                                   'Record.List';
+
                     this.listenToOnce(collection, 'sync', function () {
-                        this.createView('list', 'Record.List', {
+                        this.createView('list', viewName, {
                             collection: collection,
                             el: this.containerSelector + ' .list-container',
                             selectable: true,

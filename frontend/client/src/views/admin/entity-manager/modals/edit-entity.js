@@ -80,7 +80,7 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                     name: 'type',
                     params: {
                         required: true,
-                        options: ['Base', 'Person']
+                        options: this.getMetadata().get('app.entityTemplateList') || ['Base']
                     }
                 },
                 readOnly: scope != false

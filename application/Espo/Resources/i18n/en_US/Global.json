@@ -148,7 +148,9 @@
         "View": "View",
         "Select All Result": "Select All Result",
         "Value": "Value",
-        "Current version": "Current version"
+        "Current version": "Current version",
+        "List View": "List View",
+        "Tree View": "Tree View"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -213,8 +215,10 @@
         "phoneNumberHome": "Phone (Home)",
         "phoneNumberFax": "Phone (Fax)",
         "phoneNumberOffice": "Phone (Office)",
-        "phoneNumberOther": "Phone (Other)"
-
+        "phoneNumberOther": "Phone (Other)",
+        "order": "Order",
+        "parent": "Parent",
+        "children": "Children"
     },
     "links": {
         "assignedUser": "Assigned User",
@@ -223,7 +227,9 @@
         "team": "Team",
         "roles": "Roles",
         "teams": "Teams",
-        "users": "Users"
+        "users": "Users",
+        "parent": "Parent",
+        "children": "Children"
     },
     "dashlets": {
         "Stream": "Stream"
