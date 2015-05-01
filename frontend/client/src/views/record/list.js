@@ -60,6 +60,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         events: {
             'click a.link': function (e) {
+                e.stopPropagation();
                 if (!this.scope || this.selectable) {
                     return;
                 }
@@ -72,7 +73,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     id: id,
                     model: model
                 });
-
             },
             'click [data-action="showMore"]': function () {
                 this.showMoreRecords();

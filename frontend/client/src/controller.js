@@ -17,18 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 /**
  * Controller. Views, Models and Collections are created here.
-*/    
+*/
 Espo.Controller = function (params, injections) {
     this.initialize();
     this.params = params || {};
     this.viewFactory = injections.viewFactory;
     this.modelFactory = injections.modelFactory;
     this.collectionFactory = injections.collectionFactory;
-    
+
     this._settings = injections.settings || null;
     this._user = injections.user || null;
     this._preferences = injections.preferences || null;
@@ -38,97 +38,97 @@ Espo.Controller = function (params, injections) {
     this._storage = injections.storage || null;
     this._metadata = injections.metadata || null;
     this._dateTime = injections.dateTime || null;
-            
+
     this.set('masterRendered', false);
 };
 
 _.extend(Espo.Controller.prototype, {
-    
+
     defaultAction: 'index',
-    
+
     name: false,
-    
+
     params: null,
-    
+
     viewFactory: null,
-    
+
     modelFactory: null,
-    
+
     controllerFactory: null,
-    
+
     initialize: function () {},
-    
+
     getConfig: function () {
         return this._settings;
     },
-    
+
     getUser: function () {
         return this._user;
     },
-    
+
     getPreferences: function () {
         return this._preferences;
     },
-    
+
     getAcl: function () {
         return this._acl;
     },
-    
+
     getCache: function () {
         return this._cache;
     },
-    
+
     getRouter: function () {
         return this._router;
     },
-    
+
     getStorage: function () {
         return this._storage;
     },
-    
+
     getMetadata: function () {
         return this._metadata;
     },
-    
+
     getDateTime: function () {
         return this._dateTime;
     },
-    
+
     /**
      * Get parameter of all controllers.
      * @param key
      * @return null if doesn't exist.
-     */    
+     */
     get: function (key) {
         if (key in this.params) {
             return this.params[key];
         }
         return null;
-    },    
-    
+    },
+
     /**
      * Set paramer for all controllers.
      * @param key Name of view.
      * @param value.
-     */    
+     */
     set: function (key, value) {
-        this.params[key] = value;            
-    },        
-    
+        this.params[key] = value;
+    },
+
     checkAccess: function (action) {
         return true;
     },
-    
+
     handleAccessGlobal: function () {
         if (!this.checkAccessGlobal()) {
             throw new Espo.Exceptions.AccessDenied("Denied access to action '" + this.name + "#" + action + "'");
         }
-    },        
-    
+    },
+
     checkAccessGlobal: function () {
         return true;
     },
-    
+
     handleCheckAccess: function (action) {
         if (!this.checkAccess(action)) {
             var msg;
@@ -140,32 +140,32 @@ _.extend(Espo.Controller.prototype, {
             throw new Espo.Exceptions.AccessDenied(msg);
         }
     },
-    
+
     doAction: function (action, options) {
         this.handleAccessGlobal();
-        
-        action = action || this.defaultAction;            
+
+        action = action || this.defaultAction;
         var method = action;
         if (!(method in this)) {
             throw new Espo.Exceptions.NotFound("Action '" + this.name + "#" + action + "' is not found");
-        }        
-        
+        }
+
         var preMethod = 'before' + Espo.Utils.upperCaseFirst(method);
         var postMethod = 'after' + Espo.Utils.upperCaseFirst(method);
-        
+
         if (preMethod in this) {
             this[preMethod].call(this, options || {});
-        }                        
-        this[method].call(this, options || {});            
+        }
+        this[method].call(this, options || {});
         if (postMethod in this) {
             this[postMethod].call(this, options || {});
         }
-    },            
-    
+    },
+
     /**
      * Create master view, render it if not rendered and return it.
      * @param {Function} callback Master view will be argument for this.
-     */    
+     */
     master: function (callback) {
         var entire = this.get('entire');
         if (entire) {
@@ -173,7 +173,7 @@ _.extend(Espo.Controller.prototype, {
             this.set('entire', null);
         }
         var master = this.get('master');
-        if (!master) {                
+        if (!master) {
             this.viewFactory.create('Site.Master', null, function (master) {
                 this.set('master', master);
                 if (!this.get('masterRendered')) {
@@ -183,65 +183,65 @@ _.extend(Espo.Controller.prototype, {
                     }.bind(this));
                     return;
                 }
-                callback.call(this, master);                    
+                callback.call(this, master);
             }.bind(this));
         } else {
             callback.call(this, master);
-        }                                     
+        }
     },
-    
+
     /**
      * Create main view in master and return it.
      * @param {String} view Name of view.
      * @param {Object} options Options for view.
      * @return {Espo.View}
-     */        
-    main: function (view, options, callback) {            
-        var view = view || 'Base';            
+     */
+    main: function (view, options, callback) {
+        var view = view || 'Base';
         var master = this.master(function (master) {
             master.showLoadingNotification();
             options = options || {};
-            options.el = '#main';            
+            options.el = '#main';
             this.viewFactory.create(view, options, function (main) {
                 main.once('render', function () {
-                    main.updatePageTitle();                
-                    master.hideLoadingNotification();                        
+                    main.updatePageTitle();
+                    master.hideLoadingNotification();
                 });
                 master.setView('main', main);
-                
+
                 main.once('after:render', function () {
                     $(window).scrollTop(0)
                 });
-                
-                if (callback) {                    
+
+                if (callback) {
                     callback.call(this, main);
                 } else {
                     main.render();
                 }
-            });                
-        }.bind(this));        
+            });
+        }.bind(this));
     },
-    
+
     showLoadingNotification: function () {
         var master = this.get('master');
         if (master) {
             master.showLoadingNotification();
         }
     },
-    
+
     hideLoadingNotification: function () {
         var master = this.get('master');
         if (master) {
             master.hideLoadingNotification();
         }
     },
-    
+
     /**
      * Create view in the body tag.
      * @param {String} view Name of view.
      * @param {Object} options Options for view.
      * @return {Espo.View}
-     */    
+     */
     entire: function (view, options, callback) {
         var master = this.get('master');
         if (master) {
@@ -250,15 +250,15 @@ _.extend(Espo.Controller.prototype, {
         this.set('master', null);
         this.set('masterRendered', false);
         options = options || {};
-        options.el = 'body';            
+        options.el = 'body';
         this.viewFactory.create(view, options, function (view) {
             this.set('entire', view);
             callback(view);
-        }.bind(this));            
-    }    
+        }.bind(this));
+    }
 
 }, Backbone.Events);
 
-Espo.Controller.extend = Backbone.Router.extend;    
+Espo.Controller.extend = Backbone.Router.extend;
 
 

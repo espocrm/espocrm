@@ -47,6 +47,10 @@ class RecordTree extends Record
         $selectParams['whereClause'][] = array(
             'parentId' => $parentId
         );
+        $selectParams['orderBy'] = [
+            ['order', 'asc'],
+            ['name', 'asc']
+        ];
 
         $collection = $this->getRepository()->find($selectParams);
         foreach ($collection as $entity) {

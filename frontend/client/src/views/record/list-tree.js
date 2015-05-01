@@ -31,8 +31,6 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         checkboxes: false,
 
-        selectable: true,
-
         rowActionsView: false,
 
         presentationType: 'tree',
@@ -44,6 +42,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         checkAllResultDisabled: true,
 
         massActionList: ['remove'],
+
+        selectable: false,
 
         createDisabled: false,
 
@@ -77,19 +77,21 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
             }
             Dep.prototype.setup.call(this);
 
-            this.on('select', function (o) {
-                if (o.id) {
-                    this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
-
-                    if (this.level == 0) {
-                        this.$el.find('a.link').removeClass('text-bold');
+            if (this.selectable) {
+                this.on('select', function (o) {
+                    if (o.id) {
                         this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
 
-                        this.setSelected(o.id);
+                        if (this.level == 0) {
+                            this.$el.find('a.link').removeClass('text-bold');
+                            this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
+
+                            this.setSelected(o.id);
+                        }
                     }
-                }
-                this.getParentView().trigger('select', o);
-            }, this);
+                    this.getParentView().trigger('select', o);
+                }, this);
+            }
         },
 
         setSelected: function (id) {
@@ -118,6 +120,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 var count = modelList.length;
                 var built = 0;
                 modelList.forEach(function (model, i) {
+                    this.rows.push('row-' + i);
                     this.createView('row-' + i, 'Record.ListTreeItem', {
                         model: model,
                         collection: this.collection,
@@ -125,9 +128,9 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                         createDisabled: this.createDisabled,
                         level: this.level,
                         isSelected: model.id == this.selectedData.id,
-                        selectedData: this.selectedData
+                        selectedData: this.selectedData,
+                        selectable: this.selectable
                     }, function () {
-                        this.rows.push('row-' + i);
                         built++;
                         if (built == count) {
                             if (typeof callback == 'function') {
@@ -172,6 +175,13 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 }
             }, function (view) {
                 view.render();
+                this.listenToOnce(view, 'after:save', function (model) {
+                    view.close();
+                    this.collection.push(model);
+                    this.buildRows(function () {
+                        this.render();
+                    }.bind(this));
+                }, this);
             }.bind(this));
         },
 

@@ -126,42 +126,40 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                 createDisabled: this.options.createDisabled,
                 level: this.level + 1,
                 selectedData: this.selectedData,
-                model: this.model
+                model: this.model,
+                selectable: this.selectable
             }, callback);
         },
 
         unfold: function () {
             var childCollection = this.model.get('childCollection');
+            if (childCollection !== null) {
+                this.createChildren();
+                this.isUnfolded = true;
+                this.afterUnfold();
+            } else {
+                this.getCollectionFactory().create(this.scope, function (collection) {
+                    collection.url = this.collection.url;
+                    collection.parentId = this.model.id;
+                    collection.maxDepth = 1;
 
+                    this.notify('Please wait...');
+                    this.listenToOnce(collection, 'sync', function () {
+                    this.notify(false);
+                        this.model.set('childCollection', collection);
+                        this.createChildren();
+                        this.isUnfolded = true;
 
-                if (childCollection !== null) {
-                    this.createChildren();
-                    this.isUnfolded = true;
-                    this.afterUnfold();
-                } else {
-                    this.getCollectionFactory().create(this.scope, function (collection) {
-                        collection.url = this.collection.url;
-                        collection.parentId = this.model.id;
-                        collection.maxDepth = 1;
-
-                        this.notify('Please wait...');
-                        this.listenToOnce(collection, 'sync', function () {
-                        this.notify(false);
-                            //if (collection.length || !this.createDisabled) {
-                            this.model.set('childCollection', collection);
-                            this.createChildren();
-                            this.isUnfolded = true;
-
-                            if (collection.length && !this.createDisabled) {
-                                this.afterUnfold();
-                            } else {
-                                this.isEnd = true;
-                                this.afterIsEnd();
-                            }
-                        }, this);
-                        collection.fetch()
+                        if (collection.length || !this.createDisabled) {
+                            this.afterUnfold();
+                        } else {
+                            this.isEnd = true;
+                            this.afterIsEnd();
+                        }
                     }, this);
-                }
+                    collection.fetch()
+                }, this);
+            }
 
         },
 

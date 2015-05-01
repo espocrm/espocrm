@@ -45,7 +45,6 @@ Espo.define('Collections.Tree', 'Collection', function (Dep) {
                     if (d.childList) {
                         if (d.childList.length) {
                             f(d.childList, depth + 1);
-
                             c.set(d.childList);
                             d.childCollection = c;
                         } else {

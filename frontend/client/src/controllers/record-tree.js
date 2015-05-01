@@ -24,6 +24,15 @@ Espo.define('Controllers.RecordTree', 'Controllers.Record', function (Dep) {
 
         defaultAction: 'listTree',
 
+        beforeView: function (options) {
+            Dep.prototype.beforeView.call(this, options);
+            options = options || {};
+            if (options.model) {
+                options.model.unset('childCollection');
+                options.model.unset('childList');
+            }
+        },
+
         beforeListTree: function () {
             this.handleCheckAccess('read');
         },
@@ -36,7 +45,7 @@ Espo.define('Controllers.RecordTree', 'Controllers.Record', function (Dep) {
                     collection: collection
                 });
             });
-        },
+        }
 
     });
 
