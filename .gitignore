@@ -13,4 +13,4 @@
 /tests/testData/cache/*
 composer.phar
 vendor/
-/custom/Espo/Custom/Resources/*
+/custom/Espo/Custom/*
