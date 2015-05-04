@@ -199,6 +199,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
         checkAllResultDisabled: false,
 
+        buttonsDisabled: false,
+
         allResultIsChecked: false,
 
         data: function () {
@@ -218,7 +220,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rows: this.rows,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.disableButtons),
+                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: this.checkAllResultDisabled,
                 buttonList: this.buttonList
@@ -235,7 +237,10 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
 
-            this.disableButtons = this.options.disableButtons || false;
+
+            if ('buttonsDisabled' in this.options) {
+                this.buttonsDisabled = this.options.buttonsDisabled;
+            }
 
             if ('checkAllResultDisabled' in this.options) {
                 this.checkAllResultDisabled = this.options.checkAllResultDisabled;
