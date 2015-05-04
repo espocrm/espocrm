@@ -4,6 +4,6 @@
    "filter": true,
    "notCreatable": true,
    "fieldDefs":{
-      "skip": true
+      "skipOrmDefs": true
    }
 }
