@@ -343,6 +343,10 @@ class EntityManager
                         )
                     )
                 );
+                if ($entityForeign == $entity) {
+                    $dataLeft['links'][$link]['midKeys'] = ['leftId', 'rightId'];
+                    $dataRight['links'][$linkForeign]['midKeys'] = ['rightId', 'leftId'];
+                }
                 break;
         }
 
