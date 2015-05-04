@@ -174,7 +174,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 scope: scope,
                 attributes: {
                     parentId: parentId,
-                    parentName: parentName
+                    parentName: parentName,
+                    order: this.collection.length + 1
                 }
             }, function (view) {
                 view.render();
