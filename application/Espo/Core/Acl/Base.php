@@ -194,5 +194,30 @@ class Base implements Injectable
         }
         return false;
     }
+
+    public function checkEntityDelete(User $user, Entity $entity, $data)
+    {
+        $result = $this->checkEntity($user, $entity, $data, 'delete');
+        if (!$result) {
+            if (is_array($data)) {
+                if ($data['edit'] != 'no') {
+                    if ($entity->has('createdById') && $entity->get('createdById') == $user->id) {
+                        if (!$entity->has('assignedUserId')) {
+                            return true;
+                        } else {
+                            if (!$entity->get('assignedUserId')) {
+                                return true;
+                            }
+                            if ($entity->get('assignedUserId') == $entity->get('createdById')) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
 }
 

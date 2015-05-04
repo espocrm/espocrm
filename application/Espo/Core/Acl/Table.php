@@ -166,11 +166,30 @@ class Table
         return $result;
     }
 
+    private function getScopeList()
+    {
+        $scopeList = [];
+        $scopes = $this->metadata->get('scopes');
+        foreach ($scopes as $scope => $d) {
+        	if (!empty($d['acl'])) {
+        		$scopeList[] = $scope;
+        	}
+        }
+        return $scopeList;
+    }
+
     private function merge($tables)
     {
         $data = array();
+        $scopeList = $this->getScopeList();
+
         foreach ($tables as $table) {
-            foreach ($table as $scope => $row) {
+            foreach ($scopeList as $scope) {
+            	if (!isset($table->$scope)) {
+            		continue;
+            	}
+            	$row = $table->$scope;
+
                 if ($row == false) {
                     if (!isset($data[$scope])) {
                         $data[$scope] = false;
@@ -184,7 +203,8 @@ class Table
                     if ($data[$scope] == false) {
                         $data[$scope] = array();
                     }
-                    if (is_array($row)) {
+
+                    if (is_array($row) || $row instanceof \stdClass) {
                         foreach ($row as $action => $level) {
                             if (!isset($data[$scope][$action])) {
                                 $data[$scope][$action] = $level;
@@ -197,6 +217,15 @@ class Table
                     }
                 }
             }
+        }
+
+        foreach ($scopeList as $scope) {
+        	if (!array_key_exists($scope, $data)) {
+        		$aclType = $this->metadata->get('scopes.' . $scope . '.acl');
+        		if (!empty($aclType) && ($aclType === true || $aclType === 'record')) {
+	        		$data[$scope] = $this->metadata->get('app.acl.recordDefault');
+        		}
+        	}
         }
         return $data;
     }

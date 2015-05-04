@@ -75,12 +75,16 @@ _.extend(Espo.Acl.prototype, {
                         return true;
                     }
 
-                    if (!value || value === 'no') {
-                        return false;
-                    }
-
                     if (typeof isOwner === 'undefined') {
                         return true;
+                    }
+
+                    if (isOwner && action == 'delete' && value === 'no') {
+                        return this.check(controller, 'edit', isOwner);
+                    }
+
+                    if (!value || value === 'no') {
+                        return false;
                     }
 
                     if (isOwner) {
@@ -89,11 +93,9 @@ _.extend(Espo.Acl.prototype, {
                         }
                     }
 
-                    //if (inTeam) {
-                        if (value === 'team') {
-                            return true;
-                        }
-                    //}
+                    if (value === 'team') {
+                        return true;
+                    }
 
                     return false;
                 }

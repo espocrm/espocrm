@@ -31,5 +31,10 @@
             "delete": "own"
         },
         "Role": false
+    },
+    "recordDefault": {
+        "read": "all",
+        "edit": "all",
+        "delete": "no"
     }
 }
