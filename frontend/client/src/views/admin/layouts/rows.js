@@ -17,31 +17,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
-Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (Dep) {        
+ ************************************************************************/
 
-    return Dep.extend({    
-    
+Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (Dep) {
+
+    return Dep.extend({
+
         template: 'admin.layouts.rows',
 
-        
+
         events: _.extend({
-            'click #layout a[data-action="editField"]': function (e) {                                
+            'click #layout a[data-action="editField"]': function (e) {
                 var data = {};
                 this.dataAttributes.forEach(function (attr) {
                     data[attr] =  $(e.target).closest('li').data(Espo.Utils.toDom(attr))
-                });                    
+                });
                 this.openEditDialog(data);
             },
         }, Dep.prototype.events),
-        
+
         dataAttributes: null,
-        
+
         dataAttributesDefs: {},
-        
+
         editable: false,
-        
+
         data: function () {
             return {
                 scope: this.scope,
@@ -54,14 +54,14 @@ Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (De
                 dataAttributesDefs: this.dataAttributesDefs,
                 editable: this.editable,
             };
-        },            
-        
+        },
+
         afterRender: function () {
             $('#layout ul.enabled, #layout ul.disabled').sortable({
                 connectWith: '#layout ul.connected'
             });
         },
-        
+
         fetch: function () {
             var layout = [];
             $("#layout ul.enabled > li").each(function (i, el) {
@@ -71,19 +71,19 @@ Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (De
                     if (value) {
                         o[attr] = value;
                     }
-                });                    
+                });
                 layout.push(o);
             }.bind(this));
             return layout;
         },
-        
+
         validate: function (layout) {
             if (layout.length == 0) {
                 this.notify('Layout cannot be empty', 'error');
                 return false;
             }
             return true;
-        },    
+        }
     });
 });
 

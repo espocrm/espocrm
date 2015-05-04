@@ -92,7 +92,7 @@
                             <label>{{label}}</label>
                         </div>
                         {{#if ../editable}}
-                        <div class="right"><a href="javascript:" data-action="edit-field" class="edit-field"><i class="glyphicon glyphicon-pencil"></i></a></div>
+                        <div class="right"><a href="javascript:" data-action="editField" class="edit-field"><i class="glyphicon glyphicon-pencil"></i></a></div>
                         {{/if}}
                     </li>
                 {{/each}}
