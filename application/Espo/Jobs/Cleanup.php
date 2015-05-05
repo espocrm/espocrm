@@ -49,21 +49,26 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupScheduledJobLog()
     {
-        $lastTenRecords = "SELECT c.id FROM (
-            SELECT i1.id
-            FROM scheduled_job_log_record i1
-            CROSS JOIN scheduled_job_log_record i2 ON ( i1.scheduled_job_id = i2.scheduled_job_id
-            AND i1.id < i2.id )
-            GROUP BY i1.id
-            HAVING COUNT( * ) <10
-            ORDER BY i1.created_at DESC
-        ) AS c";
-
-        $query = "DELETE FROM `scheduled_job_log_record` WHERE DATE(created_at) < '".$this->getDate()."' AND id NOT IN (".$lastTenRecords.") ";
-
         $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($query);
+
+        $sql = "SELECT id FROM scheduled_job";
+        $sth = $pdo->prepare($sql);
         $sth->execute();
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+
+            $lastRowsSql = "SELECT id FROM scheduled_job_log_record WHERE scheduled_job_id = '".$id."' ORDER BY created_at DESC LIMIT 0,10";
+            $lastRowsSth = $pdo->prepare($lastRowsSql);
+            $lastRowsSth->execute();
+            $lastRowIds = $lastRowsSth->fetchAll(\PDO::FETCH_COLUMN, 0);
+
+            $delSql = "DELETE FROM `scheduled_job_log_record`
+                    WHERE scheduled_job_id = '".$id."'
+                    AND DATE(created_at) < '".$this->getDate()."'
+                    AND id NOT IN ('".implode("', '", $lastRowIds)."')
+                ";
+            $pdo->query($delSql);
+        }
     }
 
     protected function getDate($format = 'Y-m-d')

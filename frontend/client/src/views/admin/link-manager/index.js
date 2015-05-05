@@ -167,7 +167,7 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                 this.getMetadata().load(function () {
                     this.setupLinkData();
                     this.render();
-                }.bind(this));
+                }.bind(this), true);
             }.bind(this));
         },
 

@@ -152,7 +152,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                             type: 'listSmall',
                             searchManager: searchManager,
                             checkAllResultDisabled: !this.massRelateEnabled,
-                            disableButtons: true
+                            buttonsDisabled: true
                         }, function (list) {
                             list.once('select', function (model) {
                                 this.trigger('select', model);

@@ -35,6 +35,7 @@ class Metadata
     private $fileManager;
     private $converter;
     private $moduleConfig;
+    private $metadataHelper;
 
     /**
      * @var string - uses for loading default values
@@ -76,12 +77,6 @@ class Metadata
     {
         $this->config = $config;
         $this->fileManager = $fileManager;
-
-        $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
-
-        $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
-
-        $this->moduleConfig = new \Espo\Core\Utils\Module($this->config, $this->fileManager);
     }
 
     protected function getConfig()
@@ -89,24 +84,45 @@ class Metadata
         return $this->config;
     }
 
-    protected function getUnifier()
-    {
-        return $this->unifier;
-    }
-
     protected function getFileManager()
     {
         return $this->fileManager;
     }
 
+    protected function getUnifier()
+    {
+        if (!isset($this->unifier)) {
+            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
+        }
+
+        return $this->unifier;
+    }
+
     protected function getConverter()
     {
+        if (!isset($this->converter)) {
+            $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
+        }
+
         return $this->converter;
     }
 
     protected function getModuleConfig()
     {
+        if (!isset($this->moduleConfig)) {
+            $this->moduleConfig = new \Espo\Core\Utils\Module($this->config, $this->fileManager);
+        }
+
         return $this->moduleConfig;
+    }
+
+    protected function getMetadataHelper()
+    {
+        if (!isset($this->metadataHelper)) {
+            $this->metadataHelper = new Metadata\Helper($this);
+        }
+
+        return $this->metadataHelper;
     }
 
     public function isCached()
@@ -139,6 +155,7 @@ class Metadata
         } else {
             $this->meta = $this->getUnifier()->unify($this->name, $this->paths, true);
             $this->meta = $this->setLanguageFromConfig($this->meta);
+            $this->meta = $this->addAdditionalFields($this->meta);
 
             if ($this->getConfig()->get('useCache')) {
                 $isSaved = $this->getFileManager()->putPhpContents($this->cacheFile, $this->meta);
@@ -197,6 +214,7 @@ class Metadata
     }
 
     /**
+     * todo: move to a separate file
      * Set language list and default for Settings, Preferences metadata
      *
      * @param array $data Meta
@@ -220,6 +238,37 @@ class Metadata
         }
 
         return $data;
+    }
+
+    /**
+     * todo: move to a separate file
+     * Add additional fields defined from metadata -> fields
+     *
+     * @param array $meta
+     */
+    protected function addAdditionalFields(array $meta)
+    {
+        $metaCopy = $meta;
+        $definitionList = $meta['fields'];
+
+        foreach ($metaCopy['entityDefs'] as $entityName => $entityParams) {
+            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
+
+                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $fieldParams, $definitionList);
+                if (!empty($additionalFields)) {
+                    //merge or add to the end of meta array
+                    foreach ($additionalFields as $subFieldName => $subFieldParams) {
+                        if (isset($entityParams['fields'][$subFieldName])) {
+                            $meta['entityDefs'][$entityName]['fields'][$subFieldName] = Util::merge($subFieldParams, $entityParams['fields'][$subFieldName]);
+                        } else {
+                            $meta['entityDefs'][$entityName]['fields'][$subFieldName] = $subFieldParams;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $meta;
     }
 
     /**

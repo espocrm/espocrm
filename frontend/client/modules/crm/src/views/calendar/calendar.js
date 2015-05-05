@@ -80,6 +80,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 this.$el.find('button[data-mode="' + mode + '"]').addClass('active');
                 this.$calendar.fullCalendar('changeView', mode);
                 this.updateDate();
+                this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
             	this.$calendar.fullCalendar('refetchEvents');

@@ -20,6 +20,6 @@
    "notCreatable": true,
    "filter": true,
    "fieldDefs":{
-      "default":""
+      "notStorable":true
    }
 }

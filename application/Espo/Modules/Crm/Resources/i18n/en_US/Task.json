@@ -11,9 +11,11 @@
         "description": "Description",
         "isOverdue": "Is Overdue",
         "account": "Account",
-        "dateCompleted": "Date Completed"
+        "dateCompleted": "Date Completed",
+        "attachments": "Attachments"
     },
     "links": {
+        "attachments": "Attachments"
     },
     "options": {
         "status": {

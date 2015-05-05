@@ -160,7 +160,7 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam",
+            "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
         },
         "account": {
@@ -209,7 +209,7 @@
         },
         "emails": {
             "type": "hasChildren",
-            "entity": "Task",
+            "entity": "Email",
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
         },

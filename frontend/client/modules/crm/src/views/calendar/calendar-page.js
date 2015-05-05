@@ -28,9 +28,13 @@ Espo.define('Crm:Views.Calendar.CalendarPage', 'View', function (Dep) {
         el: '#main',
 
         setup: function () {
+            var mode = this.options.mode || null;
+            if (!mode) {
+                var mode = this.getStorage().get('state', 'calendarMode') || null;
+            }
             this.createView('calendar', 'Crm:Calendar.Calendar', {
                 date: this.options.date,
-                mode: this.options.mode,
+                mode: mode,
                 el: '#main > .calendar-container',
             }, function (view) {
                 var first = true;
@@ -39,7 +43,10 @@ Espo.define('Crm:Views.Calendar.CalendarPage', 'View', function (Dep) {
                         this.getRouter().navigate('#Calendar/show/date=' + date + '&mode=' + mode);
                     }
                     first = false;
-                }.bind(this));
+                }, this);
+                this.listenTo(view, 'change:mode', function (mode) {
+                    this.getStorage().set('state', 'calendarMode', mode);
+                }, this);
             }.bind(this));
         },
 

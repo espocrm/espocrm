@@ -22,6 +22,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
+use Espo\Core\Utils\Util;
+
 class Base extends \Espo\Core\Utils\Database\Orm\Base
 {
     private $params;
@@ -119,8 +121,11 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
                 $additionalParrams = $this->getAllowedAdditionalParams($name);
 
-                if (isset($additionalParrams) && !isset($linkParams[$name])) {
+                if (isset($additionalParrams)) {
                     $linkParams[$name] = $additionalParrams;
+                    if (isset($linkParams[$name]) && is_array($linkParams[$name])) {
+                        $linkParams[$name] = Util::merge($linkParams[$name], $additionalParrams);
+                    }
                 }
             }
         }

@@ -52,7 +52,7 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "entityTeam"
         },
         "assignedUser": {
             "type": "belongsTo",

@@ -284,11 +284,18 @@ class Sender
 
         $message->setBody($body);
 
-        if (!$message->getHeaders()->has('content-type')) {
-            $contentTypeHeader = new \Zend\Mail\Header\ContentType();
-            $message->getHeaders()->addHeader($contentTypeHeader);
+        if ($messageType == 'text/plain') {
+            if ($message->getHeaders()->has('content-type')) {
+                $message->getHeaders()->removeHeader('content-type');
+            }
+            $message->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=UTF-8');
+        } else {
+            if (!$message->getHeaders()->has('content-type')) {
+                $contentTypeHeader = new \Zend\Mail\Header\ContentType();
+                $message->getHeaders()->addHeader($contentTypeHeader);
+            }
+            $message->getHeaders()->get('content-type')->setType($messageType);
         }
-        $message->getHeaders()->get('content-type')->setType($messageType);
 
         $message->setEncoding('UTF-8');
 

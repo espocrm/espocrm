@@ -343,7 +343,7 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.
                 this.getMetadata().load(function () {
                     this.trigger('after:save');
                     this.close();
-                }.bind(this));
+                }.bind(this), true);
             }.bind(this));
         },
 

@@ -28,7 +28,7 @@ use \Espo\ORM\Entity;
 class Email extends \Espo\Core\Acl\Base
 {
 
-    public function checkRead(User $user, Entity $entity, $data)
+    public function checkEntityRead(User $user, Entity $entity, $data)
     {
         if ($this->checkEntity($user, $entity, $data, 'read')) {
             return true;

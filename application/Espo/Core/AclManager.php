@@ -149,13 +149,13 @@ class AclManager
                 $entityType = $entity->getEntityType();
 
                 $impl = $this->getImplementation($entityType);
-                $methodName = 'check' . ucfirst($action);
+                $methodName = 'checkEntity' . ucfirst($action);
                 if (method_exists($impl, $methodName)) {
                     $data = $this->getTable($user)->getScopeData($entityType);
                     return $impl->$methodName($user, $entity, $data);
                 }
 
-                return $this->checkEntity($user, $entity, $action, $isOwner, $inTeam, $entity);
+                return $this->checkEntity($user, $entity, $action);
             }
         }
     }
