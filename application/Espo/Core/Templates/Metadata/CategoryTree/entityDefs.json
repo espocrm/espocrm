@@ -79,5 +79,28 @@
                 "deleted"
             ]
         }
+    },
+    "additionalTables": {
+        "{entityType}Paths": {
+            "fields": {
+                "id": {
+                    "type": "id",
+                    "dbType": "int",
+                    "len": "11",
+                    "autoincrement": true,
+                    "unique" : true
+                },
+                "ascendorId"
+                    "type": "varchar",
+                    "len": "100",
+                    "index": true
+                },
+                "descendorId": {
+                    "type": "varchar",
+                    "len": "24",
+                    "index": true
+                }
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@ Espo.define('Views.Fields.LinkCategoryTree', 'Views.Fields.Link', function (Dep)
 
             if (data.typeFront == 'is') {
                 data.type = 'inCategory';
+                data.link = this.name;
             }
         },
     });
