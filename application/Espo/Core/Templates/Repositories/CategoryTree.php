@@ -23,7 +23,7 @@
 namespace Espo\Core\Templates\Repositories;
 
 
-class CategoryTree extends \Espo\Core\ORM\Repositories\RDB
+class CategoryTree extends \Espo\Core\Repositories\CategoryTree
 {
 
 }

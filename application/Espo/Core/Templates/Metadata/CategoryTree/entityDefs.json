@@ -81,7 +81,7 @@
         }
     },
     "additionalTables": {
-        "{entityType}Paths": {
+        "{entityType}Path": {
             "fields": {
                 "id": {
                     "type": "id",
@@ -90,7 +90,7 @@
                     "autoincrement": true,
                     "unique" : true
                 },
-                "ascendorId"
+                "ascendorId": {
                     "type": "varchar",
                     "len": "100",
                     "index": true

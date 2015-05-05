@@ -22,7 +22,7 @@
 
 namespace Espo\Core\Templates\Entities;
 
-class CategoryTree extends \Espo\Core\Entities\TreeItem
+class CategoryTree extends \Espo\Core\Entities\CategoryTreeItem
 {
 
 }

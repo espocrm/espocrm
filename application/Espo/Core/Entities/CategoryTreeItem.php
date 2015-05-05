@@ -22,7 +22,7 @@
 
 namespace Espo\Core\Entities;
 
-class TreeItem extends \Espo\Core\ORM\Entity
+class CategoryTreeItem extends \Espo\Core\ORM\Entity
 {
     public function toArray()
     {
