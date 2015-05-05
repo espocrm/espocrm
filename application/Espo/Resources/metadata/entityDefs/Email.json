@@ -174,7 +174,7 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam"
+            "relationName": "entityTeam"
         },
         "users": {
             "type": "hasMany",
@@ -191,7 +191,7 @@
             "type": "hasChildren",
             "entity": "Attachment",
             "foreign": "parent",
-            "relationName": "Attachments"
+            "relationName": "attachments"
         },
         "parent": {
             "type": "belongsToParent",
@@ -205,7 +205,7 @@
         "toEmailAddresses": {
             "type": "hasMany",
             "entity": "EmailAddress",
-            "relationName": "EmailEmailAddress",
+            "relationName": "emailEmailAddress",
             "conditions": {
                 "addressType": "to"
             },
@@ -219,7 +219,7 @@
         "ccEmailAddresses": {
             "type": "hasMany",
             "entity": "EmailAddress",
-            "relationName": "EmailEmailAddress",
+            "relationName": "emailEmailAddress",
             "conditions": {
                 "addressType": "cc"
             },
@@ -233,7 +233,7 @@
         "bccEmailAddresses": {
             "type": "hasMany",
             "entity": "EmailAddress",
-            "relationName": "EmailEmailAddress",
+            "relationName": "emailEmailAddress",
             "conditions": {
                 "addressType": "bcc"
             },
