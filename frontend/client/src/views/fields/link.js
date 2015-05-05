@@ -41,6 +41,10 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
         AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
 
+        selectRecordsViewName: 'Modals.SelectRecords',
+
+        autocompleteDisabled: false,
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -70,28 +74,36 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.notify('Loading...');
-                    this.createView('dialog', 'Modals.SelectRecords', {
-                            scope: this.foreignScope,
-                            createButton: this.mode != 'search',
-                            filters: this.getSelectFilters(),
-                            boolFilterList: this.getSelectBoolFilterList(),
-                            primaryFilterName: this.getPrimaryFilterName(),
-                        }, function (dialog) {
-                        dialog.render();
-                        self.notify(false);
-                        dialog.once('select', function (model) {
-                            self.$elementName.val(model.get('name'));
-                            self.$elementId.val(model.get('id'));
-                            self.trigger('change');
-                        });
-                    });
+                    this.createView('dialog', this.selectRecordsViewName, {
+                        scope: this.foreignScope,
+                        createButton: this.mode != 'search',
+                        filters: this.getSelectFilters(),
+                        boolFilterList: this.getSelectBoolFilterList(),
+                        primaryFilterName: this.getPrimaryFilterName()
+                    }, function (view) {
+                        view.render();
+                        this.notify(false);
+                        this.listenToOnce(view, 'select', function (model) {
+                            this.select(model);
+                        }, this);
+                    }.bind(this));
                 });
                 this.addActionHandler('clearLink', function () {
-                    this.$elementName.val('');
-                    this.$elementId.val('');
-                    this.trigger('change');
+                    this.clearLink();
                 });
             }
+        },
+
+        select: function (model) {
+            this.$elementName.val(model.get('name'));
+            this.$elementId.val(model.get('id'));
+            this.trigger('change');
+        },
+
+        clearLink: function () {
+            this.$elementName.val('');
+            this.$elementId.val('');
+            this.trigger('change');
         },
 
         setupSearch: function () {
@@ -141,37 +153,40 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                     }.bind(this));
                 }
 
-                this.$elementName.autocomplete({
-                    serviceUrl: function (q) {
-                        return this.getAutocompleteUrl(q);
-                    }.bind(this),
-                    paramName: 'q',
-                    minChars: 1,
-                    autoSelectFirst: true,
-                       formatResult: function (suggestion) {
-                        return suggestion.name;
-                    },
-                    transformResult: function (response) {
-                        var response = JSON.parse(response);
-                        var list = [];
-                        response.list.forEach(function(item) {
-                            list.push({
-                                id: item.id,
-                                name: item.name,
-                                data: item.id,
-                                value: item.name
-                            });
-                        }, this);
-                        return {
-                            suggestions: list
-                        };
-                    }.bind(this),
-                    onSelect: function (s) {
-                        this.$elementId.val(s.id);
-                        this.$elementName.val(s.name);
-                        this.trigger('change');
-                    }.bind(this)
-                });
+
+                if (!this.autocompleteDisabled) {
+                    this.$elementName.autocomplete({
+                        serviceUrl: function (q) {
+                            return this.getAutocompleteUrl(q);
+                        }.bind(this),
+                        paramName: 'q',
+                        minChars: 1,
+                        autoSelectFirst: true,
+                           formatResult: function (suggestion) {
+                            return suggestion.name;
+                        },
+                        transformResult: function (response) {
+                            var response = JSON.parse(response);
+                            var list = [];
+                            response.list.forEach(function(item) {
+                                list.push({
+                                    id: item.id,
+                                    name: item.name,
+                                    data: item.id,
+                                    value: item.name
+                                });
+                            }, this);
+                            return {
+                                suggestions: list
+                            };
+                        }.bind(this),
+                        onSelect: function (s) {
+                            this.$elementId.val(s.id);
+                            this.$elementName.val(s.name);
+                            this.trigger('change');
+                        }.bind(this)
+                    });
+                }
 
                 var $elementName = this.$elementName;
 

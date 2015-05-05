@@ -41,6 +41,8 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 
         AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
 
+        autocompleteDisabled: false,
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -149,39 +151,40 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                     }.bind(this));
                 }
 
-                this.$elementName.autocomplete({
-                    serviceUrl: function (q) {
-                        return this.getAutocompleteUrl(q);
-                    }.bind(this),
-                    minChars: 1,
-                    paramName: 'q',
-                       formatResult: function (suggestion) {
-                        return suggestion.name;
-                    },
-                    transformResult: function (response) {
-                        var response = JSON.parse(response);
-                        var list = [];
-                        response.list.forEach(function(item) {
-                            list.push({
-                                id: item.id,
-                                name: item.name,
-                                data: item.id,
-                                value: item.name
-                            });
-                        }, this);
-                        return {
-                            suggestions: list
-                        };
-                    }.bind(this),
-                    onSelect: function (s) {
-                        this.$elementId.val(s.id);
-                        this.$elementName.val(s.name);
-                        this.trigger('change');
-                    }.bind(this)
-                });
+                if (!this.autocompleteDisabled) {
+                    this.$elementName.autocomplete({
+                        serviceUrl: function (q) {
+                            return this.getAutocompleteUrl(q);
+                        }.bind(this),
+                        minChars: 1,
+                        paramName: 'q',
+                        formatResult: function (suggestion) {
+                            return suggestion.name;
+                        },
+                        transformResult: function (response) {
+                            var response = JSON.parse(response);
+                            var list = [];
+                            response.list.forEach(function(item) {
+                                list.push({
+                                    id: item.id,
+                                    name: item.name,
+                                    data: item.id,
+                                    value: item.name
+                                });
+                            }, this);
+                            return {
+                                suggestions: list
+                            };
+                        }.bind(this),
+                        onSelect: function (s) {
+                            this.$elementId.val(s.id);
+                            this.$elementName.val(s.name);
+                            this.trigger('change');
+                        }.bind(this)
+                    });
+                }
 
                 var $elementName = this.$elementName;
-
 
                 $elementName.on('change', function () {
                     if (!this.model.get(this.idName)) {

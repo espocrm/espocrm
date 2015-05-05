@@ -43,6 +43,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
 
+        autocompleteDisabled: false,
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -120,35 +122,37 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element = this.$el.find('input.main-element');
 
-                this.$element.autocomplete({
-                    serviceUrl: function (q) {
-                        return this.getAutocompleteUrl(q);
-                    }.bind(this),
-                    minChars: 1,
-                    paramName: 'q',
-                       formatResult: function (suggestion) {
-                        return suggestion.name;
-                    },
-                    transformResult: function (response) {
-                        var response = JSON.parse(response);
-                        var list = [];
-                        response.list.forEach(function(item) {
-                            list.push({
-                                id: item.id,
-                                name: item.name,
-                                data: item.id,
-                                value: item.name
-                            });
-                        }, this);
-                        return {
-                            suggestions: list
-                        };
-                    }.bind(this),
-                    onSelect: function (s) {
-                        this.addLink(s.id, s.name);
-                        this.$element.val('');
-                    }.bind(this)
-                });
+                if (!this.autocompleteDisabled) {
+                    this.$element.autocomplete({
+                        serviceUrl: function (q) {
+                            return this.getAutocompleteUrl(q);
+                        }.bind(this),
+                        minChars: 1,
+                        paramName: 'q',
+                           formatResult: function (suggestion) {
+                            return suggestion.name;
+                        },
+                        transformResult: function (response) {
+                            var response = JSON.parse(response);
+                            var list = [];
+                            response.list.forEach(function(item) {
+                                list.push({
+                                    id: item.id,
+                                    name: item.name,
+                                    data: item.id,
+                                    value: item.name
+                                });
+                            }, this);
+                            return {
+                                suggestions: list
+                            };
+                        }.bind(this),
+                        onSelect: function (s) {
+                            this.addLink(s.id, s.name);
+                            this.$element.val('');
+                        }.bind(this)
+                    });
+                }
 
 
                 var $element = this.$element;

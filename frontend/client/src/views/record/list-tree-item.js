@@ -127,7 +127,7 @@ Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
                 level: this.level + 1,
                 selectedData: this.selectedData,
                 model: this.model,
-                selectable: this.selectable
+                selectable: this.options.selectable
             }, callback);
         },
 

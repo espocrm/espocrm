@@ -62,9 +62,9 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
             if ('selectable' in this.options) {
                 this.selectable = this.options.selectable;
             }
-            if ('createDisabled' in this.options) {
-                this.createDisabled = this.options.createDisabled;
-            }
+
+            this.createDisabled = this.options.createDisabled || this.createDisabled;
+
             if ('level' in this.options) {
                 this.level = this.options.level;
             }
@@ -90,6 +90,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                             this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
 
                             this.setSelected(o.id);
+                            o.selectedData = this.selectedData;
                         }
                     }
                     this.getParentView().trigger('select', o);
