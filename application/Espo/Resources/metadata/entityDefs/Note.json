@@ -49,7 +49,7 @@
         "attachments": {
             "type": "hasChildren",
             "entity": "Attachment",
-            "relationName": "Attachments",
+            "relationName": "attachments",
             "foreign": "parent"
         },
         "parent": {
