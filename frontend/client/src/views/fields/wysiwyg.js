@@ -31,8 +31,11 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
         height: 250,
 
+        rowsDefault: 10,
+
         setup: function () {
             Dep.prototype.setup.call(this);
+
 
             this.height = this.params.height || this.height;
             this.toolbar = this.params.toolbar || [

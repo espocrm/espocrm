@@ -7,19 +7,19 @@
                     "name":"from",
                     "view": "Email.Fields.ComposeFromAddress"
                 },
-                {"name":"cc"}            
+                {"name":"cc"}
             ],
             [
                 {"name":"to"},
                 {"name":"bcc"}
-            ],            
+            ],
             [
                 {
                     "name": "parent"
                 },
                 {
                     "name":"selectTemplate",
-                    "view":"Email.Fields.SelectTemplate" 
+                    "view":"Email.Fields.SelectTemplate"
                 }
             ],
             [{"name":"name","fullWidth":true}],

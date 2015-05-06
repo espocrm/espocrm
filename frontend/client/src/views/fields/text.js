@@ -37,6 +37,8 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
         seeMoreText: false,
 
+        rowsDefault: 4,
+
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
@@ -49,7 +51,7 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
         },
 
         setup: function () {
-            this.params.rows = this.params.rows || 4;
+            this.params.rows = this.params.rows || this.rowsDefault;
         },
 
         getValueForDisplay: function () {
