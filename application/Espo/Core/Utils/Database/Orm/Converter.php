@@ -82,6 +82,16 @@ class Converter
         'len' => '24',
     );
 
+    /**
+     * Permitted Entity options which will be moved to ormMetadata
+     *
+     * @var array
+     */
+    protected $permittedEntityOptions = array(
+        'indexes',
+        'additionalTables',
+    );
+
     public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
     {
         $this->metadata = $metadata;
@@ -151,8 +161,10 @@ class Converter
             ),
         );
 
-        if (isset($entityMeta['indexes'])) {
-            $ormMeta[$entityName]['indexes'] = $entityMeta['indexes'];
+        foreach ($this->permittedEntityOptions as $optionName) {
+            if (isset($entityMeta[$optionName])) {
+                $ormMeta[$entityName][$optionName] = $entityMeta[$optionName];
+            }
         }
 
         $ormMeta[$entityName]['fields'] = $this->convertFields($entityName, $entityMeta);
