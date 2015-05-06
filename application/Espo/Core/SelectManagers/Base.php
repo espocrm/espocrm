@@ -174,7 +174,7 @@ class Base
             }
 
             if (!empty($linkedWith)) {
-                $joins = array();
+                $joins = [];
 
                 $part = array();
                 foreach ($linkedWith as $link => $idsValue) {
@@ -205,9 +205,8 @@ class Base
                 if (!empty($part)) {
                     $where[] = $part;
                 }
-                $result['joins'] = $joins;
+                $result['joins'] = array_merge($result['joins'], $joins);
                 $result['distinct'] = true;
-
             }
 
             $result['whereClause'] = array_merge($result['whereClause'], $where);
@@ -288,9 +287,9 @@ class Base
     public function getSelectParams(array $params, $withAcl = false)
     {
         $result = array(
-            'joins' => array(),
-            'leftJoins' => array(),
-            'whereClause' => array()
+            'joins' => [],
+            'leftJoins' => [],
+            'whereClause' => []
         );
 
         $this->order($params, $result);
