@@ -89,7 +89,7 @@ class Converter
         $GLOBALS['log']->debug('Schema\Converter - Start: building schema');
 
         //check if exist files in "Tables" directory and merge with ormMetadata
-        $ormMeta = Util::merge($ormMeta, $this->getCustomTables());
+        $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
         //unset some keys in orm
         if (isset($ormMeta['unset'])) {
@@ -335,11 +335,14 @@ class Converter
         return $keyList;
     }
 
-
-    /*
-     * @return array - ormMeta
+    /**
+     * Get custom table defenition in "application/Espo/Core/Utils/Database/Schema/tables/" and in metadata 'additionalTables'
+     *
+     * @param  array  $ormMeta
+     *
+     * @return array
      */
-    protected function getCustomTables()
+    protected function getCustomTables(array $ormMeta)
     {
         $customTables = array();
 
@@ -349,6 +352,13 @@ class Converter
             $fileData = $this->getFileManager()->getPhpContents( array($this->customTablePath, $fileName) );
             if (is_array($fileData)) {
                 $customTables = Util::merge($customTables, $fileData);
+            }
+        }
+
+        //get custom tables from metdata 'additionalTables'
+        foreach ($ormMeta as $entityName => $entityParams) {
+            if (isset($entityParams['additionalTables']) && is_array($entityParams['additionalTables'])) {
+                $customTables = Util::merge($customTables, $entityParams['additionalTables']);
             }
         }
 
