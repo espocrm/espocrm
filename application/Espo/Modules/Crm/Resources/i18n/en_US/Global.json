@@ -10,7 +10,6 @@
         "Call": "Call",
         "Task": "Task",
         "Case": "Case",
-        "InboundEmail": "Inbound Email",
         "Document": "Document",
         "Campaign": "Campaign",
         "TargetList": "Target List"
@@ -26,7 +25,6 @@
         "Call": "Calls",
         "Task": "Tasks",
         "Case": "Cases",
-        "InboundEmail": "Inbound Emails",
         "Document": "Documents",
         "Campaign": "Campaigns",
         "TargetList": "Target Lists"

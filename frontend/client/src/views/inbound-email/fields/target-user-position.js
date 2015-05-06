@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Fields.TargetUserPosition', 'Views.Fields.Enum', function (Dep) {
+Espo.define('Views.InboundEmail.Fields.TargetUserPosition', 'Views.Fields.Enum', function (Dep) {
 
     return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Crm:Views.InboundEmail.Fields.TargetUserPosition', 'Views.Fields.En
             Dep.prototype.setup.call(this);
 
             this.translatedOptions = {
-                '': '--' + this.translate('All') + '--' 
+                '': '--' + this.translate('All') + '--'
             };
 
             this.params.options = [''];

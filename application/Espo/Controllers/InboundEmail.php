@@ -20,7 +20,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+namespace Espo\Controllers;
 
 class InboundEmail extends \Espo\Core\Controllers\Record
 {

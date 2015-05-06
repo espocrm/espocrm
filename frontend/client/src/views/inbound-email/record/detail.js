@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('Views.InboundEmail.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
 

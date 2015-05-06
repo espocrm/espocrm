@@ -2,6 +2,5 @@
     "entity": true,
     "layouts": false,
     "tab": false,
-    "acl": false,
-    "module": "Crm"
+    "acl": false
 }

@@ -17,24 +17,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Fields.Folders', 'Crm:Views.InboundEmail.Fields.Folder', function (Dep) {
+Espo.define('Controllers.InboundEmail', 'Controllers.Record', function (Dep) {
 
-    return Dep.extend({        
-        
-        addFolder: function (folder) {            
-            var value = this.$element.val();
-            
-            var folders = [];            
-            if (value != '') {
-                folders = value.split(',');
+    return Dep.extend({
+
+        checkAccess: function () {
+            if (this.getUser().isAdmin()) {
+                return true;
             }
-            
-            if (!~folders.indexOf(folder)) {
-                folders.push(folder);    
-            }
-            this.$element.val(folders.join(','));
+            return false;
         },
-    });    
+
+    });
 });
+
+
