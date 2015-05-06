@@ -159,7 +159,9 @@ class Base
             }
 
             $linkedWith = array();
-            $ignoreList = array('linkedWith', 'bool', 'primary');
+            $inCategory = array();
+
+            $ignoreList = ['linkedWith', 'inCategory', 'bool', 'primary'];
             foreach ($params['where'] as $item) {
                 if (!in_array($item['type'], $ignoreList)) {
                     $part = $this->getWherePart($item);
@@ -169,48 +171,115 @@ class Base
                 } else {
                     if ($item['type'] == 'linkedWith' && !empty($item['value'])) {
                         $linkedWith[$item['field']] = $item['value'];
+                    } else if ($item['type'] == 'inCategory' && !empty($item['value'])) {
+                        $inCategory[$item['field']] = $item['value'];
                     }
                 }
-            }
-
-            if (!empty($linkedWith)) {
-                $joins = [];
-
-                $part = array();
-                foreach ($linkedWith as $link => $idsValue) {
-                    if (is_array($idsValue) && count($idsValue) == 1) {
-                        $idsValue = $idsValue[0];
-                    }
-
-                    $relDefs = $this->getSeed()->getRelations();
-
-                    if (!empty($relDefs[$link])) {
-                        $defs = $relDefs[$link];
-                        if ($defs['type'] == 'manyMany') {
-                            $joins[] = $link;
-                            if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
-                                $key = $defs['midKeys'][1];
-                                $relationName = lcfirst($defs['relationName']);
-                                $part[$relationName . '.' . $key] = $idsValue;
-                            }
-                        } else if ($defs['type'] == 'belongsTo') {
-                            if (!empty($defs['type']['key'])) {
-                                $key = $defs['type']['key'];
-                                $part[$key] = $idsValue;
-                            }
-                        }
-                    }
-                }
-
-                if (!empty($part)) {
-                    $where[] = $part;
-                }
-                $result['joins'] = array_merge($result['joins'], $joins);
-                $result['distinct'] = true;
             }
 
             $result['whereClause'] = array_merge($result['whereClause'], $where);
+
+            if (!empty($linkedWith)) {
+                $this->handleLinkedWith($linkedWith, $result);
+            }
+            if (!empty($inCategory)) {
+                $this->handleInCategory($inCategory, $result);
+            }
         }
+    }
+
+    protected function handleLinkedWith($linkedWith, &$result)
+    {
+        $joins = [];
+
+        $part = array();
+        foreach ($linkedWith as $link => $idsValue) {
+            if (is_array($idsValue) && count($idsValue) == 1) {
+                $idsValue = $idsValue[0];
+            }
+
+            $relDefs = $this->getSeed()->getRelations();
+
+            if (!empty($relDefs[$link])) {
+                $defs = $relDefs[$link];
+                if ($defs['type'] == 'manyMany') {
+                    $joins[] = $link;
+                    if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
+                        $key = $defs['midKeys'][1];
+                        $relationName = lcfirst($defs['relationName']);
+                        $part[$relationName . '.' . $key] = $idsValue;
+                    }
+                } else if ($defs['type'] == 'belongsTo') {
+                    if (!empty($defs['key'])) {
+                        $key = $defs['key'];
+                        $part[$key] = $idsValue;
+                    }
+                }
+            }
+        }
+
+        if (!empty($part)) {
+            $result['whereClause'][] = $part;
+        }
+        $result['joins'] = array_merge($result['joins'], $joins);
+        $result['distinct'] = true;
+    }
+
+    protected function handleInCategory($inCategory, &$result)
+    {
+        $joins = [];
+
+        $part = array();
+
+        $query = $this->getEntityManager()->getQuery();
+
+        $tableName = $query->toDb($this->getSeed()->getEntityType());
+
+        foreach ($inCategory as $link => $val) {
+
+            $relDefs = $this->getSeed()->getRelations();
+
+            if (!empty($relDefs[$link])) {
+                $defs = $relDefs[$link];
+
+                $foreignEntity = $defs['entity'];
+                if (empty($foreignEntity)) {
+                    continue;
+                }
+
+                $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
+
+                if ($defs['type'] == 'manyMany') {
+
+                    if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
+                        $result['distinct'] = true;
+                        $result['joins'][] = $link;
+                        $key = $defs['midKeys'][1];
+
+                        $relationName = lcfirst($defs['relationName']);
+
+                        $result['customJoin'] .= "
+                            JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($relationName) . "." . $query->toDb($key) . "
+                        ";
+                        $part[$pathName . '.ascendorId'] = $val;
+                    }
+                } else if ($defs['type'] == 'belongsTo') {
+                    if (!empty($defs['key'])) {
+                        $key = $defs['key'];
+                        $result['customJoin'] .= "
+                            JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = {$tableName}." . $query->toDb($key) . "
+                        ";
+                        $part[$pathName . '.ascendorId'] = $val;
+                    }
+                }
+            }
+        }
+
+
+        if (!empty($part)) {
+            $result['whereClause'][] = $part;
+        }
+
     }
 
     protected function q($params, &$result)
@@ -289,7 +358,8 @@ class Base
         $result = array(
             'joins' => [],
             'leftJoins' => [],
-            'whereClause' => []
+            'whereClause' => [],
+            'customJoin' => ''
         );
 
         $this->order($params, $result);

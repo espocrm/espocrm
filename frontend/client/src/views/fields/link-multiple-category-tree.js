@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.LinkCategoryTree', 'Views.Fields.Link', function (Dep) {
+Espo.define('Views.Fields.LinkMultipleCategoryTree', 'Views.Fields.LinkMultiple', function (Dep) {
 
     return Dep.extend({
 
@@ -32,10 +32,8 @@ Espo.define('Views.Fields.LinkCategoryTree', 'Views.Fields.Link', function (Dep)
 
             if (!data) return data;
 
-            if (data.typeFront == 'is') {
-                data.field = this.name;
-                data.type = 'inCategory';
-            }
+            data.type = 'inCategory';
+
             return data;
         },
     });

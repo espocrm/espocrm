@@ -45,6 +45,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         autocompleteDisabled: false,
 
+        selectRecordsViewName: 'Modals.SelectRecords',
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -86,7 +88,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
-                    this.createView('dialog', 'Modals.SelectRecords', {
+
+                    this.createView('dialog', this.selectRecordsViewName, {
                         scope: this.foreignScope,
                         createButton: this.mode != 'search',
                         filters: this.getSelectFilters(),

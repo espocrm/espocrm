@@ -136,13 +136,6 @@ abstract class Base
             $wherePart .= ' ' . $params['customWhere'];
         }
 
-        if (!empty($params['customJoin'])) {
-            if (!empty($joinsPart)) {
-                $joinsPart .= ' ';
-            }
-            $joinsPart .= '' . $params['customJoin'] . '';
-        }
-
         if (!empty($params['joins']) && is_array($params['joins'])) {
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
             if (!empty($joinsRelated)) {
@@ -161,6 +154,13 @@ abstract class Base
                 }
                 $joinsPart .= $joinsRelated;
             }
+        }
+
+        if (!empty($params['customJoin'])) {
+            if (!empty($joinsPart)) {
+                $joinsPart .= ' ';
+            }
+            $joinsPart .= '' . $params['customJoin'] . '';
         }
 
         $groupByPart = null;
@@ -633,7 +633,7 @@ abstract class Base
         return implode(" " . $sqlOp . " ", $whereParts);
     }
 
-    protected function sanitize($string)
+    public function sanitize($string)
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
