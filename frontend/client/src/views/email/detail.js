@@ -52,9 +52,17 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                             action: 'createContact',
                             acl: 'edit',
                             aclScope: 'Contact'
-                        });                    }
+                        });
+                    }
                 }
             }
+
+            this.menu.dropdown.push({
+                label: 'Create Task',
+                action: 'createTask',
+                acl: 'edit',
+                aclScope: 'Task'
+            });
 
             if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
                 this.menu.dropdown.push({
@@ -122,7 +130,30 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                     view.close();
                 }.bind(this));
             }.bind(this));
+        },
 
+        actionCreateTask: function () {
+            var attributes = {};
+
+            attributes.parentId = this.model.get('parentId');
+            attributes.parentName = this.model.get('parentName');
+            attributes.parentType = this.model.get('parentType');
+
+            attributes.description = '(' + this.model.get('name') + ')[#Email/view/' + this.model.id + ']';
+
+            var viewName = this.getMetadata().get('clientDefs.Task.modalViews.detail') || 'Modals.Edit';
+
+            this.notify('Loading...');
+            this.createView('quickCreate', viewName, {
+                scope: 'Task',
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                view.once('after:save', function () {
+                    view.close();
+                }.bind(this));
+            }.bind(this));
         },
 
         actionCreateContact: function () {
