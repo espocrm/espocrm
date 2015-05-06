@@ -17,34 +17,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Url', 'Views.Fields.Varchar', function (Dep) {
 
-    return Dep.extend({    
-    
+    return Dep.extend({
+
         type: 'url',
-        
-        listTemplate: 'fields.url.detail',
-        
+
+        listTemplate: 'fields.url.list',
+
         detailTemplate: 'fields.url.detail',
-        
+
         data: function () {
             return _.extend({
                 url: this.getUrl()
             }, Dep.prototype.data.call(this));
         },
-        
+
         getUrl: function () {
             var url = this.model.get(this.name);
-            if (url && url != '') {            
+            if (url && url != '') {
                 if (!(url.indexOf('http://') === 0) && !(url.indexOf('https://') === 0)) {
                     url = 'http://' + url;
                 }
                 return url;
             }
             return url;
-        },                                    
+        }
 
     });
 });
