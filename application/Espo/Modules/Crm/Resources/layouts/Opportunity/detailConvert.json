@@ -2,7 +2,7 @@
     {
         "label":"Overview",
         "rows":[
-            [{"name":"name"}],
+            [{"name":"name"}, false],
             [{"name":"stage"},{"name":"amount"}],
             [{"name":"probability"}, false],
             [{"name":"closeDate"},false],

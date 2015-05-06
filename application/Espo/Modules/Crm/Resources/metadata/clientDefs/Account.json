@@ -39,5 +39,10 @@
       "customers",
       "partners"
    ],
-   "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy"],
+   "additionalLayouts": {
+      "detailConvert": {
+         "type": "detail"
+      }
+   }
 }

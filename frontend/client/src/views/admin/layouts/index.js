@@ -29,12 +29,6 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
         typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships'],
 
-        additionalLayouts: {
-            'Opportunity': ['detailConvert'],
-            'Contact': ['detailConvert'],
-            'Account': ['detailConvert'],
-        },
-
         scope: null,
 
         type: null,
@@ -50,9 +44,11 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
                         var d = {};
                         d.scope = scope;
                         d.typeList = _.clone(this.typeList);
-                        (this.additionalLayouts[scope] || []).forEach(function (item) {
+
+                        var additionalLayouts = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts') || {};
+                        for (var item in additionalLayouts) {
                             d.typeList.push(item);
-                        });
+                        }
 
                         dataList.push(d);
                     }, this);
@@ -113,7 +109,9 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
 
             this.notify('Loading...');
 
-            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(type), {
+            var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
+
+            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(typeReal), {
                 el: '#layout-content',
                 scope: scope,
                 type: type,
