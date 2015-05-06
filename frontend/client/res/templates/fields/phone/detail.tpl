@@ -6,5 +6,9 @@
         </div>
     {{/each}}
 {{else}}
+	{{#if value}}
     <a href="tel:{{value}}" data-phone-number="{{value}}" data-action="dial">{{value}}</a>
+    {{else}}
+        {{translate 'None'}}
+    {{/if}}
 {{/if}}

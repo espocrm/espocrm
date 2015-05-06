@@ -17,20 +17,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Controllers.InboundEmail', 'Controllers.Record', function (Dep) {
-    
+Espo.define('Views.InboundEmail.Record.Edit', ['Views.Record.Edit', 'Views.InboundEmail.Record.Detail'], function (Dep, Detail) {
+
     return Dep.extend({
-    
-        checkAccess: function () {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-            return false;
-        },
-    
-    });    
-});
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            Detail.prototype.handleDistributionField.call(this);
+
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            Detail.prototype.initSslFieldListening.call(this);
+        },
+
+    });
+});
 

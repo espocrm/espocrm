@@ -20,7 +20,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Services;
 
 use \Espo\ORM\Entity;
 

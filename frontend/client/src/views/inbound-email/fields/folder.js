@@ -17,36 +17,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Fields.Folder', 'Views.Fields.Base', function (Dep) {
+Espo.define('Views.InboundEmail.Fields.Folder', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
-        
-        editTemplate: 'crm:inbound-email.fields.folder.edit',
-        
+
+        editTemplate: 'inbound-email.fields.folder.edit',
+
         events: {
-            'click [data-action="selectFolder"]': function () {            
+            'click [data-action="selectFolder"]': function () {
                 var self = this;
-                
+
                 this.notify('Please wait...');
-                
+
                 var data = {
                     host: this.model.get('host'),
                     port: this.model.get('port'),
                     ssl: this.model.get('ssl'),
                     username: this.model.get('username'),
                 };
-                
+
                 if (this.model.has('password')) {
-                    data.password = this.model.get('password'); 
-                } else {                
-                    if (!this.model.isNew()) { 
+                    data.password = this.model.get('password');
+                } else {
+                    if (!this.model.isNew()) {
                         data.id = this.model.id;
                     }
                 }
-                
-                
+
+
                 $.ajax({
                     type: 'GET',
                     url: 'InboundEmail/action/getFolders',
@@ -56,23 +56,23 @@ Espo.define('Crm:Views.InboundEmail.Fields.Folder', 'Views.Fields.Base', functio
                         xhr.errorIsHandled = true;
                     },
                 }).done(function (folders) {
-                    this.createView('modal', 'Crm:InboundEmail.Modals.SelectFolder', {
-                        folders: folders                        
+                    this.createView('modal', 'InboundEmail.Modals.SelectFolder', {
+                        folders: folders
                     }, function (view) {
                         self.notify(false);
                         view.render();
-                        
-                        self.listenToOnce(view, 'select', function (folder) {                            
+
+                        self.listenToOnce(view, 'select', function (folder) {
                             view.close();
-                            self.addFolder(folder);                            
+                            self.addFolder(folder);
                         });
                     });
-                }.bind(this));                
-            }    
+                }.bind(this));
+            }
         },
-        
+
         addFolder: function (folder) {
             this.$element.val(folder);
         },
-    });    
+    });
 });

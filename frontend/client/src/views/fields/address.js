@@ -17,43 +17,49 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
 
-    return Dep.extend({    
-    
+    return Dep.extend({
+
         type: 'address',
-        
+
         detailTemplate: 'fields.address.detail',
-        
+
         editTemplate: 'fields.address.edit',
-        
+
         searchTemplate: 'fields.address.search',
-        
+
         data: function () {
             var data = Dep.prototype.data.call(this);
-            data.ucName = Espo.Utils.upperCaseFirst(this.name);                
-            
+            data.ucName = Espo.Utils.upperCaseFirst(this.name);
+
             data.postalCodeValue = this.model.get(this.postalCodeField);
             data.streetValue = this.model.get(this.streetField);
             data.cityValue = this.model.get(this.cityField);
             data.stateValue = this.model.get(this.stateField);
             data.countryValue = this.model.get(this.countryField);
-                        
+
+            data.isEmpty = !(data.postalCodeValue ||
+                           data.streetValue ||
+                           data.cityValue ||
+                           data.stateValue ||
+                           data.countryValue);
+
             return data;
         },
-        
-        afterRender: function () {    
+
+        afterRender: function () {
             var self = this;
-                    
-            if (this.mode == 'edit') {            
+
+            if (this.mode == 'edit') {
                 this.$street = this.$el.find('[name="' + this.streetField + '"]');
                 this.$postalCode = this.$el.find('[name="' + this.postalCodeField + '"]');
                 this.$state = this.$el.find('[name="' + this.stateField + '"]');
                 this.$city = this.$el.find('[name="' + this.cityField + '"]');
                 this.$country = this.$el.find('[name="' + this.countryField + '"]');
-                
+
                 this.$street.on('change', function () {
                     self.trigger('change');
                 });
@@ -69,23 +75,23 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
                 this.$country.on('change', function () {
                     self.trigger('change');
                 });
-                
-                this.$street.on('input', function (e) {                
+
+                this.$street.on('input', function (e) {
                     var numberOfLines = e.currentTarget.value.split('\n').length;
                     var numberOfRows = this.$street.prop('rows');
-                
+
                     if (numberOfRows < numberOfLines) {
                         this.$street.prop('rows', numberOfLines);
                     } else if (numberOfRows > numberOfLines) {
                         this.$street.prop('rows', numberOfLines);
                     }
                 }.bind(this));
-                
+
                 var numberOfLines = this.$street.val().split('\n').length;
                 this.$street.prop('rows', numberOfLines);
             }
         },
-        
+
         init: function () {
             this.postalCodeField = this.options.defs.name + 'PostalCode';
             this.streetField = this.options.defs.name + 'Street';
@@ -94,8 +100,8 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
             this.countryField = this.options.defs.name + 'Country';
             Dep.prototype.init.call(this);
         },
-        
-        validateRequired: function () {            
+
+        validateRequired: function () {
             var validate = function (name) {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === '') {
@@ -104,26 +110,26 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
                         return true;
                     }
                 }
-            }.bind(this);                
-            
-            var result = false;                
+            }.bind(this);
+
+            var result = false;
             result = validate(this.postalCodeField) || result;
             result = validate(this.streetField) || result;
             result = validate(this.stateField) || result;
             result = validate(this.cityField) || result;
-            result = validate(this.countryField) || result;                
+            result = validate(this.countryField) || result;
             return result;
         },
-        
+
         isRequired: function () {
-            return this.model.getFieldParam(this.postalCodeField, 'required') || 
+            return this.model.getFieldParam(this.postalCodeField, 'required') ||
                    this.model.getFieldParam(this.streetField, 'required') ||
                    this.model.getFieldParam(this.stateField, 'required') ||
                    this.model.getFieldParam(this.cityField, 'required');
                    this.model.getFieldParam(this.countryField, 'required');
         },
-        
-        fetch: function () {            
+
+        fetch: function () {
             var data = {};
             data[this.postalCodeField] = this.$postalCode.val();
             data[this.streetField] = this.$street.val();
@@ -132,8 +138,8 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
             data[this.countryField] = this.$country.val();
             return data;
         },
-        
-        fetchSearch: function () {            
+
+        fetchSearch: function () {
             var value = this.$el.find('[name="'+this.name+'"]').val();
             if (value) {
                 var data = {

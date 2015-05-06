@@ -17,31 +17,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Modals.SelectFolder', 'Views.Modal', function (Dep) {
+Espo.define('Views.InboundEmail.Modals.SelectFolder', 'Views.Modal', function (Dep) {
 
     return Dep.extend({
-    
+
         cssName: 'select-folder-modal',
-        
-        template: 'crm:inbound-email.modals.select-folder',
-        
+
+        template: 'inbound-email.modals.select-folder',
+
         data: function () {
             return {
                 folders: this.options.folders,
             };
         },
-        
+
         events: {
             'click button[data-action="select"]': function (e) {
                 var value = $(e.currentTarget).data('value');
                 this.trigger('select', value);
             },
         },
-        
+
         setup: function () {
-                    
+
             this.buttons = [
                 {
                     name: 'cancel',
@@ -49,8 +49,8 @@ Espo.define('Crm:Views.InboundEmail.Modals.SelectFolder', 'Views.Modal', functio
                     onClick: function (dialog) {
                         dialog.close();
                     }
-                } 
-            ];            
+                }
+            ];
 
         },
 

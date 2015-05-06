@@ -29,5 +29,13 @@
         "create": false
       }
    },
-   "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy"],
+   "additionalLayouts": {
+      "detailConvert": {
+         "type": "detail"
+      },
+      "listForAccount": {
+         "type": "listSmall"
+      }
+   }
 }

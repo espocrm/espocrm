@@ -12,6 +12,7 @@
         "ExternalAccount": "External Account",
         "Extension": "Extension",
         "Dashboard": "Dashboard",
+        "InboundEmail": "Inbound Email Account",
         "Stream": "Stream",
         "Import": "Import"
     },
@@ -28,6 +29,7 @@
         "ExternalAccount": "External Accounts",
         "Extension": "Extensions",
         "Dashboard": "Dashboard",
+        "InboundEmail": "Inbound Email Accounts",
         "Stream": "Stream",
         "Import": "Import Results"
     },

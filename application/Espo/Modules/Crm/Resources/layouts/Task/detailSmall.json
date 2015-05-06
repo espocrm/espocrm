@@ -8,7 +8,8 @@
 			[{"name":"dateStart"}],
 			[{"name":"dateEnd"}],
 			[{"name":"parent"}],
-			[{"name":"description"}]
+			[{"name":"description"}],
+			[{"name":"attachments"}]
 		]
 	}
 ]

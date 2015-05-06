@@ -31,5 +31,10 @@
          "style": "success"
       }
    ],
-    "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy"],
+   "additionalLayouts": {
+      "detailConvert": {
+         "type": "detail"
+      }
+   }
 }

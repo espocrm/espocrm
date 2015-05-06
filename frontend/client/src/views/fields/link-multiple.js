@@ -224,7 +224,10 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                 this.ids.forEach(function (id) {
                     names.push(this.getDetailLinkHtml(id));
                 }, this);
-                return '<div>' + names.join('</div><div>') + '</div>';
+                if (names.length) {
+                    return '<div>' + names.join('</div><div>') + '</div>';
+                }
+                return;
             }
         },
 

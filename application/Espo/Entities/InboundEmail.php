@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,13 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Fields.TestConnection', 'Views.EmailAccount.Fields.TestConnection', function (Dep) {
+namespace Espo\Entities;
 
-    return Dep.extend({
+class InboundEmail extends \Espo\Core\ORM\Entity
+{
 
-        url: 'InboundEmail/action/testConnection',
-
-     });
-
-});
-
+}

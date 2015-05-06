@@ -31,7 +31,7 @@
             "type": "varchar",
             "required": true,
             "default": "INBOX",
-            "view": "Crm:InboundEmail.Fields.Folders"
+            "view": "InboundEmail.Fields.Folders"
         },
         "fetchData": {
             "type": "text",
@@ -57,7 +57,7 @@
         },
         "targetUserPosition": {
             "type": "enum",
-            "view": "Crm:InboundEmail.Fields.TargetUserPosition",
+            "view": "InboundEmail.Fields.TargetUserPosition",
             "tooltip": true
         },
         "reply": {

@@ -31,8 +31,11 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
         height: 250,
 
+        rowsDefault: 10,
+
         setup: function () {
             Dep.prototype.setup.call(this);
+
 
             this.height = this.params.height || this.height;
             this.toolbar = this.params.toolbar || [
@@ -46,14 +49,21 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
             ];
 
             this.listenTo(this.model, 'change:isHtml', function (model) {
-                if (!model.has('isHtml') || model.get('isHtml')) {
-		            var value = this.plainToHtml(this.model.get(this.name));
-		            this.model.set(this.name, value);
-                    this.enableWysiwygMode();
-                } else {
-		            var value = this.htmlToPlain(this.model.get(this.name));
-		            this.model.set(this.name, value);
-                    this.disableWysiwygMode();
+                if (this.mode == 'edit') {
+                    if (!model.has('isHtml') || model.get('isHtml')) {
+    		            var value = this.plainToHtml(this.model.get(this.name));
+    		            this.model.set(this.name, value);
+                        this.enableWysiwygMode();
+                    } else {
+    		            var value = this.htmlToPlain(this.model.get(this.name));
+    		            this.model.set(this.name, value);
+                        this.disableWysiwygMode();
+                    }
+                }
+                if (this.mode == 'detail') {
+                    if (this.isRendered()) {
+                        this.render();
+                    }
                 }
             }.bind(this));
 

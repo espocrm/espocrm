@@ -31,7 +31,7 @@ class EmailAccount extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->getFolders(array(
             'host' => $request->get('host'),
             'port' => $request->get('port'),
-            'ssl' => $request->get('ssl'),
+            'ssl' => $request->get('ssl') === 'true',
             'username' => $request->get('username'),
             'password' => $request->get('password'),
             'id' => $request->get('id')

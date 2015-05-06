@@ -19,19 +19,22 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.InboundEmail.Record.List', 'Views.Record.List', function (Dep) {
+Espo.define('Views.InboundEmail.Fields.Folders', 'Views.InboundEmail.Fields.Folder', function (Dep) {
 
     return Dep.extend({
 
-    	quickDetailDisabled: true,
+        addFolder: function (folder) {
+            var value = this.$element.val();
 
-        quickEditDisabled: true,
+            var folders = [];
+            if (value != '') {
+                folders = value.split(',');
+            }
 
-        massActionList: ['remove'],
-
-        checkAllResultDisabled: true
-
+            if (!~folders.indexOf(folder)) {
+                folders.push(folder);
+            }
+            this.$element.val(folders.join(','));
+        },
     });
-
 });
-

@@ -20,7 +20,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+namespace Espo\Controllers;
 
 class InboundEmail extends \Espo\Core\Controllers\Record
 {
@@ -36,7 +36,7 @@ class InboundEmail extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->getFolders(array(
             'host' => $request->get('host'),
             'port' => $request->get('port'),
-            'ssl' => $request->get('ssl'),
+            'ssl' => $request->get('ssl') === 'true',
             'username' => $request->get('username'),
             'password' => $request->get('password'),
             'id' => $request->get('id')
