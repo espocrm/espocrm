@@ -59,18 +59,35 @@ Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
                 return v1.localeCompare(v2);
             }.bind(this));
 
+            var scopeListSorted = [];
+
             scopeList.forEach(function (scope) {
                 var d = this.getMetadata().get('scopes.' + scope);
-                if (d.entity) {
-                    this.scopeDataList.push({
-                        name: scope,
-                        isCustom: d.isCustom,
-                        customizable: d.customizable,
-                        type: d.type,
-                        label: this.getLanguage().translate(scope, 'scopeNames')
-                    });
-
+                if (d.entity && d.customizable) {
+                    scopeListSorted.push(scope);
                 }
+            }, this);
+            scopeList.forEach(function (scope) {
+                var d = this.getMetadata().get('scopes.' + scope);
+                if (d.entity && !d.customizable) {
+                    scopeListSorted.push(scope);
+                }
+            }, this);
+
+            scopeList = scopeListSorted;
+
+            scopeList.forEach(function (scope) {
+                var d = this.getMetadata().get('scopes.' + scope);
+
+                this.scopeDataList.push({
+                    name: scope,
+                    isCustom: d.isCustom,
+                    customizable: d.customizable,
+                    type: d.type,
+                    label: this.getLanguage().translate(scope, 'scopeNames'),
+                    layouts: d.layouts
+                });
+
             }, this);
         },
 
