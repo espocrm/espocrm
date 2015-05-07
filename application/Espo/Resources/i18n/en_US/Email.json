@@ -17,7 +17,8 @@
         "toEmailAddresses": "To Address",
         "emailAddress": "Email Address",
         "deliveryDate": "Delivery Date",
-        "account": "Account"
+        "account": "Account",
+        "users": "Users"
     },
     "links": {
     },

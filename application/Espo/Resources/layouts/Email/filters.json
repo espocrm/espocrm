@@ -4,5 +4,6 @@
     "emailAddress",
     "status",
     "parent",
-    "teams"
+    "teams",
+    "users"
 ]
