@@ -11,12 +11,14 @@
             "style": {
                 "Completed": "success"
             },
-            "default": "Not Started"
+            "default": "Not Started",
+            "audited": true
         },
         "priority": {
             "type": "enum",
             "options": ["Low", "Normal", "High", "Urgent"],
-            "default": "Normal"
+            "default": "Normal",
+            "audited": true
         },
         "dateStart": {
             "type": "datetime",
@@ -26,7 +28,8 @@
         "dateEnd": {
             "type": "datetime",
             "after": "dateStart",
-            "view": "Crm:Task.Fields.DateEnd"
+            "view": "Crm:Task.Fields.DateEnd",
+            "audited": true
         },
         "dateStartDate": {
             "type": "date",

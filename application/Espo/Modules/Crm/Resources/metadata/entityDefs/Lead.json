@@ -31,7 +31,8 @@
                 "Converted": "success",
                 "Recycled": "danger",
                 "Dead": "danger"
-            }
+            },
+            "audited": true
         },
         "source": {
             "type": "enum",

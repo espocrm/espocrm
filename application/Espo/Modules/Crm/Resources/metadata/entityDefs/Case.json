@@ -17,7 +17,8 @@
                 "Closed": "success",
                 "Duplicate": "danger",
                 "Rejected": "danger"
-            }
+            },
+            "audited": true
         },
         "priority": {
             "type": "enum",

@@ -43,7 +43,8 @@
             "type": "enum",
             "options": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis", "Proposal/Price Quote", "Negotiation/Review", "Closed Won", "Closed Lost"],
             "view": "Crm:Opportunity.Fields.Stage",
-            "default": "Prospecting"
+            "default": "Prospecting",
+            "audited": true
         },
         "probability": {
             "type": "int",

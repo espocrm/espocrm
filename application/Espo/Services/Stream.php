@@ -678,14 +678,20 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getAuditedFields(Entity $entity)
     {
-        $entityName = $entity->getEntityName();
+        $entityType = $entity->getEntityType();
 
-        if (!array_key_exists($entityName, $this->auditedFieldsCache)) {
-            $fields = $this->getMetadata()->get('entityDefs.' . $entityName . '.fields');
+        $statusFields = $this->getStatusFields();
+
+        if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
+            $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
             $auditedFields = array();
             foreach ($fields as $field => $d) {
                 if (!empty($d['audited'])) {
-                    $attributes = array();
+                    if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
+                        continue;
+                    }
+
+                    $attributes = [];
                     $fieldsDefs = $this->getMetadata()->get('fields.' . $d['type']);
 
                     if (empty($fieldsDefs['actualFields'])) {
@@ -703,10 +709,10 @@ class Stream extends \Espo\Core\Services\Base
                     $auditedFields[$field] = $attributes;
                 }
             }
-            $this->auditedFieldsCache[$entityName] = $auditedFields;
+            $this->auditedFieldsCache[$entityType] = $auditedFields;
         }
 
-        return $this->auditedFieldsCache[$entityName];
+        return $this->auditedFieldsCache[$entityType];
     }
 
     public function handleAudited($entity)
@@ -721,7 +727,6 @@ class Stream extends \Espo\Core\Services\Base
             $updated = false;
             foreach ($attrs as $attr) {
                 if ($entity->get($attr) != $entity->getFetched($attr)) {
-
                     $updated = true;
                 }
             }

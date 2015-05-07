@@ -11,12 +11,14 @@
             "view": "Fields.EnumStyled",
             "style": {
                 "Held": "success"
-            }
+            },
+            "audited": true
         },
         "dateStart": {
             "type": "datetime",
             "required": true,
-            "default": "javascript: return this.dateTime.getNow(15);"
+            "default": "javascript: return this.dateTime.getNow(15);",
+            "audited": true
         },
         "dateEnd": {
             "type": "datetime",
