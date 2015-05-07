@@ -17,12 +17,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-    
+ ************************************************************************/
+
 Espo.define('Crm:Views.Task.Detail', 'Views.Detail', function (Dep) {
 
     return Dep.extend({
-    
+
         setup: function () {
             Dep.prototype.setup.call(this);
             if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
@@ -34,12 +34,17 @@ Espo.define('Crm:Views.Task.Detail', 'Views.Detail', function (Dep) {
                         'acl': 'edit',
                     });
                 }
+                this.listenToOnce(this.model, 'sync', function () {
+                    if (~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
+                        this.$el.find('[data-action="setCompleted"]').remove();
+                    }
+                }, this);
             }
         },
-    
+
         actionSetCompleted: function (data) {
             var id = data.id;
-            
+
             this.model.save({
                 status: 'Completed'
             }, {
@@ -48,10 +53,10 @@ Espo.define('Crm:Views.Task.Detail', 'Views.Detail', function (Dep) {
                     Espo.Ui.success(this.translate('Saved'));
                     this.$el.find('[data-action="setCompleted"]').remove();
                 }.bind(this),
-            });        
-            
+            });
+
         },
-    
+
     });
-    
+
 });
