@@ -50,7 +50,8 @@
         "assignmentEmailNotifications": "Send Email Notifications upon Assignment",
         "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
         "b2cMode": "B2C Mode",
-        "disableAvatars": "Disable Avatars"
+        "disableAvatars": "Disable Avatars",
+        "followCreatedEntities": "Follow Created Entities"
     },
     "options": {
         "weekStart": {
@@ -60,7 +61,8 @@
     },
     "tooltips": {
         "recordsPerPageSmall": "Count of records in relatinship panels.",
-        "outboundEmailIsShared": "Allow users to sent emails via this SMTP."
+        "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
+        "followCreatedEntities": "If user created a record he/she will follow it automatically."
     },
     "labels": {
         "System": "System",
