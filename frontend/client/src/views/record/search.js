@@ -71,6 +71,10 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
             this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []);
 
+            if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
+                this.boolFilterList.push('followed');
+            }
+
             this._helper.layoutManager.get(this.scope, 'filters', function (list) {
                 this.moreFields = list;
                 this.tryReady();

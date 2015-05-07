@@ -426,6 +426,11 @@ abstract class Base
         return $selectPart;
     }
 
+    public function quote($value)
+    {
+        return $this->pdo->quote($value);
+    }
+
     public function toDb($field)
     {
         if (array_key_exists($field, $this->fieldsMapCache)) {

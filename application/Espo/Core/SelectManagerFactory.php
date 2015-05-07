@@ -44,13 +44,13 @@ class SelectManagerFactory
         $this->metadata = $metadata;
     }
 
-    public function create($entityName)
+    public function create($entityType)
     {
-        $normalizedName = Util::normilizeClassName($entityName);
+        $normalizedName = Util::normilizeClassName($entityType);
 
         $className = '\\Espo\\Custom\\SelectManagers\\' . $normalizedName;
         if (!class_exists($className)) {
-            $moduleName = $this->metadata->getScopeModuleName($entityName);
+            $moduleName = $this->metadata->getScopeModuleName($entityType);
             if ($moduleName) {
                 $className = '\\Espo\\Modules\\' . $moduleName . '\\SelectManagers\\' . $normalizedName;
             } else {
@@ -62,7 +62,7 @@ class SelectManagerFactory
         }
 
         $selectManager = new $className($this->entityManager, $this->user, $this->acl, $this->metadata);
-        $selectManager->setEntityName($entityName);
+        $selectManager->setEntityType($entityType);
 
         return $selectManager;
     }

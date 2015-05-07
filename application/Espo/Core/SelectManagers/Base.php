@@ -36,7 +36,7 @@ class Base
 
     protected $entityManager;
 
-    protected $entityName;
+    protected $entityType;
 
     protected $metadata;
 
@@ -65,9 +65,14 @@ class Base
         return $this->user;
     }
 
-    public function setEntityName($entityName)
+    public function setEntityType($entityType)
     {
-        $this->entityName = $entityName;
+        $this->entityType = $entityType;
+    }
+
+    protected function getEntityType()
+    {
+        return $this->entityType;
     }
 
     protected function limit($params, &$result)
@@ -84,7 +89,7 @@ class Base
     {
         if (!empty($params['sortBy'])) {
             $result['orderBy'] = $params['sortBy'];
-            $type = $this->metadata->get("entityDefs.{$this->entityName}.fields." . $result['orderBy'] . ".type");
+            $type = $this->metadata->get("entityDefs.{$this->entityType}.fields." . $result['orderBy'] . ".type");
             if ($type == 'link') {
                 $result['orderBy'] .= 'Name';
             } else if ($type == 'linkParent') {
@@ -102,13 +107,13 @@ class Base
 
     protected function getTextFilterFields()
     {
-        return $this->metadata->get("entityDefs.{$this->entityName}.collection.textFilterFields", array('name'));
+        return $this->metadata->get("entityDefs.{$this->entityType}.collection.textFilterFields", array('name'));
     }
 
     protected function getSeed()
     {
         if (empty($this->seed)) {
-            $this->seed = $this->entityManager->getEntity($this->entityName);
+            $this->seed = $this->entityManager->getEntity($this->entityType);
         }
         return $this->seed;
     }
@@ -311,10 +316,10 @@ class Base
 
     protected function access(&$result)
     {
-        if ($this->acl->checkReadOnlyOwn($this->entityName)) {
+        if ($this->acl->checkReadOnlyOwn($this->entityType)) {
             $this->accessOnlyOwn($result);
         }
-        if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityName)) {
+        if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityType)) {
             $this->accessOnlyTeam($result);
         }
     }
@@ -658,6 +663,17 @@ class Base
         $result['whereClause'][] = array(
             'assignedUserId' => $this->getUser()->id
         );
+    }
+
+    protected function boolFilterFollowed(&$result)
+    {
+        $query = $this->getEntityManager()->getQuery();
+        $result['customJoin'] .= "
+            JOIN subscription ON
+                subscription.entity_type = ".$query->quote($this->getEntityType())." AND
+                subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
+                subscription.user_id = ".$query->toDb($this->getUser()->id)."
+        ";
     }
 }
 
