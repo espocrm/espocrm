@@ -665,7 +665,7 @@ class Base
         );
     }
 
-    protected function boolFilterFollowed(&$result)
+    protected function filterFollowed(&$result)
     {
         $query = $this->getEntityManager()->getQuery();
         $result['customJoin'] .= "
@@ -674,6 +674,11 @@ class Base
                 subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
                 subscription.user_id = ".$query->toDb($this->getUser()->id)."
         ";
+    }
+
+    protected function boolFilterFollowed(&$result)
+    {
+        $this->filterFollowed($result);
     }
 }
 

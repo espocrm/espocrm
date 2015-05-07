@@ -71,9 +71,6 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
 
             this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []);
 
-            if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
-                this.boolFilterList.push('followed');
-            }
 
             this._helper.layoutManager.get(this.scope, 'filters', function (list) {
                 this.moreFields = list;
@@ -84,6 +81,10 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
                 this.presetFilterList.push(item);
             }, this);
+
+            if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
+                this.presetFilterList.unshift('followed');
+            }
 
             this.loadSearchData();
 

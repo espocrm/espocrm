@@ -192,6 +192,9 @@
         "onlyMy": "Only My",
         "followed": "Followed"
     },
+    "presetFilters": {
+        "followed": "Followed"
+    },
     "massActions": {
         "remove": "Remove",
         "merge": "Merge",
