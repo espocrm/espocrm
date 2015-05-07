@@ -93,41 +93,47 @@
     },
     "statusStyles": {
         "Lead": {
-            "field" : "status",
-            "style" : {
-                "New" : "primary",
-                "Assigned" : "primary",
-                "In Process" : "primary",
-                "Converted" : "success",
-                "Recycled" : "danger",
-                "Dead" : "danger"
-            }
+            "New" : "primary",
+            "Assigned" : "primary",
+            "In Process" : "primary",
+            "Converted" : "success",
+            "Recycled" : "danger",
+            "Dead" : "danger"
         },
-        "Case" : {
-            "field" : "status",
-            "style" : {
-                "New" : "primary",
-                "Assigned" : "primary",
-                "Pending" : "default",
-                "Closed" : "success",
-                "Rejected" : "danger",
-                "Duplicate" : "danger"
-            }
+        "Case": {
+            "New" : "primary",
+            "Assigned" : "primary",
+            "Pending" : "default",
+            "Closed" : "success",
+            "Rejected" : "danger",
+            "Duplicate" : "danger"
         },
-        "Opportunity" : {
-            "field" : "stage",
-            "style" : {
-                "Proposal/Price Quote": "primary",
-                "Negotiation/Review": "primary",
-                "Closed Won" : "success",
-                "Closed Lost" : "danger"
-            }
+        "Opportunity": {
+            "Proposal/Price Quote": "primary",
+            "Negotiation/Review": "primary",
+            "Closed Won" : "success",
+            "Closed Lost" : "danger"
+        },
+        "Task": {
+            "Completed": "success",
+            "Started" : "primary",
+            "Canceled" : "danger"
+        },
+        "Meeting": {
+            "Held": "success"
+        },
+        "Call": {
+        	"Held": "success"
         }
     },
     "statusFields": {
         "Lead": "status",
         "Case": "status",
-        "Opportunity": "stage"
+        "Opportunity": "stage",
+        "Task": "status",
+        "Meeting": "status",
+        "Call": "status",
+        "Campaign": "status"
     },
     "indexes": {
         "createdAt": {

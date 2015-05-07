@@ -29,7 +29,9 @@ use Espo\ORM\Entity;
 
 class Stream extends \Espo\Core\Services\Base
 {
-    protected $statusDefs = null;
+    protected $statusStyles = null;
+
+    protected $statusFields = null;
 
     protected $dependencies = array(
         'entityManager',
@@ -69,12 +71,20 @@ class Stream extends \Espo\Core\Services\Base
         return $this->notificationService;
     }
 
-    protected function getStatusDefs()
+    protected function getStatusStyles()
     {
-        if (empty($this->statusDefs)) {
-            $this->statusDefs = $this->getMetadata()->get('entityDefs.Note.statusStyles', array());
+        if (empty($this->statusStyles)) {
+            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', array());
         }
-        return $this->statusDefs;
+        return $this->statusStyles;
+    }
+
+    protected function getStatusFields()
+    {
+        if (empty($this->statusFields)) {
+            $this->statusFields = $this->getMetadata()->get('entityDefs.Note.statusFields', array());
+        }
+        return $this->statusFields;
     }
 
     public function afterRecordCreatedJob($data)
@@ -542,13 +552,13 @@ class Stream extends \Espo\Core\Services\Base
 
     public function noteCreate(Entity $entity)
     {
-        $entityName = $entity->getEntityName();
+        $entityType = $entity->getEntityType();
 
         $note = $this->getEntityManager()->getEntity('Note');
 
         $note->set('type', 'Create');
         $note->set('parentId', $entity->id);
-        $note->set('parentType', $entityName);
+        $note->set('parentType', $entityType);
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
             $note->set('superParentId', $entity->get('accountId'));
@@ -565,15 +575,16 @@ class Stream extends \Espo\Core\Services\Base
             $data['assignedUserName'] = $entity->get('assignedUserName');
         }
 
-        $statusDefs = $this->getStatusDefs();
+        $statusStyles = $this->getStatusStyles();
+        $statusFields = $this->getStatusFields();
 
-        if (array_key_exists($entityName, $statusDefs)) {
-            $field = $statusDefs[$entityName]['field'];
+        if (!empty($statusFields[$entityType])) {
+            $field = $statusFields[$entityType];
             $value = $entity->get($field);
             if (!empty($value)) {
                 $style = 'default';
-                if (!empty($statusDefs[$entityName]['style'][$value])) {
-                    $style = $statusDefs[$entityName]['style'][$value];
+                if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
+                    $style = $statusStyles[$entityType][$value];
                 }
                 $data['statusValue'] = $value;
                 $data['statusField'] = $field;
@@ -647,13 +658,13 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $style = 'default';
-        $entityName = $entity->getEntityName();
+        $entityType = $entity->getEntityType();
         $value = $entity->get($field);
 
-        $statusDefs = $this->getStatusDefs();
+        $statusStyles = $this->getStatusStyles();
 
-        if (!empty($statusDefs[$entityName]) && !empty($statusDefs[$entityName]['style'][$value])) {
-            $style = $statusDefs[$entityName]['style'][$value];
+        if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
+            $style = $statusStyles[$entityType][$value];
         }
 
         $note->set('data', array(
