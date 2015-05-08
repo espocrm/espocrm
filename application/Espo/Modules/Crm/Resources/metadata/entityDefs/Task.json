@@ -21,12 +21,11 @@
             "audited": true
         },
         "dateStart": {
-            "type": "datetime",
-            "before": "dateEnd",
-            "view": "Fields.DatetimeOptional"
+            "type": "datetimeOptional",
+            "before": "dateEnd"
         },
         "dateEnd": {
-            "type": "datetime",
+            "type": "datetimeOptional",
             "after": "dateStart",
             "view": "Crm:Task.Fields.DateEnd",
             "audited": true

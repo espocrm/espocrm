@@ -68,6 +68,7 @@
         "currency": "Currency",
         "date": "Date",
         "datetime": "DateTime",
+        "datetimeOptional": "Date/DateTime",
         "email": "Email",
         "enum": "Enum",
         "enumInt": "Enum Integer",

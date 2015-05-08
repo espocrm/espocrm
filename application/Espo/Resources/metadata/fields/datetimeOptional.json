@@ -1,0 +1,32 @@
+{
+   "params":[
+      {
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name":"default",
+         "type":"varchar"
+      },
+      {
+         "name":"after",
+         "type":"varchar"
+      },
+      {
+         "name":"before",
+         "type":"varchar"
+      }
+   ],
+   "actualFields":[
+      "",
+      "date"
+   ],
+   "filter": true,
+   "notCreatable": true,
+   "fieldDefs":{
+      "type":"datetime",
+      "notNull":false
+   },
+   "view": "Fields.DatetimeOptional"
+}

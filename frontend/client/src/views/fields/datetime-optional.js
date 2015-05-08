@@ -23,6 +23,8 @@ Espo.define('Views.Fields.DatetimeOptional', 'Views.Fields.Datetime', function (
 
     return Dep.extend({
 
+        type: "datetimeOptional",
+
         setup: function () {
             this.noneOption = this.translate('None');
             this.nameDate = this.name + 'Date';

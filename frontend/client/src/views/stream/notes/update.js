@@ -75,7 +75,8 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
 
                 fields.forEach(function (field) {
                     var type = model.getFieldType(field) || 'base';
-                    this.createView(field + 'Was', this.getFieldManager().getViewName(type), {
+                    var viewName = this.getMetadata().get('entityDefs.' + model.name + '.fields.' + field + '.view') || this.getFieldManager().getViewName(type);
+                    this.createView(field + 'Was', viewName, {
                         model: modelWas,
                         readOnly: true,
                         defs: {
@@ -83,7 +84,7 @@ Espo.define('Views.Stream.Notes.Update', 'Views.Stream.Note', function (Dep) {
                         },
                         mode: 'list'
                     });
-                    this.createView(field + 'Became', this.getFieldManager().getViewName(type), {
+                    this.createView(field + 'Became', viewName, {
                         model: modelBecame,
                         readOnly: true,
                         defs: {
