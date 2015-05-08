@@ -4,13 +4,20 @@
             "type": "text"
         },
         "data": {
-            "type": "jsonObject"
+            "type": "jsonObject",
+            "readOnly": true
         },
         "type": {
-            "type": "varchar"
+            "type": "varchar",
+            "readOnly": true
         },
         "parent": {
-            "type": "linkParent"
+            "type": "linkParent",
+            "readOnly": true
+        },
+        "related": {
+            "type": "linkParent",
+            "readOnly": true
         },
         "attachments": {
             "type": "linkMultiple",
@@ -18,7 +25,8 @@
         },
         "number": {
             "type": "autoincrement",
-            "index": true
+            "index": true,
+            "readOnly": true
         },
         "createdAt": {
             "type": "datetime",
@@ -57,6 +65,9 @@
             "foreign": "notes"
         },
         "superParent": {
+            "type": "belongsToParent"
+        },
+        "related": {
             "type": "belongsToParent"
         }
     },

@@ -29,10 +29,6 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
 
         data: function () {
             return _.extend({
-                entityType: this.entityType,
-                entityId: this.entityId,
-                entityName: this.entityName,
-                action: this.action,
                 relatedTypeString: this.translate(this.entityType, 'scopeNames').toLowerCase()
             }, Dep.prototype.data.call(this));
         },
@@ -45,17 +41,14 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
         },
 
         setup: function () {
-            if (this.model.get('data')) {
-                var data = this.model.get('data');
+            var data = this.model.get('data') || {};
 
-                this.entityType = data.entityType || null;
-                this.entityId = data.entityId || null;
-                this.entityName = data.entityName || null;
-                this.action = data.action || null;
+            this.entityType = this.model.get('relatedType') || data.entityType || null;
+            this.entityId = this.model.get('relatedId') || data.entityId || null;
+            this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
-                this.messageData['relatedEntityType'] = this.translate(this.entityType, 'scopeNames').toLowerCase();
-                this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
-            }
+            this.messageData['relatedEntityType'] = this.translate(this.entityType, 'scopeNames').toLowerCase();
+            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
 
             this.createMessage();
         },

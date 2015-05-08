@@ -279,6 +279,8 @@ class Stream extends \Espo\Core\Services\Base
 		        		note.data AS 'data',
 		        		note.parent_type AS 'parentType',
 		        		note.parent_id AS 'parentId',
+                        note.related_type AS 'relatedType',
+                        note.related_id AS 'relatedId',
 		        		note.created_at AS 'createdAt',
 		        		note.created_by_id AS 'createdById',
 		        		TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
@@ -305,6 +307,8 @@ class Stream extends \Espo\Core\Services\Base
 		        		note.data AS 'data',
 		        		note.parent_type AS 'parentType',
 		        		note.parent_id AS 'parentId',
+                        note.related_type AS 'relatedType',
+                        note.related_id AS 'relatedId',
 		        		note.created_at AS 'createdAt',
 		        		note.created_by_id AS 'createdById',
 		        		TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
@@ -355,6 +359,12 @@ class Stream extends \Espo\Core\Services\Base
                 $entity = $this->getEntityManager()->getEntity($e->get('parentType'), $e->get('parentId'));
                 if ($entity) {
                     $e->set('parentName', $entity->get('name'));
+                }
+            }
+            if ($e->get('relatedId') && $e->get('relatedType')) {
+                $entity = $this->getEntityManager()->getEntity($e->get('relatedType'), $e->get('relatedId'));
+                if ($entity) {
+                    $e->set('relatedName', $entity->get('name'));
                 }
             }
         }
@@ -427,7 +437,12 @@ class Stream extends \Espo\Core\Services\Base
                         $e->set('parentName', $parent->get('name'));
                     }
                 }
-
+            }
+            if ($e->get('relatedId') && $e->get('relatedType')) {
+                $entity = $this->getEntityManager()->getEntity($e->get('relatedType'), $e->get('relatedId'));
+                if ($entity) {
+                    $e->set('relatedName', $entity->get('name'));
+                }
             }
 
         }
@@ -575,13 +590,13 @@ class Stream extends \Espo\Core\Services\Base
             $data['assignedUserName'] = $entity->get('assignedUserName');
         }
 
-        $statusStyles = $this->getStatusStyles();
         $statusFields = $this->getStatusFields();
 
         if (!empty($statusFields[$entityType])) {
             $field = $statusFields[$entityType];
             $value = $entity->get($field);
             if (!empty($value)) {
+                $statusStyles = $this->getStatusStyles();
                 $style = 'default';
                 if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
                     $style = $statusStyles[$entityType][$value];
@@ -597,25 +612,24 @@ class Stream extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function noteCreateRelated(Entity $entity, $entityType, $id, $action = 'created')
+    public function noteCreateRelated(Entity $entity, $parentType, $parentId)
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
+        $entityType = $entity->getEntityType();
+
         $note->set('type', 'CreateRelated');
-        $note->set('parentId', $id);
-        $note->set('parentType', $entityType);
+        $note->set('parentId', $parentId);
+        $note->set('parentType', $parentType);
+        $note->set(array(
+            'relatedType' => $entityType,
+            'relatedId' => $entity->id,
+        ));
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
             $note->set('superParentId', $entity->get('accountId'));
             $note->set('superParentType', 'Account');
         }
-
-        $note->set('data', array(
-            'action' => $action,
-            'entityType' => $entity->getEntityName(),
-            'entityId' => $entity->id,
-            'entityName' => $entity->get('name')
-        ));
 
         $this->getEntityManager()->saveEntity($note);
     }
