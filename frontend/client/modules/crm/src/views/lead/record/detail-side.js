@@ -24,8 +24,8 @@ Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', funct
     return Dep.extend({
 
         setupPanels: function () {
-            if (this.model.get('status') == 'Converted') {
-                var panel = {
+
+                /*var panel = {
                     name: 'convertedTo',
                     label: 'Converted To',
                     view: 'Record.Panels.Side',
@@ -36,20 +36,20 @@ Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', funct
                     }
                 };
 
-                if (this.model.get('createdAccountId')) {
-                    panel.options.fieldList.push('createdAccount');
-                }
-                if (this.model.get('createdContactId')) {
-                    panel.options.fieldList.push('createdContact');
-                }
-                if (this.model.get('createdOpportunityId')) {
-                    panel.options.fieldList.push('createdOpportunity');
-                }
-                if (panel.options.fieldList.length) {
-                    this.panels = Espo.Utils.clone(this.panels);
-                    this.panels.splice(1, 0, panel);
-                }
-            }
+
+                panel.options.fieldList.push('createdAccount');
+
+
+                panel.options.fieldList.push('createdContact');
+
+
+                panel.options.fieldList.push('createdOpportunity');
+
+
+                this.panels = Espo.Utils.clone(this.panels);
+                this.panels.splice(1, 0, panel);*/
+
+
         }
 
     });

@@ -6,8 +6,36 @@
    "recordViews":{
       "detail":"Crm:Lead.Record.Detail"
    },
+   "formDependency": {
+      "status": {
+         "map": {
+            "Converted" : [
+               {
+                  "action": "show",
+                  "panels": ["convertedTo"]
+               }
+            ]
+         },
+         "default": [
+            {
+               "action": "hide",
+               "panels": ["convertedTo"]
+            }
+         ]
+      }
+   },
    "sidePanels":{
       "detail":[
+         {
+            "name":"convertedTo",
+            "label":"Converted To",
+            "view": "Record.Panels.Side",
+            "notRefreshable": true,
+            "hidden": true,
+            "options": {
+               "fieldList": ["createdAccount", "createdContact", "createdOpportunity"]
+            }
+         },
          {
             "name":"activities",
             "label":"Activities",

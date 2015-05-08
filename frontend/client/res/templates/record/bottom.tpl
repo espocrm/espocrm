@@ -1,5 +1,5 @@
 {{#each panels}}
-    <div class="panel panel-default panel-{{name}}" data-panel-name="{{name}}">
+    <div class="panel panel-default panel-{{name}}{{#if hidden}} hidden{{/if}}" data-panel-name="{{name}}">
         <div class="panel-heading">
             <div class="pull-right btn-group">
                 {{#if buttons}}

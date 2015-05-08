@@ -120,20 +120,17 @@
         "createdAccount": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "layoutMassUpdateDisabled": true
         },
         "createdContact": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "layoutMassUpdateDisabled": true
         },
         "createdOpportunity": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "layoutMassUpdateDisabled": true
         },
         "targetLists": {
             "type": "linkMultiple",
