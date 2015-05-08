@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Site.Master', 'View', function (Dep) {
-    
+
     return Dep.extend({
-    
+
         template: 'site.master',
-    
+
         views: {
             header: {
                 id: 'header',
@@ -43,12 +43,22 @@ Espo.define('Views.Site.Master', 'View', function (Dep) {
         el: 'body',
 
         showLoadingNotification: function () {
-            this.notify('Loading...');            
+            this.notify('Loading...');
         },
-    
+
         hideLoadingNotification: function () {
             this.notify(false);
-        }        
+        },
+
+        afterRender: function () {
+            var footerView = this.getView('footer');
+            if (footerView) {
+                var html = footerView.$el.html();
+                if (!~html.toLowerCase().indexOf('espocrm')) {
+                    footerView.$el.html('<p class="credit small">EspoCRM</p>');
+                }
+            }
+        },
     });
 });
 
