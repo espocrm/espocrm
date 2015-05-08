@@ -22,6 +22,12 @@
       "",
       "date"
    ],
+   "fields":{
+      "date": {
+         "type": "date",
+         "disabled": true
+      }
+   },
    "filter": true,
    "notCreatable": true,
    "fieldDefs":{
