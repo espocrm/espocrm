@@ -6,6 +6,13 @@ It's a web application with a frontend designed as a single page application bas
 
 Download the latest release from our [website](http://www.espocrm.com).
 
+### Requirements
+
+* PHP 5.4 or above (with pdo, json, gd, mcrypt extensions);
+* MySQL 5.1 or above.
+
+For more information about server configuration see [this article](http://blog.espocrm.com/administration/server-configuration-for-espocrm/).
+
 ### How to report bug
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/bug-reports?routestring=forum/bug-reports).
