@@ -57,7 +57,7 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode == 'edit') {
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
                 this.$element.val(this.selected.join(','));
 

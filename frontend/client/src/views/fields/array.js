@@ -31,6 +31,8 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 
         editTemplate: 'fields.array.edit',
 
+        searchTemplate: 'fields.array.search',
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -120,7 +122,7 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode == 'edit') {
                 this.$list = this.$el.find('.list-group');
                 var $select = this.$select = this.$el.find('.select');
 
@@ -213,8 +215,13 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
         fetchSearch: function () {
             var field = this.name;
             var arr = [];
+            var af = [];
             $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
-                arr.push( {type: 'like', field: field, value: "%" + $(el).val() + "%"} );
+                var value = $(el).val();
+                arr.push({
+                    type: 'like', field: field, value: "%" + value + "%"
+                });
+                af.push(value);
             });
 
             if (arr.length == 0) {
@@ -223,7 +230,8 @@ Espo.define('Views.Fields.Array', 'Views.Fields.Enum', function (Dep) {
 
             var data = {
                 type: 'or',
-                value: arr
+                value: arr,
+                valueFront: af
             };
             return data;
         },
