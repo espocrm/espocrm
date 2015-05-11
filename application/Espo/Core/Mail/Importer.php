@@ -95,7 +95,6 @@ class Importer
             }
 
             if ($duplicate = $this->findDuplicate($email)) {
-                //$this->getEntityManager()->getRepository('Email')->relate($duplicate, 'users', $userId);
             	$duplicate->loadLinkMultipleField('users');
             	$usersIds = $duplicate->get('usersIds');
             	$usersIds[] = $userId;
