@@ -193,6 +193,16 @@ class EntityManager
             $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
         }
 
+        if (isset($data['sortBy'])) {
+            $entityDefsData = array(
+                'collection' => array(
+                    'sortBy' => $data['sortBy'],
+                    'asc' => !empty($data['asc'])
+                )
+            );
+            $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
         $this->getMetadata()->save();
         $this->getLanguage()->save();
 

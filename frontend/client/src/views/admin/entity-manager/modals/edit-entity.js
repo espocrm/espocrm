@@ -70,6 +70,9 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
                 this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
                 this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
+
+                this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
+                this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
             }
 
             this.createView('type', 'Fields.Enum', {
@@ -131,6 +134,46 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                     }
                 }
             });
+
+            if (scope) {
+                var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {}
+                var orderableFieldList = Object.keys(fieldDefs).filter(function (item) {
+                    if (fieldDefs[item].notStorable) {
+                        return false;
+                    }
+                    return true;
+                }, this);
+
+                var translatedOptions = {};
+                orderableFieldList.forEach(function (item) {
+                    translatedOptions[item] = this.translate(item, 'fields', scope);
+                }, this);
+
+                this.createView('sortBy', 'Fields.Enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field-sortBy',
+                    defs: {
+                        name: 'sortBy',
+                        params: {
+                            options: orderableFieldList,
+                            translatedOptions: translatedOptions
+                        }
+                    }
+                });
+
+                this.createView('sortDirection', 'Fields.Enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field-sortDirection',
+                    defs: {
+                        name: 'sortDirection',
+                        params: {
+                            options: ['asc', 'desc']
+                        }
+                    }
+                });
+            }
         },
 
         afterRender: function () {
@@ -162,6 +205,11 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
                 'stream'
             ];
 
+            if (this.scope) {
+                arr.push('sortBy');
+                arr.push('sortDirection');
+            }
+
             var notValid = false;
 
             arr.forEach(function (item) {
@@ -189,16 +237,23 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
 
             var name = this.model.get('name');
 
+            var data = {
+                name: name,
+                labelSingular: this.model.get('labelSingular'),
+                labelPlural: this.model.get('labelPlural'),
+                type: this.model.get('type'),
+                stream: this.model.get('stream')
+            };
+
+            if (this.scope) {
+                data.sortBy = this.model.get('sortBy');
+                data.sortDirection = this.model.get('sortDirection');
+            }
+
             $.ajax({
                 url: url,
                 type: 'POST',
-                data: JSON.stringify({
-                    name: name,
-                    labelSingular: this.model.get('labelSingular'),
-                    labelPlural: this.model.get('labelPlural'),
-                    type: this.model.get('type'),
-                    stream: this.model.get('stream')
-                }),
+                data: JSON.stringify(data),
                 error: function () {
                     this.$el.find('button[data-name="save"]').removeClass('disabled');
                 }.bind(this)

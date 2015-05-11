@@ -14,7 +14,9 @@
         "entityForeign": "Foreign Entity",
         "linkForeign": "Foreign Link",
         "link": "Link",
-        "labelForeign": "Foreign Label"
+        "labelForeign": "Foreign Label",
+        "sortBy": "Default Order (field)",
+        "sortDirection": "Default Order (direction)"
     },
     "options": {
         "type": {
@@ -29,6 +31,10 @@
             "manyToOne": "Many-to-One",
             "parentToChildren": "Parent-to-Children",
             "childrenToParent": "Children-to-Parent"
+        },
+        "sortDirection": {
+            "asc": "Ascending",
+            "desc": "Descending"
         }
     },
     "messages": {
