@@ -143,6 +143,18 @@
             return fields;
         },
 
+        fetch: function () {
+            var data = {};
+
+            this.panels.forEach(function (p) {
+                var panel = this.getView(p.name);
+                if ('fetch' in panel) {
+                    data = _.extend(data, panel.fetch());
+                }
+            }, this);
+            return data;
+        },
+
         filterActions: function (actions) {
             var filtered = [];
             actions.forEach(function (item) {

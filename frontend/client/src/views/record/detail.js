@@ -196,6 +196,17 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             }
         },
 
+        fetch: function () {
+            var data = Dep.prototype.fetch.call(this);
+            if (this.hasView('side')) {
+                data = _.extend(data, this.getView('side').fetch());
+            }
+            if (this.hasView('bottom')) {
+                data = _.extend(data, this.getView('bottom').fetch());
+            }
+            return data;
+        },
+
         setEditMode: function () {
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
@@ -262,6 +273,9 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             var fields = _.clone(this.getView('record').nestedViews);
             if (this.hasView('side')) {
                 _.extend(fields, this.getView('side').getFields());
+            }
+            if (this.hasView('bottom')) {
+                _.extend(fields, this.getView('bottom').getFields());
             }
             return fields;
         },

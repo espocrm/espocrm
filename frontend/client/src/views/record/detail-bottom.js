@@ -58,7 +58,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
             var panels = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 
             if (this.mode == 'detail' && this.getMetadata().get('scopes.' + scope + '.stream')) {
-                panels.unshift({
+                panels.push({
                     "name":"stream",
                     "label":"Stream",
                     "view":"Stream.Panel",
@@ -155,6 +155,29 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                 }
             }.bind(this));
             return filtered;
+        },
+
+        getFields: function () {
+            var fields = {};
+            this.panels.forEach(function (p) {
+                var panel = this.getView(p.name);
+                if ('getFields' in panel) {
+                    fields = _.extend(fields, panel.getFields());
+                }
+            }, this);
+            return fields;
+        },
+
+        fetch: function () {
+            var data = {};
+
+            this.panels.forEach(function (p) {
+                var panel = this.getView(p.name);
+                if ('fetch' in panel) {
+                    data = _.extend(data, panel.fetch());
+                }
+            }, this);
+            return data;
         },
 
     });
