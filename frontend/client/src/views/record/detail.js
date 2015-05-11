@@ -199,10 +199,16 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
             if (this.hasView('side')) {
-                data = _.extend(data, this.getView('side').fetch());
+                var view = this.getView('side');
+                if ('fetch' in view) {
+                    data = _.extend(data, view.fetch());
+                }
             }
             if (this.hasView('bottom')) {
-                data = _.extend(data, this.getView('bottom').fetch());
+                var view = this.getView('bottom');
+                if ('fetch' in view) {
+                    data = _.extend(data, view.fetch());
+                }
             }
             return data;
         },
