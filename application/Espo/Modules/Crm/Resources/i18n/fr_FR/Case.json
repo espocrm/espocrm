@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Nom",
-        "number": "Numéro",
+        "number": "Nombre",
         "status": "Statut",
         "account": "Compte",
         "contact": "Contact",
@@ -15,16 +15,16 @@
         "status": {
             "New": "Nouveau",
             "Assigned": "Assigné",
-            "Pending": "En attente",
+            "Pending": "En cours",
             "Closed": "Fermé",
             "Rejected": "Rejeté",
-            "Duplicate": "Doublon"
+            "Duplicate": "Dupliquer"
         },
         "priority" : {
-            "Low": "Bas",
-            "Normal": "Normal",
-            "High": "Haut",
-            "Urgent": "Urgent"
+            "Low": "Basse",
+            "Normal": "Normale",
+            "High": "Haute",
+            "Urgent": "Urgente"
         },
         "type": {
             "Question": "Question",
@@ -33,6 +33,10 @@
         }
     },
     "labels": {
-        "Create Case": "Créer un Ticket"
+        "Create Case": "Créer un ticket"
+    },
+    "presetFilters": {
+        "open": "Ouvert",
+        "closed": "Fermé"
     }
 }

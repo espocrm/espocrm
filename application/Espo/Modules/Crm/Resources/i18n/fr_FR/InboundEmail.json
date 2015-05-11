@@ -1,41 +1,52 @@
 {
     "fields": {
         "name": "Nom",
-        "team": "Equipe",
+        "team": "Équipe",
         "status": "Statut",
-        "assignToUser": "Assigné à l'Utilisateur",
+        "assignToUser": "Assigner à l'utilisateur",
         "host": "Hôte",
         "username": "Nom d'utilisateur",
-        "password": "Mot de Passe",
-        "port": "Porte",
-        "monitoredFolders": "Dossiers Surveillés",
+        "password": "Mot de passe",
+        "port": "Port",
+        "monitoredFolders": "Dossiers gérés",
         "trashFolder": "Corbeille",
-        "ssl": "SSL",        
-        "createCase": "Créer un Ticket",
-        "reply": "Répondre",
+        "ssl": "SSL",
+        "createCase": "Créer un ticket",
+        "reply": "Réponse automatique",
         "caseDistribution": "Distribution de tickets",
-        "replyEmailTemplate": "Modèle de Réponse par Email",
-        "replyFromAddress": "Répondre Depuis l'Adresse",
-        "replyFromName": "Répondre Depuis le Nom"
+        "replyEmailTemplate": "Modèle email de réponse",
+        "replyFromAddress": "Répondre depuis l'adresse",
+        "replyToAddress": "Répondre à l'adresse",
+        "replyFromName": "Répondre au nom de",
+        "targetUserPosition": "Position de l'utilisateur cible"
+    },
+    "tooltips": {
+        "reply": "Avertissez les expéditeurs par courrier électronique que leurs e-mails ont été reçus.",
+        "createCase": "Automatiquement créer un ticket à la réception d'un mail.",
+        "replyToAddress": "Spécifier l'adresse email de cette boîte pour que les réponses arrivent ici.",
+        "caseDistribution": "Comment les cas seront assignés. Assignés directement à l'utilisateur ou parmi l'équipe.",
+        "assignToUser": "Les e-mails / tickets de l'utilisateur y seront affectés.",
+        "team": "Les e-mails / tickets de l'équipe seront liés.",
+        "targetUserPosition": "Définir la position des utilisateurs qui se partageront les tickets."
     },
     "links": {
     },
     "options": {
         "status": {
-            "Active": "Activer",
-            "Inactive": "Désactiver"
+            "Active": "Actif",
+            "Inactive": "Inactif"
         },
         "caseDistribution": {
-            "Direct-Assignment": "Assignation Directe",
+            "Direct-Assignment": "Direct-Affectation",
             "Round-Robin": "Round-Robin",
-            "Least-Busy": "Least-Busy"
+            "Least-Busy": "Moins-Occupé"
         }
     },
     "labels": {
-        "Create InboundEmail": "Créer une boîte email",
+        "Create InboundEmail": "Créer un email entrant",
         "IMAP": "IMAP",
         "Actions": "Actions",
-        "Main": "Principal"        
+        "Main": "Principale"
     },
     "messages": {
         "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP"

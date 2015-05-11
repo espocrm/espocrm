@@ -1,0 +1,37 @@
+{
+    "labels": {
+        "Fields": "Champs",
+        "Relationships": "Relations"
+    },
+    "fields": {
+        "name": "Nom",
+        "type": "Type",
+        "labelSingular": "Libélé Singulier",
+        "labelPlural": "Libélé Pluriel",
+        "stream": "Flux",
+        "label": "Libélé",
+        "linkType": "Type de lien",
+        "entityForeign": "Entité étrangère",
+        "linkForeign": "Lien étranger",
+        "link": "Lien",
+        "labelForeign": "Libélé étranger"
+    },
+    "options": {
+        "type": {
+            "": "Aucun",
+            "Base": "Base",
+            "Person": "Personne"
+        },
+        "linkType": {
+            "manyToMany": "Plusieurs-à-Plusieurs",
+            "oneToMany": "Un-à-Plusieurs",
+            "manyToOne": "Plusieurs-à-Un",
+            "parentToChildren": "Parent-Enfant",
+            "childrenToParent": "Enfant-Parent"
+        }
+    },
+    "messages": {
+        "entityCreated": "L'entité a bien été créée",
+        "linkAlreadyExists": "Conflit: lien déjà existant."
+    }
+}

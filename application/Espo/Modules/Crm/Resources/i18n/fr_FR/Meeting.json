@@ -3,27 +3,42 @@
         "name": "Nom",
         "parent": "Parent",
         "status": "Statut",
-        "dateStart": "Date de Début",
-        "dateEnd": "Date de Fin",
+        "dateStart": "Date de début",
+        "dateEnd": "Date de fin",
         "duration": "Durée",
         "description": "Description",
         "users": "Utilisateurs",
         "contacts": "Contacts",
-        "leads": "Leads"
+        "leads": "Prospects",
+        "reminders": "Rappels",
+        "account": "Compte"
     },
     "links": {
     },
     "options": {
         "status": {
-            "Planned": "Plannifié",
-            "Held": "Fait",
-            "Not Held": "Pas Fait"
+            "Planned": "Prévu",
+            "Held": "Tenu",
+            "Not Held": "Non tenu"
+        },
+        "acceptanceStatus": {
+            "None": "Aucun",
+            "Accepted": "Accepté",
+            "Declined": "Décliné",
+            "Tentative": "Tentative"
         }
     },
     "labels": {
         "Create Meeting": "Créer un Rendez-vous",
-        "Set Held": "Marquer Fait",
-        "Set Not Held": "Marquer Pas Fait",
-        "Send Invitations": "Envoi d'Invitations"
+        "Set Held": "Qualifier en tenu",
+        "Set Not Held": "Qualifier en non tenu",
+        "Send Invitations": "Envoyer des Invitations",
+        "on time": "à l'heure",
+        "before": "en avance"
+    },
+    "presetFilters": {
+        "planned": "Prévu",
+        "held": "Tenu",
+        "todays": "Aujourd'hui"
     }
 }

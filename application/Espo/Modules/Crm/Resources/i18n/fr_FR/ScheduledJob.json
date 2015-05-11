@@ -1,0 +1,10 @@
+{
+
+    "options": {
+        "job": {
+            "CheckInboundEmails": "Vérifier les emails entrants",
+            "CheckEmailAccounts": "Vérifier ses comptes emails personnels",
+            "SendEmailReminders": "Envoyer des emails de rappel"
+        }
+    }
+}

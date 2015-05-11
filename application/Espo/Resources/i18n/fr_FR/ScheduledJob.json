@@ -3,28 +3,27 @@
         "name": "Nom",
         "status": "Statut",
         "job": "Tâche",
-        "scheduling": "Scheduling (crontab notation)"
+        "scheduling": "Plannification (crontab notation)"
     },
     "links": {
-        "log": "Journal"
+        "log": "Log"
     },
     "labels": {
-        "Create ScheduledJob": "Créer une tâche planifiée"
+        "Create ScheduledJob": "Créer une tâche plannifiée"
     },
     "options": {
         "job": {
-            "CheckInboundEmails": "Vérifier les Emails Entrants",
             "Cleanup": "Nettoyer"
         },
         "cronSetup": {
-            "linux": "",
-            "mac": "",
-            "windows": "Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:",
-            "default": "Note: Add this command to Cron Job (Scheduled Task):"
+            "linux": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
+            "mac": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
+            "windows": "Note: Créez un fichier de commandes avec les commandes suivantes pour exécuter des tâches planifiées Windows",
+            "default": "Note: Ajouter cette commande pour Cron (tâche planifiée):"
         },
         "status": {
-            "Active": "Activer",
-            "Inactive": "Désactiver"
+            "Active": "Active",
+            "Inactive": "Inactive"
         }
     }
 }

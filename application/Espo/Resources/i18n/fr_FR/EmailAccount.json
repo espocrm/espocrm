@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Nom",
+        "status": "Statut",
+        "host": "Hôte",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "port": "Port",
+        "monitoredFolders": "Dossiers surveillés",
+        "ssl": "SSL",
+        "fetchSince": "Apporté depuis"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Actif",
+            "Inactive": "Inactif"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Créer un compte email",
+        "IMAP": "IMAP",
+        "Main": "Principal",
+        "Test Connection": "Tester la connexion"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP",
+        "connectionIsOk": "Connexion établie"
+    }
+}

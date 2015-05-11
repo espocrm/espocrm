@@ -3,32 +3,45 @@
         "name": "Nom",
         "parent": "Parent",
         "status": "Statut",
-        "dateStart": "Date de Début",
-        "dateEnd": "Date de Fin",
+        "dateStart": "Date de début",
+        "dateEnd": "Date de fin",
         "direction": "Direction",
         "duration": "Durée",
         "description": "Description",
         "users": "Utilisateurs",
         "contacts": "Contacts",
-        "leads": "Leads"
+        "leads": "Prospects",
+        "reminders": "Rappels",
+        "account": "Compte"
     },
     "links": {
     },
     "options": {
         "status": {
-            "Planned": "Plannifié",
-            "Held": "Fait",
-            "Not Held": "Pas Fait"
+            "Planned": "Prévu",
+            "Held": "Tenu",
+            "Not Held": "Non tenu"
         },
         "direction": {
-            "Outbound": "Sortie",
-            "Inbound": "Entrée"
+            "Outbound": "Sortant",
+            "Inbound": "Entrant"
+        },
+        "acceptanceStatus": {
+            "None": "Aucun",
+            "Accepted": "Accepté",
+            "Declined": "Décliné",
+            "Tentative": "Tentative"
         }
     },
     "labels": {
-        "Create Call": "Générer l'appel",
-        "Set Held": "Marquer Fait",
-        "Set Not Held": "Marquer Pas Fait",
-        "Send Invitations": "Envoi d'Invitations"        
+        "Create Call": "Créer un Appel",
+        "Set Held": "Qualifier en Tenu",
+        "Set Not Held": "Qualifier en Non tenu",
+        "Send Invitations": "Envoyer les invitations"
+    },
+    "presetFilters": {
+        "planned": "Prévu",
+        "held": "Tenu",
+        "todays": "Aujourd'hui"
     }
 }

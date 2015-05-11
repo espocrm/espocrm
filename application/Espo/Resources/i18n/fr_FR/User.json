@@ -3,30 +3,60 @@
         "name": "Nom",
         "userName": "Nom d'utilisateur",
         "title": "Titre",
-        "isAdmin": "Est Admin",
-        "defaultTeam": "Equipe Standard",
+        "isAdmin": "Est Administrateur",
+        "defaultTeam": "Équipe par défaut",
         "emailAddress": "Email",
         "phoneNumber": "Téléphone",
-        "roles": "Rôles",        
-        "password": "Mot de Passe",
-        "passwordConfirm": "Confirmer le Mot de Passe",
-        "newPassword": "Nouveau Mot de Passe"
+        "roles": "Rôles",
+        "teamRole": "Position",
+        "password": "Mot de passe",
+        "passwordConfirm": "Confirmer le mot de passe",
+        "newPassword": "Nouveau mot de passe",
+        "newPasswordConfirm": "Confirmer le nouveau mot de passe",
+        "avatar": "Avatar",
+        "isActive": "Est actif"
     },
     "links": {
-        "teams": "Equipes",
+        "teams": "Équipes",
         "roles": "Rôles"
     },
     "labels": {
-        "Create User": "Créer un Utilisateur",
+        "Create User": "Créer un utilisateur",
         "Generate": "Générer",
         "Access": "Accès",
         "Preferences": "Préférences",
-        "Change Password": "Changer le Mot de Passe"
+        "Change Password": "Changer le mot de passe",
+        "Teams and Access Control": "Équipes et permissions",
+        "Forgot Password?": "Mot de passe oublié?",
+        "Password Change Request": "Changement de mot de passe",
+        "Email Address": "Adresse email",
+        "External Accounts": "Comptes externes",
+        "Email Accounts": "Comptes email"
+    },
+    "tooltips": {
+        "defaultTeam": "Toutes les données créées par cet utilisateur seront liés à cette équipe par défaut.",
+        "userName": "Lettres a-z, nombres 0-9 et underscores autorisés.",
+        "isAdmin": "Un administrateur accède à tout.",
+        "isActive": "Si décoché, alors l'utilisateur ne pourra plus se connecter.",
+        "teams": "Les équipes auxquelles l'utilisateur appartient. Permissions héritées de celles de l'équipe.",
+        "roles": "Rôles d'accès supplémentaires. Utilisez-les si l'utilisateur ne fait pas partie d'une équipe ou si vous avez besoin d'étendre le niveau des permissions uniquement pour cet utilisateur."
     },
     "messages": {
-        "passwordWillBeSent": "Le Mot de Passe sera envoyé à l'adresse email de l'utilisateur",
-        "accountInfoEmailSubject": "Information du compte",
-        "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChanged": "Mot de passe changé"
+        "passwordWillBeSent": "Les identifiants (y compris le mot de passe) seront envoyés à l'adresse email de l'utilisateur.",
+        "accountInfoEmailSubject": "EspoCRM : vos identifiants de connexion",
+        "accountInfoEmailBody": "Bonjour,\n\nVos identifiants sont les suivants:\n\nNom d'utilisateur: {userName}\nMot de passe: {password}\n\n{siteUrl}\n\n&Agrave; bient&ocirc;t,",
+        "passwordChangeLinkEmailSubject": "Demande de nouveau mot de passe",
+        "passwordChangeLinkEmailBody": "Vous pouvez changer votre mot de passe via ce lien {link}. Ce lien unique et temporaire expire bient&ocirc;t.",
+        "passwordChanged": "Le mot de passe a été modifié",
+        "userCantBeEmpty": "Le nom d'utilisateur ne peut être laissé vide",
+        "wrongUsernamePasword": "Mauvaise combinaison nom d'utilisateur/mot de passe",
+        "emailAddressCantBeEmpty": "L'adresse email ne peut être laissée vide",
+        "userNameEmailAddressNotFound": "Cette combinaison utilisateur/adresse email n'a pas été retrouvée.",
+        "forbidden": "Erreur, veuillez réessayer plus tard.",
+        "uniqueLinkHasBeenSent": "Un lien unique et temporaire a été envoyé à votre adresse email.",
+        "passwordChangedByRequest": "Le mot de passe a été modifié."
+    },
+    "boolFilters": {
+        "onlyMyTeam": "Seulement mon équipe"
     }
 }

@@ -1,25 +1,27 @@
 {
     "fields": {
-        "dateFormat": "Format de Date",
-        "timeFormat": "Format de l'Heure",
-        "timeZone": "Fuseau Horaire",
-        "weekStart": "Premier Jour de la Semaine",
-        "thousandSeparator": "Séparateur de Milliers",
-        "decimalMark": "Marqueur Décimal",
-        "defaultCurrency": "Monnaie Courante",
-        "currencyList": "Liste des Monnaies",
-        "language": "Langue",
-        
+        "dateFormat": "Format de la date",
+        "timeFormat": "Format de l'heure",
+        "timeZone": "Fuseau horaire",
+        "weekStart": "Premier jour de la semaine",
+        "thousandSeparator": "Séparateur de milliers",
+        "decimalMark": "Symbole décimal",
+        "defaultCurrency": "Devise par défaut",
+        "currencyList": "Liste des devises",
+        "language": "Langage",
         "smtpServer": "Serveur",
-        "smtpPort": "Porte",
-        "smtpAuth": "Authorization",
+        "smtpPort": "Port",
+        "smtpAuth": "Auth",
         "smtpSecurity": "Sécurité",
         "smtpUsername": "Nom d'utilisateur",
         "emailAddress": "Email",
-        "smtpPassword": "Mot de Passe",
-        "smtpEmailAddress": "Adresse Email",
-        
-        "exportDelimiter": "Délimiteur de champs (Export)"
+        "smtpPassword": "Mot de passe",
+        "smtpEmailAddress": "Adresse email",
+        "exportDelimiter": "Délimitant pour l'export",
+        "receiveAssignmentEmailNotifications": "Recevoir des notifications par email lors d'assignations",
+        "autoFollowEntityTypeList": "Suivi-auto",
+        "signature": "Signature email",
+        "dashboardTabList": "Liste des onglets"
     },
     "links": {
     },
@@ -28,5 +30,11 @@
             "0": "Dimanche",
             "1": "Lundi"
         }
+    },
+    "labels": {
+        "Notifications": "Notifications"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "L'utilisateur suivra automatiquement tous les nouveaux enregistrements des types d'entités sélectionnées, verra les informations dans le flux et recevra des notifications."
     }
 }

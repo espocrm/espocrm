@@ -2,10 +2,10 @@
     "fields": {
         "name": "Nom",
         "status": "Statut",
-        "isHtml": "En HTML",
+        "isHtml": "Html",
         "body": "Corps",
-        "subject": "Sujet",
-        "attachments": "Fichiers Joints",
+        "subject": "Objet",
+        "attachments": "Pièces-jointes",
         "insertField": ""
     },
     "links": {

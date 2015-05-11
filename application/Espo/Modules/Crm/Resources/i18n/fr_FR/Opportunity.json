@@ -2,33 +2,41 @@
     "fields": {
         "name": "Nom",
         "account": "Compte",
-        "stage": "Etage",
+        "stage": "Etape",
         "amount": "Montant",
         "probability": "Probabilité, %",
-        "leadSource": "Lead Source",
-        "doNotCall": "Ne Pas Appeler",
+        "leadSource": "Source du prospect",
+        "doNotCall": "Ne pas appeler",
         "closeDate": "Date de fermeture",
         "contacts": "Contacts",
-        "description": "Description"
+        "description": "Description",
+        "amountConverted": "Montant (converti)",
+        "amountWeightedConverted": "Montant pondéré",
+        "campaign": "Campagne"
     },
     "links": {
-        "contacts": "Contacts"
+        "contacts": "Contacts",
+        "documents": "Documents"
     },
     "options": {
         "stage": {
-            "Prospecting": "En Prospection",
+            "Prospecting": "Prospection",
             "Qualification": "Qualification",
             "Needs Analysis": "Analyse des besoins",
-            "Value Proposition": "Montant de la Proposition",
-            "Id. Decision Makers": "Id. Décisionnaire",
+            "Value Proposition": "Valeur de la proposition",
+            "Id. Decision Makers": "Id. Decisionnaire",
             "Perception Analysis": "Analyse de la perception",
-            "Proposal/Price Quote": "Proposition/Devis",
-            "Negotiation/Review": "Négociation/avis",
-            "Closed Won": "Closed Won",
-            "Closed Lost": "Closed Lost" 
+            "Proposal/Price Quote": "Proposition/devis",
+            "Negotiation/Review": "Négociation/évaluation",
+            "Closed Won": "Conclusion gagnante",
+            "Closed Lost": "Conclusion perdante"
         }
     },
     "labels": {
-        "Create Opportunity": "Créer un Challenge"
+        "Create Opportunity": "Créer une opportunité"
+    },
+    "presetFilters": {
+        "open": "Ouvrir",
+        "won": "Gagné"
     }
 }

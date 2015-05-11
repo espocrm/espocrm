@@ -1,46 +1,55 @@
 {
     "labels": {
-        "Converted To": "Convertir Vers",
-        "Create Lead": "Créer Lead",
+        "Converted To": "Converti en",
+        "Create Lead": "Créer un prospect",
         "Convert": "Convertir"
     },
     "fields": {
         "name": "Nom",
         "emailAddress": "Email",
         "title": "Titre",
-        "website": "Site Web",
+        "website": "Site internet",
         "phoneNumber": "Téléphone",
-        "accountName": "Nom du Compte",
-        "doNotCall": "Ne Pas Appeler",
+        "accountName": "Nom du compte",
+        "doNotCall": "Ne pas appeler",
         "address": "Adresse",
         "status": "Statut",
         "source": "Source",
-        "opportunityAmount": "Montant du Challenge",
+        "opportunityAmount": "Montant en jeu de l'opportunité",
+        "opportunityAmountConverted": "Montant en jeu de l'opportunité (converti)",
         "description": "Description",
         "createdAccount": "Compte",
         "createdContact": "Contact",
-        "createdOpportunity": "Challenge"
+        "createdOpportunity": "Opportunité",
+        "campaign": "Campagne",
+        "targetLists": "Listes de cibles",
+        "targetList": "Liste de cibles"
     },
     "links": {
+        "targetLists": "Listes de cibles",
+        "campaignLogRecords": "Log de campagne"
     },
     "options": {
         "status": {
             "New": "Nouveau",
             "Assigned": "Assigné",
-            "In Process": "En Cours de Traitement",
+            "In Process": "En cours",
             "Converted": "Converti",
-            "Recycled": "Supprimé",
-            "Dead": "Mort"
+            "Recycled": "Recyclé",
+            "Dead": "Dead"
         },
         "source": {
             "Call": "Appel",
             "Email": "Email",
-            "Existing Customer": "Client Existant",
+            "Existing Customer": "Client existant",
             "Partner": "Partenaire",
             "Public Relations": "Relations publiques",
-            "Web Site": "Site Web",
+            "Web Site": "Site internet",
             "Campaign": "Campagne",
             "Other": "Autre"
         }
+    },
+    "presetFilters": {
+        "active": "Actif"
     }
 }

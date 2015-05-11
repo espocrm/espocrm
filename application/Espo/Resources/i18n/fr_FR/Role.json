@@ -1,32 +1,44 @@
 {
     "fields": {
         "name": "Nom",
-        "roles": "Rôles"
+        "roles": "Rôles",
+        "assignmentPermission": "Assignation de Permissions"
     },
     "links": {
         "users": "Utilisateurs",
-        "teams": "Equipes"
+        "teams": "Équipes"
+    },
+    "tooltips": {
+        "assignmentPermission": "Permet de restreindre la capacité pour les utilisateurs d'attribuer des enregistrements aux autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peuvent assigner aux utilisateurs de l'équipe\n\nnon - seulement à soi"
     },
     "labels": {
         "Access": "Accès",
-        "Create Role": "Créer un rôle"
+        "Create Role": "Créer un Rôle"
     },
     "options": {
         "accessList": {
-            "not-set": "Indéfini",
+            "not-set": "non-défini",
             "enabled": "activé",
             "disabled": "désactivé"
         },
         "levelList": {
             "all": "tous",
             "team": "équipe",
-            "own": "Appartient",
+            "own": "soi",
             "no": "non"
+        },
+        "assignmentPermission": {
+            "all": "tous",
+            "team": "équipe",
+            "not-set": "non-défini"
         }
     },
     "actions": {
-        "read": "Lire",
-        "edit": "Edition",
-        "delete": "Effacer"
+        "read": "Voir",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+    },
+    "messages": {
+        "changesAfterClearCache": "Veuillez vider le cache pour que les changements soient pris en compte."
     }
 }

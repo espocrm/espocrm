@@ -2,7 +2,7 @@
     "fields": {
         "user": "Utilisateur",
         "ipAddress": "Adresse IP",
-        "lastAccess": "Date du dernier accès",
+        "lastAccess": "Dernière date d'accès",
         "createdAt": "Date de connexion"
 
     }

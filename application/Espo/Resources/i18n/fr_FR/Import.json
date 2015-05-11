@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "Revert Import": "Annuler l'import",
+        "Return to Import": "Retourner à l'import",
+        "Run Import": "Démarrer l'import",
+        "Back": "Retour",
+        "Field Mapping": "Correspondance des champs",
+        "Default Values": "Valeurs par défaut",
+        "Add Field": "Ajouter un champ",
+        "Created": "Créé",
+        "Updated": "Mis à jour",
+        "Result": "Résultat",
+        "Show records": "Montrer les enregistrements",
+        "Remove Duplicates": "Supprimer les doublons",
+        "importedCount": "Importés (compte)",
+        "duplicateCount": "Doublons (compte)",
+        "updatedCount": "Mis à jour (compte)"
+    },
+    "messages": {
+        "utf8": "Devrait être en UTF-8",
+        "duplicatesRemoved": "Doublons supprimés"
+    },
+    "fields": {
+        "file": "Fichier",
+        "entityType": "Type d'entité",
+        "imported": "Enregistrements importés",
+        "duplicates": "Enregistrements doublons",
+        "updated": "Enregistrements mis à jour"
+    }
+}

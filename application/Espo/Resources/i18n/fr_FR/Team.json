@@ -1,12 +1,17 @@
 {
     "fields": {
         "name": "Nom",
-        "roles": "Rôles"
+        "roles": "Rôles",
+        "positionList": "Position de Liste"
     },
     "links": {
         "users": "Utilisateurs"
     },
+    "tooltips": {
+        "roles": "Permissions. Les utilisateurs de cette équipe ont accès le niveau d'accès des rôles sélectionnés.",
+        "positionList": "Postes disponibles dans cette équipe. Par exemple : conseiller, manager."
+    },
     "labels": {
-        "Create Team": "Créer une Equipe"
+        "Create Team": "Créer une équipe"
     }
 }

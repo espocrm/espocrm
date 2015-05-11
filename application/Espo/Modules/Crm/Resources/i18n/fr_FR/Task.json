@@ -3,29 +3,40 @@
         "name": "Nom",
         "parent": "Parent",
         "status": "Statut",
-        "dateStart": "Date de Début",
+        "dateStart": "Date de début",
         "dateEnd": "Date d'échéance",
+        "dateStartDate": "Date de début (toute la journée)",
+        "dateEndDate": "Date de fin (toute la journée)",
         "priority": "Priorité",
         "description": "Description",
-        "isOverdue": "Est en Retard"
+        "isOverdue": "En retard",
+        "account": "Compte"
     },
     "links": {
     },
     "options": {
         "status": {
-            "Not Started": "Pas Commencé",
-            "Started": "Commencé",
+            "Not Started": "N'a pas démarré",
+            "Started": "Démarré",
             "Completed": "Terminé",
-            "Canceled": "Annulé"
+            "Canceled": "Annulé",
+            "Deferred": "Reporté"
         },
         "priority" : {
-            "Low": "Bas",
-            "Normal": "Normal",
-            "High": "Haut",
-            "Urgent": "Urgent"
+            "Low": "Basse",
+            "Normal": "Normale",
+            "High": "Haute",
+            "Urgent": "Urgente"
         }
     },
     "labels": {
-        "Create Task": "Créer une tâche"
+        "Create Task": "Créer une Tâche",
+        "Complete": "Terminer"
+    },
+    "presetFilters": {
+        "actual": "En cours",
+        "completed": "Terminés",
+        "todays": "Aujourd'hui",
+        "overdue": "En retard"
     }
 }

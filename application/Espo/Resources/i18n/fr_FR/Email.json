@@ -1,32 +1,63 @@
 {
     "fields": {
-        "name": "Sujet",
+        "name": "Objet",
         "parent": "Parent",
         "status": "Statut",
         "dateSent": "Date d'envoi",
         "from": "De",
-        "to": "Vers",
+        "to": "À",
         "cc": "CC",
         "bcc": "BCC",
-        "isHtml": "En HTML",
+        "isHtml": "Html",
         "body": "Corps",
-        "subject": "Sujet",
-        "attachments": "Fichiers Joints",
-        "selectTemplate": "Selectionner le Modèle",
-        "fromEmailAddress": "Adresse de l'Emetteur",
-        "toEmailAddresses": "Adresse du Destinataire",
-        "emailAddress": "Adresse Email"
+        "subject": "Objet",
+        "attachments": "Pièces-jointes",
+        "selectTemplate": "Sélectionner un modèle",
+        "fromEmailAddress": "Depuis l'adresse",
+        "toEmailAddresses": "À l'adresse",
+        "emailAddress": "Adresse email",
+        "deliveryDate": "Date de remise",
+        "account": "Compte"
     },
     "links": {
     },
     "options": {
         "Draft": "Brouillon",
-        "Sending": "En Envoi",
+        "Sending": "Envoi",
         "Sent": "Envoyé",
-        "Archived": "Archivé"
+        "Archived": "Archivé",
+        "Received": "Reçu"
     },
     "labels": {
-        "Create Email": "Archiver les Emails",
-        "Compose": "Nouveau Message"
+        "Create Email": "Créer l'Email",
+        "Archive Email": "Archiver l'Email",
+        "Compose": "Composer",
+        "Reply": "Répondre",
+        "Reply to All": "Répondre à tous",
+        "Forward": "Transférer",
+        "Original message": "Message d'origine",
+        "Forwarded message": "Message transféré",
+        "Email Accounts": "Comptes emails",
+        "Send Test Email": "Envoyer un email test",
+        "Send": "Envoyer",
+        "Email Address": "Adresse email",
+        "Mark Read": "Marquer comme lu",
+        "Sending...": "Envoi en cours...",
+        "Save Draft": "Sauvegarder le brouillon",
+        "Mark all as read": "Marquer tout comme lu"
+    },
+    "messages": {
+        "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
+        "testEmailSent": "L'email test a été envoyé",
+        "emailSent": "L'email a été envoyé",
+        "savedAsDraft": "Sauvegardé en tant que brouillon"
+    },
+    "presetFilters": {
+        "sent": "Envoyé",
+        "archived": "Archivé",
+        "draft": "Brouillon"
+    },
+    "massActions": {
+        "markAsRead": "Marquer commer lu"
     }
 }

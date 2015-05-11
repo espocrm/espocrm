@@ -2,39 +2,67 @@
     "fields": {
         "name": "Nom",
         "emailAddress": "Email",
-        "website": "Site Web",
+        "website": "Site internet",
         "phoneNumber": "Téléphone",
-        "billingAddress": "Adresse de Facturation",
-        "shippingAddress": "Adresse de Livraison",
+        "billingAddress": "Adresse de facturation",
+        "shippingAddress": "Adresse de livraison",
         "description": "Description",
-        "sicCode": "Code SIC",
+        "sicCode": "Sic Code",
         "industry": "Industrie",
         "type": "Type",
-        "contactRole": "Rôle"
+        "contactRole": "Titre",
+        "campaign": "Campagne"
     },
     "links": {
         "contacts": "Contacts",
         "opportunities": "Opportunités",
-        "cases": "Tickets"
+        "cases": "Tickets",
+        "documents": "Documents",
+        "meetingsPrimary": "Rendez-vous (étendus)",
+        "callsPrimary": "Appels (étendus)",
+        "tasksPrimary": "Tâches (étendues)",
+        "emailsPrimary": "Emails (étendus)",
+        "targetLists": "Listes de cible",
+        "campaignLogRecords": "Log de Campagne"
     },
     "options": {
         "type": {
-            "Customer": "Clients",
+            "Customer": "Client",
             "Investor": "Investisseur",
             "Partner": "Partenaire",
-            "Reseller": "Revendeur"
+            "Reseller": "Commercialisateur"
         },
         "industry": {
-            "Apparel": "Vêtements",
+            "Agriculture": "Agriculture",
+            "Advertising": "Publicité",
+            "Apparel & Accessories": "Mode et accessoires",
+            "Automotive": "Auto",
             "Banking": "Banque",
-            "Computer Software": "Logiciel Informatique",
+            "Biotechnology": "Biotechnologie",
+            "Chemical": "Chimie",
+            "Computer": "Informatique",
             "Education": "Education",
             "Electronics": "Electronique",
+            "Entertainment & Leisure": "Divertissement et loisir",
             "Finance": "Finance",
-            "Insurance": "Assurance"
+            "Food & Beverage": "Alimentation",
+            "Grocery": "Epicerie",
+            "Insurance": "Assurance",
+            "Legal": "Droit",
+            "Publishing": "Publication",
+            "Real Estate": "Immobilier",
+            "Service": "Service",
+            "Sports": "Sports",
+            "Software": "Logiciel",
+            "Technology": "Technologie",
+            "Telecommunications": "Télécommunications",
+            "Television": "Télévision",
+            "Transportation": "Transport",
+            "Venture Capital": "Investissement"
         }
     },
     "labels": {
-        "Create Account": "Nouveau Compte"
+        "Create Account": "Créer un compte",
+        "Copy Billing": "Copie de facturation"
     }
 }

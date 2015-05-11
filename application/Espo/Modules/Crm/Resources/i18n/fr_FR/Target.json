@@ -3,17 +3,17 @@
         "name": "Nom",
         "emailAddress": "Email",
         "title": "Titre",
-        "website": "Site Web",
-        "accountName": "Nom du Compte",
+        "website": "Site internet",
+        "accountName": "Nom du compte",
         "phoneNumber": "Téléphone",
-        "doNotCall": "Ne Pas Appeler",
+        "doNotCall": "Ne pas appeler",
         "address": "Adresse",
         "description": "Description"
     },
     "links": {
     },
     "labels": {
-        "Create Target": "Créer une Cible",
-        "Convert to Lead": "Convertir en Lead"
+        "Create Target": "Créer une cible",
+        "Convert to Lead": "Convertir en prospect"
     }
 }
