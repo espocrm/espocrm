@@ -31,7 +31,8 @@
             "type": "varchar",
             "required": true,
             "default": "INBOX",
-            "view": "EmailAccount.Fields.Folders"
+            "view": "EmailAccount.Fields.Folders",
+            "tooltip": true
         },
         "fetchSince": {
             "type": "date",
