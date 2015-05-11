@@ -95,7 +95,13 @@ class Importer
             }
 
             if ($duplicate = $this->findDuplicate($email)) {
-                $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'users', $userId);
+                //$this->getEntityManager()->getRepository('Email')->relate($duplicate, 'users', $userId);
+            	$duplicate->loadLinkMultipleField('users');
+            	$usersIds = $duplicate->get('usersIds');
+            	$usersIds[] = $userId;
+            	$duplicate->set('usersIds', $usersIds);
+            	$this->getEntityManager()->saveEntity($duplicate);
+
                 if (!empty($teamsIds)) {
                     foreach ($teamsIds as $teamId) {
                         $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
