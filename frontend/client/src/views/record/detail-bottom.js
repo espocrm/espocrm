@@ -61,7 +61,8 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                 panels.unshift({
                     "name":"stream",
                     "label":"Stream",
-                    "view":"Stream.Panel"
+                    "view":"Stream.Panel",
+                    "sticked": true
                 });
             }
 
