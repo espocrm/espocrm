@@ -62,6 +62,12 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['stream'])) {
             $params['stream'] = $data['stream'];
         }
+        if (!empty($data['sortBy'])) {
+            $params['sortBy'] = $data['sortBy'];
+        }
+        if (!empty($data['sortDirection'])) {
+            $params['asc'] = $data['sortDirection'] === 'asc';
+        }
 
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 
@@ -89,6 +95,10 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
         $name = $data['name'];
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
+
+        if (!empty($data['sortDirection'])) {
+            $data['asc'] = $data['sortDirection'] === 'asc';
+        }
 
         $result = $this->getContainer()->get('entityManagerUtil')->update($name, $data);
 

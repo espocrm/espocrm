@@ -49,6 +49,10 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base'], function (Dep) {
                 }
             }
 
+            if ('translatedOptions' in this.params) {
+                this.translatedOptions = this.params.translatedOptions;
+            }
+
             if (this.params.translation) {
                 var data = this.getLanguage().data;
                 var arr = this.params.translation.split('.');

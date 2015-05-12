@@ -33,7 +33,7 @@ class Campaign extends \Espo\Services\Record
 
         $sentCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
-            'action' => 'Clicked'
+            'action' => 'Sent'
         ))->count();
         $entity->set('sentCount', $sentCount);
 

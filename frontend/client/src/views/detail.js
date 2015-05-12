@@ -91,19 +91,11 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
                     this.handleFollowButton();
-                } else {
-                    this.once('after:render', function () {
-                        if (this.model.has('isFollowed')) {
-                            this.handleFollowButton();
-                        } else {
-                            this.listenToOnce(this.model, 'sync', function () {
-                                if (this.model.has('isFollowed')) {
-                                    this.handleFollowButton();
-                                }
-                            }, this);
-                        }
-                    }, this);
                 }
+
+                this.listenTo(this.model, 'change:isFollowed', function () {
+                    this.handleFollowButton();
+                }, this);
             }
         },
 
@@ -144,7 +136,6 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 success: function () {
                     $el.remove();
                     this.model.set('isFollowed', true);
-                    this.handleFollowButton();
                 }.bind(this),
                 error: function () {
                     $el.removeClass('disabled');
@@ -161,7 +152,6 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 success: function () {
                     $el.remove();
                     this.model.set('isFollowed', false);
-                    this.handleFollowButton();
                 }.bind(this),
                 error: function () {
                     $el.removeClass('disabled');

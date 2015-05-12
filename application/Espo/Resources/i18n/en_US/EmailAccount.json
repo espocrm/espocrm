@@ -8,7 +8,8 @@
         "port": "Port",
         "monitoredFolders": "Monitored Folders",
         "ssl": "SSL",
-        "fetchSince": "Fetch Since"
+        "fetchSince": "Fetch Since",
+        "emailAddress": "Email Address"
     },
     "links": {
     },
