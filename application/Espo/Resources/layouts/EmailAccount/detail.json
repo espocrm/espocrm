@@ -3,10 +3,11 @@
         "label":"Main",
         "rows":[
             [
-                {"name":"name"},
+                {"name":"emailAddress"},
                 {"name":"status"}
             ],
             [
+                {"name":"name"},
                 {"name":"fetchSince"}
             ]
         ]
