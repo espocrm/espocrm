@@ -184,6 +184,10 @@ class Stream extends \Espo\Core\Hooks\Base
                     $this->getStreamService()->noteCreate($entity);
                 }
 
+                if (in_array($this->getUser()->id, $userIdList)) {
+                	$entity->set('isFollowed', true);
+                }
+
                 $autofollowUserIdList = $this->getAutofollowUserIdList($entity, $userIdList);
                 foreach ($autofollowUserIdList as $i => $userId) {
                     if (in_array($userId, $userIdList)) {
@@ -213,6 +217,10 @@ class Stream extends \Espo\Core\Hooks\Base
                         if (!empty($assignedUserId)) {
                             $this->getStreamService()->followEntity($entity, $assignedUserId);
                             $this->getStreamService()->noteAssign($entity);
+
+			                if ($this->getUser()->id === $assignedUserId) {
+			                	$entity->set('isFollowed', true);
+			                }
                         }
                     }
                     $this->getStreamService()->handleAudited($entity);
