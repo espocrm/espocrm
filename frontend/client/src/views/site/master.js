@@ -54,8 +54,17 @@ Espo.define('Views.Site.Master', 'View', function (Dep) {
             var footerView = this.getView('footer');
             if (footerView) {
                 var html = footerView.$el.html();
-                if (!~html.toLowerCase().indexOf('espocrm')) {
-                    footerView.$el.html('<p class="credit small">EspoCRM</p>');
+                if ((html.match(/espocrm/gi) || []).length < 2) {
+                    var text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2NybS5jb20iPkVzcG9DUk08L2E+PC9wPg==';
+                    if (typeof window.atob === "function") {
+                        var decText = window.atob(text);
+                    } else if (typeof atob === "function") {
+                        var decText = atob(text);
+                    }
+
+                    if (decText) {
+                        footerView.$el.html(decText);
+                    }
                 }
             }
         },
