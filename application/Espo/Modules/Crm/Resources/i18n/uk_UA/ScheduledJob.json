@@ -3,8 +3,8 @@
     "options": {
         "job": {
             "CheckInboundEmails": "Перевірити пошту",
-            "CheckEmailAccounts": "Перевірка Особистих Облікових Записів Електронної Пошти",
-            "SendEmailReminders": "Відправляти Нагадування По Електронній Пошті"
+            "CheckEmailAccounts": "Перевірити особисті емейл-акаунти",
+            "SendEmailReminders": "Відправити нагадування емейлом"
         }
     }
 }

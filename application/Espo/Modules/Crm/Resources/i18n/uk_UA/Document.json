@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Create Document": "Створити Документ",
+        "Create Document": "Створити документ",
         "Details": "Деталі"
     },
     "fields": {
@@ -9,19 +9,19 @@
         "file": "Файл",
         "type": "Тип",
         "source": "Джерело",
-        "publishDate": "Дата Публікації",
-        "expirationDate": "Термін Придатності",
+        "publishDate": "Дата публікації",
+        "expirationDate": "Термін придатности",
         "description": "Опис"
     },
     "links": {
-        "accounts": "Контрагенти",
+        "accounts": "Контраґенти",
         "opportunities": "Угоди"
     },
     "options": {
         "status": {
             "Active": "Активний",
             "Draft": "Чернетка",
-            "Expired": "Закінчився",
+            "Expired": "Прострочено",
             "Canceled": "Скасовано"
         }
     },

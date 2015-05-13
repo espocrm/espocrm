@@ -1,7 +1,7 @@
 {
     "labels": {
         "Fields": "Поля",
-        "Relationships": "Відносини"
+        "Relationships": "Зв'язки"
     },
     "fields": {
         "name": "Ім'я",
@@ -10,17 +10,20 @@
         "labelPlural": "Множинна мітка",
         "stream": "Потік",
         "label": "Мітка",
-        "linkType": "Тип линви",
-        "entityForeign": "Іноземна орґанізація",
-        "linkForeign": "Іноземна линва",
-        "link": "Линва",
-        "labelForeign": "Іноземна мітка"
+        "linkType": "Link Type",
+        "entityForeign": "Foreign Entity",
+        "linkForeign": "Foreign Link",
+        "link": "Link",
+        "labelForeign": "Foreign Label",
+        "sortBy": "Default Order (field)",
+        "sortDirection": "Default Order (direction)"
     },
     "options": {
         "type": {
             "": "Нема",
             "Base": "База",
-            "Person": "Особа"
+            "Person": "Особа",
+            "CategoryTree": "Category Tree"
         },
         "linkType": {
             "manyToMany": "Багато-до-багатьох",
@@ -28,6 +31,10 @@
             "manyToOne": "Багато-до-одного",
             "parentToChildren": "Батьки-дітям",
             "childrenToParent": "Діти-батькам"
+        },
+        "sortDirection": {
+            "asc": "Ascending",
+            "desc": "Descending"
         }
     },
     "messages": {

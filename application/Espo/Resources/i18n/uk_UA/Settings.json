@@ -10,32 +10,25 @@
         "defaultCurrency": "Валюта за замовчуванням",
         "baseCurrency": "Базова валюта",
         "currencyRates": "Курси обміну",
-
         "currencyList": "Список валют",
         "language": "Мова",
-
         "companyLogo": "Лоґотип компанії",
-
         "smtpServer": "Сервер",
         "smtpPort": "Порт",
         "smtpAuth": "Авторизація",
         "smtpSecurity": "Безпека",
         "smtpUsername": "Ім'я користувача",
-        "emailAddress": "Електронна пошта",
+        "emailAddress": "Емейл",
         "smtpPassword": "Пароль",
         "outboundEmailFromName": "Від імені",
         "outboundEmailFromAddress": "З адреси",
         "outboundEmailIsShared": "Розшарене",
-
         "recordsPerPage": "Запис на сторінку",
         "recordsPerPageSmall": "Запис на сторінку (дрібно)",
         "tabList": "Вкладка Список",
         "quickCreateList": "Швидке створення списку",
-
         "exportDelimiter": "Експортувати роздільник даних",
-
         "globalSearchEntityList": "Ґлобальний пошук списку сутностей",
-
         "authenticationMethod": "Метод автентифікації",
         "ldapHost": "Хост",
         "ldapPort": "Порт",
@@ -44,20 +37,21 @@
         "ldapPassword": "Пароль",
         "ldapBindRequiresDn": "Прив'язка по домену",
         "ldapBaseDn": "Базовий домен",
-        "ldapAccountCanonicalForm": "Усталена форма облікового запису",
-        "ldapAccountDomainName": "Доменне ім'я облікового запису",
+        "ldapAccountCanonicalForm": "Account Canonical Form",
+        "ldapAccountDomainName": "Account Domain Name",
         "ldapTryUsernameSplit": "Спробувати відділити ім'я користувача",
         "ldapCreateEspoUser": "Створити користувача в EspoCRM",
         "ldapSecurity": "Безпека",
         "ldapUserLoginFilter": "Фільтр лоґіну користувача",
-        "ldapAccountDomainNameShort": "Обліковий запис доменного імені (коротко)",
+        "ldapAccountDomainNameShort": "Account Domain Name Short",
         "ldapOptReferrals": "Оптові реферали",
-        "disableExport": "Вимкнути експортування (доступно лише адміністраторові)",
+        "disableExport": "Вимкнути експортування (доступно лише адміністру)",
         "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
-        "assignmentEmailNotifications": "Посилати сповіщення на емейл при пов'язуванні",
+        "assignmentEmailNotifications": "Посилати сповіщення на емейл при назначенні",
         "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
         "b2cMode": "Режим В2С",
-        "disableAvatars": "Вимкнути аватари"
+        "disableAvatars": "Вимкнути аватари",
+        "followCreatedEntities": "Follow Created Entities"
     },
     "options": {
         "weekStart": {
@@ -66,7 +60,9 @@
         }
     },
     "tooltips": {
-        "recordsPerPageSmall": "Число записів в панелях зв'язків."
+        "recordsPerPageSmall": "Число записів в панелях зв'язків.",
+        "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
+        "followCreatedEntities": "If user created a record he/she will follow it automatically."
     },
     "labels": {
         "System": "Система",

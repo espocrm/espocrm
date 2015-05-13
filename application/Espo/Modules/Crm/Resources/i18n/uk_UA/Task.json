@@ -4,28 +4,31 @@
         "parent": "Джерело",
         "status": "статус",
         "dateStart": "Дата початку",
-        "dateEnd": "Дата Зв'язку",
+        "dateEnd": "Належна дата",
         "dateStartDate": "Date Start (all day)",
         "dateEndDate": "Date End (all day)",
         "priority": "Пріоритет",
         "description": "Опис",
-        "isOverdue": "Прострочена",
-        "account": "Контрагент"
+        "isOverdue": "Прострочено",
+        "account": "Контраґент",
+        "dateCompleted": "Date Completed",
+        "attachments": "Вкладення"
     },
     "links": {
+        "attachments": "Вкладення"
     },
     "options": {
         "status": {
-            "Not Started": "Не почалася",
-            "Started": "Почалася",
+            "Not Started": "Не почалося",
+            "Started": "Почалося",
             "Completed": "Завершено",
             "Canceled": "Скасовано",
-            "Deferred": "Відстрочені"
+            "Deferred": "Відстрочено"
         },
         "priority" : {
-            "Low": "Низький",
+            "Low": "Низько",
             "Normal": "Нормальний",
-            "High": "Високий",
+            "High": "Високо",
             "Urgent": "Терміново"
         }
     },
@@ -34,9 +37,9 @@
         "Complete": "Повне"
     },
     "presetFilters": {
-        "actual": "Фактичні",
+        "actual": "Актуально",
         "completed": "Завершено",
-        "todays": "На сьогодні",
-        "overdue": "Прострочені"
+        "todays": "Сьогоднішнє",
+        "overdue": "Прострочено"
     }
 }

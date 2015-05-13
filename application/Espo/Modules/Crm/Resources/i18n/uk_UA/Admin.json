@@ -1,5 +1,6 @@
 {
     "layouts": {
-        "detailConvert": "Перетворити потенційного клієнта"
+        "detailConvert": "Конвертувати лід",
+        "listForAccount": "List (for Account)"
     }
 }

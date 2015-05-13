@@ -672,7 +672,7 @@ class Base
             JOIN subscription ON
                 subscription.entity_type = ".$query->quote($this->getEntityType())." AND
                 subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
-                subscription.user_id = ".$query->toDb($this->getUser()->id)."
+                subscription.user_id = ".$query->quote($this->getUser()->id)."
         ";
     }
 

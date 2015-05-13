@@ -1,9 +1,9 @@
 {
     "fields": {
         "name": "Ім'я",
-        "number": "Номер",
+        "number": "Нумер",
         "status": "статус",
-        "account": "Контрагент",
+        "account": "Контраґент",
         "contact": "Контакт",
         "priority": "Пріоритет",
         "type": "Тип",
@@ -21,19 +21,19 @@
             "Duplicate": "Дуплікат"
         },
         "priority" : {
-            "Low": "Низький",
+            "Low": "Низько",
             "Normal": "Нормальний",
-            "High": "Високий",
+            "High": "Високо",
             "Urgent": "Терміново"
         },
         "type": {
             "Question": "Питання",
-            "Incident": "Подія",
+            "Incident": "Випадок",
             "Problem": "Проблема"
         }
     },
     "labels": {
-        "Create Case": "Створити звернення"
+        "Create Case": "Створити кейс"
     },
     "presetFilters": {
         "open": "Відкрити",

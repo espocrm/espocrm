@@ -73,6 +73,10 @@ class Invitations
                 case 'date':
                     $contents = str_replace($key, $this->dateTime->convertSystemDateToGlobal($entity->get($field)), $contents);
                     break;
+                case 'jsonArray':
+                    break;
+                case 'jsonObject':
+                    break;
                 default:
                     $contents = str_replace($key, $entity->get($field), $contents);
             }

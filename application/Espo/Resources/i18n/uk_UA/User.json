@@ -2,10 +2,10 @@
     "fields": {
         "name": "Ім'я",
         "userName": "Ім'я Користувача",
-        "title": "Назва",
+        "title": "Посада",
         "isAdmin": "Адміністратор",
         "defaultTeam": "Команда за замовчуванням",
-        "emailAddress": "Електронна пошта",
+        "emailAddress": "Емейл",
         "phoneNumber": "Телефон",
         "roles": "Ролі",
         "teamRole": "Посада",
@@ -22,7 +22,7 @@
     },
     "labels": {
         "Create User": "Створити користувача",
-        "Generate": "Зґенерувати",
+        "Generate": "Згенерувати",
         "Access": "Доступ",
         "Preferences": "Переваги",
         "Change Password": "Змінити пароль",
@@ -30,7 +30,7 @@
         "Forgot Password?": "Забули пароль?",
         "Password Change Request": "Запит на зміну пароля",
         "Email Address": "Поштова скринька",
-        "External Accounts": "Зовнішні Акаунти",
+        "External Accounts": "Зовнішні рахунки",
         "Email Accounts": "Акаунти емейлів"
     },
     "tooltips": {
@@ -46,17 +46,17 @@
         "accountInfoEmailSubject": "Інформація про користувацький доступ EspoCRM",
         "accountInfoEmailBody": "Ваша інформація про доступ:\n\nІм'я користувача: {userName}\nПароль: {password}\n\n{siteUrl}",
         "passwordChangeLinkEmailSubject": "Запит на зміну пароля",
-        "passwordChangeLinkEmailBody": "Ви можете змінити свій пароль по цьому посиланню {посилання}. Цей унікальний URL-адреса буде exprired скоро.",
-        "passwordChanged": "Пароль змінено",
-        "userCantBeEmpty": "Ім'я користувача може бути порожнім",
+        "passwordChangeLinkEmailBody": "Ви можете змінити свій пароль за цим посиланням {link}. Цей унікальний URL буде скоро прострочений.",
+        "passwordChanged": "Пароль було змінено",
+        "userCantBeEmpty": "Ім'я користувача не може бути порожнім",
         "wrongUsernamePasword": "Хибне ім'я користувача / пароль",
-        "emailAddressCantBeEmpty": "Адреса електронної пошти не може бути порожнім",
-        "userNameEmailAddressNotFound": "Ім'я користувача, адресу електронної пошти не знайдено",
-        "forbidden": "Заборонений будь ласка, спробуйте пізніше",
-        "uniqueLinkHasBeenSent": "Унікальну заслання був відправлений на вказану адресу електронної пошти.",
+        "emailAddressCantBeEmpty": "Адреса електронної пошти не може бути порожньою",
+        "userNameEmailAddressNotFound": "Ім'я користувача / адресу електронної пошти не знайдено",
+        "forbidden": "Недоступно, будь ласка, спробуйте пізніше",
+        "uniqueLinkHasBeenSent": "Унікальне посилання була відправлена на вказану адресу електронної пошти.",
         "passwordChangedByRequest": "Пароль було змінено."
     },
     "boolFilters": {
-        "onlyMyTeam": "Тільки Моя Команда"
+        "onlyMyTeam": "Тільки моя команда"
     }
 }

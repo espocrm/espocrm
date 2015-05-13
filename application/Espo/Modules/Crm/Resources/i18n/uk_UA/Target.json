@@ -1,10 +1,10 @@
 {
     "fields": {
         "name": "Ім'я",
-        "emailAddress": "Електронна пошта",
-        "title": "Назва",
-        "website": "Інтернет сайт",
-        "accountName": "Ім'я контрагента",
+        "emailAddress": "Емейл",
+        "title": "Посада",
+        "website": "Вебсайт",
+        "accountName": "Ім'я контраґента",
         "phoneNumber": "Телефон",
         "doNotCall": "Не дзвонити",
         "address": "Адреса",
@@ -13,7 +13,7 @@
     "links": {
     },
     "labels": {
-        "Create Target": "Створити мета",
-        "Convert to Lead": "Перетворити потенційного клієнта"
+        "Create Target": "Створити ціль",
+        "Convert to Lead": "Конвертувати на лід"
     }
 }
