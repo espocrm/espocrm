@@ -5,43 +5,47 @@
         "status": "статус",
         "dateStart": "Дата початку",
         "dateEnd": "Дата закінчення",
-        "direction": "Категорія",
+        "direction": "Напрямок",
         "duration": "Тривалість",
         "description": "Опис",
         "users": "Користувачі",
         "contacts": "Контакти",
-        "leads": "Потенційні клієнти",
+        "leads": "Ліди",
         "reminders": "Нагадування",
-        "account": "Контрагент"
+        "account": "Контраґент"
     },
     "links": {
     },
     "options": {
         "status": {
-            "Planned": "Запланований",
-            "Held": "Виконаний",
-            "Not Held": "Не відбувся"
+            "Planned": "Заплановано",
+            "Held": "Виконано",
+            "Not Held": "Не відбулося"
         },
         "direction": {
-            "Outbound": "Вихідний",
-            "Inbound": "Вхідний"
+            "Outbound": "Вихідне",
+            "Inbound": "Вхідне"
         },
         "acceptanceStatus": {
             "None": "Нема",
-            "Accepted": "Прийнятий",
-            "Declined": "Відхилений",
-            "Tentative": "Попередній"
+            "Accepted": "Прийнято",
+            "Declined": "Відхилено",
+            "Tentative": "Попереднє"
         }
     },
+    "massActions": {
+        "setHeld": "Позначити виконаним",
+        "setNotHeld": "Позначити невиконаним"
+    },
     "labels": {
-        "Create Call": "Новий дзвінок",
-        "Set Held": "Був виконаний",
-        "Set Not Held": "Набір Не Проводиться",
+        "Create Call": "Створити дзвінок",
+        "Set Held": "Позначити виконаним",
+        "Set Not Held": "Позначити невиконаним",
         "Send Invitations": "Відправити запрошення"
     },
     "presetFilters": {
-        "planned": "Запланований",
-        "held": "Виконаний",
-        "todays": "На сьогодні"
+        "planned": "Заплановано",
+        "held": "Виконано",
+        "todays": "Сьогоднішнє"
     }
 }

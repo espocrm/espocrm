@@ -4,18 +4,18 @@
         "actionDate": "Дата",
         "data": "Дані",
         "campaign": "Кампанія",
-        "parent": "Цільовий",
+        "parent": "Ціль",
         "object": "Об'єкт",
         "application": "Додаток"
     },
     "options": {
     	"action": {
             "Sent": "Відправлено",
-            "Opened": "Відкритий",
+            "Opened": "Відкрито",
             "Opted Out": "Відмовлено",
-            "Bounced": "Відскочив",
-            "Clicked": "Натиснув",
-            "Lead Created": "Привести Створена"
+            "Bounced": "Відшито",
+            "Clicked": "Цикнуте",
+            "Lead Created": "Лід створено"
     	}
     },
     "labels": {

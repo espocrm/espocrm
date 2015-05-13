@@ -1,47 +1,45 @@
 {
     "scopeNames": {
-        "Account": "Контрагент",
+        "Account": "Контраґент",
         "Contact": "Контакт",
-        "Lead": "Потенційний клієнт",
-        "Target": "Цільовий",
+        "Lead": "Лід",
+        "Target": "Ціль",
         "Opportunity": "Угода",
         "Meeting": "Зустріч",
         "Calendar": "Календар",
-        "Call": "Виклик",
+        "Call": "Дзвінок",
         "Task": "Завдання",
-        "Case": "Звернення",
-        "InboundEmail": "Вхідна пошта",
+        "Case": "Кейс",
         "Document": "Документ",
         "Campaign": "Кампанія",
-        "TargetList": "Цільовий Список"
+        "TargetList": "Цільовий список"
     },
     "scopeNamesPlural": {
-        "Account": "Контрагенти",
+        "Account": "Контраґенти",
         "Contact": "Контакти",
-        "Lead": "Потенційні клієнти",
+        "Lead": "Ліди",
         "Target": "Цілі",
         "Opportunity": "Угоди",
         "Meeting": "Зустрічі",
         "Calendar": "Календар",
         "Call": "Дзвінки",
         "Task": "Завдання",
-        "Case": "Звернення",
-        "InboundEmail": "Вхідні повідомлення",
+        "Case": "Кейси",
         "Document": "Документи",
-        "Campaign": "Кампаній",
-        "TargetList": "Цільові Списки"
+        "Campaign": "Кампанії",
+        "TargetList": "Цільові списки"
     },
     "dashlets": {
-        "Leads": "Мої потенційні клієнти",
+        "Leads": "Мої ліди",
         "Opportunities": "Мої угоди",
         "Tasks": "Мої завдання",
-        "Cases": "Мої звернення",
+        "Cases": "Мої кейси",
         "Calendar": "Календар",
         "Calls": "Мої дзвінки",
         "Meetings": "Мої зустрічі",
         "OpportunitiesByStage": "Угоди на стадії",
-        "OpportunitiesByLeadSource": "Операції з джерела потенційного клієнта",
-        "SalesByMonth": "Продажу по місяцях",
+        "OpportunitiesByLeadSource": "Угоди за джерелом лідів",
+        "SalesByMonth": "Продажі по місяцях",
         "SalesPipeline": "Джерела продажу"    
     },
     "labels": {
@@ -49,11 +47,11 @@
         "Activities": "Заходи",
         "History": "Історія",
         "Attendees": "Учасники",
-        "Schedule Meeting": "Запланувати зустріч",
-        "Schedule Call": "Запланувати дзвінок",
-        "Compose Email": "Створити e-mail",
-        "Log Meeting": "Записати зустріч",
-        "Log Call": "Записати дзвінок",
+        "Schedule Meeting": "Розклад зустрічей",
+        "Schedule Call": "Розклад дзвінків",
+        "Compose Email": "Написати емейл",
+        "Log Meeting": "Протокол зустрічей",
+        "Log Call": "Протокол дзвінків",
         "Archive Email": "Архівувати листа",
         "Create Task": "Створити завдання",
         "Tasks": "Завдання"        
@@ -78,15 +76,15 @@
     "links": {
         "contacts": "Контакти",
         "opportunities": "Угоди",
-        "leads": "Потенційні клієнти",        
+        "leads": "Ліди",        
         "meetings": "Зустрічі",
         "calls": "Дзвінки",
         "tasks": "Завдання",
         "emails": "Листи",
-        "accounts": "Контрагенти",
-        "cases": "Звернення",
+        "accounts": "Контраґенти",
+        "cases": "Кейси",
         "documents": "Документи",
-        "account": "Контрагент",
+        "account": "Контраґент",
         "opportunity": "Угода",        
         "contact": "Контакт",
         "parent": "Джерело"
@@ -94,7 +92,7 @@
     "options": {
         "reminderTypes": {
             "Popup": "Спливаюче вікно",
-            "Email": "Електронна пошта"
+            "Email": "Емейл"
         }
     }
 }

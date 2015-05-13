@@ -1,68 +1,72 @@
 {
     "fields": {
         "name": "Ім'я",
-        "emailAddress": "Електронна пошта",
-        "website": "Інтернет сайт",
+        "emailAddress": "Емейл",
+        "website": "Вебсайт",
         "phoneNumber": "Телефон",
-        "billingAddress": "Платіжний адреса",
+        "billingAddress": "Платіжна адреса",
         "shippingAddress": "Поштова адреса",
         "description": "Опис",
-        "sicCode": "SicCode",
+        "sicCode": "Код SIC",
         "industry": "Промисловість",
         "type": "Тип",
-        "contactRole": "Назва",
+        "contactRole": "Посада",
         "campaign": "Кампанія"
     },
     "links": {
         "contacts": "Контакти",
         "opportunities": "Угоди",
-        "cases": "Звернення",
+        "cases": "Кейси",
         "documents": "Документи",
         "meetingsPrimary": "Meetings (expanded)",
         "callsPrimary": "Calls (expanded)",
         "tasksPrimary": "Tasks (expanded)",
         "emailsPrimary": "Emails (expanded)",
-        "targetLists": "Цільові Списки",
-        "campaignLogRecords": "Кампанія Журналу"
+        "targetLists": "Цільові списки",
+        "campaignLogRecords": "Журнал кампанія"
     },
     "options": {
         "type": {
             "Customer": "Замовник",
-            "Investor": "Вкладник",
+            "Investor": "Інвестор",
             "Partner": "Партнер",
             "Reseller": "Посередник"
         },
         "industry": {
             "Agriculture": "Сільське господарство",
             "Advertising": "Реклама",
-            "Apparel & Accessories": "Одяг Та Аксесуари",
+            "Apparel & Accessories": "Одяг та аксесуари",
             "Automotive": "Автомобільні",
-            "Banking": "Банківська справа",
+            "Banking": "Банкінґ",
             "Biotechnology": "Біотехнології",
-            "Chemical": "Хімічний",
-            "Computer": "Комп'ютер",
+            "Chemical": "Хемія",
+            "Computer": "Комп'ютери",
             "Education": "Освіта",
             "Electronics": "Електроніка",
-            "Entertainment & Leisure": "Розваги Та Відпочинок",
+            "Entertainment & Leisure": "Розваги та дозвілля",
             "Finance": "Фінанси",
-            "Food & Beverage": "Їжа І Напої",
+            "Food & Beverage": "Їжа та напої",
             "Grocery": "Доставка",
             "Insurance": "Страхування",
-            "Legal": "Юридичні",
-            "Publishing": "Публікації",
+            "Legal": "Право",
+            "Publishing": "Видавництво",
             "Real Estate": "Нерухомість",
             "Service": "Сервіс",
             "Sports": "Спорт",
-            "Software": "Програмне забезпечення",
-            "Technology": "Технологія",
+            "Software": "Проґрамне забезпечення",
+            "Technology": "Технолоґія",
             "Telecommunications": "Телекомунікації",
             "Television": "Телебачення",
             "Transportation": "Транспорт",
-            "Venture Capital": "Венчурний Капітал"
+            "Venture Capital": "Венчурний капітал"
         }
     },
     "labels": {
-        "Create Account": "Створити контрагента",
-        "Copy Billing": "Копію Білінгу"
+        "Create Account": "Створити контраґента",
+        "Copy Billing": "Копія рахунку"
+    },
+    "presetFilters": {
+        "customers": "Customers",
+        "partners": "Partners"
     }
 }

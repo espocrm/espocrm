@@ -1,6 +1,6 @@
 {
     "scopeNames": {
-        "Email": "Електронна пошта",
+        "Email": "Емейл",
         "User": "Користувач",
         "Team": "Команда",
         "Role": "Роль",
@@ -9,9 +9,10 @@
         "EmailAccountScope": "Емейл-акаунт",
         "OutboundEmail": "Вихідний лист",
         "ScheduledJob": "Заплановані завдання",
-        "ExternalAccount": "Зовнішній Акаунт",
+        "ExternalAccount": "Зовнішній рахунок",
         "Extension": "Розширення",
         "Dashboard": "Панель інструментів",
+        "InboundEmail": "Inbound Email Account",
         "Stream": "Потік",
         "Import": "Імпорт"
     },
@@ -23,11 +24,12 @@
         "EmailTemplate": "Шаблони листів",
         "EmailAccount": "Акаунти емейлів",
         "EmailAccountScope": "Акаунти емейлів",
-        "OutboundEmail": "Вихідні повідомлення",
+        "OutboundEmail": "Вихідна електронна пошта",
         "ScheduledJob": "Заплановані завдання",
-        "ExternalAccount": "Зовнішні Акаунти",
+        "ExternalAccount": "Зовнішні рахунки",
         "Extension": "Розширення",
         "Dashboard": "Панель інструментів",
+        "InboundEmail": "Inbound Email Accounts",
         "Stream": "Потік",
         "Import": "Import Results"
     },
@@ -71,8 +73,9 @@
         "create": "створити",
         "Overview": "Огляд",
         "Details": "Деталі",
-        "Add Filter": "Додати фільтр",
+        "Add Field": "Додати поле",
         "Add Dashlet": "Додати дашлет",
+        "Filter": "Filter",
         "Edit Dashboard": "Змінити панель інструментів",
         "Add": "Додати",
         "Reset": "Скинути",
@@ -107,7 +110,7 @@
         "View": "Вигляд",
         "Cancel": "Скасувати",
         "Unlink": "Розлинвити",
-        "Mass Update": "Масове поновлення",
+        "Mass Update": "Масове оновлення",
         "Export": "Експортувати",
         "No Data": "Немає даних",
         "No Access": "Немає доступу",
@@ -130,7 +133,7 @@
         "change": "змінити",
         "Change": "Зміна",
         "Primary": "Первинне",
-        "Save Filters": "Зберегти фільтри",
+        "Save Filter": "Save Filter",
         "Administration": "Адміністрування",
         "Run Import": "Запустити імпорт",
         "Duplicate": "Дуплікат",
@@ -145,7 +148,11 @@
         "Yes": "Так",
         "No": "Немає",
         "View": "Вигляд",
-        "Select All Result": "Обрати всі результати"
+        "Select All Result": "Обрати всі результати",
+        "Value": "Value",
+        "Current version": "Current version",
+        "List View": "List View",
+        "Tree View": "Tree View"
     },
     "messages": {
         "pleaseWait": "Будь ласка, зачекайте...",
@@ -182,12 +189,16 @@
         "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]"
     },
     "boolFilters": {
-        "onlyMy": "Тільки моє"
+        "onlyMy": "Тільки моє",
+        "followed": "Підписано"
+    },
+    "presetFilters": {
+        "followed": "Підписано"
     },
     "massActions": {
         "remove": "Видалити",
         "merge": "Об'єднати",
-        "massUpdate": "Масове поновлення",
+        "massUpdate": "Масове оновлення",
         "export": "Експортувати"
     },
     "fields": {
@@ -196,7 +207,7 @@
         "lastName": "Прізвище",
         "salutationName": "Привітання",
         "assignedUser": "Призначений користувач",
-        "emailAddress": "Електронна пошта",
+        "emailAddress": "Емейл",
         "assignedUserName": "Ім'я призначеного користувача",
         "teams": "Команди",
         "createdAt": "Створений у",
@@ -210,8 +221,10 @@
         "phoneNumberHome": "Phone (Home)",
         "phoneNumberFax": "Phone (Fax)",
         "phoneNumberOffice": "Phone (Office)",
-        "phoneNumberOther": "Phone (Other)"
-
+        "phoneNumberOther": "Phone (Other)",
+        "order": "Order",
+        "parent": "Джерело",
+        "children": "Children"
     },
     "links": {
         "assignedUser": "Призначений користувач",
@@ -220,7 +233,9 @@
         "team": "Команда",
         "roles": "Ролі",
         "teams": "Команди",
-        "users": "Користувачі"
+        "users": "Користувачі",
+        "parent": "Джерело",
+        "children": "Children"
     },
     "dashlets": {
         "Stream": "Потік"
@@ -369,6 +384,16 @@
             "currentYear": "Поточного року",
             "lastYear": "Минулого року"
         },
+        "searchRanges": {
+            "is": "Is",
+            "isEmpty": "Is Empty",
+            "isNotEmpty": "Is Not Empty"
+        },
+        "varcharSearchRanges": {
+            "equals": "Дорівнює",
+            "startsWith": "Starts With",
+            "contains": "Contains"
+        },
         "intSearchRanges": {
             "equals": "Дорівнює",
             "notEquals": "Не дорівнює",
@@ -422,7 +447,7 @@
                 "remove": "Видалити зображення"
             },
             "link":{
-                "link": "Линва",
+                "link": "Link",
                 "insert": "Вставити линву",
                 "unlink": "Розлинвити",
                 "edit": "Зміни",

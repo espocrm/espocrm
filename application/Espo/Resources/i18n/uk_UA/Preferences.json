@@ -14,14 +14,15 @@
         "smtpAuth": "Авторизація",
         "smtpSecurity": "Безпека",
         "smtpUsername": "Ім'я користувача",
-        "emailAddress": "Електронна пошта",
+        "emailAddress": "Емейл",
         "smtpPassword": "Пароль",
         "smtpEmailAddress": "Поштова скринька",
         "exportDelimiter": "Експортувати роздільник даних",
         "receiveAssignmentEmailNotifications": "Отримувати повідомлення при призначенні",
         "autoFollowEntityTypeList": "Авто-підписка",
         "signature": "Підпис емейла",
-        "dashboardTabList": "Вкладка Список"
+        "dashboardTabList": "Вкладка Список",
+        "defaultReminders": "Default Reminders"
     },
     "links": {
     },

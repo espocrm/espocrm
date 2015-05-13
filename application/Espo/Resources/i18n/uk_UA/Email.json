@@ -17,7 +17,8 @@
         "toEmailAddresses": "На адресу",
         "emailAddress": "Поштова скринька",
         "deliveryDate": "Дата доставки",
-        "account": "Контрагент"
+        "account": "Контраґент",
+        "users": "Користувачі"
     },
     "links": {
     },
@@ -44,7 +45,8 @@
         "Mark Read": "Прочитане",
         "Sending...": "Шле...",
         "Save Draft": "Зберегти чернетку",
-        "Mark all as read": "Mark all as read"
+        "Mark all as read": "Mark all as read",
+        "Show Plain Text": "Show Plain Text"
     },
     "messages": {
         "noSmtpSetup": "Не налаштовано SMTP. {посилання}.",
@@ -55,7 +57,8 @@
     "presetFilters": {
         "sent": "Відправлено",
         "archived": "В архіві",
-        "draft": "Чернетка"
+        "inbox": "Inbox",
+        "drafts": "Drafts"
     },
     "massActions": {
         "markAsRead": "Позначити прочитаним"

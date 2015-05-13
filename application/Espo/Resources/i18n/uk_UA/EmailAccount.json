@@ -8,7 +8,8 @@
         "port": "Порт",
         "monitoredFolders": "Відслідковувані теки",
         "ssl": "SSL",
-        "fetchSince": "Вибірки з"
+        "fetchSince": "Вибірки з",
+        "emailAddress": "Поштова скринька"
     },
     "links": {
     },
@@ -21,9 +22,14 @@
     "labels": {
         "Create EmailAccount": "Створити емейл-акаунт",
         "IMAP": "IMAP",
-        "Main": "Основне"        
+        "Main": "Основне",
+        "Test Connection": "Перевірка з'єднання"
     },
     "messages": {
-        "couldNotConnectToImap": "Не вдається підключитися до сервера IMAP"
+        "couldNotConnectToImap": "Не вдається підключитися до сервера IMAP",
+        "connectionIsOk": "Connection is Ok"
+    },
+    "tooltips": {
+        "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client."
     }
 }

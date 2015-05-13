@@ -1,0 +1,54 @@
+{
+    "fields": {
+        "name": "Ім'я",
+        "team": "Команда",
+        "status": "статус",
+        "assignToUser": "Присвоїти користувачеві",
+        "host": "Хост",
+        "username": "Ім'я користувача",
+        "password": "Пароль",
+        "port": "Порт",
+        "monitoredFolders": "Відслідковувані теки",
+        "trashFolder": "Кошик",
+        "ssl": "SSL",
+        "createCase": "Створити кейс",
+        "reply": "Авто-Відповідь",
+        "caseDistribution": "Дистрибуція кейсів",
+        "replyEmailTemplate": "Відповісти за зразком",
+        "replyFromAddress": "Відповісти з адреси",
+        "replyToAddress": "Відповісти на адресу",
+        "replyFromName": "Відповісти від імені",
+        "targetUserPosition": "Позиція цільового користувача"
+    },
+    "tooltips": {
+        "reply": "Повідомити відправників, що їхні листи були отримані.",
+        "createCase": "Автоматично створювати кейс із вхідних листів.",
+        "replyToAddress": "Зазначте адресу цієї скриньки, щоби відповіді приходили сюди.",
+        "caseDistribution": "Як кейси будуть призначатися: користувачеві напряму або серед ґрупи.",
+        "assignToUser": "Користувач, якому призначатимуться листи та кейси.",
+        "team": "Команда, до якої відноситимуться листи та кейси.",
+        "targetUserPosition": "Визначити положення користувачів, які будуть розподілені за кейсами."
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Активний",
+            "Inactive": "Неактивний"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Пряме призначення",
+            "Round-Robin": "Циклічне",
+            "Least-Busy": "Найвільнішим"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Створити емейл-акаунт",
+        "IMAP": "IMAP",
+        "Actions": "Дії",
+        "Main": "Основне"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Не вдається підключитися до сервера IMAP"
+    }
+}

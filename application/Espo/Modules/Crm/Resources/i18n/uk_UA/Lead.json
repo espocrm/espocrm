@@ -1,55 +1,56 @@
 {
     "labels": {
-        "Converted To": "Перетворений в",
-        "Create Lead": "Створити потенційного клієнта",
-        "Convert": "Перетворити"
+        "Converted To": "Перетворено на",
+        "Create Lead": "Створили лід",
+        "Convert": "Конвертувати"
     },
     "fields": {
         "name": "Ім'я",
-        "emailAddress": "Електронна пошта",
-        "title": "Назва",
-        "website": "Інтернет сайт",
+        "emailAddress": "Емейл",
+        "title": "Посада",
+        "website": "Вебсайт",
         "phoneNumber": "Телефон",
-        "accountName": "Ім'я контрагента",
+        "accountName": "Ім'я контраґента",
         "doNotCall": "Не дзвонити",
         "address": "Адреса",
         "status": "статус",
         "source": "Джерело",
         "opportunityAmount": "Сума угоди",
-        "opportunityAmountConverted": "Сума угоди (конвертований)",
+        "opportunityAmountConverted": "Сума угоди (конвертована)",
         "description": "Опис",
-        "createdAccount": "Контрагент",
+        "createdAccount": "Контраґент",
         "createdContact": "Контакт",
         "createdOpportunity": "Угода",
         "campaign": "Кампанія",
-        "targetLists": "Цільові Списки",
-        "targetList": "Цільовий Список"
+        "targetLists": "Цільові списки",
+        "targetList": "Цільовий список"
     },
     "links": {
-        "targetLists": "Цільові Списки",
-        "campaignLogRecords": "Кампанія Журналу"
+        "targetLists": "Цільові списки",
+        "campaignLogRecords": "Журнал кампанія"
     },
     "options": {
         "status": {
             "New": "Новий",
             "Assigned": "На розгляді",
             "In Process": "У процесі",
-            "Converted": "Перетворене",
-            "Recycled": "Відновлений",
-            "Dead": "Мертвий"
+            "Converted": "Конвертована",
+            "Recycled": "У кошику",
+            "Dead": "Мертве"
         },
         "source": {
-            "Call": "Виклик",
-            "Email": "Електронна пошта",
-            "Existing Customer": "Існуючі Служби",
+            "Call": "Дзвінок",
+            "Email": "Емейл",
+            "Existing Customer": "Існуючі замовники",
             "Partner": "Партнер",
-            "Public Relations": "Зв'язки З Громадськістю",
-            "Web Site": "Веб-Сайт",
+            "Public Relations": "Зв'язки із громадськістю",
+            "Web Site": "Вебсайт",
             "Campaign": "Кампанія",
             "Other": "Додатково"
         }
     },
     "presetFilters": {
-        "active": "Активний"
+        "active": "Активний",
+        "converted": "Конвертована"
     }
 }

@@ -6,32 +6,32 @@
         "type": "Тип",
         "startDate": "Дата Початку",
         "endDate": "Дата Закінчення",
-        "targetLists": "Цільові Списки",
+        "targetLists": "Цільові списки",
         "sentCount": "Відправлено",
-        "openedCount": "Відкритий",
-        "clickedCount": "Натиснув",
+        "openedCount": "Відкрито",
+        "clickedCount": "Цикнуте",
         "optedOutCount": "Відмовлено",
-        "bouncedCount": "Відскочив",
-        "hardBouncedCount": "Жорсткий Відскочив",
-        "softBouncedCount": "М'яка Відскочив",
-        "leadCreatedCount": "Призводить Створена",
+        "bouncedCount": "Відшито",
+        "hardBouncedCount": "Жорстко відшито",
+        "softBouncedCount": "М'яко відшито",
+        "leadCreatedCount": "Ліди створені",
         "revenue": "Виручка"
     },
     "links": {
-        "targetLists": "Цільові Списки",
-        "accounts": "Контрагенти",
+        "targetLists": "Цільові списки",
+        "accounts": "Контраґенти",
         "contacts": "Контакти",
-        "leads": "Потенційні клієнти",
+        "leads": "Ліди",
         "opportunities": "Угоди",
         "campaignLogRecords": "Лоґ"
     },
     "options": {
         "type": {
-            "Email": "Електронна пошта",
-            "Web": "Веб -",
+            "Email": "Емейл",
+            "Web": "Веб",
             "Television": "Телебачення",
             "Radio": "Радіо",
-            "Newsletter": "Розсилку",
+            "Newsletter": "Розсилка",
             "Mail": "Пошта"
         },
         "status": {
@@ -42,11 +42,11 @@
         }
     },
     "labels": {
-        "Create Campaign": "Створити Кампанію",
-        "Target Lists": "Цільові Списки",
+        "Create Campaign": "Створити кампанію",
+        "Target Lists": "Цільові списки",
         "Statistics": "Статистика",
-        "hard": "жорсткий",
-        "soft": "м'який"
+        "hard": "жорстко",
+        "soft": "м'яко"
     },
     "presetFilters": {
         "active": "Активний"

@@ -1,17 +1,17 @@
 {
     "fields": {
         "name": "Ім'я",
-        "account": "Контрагент",
+        "account": "Контраґент",
         "stage": "Стадія",
         "amount": "Сума",
-        "probability": "Ймовірність успіху, %",
-        "leadSource": "Джерело потенційного клієнта",
+        "probability": "Імовірність, %",
+        "leadSource": "Джерело ліда",
         "doNotCall": "Не дзвонити",
         "closeDate": "Дата закриття",
         "contacts": "Контакти",
         "description": "Опис",
-        "amountConverted": "Сума (сконвертирована)",
-        "amountWeightedConverted": "Сума Зважених",
+        "amountConverted": "Сума (конвертирована)",
+        "amountWeightedConverted": "Зважена сума",
         "campaign": "Кампанія"
     },
     "links": {
@@ -20,16 +20,16 @@
     },
     "options": {
         "stage": {
-            "Prospecting": "Залучення клієнта",
-            "Qualification": "Оцінка можливості",
+            "Prospecting": "Проспектінґ",
+            "Qualification": "Кваліфікація",
             "Needs Analysis": "Вимагає аналізу",
-            "Value Proposition": "Вибір пропозиції/оферти",
-            "Id. Decision Makers": "Визначення відповідальної особи",
-            "Perception Analysis": "Проведення аналізу",
-            "Proposal/Price Quote": "Відправлено пропозиція/оферта",
-            "Negotiation/Review": "Узгодження/розгляд",
-            "Closed Won": "Закрито - Успіх",
-            "Closed Lost": "Закрито - Провал"
+            "Value Proposition": "Цінова пропозиція",
+            "Id. Decision Makers": "Визначення осіб, приймаючих рішення",
+            "Perception Analysis": "Аналізу сприйняття",
+            "Proposal/Price Quote": "Квота пропозицій/цін",
+            "Negotiation/Review": "Заперечення/перегляд",
+            "Closed Won": "Закрито переможно",
+            "Closed Lost": "Закрито провалом"
         }
     },
     "labels": {
@@ -37,6 +37,6 @@
     },
     "presetFilters": {
         "open": "Відкрити",
-        "won": "Успішні"
+        "won": "Переможні"
     }
 }

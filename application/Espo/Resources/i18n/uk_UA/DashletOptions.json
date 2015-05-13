@@ -1,6 +1,6 @@
 {
     "fields": {
-        "title": "Назва",
+        "title": "Посада",
         "dateFrom": "Дата від",
         "dateTo": "Дата до",
         "autorefreshInterval": "Інтервал авто-оновлення",
