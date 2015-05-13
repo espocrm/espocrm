@@ -466,7 +466,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                                .removeClass('btn-danger')
                                .removeClass('btn-success')
                                .removeClass('btn-info');
-            this.$filtersButton.addClass('btn-' + style);
+            this.$filtersButton.addClass('btn-' + filterStyle);
 
             presetName = presetName || '';
 
