@@ -360,7 +360,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         attributes.dateEnd = event.dateEnd;
                     }
                     if (event.dateStartDate) {
-                        console.log(event.dateStartDate);
                         var d = this.getDateTime().toMoment(event.dateStartDate).add(delta);
                         event.dateStartDate = d.format(this.getDateTime().internalDateFormat);
                         attributes.dateStartDate = event.dateStartDate;
@@ -369,7 +368,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                         var d = this.getDateTime().toMoment(event.dateEndDate).add(delta);
                         event.dateEndDate = d.format(this.getDateTime().internalDateFormat);
                         attributes.dateEndDate = event.dateEndDate;
-                        console.log(event.dateEndDate);
                     }
 
                     if (!event.end) {
