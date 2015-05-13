@@ -183,6 +183,12 @@ InstallScript.prototype.step3 = function() {
 	var backAction = '';
 	var nextAction = 'step4';
 
+	$('input[name="user-name"]').blur(function(){
+		var value = $(this).val();
+		value = value.replace(/[^a-z0-9_\s]/gi, '').replace(/[\s]/g, '_').toLowerCase();
+		$(this).val(value);
+	})
+
 	$('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
