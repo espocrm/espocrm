@@ -1,5 +1,5 @@
 {{#unless onlyContent}}
-<li data-id="{{model.id}}" class="list-group-item">
+<li data-id="{{model.id}}" class="list-group-item list-row">
 {{/unless}}
 
     {{#unless noEdit}}

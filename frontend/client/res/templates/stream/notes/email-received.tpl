@@ -1,9 +1,9 @@
 {{#unless onlyContent}}
-<li data-id="{{model.id}}" class="list-group-item">
+<li data-id="{{model.id}}" class="list-group-item list-row">
 {{/unless}}
 
     {{#unless noEdit}}
-    <div class="pull-right right-container">
+    <div class="pull-right right-container cell-buttons">
     {{{right}}}
     </div>
     {{/unless}}
