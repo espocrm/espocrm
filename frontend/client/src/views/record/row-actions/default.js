@@ -25,6 +25,18 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
 
         template: 'record.row-actions.default',
 
+
+        afterRender: function () {
+            var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
+
+            $dd.on('show.bs.dropdown', function () {
+                this.$el.closest('.list-row').addClass('active');
+            }.bind(this));
+            $dd.on('hide.bs.dropdown', function () {
+                this.$el.closest('.list-row').removeClass('active');
+            }.bind(this));
+        },
+
         getActions: function () {
             var list = [{
                 action: 'quickView',

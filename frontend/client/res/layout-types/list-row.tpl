@@ -1,4 +1,4 @@
-<tr data-id="{{model.id}}">
+<tr data-id="{{model.id}}" class="list-row">
 <% _.each(layout, function (defs, key) { %>
     <%
         var width = '';

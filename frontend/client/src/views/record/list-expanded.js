@@ -114,7 +114,7 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
+            return this.options.el + ' li[data-id="' + model.id + '"] .cell-' + item.name;
         },
 
         prepareInternalLayout: function (internalLayout, model) {
@@ -124,6 +124,9 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
                     col.el = this.getItemEl(model, col);
                 }, this);
             }, this);
+            if (internalLayout.right) {
+                internalLayout.right.el = this.getItemEl(model, internalLayout.right);
+            }
         },
 
     });
