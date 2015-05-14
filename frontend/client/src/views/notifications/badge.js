@@ -241,7 +241,9 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
             $document = $(document);
             $document.on('mouseup.notification', function (e) {
                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                    this.closeNotifications();
+                    if (!$(e.target).closest('div.modal-dialog').size()) {
+                        this.closeNotifications();
+                    }
                 }
             }.bind(this));
         },
