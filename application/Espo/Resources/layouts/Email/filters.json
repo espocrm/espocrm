@@ -2,6 +2,7 @@
     "account",
     "dateSent",
     "emailAddress",
+    "name",
     "status",
     "parent",
     "teams",
