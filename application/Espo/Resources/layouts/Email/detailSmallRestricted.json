@@ -6,9 +6,8 @@
             [{"name":"parent"}, {"name":"to", "readOnly": true}],
             [false, {"name":"cc", "readOnly": true}],
             [false, {"name":"bcc", "readOnly": true}],
-            [{"name":"name", "readOnly": true, "fullWidth": true}],
-            [{"name":"body", "readOnly": true, "fullWidth": true}],
-            [{"name":"attachments", "readOnly": true, "fullWidth": true}]
+            [{"name":"body", "readOnly": true, "fullWidth": true, "customLabel": ""}],
+            [{"name":"attachments", "readOnly": true, "fullWidth": true, "customLabel": ""}]
         ]
     }
 ]

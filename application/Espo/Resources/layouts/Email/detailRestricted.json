@@ -6,9 +6,8 @@
             [{"name":"dateSent", "readOnly": true}, {"name":"to", "readOnly": true}],
             [{"name":"parent"}, {"name":"cc", "readOnly": true}],
             [false, {"name":"bcc", "readOnly": true}],
-            [{"name":"name","fullWidth":true, "readOnly": true}],
-            [{"name":"body","fullWidth":true, "readOnly": true}],
-            [{"name":"attachments", "readOnly": true, "fullWidth":true}]
+            [{"name":"body","fullWidth":true, "readOnly": true, "customLabel": ""}],
+            [{"name":"attachments", "readOnly": true, "fullWidth":true, "customLabel": ""}]
         ]
     }
 ]
