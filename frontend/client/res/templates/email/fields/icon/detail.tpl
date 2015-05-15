@@ -1,0 +1,1 @@
+<span class="glyphicon glyphicon-envelope action text-muted" data-action="quickView" data-id="{{model.id}}" style="cursor: pointer;" title="{{translate 'View'}}"></span>

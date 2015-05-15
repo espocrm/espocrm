@@ -534,10 +534,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             for (var i in this.listLayout) {
             	var width = false;
+
             	if ('width' in this.listLayout[i]) {
-					width = this.listLayout[i].width += '%';
+					width = this.listLayout[i].width + '%';
 				} else if ('widthPx' in this.listLayout[i]) {
-					width = this.listLayout[i].width;
+					width = this.listLayout[i].widthPx;
 				}
 
                 var item = {
