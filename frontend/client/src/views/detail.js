@@ -185,6 +185,8 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
         relatedAttributeMap: {},
 
+        relatedAttributeFunctions: {},
+
         selectRelatedFilters: {},
 
         actionCreateRelated: function (data) {
@@ -194,6 +196,10 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             var foreignLink = this.model.defs['links'][link].foreign;
 
             var attributes = {};
+
+            if (this.relatedAttributeFunctions[link] && typeof this.relatedAttributeFunctions[link] == 'function') {
+                attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
+            }
 
             Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
                 attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);

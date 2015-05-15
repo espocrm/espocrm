@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
 
@@ -29,7 +29,17 @@ Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
                 'accountName': 'accountName'
             },
         },
-        
+
+        relatedAttributeFunctions: {
+            'documents': function () {
+                var data = {};
+                if (this.model.get('accountId')) {
+                    data['accountsIds'] = [this.model.get('accountId')]
+                }
+                return data;
+            }
+        },
+
         selectRelatedFilters: {
             'contacts': {
                 'account': function () {
@@ -42,10 +52,10 @@ Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
                         };
                     }
                 },
-                
+
             },
         },
-        
+
     });
 });
 
