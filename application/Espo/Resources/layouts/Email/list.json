@@ -1,5 +1,5 @@
 [
-    {"name":"icon","widthPx": 23,"notSortable": true, "customLabel": "", "view": "Email.Fields.Icon"},
+    {"name":"icon","widthPx": 16,"notSortable": true, "customLabel": "", "view": "Email.Fields.Icon"},
     {"name":"personStringData","width":16,"notSortable": true, "customLabel": ""},
     {"name":"subject","width":35,"link":true,"notSortable": true},
     {"name":"status","notSortable": true, "width":10},
