@@ -5,6 +5,7 @@
             [{"name":"dateSent"}, {"name":"from"}],
             [{"name":"parent"}, {"name":"to"}],
             [false, {"name":"cc"}],
+            [false, {"name":"bcc"}],
             [{"name":"name", "fullWidth": true}],
             [{"name":"body", "fullWidth": true}],
             [{"name":"attachments", "fullWidth": true}]

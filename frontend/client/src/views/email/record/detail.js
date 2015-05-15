@@ -65,6 +65,14 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
             }
         },
 
+        handleBccField: function () {
+            if (!this.model.get('bcc')) {
+                this.hideField('bcc');
+            } else {
+                this.showField('bcc');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -75,6 +83,10 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
             this.handleCcField();
             this.listenTo(this.model, 'change:cc', function () {
                 this.handleCcField();
+            }, this);
+            this.handleBccField();
+            this.listenTo(this.model, 'change:bcc', function () {
+                this.handleBccField();
             }, this);
         },
 
