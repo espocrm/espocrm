@@ -19,6 +19,11 @@
         "exportsTo": "$",
         "exportsAs": "select2"
     },
+    "Selectize": {
+        "path": "client/lib/selectize.min.js",
+        "exportsTo": "$",
+        "exportsAs": "selectize"
+    },
     "Cropper": {
         "path": "client/lib/cropper.min.js",
         "exportsTo": "$",

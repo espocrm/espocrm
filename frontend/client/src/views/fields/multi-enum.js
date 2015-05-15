@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], function (Dep, Select2) {
+Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Selectize'], function (Dep, Selectize) {
 
     return Dep.extend({
 
@@ -61,45 +61,44 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Select2'], fun
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
                 this.$element.val(this.selected.join(','));
 
-                this.on('remove', function () {
-                    $('.select2-hidden-accessible').remove();
-                });
 
-                this.$element.select2({
-                    data: (this.params.options || []).map(function (item) {
-                        var text = item;
-                        if (this.translatedOptions) {
-                            if (item in this.translatedOptions) {
-                                text = this.translatedOptions[item];
-                            }
+                var data = [];
+                (this.params.options || []).forEach(function (value) {
+                    if (this.translatedOptions) {
+                        var label = value;
+                        if (value in this.translatedOptions) {
+                            label = this.translatedOptions[value];
                         }
-                        return {
-                            id: item,
-                            text: text
+                    }
+                    data.push({
+                        value: value,
+                        label: label
+                    });
+                }, this);
+
+                this.$element.selectize({
+                    options: data,
+                    delimiter: ',',
+                    labelField: 'label',
+                    valueField: 'value',
+                    highlight: false,
+                    searchField: ['label'],
+                    plugins: ['remove_button', 'drag_drop'],
+                    score: function (search) {
+                        var score = this.getScoreFunction(search);
+                        search = search.toLowerCase();
+                        return function (item) {
+                            if (item.label.toLowerCase().indexOf(search) === 0) {
+                                return score(item);
+                            }
+                            return 0;
                         };
-                    }, this),
-                    multiple: true,
-                    formatSearching: '',
-                    formatNoMatches: '',
-                    matcher: function (term, text) {
-                        return text.toUpperCase().indexOf(term.toUpperCase()) == 0;
                     }
                 });
 
                 this.$element.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
-
-
-                this.$element.select2('container').find('ul.select2-choices').sortable({
-                    containment: 'parent',
-                    start: function () {
-                        $element.select2('onSortStart');
-                    },
-                    update: function () {
-                        $element.select2('onSortEnd');
-                    }
-                });
             }
         },
 
