@@ -11,7 +11,8 @@
         "source": "Source",
         "publishDate": "Publish Date",
         "expirationDate": "Expiration Date",
-        "description": "Description"
+        "description": "Description",
+        "accounts": "Accounts"
     },
     "links": {
         "accounts": "Accounts",

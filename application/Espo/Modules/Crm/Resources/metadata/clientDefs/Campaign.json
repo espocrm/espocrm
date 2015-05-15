@@ -35,15 +35,7 @@
       }
     },
     "filterList": [
-      {
-         "name":"active",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Active"]
-            }
-         }
-      }
+      "active"
    ],
    "boolFilterList": ["onlyMy"]
 }

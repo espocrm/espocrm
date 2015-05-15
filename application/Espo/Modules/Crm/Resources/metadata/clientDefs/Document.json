@@ -1,24 +1,8 @@
 {
    "controller": "Controllers.Record",
    "filterList": [
-      {
-         "name":"active",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Active"]
-            }
-         }
-      },
-      {
-         "name":"draft",
-         "data": {
-            "status": {
-               "type": "in",
-               "value": ["Draft"]
-            }
-         }
-      }
+      "active",
+      "draft"
    ],
    "boolFilterList": ["onlyMy"]
 }

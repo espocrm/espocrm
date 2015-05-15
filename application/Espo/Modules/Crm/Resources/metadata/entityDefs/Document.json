@@ -62,6 +62,15 @@
         },
         "teams": {
             "type": "linkMultiple"
+        },
+        "accounts": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "importDisabled": true,
+            "noLoad": true,
+            "noSave": true
         }
     },
     "links": {
