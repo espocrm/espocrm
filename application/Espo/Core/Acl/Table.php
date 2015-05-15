@@ -34,9 +34,9 @@ class Table
 
     private $cacheFile;
 
-    private $actionList = array('read', 'edit', 'delete');
+    private $actionList = ['read', 'edit', 'delete'];
 
-    private $levelList = array('all', 'team', 'own', 'no');
+    private $levelList = ['all', 'team', 'own', 'no'];
 
     protected $fileManager;
 
@@ -222,8 +222,11 @@ class Table
         foreach ($scopeList as $scope) {
         	if (!array_key_exists($scope, $data)) {
         		$aclType = $this->metadata->get('scopes.' . $scope . '.acl');
-        		if (!empty($aclType) && ($aclType === true || $aclType === 'record')) {
-	        		$data[$scope] = $this->metadata->get('app.acl.recordDefault');
+                if ($aclType === true) {
+                    $aclType = 'recordAllTeamOwnNo';
+                }
+        		if (!empty($aclType)) {
+	        		$data[$scope] = $this->metadata->get('app.acl.defaults.' . $aclType, true);
         		}
         	}
         }

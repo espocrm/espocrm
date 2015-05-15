@@ -32,9 +32,27 @@
         },
         "Role": false
     },
-    "recordDefault": {
-        "read": "all",
-        "edit": "all",
-        "delete": "no"
+    "defaults": {
+        "boolean": true,
+        "recordAllTeamOwnNo": {
+            "read": "all",
+            "edit": "all",
+            "delete": "no"
+        },
+        "recordAllOwnNo": {
+            "read": "all",
+            "edit": "all",
+            "delete": "no"
+        },
+        "recordAllTeamNo": {
+            "read": "all",
+            "edit": "all",
+            "delete": "no"
+        },
+        "recordAllNo": {
+            "read": "all",
+            "edit": "all",
+            "delete": "no"
+        }
     }
 }

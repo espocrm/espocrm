@@ -18,12 +18,12 @@
                 {{/if}}
             </td>
 
-            {{#ifEqual type 'record'}}
+            {{#ifNotEqual type 'boolean'}}
                 {{#each ../acl}}
                     <td>
                         {{#if ../../../editMode}}
                             <select name="{{../name}}" class="form-control" data-scope="{{../../name}}" {{#ifNotEqual ../../../access 'enabled'}}disabled{{/ifNotEqual}}>
-                            {{options ../../../../levelList level field='levelList' scope='Role'}}
+                            {{options ../../levelList level field='levelList' scope='Role'}}
                             </select>
                         {{else}}
                             {{#ifNotEqual ../../../access 'not-set'}}
@@ -32,7 +32,7 @@
                         {{/if}}
                     </td>
                 {{/each}}
-            {{/ifEqual}}
+            {{/ifNotEqual}}
         </tr>
     {{/each}}
     </table>

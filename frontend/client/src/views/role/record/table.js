@@ -29,8 +29,6 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
 
         actionList: ['read', 'edit', 'delete'],
 
-        levelList: ['all', 'team', 'own', 'no'],
-
         accessList: ['not-set', 'enabled', 'disabled'],
 
         colors: {
@@ -48,11 +46,17 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
 
         aclData: null,
 
+        levelListMap: {
+            'recordAllTeamOwnNo': ['all', 'team', 'own', 'no'],
+            'recordAllTeamNo': ['all', 'team', 'no'],
+            'recordAllOwnNo': ['all', 'own', 'no'],
+            'recordAllNo': ['all', 'no']
+        },
+
         data: function () {
             var data = {};
             data['editMode'] = this.mode === 'edit';
             data['actionList'] = this.actionList;
-            data['levelList'] = this.levelList;
             data['accessList'] = this.accessList;
             data['colors'] = this.colors;
             data['aclTable'] = this.getAclTable();
@@ -79,14 +83,16 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
                         access = 'enabled';
                     }
                 }
-                if (this.aclTypeMap[controller] == 'record') {
+                if (this.aclTypeMap[controller] != 'boolean') {
                     for (var j in this.actionList) {
                         var action = this.actionList[j];
                         var level = 'all';
                         if (controller in aclData) {
                             if (access == 'enabled') {
-                                if (action in aclData[controller]) {
-                                    level = aclData[controller][action];
+                                if (aclData[controller] !== true) {
+                                    if (action in aclData[controller]) {
+                                        level = aclData[controller][action];
+                                    }
                                 }
                             } else {
                                 level = 'no';
@@ -95,14 +101,20 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
                         o[action] = {level: level, name: controller + '-' + action};
                     }
                 }
+                var type = this.aclTypeMap[controller];
                 aclTable[controller] = {
                     acl: o,
                     access: access,
                     name: controller,
-                    type: this.aclTypeMap[controller]
+                    type: type,
+                    levelList: this.levelListMap[type] || []
                 };
             }
             return aclTable;
+        },
+
+        getAclList: function (type) {
+
         },
 
         setup: function () {
@@ -122,10 +134,9 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
                 var acl = this.getMetadata().get('scopes.' + scope + '.acl');
                 if (acl) {
                     this.scopeList.push(scope);
-                    if (acl == 'boolean') {
-                        this.aclTypeMap[scope] = 'boolean';
-                    } else {
-                        this.aclTypeMap[scope] = 'record';
+                    this.aclTypeMap[scope] = acl;
+                    if (acl === true) {
+                        this.aclTypeMap[scope] = 'recordAllTeamOwnNo';
                     }
                 }
             }.bind(this));
