@@ -23,7 +23,8 @@
         "tasksPrimary": "Tasks (expanded)",
         "emailsPrimary": "Emails (expanded)",
         "targetLists": "Target Lists",
-        "campaignLogRecords": "Campaign Log"
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign"
     },
     "options": {
         "type": {

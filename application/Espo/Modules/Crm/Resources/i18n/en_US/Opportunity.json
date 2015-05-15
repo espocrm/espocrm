@@ -16,7 +16,8 @@
     },
     "links": {
         "contacts": "Contacts",
-        "documents": "Documents"
+        "documents": "Documents",
+        "campaign": "Campaign"
     },
     "options": {
         "stage": {

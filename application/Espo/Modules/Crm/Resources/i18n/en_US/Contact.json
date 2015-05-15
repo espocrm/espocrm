@@ -20,7 +20,8 @@
         "opportunities": "Opportunities",
         "cases": "Cases",
         "targetLists": "Target Lists",
-        "campaignLogRecords": "Campaign Log"
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign"
     },
     "labels": {
         "Create Contact": "Create Contact"
