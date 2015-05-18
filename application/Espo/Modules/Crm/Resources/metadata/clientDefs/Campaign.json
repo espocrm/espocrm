@@ -7,7 +7,7 @@
                     "label": "Target Lists",
                     "link": "#TargetList",
                     "acl": "read",
-                    "style": "link",
+                    "style": "default",
                     "aclScope": "TargetList"
                 }
             ]
