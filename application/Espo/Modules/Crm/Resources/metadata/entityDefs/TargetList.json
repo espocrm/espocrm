@@ -66,22 +66,42 @@
         "accounts": {
             "type": "hasMany",
             "entity": "Account",
-            "foreign": "targetLists"
+            "foreign": "targetLists",
+            "additionalColumns": {
+                "optedOut": {
+                    "type": "bool"
+                }
+            }
         },
         "contacts": {
             "type": "hasMany",
             "entity": "Contact",
-            "foreign": "targetLists"
+            "foreign": "targetLists",
+            "additionalColumns": {
+                "optedOut": {
+                    "type": "bool"
+                }
+            }
         },
         "leads": {
             "type": "hasMany",
             "entity": "Lead",
-            "foreign": "targetLists"
+            "foreign": "targetLists",
+            "additionalColumns": {
+                "optedOut": {
+                    "type": "bool"
+                }
+            }
         },
         "users": {
             "type": "hasMany",
             "entity": "User",
-            "foreign": "targetLists"
+            "foreign": "targetLists",
+            "additionalColumns": {
+                "optedOut": {
+                    "type": "bool"
+                }
+            }
         }
     },
     "collection": {
