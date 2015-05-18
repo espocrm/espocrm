@@ -131,8 +131,7 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "noLoad": true,
-            "noSave": true
+            "noLoad": true
         },
         "targetList": {
             "type": "link",
