@@ -33,16 +33,6 @@
                         icon: 'glyphicon glyphicon-send',
                         'acl': 'edit',
                     });
-                    this.menu.actions.push({
-                        'label': 'Set Held',
-                        'action': 'setHeld',
-                        'acl': 'edit'
-                    });
-                    this.menu.actions.push({
-                        'label': 'Set Not Held',
-                        'action': 'setNotHeld',
-                        'acl': 'edit'
-                    });
                 }
             }
         },
@@ -66,35 +56,7 @@
                     }.bind(this),
                 });
             }
-        },
-
-        actionSetHeld: function () {
-            this.model.save({
-                status: 'Held'
-            }, {
-                patch: true,
-                success: function () {
-                    this.notify('Saved', 'success');
-                    this.$el.find('[data-action="sendInvitations"]').remove();
-                    this.$el.find('[data-action="setHeld"]').remove();
-                    this.$el.find('[data-action="setNotHeld"]').remove();
-                }.bind(this),
-            });
-        },
-
-        actionSetNotHeld: function () {
-            this.model.save({
-                status: 'Not Held'
-            }, {
-                patch: true,
-                success: function () {
-                    this.notify('Saved', 'success');
-                    this.$el.find('[data-action="sendInvitations"]').remove();
-                    this.$el.find('[data-action="setHeld"]').remove();
-                    this.$el.find('[data-action="setNotHeld"]').remove();
-                }.bind(this),
-            });
-        },
+        }
 
     });
 });

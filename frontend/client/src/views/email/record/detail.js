@@ -47,6 +47,20 @@ Espo.define('Views.Email.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+            if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
+                this.dropdownItemList.push({
+                    'label': 'Show Plain Text',
+                    'name': 'showBodyPlain'
+                });
+            }
+        },
+
+        actionShowBodyPlain: function () {
+            this.createView('bodyPlain', 'Email.Modals.BodyPlain', {
+                model: this.model
+            }, function (view) {
+                view.render();
+            }.bind(this));
         },
 
         handleAttachmentField: function () {

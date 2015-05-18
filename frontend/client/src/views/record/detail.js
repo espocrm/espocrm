@@ -50,12 +50,14 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 name: 'edit',
                 label: 'Edit',
                 style: 'primary',
-            },
+            }
+        ],
+
+        dropdownItemList: [
             {
                 name: 'delete',
-                label: 'Delete',
-                style: 'danger',
-            },
+                label: 'Delete'
+            }
         ],
 
         buttonEditList: [
@@ -71,6 +73,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 edit: true,
             }
         ],
+
+        dropdownEditItemList: [],
 
         id: null,
 
@@ -89,7 +93,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         dependencyDefs: {},
 
         events: {
-            'click .button-container button': function (e) {
+            'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
                 var action = $target.data('action');
                 var data = $target.data();
@@ -97,6 +101,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
                         this[method].call(this, data);
+                        e.stopPropagation();
                     }
                 }
             }
@@ -297,8 +302,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         data: function () {
             return {
                 scope: this.scope,
-                buttonList: (typeof this.buttons === 'function') ? this.buttons() : this.buttonList,
+                buttonList: this.buttonList,
                 buttonEditList: this.buttonEditList,
+                dropdownItemList: this.dropdownItemList,
+                dropdownEditItemList: this.dropdownEditItemList,
                 buttonsTop: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'top',
                 buttonsBottom: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'bottom',
                 name: this.name,
@@ -317,7 +324,12 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
             this.buttons = this.options.buttons || this.buttons;
             this.buttonList = this.options.buttonList || this.buttonList;
+            this.dropdownItemList = this.options.dropdownItemList || this.dropdownItemList;
+
             this.buttonList = _.clone(this.buttonList);
+            this.buttonEditList = _.clone(this.buttonEditList);
+            this.dropdownItemList = _.clone(this.dropdownItemList);
+            this.dropdownEditItemList = _.clone(this.dropdownEditItemList);
 
             this.returnUrl = this.options.returnUrl || this.returnUrl;
             this.exit = this.options.exit || this.exit;
@@ -468,6 +480,15 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                     this.buttonList.splice(i, 1);
                     break;
                 }
+            }
+            for (var i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name == name) {
+                    this.dropdownItemList.splice(i, 1);
+                    break;
+                }
+            }
+            if (this.isRendered()) {
+            	this.$el.find('.detail-button-container .action[data-action="'+name+'"]')
             }
         },
 

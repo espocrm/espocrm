@@ -45,6 +45,8 @@ Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
             }
         ],
 
+        dropdownItemList: [],
+
         sideView: 'Record.EditSide',
 
         bottomView: null,

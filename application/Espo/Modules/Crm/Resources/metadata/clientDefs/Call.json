@@ -4,18 +4,8 @@
         "detail":"Crm:Call.Detail"
     },
     "recordViews":{
-        "list":"Crm:Call.Record.List"
-    },
-    "menu": {
-        "detail": {
-            "actions": [
-                {
-                    "label": "Duplicate",
-                    "action": "duplicate",
-                    "acl": "edit"
-                }
-            ]
-        }
+        "list":"Crm:Call.Record.List",
+        "detail":"Crm:Meeting.Record.Detail"
     },
     "sidePanels":{
         "detail":[

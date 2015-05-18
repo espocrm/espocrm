@@ -29,15 +29,8 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.buttonList = _.clone(this.buttonList);
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                this.buttonList.push({
-                    name: 'preferences',
-                    label: 'Preferences',
-                    style: 'default'
-                });
-
                 if (!this.model.get('isAdmin')) {
                     this.buttonList.push({
                         name: 'access',
@@ -47,28 +40,13 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                 }
 
                 if (this.model.id == this.getUser().id) {
-                    this.buttonList.push({
+                    this.dropdownItemList.push({
                         name: 'changePassword',
                         label: 'Change Password',
                         style: 'default'
                     });
                 }
 
-                if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
-                    this.buttonList.push({
-                        name: 'emailAccounts',
-                        label: "Email Accounts",
-                        style: 'default'
-                    });
-                }
-
-                if (this.model.id == this.getUser().id) {
-                    this.buttonList.push({
-                        name: 'externalAccounts',
-                        label: 'External Accounts',
-                        style: 'default'
-                    });
-                }
             }
 
             if (this.model.id == this.getUser().id) {

@@ -1,8 +1,20 @@
 <div class="edit" id="{{id}}">
     {{#if buttonsTop}}
-        <div class="detail-button-container button-container record-buttons">
-            {{#each buttonList}}{{button name scope=../../scope label=label style=style}}{{/each}}
+    <div class="detail-button-container button-container record-buttons">
+        <div class="btn-group" role="group">
+        {{#each buttonList}}{{button name scope=../../scope label=label style=style}}{{/each}}
+        {{#if dropdownItemList}}
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-left">
+            {{#each dropdownItemList}}
+            <li><a href="javascript:" class="action" data-action="{{name}}">{{translate label scope=../scope}}</a></li>
+            {{/each}}
+        </ul>
+        {{/if}}
         </div>
+    </div>
     {{/if}}
 
 
@@ -23,11 +35,21 @@
 
 
     {{#if buttonsBottom}}
-        <div class="button-container record-buttons">
-            {{#each buttonList}}
-                {{button name scope=../../scope label=label style=style}}
+    <div class="detail-button-container button-container record-buttons">
+        <div class="btn-group" role="group">
+        {{#each buttonList}}{{button name scope=../../scope label=label style=style}}{{/each}}
+        {{#if dropdownItemList}}
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-left">
+            {{#each dropdownItemList}}
+            <li><a href="javascript:" class="action" data-action="{{name}}">{{translate label scope=../scope}}</a></li>
             {{/each}}
+        </ul>
+        {{/if}}
         </div>
+    </div>
     {{/if}}
 </div>
 

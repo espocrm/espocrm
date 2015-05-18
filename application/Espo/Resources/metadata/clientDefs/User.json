@@ -1,4 +1,7 @@
 {
+   "views": {
+      "detail": "User.Detail"
+   },
    "recordViews":{
       "detail":"User.Record.Detail",
       "edit":"User.Record.Edit",
