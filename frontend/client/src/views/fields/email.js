@@ -247,6 +247,11 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                     break;
             }
 
+            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name)) {
+                attributes.nameHash = {};
+                attributes.nameHash[emailAddress] = this.model.get('name');
+            }
+
             this.notify('Loading...');
             this.createView('quickCreate', 'Modals.ComposeEmail', {
                 attributes: attributes,

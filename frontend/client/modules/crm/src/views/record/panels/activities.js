@@ -273,10 +273,14 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                     attributes.parentId = this.model.id
                     attributes.parentName = this.model.get('name');
                 }
+                if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
+                    attributes.nameHash = {};
+                    attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
+                }
 
                 this.createView('quickCreate', 'Modals.ComposeEmail', {
                     relate: relate,
-                    attributes: attributes 
+                    attributes: attributes
                 }, function (view) {
                     view.render();
                     view.notify(false);
