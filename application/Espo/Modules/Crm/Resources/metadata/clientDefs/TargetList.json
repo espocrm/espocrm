@@ -1,4 +1,13 @@
 {
    "controller": "Controllers.Record",
-   "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy"],
+   "sidePanels":{
+      "detail":[
+         {
+            "name":"optedOut",
+            "label":"Opted Out",
+            "view":"Crm:TargetList.Record.Panels.OptedOut"
+         }
+      ]
+   }
 }
