@@ -26,11 +26,9 @@ use Espo\ORM\Entity;
 
 class Import extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function findRelated(Entity $entity, $link, $selectParams)
+    public function findRelated(Entity $entity, $link, $selectParams = array())
     {
         $entityType = $entity->get('entityType');
-
-
 
         $selectParams['customJoin'] .= $this->getRelatedJoin($entity, $link);
 
@@ -68,17 +66,16 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $sql;
     }
 
-    public function countRelated(Entity $entity, $link, $selectParams)
+    public function countRelated(Entity $entity, $link, $selectParams = array())
     {
         $entityType = $entity->get('entityType');
-
 
         $selectParams['customJoin'] .= $this->getRelatedJoin($entity, $link);
 
         return $this->getEntityManager()->getRepository($entityType)->count($selectParams);
     }
 
-    protected function afterRemove(Entity $entity, array $options)
+    protected function afterRemove(Entity $entity, array $options = array())
     {
         if ($entity->get('fileId')) {
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('fileId'));
