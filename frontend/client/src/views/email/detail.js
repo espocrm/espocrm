@@ -63,6 +63,15 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                 acl: 'edit',
                 aclScope: 'Task'
             });
+
+            if (this.model.get('parentType') !== 'Case' || !this.model.get('parentId')) {
+                this.menu.dropdown.push({
+                    label: 'Create Case',
+                    action: 'createCase',
+                    acl: 'edit',
+                    aclScope: 'Case'
+                });
+            }
         },
 
         actionCreateLead: function () {
@@ -116,6 +125,35 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                 }.bind(this));
             }.bind(this));
         },
+
+        actionCreateCase: function () {
+            var attributes = {};
+
+            if (this.model.get('parentType') == 'Account' && this.model.get('parentId')) {
+                attributes.accountId = this.model.get('parentId');
+                attributes.accountName = this.model.get('parentName');
+                attributes.emailsIds = [this.model.id];
+                attributes.emailId = this.model.id;
+            }
+            attributes.name = this.model.get('name');
+
+            var viewName = this.getMetadata().get('clientDefs.Case.modalViews.detail') || 'Modals.Edit';
+
+            this.notify('Loading...');
+            this.createView('quickCreate', viewName, {
+                scope: 'Case',
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                view.once('after:save', function () {
+                    this.model.fetch();
+                    this.removeMenuItem('createCase');
+                    view.close();
+                }.bind(this));
+            }.bind(this));
+        },
+
 
         actionCreateTask: function () {
             var attributes = {};

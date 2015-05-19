@@ -33,5 +33,20 @@ class CaseObj extends \Espo\Services\Record
         'emails'
     );
 
+    public function afterCreate($entity, array $data)
+    {
+        parent::afterCreate($entity, $data);
+        if (!empty($data['emailId'])) {
+            $email = $this->getEntityManager()->getEntity('Email', $data['emailId']);
+            if ($email && !$email->get('parentId')) {
+                $email->set(array(
+                    'parentType' => 'Case',
+                    'parentId' => $entity->id
+                ));
+                $this->getEntityManager()->saveEntity($email);
+            }
+        }
+    }
+
 }
 
