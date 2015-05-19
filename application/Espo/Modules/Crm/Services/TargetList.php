@@ -47,5 +47,77 @@ class TargetList extends \Espo\Services\Record
         $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'accounts');
         $entity->set('entryCount', $count);
     }
+
+    protected function findLinkedEntitiesOptedOut($id, $link, $params)
+    {
+        $collection = new \Espo\ORM\EntityCollection;
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $query = $this->getEntityManager()->getQuery();
+
+        $sqlContact = $query->createSelectQuery('Contact', array(
+            'select' => ['id', 'name', 'createdAt', ['VALUE:Contact', '_scope']],
+            'customJoin' => 'JOIN contact_target_list AS j ON j.contact_id = contact.id AND j.deleted = 0 AND j.opted_out = 1',
+            'whereClause' => array(
+                'j.targetListId' => $id
+            )
+        ));
+
+        $sqlLead = $query->createSelectQuery('Lead', array(
+            'select' => ['id', 'name', 'createdAt', ['VALUE:Lead', '_scope']],
+            'customJoin' => 'JOIN lead_target_list AS j ON j.lead_id = lead.id AND j.deleted = 0 AND j.opted_out = 1',
+            'whereClause' => array(
+                'j.targetListId' => $id
+            )
+        ));
+
+        $sqlUser = $query->createSelectQuery('User', array(
+            'select' => ['id', 'name', 'createdAt', ['VALUE:User', '_scope']],
+            'customJoin' => 'JOIN target_list_user AS j ON j.user_id = user.id AND j.deleted = 0 AND j.opted_out = 1',
+            'whereClause' => array(
+                'j.targetListId' => $id
+            )
+        ));
+
+        $sqlAccount = $query->createSelectQuery('Account', array(
+            'select' => ['id', 'name', 'createdAt', ['VALUE:Account', '_scope']],
+            'customJoin' => 'JOIN account_target_list AS j ON j.account_id = account.id AND j.deleted = 0 AND j.opted_out = 1',
+            'whereClause' => array(
+                'j.targetListId' => $id
+            )
+        ));
+
+        $sql = "
+            {$sqlContact}
+            UNION
+            {$sqlLead}
+            UNION
+            {$sqlUser}
+            UNION
+            {$sqlAccount}
+            ORDER BY createdAt DESC
+        ";
+
+        $sql = $query->limit($sql, $params['offset'], $params['maxSize']);
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $arr = [];
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $arr[] = $row;
+        }
+
+        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
+        $sth = $pdo->prepare($sqlCount);
+        $sth->execute();
+
+        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        $count = $row['count'];
+
+        return array(
+            'total' => $count,
+            'list' => $arr
+        );
+    }
 }
 

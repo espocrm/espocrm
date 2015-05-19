@@ -88,6 +88,10 @@
             "type": "image",
             "view": "User.Fields.Avatar",
             "previewSize": "small"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
         }
     },
     "links": {

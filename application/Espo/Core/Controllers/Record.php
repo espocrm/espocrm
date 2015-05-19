@@ -135,7 +135,7 @@ class Record extends Base
 
         return array(
             'total' => $result['total'],
-            'list' => $result['collection']->toArray()
+            'list' => isset($result['collection']) ? $result['collection']->toArray() : $result['list']
         );
     }
 
@@ -170,7 +170,7 @@ class Record extends Base
 
         return array(
             'total' => $result['total'],
-            'list' => $result['collection']->toArray()
+            'list' => isset($result['collection']) ? $result['collection']->toArray() : $result['list']
         );
     }
 

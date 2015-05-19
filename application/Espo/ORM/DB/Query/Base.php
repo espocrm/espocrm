@@ -251,9 +251,24 @@ abstract class Base
             $fieldList = array_keys($entity->fields);
         } else {
             $fieldList = $fields;
+            foreach ($fieldList as $i => $field) {
+                if (!is_array($field)) {
+                    $fieldList[$i] = $this->sanitize($field);
+                }
+            }
         }
 
         foreach ($fieldList as $field) {
+            if (is_array($field) && count($field) == 2) {
+                if (stripos($field[0], 'VALUE:') === 0) {
+                    $part = substr($field[0], 6);
+                    $part = $this->quote($part);
+                } else {
+                    $part = $this->convertComplexExpression($entity, $field[0], $distinct);
+                }
+                $arr[] = $part . ' AS `' . $this->sanitize($field[1]) . '`';
+                continue;
+            }
             if (array_key_exists($field, $entity->fields)) {
                 $fieldDefs = $entity->fields[$field];
             } else {

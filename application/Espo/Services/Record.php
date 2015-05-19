@@ -602,11 +602,20 @@ class Record extends \Espo\Core\Services\Base
     public function findLinkedEntities($id, $link, $params)
     {
         $entity = $this->getRepository()->get($id);
-        $foreignEntityName = $entity->relations[$link]['entity'];
-
+        if (!$entity) {
+            throw new NotFound();
+        }
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
+
+        $methodName = 'findLinkedEntities' . ucfirst($link);
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $link, $params);
+        }
+
+        $foreignEntityName = $entity->relations[$link]['entity'];
+
         if (!$this->getAcl()->check($foreignEntityName, 'read')) {
             throw new Forbidden();
         }

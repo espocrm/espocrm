@@ -16,6 +16,10 @@
             "type": "varchar",
             "notStorable": true,
             "disabled": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
         }
     },
     "links": {
