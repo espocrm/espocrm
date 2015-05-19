@@ -251,11 +251,14 @@ abstract class Base
             $fieldList = array_keys($entity->fields);
         } else {
             $fieldList = $fields;
+            print_r($fieldList);
             foreach ($fieldList as $i => $field) {
                 if (!is_array($field)) {
-                    $fieldList[$i] = $this->sanitize($field);
+                    $fieldList[$i] = $this->sanitizeAlias($field);
                 }
             }
+            print_r($fieldList);
+            //die;
         }
 
         foreach ($fieldList as $field) {
@@ -266,7 +269,7 @@ abstract class Base
                 } else {
                     $part = $this->convertComplexExpression($entity, $field[0], $distinct);
                 }
-                $arr[] = $part . ' AS `' . $this->sanitize($field[1]) . '`';
+                $arr[] = $part . ' AS `' . $this->sanitizeAlias($field[1]) . '`';
                 continue;
             }
             if (array_key_exists($field, $entity->fields)) {
@@ -656,6 +659,11 @@ abstract class Base
     public function sanitize($string)
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
+    }
+
+    public function sanitizeAlias($string)
+    {
+        return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
     protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
