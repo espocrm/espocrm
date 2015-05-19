@@ -92,6 +92,10 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
+        if ($entity->has('targetListId') && $entity->isNew()) {
+            $this->relate($entity, 'targetLists', $entity->get('targetListId'));
+        }
+
         return $result;
     }
 }
