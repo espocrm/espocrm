@@ -22,7 +22,27 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
+
 class TargetList extends \Espo\Core\Controllers\Record
 {
+	public function actionUnlinkAll($params, $data, $request)
+	{
+		if (!$request->isPost()) {
+			throw new BadRequest();
+		}
+
+		if (empty($data['id'])) {
+			throw new BadRequest();
+		}
+
+		if (empty($data['link'])) {
+			throw new BadRequest();
+		}
+
+		return $this->getRecordService()->unlinkAll($data['id'], $data['link']);
+	}
 
 }

@@ -232,14 +232,15 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             if (confirm(this.translate('unlinkAllConfirmation', 'messages'))) {
                 this.notify('Please wait...');
                 $.ajax({
-                    url: this.collection.url,
-                    type: 'DELETE',
+                    url: this.model.name + '/action/unlinkAll',
+                    type: 'POST',
                     data: JSON.stringify({
-                        all: true
+                        link: data.link,
+                        id: this.model.id
                     }),
                 }).done(function () {
                     this.notify(false);
-                    self.notify('Unlinked', 'success');
+                    this.notify('Unlinked', 'success');
                     this.collection.fetch();
                 }.bind(this));
             }

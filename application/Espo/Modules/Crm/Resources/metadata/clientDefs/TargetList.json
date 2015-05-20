@@ -48,6 +48,7 @@
          ]
       },
       "users": {
+         "create": false,
          "actionList": [
             {
                "label": "Unlink All",

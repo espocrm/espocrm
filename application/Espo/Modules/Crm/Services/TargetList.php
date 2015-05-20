@@ -48,6 +48,45 @@ class TargetList extends \Espo\Services\Record
         $entity->set('entryCount', $count);
     }
 
+    public function unlinkAll($id, $link)
+    {
+        $entity = $this->getRepository()->get($id);
+
+        $foreignEntityType = $entity->relations[$link]['entity'];
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (empty($foreignEntityType)) {
+            throw new Error();
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $query = $this->getEntityManager()->getQuery();
+        $sql = null;
+
+        switch ($link) {
+            case 'contacts':
+                $sql = "UPDATE contact_target_list SET deleted = 1 WHERE target_list_id = " . $query->quote($entity->id);
+                break;
+            case 'leads':
+                $sql = "UPDATE lead_target_list SET deleted = 1 WHERE target_list_id  = " . $query->quote($entity->id);
+                break;
+            case 'accounts':
+                $sql = "UPDATE account_target_list SET deleted = 1 WHERE target_list_id  = " . $query->quote($entity->id);
+                break;
+            case 'users':
+                $sql = "UPDATE target_list_user SET deleted = 1 WHERE target_list_id  = " . $query->quote($entity->id);
+                break;
+        }
+        if ($sql) {
+            if ($pdo->query($sql)) {
+                return true;
+            }
+        }
+    }
+
     protected function findLinkedEntitiesOptedOut($id, $link, $params)
     {
         $collection = new \Espo\ORM\EntityCollection;
