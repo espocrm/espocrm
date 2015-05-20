@@ -28,15 +28,22 @@ use Espo\Core\Utils\Json;
 class FileUnifier
 {
     private $fileManager;
+    private $metadata;
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata = null)
     {
         $this->fileManager = $fileManager;
+        $this->metadata = $metadata;
     }
 
     protected function getFileManager()
     {
         return $this->fileManager;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     /**
@@ -53,7 +60,7 @@ class FileUnifier
 
         if (!empty($paths['modulePath'])) {
             $moduleDir = strstr($paths['modulePath'], '{*}', true);
-            $moduleList = $this->getFileManager()->getFileList($moduleDir, false, '', false);
+            $moduleList = isset($this->metadata) ? $this->getMetadata()->getModuleList() : $this->getFileManager()->getFileList($moduleDir, false, '', false);
 
             foreach ($moduleList as $moduleName) {
                 $moduleFilePath = str_replace('{*}', $moduleName, $paths['modulePath']);

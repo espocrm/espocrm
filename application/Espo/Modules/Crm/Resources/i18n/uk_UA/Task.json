@@ -2,7 +2,7 @@
     "fields": {
         "name": "Ім'я",
         "parent": "Джерело",
-        "status": "статус",
+        "status": "Статус",
         "dateStart": "Дата початку",
         "dateEnd": "Належна дата",
         "dateStartDate": "Date Start (all day)",
@@ -10,7 +10,7 @@
         "priority": "Пріоритет",
         "description": "Опис",
         "isOverdue": "Прострочено",
-        "account": "Контраґент",
+        "account": "Контрагент",
         "dateCompleted": "Date Completed",
         "attachments": "Вкладення"
     },

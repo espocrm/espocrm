@@ -3,10 +3,10 @@
         "name": "Ім'я",
         "emailAddress": "Емейл",
         "title": "Посада",
-        "account": "Контраґент",
-        "accounts": "Контраґенти",
+        "account": "Контрагент",
+        "accounts": "Контрагенти",
         "phoneNumber": "Телефон",
-        "accountType": "Тип контраґента",
+        "accountType": "Тип контрагента",
         "doNotCall": "Не дзвонити",
         "address": "Адреса",
         "opportunityRole": "Роль угоди",
@@ -18,7 +18,7 @@
     },
     "links": {
         "opportunities": "Угоди",
-        "cases": "Кейси",
+        "cases": "Звернення",
         "targetLists": "Цільові списки",
         "campaignLogRecords": "Журнал кампанія"
     },

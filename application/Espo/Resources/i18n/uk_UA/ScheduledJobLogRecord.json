@@ -1,6 +1,6 @@
 {
     "fields": {
-        "status": "статус",
+        "status": "Статус",
         "executionTime": "Час виконання"
     }
 }

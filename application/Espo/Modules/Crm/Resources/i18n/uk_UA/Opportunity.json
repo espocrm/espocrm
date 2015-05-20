@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Ім'я",
-        "account": "Контраґент",
+        "account": "Контрагент",
         "stage": "Стадія",
         "amount": "Сума",
         "probability": "Імовірність, %",
@@ -20,7 +20,7 @@
     },
     "options": {
         "stage": {
-            "Prospecting": "Проспектінґ",
+            "Prospecting": "Проспектінг",
             "Qualification": "Кваліфікація",
             "Needs Analysis": "Вимагає аналізу",
             "Value Proposition": "Цінова пропозиція",

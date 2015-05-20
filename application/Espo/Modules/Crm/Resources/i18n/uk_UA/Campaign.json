@@ -2,7 +2,7 @@
     "fields": {
         "name": "Ім'я",
         "description": "Опис",
-        "status": "статус",
+        "status": "Статус",
         "type": "Тип",
         "startDate": "Дата Початку",
         "endDate": "Дата Закінчення",
@@ -19,7 +19,7 @@
     },
     "links": {
         "targetLists": "Цільові списки",
-        "accounts": "Контраґенти",
+        "accounts": "Контрагенти",
         "contacts": "Контакти",
         "leads": "Ліди",
         "opportunities": "Угоди",

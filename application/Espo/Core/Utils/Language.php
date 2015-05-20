@@ -30,6 +30,7 @@ class Language
 {
     private $fileManager;
     private $config;
+    private $metadata;
     private $preferences;
     private $unifier;
 
@@ -62,13 +63,14 @@ class Language
     );
 
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config, \Espo\Entities\Preferences $preferences = null)
+    public function __construct(File\Manager $fileManager, Config $config, Metadata $metadata, \Espo\Entities\Preferences $preferences = null)
     {
         $this->fileManager = $fileManager;
         $this->config = $config;
+        $this->metadata = $metadata;
         $this->preferences = $preferences;
 
-        $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
+        $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this->metadata);
     }
 
     protected function getFileManager()
@@ -79,6 +81,11 @@ class Language
     protected function getConfig()
     {
         return $this->config;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     protected function getPreferences()
