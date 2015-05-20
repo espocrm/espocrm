@@ -24,13 +24,13 @@
         "Create User": "Створити користувача",
         "Generate": "Згенерувати",
         "Access": "Доступ",
-        "Preferences": "Переваги",
+        "Preferences": "Параметри",
         "Change Password": "Змінити пароль",
         "Teams and Access Control": "Контроль команди і доступу",
         "Forgot Password?": "Забули пароль?",
         "Password Change Request": "Запит на зміну пароля",
         "Email Address": "Поштова скринька",
-        "External Accounts": "Зовнішні рахунки",
+        "External Accounts": "Зовнішні аккаунти",
         "Email Accounts": "Акаунти емейлів"
     },
     "tooltips": {
