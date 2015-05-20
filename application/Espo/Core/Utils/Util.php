@@ -186,17 +186,23 @@ class Util
      */
     public static function unsetInArrayByValue($needle, array $haystack, $reIndex = true)
     {
+        $doReindex = false;
+
         foreach($haystack as $key => $value) {
             if (is_array($value)) {
                 $haystack[$key] = static::unsetInArrayByValue($needle, $value);
             } else if ($needle === $value) {
 
+                unset($haystack[$key]);
+
                 if ($reIndex) {
-                    array_splice($haystack, $key, 1);
-                } else {
-                    unset($haystack[$key]);
+                    $doReindex = true;
                 }
             }
+        }
+
+        if ($doReindex) {
+            $haystack = array_values($haystack);
         }
 
         return $haystack;
