@@ -1,14 +1,19 @@
-{{#each panels}}
+{{#each panelList}}
 <div class="panel panel-default panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}" data-panel-name="{{name}}">
     {{#if label}}
     <div class="panel-heading">
         <div class="pull-right btn-group">
-            {{#if actions}}
+            {{#if buttonList}}
+                {{#each buttonList}}
+                <button type="button" class="btn btn-default btn-sm action" data-action="{{action}}" data-panel="{{../../name}}" {{#each data}} data-{{@key}}="{{./this}}"{{/each}} title="{{translate title scope=../scope}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</button>
+                {{/each}}
+            {{/if}}
+            {{#if actionList}}
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    {{#each actions}}
+                    {{#each actionList}}
                     <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-panel="{{../../name}}" data-action="{{action}}"{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../scope}}</a></li>
                     {{/each}}
                 </ul>

@@ -29,7 +29,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
         data: function () {
             return {
-                panels: this.panels
+                panelList: this.panelList
             };
         },
 
@@ -55,10 +55,10 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
         setupPanels: function () {
             var scope = this.scope;
 
-            var panels = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
+            var panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 
             if (this.mode == 'detail' && this.getMetadata().get('scopes.' + scope + '.stream')) {
-                panels.push({
+                panelList.push({
                     "name":"stream",
                     "label":"Stream",
                     "view":"Stream.Panel",
@@ -66,19 +66,19 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                 });
             }
 
-            panels.forEach(function (p) {
+            panelList.forEach(function (p) {
                 var name = p.name;
-                this.panels.push(p);
+                this.panelList.push(p);
                 this.createView(name, p.view, {
                     model: this.model,
                     panelName: name,
                     el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(name)
                 }, function (view) {
-                    if ('getActions' in view) {
-                        p.actions = this.filterActions(view.getActions());
+                    if ('getActionList' in view) {
+                        p.actionList = this.filterActions(view.getActionList());
                     }
-                    if ('getButtons' in view) {
-                        p.buttons = this.filterActions(view.getButtons());
+                    if ('getButtonList' in view) {
+                        p.buttonList = this.filterActions(view.getButtonList());
                     }
                     if (p.label) {
                         p.title = this.translate(p.label, 'labels', scope);
@@ -90,7 +90,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
         },
 
         setup: function () {
-            this.panels = [];
+            this.panelList = [];
             var scope = this.scope = this.model.name;
 
             this.setupPanels();
@@ -117,7 +117,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                         return;
                     }
 
-                    this.panels.push(p);
+                    this.panelList.push(p);
 
                     var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
 
@@ -132,11 +132,11 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                         defs: defs,
                         el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(p.name)
                     }, function (view) {
-                        if ('getActions' in view) {
-                            p.actions = this.filterActions(view.getActions());
+                        if ('getActionList' in view) {
+                            p.actionList = this.filterActions(view.getActionList());
                         }
-                        if ('getButtons' in view) {
-                            p.buttons = this.filterActions(view.getButtons());
+                        if ('getButtonList' in view) {
+                            p.buttonList = this.filterActions(view.getButtonList());
                         }
                         p.title = view.title;
                     }.bind(this));
@@ -159,7 +159,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
         getFields: function () {
             var fields = {};
-            this.panels.forEach(function (p) {
+            this.panelList.forEach(function (p) {
                 var panel = this.getView(p.name);
                 if ('getFields' in panel) {
                     fields = _.extend(fields, panel.getFields());
@@ -171,7 +171,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
         fetch: function () {
             var data = {};
 
-            this.panels.forEach(function (p) {
+            this.panelList.forEach(function (p) {
                 var panel = this.getView(p.name);
                 if ('fetch' in panel) {
                     data = _.extend(data, panel.fetch());

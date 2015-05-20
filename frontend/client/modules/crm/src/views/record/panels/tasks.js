@@ -35,12 +35,13 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
         asc: false,
 
-        actions: [
+        buttonList: [
             {
                 action: 'createTask',
-                label: 'Create Task',
+                title: 'Create Task',
                 acl: 'edit',
                 aclScope: 'Task',
+                html: '<span class="glyphicon glyphicon-plus"></span>',
             }
         ],
 

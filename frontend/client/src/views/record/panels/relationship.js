@@ -53,15 +53,27 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                 }
             }
 
-            this.buttons = {};
-            if (this.getAcl().check(this.scope, 'edit') && !~['User', 'Team'].indexOf()) {
-                this.buttons.create = this.defs.create;
+            this.buttonList = _.clone(this.defs.buttonList || []);
+            this.actionList = _.clone(this.defs.actionList || []);
+
+            if (this.defs.create) {
+                if (this.getAcl().check(this.scope, 'edit') && !~['User', 'Team'].indexOf()) {
+                    this.buttonList.push({
+                        title: 'Create',
+                        action: 'createRelated',
+                        link: this.link,
+                        acl: 'edit',
+                        aclScope: this.scope,
+                        html: '<span class="glyphicon glyphicon-plus"></span>',
+                        data: {
+                            link: this.link,
+                        }
+                    });
+                }
             }
 
-            this.actions = _.clone(this.defs.actions || []);
-
             if (this.defs.select) {
-                this.actions.unshift({
+                this.actionList.unshift({
                     label: 'Select',
                     action: 'selectRelated',
                     data: {
@@ -126,23 +138,7 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             }, this);
         },
 
-        getActions: function () {
-            return this.actions || [];
-        },
 
-        getButtons: function () {
-            if (this.buttons && this.buttons.create) {
-                return [{
-                    title: 'Create',
-                    action: 'createRelated',
-                    link: this.link,
-                    acl: 'edit',
-                    aclScope: this.scope,
-                    html: '<span class="glyphicon glyphicon-plus"></span>',
-                }];
-            }
-            return [];
-        },
 
         actionRefresh: function () {
             this.collection.fetch();

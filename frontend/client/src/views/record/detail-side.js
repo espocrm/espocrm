@@ -30,7 +30,7 @@
 
         inlineEditDisabled: false,
 
-        panels: [
+        panelList: [
             {
                 name: 'default',
                 label: false,
@@ -53,7 +53,7 @@
 
         data: function () {
             return {
-                panels: this.panels,
+                panelList: this.panelList,
                 scope: this.scope,
             };
         },
@@ -78,9 +78,9 @@
         },
 
         init: function () {
-            this.panels = this.options.panels || this.panels;
+            this.panelList = this.options.panelList || this.panelList;
             this.scope = this.options.model.name;
-            this.panels = _.clone(this.panels);
+            this.panelList = _.clone(this.panelList);
             if (!this.readOnly) {
                 if ('readOnly' in this.options)    {
                     this.readOnly = this.options.readOnly;
@@ -107,10 +107,10 @@
 
             var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.type) || [];
             additionalPanels.forEach(function (panel) {
-                this.panels.push(panel);
+                this.panelList.push(panel);
             }.bind(this));
 
-            this.panels.forEach(function (p) {
+            this.panelList.forEach(function (p) {
                 var o = {
                     model: this.options.model,
                     el: this.options.el + ' .panel-body-' + p.name,
@@ -120,8 +120,11 @@
                 };
                 o = _.extend(o, p.options);
                 this.createView(p.name, p.view, o, function (view) {
-                    if ('getActions' in view) {
-                        p.actions = this.filterActions(view.getActions());
+                    if ('getButtonList' in view) {
+                        p.buttonList = this.filterActions(view.getButtonList());
+                    }
+                    if ('getActionList' in view) {
+                        p.actionList = this.filterActions(view.getActionList());
                     }
                     if (p.label) {
                         p.title = this.translate(p.label, 'labels', this.scope);
@@ -134,7 +137,7 @@
 
         getFields: function () {
             var fields = {};
-            this.panels.forEach(function (p) {
+            this.panelList.forEach(function (p) {
                 var panel = this.getView(p.name);
                 if ('getFields' in panel) {
                     fields = _.extend(fields, panel.getFields());
@@ -146,7 +149,7 @@
         fetch: function () {
             var data = {};
 
-            this.panels.forEach(function (p) {
+            this.panelList.forEach(function (p) {
                 var panel = this.getView(p.name);
                 if ('fetch' in panel) {
                     data = _.extend(data, panel.fetch());

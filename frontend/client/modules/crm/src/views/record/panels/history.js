@@ -31,7 +31,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 
         asc: false,
 
-        actions: [
+        actionList: [
             {
                 action: 'createActivity',
                 label: 'Log Meeting',

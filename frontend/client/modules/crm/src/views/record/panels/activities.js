@@ -33,7 +33,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 
         asc: false,
 
-        actions: [
+        actionList: [
             {
                 action: 'createActivity',
                 label: 'Schedule Meeting',

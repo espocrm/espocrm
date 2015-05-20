@@ -25,7 +25,7 @@ Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
 
         mode: 'edit',
 
-        panels: [
+        panelList: [
             {
                 name: 'default',
                 label: false,

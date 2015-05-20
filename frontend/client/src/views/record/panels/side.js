@@ -36,7 +36,9 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
         mode: 'detail',
 
-        actions: null,
+        actionList: null,
+
+        buttonList: null,
 
         readOnly: false,
 
@@ -133,8 +135,12 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
             return fields;
         },
 
-        getActions: function () {
-            return this.actions || [];
+        getActionList: function () {
+            return this.actionList || [];
+        },
+
+        getButtonList: function () {
+            return this.buttonList || [];
         },
 
         actionRefresh: function () {

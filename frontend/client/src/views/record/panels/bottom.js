@@ -23,7 +23,9 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
 
     return Dep.extend({
 
-        actions: null,
+        actionList: null,
+
+        buttonList: null,
 
         defs: null,
 
@@ -52,12 +54,12 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
             this.defs = this.options.defs || {};
         },
 
-        getButtons: function () {
-            return [];
+        getButtonList: function () {
+            return this.buttonList || [];
         },
 
-        getActions: function () {
-            return [];
+        getActionList: function () {
+            return this.actionList || [];
         },
 
         actionViewRecord: function (data) {
