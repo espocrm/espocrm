@@ -9,5 +9,55 @@
             "view":"Crm:TargetList.Record.Panels.OptedOut"
          }
       ]
+   },
+   "relationshipPanels": {
+      "contacts": {
+         "actionList": [
+            {
+               "label": "Unlink All",
+               "action": "unlinkAllRelated",
+               "acl": "edit",
+               "data": {
+                  "link": "contacts"
+               }
+            }
+         ]
+      },
+      "leads": {
+         "actionList": [
+            {
+               "label": "Unlink All",
+               "action": "unlinkAllRelated",
+               "acl": "edit",
+               "data": {
+                  "link": "leads"
+               }
+            }
+         ]
+      },
+      "accounts": {
+         "actionList": [
+            {
+               "label": "Unlink All",
+               "action": "unlinkAllRelated",
+               "acl": "edit",
+               "data": {
+                  "link": "accounts"
+               }
+            }
+         ]
+      },
+      "users": {
+         "actionList": [
+            {
+               "label": "Unlink All",
+               "action": "unlinkAllRelated",
+               "acl": "edit",
+               "data": {
+                  "link": "users"
+               }
+            }
+         ]
+      }
    }
 }

@@ -152,7 +152,8 @@
         "Value": "Value",
         "Current version": "Current version",
         "List View": "List View",
-        "Tree View": "Tree View"
+        "Tree View": "Tree View",
+        "Unlink All": "Unlink All"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -175,9 +176,10 @@
         "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
         "assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you.\n\n{recordUrl}",
         "confirmation": "Are you sure?",
+        "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
         "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
         "removeRecordConfirmation": "Are you sure you want to remove the record?",
-        "unlinkRecordConfirmation": "Are you sure you want to unlink relationship?",
+        "unlinkRecordConfirmation": "Are you sure you want to unlink the related record?",
         "removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?",
         "massUpdateResult": "{count} records have been updated",
         "massUpdateResultSingle": "{count} record has been updated",

@@ -227,6 +227,23 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                 });
             }
         },
+
+        actionUnlinkAllRelated: function (data) {
+            if (confirm(this.translate('unlinkAllConfirmation', 'messages'))) {
+                this.notify('Please wait...');
+                $.ajax({
+                    url: this.collection.url,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        all: true
+                    }),
+                }).done(function () {
+                    this.notify(false);
+                    self.notify('Unlinked', 'success');
+                    this.collection.fetch();
+                }.bind(this));
+            }
+        },
     });
 });
 

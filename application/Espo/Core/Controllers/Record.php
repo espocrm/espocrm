@@ -69,13 +69,17 @@ class Record extends Base
         return $entity->toArray();
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
-        return $this->actionUpdate($params, $data);
+        return $this->actionUpdate($params, $data, $request);
     }
 
-    public function actionCreate($params, $data)
+    public function actionCreate($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw BadRequest();
+        }
+
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
@@ -89,8 +93,12 @@ class Record extends Base
         throw new Error();
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
+        if (!$request->isPut() && !$request->isPatch()) {
+            throw BadRequest();
+        }
+
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
@@ -174,8 +182,12 @@ class Record extends Base
         );
     }
 
-    public function actionDelete($params)
+    public function actionDelete($params, $data, $request)
     {
+        if (!$request->isDelete()) {
+            throw BadRequest();
+        }
+
         $id = $params['id'];
 
         if ($this->getRecordService()->deleteEntity($id)) {
@@ -212,6 +224,10 @@ class Record extends Base
 
     public function actionMassUpdate($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
@@ -235,6 +251,9 @@ class Record extends Base
 
     public function actionMassDelete($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
         if (!$this->getAcl()->check($this->name, 'delete')) {
             throw new Forbidden();
         }
@@ -254,10 +273,14 @@ class Record extends Base
         return $idsRemoved;
     }
 
-    public function actionCreateLink($params, $data)
+    public function actionCreateLink($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
         if (empty($params['id']) || empty($params['link'])) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         $id = $params['id'];
@@ -294,13 +317,17 @@ class Record extends Base
         throw new Error();
     }
 
-    public function actionRemoveLink($params, $data)
+    public function actionRemoveLink($params, $data, $request)
     {
+        if (!$request->isDelete()) {
+            throw new BadRequest();
+        }
+
         $id = $params['id'];
         $link = $params['link'];
 
         if (empty($params['id']) || empty($params['link'])) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         $foreignIds = array();
@@ -326,8 +353,11 @@ class Record extends Base
         throw new Error();
     }
 
-    public function actionFollow($params)
+    public function actionFollow($params, $data, $request)
     {
+        if (!$request->isPut()) {
+            throw new BadRequest();
+        }
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
@@ -335,8 +365,11 @@ class Record extends Base
         return $this->getRecordService()->follow($id);
     }
 
-    public function actionUnfollow($params)
+    public function actionUnfollow($params, $data, $request)
     {
+        if (!$request->isDelete()) {
+            throw new BadRequest();
+        }
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
