@@ -30,20 +30,9 @@ Espo.define('Views.Fields.Teams', 'Views.Fields.LinkMultiple', function (Dep) {
 
         getSelectBoolFilterList: function () {
             if (this.assignmentPermission == 'team' || this.assignmentPermission == 'no') {
-                return {'onlyMy': true};
+                return ['onlyMy'];
             }
         },
-
-        getAutocompleteUrl: function () {
-            var url = Dep.prototype.getAutocompleteUrl.call(this);
-            if (this.assignmentPermission == 'team' || this.assignmentPermission == 'no') {
-                url += '&where%5B0%5D%5Btype%5D=bool&where%5B0%5D%5Bvalue%5D%5B%5D=onlyMy';
-            }
-
-            return url;
-        },
-
-
 
     });
 });
