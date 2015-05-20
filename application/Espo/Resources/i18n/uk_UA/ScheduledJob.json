@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Ім'я",
-        "status": "статус",
+        "status": "Статус",
         "job": "Завдання",
         "scheduling": "Планування (оповіщення crontab)"
     },

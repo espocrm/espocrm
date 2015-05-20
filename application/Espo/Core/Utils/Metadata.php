@@ -92,7 +92,7 @@ class Metadata
     protected function getUnifier()
     {
         if (!isset($this->unifier)) {
-            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager);
+            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this);
         }
 
         return $this->unifier;

@@ -236,6 +236,7 @@ class Container
         return new \Espo\Core\Utils\Language(
             $this->get('fileManager'),
             $this->get('config'),
+            $this->get('metadata'),
             $this->get('preferences')
         );
     }

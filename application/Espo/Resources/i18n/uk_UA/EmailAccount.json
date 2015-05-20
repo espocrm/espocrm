@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Ім'я",
-        "status": "статус",
+        "status": "Статус",
         "host": "Хост",
         "username": "Ім'я користувача",
         "password": "Пароль",
@@ -20,7 +20,7 @@
         }
     },
     "labels": {
-        "Create EmailAccount": "Створити емейл-акаунт",
+        "Create EmailAccount": "Додати емейл-акаунт",
         "IMAP": "IMAP",
         "Main": "Основне",
         "Test Connection": "Перевірка з'єднання"

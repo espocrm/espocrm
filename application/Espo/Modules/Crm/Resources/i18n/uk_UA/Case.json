@@ -1,9 +1,9 @@
 {
     "fields": {
         "name": "Ім'я",
-        "number": "Нумер",
-        "status": "статус",
-        "account": "Контраґент",
+        "number": "Номер",
+        "status": "Статус",
+        "account": "Контрагент",
         "contact": "Контакт",
         "priority": "Пріоритет",
         "type": "Тип",

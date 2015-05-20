@@ -16,7 +16,7 @@
     "links": {
         "contacts": "Контакти",
         "opportunities": "Угоди",
-        "cases": "Кейси",
+        "cases": "Звернення",
         "documents": "Документи",
         "meetingsPrimary": "Meetings (expanded)",
         "callsPrimary": "Calls (expanded)",
@@ -37,7 +37,7 @@
             "Advertising": "Реклама",
             "Apparel & Accessories": "Одяг та аксесуари",
             "Automotive": "Автомобільні",
-            "Banking": "Банкінґ",
+            "Banking": "Банкінг",
             "Biotechnology": "Біотехнології",
             "Chemical": "Хемія",
             "Computer": "Комп'ютери",
@@ -53,8 +53,8 @@
             "Real Estate": "Нерухомість",
             "Service": "Сервіс",
             "Sports": "Спорт",
-            "Software": "Проґрамне забезпечення",
-            "Technology": "Технолоґія",
+            "Software": "Програмне забезпечення",
+            "Technology": "Технологія",
             "Telecommunications": "Телекомунікації",
             "Television": "Телебачення",
             "Transportation": "Транспорт",
@@ -62,7 +62,7 @@
         }
     },
     "labels": {
-        "Create Account": "Створити контраґента",
+        "Create Account": "Створити контрагента",
         "Copy Billing": "Копія рахунку"
     },
     "presetFilters": {

@@ -27,20 +27,27 @@ use Espo\Core\Utils;
 class Unifier
 {
     private $fileManager;
+    private $metadata;
 
     protected $params = array(
         'unsetFileName' => 'unset.json',
         'defaultsPath' => 'application/Espo/Core/defaults',
     );
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata = null)
     {
         $this->fileManager = $fileManager;
+        $this->metadata = $metadata;
     }
 
     protected function getFileManager()
     {
         return $this->fileManager;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     /**
@@ -58,11 +65,12 @@ class Unifier
 
         if (!empty($paths['modulePath'])) {
             $customDir = strstr($paths['modulePath'], '{*}', true);
-            $dirList = $this->getFileManager()->getFileList($customDir, false, '', false);
 
-            foreach ($dirList as $dirName) {
-                $curPath = str_replace('{*}', $dirName, $paths['modulePath']);
-                $content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $dirName));
+            $moduleList = isset($this->metadata) ? $this->getMetadata()->getModuleList() : $this->getFileManager()->getFileList($customDir, false, '', false);
+
+            foreach ($moduleList as $moduleName) {
+                $curPath = str_replace('{*}', $moduleName, $paths['modulePath']);
+                $content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $moduleName));
             }
         }
 
