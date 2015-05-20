@@ -45,6 +45,9 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
         inlineEditDisabled: false,
 
         setup: function () {
+            this.buttonList = _.clone(this.buttonList || []);
+            this.actionList = _.clone(this.actionList || []);
+
             this.fieldList = this.options.fieldList || this.fieldList || [];
             this.dates = ('dates' in this.options) ? this.options.dates : false;
             this.mode = this.options.mode || this.mode;
