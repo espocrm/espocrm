@@ -50,7 +50,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
 
         setup: function () {
             this.filters = this.options.filters || {};
-            this.boolFilterList = this.options.boolFilterList || {};
+            this.boolFilterList = this.options.boolFilterList || [];
             this.primaryFilterName = this.options.primaryFilterName || null;
 
             if ('multiple' in this.options) {
@@ -122,7 +122,11 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
                         searchManager.setAdvanced(this.filters);
                     }
                     if (this.boolFilterList) {
-                        searchManager.setBool(this.boolFilterList);
+                        var d = {};
+                        this.boolFilterList.forEach(function (item) {
+                            d[item] = true;
+                        });
+                        searchManager.setBool(d);
                     }
                     if (this.primaryFilterName) {
                         searchManager.setPrimary(this.primaryFilterName);

@@ -62,7 +62,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         getSelectBoolFilterList: function () {},
 
-        getPrimaryFilterName: function () {},
+        getSelectPrimaryFilterName: function () {},
 
         setup: function () {
             this.nameHashName = this.name + 'Names';
@@ -94,7 +94,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                         createButton: this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
-                        primaryFilterName: this.getPrimaryFilterName(),
+                        primaryFilterName: this.getSelectPrimaryFilterName(),
                         multiple: true
                     }, function (dialog) {
                         dialog.render();
@@ -118,7 +118,18 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            return this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var url = this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            var boolList = this.getSelectBoolFilterList();
+            if (boolList) {
+                boolList.forEach(function(item) {
+                    url += '&where%5B0%5D%5Btype%5D=bool&where%5B0%5D%5Bvalue%5D%5B%5D=' + item;
+                }, this);
+            }
+            var primary = this.getSelectPrimaryFilterName();
+            if (primary) {
+                url += '&where%5B0%5D%5Btype%5D=primary&where%5B0%5D%5Bvalue%5D=' + primary;
+            }
+            return url;
         },
 
         afterRender: function () {
