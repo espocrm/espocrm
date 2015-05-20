@@ -449,6 +449,86 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, Util::merge($currentArray, $newArray));
     }
 
+    public function testMergeWithAppend2()
+    {
+        $currentArray = json_decode('{
+         "controller": "Controllers.Record",
+         "boolFilterList": ["onlyMy"],
+         "sidePanels":{
+            "detail":[
+               {
+                  "name":"optedOut",
+                  "label":"Opted Out",
+                  "view":"Crm:TargetList.Record.Panels.OptedOut"
+               }
+            ]
+         }
+        }', true);
+
+        $newArray = json_decode('{
+          "views":{
+               "detail":"Advanced:TargetList.Detail"
+           },
+          "recordViews": {
+            "detail": "Advanced:TargetList.Record.Detail"
+          },
+          "sidePanels": {
+            "detail": [
+              "__APPEND__",
+                {
+                   "name":"populating",
+                   "label":"Populating",
+                   "view":"Advanced:TargetList.Record.Panels.Populating"
+                }
+            ],
+            "edit": [
+              "__APPEND__",
+                {
+                   "name":"populating",
+                   "label":"Populating",
+                   "view":"Advanced:TargetList.Record.Panels.Populating"
+                }
+            ]
+          }
+        }', true);
+
+        $result = json_decode('{
+          "controller": "Controllers.Record",
+          "boolFilterList": [
+            "onlyMy"
+          ],
+          "sidePanels": {
+            "detail": [
+              {
+                "name": "optedOut",
+                "label": "Opted Out",
+                "view": "Crm:TargetList.Record.Panels.OptedOut"
+              },
+              {
+                "name": "populating",
+                "label": "Populating",
+                "view": "Advanced:TargetList.Record.Panels.Populating"
+              }
+            ],
+            "edit": [
+              {
+                "name": "populating",
+                "label": "Populating",
+                "view": "Advanced:TargetList.Record.Panels.Populating"
+              }
+            ]
+          },
+          "views": {
+            "detail": "Advanced:TargetList.Detail"
+          },
+          "recordViews": {
+            "detail": "Advanced:TargetList.Record.Detail"
+          }
+        }', true);
+
+        $this->assertEquals($result, Util::merge($currentArray, $newArray));
+    }
+
     public function testMergeWithBool()
     {
         $currentArray = array (
@@ -1225,4 +1305,49 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.notExists', 'customReturns'));
         $this->assertNotEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.useCache', 'customReturns'));
     }
+
+    public function testUnsetInArrayByValue()
+    {
+        $newArray = json_decode('[
+          "__APPEND__",
+            {
+               "name":"populating",
+               "label":"Populating",
+               "view":"Advanced:TargetList.Record.Panels.Populating"
+            }
+        ]', true);
+
+        $result = json_decode('[
+            {
+               "name":"populating",
+               "label":"Populating",
+               "view":"Advanced:TargetList.Record.Panels.Populating"
+            }
+        ]', true);
+
+        $this->assertEquals($result, Util::unsetInArrayByValue('__APPEND__', $newArray));
+    }
+
+    public function testUnsetInArrayByValueWithoutReindex()
+    {
+        $newArray = json_decode('[
+          "__APPEND__",
+            {
+               "name":"populating",
+               "label":"Populating",
+               "view":"Advanced:TargetList.Record.Panels.Populating"
+            }
+        ]', true);
+
+        $result = json_decode('{
+          "1": {
+            "name": "populating",
+            "label": "Populating",
+            "view": "Advanced:TargetList.Record.Panels.Populating"
+          }
+        }', true);
+
+        $this->assertEquals($result, Util::unsetInArrayByValue('__APPEND__', $newArray, false));
+    }
 }
+
