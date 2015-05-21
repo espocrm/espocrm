@@ -119,7 +119,7 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                     doc.close();
 
                     setTimeout(function () {
-                        var height = $iframe.contents().find('html body').height();
+                        var height = $iframe.contents().find('html body').height() + 30;
                         iframe.style.height = height + 'px';
 
                         $iframe.load(function () {
