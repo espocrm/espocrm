@@ -49,9 +49,11 @@
                 attributes['name'] = subject;
             }
 
-            var to = null;
+            var to = '';
 
             var nameHash = model.get('nameHash') || {};
+
+            var isReplyOnSent = false;
 
             if (model.get('replyToString')) {
                 var str = model.get('replyToString');
@@ -74,15 +76,19 @@
             }
             if (!to || !~to.indexOf('@')) {
                 if (model.get('from')) {
-                    to = model.get('from');
-                    if (!nameHash[to]) {
-                        var fromString = model.get('fromString') || model.get('fromName');
-                        if (fromString) {
-                            var name = this.parseNameFromStringAddress(fromString);
-                            if (name != to) {
-                                nameHash[to] = name;
+                    if (model.get('from') != this.getUser().get('emailAddress')) {
+                        to = model.get('from');
+                        if (!nameHash[to]) {
+                            var fromString = model.get('fromString') || model.get('fromName');
+                            if (fromString) {
+                                var name = this.parseNameFromStringAddress(fromString);
+                                if (name != to) {
+                                    nameHash[to] = name;
+                                }
                             }
                         }
+                    } else {
+                        isReplyOnSent = true;
                     }
                 }
             }
@@ -92,10 +98,14 @@
             if (cc) {
                 attributes.cc = model.get('cc');
                 (model.get('to')).split(';').forEach(function (item) {
-                   item = item.trim();
-                   if (item != this.getUser().get('emailAddress')) {
-                       attributes.cc += '; ' + item;
-                   }
+                    item = item.trim();
+                    if (item != this.getUser().get('emailAddress')) {
+                        if (isReplyOnSent) {
+                            attributes.to += '; ' + item;
+                        } else {
+                            attributes.cc += '; ' + item;
+                        }
+                    }
                 }, this);
                 attributes.cc = attributes.cc.replace(/^(\; )/,"");
             }
