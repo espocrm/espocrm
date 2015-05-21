@@ -43,6 +43,20 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 
         escapeDisabled: false,
 
+        events: {
+            'click .action': function (e) {
+                var $target = $(e.currentTarget);
+                var action = $target.data('action');
+                var data = $target.data();
+                if (action) {
+                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    if (typeof this[method] == 'function') {
+                        this[method].call(this, data);
+                    }
+                }
+            }
+        },
+
         init: function () {
             var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
             var containerSelector = this.containerSelector = '#' + id;

@@ -31,7 +31,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
         saveButton: true,
 
-        fullFormButton: true,
+        fullFormDisabled: false,
 
         editViewName: null,
 
@@ -57,11 +57,9 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                 });
             }
 
-            if ('fullFormButton' in this.options) {
-                this.fullFormButton = this.options.fullFormButton;
-            }
+            this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
-            if (this.fullFormButton) {
+            if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
                     label: 'Full Form'
@@ -82,6 +80,10 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                 this.header = this.getLanguage().translate('Edit');
             }
             this.header += ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
+
+            if (!this.fullFormDisabled) {
+                this.header = '<a href="javascript:" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+            }
 
             this.waitForView('edit');
 

@@ -29,7 +29,7 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
         saveButton: false,
 
-        fullFormButton: false,
+        fullFormDisabled: true,
 
         editViewName: 'Email.Record.Compose',
 

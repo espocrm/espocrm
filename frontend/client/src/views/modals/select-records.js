@@ -178,7 +178,7 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
             this.notify('Loading...');
             this.createView('quickCreate', 'Modals.Edit', {
                 scope: this.scope,
-                fullFormButton: false,
+                fullFormDisabled: true,
             }, function (view) {
                 view.once('after:render', function () {
                     self.notify(false);

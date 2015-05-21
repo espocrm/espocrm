@@ -31,7 +31,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
         editButton: true,
 
-        fullFormButton: true,
+        fullFormDisabled: false,
 
         detailViewName: null,
 
@@ -49,11 +49,9 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                 this.editButton = this.options.editButton;
             }
 
-            if ('fullFormButton' in this.options) {
-                this.fullFormButton = this.options.fullFormButton;
-            }
+            this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
-            if (this.fullFormButton) {
+            if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
                     label: 'Full Form'
@@ -107,6 +105,10 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             if (model.get('name')) {
                 this.header += ' &raquo; ' + model.get('name');
             }
+            if (!this.fullFormDisabled) {
+                this.header = '<a href="javascript:" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+            }
+
             if (this.editButton && this.getAcl().check(model, 'edit')) {
                 this.addEditButton();
             }
@@ -137,7 +139,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             this.createView('quickEdit', 'Modals.Edit', {
                 scope: this.scope,
                 id: this.id,
-                fullFormButton: this.fullFormButton
+                fullFormDisabled: this.fullFormDisabled
             }, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
