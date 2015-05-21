@@ -118,15 +118,31 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                     doc.write(body);
                     doc.close();
 
-                    setTimeout(function () {
-                        var height = $iframe.contents().find('html body').height() + 30;
+                    var processHeight = function () {
+                        var $body = $iframe.contents().find('html body');
+
+                        var height = $body.height() + 30;
                         iframe.style.height = height + 'px';
 
-                        $iframe.load(function () {
-                            var height = $iframe.contents().find('html body').height();
+                        /*var i = 0;
+                        var p = function () {
+                            if (i >= 3) return;
+                            i++;
                             iframe.style.height = height + 'px';
-                        });
+                            console.log($body.prop('clientHeight'), $body.prop('scrollHeight'));
+                            if ($body.prop('clientHeight') < $body.prop('scrollHeight')) {
+                                height += 20;
+                                p();
+                            }
+                        }
+                        p();*/
+                    };
 
+                    setTimeout(function () {
+                        processHeight();
+                        $iframe.load(function () {
+                            processHeight();
+                        });
                     }, 50);
 
                 } else {
