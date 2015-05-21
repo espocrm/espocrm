@@ -75,6 +75,10 @@ _.extend(Espo.Acl.prototype, {
                         return true;
                     }
 
+                    if ((action == 'edit' || action == 'read') && (value == 'no' || value === false)) {
+                        return false;
+                    }
+
                     if (typeof isOwner === 'undefined') {
                         return true;
                     }
