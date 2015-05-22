@@ -328,7 +328,10 @@
     });
 
     Espo.loader = new Espo.Loader();
-    Espo.require = function (subject, callback) {
+    Espo.require = function (subject, callback, context) {
+        if (context) {
+            callback = callback.bind(context);
+        }
         Espo.loader.require(subject, callback);
     }
     Espo.define = function (subject, dependency, callback) {

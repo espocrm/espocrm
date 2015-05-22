@@ -42,7 +42,7 @@
                 isHtml: model.get('isHtml')
             };
 
-            var subject = model.get('name');
+            var subject = model.get('name') || '';
             if (subject.toUpperCase().indexOf('RE:') !== 0) {
                 attributes['name'] = 'Re: ' + subject;
             } else {
@@ -96,8 +96,8 @@
             attributes.to = to;
 
             if (cc) {
-                attributes.cc = model.get('cc');
-                (model.get('to')).split(';').forEach(function (item) {
+                attributes.cc = model.get('cc') || '';
+                (model.get('to') || '').split(';').forEach(function (item) {
                     item = item.trim();
                     if (item != this.getUser().get('emailAddress')) {
                         if (isReplyOnSent) {

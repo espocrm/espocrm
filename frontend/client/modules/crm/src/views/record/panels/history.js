@@ -31,6 +31,8 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 
         asc: false,
 
+        rowActionsView: 'Crm:Record.RowActions.History',
+
         actionList: [
             {
                 action: 'createActivity',
@@ -165,9 +167,41 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
                     });
                 });
             });
-
-
         },
+
+        actionReply: function (data) {
+            var id = data.id;
+            if (!id) {
+                return;
+            }
+
+            Espo.require('EmailHelper', function (EmailHelper) {
+                var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
+
+                this.notify('Please wait...');
+
+                this.getModelFactory().create('Email', function (model) {
+                    model.id = id;
+                    this.listenToOnce(model, 'sync', function () {
+                        var attributes = emailHelper.getReplyAttributes(model, data, true);
+                        this.createView('quickCreate', 'Modals.ComposeEmail', {
+                            attributes: attributes,
+                        }, function (view) {
+                            view.render(function () {
+                                view.getView('edit').hideField('selectTemplate');
+                            });
+
+                            this.listenToOnce(view, 'after:save', function () {
+                                this.collection.fetch();
+                            }, this);
+
+                            view.notify(false);
+                        }.bind(this));
+                    }, this);
+                    model.fetch();
+                }, this);
+            }, this);
+        }
     });
 });
 

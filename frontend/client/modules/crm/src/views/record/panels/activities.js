@@ -33,6 +33,8 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
 
         asc: false,
 
+        rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
+
         actionList: [
             {
                 action: 'createActivity',
@@ -167,7 +169,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                     el: this.$el.selector + ' > .list-container',
                     pagination: false,
                     type: 'listRelationship',
-                    rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
+                    rowActionsView: this.rowActionsView,
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
