@@ -64,9 +64,9 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Selectize'], f
 
                 var data = [];
                 (this.params.options || []).forEach(function (value) {
+                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
                     if (this.translatedOptions) {
-                        var label = value;
-                        if (value in this.translatedOptions) {
+                         if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];
                         }
                     }

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.EnumStyled', 'Views.Fields.Enum', function (Dep) {
 
@@ -26,10 +26,10 @@ Espo.define('Views.Fields.EnumStyled', 'Views.Fields.Enum', function (Dep) {
         listTemplate: 'fields.enum-styled.detail',
 
         detailTemplate: 'fields.enum-styled.detail',
-    
-        data: function () {            
-            var value = this.model.get(this.name);    
-            var style = 'default';            
+
+        data: function () {
+            var value = this.model.get(this.name);
+            var style = 'default';
             if (value in this.styleHash) {
                 style = this.styleHash[value];
             }
@@ -37,10 +37,10 @@ Espo.define('Views.Fields.EnumStyled', 'Views.Fields.Enum', function (Dep) {
                 style: style,
             }, Dep.prototype.data.call(this));
         },
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.styleHash = this.model.getFieldParam(this.name, 'style') || {};
         },
     });

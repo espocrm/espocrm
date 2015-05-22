@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 (function (Espo, _, $) {
 
@@ -85,8 +85,8 @@
                         });
                     });
                 }
-                var loadClasses = function () {                    
-                    data.classes.forEach(function (name) {                        
+                var loadClasses = function () {
+                    data.classes.forEach(function (name) {
                         Espo.loader.load(name, function () {
                             classesLoaded++;
                             countLoaded++;

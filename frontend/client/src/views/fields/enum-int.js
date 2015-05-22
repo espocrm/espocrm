@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.EnumInt', 'Views.Fields.Enum', function (Dep) {
 
@@ -32,7 +32,7 @@ Espo.define('Views.Fields.EnumInt', 'Views.Fields.Enum', function (Dep) {
         editTemplate: 'fields.enum.edit',
 
         searchTemplate: 'fields.enum.search',
-        
+
         validations: [],
 
         fetch: function () {
@@ -43,16 +43,27 @@ Espo.define('Views.Fields.EnumInt', 'Views.Fields.Enum', function (Dep) {
         },
 
         fetchSearch: function () {
-            var arr = [];
-            $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
-                arr.push(parseInt($(el).val()));
-            });
+            var list = this.$element.val().split(':,:');
+
+            list.forEach(function (item, i) {
+                list[i] = parseInt(list[i]);
+            }, this);
+
+            if (list.length == 1 && list[0] == '') {
+                list = [];
+            }
+
+            if (list.length == 0) {
+                return false;
+            }
+
             var data = {
                 type: 'in',
-                value: arr
+                value: list
             };
             return data;
         },
+
     });
 });
 

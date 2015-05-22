@@ -40,7 +40,6 @@
 		"Views.Fields.Bool",
 		"Views.Fields.Datetime",
 		"Views.Fields.Email",
-		"Views.Fields.Enum",
 		"Views.Fields.Float",
 		"Views.Fields.LinkMultiple",
 		"Views.Fields.LinkParent",

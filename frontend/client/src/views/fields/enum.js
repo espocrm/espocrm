@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Enum', ['Views.Fields.Base'], function (Dep) {
+Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
@@ -79,6 +79,51 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base'], function (Dep) {
             }
         },
 
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode == 'search') {
+                var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
+
+                var valueList = this.searchParams.value || [];
+                this.$element.val(valueList.join(':,:'));
+
+                var data = [];
+                (this.params.options || []).forEach(function (value) {
+                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                    if (this.translatedOptions) {
+                        if (value in this.translatedOptions) {
+                            label = this.translatedOptions[value];
+                        }
+                    }
+                    data.push({
+                        value: value,
+                        label: label
+                    });
+                }, this);
+
+                this.$element.selectize({
+                    options: data,
+                    delimiter: ':,:',
+                    labelField: 'label',
+                    valueField: 'value',
+                    highlight: false,
+                    searchField: ['label'],
+                    plugins: ['remove_button'],
+                    score: function (search) {
+                        var score = this.getScoreFunction(search);
+                        search = search.toLowerCase();
+                        return function (item) {
+                            if (item.label.toLowerCase().indexOf(search) === 0) {
+                                return score(item);
+                            }
+                            return 0;
+                        };
+                    }
+                });
+            }
+        },
+
         validateRequired: function () {
             if (this.params.required || this.model.isRequired(this.name)) {
                 if (!this.model.get(this.name)) {
@@ -97,18 +142,18 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base'], function (Dep) {
         },
 
         fetchSearch: function () {
-            var arr = [];
-            $.each(this.$el.find('[name="' + this.name + '"]').find('option:selected'), function (i, el) {
-                arr.push($(el).val());
-            });
+            var list = this.$element.val().split(':,:');
+            if (list.length == 1 && list[0] == '') {
+                list = [];
+            }
 
-            if (arr.length == 0) {
+            if (list.length == 0) {
                 return false;
             }
 
             var data = {
                 type: 'in',
-                value: arr
+                value: list
             };
             return data;
         },
