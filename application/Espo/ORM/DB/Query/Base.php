@@ -251,14 +251,11 @@ abstract class Base
             $fieldList = array_keys($entity->fields);
         } else {
             $fieldList = $fields;
-            print_r($fieldList);
             foreach ($fieldList as $i => $field) {
                 if (!is_array($field)) {
                     $fieldList[$i] = $this->sanitizeAlias($field);
                 }
             }
-            print_r($fieldList);
-            //die;
         }
 
         foreach ($fieldList as $field) {
