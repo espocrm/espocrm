@@ -65,6 +65,18 @@
             var timer = setInterval(checkIfReady, 100);
 
             var load = function (data) {
+                data.classes = data.classes || [];
+                data.templates = data.templates || [];
+                data.layoutTypes = data.layoutTypes || [];
+
+                var d = [];
+                data.classes.forEach(function (item) {
+                    if (item != 'Views.Fields.Enum') {
+                        d.push(item); // TODO remove this huck
+                    }
+                }, this);
+                data.classes = d;
+
                 count = data.templates.length + data.layoutTypes.length+ data.classes.length;
 
                 var loadTemplates = function () {
