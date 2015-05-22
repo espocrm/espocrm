@@ -189,6 +189,10 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
 
         selectRelatedFilters: {},
 
+        selectPrimaryFilterNames: {},
+
+        selectBoolFilterLists: [],
+
         actionCreateRelated: function (data) {
             var self = this;
             var link = data.link;
@@ -244,12 +248,21 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             var self = this;
             var attributes = {};
 
-            var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || null;
-
+            var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
             for (var filterName in filters) {
                 if (typeof filters[filterName] == 'function') {
                     filters[filterName] = filters[filterName].call(this);
                 }
+            }
+
+            var primaryFilterName = this.selectPrimaryFilterNames[link] || null;
+            if (typeof primaryFilterName == 'function') {
+                primaryFilterName = primaryFilterName.call(this);
+            }
+
+            var boolFilterList = Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
+            if (typeof boolFilterList == 'function') {
+                boolFilterList = boolFilterList.call(this);
             }
 
             this.notify('Loading...');
@@ -258,7 +271,9 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 multiple: true,
                 createButton: false,
                 filters: filters,
-                massRelateEnabled: massRelateEnabled
+                massRelateEnabled: massRelateEnabled,
+                primaryFilterName: primaryFilterName,
+                boolFilterList: boolFilterList
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
