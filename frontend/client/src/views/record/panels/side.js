@@ -44,9 +44,14 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
         inlineEditDisabled: false,
 
+        init: function () {
+            this.panelName = this.options.panelName;
+            this.defs = this.options.defs || {};
+        },
+
         setup: function () {
-            this.buttonList = _.clone(this.buttonList || []);
-            this.actionList = _.clone(this.actionList || []);
+            this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
+            this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
             this.fieldList = this.options.fieldList || this.fieldList || [];
             this.dates = ('dates' in this.options) ? this.options.dates : false;

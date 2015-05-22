@@ -55,8 +55,8 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
         },
 
         setup: function () {
-            this.buttonList = _.clone(this.buttonList || []);
-            this.actionList = _.clone(this.actionList || []);
+            this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
+            this.actionList = _.clone(this.defs.actionList || this.actionList || []);
         },
 
         getButtonList: function () {
