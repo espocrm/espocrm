@@ -162,8 +162,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function remove(Entity $entity, array $options = array())
     {
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity, $options);
-
         $result = parent::remove($entity, $options);
         if ($result) {
             $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity, $options);
