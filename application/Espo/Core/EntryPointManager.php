@@ -28,9 +28,9 @@ use \Espo\Core\Exceptions\NotFound,
 
 class EntryPointManager
 {
-    private $container;    
-    
-    private $fileManager;    
+    private $container;
+
+    private $fileManager;
 
     protected $data = null;
 
@@ -38,7 +38,7 @@ class EntryPointManager
 
     protected $allowedMethods = array(
         'run',
-    );    
+    );
 
     /**
      * @var array - path to entryPoint files
@@ -46,14 +46,14 @@ class EntryPointManager
     private $paths = array(
         'corePath' => 'application/Espo/EntryPoints',
         'modulePath' => 'application/Espo/Modules/{*}/EntryPoints',
-        'customPath' => 'custom/Espo/Custom/EntryPoints',                                              
+        'customPath' => 'custom/Espo/Custom/EntryPoints',
     );
 
 
     public function __construct(\Espo\Core\Container $container)
     {
-        $this->container = $container;        
-        $this->fileManager = $container->get('fileManager');        
+        $this->container = $container;
+        $this->fileManager = $container->get('fileManager');
     }
 
     protected function getContainer()
@@ -69,16 +69,16 @@ class EntryPointManager
     public function checkAuthRequired($name)
     {
         $className = $this->getClassName($name);
-        if ($className === false) {
+        if (!$className) {
             throw new NotFound();
         }
-        return $className::$authRequired;        
+        return $className::$authRequired;
     }
 
-    public function run($name) 
+    public function run($name)
     {
         $className = $this->getClassName($name);
-        if ($className === false) {
+        if (!$className) {
             throw new NotFound();
         }
         $entryPoint = new $className($this->container);
@@ -89,7 +89,7 @@ class EntryPointManager
     protected function getClassName($name)
     {
         $name = Util::normilizeClassName($name);
-        
+
         if (!isset($this->data)) {
             $this->init();
         }
@@ -98,8 +98,8 @@ class EntryPointManager
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
-        
-        return false; 
+
+        return false;
     }
 
 
@@ -108,8 +108,7 @@ class EntryPointManager
         $classParser = $this->getContainer()->get('classParser');
         $classParser->setAllowedMethods($this->allowedMethods);
         $this->data = $classParser->getData($this->paths, $this->cacheFile);
-    }    
-     
+    }
 
 }
 

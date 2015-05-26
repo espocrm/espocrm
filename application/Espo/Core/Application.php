@@ -108,19 +108,19 @@ class Application
 
         $entryPointManager = new \Espo\Core\EntryPointManager($container);
 
-        $auth = $this->getAuth();
-        $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
-        $slim->add($apiAuth);
+        try {
+            $auth = $this->getAuth();
+            $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
+            $slim->add($apiAuth);
 
-        $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container) {
-            try {
+            $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container) {
                 $entryPointManager->run($entryPoint);
-            } catch (\Exception $e) {
-                $container->get('output')->processError($e->getMessage(), $e->getCode(), true);
-            }
-        });
+            });
 
-        $slim->run();
+            $slim->run();
+        } catch (\Exception $e) {
+            $container->get('output')->processError($e->getMessage(), $e->getCode(), true);
+        }
     }
 
     public function runCron()
