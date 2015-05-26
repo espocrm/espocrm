@@ -51,7 +51,7 @@ class Record extends Base
             $service = $this->getServiceFactory()->create($name);
         } else {
             $service = $this->getServiceFactory()->create($this->defaultRecordServiceName);
-            $service->setEntityName($name);
+            $service->setEntityType($name);
         }
 
         return $service;

@@ -51,6 +51,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $entityName;
 
+    protected $entityType;
+
     private $streamService;
 
     protected $notFilteringFields = array(); // TODO maybe remove it
@@ -63,27 +65,32 @@ class Record extends \Espo\Core\Services\Base
 
     protected $mergeLinkList = array();
 
-    const FOLLOWERS_LIMIT = 10;
+    const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
     {
         parent::__construct();
-        if (empty($this->entityName)) {
+        if (empty($this->entityType)) {
             $name = get_class($this);
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
                 $name = $matches[1];
             }
             if ($name != 'Record') {
-                $this->entityName = Util::normilizeScopeName($name);
+                $this->entityType = Util::normilizeScopeName($name);
             }
         }
-        $this->entityType = $this->entityName;
+        $this->entityName = $this->entityType;
     }
 
-    public function setEntityName($entityType)
+    public function setEntityType($entityType)
     {
-        $this->entityName = $entityType;
         $this->entityType = $entityType;
+        $this->entityName = $entityType;
+    }
+
+    public function getEntityType()
+    {
+        return $this->entityType;
     }
 
     protected function getServiceFactory()
@@ -118,7 +125,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getRepository()
     {
-        return $this->getEntityManager()->getRepository($this->entityName);
+        return $this->getEntityManager()->getRepository($this->entityType);
     }
 
     protected function getRecordService($name)
@@ -127,7 +134,7 @@ class Record extends \Espo\Core\Services\Base
             $service = $this->getServiceFactory()->create($name);
         } else {
             $service = $this->getServiceFactory()->create('Record');
-            $service->setEntityName($name);
+            $service->setEntityType($name);
         }
 
         return $service;
@@ -174,7 +181,7 @@ class Record extends \Espo\Core\Services\Base
     protected function loadFollowers(Entity $entity)
     {
         if ($this->getMetadata()->get("scopes.".$entity->getEntityType().".stream")) {
-            $data = $this->getStreamService()->getEntityFollowers($entity, self::FOLLOWERS_LIMIT);
+            $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
             if ($data) {
                 $entity->set('followersIds', $data['idList']);
                 $entity->set('followersNames', $data['nameMap']);
@@ -189,7 +196,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function loadLinkMultipleFields(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'linkMultiple' && empty($defs['noLoad'])) {
                 $columns = null;
@@ -203,7 +210,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function loadParentNameFields(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $id = $entity->get($field . 'Id');
@@ -220,7 +227,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function loadNotJoinedLinkFields(Entity $entity)
     {
-        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.links', array());
+        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', array());
         foreach ($linkDefs as $link => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'belongsTo') {
                 if (!empty($defs['noJoin']) && !empty($defs['entity'])) {
@@ -258,7 +265,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function loadEmailAddressField(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
             $dataFieldName = 'emailAddressData';
             $entity->set($dataFieldName, $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity));
@@ -267,16 +274,16 @@ class Record extends \Espo\Core\Services\Base
 
     protected function loadPhoneNumberField(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityName() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
             $dataFieldName = 'phoneNumberData';
             $entity->set($dataFieldName, $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity));
         }
     }
 
-    protected function getSelectManager($entityName)
+    protected function getSelectManager($entityType)
     {
-        return $this->getSelectManagerFactory()->create($entityName);
+        return $this->getSelectManagerFactory()->create($entityType);
     }
 
     protected function storeEntity(Entity $entity)
@@ -567,7 +574,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getSelectParams($params)
     {
-        $selectParams = $this->getSelectManager($this->entityName)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true);
 
         return $selectParams;
     }
@@ -575,7 +582,7 @@ class Record extends \Espo\Core\Services\Base
     public function findEntities($params)
     {
         $disableCount = false;
-        if (in_array($this->entityName, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
+        if (in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
             $disableCount = true;
         }
 
@@ -919,7 +926,7 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
-            $selectParams = $this->getSelectManager($this->entityName)->getSelectParams(array('where' => $where), true);
+            $selectParams = $this->getSelectManager($this->entityType)->getSelectParams(array('where' => $where), true);
         } else if (array_key_exists('where', $params)) {
             $where = $params['where'];
 
@@ -989,7 +996,7 @@ class Record extends \Espo\Core\Services\Base
         $csv = stream_get_contents($fp);
         fclose($fp);
 
-        $fileName = "Export_{$this->entityName}.csv";
+        $fileName = "Export_{$this->entityType}.csv";
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
@@ -1094,6 +1101,45 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return true;
+    }
+
+    protected function findLinkedEntitiesFollowers($id, $link, $params)
+    {
+        $maxSize = 0;
+        if ($disableCount) {
+            if (!empty($params['maxSize'])) {
+                $maxSize = $params['maxSize'];
+                $params['maxSize'] = $params['maxSize'] + 1;
+            }
+        }
+
+        $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        $data = $this->getStreamService()->getEntityFollowers($entity, $params['offset'], $params['maxSize']);
+
+        $list = [];
+
+        foreach ($data['idList'] as $id) {
+            $list[] = array(
+                'id' => $id,
+                'name' => $data['nameMap'][$id]
+            );
+        }
+
+        if ($maxSize && count($list) > $maxSize) {
+            $total = -1;
+            unset($list[count($list) - 1]);
+        } else {
+            $total = -2;
+        }
+
+        return array(
+            'total' => $total,
+            'list' => $list
+        );
     }
 }
 

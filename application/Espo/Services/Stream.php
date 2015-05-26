@@ -772,7 +772,7 @@ class Stream extends \Espo\Core\Services\Base
         }
     }
 
-    public function getEntityFollowers(Entity $entity, $limit = false)
+    public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
         $query = $this->getEntityManager()->getQuery();
         $pdo = $this->getEntityManager()->getPDO();
@@ -789,13 +789,13 @@ class Stream extends \Espo\Core\Services\Base
                     subscription.entity_id = ".$query->quote($entity->id)." AND
                     subscription.entity_type = ".$query->quote($entity->getEntityType())."
             ",
-            'offset' => 0,
+            'offset' => $offset,
             'limit' => $limit,
-            'orderBy' => [
-                ['LIST:user.id:' . $this->getUser()->id, 'DESC']
-            ]
+            'whereClause' => array(
+                'isActive' => true
+            ),
+            'orderBy' => [['name']]
         ));
-
 
         $sth = $pdo->prepare($sql);
         $sth->execute();

@@ -7,14 +7,6 @@
     </div>
 </div>
 {{/each}}
-{{#if followers}}
-    <div class="cell form-group col-sm-6 col-md-12">
-        <label class="control-label label-followers">{{translate 'Followers'}}</label>
-        <div class="field field-followers">
-            {{{followers}}}
-        </div>
-    </div>
-{{/if}}
 </div>
 
 <div class="row">
@@ -36,6 +28,18 @@
         </div>
     </div>
     {{/ifAttrNotEmpty}}
+</div>
+
+
+<div class="row">
+{{#if followers}}
+    <div class="cell form-group col-sm-6 col-md-12">
+        <label class="control-label label-followers">{{translate 'Followers'}}</label>
+        <div class="field field-followers">
+            {{{followers}}}
+        </div>
+    </div>
+{{/if}}
 </div>
 
 
