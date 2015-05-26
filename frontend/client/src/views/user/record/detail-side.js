@@ -23,7 +23,7 @@ Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function 
 
     return Dep.extend({
 
-        panels: [
+        panelList: [
             {
                 name: 'default',
                 label: false,
