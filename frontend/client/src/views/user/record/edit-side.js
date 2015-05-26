@@ -23,7 +23,7 @@ Espo.define('Views.User.Record.EditSide', 'Views.Record.EditSide', function (Dep
 
     return Dep.extend({
 
-        panels: [
+        panelList: [
             {
                 name: 'default',
                 label: false,
