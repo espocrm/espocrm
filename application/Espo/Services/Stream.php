@@ -771,5 +771,43 @@ class Stream extends \Espo\Core\Services\Base
             $this->getEntityManager()->saveEntity($note);
         }
     }
+
+    public function getEntityFollowers(Entity $entity, $limit = false)
+    {
+        $query = $this->getEntityManager()->getQuery();
+        $pdo = $this->getEntityManager()->getPDO();
+
+        if (!$limit) {
+            $limit = 500;
+        }
+
+        $sql = $query->createSelectQuery('User', array(
+            'select' => ['id', 'name'],
+            'join' => "
+                subscription AS `subscription` ON
+                    subscription.user_id = user.id AND
+                    subscription.entity_id = ".$query->quote($entity->id)." AND
+                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
+            ",
+            'offset' => 0,
+            'limit' => $limit
+        ));
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+
+        $data = array(
+            'idList' => [],
+            'nameMap' => array()
+        );
+
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $data['idList'][] = $row['id'];
+            $data['nameMap'][$row['id']] = $row['name'];
+        }
+
+        return $data;
+
+    }
 }
 

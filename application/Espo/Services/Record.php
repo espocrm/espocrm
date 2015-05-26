@@ -63,6 +63,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $mergeLinkList = array();
 
+    const FOLLOWERS_LIMIT = 10;
+
     public function __construct()
     {
         parent::__construct();
@@ -169,6 +171,17 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function loadFollowers(Entity $entity)
+    {
+        if ($this->getMetadata()->get("scopes.".$entity->getEntityType().".stream")) {
+            $data = $this->getStreamService()->getEntityFollowers($entity, self::FOLLOWERS_LIMIT);
+            if ($data) {
+                $entity->set('followersIds', $data['idList']);
+                $entity->set('followersNames', $data['nameMap']);
+            }
+        }
+    }
+
     protected function loadIsEditable(Entity $entity)
     {
         $entity->set('isEditable', $this->getAcl()->check($entity, 'edit'));
@@ -231,6 +244,7 @@ class Record extends \Espo\Core\Services\Base
         $this->loadLinkMultipleFields($entity);
         $this->loadParentNameFields($entity);
         $this->loadIsFollowed($entity);
+        $this->loadFollowers($entity);
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);

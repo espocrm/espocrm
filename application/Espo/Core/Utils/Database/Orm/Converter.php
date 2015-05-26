@@ -308,6 +308,15 @@ class Converter
                     'type' => 'varchar',
                     'notStorable' => true,
                 );
+
+                $ormMeta[$entityName]['fields']['followersIds'] = array(
+                    'type' => 'jsonArray',
+                    'notStorable' => true,
+                );
+                $ormMeta[$entityName]['fields']['followersNames'] = array(
+                    'type' => 'jsonObject',
+                    'notStorable' => true,
+                );
             }
         } //END: add a field 'isFollowed' for stream => true
 
