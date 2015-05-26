@@ -374,12 +374,20 @@ abstract class Base
             if (strpos($orderBy, 'LIST:') === 0) {
                 list($l, $field, $list) = explode(':', $orderBy);
                 $fieldPath = $this->getFieldPathForOrderBy($entity, $field);
-                return "FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";
+                $part = "FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";
+                if (!is_null($order)) {
+                    $order = strtoupper($order);
+                    if (!in_array($order, ['ASC', 'DESC'])) {
+                        $order = 'ASC';
+                    }
+                    $part .= " " . $order;
+                }
+                return $part;
             }
 
             if (!is_null($order)) {
                 $order = strtoupper($order);
-                if (!in_array($order, array('ASC', 'DESC'))) {
+                if (!in_array($order, ['ASC', 'DESC'])) {
                     $order = 'ASC';
                 }
             } else {

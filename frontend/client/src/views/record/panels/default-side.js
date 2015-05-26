@@ -31,6 +31,9 @@ Espo.define('Views.Record.Panels.DefaultSide', 'Views.Record.Panels.Side', funct
             this.createField('modifiedAt', true);
             this.createField('createdBy', true);
             this.createField('createdAt', true);
+            if (this.getMetadata().get('scopes.' + this.model.name + '.stream')) {
+                this.createField('followers', true, 'Fields.Followers');
+            }
         },
     });
 });

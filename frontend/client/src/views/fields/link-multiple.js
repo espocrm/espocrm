@@ -67,7 +67,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name + 'Ids';
-            this.foreignScope = this.model.defs.links[this.name].entity;
+            this.foreignScope = this.foreignScope || this.model.defs.links[this.name].entity;
 
             var self = this;
 
@@ -82,7 +82,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
                 this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
-            }.bind(this));
+            }, this);
 
 
             if (this.mode != 'list') {

@@ -783,15 +783,19 @@ class Stream extends \Espo\Core\Services\Base
 
         $sql = $query->createSelectQuery('User', array(
             'select' => ['id', 'name'],
-            'join' => "
-                subscription AS `subscription` ON
+            'customJoin' => "
+                JOIN subscription AS `subscription` ON
                     subscription.user_id = user.id AND
                     subscription.entity_id = ".$query->quote($entity->id)." AND
                     subscription.entity_type = ".$query->quote($entity->getEntityType())."
             ",
             'offset' => 0,
-            'limit' => $limit
+            'limit' => $limit,
+            'orderBy' => [
+                ['LIST:user.id:' . $this->getUser()->id, 'DESC']
+            ]
         ));
+
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
