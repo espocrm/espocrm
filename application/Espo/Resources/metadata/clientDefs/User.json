@@ -8,5 +8,6 @@
       "editQuick":"User.Record.Edit",
       "list":"User.Record.List"
    },
+   "filterList": ["active"],
    "boolFilterList": ["onlyMyTeam"]
 }
