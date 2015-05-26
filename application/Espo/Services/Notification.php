@@ -143,6 +143,12 @@ class Notification extends \Espo\Core\Services\Base
                                 $note->set('parentName', $parent->get('name'));
                             }
                         }
+                        if ($note->get('relatedId') && $note->get('relatedType')) {
+                            $related = $this->getEntityManager()->getEntity($note->get('relatedType'), $note->get('relatedId'));
+                            if ($related) {
+                                $note->set('relatedName', $related->get('name'));
+                            }
+                        }
                         $entity->set('noteData', $note->toArray());
                     } else {
                         unset($collection[$k]);
