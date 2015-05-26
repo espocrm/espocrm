@@ -34,6 +34,13 @@ class User extends \Espo\Core\SelectManagers\Base
         }
     }
 
+    protected function filterActive(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isActive' => true
+        );
+    }
+
     protected function boolFilterOnlyMyTeam(&$result)
     {
         $teamIds = $this->getUser()->get('teamsIds');

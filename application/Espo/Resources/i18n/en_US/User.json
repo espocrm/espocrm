@@ -58,5 +58,8 @@
     },
     "boolFilters": {
         "onlyMyTeam": "Only My Team"
+    },
+    "presetFilters": {
+        "active": "Active"
     }
 }

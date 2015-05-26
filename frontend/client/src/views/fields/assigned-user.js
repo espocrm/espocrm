@@ -37,6 +37,10 @@ Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function
             }
         },
 
+        getSelectPrimaryFilterName: function () {
+            return 'active';
+        },
+
     });
 });
 
