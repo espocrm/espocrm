@@ -136,7 +136,7 @@ class Layout
                     }
 
                     $layoutPath = $this->getLayoutPath($controllerName, true);
-                    $data = Json::encode($layoutData, \JSON_PRETTY_PRINT);
+                    $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
                     $result &= $this->getFileManager()->putContents(array($layoutPath, $layoutName.'.json'), $data);
                 }
