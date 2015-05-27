@@ -261,7 +261,7 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
             return $this->getCreatePrimaryKeySQL($index, $table);
         }
 
-        $query = 'CREATE ' . $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name . ' ON ' . $this->espoQuote($table);
+        $query = 'ALTER IGNORE TABLE '. $this->espoQuote($table) . ' ADD ' . $this->getCreateIndexSQLFlags($index) . ' INDEX ' . $name;
         $query .= ' (' . $this->getIndexFieldDeclarationListSQL($columns) . ')';
 
         return $query;
