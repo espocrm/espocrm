@@ -329,14 +329,12 @@ class RDB extends \Espo\ORM\Repository
         return $this->getMapper()->sum($this->seed, $params, $field);
     }
 
-    // @TODO use abstract class for list params
-    // @TODO join conditions
     public function join()
     {
         $args = func_get_args();
 
         if (empty($this->listParams['joins'])) {
-            $this->listParams['joins'] = array();
+            $this->listParams['joins'] = [];
         }
 
         foreach ($args as &$param) {
@@ -346,6 +344,27 @@ class RDB extends \Espo\ORM\Repository
                 }
             } else {
                 $this->listParams['joins'][] = $param;
+            }
+        }
+
+        return $this;
+    }
+
+    public function leftJoin()
+    {
+        $args = func_get_args();
+
+        if (empty($this->listParams['leftJoins'])) {
+            $this->listParams['leftJoins'] = [];
+        }
+
+        foreach ($args as &$param) {
+            if (is_array($param)) {
+                foreach ($param as $k => $v) {
+                    $this->listParams['leftJoins'][] = $v;
+                }
+            } else {
+                $this->listParams['leftJoins'][] = $param;
             }
         }
 
