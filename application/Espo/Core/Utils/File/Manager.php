@@ -242,7 +242,7 @@ class Manager
     public function putContentsJson($path, $data)
     {
         if (!Utils\Json::isJSON($data)) {
-            $data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
+            $data = Utils\Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         return $this->putContents($path, $data, LOCK_EX);
@@ -283,7 +283,7 @@ class Manager
         $data = Utils\Util::merge($savedDataArray, $newDataArray);
 
         if ($isReturnJson) {
-            $data = Utils\Json::encode($data, JSON_PRETTY_PRINT);
+            $data = Utils\Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         if ($isPhp) {
