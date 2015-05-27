@@ -707,6 +707,8 @@ abstract class Base
 
             $alias = $this->sanitize($relationName);
 
+            $midAlias = $alias . 'Middle';
+
             $join =
                 "{$pre}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                 . " AND "

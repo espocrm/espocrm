@@ -32,7 +32,7 @@ class Email extends Record
 {
     protected function init()
     {
-        $this->dependencies[] = 'mailSender';
+        $this->dependencies[] = 'container';
         $this->dependencies[] = 'preferences';
         $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'crypt';
@@ -50,7 +50,7 @@ class Email extends Record
 
     protected function getMailSender()
     {
-        return $this->injections['mailSender'];
+        return $this->getInjection('container')->get('mailSender');
     }
 
     protected function getPreferences()

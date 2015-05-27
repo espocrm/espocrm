@@ -217,6 +217,8 @@ class InboundEmail extends \Espo\Services\Record
 
             $k = 0;
             foreach ($ids as $i => $id) {
+                $toSkip = false;
+
                 if ($k == count($ids) - 1) {
                     $lastUID = $storage->getUniqueId($id);
                 }
@@ -229,10 +231,21 @@ class InboundEmail extends \Espo\Services\Record
 
                 $message = $storage->getMessage($id);
 
-                try {
-                    $email = $importer->importMessage($message, $userId, $teamIds);
-                } catch (\Exception $e) {
-                    $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                if ($message && isset($message->from)) {
+                    $fromString = $message->from;
+                    if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
+                        $toSkip = true;
+                    }
+                }
+
+                $email = null;
+
+                if (!$toSkip) {
+                    try {
+                        $email = $importer->importMessage($message, $userId, $teamIds);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                    }
                 }
 
                 if (!empty($email)) {
@@ -426,6 +439,26 @@ class InboundEmail extends \Espo\Services\Record
 
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
     {
+        if (!$email->get('from')) {
+            return false;
+        }
+
+        $d = new \DateTime();
+        $d->modify('-3 hours');
+        $threshold = $d->format('Y-m-d H:i:s');
+
+        $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($email->get('from'));
+
+        $sent = $this->getEntityManager()->getRepository('Email')->where(array(
+            'toEmailAddresses.id' => $emailAddress->id,
+            'dateSent>' => $threshold,
+            'status' => 'Sent'
+        ))->join('toEmailAddresses')->findOne();
+
+        if ($sent) {
+            return false;
+        }
+
         try {
             $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
             if ($replyEmailTemplateId) {
@@ -467,6 +500,15 @@ class InboundEmail extends \Espo\Services\Record
                 $reply->set('isHtml', $replyData['isHtml']);
                 $reply->set('attachmentsIds', $replyData['attachmentsIds']);
 
+                if ($email->has('teamsIds')) {
+                    $reply->set('teamsIds', $email->get('teamsIds'));
+                }
+
+                if ($email->get('parentId') && $email->get('parentType')) {
+                    $reply->set('parentId', $email->get('parentId'));
+                    $reply->set('parentType', $email->get('parentType'));
+                }
+
                 $this->getEntityManager()->saveEntity($reply);
 
                 $sender = $this->getMailSender()->useGlobal();
@@ -482,11 +524,7 @@ class InboundEmail extends \Espo\Services\Record
                 }
                 $sender->send($reply, $senderParams);
 
-                foreach ($reply->get('attachments') as $attachment) {
-                    $this->getEntityManager()->removeEntity($attachment);
-                }
-
-                $this->getEntityManager()->removeEntity($reply);
+                $this->getEntityManager()->saveEntity($reply);
 
                 return true;
             }
