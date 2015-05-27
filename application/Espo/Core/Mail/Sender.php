@@ -164,6 +164,10 @@ class Sender
             $message->addFrom($fromAddress, $fromName);
         }
 
+        if (!$email->get('from')) {
+            $email->set('from', $fromAddress);
+        }
+
         if (!empty($params['replyToAddress'])) {
             $replyToName = null;
             if (!empty($params['replyToName'])) {

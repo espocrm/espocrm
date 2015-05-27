@@ -123,8 +123,8 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
             "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(createdBy.salutation_name, createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "JOIN `post_tag` AS `postTag` ON post.id = postTag.post_id AND postTag.deleted = '0' ".
-            "JOIN `tag` AS `tags` ON tags.id = postTag.tag_id AND tags.deleted = '0' ".
+            "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = '0' ".
+            "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = '0' ".
             "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = '0' ".
             "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = '0' ".
             "ORDER BY post.name DESC ".
