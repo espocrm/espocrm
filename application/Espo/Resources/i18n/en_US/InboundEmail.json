@@ -21,7 +21,7 @@
         "targetUserPosition": "Target User Position"
     },
     "tooltips": {
-        "reply": "Notify email senders that their emails has been received.",
+        "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
         "createCase": "Automatically create case from incoming emails.",
         "replyToAddress": "Specify email address of this mailbox to make responses come here.",
         "caseDistribution": "How cases will be assigned to. Assigned directly to the user or among the team.",
