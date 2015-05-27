@@ -209,10 +209,9 @@ class Base
                 $defs = $relDefs[$link];
                 if ($defs['type'] == 'manyMany') {
                     $joins[] = $link;
-                    if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
+                    if (!empty($defs['midKeys'])) {
                         $key = $defs['midKeys'][1];
-                        $relationName = lcfirst($defs['relationName']);
-                        $part[$relationName . '.' . $key] = $idsValue;
+                        $part[$link . 'Middle.' . $key] = $idsValue;
                     }
                 } else if ($defs['type'] == 'belongsTo') {
                     if (!empty($defs['key'])) {
