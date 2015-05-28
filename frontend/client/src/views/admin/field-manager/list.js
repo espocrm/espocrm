@@ -77,6 +77,7 @@ Espo.define('Views.Admin.FieldManager.List', 'View', function (Dep) {
                 this.fieldDefsArray = [];
                 this.fieldList.forEach(function (field) {
                     var defs = this.fields[field];
+                    if (defs.customizationDisabled) return;
                     this.fieldDefsArray.push({
                         name: field,
                         isCustom: defs.isCustom || false,

@@ -24,6 +24,13 @@
             "Draft": "Draft",
             "Expired": "Expired",
             "Canceled": "Canceled"
+        },
+        "type": {
+            "": "None",
+            "Contract": "Contract",
+            "NDA": "NDA",
+            "EULA": "EULA",
+            "License Agreement": "License Agreement"
         }
     },
     "presetFilters": {

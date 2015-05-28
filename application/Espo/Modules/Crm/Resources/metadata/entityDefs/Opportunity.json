@@ -54,7 +54,8 @@
         },
         "leadSource": {
             "type": "varchar",
-            "view": "Crm:Opportunity.Fields.LeadSource"
+            "view": "Crm:Opportunity.Fields.LeadSource",
+            "customizationDisabled": true
         },
         "closeDate": {
             "type": "date",
