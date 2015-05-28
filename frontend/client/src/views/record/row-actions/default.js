@@ -29,11 +29,19 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
         afterRender: function () {
             var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 
+            var isChecked = false;
             $dd.on('show.bs.dropdown', function () {
-                this.$el.closest('.list-row').addClass('active');
+                var $el = this.$el.closest('.list-row');
+                isChecked = false;
+                if ($el.hasClass('active')) {
+                    isChecked = true;
+                }
+                $el.addClass('active');
             }.bind(this));
             $dd.on('hide.bs.dropdown', function () {
-                this.$el.closest('.list-row').removeClass('active');
+                if (!isChecked) {
+                    this.$el.closest('.list-row').removeClass('active');
+                }
             }.bind(this));
         },
 
