@@ -794,7 +794,10 @@ class Stream extends \Espo\Core\Services\Base
             'whereClause' => array(
                 'isActive' => true
             ),
-            'orderBy' => [['name']]
+            'orderBy' => [
+                ['LIST:id:' . $this->getUser()->id, 'DESC'],
+                ['name']
+            ]
         ));
 
         $sth = $pdo->prepare($sql);
