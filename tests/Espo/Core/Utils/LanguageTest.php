@@ -53,9 +53,18 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
              ->method('get')
              ->will($this->returnValueMap($map));
 
+        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata']->expects($this->any())
+             ->method('getModuleList')
+             ->will($this->returnValue(
+                array (
+                  'Crm',
+                )
+             ));
+
         $this->objects['preferences'] = $this->getMockBuilder('\Espo\Entities\Preferences')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\Language($this->objects['fileManager'], $this->objects['config'], $this->objects['preferences']);
+        $this->object = new \Espo\Core\Utils\Language($this->objects['fileManager'], $this->objects['config'], $this->objects['metadata'], $this->objects['preferences']);
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('cacheFile', $this->cacheFile);
