@@ -1,0 +1,26 @@
+{
+    "controller": "Controllers.RecordTree",
+    "collection": "Collections.Tree",
+    "menu": {
+        "listTree": {
+            "buttons": [
+                {
+                    "label": "List View",
+                    "link": "#DocumentFolder\/list",
+                    "acl": "read",
+                    "style": "default"
+                }
+            ]
+        },
+        "list": {
+            "buttons": [
+                {
+                    "label": "Tree View",
+                    "link": "#DocumentFolder",
+                    "acl": "read",
+                    "style": "default"
+                }
+            ]
+        }
+    }
+}

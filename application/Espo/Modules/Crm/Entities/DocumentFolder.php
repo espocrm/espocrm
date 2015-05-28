@@ -22,7 +22,7 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class Document extends \Espo\Core\ORM\Entity
+class DocumentFolder extends \Espo\Core\Templates\Entities\CategoryTree
 {
 
 }

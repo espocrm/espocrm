@@ -5,7 +5,8 @@
             [{"name":"source"}],
             [{"name":"file"}],
             [{"name":"name"}],
-            [{"name":"type"}],            
+            [{"name":"folder"}],
+            [{"name":"type"}],
             [{"name":"status"}]
         ]
     }

@@ -20,10 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Modules\Crm\Controllers;
 
-class Document extends \Espo\Core\ORM\Entity
+class DocumentFolder extends \Espo\Core\Templates\Controllers\CategoryTree
 {
 
 }
-

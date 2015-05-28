@@ -22,6 +22,11 @@
 </div>
 {{/if}}
 
+{{#unless rows.length}}
+    {{#if createDisabled}}
+        {{translate 'No Data'}}
+    {{/if}}
+{{/unless}}
 <div class="list list-expanded">
     <ul class="list-group list-group-tree list-group-no-border">
     {{#each rows}}

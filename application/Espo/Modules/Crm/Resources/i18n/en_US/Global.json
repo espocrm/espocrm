@@ -11,6 +11,7 @@
         "Task": "Task",
         "Case": "Case",
         "Document": "Document",
+        "DocumentFolder": "Document Folder",
         "Campaign": "Campaign",
         "TargetList": "Target List"
     },
@@ -26,6 +27,7 @@
         "Task": "Tasks",
         "Case": "Cases",
         "Document": "Documents",
+        "DocumentFolder": "Document Folders",
         "Campaign": "Campaigns",
         "TargetList": "Target Lists"
     },
@@ -40,7 +42,7 @@
         "OpportunitiesByStage": "Opportunities by Stage",
         "OpportunitiesByLeadSource": "Opportunities by Lead Source",
         "SalesByMonth": "Sales by Month",
-        "SalesPipeline": "Sales Pipeline"    
+        "SalesPipeline": "Sales Pipeline"
     },
     "labels": {
         "Create InboundEmail": "Create Inbound Email",

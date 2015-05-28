@@ -12,11 +12,13 @@
         "publishDate": "Publish Date",
         "expirationDate": "Expiration Date",
         "description": "Description",
-        "accounts": "Accounts"
+        "accounts": "Accounts",
+        "folder": "Folder"
     },
     "links": {
         "accounts": "Accounts",
-        "opportunities": "Opportunities"
+        "opportunities": "Opportunities",
+        "folder": "Folder"
     },
     "options": {
         "status": {

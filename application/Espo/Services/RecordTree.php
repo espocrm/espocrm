@@ -33,6 +33,8 @@ class RecordTree extends Record
 {
     const MAX_DEPTH = 2;
 
+    private $seed = null;
+
     public function getTree($parentId = null, $params = array(), $level = 0, $maxDepth = null)
     {
         if (!$maxDepth) {
@@ -47,10 +49,17 @@ class RecordTree extends Record
         $selectParams['whereClause'][] = array(
             'parentId' => $parentId
         );
-        $selectParams['orderBy'] = [
-            ['order', 'asc'],
-            ['name', 'asc']
-        ];
+
+        if ($this->hasOrder()) {
+            $selectParams['orderBy'] = [
+                ['order', 'asc'],
+                ['name', 'asc']
+            ];
+        } else {
+            $selectParams['orderBy'] = [
+                ['name', 'asc']
+            ];
+        }
 
         $collection = $this->getRepository()->find($selectParams);
         foreach ($collection as $entity) {
@@ -76,6 +85,23 @@ class RecordTree extends Record
             }
         }
         return $arr;
+    }
+
+    protected function getSeed()
+    {
+        if (empty($this->seed)) {
+            $this->seed = $this->getEntityManager()->getEntity($this->getEntityType());
+        }
+        return $this->seed;
+    }
+
+    protected function hasOrder()
+    {
+        $seed = $this->getSeed();
+        if ($seed->hasField('order')) {
+            return true;
+        }
+        return false;
     }
 }
 

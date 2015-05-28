@@ -70,6 +70,10 @@
             "layoutMassUpdateDisabled": true,
             "importDisabled": true,
             "noLoad": true
+        },
+        "folder": {
+            "type": "link",
+            "view": "Fields.LinkCategoryTree"
         }
     },
     "links": {
@@ -100,6 +104,11 @@
             "entity": "Team",
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
+        },
+        "folder": {
+            "type": "belongsTo",
+            "foreign": "documents",
+            "entity": "DocumentFolder"
         }
     },
     "collection": {
