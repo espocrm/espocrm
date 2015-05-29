@@ -24,7 +24,9 @@
 
 {{#unless rows.length}}
     {{#if createDisabled}}
-        {{translate 'No Data'}}
+        {{#unless showRoot}}
+            {{translate 'No Data'}}
+        {{/unless}}
     {{/if}}
 {{/unless}}
 <div class="list list-expanded">
