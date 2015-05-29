@@ -28,6 +28,10 @@
     {{/if}}
 {{/unless}}
 <div class="list list-expanded">
+    {{#if showRoot}}
+    <span class="small text-primary glyphicon glyphicon-book"></span>
+    <a href="javascript:" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}</a>
+    {{/if}}
     <ul class="list-group list-group-tree list-group-no-border">
     {{#each rows}}
         {{{var this ../this}}}

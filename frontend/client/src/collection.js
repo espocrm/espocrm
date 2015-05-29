@@ -35,6 +35,8 @@ Espo.Collection = Backbone.Collection.extend({
 
     where: null,
 
+    whereAdditional: null,
+
     _user: null,
 
     initialize: function (models, options) {
@@ -109,9 +111,13 @@ Espo.Collection = Backbone.Collection.extend({
         options.data.offset = options.more ? this.length : this.offset;
         options.data.sortBy = this.sortBy;
         options.data.asc = this.asc;
-        options.data.where = this.where;
+        options.data.where = this.getWhere();
 
         return Backbone.Collection.prototype.fetch.call(this, options);
+    },
+
+    getWhere: function () {
+        return (this.where || []).concat(this.whereAdditional || []);
     },
 
     getUser: function () {

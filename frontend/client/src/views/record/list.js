@@ -287,7 +287,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         export: function () {
             var data = {};
             if (this.allResultIsChecked) {
-            	data.where = this.collection.where;
+            	data.where = this.collection.getWhere();
             	data.byWhere = true;
             } else {
             	data.ids = this.checkedList;
@@ -322,7 +322,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 var ids = [];
                 var data = {};
                 if (this.allResultIsChecked) {
-                	data.where = this.collection.where;
+                	data.where = this.collection.getWhere();
                 	data.byWhere = true;
                 } else {
                 	data.ids = ids;
@@ -415,7 +415,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.createView('massUpdate', 'Modals.MassUpdate', {
                 scope: this.scope,
                 ids: ids,
-                where: this.collection.where,
+                where: this.collection.getWhere(),
                 byWhere: this.allResultIsChecked
             }, function (view) {
                 view.render();

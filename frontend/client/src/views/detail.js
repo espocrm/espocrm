@@ -194,7 +194,6 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
         selectBoolFilterLists: [],
 
         actionCreateRelated: function (data) {
-            var self = this;
             var link = data.link;
             var scope = this.model.defs['links'][link].entity;
             var foreignLink = this.model.defs['links'][link].foreign;
@@ -222,10 +221,10 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
-                    self.updateRelationshipPanel(link);
-                });
-            });
+                this.listenToOnce(view, 'after:save', function () {
+                    this.updateRelationshipPanel(link);
+                }, this);
+            }.bind(this));
         },
 
         actionSelectRelated: function (data) {

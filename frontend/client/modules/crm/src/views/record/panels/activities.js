@@ -97,16 +97,16 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             }
         },
 
-        where: {
-            scope: false,
-        },
+        currentScope: false,
 
         events: _.extend({
             'click button.scope-switcher': function (e) {
                 var $target = $(e.currentTarget);
                 this.$el.find('button.scope-switcher').removeClass('active');
                 $target.addClass('active');
-                this.where.scope = $target.data('scope') || false;
+                this.currentScope = $target.data('scope') || false;
+
+                this.collection.where = [this.currentScope];
 
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.notify(false);
@@ -114,7 +114,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 this.notify('Loading...');
                 this.collection.fetch();
 
-                this.currentTab = this.where.scope || 'all';
+                this.currentTab = this.currentScope || 'all';
                 this.getStorage().set('state', this.getStorageKey(), this.currentTab);
             }
         }, Dep.prototype.events),
@@ -135,7 +135,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
 
             if (this.currentTab != 'all') {
-                this.where = {scope: this.currentTab};
+                this.currentScope = this.currentTab;
             }
 
             this.seeds = {};
@@ -159,7 +159,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
             this.collection = new Espo.MultiCollection();
             this.collection.seeds = this.seeds;
             this.collection.url = url;
-            this.collection.where = this.where;
+            this.collection.where = [this.currentScope];
             this.collection.sortBy = this.sortBy;
             this.collection.asc = this.asc;
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;

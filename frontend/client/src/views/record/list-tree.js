@@ -41,6 +41,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
 
         checkAllResultDisabled: true,
 
+        showRoot: false,
+
         massActionList: ['remove'],
 
         selectable: false,
@@ -54,6 +56,15 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.createDisabled = this.createDisabled;
+            data.showRoot = this.showRoot;
+            if (data.showRoot) {
+                data.rootName = this.rootName || this.translate('Root');
+            }
+
+            if (this.level == 0 && this.selectable && !(this.selectedData || {}).id) {
+                data.rootIsSelected = true;
+            }
+
 
             return data;
         },
@@ -64,6 +75,13 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
             }
 
             this.createDisabled = this.options.createDisabled || this.createDisabled;
+
+            if ('showRoot' in this.options) {
+                this.showRoot = this.options.showRoot;
+                if ('rootName' in this.options) {
+                    this.rootName = this.options.rootName;
+                }
+            }
 
             if ('level' in this.options) {
                 this.level = this.options.level;
@@ -189,6 +207,15 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                     }.bind(this));
                 }, this);
             }.bind(this));
+        },
+
+        actionSelectRoot: function () {
+            this.trigger('select', {id: null});
+            if (this.selectable) {
+                this.$el.find('a.link').removeClass('text-bold');
+                this.$el.find('a.link[data-action="selectRoot"]').addClass('text-bold');
+                this.setSelected(null);
+            }
         },
 
     });

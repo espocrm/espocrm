@@ -72,29 +72,29 @@ class Activities extends \Espo\Core\Controllers\Base
     public function actionList($params, $data, $request)
     {
         $name = $params['name'];
-        
+
         if (!in_array($name, array('activities', 'history'))) {
             throw new BadRequest();
         }
-        
+
         $entityName = $params['scope'];
         $id = $params['id'];
-        
+
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $where = $request->get('where');
-        
+
         $scope = null;
-        if (!empty($where) && !empty($where['scope']) && $where['scope'] !== 'false') {
-            $scope = $where['scope'];
+        if (is_array($where) && !empty($where[0]) && $where[0] !== 'false') {
+            $scope = $where[0];
         }
-        
+
         $service = $this->getService('Activities');
 
         $methodName = 'get' . ucfirst($name);
-        
+
         return $service->$methodName($entityName, $id, array(
             'scope' => $scope,
             'offset' => $offset,

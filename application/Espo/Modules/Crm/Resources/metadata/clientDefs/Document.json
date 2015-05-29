@@ -1,8 +1,11 @@
 {
-   "controller": "Controllers.Record",
-   "filterList": [
-      "active",
-      "draft"
-   ],
-   "boolFilterList": ["onlyMy"]
+    "controller": "Controllers.Record",
+    "views": {
+        "list": "Crm:Document.List"    
+    },
+    "filterList": [
+        "active",
+        "draft"
+    ],
+    "boolFilterList": ["onlyMy"]
 }

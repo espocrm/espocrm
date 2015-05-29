@@ -44,6 +44,8 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
 
         createButton: true,
 
+        quickCreate: false,
+
         setup: function () {
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
@@ -58,20 +60,24 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
             this.setupSorting();
 
             if (this.searchPanel) {
-                this.createView('search', 'Record.Search', {
-                    collection: this.collection,
-                    el: '#main > .search-container',
-                    searchManager: this.searchManager,
-                }, function (view) {
-                    this.listenTo(view, 'reset', function () {
-                        this.collection.sortBy = this.defaultSortBy;
-                        this.collection.asc = this.defaultAsc;
-                        this.getStorage().clear('listSorting', this.collection.name)
-                    }, this);
-                }.bind(this));
+                this.setupSearchPanel();
+
             }
 
             if (this.createButton) {
+                this.setupCreateButton();
+            }
+        },
+
+        setupCreateButton: function () {
+            if (this.quickCreate) {
+                this.menu.buttons.unshift({
+                    action: 'quickCreate',
+                    label: 'Create ' + this.scope,
+                    style: 'primary',
+                    acl: 'edit'
+                });
+            } else {
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
                     label: 'Create ' +  this.scope,
@@ -79,6 +85,20 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
                     acl: 'edit'
                 });
             }
+        },
+
+        setupSearchPanel: function () {
+            this.createView('search', 'Record.Search', {
+                collection: this.collection,
+                el: '#main > .search-container',
+                searchManager: this.searchManager,
+            }, function (view) {
+                this.listenTo(view, 'reset', function () {
+                    this.collection.sortBy = this.defaultSortBy;
+                    this.collection.asc = this.defaultAsc;
+                    this.getStorage().clear('listSorting', this.collection.name)
+                }, this);
+            }.bind(this));
         },
 
         getSearchDefaultData: function () {
@@ -118,14 +138,16 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
         },
 
         afterRender: function () {
+            this.loadList();
+        },
+
+        loadList: function () {
             this.notify('Loading...');
-
             var listViewName = this.getRecordViewName();
-
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', listViewName, {
                     collection: this.collection,
-                    el: this.options.el + ' > .list-container',
+                    el: this.options.el + ' .list-container',
                 }, function (view) {
                     view.render();
                     view.notify(false);
@@ -149,6 +171,25 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate(this.collection.name, 'scopeNamesPlural'));
+        },
+
+        getCreateAttributes: function () {},
+
+        actionQuickCreate: function () {
+            var attributes = this.getCreateAttributes() || {};
+
+            this.notify('Loading...');
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'Modals.Edit';
+            this.createView('quickCreate', 'Modals.Edit', {
+                scope: this.scope,
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', function () {
+                    this.collection.fetch();
+                }, this);
+            }.bind(this));
         },
     });
 });
