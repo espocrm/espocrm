@@ -107,9 +107,9 @@ class Converter
         return $this->metadata;
     }
 
-    protected function getEntityDefs()
+    protected function getEntityDefs($reload = false)
     {
-        if (empty($this->entityDefs)) {
+        if (empty($this->entityDefs) || $reload) {
             $this->entityDefs = $this->getMetadata()->get('entityDefs');
         }
 
@@ -138,8 +138,7 @@ class Converter
      */
     public function process()
     {
-        $this->entityDefs = null;
-        $entityDefs = $this->getEntityDefs();
+        $entityDefs = $this->getEntityDefs(true);
 
         $ormMeta = array();
         foreach($entityDefs as $entityName => $entityMeta) {
@@ -367,8 +366,6 @@ class Converter
         if (!isset($entityMeta['links'])) {
             return array();
         }
-
-        $entityDefs = $this->getEntityDefs();
 
         $relationships = array();
         foreach($entityMeta['links'] as $linkName => $linkParams) {
