@@ -61,7 +61,10 @@ Espo.define('Crm:Views.Document.Modals.SelectRecords', 'Views.Modals.SelectRecor
                                     }
                                 ];
                             }
-
+                            this.notify('Please wait...');
+                            this.listenToOnce(this.collection, 'sync', function () {
+                                this.notify(false);
+                            }, this);
                             this.collection.fetch();
 
                         }, this);

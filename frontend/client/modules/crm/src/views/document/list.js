@@ -74,6 +74,10 @@ Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
                                 ];
                             }
 
+                            this.notify('Please wait...');
+                            this.listenToOnce(this.collection, 'sync', function () {
+                                this.notify(false);
+                            }, this);
                             this.collection.fetch();
 
                         }, this);
