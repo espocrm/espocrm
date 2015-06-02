@@ -61,6 +61,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 data.rootName = this.rootName || this.translate('Root');
             }
 
+            data.showEditLink = this.showEditLink;
+
             if (this.level == 0 && this.selectable && !(this.selectedData || {}).id) {
                 data.rootIsSelected = true;
             }
@@ -81,6 +83,10 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 if ('rootName' in this.options) {
                     this.rootName = this.options.rootName;
                 }
+            }
+
+            if ('showRoot' in this.options) {
+                this.showEditLink = this.options.showEditLink;
             }
 
             if ('level' in this.options) {

@@ -51,6 +51,7 @@ Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
                         buttonsDisabled: true,
                         checkAllResultDisabled: true,
                         checkboxes: false,
+                        showEditLink: this.getAcl().check('DocumentFolder', 'edit')
                     }, function (view) {
                         view.render();
 
