@@ -131,8 +131,14 @@ class Converter
         return $this->metadataHelper;
     }
 
+    /**
+     * Orm metadata convertation process
+     *
+     * @return array
+     */
     public function process()
     {
+        $this->entityDefs = null;
         $entityDefs = $this->getEntityDefs();
 
         $ormMeta = array();
