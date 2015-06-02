@@ -47,7 +47,7 @@
             "readOnly": true,
             "notStorable": true,
             "view": "Crm:Task.Fields.IsOverdue",
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "description": {
             "type": "text"
