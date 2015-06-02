@@ -33,15 +33,7 @@ class Converter
 
     private $schemaConverter;
 
-
-
     private $schemaFromMetadata = null;
-
-    /**
-    * @var array $meta - metadata array
-    */
-    //private $meta;
-
 
     public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
     {
@@ -52,7 +44,6 @@ class Converter
 
         $this->schemaConverter = new Schema\Converter($this->fileManager);
     }
-
 
     protected function getMetadata()
     {
@@ -69,13 +60,11 @@ class Converter
         return $this->schemaConverter;
     }
 
-
     public function getSchemaFromMetadata($entityList = null)
     {
         $ormMeta = $this->getMetadata()->getOrmMetadata();
-        $entityDefs = $this->getMetadata()->get('entityDefs');
 
-        $this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityDefs, $entityList);
+        $this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityList);
 
         return $this->schemaFromMetadata;
     }
@@ -98,11 +87,4 @@ class Converter
 
         return $result;
     }
-
-
-
-
 }
-
-
-?>
