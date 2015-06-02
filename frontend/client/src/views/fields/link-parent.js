@@ -43,6 +43,8 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 
         autocompleteDisabled: false,
 
+        selectRecordsViewName: '',
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -85,7 +87,10 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.notify('Loading...');
-                    this.createView('dialog', 'Modals.SelectRecords', {
+
+                    var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || this.selectRecordsViewName;
+
+                    this.createView('dialog', viewName, {
                         scope: this.foreignScope,
                         createButton: this.mode != 'search',
                         filters: this.getSelectFilters(),

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
+Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -32,6 +32,8 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
         template: 'modals.select-records',
 
         createButton: true,
+
+        searchPanel: true,
 
         data: function () {
             return {
@@ -107,68 +109,71 @@ Espo.define('Views.Modals.SelectRecords', 'Views.Modal', function (Dep) {
             this.header = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
             this.waitForView('list');
-            this.waitForView('search');
 
-            Espo.require('SearchManager', function (SearchManager) {
-                this.getCollectionFactory().create(this.scope, function (collection) {
+            this.getCollectionFactory().create(this.scope, function (collection) {
+                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                this.collection = collection;
 
-                    collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                this.loadSearch();
+                this.loadList();
+                collection.fetch();
+            }, this);
 
-                    this.collection = collection;
+        },
 
-                    var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
-                    searchManager.emptyOnReset = true;
-                    if (this.filters) {
-                        searchManager.setAdvanced(this.filters);
-                    }
-                    if (this.boolFilterList) {
-                        var d = {};
-                        this.boolFilterList.forEach(function (item) {
-                            d[item] = true;
-                        });
-                        searchManager.setBool(d);
-                    }
-                    if (this.primaryFilterName) {
-                        searchManager.setPrimary(this.primaryFilterName);
-                    }
+        loadSearch: function () {
+            var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+            searchManager.emptyOnReset = true;
+            if (this.filters) {
+                searchManager.setAdvanced(this.filters);
+            }
+            if (this.boolFilterList) {
+                var d = {};
+                this.boolFilterList.forEach(function (item) {
+                    d[item] = true;
+                });
+                searchManager.setBool(d);
+            }
+            if (this.primaryFilterName) {
+                searchManager.setPrimary(this.primaryFilterName);
+            }
 
-                    collection.where = searchManager.getWhere();
+            this.collection.where = searchManager.getWhere();
 
-                    this.createView('search', 'Record.Search', {
-                        collection: collection,
-                        el: this.containerSelector + ' .search-container',
-                        searchManager: searchManager,
-                        disableSavePreset: true,
-                    });
+            if (this.searchPanel) {
+                this.createView('search', 'Record.Search', {
+                    collection: this.collection,
+                    el: this.containerSelector + ' .search-container',
+                    searchManager: searchManager,
+                    disableSavePreset: true,
+                });
+            }
+        },
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
-                                   this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                                   'Record.List';
+        loadList: function () {
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+                           this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+                           'Record.List';
 
-                    this.listenToOnce(collection, 'sync', function () {
-                        this.createView('list', viewName, {
-                            collection: collection,
-                            el: this.containerSelector + ' .list-container',
-                            selectable: true,
-                            checkboxes: this.multiple,
-                            massActionsDisabled: true,
-                            rowActionsView: false,
-                            type: 'listSmall',
-                            searchManager: searchManager,
-                            checkAllResultDisabled: !this.massRelateEnabled,
-                            buttonsDisabled: true
-                        }, function (list) {
-                            list.once('select', function (model) {
-                                this.trigger('select', model);
-                                this.close();
-                            }.bind(this));
-                        }.bind(this));
-
+            this.listenToOnce(this.collection, 'sync', function () {
+                this.createView('list', viewName, {
+                    collection: this.collection,
+                    el: this.containerSelector + ' .list-container',
+                    selectable: true,
+                    checkboxes: this.multiple,
+                    massActionsDisabled: true,
+                    rowActionsView: false,
+                    type: 'listSmall',
+                    searchManager: this.searchManager,
+                    checkAllResultDisabled: !this.massRelateEnabled,
+                    buttonsDisabled: true
+                }, function (list) {
+                    list.once('select', function (model) {
+                        this.trigger('select', model);
+                        this.close();
                     }.bind(this));
-
-                    collection.fetch();
-
                 }.bind(this));
+
             }.bind(this));
         },
 

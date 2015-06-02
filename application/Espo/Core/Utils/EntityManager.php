@@ -126,20 +126,17 @@ class EntityManager
         }
         $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
 
-        $scopeData = array(
-            'entity' => true,
-            'layouts' => true,
-            'tab' => true,
-            'acl' => true,
-            'module' => 'Custom',
-            'isCustom' => true,
-            'customizable' => true,
-            'importable' => true,
-            'type' => $type,
-            'stream' => $stream,
-            'notifications' => true
-        );
-        $this->getMetadata()->set('scopes', $name, $scopeData);
+        $filePath = "application/Espo/Core/Templates/Metadata/{$type}/scopes.json";
+        $scopesDataContents = $this->getFileManager()->getContents($filePath);
+        $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
+        $scopesData = Json::decode($entityDefsDataContents, true);
+
+        $scopesData['stream'] = $stream;
+        $scopesData['type'] = $type;
+        $scopesData['module'] = 'Custom';
+        $scopesData['isCustom'] = true;
+
+        $this->getMetadata()->set('scopes', $name, $scopesData);
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);

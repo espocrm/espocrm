@@ -19,22 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
+Espo.define('Crm:Views.Document.Modals.SelectRecords', 'Views.Modals.SelectRecords', function (Dep) {
 
     return Dep.extend({
 
-        template: 'crm:document.list',
-
-        quickCreate: true,
-
-        currentFolderId: null,
-
-        currentFolderName: '',
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-            this.loadFolders();
-        },
+        template: 'crm:document.modals.select-records',
 
         loadFolders: function () {
             this.getCollectionFactory().create('DocumentFolder', function (collection) {
@@ -49,8 +38,7 @@ Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
                         showRoot: true,
                         rootName: this.translate('Document', 'scopeNamesPlural'),
                         buttonsDisabled: true,
-                        checkboxes: false,
-                        showEditLink: this.getAcl().check('DocumentFolder', 'edit')
+                        checkboxes: false
                     }, function (view) {
                         view.render();
 
@@ -73,7 +61,6 @@ Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
                                     }
                                 ];
                             }
-
                             this.notify('Please wait...');
                             this.listenToOnce(this.collection, 'sync', function () {
                                 this.notify(false);
@@ -87,13 +74,11 @@ Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
             }, this);
         },
 
-        getCreateAttributes: function () {
-            return {
-                folderId: this.currentFolderId,
-                folderName: this.currentFolderName
-            };
-        },
+        loadList: function () {
+            this.loadFolders();
+            Dep.prototype.loadList.call(this);
 
+        },
     });
 
 });

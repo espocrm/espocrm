@@ -264,8 +264,10 @@ Espo.define('Views.Detail', 'Views.Main', function (Dep) {
                 boolFilterList = boolFilterList.call(this);
             }
 
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'Modals.SelectRecords';
+
             this.notify('Loading...');
-            this.createView('dialog', 'Modals.SelectRecords', {
+            this.createView('dialog', viewName, {
                 scope: scope,
                 multiple: true,
                 createButton: false,

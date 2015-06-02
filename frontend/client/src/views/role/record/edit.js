@@ -56,7 +56,7 @@ Espo.define('Views.Role.Record.Edit', 'Views.Record.Edit', function (Dep) {
                     data['data'][scope] = false;
                 } else {
                     var o = true;
-                    if (aclTypeMap[scope] == 'record') {
+                    if (aclTypeMap[scope] != 'boolean') {
                         o = {};
                         for (var j in actionList) {
                             var action = actionList[j];

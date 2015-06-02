@@ -103,5 +103,19 @@ class RecordTree extends Record
         }
         return false;
     }
+
+    protected function beforeCreate(Entity $entity, array $data = array())
+    {
+        parent::beforeCreate($entity, $data);
+        if (!empty($data['parentId'])) {
+            $parent = $this->getEntityManager()->getEntity($this->getEntityType(), $data['parentId']);
+            if (!$parent) {
+                throw new Error("Tried to create tree item entity with not existing parent.");
+            }
+            if (!$this->getAcl()->check($parent, 'edit')) {
+                throw new Forbidden();
+            }
+        }
+    }
 }
 
