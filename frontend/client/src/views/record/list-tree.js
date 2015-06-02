@@ -117,7 +117,9 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                             o.selectedData = this.selectedData;
                         }
                     }
-                    this.getParentView().trigger('select', o);
+                    if (this.level > 0) {
+                        this.getParentView().trigger('select', o);
+                    }
                 }, this);
             }
         },

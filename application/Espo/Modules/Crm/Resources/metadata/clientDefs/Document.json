@@ -1,7 +1,10 @@
 {
     "controller": "Controllers.Record",
     "views": {
-        "list": "Crm:Document.List"    
+        "list": "Crm:Document.List"
+    },
+    "modalViews": {
+        "select": "Crm:Document.Modals.SelectRecords"
     },
     "filterList": [
         "active",
