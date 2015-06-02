@@ -47,7 +47,6 @@ class Converter
         'unique' => 'unique',
     );
 
-
     //todo: same array in Converters\Orm
     protected $idParams = array(
         'dbType' => 'varchar',
@@ -68,8 +67,6 @@ class Converter
     {
         $this->fileManager = $fileManager;
 
-        $this->dbalSchema = new \Espo\Core\Utils\Database\DBAL\Schema\Schema();
-
         $this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
     }
 
@@ -78,13 +75,31 @@ class Converter
         return $this->fileManager;
     }
 
-    protected function getSchema()
+    /**
+     * Get schema
+     *
+     * @param  boolean $reload
+     *
+     * @return \Doctrine\DBAL\Schema\Schema
+     */
+    protected function getSchema($reload = false)
     {
+        if (!isset($this->dbalSchema) || $reload) {
+            $this->dbalSchema = new \Espo\Core\Utils\Database\DBAL\Schema\Schema();
+        }
+
         return $this->dbalSchema;
     }
 
-
-    public function process(array $ormMeta, $entityDefs, $entityList = null)
+    /**
+     * Schema convertation process
+     *
+     * @param  array  $ormMeta
+     * @param  array|null $entityList
+     *
+     * @return \Doctrine\DBAL\Schema\Schema
+     */
+    public function process(array $ormMeta, $entityList = null)
     {
         $GLOBALS['log']->debug('Schema\Converter - Start: building schema');
 
@@ -106,7 +121,7 @@ class Converter
             $ormMeta = array_intersect_key($ormMeta, array_flip($dependentEntities));
         }
 
-        $schema = $this->getSchema();
+        $schema = $this->getSchema(true);
 
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
