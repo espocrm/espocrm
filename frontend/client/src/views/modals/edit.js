@@ -82,7 +82,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             this.header += ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
 
             if (!this.fullFormDisabled) {
-                this.header = '<a href="javascript:" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                this.header = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
             }
 
             this.waitForView('edit');

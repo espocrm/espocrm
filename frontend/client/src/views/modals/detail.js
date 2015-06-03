@@ -106,7 +106,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                 this.header += ' &raquo; ' + model.get('name');
             }
             if (!this.fullFormDisabled) {
-                this.header = '<a href="javascript:" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                this.header = '<a href="#' + this.scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
             }
 
             if (this.editButton && this.getAcl().check(model, 'edit')) {
