@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Controllers;
 
@@ -29,7 +29,7 @@ use \Espo\Core\Exceptions\Error,
 class Activities extends \Espo\Core\Controllers\Base
 {
     public static $defaultAction = 'index';
-    
+
     public function actionListCalendarEvents($params, $data, $request)
     {
         if (!$this->getAcl()->check('Calendar')) {
@@ -38,12 +38,12 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $from = $request->get('from');
         $to = $request->get('to');
-        
+
         if (empty($from) || empty($to)) {
             throw new BadRequest();
         }
-        
-        
+
+
         $service = $this->getService('Activities');
         return $service->getEvents($this->getUser()->id, $from, $to);
     }
@@ -51,7 +51,7 @@ class Activities extends \Espo\Core\Controllers\Base
     public function actionPopupNotifications()
     {
         $userId = $this->getUser()->id;
-        
+
         return $this->getService('Activities')->getPopupNotifications($userId);
     }
 
@@ -73,11 +73,18 @@ class Activities extends \Espo\Core\Controllers\Base
     {
         $name = $params['name'];
 
-        if (!in_array($name, array('activities', 'history'))) {
+        if (!in_array($name, ['activities', 'history'])) {
             throw new BadRequest();
         }
 
-        $entityName = $params['scope'];
+        if (empty($params['scope'])) {
+            throw new BadRequest();
+        }
+        if (empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        $entityType = $params['scope'];
         $id = $params['id'];
 
         $offset = intval($request->get('offset'));
@@ -95,7 +102,7 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $methodName = 'get' . ucfirst($name);
 
-        return $service->$methodName($entityName, $id, array(
+        return $service->$methodName($entityType, $id, array(
             'scope' => $scope,
             'offset' => $offset,
             'maxSize' => $maxSize,

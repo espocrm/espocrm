@@ -9,7 +9,15 @@
             "type": "enum",
             "options": ["not-set", "all", "team", "no"],
             "default": "not-set",
-            "tooltip": true
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "userPermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
         },
         "data": {
             "type": "jsonObject"

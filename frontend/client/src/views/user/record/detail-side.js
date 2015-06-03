@@ -35,6 +35,39 @@ Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function 
             }
         ],
 
+        setupPanels: function () {
+            Dep.prototype.setupPanels.call(this);
+
+            var showActivities = false;
+
+            if (this.getUser().isAdmin()) {
+                showActivities = true;
+            } else {
+                if (this.getAcl().get('userPermission') === 'no') {
+                    if (this.model.id == this.getUser().id) {
+                        showActivities = true;
+                    }
+                } else if (this.getAcl().get('userPermission') === 'team') {
+                    showActivities = true;
+                } else {
+                    showActivities = true;
+                }
+            }
+
+            if (showActivities) {
+                this.panelList.push({
+                    "name":"activities",
+                    "label":"Activities",
+                    "view":"Crm:Record.Panels.Activities"
+                });
+                this.panelList.push({
+                    "name":"history",
+                    "label":"History",
+                    "view":"Crm:Record.Panels.History"
+                });
+            }
+        }
+
     });
 
 });

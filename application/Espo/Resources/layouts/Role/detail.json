@@ -4,6 +4,10 @@
             [
                 {"name": "name"},
                 {"name": "assignmentPermission"}
+            ],
+            [
+                false,
+                {"name": "userPermission"}
             ]
         ]
     }

@@ -33,7 +33,9 @@ Espo.define('Views.User.Modals.Access', 'Views.Modal', function (Dep) {
 
         data: function () {
             return {
-                assignmentPermission: this.options.aclData.assignmentPermission
+                assignmentPermission: this.options.aclData.assignmentPermission,
+                userPermission: this.options.aclData.userPermission,
+                levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {}
             };
         },
 

@@ -115,7 +115,7 @@ class AclManager
         if ($user->isAdmin()) {
             return true;
         }
-        $this->getTable($user)->get($permission);
+        return $this->getTable($user)->get($permission);
     }
 
     public function checkReadOnlyTeam(User $user, $scope)

@@ -118,6 +118,7 @@ class Table
         foreach ($userRoles as $role) {
             $aclTables[] = $role->get('data');
             $assignmentPermissionList[] = $role->get('assignmentPermission');
+            $userPermissionList[] = $role->get('userPermission');
         }
 
         $teams = $this->user->get('teams');
@@ -126,11 +127,14 @@ class Table
             foreach ($teamRoles as $role) {
                 $aclTables[] = $role->get('data');
                 $assignmentPermissionList[] = $role->get('assignmentPermission');
+                $userPermissionList[] = $role->get('userPermission');
             }
         }
 
         $this->data['table'] = $this->merge($aclTables);
-        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, 'all');
+
+        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
+        $this->data['userPermission'] = $this->mergeValues($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
     }
 
     private function initSolid()

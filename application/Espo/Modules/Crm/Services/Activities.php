@@ -23,6 +23,9 @@
 namespace Espo\Modules\Crm\Services;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\Forbidden;
+
 use \PDO;
 
 class Activities extends \Espo\Core\Services\Base
@@ -61,11 +64,72 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function isPerson($scope)
     {
-        return in_array($scope, array('Contact', 'Lead', 'User'));
+        return in_array($scope, ['Contact', 'Lead', 'User']);
     }
 
-    protected function getMeetingQuery($scope, $id, $op = 'IN', $notIn = array())
+    protected function getUserMeetingQuery($id, $op, $notIn)
     {
+        $sql = "
+            SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
+                   meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
+                   meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status, meeting.created_at AS createdAt
+            FROM `meeting`
+            LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = meeting.assigned_user_id
+            JOIN `meeting_user` AS `usersMiddle` ON usersMiddle.meeting_id = meeting.id AND usersMiddle.deleted = 0
+            WHERE meeting.deleted = 0 AND usersMiddle.user_id = '".$this->getUser()->id."'
+        ";
+        if (!empty($notIn)) {
+            $sql .= "
+                AND meeting.status {$op} ('". implode("', '", $notIn) . "')
+            ";
+        }
+        return $sql;
+    }
+
+    protected function getUserCallQuery($id, $op, $notIn)
+    {
+        $sql = "
+            SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
+                   call.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
+                   call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status, call.created_at AS createdAt
+            FROM `call`
+            LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = call.assigned_user_id
+            JOIN `call_user` AS `usersMiddle` ON usersMiddle.call_id = call.id AND usersMiddle.deleted = 0
+            WHERE call.deleted = 0 AND usersMiddle.user_id = '".$this->getUser()->id."'
+        ";
+        if (!empty($notIn)) {
+            $sql .= "
+                AND call.status {$op} ('". implode("', '", $notIn) . "')
+            ";
+        }
+        return $sql;
+    }
+
+    protected function getUserEmailQuery($id, $op, $notIn)
+    {
+        $sql = "
+            SELECT email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
+                   email.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
+                   email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status, email.created_at AS createdAt
+            FROM `email`
+            LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = email.assigned_user_id
+            JOIN `email_user` AS `usersMiddle` ON usersMiddle.email_id = email.id AND usersMiddle.deleted = 0
+            WHERE email.deleted = 0 AND usersMiddle.user_id = '".$this->getUser()->id."'
+        ";
+        if (!empty($notIn)) {
+            $sql .= "
+                AND email.status {$op} ('". implode("', '", $notIn) . "')
+            ";
+        }
+        return $sql;
+    }
+
+    protected function getMeetingQuery($scope, $id, $op = 'IN', $notIn = [])
+    {
+        if ($scope == 'User') {
+            return $this->getUserMeetingQuery($id, $op, $notIn);
+        }
+
         $baseSql = "
             SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
                    meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
@@ -143,8 +207,11 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getCallQuery($scope, $id, $op = 'IN', $notIn = array())
+    protected function getCallQuery($scope, $id, $op = 'IN', $notIn = [])
     {
+        if ($scope == 'User') {
+            return $this->getUserCallQuery($id, $op, $notIn);
+        }
         $baseSql = "
             SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
                    call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
@@ -222,8 +289,11 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getEmailQuery($scope, $id, $op = 'IN', $notIn = array())
+    protected function getEmailQuery($scope, $id, $op = 'IN', $notIn = [])
     {
+        if ($scope == 'User') {
+            return $this->getUserEmailQuery($id, $op, $notIn);
+        }
         $baseSql = "
             SELECT DISTINCT
                 email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
@@ -379,26 +449,76 @@ class Activities extends \Espo\Core\Services\Base
         );
     }
 
-    public function getActivities($scope, $id, $params = array())
+    protected function accessCheck($entity)
     {
+        if ($entity->getEntityType() == 'User') {
+            if ($this->getUser()->isAdmin()) {
+                return;
+            }
+            $e = $this->getAcl()->get('userPermission');
+
+            if ($this->getAcl()->get('userPermission') === 'no') {
+                if ($entity->id != $this->getUser()->id) {
+                    throw new Forbidden();
+                }
+            } else if ($this->getAcl()->get('userPermission') === 'team') {
+                if ($entity->id != $this->getUser()->id) {
+                    if (!$this->getUser()->has('teamsIds')) {
+                        $this->getUser()->loadLinkMultipleField('teams');
+                    }
+                    $entity->loadLinkMultipleField('teams');
+                    $teamIdList1 = $this->getUser()->get('teamsIds');
+                    $teamIdList2 = $entity->get('teamsIds');
+
+                    $inTeam = false;
+                    foreach ($teamIdList1 as $id) {
+                        if (in_array($id, $teamIdList2)) {
+                            $inTeam = true;
+                            break;
+                        }
+                    }
+                    if (!$inTeam) {
+                        throw new Forbidden();
+                    }
+                }
+            }
+        } else {
+            if (!$this->getAcl()->check($entity, 'read')) {
+                throw new Forbidden();
+            }
+        }
+    }
+
+    public function getActivities($scope, $id, $params = [])
+    {
+        $entity = $this->getEntityManager()->getEntity($scope, $id);
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        $this->accessCheck($entity);
+
         $fetchAll = empty($params['scope']);
 
         $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')) : array(),
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', array('Held', 'Not Held')) : array(),
+            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [],
+            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [],
         );
         return $this->getResult($parts, $scope, $id, $params);
     }
 
     public function getHistory($scope, $id, $params)
     {
+        $entity = $this->getEntityManager()->getEntity($scope, $id);
+
+        $this->accessCheck($entity);
 
         $fetchAll = empty($params['scope']);
 
         $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', array('Held', 'Not Held')) : array(),
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', array('Held', 'Not Held')) : array(),
-            'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', array('Archived', 'Sent')) : array(),
+            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [],
+            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [],
+            'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', ['Archived', 'Sent']) : [],
         );
         $result = $this->getResult($parts, $scope, $id, $params);
 

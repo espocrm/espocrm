@@ -203,6 +203,11 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 attributes.contactsNames = this.model.get('contactsNames');
             }
 
+            if (this.model.name == 'User') {
+                attributes.assignedUserId = this.model.id;
+                attributes.assignedUserName = this.model.get('name');
+            }
+
             callback.call(this, attributes);
         },
 
