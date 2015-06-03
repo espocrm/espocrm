@@ -57,9 +57,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         //check permissions copied and deleted files
         $this->checkIsWritable();
 
-        $this->backupExistingFiles();
-
         $this->beforeRunAction();
+
+        $this->backupExistingFiles();
 
         /* run before install script */
         $this->runScript('before');

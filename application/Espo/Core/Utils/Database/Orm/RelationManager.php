@@ -28,8 +28,6 @@ class RelationManager
 {
     private $metadata;
 
-    private $entityDefs;
-
     public function __construct(\Espo\Core\Utils\Metadata $metadata)
     {
         $this->metadata = $metadata;
@@ -39,16 +37,6 @@ class RelationManager
     {
         return $this->metadata;
     }
-
-    protected function getEntityDefs()
-    {
-        if (empty($this->entityDefs)) {
-            $this->entityDefs = $this->getMetadata()->get('entityDefs');
-        }
-
-        return $this->entityDefs;
-    }
-
 
     public function getLinkEntityName($entityName, $linkParams)
     {
@@ -110,7 +98,7 @@ class RelationManager
 
     public function convert($linkName, $linkParams, $entityName, $ormMeta)
     {
-        $entityDefs = $this->getEntityDefs();
+        $entityDefs = $this->getMetadata()->get('entityDefs');
 
         $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
         $foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
