@@ -108,7 +108,7 @@
             var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.type) || [];
             additionalPanels.forEach(function (panel) {
                 this.panelList.push(panel);
-            }.bind(this));
+            }, this);
 
             this.panelList.forEach(function (p) {
                 var o = {
@@ -116,7 +116,8 @@
                     el: this.options.el + ' .panel-body-' + p.name,
                     readOnly: this.readOnly,
                     inlineEditDisabled: this.inlineEditDisabled,
-                    mode: this.mode
+                    mode: this.mode,
+                    defs: p
                 };
                 o = _.extend(o, p.options);
                 this.createView(p.name, p.view, o, function (view) {

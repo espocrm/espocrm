@@ -31,8 +31,13 @@ class App extends \Espo\Core\Controllers\Base
         $preferences = $this->getPreferences()->toArray();
         unset($preferences['smtpPassword']);
 
+        $user = $this->getUser();
+        if (!$user->has('teamsIds')) {
+            $user->loadLinkMultipleField('teams');
+        }
+
         return array(
-            'user' => $this->getUser()->toArray(),
+            'user' => $user->toArray(),
             'acl' => $this->getAcl()->getMap(),
             'preferences' => $preferences,
             'token' => $this->getUser()->get('token')

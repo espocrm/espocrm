@@ -48,25 +48,43 @@ Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function 
                         showActivities = true;
                     }
                 } else if (this.getAcl().get('userPermission') === 'team') {
-                    showActivities = true;
+                    if (this.model.has('teamsIds')) {
+                        this.model.get('teamsIds').forEach(function (id) {
+                            if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                                showActivities = true;
+                            }
+                        }, this);
+                    } else {
+                        this.listenToOnce(this.model, 'sync', function () {
+                            this.model.get('teamsIds').forEach(function (id) {
+                                if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                                    this.getParentView().showPanel('activities');
+                                    this.getParentView().showPanel('history');
+                                    this.getView('activities').actionRefresh();
+                                    this.getView('history').actionRefresh();
+                                }
+                            }, this);
+                        }, this);
+                    }
                 } else {
                     showActivities = true;
                 }
             }
 
-            if (showActivities) {
-                this.panelList.push({
-                    "name":"activities",
-                    "label":"Activities",
-                    "view":"Crm:Record.Panels.Activities"
-                });
-                this.panelList.push({
-                    "name":"history",
-                    "label":"History",
-                    "view":"Crm:Record.Panels.History"
-                });
-            }
-        }
+            this.panelList.push({
+                "name":"activities",
+                "label":"Activities",
+                "view":"Crm:Record.Panels.Activities",
+                "hidden": !showActivities
+            });
+            this.panelList.push({
+                "name":"history",
+                "label":"History",
+                "view":"Crm:Record.Panels.History",
+                "hidden": !showActivities
+            });
+
+        },
 
     });
 

@@ -176,8 +176,11 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
                 }, function (view) {
                     view.render();
                 });
-            }.bind(this));
-            this.collection.fetch();
+            }, this);
+
+            if (!this.defs.hidden) {
+                this.collection.fetch();
+            }
         },
 
         getCreateActivityAttributes: function (data, callback) {
