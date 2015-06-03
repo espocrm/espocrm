@@ -52,73 +52,55 @@
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "openedCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "clickedCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "optedOutCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "bouncedCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "hardBouncedCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "softBouncedCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "leadCreatedCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         },
         "revenue": {
             "type": "currency",
             "notStorable": true,
             "readOnly": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutFiltersDisabled": true
+            "disabled": true
         }
     },
     "links": {
