@@ -82,7 +82,11 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             this.header += ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
 
             if (!this.fullFormDisabled) {
-                this.header = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                if (!this.id) {
+                    this.header = '<a href="#' + this.scope + '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                } else {
+                    this.header = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                }
             }
 
             this.waitForView('edit');
@@ -122,16 +126,16 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             this.createView('edit', viewName, options, callback);
         },
 
-        actionSave: function (dialog) {
+        actionSave: function () {
             var editView = this.getView('edit');
 
             var model = editView.model;
             editView.once('after:save', function () {
                 this.trigger('after:save', model);
-                dialog.close();
+                this.dialog.close();
             }, this);
 
-            var $buttons = dialog.$el.find('.modal-footer button');
+            var $buttons = this.dialog.$el.find('.modal-footer button');
             $buttons.addClass('disabled');
 
             editView.once('cancel:save', function () {
@@ -177,7 +181,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             }
 
             this.trigger('leave');
-            dialog.close();
+            this.dialog.close();
         }
     });
 });

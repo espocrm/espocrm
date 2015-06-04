@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
 
@@ -25,10 +25,10 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
 
         cssName: 'change-password',
 
-        template: 'modals.change-password',        
+        template: 'modals.change-password',
 
         setup: function () {
-        
+
             this.buttons = [
                 {
                     name: 'change',
@@ -45,15 +45,15 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
                         dialog.close();
                     }
                 }
-            ];    
-            
+            ];
+
             this.header = this.translate('Change Password', 'labels', 'User');
-            
+
             this.wait(true);
-            
-            this.getModelFactory().create('User', function (user) {            
+
+            this.getModelFactory().create('User', function (user) {
                 this.model = user;
-                
+
                 this.createView('password', 'Fields.Password', {
                     model: user,
                     mode: 'edit',
@@ -73,29 +73,29 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
                         name: 'passwordConfirm',
                         params: {
                             required: true,
-                        }                        
+                        }
                     }
                 });
-                        
+
                 this.wait(false);
-            }, this);            
+            }, this);
 
         },
-        
-        
-        changePassword: function () {            
+
+
+        changePassword: function () {
             this.getView('password').fetchToModel();
-            this.getView('passwordConfirm').fetchToModel();    
-            
+            this.getView('passwordConfirm').fetchToModel();
+
             var notValid = this.getView('password').validate() || this.getView('passwordConfirm').validate();
-            
+
             if (notValid) {
                 return;
             }
-            
+
             this.$el.find('button[data-name="change"]').addClass('disabled');
-            
-            $.ajax({            
+
+            $.ajax({
                 url: 'User/action/changeOwnPassword',
                 type: 'POST',
                 data: JSON.stringify({
@@ -103,12 +103,12 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
                 }),
                 error: function () {
                     this.$el.find('button[data-name="change"]').removeClass('disabled');
-                }.bind(this)            
-            }).done(function () {                
-                Espo.Ui.success(this.translate('passwordChanged', 'messages', 'User'));                
+                }.bind(this)
+            }).done(function () {
+                Espo.Ui.success(this.translate('passwordChanged', 'messages', 'User'));
                 this.trigger('changed');
                 this.close();
-            }.bind(this));            
+            }.bind(this));
         },
 
     });

@@ -51,6 +51,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                 if (action) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
+                        e.preventDefault();
                         this[method].call(this, data);
                     }
                 }
@@ -131,8 +132,8 @@ Espo.define('Views.Modal', 'View', function (Dep) {
             });
         },
 
-        actionCancel: function (dialog) {
-            dialog.close();
+        actionCancel: function () {
+            this.dialog.close();
         },
 
         close: function () {

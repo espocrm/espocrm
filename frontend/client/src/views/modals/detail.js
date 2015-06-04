@@ -135,7 +135,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             }.bind(this), 50);
         },
 
-        actionEdit: function (dialog) {
+        actionEdit: function () {
             this.createView('quickEdit', 'Modals.Edit', {
                 scope: this.scope,
                 id: this.id,
@@ -143,8 +143,8 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             }, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
-                    dialog.hide();
-                });
+                    this.dialog.hide();
+                }, this);
 
                 this.listenToOnce(view, 'remove', function () {
                     this.close();
@@ -158,7 +158,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             }.bind(this));
         },
 
-        actionFullForm: function (dialog) {
+        actionFullForm: function () {
             var url;
             var router = this.getRouter();
 
@@ -179,8 +179,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
 
             this.trigger('leave');
-            dialog.close();
-
+            this.dialog.close();
         }
     });
 });
