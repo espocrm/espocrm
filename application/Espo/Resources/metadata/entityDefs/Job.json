@@ -16,12 +16,12 @@
         "serviceName": {
             "type": "varchar",
             "required": true,
-            "len":100
+            "maxLength":100
         },
         "method": {
             "type": "varchar",
             "required": true,
-            "len":100
+            "maxLength":100
         },
         "data": {
             "type": "jsonObject"
