@@ -6,7 +6,7 @@
         <div class="header-buttons btn-group pull-right">
             {{#each items.buttons}}
                 {{#if link}}
-                    <a href="{{link}}" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}}">{{translate label scope=../../scope}}</a>
+                    <a href="{{link}}" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}}{{#if action}} action{{/if}}" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../../scope}}</a>
                 {{else}}
                     <button type="button" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action"{{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
                         {{#if icon}}<span class="{{icon}}"></span>{{/if}}

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 
 Espo.define('Views.Modals.SaveFilters', 'Views.Modal', function (Dep) {
@@ -41,7 +41,7 @@ Espo.define('Views.Modals.SaveFilters', 'Views.Modal', function (Dep) {
                     label: 'Save',
                     style: 'primary',
                     onClick: function (dialog) {
-                        this.save();                        
+                        this.save();
                     }.bind(this)
                 },
                 {
@@ -52,30 +52,30 @@ Espo.define('Views.Modals.SaveFilters', 'Views.Modal', function (Dep) {
                     }
                 }
             ];
-            
+
             this.header = this.translate('Save Filters');
-            
+
             var model = new Espo.Model();
-            this.createView('name', 'Fields.Varchar', {    
-                el: this.options.el + ' .field-name',        
+            this.createView('name', 'Fields.Varchar', {
+                el: this.options.el + ' .field-name',
                 defs: {
                     name: 'name',
                     params: {
                         required: true
-                    }                
+                    }
                 },
                 mode: 'edit',
                 model: model
             });
         },
-        
-        save: function () {    
+
+        save: function () {
             var nameView = this.getView('name');
-            nameView.fetchToModel();            
+            nameView.fetchToModel();
             if (nameView.validate()) {
                 return;
-            }            
-            this.trigger('save', nameView.model.get('name'));            
+            }
+            this.trigger('save', nameView.model.get('name'));
             return true;
         },
     });

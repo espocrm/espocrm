@@ -80,6 +80,7 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
             } else {
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
+                    action: 'create',
                     label: 'Create ' +  this.scope,
                     style: 'primary',
                     acl: 'edit'
@@ -191,6 +192,20 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
                 }, this);
             }.bind(this));
         },
+
+        actionCreate: function () {
+            var router = this.getRouter();
+
+            var url = '#' + this.scope + '/create';
+            var attributes = this.getCreateAttributes() || {};
+
+            router.dispatch(this.scope, 'create', {
+                attributes: attributes,
+                returnUrl: Backbone.history.fragment,
+            });
+            router.navigate(url, {trigger: false});
+        }
+
     });
 });
 

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Modals.Duplicate', 'Views.Modal', function (Dep) {
 
@@ -42,9 +42,9 @@ Espo.define('Views.Modals.Duplicate', 'Views.Modal', function (Dep) {
                     name: 'save',
                     label: 'Save',
                     style: 'danger',
-                    onClick: function (dialog) {                        
+                    onClick: function (dialog) {
                         this.trigger('save');
-                        dialog.close();                        
+                        dialog.close();
                     }.bind(this),
                 },
                 {
