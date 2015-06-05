@@ -50,8 +50,14 @@ $language = new Language();
 $langs = $language->get($userLang);
 //END: get user selected language
 
+$config = include('core/config.php');
+
 require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
+
+if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+    die(str_replace('{minVersion}', $config['requirements']['phpVersion'], $langs['messages']['phpVersion']) . '.');
+}
 
 if (!$systemHelper->initWritable()) {
 	$dir = $systemHelper->getWritableDir();
@@ -128,7 +134,6 @@ $smarty->assign('tplName', $tplName);
 $smarty->assign('action', ucfirst($action));
 
 /** config */
-$config = include('core/config.php');
 $smarty->assign('config', $config);
 
 if (Utils::isActionExists($action)) {

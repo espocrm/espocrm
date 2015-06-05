@@ -50,7 +50,7 @@ class Converter
     //todo: same array in Converters\Orm
     protected $idParams = array(
         'dbType' => 'varchar',
-        'len' => '24',
+        'len' => 24,
     );
 
     //todo: same array in Converters\Orm
