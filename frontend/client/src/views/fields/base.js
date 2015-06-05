@@ -227,6 +227,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                 var self = this;
 
                 if (!this.readOnly && !this.inlineEditDisabled) {
+
                     var initInlineEdit = function () {
 
                         var $cell = this.getCellElement();
@@ -241,23 +242,23 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                         $cell.prepend($editLink);
 
                         $editLink.on('click', function () {
-                            self.inlineEdit();
-                        });
+                            this.inlineEdit();
+                        }.bind(this));
 
                         $cell.on('mouseenter', function (e) {
                             e.stopPropagation();
-                            if (!self.enabled) {
+                            if (!this.enabled || this.readOnly) {
                                 return;
                             }
-                            if (self.mode == 'detail') {
+                            if (this.mode == 'detail') {
                                 $editLink.removeClass('hide');
                             }
-                        }).on('mouseleave', function (e) {
+                        }.bind(this)).on('mouseleave', function (e) {
                             e.stopPropagation();
-                            if (self.mode == 'detail') {
+                            if (this.mode == 'detail') {
                                 $editLink.addClass('hide');
                             }
-                        });
+                        }.bind(this));
                     }.bind(this);
 
                     this.listenToOnce(this, 'after:render', initInlineEdit);

@@ -53,6 +53,34 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
             }
         },
 
+        setFieldReadOnly: function (name) {
+            var view = this.getFieldView(name);
+            if (view) {
+                if (!view.readOnly) {
+                    view.readOnly = true;
+                    view.setMode('detail');
+                    if (view.isRendered()) {
+                        view.reRender();
+                    }
+                }
+            }
+        },
+
+        setFieldNotReadOnly: function (name) {
+            var view = this.getFieldView(name);
+            if (view) {
+                if (view.readOnly) {
+                    view.readOnly = false;
+                    if (this.mode == 'edit') {
+                        view.setMode('edit');
+                    }
+                    if (view.isRendered()) {
+                        view.reRender();
+                    }
+                }
+            }
+        },
+
         showPanel: function (name) {
             this.$el.find('.panel[data-panel-name="'+name+'"]').removeClass('hidden');
         },
@@ -322,6 +350,16 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
                         if (fieldView) {
                             fieldView.setRequired();
                         }
+                    }, this);
+                    break;
+                case 'setReadOnly':
+                    fields.forEach(function (field) {
+                        this.setFieldReadOnly(field);
+                    }, this);
+                    break;
+                case 'setNotReadOnly':
+                    fields.forEach(function (field) {
+                        this.setFieldNotReadOnly(field);
                     }, this);
                     break;
             }
