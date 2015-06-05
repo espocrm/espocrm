@@ -79,7 +79,7 @@ class Converter
 
     protected $idParams = array(
         'dbType' => 'varchar',
-        'len' => '24',
+        'len' => 24,
     );
 
     /**
@@ -190,12 +190,12 @@ class Converter
                 switch ($fieldParams['type']) {
                     case 'id':
                         if ($fieldParams['dbType'] != 'int') {
-                            $fieldParams = array_merge($fieldParams, $this->idParams);
+                            $fieldParams = array_merge($this->idParams, $fieldParams);
                         }
                         break;
 
                     case 'foreignId':
-                        $fieldParams = array_merge($fieldParams, $this->idParams);
+                        $fieldParams = array_merge($this->idParams, $fieldParams);
                         $fieldParams['notNull'] = false;
                         break;
 
@@ -226,6 +226,11 @@ class Converter
      */
     protected function convertFields($entityName, &$entityMeta)
     {
+        //List of unmerged fields with default field defenitions in $outputMeta
+        $unmergedFields = array(
+            'name',
+        );
+
         $outputMeta = array(
             'id' => array(
                 'type' => Entity::ID,
@@ -235,6 +240,10 @@ class Converter
                 'type' => isset($entityMeta['fields']['name']['type']) ? $entityMeta['fields']['name']['type'] : Entity::VARCHAR,
                 'notStorable' => true,
             ),
+            'deleted' => array(
+                'type' => Entity::BOOL,
+                'default' => false,
+            ),
         );
 
         foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
@@ -243,8 +252,14 @@ class Converter
             $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
             $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
+
             if ($fieldDefs !== false) {
-                $outputMeta[$fieldName] = $fieldDefs; //push fieldDefs to the main array
+                //push fieldDefs to the ORM metadata array
+                if (isset($outputMeta[$fieldName]) && !in_array($fieldName, $unmergedFields)) {
+                    $outputMeta[$fieldName] = array_merge($outputMeta[$fieldName], $fieldDefs);
+                } else {
+                    $outputMeta[$fieldName] = $fieldDefs;
+                }
             }
 
             /** check and set the linkDefs from 'fields' metadata */
@@ -257,13 +272,6 @@ class Converter
                     $entityMeta['links'] = Util::merge( array($fieldName => $linkDefs), $entityMeta['links'] );
                 }
             }
-        }
-
-        if (!isset($outputMeta['deleted'])) {
-            $outputMeta['deleted'] = array(
-                'type' => Entity::BOOL,
-                'default' => false,
-            );
         }
 
         return $outputMeta;
@@ -330,12 +338,6 @@ class Converter
 
     protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta = null)
     {
-        /** set default type if exists */
-        if (!isset($fieldParams['type']) || empty($fieldParams['type'])) {
-            $GLOBALS['log']->debug('Field type does not exist for '.$entityName.':'.$fieldName.'. Use default type ['.$this->defaultFieldType.']');
-            $fieldParams['type'] = $this->defaultFieldType;
-        } /** END: set default type if exists */
-
         /** merge fieldDefs option from field definition */
         if (!isset($fieldTypeMeta)) {
             $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
