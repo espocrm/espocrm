@@ -145,7 +145,7 @@
             });
 
             Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
-                if (model.get(attr)) {
+                if (model.get(attr) !== null) {
                     return options.fn(this);
                 }
                 return options.inverse(this);
