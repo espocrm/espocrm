@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014  Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -17,25 +17,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.GlobalSearch.NameField', 'Views.Fields.Base', function (Dep) {
+Espo.define('Views.GlobalSearch.AccountField', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
-        
-        listTemplate: 'global-search.name-field',
-        
+
+        listTemplate: 'global-search.account-field',
+
         data: function () {
             return {
                 scope: this.model.get('_scope'),
-                name: this.model.get('name'),
-                acccount: this.model.get('accountName'),
-                title: this.model.get('title'),
+                name: this.model.get('accountName'),
                 id: this.model.id,
             };
         },
 
     });
-    
+
 });
 
