@@ -109,13 +109,20 @@
             }.bind(this));
         }
 
+        $window = $(window);
+
         this.$el.on('shown.bs.modal', function (event) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
             if (this.fitHeight) {
-                this.$el.find('div.modal-body').css({
-                    'maxHeight': ($(window).height() - 192) + 'px',
-                    'overflow': 'auto'
-                });
+                var processResize = function () {
+                    this.$el.find('div.modal-body').css({
+                        'maxHeight': ($window.height() - 192) + 'px',
+                        'overflow': 'auto'
+                    });
+                }.bind(this);
+                $window.off('resize.modal-height');
+                $window.on('resize.modal-height', processResize);
+                processResize();
             }
         }.bind(this));
         this.$el.on('hidden.bs.modal', function (event) {
