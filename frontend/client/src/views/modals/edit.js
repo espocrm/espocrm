@@ -39,6 +39,8 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
         escapeDisabled: true,
 
+        fitHeight: true,
+
         setup: function () {
 
             var self = this;

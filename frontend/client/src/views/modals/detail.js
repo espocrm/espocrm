@@ -39,6 +39,8 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
         backdrop: true,
 
+        fitHeight: true,
+
         setup: function () {
 
             var self = this;

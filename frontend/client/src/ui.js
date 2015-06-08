@@ -36,7 +36,7 @@
         this.container = 'body'
         this.onRemove = function () {};
 
-        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
+        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
         params.forEach(function (param) {
             if (param in options) {
                 this[param] = options[param];
@@ -111,7 +111,13 @@
 
         this.$el.on('shown.bs.modal', function (event) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
-        });
+            if (this.fitHeight) {
+                this.$el.find('div.modal-body').css({
+                    'maxHeight': ($(window).height() - 192) + 'px',
+                    'overflow': 'auto'
+                });
+            }
+        }.bind(this));
         this.$el.on('hidden.bs.modal', function (event) {
             if ($('.modal:visible').length > 0) {
                 setTimeout(function() {

@@ -41,6 +41,8 @@ Espo.define('Views.Modal', 'View', function (Dep) {
 
         width: false,
 
+        fitHeight: false,
+
         escapeDisabled: false,
 
         events: {
@@ -112,6 +114,7 @@ Espo.define('Views.Modal', 'View', function (Dep) {
                     buttons: buttonListExt,
                     width: this.width,
                     keyboard: !this.escapeDisabled,
+                    fitHeight: this.fitHeight,
                     onRemove: function () {
                         this.remove();
                     }.bind(this)
