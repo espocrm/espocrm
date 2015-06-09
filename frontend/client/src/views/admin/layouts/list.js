@@ -27,7 +27,7 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
 
         dataAttributesDefs: {
             link: {type: 'bool'},
-            width: {type: 'varchar'},
+            width: {type: 'float'},
             notSortable: {type: 'bool'},
             align: {
                 type: 'enum',
