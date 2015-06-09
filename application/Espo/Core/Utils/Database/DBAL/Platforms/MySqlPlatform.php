@@ -22,12 +22,13 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Platforms;
 
-use Doctrine\DBAL\Schema\TableDiff,
-    Doctrine\DBAL\Schema\Index,
-    Doctrine\DBAL\Schema\Table,
-    Doctrine\DBAL\Schema\Constraint,
-    Doctrine\DBAL\Schema\ForeignKeyConstraint;
-
+use Doctrine\DBAL\Schema\TableDiff;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\Constraint;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
+use Doctrine\DBAL\Schema\ColumnDiff;
+use Doctrine\DBAL\Schema\Column;
 
 class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 {
@@ -39,20 +40,51 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
             $queryParts[] = 'RENAME TO ' . $diff->newName;
         }
 
-        foreach ($diff->addedColumns as $column) {
-            if ($this->onSchemaAlterTableAddColumn($column, $diff, $columnSql)) {
+        //espo: It works not correctly. It can rename some existing fields
+        foreach ($diff->renamedColumns as $oldColumnName => $column) {
+            if ($this->onSchemaAlterTableRenameColumn($oldColumnName, $column, $diff, $columnSql)) {
                 continue;
             }
 
+            //espo: remaned autoincrement field
+            if ($column->getAutoincrement()) {
+                $diff->removedColumns[$oldColumnName] = new Column($oldColumnName, $column->getType(), $column->toArray());
+
+                $columnName = $column->getQuotedName($this);
+                $diff->addedColumns[$columnName] = $column;
+                continue;
+            }
+            //END espo
+
             $columnArray = $column->toArray();
             $columnArray['comment'] = $this->getColumnComment($column);
-            $queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
-        }
+            /*$queryParts[] =  'CHANGE ' . $oldColumnName . ' '
+                    . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
+            $queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); //espo: fixed the problem
+        } //espo: END
 
         foreach ($diff->removedColumns as $column) {
             if ($this->onSchemaAlterTableRemoveColumn($column, $diff, $columnSql)) {
                 continue;
             }
+
+            //espo: remove autoincrement option
+            if ($column->getAutoincrement()) {
+
+                $columnName = $column->getQuotedName($this);
+
+                $changedColumn = clone $column;
+                $changedColumn->setNotNull(false);
+                $changedColumn->setAutoincrement(false);
+
+                $changedProperties = array(
+                    'notnull',
+                    'autoincrement',
+                );
+
+                $diff->changedColumns[$columnName] = new ColumnDiff($columnName, $changedColumn, $changedProperties, $column);
+            }
+            //END espo
 
             //$queryParts[] =  'DROP ' . $column->getQuotedName($this); //espo: no needs to remove columns
         }
@@ -71,19 +103,15 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
         }
 
-        //espo: It works not correctly. It can rename some existing fields
-        foreach ($diff->renamedColumns as $oldColumnName => $column) {
-            if ($this->onSchemaAlterTableRenameColumn($oldColumnName, $column, $diff, $columnSql)) {
+        foreach ($diff->addedColumns as $column) {
+            if ($this->onSchemaAlterTableAddColumn($column, $diff, $columnSql)) {
                 continue;
             }
 
             $columnArray = $column->toArray();
             $columnArray['comment'] = $this->getColumnComment($column);
-            /*$queryParts[] =  'CHANGE ' . $oldColumnName . ' '
-                    . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
-            $queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); //espo: fixed the problem
-        } //espo: END
-
+            $queryParts[] = 'ADD ' . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
+        }
 
         $sql = array();
         $tableSql = array();

@@ -5,7 +5,7 @@
     },
     "fields": {
         "name": "Ім'я",
-        "status": "статус",
+        "status": "Статус",
         "file": "Файл",
         "type": "Тип",
         "source": "Джерело",
@@ -14,7 +14,7 @@
         "description": "Опис"
     },
     "links": {
-        "accounts": "Контраґенти",
+        "accounts": "Контрагенти",
         "opportunities": "Угоди"
     },
     "options": {

@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Ім'я",
-        "status": "статус",
+        "status": "Статус",
         "isHtml": "HTML-код",
         "body": "Тіло",
         "subject": "Тема",

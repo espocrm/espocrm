@@ -2,7 +2,7 @@
     "fields": {
         "name": "Ім'я",
         "parent": "Джерело",
-        "status": "статус",
+        "status": "Статус",
         "dateStart": "Дата початку",
         "dateEnd": "Дата закінчення",
         "direction": "Напрямок",
@@ -12,7 +12,7 @@
         "contacts": "Контакти",
         "leads": "Ліди",
         "reminders": "Нагадування",
-        "account": "Контраґент"
+        "account": "Контрагент"
     },
     "links": {
     },
