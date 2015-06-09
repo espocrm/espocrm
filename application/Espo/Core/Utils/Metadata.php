@@ -28,8 +28,6 @@ class Metadata
 {
     protected $meta = null;
 
-    protected $scopes = array();
-
     private $config;
     private $unifier;
     private $fileManager;
@@ -153,6 +151,7 @@ class Metadata
         if (file_exists($this->cacheFile) && !$reload) {
             $this->meta = $this->getFileManager()->getPhpContents($this->cacheFile);
         } else {
+            $this->clearVars();
             $this->meta = $this->getUnifier()->unify($this->name, $this->paths, true);
             $this->meta = $this->setLanguageFromConfig($this->meta);
             $this->meta = $this->addAdditionalFields($this->meta);
@@ -530,5 +529,17 @@ class Metadata
         }
 
         return $path;
+    }
+
+    /**
+     * Clear metadata variables when reload meta
+     *
+     * @return void
+     */
+    protected function clearVars()
+    {
+        $this->meta = null;
+        $this->moduleList = null;
+        $this->ormMeta = null;
     }
 }
