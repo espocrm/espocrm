@@ -56,17 +56,17 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
             /* copy core files */
             if (!$this->copyFiles()) {
-                throw new $this->throwErrorAndRemovePackage('Cannot copy files.');
+                $this->throwErrorAndRemovePackage('Cannot copy files.');
             }
 
             /* remove extension files, saved in fileList */
             if (!$this->deleteFiles(true)) {
-                throw new $this->throwErrorAndRemovePackage('Permission denied to delete files.');
+                $this->throwErrorAndRemovePackage('Permission denied to delete files.');
             }
         }
 
         if (!$this->systemRebuild()) {
-            throw new $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+            $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
 
         /* run after uninstall script */
