@@ -138,48 +138,6 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                     view.close();
                 }, this);
             }.bind(this));
-            /*var tpl = this.unescape($("#edit-dialog-tpl").html());
-
-            var dialog = new Espo.Ui.Dialog({
-                header: this.translate(data.name, 'fields', this.scope),
-                body: _.template(tpl, data),
-                buttons: [
-                    {
-                        name: 'ok',
-                        text: '&nbsp; Ok &nbsp;',
-                        onClick: function (dialog) {
-                            var o = this.parseDataAttributes(dialog);
-                            var li = $("#layout ul > li[data-name='" + data.name + "']");
-                            for (var key in o) {
-                                li.attr('data-' + key, o[key]);
-                                li.data(key, o[key]);
-                                li.find('.' + key + '-value').text(o[key]);
-                            }
-                            dialog.close();
-                        }.bind(this),
-                    },
-                    {
-                        name: 'cancel',
-                        text: 'Cancel',
-                        onClick: function (dialog) {
-                            dialog.close();
-                        }
-                    }
-                ]
-            });
-
-            this.dataAttributes.forEach(function (attr) {
-                var type = (this.dataAttributesDefs[attr] || {}).type || 'varchar';
-                var value = data[attr];
-                if (type == 'bool') {
-                    if (value) {
-                        value = "true";
-                    }
-                }
-                dialog.$el.find("[name='"+attr+"']").val(value);
-            }, this);
-
-            dialog.show();*/
         },
 
         validate: function (layout) {
