@@ -112,6 +112,7 @@ class Table
     {
         $aclTables = [];
         $assignmentPermissionList = [];
+        $userPermissionList = [];
 
         $userRoles = $this->user->get('roles');
 
