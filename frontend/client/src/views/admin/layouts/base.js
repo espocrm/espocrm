@@ -22,11 +22,11 @@
 Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
 
     return Dep.extend({
-    
+
         scope: null,
-        
+
         type: null,
-        
+
         events: {
             'click button[data-action="save"]': function () {
                 this.disableButtons();
@@ -37,7 +37,7 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                 this.getRouter().navigate('#Admin/layouts', {trigger: true});
             },
         },
-        
+
         buttons: [
             {
                 name: 'save',
@@ -49,48 +49,48 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                 label: 'Cancel',
             }
         ],
-        
+
         dataAttributes: null,
-        
+
         dataAttributesDefs: null,
-        
+
         disableButtons: function () {
             this.$el.find('.button-container button').attr('disabled', true);
         },
-        
+
         enableButtons: function () {
             this.$el.find('.button-container button').removeAttr('disabled');
         },
-        
+
         save: function (callback) {
             var layout = this.fetch();
-            
+
             if (!this.validate(layout)) {
                 this.enableButtons();
                 return false;
             }
-                            
+
             this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
                 this.notify('Saved', 'success', 2000);
-                
+
                 if (typeof callback == 'function') {
                     callback();
                 }
             }.bind(this));
         },
-        
+
         cancel: function () {
             this.loadLayout(function () {
                 this.render();
             }.bind(this));
         },
-        
+
         reset: function () {
             this.render();
         },
-        
+
         fetch: function () {},
-        
+
         setup: function () {
             this.dataAttributes = _.clone(this.dataAttributes);
             this.buttons = _.clone(this.buttons);
@@ -98,12 +98,12 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
             this.scope = this.options.scope;
             this.type = this.options.type;
         },
-        
+
         unescape: function (string) {
             if (string == null) {
                 return '';
             }
-            
+
             var map = {
                 '&amp;': '&',
                 '&lt;': '<',
@@ -117,10 +117,29 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                 return map[match];
             });
         },
-        
-        openEditDialog: function (data) {
-            var tpl = this.unescape($("#edit-dialog-tpl").html());
-                
+
+        openEditDialog: function (attributes) {
+            var name = attributes.name;
+            this.createView('editModal', 'Admin.Layouts.Modals.EditAttributes', {
+                name: attributes.name,
+                scope: this.scope,
+                attributeList: this.dataAttributes,
+                attributeDefs: this.dataAttributesDefs,
+                attributes: attributes
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'after:save', function (attributes) {
+                    var $li = $("#layout ul > li[data-name='" + name + "']");
+                    for (var key in attributes) {
+                        $li.attr('data-' + key, attributes[key]);
+                        $li.data(key, attributes[key]);
+                        $li.find('.' + key + '-value').text(attributes[key]);
+                    }
+                    view.close();
+                }, this);
+            }.bind(this));
+            /*var tpl = this.unescape($("#edit-dialog-tpl").html());
+
             var dialog = new Espo.Ui.Dialog({
                 header: this.translate(data.name, 'fields', this.scope),
                 body: _.template(tpl, data),
@@ -148,9 +167,9 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                     }
                 ]
             });
-            
+
             this.dataAttributes.forEach(function (attr) {
-                var type = this.dataAttributesDefs[attr] || 'text';
+                var type = (this.dataAttributesDefs[attr] || {}).type || 'varchar';
                 var value = data[attr];
                 if (type == 'bool') {
                     if (value) {
@@ -158,13 +177,11 @@ Espo.define('Views.Admin.Layouts.Base', 'View', function (Dep) {
                     }
                 }
                 dialog.$el.find("[name='"+attr+"']").val(value);
-            }.bind(this));
-                            
-            dialog.show();
+            }, this);
+
+            dialog.show();*/
         },
-        
-        parseDataAttributes: function () {},
-        
+
         validate: function (layout) {
             return true;
         },

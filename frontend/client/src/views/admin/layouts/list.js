@@ -23,12 +23,16 @@ Espo.define('Views.Admin.Layouts.List', 'Views.Admin.Layouts.Rows', function (De
 
     return Dep.extend({
 
-        dataAttributes: ['name', 'width', 'link', 'notSortable'],
+        dataAttributes: ['name', 'width', 'link', 'notSortable', 'align'],
 
         dataAttributesDefs: {
-            link: 'bool',
-            width: 'text',
-            notSortable: 'bool',
+            link: {type: 'bool'},
+            width: {type: 'varchar'},
+            notSortable: {type: 'bool'},
+            align: {
+                type: 'enum',
+                options: ["left", "right"]
+            }
         },
 
         editable: true,

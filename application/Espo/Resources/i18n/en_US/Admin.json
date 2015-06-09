@@ -151,10 +151,5 @@
             "medium": "Medium",
             "large": "Large"
         }
-    },
-    "layoutManagerDataAttributes": {
-        "width": "Width (%)",
-        "link": "Link",
-        "notSortable": "Not Sortable"
     }
 }
