@@ -69,30 +69,14 @@ class EmailTemplate extends Record
                 'lower' => $params['emailAddress']
             ))->findOne();
 
+            $entity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($params['emailAddress']);
 
-            if (!empty($emailAddress)) {
-                $pdo = $this->getEntityManager()->getPDO();
-                $sql = "
-                    SELECT * FROM `entity_email_address`
-                    WHERE
-                        `primary` = 1 AND `deleted` = 0 AND `email_address_id` = " . $pdo->quote($emailAddress->id). "
-                ";
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
-                while ($row = $sth->fetch()) {
-                    if (!empty($row['entity_id'])) {
-                        $entity = $this->getEntityManager()->getEntity($row['entity_type'], $row['entity_id']);
-                        if ($entity) {
-                            if ($entity instanceof Person) {
-                                $entityList['Person'] = $entity;
-                            }
-                            if (empty($entityList[$entity->getEntityName()])) {
-                                $entityList[$entity->getEntityName()] = $entity;
-                            }
-                            break;
-                        }
-
-                    }
+            if ($entity) {
+                if ($entity instanceof Person) {
+                    $entityList['Person'] = $entity;
+                }
+                if (empty($entityList[$entity->getEntityType()])) {
+                    $entityList[$entity->getEntityType()] = $entity;
                 }
             }
         }
