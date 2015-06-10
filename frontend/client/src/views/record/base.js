@@ -36,8 +36,13 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
         fieldList: null,
 
         hideField: function (name) {
-            this.$el.find('label.field-label-' + name).addClass('hide');
-            this.$el.find('div.field-' + name).addClass('hide');
+            var $field = this.$el.find('div.field-' + name);
+            var $label = this.$el.find('label.field-label-' + name);
+
+            $field.addClass('hidden');
+            $label.addClass('hidden');
+            $field.closest('.cell-' + name).addClass('hidden-cell');
+
             var view = this.getFieldView(name);
             if (view) {
                 view.enabled = false;
@@ -45,8 +50,12 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
         },
 
         showField: function (name) {
-            this.$el.find('label.field-label-' + name).removeClass('hide');
-            this.$el.find('div.field-' + name).removeClass('hide');
+            var $field = this.$el.find('div.field-' + name);
+            var $label = this.$el.find('label.field-label-' + name);
+
+            $field.removeClass('hidden');
+            $label.removeClass('hidden');
+            $field.closest('.cell-' + name).removeClass('hidden-cell');
             var view = this.getFieldView(name);
             if (view) {
                 view.enabled = true;

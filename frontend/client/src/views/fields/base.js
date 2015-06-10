@@ -92,16 +92,20 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
          * Hide field and label. Works only after rendered.
          */
         hide: function () {
-            this.$el.hide();
-            this.getCellElement().children('label').hide();
+            this.$el.addClass('hidden');
+            var $cell = this.getCellElement();
+            $cell.children('label').addClass('hidden');
+            $cell.addClass('hidden-cell');
         },
 
         /**
          * Show field and label. Works only after rendered.
          */
         show: function () {
-            this.$el.show();
-            this.getCellElement().children('label').show();
+            this.$el.removeClass('hidden');
+            var $cell = this.getCellElement();
+            $cell.children('label').removeClass('hidden');
+            $cell.removeClass('hidden-cell');
         },
 
         data: function () {
@@ -231,7 +235,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                     var initInlineEdit = function () {
 
                         var $cell = this.getCellElement();
-                        var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hide"><span class="glyphicon glyphicon-pencil"></span></a>');
+                        var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="glyphicon glyphicon-pencil"></span></a>');
 
                         // sometimes field is being re-rendered in this time so need to init once again
                         if ($cell.size() == 0) {
@@ -251,12 +255,12 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                                 return;
                             }
                             if (this.mode == 'detail') {
-                                $editLink.removeClass('hide');
+                                $editLink.removeClass('hidden');
                             }
                         }.bind(this)).on('mouseleave', function (e) {
                             e.stopPropagation();
                             if (this.mode == 'detail') {
-                                $editLink.addClass('hide');
+                                $editLink.addClass('hidden');
                             }
                         }.bind(this));
                     }.bind(this);
@@ -367,7 +371,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             var $cell = this.getCellElement();
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
-            $cell.find('.inline-edit-link').addClass('hide');
+            $cell.find('.inline-edit-link').addClass('hidden');
         },
 
         addInlineEditLinks: function () {
@@ -376,7 +380,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>').css('margin-left', '8px');
             $cell.prepend($saveLink);
             $cell.prepend($cancelLink);
-            $cell.find('.inline-edit-link').addClass('hide');
+            $cell.find('.inline-edit-link').addClass('hidden');
             $saveLink.click(function () {
                 this.inlineEditSave();
             }.bind(this));
