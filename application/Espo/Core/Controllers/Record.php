@@ -224,7 +224,7 @@ class Record extends Base
 
     public function actionMassUpdate($params, $data, $request)
     {
-        if (!$request->isPost()) {
+        if (!$request->isPut()) {
             throw new BadRequest();
         }
 
