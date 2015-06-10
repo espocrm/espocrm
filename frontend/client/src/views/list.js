@@ -200,8 +200,7 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
             var attributes = this.getCreateAttributes() || {};
 
             router.dispatch(this.scope, 'create', {
-                attributes: attributes,
-                returnUrl: Backbone.history.fragment,
+                attributes: attributes
             });
             router.navigate(url, {trigger: false});
         }
