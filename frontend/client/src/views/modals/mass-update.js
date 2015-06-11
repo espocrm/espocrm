@@ -81,7 +81,14 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
                 this.getHelper().layoutManager.get(this.scope, 'massUpdate', function (layout) {
-                    this.fields = layout;
+                    layout = layout || [];
+                    this.fields = [];
+                    layout.forEach(function (field) {
+                        if (model.hasField(field)) {
+                            this.fields.push(field);
+                        }
+                    }, this);
+
                     this.wait(false);
                 }.bind(this));
             }.bind(this));
@@ -102,7 +109,10 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
             this.$el.find('.fields-container').append(html);
 
             var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
-            this.createView(name, this.getFieldManager().getViewName(type), {
+
+            var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
+            this.createView(name, viewName, {
                 model: this.model,
                 el: this.$el.selector + ' .field-' + name,
                 defs: {

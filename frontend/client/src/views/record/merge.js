@@ -169,7 +169,9 @@ Espo.define('Views.Record.Merge', 'View', function (Dep) {
                 var type = Espo.Utils.upperCaseFirst(this.models[0].getFieldParam(field, 'type'));
 
                 this.models.forEach(function (model) {
-                    this.createView(model.id + '-' + field, this.getFieldManager().getViewName(type), {
+                    var viewName = model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
+                    this.createView(model.id + '-' + field, viewName, {
                         model: model,
                         el: '.merge .' + model.id + ' .field-' + field,
                         defs: {
