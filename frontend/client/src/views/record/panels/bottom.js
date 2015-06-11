@@ -29,6 +29,8 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
 
         defs: null,
 
+        mode: 'detail',
+
         events: {
             'click .action': function (e) {
                 $el = $(e.currentTarget);
@@ -57,6 +59,7 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
         setup: function () {
             this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
+            this.mode = this.options.mode || this.mode;
         },
 
         getButtonList: function () {
