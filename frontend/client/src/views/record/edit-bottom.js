@@ -19,54 +19,15 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
+Espo.define('Views.Record.EditBottom', 'Views.Record.DetailBottom', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.edit',
-
-        type: 'edit',
-
-        name: 'edit',
-
-        fieldsMode: 'edit',
-
         mode: 'edit',
 
-        buttonList: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            }
-        ],
+        streamPanel: false,
 
-        dropdownItemList: [],
-
-        sideView: 'Record.EditSide',
-
-        bottomView: 'Record.EditBottom',
-
-        actionSave: function () {
-            this.save();
-        },
-
-        actionCancel: function () {
-            this.setConfirmLayout(false);
-            this.cancel();
-        },
-
-        cancel: function () {
-            this.exit('cancel');
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        relationshipPanels: false,
 
     });
 });

@@ -27,6 +27,10 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
         mode: 'detail',
 
+        streamPanel: true,
+
+        relationshipPanels: true,
+
         data: function () {
             return {
                 panelList: this.panelList
@@ -57,7 +61,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
             var panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 
-            if (this.mode == 'detail' && this.getMetadata().get('scopes.' + scope + '.stream')) {
+            if (this.streamPanel && this.getMetadata().get('scopes.' + scope + '.stream')) {
                 panelList.push({
                     "name":"stream",
                     "label":"Stream",
@@ -92,12 +96,19 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
         setup: function () {
             this.panelList = [];
-            var scope = this.scope = this.model.name;
+            this.scope = this.model.name;
 
             this.setupPanels();
 
-            this.wait(true);
+            if (this.relationshipPanels) {
+                this.setupRelationshipPanels();
+            }
+        },
 
+        setupRelationshipPanels: function () {
+            var scope = this.scope;
+
+            this.wait(true);
             this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
                 var panelList = layout;
                 panelList.forEach(function (item) {
