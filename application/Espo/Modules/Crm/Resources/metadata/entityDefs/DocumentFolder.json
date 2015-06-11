@@ -61,7 +61,7 @@
         },
         "documents": {
             "type": "hasMany",
-            "foreign": "folders",
+            "foreign": "folder",
             "entity": "Document"
         }
     },
