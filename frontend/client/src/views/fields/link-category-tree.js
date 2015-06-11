@@ -25,7 +25,7 @@ Espo.define('Views.Fields.LinkCategoryTree', 'Views.Fields.Link', function (Dep)
 
         selectRecordsViewName: 'Modals.SelectCategoryTreeRecords',
 
-        autocompleteDisabled: true,
+        autocompleteDisabled: false,
 
         fetchSearch: function () {
             var data = Dep.prototype.fetchSearch.call(this);
