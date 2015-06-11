@@ -1,7 +1,6 @@
 [
-    {"name":"name","width":35,"link":true},
+    {"name":"name","width":40,"link":true},
     {"name":"file","width":10, "notSortable": true},
-    {"name":"type"},
     {"name":"status"},
     {"name":"createdAt"}
 ]
