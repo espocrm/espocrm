@@ -129,7 +129,7 @@ class EntityManager
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/scopes.json";
         $scopesDataContents = $this->getFileManager()->getContents($filePath);
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
-        $scopesData = Json::decode($entityDefsDataContents, true);
+        $scopesData = Json::decode($scopesDataContents, true);
 
         $scopesData['stream'] = $stream;
         $scopesData['type'] = $type;
