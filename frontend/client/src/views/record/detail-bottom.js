@@ -77,7 +77,8 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                     model: this.model,
                     panelName: name,
                     el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(name),
-                    defs: p
+                    defs: p,
+                    mode: this.mode
                 }, function (view) {
                     if ('getActionList' in view) {
                         p.actionList = this.filterActions(view.getActionList());
