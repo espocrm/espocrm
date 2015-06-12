@@ -23,8 +23,6 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
     return Dep.extend({
 
-        type: 'wysiwyg',
-
         detailTemplate: 'fields.wysiwyg.detail',
 
         editTemplate: 'fields.wysiwyg.edit',

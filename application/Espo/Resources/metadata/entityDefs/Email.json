@@ -101,11 +101,13 @@
         },
         "bodyPlain": {
             "type": "text",
-            "readOnly": true
+            "readOnly": true,
+            "seeMoreDisabled": true
         },
         "body": {
             "type": "text",
-            "view": "Fields.Wysiwyg"
+            "view": "Fields.Wysiwyg",
+            "seeMoreDisabled": true
         },
         "isHtml": {
             "type": "bool",

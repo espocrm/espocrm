@@ -12,6 +12,10 @@
       {
          "name":"maxLength",
          "type":"int"
+      },
+      {
+         "name":"seeMoreDisabled",
+         "type":"bool"
       }
    ],
    "filter": true

@@ -56,7 +56,8 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
 
         getValueForDisplay: function () {
             var text = this.model.get(this.name);
-            if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText) {
+
+            if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText && !this.params.seeMoreDisabled) {
                 var maxLength = this.detailMaxLength;
 
                 var isCut = false;

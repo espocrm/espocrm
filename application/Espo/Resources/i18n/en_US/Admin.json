@@ -104,7 +104,8 @@
         "translation": "Translation",
         "previewSize": "Preview Size",
         "noEmptyString": "No Empty String",
-        "defaultType": "Default Type"
+        "defaultType": "Default Type",
+        "seeMoreDisabled": "Disable Text Cut"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
