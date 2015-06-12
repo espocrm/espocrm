@@ -4,5 +4,6 @@
 	"createdAt",
 	"emailAddress",
 	"industry",
-	"type"
+	"type",
+    "name"
 ]

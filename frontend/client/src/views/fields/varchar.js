@@ -37,7 +37,7 @@ Espo.define('Views.Fields.Varchar', 'Views.Fields.Base', function (Dep) {
             if (value) {
                 var data = {
                     value: value,
-                    type: type,
+                    type: type
                 }
                 return data;
             }
