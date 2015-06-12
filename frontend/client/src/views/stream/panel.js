@@ -114,9 +114,7 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 
             var collection = this.collection;
 
-            this.listenTo(this.model, 'sync', function () {
-                collection.fetchNew();
-            }.bind(this));
+
 
             this.listenToOnce(collection, 'sync', function () {
                 this.createView('list', 'Stream.List', {
@@ -126,10 +124,15 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
                 }, function (view) {
                     view.render();
                 });
-            }.bind(this));
-            collection.fetch();
 
-            var self = this;
+                setTimeout(function () {
+                    this.listenTo(this.model, 'sync', function () {
+                        collection.fetchNew();
+                    }, this);
+                }.bind(this), 500);
+
+            }, this);
+            collection.fetch();
 
             this.$textarea.textcomplete([{
                 match: /(^|\s)@(\w*)$/,
