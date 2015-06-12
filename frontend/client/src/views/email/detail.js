@@ -36,7 +36,9 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                            "style": "danger",
                            "acl": "edit"
                         }
-                    ]
+                    ],
+                    'dropdown': [],
+                    'actions': []
                 };
             } else {
                 if (status == 'Archived' || status == 'Recieved') {
@@ -55,22 +57,22 @@ Espo.define('Views.Email.Detail', ['Views.Detail', 'EmailHelper'], function (Dep
                         });
                     }
                 }
-            }
 
-            this.menu.dropdown.push({
-                label: 'Create Task',
-                action: 'createTask',
-                acl: 'edit',
-                aclScope: 'Task'
-            });
-
-            if (this.model.get('parentType') !== 'Case' || !this.model.get('parentId')) {
                 this.menu.dropdown.push({
-                    label: 'Create Case',
-                    action: 'createCase',
+                    label: 'Create Task',
+                    action: 'createTask',
                     acl: 'edit',
-                    aclScope: 'Case'
+                    aclScope: 'Task'
                 });
+
+                if (this.model.get('parentType') !== 'Case' || !this.model.get('parentId')) {
+                    this.menu.dropdown.push({
+                        label: 'Create Case',
+                        action: 'createCase',
+                        acl: 'edit',
+                        aclScope: 'Case'
+                    });
+                }
             }
         },
 
