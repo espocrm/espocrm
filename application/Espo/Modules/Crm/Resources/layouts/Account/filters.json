@@ -4,6 +4,6 @@
 	"createdAt",
 	"emailAddress",
 	"industry",
-	"type",
-    "name"
+    "phoneNumber",
+	"type"
 ]
