@@ -756,9 +756,9 @@ abstract class Mapper implements IMapper
 
     protected function prepareValueForInsert($type, $value) {
         if ($type == IEntity::JSON_ARRAY && is_array($value)) {
-            $value = json_encode($value);
+            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
         } else if ($type == IEntity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
-            $value = json_encode($value);
+            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
         }
 
         if (is_bool($value)) {

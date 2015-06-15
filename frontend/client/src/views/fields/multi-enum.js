@@ -78,7 +78,7 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Selectize'], f
 
                 this.$element.selectize({
                     options: data,
-                    delimiter: ',',
+                    delimiter: ':,:',
                     labelField: 'label',
                     valueField: 'value',
                     highlight: false,
@@ -100,10 +100,14 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Selectize'], f
                     this.trigger('change');
                 }.bind(this));
             }
+
+            if (this.mode == 'search') {
+                this.renderSearch();
+            }
         },
 
         fetch: function () {
-            var list = this.$element.val().split(',');
+            var list = this.$element.val().split(':,:');
             if (list.length == 1 && list[0] == '') {
                 list = [];
             }
