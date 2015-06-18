@@ -83,7 +83,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             }, this);
 
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
-                this.presetFilterList.unshift('followed');
+                this.boolFilterList.push('followed');
             }
 
             this.loadSearchData();
