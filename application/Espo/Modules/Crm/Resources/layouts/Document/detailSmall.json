@@ -6,7 +6,6 @@
             [{"name":"file"}],
             [{"name":"name"}],
             [{"name":"folder"}],
-            [{"name":"type"}],
             [{"name":"status"}]
         ]
     }
