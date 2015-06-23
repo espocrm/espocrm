@@ -27,16 +27,16 @@ use \Espo\ORM\Entity;
 class EmailReminder
 {
     protected $entityManager;
-    
+
     protected $mailSender;
-    
+
     protected $config;
-    
+
     protected $dateTime;
-    
+
     protected $language;
-    
-    
+
+
     public function __construct($entityManager, $mailSender, $config, $dateTime, $language)
     {
         $this->entityManager = $entityManager;
@@ -45,17 +45,17 @@ class EmailReminder
         $this->dateTime = $dateTime;
         $this->language = $language;
     }
-    
+
     protected function getEntityManager()
     {
         return $this->entityManager;
     }
-    
+
     protected function parseInvitationTemplate($contents, $entity, $user = null)
     {
-        
+
         $contents = str_replace('{eventType}', strtolower($this->language->translate($entity->getEntityName(), 'scopeNames')), $contents);
-        
+
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
         $timezone = $preferences->get('timeZone');
 
@@ -103,7 +103,7 @@ class EmailReminder
 
         return file_get_contents($fileName);
     }
-    
+
     public function send(Entity $reminder)
     {
         $user = $this->getEntityManager()->getEntity('User', $reminder->get('userId'));
@@ -123,7 +123,7 @@ class EmailReminder
 
         $subject = $this->parseInvitationTemplate($subjectTpl, $entity, $user);
         $subject = str_replace(array("\n", "\r"), '', $subject);
-        
+
         $body = $this->parseInvitationTemplate($bodyTpl, $entity, $user);
 
         $email->set('subject', $subject);
@@ -134,7 +134,7 @@ class EmailReminder
         $emailSender = $this->mailSender;
 
         $emailSender->send($email);
-       
+
         $this->getEntityManager()->removeEntity($email);
     }
 }
