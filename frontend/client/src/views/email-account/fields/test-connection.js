@@ -87,7 +87,10 @@ Espo.define('Views.EmailAccount.Fields.TestConnection', 'Views.Fields.Base', fun
                     statusReason = statusReason.replace(/ $/, '');
                     statusReason = statusReason.replace(/,$/, '');
 
-                    var msg = this.translate('Error') + ' ' + xhr.status;
+                    var msg = this.translate('Error');
+                    if (xhr.status != 200) {
+                        msg += ' ' + xhr.status;
+                    }
                     if (statusReason) {
                         msg += ': ' + statusReason;
                     }
