@@ -1,1 +1,4 @@
-{"view":"Crm:Dashlets.SalesPipeline"}
+{
+    "view":"Crm:Dashlets.SalesPipeline",
+    "aclScope": "Opportunity"
+}

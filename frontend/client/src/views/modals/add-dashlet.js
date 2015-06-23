@@ -55,9 +55,21 @@ Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
 
             this.header = this.translate('Add Dashlet');
 
-            this.dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {
+            var dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {
                 return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
             }.bind(this));
+
+            this.dashletList = [];
+
+            dashletList.forEach(function (item) {
+                var aclScope = this.getMetadata().get('dashlets.' + item + '.aclScope') || null;
+                if (aclScope) {
+                    if (!this.getAcl().check(aclScope)) {
+                        return;
+                    }
+                }
+                this.dashletList.push(item);
+            }, this);
         },
     });
 });
