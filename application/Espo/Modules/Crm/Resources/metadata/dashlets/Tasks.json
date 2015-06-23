@@ -1,1 +1,4 @@
-{"view":"Crm:Dashlets.Tasks"}
+{
+    "view":"Crm:Dashlets.Tasks",
+    "aclScope": "Task"
+}

@@ -1,1 +1,4 @@
-{"view":"Crm:Dashlets.Meetings"}
+{
+    "view":"Crm:Dashlets.Meetings",
+    "aclScope": "Meeting"
+}
