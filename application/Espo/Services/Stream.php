@@ -39,6 +39,7 @@ class Stream extends \Espo\Core\Services\Base
         'user',
         'metadata',
         'acl',
+        'aclManager',
         'container',
     );
 
@@ -56,6 +57,11 @@ class Stream extends \Espo\Core\Services\Base
     protected function getAcl()
     {
         return $this->injections['acl'];
+    }
+
+    protected function getAclManager()
+    {
+        return $this->injections['aclManager'];
     }
 
     protected function getMetadata()
