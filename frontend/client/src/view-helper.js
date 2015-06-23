@@ -145,7 +145,8 @@
             });
 
             Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
-                if (model.get(attr) !== null) {
+                var value = model.get(attr);
+                if (value !== null && typeof value !== 'undefined') {
                     return options.fn(this);
                 }
                 return options.inverse(this);
