@@ -15,6 +15,7 @@ DirectoryIndex index.php index.html
   RewriteRule ^/?data/logs/ - [F]
   RewriteRule ^/?data/cache/ - [F]
   RewriteRule ^/?data/upload/ - [F]
+  RewriteRule ^/?data/\.backup/ - [F]
   RewriteRule ^/?application/ - [F]
   RewriteRule ^/?custom/ - [F]
   RewriteRule ^/?vendor/ - [F]
