@@ -1125,7 +1125,7 @@ class Record extends \Espo\Core\Services\Base
         foreach ($data['idList'] as $id) {
             $list[] = array(
                 'id' => $id,
-                'name' => $data['nameMap'][$id]
+                'name' => $data['nameMap']->$id
             );
         }
 
