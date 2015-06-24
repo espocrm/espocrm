@@ -66,5 +66,5 @@
             ]
         }
     },
-    "disableSearchPanel": true
+    "searchPanelDisabled": true
 }

@@ -27,5 +27,5 @@
 	    	}
 	    ]
     },
-    "disableSearchPanel": true
+    "searchPanelDisabled": true
 }

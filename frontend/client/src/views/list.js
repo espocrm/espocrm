@@ -49,7 +49,7 @@ Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, Search
         setup: function () {
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
-            if (this.getMetadata().get('clientDefs.' + this.scope + '.disableSearchPanel')) {
+            if (this.getMetadata().get('clientDefs.' + this.scope + '.searchPanelDisabled')) {
                 this.searchPanel = false;
             }
 
