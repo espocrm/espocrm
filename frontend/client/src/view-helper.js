@@ -216,6 +216,9 @@
                 var translationHash = options.hash.translatedOptions || null;
                 if (translationHash === null) {
                     translationHash = self.language.translate(field, 'options', scope) || {};
+                    if (typeof translationHash !== 'object') {
+                        translationHash = {};
+                    }
                 }
                 return translationHash[name] || name;
             });
