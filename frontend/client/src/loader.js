@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 (function (Espo, _, $) {
 
@@ -26,9 +26,9 @@
     Espo.Loader = function (cache) {
         this.cache = cache || null;
         this._loadCallbacks = {};
-        
+
         this.pathsBeingLoaded = {};
-        
+
         this.libsConfig = {};
     }
 
@@ -41,10 +41,10 @@
         godClass: Espo,
 
         _loadCallbacks: null,
-        
+
         libsConfigUrl: 'client/cfg/libs.json',
 
-        _getClass: function (name) {            
+        _getClass: function (name) {
             if (name in this.godClass) {
                 return this.godClass[name];
             }
@@ -89,7 +89,7 @@
         define: function (subject, dependency, callback) {
             var self = this;
             var proceed = function (relObj) {
-                var o = callback.apply(this, arguments);                                
+                var o = callback.apply(this, arguments);
                 if (!o) {
                     if (self.cache) {
                         self.cache.clear('script', name);

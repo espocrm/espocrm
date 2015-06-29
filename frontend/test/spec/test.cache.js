@@ -20,16 +20,16 @@
  ************************************************************************/
 var Espo = Espo || {};
 
-describe("Cache", function () {		
+describe("Cache", function () {
 	var cache;
-	
-	beforeEach(function () {		
-		cache = new Espo.Cache();		
+
+	beforeEach(function () {
+		cache = new Espo.Cache();
 	});
-	
-	it('should have \'espo-cache\' prefix', function () {
-		expect(cache._prefix).toBe('espo-cache');
-	});	
+
+	it('should have \'cache\' prefix', function () {
+		expect(cache._prefix).toBe('cache');
+	});
 
 
 });

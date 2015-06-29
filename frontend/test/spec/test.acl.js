@@ -20,49 +20,56 @@
  ************************************************************************/
 var Espo = Espo || {};
 
-describe("Acl", function () {		
+describe("Acl", function () {
 	var acl;
-	
-	beforeEach(function () {		
-		acl = new Espo.Acl();	
-	});	
-	
-	it("should check an access properly", function () {	
+
+	beforeEach(function () {
+		acl = new Espo.Acl();
+		acl.user = {
+			isAdmin: function () {
+				return false;
+			}
+		};
+	});
+
+	it("should check an access properly", function () {
 		acl.set({
-			lead: {
-				read: 'team',
-				edit: 'own',
-				delete: 'no',
-			},
-			contact: {
-				read: true,
-				edit: false,
-				delete: false,
-			},
-			opportunity: false,
-			meeting: true,
+			table: {
+				Lead: {
+					read: 'team',
+					edit: 'own',
+					delete: 'no',
+				},
+				Contact: {
+					read: true,
+					edit: false,
+					delete: false,
+				},
+				Opportunity: false,
+				Meeting: true
+			}
 		});
-		
-		expect(acl.check('lead', 'read')).toBe(true);
-		
-		expect(acl.check('lead', 'read', false, false)).toBe(false);
-		expect(acl.check('lead', 'read', false, true)).toBe(true);		
-		expect(acl.check('lead', 'read', true)).toBe(true);		
-		
-		expect(acl.check('lead', 'edit')).toBe(true);
-		expect(acl.check('lead', 'edit', false, true)).toBe(false);
-		expect(acl.check('lead', 'edit', true, false)).toBe(true);
-		
-		expect(acl.check('lead', 'delete')).toBe(false);
-		
-		expect(acl.check('contact', 'read')).toBe(true);
-		expect(acl.check('contact', 'edit')).toBe(false);
-		
-		expect(acl.check('lead', 'convert')).toBe(false);
-		expect(acl.check('account', 'edit')).toBe(true);
-		
-		expect(acl.check('opportunity', 'edit')).toBe(false);
-		expect(acl.check('meeting', 'edit')).toBe(true);
-	});	
-	
+
+		expect(acl.check('Lead', 'read')).toBe(true);
+
+		expect(acl.check('Lead', 'read', false, false)).toBe(true);
+		expect(acl.check('Lead', 'read', false, true)).toBe(true);
+		expect(acl.check('Lead', 'read', true)).toBe(true);
+
+		expect(acl.check('Lead', 'edit')).toBe(true);
+		expect(acl.check('Lead', 'edit', false, true)).toBe(false);
+		expect(acl.check('Lead', 'edit', true, false)).toBe(true);
+
+		expect(acl.check('Lead', 'delete')).toBe(true);
+
+		expect(acl.check('Contact', 'read')).toBe(true);
+		expect(acl.check('Contact', 'edit')).toBe(false);
+
+		expect(acl.check('Lead', 'convert')).toBe(true);
+		expect(acl.check('Account', 'edit')).toBe(true);
+
+		expect(acl.check('Opportunity', 'edit')).toBe(false);
+		expect(acl.check('Meeting', 'edit')).toBe(true);
+	});
+
 });

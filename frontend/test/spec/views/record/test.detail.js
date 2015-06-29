@@ -27,19 +27,19 @@ describe("Views.Record.Detail", function () {
 	var factory = {
 		create: {},
 	};
-	
-	
+
+
 	beforeEach(function () {
 		var view = new Espo.View();
 		var model = new Espo.Model();
 		model.name = 'Test';
-		
+
 		var mockUser = {
 			isAdmin: function () {
 				return true;
-			}	
+			}
 		}
-		
+
 		spyOn(factory, 'create');
 		spyOn(layoutManager, 'get').andCallFake(function (n, p, callback) {
 			callback([
@@ -61,9 +61,9 @@ describe("Views.Record.Detail", function () {
 								customLabel: 'yo',
 								params: {},
 							}
-						]						
+						]
 					]
-				}			
+				}
 			]);
 		});
 		detail = new Espo['Views.Record.Detail']({
@@ -81,16 +81,16 @@ describe("Views.Record.Detail", function () {
 				},
 				metadata: {
 					get: function () {
-					
+
 					},
 				},
 			},
 			factory: factory
-		});			
+		});
 	});
-	
+
 	it ('should create record view with a proper layout', function () {
-		expect(factory.create.calls.length).toBe(3);		
+		expect(factory.create.calls.length).toBe(3);
 		var arg = factory.create.calls[0].args[1];
 		expect(arg._layout.layout[0].rows[0][1].name).toBe('email');
 	});
