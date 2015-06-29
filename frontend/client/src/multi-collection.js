@@ -17,10 +17,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-(function (Espo, _,Backbone) {
+ ************************************************************************/
 
-    Espo.MultiCollection = Espo.Collection.extend({
+Espo.define('MultiCollection', 'Collection', function (Collection) {
+
+    var MultiCollection = Collection.extend({
 
         /**
          * @prop {Object} seeds Hash off model classes.
@@ -29,10 +30,10 @@
 
         initialize: function (models, options) {
             options = options || {};
-            
-            this.sortBy = options.sortBy || this.sortBy;            
+
+            this.sortBy = options.sortBy || this.sortBy;
             this.asc = ('asc' in options) ? options.asc : this.asc;
-            
+
             Backbone.Collection.prototype.initialize.call(this);
         },
 
@@ -41,10 +42,12 @@
             return resp.list.map(function (attributes) {
                 var a = _.clone(attributes);
                 delete a['_scope'];
-                return new this.seeds[attributes._scope](a, options);                
+                return new this.seeds[attributes._scope](a, options);
             }.bind(this));
         },
 
     });
 
-}).call(this, Espo, _, Backbone);
+    return MultiCollection;
+
+});

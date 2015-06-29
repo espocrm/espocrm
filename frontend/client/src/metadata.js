@@ -18,16 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-(function (Espo, _, $, Backbone) {
+Espo.define('Metadata', [], function () {
 
-    Espo.Metadata = function (cache) {
+    var Metadata = function (cache) {
         this.cache = cache || null;
 
         this.data = {};
         this.ajax = $.ajax;
     }
 
-    _.extend(Espo.Metadata.prototype, {
+    _.extend(Metadata.prototype, {
 
         cache: null,
 
@@ -101,4 +101,6 @@
 
     }, Backbone.Events);
 
-}).call(this, Espo, _, $, Backbone);
+    return Metadata;
+
+});

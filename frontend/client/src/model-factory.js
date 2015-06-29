@@ -17,45 +17,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-(function (Espo, _) {
-    
-    Espo.ModelFactory = function (loader, metadata, user) {
+ ************************************************************************/
+
+Espo.define('ModelFactory', [], function () {
+
+    var ModelFactory = function (loader, metadata, user) {
         this.loader = loader;
         this.metadata = metadata;
         this.user = user;
-        
+
         this.seeds = {};
     };
-    
-    _.extend(Espo.ModelFactory.prototype, {
-        
+
+    _.extend(ModelFactory.prototype, {
+
         loader: null,
-        
+
         metadata: null,
-        
+
         seeds: null,
-        
+
         dateTime: null,
-        
+
         user: null,
-        
+
         create: function (name, callback, context) {
-            context = context || this;        
+            context = context || this;
             this.getSeed(name, function (seed) {
                 var model = new seed();
                 callback.call(context, model);
             }.bind(this));
         },
-        
+
         getSeed: function (name, callback) {
             if ('name' in this.seeds) {
                 callback(this.seeds[name]);
                 return;
             }
-            
+
             var className = this.metadata.get('clientDefs.' + name + '.model') || 'Model';
-                
+
             Espo.loader.load(className, function (modelClass) {
                 this.seeds[name] = modelClass.extend({
                     name: name,
@@ -67,5 +68,7 @@
             }.bind(this));
         },
     });
-    
-}).call(this, Espo, _);
+
+    return ModelFactory;
+
+});

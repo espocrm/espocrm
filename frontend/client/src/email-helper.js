@@ -19,14 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-(function (Espo) {
+Espo.define('EmailHelper', [], function () {
 
-    Espo.EmailHelper = function (language, user) {
+    var EmailHelper = function (language, user) {
         this.language = language;
         this.user = user;
     }
 
-    _.extend(Espo.EmailHelper.prototype, {
+    _.extend(EmailHelper.prototype, {
 
         getLanguage: function () {
             return this.language;
@@ -169,5 +169,6 @@
 
     });
 
+    return EmailHelper;
 
-}).call(this, Espo);
+});

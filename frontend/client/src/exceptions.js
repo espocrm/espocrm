@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.Exceptions = Espo.Exceptions || {};
 
@@ -26,7 +26,7 @@ Espo.Exceptions.AccessDenied = function (message) {
     Error.apply(this, arguments);
 }
 Espo.Exceptions.AccessDenied.prototype = new Error();
-Espo.Exceptions.AccessDenied.prototype.name = 'AccessDenied';    
+Espo.Exceptions.AccessDenied.prototype.name = 'AccessDenied';
 
 Espo.Exceptions.NotFound = function (message) {
     this.message = message;

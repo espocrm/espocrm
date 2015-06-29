@@ -18,9 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-(function (Espo, _, Backbone) {
+Espo.define('Router', [], function () {
 
-    Espo.Router = Backbone.Router.extend({
+    var Router = Backbone.Router.extend({
 
         routes: {
             "logout": "logout",
@@ -158,5 +158,6 @@
         }
     });
 
+    return Router;
 
-}).call(this, Espo, _, Backbone);
+});

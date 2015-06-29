@@ -19,9 +19,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-(function (Espo, _, Handlebars) {
+Espo.define('ViewHelper', [], function () {
 
-    Espo.ViewHelper = function (options) {
+    var ViewHelper = function (options) {
         this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         this._registerHandlebarsHelpers();
 
@@ -39,10 +39,9 @@
             '<em>$2</em>',
             '<del>$1</del>',
         ];
-
     }
 
-    _.extend(Espo.ViewHelper.prototype, {
+    _.extend(ViewHelper.prototype, {
 
         layoutManager: null,
 
@@ -272,5 +271,6 @@
         }
     });
 
+    return ViewHelper;
 
-}).call(this, Espo, _, Handlebars);
+});

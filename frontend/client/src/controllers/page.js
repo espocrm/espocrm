@@ -17,15 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Controllers.Page', 'Controller', function (Dep) {
 
     return Dep.extend({
-        
+
         view: function (options) {
             var page = options.id;
             this.main(null, {template: 'pages.' + Espo.Utils.convert(page, 'c-h')});
-            
-        }        
-    });    
+
+        }
+    });
 });

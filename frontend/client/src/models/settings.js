@@ -17,17 +17,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Models.Settings', 'ModelOffline', function (Dep) {
-    
+
     return Dep.extend({
-    
+
         name: 'Settings',
 
         getDefaultCurrencyOptions: function () {
             return this.get('currencyList') || [];
         },
-        
+
         getBaseCurrencyOptions: function () {
             return this.get('currencyList') || [];
         },

@@ -17,124 +17,130 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.FieldManager = function (defs, metadata) {
-    this.defs = defs || {};
-    this.metadata = metadata;
-};
+ Espo.define('FieldManager', [], function () {
 
-_.extend(Espo.FieldManager.prototype, {
+    var FieldManager = function (defs, metadata) {
+        this.defs = defs || {};
+        this.metadata = metadata;
+    };
 
-    defs: null,
-    
-    metadata: null,
+    _.extend(FieldManager.prototype, {
 
-    getParams: function (fieldType) {
-        if (fieldType in this.defs) {
-            return this.defs[fieldType].params || [];
-        }
-        return [];
-    },
-    
-    checkFilter: function (fieldType) {
-        if (fieldType in this.defs) {
-            if ('filter' in this.defs[fieldType]) {
-                return this.defs[fieldType].filter;
-            } else {
-                return false;
+        defs: null,
+
+        metadata: null,
+
+        getParams: function (fieldType) {
+            if (fieldType in this.defs) {
+                return this.defs[fieldType].params || [];
             }
-        }
-        return false;
-    },
-    
-    isMergable: function (fieldType) {
-        if (fieldType in this.defs) {
-            if ('mergable' in this.defs[fieldType]) {
-                return this.defs[fieldType].mergable;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    },
-    
-    getEntityAttributes: function (entityName) {
-        var list = [];
-        
-        var defs = this.metadata.get('entityDefs.' + entityName + '.fields') || {};        
-        Object.keys(defs).forEach(function (field) {
-            this.getAttributes(defs[field]['type'], field).forEach(function (attr) {
-                if (!~list.indexOf(attr)) {
-                    list.push(attr);                
-                }
-            });                    
-        }, this);
-        return list;
-    },
+            return [];
+        },
 
-    getActualAttributes: function (fieldType, fieldName) {
-        var fieldNames = [];
-        if (fieldType in this.defs) {
-            if ('actualFields' in this.defs[fieldType]) {
-                var actualfFields = this.defs[fieldType].actualFields;
-
-                var naming = 'suffix';
-                if ('naming' in this.defs[fieldType]) {
-                    naming = this.defs[fieldType].naming;
-                }
-                if (naming == 'prefix') {
-                    actualfFields.forEach(function (f) {
-                        fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
-                    });
+        checkFilter: function (fieldType) {
+            if (fieldType in this.defs) {
+                if ('filter' in this.defs[fieldType]) {
+                    return this.defs[fieldType].filter;
                 } else {
-                    actualfFields.forEach(function (f) {
-                        fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
-                    });
+                    return false;
                 }
-            } else {
-                fieldNames.push(fieldName);
             }
-        }
-        return fieldNames;
-    },
+            return false;
+        },
 
-    getNotActualAttributes: function (fieldType, fieldName) {
-        var fieldNames = [];
-        if (fieldType in this.defs) {
-            if ('notActualFields' in this.defs[fieldType]) {
-                var notActualFields = this.defs[fieldType].notActualFields;
-
-                var naming = 'suffix';
-                if ('naming' in this.defs[fieldType]) {
-                    naming = this.defs[fieldType].naming;
-                }
-                if (naming == 'prefix') {
-                    notActualFields.forEach(function (f) {
-                        fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
-                    });
+        isMergable: function (fieldType) {
+            if (fieldType in this.defs) {
+                if ('mergable' in this.defs[fieldType]) {
+                    return this.defs[fieldType].mergable;
                 } else {
-                    notActualFields.forEach(function (f) {
-                        fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
-                    });
+                    return true;
                 }
             }
-        }
-        return fieldNames;
-    },
+            return false;
+        },
 
-    getAttributes: function (fieldType, fieldName) {
-        return _.union(this.getActualAttributes(fieldType, fieldName), this.getNotActualAttributes(fieldType, fieldName));
-    },
+        getEntityAttributes: function (entityName) {
+            var list = [];
 
-    getViewName: function (fieldType) {
-        if (fieldType in this.defs) {
-            if ('view' in this.defs[fieldType]) {
-                return this.defs[fieldType].view;
+            var defs = this.metadata.get('entityDefs.' + entityName + '.fields') || {};
+            Object.keys(defs).forEach(function (field) {
+                this.getAttributes(defs[field]['type'], field).forEach(function (attr) {
+                    if (!~list.indexOf(attr)) {
+                        list.push(attr);
+                    }
+                });
+            }, this);
+            return list;
+        },
+
+        getActualAttributes: function (fieldType, fieldName) {
+            var fieldNames = [];
+            if (fieldType in this.defs) {
+                if ('actualFields' in this.defs[fieldType]) {
+                    var actualfFields = this.defs[fieldType].actualFields;
+
+                    var naming = 'suffix';
+                    if ('naming' in this.defs[fieldType]) {
+                        naming = this.defs[fieldType].naming;
+                    }
+                    if (naming == 'prefix') {
+                        actualfFields.forEach(function (f) {
+                            fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
+                        });
+                    } else {
+                        actualfFields.forEach(function (f) {
+                            fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
+                        });
+                    }
+                } else {
+                    fieldNames.push(fieldName);
+                }
             }
-        }
-        return 'Fields.' + Espo.Utils.upperCaseFirst(fieldType);
-    },
+            return fieldNames;
+        },
+
+        getNotActualAttributes: function (fieldType, fieldName) {
+            var fieldNames = [];
+            if (fieldType in this.defs) {
+                if ('notActualFields' in this.defs[fieldType]) {
+                    var notActualFields = this.defs[fieldType].notActualFields;
+
+                    var naming = 'suffix';
+                    if ('naming' in this.defs[fieldType]) {
+                        naming = this.defs[fieldType].naming;
+                    }
+                    if (naming == 'prefix') {
+                        notActualFields.forEach(function (f) {
+                            fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
+                        });
+                    } else {
+                        notActualFields.forEach(function (f) {
+                            fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
+                        });
+                    }
+                }
+            }
+            return fieldNames;
+        },
+
+        getAttributes: function (fieldType, fieldName) {
+            return _.union(this.getActualAttributes(fieldType, fieldName), this.getNotActualAttributes(fieldType, fieldName));
+        },
+
+        getViewName: function (fieldType) {
+            if (fieldType in this.defs) {
+                if ('view' in this.defs[fieldType]) {
+                    return this.defs[fieldType].view;
+                }
+            }
+            return 'Fields.' + Espo.Utils.upperCaseFirst(fieldType);
+        },
+    });
+
+    return FieldManager;
+
 });
 
 

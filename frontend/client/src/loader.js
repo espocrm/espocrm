@@ -19,6 +19,8 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
+var Espo = Espo || {classMap:{}};
+
 (function (Espo, _, $) {
 
     var root = this;
@@ -38,21 +40,21 @@
 
         data: null,
 
-        godClass: Espo,
+        classMap: Espo,
 
         _loadCallbacks: null,
 
         libsConfigUrl: 'client/cfg/libs.json',
 
         _getClass: function (name) {
-            if (name in this.godClass) {
-                return this.godClass[name];
+            if (name in this.classMap) {
+                return this.classMap[name];
             }
             return false;
         },
 
         _setClass: function (name, o) {
-            this.godClass[name] = o;
+            this.classMap[name] = o;
         },
 
         _nameToPath: function (name) {
@@ -120,19 +122,23 @@
             var readyCount = 0;
             var loaded = {};
 
-            list.forEach(function (name) {
-                this.load(name, function (c) {
-                    loaded[name] = c;
-                    readyCount++;
-                    if (readyCount == totalCount) {
-                        var args = [];
-                        for (var i in list) {
-                            args.push(loaded[list[i]]);
+            if (list.length) {
+                list.forEach(function (name) {
+                    this.load(name, function (c) {
+                        loaded[name] = c;
+                        readyCount++;
+                        if (readyCount == totalCount) {
+                            var args = [];
+                            for (var i in list) {
+                                args.push(loaded[list[i]]);
+                            }
+                            callback.apply(this, args);
                         }
-                        callback.apply(this, args);
-                    }
-                });
-            }.bind(this));
+                    });
+                }, this);
+            } else {
+                callback.apply(this);
+            }
         },
 
         _addLoadCallback: function (name, callback) {

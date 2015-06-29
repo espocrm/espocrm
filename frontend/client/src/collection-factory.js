@@ -19,38 +19,44 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.CollectionFactory = function (loader, modelFactory) {
-    this.loader = loader;
-    this.modelFactory = modelFactory;
-};
+ Espo.define('CollectionFactory', [], function () {
 
-_.extend(Espo.CollectionFactory.prototype, {
+    var CollectionFactory = function (loader, modelFactory) {
+        this.loader = loader;
+        this.modelFactory = modelFactory;
+    };
 
-    loader: null,
+    _.extend(CollectionFactory.prototype, {
 
-    modelFactory: null,
+        loader: null,
 
-    create: function (name, callback, context) {
-        context = context || this;
+        modelFactory: null,
 
-        this.modelFactory.getSeed(name, function (seed) {
+        create: function (name, callback, context) {
+            context = context || this;
 
-            var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
-            var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
+            this.modelFactory.getSeed(name, function (seed) {
 
-            var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
+                var asc = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.asc');
+                var sortBy = this.modelFactory.metadata.get('entityDefs.' + name + '.collection.sortBy');
 
-            Espo.loader.load(className, function (collectionClass) {
-                var collection = new collectionClass(null, {
-                    name: name,
-                    asc: asc,
-                    sortBy: sortBy
-                });
-                collection.model = seed;
-                collection._user = this.modelFactory.user;
-                callback.call(context, collection);
+                var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
+
+                Espo.loader.load(className, function (collectionClass) {
+                    var collection = new collectionClass(null, {
+                        name: name,
+                        asc: asc,
+                        sortBy: sortBy
+                    });
+                    collection.model = seed;
+                    collection._user = this.modelFactory.user;
+                    callback.call(context, collection);
+                }.bind(this));
             }.bind(this));
-        }.bind(this));
-    }
+        }
+    });
+
+    return CollectionFactory;
+
 });
 

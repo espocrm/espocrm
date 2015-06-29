@@ -20,7 +20,7 @@
  ************************************************************************/
 (function (Espo, _) {
 
-    Espo.Utils = {
+    Espo.utils = Espo.Utils = {
 
         checkActionAccess: function (acl, obj, item) {
             var hasAccess = true;

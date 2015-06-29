@@ -19,14 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-(function (Espo, _, $) {
+Espo.define('PreLoader', [], function () {
 
-    Espo.PreLoader = function (cache, viewFactory) {
+    var PreLoader = function (cache, viewFactory) {
         this.cache = cache;
         this.viewFactory = viewFactory;
     }
 
-    _.extend(Espo.PreLoader.prototype, {
+    _.extend(PreLoader.prototype, {
 
         configUrl: 'client/cfg/pre-load.json',
 
@@ -123,4 +123,6 @@
         }
     });
 
-}).call(this, Espo, _, $);
+    return PreLoader;
+
+});

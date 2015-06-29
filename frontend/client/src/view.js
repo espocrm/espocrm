@@ -18,9 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-(function (Espo, Backbone, _, Bull, $) {
+Espo.define('View', [], function () {
 
-    Espo.View = Bull.View.extend({
+    return Bull.View.extend({
 
         addActionHandler: function (action, handler) {
             this.events = this.events || {};
@@ -161,4 +161,4 @@
         },
     });
 
-}).call(this, Espo, Backbone, _, Bull, $);
+});

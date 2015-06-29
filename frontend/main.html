@@ -22,11 +22,12 @@
         <script type="text/javascript" src="client/lib/bull.min.js"></script>
 
 
+        <script type="text/javascript" src="client/src/loader.js"></script>
+        <script type="text/javascript" src="client/src/utils.js"></script>
         <script type="text/javascript" src="client/src/app.js"></script>
         <script type="text/javascript" src="client/src/exceptions.js"></script>
-        <script type="text/javascript" src="client/src/utils.js"></script>
+
         <script type="text/javascript" src="client/src/storage.js"></script>
-        <script type="text/javascript" src="client/src/loader.js"></script>
         <script type="text/javascript" src="client/src/pre-loader.js"></script>
         <script type="text/javascript" src="client/src/ui.js"></script>
         <script type="text/javascript" src="client/src/acl.js"></script>
@@ -73,11 +74,13 @@
 
         <script type="text/javascript">
             $(function () {
-                var app = new Espo.App({
-                    useCache: false,
-                    url: '../api/v1',
-                }, function (app) {
-                    {{runScript}}
+                Espo.require('App', function (App) {
+                    var app = new App({
+                        useCache: false,
+                        url: '../api/v1',
+                    }, function (app) {
+                        {{runScript}}
+                    });
                 });
             });
         </script>

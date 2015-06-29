@@ -18,9 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-(function (Espo, _) {
+Espo.define('SearchManager', [], function () {
 
-    Espo.SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
+    var SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
         this.collection = collection;
         this.scope = collection.name;
         this.storage = storage;
@@ -49,7 +49,7 @@
         this.sanitizeData();
     };
 
-    _.extend(Espo.SearchManager.prototype, {
+    _.extend(SearchManager.prototype, {
 
         data: null,
 
@@ -263,4 +263,6 @@
         },
     });
 
-}).call(this, Espo, _);
+    return SearchManager;
+
+});

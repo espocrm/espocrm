@@ -153,7 +153,7 @@
         $(this).off();
     };
 
-    Espo.Ui = {
+    Espo.Ui = Espo.ui = {
 
         Dialog: Dialog,
 

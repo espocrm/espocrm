@@ -18,40 +18,6 @@
 		"list-row-expanded"
 	],
 	"classes": [
-		"Views.Base",
-		"Views.Dashlet",
-		"Views.Edit",
-		"Views.Header",
-		"Views.List",
-		"Views.Login",
-		"Views.Modals.SelectRecords",
-		"Views.Modals.Edit",
-		"Views.Record.Edit",
-		"Views.Record.List",
-		"Views.Record.Search",
-		"Views.Site.Header",
-		"Views.Site.Master",
-		"Views.Site.Navbar",
-		"Views.Home",
-		"Views.Dashboard",
-		"Views.Search.Filter",
 
-		"Views.Fields.Address",
-		"Views.Fields.Bool",
-		"Views.Fields.Datetime",
-		"Views.Fields.Email",
-		"Views.Fields.Float",
-		"Views.Fields.LinkMultiple",
-		"Views.Fields.LinkParent",
-		"Views.Fields.PersonName",
-		"Views.Fields.Phone",
-		"Views.Fields.Text",
-
-		"Controllers.Home",
-		"Controllers.Record",
-
-		"Models.Settings",
-		"Models.User",
-		"Models.Preferences"
 	]
 }

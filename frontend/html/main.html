@@ -13,11 +13,13 @@
         <link rel="shortcut icon" href="client/img/favicon.ico" type="image/x-icon">
         <script type="text/javascript">
             $(function () {
-                var app = new Espo.App({
-                    useCache: {{useCache}},
-                    cacheTimestamp: {{cacheTimestamp}}
-                }, function (app) {
-                    {{runScript}}
+                Espo.require('App', function (App) {
+                    var app = new App({
+                        useCache: {{useCache}},
+                        cacheTimestamp: {{cacheTimestamp}}
+                    }, function (app) {
+                        {{runScript}}
+                    });
                 });
             });
         </script>

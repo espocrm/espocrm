@@ -17,58 +17,66 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.ModelOffline = Espo.Model.extend({
 
-    name: null,
 
-    cache: null,
+Espo.define('ModelOffline', 'Model', function (Model) {
 
-    _key: null,
+    var ModelOffline = Model.extend({
 
-    initialize: function (attributes, options) {
-        options = options || {};
-        Espo.Model.prototype.initialize.apply(this, arguments);
-        this._key = this.url = this.name;
-        this.cache = options.cache || null;
-    },
+        name: null,
 
-    load: function (callback, disableCache, sync) {
-        this.once('sync', callback);
+        cache: null,
 
-        if (!disableCache) {
-            if (this.loadFromCache()) {
-                this.trigger('sync');
-                return;
+        _key: null,
+
+        initialize: function (attributes, options) {
+            options = options || {};
+            Espo.Model.prototype.initialize.apply(this, arguments);
+            this._key = this.url = this.name;
+            this.cache = options.cache || null;
+        },
+
+        load: function (callback, disableCache, sync) {
+            this.once('sync', callback);
+
+            if (!disableCache) {
+                if (this.loadFromCache()) {
+                    this.trigger('sync');
+                    return;
+                }
             }
-        }
 
-        this.fetch({
-            async: !(sync || false)
-        });
-    },
+            this.fetch({
+                async: !(sync || false)
+            });
+        },
 
-    loadFromCache: function () {
-        if (this.cache) {
-            var cached = this.cache.get('app', this._key);
-            if (cached) {
-                this.set(cached);
-                return true;
+        loadFromCache: function () {
+            if (this.cache) {
+                var cached = this.cache.get('app', this._key);
+                if (cached) {
+                    this.set(cached);
+                    return true;
+                }
             }
-        }
-        return null;
-    },
+            return null;
+        },
 
-    storeToCache: function () {
-        if (this.cache) {
-            this.cache.set('app', this._key, this.toJSON());
-        }
-    },
+        storeToCache: function () {
+            if (this.cache) {
+                this.cache.set('app', this._key, this.toJSON());
+            }
+        },
 
-    isNew: function () {
-        return false;
-    },
+        isNew: function () {
+            return false;
+        }
+
+    });
+
+    return ModelOffline;
 
 });
 
