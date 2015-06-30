@@ -29,7 +29,7 @@
  * }
  */
 
-Espo.define('Acl', [], function () {
+Espo.define('acl', [], function () {
 
     var Acl = function (user) {
         this.data = {

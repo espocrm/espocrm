@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('LayoutManager', [], function () {
+Espo.define('layout-manager', [], function () {
 
     var LayoutManager = function (options) {
         var options = options || {};

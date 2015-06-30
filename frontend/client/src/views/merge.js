@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Merge', 'Views.Main', function (Dep) {
+Espo.define('views/merge', 'views/main', function (Dep) {
 
     return Dep.extend({
 
@@ -28,7 +28,7 @@ Espo.define('Views.Merge', 'Views.Main', function (Dep) {
         el: '#main',
 
         scope: null,
-        
+
         name: 'Merge',
 
         views: {
@@ -40,10 +40,10 @@ Espo.define('Views.Merge', 'Views.Main', function (Dep) {
 
         setup: function () {
             this.models = this.options.models;
-            
+
             this.createView('body', 'Record.Merge', {
                 el: '#main > .body',
-                models: this.models                
+                models: this.models
             });
 
         },

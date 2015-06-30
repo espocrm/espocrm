@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Utils', [], function () {
+Espo.define('utils', [], function () {
 
     var Utils = Espo.utils = Espo.Utils = {
 

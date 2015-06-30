@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Cache', [], function () {
+Espo.define('cache', [], function () {
 
     var Cache = function () {
         if (!this.get('app', 'timestamp')) {

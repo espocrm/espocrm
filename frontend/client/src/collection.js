@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Collection', [], function () {
+Espo.define('collection', [], function () {
 
     var Collection = Backbone.Collection.extend({
 

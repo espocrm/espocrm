@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Language', [], function () {
+Espo.define('language', [], function () {
 
     var Language = function (cache) {
         this.cache = cache || null;

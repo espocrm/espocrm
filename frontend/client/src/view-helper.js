@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('ViewHelper', [], function () {
+Espo.define('view-helper', [], function () {
 
     var ViewHelper = function (options) {
         this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;

@@ -23,7 +23,7 @@
  * Controller. Views, Models and Collections are created here.
 */
 
-Espo.define('Controller', [], function () {
+Espo.define('controller', [], function () {
 
     var Controller = function (params, injections) {
         this.initialize();

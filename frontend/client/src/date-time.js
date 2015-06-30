@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('DateTime', [], function () {
+Espo.define('date-time', [], function () {
 
     var DateTime = function () {
 

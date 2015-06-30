@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Dashlet', 'View', function (Dep) {
+Espo.define('views/dashlet', 'view', function (Dep) {
 
     return Dep.extend({
 

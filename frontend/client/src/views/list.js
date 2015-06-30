@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.List', ['Views.Main', 'SearchManager'], function (Dep, SearchManager) {
+Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 

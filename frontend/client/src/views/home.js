@@ -19,14 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Home', 'View', function (Dep) {
+Espo.define('views/home', 'view', function (Dep) {
 
     return Dep.extend({
 
         template: 'home',
-        
+
         el: '#main',
-        
+
         views: {
             dashboard: {
                 view: 'Dashboard',

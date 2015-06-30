@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Ui', [], function () {
+Espo.define('ui', [], function () {
 
     var Dialog = function (options) {
         options = options || {};

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.ListTree', 'Views.List', function (Dep) {
+Espo.define('views/list-tree', 'views/list', function (Dep) {
 
     return Dep.extend({
 

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
- Espo.define('CollectionFactory', [], function () {
+ Espo.define('collection-factory', [], function () {
 
     var CollectionFactory = function (loader, modelFactory) {
         this.loader = loader;

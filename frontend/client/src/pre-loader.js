@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('PreLoader', [], function () {
+Espo.define('pre-loader', [], function () {
 
     var PreLoader = function (cache, viewFactory) {
         this.cache = cache;

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Storage', [], function () {
+Espo.define('storage', [], function () {
 
     var Storage = function () {
     };

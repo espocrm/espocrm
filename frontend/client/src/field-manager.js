@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
- Espo.define('FieldManager', [], function () {
+ Espo.define('field-manager', [], function () {
 
     var FieldManager = function (defs, metadata) {
         this.defs = defs || {};

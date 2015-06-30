@@ -19,12 +19,12 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream', 'View', function (Dep) {
+Espo.define('views/stream', 'view', function (Dep) {
 
     return Dep.extend({
-    
+
         template: 'stream',
-        
+
         events: {
             'click button[data-action="refresh"]': function () {
                 if (!this.hasView('list')) return;
@@ -39,7 +39,7 @@ Espo.define('Views.Stream', 'View', function (Dep) {
         },
 
         setup: function () {
-            
+
         },
 
         afterRender: function () {
@@ -47,7 +47,7 @@ Espo.define('Views.Stream', 'View', function (Dep) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
                 collection.url = 'Stream';
-                
+
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', 'Stream.List', {
                         el: this.options.el + ' .list-container',
@@ -59,7 +59,7 @@ Espo.define('Views.Stream', 'View', function (Dep) {
                     });
                 }.bind(this));
                 collection.fetch();
-                
+
             }, this);
         },
 

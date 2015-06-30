@@ -20,8 +20,7 @@
  ************************************************************************/
 
 
-
-Espo.define('ModelOffline', 'Model', function (Model) {
+Espo.define('model-offline', 'Model', function (Model) {
 
     var ModelOffline = Model.extend({
 

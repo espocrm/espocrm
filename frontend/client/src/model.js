@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Model', [], function () {
+Espo.define('model', [], function () {
 
     var Model = Backbone.Model.extend({
 

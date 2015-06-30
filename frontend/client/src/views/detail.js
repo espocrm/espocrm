@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Detail', 'Views.Main', function (Dep) {
+Espo.define('views/detail', 'views/main', function (Dep) {
 
     return Dep.extend({
 

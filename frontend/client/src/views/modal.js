@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Modal', 'View', function (Dep) {
+Espo.define('views/modal', 'view', function (Dep) {
 
     return Dep.extend({
 
