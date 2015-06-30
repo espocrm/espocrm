@@ -20,7 +20,7 @@
  ************************************************************************/
 
 
-Espo.define('Views.Modals.EditDashboard', 'Views.Modal', function (Dep) {
+Espo.define('Views.Modals.EditDashboard', ['Views.Modal', 'Model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -72,7 +72,7 @@ Espo.define('Views.Modals.EditDashboard', 'Views.Modal', function (Dep) {
                 }
             }, this);
 
-            var model = new Espo.Model();
+            var model = new Model();
             model.name = 'Preferences';
 
             model.set('dashboardTabList', dashboardTabList);

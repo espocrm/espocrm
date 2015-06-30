@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
+Espo.define('Views.Admin.FieldManager.Edit', ['View', 'Model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -58,7 +58,7 @@ Espo.define('Views.Admin.FieldManager.Edit', 'View', function (Dep) {
                 this.isNew = true;
             }
 
-            this.model = new Espo.Model();
+            this.model = new Model();
             this.model.name = 'Admin';
             this.model.urlRoot = 'Admin/fieldManager/' + this.scope;
 

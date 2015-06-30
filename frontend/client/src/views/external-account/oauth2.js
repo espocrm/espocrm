@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
+Espo.define('Views.ExternalAccount.OAuth2', ['View', 'Model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -64,7 +64,7 @@ Espo.define('Views.ExternalAccount.OAuth2', 'View', function (Dep) {
 
             this.dataFieldList = [];
 
-            this.model = new Espo.Model();
+            this.model = new Model();
             this.model.id = this.id;
             this.model.name = 'ExternalAccount';
             this.model.urlRoot = 'ExternalAccount';

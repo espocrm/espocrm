@@ -20,7 +20,7 @@
  ************************************************************************/
 
 
-Espo.define('Views.Modals.SaveFilters', 'Views.Modal', function (Dep) {
+Espo.define('Views.Modals.SaveFilters', ['Views.Modal', 'Model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -55,7 +55,7 @@ Espo.define('Views.Modals.SaveFilters', 'Views.Modal', function (Dep) {
 
             this.header = this.translate('Save Filters');
 
-            var model = new Espo.Model();
+            var model = new Model();
             this.createView('name', 'Fields.Varchar', {
                 el: this.options.el + ' .field-name',
                 defs: {
