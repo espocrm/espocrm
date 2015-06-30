@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'], function (Dep, Detail) {
+Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail', 'Model'], function (Dep, Detail, Model) {
 
     var self;
 
@@ -84,7 +84,7 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
             this.id = 'dashlet-options';
 
             self = this;
-            var model = this.model = new Espo.Model();
+            var model = this.model = new Model();
             model.name = 'DashletOptions';
             model.defs = {
                 fields: this.fields
