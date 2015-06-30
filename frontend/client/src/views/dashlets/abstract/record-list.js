@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base', function (Dep) {
+Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base', 'SearchManager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -49,7 +49,7 @@ Espo.define('Views.Dashlets.Abstract.RecordList', 'Views.Dashlets.Abstract.Base'
 
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {
-                var searchManager = this.searchManager = new Espo.SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
+                var searchManager = this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
 
                 if (!this.getAcl().check(this.scope, 'read')) {
                     this.$el.find('.list-container').html(this.translate('No Access'));

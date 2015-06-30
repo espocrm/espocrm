@@ -22,8 +22,8 @@
 
 Espo.define(
     'App',
-    ['Acl', 'Cache', 'Storage', 'Models.Settings', 'Language', 'Metadata', 'FieldManager', 'Models.User', 'Models.Preferences', 'ModelFactory' ,'CollectionFactory', 'PreLoader', 'ViewHelper', 'Controllers.Base', 'Router', 'DateTime', 'LayoutManager'],
-    function (Acl, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager) {
+    ['Ui', 'Utils', 'Acl', 'Cache', 'Storage', 'Models.Settings', 'Language', 'Metadata', 'FieldManager', 'Models.User', 'Models.Preferences', 'ModelFactory' ,'CollectionFactory', 'PreLoader', 'ViewHelper', 'Controllers.Base', 'Router', 'DateTime', 'LayoutManager'],
+    function (Ui, Utils, Acl, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager) {
 
     var App = function (options, callback) {
         var options = options || {};

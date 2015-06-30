@@ -18,7 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-(function (Espo, $) {
+
+Espo.define('Ui', [], function () {
 
     var Dialog = function (options) {
         options = options || {};
@@ -153,7 +154,7 @@
         $(this).off();
     };
 
-    Espo.Ui = Espo.ui = {
+    var Ui = Espo.Ui = Espo.ui = {
 
         Dialog: Dialog,
 
@@ -212,4 +213,6 @@
         },
     }
 
-}).call(this, Espo, $);
+    return Ui;
+
+});

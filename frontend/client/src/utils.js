@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-(function (Espo, _) {
 
-    Espo.utils = Espo.Utils = {
+Espo.define('Utils', [], function () {
+
+    var Utils = Espo.utils = Espo.Utils = {
 
         checkActionAccess: function (acl, obj, item) {
             var hasAccess = true;
@@ -161,5 +162,7 @@
         }
     };
 
-}).call(this, Espo, _);
+    return Utils;
+
+});
 
