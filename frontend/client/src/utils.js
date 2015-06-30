@@ -98,9 +98,14 @@ Espo.define('Utils', [], function () {
          */
         composeClassName: function (module, name, location) {
             if (module) {
-                return module + ':' + location + '.' + name;
+                module = this.camelCaseToHyphen(module);
+                name = this.camelCaseToHyphen(name).split('.').join('/');
+                location = this.camelCaseToHyphen(location || '');
+
+                return module + ':' + location + '/' + name;
             } else {
-                return location + '.' + name;
+                name = this.camelCaseToHyphen(name).split('.').join('/');
+                return location + '/' + name;
             }
         },
 
@@ -109,9 +114,13 @@ Espo.define('Utils', [], function () {
                 var arr = name.split(':');
                 var modPart = arr[0];
                 var namePart = arr[1];
-                return modPart + ':' + 'Views' + '.' + namePart;
+                modPart = this.camelCaseToHyphen(modPart);
+                namePart = this.camelCaseToHyphen(namePart).split('.').join('/');
+
+                return modPart + ':' + 'views' + '/' + namePart;
             } else {
-                return 'Views' + '.' + name;
+                name = this.camelCaseToHyphen(name).split('.').join('/');
+                return 'views' + '/' + name;
             }
         },
 

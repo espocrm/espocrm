@@ -99,7 +99,7 @@ Espo.define('PreLoader', [], function () {
                 }
                 var loadClasses = function () {
                     data.classes.forEach(function (name) {
-                        Espo.loader.load(name, function () {
+                        Espo.loader.require(name, function () {
                             classesLoaded++;
                             countLoaded++;
                             updateBar();

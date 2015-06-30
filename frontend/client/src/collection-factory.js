@@ -42,7 +42,7 @@
 
                 var className = this.modelFactory.metadata.get('clientDefs.' + name + '.collection') || 'Collection';
 
-                Espo.loader.load(className, function (collectionClass) {
+                Espo.loader.require(className, function (collectionClass) {
                     var collection = new collectionClass(null, {
                         name: name,
                         asc: asc,

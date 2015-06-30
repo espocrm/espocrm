@@ -222,10 +222,9 @@ Espo.define(
                     var className = this.metadata.get('clientDefs.' + name + '.controller');
                     if (!className) {
                         var module = this.metadata.get('scopes.' + name + '.module');
-                        className = Espo.Utils.composeClassName(module, name, 'Controllers');
+                        className = Espo.Utils.composeClassName(module, name, 'controllers');
                     }
-
-                    this.loader.load(className, function (controllerClass) {
+                    Espo.require(className, function (controllerClass) {
                         this.controllers[name] = new controllerClass(this.baseController.params, this.getControllerInjection());
                         this.controllers[name].name = name;
                         callback(this.controllers[name]);
@@ -270,7 +269,7 @@ Espo.define(
             helper.storage = this.storage;
 
             this._viewLoader = function (viewName, callback) {
-                this.loader.load(Espo.Utils.composeViewClassName(viewName), callback);
+                Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
             }.bind(this);
 
             var self = this;

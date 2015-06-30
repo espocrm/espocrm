@@ -33,7 +33,7 @@ Espo.define('ModelOffline', 'Model', function (Model) {
 
         initialize: function (attributes, options) {
             options = options || {};
-            Espo.Model.prototype.initialize.apply(this, arguments);
+            Model.prototype.initialize.apply(this, arguments);
             this._key = this.url = this.name;
             this.cache = options.cache || null;
         },

@@ -59,19 +59,21 @@ var Espo = Espo || {classMap:{}};
 
         _nameToPath: function (name) {
             var path;
+
             if (name.indexOf(':') != -1) {
                 var arr = name.split(':');
-                var name = arr[1];
-                var mod = arr[0];
-                if (mod == 'Custom') {
-                    path = 'client/custom/src/' + Espo.Utils.convert(name, 'C-h').split('.').join('/');
+                var namePart = arr[1];
+                var modulePart = arr[0];
+                if (modulePart == 'Custom') {
+                    path = 'client/custom/src/' + namePart;
                 } else {
-                    path = 'client/modules/' + Espo.Utils.convert(mod, 'C-h') + '/src/' + Espo.Utils.convert(name, 'C-h').split('.').join('/');
+                    path = 'client/modules/' + modulePart + '/src/' + namePart;
                 }
             } else {
-                path = 'client/src/' + Espo.Utils.convert(name, 'C-h').split('.').join('/');
+                path = 'client/src/' + name;
             }
             path += '.js';
+
             return path;
         },
 
@@ -89,6 +91,8 @@ var Espo = Espo || {classMap:{}};
         },
 
         define: function (subject, dependency, callback) {
+            subject = this.normalizeClassName(subject);
+
             var self = this;
             var proceed = function (relObj) {
                 var o = callback.apply(this, arguments);
@@ -114,7 +118,11 @@ var Espo = Espo || {classMap:{}};
         require: function (subject, callback) {
             if (Object.prototype.toString.call(subject) === '[object Array]') {
                 var list = subject;
+                list.forEach(function (item, i) {
+                    list[i] = this.normalizeClassName(list[i]);
+                }, this);
             } else {
+                subject = this.normalizeClassName(subject);
                 this.load(subject, callback);
                 return;
             }
@@ -139,6 +147,29 @@ var Espo = Espo || {classMap:{}};
             } else {
                 callback.apply(this);
             }
+        },
+
+        convertCamelCaseToHyphen: function (string) {
+            if (string == null) {
+                return string;
+            }
+            return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+        },
+
+        normalizeClassName: function (name) {
+            var normalizedName = name;
+            if (!!/[A-Z]/.exec(name[0])) {
+                if (name.indexOf(':') != -1) {
+                    var arr = name.split(':');
+                    var modulePart = arr[0];
+                    var namePart = arr[1];
+                    normalizedName = this.convertCamelCaseToHyphen(modulePart) + ':' + this.convertCamelCaseToHyphen(namePart).split('.').join('/');
+                } else {
+                    normalizedName = this.convertCamelCaseToHyphen(name).split('.').join('/');
+                }
+            }
+
+            return normalizedName;
         },
 
         _addLoadCallback: function (name, callback) {
@@ -247,7 +278,8 @@ var Espo = Espo || {classMap:{}};
             $.ajax({
                 type: 'GET',
                 cache: false,
-                dataType: dataType,
+                //dataType: dataType,
+                dataType: 'text',
                 local: true,
                 url: path,
                 success: function (response) {
@@ -277,7 +309,7 @@ var Espo = Espo || {classMap:{}};
                     }
                     return;
                 }.bind(this),
-                error: function () {
+                error: function (event, xhr, options) {
                     if (typeof error == 'function') {
                         error();
                     }

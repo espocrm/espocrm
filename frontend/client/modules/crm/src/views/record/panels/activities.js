@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relationship', function (Dep) {
+Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relationship', 'MultiCollection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -156,7 +156,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', 'Views.Record.Panels.Relations
         afterRender: function () {
             var url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
-            this.collection = new Espo.MultiCollection();
+            this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
             this.collection.url = url;
             this.collection.where = [this.currentScope];

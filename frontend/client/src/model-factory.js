@@ -57,7 +57,7 @@ Espo.define('ModelFactory', [], function () {
 
             var className = this.metadata.get('clientDefs.' + name + '.model') || 'Model';
 
-            Espo.loader.load(className, function (modelClass) {
+            Espo.loader.require(className, function (modelClass) {
                 this.seeds[name] = modelClass.extend({
                     name: name,
                     defs: this.metadata.get('entityDefs.' + name, {}),

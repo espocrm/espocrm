@@ -17,46 +17,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
 
     return Dep.extend({
 
         type: 'float',
-        
+
         editTemplate: 'fields.float.edit',
-    
+
         decimalMark: '.',
-    
+
         thousandSeparator: ',',
-        
+
         validations: ['required', 'float', 'range'],
-    
+
         setup: function () {
-            Espo['Views.Fields.Int'].prototype.setup.call(this);            
-        
+            Dep.prototype.setup.call(this);
+
             if (this.getPreferences().has('decimalMark')) {
-                this.decimalMark = this.getPreferences().get('decimalMark') 
+                this.decimalMark = this.getPreferences().get('decimalMark');
             } else {
                 if (this.getConfig().has('decimalMark')) {
-                    this.decimalMark = this.getConfig().get('decimalMark') 
+                    this.decimalMark = this.getConfig().get('decimalMark');
                 }
-            }                
+            }
             if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator') 
+                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
             } else {
                 if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator') 
+                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
             }
         },
-    
+
         getValueForDisplay: function () {
             var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
             return this.formatNumber(value);
         },
-        
+
         formatNumber: function (value) {
             if (value !== null) {
                 var parts = value.toString().split(".");
@@ -65,10 +65,10 @@ Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
             }
             return '';
         },
-    
+
         defineMaxLength: function () {
-        },        
-    
+        },
+
         validateFloat: function () {
             var value = this.model.get(this.name);
             if (isNaN(value)) {
@@ -77,9 +77,9 @@ Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
                 return true;
             }
         },
-        
+
         parse: function (value) {
-            value = (value !== '') ? value : null;            
+            value = (value !== '') ? value : null;
             if (value !== null) {
                 value = value.split(this.thousandSeparator).join('');
                 value = value.split(this.decimalMark).join('.');
@@ -87,11 +87,11 @@ Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
             }
             return value;
         },
-    
+
         fetch: function () {
             var value = this.$el.find('[name="'+this.name+'"]').val();
-            value = this.parse(value);                
-        
+            value = this.parse(value);
+
             var data = {};
             data[this.name] = value;
             return data;
