@@ -21,8 +21,8 @@
 
 
 Espo.define(
-    'App',
-    ['Ui', 'Utils', 'Acl', 'Cache', 'Storage', 'Models.Settings', 'Language', 'Metadata', 'FieldManager', 'Models.User', 'Models.Preferences', 'ModelFactory' ,'CollectionFactory', 'PreLoader', 'ViewHelper', 'Controllers.Base', 'Router', 'DateTime', 'LayoutManager'],
+    'app',
+    ['ui', 'utils', 'acl', 'cache', 'storage', 'models/settings', 'language', 'metadata', 'field-manager', 'models/user', 'models/preferences', 'model-factory' ,'collection-factory', 'pre-loader', 'view-helper', 'controllers/base', 'router', 'date-time', 'layout-manager'],
     function (Ui, Utils, Acl, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager) {
 
     var App = function (options, callback) {
