@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Controllers.EmailAccount', 'Controllers.Record', function (Dep) {
+Espo.define('controllers/email-account', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 

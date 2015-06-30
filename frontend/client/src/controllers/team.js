@@ -17,11 +17,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Controllers.Team', 'Controllers.Record', function (Dep) {
-    
+ ************************************************************************/
+Espo.define('controllers/team', 'controllers/record', function (Dep) {
+
     return Dep.extend({
-    
+
         checkAccess: function (action) {
             if (action == 'read') {
                 return true;
@@ -30,7 +30,7 @@ Espo.define('Controllers.Team', 'Controllers.Record', function (Dep) {
                 return true;
             }
         }
-    
-    });    
+
+    });
 });
 

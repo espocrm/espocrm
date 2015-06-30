@@ -17,33 +17,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Controllers.Preferences', 'Controllers.Record', function (Dep) {
-            
-    return Dep.extend({        
-    
-        defaultAction: 'own',        
-        
-        getModel: function (callback) {        
-            var model = new Espo['Models.Preferences']();
+Espo.define('controllers/preferences', ['controllers/record', 'models/preferences'], function (Dep, Preferences) {
+
+    return Dep.extend({
+
+        defaultAction: 'own',
+
+        getModel: function (callback) {
+            var model = new Preferences();
             model.settings = this.getConfig();
-            model.defs = this.getMetadata().get('entityDefs.Preferences');            
+            model.defs = this.getMetadata().get('entityDefs.Preferences');
             callback.call(this, model);
-        },    
-    
-        checkAccess: function (action) {
-            return true;            
         },
-    
+
+        checkAccess: function (action) {
+            return true;
+        },
+
         own: function () {
             this.edit({
                 id: this.getUser().id
             });
-        },        
-        
-        list: function () {},    
-    });    
+        },
+
+        list: function () {}
+    });
 });
 
 

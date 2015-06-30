@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Controllers.Base', 'Controller', function (Dep) {
+ ************************************************************************/
+Espo.define('controllers/base', 'controller', function (Dep) {
 
     return Dep.extend({
 
@@ -34,8 +34,8 @@ Espo.define('Controllers.Base', 'Controller', function (Dep) {
         logout: function () {
             this.trigger('logout');
         },
-        
-        clearCache: function (options) {                
+
+        clearCache: function (options) {
             var cache = this.getCache();
             if (cache) {
                 cache.clear();
@@ -58,7 +58,6 @@ Espo.define('Controllers.Base', 'Controller', function (Dep) {
                 view.render();
             });
         },
-        
 
     });
 });

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Controllers.Page', 'Controller', function (Dep) {
+Espo.define('controllers/page', 'controller', function (Dep) {
 
     return Dep.extend({
 

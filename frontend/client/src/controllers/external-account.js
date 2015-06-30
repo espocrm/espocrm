@@ -17,37 +17,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Controllers.ExternalAccount', 'Controller', function (Dep) {
-    
+Espo.define('controllers/external-account', 'controller', function (Dep) {
+
     return Dep.extend({
-        
+
         defaultAction: 'list',
-        
+
         list: function (options) {
             this.collectionFactory.create('ExternalAccount', function (collection) {
                 collection.once('sync', function () {
                     this.main('ExternalAccount.Index', {
                         collection: collection,
                     });
-                }, this);                
-                collection.fetch();        
+                }, this);
+                collection.fetch();
             }, this);
         },
-        
+
         edit: function (options) {
             var id = options.id;
-            
+
             this.collectionFactory.create('ExternalAccount', function (collection) {
                 collection.once('sync', function () {
                     this.main('ExternalAccount.Index', {
                         collection: collection,
                         id: id
                     });
-                }, this);                
-                collection.fetch();    
+                }, this);
+                collection.fetch();
             }, this);
         },
-    });    
+    });
 });

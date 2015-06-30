@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Models.User', 'Model', function (Dep) {
-    
+ ************************************************************************/
+Espo.define('models/user', 'model', function (Dep) {
+
     return Dep.extend({
-    
+
         name: "User",
-    
-        isAdmin: function () {            
+
+        isAdmin: function () {
             return this.get('isAdmin');
         },
 
@@ -33,7 +33,7 @@ Espo.define('Models.User', 'Model', function (Dep) {
         },
 
         inTeam: function (model) {
-        
+
             var userTeamIds = this.getTeamIds();
 
             if (model.name == 'Team') {

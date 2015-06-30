@@ -17,13 +17,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Controllers.Stream', 'Controller', function (Dep) {
-    
+ ************************************************************************/
+Espo.define('controllers/stream', 'controller', function (Dep) {
+
     return Dep.extend({
-    
+
         defaultAction: 'index',
-    
+
         index: function () {
             this.main('Stream', {
                 displayTitle: true,
@@ -33,5 +33,5 @@ Espo.define('Controllers.Stream', 'Controller', function (Dep) {
         }
 
     });
-    
+
 });

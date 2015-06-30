@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Controllers.PasswordChangeRequest', 'Controller', function (Dep) {
+Espo.define('controllers/password-change-request', 'controller', function (Dep) {
 
     return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Controllers.PasswordChangeRequest', 'Controller', function (Dep) {
             if (!id) {
                 throw new Error();
             }
-            
+
             this.entire('User.PasswordChangeRequest', {
                 requestId: id
             }, function (view) {

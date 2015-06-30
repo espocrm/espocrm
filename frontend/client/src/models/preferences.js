@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Models.Preferences', 'Model', function (Dep) {
+Espo.define('models/preferences', 'model', function (Dep) {
 
     return Dep.extend({
 

@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Controllers.Dashboard', 'Controller', function (Dep) {
-    
+Espo.define('controllers/dashboard', 'controller', function (Dep) {
+
     return Dep.extend({
-    
+
         defaultAction: 'index',
-    
+
         index: function () {
             this.main('Dashboard', {
                 displayTitle: true,
@@ -33,5 +33,5 @@ Espo.define('Controllers.Dashboard', 'Controller', function (Dep) {
         }
 
     });
-    
+
 });
