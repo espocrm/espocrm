@@ -36,44 +36,8 @@ module.exports = function (grunt) {
         'client/lib/bull.min.js',
         'client/src/namespace.js',
         'client/src/exceptions.js',
-
         'client/src/loader.js',
-        'client/src/utils.js',
-        'client/src/storage.js',
-        'client/src/ui.js',
-        'client/src/acl.js',
-
-        'client/src/model.js',
-        'client/src/model-offline.js',
-
-        'client/src/metadata.js',
-        'client/src/language.js',
-
-        'client/src/collection.js',
-        'client/src/multi-collection.js',
-
-        'client/src/app.js',
-
-        'client/src/pre-loader.js',
-
-
-        'client/src/cache.js',
-        'client/src/controller.js',
-        'client/src/router.js',
-        'client/src/date-time.js',
-        'client/src/field-manager.js',
-        'client/src/search-manager.js',
-
-
-        'client/src/view-helper.js',
-        'client/src/layout-manager.js',
-        'client/src/model-factory.js',
-        'client/src/collection-factory.js',
-        'client/src/models/settings.js',
-        'client/src/models/user.js',
-        'client/src/models/preferences.js',
-        'client/src/controllers/base.js',
-        'client/src/view.js',
+        'client/src/utils.js'
     ];
 
     grunt.initConfig({
