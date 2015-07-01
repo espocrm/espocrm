@@ -1,5 +1,5 @@
 {
-  "controller": "Controllers.Record",
+  "controller": "controllers/record",
   "relationshipPanels":{
      "log":{
         "readOnly": true
@@ -9,6 +9,6 @@
     "list":"ScheduledJob.Record.List"
   },
   "views": {
-    "list": "ScheduledJob.List"      
+    "list": "ScheduledJob.List"
   }
 }

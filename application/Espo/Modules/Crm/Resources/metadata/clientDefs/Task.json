@@ -1,5 +1,5 @@
 {
-   "controller": "Controllers.Record",
+   "controller": "controllers/record",
    "recordViews":{
       "list": "Crm:Task.Record.List",
       "detail": "Crm:Task.Record.Detail"

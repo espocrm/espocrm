@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.EmailTemplate.Fields.InsertField', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/email-template/fields/insert-field', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         inlineEditDisabled: true,
 
-        detailTemplate: 'email-template.fields.insert-field.detail',
+        detailTemplate: 'email-template/fields/insert-field/detail',
 
-        editTemplate: 'email-template.fields.insert-field.edit',
+        editTemplate: 'email-template/fields/insert-field/edit',
 
         data: function () {
             return {

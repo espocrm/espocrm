@@ -1,6 +1,6 @@
 {
-    "controller": "Controllers.RecordTree",
-    "collection": "Collections.Tree",
+    "controller": "controllers/record-tree",
+    "collection": "collections/tree",
     "menu": {
         "listTree": {
             "buttons": [

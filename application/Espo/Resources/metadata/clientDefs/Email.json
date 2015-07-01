@@ -1,6 +1,6 @@
 {
-   "controller": "Controllers.Record",
-   "model": "Models.Email",
+   "controller": "controllers/record",
+   "model": "models/email",
    "views":{
       "list":"Email.List",
       "detail":"Email.Detail"

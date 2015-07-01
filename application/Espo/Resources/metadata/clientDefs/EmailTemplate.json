@@ -1,5 +1,5 @@
 {
-   "controller": "Controllers.Record",
+   "controller": "controllers/record",
    "recordViews":{
       "edit": "EmailTemplate.Record.Edit",
       "detail": "EmailTemplate.Record.Detail"

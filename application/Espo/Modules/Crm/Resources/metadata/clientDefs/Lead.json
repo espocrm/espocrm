@@ -1,5 +1,5 @@
 {
-   "controller": "Crm:Controllers.Lead",
+   "controller": "crm:controllers/lead",
    "views":{
       "detail":"Crm:Lead.Detail"
    },

@@ -1,5 +1,5 @@
 {
-    "controller": "Controllers.Import",
+    "controller": "controllers/import",
     "recordViews": {
         "list":"Import.Record.List",
         "detail": "Import.Record.Detail"

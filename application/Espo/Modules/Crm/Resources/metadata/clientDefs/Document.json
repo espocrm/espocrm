@@ -1,5 +1,5 @@
 {
-    "controller": "Controllers.Record",
+    "controller": "controllers/record",
     "views": {
         "list": "Crm:Document.List"
     },

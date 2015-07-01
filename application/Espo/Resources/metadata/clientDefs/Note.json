@@ -1,5 +1,5 @@
 {
-   "collection": "Collections.Note",
+   "collection": "collections/note",
    "recordViews":{
       "edit":"Note.Record.Edit",
       "editQuick":"Note.Record.Edit"

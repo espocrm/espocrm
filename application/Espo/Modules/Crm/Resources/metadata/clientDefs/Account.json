@@ -1,5 +1,5 @@
 {
-   "controller": "Controllers.Record",
+   "controller": "controllers/record",
    "views":{
       "detail":"Crm:Account.Detail"
    },
