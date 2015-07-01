@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Email.Fields.FromAddressVarchar', 'Views.Fields.Varchar', function (Dep) {
+Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        detailTemplate: 'email.fields.email-address-varchar.detail',
+        detailTemplate: 'email/fields/email-address-varchar/detail',
 
         setup: function () {
             Dep.prototype.setup.call(this);

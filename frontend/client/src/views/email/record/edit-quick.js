@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Email.Record.EditQuick', 'Views.Email.Record.Edit', function (Dep, Detail) {
+Espo.define('views/email/record/edit-quick', 'views/email/record/edit', function (Dep, Detail) {
 
     return Dep.extend({
 

@@ -29,6 +29,7 @@ Espo.define('controllers/email-account', 'controllers/record', function (Dep) {
         		Dep.prototype.list.call(this, options);
         	} else {
 	            this.getCollection(function (collection) {
+
 	            	collection.where = [{
 	            		type: 'equals',
 	            		field: 'assignedUserId',

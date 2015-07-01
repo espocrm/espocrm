@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.EmailAccount.Fields.EmailAddress', 'Views.Fields.Varchar', function (Dep) {
+Espo.define('views/email-account/fields/email-address', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 

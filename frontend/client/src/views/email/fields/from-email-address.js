@@ -17,15 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Views.Email.Fields.FromEmailAddress', 'Views.Fields.Link', function (Dep) {
+ ************************************************************************/
+Espo.define('views/email/fields/from-email-address', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
-        
-        listTemplate: 'email.fields.from-email-address.detail',
-        
-        detailTemplate: 'email.fields.from-email-address.detail',        
-        
+
+        listTemplate: 'email/fields/from-email-address/detail',
+
+        detailTemplate: 'email/fields/from-email-address/detail',
+
     });
-    
+
 });

@@ -17,25 +17,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.EmailTemplate.Record.Detail', 'Views.Record.Detail', function (Dep) {
-    
+Espo.define('views/email-template/record/detail', 'views/record/detail', function (Dep) {
+
     return Dep.extend({
-        
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             this.listenToInsertField();
         },
-        
+
         listenToInsertField: function () {
             var fieldView = this.getFieldView('insertField');
             if (fieldView) {
-                this.listenTo(fieldView, 'insert-field', function (o) {                    
+                this.listenTo(fieldView, 'insert-field', function (o) {
                     var tag = '{' + o.entityType + '.' + o.field + '}';
-                    
+
                     $body = this.$el.find('[name="body"]');
-                    
+
                     if (this.model.get('isHtml')) {
                         var code = $body.summernote().code();
                         code += tag;
@@ -45,14 +45,14 @@ Espo.define('Views.EmailTemplate.Record.Detail', 'Views.Record.Detail', function
                         text += tag;
                         $body.val(text);
                     }
-                    
+
                     var bodyView = this.getFieldView('body');
-                    
-                    
+
+
                 }.bind(this));
             };
         },
-        
+
     });
 
 });

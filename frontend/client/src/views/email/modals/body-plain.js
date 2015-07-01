@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Email.Modals.BodyPlain', 'Views.Modal', function (Dep) {
+Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
 
     return Dep.extend({
 

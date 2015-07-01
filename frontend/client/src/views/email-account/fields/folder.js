@@ -17,35 +17,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.EmailAccount.Fields.Folder', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/email-account/fields/folder', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
-        
-        editTemplate: 'email-account.fields.folder.edit',
-        
+
+        editTemplate: 'email-account/fields/folder/edit',
+
         events: {
-            'click [data-action="selectFolder"]': function () {            
+            'click [data-action="selectFolder"]': function () {
                 var self = this;
-                
+
                 this.notify('Please wait...');
-                
+
                 var data = {
                     host: this.model.get('host'),
                     port: this.model.get('port'),
                     ssl: this.model.get('ssl'),
                     username: this.model.get('username'),
                 };
-                
+
                 if (this.model.has('password')) {
-                    data.password = this.model.get('password'); 
-                } else {                
-                    if (!this.model.isNew()) { 
+                    data.password = this.model.get('password');
+                } else {
+                    if (!this.model.isNew()) {
                         data.id = this.model.id;
                     }
-                }                
-                
+                }
+
                 $.ajax({
                     type: 'GET',
                     url: 'EmailAccount/action/getFolders',
@@ -56,22 +56,22 @@ Espo.define('Views.EmailAccount.Fields.Folder', 'Views.Fields.Base', function (D
                     },
                 }).done(function (folders) {
                     this.createView('modal', 'EmailAccount.Modals.SelectFolder', {
-                        folders: folders                        
+                        folders: folders
                     }, function (view) {
                         self.notify(false);
                         view.render();
-                        
-                        self.listenToOnce(view, 'select', function (folder) {                            
+
+                        self.listenToOnce(view, 'select', function (folder) {
                             view.close();
-                            self.addFolder(folder);                            
+                            self.addFolder(folder);
                         });
                     });
-                }.bind(this));                
-            }    
+                }.bind(this));
+            }
         },
-        
+
         addFolder: function (folder) {
             this.$element.val(folder);
         },
-    });    
+    });
 });

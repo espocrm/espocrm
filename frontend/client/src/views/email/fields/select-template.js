@@ -17,17 +17,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Views.Email.Fields.SelectTemplate', 'Views.Fields.Link', function (Dep) {
+ ************************************************************************/
+Espo.define('views/email/fields/select-template', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
         type: 'link',
-        
+
         foreignScope: 'EmailTemplate',
-        
-        editTemplate: 'email.fields.select-template.edit',
-        
+
+        editTemplate: 'email/fields/select-template/edit',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -38,17 +38,17 @@ Espo.define('Views.Email.Fields.SelectTemplate', 'Views.Fields.Link', function (
                 }
             }, this);
         },
-        
+
         loadTemplate: function (id) {
             var to = this.model.get('to') || '';
             var emailAddress = null;
-            to = to.trim();            
-            if (to) {            
+            to = to.trim();
+            if (to) {
                 var emailAddress = to.split(';')[0].trim();
             }
-            
+
             $.ajax({
-                url: 'EmailTemplate/action/parse',                
+                url: 'EmailTemplate/action/parse',
                 data: {
                     id: id,
                     emailAddress: emailAddress,
@@ -69,12 +69,12 @@ Espo.define('Views.Email.Fields.SelectTemplate', 'Views.Fields.Link', function (
                 }.bind(this)
             });
         },
-        
+
         emptyField: function () {
             this.model.set(this.idName, null);
             this.model.set(this.nameName, '');
-        },
-        
+        }
+
     });
-    
+
 });

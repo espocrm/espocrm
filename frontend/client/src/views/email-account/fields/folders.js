@@ -17,24 +17,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.EmailAccount.Fields.Folders', 'Views.EmailAccount.Fields.Folder', function (Dep) {
+Espo.define('views/email-account/fields/folders', 'views/email-account/fields/folder', function (Dep) {
 
-    return Dep.extend({        
-        
-        addFolder: function (folder) {            
+    return Dep.extend({
+
+        addFolder: function (folder) {
             var value = this.$element.val();
-            
-            var folders = [];            
+
+            var folders = [];
             if (value != '') {
                 folders = value.split(',');
             }
-            
+
             if (!~folders.indexOf(folder)) {
-                folders.push(folder);    
+                folders.push(folder);
             }
             this.$element.val(folders.join(','));
         },
-    });    
+    });
 });

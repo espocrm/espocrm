@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.EmailAccount.Fields.TestConnection', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/email-account/fields/test-connection', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 

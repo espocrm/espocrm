@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Email.Fields.Subject', 'Views.Fields.Varchar', function (Dep) {
+Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        listLinkTemplate: 'email.fields.subject.list-link',
+        listLinkTemplate: 'email/fields/subject/list-link',
 
         data: function () {
             var status = this.model.get('status');

@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Email.Fields.Icon', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/email/fields/icon', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'email.fields.icon.detail',
+        listTemplate: 'email/fields/icon/detail',
 
-        detailTemplate: 'email.fields.icon.detail',
+        detailTemplate: 'email/fields/icon/detail',
 
     });
 

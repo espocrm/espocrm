@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Email.Fields.ComposeFromAddress', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/email/fields/compose-from-address', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        editTemplate: 'email.fields.compose-from-address.edit',
+        editTemplate: 'email/fields/compose-from-address/edit',
 
         data: function () {
             return _.extend({

@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.EmailAccount.Record.Edit', ['Views.Record.Edit', 'Views.EmailAccount.Record.Detail'], function (Dep, Detail) {
+Espo.define('views/email-account/record/edit', ['views/record/edit', 'views/email-account/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -35,10 +35,8 @@ Espo.define('Views.EmailAccount.Record.Edit', ['Views.Record.Edit', 'Views.Email
                     fieldView.setMode('edit');
                     fieldView.render();
                 }
-
             }
-
-        },
+        }
 
     });
 
