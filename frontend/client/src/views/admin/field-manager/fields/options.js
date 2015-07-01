@@ -17,10 +17,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Admin.FieldManager.Fields.Options', 'Views.Fields.Array', function (Dep) {
-    
+Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', function (Dep) {
+
     return Dep.extend({
 
         setup: function () {
@@ -29,15 +29,15 @@ Espo.define('Views.Admin.FieldManager.Fields.Options', 'Views.Fields.Array', fun
             this.translatedOptions = this.getLanguage().get(this.options.scope, 'options', this.options.field) || {};
         },
 
-        getItemHtml: function (value) {            
+        getItemHtml: function (value) {
             var translatedValue = this.translatedOptions[value] || value;
 
             var html = '' +
             '<div class="list-group-item link-with-role form-inline" data-value="' + value + '">' +
-                '<div class="pull-left" style="width: 92%; display: inline-block;">' + 
+                '<div class="pull-left" style="width: 92%; display: inline-block;">' +
                     '<input name="translatedValue" data-value="' + value + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' + 
-                    '<div>' + value + '</div>' + 
-                '</div>' +  
+                    '<div>' + value + '</div>' +
+                '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
                     '<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
                 '</div><br style="clear: both;" />' +
@@ -54,8 +54,8 @@ Espo.define('Views.Admin.FieldManager.Fields.Options', 'Views.Fields.Array', fun
             }, this);
 
             return data;
-        },
-        
+        }
+
     });
 
 });

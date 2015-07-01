@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.OutboundEmails', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('views/admin/outbound-emails', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 

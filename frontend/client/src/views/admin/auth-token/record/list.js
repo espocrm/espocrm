@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.AuthToken.Record.List', 'Views.Record.List', function (Dep) {
+Espo.define('views/admin/auth-token/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        rowActionsView: 'Admin.AuthToken.Record.RowActions.Remove',
+        rowActionsView: 'admin/auth-token/record/row-actions/remove',
 
         massActionList: ['remove'],
 

@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Integrations.Edit', ['View', 'Model'], function (Dep, Model) {
+Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
-        template: 'admin.integrations.edit',
+        template: 'admin/integrations/edit',
 
         data: function () {
             return {

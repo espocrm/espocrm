@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Admin.Index', 'View', function (Dep) {
+Espo.define('views/admin/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.index',
+        template: 'admin/index',
 
         data: function () {
             return {

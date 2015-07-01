@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
+Espo.define('views/admin/extensions/done', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Views.Admin.Extensions.Done', 'Views.Modal', function (Dep) {
 
         header: false,
 
-        template: 'admin.extensions.done',
+        template: 'admin/extensions/done',
 
         createButton: true,
 

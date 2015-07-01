@@ -19,13 +19,13 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', function (Dep) {
+Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         cssName: 'edit-entity',
 
-        template: 'admin.entity-manager.modals.edit-entity',
+        template: 'admin/entity-manager/modals/edit-entity',
 
         setup: function () {
 
@@ -56,7 +56,7 @@ Espo.define('Views.Admin.EntityManager.Modals.EditEntity', 'Views.Modal', functi
 
             this.header = this.translate(header, 'labels', 'Admin');
 
-            var model = this.model = new Espo.Model();
+            var model = this.model = new Model();
             model.name = 'EntityManager';
 
             this.hasStreamField = true;

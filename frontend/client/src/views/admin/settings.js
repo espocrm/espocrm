@@ -17,12 +17,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Admin.Settings', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
-        
+
         layoutName: 'settings',
 
         afterRender: function () {

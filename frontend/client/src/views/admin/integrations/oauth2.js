@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Integrations.OAuth2', 'Views.Admin.Integrations.Edit', function (Dep) {
+Espo.define('views/admin/integrations/oauth2', 'views/admin/integrations/edit', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.integrations.oauth2',
+        template: 'admin/integrations/oauth2',
 
         data: function () {
 

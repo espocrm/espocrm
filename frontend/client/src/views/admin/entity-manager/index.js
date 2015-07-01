@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.EntityManager.Index', 'View', function (Dep) {
+Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.entity-manager.index',
+        template: 'admin/entity-manager/index',
 
         scopeDataList: null,
 

@@ -17,30 +17,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Admin.Extensions.Ready', 'Views.Modal', function (Dep) {
+Espo.define('views/admin/extensions/ready', 'views/modal', function (Dep) {
 
     return Dep.extend({
-    
-        cssName: 'ready-modal',    
-        
+
+        cssName: 'ready-modal',
+
         header: false,
-        
-        template: 'admin.extensions.ready',
-        
+
+        template: 'admin/extensions/ready',
+
         createButton: true,
-        
-        data: function () {        
+
+        data: function () {
             return {
                 version: this.upgradeData.version,
                 text: this.translate('installExtension', 'messages', 'Admin').replace('{version}', this.upgradeData.version)
                                                                              .replace('{name}', this.upgradeData.name)
             };
         },
-                
+
         setup: function () {
-            
+
             this.buttons = [
                 {
                     name: 'run',
@@ -56,19 +56,19 @@ Espo.define('Views.Admin.Extensions.Ready', 'Views.Modal', function (Dep) {
                     onClick: function (dialog) {
                         dialog.close();
                     }
-                } 
+                }
             ];
-            
+
             this.upgradeData = this.options.upgradeData;
-                    
-            this.header = this.getLanguage().translate('Ready for installation', 'labels', 'Admin');                
-            
+
+            this.header = this.getLanguage().translate('Ready for installation', 'labels', 'Admin');
+
         },
-        
+
         run: function () {
             this.trigger('run');
             this.remove();
-        }    
+        }
     });
 });
 

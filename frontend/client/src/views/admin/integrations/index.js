@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Integrations.Index', 'View', function (Dep) {
+Espo.define('views/admin/integrations/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.integrations.index',
+        template: 'admin/integrations/index',
 
         integrationList: null,
 

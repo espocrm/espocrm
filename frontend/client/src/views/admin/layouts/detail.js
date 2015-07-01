@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Layouts.Detail', 'Views.Admin.Layouts.Grid', function (Dep) {
+Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) {
 
     return Dep.extend({
 

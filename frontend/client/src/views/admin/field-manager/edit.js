@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.FieldManager.Edit', ['View', 'Model'], function (Dep, Model) {
+Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
-        template: 'admin.field-manager.edit',
+        template: 'admin/field-manager/edit',
 
         data: function () {
             return {

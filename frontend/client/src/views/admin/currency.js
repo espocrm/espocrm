@@ -17,25 +17,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Admin.Currency', 'Views.Settings.Record.Edit', function (Dep) {        
+Espo.define('views/admin/currency', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
-        
-        layoutName: 'currency',    
-    
+
+        layoutName: 'currency',
+
         setup: function () {
             Dep.prototype.setup.call(this);
         },
-        
-        afterRender: function () {            
+
+        afterRender: function () {
             var currencyListField = this.getFieldView('currencyList');
             var defaultCurrencyField = this.getFieldView('defaultCurrency');
             var baseCurrencyField = this.getFieldView('baseCurrency');
-            
+
             var currencyRatesField = this.getFieldView('currencyRates');
-            
+
             if (currencyListField) {
                 this.listenTo(currencyListField, 'change', function () {
                     var data = currencyListField.fetch();
@@ -53,7 +53,7 @@ Espo.define('Views.Admin.Currency', 'Views.Settings.Record.Edit', function (Dep)
                     }
                 }, this);
             }
-            
+
             if (baseCurrencyField) {
                 this.listenTo(baseCurrencyField, 'change', function () {
                     if (currencyRatesField) {
@@ -62,8 +62,8 @@ Espo.define('Views.Admin.Currency', 'Views.Settings.Record.Edit', function (Dep)
                 }, this);
             }
         },
-        
-    });        
-    
+
+    });
+
 });
 

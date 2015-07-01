@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('controllers/admin', 'controller', function (Dep) {
+Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -136,7 +136,7 @@ Espo.define('controllers/admin', 'controller', function (Dep) {
 
         authTokens: function () {
             this.collectionFactory.create('AuthToken', function (collection) {
-                var searchManager = new Espo.SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;

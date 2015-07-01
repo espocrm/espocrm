@@ -19,13 +19,13 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.UserInterface', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('views/admin/user-interface', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
-        
+
         layoutName: 'userInterface',
-        
+
     });
-    
+
 });
 

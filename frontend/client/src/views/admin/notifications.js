@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Notifications', 'Views.Settings.Record.Edit', function (Dep) {
+Espo.define('views/admin/notifications', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
