@@ -89,9 +89,6 @@ return array (
     'adminItems' =>
     array (
         'devMode',
-        'outboundEmailIsShared',
-        'outboundEmailFromName',
-        'outboundEmailFromAddress',
         'smtpServer',
         'smtpPort',
         'smtpAuth',

@@ -17,13 +17,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 Espo.define('Views.Email.Fields.ComposeFromAddress', 'Views.Fields.Base', function (Dep) {
 
     return Dep.extend({
-    
+
         editTemplate: 'email.fields.compose-from-address.edit',
-        
+
         data: function () {
             return _.extend({
                 list: this.list,
@@ -34,14 +34,14 @@ Espo.define('Views.Email.Fields.ComposeFromAddress', 'Views.Fields.Base', functi
         setup: function () {
             Dep.prototype.setup.call(this);
             this.list = [];
-            
+
             if (this.getUser().get('emailAddress') && this.getPreferences().get('smtpServer')) {
                 this.list.push(this.getUser().get('emailAddress'));
             }
-            
+
             if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
                 this.list.push(this.getConfig().get('outboundEmailFromAddress'));
-            }            
+            }
         },
     });
 
