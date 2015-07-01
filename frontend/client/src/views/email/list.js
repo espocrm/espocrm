@@ -27,13 +27,6 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
-            if (this.getAcl().check('EmailAccountScope')) {
-                this.menu.dropdown.push({
-                   "label": "Email Accounts",
-                   "link": "#EmailAccount"
-                });
-            }
         },
 
         actionComposeEmail: function () {

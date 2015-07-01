@@ -29,7 +29,7 @@ Espo.define('utils', [], function () {
                 if (!item.aclScope) {
                     if (obj) {
                         if (typeof obj == 'string' || obj instanceof String) {
-                           hasAccess = acl.check(obj, item.acl);
+                            hasAccess = acl.check(obj, item.acl);
                         } else {
                             hasAccess = acl.checkModel(obj, item.acl);
                         }

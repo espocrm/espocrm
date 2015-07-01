@@ -30,6 +30,17 @@
                "label": "Archive Email",
                "link": "#Email/create",
                "acl": "edit"
+             },
+             {
+               "label": "Email Accounts",
+               "link": "#EmailAccount",
+               "aclScope": "EmailAccountScope"
+             },
+             {
+               "label": "Email Templates",
+               "link": "#EmailTemplate",
+               "acl": "read",
+               "aclScope": "EmailTemplate"
              }
          ]
       },
