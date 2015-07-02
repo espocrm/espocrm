@@ -49,6 +49,7 @@ Espo.define('collection', [], function () {
 
             this.sortBy = options.sortBy || this.sortBy;
             this.asc = ('asc' in options) ? options.asc : this.asc;
+            this.data = {};
 
             Backbone.Collection.prototype.initialize.call(this);
         },
@@ -97,7 +98,7 @@ Espo.define('collection', [], function () {
 
         fetch: function (options) {
             var options = options || {};
-            options.data = options.data || {};
+            options.data = _.extend(options.data || {}, this.data);
 
             this.offset = options.offset || this.offset;
             this.sortBy = options.sortBy || this.sortBy;

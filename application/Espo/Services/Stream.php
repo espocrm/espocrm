@@ -420,6 +420,17 @@ class Stream extends \Espo\Core\Services\Base
             $where['createdAt>'] = $params['after'];
         }
 
+        if (!empty($params['filter'])) {
+            switch ($params['filter']) {
+                case 'posts':
+                    $where['type'] = 'Post';
+                    break;
+                  case 'updates':
+                    $where['type'] = ['Update', 'Status'];
+                    break;
+            }
+        }
+
         $collection = $this->getEntityManager()->getRepository('Note')->find(array(
             'whereClause' => $where,
             'offset' => $params['offset'],

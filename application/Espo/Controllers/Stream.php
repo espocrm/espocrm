@@ -38,6 +38,7 @@ class Stream extends \Espo\Core\Controllers\Base
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
         $after = $request->get('after');
+        $filter = $request->get('filter');
 
         $service = $this->getService('Stream');
 
@@ -52,6 +53,7 @@ class Stream extends \Espo\Core\Controllers\Base
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,
+            'filter' => $filter
         ));
 
         return array(

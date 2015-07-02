@@ -88,6 +88,10 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
         setup: function () {
             this.title = this.translate('Stream');
 
+            this.scope = this.model.name;
+
+            this.filter = this.getStoredFilter();
+
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
@@ -99,10 +103,10 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
 
         createCollection: function (callback) {
             this.getCollectionFactory().create('Note', function (collection) {
-
                 this.collection = collection;
                 collection.url = this.model.name + '/' + this.model.id + '/stream';
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                this.setFilter(this.filter);
 
                 callback();
             }, this);
@@ -113,8 +117,6 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
             this.$attachments = this.$el.find('div.attachments');
 
             var collection = this.collection;
-
-
 
             this.listenToOnce(collection, 'sync', function () {
                 this.createView('list', 'Stream.List', {
@@ -229,9 +231,70 @@ Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Text
             }.bind(this));
         },
 
-        getButtons: function () {
+        getButtonList: function () {
             return [];
         },
+
+        filterList: ['all', 'posts', 'updates'],
+
+        getActionList: function () {
+            var list = [];
+            this.filterList.forEach(function (item) {
+                var selected = false;
+                if (item == 'all') {
+                    selected = !this.filter;
+                } else {
+                    selected = item === this.filter;
+                }
+                list.push({
+                    action: 'selectFilter',
+                    html: this.translate(item, 'filters', 'Note')  + '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>',
+                    data: {
+                        name: item
+                    }
+                });
+            }, this);
+            return list;
+        },
+
+        getStoredFilter: function () {
+            return this.getStorage().get('state', 'streamPanelFilter' + this.scope) || null;
+        },
+
+        storeFilter: function (filter) {
+            if (filter) {
+                this.getStorage().set('state', 'streamPanelFilter' + this.scope, filter);
+            } else {
+                this.getStorage().clear('state', 'streamPanelFilter' + this.scope);
+            }
+        },
+
+        setFilter: function (filter) {
+            this.collection.data.filter = null;
+            if (filter) {
+                this.collection.data.filter = filter;
+            }
+        },
+
+        actionSelectFilter: function (data) {
+            var filter = data.name;
+            var filterInternal = filter;
+            if (filter == 'all') {
+                filterInternal = false;
+            }
+            this.storeFilter(filterInternal);
+            this.setFilter(filterInternal);
+
+            this.filterList.forEach(function (item) {
+                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+                if (item === filter) {
+                    $el.removeClass('hidden');
+                } else {
+                    $el.addClass('hidden');
+                }
+            }, this);
+            this.collection.fetch();
+        }
 
     });
 });
