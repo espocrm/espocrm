@@ -79,7 +79,7 @@ class User extends Record
         return $result;
     }
 
-    public function changePassword($userId, $password)
+    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -88,6 +88,17 @@ class User extends Record
 
         if (empty($password)) {
             throw new Error('Password can\'t be empty.');
+        }
+
+        if ($checkCurrentPassword) {
+            $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
+            $u = $this->getEntityManager()->getRepository('User')->where(array(
+                'id' => $user->id,
+                'password' => $passwordHash->hash($currentPassword)
+            ))->findOne();
+            if (!$u) {
+                throw new Forbidden();
+            }
         }
 
         $user->set('password', $this->hashPassword($password));

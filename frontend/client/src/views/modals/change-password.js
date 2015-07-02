@@ -54,6 +54,18 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
             this.getModelFactory().create('User', function (user) {
                 this.model = user;
 
+                this.createView('currentPassword', 'Fields.Password', {
+                    model: user,
+                    mode: 'edit',
+                    el: this.options.el + ' .field-currentPassword',
+                    defs: {
+                        name: 'currentPassword',
+                        params: {
+                            required: true,
+                        }
+                    }
+                });
+
                 this.createView('password', 'Fields.Password', {
                     model: user,
                     mode: 'edit',
@@ -84,10 +96,13 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
 
 
         changePassword: function () {
+            this.getView('currentPassword').fetchToModel();
             this.getView('password').fetchToModel();
             this.getView('passwordConfirm').fetchToModel();
 
-            var notValid = this.getView('password').validate() || this.getView('passwordConfirm').validate();
+            var notValid = this.getView('currentPassword').validate() ||
+                           this.getView('password').validate() ||
+                           this.getView('passwordConfirm').validate();
 
             if (notValid) {
                 return;
@@ -99,6 +114,7 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
                 url: 'User/action/changeOwnPassword',
                 type: 'POST',
                 data: JSON.stringify({
+                    currentPassword: this.model.get('currentPassword'),
                     password: this.model.get('password')
                 }),
                 error: function () {

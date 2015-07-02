@@ -53,7 +53,10 @@ class User extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        return $this->getService('User')->changePassword($this->getUser()->id, $data['password']);
+        if (!array_key_exists('password', $data) || !array_key_exists('currentPassword', $data)) {
+            throw new BadRequest();
+        }
+        return $this->getService('User')->changePassword($this->getUser()->id, $data['password'], true, $data['currentPassword']);
     }
 
     public function actionChangePasswordByRequest($params, $data, $request)

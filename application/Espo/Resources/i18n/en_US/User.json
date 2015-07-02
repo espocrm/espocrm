@@ -10,6 +10,7 @@
         "roles": "Roles",
         "teamRole": "Position",
         "password": "Password",
+        "currentPassword": "Current Password",
         "passwordConfirm": "Confirm Password",
         "newPassword": "New Password",
         "newPasswordConfirm": "Confirm New Password",
