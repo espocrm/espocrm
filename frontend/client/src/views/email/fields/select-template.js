@@ -56,12 +56,8 @@ Espo.define('views/email/fields/select-template', 'views/fields/link', function 
                     parentId: this.model.get('parentId'),
                 },
                 success: function (data) {
-                    this.model.set('name', data.subject);
-                    this.model.set('body', data.body);
-                    this.model.set({
-                        attachmentsIds: data.attachmentsIds,
-                        attachmentsNames: data.attachmentsNames
-                    });
+                    this.model.trigger('insert-template', data);
+
                     this.emptyField();
                 }.bind(this),
                 error: function () {

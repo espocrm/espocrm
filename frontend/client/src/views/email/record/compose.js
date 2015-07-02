@@ -31,22 +31,48 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         	Dep.prototype.setup.call(this);
 
         	if (this.hasSignature()) {
-	        	var body = this.model.get('body') || '';
-                if (this.model.get('isHtml')) {
-                    var signature = this.getSignature();
-                    if (body) {
-                        signature += '<br>';
-                    }
-	                body = '<p><br></p><br>' + signature + body;
-                } else {
-                    var signature = this.getPlainTextSignature();
-                    if (body) {
-                        signature += '\n';
-                    }
-                    body = '\n\n' + signature + body;
-                }
+                var body = this.prependSignature(this.model.get('body') || '', this.model.get('isHtml'));
 	        	this.model.set('body', body);
 	        }
+
+            this.listenTo(this.model, 'insert-template', function (data) {
+                var body = this.appendSignature(data.body || '', data.isHtml);
+                this.model.set('isHtml', data.isHtml);
+                this.model.set('name', data.subject);
+                this.model.set('body', body);
+                this.model.set({
+                    attachmentsIds: data.attachmentsIds,
+                    attachmentsNames: data.attachmentsNames
+                });
+            }, this);
+        },
+
+        prependSignature: function (body, isHtml) {
+            if (isHtml) {
+                var signature = this.getSignature();
+                if (body) {
+                    signature += '<br>';
+                }
+                body = '<p><br></p><br>' + signature + body;
+            } else {
+                var signature = this.getPlainTextSignature();
+                if (body) {
+                    signature += '\n';
+                }
+                body = '\n\n' + signature + body;
+            }
+            return body;
+        },
+
+        appendSignature: function (body, isHtml) {
+            if (isHtml) {
+                var signature = this.getSignature();
+                body = body + '<p><br></p>' + signature;
+            } else {
+                var signature = this.getPlainTextSignature();
+                body = body + '\n\n' + signature;
+            }
+            return body;
         },
 
         hasSignature: function () {
