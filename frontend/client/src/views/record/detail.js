@@ -56,7 +56,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         dropdownItemList: [
             {
                 name: 'delete',
-                label: 'Delete'
+                label: 'Remove'
             }
         ],
 
