@@ -4,6 +4,7 @@
    },
    "recordViews":{
       "detail":"User.Record.Detail",
+      "detailQuick":"User.Record.DetailQuick",
       "edit":"User.Record.Edit",
       "editQuick":"User.Record.Edit",
       "list":"User.Record.List"

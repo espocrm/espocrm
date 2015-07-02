@@ -3,8 +3,7 @@
 		"label":"",
 		"rows":[
 			[{"name":"name"}],
-			[{"name":"status"}],
-			[{"name":"priority"}],
+			[{"name":"status"}, {"name":"priority"}],
 			[{"name":"dateStart"}],
 			[{"name":"dateEnd"}],
 			[{"name":"parent"}],

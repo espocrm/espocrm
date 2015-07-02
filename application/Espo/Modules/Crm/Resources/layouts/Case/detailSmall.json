@@ -3,9 +3,8 @@
 		"label":"",
 		"rows":[
 			[{"name":"name"}],
-			[{"name":"status"}],
-			[{"name":"priority"}],
-			[{"name":"type"}],
+			[{"name":"status"}, {"name":"priority"}],
+			[{"name":"type"}, {"name":"number"}],
 			[{"name":"account"}],
 			[{"name":"description"}]
 		]

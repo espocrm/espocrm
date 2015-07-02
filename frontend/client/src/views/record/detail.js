@@ -541,11 +541,18 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                             o.inlineEditDisabled = true;
                         }
 
+                        var fullWidth = cellDefs.fullWidth || false;
+                        if (!fullWidth) {
+                            if (simplifiedLayout[p].rows[i].length == 1) {
+                                fullWidth = true;
+                            }
+                        }
+
                         var cell = {
                             name: cellDefs.name,
                             view: viewName,
                             el: el + ' .record .field-' + cellDefs.name,
-                            fullWidth: cellDefs.fullWidth || false,
+                            fullWidth: fullWidth,
                             options: o
                         };
 

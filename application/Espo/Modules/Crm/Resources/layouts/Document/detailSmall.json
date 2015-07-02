@@ -2,11 +2,9 @@
     {
         "label": false,
         "rows": [
-            [{"name":"source"}],
-            [{"name":"file"}],
+            [{"name":"file"}, {"name":"source"}],
             [{"name":"name"}],
-            [{"name":"folder"}],
-            [{"name":"status"}]
+            [{"name":"status"}, {"name":"folder"}]
         ]
     }
 ]

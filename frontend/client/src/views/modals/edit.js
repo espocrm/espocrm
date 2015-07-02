@@ -35,7 +35,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
         editViewName: null,
 
-        columnCount: 1,
+        columnCount: 2,
 
         escapeDisabled: true,
 

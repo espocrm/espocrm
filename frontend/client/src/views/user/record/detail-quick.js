@@ -19,12 +19,20 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.Layouts.DetailSmall', 'Views.Admin.Layouts.Detail', function (Dep) {
+Espo.define('Views.User.Record.DetailQuick', 'Views.Record.Detail', function (Dep) {
 
     return Dep.extend({
 
-        columnCount: 2,
+        sideView: 'User.Record.DetailQuickSide',
+
+        editModeEnabled: false,
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+        }
 
     });
+
 });
 

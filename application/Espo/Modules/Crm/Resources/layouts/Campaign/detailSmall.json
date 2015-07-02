@@ -3,8 +3,7 @@
         "label": "",
         "rows": [
             [{"name":"name"}],
-            [{"name":"type"}],
-            [{"name":"status"}],
+            [{"name":"type"}, {"name":"status"}],
             [{"name":"endDate"}]
         ]
     }

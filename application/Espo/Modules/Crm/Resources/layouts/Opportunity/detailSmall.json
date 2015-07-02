@@ -1,1 +1,12 @@
-[{"label":"","rows":[[{"name":"name"}],[{"name":"account"}],[{"name":"stage"}],[{"name":"amount"}],[{"name":"closeDate"}]]}]
+[
+    {
+        "label":"",
+        "rows":[
+            [{"name":"name", "fullWidth": true}],
+            [{"name":"account", "fullWidth": true}],
+            [{"name":"stage"}, {"name":"closeDate"}],
+            [{"name":"amount"}],
+            [{"name":"description"}]
+        ]
+    }
+]

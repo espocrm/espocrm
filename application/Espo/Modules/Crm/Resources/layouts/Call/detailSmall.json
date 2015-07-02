@@ -3,8 +3,7 @@
 		"label":"",
 		"rows":[
 			[{"name":"name"}],
-			[{"name":"status"}],
-			[{"name":"direction"}],
+			[{"name":"status"}, {"name":"direction"}],
 			[{"name":"dateStart"}],
 			[{"name":"duration"}],
 			[{"name":"parent"}],
