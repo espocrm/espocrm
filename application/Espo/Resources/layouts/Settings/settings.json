@@ -4,7 +4,7 @@
         "rows": [
             [{"name": "useCache"},{"name": "companyLogo"}],
             [{"name": "disableExport"},{"name": "globalSearchEntityList"}],
-            [{"name": "followCreatedEntities"}]
+            [{"name": "followCreatedEntities"}, false]
         ]
     },
     {
@@ -13,7 +13,7 @@
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
             [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
-            [{"name": "language"}]
+            [{"name": "language"}, false]
         ]
     }
 ]

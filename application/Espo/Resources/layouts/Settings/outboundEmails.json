@@ -5,14 +5,14 @@
             [{"name": "smtpServer"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
             [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "OutboundEmail.Fields.TestSend"}],
-            [{"name": "smtpPassword"}]
+            [{"name": "smtpPassword"}, false]
         ]
     },
     {
         "label": "Configuration",
         "rows": [
             [{"name": "outboundEmailFromAddress"}, {"name": "outboundEmailIsShared"}],
-            [{"name": "outboundEmailFromName"}]
+            [{"name": "outboundEmailFromName"}, false]
         ]
     }
 ]
