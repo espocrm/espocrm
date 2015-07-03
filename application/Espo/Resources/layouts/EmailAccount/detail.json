@@ -24,7 +24,7 @@
             [
                 {"name":"monitoredFolders"},{"name":"password"}
             ],
-            [{"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}]
+            [{"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}, false]
         ]
     }
 ]
