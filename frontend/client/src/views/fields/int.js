@@ -36,6 +36,12 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.defineMaxLength();
+
+            this.on('change', function () {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }, this);
         },
 
         data: function () {
