@@ -110,7 +110,7 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                     var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
 
                     doc.open('text/html', 'replace');
-                    var body = this.model.get('body');
+                    var body = this.model.get(this.name);
                     body += link;
 
                     doc.write(body);
@@ -121,19 +121,6 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
                         var height = $body.height() + 30;
                         iframe.style.height = height + 'px';
-
-                        /*var i = 0;
-                        var p = function () {
-                            if (i >= 3) return;
-                            i++;
-                            iframe.style.height = height + 'px';
-                            console.log($body.prop('clientHeight'), $body.prop('scrollHeight'));
-                            if ($body.prop('clientHeight') < $body.prop('scrollHeight')) {
-                                height += 20;
-                                p();
-                            }
-                        }
-                        p();*/
                     };
 
                     setTimeout(function () {
