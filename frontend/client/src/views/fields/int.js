@@ -25,6 +25,8 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
 
         type: 'int',
 
+        detailTemplate: 'fields.int.detail',
+
         editTemplate: 'fields.int.edit',
 
         searchTemplate: 'fields.int.search',
@@ -34,6 +36,15 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.defineMaxLength();
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+
+            if (this.model.get(this.name) !== null) {
+                data.isNotNull = true;
+            }
+            return data;
         },
 
         setupSearch: function () {
