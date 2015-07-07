@@ -143,9 +143,7 @@ class EmailAccount extends Record
             throw new Error("No sent folder for Email Account: " . $emailAccount->id . ".");
         }
 
-        $storage->selectFolder($folder);
-
-        $storage->appendMessage($message);
+        $storage->appendMessage($message, $folder);
     }
 
     protected function getStorage(Entity $emailAccount)
