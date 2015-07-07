@@ -131,7 +131,7 @@ class Sender
         return $this;
     }
 
-    public function send(Email $email, $params = array())
+    public function send(Email $email, $params = array(), &$message = null)
     {
         $message = new Message();
         $config = $this->config;

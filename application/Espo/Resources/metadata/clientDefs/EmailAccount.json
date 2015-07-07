@@ -8,5 +8,31 @@
     "views": {
     	"list": "EmailAccount.List"
     },
-    "searchPanelDisabled": true
+    "searchPanelDisabled": true,
+    "formDependency": {
+        "storeSentEmails": {
+            "map": {
+                "true" : [
+                    {
+                        "action": "show",
+                        "fields": ["sentFolder"]
+                    },
+                    {
+                        "action": "setRequired",
+                        "fields": ["sentFolder"]
+                    }
+                ]
+            },
+            "default": [
+                {
+                    "action": "hide",
+                    "fields": ["sentFolder"]
+                },
+                {
+                    "action": "setNotRequired",
+                    "fields": ["sentFolder"]
+                }
+            ]
+        }
+    }
 }

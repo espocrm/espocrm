@@ -107,7 +107,24 @@ class Email extends Record
             }
         }
 
-        $emailSender->send($entity, $params);
+        $message = null;
+
+        $emailSender->send($entity, $params, $message);
+
+        if ($entity->get('from') && $message) {
+            $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
+                'storeSentEmails' => true,
+                'emailAddress' => $entity->get('from')
+            ))->findOne();
+            if ($emailAccount) {
+                try {
+                    $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+                    $emailAccountService->storeSentMessage($emailAccount, $message);
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error("Could not store message to IMAP server. Email Account id: " . $emailAccount->id . ".");
+                }
+            }
+        }
 
         if ($parent) {
             $this->getStreamService()->noteEmailSent($parent, $entity);

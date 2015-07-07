@@ -24,7 +24,15 @@
             [
                 {"name":"monitoredFolders"},{"name":"password"}
             ],
-            [{"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}, false]
+            [
+                {"name":"storeSentEmails"}, false
+            ],
+            [
+                {"name":"sentFolder"}, false
+            ],
+            [
+                {"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}, false
+            ]
         ]
     }
 ]

@@ -40,6 +40,14 @@
             "view": "EmailAccount.Fields.Folders",
             "tooltip": true
         },
+        "sentFolder": {
+            "type": "varchar",
+            "view": "EmailAccount.Fields.Folder"
+        },
+        "storeSentEmails": {
+            "type": "bool",
+            "tooltip": true
+        },
         "fetchSince": {
             "type": "date",
             "required": true

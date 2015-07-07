@@ -4,9 +4,9 @@
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeFormat"}],
             [{"name": "timeZone"}, {"name": "weekStart"}],
-            [{"name": "defaultCurrency"}],
+            [{"name": "defaultCurrency"}, false],
             [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
-            [{"name": "language"}]
+            [{"name": "language"}, false]
         ]
     },
     {
@@ -15,7 +15,7 @@
             [
                 {
                     "name": "smtpEmailAddress"
-                }
+                }, false
             ],
             [{"name": "smtpServer"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
@@ -49,7 +49,7 @@
     {
         "label": "Notifications",
         "rows": [
-            [{"name": "receiveAssignmentEmailNotifications"}]
+            [{"name": "receiveAssignmentEmailNotifications"}, false]
         ]
     }
 ]

@@ -134,6 +134,38 @@ class EmailAccount extends Record
         return $entity;
     }
 
+    public function storeSentMessage(Entity $emailAccount, $message)
+    {
+        $storage = $this->getStorage($emailAccount);
+
+        $folder = $emailAccount->get('sentFolder');
+        if (empty($folder)) {
+            throw new Error("No sent folder for Email Account: " . $emailAccount->id . ".");
+        }
+
+        $storage->selectFolder($folder);
+
+        $storage->appendMessage($message);
+    }
+
+    protected function getStorage(Entity $emailAccount)
+    {
+        $imapParams = array(
+            'host' => $emailAccount->get('host'),
+            'port' => $emailAccount->get('port'),
+            'user' => $emailAccount->get('username'),
+            'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
+        );
+
+        if ($emailAccount->get('ssl')) {
+            $imapParams['ssl'] = 'SSL';
+        }
+
+        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+
+        return $storage;
+    }
+
     public function fetchFromMailServer(Entity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active') {
@@ -168,18 +200,7 @@ class EmailAccount extends Record
             $fetchData['lastDate'] = array();
         }
 
-        $imapParams = array(
-            'host' => $emailAccount->get('host'),
-            'port' => $emailAccount->get('port'),
-            'user' => $emailAccount->get('username'),
-            'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
-        );
-
-        if ($emailAccount->get('ssl')) {
-            $imapParams['ssl'] = 'SSL';
-        }
-
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = $this->getStorage($emailAccount);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
         if (empty($monitoredFolders)) {
