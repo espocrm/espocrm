@@ -52,10 +52,14 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
 
                 var entityFields = {};
                 entityList.forEach(function (scope) {
-                    entityFields[scope] = this.getFieldManager().getEntityAttributes(scope);
+                    var list = this.getFieldManager().getEntityAttributes(scope) || [];
+                    list.push('id');
                     if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {
-                        entityFields[scope].unshift('name');
+                        list.unshift('name');
                     };
+                    entityFields[scope] = list.sort(function (v1, v2) {
+                        return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                    }.bind(this));
                 }, this);
 
                 entityFields['Person'] = ['name', 'firstName', 'lastName', 'salutationName', 'emailAddress', 'assignedUserName'];
@@ -97,11 +101,11 @@ Espo.define('views/email-template/fields/insert-field', 'views/fields/base', fun
 
         changeEntityType: function () {
             var entityType = this.$entityType.val();
-            var fields = this.entityFields[entityType];
+            var fieldList = this.entityFields[entityType];
 
             this.$field.empty();
 
-            fields.forEach(function (field) {
+            fieldList.forEach(function (field) {
                 this.$field.append('<option value="' + field + '">' + this.translate(field, 'fields', entityType) + '</option>');
             }, this);
         },

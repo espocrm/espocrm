@@ -141,8 +141,9 @@ class EmailTemplate extends Record
 
     protected function parseText($type, Entity $entity, $text)
     {
-        $fields = array_keys($entity->getFields());
-        foreach ($fields as $field) {
+        $fieldList = array_keys($entity->getFields());
+        $fieldList[] = $id;
+        foreach ($fieldList as $field) {
             $value = $entity->get($field);
             if (is_object($value)) {
                 continue;
