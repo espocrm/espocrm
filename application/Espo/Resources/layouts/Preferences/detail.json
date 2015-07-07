@@ -20,7 +20,7 @@
             [{"name": "smtpServer"}, {"name": "smtpPort"}],
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
             [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "Preferences.Fields.TestSend"}],
-            [{"name": "smtpPassword"}]
+            [{"name": "smtpPassword"}, false]
         ]
     },
     {
