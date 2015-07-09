@@ -27,6 +27,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\Number;
 
 require('vendor/zordius/lightncandy/src/lightncandy.php');
 
@@ -36,10 +37,18 @@ class Htmlizer
 
     protected $dateTime;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime)
+    protected $config;
+
+    public function __construct(FileManager $fileManager, DateTime $dateTime, Number $number)
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
+        $this->number = $number;
+    }
+
+    protected function formatNumber($value)
+    {
+        return $this->number->format($value);
     }
 
     protected function getDataFromEntity(Entity $entity)
@@ -71,6 +80,11 @@ class Htmlizer
                         if ($item instanceof \StdClass) {
                             $v = get_object_vars($v);
                         }
+                        foreach ($v as $k => $w) {
+                            if (is_float($v[$k]) || is_int($v[$k])) {
+                                $v[$k] = $this->formatNumber($v[$k]);
+                            }
+                        }
                         $newList[] = $v;
                     }
                     $data[$field] = $newList;
@@ -81,6 +95,17 @@ class Htmlizer
                     if ($value instanceof \StdClass) {
                         $data[$field] = get_object_vars($value);
                     }
+                    foreach ($data[$field] as $k => $w) {
+                        if (is_float($data[$field][$k]) || is_int($data[$field][$k])) {
+                            $data[$field][$k] = $this->formatNumber($data[$field][$k]);
+                        }
+                    }
+                }
+            }
+
+            if (!empty($data[$field])) {
+                if (is_float($data[$field]) || is_int($data[$field])) {
+                    $data[$field] = $this->formatNumber($data[$field]);
                 }
             }
         }

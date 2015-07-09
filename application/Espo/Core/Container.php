@@ -161,6 +161,14 @@ class Container
         );
     }
 
+    private function loadNumber()
+    {
+        return new \Espo\Core\Utils\Number(
+            $this->get('config')->get('decimalMark'),
+            $this->get('config')->get('thousandSeparator')
+        );
+    }
+
     private function loadServiceFactory()
     {
         return new \Espo\Core\ServiceFactory(

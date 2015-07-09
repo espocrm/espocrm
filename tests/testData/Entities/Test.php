@@ -20,6 +20,12 @@ class Test extends Entity
         'dateTime' => array(
             'type' => Entity::DATETIME
         ),
+        'int' => array(
+            'type' => Entity::INT
+        ),
+        'float' => array(
+            'type' => Entity::FLOAT
+        ),
         'list' => array(
             'type' => Entity::JSON_ARRAY
         ),

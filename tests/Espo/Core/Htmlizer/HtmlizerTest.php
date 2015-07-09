@@ -29,6 +29,11 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
 
     protected $fileManager;
 
+    protected $config;
+
+    protected $dateTime;
+
+    protected $number;
 
     protected function setUp()
     {
@@ -42,6 +47,7 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
                         file_put_contents($fileName, $contents);
                     }));
 
+
         $this->fileManager
                     ->expects($this->any())
                     ->method('unlink')
@@ -49,16 +55,20 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
                         unlink($fileName);
                     }));
 
+
+
         $this->dateTime = new \Espo\Core\Utils\DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
+        $this->number = new \Espo\Core\Utils\Number('.', ',');
 
-        $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $this->dateTime);
-
+        $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $this->dateTime, $this->number);
     }
 
     protected function tearDown()
     {
         unset($this->htmlizer);
         unset($this->fileManager);
+        unset($this->dateTime);
+        unset($this->number);
     }
 
     public function testRender()
@@ -67,21 +77,39 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
         $entity->set('name', 'test');
         $entity->set('date', '2015-09-15');
         $entity->set('dateTime', '2015-09-15 10:00:00');
+        $entity->set('int', 3);
+        $entity->set('float', 3.5);
 
         $item1 = new \StdClass();
-        $item1->value = '1';
+        $item1->value = 1;
 
         $item2 = new \StdClass();
-        $item2->value = '2';
+        $item2->value = 2000.5;
 
         $list = [$item1, $item2];
         $entity->set('list', $list);
 
-        $template = "{{name}} test {{date}} {{dateTime}} {{#each list}}{{value}}{{/each}}";
-
+        $template = "{{name}} test {{date}} {{dateTime}} {{#each list}}{{value}} {{/each}}{{int}} {{float}}";
         $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('test test 09/15/2015 09/15/2015 01:00 PM 1 2,000.5 3 3.5', $html);
 
-        $this->assertEquals('test test 09/15/2015 09/15/2015 01:00 PM 12', $html);
+
+        $template = "{{float}}";
+        $entity->set('float', 3);
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('3', $html);
+
+
+        $template = "{{float}}";
+        $entity->set('float', 3);
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('3', $html);
+
+        $template = "{{float}}";
+        $entity->set('float', 10000.50);
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('10,000.5', $html);
+
     }
 }
 
