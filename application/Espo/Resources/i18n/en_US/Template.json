@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "name": "Name",
+        "body": "Body",
+        "entityType": "Entity Type",
+        "header": "Header",
+        "footer": "Footer"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Template": "Create Template"
+    }
+}

@@ -14,7 +14,8 @@
         "Dashboard": "Dashboard",
         "InboundEmail": "Inbound Email Account",
         "Stream": "Stream",
-        "Import": "Import"
+        "Import": "Import",
+        "Template": "Template"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -31,7 +32,8 @@
         "Dashboard": "Dashboard",
         "InboundEmail": "Inbound Email Accounts",
         "Stream": "Stream",
-        "Import": "Import Results"
+        "Import": "Import Results",
+        "Template": "Templates"
     },
     "labels": {
         "Misc": "Misc",

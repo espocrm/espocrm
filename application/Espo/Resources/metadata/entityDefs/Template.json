@@ -1,0 +1,64 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "body": {
+            "type": "text",
+            "view": "Fields.Wysiwyg"
+        },
+        "header": {
+            "type": "text",
+            "view": "Fields.Wysiwyg"
+        },
+        "footer": {
+            "type": "text",
+            "view": "Fields.Wysiwyg"
+        },
+        "entityType": {
+            "type": "enum",
+            "required": true,
+            "translation": "Global.scopeNames",
+            "view": "Fields.EntityType"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

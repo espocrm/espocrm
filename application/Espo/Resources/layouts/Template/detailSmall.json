@@ -1,0 +1,12 @@
+[
+    {
+        "label":"",
+        "rows":[
+            [{"name":"name"}],
+            [{"name":"entityType"}, false],
+            [{"name":"header","fullWidth":true}],
+            [{"name":"body","fullWidth":true}],
+            [{"name":"footer","fullWidth":true}]
+        ]
+    }
+]
