@@ -4,7 +4,11 @@
         "body": "Body",
         "entityType": "Entity Type",
         "header": "Header",
-        "footer": "Footer"
+        "footer": "Footer",
+        "leftMargin": "Left Margin",
+        "topMargin": "Top Margin",
+        "rightMargin": "Right Margin",
+        "bottomMargin": "Bottom Margin"
     },
     "links": {
     },

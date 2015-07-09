@@ -43,10 +43,10 @@ class Download extends \Espo\Core\EntryPoints\Base
 
     public function run()
     {
-        $id = $_GET['id'];
-        if (empty($id)) {
+        if (empty($_GET['id'])) {
             throw new BadRequest();
         }
+        $id = $_GET['id'];
 
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 

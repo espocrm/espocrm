@@ -30,13 +30,13 @@ use \Espo\Core\Exceptions\Error;
 class Image extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = true;
-    
+
     protected $allowedFileTypes = array(
         'image/jpeg',
         'image/png',
         'image/gif',
     );
-    
+
     protected $imageSizes = array(
         'xxx-small' => array(18, 18),
         'xx-small' => array(32, 32),
@@ -47,59 +47,58 @@ class Image extends \Espo\Core\EntryPoints\Base
         'x-large' => array(864, 864),
         'xx-large' => array(1024, 1024),
     );
-    
-    
+
+
     public function run()
     {
         if (empty($_GET['id'])) {
             throw new BadRequest();
         }
-
         $id = $_GET['id'];
-            
+
         $size = null;
         if (!empty($_GET['size'])) {
             $size = $_GET['size'];
         }
-        
+
         $this->show($id, $size);
     }
-    
+
     protected function show($id, $size)
     {
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-        
+
         if (!$attachment) {
             throw new NotFound();
         }
-        
+
         if ($attachment->get('parentId') && $attachment->get('parentType')) {
             $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));
             if ($parent && !$this->getAcl()->check($parent)) {
                 throw new Forbidden();
             }
         }
-        
+
         $filePath = "data/upload/{$attachment->id}";
-        
+
         $fileType = $attachment->get('type');
-        
+
         if (!file_exists($filePath)) {
             throw new NotFound();
         }
-        
+
         if (!in_array($fileType, $this->allowedFileTypes)) {
             throw new Error();
         }
-        
+
         if (!empty($size)) {
             if (!empty($this->imageSizes[$size])) {
                 $thumbFilePath = "data/upload/thumbs/{$attachment->id}_{$size}";
-                
+
                 if (!file_exists($thumbFilePath)) {
                     $targetImage = $this->getThumbImage($filePath, $fileType, $size);
                     ob_start();
-                    
+
                     switch ($fileType) {
                         case 'image/jpeg':
                             imagejpeg($targetImage);
@@ -117,12 +116,12 @@ class Image extends \Espo\Core\EntryPoints\Base
                     $this->getContainer()->get('fileManager')->putContents($thumbFilePath, $contents);
                 }
                 $filePath = $thumbFilePath;
-        
+
             } else {
                 throw new Error();
             }
         }
-        
+
         if (!empty($size)) {
             $fileName = $attachment->id . '_' . $size . '.jpg';
         } else {
@@ -143,12 +142,12 @@ class Image extends \Espo\Core\EntryPoints\Base
         readfile($filePath);
         exit;
     }
-    
+
     protected function getThumbImage($filePath, $fileType, $size)
     {
         list($originalWidth, $originalHeight) = getimagesize($filePath);
         list($width, $height) = $this->imageSizes[$size];
-    
+
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
             $targetHeight = $originalHeight;
@@ -169,7 +168,7 @@ class Image extends \Espo\Core\EntryPoints\Base
                 }
             }
         }
-                
+
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
         switch ($fileType) {
             case 'image/jpeg':
@@ -189,8 +188,8 @@ class Image extends \Espo\Core\EntryPoints\Base
                 imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
                 break;
         }
-        
-        
+
+
         return $targetImage;
     }
 }

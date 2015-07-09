@@ -12,7 +12,10 @@
             ],
             [{"name":"header","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
-            [{"name":"footer","fullWidth":true}]
+            [{"name":"footer","fullWidth":true}],
+            [{"name":"topMargin"}, false],
+            [{"name":"leftMargin"}, {"name":"rightMargin"}],
+            [{"name":"bottomMargin"}, false]
         ]
     }
 ]

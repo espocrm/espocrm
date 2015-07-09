@@ -67,6 +67,21 @@ abstract class Base
         return $this->getContainer()->get('metadata');
     }
 
+    protected function getDateTime()
+    {
+        return $this->getContainer()->get('dateTime');
+    }
+
+    protected function getNumber()
+    {
+        return $this->getContainer()->get('number');
+    }
+
+    protected function getFileManager()
+    {
+        return $this->getContainer()->get('fileManager');
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;

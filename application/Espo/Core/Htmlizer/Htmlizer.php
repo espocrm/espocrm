@@ -51,6 +51,16 @@ class Htmlizer
         return $this->number->format($value);
     }
 
+    protected function format($value)
+    {
+        if (is_float($value) || is_int($value)) {
+            $value = $this->formatNumber($value);
+        } else if (is_string($value)) {
+            $value = nl2br($value);
+        }
+        return $value;
+    }
+
     protected function getDataFromEntity(Entity $entity)
     {
         $data = $entity->toArray();
@@ -81,9 +91,7 @@ class Htmlizer
                             $v = get_object_vars($v);
                         }
                         foreach ($v as $k => $w) {
-                            if (is_float($v[$k]) || is_int($v[$k])) {
-                                $v[$k] = $this->formatNumber($v[$k]);
-                            }
+                            $v[$k] = $this->format($v[$k]);
                         }
                         $newList[] = $v;
                     }
@@ -96,17 +104,14 @@ class Htmlizer
                         $data[$field] = get_object_vars($value);
                     }
                     foreach ($data[$field] as $k => $w) {
-                        if (is_float($data[$field][$k]) || is_int($data[$field][$k])) {
-                            $data[$field][$k] = $this->formatNumber($data[$field][$k]);
-                        }
+                        $data[$field][$k] = $this->format($data[$field][$k]);
                     }
                 }
             }
 
+
             if (!empty($data[$field])) {
-                if (is_float($data[$field]) || is_int($data[$field])) {
-                    $data[$field] = $this->formatNumber($data[$field]);
-                }
+               $data[$field] = $this->format($data[$field]);
             }
         }
 

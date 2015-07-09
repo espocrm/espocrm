@@ -22,6 +22,22 @@
             "translation": "Global.scopeNames",
             "view": "Fields.EntityType"
         },
+        "leftMargin": {
+            "type": "float",
+            "default": 10
+        },
+        "rightMargin": {
+            "type": "float",
+            "default": 10
+        },
+        "topMargin": {
+            "type": "float",
+            "default": 10
+        },
+        "bottomMargin": {
+            "type": "float",
+            "default": 20
+        },
         "teams": {
             "type": "linkMultiple"
         },
