@@ -110,6 +110,11 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10,000.5', $html);
 
+        $template = "{{int}}";
+        $entity->set('int', 3000);
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('3,000', $html);
+
     }
 }
 
