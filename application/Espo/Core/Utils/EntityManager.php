@@ -134,6 +134,7 @@ class EntityManager
         $scopesData['stream'] = $stream;
         $scopesData['type'] = $type;
         $scopesData['module'] = 'Custom';
+        $scopesData['object'] = true;
         $scopesData['isCustom'] = true;
 
         $this->getMetadata()->set('scopes', $name, $scopesData);

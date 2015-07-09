@@ -24,7 +24,8 @@ Espo.define('views/fields/entity-type', 'views/fields/enum', function (Dep) {
     return Dep.extend({
 
         checkAvailability: function (entityType) {
-            if (this.scopesMetadataDefs[entityType].entity) {
+            var defs = this.scopesMetadataDefs[entityType] || {};
+            if (defs.entity && defs.object) {
                 return true;
             }
         },

@@ -6,5 +6,6 @@
     "module": "Crm",
     "customizable": false,
     "importable": false,
-    "notifications": false
+    "notifications": false,
+    "object": true
 }

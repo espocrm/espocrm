@@ -3,5 +3,6 @@
     "layouts": false,
     "tab": true,
     "acl": true,
-    "notifications": true
+    "notifications": true,
+    "object": true
 }

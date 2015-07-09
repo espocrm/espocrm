@@ -3,5 +3,6 @@
 	"layouts": true,
 	"tab": true,
 	"acl": false,
-	"customizable": true
+	"customizable": true,
+    "object": true
 }

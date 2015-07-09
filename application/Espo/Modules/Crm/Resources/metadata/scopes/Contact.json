@@ -7,5 +7,6 @@
     "customizable": true,
     "stream": true,
     "importable": true,
-    "notifications": true
+    "notifications": true,
+    "object": true
 }

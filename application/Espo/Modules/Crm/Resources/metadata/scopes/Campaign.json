@@ -6,5 +6,6 @@
     "module": "Crm",
     "customizable": true,
     "stream": false,
-    "importable": false
+    "importable": false,
+    "object": true
 }
