@@ -27,7 +27,6 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Htmlizer\Htmlizer;
 
-require "vendor/tecnick.com/tcpdf/tcpdf.php";
 
 class Pdf extends \Espo\Core\EntryPoints\Base
 {
@@ -62,8 +61,9 @@ class Pdf extends \Espo\Core\EntryPoints\Base
 
         $htmlizer = new Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber());
 
-        $pdf = new \TCPDF();
+        $pdf = new \Espo\Core\Pdf\Tcpdf();
         $pdf->setPrintHeader(false);
+        //$pdf->setPrintFooter(false);
         $pdf->setAutoPageBreak(true, $template->get('bottomMargin'));
         $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
 
