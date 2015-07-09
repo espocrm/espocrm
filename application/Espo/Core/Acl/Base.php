@@ -105,7 +105,7 @@ class Base implements Injectable
     public function checkScope(User $user, $data, $scope, $action = null, $isOwner = null, $inTeam = null, Entity $entity = null)
     {
         if (is_null($data)) {
-            return true;
+            return false;
         }
         if ($data === false) {
             return false;
