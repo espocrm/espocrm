@@ -159,7 +159,8 @@
         "List View": "List View",
         "Tree View": "Tree View",
         "Unlink All": "Unlink All",
-        "Total": "Total"
+        "Total": "Total",
+        "Print to PDF": "Print to PDF"
     },
     "messages": {
         "pleaseWait": "Please wait...",

@@ -35,6 +35,8 @@ Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], func
 
         searchPanel: true,
 
+        scope: null,
+
         data: function () {
             return {
                 createButton: this.createButton && this.getAcl().check(this.scope, 'edit')
@@ -100,7 +102,7 @@ Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], func
                 });
             }
 
-            this.scope = this.options.scope;
+            this.scope = this.options.scope || this.scope;
 
             if (['User', 'Team', 'Acl'].indexOf(this.scope) !== -1) {
                 this.createButton = false;

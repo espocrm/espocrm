@@ -19,30 +19,36 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-
-Espo.define('Crm:Views.Lead.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('views/modals/select-template', ['views/modals/select-records', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
-        sideView: 'Crm:Lead.Record.DetailSide',
+        multiple: false,
+
+        header: false,
+
+        createButton: false,
+
+        searchPanel: false,
+
+        scope: 'Template',
 
         setup: function () {
             Dep.prototype.setup.call(this);
         },
 
-        actionPrintPdf: function () {
-            this.createView('pdfTemplate', 'Modals.SelectTemplate', {
-                entityType: this.model.name
-            }, function (view) {
-                view.render();
+        loadSearch: function () {
+            Dep.prototype.loadSearch.call(this);
 
-                this.listenTo(view, 'select', function (model) {
-                    window.open('?entryPoint=pdf&entityType='+this.model.name+'&entityId='+this.model.id+'&templateId=' + model.id, '_blank');
-                }, this);
-            }.bind(this));
+            this.searchManager.setAdvanced({
+                entityType: {
+                    type: 'equals',
+                    value: this.options.entityType
+                }
+            });
+
+            this.collection.where = this.searchManager.getWhere();
         }
-
     });
 });
-
 

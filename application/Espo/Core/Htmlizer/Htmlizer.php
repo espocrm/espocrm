@@ -65,6 +65,8 @@ class Htmlizer
     {
         $data = $entity->toArray();
 
+
+
         $fieldDefs = $entity->getFields();
         $fieldList = array_keys($fieldDefs);
 
@@ -109,8 +111,7 @@ class Htmlizer
                 }
             }
 
-
-            if (!empty($data[$field])) {
+            if (array_key_exists($field, $data)) {
                $data[$field] = $this->format($data[$field]);
             }
         }
