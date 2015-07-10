@@ -1,3 +1,21 @@
 {
-   "controller": "controllers/record"
+    "controller": "controllers/record",
+    "formDependency": {
+        "printFooter": {
+            "map": {
+                "true" : [
+                    {
+                        "action": "show",
+                        "fields": ["footer", "footerPosition"]
+                    }
+                ]
+            },
+            "default": [
+                {
+                    "action": "hide",
+                    "fields": ["footer", "footerPosition"]
+                }
+            ]
+        }
+    }
 }

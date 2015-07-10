@@ -14,7 +14,8 @@
         },
         "footer": {
             "type": "text",
-            "view": "Fields.Wysiwyg"
+            "view": "Fields.Wysiwyg",
+            "tooltip": true
         },
         "entityType": {
             "type": "enum",
@@ -37,6 +38,13 @@
         "bottomMargin": {
             "type": "float",
             "default": 20
+        },
+        "printFooter": {
+            "type": "bool"
+        },
+        "footerPosition": {
+            "type": "float",
+            "default": 15
         },
         "teams": {
             "type": "linkMultiple"

@@ -39,10 +39,11 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
             this.toolbar = this.params.toolbar || [
                 ['style', ['style']],
                 ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
-                ['table', ['table', 'link', 'picture']],
+                ['table', ['table', 'link', 'picture', 'hr']],
                 ['misc',['codeview']]
             ];
 

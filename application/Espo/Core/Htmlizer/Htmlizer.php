@@ -129,6 +129,11 @@ class Htmlizer
 
         $data = $this->getDataFromEntity($entity);
 
-        return $renderer($data);
+        $html = $renderer($data);
+
+        $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
+        $html = preg_replace('/\?entryPoint=attachment\&id=(.*)/', 'data/upload/$1', $html);
+
+        return $html;
     }
 }

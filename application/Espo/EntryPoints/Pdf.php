@@ -63,11 +63,18 @@ class Pdf extends \Espo\Core\EntryPoints\Base
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
         $pdf->setPrintHeader(false);
-        //$pdf->setPrintFooter(false);
+
         $pdf->setAutoPageBreak(true, $template->get('bottomMargin'));
         $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
 
-        $htmlFooter = $htmlizer->render($entity, $template->get('footer'));
+
+        if ($template->get('printFooter')) {
+            $htmlFooter = $htmlizer->render($entity, $template->get('footer'));
+            $pdf->setFooterPosition($template->get('footerPosition'));
+            $pdf->setFooterHtml($htmlFooter);
+        } else {
+            $pdf->setPrintFooter(false);
+        }
 
         $pdf->addPage();
 
