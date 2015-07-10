@@ -1,5 +1,8 @@
 {
     "controller": "controllers/record",
+    "recordViews": {
+        "detail": "Template.Record.Detail"
+    },
     "formDependency": {
         "printFooter": {
             "map": {

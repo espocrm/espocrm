@@ -37,7 +37,7 @@
         },
         "bottomMargin": {
             "type": "float",
-            "default": 20
+            "default": 25
         },
         "printFooter": {
             "type": "bool"

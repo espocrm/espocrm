@@ -23,13 +23,11 @@ Espo.define('Crm:Views.Meeting.Record.Detail', 'Views.Record.Detail', function (
 
     return Dep.extend({
 
+        duplicateAction: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
             if (this.getAcl().checkModel(this.model, 'edit')) {
-                this.dropdownItemList.push({
-                    'label': 'Duplicate',
-                    'name': 'Duplicate'
-                });
                 if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
                     this.dropdownItemList.push({
                         'label': 'Set Held',

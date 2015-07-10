@@ -92,6 +92,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
         dependencyDefs: {},
 
+        duplicateAction: false,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -409,6 +411,15 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this._initDependancy();
+
+            if (this.duplicateAction) {
+                if (this.getAcl().checkModel(this.model, 'edit')) {
+                    this.dropdownItemList.push({
+                        'label': 'Duplicate',
+                        'name': 'Duplicate'
+                    });
+                }
+            }
         },
 
 
