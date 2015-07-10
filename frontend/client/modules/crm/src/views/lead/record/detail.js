@@ -28,18 +28,6 @@ Espo.define('Crm:Views.Lead.Record.Detail', 'Views.Record.Detail', function (Dep
 
         setup: function () {
             Dep.prototype.setup.call(this);
-        },
-
-        actionPrintPdf: function () {
-            this.createView('pdfTemplate', 'Modals.SelectTemplate', {
-                entityType: this.model.name
-            }, function (view) {
-                view.render();
-
-                this.listenTo(view, 'select', function (model) {
-                    window.open('?entryPoint=pdf&entityType='+this.model.name+'&entityId='+this.model.id+'&templateId=' + model.id, '_blank');
-                }, this);
-            }.bind(this));
         }
 
     });
