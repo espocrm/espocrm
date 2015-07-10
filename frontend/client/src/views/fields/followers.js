@@ -38,6 +38,7 @@ Espo.define('Views.Fields.Followers', 'Views.Fields.LinkMultiple', function (Dep
                     if (!~idList.indexOf(this.getUser().id)) {
                         idList.unshift(this.getUser().id);
                         var nameMap = this.model.get(this.nameHashName) || {};
+
                         nameMap[this.getUser().id] = this.getUser().get('name');
                         this.model.trigger('change:' + this.idsName);
                         this.render();

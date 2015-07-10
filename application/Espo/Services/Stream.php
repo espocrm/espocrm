@@ -39,6 +39,7 @@ class Stream extends \Espo\Core\Services\Base
         'user',
         'metadata',
         'acl',
+        'aclManager',
         'container',
     );
 
@@ -56,6 +57,11 @@ class Stream extends \Espo\Core\Services\Base
     protected function getAcl()
     {
         return $this->injections['acl'];
+    }
+
+    protected function getAclManager()
+    {
+        return $this->injections['aclManager'];
     }
 
     protected function getMetadata()
@@ -805,12 +811,13 @@ class Stream extends \Espo\Core\Services\Base
 
         $data = array(
             'idList' => [],
-            'nameMap' => array()
+            'nameMap' => new \StdClass()
         );
 
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $data['idList'][] = $row['id'];
-            $data['nameMap'][$row['id']] = $row['name'];
+            $id = $row['id'];
+            $data['idList'][] = $id;
+            $data['nameMap']->$id = $row['name'];
         }
 
         return $data;

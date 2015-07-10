@@ -8,5 +8,5 @@
     "views": {
     	"list": "EmailAccount.List"
     },
-    "disableSearchPanel": true
+    "searchPanelDisabled": true
 }

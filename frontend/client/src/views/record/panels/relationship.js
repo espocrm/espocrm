@@ -60,7 +60,7 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                 if (this.getAcl().check(this.scope, 'edit') && !~['User', 'Team'].indexOf()) {
                     this.buttonList.push({
                         title: 'Create',
-                        action: 'createRelated',
+                        action: this.defs.createAction || 'createRelated',
                         link: this.link,
                         acl: 'edit',
                         aclScope: this.scope,
@@ -75,7 +75,7 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
             if (this.defs.select) {
                 this.actionList.unshift({
                     label: 'Select',
-                    action: 'selectRelated',
+                    action: this.defs.selectAction || 'selectRelated',
                     data: {
                         link: this.link,
                     }

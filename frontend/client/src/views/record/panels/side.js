@@ -34,6 +34,19 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
             };
         },
 
+        events: {
+            'click .action': function (e) {
+                $el = $(e.currentTarget);
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                if (typeof this[method] == 'function') {
+                    var data = $el.data();
+                    this[method](data);
+                    e.stopPropagation();
+                }
+            }
+        },
+
         mode: 'detail',
 
         actionList: null,

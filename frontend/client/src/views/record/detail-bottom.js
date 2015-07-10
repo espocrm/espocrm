@@ -51,6 +51,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                     var view = this.getView(panel);
                     if (view && typeof view[method] == 'function') {
                         view[method].call(view, d);
+                        e.stopPropagation();
                     }
                 }
             }

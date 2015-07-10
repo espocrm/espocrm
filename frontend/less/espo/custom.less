@@ -109,10 +109,14 @@ table.table > thead th {
 }
 
 
-.cell > label,
+.cell label,
 .filter label {
     color: @gray-light;
     font-weight: normal;
+}
+
+.cell > label,
+.filter label {
     margin-bottom: 2px;
 }
 
@@ -238,7 +242,7 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin-right: -5px !important;
 }
 
-.field .row > div {
+.field > .row > div {
     padding-left: 5px !important;
     padding-right: 5px !important;
     float: left;
@@ -288,6 +292,10 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .field .link-container .list-group-item.link-with-role a {
     margin-top: 6px;
+}
+
+.detail-field-container {
+    padding: 7px 0;
 }
 
 #login.panel > .panel-heading {
