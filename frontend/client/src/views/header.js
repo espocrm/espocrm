@@ -35,12 +35,19 @@ Espo.define('views/header', 'view', function (Dep) {
             return data;
         },
 
-        afterRender: function () {
+        setup: function () {
             if (this.model) {
                 this.listenTo(this.model, 'after:save', function () {
-                    this.render();
-                }.bind(this));
+                    if (this.isRendered()) {
+                        console.log(1);
+                        this.reRender();
+                    }
+                }, this);
             }
+        },
+
+        afterRender: function () {
+
         },
 
         getItems: function () {
