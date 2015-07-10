@@ -45,6 +45,8 @@ class Pdf extends \Espo\Core\EntryPoints\Base
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
         $template = $this->getEntityManager()->getEntity('Template', $templateId);
 
+        $this->getContainer()->get('serviceFactory')->create($entityType)->loadAdditionalFields($entity);
+
         if (!$entity || !$template) {
             throw new NotFound();
         }

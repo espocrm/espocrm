@@ -246,7 +246,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity)
     {
         $this->loadLinkMultipleFields($entity);
         $this->loadParentNameFields($entity);
