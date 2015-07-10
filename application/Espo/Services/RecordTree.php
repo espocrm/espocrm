@@ -117,5 +117,22 @@ class RecordTree extends Record
             }
         }
     }
+
+    public function updateEntity($id, $data)
+    {
+        if (!empty($data['parentId']) && $data['parentId'] == $id) {
+            throw new Forbidden();
+        }
+
+        return parent::updateEntity($id, $data);
+    }
+
+    public function linkEntity($id, $link, $foreignId)
+    {
+        if ($id == $foreignId ) {
+            throw new Forbidden();
+        }
+        return parent::linkEntity($id, $link, $foreignId);
+    }
 }
 
