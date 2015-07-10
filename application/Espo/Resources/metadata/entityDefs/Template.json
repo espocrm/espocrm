@@ -5,11 +5,11 @@
             "required": true
         },
         "body": {
-            "type": "text",
-            "view": "Fields.Wysiwyg"
+            "type": "text"
         },
         "header": {
-            "type": "text"
+            "type": "text",
+            "view": "Fields.Wysiwyg"
         },
         "footer": {
             "type": "text",
