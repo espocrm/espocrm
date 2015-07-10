@@ -26,7 +26,7 @@ use \Espo\ORM\Entity;
 
 class TargetList extends \Espo\Services\Record
 {
-    protected function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
         $this->loadEntryCountField($entity);

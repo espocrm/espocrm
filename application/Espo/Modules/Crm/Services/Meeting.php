@@ -99,7 +99,7 @@ class Meeting extends \Espo\Services\Record
         return true;
     }
 
-    protected function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
         $this->loadRemindersField($entity);

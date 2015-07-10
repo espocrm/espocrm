@@ -26,7 +26,7 @@ use \Espo\ORM\Entity;
 
 class Campaign extends \Espo\Services\Record
 {
-    protected function loadAdditionalFields($entity)
+    public function loadAdditionalFields($entity)
     {
         parent::loadAdditionalFields($entity);
 

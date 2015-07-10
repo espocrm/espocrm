@@ -226,7 +226,7 @@ class Email extends Record
         return $entity;
     }
 
-    protected function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
 

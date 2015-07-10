@@ -84,7 +84,7 @@ class Import extends \Espo\Services\Record
         return $this->injections['serviceFactory'];
     }
 
-    protected function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
 
