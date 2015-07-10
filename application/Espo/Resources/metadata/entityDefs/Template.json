@@ -9,8 +9,7 @@
             "view": "Fields.Wysiwyg"
         },
         "header": {
-            "type": "text",
-            "view": "Fields.Wysiwyg"
+            "type": "text"
         },
         "footer": {
             "type": "text",
