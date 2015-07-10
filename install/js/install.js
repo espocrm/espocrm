@@ -419,8 +419,8 @@ InstallScript.prototype.checkSett = function(opt) {
 					msg += self.getLang('MySQLVersion', 'messages').replace('{minVersion}', errors.MySQLVersion) + rowDelim;
 				}
 
-				if (typeof(errors.exts) !== 'undefined') {
-					var exts = errors.exts;
+				if (typeof(errors.phpRequires) !== 'undefined') {
+					var exts = errors.phpRequires;
 					var len = exts.length;
 					for (var index = 0; index < len; index++) {
 						var temp = self.getLang('The PHP extension was not found...', 'messages');
