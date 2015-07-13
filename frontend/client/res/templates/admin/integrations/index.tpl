@@ -3,8 +3,8 @@
 <div class="row">
     <div id="integrations-menu" class="col-sm-3">
     <ul class="list-group">
-    {{#each integrationList}}        
-        <li class="list-group-item"><a href="javascript:" class="integration-link" data-name="{{./this}}">{{./this}}</a></li>        
+    {{#each integrationList}}
+        <li class="list-group-item"><a href="javascript:" class="integration-link" data-name="{{./this}}">{{{translate ./this scope='Integration' category='titles'}}}</a></li>
     {{/each}}
     </ul>
     </div>
@@ -13,7 +13,7 @@
         <h4 id="integration-header" style="margin-top: 0px;"></h4>
         <div id="integration-content">
             {{{content}}}
-        </div>    
+        </div>
     </div>
 </div>
 
