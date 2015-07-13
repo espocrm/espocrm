@@ -87,7 +87,7 @@ class EmailTemplate extends Record
                 $entityList[$params['parentType']] = $parent;
                 $entityList['Parent'] = $parent;
 
-                if (empty($entityList['Person']) && ($entity instanceof Person)) {
+                if (empty($entityList['Person']) && ($parent instanceof Person)) {
                     $entityList['Person'] = $parent;
                 }
             }
