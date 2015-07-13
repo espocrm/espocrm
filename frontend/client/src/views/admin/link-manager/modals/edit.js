@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.LinkManager.Index'], function (Dep, Index) {
+Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin/link-manager/index', 'model'], function (Dep, Index, Model) {
 
     return Dep.extend({
 
@@ -61,7 +61,7 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.
 
             this.header = this.translate(header, 'labels', 'Admin');
 
-            var model = this.model = new Espo.Model();
+            var model = this.model = new Model();
             model.name = 'EntityManager';
 
             this.model.set('entity', scope);
@@ -212,15 +212,30 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.
             switch (linkType) {
                 case 'oneToMany':
                     linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
-                    link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign))
+                    link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign));
+                    if (entityForeign == this.scope) {
+
+                        if (linkForeign == Espo.Utils.lowerCaseFirst(this.scope)) {
+                            linkForeign = linkForeign + 'Parent';
+                        }
+                    }
                     break;
                 case 'manyToOne':
                     linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
                     link = Espo.Utils.lowerCaseFirst(entityForeign);
+                    if (entityForeign == this.scope) {
+                        if (link == Espo.Utils.lowerCaseFirst(this.scope)) {
+                            link = link + 'Parent';
+                        }
+                    }
                     break;
                 case 'manyToMany':
                     linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
                     link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign));
+                    if (link == linkForeign) {
+                        link = link + 'Right';
+                        linkForeign = linkForeign + 'Left';
+                    }
                     break;
             }
 
@@ -318,7 +333,7 @@ Espo.define('Views.Admin.LinkManager.Modals.Edit', ['Views.Modal', 'Views.Admin.
                 }),
                 error: function (x) {
                     if (x.status == 409) {
-                        Espo.Ui.error(this.translate('linkAlreadyExists', 'messages', 'EntityManager'));
+                        Espo.Ui.error(this.translate('linkConflict', 'messages', 'EntityManager'));
                         x.errorIsHandled = true;
                     }
                     this.$el.find('button[data-name="save"]').removeClass('disabled');

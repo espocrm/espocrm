@@ -278,6 +278,12 @@ class EntityManager
             throw new Conflict('Link ['.$entityForeign.'::'.$linkForeign.'] already exists.');
         }
 
+        if ($entity === $entityForeign) {
+            if ($link === ucfirst($entity) || $linkForeign === ucfirst($entity)) {
+                throw new Conflict();
+            }
+        }
+
         switch ($linkType) {
             case 'oneToMany':
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.field.' . $linkForeign)) {
