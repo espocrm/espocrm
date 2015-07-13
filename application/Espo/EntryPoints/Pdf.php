@@ -64,6 +64,7 @@ class Pdf extends \Espo\Core\EntryPoints\Base
         $htmlizer = new Htmlizer($this->getFileManager(), $this->getDateTime(), $this->getNumber());
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
+        $pdf->setFont('freesans', '', 12, '', true);
         $pdf->setPrintHeader(false);
 
         $pdf->setAutoPageBreak(true, $template->get('bottomMargin'));
