@@ -91,7 +91,7 @@ Espo.define('views/admin/integrations/index', 'view', function (Dep) {
                 $('#integration-header').html('');
                 return;
             }
-            $('#integration-header').show().html(this.integration);
+            $('#integration-header').show().html(this.translate(this.integration, 'titles', 'Integration'));
         },
 
         updatePageTitle: function () {
