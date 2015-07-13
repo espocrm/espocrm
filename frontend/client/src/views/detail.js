@@ -211,7 +211,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.notify('Loading...');
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
-            this.createView('quickCreate', 'Modals.Edit', {
+            this.createView('quickCreate', viewName, {
                 scope: scope,
                 relate: {
                     model: this.model,
