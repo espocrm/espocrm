@@ -11,11 +11,14 @@
         "source": "Fuente",
         "publishDate": "Publicar Fecha",
         "expirationDate": "Fecha de Expiración",
-        "description": "Descripción"
+        "description": "Descripción",
+        "folder": "Carpeta"
     },
     "links": {
         "accounts": "Cuentas",
-        "opportunities": "Oportunidades"
+        "opportunities": "Oportunidades",
+        "accounts": "Cuentas",
+        "folder": "Carpeta"
     },
     "options": {
         "status": {
