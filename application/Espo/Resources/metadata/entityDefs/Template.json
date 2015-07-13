@@ -5,7 +5,8 @@
             "required": true
         },
         "body": {
-            "type": "text"
+            "type": "text",
+            "view": "Fields.Wysiwyg"
         },
         "header": {
             "type": "text",
