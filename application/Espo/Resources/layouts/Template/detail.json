@@ -10,6 +10,7 @@
                     "name":"entityType"
                 }
             ],
+            [{"name":"variables","fullWidth":true,"customLabel":"","view": "Template.Fields.Variables"}],
             [{"name":"header","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
             [{"name":"topMargin"}, false],
