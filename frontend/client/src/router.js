@@ -39,9 +39,9 @@ Espo.define('router', [], function () {
 
         _last: null,
 
-        confirmLayout: false,
+        confirmLeaveOut: false,
 
-        confirmLeaveOutMessage: 'Are you sure?', 
+        confirmLeaveOutMessage: 'Are you sure?',
 
         initialize: function () {
             this.history = [];
@@ -51,9 +51,9 @@ Espo.define('router', [], function () {
         },
 
         execute: function (callback, args, name) {
-            if (this.confirmLayout) {
+            if (this.confirmLeaveOut) {
                 if (confirm(this.confirmLeaveOutMessage)) {
-                    this.confirmLayout = false;
+                    this.confirmLeaveOut = false;
                     Backbone.Router.prototype.execute.call(this, callback, args, name);
                 } else {
                     this.navigateBack({trigger: false});

@@ -17,13 +17,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
+Espo.define('crm:views/lead/convert', 'View', function (Dep) {
 
     return Dep.extend({
 
-        template: 'crm:lead.convert',
+        template: 'crm:lead/convert',
 
         data: function () {
             return {
@@ -42,7 +42,7 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
                     $div.addClass('hide');
                 }
             },
-            'click button[data-action="convert"]': function (e) {            
+            'click button[data-action="convert"]': function (e) {
                 this.convert();
             },
             'click button[data-action="cancel"]': function (e) {
@@ -53,7 +53,7 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
         setup: function () {
             this.wait(true);
             this.id = this.options.id;
-            
+
             this.notify('Loading...');
 
             this.getModelFactory().create('Lead', function (model) {
@@ -76,20 +76,20 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
                 }
             }
             var i = 0;
-            
-            var attributeList = this.getFieldManager().getEntityAttributes(this.model.name);            
-            var ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];            
-            
+
+            var attributeList = this.getFieldManager().getEntityAttributes(this.model.name);
+            var ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
+
             scopes.forEach(function (scope) {
                 this.getModelFactory().create(scope, function (model) {
                     model.populateDefaults();
-                    
+
                     this.getFieldManager().getEntityAttributes(model.name).forEach(function (attr) {
                         if (~attributeList.indexOf(attr) && !~ignoreAttributeList.indexOf(attr)) {
                             model.set(attr, this.model.get(attr), {silent: true}); 
                         }
                     }, this);
-                                    
+
                     for (var field in this.model.defs.convertFields[scope]) {
                         var leadField = this.model.defs.convertFields[scope][field];
                         var leadAttrs = this.getFieldManager().getAttributes(this.model.getFieldParam(leadField, 'type'), leadField);
@@ -118,8 +118,8 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
             }, this);
         },
 
-        convert: function () {            
-            
+        convert: function () {
+
             var scopes = [];
 
             this.scopes.forEach(function (scope) {
@@ -134,15 +134,17 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
                 return;
             }
 
+            this.getRouter().confirmLeaveOut = false;
+
             var notValid = false;
             scopes.forEach(function (scope) {
                 var editView = this.getView(scope);
                 editView.model.set(editView.fetch());
                 notValid = editView.validate() || notValid;
             }.bind(this));
-            
+
             var self = this;
-            
+
             var data = {
                 id: self.model.id,
                 records: {}
@@ -150,7 +152,7 @@ Espo.define('Crm:Views.Lead.Convert', 'View', function (Dep) {
             scopes.forEach(function (scope) {
                 data.records[scope] = self.getView(scope).model.attributes;
             });
-            
+
 
             if (!notValid) {
                 this.$el.find('[data-action="convert"]').addClass('disabled');

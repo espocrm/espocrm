@@ -109,8 +109,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             }
         },
 
-        setConfirmLayout: function (value) {
-            this.getRouter().confirmLayout = value;
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
         },
 
         actionEdit: function () {
@@ -257,7 +257,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         cancelEdit: function () {
             this.model.set(this.attributes);
             this.setDetailMode();
-            this.setConfirmLayout(false);
+            this.setConfirmLeaveOut(false);
         },
 
         delete: function () {
@@ -346,7 +346,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             }
 
             this.on('remove', function () {
-                this.setConfirmLayout(false);
+                this.setConfirmLeaveOut(false);
             }, this);
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
@@ -405,7 +405,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
             this.listenTo(this.model, 'change', function () {
                 if (this.mode == 'edit') {
-                    this.setConfirmLayout(true);
+                    this.setConfirmLeaveOut(true);
                 }
             }, this);
 
@@ -430,7 +430,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.notify('Saved', 'success');
             }
             this.enableButtons();
-            this.setConfirmLayout(false);
+            this.setConfirmLeaveOut(false);
         },
 
         beforeSave: function () {

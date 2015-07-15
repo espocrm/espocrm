@@ -56,7 +56,7 @@ Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
         },
 
         actionCancel: function () {
-            this.setConfirmLayout(false);
+            this.setConfirmLeaveOut(false);
             this.cancel();
         },
 
