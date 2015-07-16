@@ -91,8 +91,6 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
         }
 
         return $reminders;
-
-        $entity->set('reminders', $reminders);
     }
 
     protected function afterSave(Entity $entity, array $options)
