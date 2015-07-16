@@ -27,9 +27,9 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
         template: 'crm:record.panels.tasks',
 
-        tabList: ['Actual', 'Completed'],
+        tabList: ['actual', 'completed'],
 
-        defaultTab: 'Actual',
+        defaultTab: 'actual',
 
         sortBy: 'createdAt',
 
