@@ -33,7 +33,31 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             this.listenTo(this.model, 'change:' + this.name, function () {
                 this.initAddressList();
             }, this);
+            this.listenTo(this.model, 'change:idHash', function () {
+                this.initAddressList();
+            }, this);
+        },
 
+        events: {
+            'click [data-action="createContact"]': function () {
+                this.createPerson('Contact');
+            },
+            'click [data-action="createLead"]': function () {
+                this.createPerson('Lead');
+            },
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+
+            var address = this.model.get(this.name);
+            if (!(address in this.idHash)) {
+                if (this.getAcl().check('Contact', 'edit')) {
+                    data.showCreate = true;
+                }
+            }
+
+            return data;
         },
 
         initAddressList: function () {
@@ -68,15 +92,15 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
-            var addressHtml = '<span class="">' + address + '</span>';
+            var addressHtml = '<span>' + address + '</span>';
 
             var lineHtml;
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else if (name) {
-                lineHtml = '<div>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
+                lineHtml = '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
             } else {
-                lineHtml = '<div>' + addressHtml + '</div>';
+                lineHtml = addressHtml;
             }
             return lineHtml;
         },
@@ -91,7 +115,60 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                 return name;
             }
             return null;
-        }
+        },
+
+        createPerson: function (scope) {
+            var address = this.model.get(this.name);
+
+            var fromString = this.model.get('fromString') || this.model.get('fromName');
+            var name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
+
+            var attributes = {
+                emailAddress: address
+            };
+
+            if (this.model.get('accountId') && scope == 'Contact') {
+                attributes.accountId = this.model.get('accountId');
+                attributes.accountName = this.model.get('accountName');
+            }
+
+            if (name) {
+                var firstName = name.split(' ').slice(0, -1).join(' ');
+                var lastName = name.split(' ').slice(-1).join(' ');
+                attributes.firstName = firstName;
+                attributes.lastName = lastName;
+            }
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+
+            this.createView('create', viewName, {
+                scope: scope,
+                attributes: attributes
+            }, function (view) {
+                view.render();
+                this.listenTo(view, 'after:save', function (model) {
+                    var nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
+                    var typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
+                    var idHash = Espo.Utils.clone(this.model.get('idHash') || {});
+
+                    idHash[address] = model.id;
+                    nameHash[address] = model.get('name');
+                    typeHash[address] = scope;
+
+                    this.idHash = idHash;
+                    this.nameHash = nameHash;
+                    this.typeHash = typeHash;
+
+                    setTimeout(function () {
+                        this.model.set({
+                            nameHash: nameHash,
+                            idHash: idHash,
+                            typeHash: typeHash
+                        });
+                    }.bind(this), 50);
+                }, this);
+            }.bind(this));
+        },
 
     });
 
