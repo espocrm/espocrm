@@ -39,7 +39,6 @@ Espo.define('views/header', 'view', function (Dep) {
             if (this.model) {
                 this.listenTo(this.model, 'after:save', function () {
                     if (this.isRendered()) {
-                        console.log(1);
                         this.reRender();
                     }
                 }, this);
