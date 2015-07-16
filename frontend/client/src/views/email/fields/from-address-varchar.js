@@ -39,19 +39,17 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
         },
 
         events: {
-            'click [data-action="createContact"]': function () {
-                this.createPerson('Contact');
-            },
-            'click [data-action="createLead"]': function () {
-                this.createPerson('Lead');
-            },
+            'click [data-action="createContact"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                this.createPerson('Contact', address);
+            }
         },
 
         data: function () {
             var data = Dep.prototype.data.call(this);
 
             var address = this.model.get(this.name);
-            if (!(address in this.idHash)) {
+            if (!(address in this.idHash) && this.model.get('parentId')) {
                 if (this.getAcl().check('Contact', 'edit')) {
                     data.showCreate = true;
                 }
@@ -102,7 +100,27 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             } else {
                 lineHtml = addressHtml;
             }
+            if (!id) {
+                if (this.model.get('parentId')) {
+                    if (this.getAcl().check('Contact', 'edit')) {
+                        lineHtml += this.getCreateHtml(address);
+                    }
+                }
+            }
+            lineHtml = '<div>' + lineHtml + '</div>';
             return lineHtml;
+        },
+
+        getCreateHtml: function (address) {
+            var html = '<span class="dorpdown email-address-create-dropdown">' +
+                '<button class="dropdown-toggle btn btn-link btn-sm" data-toggle="dropdown">' +
+                    '<span class="caret text-muted"></span>' +
+                '</button>' +
+                '<ul class="dropdown-menu" role="menu">' +
+                    '<li><a href="javascript:" data-action="createContact" data-address="'+address+'">'+this.translate('Create Contact', 'labels', 'Email')+'</a></li>' +
+                '</ul>' +
+            '</span>';
+            return html;
         },
 
         parseNameFromStringAddress: function (value) {
@@ -117,11 +135,17 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             return null;
         },
 
-        createPerson: function (scope) {
-            var address = this.model.get(this.name);
+        createPerson: function (scope, address) {
+            var address = address;
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
-            var name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
+            var name = this.nameHash[address] || null;
+
+            if (!name) {
+                if (this.name == 'from') {
+                    name = this.parseNameFromStringAddress(fromString) || null;
+                }
+            }
 
             var attributes = {
                 emailAddress: address

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('views/email/fields/email-address-varchar', 'views/fields/varchar', function (Dep) {
+Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar', 'views/email/fields/from-address-varchar'], function (Dep, From) {
 
     return Dep.extend({
 
@@ -38,7 +38,6 @@ Espo.define('views/email/fields/email-address-varchar', 'views/fields/varchar', 
                     if (~address.indexOf('@')) {
                         this.addAddress(address, '');
                         $input.val('');
-
                     }
 
                 }
@@ -51,6 +50,14 @@ Espo.define('views/email/fields/email-address-varchar', 'views/fields/varchar', 
                     $input.val('');
                 }
             },
+            'click [data-action="createContact"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.createPerson.call(this, 'Contact', address);
+            }
+        },
+
+        parseNameFromStringAddress: function (s) {
+            return From.prototype.parseNameFromStringAddress.call(this, s);
         },
 
         getAttributeList: function () {
@@ -214,8 +221,16 @@ Espo.define('views/email/fields/email-address-varchar', 'views/fields/varchar', 
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
-                lineHtml = '<div>' + addressHtml + '</div>';
+                lineHtml = addressHtml;
             }
+            if (!id) {
+                if (this.model.get('parentId')) {
+                    if (this.getAcl().check('Contact', 'edit')) {
+                        lineHtml += From.prototype.getCreateHtml.call(this, address);
+                    }
+                }
+            }
+            lineHtml = '<div>' + lineHtml + '</div>';
             return lineHtml;
         },
 
