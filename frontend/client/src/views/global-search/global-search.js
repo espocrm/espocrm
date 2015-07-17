@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
 
     return Dep.extend({
 
         template: 'global-search.global-search',
-        
+
         events: {
             'keypress #global-search-input': function (e) {
                 if (e.keyCode == 13) {
@@ -34,10 +34,13 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
             'click [data-action="search"]': function () {
                 this.runSearch();
             },
+            'focus #global-search-input': function (e) {
+                e.currentTarget.select();
+            }
         },
-        
+
         setup: function () {
-            
+
             this.wait(true);
             this.getCollectionFactory().create('GlobalSearch', function (collection) {
                 this.collection = collection;

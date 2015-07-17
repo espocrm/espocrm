@@ -134,6 +134,9 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
                     this.search();
                 }
             },
+            'focus input[name="textFilter"]': function (e) {
+                e.currentTarget.select();
+            },
             'click button[data-action="search"]': function (e) {
                 this.search();
             },
