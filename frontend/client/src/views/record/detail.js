@@ -639,7 +639,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                         inlineEditDisabled: this.inlineEditDisabled
                     }, function (view) {
                         view.render();
-                    }, false);
+                    }, this, false);
                 }, this);
 
             }
