@@ -223,10 +223,8 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 lineHtml = addressHtml;
             }
             if (!id) {
-                if (this.model.get('parentId')) {
-                    if (this.getAcl().check('Contact', 'edit')) {
-                        lineHtml += From.prototype.getCreateHtml.call(this, address);
-                    }
+                if (this.getAcl().check('Contact', 'edit')) {
+                    lineHtml += From.prototype.getCreateHtml.call(this, address);
                 }
             }
             lineHtml = '<div>' + lineHtml + '</div>';

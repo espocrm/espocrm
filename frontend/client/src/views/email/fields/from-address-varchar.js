@@ -98,10 +98,8 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                 lineHtml = addressHtml;
             }
             if (!id) {
-                if (this.model.get('parentId')) {
-                    if (this.getAcl().check('Contact', 'edit')) {
-                        lineHtml += this.getCreateHtml(address);
-                    }
+                if (this.getAcl().check('Contact', 'edit')) {
+                    lineHtml += this.getCreateHtml(address);
                 }
             }
             lineHtml = '<div>' + lineHtml + '</div>';
