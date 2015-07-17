@@ -65,6 +65,7 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             list.push('nameHash');
             list.push('typeHash');
             list.push('idHash');
+            list.push('accountId');
             list.push(this.name + 'EmailAddressesNames');
             list.push(this.name + 'EmailAddressesIds');
             return list;
@@ -73,15 +74,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.nameHash = {};
-
-            this.initAddressList();
-            this.listenTo(this.model, 'change:' + this.name, function (model) {
+            this.on('render', function () {
                 this.initAddressList();
             }, this);
         },
 
         initAddressList: function () {
+            this.nameHash = {};
             this.addressList = (this.model.get(this.name) || '').split(';').filter(function (item) {
                 return item != '';
             }).map(function (item) {

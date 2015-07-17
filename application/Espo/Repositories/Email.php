@@ -161,13 +161,17 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         if (!empty($parentId) || !empty($parentType)) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!empty($parent)) {
-                if ($parent->getEntityName() == 'Account') {
+                if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
                 } else if ($parent->has('accountId')) {
                     $accountId = $parent->get('accountId');
                 }
                 if (!empty($accountId)) {
-                    $entity->set('accountId', $accountId);
+                    $account = $this->getEntityManager()->getEntity('Account', $accountId);
+                    if ($account) {
+                        $entity->set('accountId', $accountId);
+                        $entity->set('accountName', $account->get('name'));
+                    }
                 }
             }
         }
