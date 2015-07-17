@@ -61,16 +61,16 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
                 this.search(text);
             }
         },
-        
+
         search: function (text) {
             this.collection.url = this.collection.urlRoot =  'GlobalSearch/' + text;
-            
+
             this.showPanel();
         },
-        
+
         showPanel: function () {
             this.closePanel();
-            
+
             var $container = $('<div>').attr('id', 'global-search-panel').css({
                 'position': 'absolute',
                 'width': '500px',
@@ -78,16 +78,16 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
                 'right': 0,
                 'left': 'auto'
             });
-                        
+
             $container.appendTo(this.$el.find('.global-search-panel-container'));
-            
+
             this.createView('panel', 'GlobalSearch.Panel', {
                 el: '#global-search-panel',
                 collection: this.collection,
             }, function (view) {
                 view.render();
             }.bind(this));
-            
+
             $document = $(document);
             $document.on('mouseup.global-search', function (e) {
                 if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
@@ -101,10 +101,10 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
                    }
             }.bind(this));
         },
-        
+
         closePanel: function () {
             $container = $('#global-search-panel');
-            
+
             $('#global-search-panel').remove();
             $document = $(document);
             if (this.hasView('panel')) {
@@ -113,8 +113,8 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
              $document.off('mouseup.global-search');
                $container.remove();
         },
-        
+
     });
-    
+
 });
 
