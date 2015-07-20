@@ -218,11 +218,11 @@
         "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}"
     },
     "lists": {
-        "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        "dayNamesMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+        "monthNames": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "ноябрь", "Декабрь"],
+        "monthNamesShort": ["Янв", "Февр", "Март", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Нояб", "Дек"],
+        "dayNames": ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+        "dayNamesShort": ["Вскр", "Пнд", "Вт", "Ср", "Чтв", "Птн", "Сб"],
+        "dayNamesMin": ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
     },
     "options": {
         "salutationName": {
