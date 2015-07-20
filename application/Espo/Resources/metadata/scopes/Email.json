@@ -4,5 +4,6 @@
     "tab": true,
     "acl": true,
     "notifications": true,
-    "object": true
+    "object": true,
+    "customizable": true
 }

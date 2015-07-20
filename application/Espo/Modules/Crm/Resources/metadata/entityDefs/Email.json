@@ -3,15 +3,15 @@
         "account": {
             "type": "link",
             "disabled": true
+        },
+        "parent": {
+            "entityList": ["Account", "Lead", "Opportunity", "Case"]
         }
     },
     "links": {
         "account": {
             "type": "belongsTo",
             "entity": "Account"
-        },
-        "parent": {
-            "entityList": ["Account", "Lead", "Opportunity", "Case"]
         }
     }
 }

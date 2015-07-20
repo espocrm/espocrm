@@ -53,7 +53,8 @@
             "type": "text"
         },
         "parent": {
-            "type": "linkParent"
+            "type": "linkParent",
+            "entityList": ["Account", "Contact", "Lead", "Opportunity", "Case"]
         },
         "account": {
             "type": "link",
@@ -108,7 +109,6 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entityList": ["Account", "Contact", "Lead", "Opportunity", "Case"],
             "foreign": "tasks"
         },
         "account": {

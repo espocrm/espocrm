@@ -46,7 +46,8 @@
             "type": "text"
         },
         "parent": {
-            "type": "linkParent"
+            "type": "linkParent",
+            "entityList": ["Account", "Lead", "Opportunity", "Case"]
         },
         "account": {
             "type": "link",
@@ -170,7 +171,6 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entityList": ["Account", "Lead", "Opportunity", "Case"],
             "foreign": "calls"
         }
     },

@@ -71,6 +71,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             if (!this.isNew) {
                 this.model.id = this.field;
+                this.model.scope = this.scope;
                 this.model.set('name', this.field);
                 this.model.set('label', this.getLanguage().translate(this.field, 'fields', this.scope));
             } else {
