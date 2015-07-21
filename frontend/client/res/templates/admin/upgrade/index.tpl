@@ -17,7 +17,7 @@
     <div class="panel-body">
 
         <p class="text-muted">
-            {{{translate 'downloadUpgradePackage' scope='Admin' category="messages"}}}
+            {{{downloadMsg}}}
         </p>
         <div>
             <input type="file" name="package" accept="application/zip">

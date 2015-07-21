@@ -114,7 +114,7 @@
         "userHasNoEmailAddress": "Користувач не має адреси електронної пошти.",
         "selectEntityType": "Оберіть тип сутности у лівому меню.",
         "selectUpgradePackage": "Оберіть пакет оновлення",
-        "downloadUpgradePackage": "Завантажити необхідні оновлення <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">тут</a>.",
+        "downloadUpgradePackage": "Завантажити необхідні оновлення <a href=\"{url}\">тут</a>.",
         "selectLayout": "Оберіть потрібний макет у лівому меню та змінюйте його.",
         "selectExtensionPackage": "Оберіть пакет розширення",
         "extensionInstalled": "Розширення {name} {version} установлено.",

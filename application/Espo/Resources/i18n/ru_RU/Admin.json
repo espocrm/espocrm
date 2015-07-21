@@ -107,7 +107,7 @@
         "userHasNoEmailAddress": "User has not email address.",
         "selectEntityType": "Выберите тип сущности в меню слева.",
         "selectUpgradePackage": "Выберите пакет обновления",
-        "downloadUpgradePackage": "Скачать необходимые обновления <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\"> </a>.",
+        "downloadUpgradePackage": "Скачать необходимые обновления <a href=\"{url}\"> </a>.",
         "selectLayout": "Select needed layout in the left menu and edit it.",
         "selectExtensionPackage": "Выберите пакет расширения",
         "extensionInstalled": "Расширение {name} {version} установлено.",

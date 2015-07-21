@@ -30,7 +30,8 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
         data: function () {
             return {
                 versionMsg: this.translate('Current version') + ': ' + this.getConfig().get('version'),
-                backupsMsg: this.translate('upgradeBackup', 'messages', 'Admin')
+                backupsMsg: this.translate('upgradeBackup', 'messages', 'Admin'),
+                downloadMsg: this.translate('downloadUpgradePackage', 'messages', 'Admin').replace('{url}', 'http://www.espocrm.com/download/upgrades')
             };
         },
 

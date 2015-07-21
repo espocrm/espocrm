@@ -112,7 +112,7 @@
         "userHasNoEmailAddress": "L'utilisateur n'a pas d'adresse email.",
         "selectEntityType": "Sélectionner le type d'entité dans le menu de gauche.",
         "selectUpgradePackage": "Sélectionner le pack de mise à jour",
-        "downloadUpgradePackage": "Téléchargement nécessaire des packs de mise à jour <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">ici</a>.",
+        "downloadUpgradePackage": "Téléchargement nécessaire des packs de mise à jour <a href=\"{url}\">ici</a>.",
         "selectLayout": "Sélectionnez le modèle dans le menu de gauche et modifiez-le.",
         "selectExtensionPackage": "Sélectionner un pack d'extension",
         "extensionInstalled": "L'extension {name} {version} a été installé.",

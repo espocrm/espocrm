@@ -110,7 +110,7 @@
         "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
         "selectEntityType": "Modul\/Entität links auswählen",
         "selectUpgradePackage": "Aktualisierungspaket auswählen",
-        "downloadUpgradePackage": "Benötigte Aktualisierungs Paket(e) <a href=\"https:\/\/sourceforge.net\/projects\/espocrm\/files\/Upgrades\/\">hier<\/a> herunterladen.",
+        "downloadUpgradePackage": "Benötigte Aktualisierungs Paket(e) <a href=\"{url}\">hier<\/a> herunterladen.",
         "selectLayout": "Layout zum Editieren links auswählen",
         "selectExtensionPackage": "Erweiterungspaket auswählen",
         "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",

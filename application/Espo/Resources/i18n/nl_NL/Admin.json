@@ -106,7 +106,7 @@
         "userHasNoEmailAddress": "Gebruiker heeft geen emailadres.",
         "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
         "selectUpgradePackage": "Selecteer het upgradebestand",
-        "downloadUpgradePackage": "Download benodigde upgrade bestanden <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">hier</a>.",
+        "downloadUpgradePackage": "Download benodigde upgrade bestanden <a href=\"{url}\">hier</a>.",
         "selectLayout": "Selecteer de layout in het linker menu en pas deze aan.",
         "selectExtensionPackage": "Selecteer extensie bestand",
         "extensionInstalled": "Extensie {name} {version} is geinstalleerd.",

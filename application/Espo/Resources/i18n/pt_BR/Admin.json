@@ -111,7 +111,7 @@
     "userHasNoEmailAddress": "Usuário não possui endereço de e-mail.",
     "selectEntityType": "Escolha o tipo de entidade no menu a esquerda.",
     "selectUpgradePackage": "Selecione o pacote de atualização",
-    "downloadUpgradePackage": "Download do(s) pacote(s) de atualização <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">aqui</a>.",
+    "downloadUpgradePackage": "Download do(s) pacote(s) de atualização <a href=\"{url}\">aqui</a>.",
     "selectLayout": "Selecione o layout necessário no meu a esquerda e edite ele.",
     "selectExtensionPackage": "Selecione o pacote de extensão",
     "extensionInstalled": "A extensão {name} {version} foi instalada.",

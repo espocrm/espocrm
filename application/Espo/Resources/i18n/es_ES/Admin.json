@@ -96,7 +96,7 @@
         "min": "Mínimo",
         "max": "Máximo",
         "translation": "Traducción",
-        "previewSize": "Tamaño de vista previa"                
+        "previewSize": "Tamaño de vista previa"
     },
     "messages": {
         "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Tomará algún tiempo.",
@@ -106,7 +106,7 @@
         "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
         "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
         "selectUpgradePackage": "Seleccione Actualizar Paquete",
-        "downloadUpgradePackage": "La descarga necesita paquete(s) actualizados de <a href=\"https://sourceforge.net/projects/espocrm/files/Upgrades/\">acá</a>.",
+        "downloadUpgradePackage": "La descarga necesita paquete(s) actualizados de <a href=\"{url}\">acá</a>.",
         "selectLayout": "Seleccione el diseño necesario en el menú de la izquierda y editarlo.",
         "selectExtensionPackage": "Seleccionar extensión del paquete",
         "extensionInstalled": "La Extensión {name} {version} ha sido instalada",
