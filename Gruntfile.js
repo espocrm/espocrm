@@ -21,7 +21,7 @@
 module.exports = function (grunt) {
 
     var jsFilesToMinify = [
-        'client/lib/jquery-2.0.2.min.js',
+        'client/lib/jquery-2.1.4.min.js',
         'client/lib/underscore-min.js',
         'client/lib/backbone-min.js',
         'client/lib/handlebars.js',
