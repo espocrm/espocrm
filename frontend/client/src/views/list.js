@@ -144,24 +144,35 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         loadList: function () {
             this.notify('Loading...');
+            if (this.collection.isFetched) {
+                this.createListRecordView(true);
+            } else {
+                this.listenToOnce(this.collection, 'sync', function () {
+                    this.createListRecordView();
+                }, this);
+                this.collection.fetch();
+            }
+        },
+
+        createListRecordView: function (fetch) {
             var listViewName = this.getRecordViewName();
-            this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', listViewName, {
-                    collection: this.collection,
-                    el: this.options.el + ' .list-container',
-                }, function (view) {
-                    view.render();
-                    view.notify(false);
-
-                    if (this.searchPanel) {
-                        this.listenTo(this.getView('list'), 'sort', function (obj) {
-                            this.getStorage().set('listSorting', this.collection.name, obj);
-                        }, this);
-                    }
-
-                }.bind(this));
-            }, this);
-            this.collection.fetch();
+            this.createView('list', listViewName, {
+                collection: this.collection,
+                el: this.options.el + ' .list-container',
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                if (this.searchPanel) {
+                    this.listenTo(view, 'sort', function (obj) {
+                        this.getStorage().set('listSorting', this.collection.name, obj);
+                    }, this);
+                }
+                if (fetch) {
+                    setTimeout(function () {
+                        this.collection.fetch();
+                    }.bind(this), 2000);
+                }
+            });
         },
 
         getHeader: function () {

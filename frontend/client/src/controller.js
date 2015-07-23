@@ -197,7 +197,7 @@ Espo.define('controller', [], function () {
          * Create main view in master and return it.
          * @param {String} view Name of view.
          * @param {Object} options Options for view.
-         * @return {Espo.View}
+         * @return {view}
          */
         main: function (view, options, callback) {
             var view = view || 'Base';

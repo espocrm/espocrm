@@ -39,6 +39,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         initialize: function () {
             this.viewMap = this.viewMap || {};
             this.viewsMap = this.viewsMap || {};
+            this.collectionMap = {};
         },
 
         getViewName: function (type) {
@@ -196,7 +197,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
         /**
          * Get collection for the current controller.
-         * @param {Espo.Collection}.
+         * @param {collection}.
          */
         getCollection: function (callback, context) {
             context = context || this;
@@ -205,14 +206,31 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 throw new Error('No collection for unnamed controller');
             }
             var collectionName = this.name;
+            /*if (collectionName in this.collectionMap) {
+                var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
+                var maxSize = this.getConfig().get('recordsPerPage');
+                if (collection.length > maxSize) {
+                    var k = collection.length - maxSize;
+                    while (k) {
+                        collection.pop();
+                        k--;
+                    }
+                }
+                callback.call(context, collection);
+                return;
+            }*/
             this.collectionFactory.create(collectionName, function (collection) {
+                this.collectionMap[collectionName] = collection;
+                this.listenTo(collection, 'sync', function () {
+                    collection.isFetched = true;
+                }, this);
                 callback.call(context, collection);
             }, context);
         },
 
         /**
          * Get model for the current controller.
-         * @param {Espo.Model}.
+         * @param {model}.
          */
         getModel: function (callback, context) {
             context = context || this;
