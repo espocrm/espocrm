@@ -13,7 +13,8 @@
         "reminders": "Erinnerungen",
         "account": "Firma"
     },
-    "links": {},
+    "links": {
+    },
     "options": {
         "status": {
             "Planned": "Geplant",
@@ -27,13 +28,17 @@
             "Tentative": "Mit Vorbehalt"
         }
     },
+    "massActions": {
+        "setHeld": "Auf gehalten setzen",
+        "setNotHeld": "Auf nicht gehalten setzen"
+    },
     "labels": {
         "Create Meeting": "Meeting erstellen",
         "Set Held": "Auf gehalten setzen",
         "Set Not Held": "Auf nicht gehalten setzen",
         "Send Invitations": "Einladungen versenden",
         "on time": "Aktuelle Zeit",
-        "before": "Bevor"
+        "before": "bevor"
     },
     "presetFilters": {
         "planned": "Geplant",

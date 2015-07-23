@@ -6,9 +6,10 @@
         "body": "Inhalt",
         "subject": "Betreff",
         "attachments": "Anhänge",
-        "insertField": ""
+        "insertField": "Project-Id-Version: 3.50\nPOT-Creation-Date: 2015-07-22\nPO-Revision-Date: \nLast-Translator: iscon\nLanguage-Team: iscon group <info@iscongroup.net>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: de_DE\n"
     },
-    "links": {},
+    "links": {
+    },
     "labels": {
         "Create EmailTemplate": "E-Mail Vorlage erstellen"
     }

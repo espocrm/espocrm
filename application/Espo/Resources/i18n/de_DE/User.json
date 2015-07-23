@@ -10,6 +10,7 @@
         "roles": "Rollen",
         "teamRole": "Position",
         "password": "Passwort",
+        "currentPassword": "Aktuelles Passwort",
         "passwordConfirm": "Passwort bestätigen",
         "newPassword": "Neues Passwort",
         "newPasswordConfirm": "Neues Passwort bestätigen",
@@ -49,11 +50,17 @@
         "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern Diese eindeutige URL ist nur für kurze Zeit gültig.",
         "passwordChanged": "Das Passwort wurde geändert",
         "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
-        "wrongUsernamePasword": "Falscher Benutzername\/Passwort",
+        "wrongUsernamePasword": "Falscher Benutzername/Passwort",
         "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
         "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
         "forbidden": "Verboten, bitte später nochmals versuchen",
         "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
         "passwordChangedByRequest": "Das Passwort wurde geändert"
+    },
+    "boolFilters": {
+        "onlyMyTeam": "Nur mein Team"
+    },
+    "presetFilters": {
+        "active": "Aktiv"
     }
 }

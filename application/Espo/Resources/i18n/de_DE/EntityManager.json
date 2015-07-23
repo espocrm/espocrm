@@ -11,27 +11,34 @@
         "stream": "Vorgänge",
         "label": "Bezeichnung",
         "linkType": "Relationstyp",
-        "entityForeign": "Fremdentität\/-modul",
-        "linkForeign": "Remdrelation\/-modul",
+        "entityForeign": "Fremdentität/-modul",
+        "linkForeign": "Remdrelation/-modul",
         "link": "Link",
-        "labelForeign": "Fremdbezeichnung"
+        "labelForeign": "Fremdbezeichnung",
+        "sortBy": "Standardsortierung (Feld)",
+        "sortDirection": "Standardsortierung (Richtung)"
     },
     "options": {
         "type": {
             "": "Kein(e)",
             "Base": "Basis",
-            "Person": "Person"
+            "Person": "Person",
+            "CategoryTree": "Kategoriebaum"
         },
         "linkType": {
             "manyToMany": "Viele zu Viele",
             "oneToMany": "Eins zu Viele",
-            "manyToOne": "Viele zu EIns",
+            "manyToOne": "Viele zu Eins",
             "parentToChildren": "Vater zu KInd",
             "childrenToParent": "Kind zu Vater"
+        },
+        "sortDirection": {
+            "asc": "Aufsteigend",
+            "desc": "Absteigend"
         }
     },
     "messages": {
         "entityCreated": "Entität wurde erstellt",
-        "linkAlreadyExists": "Konflikt: Relation besteht bereits"
+        "linkAlreadyExists": "Konflikt Name Relation"
     }
 }

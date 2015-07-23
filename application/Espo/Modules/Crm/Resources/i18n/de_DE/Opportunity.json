@@ -11,11 +11,13 @@
         "contacts": "Kontakte",
         "description": "Beschreibung",
         "amountConverted": "Betrag (konvertiert)",
-        "amountWeightedConverted": "Betrag gewichtet"
+        "amountWeightedConverted": "Betrag gewichtet",
+        "campaign": "Kampagne"
     },
     "links": {
         "contacts": "Kontakte",
-        "documents": "Dokumente"
+        "documents": "Dokumente",
+        "campaign": "Kampagne"
     },
     "options": {
         "stage": {
@@ -26,9 +28,9 @@
             "Id. Decision Makers": "Entscheider ident.",
             "Perception Analysis": "Analyse Sichtweise",
             "Proposal/Price Quote": "Preisangebot",
-            "Negotiation/Review": "Verhandlung\/Überarbeitung",
+            "Negotiation/Review": "Verhandlung/Überarbeitung",
             "Closed Won": "Gewonnen",
-            "Closed Lost": "Verloren" 
+            "Closed Lost": "Verloren"
         }
     },
     "labels": {

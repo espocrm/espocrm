@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Name",
+        "description": "Beschreibung",
+        "entryCount": "Eingabezähler",
+        "campaigns": "Kampagnen",
+        "endDate": "Enddatum",
+        "targetLists": "Kontaktlisten"
+    },
+    "links": {
+        "accounts": "Firmen",
+        "contacts": "Kontakte",
+        "leads": "Interessenten",
+        "campaigns": "Kampagnen"
+    },
+    "options": {
+        "type": {
+            "Email": "E-Mail",
+            "Web": "Web",
+            "Television": "Fernsehen",
+            "Radio": "Radio Button",
+            "Newsletter": "Newsletter"
+        }
+    },
+    "labels": {
+        "Create TargetList": "Kontaktliste erstellen",
+        "Opted Out": "Keine E-Mails"
+    }
+}

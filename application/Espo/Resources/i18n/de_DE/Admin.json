@@ -8,8 +8,8 @@
         "Data": "Daten",
         "Customization": "Anpassung",
         "Available Fields": "Verfügbare Felder",
-        "Layout": "Aktuelles Layout",
-        "Entity Manager": "Entitäts-\/Modulmanager",
+        "Layout": "Layout",
+        "Entity Manager": "Entitäts-/Modulmanager",
         "Add Panel": "Panel hinzufügen",
         "Add Field": "Feld hinzufügen",
         "Settings": "Einstellungen",
@@ -41,10 +41,11 @@
         "Ready for installation": "Bereit für Installation",
         "Uninstalling...": "Deinstalliere...",
         "Uninstalled": "Deinstalliert",
-        "Create Entity": "Entität\/Modul erstellen",
-        "Edit Entity": "Entität\/Modul bearbeiten",
+        "Create Entity": "Entität/Modul erstellen",
+        "Edit Entity": "Entität/Modul bearbeiten",
         "Create Link": "Relation erstellen",
-        "Edit Link": "Relation bearbeiten"
+        "Edit Link": "Relation bearbeiten",
+        "Notifications": "Benachrichtigungen"
     },
     "layouts": {
         "list": "Liste",
@@ -66,7 +67,8 @@
         "bool": "Bool",
         "currency": "Währung",
         "date": "Datum",
-        "datetime": "Datum\/Zeit",
+        "datetime": "Datum/Zeit",
+        "datetimeOptional": "Datum/Datum-Zeit",
         "email": "E-Mail",
         "enum": "Einfachauswahl",
         "enumInt": "Einfachauswahl Ganzzahlwerte",
@@ -100,17 +102,21 @@
         "min": "Min",
         "max": "Max",
         "translation": "Übersetzung",
-        "previewSize": "Vorschau Größe"
+        "previewSize": "Vorschau Größe",
+        "noEmptyString": "Keine leere Zeichenkette",
+        "defaultType": "Standardtyp",
+        "seeMoreDisabled": "Abschneiden des Texts verhindern",
+        "entityList": "Entity List"
     },
     "messages": {
-        "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}<\/strong> aktualisiert. Dies kann einige Zeit dauern.",
-        "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}<\/strong> aktualisiert. Laden Sie Sie Ihr Browser Fenster neu.",
+        "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
+        "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert.",
         "upgradeBackup": "Wir empfehlen, vor der Aktualisierung von EspoCRM das Programmverzeichnis sowie die Datenbank zu sichern.",
         "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen kann nicht gleich dem Dezimaltrennzeichen sein",
         "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
-        "selectEntityType": "Modul\/Entität links auswählen",
+        "selectEntityType": "Modul/Entität links auswählen",
         "selectUpgradePackage": "Aktualisierungspaket auswählen",
-        "downloadUpgradePackage": "Benötigte Aktualisierungs Paket(e) <a href=\"{url}\">hier<\/a> herunterladen.",
+        "downloadUpgradePackage": "Download upgrade package(s) <a href=\"{url}\">here</a>.",
         "selectLayout": "Layout zum Editieren links auswählen",
         "selectExtensionPackage": "Erweiterungspaket auswählen",
         "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
@@ -131,13 +137,14 @@
         "emailTemplates": "Vorlagen für ausgehende E-Mails.",
         "import": "Datenimport aus CSV Datei.",
         "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
-        "entityManager": "Module\/Entitäten selbst erstellen, existente bearbeiten, Felder und Relationen verwalten.",
+        "entityManager": "Module/Entitäten selbst erstellen, existente bearbeiten, Felder und Relationen verwalten.",
         "userInterface": "Benutzeroberfläche anpassen.",
         "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum,",
         "authentication": "Authentifizierungs Einstellungen.",
         "currency": "Währungseinstellungen und Kurse",
         "extensions": "Erweiterungen installieren oder deinstallieren",
-        "integrations": "Integration mit Drittanbietern "
+        "integrations": "Integration mit Drittanbietern ",
+        "notifications": "In-App und E-Mail Benachrichtigungseinstellungen."
     },
     "options": {
         "previewSize": {
@@ -146,10 +153,5 @@
             "medium": "Medium",
             "large": "Large"
         }
-    },
-    "layoutManagerDataAttributes": {
-        "width": "Breite (%)",
-        "link": "Link",
-        "notSortable": "Nicht sortierbar"
     }
 }

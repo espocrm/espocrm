@@ -14,7 +14,8 @@
         "reminders": "Erinnerungen",
         "account": "Firma"
     },
-    "links": {},
+    "links": {
+    },
     "options": {
         "status": {
             "Planned": "Geplant",
@@ -31,6 +32,10 @@
             "Declined": "Abgelehnt",
             "Tentative": "Mit Vorbehalt"
         }
+    },
+    "massActions": {
+        "setHeld": "Auf gehalten setzen",
+        "setNotHeld": "Auf nicht gehalten setzen"
     },
     "labels": {
         "Create Call": "Anruf erstellen",

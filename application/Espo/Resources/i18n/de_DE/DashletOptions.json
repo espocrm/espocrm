@@ -5,6 +5,14 @@
         "dateTo": "Bis Datum",
         "autorefreshInterval": "Aktualisierungsintervall",
         "displayRecords": "Sätze anzeigen",
-        "isDoubleHeight": "Zweifache Höhe"
+        "isDoubleHeight": "Zweifache Höhe",
+        "mode": "Modus"
+    },
+    "options": {
+    	"mode": {
+    		"agendaWeek": "Woche (Agenda)",
+    		"basicWeek": "Woche",
+    		"month": "Monat"
+    	}
     }
 }

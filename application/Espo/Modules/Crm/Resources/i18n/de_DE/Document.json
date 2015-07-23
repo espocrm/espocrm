@@ -11,11 +11,14 @@
         "source": "Quelle",
         "publishDate": "Veröffentlichungsdatum",
         "expirationDate": "Ablaufdatum",
-        "description": "Beschreibung"
+        "description": "Beschreibung",
+        "accounts": "Firmen",
+        "folder": "Ordner"
     },
     "links": {
         "accounts": "Firmen",
-        "opportunities": "Verkaufschancen"
+        "opportunities": "Verkaufschancen",
+        "folder": "Ordner"
     },
     "options": {
         "status": {
@@ -23,6 +26,13 @@
             "Draft": "Entwurf",
             "Expired": "Abgelaufen",
             "Canceled": "Storniert"
+        },
+        "type": {
+            "": "Kein(e)",
+            "Contract": "Vertrag",
+            "NDA": "NDA",
+            "EULA": "EULA",
+            "License Agreement": "Lizenz Vereinbarung"
         }
     },
     "presetFilters": {

@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "action": "Aktion",
+        "actionDate": "Datum",
+        "data": "Daten",
+        "campaign": "Kampagne",
+        "parent": "Zielkontakt",
+        "object": "Objekt",
+        "application": "Applikation"
+    },
+    "options": {
+    	"action": {
+            "Sent": "Gesendet",
+            "Opened": "Geöffnet",
+            "Opted Out": "Keine E-Mails",
+            "Bounced": "Nicht zustellbar",
+            "Clicked": "Geklickt",
+            "Lead Created": "Interessent erstellt"
+    	}
+    },
+    "labels": {
+        "All": "Alle"
+    }
+}
