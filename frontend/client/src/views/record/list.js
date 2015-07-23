@@ -725,6 +725,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
             this.rows.push(key);
             this.getInternalLayout(function (internalLayout) {
+                internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
 
                 this.createView(key, 'Base', {
@@ -760,7 +761,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 }
 
                 this.wait(true);
-                this.getInternalLayout(function (internalLayout) {
+                //this.getInternalLayout(function (internalLayout) {
                     var modelList = this.collection.models;
                     var count = modelList.length;
                     var built = 0;
@@ -773,7 +774,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                             }
                         }.bind(this));
                     }, this);
-                }.bind(this));
+                //}.bind(this)
 
                 if (this.pagination) {
                     this.createView('pagination', 'Record.ListPagination', {
