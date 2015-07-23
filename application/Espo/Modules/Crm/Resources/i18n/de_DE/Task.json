@@ -5,19 +5,27 @@
         "status": "Status",
         "dateStart": "Startdatum",
         "dateEnd": "Fällig am",
+        "dateStartDate": "Startdatum (ganztägig)",
+        "dateEndDate": "Enddatum (ganztägig)",
         "priority": "Priorität",
         "description": "Beschreibung",
-        "isOverdue": "Ist überfällig"
+        "isOverdue": "Ist überfällig",
+        "account": "Firma",
+        "dateCompleted": "Datum erledigt",
+        "attachments": "Anhänge"
     },
-    "links": {},
+    "links": {
+        "attachments": "Anhänge"
+    },
     "options": {
         "status": {
             "Not Started": "Nicht begonnen",
             "Started": "In Bearbeitung",
             "Completed": "Abgeschlossen",
-            "Canceled": "Storniert"
+            "Canceled": "Storniert",
+            "Deferred": "Zurückgestellt"
         },
-        "priority": {
+        "priority" : {
             "Low": "Niedrig",
             "Normal": "Normal",
             "High": "Hoch",

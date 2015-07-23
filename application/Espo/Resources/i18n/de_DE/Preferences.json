@@ -9,7 +9,6 @@
         "defaultCurrency": "Standardwährung",
         "currencyList": "Währungsliste",
         "language": "Sprache",
-        
         "smtpServer": "Server",
         "smtpPort": "Port",
         "smtpAuth": "Autorisierung",
@@ -18,12 +17,15 @@
         "emailAddress": "E-Mail",
         "smtpPassword": "Passwort",
         "smtpEmailAddress": "E-Mail Adresse",
-        
         "exportDelimiter": "Export Trennzeichen",
-        
-        "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten"
+        "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten",
+        "autoFollowEntityTypeList": "Autom. Beobachten",
+        "signature": "E-Mail Signatur",
+        "dashboardTabList": "Reiter Liste",
+        "defaultReminders": "Standarderinnerungen"
     },
-    "links": {},
+    "links": {
+    },
     "options": {
         "weekStart": {
             "0": "Sonntag",
@@ -32,5 +34,8 @@
     },
     "labels": {
         "Notifications": "Benachrichtigungen"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Einträge der gewählten Entität, sieht Neuigkeiten in den Vorgängen und erhält Benachrichtigungen."
     }
 }

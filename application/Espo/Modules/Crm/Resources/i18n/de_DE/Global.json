@@ -10,8 +10,10 @@
         "Call": "Anruf",
         "Task": "Aufgabe",
         "Case": "Fall",
-        "InboundEmail": "Eingehende E-Mails",
-        "Document": "Dokument"
+        "Document": "Dokument",
+        "DocumentFolder": "Dokumente Ordner",
+        "Campaign": "Kampagne",
+        "TargetList": "Kontaktliste"
     },
     "scopeNamesPlural": {
         "Account": "Firmen",
@@ -24,8 +26,10 @@
         "Call": "Anrufe",
         "Task": "Aufgaben",
         "Case": "Fälle",
-        "InboundEmail": "Eingehende E-Mails",
-        "Document": "Dokumente"
+        "Document": "Dokumente",
+        "DocumentFolder": "Dokumente Ordner",
+        "Campaign": "Kampagnen",
+        "TargetList": "Kontaktlisten"
     },
     "dashlets": {
         "Leads": "Meine Interessenten",
@@ -38,7 +42,7 @@
         "OpportunitiesByStage": "Verkaufschancen nach Verkaufsphase",
         "OpportunitiesByLeadSource": "Verkaufschancen nach Quelle",
         "SalesByMonth": "Umsätze nach Monat",
-        "SalesPipeline": "Verkaufspipeline"    
+        "SalesPipeline": "Verkaufspipeline"
     },
     "labels": {
         "Create InboundEmail": "Eingehende E-Mail erstellen",
@@ -58,17 +62,17 @@
         "billingAddressCity": "Ort",
         "billingAddressCountry": "Land",
         "billingAddressPostalCode": "PLZ",
-        "billingAddressState": "Bundesland\/Kanton",
+        "billingAddressState": "Bundesland/Kanton",
         "billingAddressStreet": "Straße",
         "addressCity": "Ort",
         "addressStreet": "Straße",
         "addressCountry": "Land",
-        "addressState": "Bundesland\/Kanton",
+        "addressState": "Bundesland/Kanton",
         "addressPostalCode": "PLZ",        
         "shippingAddressCity": "Ort (Lieferadresse)",
         "shippingAddressStreet": "Straße (Lieferadresse)",
         "shippingAddressCountry": "Land (Lieferadresse)",
-        "shippingAddressState": "Bundesland\/Kanton (Lieferadresse)",
+        "shippingAddressState": "Bundesland/Kanton (Lieferadresse)",
         "shippingAddressPostalCode": "PLZ (Lieferadresse)"
     },
     "links": {

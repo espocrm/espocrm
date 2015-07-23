@@ -1,11 +1,17 @@
 {
     "fields": {
         "name": "Name",
-        "roles": "Rollen"
+        "roles": "Rollen",
+        "assignmentPermission": "Zuweisungsberechtigungen",
+        "userPermission": "Benutzerberechtigung"
     },
     "links": {
         "users": "Benutzer",
         "teams": "Teams"
+    },
+    "tooltips": {
+        "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen\n\nNein - Kann nur sich selbst zuweisen",
+        "userPermission": "Erlaubt Benutzern die Aktivitäten anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen"
     },
     "labels": {
         "Access": "Zugang",
@@ -21,7 +27,8 @@
             "all": "Alle",
             "team": "Team",
             "own": "Eigene",
-            "no": "Nein"
+            "no": "Nein",
+            "not-set": "nicht gesetzt"
         }
     },
     "actions": {

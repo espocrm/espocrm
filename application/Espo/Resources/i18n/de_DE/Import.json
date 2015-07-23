@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Revert": "Zurückkehren",
+        "Revert Import": "Import rückgängig machen",
         "Return to Import": "Zurück zum Import",
         "Run Import": "Import durchführen",
         "Back": "Zurück",
@@ -10,9 +10,21 @@
         "Created": "Erstellt",
         "Updated": "Aktualisiert",
         "Result": "Resultat",
-        "Show records": "Datensätze zeigen"
+        "Show records": "Datensätze zeigen",
+        "Remove Duplicates": "Duplikate entfernen",
+        "importedCount": "Importiert (Anzahl)",
+        "duplicateCount": "Duplicate (Anzahl)",
+        "updatedCount": "Aktualisiert (Anzahl)"
     },
     "messages": {
-        "utf8": "Sollte UTF-8 kodiert sein"
+        "utf8": "Sollte UTF-8 kodiert sein",
+        "duplicatesRemoved": "Duplikate entfernt"
+    },
+    "fields": {
+        "file": "Datei",
+        "entityType": "Entitätstyp",
+        "imported": "Importierte Datensätze",
+        "duplicates": "Doppelte Datensätze",
+        "updated": "Aktualisierte Datensätze"
     }
 }

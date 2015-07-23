@@ -10,16 +10,21 @@
         "sicCode": "WKN Nummer",
         "industry": "Branche",
         "type": "Typ",
-        "contactRole": "Rolle"
+        "contactRole": "Funktion",
+        "campaign": "Kampagne"
     },
     "links": {
         "contacts": "Kontakte",
         "opportunities": "Verkaufschancen",
         "cases": "Fälle",
         "documents": "Dokumente",
-        "meetingsPrimary": "Meetings (intern)",
-        "callsPrimary": "Anrufe (intern)",
-        "tasksPrimary": "Aufgaben (intern)"
+        "meetingsPrimary": "Meetings (erweitert)",
+        "callsPrimary": "Anrufe (erweitert)",
+        "tasksPrimary": "Aufgaben (erweitert)",
+        "emailsPrimary": "E-Mails (erweitert)",
+        "targetLists": "Kontaktlisten",
+        "campaignLogRecords": "Kampagnen Log",
+        "campaign": "Kampagne"
     },
     "options": {
         "type": {
@@ -49,7 +54,7 @@
             "Real Estate": "Immobilien",
             "Service": "Dienstleistung",
             "Sports": "Sport",
-            "Sofware": "Software",
+            "Software": "Software",
             "Technology": "Technologie",
             "Telecommunications": "Telekommunikation",
             "Television": "Fernsehen",
@@ -60,5 +65,9 @@
     "labels": {
         "Create Account": "Firma erstellen",
         "Copy Billing": "Rechnungsadresse kopieren"
+    },
+    "presetFilters": {
+        "customers": "Kunden",
+        "partners": "Partner"
     }
 }

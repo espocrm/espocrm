@@ -1,0 +1,55 @@
+{
+    "fields": {
+        "name": "Name",
+        "description": "Beschreibung",
+        "status": "Status",
+        "type": "Typ",
+        "startDate": "Startdatum",
+        "endDate": "Enddatum",
+        "targetLists": "Kontaktlisten",
+        "sentCount": "Gesendet",
+        "openedCount": "Geöffnet",
+        "clickedCount": "Geklickt",
+        "optedOutCount": "Keine E-Mails",
+        "bouncedCount": "Nicht zustellbar",
+        "hardBouncedCount": "Hard Bounced",
+        "softBouncedCount": "Soft Bounced",
+        "leadCreatedCount": "Erstellte Interessenten",
+        "revenue": "Umsatz",
+        "revenueConverted": "Umsatz (konvertiert)"
+    },
+    "links": {
+        "targetLists": "Kontaktlisten",
+        "accounts": "Firmen",
+        "contacts": "Kontakte",
+        "leads": "Interessenten",
+        "opportunities": "Verkaufschancen",
+        "campaignLogRecords": "Protokoll"
+    },
+    "options": {
+        "type": {
+            "Email": "E-Mail",
+            "Web": "Web",
+            "Television": "Fernsehen",
+            "Radio": "Radio Button",
+            "Newsletter": "Newsletter",
+            "Mail": "Mail"
+        },
+        "status": {
+            "Planning": "Planung",
+            "Active": "Aktiv",
+            "Inactive": "Inaktiv",
+            "Complete": "Fertig"
+        }
+    },
+    "labels": {
+        "Create Campaign": "Neue Kampagne",
+        "Target Lists": "Kontaktlisten",
+        "Statistics": "Statistik",
+        "hard": "hart",
+        "soft": "weich"
+    },
+    "presetFilters": {
+        "active": "Aktiv"
+    }
+}

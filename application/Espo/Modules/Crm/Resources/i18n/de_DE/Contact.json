@@ -10,12 +10,18 @@
         "doNotCall": "Nicht anrufen",
         "address": "Adresse",
         "opportunityRole": "Verkaufschance Rolle",
-        "accountRole": "Rolle",
-        "description": "Beschreibung"
+        "accountRole": "Funktion",
+        "description": "Beschreibung",
+        "campaign": "Kampagne",
+        "targetLists": "Kontaktlisten",
+        "targetList": "Kontaktliste"
     },
     "links": {
         "opportunities": "Verkaufschancen",
-        "cases": "Fälle"
+        "cases": "Fälle",
+        "targetLists": "Kontaktlisten",
+        "campaignLogRecords": "Kampagnen Log",
+        "campaign": "Kampagne"
     },
     "labels": {
         "Create Contact": "Kontakt erstellen"
