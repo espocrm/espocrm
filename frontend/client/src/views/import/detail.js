@@ -36,21 +36,50 @@ Espo.define('Views.Import.Detail', 'Views.Detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.setupMenu();
+
+            this.listenTo(this.model, 'change', function () {
+                this.setupMenu();
+                if (this.isRendered()) {
+                    this.getView('header').reRender();
+                }
+            }, this);
+        },
+
+        setupMenu: function () {
             if (this.model.get('importedCount')) {
-                this.menu.buttons.unshift({
-                   "label": "Revert Import",
-                   "action": "revert",
-                   "style": "danger",
-                   "acl": "edit"
-                });
+                var i = 0;
+                this.menu.buttons.forEach(function (item) {
+                    if (item.action == 'revert') {
+                        i = 1;
+                    }
+                }, this);
+                if (!i) {
+                    this.menu.buttons.unshift({
+                       "label": "Revert Import",
+                       "action": "revert",
+                       "style": "danger",
+                       "acl": "edit"
+                    });
+                }
             }
             if (this.model.get('duplicateCount')) {
-                this.menu.buttons.unshift({
-                   "label": "Remove Duplicates",
-                   "action": "removeDuplicates",
-                   "style": "default",
-                   "acl": "edit"
-                });
+                var i = 0;
+                this.menu.buttons.forEach(function (item) {
+                    if (item.action == 'removeDuplicates') {
+                        i = 1;
+                    }
+                }, this);
+                if (!i) {
+                    this.menu.buttons.unshift({
+                       "label": "Remove Duplicates",
+                       "action": "removeDuplicates",
+                       "style": "default",
+                       "acl": "edit"
+                    });
+                }
+
             }
         },
 
