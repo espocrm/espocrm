@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.TargetList.Record.Panels.OptedOut', 'Views.Record.Panels.Relationship', function (Dep) {
+Espo.define('Crm:Views.TargetList.Record.Panels.OptedOut', ['Views.Record.Panels.Relationship', 'MultiCollection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -102,7 +102,7 @@ Espo.define('Crm:Views.TargetList.Record.Panels.OptedOut', 'Views.Record.Panels.
         afterRender: function () {
             var url = 'TargetList/' + this.model.id + '/' + this.name;
 
-            this.collection = new Espo.MultiCollection();
+            this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
             this.collection.url = url;
 
