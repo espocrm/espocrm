@@ -166,12 +166,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
         addAddressHtml: function (address, name) {
             var conteiner = this.$el.find('.link-container');
-            var $el = $('<div />').attr('data-address', address).addClass('list-group-item');
-            $el.html(((name) ? (name + ' <span class="text-muted">&#187;</span> ') : '') + '<span>' + address + '</span>');
-            $el.append('<a href="javascript:" class="pull-right" data-address="' + address + '" data-action="clearAddress"><span class="glyphicon glyphicon-remove"></a>');
-            conteiner.append($el);
+            var html =
+            '<div data-address="'+address+'" class="list-group-item">' +
+                '<a href="javascript:" class="pull-right" data-address="' + address + '" data-action="clearAddress"><span class="glyphicon glyphicon-remove"></a>' +
+                '<span>'+ ((name) ? (name + ' <span class="text-muted">&#187;</span> ') : '') + '<span>'+address+'</span>'+'</span>' +
 
-            return $el;
+            '</div>';
+            conteiner.append(html);
         },
 
         deleteAddress: function (address) {

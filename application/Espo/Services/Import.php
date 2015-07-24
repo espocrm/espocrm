@@ -298,6 +298,9 @@ class Import extends \Espo\Services\Record
                 continue;
             }
             $r = $this->importRow($scope, $fields, $arr, $params);
+            if (empty($r)) {
+                continue;
+            }
             if (!empty($r['isImported'])) {
                 $result['importedIds'][] = $r['id'];
             }
@@ -334,22 +337,36 @@ class Import extends \Espo\Services\Record
     public function importRow($scope, array $fields, array $row, array $params = array())
     {
         $id = null;
+        $action = 'create';
         if (!empty($params['action'])) {
-            if ($params['action'] == 'createAndUpdate' && in_array('id', $fields)) {
-                $i = array_search('id', $fields);
-                $id = $row[$i];
-                if (empty($id)) {
-                    $id = null;
-                }
+            $action = $params['action'];
+        }
+
+        if (in_array($action, ['createAndUpdate', 'update']) && in_array('id', $fields)) {
+            $i = array_search('id', $fields);
+            $id = $row[$i];
+            if (empty($id)) {
+                $id = null;
             }
         }
 
         $recordService = $this->getRecordService($scope);
 
-        $entity = $this->getEntityManager()->getEntity($scope, $id);
-        if (!$entity) {
+        if (in_array($action, ['createAndUpdate', 'update'])) {
+            if (!$id) {
+                return;
+            }
+            $entity = $this->getEntityManager()->getEntity($scope, $id);
+            if (!$entity) {
+                if ($action == 'createAndUpdate') {
+                    $entity = $this->getEntityManager()->getEntity($scope);
+                    $entity->set('id', $id);
+                } else {
+                    return;
+                }
+            }
+        } else {
             $entity = $this->getEntityManager()->getEntity($scope);
-            $entity->set('id', $id);
         }
 
         $isNew = $entity->isNew();
