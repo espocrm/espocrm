@@ -2,7 +2,7 @@
     {
         "label": "Overview",
         "rows": [
-            [{"name":"userName"}],
+            [{"name":"userName"}, false],
             [{"name": "name"}, {"name": "title"}],
             [{"name": "emailAddress"}, {"name": "phoneNumber"}]
         ]
