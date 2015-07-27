@@ -232,6 +232,10 @@
             "type": "bool",
             "default": false,
             "tooltip": true
+        },
+        "restrictedMode": {
+            "type": "bool",
+            "default": false
         }
     }
 }

@@ -84,7 +84,8 @@ return array (
         'permissionMap',
         'permissionRules',
         'passwordSalt',
-        'cryptKey'
+        'cryptKey',
+        'restrictedMode'
     ),
     'adminItems' =>
     array (

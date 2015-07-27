@@ -61,6 +61,9 @@ class User extends Record
         }
 
         $entity = parent::getEntity($id);
+        if ($entity->get('isSuperAdmin') && !$this->getUser()->get('isSuperAdmin')) {
+            throw new Forbidden();
+        }
         return $entity;
     }
 
@@ -84,6 +87,10 @@ class User extends Record
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
             throw new NotFound();
+        }
+
+        if ($user->get('isSuperAdmin') && !$this->getUser()->get('isSuperAdmin')) {
+            throw new Forbidden();
         }
 
         if (empty($password)) {
@@ -196,6 +203,9 @@ class User extends Record
             $newPassword = $data['password'];
             $data['password'] = $this->hashPassword($data['password']);
         }
+        if (!$this->getUser()->get('isSuperAdmin')) {
+            unset($data['isSuperAdmin']);
+        }
         $user = parent::createEntity($data);
 
         if (!is_null($newPassword)) {
@@ -220,6 +230,9 @@ class User extends Record
 
         if ($id == $this->getUser()->id) {
             unset($data['isActive']);
+        }
+        if (!$this->getUser()->get('isSuperAdmin')) {
+            unset($data['isSuperAdmin']);
         }
         $user = parent::updateEntity($id, $data);
 

@@ -101,6 +101,7 @@ return array (
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,
     'b2cMode' => false,
+    'restrictedMode' => false,
     'isInstalled' => false,
 );
 

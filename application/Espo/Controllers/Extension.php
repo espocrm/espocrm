@@ -58,6 +58,11 @@ class Extension extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new Forbidden();
         }
+        if ($this->getConfig('restrictedMode')) {
+            if (!$this->getUser()->get('isSuperAdmin')) {
+                throw new Forbidden();
+            }
+        }
 
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
 
@@ -71,11 +76,14 @@ class Extension extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new Forbidden();
         }
+        if ($this->getConfig('restrictedMode')) {
+            if (!$this->getUser()->get('isSuperAdmin')) {
+                throw new Forbidden();
+            }
+        }
 
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
         $manager->uninstall($data);
-
         return true;
     }
 
@@ -99,12 +107,18 @@ class Extension extends \Espo\Core\Controllers\Record
         throw new Forbidden();
     }
 
-    public function actionDelete($params)
+    public function actionDelete($params, $data, $request)
     {
+        if (!$request->isDelete()) {
+            throw BadRequest();
+        }
+        if ($this->getConfig('restrictedMode')) {
+            if (!$this->getUser()->get('isSuperAdmin')) {
+                throw new Forbidden();
+            }
+        }
         $manager = new \Espo\Core\ExtensionManager($this->getContainer());
-
         $manager->delete($params);
-
         return true;
     }
 

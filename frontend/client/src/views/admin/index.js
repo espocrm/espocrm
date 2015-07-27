@@ -26,12 +26,14 @@ Espo.define('views/admin/index', 'view', function (Dep) {
 
         data: function () {
             return {
-                links: this.links
+                links: this.links,
+                iframeUrl: this.iframeUrl
             };
         },
 
         setup: function () {
             this.links = this.getMetadata().get('app.adminPanel');
+            this.iframeUrl = '//espocrm.com/news';
         },
 
         updatePageTitle: function () {

@@ -18,7 +18,8 @@
         "password": {
             "type": "password",
             "maxLength": 150,
-            "internal": true
+            "internal": true,
+            "disabled": true
         },
         "salutationName": {
             "type": "enum",
@@ -39,6 +40,11 @@
             "type": "bool",
             "tooltip": true,
             "default": true
+        },
+        "isSuperAdmin": {
+            "type": "bool",
+            "default": false,
+            "disabled": true
         },
         "title": {
             "type": "varchar",

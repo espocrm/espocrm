@@ -32,6 +32,9 @@ class User extends \Espo\Core\SelectManagers\Base
                 'isActive' => true
             );
         }
+        $result['whereClause'][] = array(
+            'isSuperAdmin' => false
+        );
     }
 
     protected function filterActive(&$result)
