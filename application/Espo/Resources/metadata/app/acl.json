@@ -20,6 +20,11 @@
             "edit": "no",
             "delete": "no"
         },
+        "Attachment": {
+            "read": "own",
+            "edit": "own",
+            "delete": "own"
+        },
         "PhoneNumber": {
             "read": "no",
             "edit": "no",

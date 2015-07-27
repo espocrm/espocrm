@@ -77,7 +77,7 @@ class Record extends Base
     public function actionCreate($params, $data, $request)
     {
         if (!$request->isPost()) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
@@ -96,7 +96,7 @@ class Record extends Base
     public function actionUpdate($params, $data, $request)
     {
         if (!$request->isPut() && !$request->isPatch()) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
@@ -185,7 +185,7 @@ class Record extends Base
     public function actionDelete($params, $data, $request)
     {
         if (!$request->isDelete()) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         $id = $params['id'];
