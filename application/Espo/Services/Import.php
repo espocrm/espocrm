@@ -448,7 +448,9 @@ class Import extends \Espo\Services\Record
                         $isPrimary = false;
                         if (empty($phoneNumberData)) {
                             $phoneNumberData = [];
-                            $isPrimary = true;
+                            if (!in_array('phoneNumber', $fields)) {
+                                $isPrimary = true;
+                            }
                         }
                         $type = str_replace('phoneNumber', '', $field);
                         $type = str_replace('_', ' ', $type);
