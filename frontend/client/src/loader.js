@@ -64,7 +64,7 @@ var Espo = Espo || {classMap:{}};
                 var arr = name.split(':');
                 var namePart = arr[1];
                 var modulePart = arr[0];
-                if (modulePart == 'Custom') {
+                if (modulePart == 'custom') {
                     path = 'client/custom/src/' + namePart;
                 } else {
                     path = 'client/modules/' + modulePart + '/src/' + namePart;
