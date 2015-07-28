@@ -105,7 +105,11 @@ Espo.define('views/dashboard', 'view', function (Dep) {
                     this.dashboardLayout = defaultLayout;
                 }
             }
-            var dashboardLayout = this.dashboardLayout;
+            var dashboardLayout = this.dashboardLayout || [];
+
+            if (dashboardLayout.length <= this.currentTab) {
+                this.currentTab = 0;
+            }
 
             var tabLayout = dashboardLayout[this.currentTab].layout || [];
 
