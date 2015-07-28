@@ -90,6 +90,42 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, Util::toUnderScore($input));
     }
 
+    public function testMerge2()
+    {
+        $d1 = array(
+          'hello' => 'world',
+          'man' => array(
+            'test' => [
+              0 => ['name' => 'test 1'],
+              1 => ['name' => 'test 2']
+            ]
+          )
+        );
+        $d2 = array(
+          'test' => []
+        );
+        $d3 = array(
+          'man' => array(
+            'test' => [
+              0 => '__APPEND__',
+              1 => ['name' => 'test 3']
+            ]
+          )
+        );
+        $expected = array(
+            'hello' => 'world',
+            'man' => array(
+              'test' => [
+                0 => ['name' => 'test 1'],
+                1 => ['name' => 'test 2'],
+                2 => ['name' => 'test 3']
+              ]
+            )
+        );
+        $result = Util::merge($d3, Util::merge($d2, $d1));
+        $this->assertEquals($expected, $result);
+    }
+
     public function testMerge()
     {
         $array1= array(

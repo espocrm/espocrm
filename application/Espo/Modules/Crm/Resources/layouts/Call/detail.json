@@ -5,7 +5,7 @@
             [{"name":"name"},{"name":"parent"}],
             [{"name":"status"}, {"name":"direction"}],
             [{"name":"dateStart"}, {"name":"reminders"}],
-            [{"name":"duration"}],
+            [{"name":"duration"}, false],
             [{"name":"description", "fullWidth": true}]
         ]
     }
