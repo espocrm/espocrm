@@ -300,9 +300,19 @@ class Importer
                             $disposition = 'attachment';
                         }
                     } else if (strpos($part->ContentDisposition, 'inline') === 0) {
-                        $contentId = trim($part->contentID, '<>');
-                        $fileName = $contentId;
-                        $disposition = 'inline';
+                        if (isset($part->contentID)) {
+                            $contentId = trim($part->contentID, '<>');
+                            $fileName = $contentId;
+                            $disposition = 'inline';
+                        } else {
+                            // hack for iOS not proper attachments
+                            if (empty($fileName)) {
+                                if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
+                                    $fileName = $m[1];
+                                    $disposition = 'attachment';
+                                }
+                            }
+                        }
                     }
                 }
 
