@@ -236,6 +236,9 @@
         "restrictedMode": {
             "type": "bool",
             "default": false
+        },
+        "adminPanelIframeUrl": {
+            "type": "varchar"
         }
     }
 }
