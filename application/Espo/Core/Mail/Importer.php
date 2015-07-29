@@ -136,6 +136,10 @@ class Importer
                 $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
             }
 
+            if (!$email->get('body') && $email->get('bodyPlain')) {
+                $email->set('body', $email->get('bodyPlain'));
+            }
+
             $body = $email->get('body');
             if (!empty($body)) {
                 foreach ($inlineIds as $cid => $attachmentId) {
@@ -251,6 +255,15 @@ class Importer
                 $type = strtok($part->contentType, ';');
             }
 
+            $contentDisposition = false;
+            if (isset($part->ContentDisposition)) {
+                if (strpos(strtolower($part->ContentDisposition), 'attachment') === 0) {
+                    $contentDisposition = 'attachment';
+                } else if (strpos(strtolower($part->ContentDisposition), 'inline') === 0) {
+                    $contentDisposition = 'inline';
+                }
+            }
+
             if (empty($type)) {
                 if (!empty($defaultContentType)) {
                     $type = $defaultContentType;
@@ -260,28 +273,26 @@ class Importer
             }
 
             $encoding = null;
-
             $isAttachment = true;
-
             if ($type == 'text/plain' || $type == 'text/html') {
-
-                $isAttachment = false;
-                $content = $this->getContentFromPart($part);
-                if ($type == 'text/plain') {
-                    if ($email->get('bodyPlain')) {
-                        $isAttachment = true;
-                    } else {
-                        $email->set('bodyPlain', $content);
-                        if (!$email->get('body')) {
-                            $email->set('body', $content);
+                if ($contentDisposition !== 'inline' && $contentDisposition !== 'attachment') {
+                    $isAttachment = false;
+                    $content = $this->getContentFromPart($part);
+                    if ($type == 'text/plain') {
+                        $bodyPlain = '';
+                        if ($email->get('bodyPlain')) {
+                            $bodyPlain .= $email->get('bodyPlain') . "\n";
                         }
-                    }
-                } else if ($type == 'text/html') {
-                    if ($email->get('isHtml')) {
-                        $isAttachment = true;
-                    } else {
-                        $email->set('body', $content);
+                        $bodyPlain .= $content;
+                        $email->set('bodyPlain', $content);
+                    } else if ($type == 'text/html') {
+                        $body = '';
+                        if ($email->get('body')) {
+                            $body .= $email->get('body') . "<br>";
+                        }
+                        $body .= $content;
                         $email->set('isHtml', true);
+                        $email->set('body', $body);
                     }
                 }
             }
@@ -293,13 +304,13 @@ class Importer
                 $fileName = null;
                 $contentId = null;
 
-                if (isset($part->ContentDisposition)) {
-                    if (strpos($part->ContentDisposition, 'attachment') === 0) {
+                if ($contentDisposition) {
+                    if ($contentDisposition === 'attachment') {
                         if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
                             $fileName = $m[1];
                             $disposition = 'attachment';
                         }
-                    } else if (strpos($part->ContentDisposition, 'inline') === 0) {
+                    } else if ($contentDisposition ===  'inline') {
                         if (isset($part->contentID)) {
                             $contentId = trim($part->contentID, '<>');
                             $fileName = $contentId;
