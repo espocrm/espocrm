@@ -82,6 +82,33 @@ Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
                     clearTimeout(t);
                 }, this);
             }
+
+
+            this.actionList = Espo.Utils.clone(this.actionList);
+            this.setupActionList();
+        },
+
+        actionList: [
+            {
+                name: 'refresh',
+                label: 'Refresh',
+                iconHtml: '<span class="glyphicon glyphicon-refresh"></span>',
+            },
+            {
+                name: 'options',
+                label: 'Options',
+                iconHtml: '<span class="glyphicon glyphicon-pencil"></span>',
+            },
+            {
+                name: 'remove',
+                label: 'Remove',
+                iconHtml: '<span class="glyphicon glyphicon-remove"></span>',
+            }
+        ],
+
+
+        setupActionList: function () {
+
         },
 
         getOption: function (key) {

@@ -84,10 +84,39 @@ Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base
             }, this);
         },
 
+        setupActionList: function () {
+            this.actionList.unshift({
+                name: 'create',
+                html: this.translate('Create ' + this.scope, 'labels', this.scope),
+                iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+            });
+        },
+
         actionRefresh: function () {
             this.collection.where = this.searchManager.getWhere();
             this.collection.fetch();
         },
+
+        actionCreate: function () {
+            var attributes = this.getCreateAttributes() || {};
+
+            this.notify('Loading...');
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'Modals.Edit';
+            this.createView('quickCreate', 'Modals.Edit', {
+                scope: this.scope,
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', function () {
+                    this.actionRefresh();
+                }, this);
+            }.bind(this));
+        },
+
+        getCreateAttributes: function () {
+
+        }
     });
 });
 

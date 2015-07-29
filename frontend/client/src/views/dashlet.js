@@ -36,19 +36,29 @@ Espo.define('views/dashlet', 'view', function (Dep) {
                 name: this.name,
                 id: this.id,
                 title: this.getOption('title'),
-                isDoubleHeight: this.getOption('isDoubleHeight')
+                isDoubleHeight: this.getOption('isDoubleHeight'),
+                actionList: (this.getView('body') || {}).actionList || []
             };
         },
 
         events: {
-            'click [data-action="refresh"]': function (e) {
-                this.actionRefresh();
-            },
-            'click [data-action="options"]': function (e) {
-                this.actionOptions();
-            },
-            'click [data-action="remove"]': function (e) {
-                this.actionRemove();
+            'click .action': function (e) {
+                var $target = $(e.currentTarget);
+                var action = $target.data('action');
+                var data = $target.data();
+                if (action) {
+                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    if (typeof this[method] == 'function') {
+                        e.preventDefault();
+                        this[method].call(this, data);
+                    } else {
+                        var bodyView = this.getView('body');
+                        if (typeof bodyView[method] == 'function') {
+                            e.preventDefault();
+                            bodyView[method].call(bodyView, data);
+                        }
+                    }
+                }
             },
         },
 
