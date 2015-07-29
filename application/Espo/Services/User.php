@@ -206,6 +206,7 @@ class User extends Record
         if (!$this->getUser()->get('isSuperAdmin')) {
             unset($data['isSuperAdmin']);
         }
+
         $user = parent::createEntity($data);
 
         if (!is_null($newPassword)) {
@@ -234,6 +235,8 @@ class User extends Record
         if (!$this->getUser()->get('isSuperAdmin')) {
             unset($data['isSuperAdmin']);
         }
+
+
         $user = parent::updateEntity($id, $data);
 
         if (!is_null($newPassword)) {
@@ -245,6 +248,36 @@ class User extends Record
         }
 
         return $user;
+    }
+
+    protected function beforeCreate(Entity $entity, array $data = array())
+    {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
+            $userCount = $this->getEntityManager()->getRepository('User')->where(array(
+                'isActive' => true,
+                'isSuperAdmin' => false
+            ))->count();
+            if ($userCount >= $this->getConfig()->get('userLimit')) {
+                throw new Forbidden('User limit is reached.');
+            }
+        }
+    }
+
+    protected function beforeUpdate(Entity $user, array $data = array())
+    {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
+            if (!$user->isActive()) {
+                if (array_key_exists('isActive', $data) && $data['isActive']) {
+                    $userCount = $this->getEntityManager()->getRepository('User')->where(array(
+                        'isActive' => true,
+                        'isSuperAdmin' => false
+                    ))->count();
+                    if ($userCount >= $this->getConfig()->get('userLimit')) {
+                        throw new Forbidden('User limit is reached.');
+                    }
+                }
+            }
+        }
     }
 
     protected function sendPassword(Entity $user, $password)

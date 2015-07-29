@@ -506,9 +506,12 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $entity->set($data);
+        $dataBefore = $entity->toArray();
 
         $this->beforeUpdate($entity, $data);
+
+        $entity->set($data);
+
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
