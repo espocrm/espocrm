@@ -454,6 +454,8 @@ Espo.define(
                 if (xhr.errorIsHandled) {
                     return;
                 }
+                var statusReason = xhr.getResponseHeader('X-Status-Reason');
+
                 switch (xhr.status) {
                     case 0:
                         if (xhr.statusText == 'timeout') {
@@ -476,23 +478,30 @@ Espo.define(
                         if (options.main) {
                             self.baseController.error403();
                         } else {
-                            Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
+                            var msg = self.language.translate('Error') + ' ' + xhr.status;
+                            if (statusReason) {
+                                msg += ': ' + statusReason;
+                            }
+                            Espo.Ui.error(msg);
                         }
                         break;
                     case 404:
                         if (options.main) {
                             self.baseController.error404();
                         } else {
-                            Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
+                            var msg = self.language.translate('Error') + ' ' + xhr.status;
+                            if (statusReason) {
+                                msg += ': ' + statusReason;
+                            }
+                            Espo.Ui.error(msg);
                         }
                         break;
                     default:
                         Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
                 }
 
-                var statusReason = xhr.getResponseHeader('X-Status-Reason');
                 if (statusReason) {
-                    console.error('Server side error: ' + statusReason);
+                    console.error('Server side error '+xhr.status+': ' + statusReason);
                 }
             });
         },
