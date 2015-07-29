@@ -478,8 +478,7 @@ class Metadata
             }
         }
 
-        krsort($modulesToSort);
-        asort($modulesToSort);
+        array_multisort(array_values($modulesToSort), SORT_ASC, array_keys($modulesToSort), SORT_ASC, $modulesToSort);
 
         $this->moduleList = array_keys($modulesToSort);
     }
