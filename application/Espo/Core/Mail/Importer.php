@@ -284,7 +284,7 @@ class Importer
                             $bodyPlain .= $email->get('bodyPlain') . "\n";
                         }
                         $bodyPlain .= $content;
-                        $email->set('bodyPlain', $content);
+                        $email->set('bodyPlain', $bodyPlain);
                     } else if ($type == 'text/html') {
                         $body = '';
                         if ($email->get('body')) {
