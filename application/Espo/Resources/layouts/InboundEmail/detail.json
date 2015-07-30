@@ -3,12 +3,16 @@
         "label":"Main",
         "rows":[
             [
-                {"name":"name"},
+                {"name":"emailAddress"},
                 {"name":"status"}
             ],
             [
-                {"name":"team"},
+                {"name":"name"},
                 {"name":"replyToAddress"}
+            ],
+            [
+                {"name":"team"},
+                false
             ],
             [
                 {"name":"assignToUser"},

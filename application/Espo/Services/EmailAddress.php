@@ -28,19 +28,34 @@ use \Espo\Core\Exceptions\Error;
 
 class EmailAddress extends Record
 {
-    private function findInAddressBookByEntityType($where, $limit, $entityType, &$result)
+
+    protected function findInAddressBookByEntityType($query, $limit, $entityType, &$result)
     {
-        $service = $this->getServiceFactory()->create($entityType);
+        $whereClause = array(
+            'OR' => array(
+                array(
+                    'name*' => $query . '%'
+                ),
+                array(
+                    'emailAddress*' => $query . '%'
+                )
+            ),
+            array(
+                'emailAddress!=' => null
+            )
+        );
 
-        $r = $service->findEntities(array(
-            'where' => $where,
-            'maxSize' => $limit,
-            'sortBy' => 'name'
-        ));
+        $searchParams = array(
+            'whereClause' => $whereClause,
+            'orderBy' => 'name',
+            'limit' => $limit
+        );
 
-        foreach ($r['collection'] as $entity) {
-            $entity->loadLinkMultipleField('emailAddress');
+        $this->getSelectManagerFactory()->create($entityType)->manageAccess($searchParams);
 
+        $collection = $this->getEntityManager()->getRepository($entityType)->find($searchParams);
+
+        foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');
 
             $result[] = array(
@@ -50,8 +65,7 @@ class EmailAddress extends Record
                 'entityId' => $entity->id
             );
 
-            $c = $service->getEntity($entity->id);
-            $emailAddressData = $c->get('emailAddressData');
+            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
             foreach ($emailAddressData as $d) {
                 if ($emailAddress != $d->emailAddress) {
                     $emailAddress = $d->emailAddress;
@@ -67,37 +81,38 @@ class EmailAddress extends Record
         }
     }
 
+    protected function findInInboundEmail($query, $limit, &$result)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+        $qu = $this->getEntityManager()->getQuery()->createSelectQuery('InboundEmail', [
+            'select' => ['id', 'name', 'emailAddress'],
+            'whereClause' => [
+                'emailAddress*' => $query . '%'
+            ],
+            'orderBy' => 'name',
+        ]);
+
+        $sth = $pdo->prepare($qu);
+        $sth->execute();
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $result[] = [
+                'emailAddress' => $row['emailAddress'],
+                'entityName' => $row['name'],
+                'entityType' => 'InboundEmail',
+                'entityId' => $row['id']
+            ];
+        }
+    }
 
     public function searchInAddressBook($query, $limit)
     {
-        $result = array();
+        $result = [];
 
-        $where = array(
-            array(
-                'type' => 'or',
-                'value' => array(
-                    array(
-                        'type' => 'like',
-                        'field' => 'name',
-                        'value' => $query . '%'
-                    ),
-                    array(
-                        'type' => 'like',
-                        'field' => 'emailAddress',
-                        'value' => $query . '%'
-                    )
-                )
-            ),
-            array(
-                'type' => 'notEquals',
-                'field' => 'emailAddress',
-                'value' => null
-            )
-        );
-
-        $this->findInAddressBookByEntityType($where, $limit, 'Contact', $result);
-        $this->findInAddressBookByEntityType($where, $limit, 'Lead', $result);
-        $this->findInAddressBookByEntityType($where, $limit, 'User', $result);
+        $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result);
+        $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result);
+        $this->findInAddressBookByEntityType($query, $limit, 'User', $result);
+        $this->findInAddressBookByEntityType($query, $limit, 'Account', $result);
+        $this->findInInboundEmail($query, $limit, $result);
 
         $final = array();
 

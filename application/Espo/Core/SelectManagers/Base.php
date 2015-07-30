@@ -313,6 +313,26 @@ class Base
         }
     }
 
+    public function manageAccess(&$result)
+    {
+        if (empty($result)) {
+            $result = array();
+        }
+        if (empty($result['joins'])) {
+            $result['joins'] = [];
+        }
+        if (empty($result['leftJoins'])) {
+            $result['leftJoins'] = [];
+        }
+        if (empty($result['whereClause'])) {
+            $result['whereClause'] = array();
+        }
+        if (empty($result['customJoin'])) {
+            $result['customJoin'] = [];
+        }
+        $this->access($result);
+    }
+
     protected function access(&$result)
     {
         if ($this->acl->checkReadOnlyOwn($this->entityType)) {

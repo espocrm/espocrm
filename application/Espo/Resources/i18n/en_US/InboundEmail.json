@@ -1,6 +1,7 @@
 {
     "fields": {
         "name": "Name",
+        "emailAddress": "Email Address",
         "team": "Team",
         "status": "Status",
         "assignToUser": "Assign to User",
