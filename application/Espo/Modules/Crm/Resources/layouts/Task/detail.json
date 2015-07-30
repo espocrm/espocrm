@@ -8,7 +8,7 @@
             [{"name":"dateStart"},{"name":"dateCompleted"}],
             [{"name":"dateEnd"},false],
             [{"name":"description", "fullWidth": true}],
-            [{"name":"attachments"},false]
+            [{"name":"attachments", "fullWidth": true}]
         ]
     }
 ]
