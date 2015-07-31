@@ -185,6 +185,11 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             };
 
+            if ($navbar.height() <= navbarNeededHeight) {
+                $more.parent().addClass('hide');
+            }
+
+
             processUpdateWidth();
 
         },
