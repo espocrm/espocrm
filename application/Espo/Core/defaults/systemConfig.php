@@ -86,7 +86,8 @@ return array (
         'passwordSalt',
         'cryptKey',
         'restrictedMode',
-        'userLimit'
+        'userLimit',
+        'stylesheet'
     ),
     'adminItems' =>
     array (
