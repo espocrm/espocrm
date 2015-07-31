@@ -233,13 +233,6 @@
             "default": false,
             "tooltip": true
         },
-        "restrictedMode": {
-            "type": "bool",
-            "default": false
-        },
-        "userLimit": {
-            "type": "int"
-        },
         "adminPanelIframeUrl": {
             "type": "varchar"
         }
