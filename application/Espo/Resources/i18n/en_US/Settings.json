@@ -51,7 +51,8 @@
         "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
         "b2cMode": "B2C Mode",
         "disableAvatars": "Disable Avatars",
-        "followCreatedEntities": "Follow Created Entities"
+        "followCreatedEntities": "Follow Created Entities",
+        "theme": "Theme"
     },
     "options": {
         "weekStart": {

@@ -20,21 +20,33 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-include "../bootstrap.php";
+namespace Espo\Core\Utils;
 
-$app = new \Espo\Core\Application();
+class ThemeManager
+{
+    protected $config;
 
-if (!empty($_GET['entryPoint'])) {
-    $app->runEntryPoint($_GET['entryPoint']);
-    exit;
+    protected $metadata;
+
+    private $defaultName = 'Espo';
+
+    private $defaultStylesheet = 'Espo';
+
+    public function __construct(Config $config, Metadata $metadata)
+    {
+        $this->config = $config;
+        $this->metadata = $metadata;
+    }
+
+    public function getName()
+    {
+        return $this->config->get('theme', $this->defaultName);
+    }
+
+    public function getStylesheet()
+    {
+        return $this->metadata->get('themes.' . $this->getName() . '.stylesheet', 'client/css/espo.css');
+    }
 }
 
-$themeManager = $app->getContainer()->get('themeManager');
-
-$runScript = "app.start();";
-$html = file_get_contents("frontend/main.html");
-$html = str_replace('{{stylesheet}}', $themeManager->getStylesheet() , $html);
-$html = str_replace('{{runScript}}', $runScript , $html);
-echo $html;
-exit;
 

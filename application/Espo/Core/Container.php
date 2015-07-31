@@ -278,6 +278,14 @@ class Container
         );
     }
 
+    private function loadThemeManager()
+    {
+        return new \Espo\Core\Utils\ThemeManager(
+            $this->get('config'),
+            $this->get('metadata')
+        );
+    }
+
     public function setUser($user)
     {
         $this->data['user'] = $user;

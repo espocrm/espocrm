@@ -235,6 +235,11 @@
         },
         "adminPanelIframeUrl": {
             "type": "varchar"
+        },
+        "theme": {
+            "type": "enum",
+            "view": "Settings.Fields.Theme",
+            "translation": "themes"
         }
     }
 }

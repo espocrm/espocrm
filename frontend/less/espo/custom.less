@@ -299,7 +299,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 #login.panel > .panel-heading {
-    background-color: #4A6492;
+    background-color: @login-panel-heading-bg;
     padding: 0;
     margin: -2px;
 }
@@ -790,6 +790,10 @@ img.avatar.avatar-link {
 .link-container .list-group-item {
     padding: @padding-base-vertical @padding-base-horizontal;
     line-height: @line-height-computed;
+}
+
+.list-group-item {
+    background-color: transparent;
 }
 
 .note-editable blockquote {

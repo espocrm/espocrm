@@ -59,22 +59,28 @@ module.exports = function (grunt) {
             final: ['build/tmp'],
         },
         less: {
-            bootstrap: {
+            espo: {
                 options: {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/bootstrap.css': 'frontend/less/espo/main.less',
+                    'frontend/client/css/espo.css': 'frontend/less/espo/main.less',
+                },
+            },
+            sacura: {
+                options: {
+                    yuicompress: true,
+                },
+                files: {
+                    'frontend/client/css/sacura.css': 'frontend/less/sacura/main.less',
                 },
             },
         },
         cssmin: {
             minify: {
                 files: {
-                    'build/tmp/client/css/espo.min.css': [
-                        'frontend/client/css/bootstrap.css',
-                        'frontend/client/css/datepicker.css',
-                        'frontend/client/css/jquery.timepicker.css',
+                    'build/tmp/client/css/espo.css': [
+                        'frontend/client/css/espo.css',
                     ]
                 }
             },

@@ -38,6 +38,7 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
         }
 
         $config = $this->getConfig();
+        $themeManager = $this->getThemeManager();
 
         $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
             'requestId' => $requestId
@@ -56,10 +57,15 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
         $html = file_get_contents('main.html');
         $html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
         $html = str_replace('{{useCache}}', $config->get('useCache') ? 'true' : 'false' , $html);
-        $html = str_replace('{{stylesheet}}', $config->get('stylesheet', 'client/css/espo.min.css'), $html);
+        $html = str_replace('{{stylesheet}}', $themeManager->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
         echo $html;
         exit;
+    }
+
+    protected function getThemeManager()
+    {
+        return $this->getContainer()->get('themeManager');
     }
 }
 

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,22 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
+Espo.define('views/settings/fields/theme', 'views/fields/enum', function (Dep) {
 
-include "../bootstrap.php";
+    return Dep.extend({
 
-$app = new \Espo\Core\Application();
+        setup: function () {
+            this.params.options = Object.keys(this.getMetadata().get('themes')).sort(function (v1, v2) {
+                return this.translate(v1, 'theme').localeCompare(this.translate(v2, 'theme'));
+            }.bind(this));
 
-if (!empty($_GET['entryPoint'])) {
-    $app->runEntryPoint($_GET['entryPoint']);
-    exit;
-}
+            Dep.prototype.setup.call(this);
+        },
 
-$themeManager = $app->getContainer()->get('themeManager');
+    });
 
-$runScript = "app.start();";
-$html = file_get_contents("frontend/main.html");
-$html = str_replace('{{stylesheet}}', $themeManager->getStylesheet() , $html);
-$html = str_replace('{{runScript}}', $runScript , $html);
-echo $html;
-exit;
-
+});

@@ -102,6 +102,7 @@ return array (
     'followCreatedEntities' => false,
     'b2cMode' => false,
     'restrictedMode' => false,
+    'theme' => 'Espo',
     'isInstalled' => false,
 );
 

@@ -3,7 +3,7 @@
         "label": "Configuration",
         "rows": [
             [{"name": "recordsPerPage"},{"name": "recordsPerPageSmall"}],
-            [{"name": "disableAvatars"},false],
+            [{"name": "theme"}, {"name": "disableAvatars"}],
             [{"name": "tabList"},{"name": "quickCreateList"}]
         ]
     }

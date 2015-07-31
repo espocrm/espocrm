@@ -530,5 +530,8 @@
                 "redo":"Redo"
             }
         }
+    },
+    "themes": {
+        "Espo": "Espo"
     }
 }
