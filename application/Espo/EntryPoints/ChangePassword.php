@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\EntryPoints;
 
@@ -29,7 +29,7 @@ use \Espo\Core\Exceptions\BadRequest;
 class ChangePassword extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
-    
+
     public function run()
     {
         $requestId = $_GET['id'];
@@ -56,6 +56,7 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
         $html = file_get_contents('main.html');
         $html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
         $html = str_replace('{{useCache}}', $config->get('useCache') ? 'true' : 'false' , $html);
+        $html = str_replace('{{stylesheet}}', $config->get('stylesheet', 'client/css/espo.min.css'), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
         echo $html;
         exit;
