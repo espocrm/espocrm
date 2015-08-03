@@ -11,6 +11,7 @@
 /main.html
 /frontend/client/css/bootstrap.css
 /frontend/client/css/espo.css
+/frontend/client/css/espo-vertical.css
 /frontend/client/css/sacura.css
 /tests/testData/cache/*
 composer.phar

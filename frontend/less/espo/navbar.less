@@ -1,0 +1,45 @@
+#header .navbar {
+  .navbar-collapse {
+    max-height: @navbar-collapse-max-height;
+
+    @media (max-device-width: @screen-xs-min) and (orientation: landscape) {
+      max-height: 200px;
+    }
+  }
+}
+
+.navbar-collapse {
+  @media (min-width: @grid-float-breakpoint) {
+    .navbar & {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+
+
+#header .navbar {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: @zindex-navbar-fixed;
+}
+
+#header .navbar {
+  top: 0;
+  border-width: 0 0 1px;
+}
+
+
+body {
+    padding-top: 55px;
+}
+
+@media screen and (max-width: @screen-sm-min) {
+  .navbar {
+      position: static;
+  }
+  body {
+      padding-top: 0;
+  }
+}

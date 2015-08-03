@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="navbar navbar-inverse" role="navigation">
 
     <div class="navbar-header">
         <a class="navbar-brand" href="#"><img src="{{logoSrc}}"></a>
