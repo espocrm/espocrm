@@ -223,7 +223,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: this.checkAllResultDisabled,
-                buttonList: this.buttonList
+                buttonList: this.buttonList,
+                displayTotalCount: this.displayTotalCount && this.collection.total > 0
             };
         },
 
@@ -236,7 +237,6 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
-
 
             if ('buttonsDisabled' in this.options) {
                 this.buttonsDisabled = this.options.buttonsDisabled;
@@ -501,6 +501,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             if ('showCount' in this.options) {
                 this.showCount = this.options.showCount;
             }
+
+            this.displayTotalCount = this.showCount && this.getConfig().get('displayListViewRecordCount');
 
 
             if (this.options.massActionsDisabled) {

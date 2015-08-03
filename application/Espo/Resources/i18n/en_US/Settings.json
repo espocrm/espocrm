@@ -52,6 +52,7 @@
         "b2cMode": "B2C Mode",
         "disableAvatars": "Disable Avatars",
         "followCreatedEntities": "Follow Created Entities",
+        "displayListViewRecordCount": "Display Total Count (on List View)",
         "theme": "Theme"
     },
     "options": {

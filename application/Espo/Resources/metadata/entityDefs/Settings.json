@@ -236,6 +236,9 @@
         "adminPanelIframeUrl": {
             "type": "varchar"
         },
+        "displayListViewRecordCount": {
+            "type": "bool"
+        },
         "theme": {
             "type": "enum",
             "view": "Settings.Fields.Theme",

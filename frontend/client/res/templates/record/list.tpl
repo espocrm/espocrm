@@ -3,7 +3,7 @@
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
     {{#if paginationTop}}
-    <div class="">
+    <div>
         {{{pagination}}}
     </div>
     {{/if}}
@@ -22,6 +22,12 @@
         </ul>
     </div>
     {{/if}}
+    {{/if}}
+
+    {{#if displayTotalCount}}
+        <div class="text-muted total-count">
+        {{translate 'Total'}}: {{collection.total}}
+        </div>
     {{/if}}
 
     {{#each buttonList}}
