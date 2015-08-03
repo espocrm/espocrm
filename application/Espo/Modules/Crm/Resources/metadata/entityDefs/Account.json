@@ -23,8 +23,8 @@
             "type": "enum",
             "options": [
                 "",
-                "Agriculture",
                 "Advertising",
+                "Agriculture",
                 "Apparel & Accessories",
                 "Automotive",
                 "Banking",
@@ -52,7 +52,8 @@
                 "Television",
                 "Transportation",
                 "Venture Capital"
-            ]
+            ],
+            "isSorted": true
         },
         "sicCode": {
             "type": "varchar",

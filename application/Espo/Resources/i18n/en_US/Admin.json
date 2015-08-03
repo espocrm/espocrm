@@ -106,7 +106,8 @@
         "noEmptyString": "No Empty String",
         "defaultType": "Default Type",
         "seeMoreDisabled": "Disable Text Cut",
-        "entityList": "Entity List"
+        "entityList": "Entity List",
+        "isSorted": "Is Sorted (alphabetically)"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

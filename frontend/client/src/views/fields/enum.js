@@ -77,6 +77,17 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], functio
                     this.translatedOptions = translatedOptions;
                 }
             }
+
+            if (this.translatedOptions === null) {
+                this.translatedOptions = this.getLanguage().get(this.model.name, 'options', this.name) || {};
+            }
+
+            if (this.params.isSorted && this.translatedOptions) {
+                this.params.options = Espo.Utils.clone(this.params.options);
+                this.params.options = this.params.options.sort(function (v1, v2) {
+                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                }.bind(this));
+            }
         },
 
         afterRender: function () {
