@@ -34,43 +34,24 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
         data: function () {
             return _.extend({
                 currencyFieldName: this.currencyFieldName,
-                currencyValue: this.currencyValue,
+                currencyValue: this.model.get(this.currencyFieldName),
                 currencyOptions: this.currencyOptions,
+                currencyList: this.currencyList
             }, Dep.prototype.data.call(this));
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
             this.currencyFieldName = this.name + 'Currency';
-
+            this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];
             var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getConfig().get('defaultCurrency');
 
-            this.listenTo(this.model, 'change:' + this.currencyFieldName, function () {
-                this.currencyValue = this.model.get(this.currencyFieldName);
-                this.updateCurrency();
-            }.bind(this));
-
-            if (this.mode == 'edit' || this.mode == 'detail') {
-                this.updateCurrency();
-            }
-        },
-
-        updateCurrency: function () {
-            this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];
-            var currencyOptions = '';
-            this.currencyList.forEach(function (code) {
-                currencyOptions += '<option value="' + code + '"' + ((this.currencyValue == code) ? ' selected' : '') + '>' + code + '</option>';
-            }, this);
-            this.currencyOptions = currencyOptions;
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
                 this.$currency = this.$el.find('[name="' + this.currencyFieldName + '"]');
-                this.$currency.on('change', function () {
-                    this.trigger('change');
-                }.bind(this));
             }
         },
 
