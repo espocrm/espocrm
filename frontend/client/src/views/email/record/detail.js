@@ -23,6 +23,8 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
+        sideView: 'Email.Record.DetailSide',
+
         layoutNameConfigure: function () {
             if (!this.model.isNew()) {
                 var isRestricted = false;
