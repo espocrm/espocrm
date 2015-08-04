@@ -48,6 +48,9 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                     this.$el.find('.navbar-collapse.in').collapse('hide');
                 }
             },
+            'click .navbar-header a.navbar-brand': function (e) {
+                this.$el.find('.navbar-collapse.in').collapse('hide');
+            },
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
