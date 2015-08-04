@@ -1,0 +1,6 @@
+[
+    {"name":"name", "width": 35, "link": true},
+    {"name":"stage", "width": 25},
+    {"name":"createdAt"},
+    {"name":"amount", "align": "right"}
+]

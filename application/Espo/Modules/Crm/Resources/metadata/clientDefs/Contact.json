@@ -27,6 +27,9 @@
         "rowActionsView": "Record.RowActions.Empty",
         "select": false,
         "create": false
+      },
+      "opportunities":{
+         "layout":"listForAccount"
       }
    },
    "boolFilterList": ["onlyMy"],

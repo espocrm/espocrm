@@ -24,9 +24,9 @@
    },
    "relationshipPanels":{
       "contacts":{
-         "actions":[
-
-         ],
+         "layout":"listForAccount"
+      },
+      "opportunities":{
          "layout":"listForAccount"
       },
       "campaignLogRecords": {
