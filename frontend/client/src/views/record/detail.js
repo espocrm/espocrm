@@ -144,8 +144,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             var theme = this.getConfig().get('theme');
             var themeDefs = this.getMetadata().get('themes.' + theme) || {};
 
-            var stickTop = 62 ;themeDefs.stickTop || 62;
-            var blockHeight = 21;themeDefs.blockHeight || 21;
+            var stickTop = themeDefs.stickTop || 62;
+            var blockHeight = themeDefs.blockHeight || 21;
 
             var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
             var $record = this.getView('record').$el;

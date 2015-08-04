@@ -532,6 +532,8 @@
         }
     },
     "themes": {
-        "Espo": "Espo"
+        "Espo": "Espo",
+        "Sacura": "Sacura",
+        "EspoVertical": "Espo Vertical"
     }
 }

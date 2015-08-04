@@ -2,6 +2,6 @@
     "stylesheet": "client/css/espo-vertical.css",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 44,
-    "recordTopButtonsStickTop": 26,
+    "recordTopButtonsStickTop": 61,
     "recordTopButtonsBlockHeight": 21
 }
