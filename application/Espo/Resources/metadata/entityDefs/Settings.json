@@ -242,7 +242,8 @@
         "theme": {
             "type": "enum",
             "view": "Settings.Fields.Theme",
-            "translation": "Global.themes"
+            "translation": "Global.themes",
+            "isSorted": true
         }
     }
 }
