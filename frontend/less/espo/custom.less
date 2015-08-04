@@ -15,10 +15,6 @@ blockquote {
     font-size: @font-size-base;
 }
 
-.pagination-sm {
-  .pagination-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @button-radius);
-}
-
 .pagination-sm > li > a {
     line-height: @line-height-small;
 }
@@ -72,6 +68,7 @@ label {
   margin: 10px 0;
   border-bottom: 0;
   padding-bottom: 2px;
+  min-height: 33px;
 }
 
 .modal-header {
@@ -645,36 +642,9 @@ td.cell-buttons > .btn-group {
     color: @brand-warning;
 }
 
-html, body {
-    height: 100%;
-}
-
-body > .content {
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 42px;
-}
 
 body > footer {
-    clear: both;
-    position: relative;
-    height: 26px;
-    margin-top: -28px;
     background-color: @gray-lighter;
-}
-
-
-@media screen and (max-width: @screen-sm-min) {
-    body > .content {
-        margin-top: -95px;
-        padding-top: 95px;
-        margin-bottom: -20px;
-        padding-bottom: 0;
-    }
-
-    body > footer {
-        margin-top: 23px;
-    }
 }
 
 
@@ -703,7 +673,6 @@ body > footer > p a:visited {
 .navbar-form.global-search-container {
     padding-left: 0;
     padding-right: 0;
-    margin-left: -8px;
 }
 
 #global-search-panel > .panel > .panel-body {

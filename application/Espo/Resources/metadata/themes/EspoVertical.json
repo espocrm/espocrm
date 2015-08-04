@@ -1,4 +1,7 @@
 {
     "stylesheet": "client/css/espo-vertical.css",
-    "navbarHorizontalAdjustDisabled": true
+    "navbarIsVertical": true,
+    "navbarStaticItemsHeight": 44,
+    "recordTopButtonsStickTop": 26,
+    "recordTopButtonsBlockHeight": 21
 }

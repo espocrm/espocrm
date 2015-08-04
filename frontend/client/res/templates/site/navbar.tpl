@@ -28,7 +28,7 @@
                 {{{notificationsBadge}}}
             </li>
             {{#if enableQuickCreate}}
-            <li class="dropdown hidden-xs">
+            <li class="dropdown hidden-xs quick-create-container">
                 <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
                     <li class="dropdown-header">{{translate 'Create'}}</li>
@@ -38,7 +38,7 @@
                 </ul>
             </li>
             {{/if}}
-            <li class="dropdown">
+            <li class="dropdown menu-container">
                 <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     <li><a href="#User/view/{{userId}}">{{userName}}</a></li>

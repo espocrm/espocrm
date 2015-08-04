@@ -117,7 +117,9 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             var self = this;
 
             var theme = this.getConfig().get('theme');
-            if (!this.getMetadata().get('themes.' + theme + '.navbarHorizontalAdjustDisabled')) {
+            var themeDefs = this.getMetadata().get('themes.' + theme) || {};
+
+            if (!themeDefs.navbarIsVertical) {
                 var $tabs = this.$el.find('ul.tabs');
                 var $more = $tabs.find('li.dropdown > ul');
 
@@ -193,10 +195,12 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 processUpdateWidth();
             } else {
                 var $tabs = this.$el.find('ul.tabs');
+
+                var navbarStaticItemsHeight = themeDefs.navbarStaticItemsHeight || 0;
                 var updateHeight = function () {
                     var windowHeight = window.innerHeight;
 
-                    $tabs.css('height', (windowHeight - 130) + 'px');
+                    $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                 }.bind(this);
 
                 $(window).on('resize.navbar', function() {

@@ -8,7 +8,7 @@
   }
 }
 
-.navbar-collapse {
+#header .navbar-collapse {
   @media (min-width: @grid-float-breakpoint) {
     .navbar & {
       padding-left: 0;
@@ -35,11 +35,45 @@ body {
     padding-top: 55px;
 }
 
+html, body {
+    height: 100%;
+}
+
+body > footer {
+    margin-top: -28px;
+}
+
+body > .content {
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 42px;
+}
+
+body > footer {
+    clear: both;
+    position: relative;
+    height: 26px;
+}
+
 @media screen and (max-width: @screen-sm-min) {
-  .navbar {
+  #header .navbar {
       position: static;
   }
   body {
       padding-top: 0;
   }
 }
+
+@media screen and (max-width: @screen-sm-min) {
+    body > .content {
+        margin-top: -95px;
+        padding-top: 95px;
+        margin-bottom: -20px;
+        padding-bottom: 0;
+    }
+
+    body > footer {
+        margin-top: 23px;
+    }
+}
+

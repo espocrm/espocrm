@@ -140,9 +140,14 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
         afterRender: function () {
             var $container = this.$el.find('.detail-button-container');
-            var stickTop = 62;
-            var blockHeihgt = 21;
-            var $block = $('<div>').css('height', blockHeihgt + 'px').html('&nbsp;').hide().insertAfter($container);
+
+            var theme = this.getConfig().get('theme');
+            var themeDefs = this.getMetadata().get('themes.' + theme) || {};
+
+            var stickTop = 62 ;themeDefs.stickTop || 62;
+            var blockHeight = 21;themeDefs.blockHeight || 21;
+
+            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
             var $record = this.getView('record').$el;
             var $window = $(window);
 
@@ -167,7 +172,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                             var $p = $('.popover');
                             $p.each(function (i, el) {
                                 $el = $(el);
-                                $el.css('top', ($el.position().top - blockHeihgt) + 'px');
+                                $el.css('top', ($el.position().top - blockHeight) + 'px');
                             });
                         }
                     } else {
@@ -178,7 +183,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                             var $p = $('.popover');
                             $p.each(function (i, el) {
                                 $el = $(el);
-                                $el.css('top', ($el.position().top + blockHeihgt) + 'px');
+                                $el.css('top', ($el.position().top + blockHeight) + 'px');
                             });
                         }
                     }
