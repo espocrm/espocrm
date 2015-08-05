@@ -22,8 +22,8 @@
 
 Espo.define(
     'app',
-    ['ui', 'utils', 'acl', 'cache', 'storage', 'models/settings', 'language', 'metadata', 'field-manager', 'models/user', 'models/preferences', 'model-factory' ,'collection-factory', 'pre-loader', 'view-helper', 'controllers/base', 'router', 'date-time', 'layout-manager'],
-    function (Ui, Utils, Acl, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager) {
+    ['ui', 'utils', 'acl', 'cache', 'storage', 'models/settings', 'language', 'metadata', 'field-manager', 'models/user', 'models/preferences', 'model-factory' ,'collection-factory', 'pre-loader', 'view-helper', 'controllers/base', 'router', 'date-time', 'layout-manager', 'theme-manager'],
+    function (Ui, Utils, Acl, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager, ThemeManager) {
 
     var App = function (options, callback) {
         var options = options || {};
@@ -61,6 +61,8 @@ Espo.define(
             this.preferences.settings = this.settings;
             this.acl = new Acl(this.user);
 
+            this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
+
             this._modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
             this._collectionFactory = new CollectionFactory(this.loader, this._modelFactory);
 
@@ -68,7 +70,7 @@ Espo.define(
             this._initView();
             this._initBaseController();
 
-            this._preLoader = new PreLoader(this.cache, this._viewFactory);
+            this._preLoader = new PreLoader(this.cache, this._viewFactory, this.themeManager);
 
             this._preLoad(function () {
                 callback.call(this, this);
@@ -135,6 +137,9 @@ Espo.define(
                     this.user.defs = this.metadata.get('entityDefs.User');
                     this.preferences.defs = this.metadata.get('entityDefs.Preferences');
 
+                    if (this.themeManager.isUserTheme()) {
+                        $('#main-stylesheet').attr('href', this.themeManager.getStylesheet());
+                    }
 
                     this.loader.addLibsConfig(this.metadata.get('app.jsLibs') || {});
 
@@ -267,6 +272,7 @@ Espo.define(
             helper.fieldManager = this.fieldManager;
             helper.cache = this.cache;
             helper.storage = this.storage;
+            helper.themeManager = this.themeManager;
 
             this._viewLoader = function (viewName, callback) {
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);

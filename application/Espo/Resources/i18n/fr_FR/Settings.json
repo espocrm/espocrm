@@ -52,12 +52,12 @@
         "ldapUserLoginFilter": "Filtre des Connexions utilisateur",
         "ldapAccountDomainNameShort": "Compte du nom de domaine réduit",
         "ldapOptReferrals": "Abonnés parrainés",
-        "disableExport": "Désactiver l'Export (seul l'administrateur pourra le faire)",
+        "exportDisabled": "Désactiver l'Export (seul l'administrateur pourra le faire)",
         "assignmentNotificationsEntityList": "Entités à prévenir lors d'affectations",
         "assignmentEmailNotifications": "Envoyer des notifications emal lors d'affectations",
         "assignmentEmailNotificationsEntityList": "Entités à notifier par email lors d'affectations",
         "b2cMode": "Mode B2C",
-        "disableAvatars": "Désactiver les Avatars"
+        "avatarsDisabled": "Désactiver les Avatars"
     },
     "options": {
         "weekStart": {

@@ -50,7 +50,7 @@
         "ldapUserLoginFilter": "Фильтер пользовательской авторизации",
         "ldapAccountDomainNameShort": "Краткая учетная запись домена",
         "ldapOptReferrals": "Opt Referrals",
-        "disableExport": "Отмена экпортирования (доступно только администратору)",
+        "exportDisabled": "Отмена экпортирования (доступно только администратору)",
         "assignmentEmailNotifications": "Оповещать по email при назначении",
         "assignmentEmailNotificationsEntityList": "Список вещей для оповещения",
 

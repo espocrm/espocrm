@@ -36,7 +36,7 @@ Espo.define('Views.Fields.UserWithAvatar', 'Views.Fields.Link', function (Dep) {
         },
 
         getAvatarHtml: function () {
-            if (this.getConfig().get('disableAvatars')) {
+            if (this.getConfig().get('avatarsDisabled')) {
                 return '';
             }
             var t;

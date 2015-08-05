@@ -202,7 +202,7 @@
             "type": "bool",
             "default": true
         },
-        "disableExport": {
+        "exportDisabled": {
             "type": "bool",
             "default": false
         },
@@ -224,7 +224,7 @@
             "type": "bool",
             "default": false
         },
-        "disableAvatars": {
+        "avatarsDisabled": {
             "type": "bool",
             "default": false
         },
@@ -239,11 +239,13 @@
         "displayListViewRecordCount": {
             "type": "bool"
         },
+        "userThemesDisabled": {
+            "type": "bool"
+        },
         "theme": {
             "type": "enum",
             "view": "Settings.Fields.Theme",
-            "translation": "Global.themes",
-            "isSorted": true
+            "translation": "Global.themes"
         }
     }
 }

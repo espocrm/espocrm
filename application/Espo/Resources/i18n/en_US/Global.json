@@ -160,7 +160,8 @@
         "Tree View": "Tree View",
         "Unlink All": "Unlink All",
         "Total": "Total",
-        "Print to PDF": "Print to PDF"
+        "Print to PDF": "Print to PDF",
+        "Default": "Default"
     },
     "messages": {
         "pleaseWait": "Please wait...",

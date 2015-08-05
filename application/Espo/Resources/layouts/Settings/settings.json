@@ -3,7 +3,7 @@
         "label": "System",
         "rows": [
             [{"name": "useCache"},{"name": "companyLogo"}],
-            [{"name": "disableExport"},{"name": "globalSearchEntityList"}],
+            [{"name": "exportDisabled"},{"name": "globalSearchEntityList"}],
             [{"name": "followCreatedEntities"}, false]
         ]
     },

@@ -52,11 +52,11 @@
 		"ldapUserLoginFilter": "Filtro para Login de Usuário",
 		"ldapAccountDomainNameShort": "Nome curto do Domínio da Conta",
 		"ldapOptReferrals": "Referências Opt",
-		"disableExport": "Desabilitar exportação (permitido apenas para administradores)",
+		"exportDisabled": "Desabilitar exportação (permitido apenas para administradores)",
 		"assignmentEmailNotifications": "Enviar notificações sobre as designações por e-mail",
 		"assignmentEmailNotificationsEntityList": "Entidades para notificar",
         "b2cMode": "Modo B2C",
-        "disableAvatars": "Desabilitar Avatares"
+        "avatarsDisabled": "Desabilitar Avatares"
     },
     "options": {
         "weekStart": {

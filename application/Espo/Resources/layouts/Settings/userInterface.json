@@ -2,9 +2,9 @@
     {
         "label": "Configuration",
         "rows": [
-            [{"name": "theme"}, {"name": "disableAvatars"}],
+            [{"name": "theme"}, {"name": "userThemesDisabled"}],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
-            [{"name": "recordsPerPageSmall"},false],
+            [{"name": "recordsPerPageSmall"},{"name": "avatarsDisabled"}],
             [{"name": "tabList"},{"name": "quickCreateList"}]
         ]
     }

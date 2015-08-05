@@ -147,6 +147,12 @@ Espo.define('view', [], function () {
             }
         },
 
+        getThemeManager: function () {
+            if (this._helper) {
+                return this._helper.themeManager;
+            }
+        },
+
         updatePageTitle: function () {
             var title = this.getConfig().get('applicationTitle') || 'EspoCRM';
             this.setPageTitle(title);

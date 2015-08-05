@@ -47,7 +47,7 @@
         "ldapUserLoginFilter": "Bộ lọc đăng nhập",
         "ldapAccountDomainNameShort": "Tên miền tài khoản",
         "ldapOptReferrals": "Được giới thiệu",
-        "disableExport": "Disable Export (only admin is allowed)"
+        "exportDisabled": "Disable Export (only admin is allowed)"
     },
     "options": {
         "weekStart": {

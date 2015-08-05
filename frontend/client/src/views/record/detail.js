@@ -141,11 +141,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         afterRender: function () {
             var $container = this.$el.find('.detail-button-container');
 
-            var theme = this.getConfig().get('theme');
-            var themeDefs = this.getMetadata().get('themes.' + theme) || {};
-
-            var stickTop = themeDefs.stickTop || 62;
-            var blockHeight = themeDefs.blockHeight || 21;
+            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
+            var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
 
             var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
             var $record = this.getView('record').$el;

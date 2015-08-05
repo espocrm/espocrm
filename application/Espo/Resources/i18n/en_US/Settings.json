@@ -45,15 +45,16 @@
         "ldapUserLoginFilter": "User Login Filter",
         "ldapAccountDomainNameShort": "Account Domain Name Short",
         "ldapOptReferrals": "Opt Referrals",
-        "disableExport": "Disable Export (only admin is allowed)",
+        "exportDisabled": "Disable Export (only admin is allowed)",
         "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
         "assignmentEmailNotifications": "Send Email Notifications upon Assignment",
         "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
         "b2cMode": "B2C Mode",
-        "disableAvatars": "Disable Avatars",
+        "avatarsDisabled": "Disable Avatars",
         "followCreatedEntities": "Follow Created Entities",
         "displayListViewRecordCount": "Display Total Count (on List View)",
-        "theme": "Theme"
+        "theme": "Theme",
+        "userThemesDisabled": "Disable User Themes"
     },
     "options": {
         "weekStart": {

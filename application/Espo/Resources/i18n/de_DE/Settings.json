@@ -45,12 +45,12 @@
         "ldapUserLoginFilter": "Login Filter benutzen",
         "ldapAccountDomainNameShort": "Domain Name Konto kurz",
         "ldapOptReferrals": "Opt Referrals",
-        "disableExport": "Export deaktivieren (nur Admin ist berechtigt)",
+        "exportDisabled": "Export deaktivieren (nur Admin ist berechtigt)",
         "assignmentNotificationsEntityList": "Entitäten über die bei Zuweisung benachrichtigt werden soll",
         "assignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen senden",
         "assignmentEmailNotificationsEntityList": "Entitäten über die mit E-Mail bei Zuweisung benachrichtigt werden soll",
         "b2cMode": "B2C Modus",
-        "disableAvatars": "Avatare deaktivieren",
+        "avatarsDisabled": "Avatare deaktivieren",
         "followCreatedEntities": "Erstellten Einträgen beobachten"
     },
     "options": {

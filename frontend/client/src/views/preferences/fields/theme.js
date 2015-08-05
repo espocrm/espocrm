@@ -18,32 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.User.Fields.Name', 'Views.Fields.PersonName', function (Dep) {
+Espo.define('views/preferences/fields/theme', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'user.fields.name.list-link',
+        setup: function () {
+            this.params.options = Object.keys(this.getMetadata().get('themes')).sort(function (v1, v2) {
+                return this.translate(v1, 'theme').localeCompare(this.translate(v2, 'theme'));
+            }.bind(this));
 
-        listLinkTemplate: 'user.fields.name.list-link',
+            this.params.options.unshift('');
 
-        data: function () {
-            return _.extend({
-                avatar: this.getAvatarHtml()
-            }, Dep.prototype.data.call(this));
-        },
+            Dep.prototype.setup.call(this);
 
-        getAvatarHtml: function () {
-            if (this.getConfig().get('avatarsDisabled')) {
-                return '';
-            }
-            var t;
-            var cache = this.getCache();
-            if (cache) {
-                t = cache.get('app', 'timestamp');
-            } else {
-                t = Date.now();
-            }
-            return '<img class="avatar avatar-link" width="16" src="?entryPoint=avatar&size=small&id=' + this.model.id + '&t='+t+'">';
+            this.translatedOptions = this.translatedOptions || {};
+            this.translatedOptions[''] = this.translate('Default');
         },
 
     });

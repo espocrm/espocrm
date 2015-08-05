@@ -45,12 +45,12 @@
         "ldapUserLoginFilter": "Фільтр логіну користувача",
         "ldapAccountDomainNameShort": "Account Domain Name Short",
         "ldapOptReferrals": "Оптові реферали",
-        "disableExport": "Вимкнути експортування (доступно лише адміністру)",
+        "exportDisabled": "Вимкнути експортування (доступно лише адміністру)",
         "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
         "assignmentEmailNotifications": "Посилати сповіщення на емейл при назначенні",
         "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
         "b2cMode": "Режим В2С",
-        "disableAvatars": "Вимкнути аватари",
+        "avatarsDisabled": "Вимкнути аватари",
         "followCreatedEntities": "Follow Created Entities"
     },
     "options": {

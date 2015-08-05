@@ -50,11 +50,11 @@
         "ldapUserLoginFilter": "Gebruikers Login Filter",
         "ldapAccountDomainNameShort": "Korte Gebruikers Domein Naam",
         "ldapOptReferrals": "Opt Referentie",
-        "disableExport": "Exporteren Uitschakelen (Uitsluitend toegestaan voor Admin)",
+        "exportDisabled": "Exporteren Uitschakelen (Uitsluitend toegestaan voor Admin)",
         "assignmentEmailNotifications": "Verzend Email na Toewijzing",
         "assignmentEmailNotificationsEntityList": "Entities om over te informeren",
         "b2cMode": "B2C Mode",
-        "disableAvatars": "Avatar uitschakelen"
+        "avatarsDisabled": "Avatar uitschakelen"
     },
     "options": {
         "weekStart": {

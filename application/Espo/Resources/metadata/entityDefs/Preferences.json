@@ -102,6 +102,11 @@
         "defaultReminders": {
             "type": "jsonArray",
             "view": "Crm:Meeting.Fields.Reminders"
+        },
+        "theme": {
+            "type": "enum",
+            "view": "Preferences.Fields.Theme",
+            "translation": "Global.themes"
         }
     }
 }

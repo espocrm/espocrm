@@ -446,7 +446,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         },
 
         massActionExport: function () {
-	        if (!this.getConfig().get('disableExport') || this.getUser().get('isAdmin')) {
+	        if (!this.getConfig().get('exportDisabled') || this.getUser().get('isAdmin')) {
 	            this.export();
 	        }
         },
@@ -476,7 +476,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-            if (this.getConfig().get('disableExport') && !this.getUser().get('isAdmin')) {
+            if (this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')) {
             	this.removeMassAction('export');
             }
 

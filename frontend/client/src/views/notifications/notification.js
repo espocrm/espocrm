@@ -70,7 +70,7 @@ Espo.define('Views.Notifications.Notification', 'View', function (Dep) {
         },
 
         getAvatarHtml: function () {
-            if (this.getConfig().get('disableAvatars')) {
+            if (this.getConfig().get('avatarsDisabled')) {
                 return '';
             }
             var t;

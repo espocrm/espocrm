@@ -96,6 +96,10 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
                 this.hideField('receiveAssignmentEmailNotifications');
             }
 
+            if (this.getConfig().get('userThemesDisabled')) {
+                this.hideField('theme');
+            }
+
             var smtpSecurityField = this.getFieldView('smtpSecurity');
             this.listenTo(smtpSecurityField, 'change', function () {
                 var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];

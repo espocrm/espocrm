@@ -116,10 +116,10 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
             var self = this;
 
-            var theme = this.getConfig().get('theme');
-            var themeDefs = this.getMetadata().get('themes.' + theme) || {};
+            var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
+            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
 
-            if (!themeDefs.navbarIsVertical) {
+            if (!navbarIsVertical) {
                 var $tabs = this.$el.find('ul.tabs');
                 var $more = $tabs.find('li.dropdown > ul');
 
@@ -196,7 +196,6 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
-                var navbarStaticItemsHeight = themeDefs.navbarStaticItemsHeight || 0;
                 var updateHeight = function () {
                     var windowHeight = window.innerHeight;
 

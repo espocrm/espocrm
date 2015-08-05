@@ -43,6 +43,10 @@
                 {
                     "name": "defaultReminders"
                 }
+            ],
+            [
+                {"name":"theme"},
+                false
             ]
         ]
     },

@@ -198,7 +198,7 @@ class Record extends Base
 
     public function actionExport($params, $data, $request)
     {
-        if ($this->getConfig()->get('disableExport') && !$this->getUser()->isAdmin()) {
+        if ($this->getConfig()->get('exportDisabled') && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 

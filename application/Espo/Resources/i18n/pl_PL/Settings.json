@@ -50,7 +50,7 @@
         "ldapUserLoginFilter": "Filtr użytkoników ",
         "ldapAccountDomainNameShort": "Krótka nazwa konta domeny",
         "ldapOptReferrals": "Opt Referrals",
-        "disableExport": "Disable Export (only admin is allowed)",
+        "exportDisabled": "Disable Export (only admin is allowed)",
         "assignmentEmailNotifications": "Wyślij powiadominie do użytkonika o przypisaniu",
         "assignmentEmailNotificationsEntityList": "Entities to Notify About"
     },
