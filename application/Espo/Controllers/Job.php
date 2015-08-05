@@ -23,8 +23,9 @@
 namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 
-class Integration extends \Espo\Core\Controllers\Record
+class Job extends \Espo\Core\Controllers\Record
 {
     protected function checkControllerAccess()
     {
@@ -33,29 +34,39 @@ class Integration extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionIndex($params, $data, $request)
+    public function actionCreate($params, $data)
     {
-        return false;
-    }
-
-    public function actionRead($params, $data, $request)
-    {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        return $entity->toArray();
+        throw new Forbidden();
     }
 
     public function actionUpdate($params, $data)
     {
-        return $this->actionPatch($params, $data);
+        throw new Forbidden();
     }
 
     public function actionPatch($params, $data)
     {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        $entity->set($data);
-        $this->getEntityManager()->saveEntity($entity);
+        throw new Forbidden();
+    }
 
-        return $entity->toArray();
+    public function actionListLinked($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
+
+    public function actionMassUpdate($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
+
+    public function actionCreateLink($params, $data)
+    {
+        throw new Forbidden();
+    }
+
+    public function actionRemoveLink($params, $data)
+    {
+        throw new Forbidden();
     }
 }
 

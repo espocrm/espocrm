@@ -1,0 +1,20 @@
+[
+    {
+        "label":"",
+        "rows":[
+            [{"name":"name"}, {"name": "status"}],
+            [{"name":"executeTime"}, {"name": "attempts"}],
+            [{"name":"createdAt"}, {"name": "failedAttempts"}],
+            [{"name":"modifiedAt"}, false]
+        ]
+    },
+    {
+        "label":"",
+        "rows":[
+            [{"name":"scheduledJob"}, false],
+            [{"name":"serviceName"}, false],
+            [{"name":"method"}, false],
+            [{"name": "data"}]
+        ]
+    }
+]

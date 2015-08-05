@@ -40,7 +40,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupJobs()
     {
-        $query = "DELETE FROM `job` WHERE DATE(modified_at) < '".$this->getDate()."' ";
+        $query = "DELETE FROM `job` WHERE DATE(modified_at) < '".$this->getCleanupFromDate()."' AND status <> 'Pending'";
 
         $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
@@ -64,14 +64,14 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
             $delSql = "DELETE FROM `scheduled_job_log_record`
                     WHERE scheduled_job_id = '".$id."'
-                    AND DATE(created_at) < '".$this->getDate()."'
+                    AND DATE(created_at) < '".$this->getCleanupFromDate()."'
                     AND id NOT IN ('".implode("', '", $lastRowIds)."')
                 ";
             $pdo->query($delSql);
         }
     }
 
-    protected function getDate($format = 'Y-m-d')
+    protected function getCleanupFromDate($format = 'Y-m-d')
     {
         $datetime = new \DateTime();
         $datetime->modify($this->period);

@@ -19,14 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.RowActions.RemoveOnly', 'View', function (Dep) {
+Espo.define('views/record/row-actions/remove-only', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.row-actions.default',
+        template: 'record/row-actions/default',
 
         getActions: function () {
-            if (this.options.acl.remove) {
+            if (this.options.acl.edit) {
                 return [
                     {
                         action: 'quickRemove',

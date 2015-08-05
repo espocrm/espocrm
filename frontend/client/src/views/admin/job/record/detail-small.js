@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,42 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/admin/job/record/detail-small', 'views/record/detail-small', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
+    return Dep.extend({
 
-class Integration extends \Espo\Core\Controllers\Record
-{
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
+        sideView: null,
 
-    public function actionIndex($params, $data, $request)
-    {
-        return false;
-    }
+        isWide: true
 
-    public function actionRead($params, $data, $request)
-    {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        return $entity->toArray();
-    }
-
-    public function actionUpdate($params, $data)
-    {
-        return $this->actionPatch($params, $data);
-    }
-
-    public function actionPatch($params, $data)
-    {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        $entity->set($data);
-        $this->getEntityManager()->saveEntity($entity);
-
-        return $entity->toArray();
-    }
-}
+    });
+});
 

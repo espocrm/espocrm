@@ -149,6 +149,21 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             }, this);
         },
 
+        jobs: function () {
+            this.collectionFactory.create('Job', function (collection) {
+                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+                searchManager.loadStored();
+                collection.where = searchManager.getWhere();
+                collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+
+                this.main('Admin.Job.List', {
+                    scope: 'Job',
+                    collection: collection,
+                    searchManager: searchManager,
+                });
+            }, this);
+        },
+
         userInterface: function () {
             var model = this.getSettingsModel();
 

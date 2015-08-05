@@ -23,7 +23,7 @@ Espo.define('views/admin/auth-token/record/list', 'views/record/list', function 
 
     return Dep.extend({
 
-        rowActionsView: 'admin/auth-token/record/row-actions/remove',
+        rowActionsView: 'record/row-actions/remove-only',
 
         massActionList: ['remove'],
 

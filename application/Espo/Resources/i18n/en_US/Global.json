@@ -15,7 +15,8 @@
         "InboundEmail": "Inbound Email Account",
         "Stream": "Stream",
         "Import": "Import",
-        "Template": "Template"
+        "Template": "Template",
+        "Job": "Job"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -33,7 +34,8 @@
         "InboundEmail": "Inbound Email Accounts",
         "Stream": "Stream",
         "Import": "Import Results",
-        "Template": "Templates"
+        "Template": "Templates",
+        "Job": "Jobs"
     },
     "labels": {
         "Misc": "Misc",

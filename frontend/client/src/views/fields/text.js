@@ -46,10 +46,6 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
             }
         },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-
         setup: function () {
             this.params.rows = this.params.rows || this.rowsDefault;
         },

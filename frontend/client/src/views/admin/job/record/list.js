@@ -19,17 +19,15 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Admin.AuthToken.Record.RowActions.Remove', 'View', function (Dep) {
+Espo.define('views/admin/job/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        _template: '<a href="javascript:" class="action" data-action="quickRemove" data-id="{{id}}">{{translate "Remove"}}</a>',
+        rowActionsView: 'record/row-actions/view-and-remove',
 
-        data: function () {
-            return {
-                id: this.model.id
-            };
-        }
+        massActionList: ['remove'],
+
+        rowActionsColumnWidth: '5%',
 
     });
 });

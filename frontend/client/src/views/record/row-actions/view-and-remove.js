@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,42 +19,42 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/record/row-actions/view-and-remove', 'views/record/row-actions/default', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
+    return Dep.extend({
 
-class Integration extends \Espo\Core\Controllers\Record
-{
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
+        template: 'record/row-actions/default',
+
+        getActions: function () {
+            var actionList = [{
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                }
+            }];
+            if (this.options.acl.edit) {
+                actionList.push({
+                    action: 'quickRemove',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+
+            }
+            return actionList;
+        },
+
+        data: function () {
+            return {
+                acl: this.options.acl,
+                actions: this.getActions(),
+                scope: this.model.name
+            };
         }
-    }
+    });
 
-    public function actionIndex($params, $data, $request)
-    {
-        return false;
-    }
+});
 
-    public function actionRead($params, $data, $request)
-    {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        return $entity->toArray();
-    }
-
-    public function actionUpdate($params, $data)
-    {
-        return $this->actionPatch($params, $data);
-    }
-
-    public function actionPatch($params, $data)
-    {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        $entity->set($data);
-        $this->getEntityManager()->saveEntity($entity);
-
-        return $entity->toArray();
-    }
-}
 
