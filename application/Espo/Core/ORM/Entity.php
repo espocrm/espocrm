@@ -37,6 +37,7 @@ class Entity extends \Espo\ORM\Entity
             $collection = $this->get($field, $defs);
             $ids = array();
             $names = new \stdClass();
+            $types = new \stdClass();
             if (!empty($columns)) {
                 $columnsData = new \stdClass();
             }
@@ -46,6 +47,7 @@ class Entity extends \Espo\ORM\Entity
                     $id = $e->id;
                     $ids[] = $id;
                     $names->$id = $e->get('name');
+                    $types->$id = $e->get('type');
                     if (!empty($columns)) {
                         $columnsData->$id = new \stdClass();
                         foreach ($columns as $column => $f) {
@@ -57,6 +59,7 @@ class Entity extends \Espo\ORM\Entity
 
             $this->set($field . 'Ids', $ids);
             $this->set($field . 'Names', $names);
+            $this->set($field . 'Types', $types);
             if (!empty($columns)) {
                 $this->set($field . 'Columns', $columnsData);
             }

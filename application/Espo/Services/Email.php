@@ -237,9 +237,6 @@ class Email extends Record
 
         $this->loadNameHash($entity);
 
-        if ($entity->id) {
-            $this->loadAttachmentsTypes($entity);
-        }
     }
 
     public function markAsReadByIds(array $ids)
@@ -351,23 +348,6 @@ class Email extends Record
             $isRead = true;
         }
         $entity->set('isRead', $isRead);
-    }
-
-    protected function loadAttachmentsTypes(Entity $entity)
-    {
-        $types = new \stdClass();
-
-        $attachmentsIds = $entity->get('attachmentsIds');
-        if (!empty($attachmentsIds)) {
-            foreach ($attachmentsIds as $id) {
-                $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-                if ($attachment) {
-                    $types->$id = $attachment->get('type');
-                }
-            }
-        }
-
-        $entity->set('attachmentsTypes', $types);
     }
 
     public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])

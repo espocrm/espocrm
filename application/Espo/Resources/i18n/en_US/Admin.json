@@ -85,7 +85,8 @@
         "varchar": "Varchar",
         "file": "File",
         "image": "Image",
-        "multiEnum": "Multi-Enum"
+        "multiEnum": "Multi-Enum",
+        "attachmentMultiple": "Attachment Multiple"
     },
     "fields": {
         "type": "Type",

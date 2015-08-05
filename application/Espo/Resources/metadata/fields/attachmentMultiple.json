@@ -1,0 +1,23 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      }
+   ],
+   "actualFields":[
+      "ids"
+   ],
+   "notActualFields":[
+      "names"
+   ],
+   "linkDefs": {
+      "type": "hasChildren",
+      "entity": "Attachment",
+      "foreign": "parent",
+      "layoutRelationshipsDisabled": true,
+      "relationName": "attachments"
+   },
+   "filter": false
+}

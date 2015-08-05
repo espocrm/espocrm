@@ -29,30 +29,6 @@ use \Espo\ORM\Entity;
 
 class Task extends \Espo\Services\Record
 {
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
 
-        if ($entity->id) {
-            $this->loadAttachmentsTypes($entity);
-        }
-    }
-
-    protected function loadAttachmentsTypes(Entity $entity)
-    {
-        $types = new \stdClass();
-
-        $attachmentsIds = $entity->get('attachmentsIds');
-        if (!empty($attachmentsIds)) {
-            foreach ($attachmentsIds as $id) {
-                $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-                if ($attachment) {
-                    $types->$id = $attachment->get('type');
-                }
-            }
-        }
-
-        $entity->set('attachmentsTypes', $types);
-    }
 }
 

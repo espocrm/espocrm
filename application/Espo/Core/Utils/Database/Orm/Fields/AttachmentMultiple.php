@@ -20,28 +20,32 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Relations;
+namespace Espo\Core\Utils\Database\Orm\Fields;
 
-class Attachments extends HasChildren
+class AttachmentMultiple extends Base
 {
-    protected function load($linkName, $entityName)
+    protected function load($fieldName, $entityType)
     {
-        $parentRelation = parent::load($linkName, $entityName);
-
-        $relation = array(
-            $entityName => array (
+        $data = array(
+            $entityType => array (
                 'fields' => array(
-                    $linkName.'Types' => array(
-                        'type' => 'jsonObject',
-                        'notStorable' => true,
+                    $fieldName.'Ids' => array(
+                        'type' => 'varchar',
+                        'notStorable' => true
                     ),
+                    $fieldName.'Names' => array(
+                        'type' => 'varchar',
+                        'notStorable' => true
+                    ),
+                )
+            ),
+            'unset' => array(
+                $entityType => array(
+                    'fields.'.$fieldName,
                 ),
             ),
         );
 
-        $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
-
-        return $relation;
+        return $data;
     }
 }
-

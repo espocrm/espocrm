@@ -84,8 +84,7 @@
             "type": "linkMultiple"
         },
         "attachments": {
-            "type": "linkMultiple",
-            "view": "Fields.AttachmentMultiple"
+            "type": "attachmentMultiple"
         }
     },
     "links": {
@@ -114,13 +113,6 @@
         "account": {
             "type": "belongsTo",
             "entity": "Account"
-        },
-        "attachments": {
-            "type": "hasChildren",
-            "entity": "Attachment",
-            "foreign": "parent",
-            "relationName": "attachments",
-            "layoutRelationshipsDisabled": true
         }
     },
     "collection": {

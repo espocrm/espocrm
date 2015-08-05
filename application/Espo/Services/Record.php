@@ -198,7 +198,7 @@ class Record extends \Espo\Core\Services\Base
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         foreach ($fieldDefs as $field => $defs) {
-            if (isset($defs['type']) && $defs['type'] == 'linkMultiple' && empty($defs['noLoad'])) {
+            if (isset($defs['type']) && in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) && empty($defs['noLoad'])) {
                 $columns = null;
                 if (!empty($defs['columns'])) {
                     $columns = $defs['columns'];
