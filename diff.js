@@ -69,7 +69,9 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 
     fileList.push('client/espo.min.js');
 
-    fileList.push('client/css/espo.min.css');
+    fileList.push('client/css/espo.css');
+    fileList.push('client/css/espo-vertical.css');
+    fileList.push('client/css/sacura.css');
     fileList.push('client/css/bootstrap.css');
 
     fs.writeFileSync(diffFilePath, fileList.join('\n'));
