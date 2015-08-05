@@ -103,7 +103,7 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
             this.fieldList.forEach(function (item) {
                 var view = this.getFieldView(item);
                 if (view) {
-                    view[item] = view;
+                    fields[item] = view;
                 }
             }, this);
             return fields;
