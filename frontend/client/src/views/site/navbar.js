@@ -119,6 +119,8 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
             var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
 
+            var smallScreenWidth = 768;
+
             if (!navbarIsVertical) {
                 var $tabs = this.$el.find('ul.tabs');
                 var $more = $tabs.find('li.dropdown > ul');
@@ -156,7 +158,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
                     $more.parent().addClass('hide');
 
-                    if (windowWidth < 768) {
+                    if (windowWidth < smallScreenWidth) {
                         return;
                     }
 
@@ -198,6 +200,12 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
                 var updateHeight = function () {
                     var windowHeight = window.innerHeight;
+                    var windowWidth = window.innerWidth;
+
+                    if (windowWidth < smallScreenWidth) {
+                        $tabs.css('height', 'none');
+                        return;
+                    }
 
                     $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                 }.bind(this);
