@@ -27,7 +27,7 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
         layoutName: 'composeSmall',
 
-        saveButton: false,
+        saveDisabled: true,
 
         fullFormDisabled: true,
 

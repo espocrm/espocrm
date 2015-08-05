@@ -23,12 +23,9 @@ Espo.define('views/admin/job/modals/detail', 'views/modals/detail', function (De
 
     return Dep.extend({
 
-        editButton: false,
-
         editDisabled: true,
 
         fullFormDisabled: true
-
 
     });
 });

@@ -29,7 +29,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
         template: 'modals.edit',
 
-        saveButton: true,
+        saveDisabled: false,
 
         fullFormDisabled: false,
 
@@ -47,11 +47,11 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
 
             this.buttonList = [];
 
-            if ('saveButton' in this.options) {
-                this.saveButton = this.options.saveButton;
+            if ('saveDisabled' in this.options) {
+                this.saveDisabled = this.options.saveDisabled;
             }
 
-            if (this.saveButton) {
+            if (!this.saveDisabled) {
                 this.buttonList.push({
                     name: 'save',
                     label: 'Save',

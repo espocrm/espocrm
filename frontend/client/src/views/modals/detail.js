@@ -29,7 +29,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
         template: 'modals.detail',
 
-        editButton: true,
+        editDisabled: false,
 
         fullFormDisabled: false,
 
@@ -47,8 +47,8 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
             this.buttonList = [];
 
-            if ('editButton' in this.options) {
-                this.editButton = this.options.editButton;
+            if ('editDisabled' in this.options) {
+                this.editDisabled = this.options.editDisabled;
             }
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
@@ -111,7 +111,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                 this.header = '<a href="#' + this.scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
             }
 
-            if (this.editButton && this.getAcl().check(model, 'edit')) {
+            if (!this.editDisabled && this.getAcl().check(model, 'edit')) {
                 this.addEditButton();
             }
 
