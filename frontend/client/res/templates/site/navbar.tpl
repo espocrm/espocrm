@@ -1,23 +1,22 @@
 <div class="navbar navbar-inverse" role="navigation">
-
     <div class="navbar-header">
+        <a class="minimizer" href="javascript:"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
         <a class="navbar-brand" href="#"><img src="{{logoSrc}}"></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
-              <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-         </button>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
     </div>
 
     <div class="collapse navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
             {{#each tabs}}
-            <li data-name="{{name}}"><a href="{{link}}">{{label}}</a></li>
+            <li data-name="{{name}}"><a href="{{link}}"><span>{{label}}</span></a></li>
             {{/each}}
             <li class="dropdown">
                 <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
-                </ul>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown"></ul>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">

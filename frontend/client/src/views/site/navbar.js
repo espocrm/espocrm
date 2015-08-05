@@ -62,6 +62,16 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                     view.render();
                 });
             },
+            'click .navbar-header a.minimizer': function () {
+                var $body = $('body');
+                if ($body.hasClass('minimized')) {
+                    $body.removeClass('minimized');
+                    this.getStorage().clear('state', 'layoutMinimized');
+                } else {
+                    $body.addClass('minimized');
+                    this.getStorage().set('state', 'layoutMinimized', true);
+                }
+            }
         },
 
         getLogoSrc: function () {
@@ -110,9 +120,13 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             });
         },
 
-
         afterRender: function () {
             this.selectTab(this.getRouter().getLast().controller);
+
+            if (this.getStorage().get('state', 'layoutMinimized')) {
+                var $body = $('body');
+                $body.addClass('minimized');
+            }
 
             var self = this;
 
