@@ -17,22 +17,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Views.ScheduledJob.List', 'Views.List', function (Dep) {
+ ************************************************************************/
+Espo.define('views/scheduled-job/list', 'views/list', function (Dep) {
 
-    return Dep.extend({    
-    
+    return Dep.extend({
+
         searchPanel: false,
-        
+
         setup: function () {
-            Dep.prototype.setup.call(this);            
-            
+            Dep.prototype.setup.call(this);
+
+            this.menu.dropdown.push({
+                link: '#Admin/jobs',
+                html: this.translate('Jobs', 'labels', 'Admin')
+            });
+
             this.createView('search', 'Base', {
                 el: '#main > .search-container',
                 template: 'scheduled-job.cronjob'
-            });            
+            });
         },
-        
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             $.ajax({
@@ -43,9 +48,9 @@ Espo.define('Views.ScheduledJob.List', 'Views.List', function (Dep) {
             }).done(function (data) {
                 this.$el.find('.cronjob .message').html(data.message);
                 this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
-            }.bind(this));        
+            }.bind(this));
         },
-        
+
     });
-    
+
 });
