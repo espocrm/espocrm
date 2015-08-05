@@ -317,7 +317,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a></div>';
                     names.push(line);
                 }
-                var string = previews.join('') + names.join(', ');
+                var string = previews.join('') + names.join('');
 
                 return string;
             }
