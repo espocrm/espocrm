@@ -25,12 +25,17 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
 
         type: 'listStream',
 
+        setup: function () {
+            this.itemViews = this.getMetadata().get('clientDefs.Note.itemViews') || {};
+            Dep.prototype.setup.call(this);
+        },
+
         buildRow: function (i, model, callback) {
             var key = 'row-' + model.id;
             this.rows.push(key);
 
             var type = model.get('type');
-            var viewName = 'Stream.Notes.' + type;
+            var viewName = this.itemViews[type] || 'Stream.Notes.' + type;
 
             this.createView(key, viewName, {
                 model: model,
