@@ -24,12 +24,6 @@ Espo.define('theme-manager', [], function () {
         this.config = config;
         this.preferences = preferences;
         this.metadata = metadata;
-
-        /*this.preferences.on('change:theme', function () {
-            if (this.getStylesheet() && this.isUserTheme()) {
-                $('#main-stylesheet').attr('href', this.getStylesheet());
-            }
-        }, this);*/
     };
 
     _.extend(ThemeManager.prototype, {
