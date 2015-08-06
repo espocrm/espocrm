@@ -101,6 +101,9 @@
             "notStorable": true,
             "readOnly": true,
             "disabled": true
+        },
+        "budget": {
+            "type": "currency"
         }
     },
     "links": {

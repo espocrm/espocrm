@@ -37,5 +37,35 @@
     "filterList": [
       "active"
    ],
+   "formDependency": {
+      "type": {
+         "map": {
+            "Email": [
+               {
+                  "action": "show",
+                  "fields": ["targetLists"]
+               }
+            ],
+            "Newsletter": [
+               {
+                  "action": "show",
+                  "fields": ["targetLists"]
+               }
+            ],
+            "Mail": [
+               {
+                  "action": "show",
+                  "fields": ["targetLists"]
+               }
+            ]
+         },
+         "default": [
+            {
+               "action": "hide",
+               "fields": ["targetLists"]
+            }
+         ]
+      }
+   },
    "boolFilterList": ["onlyMy"]
 }

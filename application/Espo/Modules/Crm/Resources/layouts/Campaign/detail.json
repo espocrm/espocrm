@@ -5,6 +5,7 @@
             [{"name":"name"}, {"name":"status"}],
             [{"name":"type"}, {"name":"startDate"}],
             [{"name":"targetLists"}, {"name":"endDate"}],
+            [false, {"name":"budget"}],
             [{"name":"description", "fullWidth": true}]
         ]
     }

@@ -16,7 +16,8 @@
         "softBouncedCount": "Soft Bounced",
         "leadCreatedCount": "Leads Created",
         "revenue": "Revenue",
-        "revenueConverted": "revenue (converted)"
+        "revenueConverted": "revenue (converted)",
+        "budget": "Budget"
     },
     "links": {
         "targetLists": "Target Lists",
