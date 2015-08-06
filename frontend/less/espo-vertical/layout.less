@@ -17,49 +17,95 @@
   }
 }
 
+body > #header ul.tabs > li > a > span.short-label {
+  display: none;
+}
+body > #header ul.tabs > li > a > span.full-label {
+  display: inline;
+}
+
+body > #header .navbar-brand span.home-icon {
+  display: none;
+}
 
 @media screen and (min-width: @screen-sm-min) {
 
-  body.minimized > #header {
-    width: @navbar-minimized-width;
-  }
-  body.minimized > #header .navbar-brand img {
-    display: none;
-  }
-  body.minimized > #header .navbar-header {
+  body.minimized {
+    #header {
       width: @navbar-minimized-width;
-  }
-  body.minimized > #content {
-    margin-left: @navbar-minimized-width;
-  }
+    }
 
-  body.minimized > #footer {
-    margin-left: @navbar-minimized-width;
-  }
+    #header .navbar-brand img {
+      display: none;
+    }
 
-  body.minimized > #header .navbar {
-    width: @navbar-minimized-width;
-  }
+    #header a.navbar-brand {
+      position: fixed;
+      top: 30px;
+      height: 35px;
+      width: @navbar-minimized-width;
+      padding-top: 8px;
+      paddin-left: 12px;
+    }
 
-  body.minimized > #header ul.tabs {
-    width: @navbar-minimized-width;
-  }
+    #header a.navbar-brand span.home-icon {
+      margin-left: 10px;
+      display: inline;
+      font-size: 14px;
+    }
 
-  body.minimized > #login {
-    margin-left: -@navbar-minimized-width;
-  }
+    #header .navbar-brand img {
+      display: none;
+    }
 
-  body.minimized > #header .navbar-right {
-    margin-left: @navbar-minimized-width;
-    padding-right: @navbar-minimized-width;
-  }
+    #header .navbar-header {
+        width: @navbar-minimized-width;
+        height: 30px;
+    }
 
-  body.minimized > #header ul.tabs li a span {
-    visibility: hidden;
-    display: block;
-  }
-  body.minimized > #header ul.tabs li a span:first-letter {
-    visibility: visible;
+    #header .navbar-header > a.minimizer {
+      width: 30px;
+      height: 30px;
+      float: none;
+      display: block;
+    }
+
+    #header .navbar-header > a.minimizer span {
+      margin-left: 12px;
+    }
+
+    #content {
+      margin-left: @navbar-minimized-width;
+    }
+
+    #footer {
+      margin-left: @navbar-minimized-width;
+    }
+
+    #header .navbar {
+      width: @navbar-minimized-width;
+    }
+
+    #header ul.tabs {
+      width: @navbar-minimized-width;
+      margin-top: 35px;
+    }
+
+    #login {
+      margin-left: -@navbar-minimized-width;
+    }
+
+    #header .navbar-right {
+      margin-left: @navbar-minimized-width;
+      padding-right: @navbar-minimized-width;
+    }
+
+    #header ul.tabs > li > a > span.short-label {
+      display: inline;
+    }
+    #header ul.tabs > li > a > span.full-label {
+      display: none;
+    }
   }
 
   #header .navbar {
@@ -139,7 +185,7 @@
   #header ul.tabs {
     width: @navbar-width;
     margin-left: -8px;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
   }
 

@@ -1,7 +1,9 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <a class="minimizer" href="javascript:"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
-        <a class="navbar-brand" href="#"><img src="{{logoSrc}}"></a>
+        <a class="minimizer" href="javascript:">
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </a>
+        <a class="navbar-brand" href="#"><img src="{{logoSrc}}"><span class="home-icon glyphicon glyphicon-home"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -11,8 +13,8 @@
 
     <div class="collapse navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
-            {{#each tabs}}
-            <li data-name="{{name}}"><a href="{{link}}"><span>{{label}}</span></a></li>
+            {{#each tabListDefs}}
+            <li data-name="{{name}}"><a href="{{link}}"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
             {{/each}}
             <li class="dropdown">
                 <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>

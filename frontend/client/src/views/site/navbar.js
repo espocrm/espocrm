@@ -29,7 +29,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
         data: function () {
             return {
-                tabs: this.tabDefs,
+                tabListDefs: this.tabListDefs,
                 title: this.options.title,
                 menu: this.getMenuDefs(),
                 quickCreateList: this.quickCreateList,
@@ -113,10 +113,11 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 el: this.options.el + ' .global-search-container'
             });
 
-            this.tabDefs = this.getTabDefs();
+            this.tabListDefs = this.getTabListDefs();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
+                $(window).off('scroll.navbar');
             });
         },
 
@@ -130,6 +131,8 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
             var self = this;
 
+            $window = $(window);
+
             var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
             var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
 
@@ -139,7 +142,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 var $tabs = this.$el.find('ul.tabs');
                 var $more = $tabs.find('li.dropdown > ul');
 
-                $(window).on('resize.navbar', function() {
+                $window.on('resize.navbar', function() {
                     updateWidth();
                 });
 
@@ -212,6 +215,12 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
+                var minHeight = $tabs.height() + navbarStaticItemsHeight;
+                $('body').css('minHeight', minHeight + 'px');
+                $window.on('scroll.navbar', function () {
+                    $tabs.scrollTop($window.scrollTop());
+                }.bind(this));
+
                 var updateHeight = function () {
                     var windowHeight = window.innerHeight;
                     var windowWidth = window.innerWidth;
@@ -246,17 +255,19 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             return this.tabList;
         },
 
-        getTabDefs: function () {
-            var tabDefs = [];
+        getTabListDefs: function () {
+            var tabListDefs = [];
             this.getTabList().forEach(function (tab, i) {
+                var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
                 var o = {
                     link: '#' + tab,
-                    label: this.getLanguage().translate(tab, 'scopeNamesPlural'),
+                    label: label,
+                    shortLabel: label.substr(0, 2),
                     name: tab
                 };
-                tabDefs.push(o);
+                tabListDefs.push(o);
             }, this);
-            return tabDefs;
+            return tabListDefs;
         },
 
         getMenuDefs: function () {
