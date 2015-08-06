@@ -83,6 +83,14 @@ module.exports = function (grunt) {
                     'frontend/client/css/espo-vertical.css': 'frontend/less/espo-vertical/main.less',
                 },
             },
+            sacuraVertical: {
+                options: {
+                    yuicompress: true,
+                },
+                files: {
+                    'frontend/client/css/sacura-vertical.css': 'frontend/less/sacura-vertical/main.less',
+                },
+            }
         },
         cssmin: {
             minify: {

@@ -537,6 +537,7 @@
     "themes": {
         "Espo": "Espo",
         "Sacura": "Sacura",
-        "EspoVertical": "Espo Vertical"
+        "EspoVertical": "Espo (Vertical)",
+        "SacuraVertical": "Sacura (Vertical)"
     }
 }
