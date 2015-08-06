@@ -129,7 +129,7 @@ class Record extends Base
             $maxSize = self::MAX_SIZE_LIMIT;
         }
         if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
-            throw new Forbidden();
+            throw new Forbidden("Max should should not exceed " . self::MAX_SIZE_LIMIT . ". Use pagination (offset, limit).");
         }
 
         $result = $this->getRecordService()->findEntities(array(
