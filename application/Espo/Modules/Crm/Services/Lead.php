@@ -94,7 +94,6 @@ class Lead extends \Espo\Services\Record
 
         $entityManager = $this->getEntityManager();
 
-
         if (!empty($recordsData->Account)) {
             $account = $entityManager->getEntity('Account');
             $account->set(get_object_vars($recordsData->Account));
@@ -170,6 +169,19 @@ class Lead extends \Espo\Services\Record
                     $email->set('parentType', 'Account');
                     $entityManager->saveEntity($email);
                 }
+            }
+        }
+
+        $streamService = $this->getStreamService();
+        if ($streamService->checkIsFollowed($lead, $this->getUser()->id)) {
+            if (!empty($opportunity)) {
+                $streamService->followEntity($opportunity, $this->getUser()->id);
+            }
+            if (!empty($account)) {
+                $streamService->followEntity($account, $this->getUser()->id);
+            }
+            if (!empty($contact)) {
+                $streamService->followEntity($contact, $this->getUser()->id);
             }
         }
 
