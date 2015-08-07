@@ -53,7 +53,7 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
                 bool: {
                     onlyMy: true
                 },
-                primary: 'actual'
+                primary: 'actualNotDeferred'
             },
         },
 
