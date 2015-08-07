@@ -7,9 +7,11 @@
         "contact": "Contact",
         "priority": "Priority",
         "type": "Type",
-        "description": "Description"
+        "description": "Description",
+        "inboundEmail": "Inbound Email"
     },
     "links": {
+        "inboundEmail": "Inbound Email"
     },
     "options": {
         "status": {
