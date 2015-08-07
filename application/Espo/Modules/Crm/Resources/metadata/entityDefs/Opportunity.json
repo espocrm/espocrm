@@ -53,9 +53,9 @@
             "max": 100
         },
         "leadSource": {
-            "type": "varchar",
+            "type": "enum",
             "view": "Crm:Opportunity.Fields.LeadSource",
-            "customizationDisabled": true
+            "customizationOptionsDisabled": true
         },
         "closeDate": {
             "type": "date",

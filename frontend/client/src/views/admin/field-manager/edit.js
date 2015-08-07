@@ -87,7 +87,16 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.defs = model.defs.fields[this.field];
                 }
 
-                this.params = this.getFieldManager().getParams(this.type) || [];
+                this.params = [];
+                var params = this.getFieldManager().getParams(this.type) || [];
+                params.forEach(function (o) {
+                    var item = o.name;
+                    var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+                    if (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName)) {
+                        return;
+                    }
+                    this.params.push(o);
+                }, this);
 
                 this.params.forEach(function (o) {
                     this.model.defs.fields[o.name] = o;
