@@ -19,13 +19,13 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Notifications.Items.EmailReceived', 'Views.Notifications.Notification', function (Dep) {
+Espo.define('views/notifications/items/email-received', 'views/notifications/notification', function (Dep) {
 
     return Dep.extend({
 
         messageName: 'emailReceived',
 
-        template: 'notifications.items.email-received',
+        template: 'notifications/items/email-received',
 
         data: function () {
             return _.extend({

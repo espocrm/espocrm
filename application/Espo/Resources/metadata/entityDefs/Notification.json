@@ -23,6 +23,9 @@
         "createdAt": {
             "type": "datetime",
             "readOnly": true
+        },
+        "message": {
+            "type": "text"
         }
     },
     "links": {

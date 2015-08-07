@@ -45,8 +45,9 @@ Espo.define('Views.Notifications.Field', 'Views.Fields.Base', function (Dep) {
         process: function () {
             var type = this.model.get('type');
             if (!type) return;
+            type = type.replace(/ /g, '');
 
-            var viewName = 'Notifications.Items.' + type.replace(/ /g, '');
+            var viewName = (this.getMetadata().get('clientDefs.Notification.itemViews.' + type)) || 'Notifications.Items.' + type.replace(/ /g, '');
             this.createView('notification', viewName, {
                 model: this.model,
                 el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',

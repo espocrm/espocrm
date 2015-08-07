@@ -57,7 +57,7 @@ Espo.define('Views.Notifications.Notification', 'View', function (Dep) {
         },
 
         createMessage: function () {
-            if (!this.messageTemplate) {
+            if (!this.messageTemplate && this.messageName) {
                 this.messageTemplate = this.translate(this.messageName, 'notificationMessages') || '';
             }
 

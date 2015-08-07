@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Message', 'View', function (Dep) {
+Espo.define('views/stream/message', 'view', function (Dep) {
 
     return Dep.extend({
 

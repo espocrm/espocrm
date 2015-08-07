@@ -19,24 +19,22 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('views/notifications/items/assign', 'views/notifications/notification', function (Dep) {
+Espo.define('views/notifications/items/system', 'views/notifications/notification', function (Dep) {
 
     return Dep.extend({
 
-        messageName: 'assign',
+        template: 'notifications/items/system',
 
-        template: 'notifications/items/assign',
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data['message'] = this.model.get('message');
+            return data;
+        },
 
         setup: function () {
             var data = this.model.get('data') || {};
-
             this.userId = data.userId;
-
-            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
-            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>';
-
-            this.createMessage();
-        },
+        }
 
     });
 });
