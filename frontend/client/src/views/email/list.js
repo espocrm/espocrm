@@ -27,6 +27,13 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            if (this.getUser().isAdmin()) {
+                this.menu.dropdown.push({
+                    link: '#InboundEmail',
+                    label: 'Inbound Emails'
+                });
+            }
         },
 
         actionComposeEmail: function () {
