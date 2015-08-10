@@ -69,6 +69,7 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getUserMeetingQuery($id, $op, $notIn)
     {
+        $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
                    meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
@@ -76,7 +77,7 @@ class Activities extends \Espo\Core\Services\Base
             FROM `meeting`
             LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = meeting.assigned_user_id
             JOIN `meeting_user` AS `usersMiddle` ON usersMiddle.meeting_id = meeting.id AND usersMiddle.deleted = 0
-            WHERE meeting.deleted = 0 AND usersMiddle.user_id = '".$this->getUser()->id."'
+            WHERE meeting.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
         ";
         if (!empty($notIn)) {
             $sql .= "
@@ -88,6 +89,7 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getUserCallQuery($id, $op, $notIn)
     {
+        $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
                    call.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
@@ -95,7 +97,7 @@ class Activities extends \Espo\Core\Services\Base
             FROM `call`
             LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = call.assigned_user_id
             JOIN `call_user` AS `usersMiddle` ON usersMiddle.call_id = call.id AND usersMiddle.deleted = 0
-            WHERE call.deleted = 0 AND usersMiddle.user_id = '".$this->getUser()->id."'
+            WHERE call.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
         ";
         if (!empty($notIn)) {
             $sql .= "
@@ -107,6 +109,7 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getUserEmailQuery($id, $op, $notIn)
     {
+        $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             SELECT email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
                    email.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
@@ -114,7 +117,7 @@ class Activities extends \Espo\Core\Services\Base
             FROM `email`
             LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = email.assigned_user_id
             JOIN `email_user` AS `usersMiddle` ON usersMiddle.email_id = email.id AND usersMiddle.deleted = 0
-            WHERE email.deleted = 0 AND usersMiddle.user_id = '".$this->getUser()->id."'
+            WHERE email.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
         ";
         if (!empty($notIn)) {
             $sql .= "
