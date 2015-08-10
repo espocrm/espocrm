@@ -110,6 +110,9 @@ Espo.define('utils', [], function () {
         },
 
         composeViewClassName: function (name) {
+            if (name && name[0] === name[0].toLowerCase()) {
+                return name;
+            }
             if (name.indexOf(':') != -1) {
                 var arr = name.split(':');
                 var modPart = arr[0];
