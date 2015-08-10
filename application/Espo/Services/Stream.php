@@ -795,7 +795,7 @@ class Stream extends \Espo\Core\Services\Base
         $pdo = $this->getEntityManager()->getPDO();
 
         if (!$limit) {
-            $limit = 500;
+            $limit = 200;
         }
 
         $sql = $query->createSelectQuery('User', array(

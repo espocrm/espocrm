@@ -29,7 +29,9 @@ class Notifications extends \Espo\Core\Hooks\Base
 {
     public static $order = 10;
 
-    protected $noticatorsHash = array();
+    protected $notifatorsHash = array();
+
+    private $streamService;
 
     protected function init()
     {
@@ -42,6 +44,11 @@ class Notifications extends \Espo\Core\Hooks\Base
     protected function getContainer()
     {
         return $this->getInjection('container');
+    }
+
+    protected function getServiceFactory()
+    {
+        return $this->getContainer()->get('serviceFactory');
     }
 
     protected function getMetadata()
@@ -59,7 +66,7 @@ class Notifications extends \Espo\Core\Hooks\Base
 
     protected function getNotificator($entityType)
     {
-        if (empty($this->noticatorsHash[$entityType])) {
+        if (empty($this->notifatorsHash[$entityType])) {
             $normalizedName = Util::normilizeClassName($entityType);
 
             $className = '\\Espo\\Custom\\Notificators\\' . $normalizedName;
@@ -81,18 +88,18 @@ class Notifications extends \Espo\Core\Hooks\Base
                 $notificator->inject($name, $this->getContainer()->get($name));
             }
 
-            $this->noticatorsHash[$entityType] = $notificator;
+            $this->notifatorsHash[$entityType] = $notificator;
         }
-        return $this->noticatorsHash[$entityType];
+        return $this->notifatorsHash[$entityType];
     }
 
     public function afterSave(Entity $entity, array $options = array())
     {
-        $entityType = $entity->getEntityType();
-
         if (!empty($options['silent']) && !empty($options['noNotifications'])) {
             return;
         }
+
+        $entityType = $entity->getEntityType();
 
         if (!$this->checkHasStream($entityType)) {
             if (in_array($entityType, $this->getConfig()->get('assignmentNotificationsEntityList', []))) {
@@ -100,6 +107,44 @@ class Notifications extends \Espo\Core\Hooks\Base
                 $notificator->process($entity);
             }
         }
+    }
+
+    public function beforeRemove(Entity $entity, array $options = array())
+    {
+        if (!empty($options['silent']) && !empty($options['noNotifications'])) {
+            return;
+        }
+
+        $entityType = $entity->getEntityType();
+        if ($this->checkHasStream($entityType)) {
+            $followersData = $this->getStreamService()->getEntityFollowers($entity);
+            foreach ($followersData['idList'] as $userId) {
+                if ($userId === $this->getUser()->id) {
+                    continue;
+                }
+                $notification = $this->getEntityManager()->getEntity('Notification');
+                $notification->set(array(
+                    'userId' => $userId,
+                    'type' => 'EntityRemoved',
+                    'data' => array(
+                        'entityType' => $entity->getEntityType(),
+                        'entityId' => $entity->id,
+                        'entityName' => $entity->get('name'),
+                        'userId' => $this->getUser()->id,
+                        'userName' => $this->getUser()->get('name')
+                    )
+                ));
+                $this->getEntityManager()->saveEntity($notification);
+            }
+        }
+    }
+
+    protected function getStreamService()
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->getServiceFactory()->create('Stream');
+        }
+        return $this->streamService;
     }
 
 }

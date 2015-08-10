@@ -137,7 +137,7 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected function getAutofollowUserIdList(Entity $entity, array $ignoreList = array())
     {
-        $entityType = $entity->getEntityName();
+        $entityType = $entity->getEntityType();
         $pdo = $this->getEntityManager()->getPDO();
         $userIdList = [];
 
@@ -160,7 +160,7 @@ class Stream extends \Espo\Core\Hooks\Base
 
     public function afterSave(Entity $entity, array $options = array())
     {
-        $entityName = $entity->getEntityName();
+        $entityName = $entity->getEntityType();
 
         if ($this->checkHasStream($entity)) {
             if ($entity->isNew()) {

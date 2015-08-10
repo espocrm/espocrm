@@ -254,7 +254,8 @@
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",
-        "emailReceived": "Email received from {from}"
+        "emailReceived": "Email received from {from}",
+        "entityRemoved": "{user} removed {entityType} {entity}"
     },
     "streamMessages": {
         "create": "{user} created {entityType} {entity}",
