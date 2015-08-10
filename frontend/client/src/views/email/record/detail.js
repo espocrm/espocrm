@@ -38,7 +38,9 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     this.layoutName += 'Restricted';
                     isRestricted = true;
                 }
+                this.isRestricted = isRestricted;
             }
+
         },
 
         init: function () {
@@ -92,18 +94,21 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            this.handleAttachmentField();
-            this.listenTo(this.model, 'change:attachmentsIds', function () {
+            if (this.isRestricted) {
                 this.handleAttachmentField();
-            }, this);
-            this.handleCcField();
-            this.listenTo(this.model, 'change:cc', function () {
+                this.listenTo(this.model, 'change:attachmentsIds', function () {
+                    this.handleAttachmentField();
+                }, this);
+
                 this.handleCcField();
-            }, this);
-            this.handleBccField();
-            this.listenTo(this.model, 'change:bcc', function () {
+                this.listenTo(this.model, 'change:cc', function () {
+                    this.handleCcField();
+                }, this);
                 this.handleBccField();
-            }, this);
+                this.listenTo(this.model, 'change:bcc', function () {
+                    this.handleBccField();
+                }, this);
+            }
         },
 
         send: function () {
