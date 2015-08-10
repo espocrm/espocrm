@@ -19,13 +19,17 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.Calls', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
+Espo.define('crm:views/dashlets/calls', 'views/dashlets/abstract/record-list', function (Dep) {
 
     return Dep.extend({
 
         name: 'Calls',
 
         scope: 'Call',
+
+        listViewName: 'Crm:Call.Record.ListExpanded',
+
+        rowActionsView: 'Crm:Call.Record.RowActions.Dashlet',
 
         defaultOptions: {
             sortBy: 'dateStart',

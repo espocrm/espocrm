@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Call.Record.RowActions.Default', 'Views.Record.RowActions.Default', function (Dep) {
+Espo.define('crm:views/call/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 

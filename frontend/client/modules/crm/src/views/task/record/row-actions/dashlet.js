@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Task.Record.RowActions.Default', 'Views.Record.RowActions.Default', function (Dep) {
+Espo.define('crm:views/task/record/row-actions/dashlet', 'views/record/row-actions/view-and-edit', function (Dep) {
 
     return Dep.extend({
 

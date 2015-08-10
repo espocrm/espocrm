@@ -19,17 +19,24 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Task.Record.RowActions.Default', 'Views.Record.RowActions.Default', function (Dep) {
+Espo.define('crm:views/call/record/row-actions/dashlet', ['views/record/row-actions/view-and-edit'], function (Dep) {
 
     return Dep.extend({
 
         getActions: function () {
             var actions = Dep.prototype.getActions.call(this);
 
-            if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
+            if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
                 actions.push({
-                    action: 'setCompleted',
-                    label: 'Complete',
+                    action: 'setHeld',
+                    label: 'Set Held',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+                actions.push({
+                    action: 'setNotHeld',
+                    label: 'Set Not Held',
                     data: {
                         id: this.model.id
                     }

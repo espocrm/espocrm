@@ -19,25 +19,16 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Task.Record.RowActions.Default', 'Views.Record.RowActions.Default', function (Dep) {
+Espo.define('crm:views/task/record/list-expanded', ['views/record/list-expanded', 'crm:views/task/record/list'], function (Dep, List) {
 
     return Dep.extend({
 
-        getActions: function () {
-            var actions = Dep.prototype.getActions.call(this);
+        rowActionsView: 'Crm:Task.Record.RowActions.Default',
 
-            if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                actions.push({
-                    action: 'setCompleted',
-                    label: 'Complete',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
+        actionSetCompleted: function (data) {
+            List.prototype.actionSetCompleted.call(this, data);
+        },
 
-            return actions;
-        }
     });
 
 });

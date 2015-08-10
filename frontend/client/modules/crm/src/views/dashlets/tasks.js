@@ -27,6 +27,10 @@ Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', fu
 
         scope: 'Task',
 
+        listViewName: 'Crm:Task.Record.ListExpanded',
+
+        rowActionsView: 'Crm:Task.Record.RowActions.Dashlet',
+
         defaultOptions: {
             sortBy: 'dateEnd',
             asc: true,
