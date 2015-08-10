@@ -65,7 +65,7 @@
     "tooltips": {
         "recordsPerPageSmall": "Count of records in relatinship panels.",
         "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
-        "followCreatedEntities": "If user created a record he/she will follow it automatically."
+        "followCreatedEntities": "Users will automatically follow records they created."
     },
     "labels": {
         "System": "System",
