@@ -249,13 +249,18 @@ class EmailAccount extends Record
                     }
                 }
 
-                $message = $storage->getMessage($id);
-
+                $message = null;
+                $email = null;
                 try {
-                	$email = $importer->importMessage($message, $userId, $teamIds);
-	            } catch (\Exception $e) {
-	                $GLOBALS['log']->error('EmailAccount (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
-	            }
+                    $message = $storage->getMessage($id);
+                    try {
+                    	$email = $importer->importMessage($message, $userId, $teamIds);
+    	            } catch (\Exception $e) {
+    	                $GLOBALS['log']->error('EmailAccount (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+    	            }
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('EmailAccount (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                }
 
                 if (!empty($email)) {
                     $this->noteAboutEmail($email);

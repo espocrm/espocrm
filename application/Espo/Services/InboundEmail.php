@@ -229,23 +229,25 @@ class InboundEmail extends \Espo\Services\Record
                     }
                 }
 
-                $message = $storage->getMessage($id);
-
-                if ($message && isset($message->from)) {
-                    $fromString = $message->from;
-                    if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
-                        $toSkip = true;
-                    }
-                }
-
+                $message = null;
                 $email = null;
-
-                if (!$toSkip) {
-                    try {
-                        $email = $importer->importMessage($message, $userId, $teamIds);
-                    } catch (\Exception $e) {
-                        $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                try {
+                    $message = $storage->getMessage($id);
+                    if ($message && isset($message->from)) {
+                        $fromString = $message->from;
+                        if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
+                            $toSkip = true;
+                        }
                     }
+                    if (!$toSkip) {
+                        try {
+                            $email = $importer->importMessage($message, $userId, $teamIds);
+                        } catch (\Exception $e) {
+                            $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('InboundEmail (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if (!empty($email)) {
