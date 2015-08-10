@@ -17,7 +17,8 @@
         },
         "type": {
             "type": "enum",
-            "options": ["", "Customer", "Investor", "Partner", "Reseller"]
+            "options": ["", "Customer", "Investor", "Partner", "Reseller"],
+            "default": ""
         },
         "industry": {
             "type": "enum",
@@ -53,6 +54,7 @@
                 "Transportation",
                 "Venture Capital"
             ],
+            "default": "",
             "isSorted": true
         },
         "sicCode": {

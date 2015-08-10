@@ -36,7 +36,8 @@
         },
         "source": {
             "type": "enum",
-            "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"]
+            "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"],
+            "default": ""
         },
         "opportunityAmount": {
             "type": "currency",

@@ -55,7 +55,8 @@
         "leadSource": {
             "type": "enum",
             "view": "Crm:Opportunity.Fields.LeadSource",
-            "customizationOptionsDisabled": true
+            "customizationOptionsDisabled": true,
+            "default": ""
         },
         "closeDate": {
             "type": "date",
