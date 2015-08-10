@@ -3,20 +3,15 @@
 $sapiName = php_sapi_name();
 
 if (substr($sapiName, 0, 3) != 'cli') {
-    die("Upgrade script can be run only via CLI.\n");
+    die("Extension installer script can be run only via CLI.\n");
 }
 
 include "bootstrap.php";
 
 $arg = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : '';
 
-if ($arg == 'version' || $arg == '-v') {
-    $app = new \Espo\Core\Application();
-    die("Current version is " . $app->getContainer()->get('config')->get('version') . ".\n");
-}
-
 if (empty($arg)) {
-    die("Specify an upgrade package file.\n");
+    die("Specify extension package file.\n");
 }
 
 if (!file_exists($arg)) {
@@ -36,10 +31,9 @@ $entityManager = $app->getContainer()->get('entityManager');
 $user = $entityManager->getEntity('User', 'system');
 $app->getContainer()->setUser($user);
 
-$upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
+$upgradeManager = new \Espo\Core\ExtensionManager($app->getContainer());
 
-echo "Current version is " . $config->get('version') . "\n";
-echo "Start upgrade process...\n";
+echo "Start install process...\n";
 
 try {
     $fileData = file_get_contents($arg);
@@ -56,4 +50,4 @@ try {
     $app->runRebuild();
 } catch (\Exception $e) {}
 
-echo "Upgrade is completed. New version is " . $config->get('version') . ". \n";
+echo "Install is completed.\n";
