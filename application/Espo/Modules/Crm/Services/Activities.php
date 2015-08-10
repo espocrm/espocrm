@@ -326,7 +326,7 @@ class Activities extends \Espo\Core\Services\Base
             ";
         }
 
-        if ($this->isPerson($scope)) {
+        if ($this->isPerson($scope) || $scope == 'Account') {
             $sql = $sql . "
                 UNION
             " . $baseSql;
