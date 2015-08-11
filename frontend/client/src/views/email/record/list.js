@@ -23,7 +23,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        massActionList: ['remove'],
+        massActionList: ['remove', 'massUpdate'],
 
         buttonList: [
             {
