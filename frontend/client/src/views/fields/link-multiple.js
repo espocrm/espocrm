@@ -47,6 +47,8 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         selectRecordsViewName: 'Modals.SelectRecords',
 
+        createDisabled: false,
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -69,6 +71,10 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             this.idsName = this.name + 'Ids';
 
             this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.defs.links[this.name].entity;
+
+            if ('createDisabled' in this.options) {
+                this.createDisabled = this.options.createDisabled;
+            }
 
             var self = this;
 
@@ -94,7 +100,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),

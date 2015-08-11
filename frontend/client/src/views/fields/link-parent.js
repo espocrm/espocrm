@@ -45,6 +45,8 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 
         selectRecordsViewName: 'Modals.SelectRecords',
 
+        createDisabled: false,
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -81,6 +83,9 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                 this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
             }.bind(this));
 
+            if ('createDisabled' in this.options) {
+                this.createDisabled = this.options.createDisabled;
+            }
 
             var self = this;
 
@@ -92,7 +97,7 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
