@@ -11,7 +11,8 @@
         "fetchSince": "Fetch Since",
         "emailAddress": "Email Address",
         "sentFolder": "Sent Folder",
-        "storeSentEmails": "Store Sent Emails"
+        "storeSentEmails": "Store Sent Emails",
+        "keepFetchedEmailsUnread": "Keep Fetched Emails Unread"
     },
     "links": {
     },

@@ -26,6 +26,7 @@ use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Zend\Mail\Storage;
 
 class EmailAccount extends Record
 {
@@ -253,11 +254,21 @@ class EmailAccount extends Record
                 $email = null;
                 try {
                     $message = $storage->getMessage($id);
+                    if ($message && $emailAccount->get('keepFetchedEmailsUnread')) {
+                        $flags = $message->getFlags();
+                    }
                     try {
                     	$email = $importer->importMessage($message, $userId, $teamIds);
     	            } catch (\Exception $e) {
     	                $GLOBALS['log']->error('EmailAccount (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }
+
+                    if ($emailAccount->get('keepFetchedEmailsUnread')) {
+                        if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
+                            $storage->setFlags($id, $flags);
+                        }
+                    }
+
                 } catch (\Exception $e) {
                     $GLOBALS['log']->error('EmailAccount (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }

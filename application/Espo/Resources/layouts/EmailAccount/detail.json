@@ -25,6 +25,9 @@
                 {"name":"monitoredFolders"},{"name":"password"}
             ],
             [
+                false,{"name":"keepFetchedEmailsUnread"}
+            ],
+            [
                 {"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}, false
             ]
         ]

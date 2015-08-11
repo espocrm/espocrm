@@ -48,6 +48,9 @@
             "type": "bool",
             "tooltip": true
         },
+        "keepFetchedEmailsUnread": {
+            "type": "bool"
+        },
         "fetchSince": {
             "type": "date",
             "required": true
