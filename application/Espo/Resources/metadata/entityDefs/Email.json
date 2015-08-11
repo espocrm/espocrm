@@ -87,7 +87,8 @@
         },
         "emailAddress": {
             "type": "base",
-            "db": false
+            "notStorable": true,
+            "view": "views/email/fields/email-address"
         },
         "fromEmailAddress": {
             "type": "link",
