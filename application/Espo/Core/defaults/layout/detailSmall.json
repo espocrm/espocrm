@@ -1,6 +1,6 @@
 [{
     "label":"",
     "rows": [
-        [{"name":"name"}]
+        [{"name":"name"}, false]
     ]
 }]
