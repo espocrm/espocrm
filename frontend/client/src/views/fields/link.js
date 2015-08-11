@@ -45,6 +45,8 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
         autocompleteDisabled: false,
 
+        createDisabled: false,
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -66,9 +68,11 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
             this.idName = this.name + 'Id';
 
             this.foreignScope = this.options.foreignScope || this.foreignScope;
-
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.defs.links[this.name].entity;
 
+            if ('createDisabled' in this.options) {
+                this.createDisabled = this.options.createDisabled;
+            }
             var self = this;
 
             if (this.mode != 'list') {
@@ -79,7 +83,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName()
