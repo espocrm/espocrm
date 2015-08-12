@@ -37,7 +37,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         },
 
         events: {
-            'click button[data-action="cancel"]': function () {
+            'click button[data-action="close"]': function () {
                 this.getRouter().navigate('#Admin/fieldManager/scope=' + this.scope, {trigger: true});
             },
             'click button[data-action="save"]': function () {
