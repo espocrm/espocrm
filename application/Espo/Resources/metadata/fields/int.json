@@ -16,6 +16,10 @@
       {
          "name":"max",
          "type":"int"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "filter": true

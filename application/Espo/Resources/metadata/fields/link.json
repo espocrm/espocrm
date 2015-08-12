@@ -4,6 +4,10 @@
          "name":"required",
          "type":"bool",
          "default":false
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "actualFields":[

@@ -16,6 +16,10 @@
       {
          "name":"before",
          "type":"varchar"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "actualFields":[

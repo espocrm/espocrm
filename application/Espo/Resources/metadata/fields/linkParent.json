@@ -9,6 +9,10 @@
          "name":"entityList",
          "type":"multiEnum",
          "view": "Admin.FieldManager.Fields.EntityList"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "actualFields":[

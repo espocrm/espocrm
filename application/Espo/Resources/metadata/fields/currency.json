@@ -12,6 +12,10 @@
       {
          "name":"max",
          "type":"float"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "actualFields":[

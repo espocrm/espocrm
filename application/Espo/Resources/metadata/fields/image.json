@@ -10,6 +10,10 @@
          "type":"enum",
          "default":"small",
          "options": ["x-small", "small", "medium", "large"]
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "actualFields":[

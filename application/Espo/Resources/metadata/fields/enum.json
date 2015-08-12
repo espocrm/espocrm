@@ -22,6 +22,10 @@
          "name":"translation",
          "type":"varchar",
          "hidden": true
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "filter": true,

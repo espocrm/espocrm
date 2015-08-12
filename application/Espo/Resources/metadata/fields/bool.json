@@ -3,6 +3,10 @@
       {
          "name":"default",
          "type":"bool"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "filter": true
