@@ -166,7 +166,8 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
                                 attachment.set('size', file.size);
                                 attachment.once('sync', function () {
                                     var url = '?entryPoint=attachment&id=' + attachment.id;
-                                    editor.insertImage(welEditable, url);
+                                    //editor.insertImage(welEditable, url);
+                                    this.$summernote.summernote('insertImage', url);
                                     this.notify(false);
                                 }, this);
                                 attachment.save();
