@@ -52,6 +52,21 @@ Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
                         };
                     }
                 },
+            },
+            'documents': {
+                'accounts': function () {
+                    var accountId = this.model.get('accountId');
+                    var nameHash = {};
+                    nameHash[accountId] = this.model.get('accountName');
+                    if (this.model.get('accountId')) {
+                        return {
+                            field: 'accounts',
+                            type: 'linkedWith',
+                            value: [accountId],
+                            nameHash: nameHash
+                        };
+                    }
+                },
 
             },
         },
