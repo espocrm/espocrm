@@ -126,7 +126,12 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
                     var name = p.name;
 
-                    var foreignScope = this.model.defs.links[name].entity;
+                    var links = (this.model.defs || {}).links || {};
+                    if (!(name in links)) {
+                        return;
+                    }
+
+                    var foreignScope = links[name].entity;
                     if (!this.getAcl().check(foreignScope, 'read')) {
                         return;
                     }
@@ -137,11 +142,8 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
                     var viewName = defs.view || 'Record.Panels.Relationship';
 
-                    var total = 8;
-
                     this.createView(name, viewName, {
                         model: this.model,
-                        total: total,
                         panelName: name,
                         defs: defs,
                         el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(p.name)
