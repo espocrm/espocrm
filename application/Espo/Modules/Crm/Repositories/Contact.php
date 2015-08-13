@@ -43,7 +43,17 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
     public function afterSave(Entity $entity, array $options)
     {
         $result = parent::afterSave($entity, $options);
+        $this->handleAfterSaveAccounts($entity, $options);
 
+        if ($entity->has('targetListId') && $entity->isNew()) {
+            $this->relate($entity, 'targetLists', $entity->get('targetListId'));
+        }
+
+        return $result;
+    }
+
+    protected function handleAfterSaveAccounts(Entity $entity, array $options)
+    {
         $accountIdChanged = $entity->has('accountId') && $entity->get('accountId') != $entity->getFetched('accountId');
         $titleChanged = $entity->has('title') && $entity->get('title') != $entity->getFetched('title');
 
@@ -51,7 +61,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
             $accountId = $entity->get('accountId');
             if (empty($accountId)) {
                 $this->unrelate($entity, 'accounts', $entity->getFetched('accountId'));
-                return $result;
+                return;
             }
         }
 
@@ -59,7 +69,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
             if (empty($accountId)) {
                 $accountId = $entity->getFetched('accountId');
                 if (empty($accountId)) {
-                    return $result;
+                    return;
                 }
             }
         }
@@ -91,12 +101,6 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
-
-        if ($entity->has('targetListId') && $entity->isNew()) {
-            $this->relate($entity, 'targetLists', $entity->get('targetListId'));
-        }
-
-        return $result;
     }
 }
 

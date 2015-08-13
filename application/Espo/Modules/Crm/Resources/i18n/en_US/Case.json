@@ -5,13 +5,21 @@
         "status": "Status",
         "account": "Account",
         "contact": "Contact",
+        "contacts": "Contacts",
         "priority": "Priority",
         "type": "Type",
         "description": "Description",
         "inboundEmail": "Inbound Email"
     },
     "links": {
-        "inboundEmail": "Inbound Email"
+        "inboundEmail": "Inbound Email",
+        "account": "Account",
+        "contact": "Contact (Primary)",
+        "Contacts": "Contacts",
+        "meetings": "Meetings",
+        "calls": "Calls",
+        "tasks": "Tasks",
+        "emails": "Emails"
     },
     "options": {
         "status": {

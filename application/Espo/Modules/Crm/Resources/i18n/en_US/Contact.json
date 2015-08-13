@@ -21,7 +21,10 @@
         "cases": "Cases",
         "targetLists": "Target Lists",
         "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign"
+        "campaign": "Campaign",
+        "account": "Account (Primary)",
+        "accounts": "Accounts",
+        "casesPrimary": "Cases (Primary)"
     },
     "labels": {
         "Create Contact": "Create Contact"

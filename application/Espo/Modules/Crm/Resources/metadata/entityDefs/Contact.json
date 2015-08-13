@@ -183,10 +183,16 @@
             "entity": "Opportunity",
             "foreign": "contacts"
         },
+        "casesPrimary": {
+            "type": "hasMany",
+            "entity": "Case",
+            "foreign": "contact",
+            "layoutRelationshipsDisabled": true
+        },
         "cases": {
             "type": "hasMany",
             "entity": "Case",
-            "foreign": "contact"
+            "foreign": "contacts"
         },
         "meetings": {
             "type": "hasMany",

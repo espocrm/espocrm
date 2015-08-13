@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithRole', function (Dep) {
+Espo.define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
-        roleType: 'varchar',
+        primaryLink: null,
 
         events: {
             'click [data-action="switchPrimary"]': function (e) {
@@ -40,18 +40,19 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
-            list.push('accountId');
-            list.push('accountName');
-            list.push('title');
+            list.push(this.primaryIdFieldName);
+            list.push(this.primaryNameFieldName);
             return list;
         },
 
         setup: function () {
+            this.primaryLink = this.options.primaryLink || this.primaryLink;
+
+            this.primaryIdFieldName = this.primaryLink + 'Id';
+            this.primaryNameFieldName = this.primaryLink + 'Name';
+
             Dep.prototype.setup.call(this);
 
-            this.primaryIdFieldName = 'accountId';
-            this.primaryNameFieldName = 'accountName';
-            this.primaryRoleFieldName = 'title';
 
             this.primaryId = this.model.get(this.primaryIdFieldName);
             this.primaryName = this.model.get(this.primaryNameFieldName);
@@ -90,12 +91,15 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
                 if (this.primaryId) {
                     names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
                 }
+                if (!this.ids.length) {
+                    return;
+                }
                 this.ids.forEach(function (id) {
                     if (id != this.primaryId) {
                         names.push(this.getDetailLinkHtml(id));
                     }
                 }, this);
-                return names.join('');
+                return '<div>' + names.join('</div><div>') + '</div>';
             }
         },
 
@@ -116,16 +120,39 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            var $el = Dep.prototype.addLinkHtml.call(this, id, name);
+            var $container = this.$el.find('.link-container');
+            var $el = $('<div class="form-inline list-group-item link-with-role">').addClass('link-' + id);
+
+            var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
+            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>';
+
+            $left = $('<div class="pull-left">').css({
+                'width': '92%',
+                'display': 'inline-block'
+            });
+            $left.append(nameHtml);
+            $el.append($left);
+
+            $right = $('<div>').css({
+                'width': '8%',
+                'display': 'inline-block',
+                'vertical-align': 'top'
+            });
+            $right.append(removeHtml);
+            $el.append($right);
+            $el.append('<br style="clear: both;" />');
 
             var isPrimary = (id == this.primaryId);
-
             var iconHtml = '<span class="glyphicon glyphicon-star ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
             var title = this.translate('Primary');
-
             var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
-            $primary.insertAfter($el.children().first().children().first());
+            $primary.insertBefore($el.children().first().children().first());
+
+            $container.append($el);
+
             this.managePrimaryButton();
+
+            return $el;
         },
 
         afterRender: function () {
@@ -154,11 +181,11 @@ Espo.define('Crm:Views.Contact.Fields.Accounts', 'Views.Fields.LinkMultipleWithR
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;
-            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || '';
 
             return data;
         },
 
     });
-
 });
+
+

@@ -41,6 +41,10 @@
             "type": "link",
             "view": "Crm:Case.Fields.Contact"
         },
+        "contacts": {
+            "type": "linkMultiple",
+            "view": "crm:views/case/fields/contacts"
+        },
         "inboundEmail": {
             "type": "link",
             "readOnly": true
@@ -100,7 +104,13 @@
         "contact": {
             "type": "belongsTo",
             "entity": "Contact",
-            "foreign": "cases"
+            "foreign": "casesPrimary"
+        },
+        "contacts": {
+            "type": "hasMany",
+            "entity": "Contact",
+            "foreign": "cases",
+            "layoutRelationshipsDisabled": true
         },
         "meetings": {
             "type": "hasChildren",

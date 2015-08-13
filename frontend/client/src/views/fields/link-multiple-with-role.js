@@ -126,7 +126,7 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
             if (this.mode == 'search') {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
-            var $conteiner = this.$el.find('.link-container');
+            var $container = this.$el.find('.link-container');
             var $el = $('<div class="form-inline list-group-item link-with-role">').addClass('link-' + id);
 
             var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
@@ -148,11 +148,8 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
                 'width': '92%',
                 'display': 'inline-block'
             });
-
             $left.append($role);
-
             $left.append(nameHtml);
-
             $el.append($left);
 
             $right = $('<div>').css({
@@ -160,14 +157,11 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
                 'display': 'inline-block',
                 'vertical-align': 'top'
             });
-
             $right.append(removeHtml);
-
-            $el.append($right)
-
+            $el.append($right);
             $el.append('<br style="clear: both;" />');
 
-            $conteiner.append($el);
+            $container.append($el);
 
             if (this.mode == 'edit') {
                 var fetch = function ($target) {

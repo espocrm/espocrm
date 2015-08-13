@@ -56,7 +56,7 @@
         "Log Call": "Log Call",
         "Archive Email": "Archive Email",
         "Create Task": "Create Task",
-        "Tasks": "Tasks"        
+        "Tasks": "Tasks"
     },
     "fields": {
         "billingAddressCity": "City",
@@ -68,7 +68,7 @@
         "addressStreet": "Street",
         "addressCountry": "Country",
         "addressState": "State",
-        "addressPostalCode": "Postal Code",        
+        "addressPostalCode": "Postal Code",
         "shippingAddressCity": "City (Shipping)",
         "shippingAddressStreet": "Street (Shipping)",
         "shippingAddressCountry": "Country (Shipping)",
@@ -78,7 +78,7 @@
     "links": {
         "contacts": "Contacts",
         "opportunities": "Opportunities",
-        "leads": "Leads",        
+        "leads": "Leads",
         "meetings": "Meetings",
         "calls": "Calls",
         "tasks": "Tasks",
@@ -87,7 +87,7 @@
         "cases": "Cases",
         "documents": "Documents",
         "account": "Account",
-        "opportunity": "Opportunity",        
+        "opportunity": "Opportunity",
         "contact": "Contact",
         "parent": "Parent"
     },
