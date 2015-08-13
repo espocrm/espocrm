@@ -64,6 +64,9 @@ class GlobalSearch extends \Espo\Core\Services\Base
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
+            if ($this->getAcl()->checkScope($entityType, 'read')) {
+                continue;
+            }
             $params = array(
                 'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
             );
