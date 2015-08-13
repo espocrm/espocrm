@@ -91,8 +91,8 @@ class GlobalSearch extends \Espo\Core\Services\Base
 
         $sth = $pdo->prepare($unionSql);
 
-        $sth->bindParam(':offset', intval($offset), \PDO::PARAM_INT);
-        $sth->bindParam(':maxSize', intval($maxSize), \PDO::PARAM_INT);
+        $sth->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        $sth->bindParam(':maxSize', $maxSize, \PDO::PARAM_INT);
         $sth->execute();
         $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
 

@@ -17,16 +17,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.GlobalSearch.Panel', 'View', function (Dep) {
 
     return Dep.extend({
 
-        template: 'global-search.panel',        
-        
+        template: 'global-search.panel',
+
         afterRender: function () {
-        
+
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'Record.ListExpanded', {
                     el: this.options.el + ' .list-container',
@@ -40,7 +40,7 @@ Espo.define('Views.GlobalSearch.Panel', 'View', function (Dep) {
                                     params: {
                                         containerEl: this.options.el
                                     },
-                                }                            
+                                }
                             ]
                         ],
                         right: {
@@ -53,13 +53,11 @@ Espo.define('Views.GlobalSearch.Panel', 'View', function (Dep) {
                     view.render();
                 });
             }.bind(this));
-            this.collection.maxLength = 10;            
+            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 10;
             this.collection.fetch();
-        
-        },        
-        
+        }
 
     });
-    
+
 });
 
