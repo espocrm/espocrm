@@ -76,7 +76,7 @@ class Acl
 
     public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
     {
-        return $this->getAclManager()->checkScope($this->getUser(), $subject, $action, $isOwner, $inTeam, $entity) ;
+        return $this->getAclManager()->checkScope($this->getUser(), $scope, $action, $isOwner, $inTeam, $entity) ;
     }
 }
 

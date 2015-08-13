@@ -64,7 +64,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
-            if ($this->getAcl()->checkScope($entityType, 'read')) {
+            if (!$this->getAcl()->checkScope($entityType, 'read')) {
                 continue;
             }
             $params = array(
@@ -78,6 +78,12 @@ class GlobalSearch extends \Espo\Core\Services\Base
             $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
 
             $unionPartList[] = '' . $sql . '';
+        }
+        if (empty($unionPartList)) {
+            return array(
+                'total' => 0,
+                'list' => []
+            );
         }
 
         $pdo = $this->getEntityManager()->getPDO();
