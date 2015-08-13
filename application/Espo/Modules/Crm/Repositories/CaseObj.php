@@ -59,9 +59,7 @@ class CaseObj extends \Espo\Core\ORM\Repositories\RDB
             $sth->execute();
 
             if (!$sth->fetch()) {
-                if ($contactIdChanged) {
-                    $this->relate($entity, 'accounts');
-                }
+                $this->relate($entity, 'contacts', $contactId);
             }
         }
     }
