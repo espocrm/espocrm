@@ -333,6 +333,26 @@ class Base
         $this->access($result);
     }
 
+    public function manageTextFilter($textFilter, &$result)
+    {
+        if (empty($result)) {
+            $result = array();
+        }
+        if (empty($result['joins'])) {
+            $result['joins'] = [];
+        }
+        if (empty($result['leftJoins'])) {
+            $result['leftJoins'] = [];
+        }
+        if (empty($result['whereClause'])) {
+            $result['whereClause'] = array();
+        }
+        if (empty($result['customJoin'])) {
+            $result['customJoin'] = [];
+        }
+        $this->q(array('q' => $textFilter), $result);
+    }
+
     protected function access(&$result)
     {
         if ($this->acl->checkReadOnlyOwn($this->entityType)) {

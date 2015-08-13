@@ -60,46 +60,54 @@ class GlobalSearch extends \Espo\Core\Services\Base
 
     public function find($query, $offset, $maxSize)
     {
-        $entityNameList = $this->getConfig()->get('globalSearchEntityList');
+        $entityTypeList = $this->getConfig()->get('globalSearchEntityList');
 
-        $entityTypeCount = count($entityNameList);
+        $unionPartList = [];
+        foreach ($entityTypeList as $entityType) {
+            $params = array(
+                'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
+            );
 
-        $list = array();
-        $count = 0;
-        $total = 0;
-        foreach ($entityNameList as $entityName) {
+            $selectManager = $this->getSelectManagerFactory()->create($entityType);
+            $selectManager->manageAccess($params);
+            $selectManager->manageTextFilter($query, $params);
 
-            if (!$this->getAcl()->check($entityName, 'read')) {
-                continue;
-            }
-            $selectManager = $this->getSelectManagerFactory()->create($entityName);
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
 
-            $selectParams = $selectManager->getSelectParams(array(
-                'where' => array(
-                    array(
-                        'type' => 'textFilter',
-                        'value' => $query
-                    )
-                ),
-                'asc' => true,
-                'sortBy' => 'name',
-                'offset' => round($offset / $entityTypeCount),
-                'maxSize' => round($maxSize / $entityTypeCount),
-            ), true);
+            $unionPartList[] = '' . $sql . '';
+        }
 
-            $collection = $this->getEntityManager()->getRepository($entityName)->find($selectParams);
-            $count += count($collection);
-            $total += $this->getEntityManager()->getRepository($entityName)->count($selectParams);
-            foreach ($collection as $entity) {
-                $data = $entity->toArray();
-                $data['_scope'] = $entityName;
-                $list[] = $data;
-            }
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $unionSql = implode(' UNION ', $unionPartList);
+        $countSql = "SELECT COUNT(*) AS 'COUNT' FROM ({$unionSql}) AS c";
+        $sth = $pdo->prepare($countSql);
+        $sth->execute();
+        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        $totalCount = $row['COUNT'];
+
+        $unionSql .= " ORDER BY name";
+        $unionSql .= " LIMIT :offset, :maxSize";
+
+        $sth = $pdo->prepare($unionSql);
+
+        $sth->bindParam(':offset', intval($offset), \PDO::PARAM_INT);
+        $sth->bindParam(':maxSize', intval($maxSize), \PDO::PARAM_INT);
+        $sth->execute();
+        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+        $entityDataList = [];
+
+        foreach ($rows as $row) {
+            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['id']);
+            $entityData = $entity->toArray();
+            $entityData['_scope'] = $entity->getEntityType();
+            $entityDataList[] = $entityData;
         }
 
         return array(
-            'total' => $total,
-            'list' => $list,
+            'total' => $totalCount,
+            'list' => $entityDataList,
         );
     }
 }
