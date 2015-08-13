@@ -226,6 +226,7 @@ class Base
             $result['whereClause'][] = $part;
         }
         $result['joins'] = array_merge($result['joins'], $joins);
+        $result['joins'] = array_unique($result['joins']);
         $result['distinct'] = true;
     }
 

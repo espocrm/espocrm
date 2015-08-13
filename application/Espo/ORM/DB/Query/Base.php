@@ -137,6 +137,7 @@ abstract class Base
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
+            $params['joins'] = array_unique($params['joins']);
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
             if (!empty($joinsRelated)) {
                 if (!empty($joinsPart)) {
@@ -147,6 +148,7 @@ abstract class Base
         }
 
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
+            $params['leftJoins'] = array_unique($params['leftJoins']);
             $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions']);
             if (!empty($joinsRelated)) {
                 if (!empty($joinsPart)) {
