@@ -34,20 +34,20 @@ Espo.define('layout-manager', [], function () {
 
         data: null,
 
-        _getKey: function (controller, type) {
-            return controller + '-' + type;
+        _getKey: function (scope, type) {
+            return scope + '-' + type;
         },
 
-        _getUrl: function (controller, type) {
-            return controller + '/layout/' + type;
+        _getUrl: function (scope, type) {
+            return scope + '/layout/' + type;
         },
 
-        get: function (controller, type, callback, cache) {
+        get: function (scope, type, callback, cache) {
             if (typeof cache == 'undefined') {
                 cache = true;
             }
 
-            var key = this._getKey(controller, type);
+            var key = this._getKey(scope, type);
 
             if (cache) {
                 if (key in this.data) {
@@ -70,7 +70,7 @@ Espo.define('layout-manager', [], function () {
             }
 
             this.ajax({
-                url: this._getUrl(controller, type),
+                url: this._getUrl(scope, type),
                 type: 'GET',
                 dataType: 'json',
                 success: function (layout) {
@@ -85,11 +85,11 @@ Espo.define('layout-manager', [], function () {
             });
         },
 
-        set: function (controller, type, layout, callback) {
-            var key = this._getKey(controller, type);
+        set: function (scope, type, layout, callback) {
+            var key = this._getKey(scope, type);
 
             this.ajax({
-                url: this._getUrl(controller, type),
+                url: this._getUrl(scope, type),
                 type: 'PUT',
                 data: JSON.stringify(layout),
                 success: function () {
@@ -104,6 +104,29 @@ Espo.define('layout-manager', [], function () {
                 }.bind(this)
             });
         },
+
+        resetToDefault: function (scope, type, callback) {
+            var key = this._getKey(scope, type);
+
+            this.ajax({
+                url: 'Layout/action/resetToDefault',
+                type: 'POST',
+                data: JSON.stringify({
+                    scope: scope,
+                    name: type
+                }),
+                success: function (layout) {
+                    if (this.cache !== null) {
+                        this.cache.clear('app-layout', key);
+                    }
+                    this.data[key] = layout;
+                    this.trigger('sync');
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }.bind(this)
+            });
+        }
 
     }, Backbone.Events);
 

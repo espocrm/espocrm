@@ -66,23 +66,31 @@ class Layout
         return $this->metadata;
     }
 
+    protected function sanitizeInput($name)
+    {
+        return preg_replace("([\.]{2,})", '', $name);
+    }
+
     /**
      * Get Layout context
      *
-     * @param $controller
+     * @param $scope
      * @param $name
      *
      * @return json
      */
-    public function get($controller, $name)
+    public function get($scope, $name)
     {
-        if (isset($this->changedData[$controller][$name])) {
-            return Json::encode($this->changedData[$controller][$name]);
+        $scope = $this->sanitizeInput($scope);
+        $name = $this->sanitizeInput($name);
+
+        if (isset($this->changedData[$scope][$name])) {
+            return Json::encode($this->changedData[$scope][$name]);
         }
 
-        $fileFullPath = Util::concatPath($this->getLayoutPath($controller, true), $name.'.json');
+        $fileFullPath = Util::concatPath($this->getLayoutPath($scope, true), $name.'.json');
         if (!file_exists($fileFullPath)) {
-            $fileFullPath = Util::concatPath($this->getLayoutPath($controller), $name.'.json');
+            $fileFullPath = Util::concatPath($this->getLayoutPath($scope), $name.'.json');
         }
 
         if (!file_exists($fileFullPath)) {
@@ -101,21 +109,39 @@ class Layout
 
     /**
      * Set Layout data
-     * Ex. $controller = Account, $name = detail then will be created a file layoutFolder/Account/detail.json
+     * Ex. $scope = Account, $name = detail then will be created a file layoutFolder/Account/detail.json
      *
      * @param array $data
-     * @param string $controller - ex. Account
+     * @param string $scope - ex. Account
      * @param string $name - detail
      *
      * @return void
      */
-    public function set($data, $controller, $name)
+    public function set($data, $scope, $name)
     {
-        if (empty($controller) || empty($name)) {
+        $scope = $this->sanitizeInput($scope);
+        $name = $this->sanitizeInput($name);
+
+        if (empty($scope) || empty($name)) {
             return false;
         }
 
-        $this->changedData[$controller][$name] = $data;
+        $this->changedData[$scope][$name] = $data;
+    }
+
+    public function resetToDefault($scope, $name)
+    {
+        $scope = $this->sanitizeInput($scope);
+        $name = $this->sanitizeInput($name);
+
+        $filePath = 'custom/Espo/Custom/Resources/layouts/' . $scope . '/' . $name . '.json';
+        if ($this->getFileManager()->isFile($filePath)) {
+            $this->getFileManager()->removeFile($filePath);
+        }
+        if (!empty($this->changedData[$scope]) && !empty($this->changedData[$scope][$name])) {
+            unset($this->changedData[$scope][$name]);
+        }
+        return $this->get($scope, $name);
     }
 
     /**
@@ -128,14 +154,14 @@ class Layout
         $result = true;
 
         if (!empty($this->changedData)) {
-            foreach ($this->changedData as $controllerName => $rowData) {
+            foreach ($this->changedData as $scope => $rowData) {
                 foreach ($rowData as $layoutName => $layoutData) {
 
-                    if (empty($controllerName) || empty($layoutName)) {
+                    if (empty($scope) || empty($layoutName)) {
                         continue;
                     }
 
-                    $layoutPath = $this->getLayoutPath($controllerName, true);
+                    $layoutPath = $this->getLayoutPath($scope, true);
                     $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
                     $result &= $this->getFileManager()->putContents(array($layoutPath, $layoutName.'.json'), $data);
@@ -162,17 +188,20 @@ class Layout
 
     /**
      * Merge layout data
-     * Ex. $controller= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
+     * Ex. $scope= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
      *
      * @param JSON string $data
-     * @param string $controller - ex. Account
+     * @param string $scope - ex. Account
      * @param string $name - detail
      *
      * @return bool
      */
-    public function merge($data, $controller, $name)
+    public function merge($data, $scope, $name)
     {
-        $prevData = $this->get($controller, $name);
+        $scope = $this->sanitizeInput($scope);
+        $name = $this->sanitizeInput($name);
+
+        $prevData = $this->get($scope, $name);
 
         $prevDataArray = Json::getArrayData($prevData);
         $dataArray = Json::getArrayData($data);
@@ -180,7 +209,7 @@ class Layout
         $data = Util::merge($prevDataArray, $dataArray);
         $data = Json::encode($data);
 
-        return $this->set($data, $controller, $name);
+        return $this->set($data, $scope, $name);
     }
 
     /**
@@ -208,9 +237,4 @@ class Layout
 
         return $path;
     }
-
-
 }
-
-
-?>

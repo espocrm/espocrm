@@ -67,11 +67,15 @@ class Layout extends \Espo\Core\Controllers\Base
         return $this->actionUpdate($params, $data);
     }
 
-    public function actionDelete($params, $data, $request)
+    public function actionResetToDefault($params, $data, $request)
     {
-        if (!$request->isDelete()) {
+        if (!$request->isPost()) {
             throw new BadRequest();
         }
-        // todo
+        if (empty($data['scope']) || empty($data['name'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getContainer()->get('layout')->resetToDefault($data['scope'], $data['name']);
     }
 }
