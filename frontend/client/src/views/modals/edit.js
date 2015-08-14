@@ -123,8 +123,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
                 buttonsPosition: false,
-                exit: function () {},
-                returnUrl: this.options.returnUrl
+                exit: function () {}
             };
             this.createView('edit', viewName, options, callback);
         },
