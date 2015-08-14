@@ -3,7 +3,7 @@
         <a class="minimizer" href="javascript:">
             <span class="glyphicon glyphicon-menu-hamburger"></span>
         </a>
-        <a class="navbar-brand" href="#"><img src="{{logoSrc}}"><span class="home-icon glyphicon glyphicon-home"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}"><span class="home-icon glyphicon glyphicon-home"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
             {{#each tabListDefs}}
-            <li data-name="{{name}}"><a href="{{link}}"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
+            <li data-name="{{name}}"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
             {{/each}}
             <li class="dropdown">
                 <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>
@@ -22,10 +22,10 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav navbar-nav navbar-form global-search-container hidden-xs">
+            <li class="nav navbar-nav navbar-form global-search-container">
                 {{{globalSearch}}}
             </li>
-            <li class="dropdown hidden-xs notifications-badge-container">
+            <li class="dropdown notifications-badge-container">
                 {{{notificationsBadge}}}
             </li>
             {{#if enableQuickCreate}}
@@ -42,11 +42,11 @@
             <li class="dropdown menu-container">
                 <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
-                    <li><a href="#User/view/{{userId}}">{{userName}}</a></li>
+                    <li><a href="#User/view/{{userId}}" class="nav-link">{{userName}}</a></li>
                     <li class="divider"></li>
                     {{#each menu}}
                         {{#unless divider}}
-                            <li><a href="{{link}}">{{label}}</a></li>
+                            <li><a href="{{link}}" class="nav-link">{{label}}</a></li>
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}

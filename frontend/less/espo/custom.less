@@ -893,3 +893,52 @@ img.avatar.avatar-link {
     margin-top: 10px;
 }
 
+#notifications-panel {
+    position: absolute;
+    width: 600px;
+    z-index: 1001;
+    right: 0;
+    left: auto;
+}
+
+#global-search-panel {
+    position: absolute;
+    width: 500px;
+    z-index: 1001;
+    right: 0;
+    left: auto;
+}
+
+@media screen and (max-width: @screen-sm-min) {
+    #notifications-panel {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        right: none;
+        left: 0;
+        margin-right: 10px;
+    }
+
+    #global-search-panel {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        right: none;
+        left: 0;
+        margin-right: 10px;
+    }
+
+    #global-search-input {
+        width: 200px;
+        margin-left: 20px;
+    }
+
+    #header .navbar-right > li {
+        display: inline-block;
+    }
+
+    #header .navbar-right > li.notifications-badge-container {
+        display: inline-block;
+        float: right;
+    }
+}

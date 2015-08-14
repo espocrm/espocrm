@@ -71,13 +71,7 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
         showPanel: function () {
             this.closePanel();
 
-            var $container = $('<div>').attr('id', 'global-search-panel').css({
-                'position': 'absolute',
-                'width': '500px',
-                'z-index': 1001,
-                'right': 0,
-                'left': 'auto'
-            });
+            var $container = $('<div>').attr('id', 'global-search-panel');
 
             $container.appendTo(this.$el.find('.global-search-panel-container'));
 

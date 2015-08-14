@@ -41,7 +41,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
         },
 
         events: {
-            'click .navbar-collapse.in a': function (e) {
+            'click .navbar-collapse.in a.nav-link': function (e) {
                 var $a = $(e.currentTarget);
                 var href = $a.attr('href');
                 if (href && href != '#') {
@@ -49,7 +49,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             },
             'click .navbar-header a.navbar-brand': function (e) {
-                this.$el.find('.navbar-collapse.in').collapse('hide');
+                //this.$el.find('.navbar-collapse.in').collapse('hide');
             },
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
