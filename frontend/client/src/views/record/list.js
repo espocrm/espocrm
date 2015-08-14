@@ -894,7 +894,8 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.createView('quickEdit', viewName, {
                     scope: this.scope,
                     id: id,
-                    fullFormDisabled: d.noFullForm
+                    fullFormDisabled: d.noFullForm,
+                    returnUrl: '#' + this.scope,
                 }, function (view) {
                     view.once('after:render', function () {
                         Espo.Ui.notify(false);

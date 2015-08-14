@@ -124,6 +124,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 exit: function () {},
+                returnUrl: this.options.returnUrl
             };
             this.createView('edit', viewName, options, callback);
         },
