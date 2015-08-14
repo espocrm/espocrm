@@ -137,6 +137,8 @@ Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', fu
 
             var roleValue = (this.columns[id] || {})[this.columnName];
 
+            roleValue = Handlebars.Utils.escapeExpression(roleValue);
+
             if (this.roleType == 'enum') {
                 $role = this.getJQSelect(id, roleValue);
             } else {
