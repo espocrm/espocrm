@@ -26,6 +26,7 @@ use Espo\Core\Utils as Utils;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class Layout extends \Espo\Core\Controllers\Base
 {
@@ -38,10 +39,14 @@ class Layout extends \Espo\Core\Controllers\Base
         return $data;
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
+        }
+
+        if (!$request->isPut() && !$request->isPatch()) {
+            throw new BadRequest();
         }
 
         $layoutManager = $this->getContainer()->get('layout');
@@ -60,5 +65,13 @@ class Layout extends \Espo\Core\Controllers\Base
     public function actionPatch($params, $data)
     {
         return $this->actionUpdate($params, $data);
+    }
+
+    public function actionDelete($params, $data, $request)
+    {
+        if (!$request->isDelete()) {
+            throw new BadRequest();
+        }
+        // todo
     }
 }

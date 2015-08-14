@@ -46,7 +46,7 @@ Espo.define('Views.Admin.Layouts.Rows', 'Views.Admin.Layouts.Base', function (De
             return {
                 scope: this.scope,
                 type: this.type,
-                buttons: this.buttons,
+                buttonList: this.buttonList,
                 enabledFields: this.enabledFields,
                 disabledFields: this.disabledFields,
                 layout: this.rowLayout,

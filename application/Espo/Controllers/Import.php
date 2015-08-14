@@ -71,9 +71,13 @@ class Import extends \Espo\Core\Controllers\Record
         return $this->getContainer()->get('entityManager');
     }
 
-    public function actionUploadFile($params, $data)
+    public function actionUploadFile($params, $data, $request)
     {
         $contents = $data;
+
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('type', 'text/csv');
@@ -88,24 +92,34 @@ class Import extends \Espo\Core\Controllers\Record
         );
     }
 
-    public function actionRevert($params, $data)
+    public function actionRevert($params, $data, $request)
     {
         if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        if (!$request->isPost()) {
             throw new BadRequest();
         }
         return $this->getService('Import')->revert($data['id']);
     }
 
-    public function actionRemoveDuplicates($params, $data)
+    public function actionRemoveDuplicates($params, $data, $request)
     {
         if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        if (!$request->isPost()) {
             throw new BadRequest();
         }
         return $this->getService('Import')->removeDuplicates($data['id']);
     }
 
-    public function actionCreate($params, $data)
+    public function actionCreate($params, $data, $request)
     {
+        if (!$request->isPost() && !$request->isPut()) {
+            throw new BadRequest();
+        }
+
         $importParams = array(
             'headerRow' => $data['headerRow'],
             'fieldDelimiter' => $data['fieldDelimiter'],

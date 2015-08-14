@@ -13,7 +13,7 @@
                         <ul class="list-unstyled">
                         {{#each typeList}}
                             <li>
-                                <button style="display: block;" class="layout-link btn btn-link" data-type="{{./this}}" data-scope="{{../scope}}">{{translate this scope='Admin' category='layouts'}}</button>            
+                                <button style="display: block;" class="layout-link btn btn-link" data-type="{{./this}}" data-scope="{{../scope}}">{{translate this scope='Admin' category='layouts'}}</button>
                             </li>
                         {{/each}}
                         </ul>
@@ -28,7 +28,7 @@
         <h4 id="layout-header" style="margin-top: 0px;"></h4>
         <div id="layout-content">
             {{{content}}}
-        </div>    
+        </div>
     </div>
 </div>
 

@@ -152,7 +152,7 @@
 
   {
     "route":"/Admin/rebuild",
-    "method":"get",
+    "method":"post",
     "params":{
         "controller":"Admin",
         "action":"rebuild"
@@ -161,7 +161,7 @@
 
   {
     "route":"/Admin/clearCache",
-    "method":"get",
+    "method":"post",
     "params":{
         "controller":"Admin",
         "action":"clearCache"

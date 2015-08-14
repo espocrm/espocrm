@@ -22,11 +22,18 @@
 
 namespace Espo\Controllers;
 
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
+
 class Attachment extends \Espo\Core\Controllers\Record
 {
 
-    public function actionUpload($params, $data)
+    public function actionUpload($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
         list($prefix, $contents) = explode(',', $data);
         $contents = base64_decode($contents);
 

@@ -1,5 +1,5 @@
 <div class="button-container">
-{{#each buttons}}
+{{#each buttonList}}
     {{button name label=label scope='Admin' style=style}}
 {{/each}}
 </div>

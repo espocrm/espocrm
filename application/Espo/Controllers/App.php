@@ -44,7 +44,7 @@ class App extends \Espo\Core\Controllers\Base
         );
     }
 
-    public function actionDestroyAuthToken($params, $data)
+    public function postActionDestroyAuthToken($params, $data)
     {
         $token = $data['token'];
         if (empty($token)) {

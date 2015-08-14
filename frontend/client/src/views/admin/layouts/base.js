@@ -34,11 +34,16 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
                 this.save(this.enableButtons.bind(this));
             },
             'click button[data-action="cancel"]': function () {
-                this.getRouter().navigate('#Admin/layouts', {trigger: true});
+                this.cancel();
+            },
+            'click button[data-action="resetToDefault"]': function () {
+                if (confirm(this.translate('confirmation', 'messages'))) {
+                    this.resetToDefault();
+                }
             },
         },
 
-        buttons: [
+        buttonList: [
             {
                 name: 'save',
                 label: 'Save',
@@ -47,6 +52,10 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             {
                 name: 'cancel',
                 label: 'Cancel',
+            },
+            {
+                name: 'resetToDefault',
+                label: 'Reset To Default',
             }
         ],
 
@@ -79,6 +88,12 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             }.bind(this));
         },
 
+        resetToDefault: function () {
+            this.getHelper().layoutManager.resetToDefault(this.scope, this.type, function () {
+                this.cancel();
+            }.bind(this));
+        },
+
         cancel: function () {
             this.loadLayout(function () {
                 this.render();
@@ -93,7 +108,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
 
         setup: function () {
             this.dataAttributes = _.clone(this.dataAttributes);
-            this.buttons = _.clone(this.buttons);
+            this.buttonList = _.clone(this.buttonList);
             this.events = _.clone(this.events);
             this.scope = this.options.scope;
             this.type = this.options.type;
@@ -137,6 +152,12 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
                     }
                     view.close();
                 }, this);
+            }.bind(this));
+        },
+
+        cancel: function () {
+            this.loadLayout(function () {
+                this.reRender();
             }.bind(this));
         },
 

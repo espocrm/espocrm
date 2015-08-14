@@ -35,7 +35,7 @@ Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (De
             return {
                 scope: this.scope,
                 type: this.type,
-                buttons: this.buttons,
+                buttonList: this.buttonList,
                 enabledFields: this.enabledFields,
                 disabledFields: this.disabledFields,
                 panels: this.panels,

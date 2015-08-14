@@ -24,6 +24,7 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class Settings extends \Espo\Core\Controllers\Base
 {
@@ -51,10 +52,14 @@ class Settings extends \Espo\Core\Controllers\Base
         return $this->actionPatch($params, $data);
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
+        }
+
+        if (!$request->isPut() && !$request->isPatch()) {
+            throw new BadRequest();
         }
 
         if (isset($data['useCache']) && $data['useCache'] != $this->getConfig()->get('useCache')) {

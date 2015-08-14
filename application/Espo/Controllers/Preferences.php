@@ -53,10 +53,13 @@ class Preferences extends \Espo\Core\Controllers\Base
         }
     }
 
-    public function actionDelete($params, $data)
+    public function actionDelete($params, $data, $request)
     {
         $userId = $params['id'];
         if (empty($userId)) {
+            throw new BadRequest();
+        }
+        if (!$request->isDelete()) {
             throw new BadRequest();
         }
         $this->handleUserAccess($userId);
@@ -69,10 +72,14 @@ class Preferences extends \Espo\Core\Controllers\Base
         return $this->actionUpdate($params, $data);
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
         $userId = $params['id'];
         $this->handleUserAccess($userId);
+
+        if (!$request->isPost() && !$request->isPatch()) {
+            throw new BadRequest();
+        }
 
         if (array_key_exists('smtpPassword', $data)) {
             $data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);

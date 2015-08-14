@@ -213,6 +213,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             $.ajax({
                 url: 'Admin/rebuild',
                 timeout: 0,
+                type: 'POST',
                 success: function () {
                     var msg = master.translate('Rebuild has been done', 'labels', 'Admin');
                     Espo.Ui.success(msg);
@@ -226,6 +227,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             this.getRouter().navigate('#Admin');
             $.ajax({
                 url: 'Admin/clearCache',
+                type: 'POST',
                 success: function () {
                     var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
                     Espo.Ui.success(msg);

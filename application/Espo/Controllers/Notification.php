@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -32,32 +32,32 @@ class Notification extends \Espo\Core\Controllers\Base
     {
         $scope = $params['scope'];
         $id = $params['id'];
-        
+
         $userId = $this->getUser()->id;
-        
+
         $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));        
-        
+        $maxSize = intval($request->get('maxSize'));
+
         $params = array(
             'offset' => $offset,
             'maxSize' => $maxSize,
         );
-        
-        $result = $this->getService('Notification')->getList($userId, $params);    
-        
+
+        $result = $this->getService('Notification')->getList($userId, $params);
+
         return array(
             'total' => $result['total'],
             'list' => $result['collection']->toArray()
         );
     }
-    
+
     public function actionNotReadCount()
     {
         $userId = $this->getUser()->id;
         return $this->getService('Notification')->getNotReadCount($userId);
     }
-    
-    public function actionMarkAllRead($params, $data, $request)
+
+    public function postActionMarkAllRead($params, $data, $request)
     {
         $userId = $this->getUser()->id;
         return $this->getService('Notification')->markAllRead($userId);

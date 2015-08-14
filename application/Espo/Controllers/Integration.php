@@ -23,6 +23,8 @@
 namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class Integration extends \Espo\Core\Controllers\Record
 {
@@ -40,17 +42,23 @@ class Integration extends \Espo\Core\Controllers\Record
 
     public function actionRead($params, $data, $request)
     {
+        if (!$request->isPut() && !$request->isPatch()) {
+            throw new BadRequest();
+        }
         $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
         return $entity->toArray();
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
         return $this->actionPatch($params, $data);
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
+        if (!$request->isPut() && !$request->isPatch()) {
+            throw new BadRequest();
+        }
         $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
         $entity->set($data);
         $this->getEntityManager()->saveEntity($entity);

@@ -87,18 +87,27 @@ class ControllerManager
         $actionNameUcfirst = ucfirst($actionName);
 
         $beforeMethodName = 'before' . $actionNameUcfirst;
+        $actionMethodName = 'action' . $actionNameUcfirst;
+        $afterMethodName = 'after' . $actionNameUcfirst;
+
+        $fullActionMethodName = strtolower($request->getMethod()) . ucfirst($actionMethodName);
+
+        if (method_exists($controller, $fullActionMethodName)) {
+            $primaryActionMethodName = $fullActionMethodName;
+        } else {
+            $primaryActionMethodName = $actionMethodName;
+        }
+
+        if (!method_exists($controller, $primaryActionMethodName)) {
+            throw new NotFound("Action '$actionName' (".$request->getMethod().") does not exist in controller '$controller'");
+        }
+
         if (method_exists($controller, $beforeMethodName)) {
             $controller->$beforeMethodName($params, $data, $request);
         }
-        $actionMethodName = 'action' . $actionNameUcfirst;
 
-        if (!method_exists($controller, $actionMethodName)) {
-            throw new NotFound("Action '$actionMethodName' does not exist in controller '$controller'");
-        }
+        $result = $controller->$primaryActionMethodName($params, $data, $request);
 
-        $result = $controller->$actionMethodName($params, $data, $request);
-
-        $afterMethodName = 'after' . $actionNameUcfirst;
         if (method_exists($controller, $afterMethodName)) {
             $controller->$afterMethodName($params, $data, $request);
         }

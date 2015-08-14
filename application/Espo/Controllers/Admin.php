@@ -22,8 +22,10 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class Admin extends \Espo\Core\Controllers\Base
 {
@@ -34,17 +36,19 @@ class Admin extends \Espo\Core\Controllers\Base
         }
     }
 
-    public function actionRebuild($params, $data)
+    public function postActionRebuild($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
         $result = $this->getContainer()->get('dataManager')->rebuild();
 
         return $result;
     }
 
-    public function actionClearCache($params, $data)
+    public function postActionClearCache($params, $data)
     {
         $result = $this->getContainer()->get('dataManager')->clearCache();
-
         return $result;
     }
 
@@ -55,7 +59,7 @@ class Admin extends \Espo\Core\Controllers\Base
         return $scheduledJob->getAllNamesOnly();
     }
 
-    public function actionUploadUpgradePackage($params, $data)
+    public function postActionUploadUpgradePackage($params, $data)
     {
         if ($this->getConfig('restrictedMode')) {
             if (!$this->getUser()->get('isSuperAdmin')) {
@@ -73,7 +77,7 @@ class Admin extends \Espo\Core\Controllers\Base
         );
     }
 
-    public function actionRunUpgrade($params, $data)
+    public function postActionRunUpgrade($params, $data)
     {
         if ($this->getConfig('restrictedMode')) {
             if (!$this->getUser()->get('isSuperAdmin')) {

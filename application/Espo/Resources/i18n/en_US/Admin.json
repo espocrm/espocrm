@@ -46,7 +46,8 @@
         "Create Link": "Create Link",
         "Edit Link": "Edit Link",
         "Notifications": "Notifications",
-        "Jobs": "Jobs"
+        "Jobs": "Jobs",
+        "Reset To Default": "Reset To Default"
     },
     "layouts": {
         "list": "List",
