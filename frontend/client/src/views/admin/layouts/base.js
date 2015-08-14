@@ -55,7 +55,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             },
             {
                 name: 'resetToDefault',
-                label: 'Reset To Default',
+                label: 'Reset to Default',
             }
         ],
 
