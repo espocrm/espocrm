@@ -1,6 +1,6 @@
 [
     {
-        "label": false,
+        "label": "",
         "rows": [
             [{"name":"file"}, {"name":"source"}],
             [{"name":"name"}],
