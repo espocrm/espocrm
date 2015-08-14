@@ -894,8 +894,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 this.createView('quickEdit', viewName, {
                     scope: this.scope,
                     id: id,
-                    fullFormDisabled: d.noFullForm,
-                    returnUrl: '#' + this.scope,
+                    fullFormDisabled: d.noFullForm
                 }, function (view) {
                     view.once('after:render', function () {
                         Espo.Ui.notify(false);
@@ -912,7 +911,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
                 }.bind(this));
             } else {
-                this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: true});
+                this.getRouter().dispatch(this.scope, 'edit', {
+                    id: id,
+                    returnUrl: '#' + this.scope
+                });
+                this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: false});
             }
         },
 
