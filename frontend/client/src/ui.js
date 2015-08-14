@@ -116,8 +116,16 @@ Espo.define('ui', [], function () {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
             if (this.fitHeight) {
                 var processResize = function () {
+                    var windowHeight = $window.height();
+                    if (windowHeight < 512) {
+                        this.$el.find('div.modal-body').css({
+                            'maxHeight': 'none',
+                            'overflow': 'auto'
+                        });
+                        return;
+                    }
                     this.$el.find('div.modal-body').css({
-                        'maxHeight': ($window.height() - 192) + 'px',
+                        'maxHeight': (windowHeight - 192) + 'px',
                         'overflow': 'auto'
                     });
                 }.bind(this);
