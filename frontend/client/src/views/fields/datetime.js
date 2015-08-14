@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 
@@ -29,7 +29,7 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
 
         validations: ['required', 'datetime', 'after', 'before'],
 
-        searchTypeOptions: ['currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'on', 'after', 'before', 'between'],
+        searchTypeOptions: ['lastSevenDays', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'on', 'after', 'before', 'between'],
 
         timeFormatMap: {
             'HH:mm': 'H:i',

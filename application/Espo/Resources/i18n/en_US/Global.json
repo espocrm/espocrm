@@ -395,7 +395,8 @@
             "currentQuarter": "Current Quarter",
             "lastQuarter": "Last Quarter",
             "currentYear": "Current Year",
-            "lastYear": "Last Year"
+            "lastYear": "Last Year",
+            "lastSevenDays": "Last 7 Days"
         },
         "searchRanges": {
             "is": "Is",

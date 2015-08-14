@@ -481,6 +481,24 @@ class Base
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
+            case 'lastSevenDays':
+                $where['type'] = 'between';
+
+                $dtFrom = clone $dt;
+
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $to = $dt->format($format);
+
+
+                $dtFrom->modify('-7 day');
+                $dtFrom->setTime(0, 0, 0);
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+
+                $from = $dtFrom->format($format);
+
+                $where['value'] = [$from, $to];
+
+                break;
             case 'on':
                 $where['type'] = 'between';
 
@@ -608,6 +626,15 @@ class Base
                     break;
                 case 'future':
                     $part[$item['field'] . '>='] = date('Y-m-d');
+                    break;
+                case 'lastSevenDays':
+                    $dt1 = new \DateTime();
+                    $dt2 = clone $dt1;
+                    $dt2->modify('-7 days');
+                    $part['AND'] = array(
+                        $item['field'] . '>=' => $dt2->format('Y-m-d'),
+                        $item['field'] . '<=' => $dt1->format('Y-m-d'),
+                    );
                     break;
                 case 'currentMonth':
                     $dt = new \DateTime();
