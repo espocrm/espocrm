@@ -67,9 +67,9 @@ class Preferences extends \Espo\Core\Controllers\Base
         return $this->getEntityManager()->getRepository('Preferences')->resetToDefaults($userId);
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
-        return $this->actionUpdate($params, $data);
+        return $this->actionUpdate($params, $data, $request);
     }
 
     public function actionUpdate($params, $data, $request)

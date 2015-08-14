@@ -18,12 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class ExternalAccount extends \Espo\Core\Controllers\Record
 {
@@ -34,7 +35,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         $integrations = $this->getEntityManager()->getRepository('Integration')->find();
         $arr = array();
         foreach ($integrations as $entity) {
-            if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')) {                
+            if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')) {
                 $arr[] = array(
                     'id' => $entity->id
                 );
@@ -77,15 +78,18 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         return $entity->toArray();
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
-        return $this->actionPatch($params, $data);
+        return $this->actionPatch($params, $data, $request);
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
-        list($integration, $userId) = explode('__', $params['id']);
+        if (!$request->isPost() && !$request->isPatch()) {
+            throw new BadRequest();
+        }
 
+        list($integration, $userId) = explode('__', $params['id']);
 
         if ($this->getUser()->id != $userId) {
             throw new Forbidden();

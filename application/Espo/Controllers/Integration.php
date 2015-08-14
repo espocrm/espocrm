@@ -51,7 +51,7 @@ class Integration extends \Espo\Core\Controllers\Record
 
     public function actionUpdate($params, $data, $request)
     {
-        return $this->actionPatch($params, $data);
+        return $this->actionPatch($params, $data, $request);
     }
 
     public function actionPatch($params, $data, $request)

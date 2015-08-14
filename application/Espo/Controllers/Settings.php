@@ -47,9 +47,9 @@ class Settings extends \Espo\Core\Controllers\Base
         return $this->getConfigData();
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
-        return $this->actionPatch($params, $data);
+        return $this->actionPatch($params, $data, $request);
     }
 
     public function actionPatch($params, $data, $request)
