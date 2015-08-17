@@ -131,6 +131,10 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
 
             this.attributes = this.model.getClonedAttributes();
 
+            if (this.options.attributes) {
+                this.model.set(this.options.attributes);
+            }
+
             this._initDependancy();
         },
 

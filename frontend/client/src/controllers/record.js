@@ -121,16 +121,19 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 if (options.relate) {
                     model.setRelate(options.relate);
                 }
-                if (options.attributes) {
-                    model.set(options.attributes)
-                }
 
-                this.main(this.getViewName('edit'), {
+                var o = {
                     scope: this.name,
                     model: model,
                     returnUrl: options.returnUrl,
                     views: this.getViews('edit'),
-                });
+                };
+
+                if (options.attributes) {
+                    this.model.set(options.attributes);
+                }
+
+                this.main(this.getViewName('edit'), o);
             });
         },
 
@@ -146,17 +149,18 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
                 this.showLoadingNotification();
                 model.once('sync', function () {
-
-                    if (options.attributes) {
-                        model.set(options.attributes)
-                    }
-
-                    this.main(this.getViewName('edit'), {
+                    var o = {
                         scope: this.name,
                         model: model,
                         returnUrl: options.returnUrl,
                         views: this.getViews('edit'),
-                    });
+                    };
+
+                    if (options.attributes) {
+                        o.attributes = options.attributes;
+                    }
+
+                    this.main(this.getViewName('edit'), o);
                 }, this);
                 model.fetch({main: true});
             });

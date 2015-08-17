@@ -400,6 +400,10 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
             this.attributes = this.model.getClonedAttributes();
 
+            if (this.options.attributes) {
+                this.model.set(this.options.attributes);
+            }
+
             this.build();
             this.listenTo(this.model, 'sync', function () {
                 this.attributes = this.model.getClonedAttributes();

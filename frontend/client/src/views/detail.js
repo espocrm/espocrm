@@ -31,7 +31,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         name: 'Detail',
 
-        optionsToPass: [],
+        optionsToPass: ['attributes'],
 
         views: {
             header: {

@@ -33,7 +33,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         menu: null,
 
-        optionsToPass: ['returnUrl'],
+        optionsToPass: ['returnUrl', 'attributes'],
 
         views: {
             header: {
