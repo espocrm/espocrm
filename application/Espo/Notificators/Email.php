@@ -43,13 +43,17 @@ class Email extends \Espo\Core\Notificators\Base
 
     public function process(Entity $entity)
     {
-        if ($entity->get('status') != 'Archived' && $entity->get('status') != 'Sent') {
+        if ($entity->get('status') !== 'Archived' && $entity->get('status') !== 'Sent') {
             return;
         }
 
-        $previousUserIdList = $entity->getFetched('usersIds');
-        if (!is_array($previousUserIdList)) {
+        if ($entity->get('status') === 'Sent') {
             $previousUserIdList = [];
+        } else {
+            $previousUserIdList = $entity->getFetched('usersIds');
+            if (!is_array($previousUserIdList)) {
+                $previousUserIdList = [];
+            }
         }
 
         $emailUserIdList = $entity->get('usersIds');
@@ -69,6 +73,10 @@ class Email extends \Espo\Core\Notificators\Base
             'emailId' => $entity->id,
             'emailName' => $entity->get('name'),
         );
+
+        if (!$entity->has('from')) {
+            $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
+        }
 
         $from = $entity->get('from');
         if ($from) {

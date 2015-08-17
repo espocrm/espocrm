@@ -99,6 +99,7 @@ class Importer
             	$usersIds = $duplicate->get('usersIds');
             	$usersIds[] = $userId;
             	$duplicate->set('usersIds', $usersIds);
+
             	$this->getEntityManager()->saveEntity($duplicate);
 
                 if (!empty($teamsIds)) {
