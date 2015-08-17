@@ -63,14 +63,14 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         },
 
         list: function (options) {
+            var isReturn = options.isReturn || false;
+
             this.getCollection(function (collection) {
-
-
                 this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
                 });
-            });
+            }, null, isReturn);
         },
 
         beforeView: function () {
@@ -199,26 +199,28 @@ Espo.define('controllers/record', 'controller', function (Dep) {
          * Get collection for the current controller.
          * @param {collection}.
          */
-        getCollection: function (callback, context) {
+        getCollection: function (callback, context, usePreviouslyFetched) {
             context = context || this;
 
             if (!this.name) {
                 throw new Error('No collection for unnamed controller');
             }
             var collectionName = this.name;
-            /*if (collectionName in this.collectionMap) {
-                var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
-                var maxSize = this.getConfig().get('recordsPerPage');
-                if (collection.length > maxSize) {
-                    var k = collection.length - maxSize;
-                    while (k) {
-                        collection.pop();
-                        k--;
-                    }
+            if (usePreviouslyFetched) {
+                if (collectionName in this.collectionMap) {
+                    var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
+                    /*var maxSize = this.getConfig().get('recordsPerPage');
+                    if (collection.length > maxSize) {
+                        var k = collection.length - maxSize;
+                        while (k) {
+                            collection.pop();
+                            k--;
+                        }
+                    }*/
+                    callback.call(context, collection);
+                    return;
                 }
-                callback.call(context, collection);
-                return;
-            }*/
+            }
             this.collectionFactory.create(collectionName, function (collection) {
                 this.collectionMap[collectionName] = collection;
                 this.listenTo(collection, 'sync', function () {

@@ -144,7 +144,7 @@ Espo.define('router', [], function () {
         },
 
         dispatch: function (controller, action, options) {
-            var o =    {
+            var o = {
                 controller: controller,
                 action: action,
                 options: options

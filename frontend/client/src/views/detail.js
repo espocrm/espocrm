@@ -164,7 +164,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
             return this.buildHeaderHtml([
-                '<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
+                '<a href="#' + this.model.name + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 name
             ]);
         },
@@ -192,6 +192,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         selectPrimaryFilterNames: {},
 
         selectBoolFilterLists: [],
+
+        actionNavigateToRoot: function () {
+            this.getRouter().dispatch(this.scope, '', {
+                isReturn: true
+            });
+            this.getRouter().navigate('#' + this.scope, {trigger: false});
+        },
 
         actionCreateRelated: function (data) {
             var link = data.link;

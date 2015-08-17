@@ -145,7 +145,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         loadList: function () {
             this.notify('Loading...');
             if (this.collection.isFetched) {
-                this.createListRecordView(true);
+                this.createListRecordView(false);
             } else {
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.createListRecordView();
