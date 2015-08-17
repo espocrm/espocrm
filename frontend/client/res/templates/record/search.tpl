@@ -9,9 +9,9 @@
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
 
-                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset">{{translate 'All'}}</a></li>
+                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset"><div>{{translate 'All'}}</div></a></li>
                     {{#each presetFilterList}}
-                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset">{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../scope}}{{/if}}</a></li>
+                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset"><div>{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../scope}}{{/if}}</div></a></li>
                     {{/each}}
                     <li class="divider preset-control hidden"></li>
 
