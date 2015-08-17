@@ -63,7 +63,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         },
 
         list: function (options) {
-            var isReturn = options.isReturn || false;
+            var isReturn = false;
 
             this.getCollection(function (collection) {
                 this.main(this.getViewName('list'), {
