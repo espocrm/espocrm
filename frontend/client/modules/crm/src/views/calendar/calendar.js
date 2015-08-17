@@ -178,9 +178,6 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
             var color = this.colors[event.scope];
             var d = event.dateEnd;
 
-            /*if (d && this.getDateTime().toMoment(d).unix() < this.now.unix()) {
-                color = this.shadeColor(color, 0.4);
-            }*/
             if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
             	color = this.shadeColor(color, 0.4);
             }
