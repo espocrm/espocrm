@@ -104,6 +104,9 @@ class HookManager
                 foreach ($this->data[$scope][$hookName] as $className) {
                     if (empty($this->hooks[$className])) {
                         $this->hooks[$className] = $this->createHookByClassName($className);
+                        if (empty($this->hooks[$className])) {
+                            continue;
+                        }
                     }
                     $hook = $this->hooks[$className];
                     $hook->$hookName($injection, $options);
