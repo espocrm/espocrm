@@ -195,7 +195,12 @@ class InboundEmail extends \Espo\Services\Record
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
-            $storage->selectFolder($folder);
+            try {
+                $storage->selectFolder($folder);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('InboundEmail '.$inboundEmail->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage());
+                continue;
+            }
 
 
             $lastUID = 0;
@@ -243,11 +248,11 @@ class InboundEmail extends \Espo\Services\Record
                         try {
                             $email = $importer->importMessage($message, $userId, $teamIds);
                         } catch (\Exception $e) {
-                            $GLOBALS['log']->error('InboundEmail (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                            $GLOBALS['log']->error('InboundEmail '.$inboundEmail->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
                         }
                     }
                 } catch (\Exception $e) {
-                    $GLOBALS['log']->error('InboundEmail (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                    $GLOBALS['log']->error('InboundEmail '.$inboundEmail->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if (!empty($email)) {

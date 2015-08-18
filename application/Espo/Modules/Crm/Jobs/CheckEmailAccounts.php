@@ -34,7 +34,7 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
             try {
                 $service->fetchFromMailServer($entity);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Job CheckEmailAccounts: [' . $e->getCode() . '] ' .$e->getMessage());
+                $GLOBALS['log']->error('Job CheckEmailAccounts '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }
 

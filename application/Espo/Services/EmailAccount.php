@@ -210,7 +210,12 @@ class EmailAccount extends Record
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
-            $storage->selectFolder($folder);
+            try {
+                $storage->selectFolder($folder);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage());
+                continue;
+            }
 
             $lastUID = 0;
             $lastDate = 0;
@@ -260,7 +265,7 @@ class EmailAccount extends Record
                     try {
                     	$email = $importer->importMessage($message, $userId, $teamIds);
     	            } catch (\Exception $e) {
-    	                $GLOBALS['log']->error('EmailAccount (Importing Message): [' . $e->getCode() . '] ' .$e->getMessage());
+    	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }
 
                     if ($emailAccount->get('keepFetchedEmailsUnread')) {
@@ -270,7 +275,7 @@ class EmailAccount extends Record
                     }
 
                 } catch (\Exception $e) {
-                    $GLOBALS['log']->error('EmailAccount (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                    $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if (!empty($email)) {

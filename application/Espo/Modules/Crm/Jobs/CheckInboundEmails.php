@@ -34,7 +34,7 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
             try {
                 $service->fetchFromMailServer($entity);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Job CheckInboundEmails: [' . $e->getCode() . '] ' .$e->getMessage());
+                $GLOBALS['log']->error('Job CheckInboundEmails '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }
 
