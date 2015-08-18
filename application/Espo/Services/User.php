@@ -61,7 +61,7 @@ class User extends Record
         }
 
         $entity = parent::getEntity($id);
-        if ($entity->get('isSuperAdmin') && !$this->getUser()->get('isSuperAdmin')) {
+        if ($entity && $entity->get('isSuperAdmin') && !$this->getUser()->get('isSuperAdmin')) {
             throw new Forbidden();
         }
         return $entity;
