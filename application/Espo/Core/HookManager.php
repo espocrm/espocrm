@@ -122,7 +122,7 @@ class HookManager
             }
             return $hook;
         }
-        throw new Error("Class '$className' does not exist");
+        $GLOBALS['log']->error("Hook class '{$name}' does not exist.");
     }
 
     /**
