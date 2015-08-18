@@ -153,6 +153,7 @@ module.exports = function (grunt) {
                     'rebuild.php',
                     'clear_cache.php',
                     'upgrade.php',
+                    'extension.php',
                     'index.php',
                     'LICENSE.txt',
                     '.htaccess',
