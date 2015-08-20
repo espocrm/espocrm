@@ -11,8 +11,8 @@
 /main.html
 /frontend/client/css/espo.css
 /frontend/client/css/espo-vertical.css
-/frontend/client/css/sacura.css
-/frontend/client/css/sacura-vertical.css
+/frontend/client/css/sakura.css
+/frontend/client/css/sakura-vertical.css
 /tests/testData/cache/*
 composer.phar
 vendor/

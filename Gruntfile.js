@@ -67,12 +67,12 @@ module.exports = function (grunt) {
                     'frontend/client/css/espo.css': 'frontend/less/espo/main.less',
                 },
             },
-            sacura: {
+            sakura: {
                 options: {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/sacura.css': 'frontend/less/sacura/main.less',
+                    'frontend/client/css/sakura.css': 'frontend/less/sakura/main.less',
                 },
             },
             espoVertical: {
@@ -83,12 +83,12 @@ module.exports = function (grunt) {
                     'frontend/client/css/espo-vertical.css': 'frontend/less/espo-vertical/main.less',
                 },
             },
-            sacuraVertical: {
+            sakuraVertical: {
                 options: {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/sacura-vertical.css': 'frontend/less/sacura-vertical/main.less',
+                    'frontend/client/css/sakura-vertical.css': 'frontend/less/sakura-vertical/main.less',
                 },
             }
         },

@@ -1,5 +1,5 @@
 {
-    "stylesheet": "client/css/sacura-vertical.css",
+    "stylesheet": "client/css/sakura-vertical.css",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 65,
     "recordTopButtonsStickTop": 61,
