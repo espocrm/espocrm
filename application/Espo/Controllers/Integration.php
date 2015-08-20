@@ -42,9 +42,6 @@ class Integration extends \Espo\Core\Controllers\Record
 
     public function actionRead($params, $data, $request)
     {
-        if (!$request->isPut() && !$request->isPatch()) {
-            throw new BadRequest();
-        }
         $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
         return $entity->toArray();
     }
