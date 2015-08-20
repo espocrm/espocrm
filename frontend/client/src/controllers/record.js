@@ -130,7 +130,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 };
 
                 if (options.attributes) {
-                    this.model.set(options.attributes);
+                    model.set(options.attributes);
                 }
 
                 this.main(this.getViewName('edit'), o);
