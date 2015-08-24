@@ -35,6 +35,11 @@
             "edit": "own",
             "delete": "own"
         },
+        "EmailFilter": {
+            "read": "own",
+            "edit": "own",
+            "delete": "own"
+        },
         "Role": false
     },
     "defaults": {

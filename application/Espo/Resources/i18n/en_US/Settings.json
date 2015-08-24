@@ -54,7 +54,8 @@
         "followCreatedEntities": "Follow Created Entities",
         "displayListViewRecordCount": "Display Total Count (on List View)",
         "theme": "Theme",
-        "userThemesDisabled": "Disable User Themes"
+        "userThemesDisabled": "Disable User Themes",
+        "emailMessageMaxSize": "Email Max Size (Mb)"
     },
     "options": {
         "weekStart": {
@@ -65,7 +66,8 @@
     "tooltips": {
         "recordsPerPageSmall": "Count of records in relatinship panels.",
         "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
-        "followCreatedEntities": "Users will automatically follow records they created."
+        "followCreatedEntities": "Users will automatically follow records they created.",
+        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped."
     },
     "labels": {
         "System": "System",
@@ -75,6 +77,6 @@
         "In-app Notifications": "In-app Notifications",
         "Email Notifications": "Email Notifications",
         "Currency Settings": "Currency Settings",
-        "Currency Rtes": "Currency Rates"
+        "Currency Rates": "Currency Rates"
     }
 }

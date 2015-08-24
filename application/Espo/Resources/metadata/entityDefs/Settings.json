@@ -246,6 +246,11 @@
             "type": "enum",
             "view": "Settings.Fields.Theme",
             "translation": "Global.themes"
+        },
+        "emailMessageMaxSize": {
+            "type": "float",
+            "min": 0,
+            "tooltip": true
         }
     }
 }

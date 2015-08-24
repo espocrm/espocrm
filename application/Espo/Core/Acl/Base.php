@@ -160,10 +160,11 @@ class Base implements Injectable
             if ($user->id === $entity->get('assignedUserId')) {
                 return true;
             }
-        }
-        if ($entity->has('createdById')) {
-            if ($user->id === $entity->get('createdById')) {
-                return true;
+        } else {
+            if ($entity->has('createdById')) {
+                if ($user->id === $entity->get('createdById')) {
+                    return true;
+                }
             }
         }
         return false;

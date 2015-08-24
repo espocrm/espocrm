@@ -110,8 +110,24 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('Edit', {
                     model: model,
                     views: {
-                        header: {template: 'admin.settings.header-outbound-emails'},
+                        header: {template: 'admin/settings/header-outbound-emails'},
                         body: {view: 'Admin.OutboundEmails'},
+                    },
+                });
+            }, this);
+            model.fetch();
+        },
+
+        inboundEmails: function () {
+            var model = this.getSettingsModel();
+
+            model.once('sync', function () {
+                model.id = '1';
+                this.main('Edit', {
+                    model: model,
+                    views: {
+                        header: {template: 'admin/settings/header-inbound-emails'},
+                        body: {view: 'Admin.InboundEmails'},
                     },
                 });
             }, this);

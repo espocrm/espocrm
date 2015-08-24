@@ -300,14 +300,17 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
+        return true;
+    }
+
+    public function checkAssignment(Entity $entity)
+    {
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
         }
-
         if (!$this->isPermittedTeams($entity)) {
             return false;
         }
-
         return true;
     }
 
@@ -460,6 +463,10 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest();
         }
 
+        if (!$this->checkAssignment($entity)) {
+            throw new Forbidden();
+        }
+
         if (empty($data['forceDuplicate'])) {
             $duplicates = $this->checkEntityForDuplicate($entity);
             if (!empty($duplicates)) {
@@ -515,6 +522,10 @@ class Record extends \Espo\Core\Services\Base
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
+        }
+
+        if (!$this->checkAssignment($entity)) {
+            throw new Forbidden();
         }
 
         if ($this->storeEntity($entity)) {

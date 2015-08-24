@@ -20,7 +20,8 @@
         "Teams": "Teams",
         "Roles": "Roles",
         "Outbound Emails": "Outbound Emails",
-        "Inbound Emails": "Group Email Accounts",
+        "Group Email Accounts": "Group Email Accounts",
+        "Inbound Emails": "Inbound Emails",
         "Email Templates": "Email Templates",
         "Import": "Import",
         "Layout Manager": "Layout Manager",
@@ -138,7 +139,7 @@
         "teams": "Teams management.",
         "roles": "Roles management.",
         "outboundEmails": "SMTP settings for outgoing emails.",
-        "inboundEmails": "Group IMAP email accouts. Email import and Email-to-Case.",
+        "groupEmailAccounts": "Group IMAP email accounts. Email import and Email-to-Case.",
         "emailTemplates": "Templates for outbound emails.",
         "import": "Import data from CSV file.",
         "layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
@@ -149,7 +150,8 @@
         "currency": "Currency settings and rates.",
         "extensions": "Install or uninstall extensions.",
         "integrations": "Integration with third-party services.",
-        "notifications": "In-app and email notification settings."
+        "notifications": "In-app and email notification settings.",
+        "inboundEmails": "Settings for incoming emails."
     },
     "options": {
         "previewSize": {

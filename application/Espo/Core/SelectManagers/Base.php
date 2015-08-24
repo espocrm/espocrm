@@ -366,12 +366,19 @@ class Base
 
     protected function accessOnlyOwn(&$result)
     {
-        if (!$this->getSeed()->hasField('assignedUserId')) {
+        if ($this->getSeed()->hasField('assignedUserId')) {
+            $result['whereClause'][] = array(
+                'assignedUserId' => $this->getUser()->id
+            );
             return;
         }
-        $result['whereClause'][] = array(
-            'assignedUserId' => $this->getUser()->id
-        );
+
+        if ($this->getSeed()->hasField('createdById')) {
+            $result['whereClause'][] = array(
+                'createdById' => $this->getUser()->id
+            );
+            return;
+        }
     }
 
     protected function accessOnlyTeam(&$result)
