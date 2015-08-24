@@ -1,4 +1,4 @@
-{{#if hasAttachments}}
+{{#if hasAttachment}}
 <span class="glyphicon glyphicon-paperclip small text-muted pull-right"></span>
 {{/if}}
 {{#unless isRead}}<strong>{{/unless}}

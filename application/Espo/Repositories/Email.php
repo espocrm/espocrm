@@ -120,7 +120,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         if ($entity->has('attachmentsIds')) {
             $attachmentsIds = $entity->get('attachmentsIds');
             if (!empty($attachmentsIds)) {
-                $entity->set('hasAttachments', true);
+                $entity->set('hasAttachment', true);
             }
         }
 

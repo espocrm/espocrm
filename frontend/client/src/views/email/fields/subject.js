@@ -29,7 +29,7 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
 
             return _.extend({
                 'isRead': !(~['Archived', 'Received'].indexOf(status)) || this.model.get('isRead'),
-                'hasAttachments': this.model.get('hasAttachments')
+                'hasAttachment': this.model.get('hasAttachment')
             }, Dep.prototype.data.call(this));
         },
 
