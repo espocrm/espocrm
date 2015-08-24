@@ -121,6 +121,11 @@
         "replyEmailTemplate": {
             "type": "belongsTo",
             "entity": "EmailTemplate"
+        },
+        "filters": {
+            "type": "hasChildren",
+            "foreign": "parent",
+            "entity": "EmailFilter"
         }
     },
     "collection": {

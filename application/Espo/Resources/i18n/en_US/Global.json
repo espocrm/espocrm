@@ -16,7 +16,8 @@
         "Stream": "Stream",
         "Import": "Import",
         "Template": "Template",
-        "Job": "Job"
+        "Job": "Job",
+        "EmailFilter": "Email Filter"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -35,7 +36,8 @@
         "Stream": "Stream",
         "Import": "Import Results",
         "Template": "Templates",
-        "Job": "Jobs"
+        "Job": "Jobs",
+        "EmailFilter": "Email Filters"
     },
     "labels": {
         "Misc": "Misc",

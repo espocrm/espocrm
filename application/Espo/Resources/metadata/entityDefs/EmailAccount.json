@@ -92,6 +92,11 @@
         "modifiedBy": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "filters": {
+            "type": "hasChildren",
+            "foreign": "parent",
+            "entity": "EmailFilter"
         }
     },
     "collection": {

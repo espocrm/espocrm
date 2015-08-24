@@ -34,5 +34,11 @@
                 }
             ]
         }
+    },
+    "relationshipPanels": {
+        "filters": {
+            "select": false,
+            "rowActionsView": "views/record/row-actions/relationship-edit-and-remove"
+        }
     }
 }

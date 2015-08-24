@@ -77,11 +77,11 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
             this.id = this.options.id;
 
             if (!this.id) {
-                this.header = this.getLanguage().translate('Create');
+                this.header = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
             } else {
                 this.header = this.getLanguage().translate('Edit');
+                this.header += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
             }
-            this.header += ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
 
             if (!this.fullFormDisabled) {
                 if (!this.id) {

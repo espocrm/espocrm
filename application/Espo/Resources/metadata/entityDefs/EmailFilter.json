@@ -1,5 +1,10 @@
 {
     "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100
+        },
         "from": {
             "type": "varchar",
             "maxLength": 200

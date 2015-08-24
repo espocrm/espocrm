@@ -15,6 +15,7 @@
         "keepFetchedEmailsUnread": "Keep Fetched Emails Unread"
     },
     "links": {
+        "filters": "Filters"
     },
     "options": {
         "status": {

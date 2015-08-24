@@ -1,0 +1,5 @@
+{
+    "modalViews": {
+        "edit": "views/email-filter/modals/edit"
+    }
+}
