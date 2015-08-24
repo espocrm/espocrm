@@ -5,11 +5,21 @@
         "status": "Status",
         "account": "Firma",
         "contact": "Kontakt",
+        "contacts": "Kontakte",
         "priority": "Priorität",
         "type": "Typ",
-        "description": "Beschreibung"
+        "description": "Beschreibung",
+        "inboundEmail": "Eingehende E-Mails"
     },
     "links": {
+        "inboundEmail": "Eingehende E-Mails",
+        "account": "Firma",
+        "contact": "Kontakt (Primär)",
+        "Contacts": "Kontakte",
+        "meetings": "Meetings",
+        "calls": "Anrufe",
+        "tasks": "Aufgaben",
+        "emails": "E-Mails"
     },
     "options": {
         "status": {

@@ -21,7 +21,10 @@
         "cases": "Fälle",
         "targetLists": "Kontaktlisten",
         "campaignLogRecords": "Kampagnen Log",
-        "campaign": "Kampagne"
+        "campaign": "Kampagne",
+        "account": "Firma (Primär)",
+        "accounts": "Firmen",
+        "casesPrimary": "Fälle (Primär)"
     },
     "labels": {
         "Create Contact": "Kontakt erstellen"

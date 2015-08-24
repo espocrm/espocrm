@@ -51,7 +51,10 @@
         "assignmentEmailNotificationsEntityList": "Entitäten über die mit E-Mail bei Zuweisung benachrichtigt werden soll",
         "b2cMode": "B2C Modus",
         "avatarsDisabled": "Avatare deaktivieren",
-        "followCreatedEntities": "Erstellten Einträgen beobachten"
+        "followCreatedEntities": "Erstellten Einträgen beobachten",
+        "displayListViewRecordCount": "Gesamtanzahl anzeigen (in Listenansicht)",
+        "theme": "Design",
+        "userThemesDisabled": "Benutzerdesigns deaktivieren"
     },
     "options": {
         "weekStart": {
@@ -62,7 +65,7 @@
     "tooltips": {
         "recordsPerPageSmall": "Anzahl Sätze in Beziehungssubpanels",
         "outboundEmailIsShared": "Benutzern gestatten, E-Mails über dieses SMTP Konto zu senden",
-        "followCreatedEntities": "Wenn ein Benutzer einen Datensatz erstellt hat dann folgt er ihm automatisch"
+        "followCreatedEntities": "Benutzer folgen automatisch jenen Sätzen die sie erstellt haben"
     },
     "labels": {
         "System": "System",

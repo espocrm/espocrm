@@ -22,7 +22,8 @@
         "autoFollowEntityTypeList": "Autom. Beobachten",
         "signature": "E-Mail Signatur",
         "dashboardTabList": "Reiter Liste",
-        "defaultReminders": "Standarderinnerungen"
+        "defaultReminders": "Standarderinnerungen",
+        "theme": "Design"
     },
     "links": {
     },

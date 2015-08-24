@@ -28,7 +28,10 @@
     "links": {
         "targetLists": "Kontaktlisten",
         "campaignLogRecords": "Kampagnen Log",
-        "campaign": "Kampagne"
+        "campaign": "Kampagne",
+        "createdAccount": "Firma",
+        "createdContact": "Kontakt",
+        "createdOpportunity": "Verkaufschance"
     },
     "options": {
         "status": {

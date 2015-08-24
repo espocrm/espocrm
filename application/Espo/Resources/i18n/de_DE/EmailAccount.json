@@ -11,7 +11,8 @@
         "fetchSince": "Holen seit",
         "emailAddress": "E-Mail Adresse",
         "sentFolder": "Gesendet Ordner",
-        "storeSentEmails": "Gesendete E-Mails speichern"
+        "storeSentEmails": "Gesendete E-Mails speichern",
+        "keepFetchedEmailsUnread": "Geholte E-Mails als ungelesen behalten"
     },
     "links": {
     },

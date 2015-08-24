@@ -5,17 +5,18 @@
         "Team": "Team",
         "Role": "Rolle",
         "EmailTemplate": "E-Mail Vorlage",
-        "EmailAccount": "E-Mail Konto",
-        "EmailAccountScope": "E-Mail Konto",
+        "EmailAccount": "Persönliches E-Mail Konto",
+        "EmailAccountScope": "Persönliches E-Mail Konto",
         "OutboundEmail": "Ausgehende E-Mail",
         "ScheduledJob": "Geplante Aufgabe",
         "ExternalAccount": "Externes Konto",
         "Extension": "Erweiterung",
         "Dashboard": "Übersicht",
-        "InboundEmail": "Eingehende E-Mail",
+        "InboundEmail": "Gruppen E-Mail Konto",
         "Stream": "Vorgänge",
         "Import": "Import",
-        "Template": "Vorlage"
+        "Template": "Vorlage",
+        "Job": "Job"
     },
     "scopeNamesPlural": {
         "Email": "E-Mails",
@@ -23,17 +24,18 @@
         "Team": "Teams",
         "Role": "Rollen",
         "EmailTemplate": "E-Mail Vorlagen",
-        "EmailAccount": "E-Mail Konten",
-        "EmailAccountScope": "E-Mail Konten",
+        "EmailAccount": "Persönliche E-Mail Konten",
+        "EmailAccountScope": "Persönliche E-Mail Konten",
         "OutboundEmail": "Ausgehende E-Mails",
         "ScheduledJob": "Geplante Jobs",
         "ExternalAccount": "Externe Konten",
         "Extension": "Erweiterungen",
         "Dashboard": "Übersicht",
-        "InboundEmail": "Eingehende E-Mails",
+        "InboundEmail": "Gruppen E-Mail Konten",
         "Stream": "Vorgänge",
         "Import": "Importergebnis",
-        "Template": "Vorlagen"
+        "Template": "Vorlagen",
+        "Job": "Jobs"
     },
     "labels": {
         "Misc": "Verschiedenes",
@@ -160,7 +162,8 @@
         "Tree View": "Baumansicht",
         "Unlink All": "Alle Links entfernen",
         "Total": "Gesamt",
-        "Print to PDF": "Als PDF drucken"
+        "Print to PDF": "Als PDF drucken",
+        "Default": "Standard"
     },
     "messages": {
         "pleaseWait": "Bitte warten...",
@@ -251,7 +254,8 @@
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} wurde Ihnen zugewiesen",
-        "emailReceived": "E-Mail empfangen von {from}"
+        "emailReceived": "E-Mail empfangen von {from}",
+        "entityRemoved": "{user} hat {entityType} {entity} entfernt"
     },
     "streamMessages": {
         "create": "{user} hat {entityType} {entity} erstellt",
@@ -391,7 +395,8 @@
             "currentQuarter": "Aktuelles Quartal",
             "lastQuarter": "Letztes Quartal",
             "currentYear": "Aktuelles Jahr",
-            "lastYear": "Letztes Jahr"
+            "lastYear": "Letztes Jahr",
+            "lastSevenDays": "Letzten 7 Tage"
         },
         "searchRanges": {
             "is": "Ist",
@@ -480,7 +485,7 @@
             "style":{
                 "style": "Stil",
                 "normal": "Normal",
-                "blockquote": "Zitat",
+                "blockquote": "Angebot",
                 "pre": "Quellcode",
                 "h1": "Überschrift 1",
                 "h2": "Überschrift 2",
@@ -530,5 +535,11 @@
                 "redo": "Wiederholen"
             }
         }
+    },
+    "themes": {
+        "Espo": "Espo",
+        "Sakura": "Sakura",
+        "EspoVertical": "Espo (Vertikal)",
+        "SakuraVertical": "Sakura (Vertical)"
     }
 }

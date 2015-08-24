@@ -8,7 +8,7 @@
         "Data": "Daten",
         "Customization": "Anpassung",
         "Available Fields": "Verfügbare Felder",
-        "Layout": "Layout",
+        "Layout": "Aktuelles Layout",
         "Entity Manager": "Entitäts-/Modulmanager",
         "Add Panel": "Panel hinzufügen",
         "Add Field": "Feld hinzufügen",
@@ -20,7 +20,7 @@
         "Teams": "Teams",
         "Roles": "Rollen",
         "Outbound Emails": "Ausgehende E-Mails",
-        "Inbound Emails": "Eingehende E-Mails",
+        "Inbound Emails": "Gruppen E-Mail Konten",
         "Email Templates": "E-Mail Vorlagen",
         "Import": "Import",
         "Layout Manager": "Layouts anpassen",
@@ -45,7 +45,9 @@
         "Edit Entity": "Entität/Modul bearbeiten",
         "Create Link": "Relation erstellen",
         "Edit Link": "Relation bearbeiten",
-        "Notifications": "Benachrichtigungen"
+        "Notifications": "Benachrichtigungen",
+        "Jobs": "Jobs",
+        "Reset to Default": "Zurücksetzen auf Standard"
     },
     "layouts": {
         "list": "Liste",
@@ -85,7 +87,8 @@
         "varchar": "Text (max. 255)",
         "file": "Datei",
         "image": "Bild",
-        "multiEnum": "Mehrfachauswahl"
+        "multiEnum": "Mehrfachauswahl",
+        "attachmentMultiple": "Mehrfach Anhänge"
     },
     "fields": {
         "type": "Typ",
@@ -106,17 +109,19 @@
         "noEmptyString": "Keine leere Zeichenkette",
         "defaultType": "Standardtyp",
         "seeMoreDisabled": "Abschneiden des Texts verhindern",
-        "entityList": "Entity List"
+        "entityList": "Entitätsliste",
+        "isSorted": "Sortiert (alphabetisch)",
+        "audited": "Auditiert"
     },
     "messages": {
         "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
         "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert.",
-        "upgradeBackup": "Wir empfehlen, vor der Aktualisierung von EspoCRM das Programmverzeichnis sowie die Datenbank zu sichern.",
+        "upgradeBackup": "Wie empfehlen VOR einer Aktualisierung die Espo Dateien sowie die Datenbank zu sichern.",
         "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen kann nicht gleich dem Dezimaltrennzeichen sein",
         "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
         "selectEntityType": "Modul/Entität links auswählen",
         "selectUpgradePackage": "Aktualisierungspaket auswählen",
-        "downloadUpgradePackage": "Download upgrade package(s) <a href=\"{url}\">here</a>.",
+        "downloadUpgradePackage": "Aktualisierungspaket(e) <a href=\"{url}\">hier </a>herunterladen.",
         "selectLayout": "Layout zum Editieren links auswählen",
         "selectExtensionPackage": "Erweiterungspaket auswählen",
         "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
