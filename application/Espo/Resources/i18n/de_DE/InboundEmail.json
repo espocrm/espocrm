@@ -1,6 +1,7 @@
 {
     "fields": {
         "name": "Name",
+        "emailAddress": "E-Mail Adresse",
         "team": "Team",
         "status": "Status",
         "assignToUser": "Mit Benutzer verknüpfen",

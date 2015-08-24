@@ -56,7 +56,7 @@
         "Log Call": "Anruf erfassen",
         "Archive Email": "E-Mail archivieren",
         "Create Task": "Neue Aufgabe",
-        "Tasks": "Aufgaben"        
+        "Tasks": "Aufgaben"
     },
     "fields": {
         "billingAddressCity": "Ort",
@@ -68,7 +68,7 @@
         "addressStreet": "Straße",
         "addressCountry": "Land",
         "addressState": "Bundesland/Kanton",
-        "addressPostalCode": "PLZ",        
+        "addressPostalCode": "PLZ",
         "shippingAddressCity": "Ort (Lieferadresse)",
         "shippingAddressStreet": "Straße (Lieferadresse)",
         "shippingAddressCountry": "Land (Lieferadresse)",
@@ -78,7 +78,7 @@
     "links": {
         "contacts": "Kontakte",
         "opportunities": "Verkaufschancen",
-        "leads": "Interessenten",        
+        "leads": "Interessenten",
         "meetings": "Meetings",
         "calls": "Anrufe",
         "tasks": "Aufgaben",
@@ -87,7 +87,7 @@
         "cases": "Fälle",
         "documents": "Dokumente",
         "account": "Firma",
-        "opportunity": "Verkaufschance",        
+        "opportunity": "Verkaufschance",
         "contact": "Kontakt",
         "parent": "Bezieht sich auf"
     },

@@ -16,7 +16,8 @@
         "softBouncedCount": "Soft Bounced",
         "leadCreatedCount": "Erstellte Interessenten",
         "revenue": "Umsatz",
-        "revenueConverted": "Umsatz (konvertiert)"
+        "revenueConverted": "Umsatz (konvertiert)",
+        "budget": "Budget"
     },
     "links": {
         "targetLists": "Kontaktlisten",
