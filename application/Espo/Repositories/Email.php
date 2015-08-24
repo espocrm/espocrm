@@ -117,6 +117,13 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
+        if ($entity->has('attachmentsIds')) {
+            $attachmentsIds = $entity->get('attachmentsIds');
+            if (!empty($attachmentsIds)) {
+                $entity->set('hasAttachments', true);
+            }
+        }
+
         if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc')) {
             if (!$entity->has('usersIds')) {
                 $entity->loadLinkMultipleField('users');

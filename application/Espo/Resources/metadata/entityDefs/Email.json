@@ -124,6 +124,10 @@
             "type": "linkMultiple",
             "view": "Fields.AttachmentMultiple"
         },
+        "hasAttachments": {
+            "type": "bool",
+            "readOnly": true
+        },
         "parent": {
             "type": "linkParent"
         },

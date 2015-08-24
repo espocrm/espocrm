@@ -28,7 +28,8 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
             var status = this.model.get('status');
 
             return _.extend({
-                'isRead': !(~['Archived', 'Received'].indexOf(status)) || this.model.get('isRead')
+                'isRead': !(~['Archived', 'Received'].indexOf(status)) || this.model.get('isRead'),
+                'hasAttachments': this.model.get('hasAttachments')
             }, Dep.prototype.data.call(this));
         },
 
