@@ -49,6 +49,10 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], functio
                 }
             }
 
+            if ('translatedOptions' in this.options) {
+                this.translatedOptions = this.options.translatedOptions;
+            }
+
             if ('translatedOptions' in this.params) {
                 this.translatedOptions = this.params.translatedOptions;
             }

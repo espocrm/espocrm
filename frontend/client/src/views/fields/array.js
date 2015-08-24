@@ -76,44 +76,45 @@ Espo.define('Views.Fields.Array', ['Views.Fields.Base', 'lib!Selectize'], functi
         setup: function () {
             Dep.prototype.setup.call(this);
 
-
             this.noEmptyString = this.params.noEmptyString;
 
 
-            var t = {};
+            if ('translatedOptions' in this.options) {
+                this.translatedOptions = this.options.translatedOptions;
+            }
 
-            if (this.params.translation) {
-                var data = this.getLanguage().data;
-                var arr = this.params.translation.split('.');
-                var pointer = this.getLanguage().data;
-                arr.forEach(function (key) {
-                    if (key in pointer) {
-                        pointer = pointer[key];
-                        t = pointer;
-                    }
-                }, this);
-            } else {
-                t = this.translate(this.name, 'options', this.model.name);
+            if (!this.translatedOptions) {
+                var t = {};
+                if (this.params.translation) {
+                    var data = this.getLanguage().data;
+                    var arr = this.params.translation.split('.');
+                    var pointer = this.getLanguage().data;
+                    arr.forEach(function (key) {
+                        if (key in pointer) {
+                            pointer = pointer[key];
+                            t = pointer;
+                        }
+                    }, this);
+                } else {
+                    t = this.translate(this.name, 'options', this.model.name);
+                }
+                this.translatedOptions = null;
+                var translatedOptions = {};
+                if (this.params.options) {
+                    this.params.options.forEach(function (o) {
+                        if (typeof t === 'object' && o in t) {
+                            translatedOptions[o] = t[o];
+                        } else {
+                            translatedOptions[o] = o;
+                        }
+                    }.bind(this));
+                    this.translatedOptions = translatedOptions;
+                }
             }
 
             this.listenTo(this.model, 'change:' + this.name, function () {
                 this.selected = Espo.Utils.clone(this.model.get(this.name));
             }, this);
-
-
-            this.translatedOptions = null;
-
-            var translatedOptions = {};
-            if (this.params.options) {
-                this.params.options.forEach(function (o) {
-                    if (typeof t === 'object' && o in t) {
-                        translatedOptions[o] = t[o];
-                    } else {
-                        translatedOptions[o] = o;
-                    }
-                }.bind(this));
-                this.translatedOptions = translatedOptions;
-            }
 
             this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
             if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
