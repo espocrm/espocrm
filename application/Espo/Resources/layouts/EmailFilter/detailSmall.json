@@ -1,0 +1,22 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"}
+            ],
+            [
+                {"name": "from"}
+            ],
+            [
+                {"name": "to"}
+            ],
+            [
+                {"name": "subject"}
+            ],
+            [
+                {"name": "bodyContains"}
+            ]
+        ]
+    }
+
+]
