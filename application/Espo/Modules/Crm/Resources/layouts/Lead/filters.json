@@ -3,6 +3,7 @@
     "address",
     "campaign",
     "createdAt",
+    "createdBy",
     "emailAddress",
     "status",
     "source",

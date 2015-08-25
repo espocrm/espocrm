@@ -3,6 +3,7 @@
 	"assignedUser",
 	"contact",
 	"createdAt",
+	"createdBy",
 	"number",
 	"modifiedAt",
 	"status",

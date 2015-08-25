@@ -2,6 +2,7 @@
 	"account",
 	"assignedUser",
 	"createdAt",
+	"createdBy",
 	"dateStart",
 	"direction",
 	"modifiedAt",
