@@ -61,9 +61,8 @@ class Campaign extends \Espo\Services\Record
         ))->count();
         $entity->set('bouncedCount', $bouncedCount);
 
-        $leadCreatedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
-            'campaignId' => $entity->id,
-            'action' => 'Lead Created'
+        $leadCreatedCount = $this->getEntityManager()->getRepository('Lead')->where(array(
+            'campaignId' => $entity->id
         ))->count();
         $entity->set('leadCreatedCount', $leadCreatedCount);
 
