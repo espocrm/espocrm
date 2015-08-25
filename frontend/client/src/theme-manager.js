@@ -35,7 +35,7 @@ Espo.define('theme-manager', [], function () {
                     return name;
                 }
             }
-            return this.config.get('name');
+            return this.config.get('theme');
         },
 
         getStylesheet: function () {
