@@ -16,7 +16,7 @@
             {{#each tabListDefs}}
             <li data-name="{{name}}"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
             {{/each}}
-            <li class="dropdown">
+            <li class="dropdown more">
                 <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown"></ul>
             </li>
