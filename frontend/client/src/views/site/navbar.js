@@ -121,17 +121,8 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             });
         },
 
-        afterRender: function () {
-            this.selectTab(this.getRouter().getLast().controller);
-
-            if (this.getStorage().get('state', 'layoutMinimized')) {
-                var $body = $('body');
-                $body.addClass('minimized');
-            }
-
-            var self = this;
-
-            $window = $(window);
+        adjust: function () {
+            var $window = $(window);
 
             var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
             var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
@@ -140,7 +131,8 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
             if (!navbarIsVertical) {
                 var $tabs = this.$el.find('ul.tabs');
-                var $more = $tabs.find('li.dropdown > ul');
+                var $moreDropdown = $tabs.find('li.more');
+                var $more = $tabs.find('li.more > ul');
 
                 $window.on('resize.navbar', function() {
                     updateWidth();
@@ -152,10 +144,9 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                     $one.prependTo($more);
                 };
                 var unhideOneTab = function () {
-                    var count = $tabs.children().size();
                     var $one = $more.children().eq(0);
                     if ($one.size()) {
-                        $one.insertAfter($tabs.children().eq(count - 2));
+                        $one.insertBefore($moreDropdown);
                     }
                 };
 
@@ -166,14 +157,13 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
 
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
-
                     var windowWidth = window.innerWidth;
 
                     $more.children('li').each(function (i, li) {
                         unhideOneTab();
                     });
 
-                    $more.parent().addClass('hide');
+                    $more.parent().addClass('hidden');
 
                     if (windowWidth < smallScreenWidth) {
                         return;
@@ -182,15 +172,18 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                     var headerWidth = this.$el.width();
 
                     var maxWidth = headerWidth - 546 - moreWidth;
-
                     var width = $tabs.width();
+
+                    var i = 0;
                     while (width > maxWidth) {
                         hideOneTab();
                         width = $tabs.width();
+                        i++;
+                        if (i >= tabCount) break;
                     }
 
                     if ($more.children().size() > 0) {
-                        $more.parent().removeClass('hide');
+                        $moreDropdown.removeClass('hidden');
                     }
                 }.bind(this);
 
@@ -208,10 +201,12 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 };
 
                 if ($navbar.height() <= navbarNeededHeight) {
-                    $more.parent().addClass('hide');
+                    $more.parent().addClass('hidden');
                 }
 
                 processUpdateWidth();
+
+
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
@@ -238,7 +233,51 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 });
                 updateHeight();
             }
+        },
 
+        afterRender: function () {
+            this.selectTab(this.getRouter().getLast().controller);
+
+            if (this.getStorage().get('state', 'layoutMinimized')) {
+                var $body = $('body');
+                $body.addClass('minimized');
+            }
+
+            if (this.getThemeManager().getParam('navbarIsVertical')) {
+                var process = function () {
+                    if (this.$el.height() < $(window).height() / 2) {
+                        setTimeout(function () {
+                            process();
+                        }.bind(this), 50);
+                        return;
+                    }
+                    if (this.getThemeManager().isUserTheme()) {
+                        setTimeout(function () {
+                            this.adjust();
+                        }.bind(this), 10);
+                        return;
+                    }
+                    this.adjust();
+                }.bind(this);
+                process();
+            } else {
+                var process = function () {
+                    if (this.$el.width() < $(window).width() / 2) {
+                        setTimeout(function () {
+                            process();
+                        }.bind(this), 50);
+                        return;
+                    }
+                    if (this.getThemeManager().isUserTheme()) {
+                        setTimeout(function () {
+                            this.adjust();
+                        }.bind(this), 10);
+                        return;
+                    }
+                    this.adjust();
+                }.bind(this);
+                process();
+            }
         },
 
         selectTab: function (name) {
