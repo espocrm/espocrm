@@ -26,7 +26,8 @@
             "tooltip": true
         },
         "parent": {
-            "type": "linkParent"
+            "type": "linkParent",
+            "tooltip": true
         },
         "createdAt": {
             "type": "datetime",

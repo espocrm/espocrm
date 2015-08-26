@@ -1,0 +1,5 @@
+[
+    {"name": "name", "link": true, "Width": 40},
+    {"name": "parent"},
+    {"name": "createdBy", "width": 20}
+]

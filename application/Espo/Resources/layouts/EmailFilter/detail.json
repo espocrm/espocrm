@@ -1,0 +1,22 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"}, {"name": "parent"}
+            ],
+            [
+                {"name": "from"}, false
+            ],
+            [
+                {"name": "to"}, false
+            ],
+            [
+                {"name": "subject", "fullWidth": true}
+            ],
+            [
+                {"name": "bodyContains"}
+            ]
+        ]
+    }
+
+]

@@ -1,4 +1,5 @@
 {
+    "controller": "controllers/record",
     "modalViews": {
         "edit": "views/email-filter/modals/edit"
     }
