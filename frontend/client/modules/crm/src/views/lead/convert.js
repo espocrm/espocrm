@@ -27,7 +27,7 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
 
         data: function () {
             return {
-                scopes: this.scopes,
+                scopeList: this.scopeList,
                 scope: this.model.name,
             };
         },
@@ -69,18 +69,21 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
         },
 
         build: function () {
-            var scopes = this.scopes = [];
-            for (var scope in this.model.defs.convertFields) {
-                if (this.getAcl().check(scope, 'edit')) {
-                    scopes.push(scope);
+            var scopeList = this.scopeList = [];
+            (this.getMetadata().get('entityDefs.Lead.convertEntityList') || []).forEach(function (scope) {
+                if (scope == 'Account' && this.getConfig().get('b2cMode')) {
+                    return;
                 }
-            }
+                if (this.getAcl().check(scope, 'edit')) {
+                    scopeList.push(scope);
+                }
+            }, this);
             var i = 0;
 
             var attributeList = this.getFieldManager().getEntityAttributes(this.model.name);
             var ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
 
-            scopes.forEach(function (scope) {
+            scopeList.forEach(function (scope) {
                 this.getModelFactory().create(scope, function (model) {
                     model.populateDefaults();
 
@@ -109,27 +112,31 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
                         exit: function () {},
                     }, function (view) {
                         i++;
-                        if (i == scopes.length) {
+                        if (i == scopeList.length) {
                             this.wait(false);
                             this.notify(false);
                         }
                     }.bind(this));
                 }, this);
             }, this);
+
+            if (scopeList.length == 0) {
+                this.wait(false);
+            }
         },
 
         convert: function () {
 
-            var scopes = [];
+            var scopeList = [];
 
-            this.scopes.forEach(function (scope) {
+            this.scopeList.forEach(function (scope) {
                 var el = this.$el.find('input[data-scope="' + scope + '"]').get(0);
                 if (el && el.checked) {
-                    scopes.push(scope);
+                    scopeList.push(scope);
                 }
             }.bind(this));
 
-            if (scopes.length == 0) {
+            if (scopeList.length == 0) {
                 this.notify('Select one or more checkboxes', 'error');
                 return;
             }
@@ -137,11 +144,11 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
             this.getRouter().confirmLeaveOut = false;
 
             var notValid = false;
-            scopes.forEach(function (scope) {
+            scopeList.forEach(function (scope) {
                 var editView = this.getView(scope);
                 editView.model.set(editView.fetch());
                 notValid = editView.validate() || notValid;
-            }.bind(this));
+            }, this);
 
             var self = this;
 
@@ -149,7 +156,7 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
                 id: self.model.id,
                 records: {}
             };
-            scopes.forEach(function (scope) {
+            scopeList.forEach(function (scope) {
                 data.records[scope] = self.getView(scope).model.attributes;
             });
 
@@ -162,9 +169,10 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
                     data: JSON.stringify(data),
                     type: 'POST',
                     success: function () {
+                        this.getRouter().confirmLeaveOut = false;
                         self.getRouter().navigate('#Lead/view/' + self.model.id, {trigger: true});
                         self.notify('Converted', 'success');
-                    },
+                    }.bind(this),
                     error: function () {
                         self.$el.find('[data-action="convert"]').removeClass('disabled');
                     }
