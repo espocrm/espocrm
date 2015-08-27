@@ -255,10 +255,11 @@ class User extends Record
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             $userCount = $this->getEntityManager()->getRepository('User')->where(array(
                 'isActive' => true,
-                'isSuperAdmin' => false
+                'isSuperAdmin' => false,
+                'id!=' => 'system'
             ))->count();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
-                throw new Forbidden('User limit is reached.');
+                throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
             }
         }
     }
@@ -270,10 +271,11 @@ class User extends Record
                 if (array_key_exists('isActive', $data) && $data['isActive']) {
                     $userCount = $this->getEntityManager()->getRepository('User')->where(array(
                         'isActive' => true,
-                        'isSuperAdmin' => false
+                        'isSuperAdmin' => false,
+                        'id!=' => 'system'
                     ))->count();
                     if ($userCount >= $this->getConfig()->get('userLimit')) {
-                        throw new Forbidden('User limit is reached.');
+                        throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
                     }
                 }
             }
