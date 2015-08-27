@@ -166,7 +166,7 @@ class AclManager
             return true;
         }
         $data = $this->getTable($user)->getScopeData($entity->getEntityType());
-        return $this->getImplementation($scope)->checkEntity($user, $entity, $data, $action);
+        return $this->getImplementation($entity->getEntityType())->checkEntity($user, $entity, $data, $action);
     }
 
     public function checkScope(User $user, $scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
