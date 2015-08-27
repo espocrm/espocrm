@@ -30,13 +30,16 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 var isRestricted = false;
 
                 if (this.model.get('status') == 'Sent') {
-                    this.layoutName += 'Restricted';
                     isRestricted = true;
                 }
 
-                if (this.model.get('status') == 'Archived' && this.model.get('createdById') == 'system') {
+                if (this.model.get('status') == 'Archived') {
+                    if (this.model.get('createdById') == 'system' || !this.model.get('createdById')) {
+                        isRestricted = true;
+                    }
+                }
+                if (isRestricted) {
                     this.layoutName += 'Restricted';
-                    isRestricted = true;
                 }
                 this.isRestricted = isRestricted;
             }
