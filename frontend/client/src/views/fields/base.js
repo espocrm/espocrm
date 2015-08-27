@@ -171,6 +171,10 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                 }
             }
 
+            if (this.options.readOnlyDisabled) {
+                this.readOnly = false;
+            }
+
             if (this.mode == 'edit' && this.readOnly) {
                 this.mode = 'detail';
             }
