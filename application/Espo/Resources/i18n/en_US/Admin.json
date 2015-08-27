@@ -48,7 +48,8 @@
         "Edit Link": "Edit Link",
         "Notifications": "Notifications",
         "Jobs": "Jobs",
-        "Reset to Default": "Reset to Default"
+        "Reset to Default": "Reset to Default",
+        "Email Filters": "Email Filters"
     },
     "layouts": {
         "list": "List",
@@ -151,7 +152,8 @@
         "extensions": "Install or uninstall extensions.",
         "integrations": "Integration with third-party services.",
         "notifications": "In-app and email notification settings.",
-        "inboundEmails": "Settings for incoming emails."
+        "inboundEmails": "Settings for incoming emails.",
+        "emailFilters": "Allow to filter incoming emails by specified criteria."
     },
     "options": {
         "previewSize": {

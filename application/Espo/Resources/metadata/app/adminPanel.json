@@ -93,6 +93,11 @@
             "description":"groupEmailAccounts"
          },
          {
+            "url":"#EmailFilter",
+            "label":"Email Filters",
+            "description":"emailFilters"
+         },
+         {
             "url":"#EmailTemplate",
             "label":"Email Templates",
             "description":"emailTemplates"
