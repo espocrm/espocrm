@@ -391,10 +391,11 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.removeButton('delete');
             }
 
-            if (!this.getAcl().checkModel(this.model, 'edit')) {
-                this.readOnly = true;
+            if (!this.isNew) {
+                if (!this.getAcl().checkModel(this.model, 'edit')) {
+                    this.readOnly = true;
+                }
             }
-
 
             this.manageAccess();
 
