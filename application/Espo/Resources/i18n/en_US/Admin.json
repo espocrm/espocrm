@@ -153,7 +153,7 @@
         "integrations": "Integration with third-party services.",
         "notifications": "In-app and email notification settings.",
         "inboundEmails": "Settings for incoming emails.",
-        "emailFilters": "Allow to filter incoming emails by specified criteria."
+        "emailFilters": "Emails messages that match specified filter won't be imported."
     },
     "options": {
         "previewSize": {
