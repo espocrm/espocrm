@@ -169,7 +169,7 @@ class Stream extends \Espo\Core\Services\Base
     public function followEntityMass(Entity $entity, array $sourceUserIdList)
     {
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
-            throw new Error();
+            return false;
         }
 
         $userIdList = [];
