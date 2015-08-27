@@ -231,6 +231,11 @@
             "foreign": "leads"
         }
     },
+    "convertEntityList": [
+        "Account",
+        "Contact",
+        "Opportunity"
+    ],
     "convertFields": {
         "Contact": {
         },
