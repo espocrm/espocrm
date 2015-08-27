@@ -142,9 +142,9 @@ class InboundEmail extends \Espo\Services\Record
         throw new Error();
     }
 
-    public function fetchFromMailServer(Entity $inboundEmail)
+    public function fetchFromMailServer(Entity $emailAccount)
     {
-        if ($inboundEmail->get('status') != 'Active') {
+        if ($emailAccount->get('status') != 'Active') {
             throw new Error();
         }
 
@@ -152,17 +152,29 @@ class InboundEmail extends \Espo\Services\Record
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
-        $teamId = $inboundEmail->get('teamId');
+        $teamId = $emailAccount->get('teamId');
         $userId = $this->getUser()->id;
-        if ($inboundEmail->get('assignToUserId')) {
-            $userId = $inboundEmail->get('assignToUserId');
+        if ($emailAccount->get('assignToUserId')) {
+            $userId = $emailAccount->get('assignToUserId');
         }
         $teamIds = array();
         if (!empty($teamId)) {
             $teamIds[] = $teamId;
         }
 
-        $fetchData = json_decode($inboundEmail->get('fetchData'), true);
+        $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
+            'OR' => [
+                [
+                    'parentType' => $emailAccount->getEntityType(),
+                    'parentId' => $emailAccount->id
+                ],
+                [
+                    'parentId' => null
+                ]
+            ]
+        ])->find();
+
+        $fetchData = json_decode($emailAccount->get('fetchData'), true);
         if (empty($fetchData)) {
             $fetchData = array();
         }
@@ -174,19 +186,19 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $imapParams = array(
-            'host' => $inboundEmail->get('host'),
-            'port' => $inboundEmail->get('port'),
-            'user' => $inboundEmail->get('username'),
-            'password' => $this->getCrypt()->decrypt($inboundEmail->get('password')),
+            'host' => $emailAccount->get('host'),
+            'port' => $emailAccount->get('port'),
+            'user' => $emailAccount->get('username'),
+            'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
         );
 
-        if ($inboundEmail->get('ssl')) {
+        if ($emailAccount->get('ssl')) {
             $imapParams['ssl'] = 'SSL';
         }
 
         $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
 
-        $monitoredFolders = $inboundEmail->get('monitoredFolders');
+        $monitoredFolders = $emailAccount->get('monitoredFolders');
         if (empty($monitoredFolders)) {
             $monitoredFolders = 'INBOX';
         }
@@ -198,7 +210,7 @@ class InboundEmail extends \Espo\Services\Record
             try {
                 $storage->selectFolder($folder);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('InboundEmail '.$inboundEmail->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage());
+                $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage());
                 continue;
             }
 
@@ -246,26 +258,26 @@ class InboundEmail extends \Espo\Services\Record
                     }
                     if (!$toSkip) {
                         try {
-                            $email = $importer->importMessage($message, $userId, $teamIds);
+                            $email = $importer->importMessage($message, $userId, $teamIds, $filterCollection);
                         } catch (\Exception $e) {
-                            $GLOBALS['log']->error('InboundEmail '.$inboundEmail->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
                         }
                     }
                 } catch (\Exception $e) {
-                    $GLOBALS['log']->error('InboundEmail '.$inboundEmail->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if (!empty($email)) {
-                    if (!$inboundEmail->get('createCase')) {
+                    if (!$emailAccount->get('createCase')) {
                         $this->noteAboutEmail($email);
                     }
 
-                    if ($inboundEmail->get('createCase')) {
-                        $this->createCase($inboundEmail, $email);
+                    if ($emailAccount->get('createCase')) {
+                        $this->createCase($emailAccount, $email);
                     } else {
-                        if ($inboundEmail->get('reply')) {
+                        if ($emailAccount->get('reply')) {
                             $user = $this->getEntityManager()->getEntity('User', $userId);
-                            $this->autoReply($inboundEmail, $email, $user);
+                            $this->autoReply($emailAccount, $email, $user);
                         }
                     }
                 }
@@ -290,8 +302,8 @@ class InboundEmail extends \Espo\Services\Record
             $fetchData['lastUID'][$folder] = $lastUID;
             $fetchData['lastDate'][$folder] = $lastDate;
 
-            $inboundEmail->set('fetchData', json_encode($fetchData));
-            $this->getEntityManager()->saveEntity($inboundEmail, array('silent' => true));
+            $emailAccount->set('fetchData', json_encode($fetchData));
+            $this->getEntityManager()->saveEntity($emailAccount, array('silent' => true));
         }
 
         return true;

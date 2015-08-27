@@ -25,6 +25,7 @@ namespace Espo\Core\Mail;
 use \Zend\Mime\Mime as Mime;
 
 use \Espo\ORM\Entity;
+use \Espo\ORM\Email;
 
 class Importer
 {
@@ -34,11 +35,14 @@ class Importer
 
     private $config;
 
+    private $filtersMatcher;
+
     public function __construct($entityManager, $fileManager, $config)
     {
         $this->entityManager = $entityManager;
         $this->fileManager = $fileManager;
         $this->config = $config;
+        $this->filtersMatcher = new FiltersMatcher();
     }
 
     protected function getEntityManager()
@@ -55,7 +59,12 @@ class Importer
         return $this->fileManager;
     }
 
-    public function importMessage($message, $userId, $teamsIds = array())
+    protected function getFiltersMatcher()
+    {
+        return $this->filtersMatcher;
+    }
+
+    public function importMessage($message, $userId, $teamsIds = [], $filterList = [])
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
@@ -86,6 +95,10 @@ class Importer
             $email->set('from', $fromArr[0]);
             $email->set('to', implode(';', $toArr));
             $email->set('cc', implode(';', $ccArr));
+
+            if ($this->getFiltersMatcher()->match($email, $filterList)) {
+                return false;
+            }
 
             if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
@@ -147,6 +160,10 @@ class Importer
                     $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
                 }
                 $email->set('body', $body);
+            }
+
+            if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
+                return false;
             }
 
             $parentFound = false;

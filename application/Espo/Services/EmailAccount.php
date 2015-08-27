@@ -176,7 +176,6 @@ class EmailAccount extends Record
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
         $user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
-
         if (!$user) {
             throw new Error();
         }
@@ -187,6 +186,18 @@ class EmailAccount extends Record
         if (!empty($teamId)) {
             $teamIds[] = $teamId;
         }
+
+        $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
+            'OR' => [
+                [
+                    'parentType' => $emailAccount->getEntityType(),
+                    'parentId' => $emailAccount->id
+                ],
+                [
+                    'parentId' => null
+                ]
+            ]
+        ])->find();
 
         $fetchData = json_decode($emailAccount->get('fetchData'), true);
         if (empty($fetchData)) {
@@ -263,7 +274,7 @@ class EmailAccount extends Record
                         $flags = $message->getFlags();
                     }
                     try {
-                    	$email = $importer->importMessage($message, $userId, $teamIds);
+                    	$email = $importer->importMessage($message, $userId, $teamIds, $filterCollection);
     	            } catch (\Exception $e) {
     	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }

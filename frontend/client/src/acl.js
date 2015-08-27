@@ -135,7 +135,33 @@ Espo.define('acl', [], function () {
                     return model.get('isRemovable');
                 }
             }
-            return this.check(model.name, action, this.user.isOwner(model), this.user.inTeam(model));
+            return this.check(model.name, action, this.checkIsOwner(model), this.checkInTeam(model));
+        },
+
+        checkIsOwner: function (model) {
+            var result = this.user.id === model.get('assignedUserId') || this.user.id === model.get('createdById');
+            if (!result) {
+                if (!model.hasField('assignedUser') && !model.hasField('createdBy')) {
+                    return true;
+                }
+            }
+            return result;
+        },
+
+        checkInTeam: function (model) {
+            var userTeamIds = this.user.getTeamIds();
+
+            if (model.name == 'Team') {
+                return (userTeamIds.indexOf(model.id) != -1);
+            } else {
+                var teamIds = model.getTeamIds();
+                for (var i in userTeamIds) {
+                    if (teamIds.indexOf(i) != -1) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         },
 
         clear: function () {
