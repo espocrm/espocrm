@@ -501,8 +501,11 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             if ('showCount' in this.options) {
                 this.showCount = this.options.showCount;
             }
-
             this.displayTotalCount = this.showCount && this.getConfig().get('displayListViewRecordCount');
+
+            if ('displayTotalCount' in this.options) {
+                this.displayTotalCount = this.options.displayTotalCount;
+            }
 
 
             if (this.options.massActionsDisabled) {
