@@ -154,10 +154,13 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 var $navbar = $('#navbar .navbar');
                 var navbarNeededHeight = 45;
 
+                $moreDd = $('#nav-more-tabs-dropdown');
+
+
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
                     var windowWidth = window.innerWidth;
-                    var moreWidth = $more.width();
+                    var moreWidth = $moreDd.width();
 
                     $more.children('li').each(function (i, li) {
                         unhideOneTab();
