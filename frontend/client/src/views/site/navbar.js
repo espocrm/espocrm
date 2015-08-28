@@ -153,11 +153,11 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 var tabCount = this.tabList.length;
                 var $navbar = $('#navbar .navbar');
                 var navbarNeededHeight = 45;
-                var moreWidth = $('#nav-more-tabs-dropdown').width();
 
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
                     var windowWidth = window.innerWidth;
+                    var moreWidth = $more.width();
 
                     $more.children('li').each(function (i, li) {
                         unhideOneTab();
@@ -179,7 +179,12 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                         hideOneTab();
                         width = $tabs.width();
                         i++;
-                        if (i >= tabCount) break;
+                        if (i >= tabCount) {
+                            setTimeout(function () {
+                                updateWidth();
+                            }, 100);
+                            break;
+                        }
                     }
 
                     if ($more.children().size() > 0) {

@@ -137,7 +137,9 @@ Espo.define(
                     this.user.defs = this.metadata.get('entityDefs.User');
                     this.preferences.defs = this.metadata.get('entityDefs.Preferences');
 
-                    $('#main-stylesheet').attr('href', this.themeManager.getStylesheet());
+                    if (this.themeManager.isUserTheme()) {
+                        $('#main-stylesheet').attr('href', this.themeManager.getStylesheet());
+                    }
 
                     this.loader.addLibsConfig(this.metadata.get('app.jsLibs') || {});
 
