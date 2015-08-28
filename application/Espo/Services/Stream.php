@@ -215,7 +215,7 @@ class Stream extends \Espo\Core\Services\Base
             return;
         }
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
-            throw new Error();
+            return false;
         }
 
         $pdo = $this->getEntityManager()->getPDO();
@@ -235,7 +235,7 @@ class Stream extends \Espo\Core\Services\Base
     public function unfollowEntity(Entity $entity, $userId)
     {
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
-            throw new Error();
+            return false;
         }
 
         $pdo = $this->getEntityManager()->getPDO();
