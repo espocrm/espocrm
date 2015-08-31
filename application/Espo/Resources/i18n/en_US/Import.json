@@ -14,7 +14,11 @@
         "Remove Duplicates": "Remove Duplicates",
         "importedCount": "Imported (count)",
         "duplicateCount": "Duplicates (count)",
-        "updatedCount": "Updated (count)"
+        "updatedCount": "Updated (count)",
+        "Create Only": "Create Only",
+        "Create and Update": "Create & Update",
+        "Update Only": "Update Only",
+        "Update by": "Update by"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",

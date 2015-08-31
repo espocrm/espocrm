@@ -133,6 +133,10 @@ class Import extends \Espo\Core\Controllers\Record
             'action' => $data['action'],
         );
 
+        if (array_key_exists('updateBy', $data)) {
+            $importParams['updateBy'] = $data['updateBy'];
+        }
+
         $attachmentId = $data['attachmentId'];
 
         if (!$this->getAcl()->check($data['entityType'], 'edit')) {

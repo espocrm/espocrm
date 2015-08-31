@@ -107,6 +107,11 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
             $row.append($cell);
             $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
             $row.append($cell);
+
+            if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
+                $cell = $('<th>').html(this.translate('Update by', 'labels', 'Import'));
+                $row.append($cell);
+            }
             $table.append($row);
 
             this.mapping.forEach(function (d, i) {
@@ -121,6 +126,15 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
 
                 $cell = $('<td>').html(d.value);
                 $row.append($cell);
+
+                if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
+                    var $checkbox = $('<input>').attr('type', 'checkbox').attr('id', 'update-by-' + i.toString());
+                    if (d.name == 'id') {
+                        $checkbox.attr('checked', true);
+                    }
+                    $cell = $('<td>').append($checkbox);
+                    $row.append($cell);
+                }
 
                 $table.append($row);
             }, this);
@@ -303,8 +317,18 @@ Espo.define('Views.Import.Step2', 'View', function (Dep) {
                 fields.push($('#column-' + i).val());
             }, this);
 
-
             this.formData.fields = fields;
+
+            if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
+                var updateBy = [];
+                this.mapping.forEach(function (d, i) {
+                    if ($('#update-by-' + i).get(0).checked) {
+                        updateBy.push(i);
+                    }
+                }, this);
+                this.formData.updateBy = updateBy;
+            }
+
 
             this.getParentView().formData = this.formData;
 

@@ -342,25 +342,33 @@ class Import extends \Espo\Services\Record
             $action = $params['action'];
         }
 
-        if (in_array($action, ['createAndUpdate', 'update']) && in_array('id', $fields)) {
-            $i = array_search('id', $fields);
-            $id = $row[$i];
-            if (empty($id)) {
-                $id = null;
+
+        if (in_array($action, ['createAndUpdate', 'update'])) {
+            if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
+                $updateByFieldList = [];
+                $whereClause = array();
+                foreach ($params['updateBy'] as $i) {
+                    if (array_key_exists($i, $fields)) {
+                        $updateByFieldList[] = $fields[$i];
+                        $whereClause[$fields[$i]] = $row[$i];
+                    }
+                }
             }
         }
 
         $recordService = $this->getRecordService($scope);
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
-            if (!$id) {
+            if (!count($updateByFieldList)) {
                 return;
             }
-            $entity = $this->getEntityManager()->getEntity($scope, $id);
+            $entity = $this->getEntityManager()->getRepository($scope)->where($whereClause)->findOne();
             if (!$entity) {
                 if ($action == 'createAndUpdate') {
                     $entity = $this->getEntityManager()->getEntity($scope);
-                    $entity->set('id', $id);
+                    if (array_key_exists('id', $whereClause)) {
+                        $entity->set('id', $whereClause['id']);
+                    }
                 } else {
                     return;
                 }

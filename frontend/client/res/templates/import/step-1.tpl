@@ -25,6 +25,7 @@
                             <select class="form-control" id="import-action">
                                 <option value="create">{{translate 'Create Only' scope='Import'}}</option>
                                 <option value="createAndUpdate">{{translate 'Create and Update' scope='Import'}}</option>
+                                <option value="update">{{translate 'Update Only' scope='Import'}}</option>
                             </select>
                         </div>
                     </div>
