@@ -506,6 +506,42 @@ class Base
                 $where['value'] = [$from, $to];
 
                 break;
+            case 'lastXDays':
+                $where['type'] = 'between';
+
+                $dtFrom = clone $dt;
+
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $to = $dt->format($format);
+
+                $number = strval(intval($item['value']));
+                $dtFrom->modify('-'.$number.' day');
+                $dtFrom->setTime(0, 0, 0);
+                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
+
+                $from = $dtFrom->format($format);
+
+                $where['value'] = [$from, $to];
+
+                break;
+            case 'nextXDays':
+                $where['type'] = 'between';
+
+                $dtTo = clone $dt;
+
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $from = $dt->format($format);
+
+                $number = strval(intval($item['value']));
+                $dtTo->modify('+'.$number.' day');
+                $dtTo->setTime(24, 59, 59);
+                $dtTo->setTimezone(new \DateTimeZone('UTC'));
+
+                $to = $dtTo->format($format);
+
+                $where['value'] = [$from, $to];
+
+                break;
             case 'on':
                 $where['type'] = 'between';
 
@@ -641,6 +677,27 @@ class Base
                     $part['AND'] = array(
                         $item['field'] . '>=' => $dt2->format('Y-m-d'),
                         $item['field'] . '<=' => $dt1->format('Y-m-d'),
+                    );
+                    break;
+                case 'lastXDays':
+                    $dt1 = new \DateTime();
+                    $dt2 = clone $dt1;
+                    $number = strval(intval($item['value']));
+
+                    $dt2->modify('-'.$number.' days');
+                    $part['AND'] = array(
+                        $item['field'] . '>=' => $dt2->format('Y-m-d'),
+                        $item['field'] . '<=' => $dt1->format('Y-m-d'),
+                    );
+                    break;
+                case 'nextXDays':
+                    $dt1 = new \DateTime();
+                    $dt2 = clone $dt1;
+                    $number = strval(intval($item['value']));
+                    $dt2->modify('+'.$number.' days');
+                    $part['AND'] = array(
+                        $item['field'] . '>=' => $dt1->format('Y-m-d'),
+                        $item['field'] . '<=' => $dt2->format('Y-m-d'),
                     );
                     break;
                 case 'currentMonth':

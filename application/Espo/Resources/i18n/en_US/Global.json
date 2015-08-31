@@ -165,7 +165,8 @@
         "Unlink All": "Unlink All",
         "Total": "Total",
         "Print to PDF": "Print to PDF",
-        "Default": "Default"
+        "Default": "Default",
+        "Number": "Number"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -398,7 +399,9 @@
             "lastQuarter": "Last Quarter",
             "currentYear": "Current Year",
             "lastYear": "Last Year",
-            "lastSevenDays": "Last 7 Days"
+            "lastSevenDays": "Last 7 Days",
+            "lastXDays": "Last X Days",
+            "nextXDays": "Next X Days"
         },
         "searchRanges": {
             "is": "Is",
