@@ -18,9 +18,13 @@
         "emailAddress": "Email Address",
         "deliveryDate": "Delivery Date",
         "account": "Account",
-        "users": "Users"
+        "users": "Users",
+        "replied": "Replied",
+        "replies": "Replies"
     },
     "links": {
+        "replied": "Replied",
+        "replies": "Replies"
     },
     "options": {
         "Draft": "Draft",

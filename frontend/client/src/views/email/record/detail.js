@@ -94,6 +94,19 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
             }
         },
 
+        handleRepliesField: function () {
+            if ((this.model.get('repliesIds') || []).length == 0) {
+                this.hideField('replies');
+            } else {
+                this.showField('replies');
+            }
+            if (!this.model.get('repliedId')) {
+                this.hideField('replied');
+            } else {
+                this.showField('replied');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -110,6 +123,11 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 this.handleBccField();
                 this.listenTo(this.model, 'change:bcc', function () {
                     this.handleBccField();
+                }, this);
+
+                this.handleRepliesField();
+                this.listenTo(this.model, 'change:repliesIds', function () {
+                    this.handleRepliesField();
                 }, this);
             }
         },

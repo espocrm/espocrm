@@ -158,6 +158,15 @@
             "type": "link",
             "required": false
         },
+        "replied": {
+            "type": "link",
+            "noJoin": true,
+            "readOnly": true
+        },
+        "replies": {
+            "type": "linkMultiple",
+            "readOnly": true
+        },
         "teams": {
             "type": "linkMultiple"
         },
@@ -204,6 +213,16 @@
             "type": "belongsToParent",
             "entityList": [],
             "foreign": "emails"
+        },
+        "replied": {
+            "type": "belongsTo",
+            "entity": "Email",
+            "foreign": "replies"
+        },
+        "replies": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "replied"
         },
         "fromEmailAddress": {
             "type": "belongsTo",

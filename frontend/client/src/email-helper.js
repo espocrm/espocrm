@@ -118,6 +118,8 @@ Espo.define('email-helper', [], function () {
 
             attributes.nameHash = nameHash;
 
+            attributes.repliedId = model.id;
+
             this.addReplyBodyAttrbutes(model, attributes);
 
             return attributes;

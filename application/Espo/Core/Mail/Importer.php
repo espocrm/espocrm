@@ -168,8 +168,21 @@ class Importer
 
             $parentFound = false;
 
+            if (isset($message->inReplyTo) && !empty($message->inReplyTo)) {
+                $arr = explode(' ', $message->inReplyTo);
+                $inReplyTo = $arr[0];
+                $replied = $this->getEntityManager()->getRepository('Email')->where(array(
+                    'messageId' => $inReplyTo
+                ))->findOne();
+                if ($replied) {
+                    $email->set('repliedId', $replied->id);
+                }
+            }
+
             if (isset($message->references) && !empty($message->references)) {
-                $reference = str_replace(array('/', '@'), " ", trim($message->references, '<>'));
+                $arr = explode(' ', $message->references);
+                $reference = $arr[0];
+                $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
                 $parentType = $parentId = null;
                 $emailSent = PHP_INT_MAX;
                 $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);

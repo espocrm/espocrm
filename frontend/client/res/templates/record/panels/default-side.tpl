@@ -1,7 +1,7 @@
 <div class="row">
 {{#each fieldList}}
 <div class="cell cell-{{./this}} form-group col-sm-6 col-md-12">
-    <label class="control-label label-{{./this}}">{{translate this scope=../model.name category='fields'}}</label>
+    <label class="control-label field-label-{{./this}}">{{translate this scope=../model.name category='fields'}}</label>
     <div class="field field-{{./this}}">
     {{{var this ../this}}}
     </div>
@@ -34,7 +34,7 @@
 <div class="row">
 {{#if followers}}
     <div class="cell form-group col-sm-6 col-md-12">
-        <label class="control-label label-followers">{{translate 'Followers'}}</label>
+        <label class="control-label field-label-followers">{{translate 'Followers'}}</label>
         <div class="field field-followers">
             {{{followers}}}
         </div>

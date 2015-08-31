@@ -33,7 +33,9 @@ Espo.define('views/email/record/detail-side', 'views/record/detail-side', functi
                         {
                             name: 'teams',
                             view: 'Fields.Teams'
-                        }
+                        },
+                        'replied',
+                        'replies'
                     ]
                 }
             }

@@ -184,5 +184,24 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
+    protected function afterSave(Entity $entity, array $options)
+    {
+        parent::afterSave($entity, $options);
+        if (!$entity->isNew()) {
+            if ($entity->get('parentType') && $entity->get('parentId') && $entity->isFieldChanged('parentId')) {
+                $replyList = $this->findRelated($entity, 'replies');
+                foreach ($replyList as $reply) {
+                    if (!$reply->get('parentId')) {
+                        $reply->set(array(
+                            'parentId' => $entity->get('parentId'),
+                            'parentType' => $entity->get('parentType'),
+                        ));
+                        $this->getEntityManager()->saveEntity($reply);
+                    }
+                }
+            }
+        }
+    }
+
 }
 
