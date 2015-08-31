@@ -31,16 +31,16 @@ return array(
 	),
 	'ScheduledJob' => array(
 		0 => array(
-			'name' => 'Check Inbound Emails',
+			'name' => 'Check Group Email Accounts',
 			'job' => 'CheckInboundEmails',
 			'status' => 'Active',
-			'scheduling' => '*/5 * * * *',
+			'scheduling' => '*/4 * * * *',
 		),
 		1 => array(
 			'name' => 'Check Personal Email Accounts',
 			'job' => 'CheckEmailAccounts',
 			'status' => 'Active',
-			'scheduling' => '*/10 * * * *',
+			'scheduling' => '*/5 * * * *',
 		),
 		2 => array(
 			'name' => 'Send Email Reminders',
