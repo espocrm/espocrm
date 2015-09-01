@@ -56,9 +56,26 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                 $usersIds[] = $assignedUserId;
                 $entity->set('usersIds', $usersIds);
                 $hash = $entity->get('usersNames');
-                if ($hash instanceof \stdClass) {
+                if ($hash instanceof \StdClass) {
                     $hash->$assignedUserId = $entity->get('assignedUserName');
                     $entity->set('usersNames', $hash);
+                }
+            }
+            if ($entity->isNew()) {
+                $currentUserId = $this->getEntityManager()->getUser()->id;
+                if (in_array($currentUserId, $usersIds)) {
+                    $usersColumns = $entity->get('usersColumns');
+                    if (empty($usersColumns)) {
+                        $usersColumns = new \StdClass();
+                    }
+                    if ($usersColumns instanceof \StdClass) {
+                        if (!($usersColumns->$currentUserId instanceof \StdClass)) {
+                            $usersColumns->$currentUserId = new \StdClass();
+                        }
+                        if (empty($usersColumns->$currentUserId->status)) {
+                            $usersColumns->$currentUserId->status = 'Accepted';
+                        }
+                    }
                 }
             }
         }
