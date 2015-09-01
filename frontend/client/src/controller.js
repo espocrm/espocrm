@@ -118,6 +118,14 @@ Espo.define('controller', [], function () {
             this.params[key] = value;
         },
 
+        unset: function (key) {
+            delete this.params[key];
+        },
+
+        has: function (key) {
+            return key in this.params;
+        },
+
         checkAccess: function (action) {
             return true;
         },
@@ -199,29 +207,52 @@ Espo.define('controller', [], function () {
          * @param {Object} options Options for view.
          * @return {view}
          */
-        main: function (view, options, callback) {
+        main: function (view, options, callback, useStored, storedKey) {
             var view = view || 'Base';
             var master = this.master(function (master) {
                 master.showLoadingNotification();
                 options = options || {};
                 options.el = '#main';
-                this.viewFactory.create(view, options, function (main) {
+
+                var process = function (main) {
+                    if (useStored) {
+                        this.set('storedView-' + storedKey, main);
+                    }
                     main.once('render', function () {
                         main.updatePageTitle();
                         master.hideLoadingNotification();
                     });
+
+                    if (master.currentViewKey) {
+                        this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
+                        if (this.has('storedView-' + master.currentViewKey)) {
+                            delete master.nestedViews['main'];
+                        }
+                    }
+                    master.currentViewKey = storedKey;
                     master.setView('main', main);
 
                     main.once('after:render', function () {
-                        $(window).scrollTop(0)
-                    });
+                        if (useStored && this.has('storedScrollTop-' + storedKey)) {
+                            $(window).scrollTop(this.get('storedScrollTop-' + storedKey));
+                        } else {
+                            $(window).scrollTop(0);
+                        }
+                    }.bind(this));
 
                     if (callback) {
                         callback.call(this, main);
                     } else {
                         main.render();
                     }
-                });
+                }.bind(this);
+                if (useStored) {
+                    if (this.has('storedView-' + storedKey)) {
+                        process(this.get('storedView-' + storedKey));
+                        return;
+                    }
+                }
+                this.viewFactory.create(view, options, process);
             }.bind(this));
         },
 

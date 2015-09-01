@@ -63,14 +63,24 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         },
 
         list: function (options) {
-            var isReturn = false;
+            var isReturn = options.isReturn;
+
+            var key = this.name + 'List';
+
+            if (!isReturn) {
+                var stored = this.get('storedView-' + key);
+                if (stored) {
+                    stored.remove();
+                    this.unset('storedView-' + key);
+                }
+            }
 
             this.getCollection(function (collection) {
                 this.main(this.getViewName('list'), {
                     scope: this.name,
-                    collection: collection,
-                });
-            }, null, isReturn);
+                    collection: collection
+                }, null, isReturn, key);
+            }.bind(this), null, isReturn);
         },
 
         beforeView: function () {

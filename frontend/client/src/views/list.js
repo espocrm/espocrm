@@ -139,7 +139,9 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         afterRender: function () {
-            this.loadList();
+            if (!this.isRendered()) {
+                this.loadList();
+            }
         },
 
         loadList: function () {
