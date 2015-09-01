@@ -176,6 +176,13 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                     router.dispatch(this.scope, 'edit', {
                         attributes: attributes,
                         returnUrl: Backbone.history.fragment,
+                        returnDispatchParams: {
+                            controller: this.scope,
+                            action: null,
+                            options: {
+                                isReturn: true
+                            }
+                        },
                         id: this.id
                     });
                     router.navigate(url, {trigger: false});

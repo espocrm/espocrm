@@ -80,6 +80,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
         returnUrl: null,
 
+        returnDispatchParams: null,
+
         sideView: 'Record.DetailSide',
 
         bottomView: 'Record.DetailBottom',
@@ -348,6 +350,8 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             this.dropdownEditItemList = _.clone(this.dropdownEditItemList);
 
             this.returnUrl = this.options.returnUrl || this.returnUrl;
+            this.returnDispatchParams = this.options.returnDispatchParams || this.returnDispatchParams;
+
             this.exit = this.options.exit || this.exit;
             this.columnCount = this.options.columnCount || this.columnCount;
 
@@ -679,6 +683,14 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 if (after != 'delete' && this.model.id) {
                     url += '/view/' + this.model.id;
                 }
+            }
+            if (this.returnDispatchParams) {
+                var controller = this.returnDispatchParams.controller;
+                var action = this.returnDispatchParams.action;
+                var options = this.returnDispatchParams.options || {};
+                this.getRouter().dispatch(controller, action, options);
+                this.getRouter().navigate(url, {trigger: false});
+                return;
             }
             this.getRouter().navigate(url, {trigger: true});
         },

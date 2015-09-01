@@ -136,6 +136,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     scope: this.name,
                     model: model,
                     returnUrl: options.returnUrl,
+                    returnDispatchParams: options.returnDispatchParams,
                     views: this.getViews('edit'),
                 };
 
@@ -163,6 +164,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                         scope: this.name,
                         model: model,
                         returnUrl: options.returnUrl,
+                        returnDispatchParams: options.returnDispatchParams,
                         views: this.getViews('edit'),
                     };
 
