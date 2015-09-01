@@ -23,7 +23,7 @@ Espo.define('Crm:Views.Record.RowActions.History', 'Views.Record.RowActions.Rela
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             var list = [{
                 action: 'viewRelated',
                 label: 'View',

@@ -23,7 +23,7 @@ Espo.define('Views.Extension.Record.RowActions', 'Views.Record.RowActions.Defaul
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             if (this.options.acl.edit) {
 
                 if (this.model.get('isInstalled')) {

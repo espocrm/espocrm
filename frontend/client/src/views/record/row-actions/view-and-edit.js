@@ -23,7 +23,7 @@ Espo.define('Views.Record.RowActions.ViewAndEdit', 'Views.Record.RowActions.Defa
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             var list = [{
                 action: 'quickView',
                 label: 'View',

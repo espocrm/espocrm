@@ -76,6 +76,14 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                     });
                 }
             }
+
+            this.listenTo(this.model, 'change:isImportant', function () {
+                if (!this.isRendered()) return;
+                var headerView = this.getView('header');
+                if (headerView) {
+                    headerView.reRender();
+                }
+            }, this);
         },
 
         actionCreateLead: function () {
@@ -340,6 +348,19 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
             }.bind(this));
 
+        },
+
+        getHeader: function () {
+            var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+            var nameHtml = name;
+            if (this.model.get('isImportant')) {
+                nameHtml = '<span class="text-warning">' + name + '</span>'
+            }
+
+            return this.buildHeaderHtml([
+                '<a href="#' + this.model.name + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
+                nameHtml
+            ]);
         },
 
     });

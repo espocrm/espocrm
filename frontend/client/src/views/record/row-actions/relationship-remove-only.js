@@ -23,7 +23,7 @@ Espo.define('Views.Record.RowActions.RelationshipRemoveOnly', 'Views.Record.RowA
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             if (this.options.acl.edit) {
                 return [
                     {

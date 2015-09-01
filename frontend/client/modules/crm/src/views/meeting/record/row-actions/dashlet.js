@@ -23,8 +23,8 @@ Espo.define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-a
 
     return Dep.extend({
 
-        getActions: function () {
-            var actions = Dep.prototype.getActions.call(this);
+        getActionList: function () {
+            var actions = Dep.prototype.getActionList.call(this);
 
             if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
                 actions.push({

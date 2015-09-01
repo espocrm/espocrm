@@ -63,25 +63,65 @@ class Email extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->sendTestEmail($data);
     }
 
-    public function actionMarkAsRead($params, $data, $request)
+    public function postActionMarkAsRead($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
         }
-        if (empty($data['ids']) || !is_array($data['ids'])) {
-            throw new BadRequest();
-        }
-        $ids = $data['ids'];
-
         return $this->getRecordService()->markAsReadByIds($ids);
     }
 
-    public function actionMarkAllAsRead($params, $data, $request)
+    public function postActionMarkAsNotRead($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
         }
+        return $this->getRecordService()->markAsNotReadByIds($ids);
+    }
+
+    public function postActionMarkAllAsRead($params, $data, $request)
+    {
         return $this->getRecordService()->markAllAsRead();
+    }
+
+    public function postActionMarkAsImportant($params, $data, $request)
+    {
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
+        }
+        return $this->getRecordService()->markAsImportantByIds($ids);
+    }
+
+    public function postActionMarkAsNotImportant($params, $data, $request)
+    {
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
+        }
+        return $this->getRecordService()->markAsNotImportantByIds($ids);
     }
 }
 

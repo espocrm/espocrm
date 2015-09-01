@@ -23,8 +23,8 @@ Espo.define('Crm:Views.Task.Record.RowActions.Default', 'Views.Record.RowActions
 
     return Dep.extend({
 
-        getActions: function () {
-            var actions = Dep.prototype.getActions.call(this);
+        getActionList: function () {
+            var actions = Dep.prototype.getActionList.call(this);
 
             if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
                 actions.push({

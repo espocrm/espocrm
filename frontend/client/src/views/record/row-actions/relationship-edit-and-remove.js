@@ -23,7 +23,7 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             if (this.options.acl.edit) {
                 return [
                     {

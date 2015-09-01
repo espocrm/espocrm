@@ -56,6 +56,11 @@
             "notStorable": true,
             "default": true
         },
+        "isImportant": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false
+        },
         "nameHash": {
             "type": "text",
             "notStorable": true,
@@ -198,6 +203,10 @@
             "foreign": "emails",
             "additionalColumns": {
                 "isRead": {
+                    "type": "bool",
+                    "default": false
+                },
+                "isImportant": {
                     "type": "bool",
                     "default": false
                 }

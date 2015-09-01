@@ -44,7 +44,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
         */
         selectable: false,
 
-        rowActionsView: 'Record.RowActions.Default',
+        rowActionsView: 'views/record/row-actions/default',
 
         scope: null,
 
@@ -143,7 +143,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 if (typeof this[method] == 'function') {
                     var data = $el.data();
                     this[method](data);
-                    e.stopPropagation();
+                    e.preventDefault();
                 }
             },
             'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {

@@ -20,7 +20,9 @@
         "account": "Account",
         "users": "Users",
         "replied": "Replied",
-        "replies": "Replies"
+        "replies": "Replies",
+        "isRead": "Is Read",
+        "isImportant": "Is Important"
     },
     "links": {
         "replied": "Replied",
@@ -52,7 +54,9 @@
         "Sending...": "Sending...",
         "Save Draft": "Save Draft",
         "Mark all as read": "Mark all as read",
-        "Show Plain Text": "Show Plain Text"
+        "Show Plain Text": "Show Plain Text",
+        "Mark as Important": "Mark as Important",
+        "Mark as Not Important": "Mark as Not Important"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
@@ -67,6 +71,9 @@
         "drafts": "Drafts"
     },
     "massActions": {
-        "markAsRead": "Mark As Read"
+        "markAsRead": "Mark as Read",
+        "markAsNotRead": "Mark as Not Read",
+        "markAsImportant": "Mark as Important",
+        "markAsNotImportant": "Mark as Not Important"
     }
 }

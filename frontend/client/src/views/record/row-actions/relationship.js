@@ -23,7 +23,7 @@ Espo.define('Views.Record.RowActions.Relationship', 'Views.Record.RowActions.Def
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             var list = [{
                 action: 'viewRelated',
                 label: 'View',

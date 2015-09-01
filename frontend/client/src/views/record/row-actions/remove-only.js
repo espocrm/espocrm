@@ -23,9 +23,7 @@ Espo.define('views/record/row-actions/remove-only', 'views/record/row-actions/de
 
     return Dep.extend({
 
-        template: 'record/row-actions/default',
-
-        getActions: function () {
+        getActionList: function () {
             if (this.options.acl.edit) {
                 return [
                     {
@@ -39,13 +37,6 @@ Espo.define('views/record/row-actions/remove-only', 'views/record/row-actions/de
             }
         },
 
-        data: function () {
-            return {
-                acl: this.options.acl,
-                actions: this.getActions(),
-                scope: this.model.name
-            };
-        }
     });
 
 });

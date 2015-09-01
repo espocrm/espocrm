@@ -103,7 +103,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
                         this[method].call(this, data);
-                        e.stopPropagation();
+                        e.preventDefault();
                     }
                 }
             }
@@ -136,6 +136,18 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
         actionCancelEdit: function () {
             this.cancelEdit();
             $(window).scrollTop(0);
+        },
+
+        hideActionItem: function (name) {
+            if (!this.isRendered()) return;
+            this.$el.find('li > .action[data-action="'+name+'"]').parent().addClass('hidden');
+            this.$el.find('button.action[data-action="'+name+'"]').addClass('hidden');
+        },
+
+        showActionItem: function (name) {
+            if (!this.isRendered()) return;
+            this.$el.find('li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
+            this.$el.find('button.action[data-action="'+name+'"]').removeClass('hidden');
         },
 
         afterRender: function () {

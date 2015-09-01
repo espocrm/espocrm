@@ -43,7 +43,6 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 }
                 this.isRestricted = isRestricted;
             }
-
         },
 
         init: function () {
@@ -60,6 +59,49 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     'name': 'showBodyPlain'
                 });
             }
+
+            this.dropdownItemList.push({
+                'label': 'Mark as Important',
+                'name': 'markAsImportant',
+                'hidden': this.model.get('isImportant')
+            });
+            this.dropdownItemList.push({
+                'label': 'Mark as Not Important',
+                'name': 'markAsNotImportant',
+                'hidden': !this.model.get('isImportant')
+            });
+
+            this.listenTo(this.model, 'change:isImportant', function () {
+                if (this.model.get('isImportant')) {
+                    this.hideActionItem('markAsImportant');
+                    this.showActionItem('markAsNotImportant');
+                } else {
+                    this.hideActionItem('markAsNotImportant');
+                    this.showActionItem('markAsImportant');
+                }
+            }, this);
+        },
+
+        actionMarkAsImportant: function () {
+            $.ajax({
+                url: 'Email/action/markAsImportant',
+                type: 'POST',
+                data: JSON.stringify({
+                    id: this.model.id
+                })
+            });
+            this.model.set('isImportant', true);
+        },
+
+        actionMarkAsNotImportant: function () {
+            $.ajax({
+                url: 'Email/action/markAsNotImportant',
+                type: 'POST',
+                data: JSON.stringify({
+                    id: this.model.id
+                })
+            });
+            this.model.set('isImportant', false);
         },
 
         actionShowBodyPlain: function () {

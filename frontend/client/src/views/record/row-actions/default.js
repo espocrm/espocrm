@@ -19,12 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
+Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.row-actions.default',
-
+        template: 'record/row-actions/default',
 
         afterRender: function () {
             var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
@@ -45,7 +44,7 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
             }.bind(this));
         },
 
-        getActions: function () {
+        getActionList: function () {
             var list = [{
                 action: 'quickView',
                 label: 'View',
@@ -77,7 +76,7 @@ Espo.define('Views.Record.RowActions.Default', 'View', function (Dep) {
         data: function () {
             return {
                 acl: this.options.acl,
-                actions: this.getActions(),
+                actionList: this.getActionList(),
                 scope: this.model.name
             };
         }

@@ -39,7 +39,7 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
                 if (typeof this[method] == 'function') {
                     var data = $el.data();
                     this[method](data);
-                    e.stopPropagation();
+                    e.preventDefault();
                 }
             }
         },

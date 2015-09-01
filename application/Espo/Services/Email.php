@@ -237,12 +237,37 @@ class Email extends Record
 
         $this->loadNameHash($entity);
 
+        $this->loadUserColumnFields($entity);
     }
 
     public function markAsReadByIds(array $ids)
     {
         foreach ($ids as $id) {
             $this->markAsRead($id);
+        }
+        return true;
+    }
+
+    public function markAsNotReadByIds(array $ids)
+    {
+        foreach ($ids as $id) {
+            $this->markAsNotRead($id);
+        }
+        return true;
+    }
+
+    public function markAsImportantByIds(array $ids)
+    {
+        foreach ($ids as $id) {
+            $this->markAsImportant($id);
+        }
+        return true;
+    }
+
+    public function markAsNotImportantByIds(array $ids)
+    {
+        foreach ($ids as $id) {
+            $this->markAsNotImportant($id);
         }
         return true;
     }
@@ -266,6 +291,51 @@ class Email extends Record
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             UPDATE email_user SET is_read = 1
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
+    public function markAsNotRead($id)
+    {
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET is_read = 0
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
+    public function markAsImportant($id)
+    {
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET is_important = 1
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
+    public function markAsNotImportant($id)
+    {
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET is_important = 0
             WHERE
                 deleted = 0 AND
                 user_id = " . $pdo->quote($this->getUser()->id) . " AND
@@ -330,10 +400,15 @@ class Email extends Record
             }
         }
 
+        $this->loadUserColumnFields($entity);
+    }
+
+    public function loadUserColumnFields(Entity $entity)
+    {
         $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "
-            SELECT is_read AS 'isRead' FROM email_user
+            SELECT is_read AS 'isRead', is_important AS 'isImportant' FROM email_user
             WHERE
                 deleted = 0 AND
                 user_id = " . $pdo->quote($this->getUser()->id) . " AND
@@ -344,10 +419,13 @@ class Email extends Record
         $sth->execute();
         if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $isRead = !empty($row['isRead']) ? true : false;
+            $isImportant = !empty($row['isImportant']) ? true : false;
         } else {
             $isRead = true;
+            $isImportant = false;
         }
         $entity->set('isRead', $isRead);
+        $entity->set('isImportant', $isImportant);
     }
 
     public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])

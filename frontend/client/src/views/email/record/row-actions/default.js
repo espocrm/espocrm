@@ -19,32 +19,43 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('crm:views/call/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
+Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
-        getActionList: function () {
-            var actions = Dep.prototype.getActionList.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.listenTo(this.model, 'change:isImportant', function () {
+                setTimeout(function () {
+                    this.reRender();
+                }.bind(this), 10);
+            }, this);
+        },
 
-            if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                actions.push({
-                    action: 'setHeld',
-                    label: 'Set Held',
+        getActionList: function () {
+            var list = Dep.prototype.getActionList.call(this);
+            if (!this.model.get('isImportant')) {
+                list.push({
+                    action: 'markAsImportant',
+                    label: 'Mark as Important',
                     data: {
                         id: this.model.id
                     }
                 });
-                actions.push({
-                    action: 'setNotHeld',
-                    label: 'Set Not Held',
+            } else {
+                list.push({
+                    action: 'markAsNotImportant',
+                    label: 'Mark as Not Important',
                     data: {
                         id: this.model.id
                     }
                 });
             }
+            return list;
+        }
 
-            return actions;
-        },
     });
 
 });
+
+

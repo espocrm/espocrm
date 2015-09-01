@@ -23,9 +23,7 @@ Espo.define('views/record/row-actions/view-and-remove', 'views/record/row-action
 
     return Dep.extend({
 
-        template: 'record/row-actions/default',
-
-        getActions: function () {
+        getActionList: function () {
             var actionList = [{
                 action: 'quickView',
                 label: 'View',
@@ -44,14 +42,6 @@ Espo.define('views/record/row-actions/view-and-remove', 'views/record/row-action
 
             }
             return actionList;
-        },
-
-        data: function () {
-            return {
-                acl: this.options.acl,
-                actions: this.getActions(),
-                scope: this.model.name
-            };
         }
     });
 

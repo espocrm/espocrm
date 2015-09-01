@@ -23,7 +23,7 @@ Espo.define('Views.Record.RowActions.Empty', 'Views.Record.RowActions.Default', 
 
     return Dep.extend({
 
-        getActions: function () {
+        getActionList: function () {
             return [];
         }
 
