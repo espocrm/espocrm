@@ -40,7 +40,7 @@ You need to have nodejs and Grunt CLI installed.
 
 The build will be created in the `build` directory.
 
-### How to make translation
+### How to make a translation
 
 Build po file with command:
 `node po.js en_EN`
