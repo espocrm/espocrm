@@ -96,7 +96,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || 'Modals.SelectRecords';
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsViewName;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
