@@ -40,7 +40,7 @@ Espo.define('views/main', 'view', function (Dep) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
                         e.preventDefault();
-                        this[method].call(this, data);
+                        this[method].call(this, data, e);
                     }
                 }
             },

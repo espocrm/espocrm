@@ -104,7 +104,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 if (action) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
-                        this[method].call(this, data);
+                        this[method].call(this, data, e);
                         e.preventDefault();
                     }
                 }

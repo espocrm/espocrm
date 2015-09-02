@@ -38,7 +38,7 @@ Espo.define('Views.Record.Panels.Bottom', 'View', function (Dep) {
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {
                     var data = $el.data();
-                    this[method](data);
+                    this[method](data, e);
                     e.preventDefault();
                 }
             }

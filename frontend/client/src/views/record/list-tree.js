@@ -186,7 +186,9 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
         },
 
-        actionCreate: function () {
+        actionCreate: function (data, e) {
+            e.stopPropagation();
+
             var parentId = null;
             var parentName = null;
             if (this.model) {
