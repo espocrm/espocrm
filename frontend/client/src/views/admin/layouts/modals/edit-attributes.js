@@ -67,7 +67,9 @@ Espo.define('Views.Admin.Layouts.Modals.EditAttributes', ['Views.Modal', 'Model'
 
         save: function () {
             var editView = this.getView('edit');
-            editView.fetch();
+            var attrs = editView.fetch();
+
+            editView.model.set(attrs, {silent: true});
             if (editView.validate()) {
                 return;
             }
