@@ -13,7 +13,10 @@
     },
     "options": {
         "job": {
-            "Cleanup": "Clean-up"
+            "Cleanup": "Clean-up",
+            "CheckInboundEmails": "Check Group Email Accounts",
+            "CheckEmailAccounts": "Check Personal Email Accounts",
+            "SendEmailReminders": "Send Email Reminders"
         },
         "cronSetup": {
             "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
