@@ -64,6 +64,9 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
         list: function (options) {
             var isReturn = options.isReturn;
+            if (this.getRouter().backProcessed) {
+                isReturn = true;
+            }
 
             var key = this.name + 'List';
 

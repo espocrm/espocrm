@@ -41,10 +41,45 @@ Espo.define('router', [], function () {
 
         confirmLeaveOut: false,
 
+        backProcessed: false,
+
         confirmLeaveOutMessage: 'Are you sure?',
 
         initialize: function () {
             this.history = [];
+
+            var detectBackOrForward = function(onBack, onForward) {
+                hashHistory = [window.location.hash];
+                historyLength = window.history.length;
+
+                return function () {
+                    var hash = window.location.hash, length = window.history.length;
+                    if (hashHistory.length && historyLength == length) {
+                        if (hashHistory[hashHistory.length - 2] == hash) {
+                            hashHistory = hashHistory.slice(0, -1);
+                            if (onBack) {
+                                onBack();
+                            }
+                        } else {
+                            hashHistory.push(hash);
+                            if (onForward) {
+                                onForward();
+                            }
+                        }
+                    } else {
+                        hashHistory.push(hash);
+                        historyLength = length;
+                    }
+                }
+            };
+
+            window.addEventListener('hashchange', detectBackOrForward(function () {
+                this.backProcessed = true;
+                setTimeout(function () {
+                    this.backProcessed = false;
+                }.bind(this), 50);
+            }.bind(this)));
+
             this.on('route', function () {
                 this.history.push(Backbone.history.fragment);
             });
