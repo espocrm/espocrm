@@ -157,6 +157,9 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
             this.getModel(function (model) {
                 model.id = id;
+                if (options.model) {
+                    model = options.model;
+                }
 
                 this.showLoadingNotification();
                 model.once('sync', function () {

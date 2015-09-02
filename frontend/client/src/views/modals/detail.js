@@ -72,8 +72,10 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
             this.waitForView('record');
 
+            this.sourceModel = this.model;
+
             this.getModelFactory().create(this.scope, function (model) {
-                if (!this.model) {
+                if (!this.sourceModel) {
                     this.model = model;
                     model.id = this.id;
                     model.once('sync', function () {
@@ -81,7 +83,6 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                     }, this);
                     model.fetch();
                 } else {
-                    var sourceModel = this.model;
                     model = this.model = this.model.clone();
                     this.once('after:render', function () {
                         model.fetch();
@@ -89,7 +90,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                     this.createRecord(model);
 
                     this.listenTo(model, 'change', function () {
-                        sourceModel.set(model.getClonedAttributes());
+                        this.sourceModel.set(model.getClonedAttributes());
                     }, this);
                 }
             }, this);
@@ -174,6 +175,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                 router.dispatch(this.scope, 'view', {
                     attributes: attributes,
                     returnUrl: Backbone.history.fragment,
+                    model: this.sourceModel,
                     id: this.id
                 });
                 router.navigate(url, {trigger: false});

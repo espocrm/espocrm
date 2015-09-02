@@ -91,12 +91,18 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                 }
             }
 
+            this.sourceModel = this.model;
+
             this.waitForView('edit');
 
             this.getModelFactory().create(this.scope, function (model) {
-                this.model = model;
                 if (this.id) {
-                    model.id = this.id;
+                    if (this.sourceModel) {
+                        model = this.model = this.sourceModel.clone();
+                    } else {
+                        this.model = model;
+                        model.id = this.id;
+                    }
                     model.once('sync', function () {
                         this.createEdit(model);
                     }, this);
@@ -161,7 +167,7 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                     router.dispatch(this.scope, 'create', {
                         attributes: attributes,
                         relate: this.options.relate,
-                        returnUrl: Backbone.history.fragment,
+                        returnUrl: this.options.returnUrl || Backbone.history.fragment,
                     });
                     router.navigate(url, {trigger: false});
                 }.bind(this), 10);
@@ -175,14 +181,9 @@ Espo.define('Views.Modals.Edit', 'Views.Modal', function (Dep) {
                 setTimeout(function () {
                     router.dispatch(this.scope, 'edit', {
                         attributes: attributes,
-                        returnUrl: Backbone.history.fragment,
-                        returnDispatchParams: {
-                            controller: this.scope,
-                            action: null,
-                            options: {
-                                isReturn: true
-                            }
-                        },
+                        returnUrl: this.options.returnUrl || Backbone.history.fragment,
+                        returnDispatchParams: this.options.returnDispatchParams || null,
+                        model: this.sourceModel,
                         id: this.id
                     });
                     router.navigate(url, {trigger: false});
