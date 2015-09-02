@@ -144,9 +144,9 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             if (this.model.get('parentType') == 'Account' && this.model.get('parentId')) {
                 attributes.accountId = this.model.get('parentId');
                 attributes.accountName = this.model.get('parentName');
-                attributes.emailsIds = [this.model.id];
-                attributes.emailId = this.model.id;
             }
+            attributes.emailsIds = [this.model.id];
+            attributes.emailId = this.model.id;
             attributes.name = this.model.get('name');
 
             var viewName = this.getMetadata().get('clientDefs.Case.modalViews.detail') || 'Modals.Edit';
