@@ -62,7 +62,7 @@ Espo.define('views/fields/range-currency', 'views/fields/range-float', function 
             var fromValue = isNaN(fromValue) ? null : fromValue;
             var toValue = isNaN(toValue) ? null : toValue;
 
-            var currencyValue = this.model.get(this.fromCurrencyField);
+            var currencyValue = this.model.get(this.fromCurrencyField) || this.model.get(this.toCurrencyField) ;
 
             if (fromValue !== null && toValue !== null) {
                 return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue) + ' '+currencyValue+'';
