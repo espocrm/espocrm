@@ -99,5 +99,53 @@ class Email extends \Espo\Core\ORM\Entity
         }
         return $attachmentList;
     }
+
+    public function getToList()
+    {
+        $value = $email->get('to');
+        if ($value) {
+            $arr = explode(';', $value);
+            if (is_array($arr)) {
+                return $arr;
+            }
+        }
+        return [];
+    }
+
+    public function getCcList()
+    {
+        $value = $email->get('cc');
+        if ($value) {
+            $arr = explode(';', $value);
+            if (is_array($arr)) {
+                return $arr;
+            }
+        }
+        return [];
+    }
+
+    public function getBccList()
+    {
+        $value = $email->get('bcc');
+        if ($value) {
+            $arr = explode(';', $value);
+            if (is_array($arr)) {
+                return $arr;
+            }
+        }
+        return [];
+    }
+
+    public function getReplyToList()
+    {
+        $value = $email->get('replyTo');
+        if ($value) {
+            $arr = explode(';', $value);
+            if (is_array($arr)) {
+                return $arr;
+            }
+        }
+        return [];
+    }
 }
 

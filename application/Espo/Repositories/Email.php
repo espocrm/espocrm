@@ -124,7 +124,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
-        if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc')) {
+        if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc') || $entity->has('replyTo')) {
             if (!$entity->has('usersIds')) {
                 $entity->loadLinkMultipleField('users');
             }
@@ -150,6 +150,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
             if ($entity->has('bcc')) {
                 $this->prepareAddressess($entity, 'bcc');
+            }
+            if ($entity->has('replyTo')) {
+                $this->prepareAddressess($entity, 'replyTo');
             }
 
             $usersIds = $entity->get('usersIds');

@@ -91,10 +91,12 @@ class Importer
 
             $toArr = $this->getAddressListFromMessage($message, 'to');
             $ccArr = $this->getAddressListFromMessage($message, 'cc');
+            $replyToArr = $this->getAddressListFromMessage($message, 'replyTo');
 
             $email->set('from', $fromArr[0]);
             $email->set('to', implode(';', $toArr));
             $email->set('cc', implode(';', $ccArr));
+            $email->set('replyTo', implode(';', $replyToArr));
 
             if ($this->getFiltersMatcher()->match($email, $filterList)) {
                 return false;
@@ -200,10 +202,15 @@ class Importer
                 if ($from) {
                     $parentFound = $this->findParent($email, $from);
                 }
-                if (!$parentFound) {
-                    if (!empty($toArr)) {
-                        $parentFound = $this->findParent($email, $toArr[0]);
-                    }
+            }
+            if (!$parentFound) {
+                if (!empty($replyToArr)) {
+                    $parentFound = $this->findParent($email, $replyToArr[0]);
+                }
+            }
+            if (!$parentFound) {
+                if (!empty($toArr)) {
+                    $parentFound = $this->findParent($email, $toArr[0]);
                 }
             }
 
@@ -268,7 +275,6 @@ class Importer
     {
         $addressList = array();
         if (isset($message->$type)) {
-
             $list = $message->getHeader($type)->getAddressList();
             foreach ($list as $address) {
                 $addressList[] = $address->getEmail();

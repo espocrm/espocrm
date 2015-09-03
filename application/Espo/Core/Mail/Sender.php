@@ -206,6 +206,16 @@ class Sender
             }
         }
 
+        $value = $email->get('replyTo');
+        if ($value) {
+            $arr = explode(';', $value);
+            if (is_array($arr)) {
+                foreach ($arr as $address) {
+                    $message->addReplyTo(trim($address));
+                }
+            }
+        }
+
         $attachmentPartList = array();
         $attachmentCollection = $email->get('attachments');
         $attachmentInlineCollection = $email->getInlineAttachments();

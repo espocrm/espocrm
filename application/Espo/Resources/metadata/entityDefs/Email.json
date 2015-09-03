@@ -7,7 +7,6 @@
         "subject": {
             "type": "varchar",
             "required": true,
-            "db": false,
             "notStorable": true,
             "view": "Email.Fields.Subject"
         },
@@ -22,29 +21,30 @@
         },
         "from": {
             "type": "varchar",
-            "db": false,
             "notStorable": true,
             "required": true,
-            "view": "Email.Fields.FromAddressVarchar"
+            "view": "views/email/fields/from-address-varchar"
         },
         "to": {
             "type": "varchar",
-            "db": false,
             "notStorable": true,
             "required": true,
-            "view": "Email.Fields.EmailAddressVarchar"
+            "view": "views/email/fields/email-address-varchar"
         },
         "cc": {
             "type": "varchar",
-            "db": false,
             "notStorable": true,
-            "view": "Email.Fields.EmailAddressVarchar"
+            "view": "views/email/fields/email-address-varchar"
         },
         "bcc": {
             "type": "varchar",
-            "db": false,
             "notStorable": true,
-            "view": "Email.Fields.EmailAddressVarchar"
+            "view": "views/email/fields/email-address-varchar"
+        },
+        "replyTo": {
+            "type": "varchar",
+            "notStorable": true,
+            "view": "views/email/fields/email-address-varchar"
         },
         "personStringData": {
             "type": "varchar",

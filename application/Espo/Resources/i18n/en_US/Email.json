@@ -8,6 +8,8 @@
         "to": "To",
         "cc": "CC",
         "bcc": "BCC",
+        "replyTo": "Reply To",
+        "replyToString": "Reply To (String)",
         "isHtml": "Is Html",
         "body": "Body",
         "subject": "Subject",
