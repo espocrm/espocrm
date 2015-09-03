@@ -129,8 +129,9 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getMeetingQuery($scope, $id, $op = 'IN', $notIn = [])
     {
-        if ($scope == 'User') {
-            return $this->getUserMeetingQuery($id, $op, $notIn);
+        $methodName = 'get' .$scope . 'MeetingQuery';
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $op, $notIn);
         }
 
         $baseSql = "
@@ -212,9 +213,11 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getCallQuery($scope, $id, $op = 'IN', $notIn = [])
     {
-        if ($scope == 'User') {
-            return $this->getUserCallQuery($id, $op, $notIn);
+        $methodName = 'get' .$scope . 'CallQuery';
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $op, $notIn);
         }
+
         $baseSql = "
             SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
                    call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
@@ -294,9 +297,11 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getEmailQuery($scope, $id, $op = 'IN', $notIn = [])
     {
-        if ($scope == 'User') {
-            return $this->getUserEmailQuery($id, $op, $notIn);
+        $methodName = 'get' .$scope . 'EmailQuery';
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $op, $notIn);
         }
+
         $baseSql = "
             SELECT DISTINCT
                 email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
