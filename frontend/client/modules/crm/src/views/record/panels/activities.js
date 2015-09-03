@@ -31,6 +31,8 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
 
         sortBy: 'dateStart',
 
+        serviceName: 'Activities',
+
         asc: false,
 
         rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
@@ -154,7 +156,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
         },
 
         afterRender: function () {
-            var url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name;
+            var url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
             this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
