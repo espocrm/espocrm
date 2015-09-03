@@ -1,0 +1,21 @@
+{
+   "actualFields": [
+      "from",
+      "to"
+   ],
+   "fields": {
+      "from": {
+         "type": "int"
+      },
+      "to": {
+         "type": "int"
+      }
+   },
+   "naming": "prefix",
+   "mergable": false,
+   "notCreatable": true,
+   "filter": false,
+   "fieldDefs": {
+      "notStorable": true
+   }
+}

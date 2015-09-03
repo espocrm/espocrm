@@ -90,7 +90,10 @@
         "file": "File",
         "image": "Image",
         "multiEnum": "Multi-Enum",
-        "attachmentMultiple": "Attachment Multiple"
+        "attachmentMultiple": "Attachment Multiple",
+        "rangeInt": "Range Integer",
+        "rangeFloat": "Range Float",
+        "rangeCurrency": "Range Currency"
     },
     "fields": {
         "type": "Type",

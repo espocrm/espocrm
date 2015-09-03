@@ -166,7 +166,9 @@
         "Total": "Total",
         "Print to PDF": "Print to PDF",
         "Default": "Default",
-        "Number": "Number"
+        "Number": "Number",
+        "From": "From",
+        "To": "To"
     },
     "messages": {
         "pleaseWait": "Please wait...",

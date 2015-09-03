@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
 
@@ -34,7 +34,7 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
         data: function () {
             return _.extend({
                 currencyFieldName: this.currencyFieldName,
-                currencyValue: this.model.get(this.currencyFieldName),
+                currencyValue: this.model.get(this.currencyFieldName) || this.getPreferences().get('defaultCurrency') || this.getConfig().get('defaultCurrency'),
                 currencyOptions: this.currencyOptions,
                 currencyList: this.currencyList
             }, Dep.prototype.data.call(this));

@@ -1,0 +1,21 @@
+{
+   "actualFields": [
+      "from",
+      "to"
+   ],
+   "fields": {
+      "from": {
+         "type": "float"
+      },
+      "to": {
+         "type": "float"
+      }
+   },
+   "naming": "prefix",
+   "mergable": false,
+   "notCreatable": true,
+   "filter": false,
+   "fieldDefs": {
+      "notStorable": true
+   }
+}

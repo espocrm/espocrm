@@ -71,7 +71,7 @@ Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === '') {
                         var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-                        this.showValidationMessage(msg, 'input[name="'+name+'"]');
+                        this.showValidationMessage(msg, '[name="'+name+'"]');
                         return true;
                     }
                 }
