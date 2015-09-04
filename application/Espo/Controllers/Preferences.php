@@ -77,7 +77,7 @@ class Preferences extends \Espo\Core\Controllers\Base
         $userId = $params['id'];
         $this->handleUserAccess($userId);
 
-        if (!$request->isPost() && !$request->isPatch()) {
+        if (!$request->isPost() && !$request->isPatch() && !$request->isPut()) {
             throw new BadRequest();
         }
 
