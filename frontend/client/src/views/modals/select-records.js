@@ -129,15 +129,18 @@ Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], func
             if (this.filters) {
                 searchManager.setAdvanced(this.filters);
             }
-            if (this.boolFilterList) {
+
+            var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
+            if (boolFilterList) {
                 var d = {};
-                this.boolFilterList.forEach(function (item) {
+                boolFilterList.forEach(function (item) {
                     d[item] = true;
                 });
                 searchManager.setBool(d);
             }
-            if (this.primaryFilterName) {
-                searchManager.setPrimary(this.primaryFilterName);
+            var primaryFilterName = this.primaryFilterName || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
+            if (primaryFilterName) {
+                searchManager.setPrimary(primaryFilterName);
             }
 
             this.collection.where = searchManager.getWhere();

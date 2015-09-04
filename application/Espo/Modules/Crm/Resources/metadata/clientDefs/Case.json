@@ -35,5 +35,8 @@
          "style": "success"
       }
    ],
-    "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy"],
+   "selectDefaultFilters": {
+      "filter": "open"
+   }
 }

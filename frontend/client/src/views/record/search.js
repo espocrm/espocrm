@@ -417,6 +417,10 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             var filterLabel = this.translate('All');
             var filterStyle = 'default';
 
+            if (!presetName && primary) {
+                presetName = primary;
+            }
+
             if (presetName && presetName != primary) {
                 this.$advancedFiltersPanel.addClass('hidden');
 
