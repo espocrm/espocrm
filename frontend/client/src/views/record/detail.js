@@ -522,7 +522,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 }
             }
             if (this.isRendered()) {
-            	this.$el.find('.detail-button-container .action[data-action="'+name+'"]')
+            	this.$el.find('.detail-button-container .action[data-action="'+name+'"]').remove();
             }
         },
 

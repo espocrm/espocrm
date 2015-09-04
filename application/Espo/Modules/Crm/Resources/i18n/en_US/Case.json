@@ -43,7 +43,11 @@
         }
     },
     "labels": {
-        "Create Case": "Create Case"
+        "Create Case": "Create Case",
+        "Close": "Close",
+        "Reject": "Reject",
+        "Closed": "Closed",
+        "Rejected": "Rejected"
     },
     "presetFilters": {
         "open": "Open",

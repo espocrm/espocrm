@@ -1,5 +1,8 @@
 {
    "controller": "controllers/record",
+   "recordViews": {
+      "detail": "crm:views/case/record/detail"
+   },
    "bottomPanels":{
       "detail":[
       ]
