@@ -14,6 +14,10 @@
          "type":"int"
       },
       {
+         "name":"trim",
+         "type":"bool"
+      },
+      {
          "name":"audited",
          "type":"bool"
       }

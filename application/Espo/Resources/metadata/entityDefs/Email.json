@@ -172,6 +172,11 @@
             "type": "linkMultiple",
             "readOnly": true
         },
+        "isSystem": {
+            "type": "bool",
+            "default": false,
+            "readOnly": true
+        },
         "teams": {
             "type": "linkMultiple"
         },

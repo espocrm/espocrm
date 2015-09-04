@@ -105,7 +105,8 @@ class EmailNotification extends \Espo\Core\Services\Base
                     'subject' => $subject,
                     'body' => $body,
                     'isHtml' => false,
-                    'to' => $emailAddress
+                    'to' => $emailAddress,
+                    'isSystem' => true
                 ));
 
                 $this->getMailSender()->send($email);

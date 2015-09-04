@@ -8,7 +8,8 @@
             "type": "varchar",
             "required": true,
             "maxLength": 100,
-            "view": "EmailAccount.Fields.EmailAddress"
+            "view": "EmailAccount.Fields.EmailAddress",
+            "trim": true
         },
         "status": {
             "type": "enum",

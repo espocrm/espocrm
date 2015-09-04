@@ -84,7 +84,8 @@
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "smtpServer": {
             "type": "varchar",

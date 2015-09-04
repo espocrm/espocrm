@@ -116,7 +116,8 @@
         "seeMoreDisabled": "Disable Text Cut",
         "entityList": "Entity List",
         "isSorted": "Is Sorted (alphabetically)",
-        "audited": "Audited"
+        "audited": "Audited",
+        "trim": "Trim"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

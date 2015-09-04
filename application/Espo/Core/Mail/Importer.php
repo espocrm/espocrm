@@ -102,10 +102,14 @@ class Importer
                 return false;
             }
 
+
             if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
                 if (isset($message->deliveredTo)) {
                     $email->set('messageIdInternal', $message->messageId . '-' . $message->deliveredTo);
+                }
+                if (stripos($message->messageId, '@espo-system') !== false) {
+                    return;
                 }
             }
 

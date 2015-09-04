@@ -321,6 +321,9 @@ class Sender
             } else {
                 $messageId = '' . md5($email->get('name')) . '/' . time() . '/' . $rand .  '@espo';
             }
+            if ($email->get('isSystem')) {
+                $messageId .= '-system';
+            }
 
             $messageIdHeader = new \Zend\Mail\Header\MessageId();
             $messageIdHeader->setId($messageId);
