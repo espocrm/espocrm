@@ -130,7 +130,17 @@ Espo.define('views/main', 'view', function (Dep) {
             if (this.isRendered()) {
                 this.getView('header').render();
             }
+        },
+
+        actionNavigateToRoot: function (data, e) {
+            e.stopPropagation();
+            var options = {
+                isReturn: true
+            };
+            this.getRouter().dispatch(this.scope, null, options);
+            this.getRouter().navigate('#' + this.scope, {trigger: false});
         }
+
     });
 });
 

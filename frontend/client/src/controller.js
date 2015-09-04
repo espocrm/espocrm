@@ -126,6 +126,26 @@ Espo.define('controller', [], function () {
             return key in this.params;
         },
 
+        getStoredMainView: function (key) {
+            return this.get('storedMainView-' + key);
+        },
+
+        hasStoredMainView: function (key) {
+            return this.has('storedMainView-' + key);
+        },
+
+        clearStoredMainView: function (key) {
+            var view = this.getStoredMainView(key);
+            if (view) {
+                view.remove();
+            }
+            this.unset('storedMainView-' + key);
+        },
+
+        storeMainView: function (key, view) {
+            this.set('storedMainView-' + key, view);
+        },
+
         checkAccess: function (action) {
             return true;
         },
@@ -216,7 +236,7 @@ Espo.define('controller', [], function () {
 
                 var process = function (main) {
                     if (useStored) {
-                        this.set('storedView-' + storedKey, main);
+                        this.storeMainView(storedKey, main);
                     }
                     main.once('render', function () {
                         main.updatePageTitle();
@@ -225,7 +245,8 @@ Espo.define('controller', [], function () {
 
                     if (master.currentViewKey) {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
-                        if (this.has('storedView-' + master.currentViewKey)) {
+                        if (this.hasStoredMainView(master.currentViewKey)) {
+                            master.nestedViews['main'].undelegateEvents();
                             delete master.nestedViews['main'];
                         }
                     }
@@ -247,8 +268,9 @@ Espo.define('controller', [], function () {
                     }
                 }.bind(this);
                 if (useStored) {
-                    if (this.has('storedView-' + storedKey)) {
-                        process(this.get('storedView-' + storedKey));
+                    if (this.hasStoredMainView(storedKey)) {
+                        var main = this.getStoredMainView(storedKey);
+                        process(main);
                         return;
                     }
                 }

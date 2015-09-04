@@ -693,9 +693,6 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 return;
             }
             this.getRouter().navigate(url, {trigger: true});
-        },
-
-        createField: function () {
         }
 
     });

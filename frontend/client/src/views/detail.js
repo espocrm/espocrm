@@ -193,13 +193,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         selectBoolFilterLists: [],
 
-        actionNavigateToRoot: function () {
-            this.getRouter().dispatch(this.scope, '', {
-                isReturn: true
-            });
-            this.getRouter().navigate('#' + this.scope, {trigger: false});
-        },
-
         actionCreateRelated: function (data) {
             var link = data.link;
             var scope = this.model.defs['links'][link].entity;

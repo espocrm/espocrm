@@ -71,10 +71,9 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             var key = this.name + 'List';
 
             if (!isReturn) {
-                var stored = this.get('storedView-' + key);
+                var stored = this.getStoredMainView(key);
                 if (stored) {
-                    stored.remove();
-                    this.unset('storedView-' + key);
+                    this.clearStoredMainView(key);
                 }
             }
 
@@ -83,7 +82,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     scope: this.name,
                     collection: collection
                 }, null, isReturn, key);
-            }.bind(this), null, isReturn);
+            }, this, false);
         },
 
         beforeView: function () {
@@ -146,6 +145,11 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 if (options.attributes) {
                     model.set(options.attributes);
                 }
+
+                model.on('sync', function () {
+                    var key = this.name + 'List';
+                    this.clearStoredMainView(key);
+                }, this);
 
                 this.main(this.getViewName('edit'), o);
             });
@@ -231,14 +235,6 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             if (usePreviouslyFetched) {
                 if (collectionName in this.collectionMap) {
                     var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
-                    /*var maxSize = this.getConfig().get('recordsPerPage');
-                    if (collection.length > maxSize) {
-                        var k = collection.length - maxSize;
-                        while (k) {
-                            collection.pop();
-                            k--;
-                        }
-                    }*/
                     callback.call(context, collection);
                     return;
                 }

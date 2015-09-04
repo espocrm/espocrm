@@ -57,7 +57,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             if (this.options.noHeaderLinks) {
                 arr.push(this.getLanguage().translate(this.model.name, 'scopeNamesPlural'));
             } else {
-                arr.push('<a href="#' + this.model.name + '">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>');
+                arr.push('<a href="#' + this.model.name + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>');
             }
 
             if (this.model.isNew()) {
@@ -67,7 +67,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                 if (this.options.noHeaderLinks) {
                     arr.push(name);
                 } else {
-                    arr.push('<a href="#' + this.model.name + '/view/' + this.model.id + '">' + name + '</a>');
+                    arr.push('<a href="#' + this.model.name + '/view/' + this.model.id + '" class="action" data-action="navigateToRoot">' + name + '</a>');
                 }
             }
             return this.buildHeaderHtml(arr);
