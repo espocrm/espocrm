@@ -363,6 +363,15 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 throw new Error('Model has not been injected into record view.');
             }
 
+            var collection = this.model.collection;
+            if (collection) {
+                this.listenTo(this.model, 'destroy', function () {
+                    collection.remove(this.model.id);
+                    collection.trigger('sync');
+                }, this);
+            }
+
+
             this.on('remove', function () {
                 this.setConfirmLeaveOut(false);
             }, this);
@@ -679,11 +688,19 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
             if (this.returnUrl) {
                 url = this.returnUrl;
             } else {
-                url = '#' + this.model.name + '';
-                if (after != 'delete' && this.model.id) {
+                if (after == 'delete') {
+                    this.getRouter().dispatch(this.scope, null, {
+                        isReturn: true
+                    });
+                    this.getRouter().navigate('#' + this.scope, {trigger: false});
+                    return;
+                }
+                url = '#' + this.scope;
+                if (this.model.id) {
                     url += '/view/' + this.model.id;
                 }
             }
+
             if (this.returnDispatchParams) {
                 var controller = this.returnDispatchParams.controller;
                 var action = this.returnDispatchParams.action;
@@ -692,6 +709,7 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
                 this.getRouter().navigate(url, {trigger: false});
                 return;
             }
+
             this.getRouter().navigate(url, {trigger: true});
         }
 

@@ -68,7 +68,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 var id = $(e.currentTarget).data('id');
                 var model = this.collection.get(id);
 
-                this.getRouter().navigate('#' + this.scope + '/view/' + id);
+                this.getRouter().navigate('#' + this.scope + '/view/' + id, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: id,
                     model: model
@@ -899,7 +899,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     id: id,
                     model: this.collection.get(id),
                     fullFormDisabled: d.noFullForm,
-                    returnUrl: Backbone.history.fragment,
+                    returnUrl: '#' + this.scope,
                     returnDispatchParams: {
                         controller: this.scope,
                         action: null,
@@ -925,7 +925,15 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             } else {
                 this.getRouter().dispatch(this.scope, 'edit', {
                     id: id,
-                    returnUrl: '#' + this.scope
+                    model: this.collection.get(id),
+                    returnUrl: '#' + this.scope,
+                    returnDispatchParams: {
+                        controller: this.scope,
+                        action: null,
+                        options: {
+                            isReturn: true
+                        }
+                    }
                 });
                 this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: false});
             }

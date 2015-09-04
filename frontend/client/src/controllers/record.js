@@ -97,6 +97,8 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     scope: this.name,
                     model: model,
                     views: this.getViews('detail'),
+                    returnUrl: options.returnUrl,
+                    returnDispatchParams: options.returnDispatchParams,
                 });
             }.bind(this);
 
