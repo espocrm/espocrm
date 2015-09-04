@@ -233,8 +233,7 @@ Espo.define(
                         this.controllers[name] = new controllerClass(this.baseController.params, this.getControllerInjection());
                         this.controllers[name].name = name;
                         callback(this.controllers[name]);
-                    }.bind(this),
-                    function () {
+                    }, this, function () {
                         this.baseController.error404();
                     }.bind(this));
                     return;

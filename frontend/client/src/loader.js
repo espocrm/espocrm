@@ -115,7 +115,7 @@ var Espo = Espo || {classMap:{}};
             }
         },
 
-        require: function (subject, callback) {
+        require: function (subject, callback, errorCallback) {
             if (Object.prototype.toString.call(subject) === '[object Array]') {
                 var list = subject;
                 list.forEach(function (item, i) {
@@ -123,7 +123,7 @@ var Espo = Espo || {classMap:{}};
                 }, this);
             } else {
                 subject = this.normalizeClassName(subject);
-                this.load(subject, callback);
+                this.load(subject, callback, errorCallback);
                 return;
             }
             var totalCount = list.length;
@@ -181,7 +181,7 @@ var Espo = Espo || {classMap:{}};
 
         dataLoaded: {},
 
-        load: function (name, callback, error) {
+        load: function (name, callback, errorCallback) {
             var dataType, type, path, fetchObject;
             var realName = name;
 
@@ -278,7 +278,6 @@ var Espo = Espo || {classMap:{}};
             $.ajax({
                 type: 'GET',
                 cache: false,
-                //dataType: dataType,
                 dataType: 'text',
                 local: true,
                 url: path,
@@ -294,7 +293,6 @@ var Espo = Espo || {classMap:{}};
                     }
 
                     if (type == 'class') {
-                        // TODO remove this and use define for all classes
                         var c = this._getClass(name);
                         if (c && typeof c === 'function') {
                             this._executeLoadCallback(name, c);
@@ -310,8 +308,9 @@ var Espo = Espo || {classMap:{}};
                     return;
                 }.bind(this),
                 error: function (event, xhr, options) {
-                    if (typeof error == 'function') {
-                        error();
+                    if (typeof errorCallback == 'function') {
+                        errorCallback();
+                        return;
                     }
                     throw new Error("Could not load file '" + path + "'");
                 }
@@ -366,11 +365,11 @@ var Espo = Espo || {classMap:{}};
     });
 
     Espo.loader = new Espo.Loader();
-    Espo.require = function (subject, callback, context) {
+    Espo.require = function (subject, callback, context, errorCallback) {
         if (context) {
             callback = callback.bind(context);
         }
-        Espo.loader.require(subject, callback);
+        Espo.loader.require(subject, callback, errorCallback);
     }
     Espo.define = function (subject, dependency, callback) {
         Espo.loader.define(subject, dependency, callback);
