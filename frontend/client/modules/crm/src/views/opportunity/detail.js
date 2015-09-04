@@ -56,9 +56,9 @@ Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
             'documents': {
                 'accounts': function () {
                     var accountId = this.model.get('accountId');
-                    var nameHash = {};
-                    nameHash[accountId] = this.model.get('accountName');
-                    if (this.model.get('accountId')) {
+                    if (accountId) {
+                        var nameHash = {};
+                        nameHash[accountId] = this.model.get('accountName');
                         return {
                             field: 'accounts',
                             type: 'linkedWith',
