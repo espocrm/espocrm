@@ -312,7 +312,7 @@ class Importer
             $encoding = null;
             $isAttachment = true;
             if ($type == 'text/plain' || $type == 'text/html') {
-                if ($contentDisposition !== 'inline' && $contentDisposition !== 'attachment') {
+                if ($contentDisposition !== 'attachment') {
                     $isAttachment = false;
                     $content = $this->getContentFromPart($part);
                     if ($type == 'text/plain') {
