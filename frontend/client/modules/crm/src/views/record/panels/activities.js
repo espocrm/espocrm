@@ -35,7 +35,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
 
         asc: false,
 
-        rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
+        rowActionsView: 'crm:views/record/row-actions/activities',
 
         actionList: [
             {
@@ -306,7 +306,39 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
 
         actionRefresh: function () {
             this.collection.fetch();
-        }
+        },
+
+        actionSetHeld: function (data) {
+            var id = data.id;
+            if (!id) {
+                return;
+            }
+            var model = this.collection.get(id);
+            model.save({
+                status: 'Held'
+            }, {
+                patch: true,
+                success: function () {
+                    this.collection.fetch();
+                }.bind(this)
+            });
+        },
+
+        actionSetNotHeld: function (data) {
+            var id = data.id;
+            if (!id) {
+                return;
+            }
+            var model = this.collection.get(id);
+            model.save({
+                status: 'Not Held'
+            }, {
+                patch: true,
+                success: function () {
+                    this.collection.fetch();
+                }.bind(this)
+            });
+        },
     });
 });
 

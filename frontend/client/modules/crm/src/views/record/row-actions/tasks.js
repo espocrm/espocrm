@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Record.RowActions.History', 'Views.Record.RowActions.Relationship', function (Dep) {
+Espo.define('crm:views/record/row-actions/tasks', 'views/record/row-actions/relationship-no-unlink', function (Dep) {
 
     return Dep.extend({
 
@@ -31,32 +31,34 @@ Espo.define('Crm:Views.Record.RowActions.History', 'Views.Record.RowActions.Rela
                     id: this.model.id
                 }
             }];
-            if (this.model.name == 'Email') {
+            if (this.options.acl.edit) {
                 list.push({
-                    action: 'reply',
-                    html: this.translate('Reply', 'labels', 'Email'),
+                    action: 'editRelated',
+                    label: 'Edit',
                     data: {
                         id: this.model.id
                     }
                 });
-            }
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'editRelated',
-                        label: 'Edit',
+
+                if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
+                    list.push({
+                        action: 'Complete',
+                        html: this.translate('Complete', 'labels', 'Task'),
                         data: {
                             id: this.model.id
                         }
-                    },
-                    {
-                        action: 'removeRelated',
-                        label: 'Remove',
-                        data: {
-                            id: this.model.id
-                        }
+                    });
+                }
+
+
+                list.push({
+                    action: 'removeRelated',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id
                     }
-                ]);
+                });
+
             }
             return list;
         }

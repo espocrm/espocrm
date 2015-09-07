@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Record.RowActions.History', 'Views.Record.RowActions.Relationship', function (Dep) {
+Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
@@ -31,32 +31,38 @@ Espo.define('Crm:Views.Record.RowActions.History', 'Views.Record.RowActions.Rela
                     id: this.model.id
                 }
             }];
-            if (this.model.name == 'Email') {
+            if (this.options.acl.edit) {
                 list.push({
-                    action: 'reply',
-                    html: this.translate('Reply', 'labels', 'Email'),
+                    action: 'editRelated',
+                    label: 'Edit',
                     data: {
                         id: this.model.id
                     }
                 });
-            }
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'editRelated',
-                        label: 'Edit',
+                if (this.model.name == 'Meeting' || this.model.name == 'Call') {
+                    list.push({
+                        action: 'setHeld',
+                        html: this.translate('Set Held', 'labels', 'Meeting'),
                         data: {
                             id: this.model.id
                         }
-                    },
-                    {
-                        action: 'removeRelated',
-                        label: 'Remove',
+                    });
+                    list.push({
+                        action: 'setNotHeld',
+                        html: this.translate('Set Not Held', 'labels', 'Meeting'),
                         data: {
                             id: this.model.id
                         }
+                    });
+                }
+                list.push({
+                    action: 'removeRelated',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id
                     }
-                ]);
+                });
+
             }
             return list;
         }

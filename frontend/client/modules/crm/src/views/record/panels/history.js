@@ -31,7 +31,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 
         asc: false,
 
-        rowActionsView: 'Crm:Record.RowActions.History',
+        rowActionsView: 'crm:views/record/row-actions/history',
 
         actionList: [
             {

@@ -137,12 +137,14 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                 collection.asc = this.asc;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
+                var rowActionsView = 'crm:views/record/row-actions/tasks';
+
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.createView('list', 'Record.ListExpanded', {
                         el: this.$el.selector + ' > .list-container',
                         pagination: false,
                         type: 'listRelationship',
-                        rowActionsView: 'Record.RowActions.RelationshipNoUnlink',
+                        rowActionsView: rowActionsView,
                         checkboxes: false,
                         collection: collection,
                         listLayout: this.listLayout,
@@ -180,7 +182,23 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
         actionRefresh: function () {
             this.collection.fetch();
-        }
+        },
+
+        actionComplete: function (data) {
+            var id = data.id;
+            if (!id) {
+                return;
+            }
+            var model = this.collection.get(id);
+            model.save({
+                status: 'Completed'
+            }, {
+                patch: true,
+                success: function () {
+                    this.collection.fetch();
+                }.bind(this)
+            });
+        },
 
     });
 });
