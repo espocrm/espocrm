@@ -26,18 +26,14 @@ class MassEmail extends \Espo\Core\SelectManagers\Base
 {
     protected function accessOnlyOwn(&$result)
     {
-        if ($this->getAcl()->checkReadOnlyOwn('Campaign') {
+        if ($this->getAcl()->checkReadOnlyOwn('Campaign')) {
             $result['whereClause'][] = array(
                 'campaign.assignedUserId' => $this->getUser()->id
             );
-        } else if ($this->getAcl()->checkReadOnlyTeam('Campaign') {
-            if (!empty($result['customWhere'])) {
-                $result['customWhere'] = " AND ";
-            }
-
+        } else if ($this->getAcl()->checkReadOnlyTeam('Campaign')) {
             $teamIdList = $this->user->get('teamsIds');
             if (empty($teamIdList)) {
-                $result['customWhere'] .= "0";
+                $result['customWhere'] .= " AND 0 ";
             }
             $arr = [];
             if (is_array($teamIdList)) {
@@ -47,8 +43,10 @@ class MassEmail extends \Espo\Core\SelectManagers\Base
             }
 
             $result['customJoin'] .= " JOIN teamsMiddle AS teamsMiddle ON teamsMiddle.entity_type = 'Campaign' AND teamsMiddle.entity_id = campaign.id AND teamsMiddle.deleted = 0";
-
-            $result['customWhere'] .= "teamsMiddle.team_id IN (" . implode(', ', $arr) . ")";
+            $result['customWhere'] .= " AND teamsMiddle.team_id IN (" . implode(', ', $arr) . ") ";
+            $result['whereClause'][] = array(
+                'campaignId!=' => null
+            );
         }
     }
 }

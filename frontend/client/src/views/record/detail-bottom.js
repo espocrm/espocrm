@@ -72,8 +72,13 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
             }
 
             panelList.forEach(function (p) {
-                var name = p.name;
                 this.panelList.push(p);
+            }, this);
+        },
+
+        setupPanelViews: function () {
+            this.panelList.forEach(function (p) {
+                var name = p.name;
                 this.createView(name, p.view, {
                     model: this.model,
                     panelName: name,
@@ -88,7 +93,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                         p.buttonList = this.filterActions(view.getButtonList());
                     }
                     if (p.label) {
-                        p.title = this.translate(p.label, 'labels', scope);
+                        p.title = this.translate(p.label, 'labels', this.scope);
                     } else {
                         p.title = view.title;
                     }
@@ -101,6 +106,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
             this.scope = this.model.name;
 
             this.setupPanels();
+            this.setupPanelViews();
 
             if (this.relationshipPanels) {
                 this.setupRelationshipPanels();
@@ -140,7 +146,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
                     var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
 
-                    var viewName = defs.view || 'Record.Panels.Relationship';
+                    var viewName = defs.view || 'views/record/panels/relationship';
 
                     this.createView(name, viewName, {
                         model: this.model,

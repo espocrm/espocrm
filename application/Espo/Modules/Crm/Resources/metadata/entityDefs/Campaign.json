@@ -158,7 +158,8 @@
         "massEmails": {
             "type": "hasMany",
             "entity": "MassEmail",
-            "foreign": "campaign"
+            "foreign": "campaign",
+            "layoutRelationshipsDisabled": true
         }
     },
     "collection": {

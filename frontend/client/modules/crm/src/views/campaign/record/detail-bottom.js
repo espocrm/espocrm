@@ -20,9 +20,41 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Campaign.Record.DetailBottom', 'Views.Record.DetailBottom', function (Dep) {
+Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
 
     return Dep.extend({
+
+        setupPanels: function () {
+            Dep.prototype.setupPanels.call(this);
+
+            this.panelList.unshift({
+                name: 'massEmails',
+                label: this.translate('massEmails', 'links', 'Campaign'),
+                view: 'views/record/panels/relationship',
+                sticked: true,
+                hidden: true,
+                select: false
+            });
+
+            this.listenTo(this.model, 'change', function () {
+                this.manageMassEmails();
+            }, this);
+        },
+
+        afterRender: function () {
+            Dep.prototype.setupPanels.call(this);
+            this.manageMassEmails();
+        },
+
+        manageMassEmails: function () {
+            var parentView = this.getParentView();
+            if (!parentView) return;
+            if (this.model.get('type') == 'Email') {
+                parentView.showPanel('massEmails');
+            } else {
+                parentView.hidePanel('massEmails');
+            }
+        }
 
 
     });

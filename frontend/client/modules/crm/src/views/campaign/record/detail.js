@@ -20,11 +20,11 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Campaign.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('crm:views/campaign/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
-        bottomView: 'Crm:Campaign.Record.DetailBottom',
+        bottomView: 'crm:views/campaign/record/detail-bottom',
 
         handleStatisticsPanelAppearance: function() {
             if (this.model.get('status') == 'Planning') {
