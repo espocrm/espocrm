@@ -63,6 +63,11 @@
             "entity": "Campaign",
             "foreign": "targetLists"
         },
+        "massEmails": {
+            "type": "hasMany",
+            "entity": "MassEmail",
+            "foreign": "targetLists"
+        },
         "accounts": {
             "type": "hasMany",
             "entity": "Account",

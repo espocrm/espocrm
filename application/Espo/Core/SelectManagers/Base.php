@@ -65,6 +65,11 @@ class Base
         return $this->user;
     }
 
+    protected function getAcl()
+    {
+        return $this->acl;
+    }
+
     public function setEntityType($entityType)
     {
         $this->entityType = $entityType;

@@ -11,7 +11,8 @@
         "accounts": "Accounts",
         "contacts": "Contacts",
         "leads": "Leads",
-        "campaigns": "Campaigns"
+        "campaigns": "Campaigns",
+        "massEmails": "Mass Emails"
     },
     "options": {
         "type": {

@@ -154,6 +154,11 @@
             "type": "hasMany",
             "entity": "CampaignLogRecord",
             "foreign": "campaign"
+        },
+        "massEmails": {
+            "type": "hasMany",
+            "entity": "MassEmail",
+            "foreign": "campaign"
         }
     },
     "collection": {

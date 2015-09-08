@@ -1,0 +1,100 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Draft", "Pending", "Canceled"],
+            "default": "Pending"
+        },
+        "storeSentEmails": {
+            "type": "bool",
+            "default": false
+        },
+        "fromAddress": {
+            "type": "varchar",
+            "trim": true
+        },
+        "fromName": {
+            "type": "varchar"
+        },
+        "replyToAddress": {
+            "type": "varchar",
+            "trim": true
+        },
+        "replyToName": {
+            "type": "varchar"
+        },
+        "startAt": {
+            "type": "datetime",
+            "required": true
+        },
+        "emailTemplate": {
+            "type": "link"
+        },
+        "campaign": {
+            "type": "link"
+        },
+        "targetLists": {
+            "type": "linkMultiple"
+        },
+        "inboundEmail": {
+            "type": "link"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "emailTemplate": {
+            "type": "belongsTo",
+            "entity": "EmailTemplate"
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign",
+            "foreign": "massEmails"
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "massEmails"
+        },
+        "inboundEmail": {
+            "type": "belongsTo",
+            "entity": "InboundEmail"
+        },
+        "queueItems": {
+            "type": "belongsTo",
+            "entity": "EmailQueueItem",
+            "foreign": "massEmail"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    }
+}

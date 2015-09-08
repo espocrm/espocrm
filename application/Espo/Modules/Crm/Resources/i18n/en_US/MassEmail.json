@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Name",
+        "status": "Status",
+        "storeSentEmails": "Store Sent Emails",
+        "startAt": "Date Start",
+        "fromAddress": "From Address",
+        "fromName": "From Name",
+        "replyToAddress": "Reply-to Address",
+        "replyToName": "Reply-to Name",
+        "campaign": "Campaign",
+        "emailTemplate": "Email Template",
+        "inboundEmail": "Email Account"
+    },
+    "links": {
+        "targetLists": "Target Lists",
+        "queueItems": "Queue Items",
+        "campaign": "Campaign",
+        "emailTemplate": "Email Template",
+        "inboundEmail": "Email Account"
+    },
+    "options": {
+        "status": {
+            "Draft": "Draft",
+            "Pending": "Pending",
+            "In Process": "In Process",
+            "Complete": "Complete",
+            "Canceled": "Canceled"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "solid": {
+        "MassEmail": {
+            "read": "own",
+            "edit": "own",
+            "delete": "own"
+        },
+        "EmailQueueItem": false
+    }
+}

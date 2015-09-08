@@ -25,7 +25,8 @@
         "contacts": "Contacts",
         "leads": "Leads",
         "opportunities": "Opportunities",
-        "campaignLogRecords": "Log"
+        "campaignLogRecords": "Log",
+        "massEmails": "Mass Emails"
     },
     "options": {
         "type": {

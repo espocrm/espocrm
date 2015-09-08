@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "massEmail": {
+            "type": "link",
+            "readOnly": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Pending", "Sent", "Failed"],
+            "readOnly": true
+        },
+        "attemptCount": {
+            "type": "int",
+            "readOnly": true,
+            "default": 0
+        },
+        "target": {
+            "type": "linkTarget",
+            "readOnly": true
+        },
+        "sentAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "massEmail": {
+            "type": "belongsTo",
+            "entity": "MassEmail",
+            "foreign": "queueItems"
+        },
+        "target": {
+            "type": "belongsToParent"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    }
+}

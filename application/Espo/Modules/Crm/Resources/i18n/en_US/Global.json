@@ -13,7 +13,9 @@
         "Document": "Document",
         "DocumentFolder": "Document Folder",
         "Campaign": "Campaign",
-        "TargetList": "Target List"
+        "TargetList": "Target List",
+        "MassEmail": "Mass Email",
+        "EmailQueueItem": "Email Queue Item"
     },
     "scopeNamesPlural": {
         "Account": "Accounts",
@@ -29,7 +31,9 @@
         "Document": "Documents",
         "DocumentFolder": "Document Folders",
         "Campaign": "Campaigns",
-        "TargetList": "Target Lists"
+        "TargetList": "Target Lists",
+        "MassEmail": "Mass Emails",
+        "EmailQueueItem": "Email Queue Items"
     },
     "dashlets": {
         "Leads": "My Leads",

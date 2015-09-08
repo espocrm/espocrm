@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "name": "Name",
+        "status": "Status",
+        "target": "Target",
+        "sentAt": "Date Sent",
+        "attemptCount": "Attempts"
+    },
+    "links": {
+        "target": "Target",
+        "massEmail": "Mass Email"
+    },
+    "options": {
+        "status": {
+            "Pending": "Pending",
+            "Sent": "Sent",
+            "Failed": "Failed"
+        }
+    }
+}
