@@ -1,0 +1,26 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [
+                {"name": "name"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "startAt"},
+                {"name": "campaign"}
+            ],
+            [
+                {"name": "emailTemplate"}, {"name": "storeSentEmails"}
+            ],
+            [
+                {"name": "fromAddress"},
+                {"name": "fromName"}
+            ],
+            [
+                {"name": "replyToAddress"},
+                {"name": "replyToName"}
+            ]
+        ]
+    }
+]

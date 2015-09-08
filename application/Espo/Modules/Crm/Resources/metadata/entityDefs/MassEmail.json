@@ -32,7 +32,8 @@
             "required": true
         },
         "emailTemplate": {
-            "type": "link"
+            "type": "link",
+            "required": true
         },
         "campaign": {
             "type": "link"

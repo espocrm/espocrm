@@ -33,7 +33,8 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
                 view: 'views/record/panels/relationship',
                 sticked: true,
                 hidden: true,
-                select: false
+                select: false,
+                rowActionsView: 'views/record/row-actions/relationship-no-unlink'
             });
 
             this.listenTo(this.model, 'change', function () {

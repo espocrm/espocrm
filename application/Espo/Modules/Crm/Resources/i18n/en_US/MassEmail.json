@@ -27,5 +27,8 @@
             "Complete": "Complete",
             "Canceled": "Canceled"
         }
+    },
+    "labels": {
+        "Create MassEmail": "Create Mass Email"
     }
 }
