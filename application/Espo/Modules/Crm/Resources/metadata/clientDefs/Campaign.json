@@ -16,6 +16,9 @@
     "recordViews": {
       "detail": "Crm:Campaign.Record.Detail"
     },
+    "views": {
+      "detail": "crm:views/campaign/detail"
+    },
     "sidePanels":{
       "detail":[
          {

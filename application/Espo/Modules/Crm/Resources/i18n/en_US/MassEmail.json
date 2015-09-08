@@ -10,7 +10,8 @@
         "replyToName": "Reply-to Name",
         "campaign": "Campaign",
         "emailTemplate": "Email Template",
-        "inboundEmail": "Email Account"
+        "inboundEmail": "Email Account",
+        "targetLists": "Target Lists"
     },
     "links": {
         "targetLists": "Target Lists",

@@ -7,8 +7,12 @@
                 {"name": "status"}
             ],
             [
-                {"name": "startAt"},
-                {"name": "campaign"}
+                {"name": "campaign"},
+                {"name": "startAt"}
+            ],
+            [
+                {"name": "targetLists"},
+                false
             ],
             [
                 {"name": "emailTemplate"}, {"name": "storeSentEmails"}

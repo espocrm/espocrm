@@ -10,6 +10,9 @@
                 {"name": "startAt", "fullWidth": true}
             ],
             [
+                {"name": "targetLists", "fullWidth": true}
+            ],
+            [
                 {"name": "emailTemplate", "fullWidth": true}
             ],
             [
