@@ -124,7 +124,7 @@ class AclManager
             return false;
         }
         $data = $this->getTable($user)->getScopeData($scope);
-        return $this->getImplementation($scope)->checkReadOnlyTeam($user, $scope, $data);
+        return $this->getImplementation($scope)->checkReadOnlyTeam($user, $data);
     }
 
     public function checkReadOnlyOwn(User $user, $scope)
@@ -133,7 +133,7 @@ class AclManager
             return false;
         }
         $data = $this->getTable($user)->getScopeData($scope);
-        return $this->getImplementation($scope)->checkReadOnlyOwn($user, $scope, $data);
+        return $this->getImplementation($scope)->checkReadOnlyOwn($user, $data);
     }
 
     public function check(User $user, $subject, $action = null, $isOwner = null, $inTeam = null)

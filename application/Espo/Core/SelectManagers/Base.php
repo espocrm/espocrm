@@ -363,9 +363,10 @@ class Base
     {
         if ($this->acl->checkReadOnlyOwn($this->entityType)) {
             $this->accessOnlyOwn($result);
-        }
-        if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityType)) {
-            $this->accessOnlyTeam($result);
+        } else {
+            if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityType)) {
+                $this->accessOnlyTeam($result);
+            }
         }
     }
 

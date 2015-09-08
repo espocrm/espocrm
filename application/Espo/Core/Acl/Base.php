@@ -81,7 +81,7 @@ class Base implements Injectable
         return $this->getInjection('aclManager');
     }
 
-    public function checkReadOnlyTeam(User $user, $scope, $data)
+    public function checkReadOnlyTeam(User $user, $data)
     {
         if (empty($data) || !is_array($data) || !isset($data['read'])) {
             return false;
@@ -89,7 +89,7 @@ class Base implements Injectable
         return $data['read'] === 'team';
     }
 
-    public function checkReadOnlyOwn(User $user, $scope, $data)
+    public function checkReadOnlyOwn(User $user, $data)
     {
         if (empty($data) || !is_array($data) || !isset($data['read'])) {
             return false;

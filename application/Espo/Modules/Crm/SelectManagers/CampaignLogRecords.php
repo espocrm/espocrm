@@ -22,7 +22,7 @@
 
 namespace Espo\Modules\Crm\SelectManagers;
 
-class MassEmail extends \Espo\Core\SelectManagers\Base
+class CampaignLogRecords extends \Espo\Core\SelectManagers\Base
 {
     protected function accessOnlyOwn(&$result)
     {

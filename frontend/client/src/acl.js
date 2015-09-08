@@ -69,6 +69,10 @@ Espo.define('acl', [], function () {
                 if (this.data.table[controller] === true) {
                     return true;
                 }
+                if (typeof this.data.table[controller] === 'string') {
+                    return true;
+                }
+
                 if (typeof action !== 'undefined') {
                     if (action in this.data.table[controller]) {
                         var value = this.data.table[controller][action];

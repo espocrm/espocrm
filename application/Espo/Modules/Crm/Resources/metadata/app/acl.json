@@ -1,10 +1,7 @@
 {
     "solid": {
-        "MassEmail": {
-            "read": "own",
-            "edit": "own",
-            "delete": "own"
-        },
+        "MassEmail": "Campaign",
+        "CampaignLogRecord": "Campaign",
         "EmailQueueItem": false
     }
 }

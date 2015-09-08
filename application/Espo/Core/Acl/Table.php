@@ -81,7 +81,12 @@ class Table
     public function getScopeData($scope)
     {
         if (array_key_exists($scope, $this->data['table'])) {
-            return $this->data['table'][$scope];
+            $data = $this->data['table'][$scope];
+            if (is_string($data)) {
+                $data = $this->getScopeData($data);
+                return $data;
+            }
+            return $data;
         }
         return null;
     }
