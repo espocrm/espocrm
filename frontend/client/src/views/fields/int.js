@@ -19,17 +19,17 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'int',
 
-        detailTemplate: 'fields.int.detail',
+        detailTemplate: 'fields/int/detail',
 
-        editTemplate: 'fields.int.edit',
+        editTemplate: 'fields/int/edit',
 
-        searchTemplate: 'fields.int.search',
+        searchTemplate: 'fields/int/search',
 
         validations: ['required', 'int', 'range'],
 
@@ -47,8 +47,8 @@ Espo.define('Views.Fields.Int', 'Views.Fields.Base', function (Dep) {
         data: function () {
             var data = Dep.prototype.data.call(this);
 
-            if (this.model.get(this.name) !== null) {
-                data.isNotNull = true;
+            if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
+                data.isNotEmpty = true;
             }
             return data;
         },

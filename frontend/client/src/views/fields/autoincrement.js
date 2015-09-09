@@ -19,17 +19,17 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Autoincrement', 'Views.Fields.Int', function (Dep) {
+Espo.define('views/fields/autoincrement', 'views/fields/int', function (Dep) {
 
     return Dep.extend({
 
         type: 'autoincrement',
 
-        editTemplate: 'fields.base.detail',
-
         validations: [],
 
         inlineEditDisabled: true,
+
+        readOnly: true,
 
         parse: function (value) {
             value = (value !== '') ? value : null;

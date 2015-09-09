@@ -1,4 +1,4 @@
-{{#if isNotNull}}
+{{#if isNotEmpty}}
     {{value}}
 {{else}}
     {{translate 'None'}}
