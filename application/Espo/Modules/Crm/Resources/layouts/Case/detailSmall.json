@@ -2,11 +2,11 @@
 	{
 		"label":"",
 		"rows":[
-			[{"name":"name"}],
+			[{"name":"name", "fullWidth": true}],
 			[{"name":"status"}, {"name":"priority"}],
 			[{"name":"type"}, {"name":"number"}],
-			[{"name":"account"}],
-			[{"name":"description"}]
+			[{"name":"account", "fullWidth": true}],
+			[{"name":"description", "fullWidth": true}]
 		]
 	}
 ]

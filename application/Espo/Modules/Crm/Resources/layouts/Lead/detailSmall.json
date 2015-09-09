@@ -3,22 +3,25 @@
         "label":"",
         "rows":[
             [
-                {"name":"name"}
+                {"name":"name", "fullWidth": true}
             ],
             [
-                {"name":"emailAddress"}
+                {"name":"emailAddress", "fullWidth": true}
             ],
             [
-                {"name":"phoneNumber"}
+                {"name":"phoneNumber", "fullWidth": true}
             ],
             [
-                {"name":"accountName"}
+                {"name":"accountName", "fullWidth": true}
+            ],
+            [
+                {"name":"title"}, {"name":"website"}
             ],
             [
                 {"name":"status"}, {"name":"source"}
             ],
             [
-                {"name":"description"}
+                {"name":"description", "fullWidth": true}
             ]
         ]
     }

@@ -2,12 +2,12 @@
 	{
 		"label":"",
 		"rows":[
-			[{"name":"name"}],
+			[{"name":"name", "fullWidth": true}],
 			[{"name":"status"}, {"name":"direction"}],
-			[{"name":"dateStart"}],
-			[{"name":"duration"}],
-			[{"name":"parent"}],
-			[{"name":"description"}]
+			[{"name":"dateStart", "fullWidth": true}],
+			[{"name":"duration", "fullWidth": true}],
+			[{"name":"parent", "fullWidth": true}],
+			[{"name":"description", "fullWidth": true}]
 		]
 	}
 ]

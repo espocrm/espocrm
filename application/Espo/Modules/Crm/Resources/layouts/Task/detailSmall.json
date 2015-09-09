@@ -2,13 +2,13 @@
 	{
 		"label":"",
 		"rows":[
-			[{"name":"name"}],
+			[{"name":"name", "fullWidth": true}],
 			[{"name":"status"}, {"name":"priority"}],
-			[{"name":"dateStart"}],
-			[{"name":"dateEnd"}],
-			[{"name":"parent"}],
-			[{"name":"description"}],
-			[{"name":"attachments"}]
+			[{"name":"dateStart", "fullWidth": true}],
+			[{"name":"dateEnd", "fullWidth": true}],
+			[{"name":"parent", "fullWidth": true}],
+			[{"name":"description", "fullWidth": true}],
+			[{"name":"attachments", "fullWidth": true}]
 		]
 	}
 ]
