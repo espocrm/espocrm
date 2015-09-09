@@ -54,6 +54,12 @@ return array(
 			'status' => 'Active',
 			'scheduling' => '1 1 * * 0',
 		),
+		4 => array(
+			'name' => 'Send Mass Emails',
+			'job' => 'ProcessMassEmail',
+			'status' => 'Active',
+			'scheduling' => '0 2-5 * * *',
+		),
 
 	),
 );

@@ -95,7 +95,7 @@ class EntityManager
     protected function getMapperClassName($name)
     {
         $className = null;
-        
+
         switch ($name) {
             case 'RDB':
                 $platform = $this->params['platform'];

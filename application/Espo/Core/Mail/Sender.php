@@ -131,7 +131,7 @@ class Sender
         return $this;
     }
 
-    public function send(Email $email, $params = array(), &$message = null)
+    public function send(Email $email, $params = array(), &$message = null, $attachmetList = [])
     {
         $message = new Message();
         $config = $this->config;
@@ -219,6 +219,10 @@ class Sender
         $attachmentPartList = array();
         $attachmentCollection = $email->get('attachments');
         $attachmentInlineCollection = $email->getInlineAttachments();
+
+        foreach ($attachmetList as $attachment) {
+            $attachmentCollection[] = $attachment;
+        }
 
         if (!empty($attachmentCollection)) {
             foreach ($attachmentCollection as $a) {

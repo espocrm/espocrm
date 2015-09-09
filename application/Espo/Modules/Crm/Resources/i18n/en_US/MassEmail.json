@@ -26,7 +26,8 @@
             "Pending": "Pending",
             "In Process": "In Process",
             "Complete": "Complete",
-            "Canceled": "Canceled"
+            "Canceled": "Canceled",
+            "Failed": "Failed"
         }
     },
     "labels": {

@@ -48,20 +48,15 @@ class EmailTemplate extends Record
         return $this->injections['dateTime'];
     }
 
-    public function parse($id, array $params = array(), $copyAttachments = false)
+    public function parseTemplate(Entity $emailTemplate, array $params = array(), $copyAttachments = false)
     {
-        $emailTemplate = $this->getEntity($id);
-        if (empty($emailTemplate)) {
-            throw new NotFound();
-        }
-
-        $entityList = array();
+        $entityHash = array();
         if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
-            $entityList = $params['entityHash'];
+            $entityHash = $params['entityHash'];
         }
 
-        if (!isset($entityList['User'])) {
-            $entityList['User'] = $this->getUser();
+        if (!isset($entityHash['User'])) {
+            $entityHash['User'] = $this->getUser();
         }
 
         if (!empty($params['emailAddress'])) {
@@ -73,33 +68,40 @@ class EmailTemplate extends Record
 
             if ($entity) {
                 if ($entity instanceof Person) {
-                    $entityList['Person'] = $entity;
+                    $entityHash['Person'] = $entity;
                 }
-                if (empty($entityList[$entity->getEntityType()])) {
-                    $entityList[$entity->getEntityType()] = $entity;
+                if (empty($entityHash[$entity->getEntityType()])) {
+                    $entityHash[$entity->getEntityType()] = $entity;
                 }
             }
         }
 
-        if (!empty($params['parentId']) && !empty($params['parentType'])) {
-            $parent = $this->getEntityManager()->getEntity($params['parentType'], $params['parentId']);
-            if (!empty($parent)) {
-                $entityList[$params['parentType']] = $parent;
-                $entityList['Parent'] = $parent;
-
-                if (empty($entityList['Person']) && ($parent instanceof Person)) {
-                    $entityList['Person'] = $parent;
+        if (empty($params['parent'])) {
+            if (!empty($params['parentId']) && !empty($params['parentType'])) {
+                $parent = $this->getEntityManager()->getEntity($params['parentType'], $params['parentId']);
+                if ($parent) {
+                    $params['parent'] = $parent;
                 }
+            }
+        }
+
+        if (!empty($params['parent'])) {
+            $parent = $params['parent'];
+            $entityHash[$parent->getEntityType()] = $parent;
+            $entityHash['Parent'] = $parent;
+
+            if (empty($entityHash['Person']) && ($parent instanceof Person)) {
+                $entityHash['Person'] = $parent;
             }
         }
 
         $subject = $emailTemplate->get('subject');
         $body = $emailTemplate->get('body');
 
-        foreach ($entityList as $type => $entity) {
+        foreach ($entityHash as $type => $entity) {
             $subject = $this->parseText($type, $entity, $subject);
         }
-        foreach ($entityList as $type => $entity) {
+        foreach ($entityHash as $type => $entity) {
             $body = $this->parseText($type, $entity, $body);
         }
 
@@ -137,6 +139,16 @@ class EmailTemplate extends Record
             'attachmentsNames' => $attachmentsNames,
             'isHtml' => $emailTemplate->get('isHtml')
         );
+    }
+
+    public function parse($id, array $params = array(), $copyAttachments = false)
+    {
+        $emailTemplate = $this->getEntity($id);
+        if (empty($emailTemplate)) {
+            throw new NotFound();
+        }
+
+        return $this->parseTemplate($emailTemplate, $params, $copyAttachments);
     }
 
     protected function parseText($type, Entity $entity, $text)
