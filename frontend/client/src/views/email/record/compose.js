@@ -39,6 +39,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 var body = this.appendSignature(data.body || '', data.isHtml);
                 this.model.set('isHtml', data.isHtml);
                 this.model.set('name', data.subject);
+                this.model.set('body', '');
                 this.model.set('body', body);
                 this.model.set({
                     attachmentsIds: data.attachmentsIds,
