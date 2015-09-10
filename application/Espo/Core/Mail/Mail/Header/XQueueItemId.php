@@ -9,13 +9,29 @@
 
 namespace Espo\Core\Mail\Mail\Header;
 
+use \Zend\Mail\Header;
 use Zend\Mime\Mime;
 
-class XQueueItemId extends \Zend\Mail\Header\GenericHeader
+class XQueueItemId implements Header\HeaderInterface
 {
     protected $fieldName = 'X-QueueItemId';
 
     protected $id = null;
+
+    public static function fromString($headerLine)
+    {
+        list($name, $value) = Header\GenericHeader::splitHeaderLine($headerLine);
+        $value = Header\HeaderWrap::mimeDecodeValue($value);
+
+        if (strtolower($name) !== 'x-queue-item-id') {
+            throw new Header\Exception\InvalidArgumentException('Invalid header line for Message-ID string');
+        }
+
+        $header = new static();
+        $header->setId($value);
+
+        return $header;
+    }
 
     public function getFieldName()
     {
@@ -46,7 +62,7 @@ class XQueueItemId extends \Zend\Mail\Header\GenericHeader
         return $this->fieldName . ': ' . $this->getFieldValue();
     }
 
-    public function getFieldValue($format = \Zend\Mail\Header\HeaderInterface::FORMAT_RAW)
+    public function getFieldValue($format = Header\HeaderInterface::FORMAT_RAW)
     {
         return $this->id;
     }

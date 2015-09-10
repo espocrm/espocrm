@@ -562,22 +562,26 @@ class InboundEmail extends \Espo\Services\Record
     protected function processBouncedMessage(\Zend\Mail\Message $message)
     {
         $content = $message->getContent();
-        echo "bounced\n";
 
         $isHard = false;
         if (preg_match('/permanent[ ]*error/', $content)) {
             $isHard = true;
         }
         if (preg_match('/X-QueueItemId: [a-z0-9\-]*/', $content, $m)) {
-            $queueItemId = preg_split('/X-QueueItemId: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+            $arr = preg_split('/X-QueueItemId: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+
+            $queueItemId = $arr[0];
             if (!$queueItemId) return;
-            echo $queueItemId . "\n";
 
             $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
-
             if (!$queueItem) return;
+            $massEmailId = $queueItem->get('massEmailId');
+            $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
 
-            $campaignId = $queueItem->get('campaignId');
+            $campaignId = null;
+            if ($massEmail) {
+                $campaignId = $massEmail->get('campaignId');
+            }
 
             $targetType = $queueItem->get('targetType');
             $targetId = $queueItem->get('targetId');
@@ -591,7 +595,7 @@ class InboundEmail extends \Espo\Services\Record
                 $this->getEntityManager()->saveEntity($emailAddressEntity);
             }
 
-            if ($campaignId && $target) {
+            if ($campaignId && $target && $target->id) {
                 $this->getCampaignService()->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard);
             }
         }
