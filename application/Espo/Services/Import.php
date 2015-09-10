@@ -524,12 +524,16 @@ class Import extends \Espo\Services\Record
 
         $defaultCurrency = 'USD';
         if (!empty($params['defaultCurrency'])) {
-            $dateFormat = $params['defaultCurrency'];
+            $defaultCurrency = $params['defaultCurrency'];
         }
 
         $dateFormat = 'Y-m-d';
         if (!empty($params['dateFormat'])) {
-            $dateFormat = $params['dateFormat'];
+            if (!empty($this->dateFormatsMap[$params['dateFormat']])) {
+                $dateFormat = $this->dateFormatsMap[$params['dateFormat']];
+            } else {
+                $dateFormat = 'Y-m-d';
+            }
         }
 
         $timeFormat = 'H:i';
