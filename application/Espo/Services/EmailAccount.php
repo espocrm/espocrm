@@ -251,6 +251,7 @@ class EmailAccount extends Record
 
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
+                        $k++;
                         continue;
                     }
                 }
