@@ -242,6 +242,7 @@ class InboundEmail extends \Espo\Services\Record
 
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
+                        $k++;
                         continue;
                     }
                 }
