@@ -6,7 +6,8 @@
         "campaign": "Campaign",
         "parent": "Target",
         "object": "Object",
-        "application": "Application"
+        "application": "Application",
+        "queueItem": "Queue Item"
     },
     "options": {
     	"action": {

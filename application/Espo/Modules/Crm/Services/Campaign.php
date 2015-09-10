@@ -95,5 +95,53 @@ class Campaign extends \Espo\Services\Record
         }
     }
 
+    public function logSent($campaignId, $queueItemId = null, Entity $target, Entity $emailOrEmailTemplate = null, $emailAddress, $actionDate = null)
+    {
+        if (empty($actionDate)) {
+            $actionDate = date('Y-m-d H:i:s');
+        }
+        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord->set(array(
+            'campaignId' => $campaignId,
+            'actionDate' => $actionDate,
+            'parentId' => $target->id,
+            'parentType' => $target->getEntityType(),
+            'action' => 'Sent',
+            'stringData' => $emailAddress,
+            'queueItemId' => $queueItemId
+        ));
+
+        if ($emailOrEmailTemplate) {
+            $logRecord->set(array(
+                'objectId' => $emailOrEmailTemplate->id,
+                'objectType' => $emailOrEmailTemplate->getEntityType()
+            ));
+        }
+        $this->getEntityManager()->saveEntity($logRecord);
+    }
+
+    public function logBounced($campaignId, $queueItemId = null, Entity $target, $emailAddress, $isHard = false, $actionDate = null)
+    {
+        if (empty($actionDate)) {
+            $actionDate = date('Y-m-d H:i:s');
+        }
+        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord->set(array(
+            'campaignId' => $campaignId,
+            'actionDate' => $actionDate,
+            'parentId' => $target->id,
+            'parentType' => $target->getEntityType(),
+            'action' => 'Bounced',
+            'stringData' => $emailAddress,
+            'queueItemId' => $queueItemId
+        ));
+        if ($isHard) {
+            $logRecord->set('stringAdditionalData', 'Hard');
+        } else {
+            $logRecord->set('stringAdditionalData', 'Soft');
+        }
+        $this->getEntityManager()->saveEntity($logRecord);
+    }
+
 }
 

@@ -308,7 +308,9 @@ class RDB extends \Espo\ORM\Repository
         $this->handleSelectParams($params);
 
         $params = $this->getSelectParams($params);
-        return $this->getMapper()->count($this->seed, $params);
+        $count = $this->getMapper()->count($this->seed, $params);
+        $this->reset();
+        return $count;
     }
 
     public function max($field)

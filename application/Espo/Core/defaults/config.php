@@ -103,6 +103,7 @@ return array (
     'b2cMode' => false,
     'restrictedMode' => false,
     'theme' => 'Espo',
+    'massEmailMaxPerHourCount' => 100,
     'isInstalled' => false,
 );
 

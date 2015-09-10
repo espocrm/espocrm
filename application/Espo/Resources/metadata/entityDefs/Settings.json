@@ -252,6 +252,10 @@
             "type": "float",
             "min": 0,
             "tooltip": true
+        },
+        "massEmailMaxPerHourCount": {
+            "type": "int",
+            "min": 0
         }
     }
 }

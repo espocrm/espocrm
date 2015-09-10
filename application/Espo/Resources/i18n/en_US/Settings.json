@@ -55,7 +55,8 @@
         "displayListViewRecordCount": "Display Total Count (on List View)",
         "theme": "Theme",
         "userThemesDisabled": "Disable User Themes",
-        "emailMessageMaxSize": "Email Max Size (Mb)"
+        "emailMessageMaxSize": "Email Max Size (Mb)",
+        "massEmailMaxPerHourCount": "Max count of emails sent per hour"
     },
     "options": {
         "weekStart": {
@@ -77,6 +78,7 @@
         "In-app Notifications": "In-app Notifications",
         "Email Notifications": "Email Notifications",
         "Currency Settings": "Currency Settings",
-        "Currency Rates": "Currency Rates"
+        "Currency Rates": "Currency Rates",
+        "Mass Email"
     }
 }

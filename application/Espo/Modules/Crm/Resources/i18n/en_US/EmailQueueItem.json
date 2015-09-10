@@ -4,7 +4,8 @@
         "status": "Status",
         "target": "Target",
         "sentAt": "Date Sent",
-        "attemptCount": "Attempts"
+        "attemptCount": "Attempts",
+        "emailAddress": "Email Address"
     },
     "links": {
         "target": "Target",

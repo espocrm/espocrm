@@ -31,11 +31,17 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
 
     		switch (action) {
     			case 'Sent':
-    				return this.model.get('stringData');
+                    if (this.model.get('objectId') && this.model.get('objectType') && this.model.get('objectName')) {
+                        return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
+                    }
+                    return this.model.get('stringData') || '';
     			case 'Clicked':
-    				return '<span class="text-success">' + this.model.get('stringData') + '</span>';
+                    if (this.model.get('objectId') && this.model.get('objectType') && this.model.get('objectName')) {
+                        return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
+                    }
+    				return '<span>' + (this.model.get('stringData') || '') + '</span>';
                 case 'Opted Out':
-                    return '<span class="text-muted">' + this.model.get('stringData') + '</span>';
+                    return '<s>' + this.model.get('stringData') + '</s>';
                 case 'Bounced':
                     var emailAddress = this.model.get('stringData');
                     var type = this.model.get('stringAdditionalData');

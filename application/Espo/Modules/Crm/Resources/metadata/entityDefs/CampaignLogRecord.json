@@ -44,6 +44,9 @@
         },
         "object": {
             "type": "linkParent"
+        },
+        "queueItem": {
+            "type": "link"
         }
     },
     "links": {
@@ -55,6 +58,11 @@
             "type": "belongsTo",
             "entity": "Campaign",
             "foreign": "campaignLogRecords"
+        },
+        "queueItem": {
+            "type": "belongsTo",
+            "entity": "EmailQueueItem",
+            "noJoin": true
         },
         "parent": {
             "type": "belongsToParent",

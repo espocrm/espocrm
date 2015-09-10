@@ -133,7 +133,9 @@ class Sender
 
     public function send(Email $email, $params = array(), &$message = null, $attachmetList = [])
     {
-        $message = new Message();
+        if (!$message) {
+            $message = new Message();
+        }
         $config = $this->config;
         $params = $this->params + $params;
 

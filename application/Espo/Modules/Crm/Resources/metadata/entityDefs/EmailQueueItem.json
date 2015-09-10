@@ -21,6 +21,10 @@
         "sentAt": {
             "type": "datetime",
             "readOnly": true
+        },
+        "emailAddress": {
+            "type": "varchar",
+            "readOnly": true
         }
     },
     "links": {

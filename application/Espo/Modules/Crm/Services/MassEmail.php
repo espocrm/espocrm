@@ -30,6 +30,12 @@ class MassEmail extends \Espo\Services\Record
 {
     const MAX_ATTEMPT_COUNT = 3;
 
+    const MAX_PER_HOUR_COUNT = 100;
+
+    private $campaignService = null;
+
+    private $emailTemplateService = null;
+
     protected function init()
     {
         $this->dependencies[] = 'container';
@@ -138,10 +144,25 @@ class MassEmail extends \Espo\Services\Record
 
     public function processSending(Entity $massEmail)
     {
+        $threshold = new \DateTime();
+        $threshold->modify('-1 hour');
+        $sentLastHourCount = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
+            'status' => 'Sent',
+            'sentAt>' => $threshold->format('Y-m-d H:i:s')
+        ))->count();
+
+        $maxBatchSize = $this->getConfig()->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
+
+        if ($sentLastHourCount >= $maxBatchSize) {
+            return;
+        }
+
+        $maxBatchSize = $maxBatchSize - $sentLastHourCount;
+
         $queueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => 'Pending',
             'massEmailId' => $massEmail->id
-        ))->find();
+        ))->limit(0, $maxBatchSize)->find();
 
         $templateId = $massEmail->get('emailTemplateId');
         if (!$templateId) {
@@ -149,6 +170,11 @@ class MassEmail extends \Espo\Services\Record
             return;
         }
 
+        $campaign = null;
+        $campaignId = $massEmail->get('campaignId');
+        if ($campaignId) {
+            $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
+        }
         $emailTemplate = $this->getEntityManager()->getEntity('EmailTemplate', $templateId);
         if (!$emailTemplate) {
             $this->setFailed($massEmail);
@@ -157,7 +183,7 @@ class MassEmail extends \Espo\Services\Record
         $attachmetList = $emailTemplate->get('attachmets');
 
         foreach ($queueItemList as $queueItem) {
-            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmetList);
+            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmetList, $campaign);
         }
 
         $countLeft = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
@@ -170,7 +196,7 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
-    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmetList = [])
+    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmetList = [], $campaign = null)
     {
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
         if (!$target || !$target->id || !$target->get('emailAddress')) {
@@ -214,12 +240,30 @@ class MassEmail extends \Espo\Services\Record
             $attemptCount++;
             $queueItem->set('attemptCount', $attemptCount);
 
-            $message = false;
+            $message = new \Zend\Mail\Message();
+
+            $header = new \Espo\Core\Mail\Mail\Header\XQueueItemId();
+            $header->setId($queueItem->id);
+            $message->getHeaders()->addHeader($header);
+
             $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmetList);
+
+            $emailObject = $emailTemplate;
+            if ($massEmail->get('storeSentEmails')) {
+                $this->getEntityManager()->saveEntity($email);
+                $emailObject = $email;
+            }
+
+            $queueItem->set('emailAddress', $target->get('emailAddress'));
 
             $queueItem->set('status', 'Sent');
             $queueItem->set('sentAt', date('Y-m-d H:i:s'));
             $this->getEntityManager()->saveEntity($queueItem);
+
+            if ($campaign) {
+                $this->getCampaignService()->logSent($campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'));
+            }
+
         } catch (\Exception $e) {
             if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
                 $queueItem->set('status', 'Failed');
@@ -238,6 +282,14 @@ class MassEmail extends \Espo\Services\Record
             $this->emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
         }
         return $this->emailTemplateService;
+    }
+
+    protected function getCampaignService()
+    {
+        if (!$this->campaignService) {
+            $this->campaignService = $this->getServiceFactory()->create('Campaign');
+        }
+        return $this->campaignService;
     }
 }
 

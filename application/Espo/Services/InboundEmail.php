@@ -31,6 +31,8 @@ class InboundEmail extends \Espo\Services\Record
 {
     protected $internalFields = array('password');
 
+    private $campaignService = null;
+
     const PORTION_LIMIT = 20;
 
     public function createEntity($data)
@@ -255,6 +257,11 @@ class InboundEmail extends \Espo\Services\Record
                         $fromString = $message->from;
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             $toSkip = true;
+                            try {
+                                $this->processBouncedMessage($message);
+                            } catch (\Exception $e) {
+                                $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage());
+                            }
                         }
                     }
                     if (!$toSkip) {
@@ -551,5 +558,52 @@ class InboundEmail extends \Espo\Services\Record
 
         } catch (\Exception $e) {}
     }
+
+    protected function processBouncedMessage(\Zend\Mail\Message $message)
+    {
+        $content = $message->getContent();
+        echo "bounced\n";
+
+        $isHard = false;
+        if (preg_match('/permanent[ ]*error/', $content)) {
+            $isHard = true;
+        }
+        if (preg_match('/X-QueueItemId: [a-z0-9\-]*/', $content, $m)) {
+            $queueItemId = preg_split('/X-QueueItemId: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+            if (!$queueItemId) return;
+            echo $queueItemId . "\n";
+
+            $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+
+            if (!$queueItem) return;
+
+            $campaignId = $queueItem->get('campaignId');
+
+            $targetType = $queueItem->get('targetType');
+            $targetId = $queueItem->get('targetId');
+            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+
+            $emailAddress = $queueItem->get('emailAddress');
+
+            if ($isHard && $emailAddress) {
+                $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+                $emailAddressEntity->set('invalid', true);
+                $this->getEntityManager()->saveEntity($emailAddressEntity);
+            }
+
+            if ($campaignId && $target) {
+                $this->getCampaignService()->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard);
+            }
+        }
+    }
+
+    protected function getCampaignService()
+    {
+        if (!$this->campaignService) {
+            $this->campaignService = $this->getServiceFactory()->create('Campaign');
+        }
+        return $this->campaignService;
+    }
+
 }
 
