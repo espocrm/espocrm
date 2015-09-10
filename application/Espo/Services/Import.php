@@ -531,14 +531,14 @@ class Import extends \Espo\Services\Record
         if (!empty($params['dateFormat'])) {
             if (!empty($this->dateFormatsMap[$params['dateFormat']])) {
                 $dateFormat = $this->dateFormatsMap[$params['dateFormat']];
-            } else {
-                $dateFormat = 'Y-m-d';
             }
         }
 
         $timeFormat = 'H:i';
         if (!empty($params['timeFormat'])) {
-            $timeFormat = $params['timeFormat'];
+            if (!empty($this->timeFormatsMap[$params['timeFormat']])) {
+                $timeFormat = $this->timeFormatsMap[$params['timeFormat']];
+            }
         }
 
         $fieldDefs = $entity->getFields();
