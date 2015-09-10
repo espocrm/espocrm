@@ -185,9 +185,6 @@ class MassEmail extends \Espo\Services\Record
 
         $emailData = $this->getEmailTemplateService()->parseTemplate($emailTemplate, $templateParams);
 
-        print_r($emailData);
-        return;
-
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set($emailData);
         $emailAddress = $target->get('emailAddress');
