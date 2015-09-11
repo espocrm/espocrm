@@ -2,7 +2,7 @@
     "fields": {
         "account": {
             "type": "link",
-            "disabled": true
+            "readOnly": true
         },
         "parent": {
             "entityList": ["Account", "Lead", "Opportunity", "Case"]
