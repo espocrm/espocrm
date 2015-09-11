@@ -1,0 +1,17 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [
+                {"name": "name"},
+                {"name": "campaign"}
+            ],
+            [
+                {"name": "url", "fullWidth": true}
+            ],
+            [
+                {"name": "urlToUse", "fullWidth": true}
+            ]
+        ]
+    }
+]

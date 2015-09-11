@@ -25,7 +25,7 @@ namespace Espo\Modules\Crm\Acl;
 use \Espo\Entities\User;
 use \Espo\ORM\Entity;
 
-class CampaignLogRecords extends \Espo\Core\Acl\Base
+class CampaignTrackingUrl extends \Espo\Core\Acl\Base
 {
 
     public function checkIsOwner(User $user, Entity $entity)

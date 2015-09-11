@@ -1,0 +1,20 @@
+[
+    {
+        "name": "name",
+        "width": 25,
+        "link": true
+    },
+    {
+        "name": "url",
+        "notSortable": true,
+        "width": 30
+    },
+    {
+        "name": "campaign",
+        "notSortable": true
+    },
+    {
+        "name": "createdAt",
+        "width": 10
+    }
+]

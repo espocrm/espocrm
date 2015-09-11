@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,38 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Url', 'Views.Fields.Varchar', function (Dep) {
+namespace Espo\Modules\Crm\Controllers;
 
-    return Dep.extend({
 
-        type: 'url',
-
-        listTemplate: 'fields.url.list',
-
-        detailTemplate: 'fields.url.detail',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.params.trim = true;
-        },
-
-        data: function () {
-            return _.extend({
-                url: this.getUrl()
-            }, Dep.prototype.data.call(this));
-        },
-
-        getUrl: function () {
-            var url = this.model.get(this.name);
-            if (url && url != '') {
-                if (!(url.indexOf('http://') === 0) && !(url.indexOf('https://') === 0)) {
-                    url = 'http://' + url;
-                }
-                return url;
-            }
-            return url;
-        }
-
-    });
-});
-
+class CampaignTrackingUrl extends \Espo\Core\Controllers\Record
+{
+}

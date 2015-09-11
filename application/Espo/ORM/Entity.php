@@ -152,6 +152,11 @@ abstract class Entity implements IEntity
         if ($name == 'id') {
             return isset($this->id);
         }
+        $method = '_has' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
+
         if (array_key_exists($name, $this->valuesContainer)) {
             return true;
         }

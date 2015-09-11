@@ -15,7 +15,8 @@
         "Campaign": "Campaign",
         "TargetList": "Target List",
         "MassEmail": "Mass Email",
-        "EmailQueueItem": "Email Queue Item"
+        "EmailQueueItem": "Email Queue Item",
+        "CampaignTrackingUrl": "Tracking URL"
     },
     "scopeNamesPlural": {
         "Account": "Accounts",
@@ -33,7 +34,8 @@
         "Campaign": "Campaigns",
         "TargetList": "Target Lists",
         "MassEmail": "Mass Emails",
-        "EmailQueueItem": "Email Queue Items"
+        "EmailQueueItem": "Email Queue Items",
+        "CampaignTrackingUrl": "Tracking URLs"
     },
     "dashlets": {
         "Leads": "My Leads",

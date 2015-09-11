@@ -39,11 +39,17 @@ class MassEmail extends \Espo\Services\Record
     protected function init()
     {
         $this->dependencies[] = 'container';
+        $this->dependencies[] = 'language';
     }
 
     protected function getMailSender()
     {
         return $this->getInjection('container')->get('mailSender');
+    }
+
+    protected function getLanguage()
+    {
+        return $this->getInjection('language');
     }
 
     protected function beforeCreate(Entity $entity, array $data = array())
@@ -69,7 +75,11 @@ class MassEmail extends \Espo\Services\Record
 
         $targetListCollection = $massEmail->get('targetLists');
         foreach ($targetListCollection as $targetList) {
-            $accountList = $targetList->get('accounts');
+            $accountList = $targetList->get('accounts', array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
             foreach ($accountList as $account) {
                 $hashId = $account->getEntityType() . '-'. $account->id;
                 if (!empty($targetHash[$hashId])) {
@@ -78,7 +88,11 @@ class MassEmail extends \Espo\Services\Record
                 $entityList[] = $account;
                 $targetHash[$hashId] = true;
             }
-            $contactList = $targetList->get('contacts');
+            $contactList = $targetList->get('contacts', array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
             foreach ($contactList as $contact) {
                 $hashId = $contact->getEntityType() . '-'. $contact->id;
                 if (!empty($targetHash[$hashId])) {
@@ -87,7 +101,11 @@ class MassEmail extends \Espo\Services\Record
                 $entityList[] = $contact;
                 $targetHash[$hashId] = true;
             }
-            $leadList = $targetList->get('leads');
+            $leadList = $targetList->get('leads', array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
             foreach ($leadList as $lead) {
                 $hashId = $lead->getEntityType() . '-'. $lead->id;
                 if (!empty($targetHash[$hashId])) {
@@ -96,7 +114,11 @@ class MassEmail extends \Espo\Services\Record
                 $entityList[] = $lead;
                 $targetHash[$hashId] = true;
             }
-            $userList = $targetList->get('users');
+            $userList = $targetList->get('users', array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
             foreach ($userList as $user) {
                 $hashId = $user->getEntityType() . '-'. $user->id;
                 if (!empty($targetHash[$hashId])) {
@@ -196,6 +218,58 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
+    protected function getProparedEmail(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
+    {
+        $templateParams = array(
+            'parent' => $target
+        );
+
+        $emailData = $this->getEmailTemplateService()->parseTemplate($emailTemplate, $templateParams);
+
+        $body = $emailData['body'];
+
+        $optOutUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+        $optOutLink = '<a href="'.$optOutUrl.'">'.$this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign').'</a>';
+
+        $body = str_replace('{optOutUrl}', $optOutUrl, $body);
+        $body = str_replace('{optOutLink}', $optOutLink, $body);
+
+        foreach ($trackingUrlList as $trackingUrl) {
+            $url = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignUrl&id=' . $trackingUrl->id . '&queueItemId=' . $queueItem->id;
+            $body = str_replace($trackingUrl->get('urlToUse'), $url, $body);
+        }
+
+        if (stripos('?entryPoint=unsubscribe&id', $body) === false) {
+            if ($emailData['isHtml']) {
+                $body .= "<br><br>" . $optOutLink;
+            } else {
+                $body .= "\n\n" . $optOutUrl;
+            }
+        }
+
+        $emailData['body'] = $body;
+
+        $email = $this->getEntityManager()->getEntity('Email');
+        $email->set($emailData);
+
+        $emailAddress = $target->get('emailAddress');
+
+        if (empty($emailAddress)) {
+            return false;
+        }
+
+        $email->set('to', $emailAddress);
+
+        if ($massEmail->get('fromAddress')) {
+            $email->set('from', $massEmail->get('fromAddress'));
+        }
+        if ($massEmail->get('replyToAddress')) {
+            $email->set('replyToAddress', $massEmail->get('replyToAddress'));
+        }
+
+        return $email;
+    }
+
     protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmetList = [], $campaign = null)
     {
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
@@ -205,29 +279,17 @@ class MassEmail extends \Espo\Services\Record
             return;
         }
 
-        $templateParams = array(
-            'parent' => $target
-        );
-
-        $emailData = $this->getEmailTemplateService()->parseTemplate($emailTemplate, $templateParams);
-
-        $email = $this->getEntityManager()->getEntity('Email');
-        $email->set($emailData);
         $emailAddress = $target->get('emailAddress');
+        if (!$emailAddress) return;
 
-        if (empty($emailAddress)) {
-            return false;
+        $trackingUrlList = [];
+        if ($campaign) {
+            $trackingUrlList = $campaign->get('trackingUrls');
         }
 
-        $email->set('to', $emailAddress);
+        $email = $this->getProparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
 
         $params = array();
-        if ($massEmail->get('fromAddress')) {
-            $email->set('from', $massEmail->get('fromAddress'));
-        }
-        if ($massEmail->get('replyToAddress')) {
-            $email->set('replyToAddress', $massEmail->get('replyToAddress'));
-        }
         if ($massEmail->get('fromName')) {
             $params['fromName'] = $massEmail->get('fromName');
         }

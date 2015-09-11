@@ -122,7 +122,7 @@ class Campaign extends \Espo\Services\Record
 
     public function logBounced($campaignId, $queueItemId = null, Entity $target, $emailAddress, $isHard = false, $actionDate = null)
     {
-        if ($this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+        if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'queueItemId' => $queueItemId,
             'action' => 'Bounced'
         ))->findOne()) {
@@ -146,6 +146,55 @@ class Campaign extends \Espo\Services\Record
         } else {
             $logRecord->set('stringAdditionalData', 'Soft');
         }
+        $this->getEntityManager()->saveEntity($logRecord);
+    }
+
+    public function logOptedOut($campaignId, $queueItemId = null, Entity $target, $emailAddress = null)
+    {
+        if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+            'queueItemId' => $queueItemId,
+            'action' => 'Opted Out'
+        ))->findOne()) {
+            return;
+        }
+        if (empty($actionDate)) {
+            $actionDate = date('Y-m-d H:i:s');
+        }
+        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord->set(array(
+            'campaignId' => $campaignId,
+            'actionDate' => $actionDate,
+            'parentId' => $target->id,
+            'parentType' => $target->getEntityType(),
+            'action' => 'Opted Out',
+            'stringData' => $emailAddress,
+            'queueItemId' => $queueItemId
+        ));
+        $this->getEntityManager()->saveEntity($logRecord);
+    }
+
+    public function logClicked($campaignId, $queueItemId = null, Entity $target, Entity $trackingUrl)
+    {
+        if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+            'queueItemId' => $queueItemId,
+            'action' => 'Clicked'
+        ))->findOne()) {
+            return;
+        }
+        if (empty($actionDate)) {
+            $actionDate = date('Y-m-d H:i:s');
+        }
+        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord->set(array(
+            'campaignId' => $campaignId,
+            'actionDate' => $actionDate,
+            'parentId' => $target->id,
+            'parentType' => $target->getEntityType(),
+            'action' => 'Clicked',
+            'objectId' => $trackingUrl->id,
+            'objectType' => $trackingUrl->getEntityType(),
+            'queueItemId' => $queueItemId
+        ));
         $this->getEntityManager()->saveEntity($logRecord);
     }
 

@@ -1,0 +1,16 @@
+[
+    {
+        "name": "name",
+        "width": 30,
+        "link": true
+    },
+    {
+        "name": "url",
+        "width": 30,
+        "notSortable": true
+    },
+    {
+        "name": "urlToUse",
+        "notSortable": true
+    }
+]

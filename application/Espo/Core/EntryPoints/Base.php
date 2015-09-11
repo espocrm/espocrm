@@ -82,6 +82,11 @@ abstract class Base
         return $this->getContainer()->get('fileManager');
     }
 
+    protected function getLanguage()
+    {
+        return $this->getContainer()->get('language');
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;

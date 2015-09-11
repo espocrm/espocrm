@@ -155,6 +155,11 @@
             "entity": "CampaignLogRecord",
             "foreign": "campaign"
         },
+        "trackingUrls": {
+            "type": "hasMany",
+            "entity": "CampaignTrackingUrl",
+            "foreign": "campaign"
+        },
         "massEmails": {
             "type": "hasMany",
             "entity": "MassEmail",

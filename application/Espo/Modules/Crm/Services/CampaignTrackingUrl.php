@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,38 +20,19 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Url', 'Views.Fields.Varchar', function (Dep) {
+namespace Espo\Modules\Crm\Services;
 
-    return Dep.extend({
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\ORM\Entity;
 
-        type: 'url',
-
-        listTemplate: 'fields.url.list',
-
-        detailTemplate: 'fields.url.detail',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.params.trim = true;
-        },
-
-        data: function () {
-            return _.extend({
-                url: this.getUrl()
-            }, Dep.prototype.data.call(this));
-        },
-
-        getUrl: function () {
-            var url = this.model.get(this.name);
-            if (url && url != '') {
-                if (!(url.indexOf('http://') === 0) && !(url.indexOf('https://') === 0)) {
-                    url = 'http://' + url;
-                }
-                return url;
-            }
-            return url;
+class CampaignTrackingUrl extends \Espo\Services\Record
+{
+    protected function beforeCreate(Entity $entity, array $data = array())
+    {
+        parent::beforeCreate($entity, $data);
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
         }
-
-    });
-});
+    }
+}
 

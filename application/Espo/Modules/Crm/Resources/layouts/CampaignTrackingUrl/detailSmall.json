@@ -1,0 +1,16 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [
+                {"name": "name", "fullWidth": true}
+            ],
+            [
+                {"name": "url", "fullWidth": true}
+            ],
+            [
+                {"name": "urlToUse", "fullWidth": true}
+            ]
+        ]
+    }
+]

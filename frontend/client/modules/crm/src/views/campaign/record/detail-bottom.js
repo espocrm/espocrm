@@ -37,6 +37,16 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
                 rowActionsView: 'views/record/row-actions/relationship-no-unlink'
             });
 
+            this.panelList.unshift({
+                name: 'trackingUrls',
+                label: this.translate('trackingUrls', 'links', 'Campaign'),
+                view: 'views/record/panels/relationship',
+                sticked: true,
+                hidden: true,
+                select: false,
+                rowActionsView: 'views/record/row-actions/relationship-no-unlink'
+            });
+
             this.listenTo(this.model, 'change', function () {
                 this.manageMassEmails();
             }, this);
@@ -52,8 +62,10 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
             if (!parentView) return;
             if (this.model.get('type') == 'Email') {
                 parentView.showPanel('massEmails');
+                parentView.showPanel('trackingUrls');
             } else {
                 parentView.hidePanel('massEmails');
+                parentView.showPanel('trackingUrls');
             }
         }
 
