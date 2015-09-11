@@ -282,6 +282,13 @@ class MassEmail extends \Espo\Services\Record
         $emailAddress = $target->get('emailAddress');
         if (!$emailAddress) return;
 
+        $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+        if ($emailAddressRecord) {
+            if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
+                return;
+            }
+        }
+
         $trackingUrlList = [];
         if ($campaign) {
             $trackingUrlList = $campaign->get('trackingUrls');

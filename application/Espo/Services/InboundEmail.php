@@ -564,7 +564,7 @@ class InboundEmail extends \Espo\Services\Record
         $content = $message->getContent();
 
         $isHard = false;
-        if (preg_match('/permanent[ ]*error/', $content)) {
+        if (preg_match('/permanent[ ]*[error|failure]/', $content)) {
             $isHard = true;
         }
         if (preg_match('/X-QueueItemId: [a-z0-9\-]*/', $content, $m)) {
