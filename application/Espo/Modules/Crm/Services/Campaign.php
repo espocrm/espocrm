@@ -122,7 +122,12 @@ class Campaign extends \Espo\Services\Record
 
     public function logBounced($campaignId, $queueItemId = null, Entity $target, $emailAddress, $isHard = false, $actionDate = null)
     {
-        // TODO check for duplicate
+        if ($this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+            'queueItemId' => $queueItemId,
+            'action' => 'Bounced'
+        ))->findOne()) {
+            return;
+        }
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }

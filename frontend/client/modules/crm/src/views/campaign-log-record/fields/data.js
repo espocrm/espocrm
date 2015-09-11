@@ -41,14 +41,14 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
                     }
     				return '<span>' + (this.model.get('stringData') || '') + '</span>';
                 case 'Opted Out':
-                    return '<s>' + this.model.get('stringData') + '</s>';
+                    return '<span class="text-danger">' + this.model.get('stringData') + '</span>';
                 case 'Bounced':
                     var emailAddress = this.model.get('stringData');
                     var type = this.model.get('stringAdditionalData');
                     if (type == 'Hard') {
                         return '<s class="text-danger">' + emailAddress + '</s>';
                     } else {
-                        return '<s class="text-muted">' + emailAddress + '</s>';
+                        return '<s class="">' + emailAddress + '</s>';
                     }
     		}
     		return '';
