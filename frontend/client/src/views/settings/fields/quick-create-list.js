@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Settings.Fields.QuickCreateList', 'Views.Fields.Array', function (Dep) {
+Espo.define('views/settings/fields/quick-create-list', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
-    
+
         setup: function () {
 
             this.params.options =  Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
@@ -32,8 +32,8 @@ Espo.define('Views.Settings.Fields.QuickCreateList', 'Views.Fields.Array', funct
 
             Dep.prototype.setup.call(this);
         },
-        
-        
+
+
     });
-    
+
 });

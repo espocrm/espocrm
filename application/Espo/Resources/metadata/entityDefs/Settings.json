@@ -121,7 +121,7 @@
         "quickCreateList": {
             "type": "array",
             "translation": "Global.scopeNames",
-            "view": "Settings.Fields.QuickCreateList"
+            "view": "views/settings/fields/quick-create-list"
         },
         "language": {
             "type": "enum",
