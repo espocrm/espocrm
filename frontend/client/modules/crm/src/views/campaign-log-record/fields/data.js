@@ -31,6 +31,7 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
 
     		switch (action) {
     			case 'Sent':
+                case 'Opened':
                     if (this.model.get('objectId') && this.model.get('objectType') && this.model.get('objectName')) {
                         return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
                     }

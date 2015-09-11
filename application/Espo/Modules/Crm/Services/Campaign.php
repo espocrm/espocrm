@@ -177,13 +177,41 @@ class Campaign extends \Espo\Services\Record
     {
         if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'queueItemId' => $queueItemId,
-            'action' => 'Clicked'
+            'action' => 'Clicked',
+            'objectId' => $trackingUrl->id,
+            'objectType' => $trackingUrl->getEntityType()
         ))->findOne()) {
             return;
         }
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }
+
+
+        if ($queueItemId && !$this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+            'queueItemId' => $queueItemId,
+            'action' => 'Opened',
+        ))->findOne()) {
+            $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+            if ($queueItem) {
+                $massEmail = $this->getEntityManager()->getEntity('MassEmail', $queueItem->get('massEmailId'));
+                if ($massEmail && $massEmail->id) {
+                    $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+                    $logRecord->set(array(
+                        'campaignId' => $campaignId,
+                        'actionDate' => $actionDate,
+                        'parentId' => $target->id,
+                        'parentType' => $target->getEntityType(),
+                        'action' => 'Opened',
+                        'objectId' => $massEmail->get('emailTemplateId'),
+                        'objectType' => 'EmailTemplate',
+                        'queueItemId' => $queueItemId
+                    ));
+                    $this->getEntityManager()->saveEntity($logRecord);
+                }
+            }
+        }
+
         $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
         $logRecord->set(array(
             'campaignId' => $campaignId,
@@ -196,6 +224,9 @@ class Campaign extends \Espo\Services\Record
             'queueItemId' => $queueItemId
         ));
         $this->getEntityManager()->saveEntity($logRecord);
+
+
+
     }
 
 }
