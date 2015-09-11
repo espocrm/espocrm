@@ -85,7 +85,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 
     public function actionPatch($params, $data, $request)
     {
-        if (!$request->isPost() && !$request->isPatch()) {
+        if (!$request->isPut() && !$request->isPost() && !$request->isPatch()) {
             throw new BadRequest();
         }
 
