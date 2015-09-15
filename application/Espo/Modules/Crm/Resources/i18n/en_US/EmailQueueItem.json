@@ -6,7 +6,8 @@
         "sentAt": "Date Sent",
         "attemptCount": "Attempts",
         "emailAddress": "Email Address",
-        "massEmail": "Mass Email"
+        "massEmail": "Mass Email",
+        "isTest": "Is Test"
     },
     "links": {
         "target": "Target",

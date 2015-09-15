@@ -29,6 +29,9 @@
         "emailAddress": {
             "type": "varchar",
             "readOnly": true
+        },
+        "isTest": {
+            "type": "bool"
         }
     },
     "links": {
