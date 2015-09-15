@@ -57,5 +57,47 @@ class CampaignLogRecord extends \Espo\Core\SelectManagers\Base
             'campaignId!=' => null
         );
     }
+
+    protected function filterOpened(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Opened'
+        );
+    }
+
+    protected function filterSent(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Sent'
+        );
+    }
+
+    protected function filterClicked(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Clicked'
+        );
+    }
+
+    protected function filterOptedOut(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Opted Out'
+        );
+    }
+
+    protected function filterBounced(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Bounced'
+        );
+    }
+
+    protected function filterLeadCreated(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Lead Created'
+        );
+    }
 }
 

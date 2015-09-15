@@ -53,7 +53,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            this.filterList = this.defs.filterList || null;
+            this.filterList = this.defs.filterList || this.filterList || null;
 
             if (this.filterList && this.filterList.length) {
                 this.filter = this.getStoredFilter();

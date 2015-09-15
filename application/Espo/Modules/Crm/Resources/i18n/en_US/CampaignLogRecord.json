@@ -21,5 +21,13 @@
     },
     "labels": {
         "All": "All"
+    },
+    "presetFilters": {
+        "sent": "Sent",
+        "opened": "Opened",
+        "optedOut": "Opted Out",
+        "bounced": "Bounced",
+        "clicked": "Clicked",
+        "leadCreated": "Lead Created"
     }
 }

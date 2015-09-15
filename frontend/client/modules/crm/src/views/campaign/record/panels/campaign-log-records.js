@@ -20,40 +20,40 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Campaign.Record.Panels.CampaignLogRecords', 'Views.Record.Panels.Relationship', function (Dep) {
+Espo.define('crm:views/campaign/record/panels/campaign-log-records', 'views/record/panels/relationship', function (Dep) {
 
     return Dep.extend({
 
-    	template: 'crm:campaign.record.panels.campaign-log-records',
+    	//template: 'crm:campaign/record/panels/campaign-log-records',
 
-    	filterList: ["All", "Sent", "Opened", "Opted Out", "Bounced", "Clicked", "Lead Created"],
+    	filterList: ["all", "sent", "opened", "optedOut", "bounced", "clicked", "leadCreated"],
 
     	data: function () {
     		return _.extend({
     			filterList: this.filterList,
     			filterValue: this.filterValue,
-    			filterTranslatedOptions: this.getFilterTranslatedOptions()
+    			//filterTranslatedOptions: this.getFilterTranslatedOptions()
     		}, Dep.prototype.data.call(this));
     	},
 
-    	getFilterTranslatedOptions: function () {
+    	/*getFilterTranslatedOptions: function () {
     		var o = Espo.Utils.clone(this.getLanguage().get('CampaignLogRecord', 'options', 'action'));
     		o['All'] = this.translate('All', 'labels', 'CampaignLogRecord');
 
     		return o;
-    	},
+    	},*/
 
     	setup: function () {
     		Dep.prototype.setup.call(this);
-    		this.events = Espo.Utils.clone(this.events || {});
+    		//this.events = Espo.Utils.clone(this.events || {});
 
-    		this.events['change select[name="filter"]'] = function (e) {
+    		/*this.events['change select[name="filter"]'] = function (e) {
     			var value = $(e.currentTarget).val();
     			this.setFilter(value);
-    		};
+    		};*/
     	},
 
-    	setFilter: function (value) {
+    	/*setFilter: function (value) {
     		this.filterValue = value;
     		if (value && value != 'All') {
     			this.collection.where = [{
@@ -66,7 +66,7 @@ Espo.define('Crm:Views.Campaign.Record.Panels.CampaignLogRecords', 'Views.Record
     		}
     		this.collection.fetch();
 
-    	}
+    	}*/
 
     });
 });
