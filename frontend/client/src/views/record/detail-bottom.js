@@ -50,8 +50,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                     delete d['panel'];
                     var view = this.getView(panel);
                     if (view && typeof view[method] == 'function') {
-                        view[method].call(view, d);
-                        e.stopPropagation();
+                        view[method].call(view, d, e);
                     }
                 }
             }

@@ -19,19 +19,19 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', 'SearchManager'], function (Dep, SearchManager) {
+Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
-        template: 'record.panels.relationship',
+        template: 'record/panels/relationship',
 
-        rowActionsView: 'Record.RowActions.Relationship',
+        rowActionsView: 'views/record/row-actions/relationship',
 
         url: null,
 
         scope: null,
 
-        readOlny: false,
+        readOnly: false,
 
         setup: function () {
             this.link = this.panelName;
@@ -51,6 +51,12 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                 if (!('select' in this.defs)) {
                     this.defs.select = true;
                 }
+            }
+
+            this.filterList = this.defs.filterList || null;
+
+            if (this.filterList && this.filterList.length) {
+                this.filter = this.getStoredFilter();
             }
 
             this.buttonList = _.clone(this.defs.buttonList || []);
@@ -115,6 +121,8 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
                 }
                 this.collection = collection;
 
+                this.setFilter(this.filter);
+
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
                 this.once('after:render', function () {
@@ -136,9 +144,70 @@ Espo.define('Views.Record.Panels.Relationship', ['Views.Record.Panels.Bottom', '
 
                 this.wait(false);
             }, this);
+
+            this.setupFilterActions();
         },
 
+        setupFilterActions: function () {
+            if (this.filterList && this.filterList.length) {
+                this.filterList.forEach(function (item) {
+                    var selected = false;
+                    if (item == 'all') {
+                        selected = !this.filter;
+                    } else {
+                        selected = item === this.filter;
+                    }
+                    this.actionList.push({
+                        action: 'selectFilter',
+                        html: this.translate(item, 'presetFilters', this.scope)  + '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>',
+                        data: {
+                            name: item
+                        }
+                    });
+                }, this);
+            }
+        },
 
+        getStoredFilter: function () {
+            var key = 'panelFilter' + this.scope + '-' + this.panelName;
+            return this.getStorage().get('state', key) || null;
+        },
+
+        storeFilter: function (filter) {
+            var key = 'panelFilter' + this.scope + '-' + this.panelName;
+            if (filter) {
+                this.getStorage().set('state', key, filter);
+            } else {
+                this.getStorage().clear('state', key);
+            }
+        },
+
+        setFilter: function (filter) {
+            this.collection.data.filter = null;
+            if (filter) {
+                this.collection.data.filter = filter;
+            }
+        },
+
+        actionSelectFilter: function (data) {
+            var filter = data.name;
+            var filterInternal = filter;
+            if (filter == 'all') {
+                filterInternal = false;
+            }
+            this.storeFilter(filterInternal);
+            this.setFilter(filterInternal);
+
+            this.filterList.forEach(function (item) {
+                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+                if (item === filter) {
+                    $el.removeClass('hidden');
+                } else {
+                    $el.addClass('hidden');
+                }
+            }, this);
+            this.collection.fetch();
+        },
 
         actionRefresh: function () {
             this.collection.fetch();

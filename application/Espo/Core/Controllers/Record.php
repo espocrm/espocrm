@@ -132,14 +132,19 @@ class Record extends Base
             throw new Forbidden("Max should should not exceed " . self::MAX_SIZE_LIMIT . ". Use pagination (offset, limit).");
         }
 
-        $result = $this->getRecordService()->findEntities(array(
+        $params = array(
             'where' => $where,
             'offset' => $offset,
             'maxSize' => $maxSize,
             'asc' => $asc,
             'sortBy' => $sortBy,
             'q' => $q,
-        ));
+        );
+        if ($request->get('filter')) {
+            $params['filter'] = $request->get('filter');
+        }
+
+        $result = $this->getRecordService()->findEntities($params);
 
         return array(
             'total' => $result['total'],
@@ -166,15 +171,19 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $result = $this->getRecordService()->findLinkedEntities($id, $link, array(
+        $params = array(
             'where' => $where,
             'offset' => $offset,
             'maxSize' => $maxSize,
             'asc' => $asc,
             'sortBy' => $sortBy,
             'q' => $q,
-        ));
+        );
+        if ($request->get('filter')) {
+            $params['filter'] = $request->get('filter');
+        }
 
+        $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
 
         return array(
             'total' => $result['total'],

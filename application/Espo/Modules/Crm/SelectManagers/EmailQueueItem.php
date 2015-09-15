@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,31 +20,30 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
+namespace Espo\Modules\Crm\SelectManagers;
 
-Espo.define('crm:views/mass-email/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
+class EmailQueueItem extends \Espo\Core\SelectManagers\Base
+{
 
-    return Dep.extend({
+    protected function filterPending(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status=' => 'Pending'
+        );
+    }
 
-        setupPanels: function () {
-            Dep.prototype.setupPanels.call(this);
+    protected function filterSent(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status=' => 'Sent'
+        );
+    }
 
-            this.panelList.unshift({
-                name: 'queueItems',
-                label: this.translate('queueItems', 'links', 'MassEmail'),
-                view: 'views/record/panels/relationship',
-                select: false,
-                create: false,
-                layout: 'listForMassEmail',
-                rowActionsView: 'views/record/row-actions/empty',
-                filterList: ['all', 'pending', 'sent', 'failed']
-            });
-        },
-
-        afterRender: function () {
-            Dep.prototype.setupPanels.call(this);
-        }
-
-    });
-});
-
+    protected function filterFailed(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status=' => 'Failed'
+        );
+    }
+}
 

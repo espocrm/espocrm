@@ -147,6 +147,10 @@ class Base
 
     protected function where($params, &$result)
     {
+        if (!empty($params['filter'])) {
+            $this->primaryFilter($params['filter'], $result);
+        }
+
         if (!empty($params['where']) && is_array($params['where'])) {
             $where = array();
 

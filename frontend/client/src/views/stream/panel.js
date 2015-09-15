@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Panel', ['Views.Record.Panels.Relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
+Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
 
     return Dep.extend({
 
-        template: 'stream.panel',
+        template: 'stream/panel',
 
         postingMode: false,
 

@@ -18,5 +18,10 @@
             "Sent": "Sent",
             "Failed": "Failed"
         }
+    },
+    "presetFilters": {
+        "pending": "Pending",
+        "sent": "Sent",
+        "failed": "Failed"
     }
 }

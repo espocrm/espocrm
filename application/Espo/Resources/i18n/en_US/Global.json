@@ -210,7 +210,8 @@
         "followed": "Followed"
     },
     "presetFilters": {
-        "followed": "Followed"
+        "followed": "Followed",
+        "all": "All"
     },
     "massActions": {
         "remove": "Remove",
