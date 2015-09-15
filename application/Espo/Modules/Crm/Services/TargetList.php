@@ -87,7 +87,7 @@ class TargetList extends \Espo\Services\Record
         }
     }
 
-    protected function findLinkedEntitiesOptedOut($id, $link, $params)
+    protected function findLinkedEntitiesOptedOut($id, $params)
     {
         $collection = new \Espo\ORM\EntityCollection;
 

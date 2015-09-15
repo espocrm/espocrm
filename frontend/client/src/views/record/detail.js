@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
+Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.detail',
+        template: 'record/detail',
 
         type: 'detail',
 
@@ -82,9 +82,9 @@ Espo.define('Views.Record.Detail', 'Views.Record.Base', function (Dep) {
 
         returnDispatchParams: null,
 
-        sideView: 'Record.DetailSide',
+        sideView: 'views/record/detail-side',
 
-        bottomView: 'Record.DetailBottom',
+        bottomView: 'views/record/detail-bottom',
 
         editModeEnabled: true,
 

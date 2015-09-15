@@ -23,6 +23,7 @@
 namespace Espo\Modules\Crm\Services;
 
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\Error;
 
 use \Espo\ORM\Entity;
 
@@ -62,6 +63,9 @@ class MassEmail extends \Espo\Services\Record
 
     public function createQueue(Entity $massEmail)
     {
+        if ($massEmail->get('status') !== 'Pending') {
+            throw new Error("Mass Email '".$massEmail->id."' should be 'Pending'.");
+        }
         $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => ['Pending', 'Failed'],
             'massEmailId' => $massEmail->id
@@ -130,6 +134,15 @@ class MassEmail extends \Espo\Services\Record
         }
 
         foreach ($entityList as $target) {
+            $emailAddress = $target->get('emailAddress');
+            if (!$target->get('emailAddress')) continue;
+            $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+            if ($emailAddressRecord) {
+                if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
+                    continue;
+                }
+            }
+
             $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem');
             $queueItem->set(array(
                 'massEmailId' => $massEmail->id,
@@ -264,7 +277,7 @@ class MassEmail extends \Espo\Services\Record
             $email->set('from', $massEmail->get('fromAddress'));
         }
         if ($massEmail->get('replyToAddress')) {
-            $email->set('replyToAddress', $massEmail->get('replyToAddress'));
+            $email->set('replyTo', $massEmail->get('replyToAddress'));
         }
 
         return $email;
@@ -280,12 +293,19 @@ class MassEmail extends \Espo\Services\Record
         }
 
         $emailAddress = $target->get('emailAddress');
-        if (!$emailAddress) return;
+        if (!$emailAddress) {
+            $queueItem->set('status', 'Failed');
+            $this->getEntityManager()->saveEntity($queueItem);
+
+            return false;
+        };
 
         $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
         if ($emailAddressRecord) {
             if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
-                return;
+                $queueItem->set('status', 'Failed');
+                $this->getEntityManager()->saveEntity($queueItem);
+                return false;
             }
         }
 
@@ -335,6 +355,7 @@ class MassEmail extends \Espo\Services\Record
 
         } catch (\Exception $e) {
             if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
+                $this->setQueueItemFailed($queueItem);
                 $queueItem->set('status', 'Failed');
             }
             $this->getEntityManager()->saveEntity($queueItem);
@@ -359,6 +380,36 @@ class MassEmail extends \Espo\Services\Record
             $this->campaignService = $this->getServiceFactory()->create('Campaign');
         }
         return $this->campaignService;
+    }
+
+    protected function findLinkedEntitiesQueueItems($id, $params)
+    {
+        $link = 'queueItems';
+
+        $entity = $this->getEntityManager()->getEntity('MassEmail', $id);
+
+        $selectParams = $this->getSelectManager('EmailQueueItem')->getSelectParams($params, false);
+
+        if (array_key_exists($link, $this->linkSelectParams)) {
+            $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
+        }
+
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+
+        $recordService = $this->getRecordService('EmailQueueItem');
+
+        foreach ($collection as $e) {
+            $recordService->loadAdditionalFieldsForList($e);
+            $recordService->prepareEntityForOutput($e);
+        }
+
+        $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+
+        return array(
+            'total' => $total,
+            'collection' => $collection
+        );
+
     }
 }
 

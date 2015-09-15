@@ -1,0 +1,20 @@
+[
+    {
+        "name": "massEmail"
+    },
+    {
+        "name": "status",
+        "width": 12
+    },
+    {
+        "name": "target"
+    },
+    {
+        "name": "sentAt",
+        "width": 12
+    },
+    {
+        "name": "attemptCount",
+        "width": 10
+    }
+]

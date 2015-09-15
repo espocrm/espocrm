@@ -6,7 +6,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Draft", "Pending", "Canceled"],
+            "options": ["Draft", "Pending"],
             "default": "Pending"
         },
         "storeSentEmails": {
@@ -15,7 +15,8 @@
         },
         "fromAddress": {
             "type": "varchar",
-            "trim": true
+            "trim": true,
+            "view": "crm:views/mass-email/fields/from-address"
         },
         "fromName": {
             "type": "varchar"

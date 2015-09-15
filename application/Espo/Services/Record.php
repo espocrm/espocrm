@@ -646,7 +646,7 @@ class Record extends \Espo\Core\Services\Base
 
         $methodName = 'findLinkedEntities' . ucfirst($link);
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $link, $params);
+            return $this->$methodName($id, $params);
         }
 
         $foreignEntityName = $entity->relations[$link]['entity'];
@@ -1117,7 +1117,7 @@ class Record extends \Espo\Core\Services\Base
         return true;
     }
 
-    protected function findLinkedEntitiesFollowers($id, $link, $params)
+    protected function findLinkedEntitiesFollowers($id, $params)
     {
         $maxSize = 0;
         if ($disableCount) {

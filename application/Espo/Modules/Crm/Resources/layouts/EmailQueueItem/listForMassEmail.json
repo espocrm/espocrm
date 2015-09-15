@@ -1,0 +1,17 @@
+[
+    {
+        "name": "status",
+        "width": 30
+    },
+    {
+        "name": "target"
+    },
+    {
+        "name": "sentAt",
+        "width": 20
+    },
+    {
+        "name": "attemptCount",
+        "width": 10
+    }
+]

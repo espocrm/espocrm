@@ -18,6 +18,10 @@
             "type": "linkParent",
             "readOnly": true
         },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "sentAt": {
             "type": "datetime",
             "readOnly": true

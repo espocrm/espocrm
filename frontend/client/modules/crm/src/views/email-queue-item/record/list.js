@@ -19,33 +19,12 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-
-Espo.define('crm:views/campaign/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('crm:views/email-queue-item/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        duplicateAction: true,
-
-        bottomView: 'crm:views/campaign/record/detail-bottom',
-
-        handleStatisticsPanelAppearance: function() {
-            if (this.model.get('status') == 'Planning') {
-                this.hidePanel('statistics');
-            } else {
-                this.showPanel('statistics');
-            }
-        },
-
-        afterRender: function () {
-        	Dep.prototype.afterRender.call(this);
-
-            this.handleStatisticsPanelAppearance();
-            this.listenTo(this.model, 'change:status', function () {
-                this.handleStatisticsPanelAppearance();
-            }, this);
-        },
+        rowActionsView: 'views/record/row-actions/remove-only'
 
     });
+
 });
-
-

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -19,33 +20,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
+namespace Espo\Modules\Crm\Controllers;
 
-Espo.define('crm:views/campaign/record/detail', 'views/record/detail', function (Dep) {
-
-    return Dep.extend({
-
-        duplicateAction: true,
-
-        bottomView: 'crm:views/campaign/record/detail-bottom',
-
-        handleStatisticsPanelAppearance: function() {
-            if (this.model.get('status') == 'Planning') {
-                this.hidePanel('statistics');
-            } else {
-                this.showPanel('statistics');
-            }
-        },
-
-        afterRender: function () {
-        	Dep.prototype.afterRender.call(this);
-
-            this.handleStatisticsPanelAppearance();
-            this.listenTo(this.model, 'change:status', function () {
-                this.handleStatisticsPanelAppearance();
-            }, this);
-        },
-
-    });
-});
-
-
+class EmailQueueItem extends \Espo\Core\Controllers\Record
+{
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
+}

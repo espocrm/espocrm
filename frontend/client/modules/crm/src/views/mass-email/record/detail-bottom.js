@@ -20,30 +20,27 @@
  ************************************************************************/
 
 
-Espo.define('crm:views/campaign/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('crm:views/mass-email/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
 
     return Dep.extend({
 
-        duplicateAction: true,
+        setupPanels: function () {
+            Dep.prototype.setupPanels.call(this);
 
-        bottomView: 'crm:views/campaign/record/detail-bottom',
-
-        handleStatisticsPanelAppearance: function() {
-            if (this.model.get('status') == 'Planning') {
-                this.hidePanel('statistics');
-            } else {
-                this.showPanel('statistics');
-            }
+            this.panelList.unshift({
+                name: 'queueItems',
+                label: this.translate('queueItems', 'links', 'MassEmail'),
+                view: 'views/record/panels/relationship',
+                select: false,
+                create: false,
+                layout: 'listForMassEmail',
+                rowActionsView: 'views/record/row-actions/empty'
+            });
         },
 
         afterRender: function () {
-        	Dep.prototype.afterRender.call(this);
-
-            this.handleStatisticsPanelAppearance();
-            this.listenTo(this.model, 'change:status', function () {
-                this.handleStatisticsPanelAppearance();
-            }, this);
-        },
+            Dep.prototype.setupPanels.call(this);
+        }
 
     });
 });

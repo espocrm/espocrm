@@ -19,33 +19,20 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-
-Espo.define('crm:views/campaign/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('crm:views/mass-email/fields/from-address', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        duplicateAction: true,
-
-        bottomView: 'crm:views/campaign/record/detail-bottom',
-
-        handleStatisticsPanelAppearance: function() {
-            if (this.model.get('status') == 'Planning') {
-                this.hidePanel('statistics');
-            } else {
-                this.showPanel('statistics');
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            if (this.model.isNew() && !this.model.has('fromAddress')) {
+                this.model.set('fromAddress', this.getConfig().get('outboundEmailFromAddress'));
+            }
+            if (this.model.isNew() && !this.model.has('fromName')) {
+                this.model.set('fromName', this.getConfig().get('outboundEmailFromName'));
             }
         },
 
-        afterRender: function () {
-        	Dep.prototype.afterRender.call(this);
-
-            this.handleStatisticsPanelAppearance();
-            this.listenTo(this.model, 'change:status', function () {
-                this.handleStatisticsPanelAppearance();
-            }, this);
-        },
-
     });
+
 });
-
-

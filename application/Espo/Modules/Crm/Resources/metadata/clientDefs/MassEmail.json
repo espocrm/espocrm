@@ -1,3 +1,44 @@
 {
-    "controller": "controllers/record"
+  "controller": "controllers/record",
+  "recordViews": {
+    "detail": "crm:views/mass-email/record/detail"
+  },
+  "formDependency": {
+    "status": {
+      "map": {
+        "Complete": [
+          {
+            "action": "setReadOnly",
+            "fields": [
+              "status"
+            ]
+          }
+        ],
+        "In Process": [
+          {
+            "action": "setReadOnly",
+            "fields": [
+              "status"
+            ]
+          }
+        ],
+        "Failed": [
+          {
+            "action": "setReadOnly",
+            "fields": [
+              "status"
+            ]
+          }
+        ]
+      },
+      "default": [
+        {
+          "action": "setNotReadOnly",
+          "fields": [
+            "status"
+          ]
+        }
+      ]
+    }
+  }
 }
