@@ -12,7 +12,7 @@
             {
                 "name":"attendees",
                 "label":"Attendees",
-                "view":"Record.Panels.Side",
+                "view":"crm:views/meeting/record/panels/attendees",
                 "options":{
                     "fieldList":[
                         "users",
@@ -27,14 +27,7 @@
             {
                 "name":"attendees",
                 "label":"Attendees",
-                "view":"Record.Panels.Side",
-                "options":{
-                    "fieldList":[
-                        "users",
-                        "contacts",
-                        "leads"
-                    ]
-                },
+                "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true
             }
         ],
@@ -42,14 +35,7 @@
             {
                 "name":"attendees",
                 "label":"Attendees",
-                "view":"Record.Panels.Side",
-                "options":{
-                    "fieldList":[
-                        "users",
-                        "contacts",
-                        "leads"
-                    ]
-                },
+                "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true
             }
         ],
@@ -57,14 +43,7 @@
             {
                 "name":"attendees",
                 "label":"Attendees",
-                "view":"Record.Panels.Side",
-                "options":{
-                    "fieldList":[
-                        "users",
-                        "contacts",
-                        "leads"
-                    ]
-                },
+                "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true
             }
         ]

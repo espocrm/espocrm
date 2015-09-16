@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
+Espo.define('views/record/panels/side', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.panels.side',
+        template: 'record/panels/side',
 
         fieldList: null,
 
@@ -36,7 +36,7 @@ Espo.define('Views.Record.Panels.Side', 'View', function (Dep) {
 
         events: {
             'click .action': function (e) {
-                $el = $(e.currentTarget);
+                var $el = $(e.currentTarget);
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {
