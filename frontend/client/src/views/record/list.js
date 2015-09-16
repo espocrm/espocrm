@@ -137,7 +137,7 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                 }
             },
             'click .action': function (e) {
-                $el = $(e.currentTarget);
+                var $el = $(e.currentTarget);
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {

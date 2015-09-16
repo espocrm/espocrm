@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -20,43 +19,22 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/target-list/record/row-actions/opted-out', 'views/record/row-actions/default', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class TargetList extends \Espo\Core\Controllers\Record
-{
-	public function actionUnlinkAll($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new BadRequest();
-		}
+        getActionList: function () {
+            return [
+                {
+                    action: 'cancelOptOut',
+                    label: 'Cancel Opt-Out',
+                    data: {
+                        id: this.model.id,
+                        type: this.model.name
+                    }
+                }
+            ];
+        }
+    });
+});
 
-		if (empty($data['id'])) {
-			throw new BadRequest();
-		}
-
-		if (empty($data['link'])) {
-			throw new BadRequest();
-		}
-
-		return $this->getRecordService()->unlinkAll($data['id'], $data['link']);
-	}
-
-	public function postActionCancelOptOut($params, $data)
-	{
-		if (empty($data['id'])) {
-			throw new BadRequest();
-		}
-		if (empty($data['targetType'])) {
-			throw new BadRequest();
-		}
-		if (empty($data['targetId'])) {
-			throw new BadRequest();
-		}
-		return $this->getRecordService()->cancelOptOut($data['id'], $data['targetType'], $data['targetId']);
-	}
-
-}

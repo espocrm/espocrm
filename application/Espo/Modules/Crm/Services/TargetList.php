@@ -24,6 +24,8 @@ namespace Espo\Modules\Crm\Services;
 
 use \Espo\ORM\Entity;
 
+use \Espo\Core\Exceptions\NotFound;
+
 class TargetList extends \Espo\Services\Record
 {
     public function loadAdditionalFields(Entity $entity)
@@ -157,6 +159,33 @@ class TargetList extends \Espo\Services\Record
             'total' => $count,
             'list' => $arr
         );
+    }
+
+    public function cancelOptOut($id, $targetType, $targetId)
+    {
+        $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
+        if (!$targetList) {
+            throw new NotFound();
+        }
+        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+        if (!$target) {
+            throw new NotFound();
+        }
+        $map = array(
+            'Account' => 'accounts',
+            'Contact' => 'contacts',
+            'Lead' => 'leads',
+            'User' => 'users'
+        );
+
+        if (empty($map[$targetType])) {
+            throw new Error();
+        }
+        $link = $map[$targetType];
+
+        return $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
+            'optedOut' => false
+        ));
     }
 }
 

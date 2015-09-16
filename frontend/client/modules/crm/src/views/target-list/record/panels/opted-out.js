@@ -19,13 +19,13 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.TargetList.Record.Panels.OptedOut', ['Views.Record.Panels.Relationship', 'MultiCollection'], function (Dep, MultiCollection) {
+Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
         name: 'optedOut',
 
-        template: 'crm:target-list.record.panels.opted-out',
+        template: 'crm:target-list/record/panels/opted-out',
 
         scopeList: ['Contact', 'Lead', 'User', 'Account'],
 
@@ -109,11 +109,11 @@ Espo.define('Crm:Views.TargetList.Record.Panels.OptedOut', ['Views.Record.Panels
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
             this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', 'Record.ListExpanded', {
+                this.createView('list', 'views/record/list-expanded', {
                     el: this.$el.selector + ' > .list-container',
                     pagination: false,
                     type: 'listRelationship',
-                    rowActionsView: null,
+                    rowActionsView: 'crm:views/target-list/record/row-actions/opted-out',
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
@@ -126,7 +126,24 @@ Espo.define('Crm:Views.TargetList.Record.Panels.OptedOut', ['Views.Record.Panels
 
         actionRefresh: function () {
             this.collection.fetch();
+        },
+
+        actionCancelOptOut: function (data) {
+            if (confirm(this.translate('confirmation', 'messages'))) {
+                $.ajax({
+                    url: 'TargetList/action/cancelOptOut',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        id: this.model.id,
+                        targetId: data.id,
+                        targetType: data.type
+                    })
+                }).done(function () {
+                    this.collection.fetch();
+                }.bind(this));
+            }
         }
+
     });
 });
 

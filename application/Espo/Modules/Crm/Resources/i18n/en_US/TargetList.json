@@ -25,6 +25,7 @@
     },
     "labels": {
         "Create TargetList": "Create Target List",
-        "Opted Out": "Opted Out"
+        "Opted Out": "Opted Out",
+        "Cancel Opt-Out": "Cancel Opt-Out"
     }
 }

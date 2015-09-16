@@ -33,7 +33,7 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
 
         events: {
             'click .action': function (e) {
-                $el = $(e.currentTarget);
+                var $el = $(e.currentTarget);
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {
