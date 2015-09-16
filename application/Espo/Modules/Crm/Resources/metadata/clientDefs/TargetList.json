@@ -21,7 +21,8 @@
                   "link": "contacts"
                }
             }
-         ]
+         ],
+         "rowActionsView": "views/record/row-actions/relationship-no-remove"
       },
       "leads": {
          "actionList": [
@@ -33,7 +34,8 @@
                   "link": "leads"
                }
             }
-         ]
+         ],
+         "rowActionsView": "views/record/row-actions/relationship-no-remove"
       },
       "accounts": {
          "actionList": [
@@ -45,7 +47,8 @@
                   "link": "accounts"
                }
             }
-         ]
+         ],
+         "rowActionsView": "views/record/row-actions/relationship-no-remove"
       },
       "users": {
          "create": false,
@@ -58,7 +61,8 @@
                   "link": "users"
                }
             }
-         ]
+         ],
+         "rowActionsView": "views/record/row-actions/relationship-no-remove"
       }
    }
 }
