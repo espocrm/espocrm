@@ -124,7 +124,8 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
         data: function () {
             return {
                 currentTab: this.currentTab,
-                scopeList: this.scopeList
+                scopeList: this.scopeList,
+                tabList: this.tabList
             };
         },
 
@@ -153,6 +154,17 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
                     }
                 }.bind(this));
             }.bind(this));
+            if (this.scopeList.length == 0) {
+                this.wait(false);
+            }
+
+
+            this.tabList = [];
+            this.scopeList.forEach(function (item) {
+                if (this.getAcl().check(item)) {
+                    this.tabList.push(item);
+                }
+            }, this);
         },
 
         afterRender: function () {
