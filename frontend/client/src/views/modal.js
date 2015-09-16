@@ -142,6 +142,16 @@ Espo.define('views/modal', 'view', function (Dep) {
         close: function () {
             this.dialog.close();
         },
+
+        disableButton: function (name) {
+            if (!this.isRendered()) return;
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled');
+        },
+
+        enableButton: function (name) {
+            if (!this.isRendered()) return;
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled');
+        }
     });
 });
 

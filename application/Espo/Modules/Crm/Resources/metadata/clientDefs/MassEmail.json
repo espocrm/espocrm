@@ -3,6 +3,9 @@
   "recordViews": {
     "detail": "crm:views/mass-email/record/detail"
   },
+  "views": {
+    "detail": "crm:views/mass-email/detail"
+  },
   "formDependency": {
     "status": {
       "map": {

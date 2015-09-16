@@ -34,7 +34,8 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
                 sticked: true,
                 hidden: true,
                 select: false,
-                rowActionsView: 'views/record/row-actions/relationship-no-unlink'
+                recordListView: 'crm:views/mass-email/record/list-for-campaign',
+                rowActionsView: 'crm:views/mass-email/record/row-actions/for-campaign'
             });
 
             this.panelList.unshift({

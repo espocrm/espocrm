@@ -31,6 +31,11 @@
         }
     },
     "labels": {
-        "Create MassEmail": "Create Mass Email"
+        "Create MassEmail": "Create Mass Email",
+        "Send Test": "Send Test"
+    },
+    "messages": {
+        "selectAtLeastOneTarget": "Select at least one target.",
+        "testSent": "Test email(s) supposed to be sent"
     }
 }

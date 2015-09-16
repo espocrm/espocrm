@@ -133,10 +133,6 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
         },
 
         init: function () {
-            if (!('defs' in this.options)) {
-                throw new Error('Defs has not been defined for Field View.');
-            }
-
             if (this.events) {
                 this.events = _.clone(this.events);
             } else {
@@ -144,8 +140,8 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
             }
 
             this.defs = this.options.defs;
-            this.name = this.options.defs.name;
-            this.params = this.options.defs.params || {};
+            this.name = this.options.name = this.options.defs.name;
+            this.params = this.options.params = this.options.defs.params || {};
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
 

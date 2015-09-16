@@ -24,6 +24,7 @@ namespace Espo\Modules\Crm\Services;
 
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\BadRequest;
 
 use \Espo\ORM\Entity;
 
@@ -190,20 +191,23 @@ class MassEmail extends \Espo\Services\Record
 
     public function processSending(Entity $massEmail, $isTest = false)
     {
-        $threshold = new \DateTime();
-        $threshold->modify('-1 hour');
-        $sentLastHourCount = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-            'status' => 'Sent',
-            'sentAt>' => $threshold->format('Y-m-d H:i:s')
-        ))->count();
-
         $maxBatchSize = $this->getConfig()->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
 
-        if ($sentLastHourCount >= $maxBatchSize) {
-            return;
-        }
+        if (!$isTest) {
+            $threshold = new \DateTime();
+            $threshold->modify('-1 hour');
 
-        $maxBatchSize = $maxBatchSize - $sentLastHourCount;
+            $sentLastHourCount = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
+                'status' => 'Sent',
+                'sentAt>' => $threshold->format('Y-m-d H:i:s')
+            ))->count();
+
+            if ($sentLastHourCount >= $maxBatchSize) {
+                return;
+            }
+
+            $maxBatchSize = $maxBatchSize - $sentLastHourCount;
+        }
 
         $queueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => 'Pending',
@@ -230,22 +234,24 @@ class MassEmail extends \Espo\Services\Record
         $attachmetList = $emailTemplate->get('attachmets');
 
         foreach ($queueItemList as $queueItem) {
-            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmetList, $campaign);
+            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmetList, $campaign, $isTest);
         }
 
-        $countLeft = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-            'status' => 'Pending',
-            'massEmailId' => $massEmail->id,
-            'isTest' => $isTest
-        ))->count();
+        if (!$isTest) {
+            $countLeft = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
+                'status' => 'Pending',
+                'massEmailId' => $massEmail->id,
+                'isTest' => false
+            ))->count();
 
-        if (!$isTest && $countLeft == 0) {
-            $massEmail->set('status', 'Complete');
-            $this->getEntityManager()->saveEntity($massEmail);
+            if ($countLeft == 0) {
+                $massEmail->set('status', 'Complete');
+                $this->getEntityManager()->saveEntity($massEmail);
+            }
         }
     }
 
-    protected function getProparedEmail(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
+    protected function getPreparedEmail(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
     {
         $templateParams = array(
             'parent' => $target
@@ -297,7 +303,7 @@ class MassEmail extends \Espo\Services\Record
         return $email;
     }
 
-    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmetList = [], $campaign = null)
+    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmetList = [], $campaign = null, $isTest = false)
     {
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
         if (!$target || !$target->id || !$target->get('emailAddress')) {
@@ -310,9 +316,8 @@ class MassEmail extends \Espo\Services\Record
         if (!$emailAddress) {
             $queueItem->set('status', 'Failed');
             $this->getEntityManager()->saveEntity($queueItem);
-
             return false;
-        };
+        }
 
         $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
         if ($emailAddressRecord) {
@@ -328,7 +333,7 @@ class MassEmail extends \Espo\Services\Record
             $trackingUrlList = $campaign->get('trackingUrls');
         }
 
-        $email = $this->getProparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
+        $email = $this->getPreparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
 
         $params = array();
         if ($massEmail->get('fromName')) {
@@ -427,7 +432,7 @@ class MassEmail extends \Espo\Services\Record
             'total' => $total,
             'collection' => $collection
         );
-
     }
+
 }
 
