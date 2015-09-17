@@ -25,7 +25,7 @@ Espo.define('Views.Modals.ArrayFieldAdd', 'Views.Modal', function (Dep) {
 
         cssName: 'add-modal',
 
-        template: 'modals.array-field-add',
+        template: 'modals/array-field-add',
 
         data: function () {
             return {
@@ -43,7 +43,9 @@ Espo.define('Views.Modals.ArrayFieldAdd', 'Views.Modal', function (Dep) {
 
         setup: function () {
 
-            this.buttons = [
+            this.header = this.translate('Add Item');
+
+            this.buttonList = [
                 {
                     name: 'cancel',
                     label: 'Cancel',

@@ -58,6 +58,22 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
                         fields: ['smtpUsername', 'smtpPassword']
                     }
                 ]
+            },
+            'useCustomTabList': {
+                map: {
+                    true: [
+                        {
+                            action: 'show',
+                            fields: ['tabList']
+                        }
+                    ]
+                },
+                default: [
+                    {
+                        action: 'hide',
+                        fields: ['tabList']
+                    }
+                ]
             }
         },
 

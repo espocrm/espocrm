@@ -107,6 +107,15 @@
             "type": "enum",
             "view": "Preferences.Fields.Theme",
             "translation": "Global.themes"
+        },
+        "useCustomTabList": {
+            "type": "bool",
+            "default": false
+        },
+        "tabList": {
+            "type": "array",
+            "translation": "Global.scopeNamesPlural",
+            "view": "views/settings/fields/tab-list"
         }
     }
 }

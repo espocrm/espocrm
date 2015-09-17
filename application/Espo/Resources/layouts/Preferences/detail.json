@@ -51,6 +51,19 @@
         ]
     },
     {
+        "label": "User Interface",
+        "rows": [
+            [
+                {"name":"theme"},
+                false
+            ],
+            [
+                {"name":"useCustomTabList"},
+                {"name":"tabList"}
+            ]
+        ]
+    },
+    {
         "label": "Notifications",
         "rows": [
             [{"name": "receiveAssignmentEmailNotifications"}, false]

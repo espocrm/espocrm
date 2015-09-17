@@ -91,7 +91,9 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 }
             }.bind(this));
 
-            this.tabList = this.getConfig().get('tabList').filter(function (scope) {
+            var tabList = this.getPreferences().get('useCustomTabList') ? this.getPreferences().get('tabList') : this.getConfig().get('tabList');
+
+            this.tabList = tabList.filter(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.acl')) {
                     return this.getAcl().check(scope);
                 }
