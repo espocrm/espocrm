@@ -104,12 +104,10 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                     }, function (dialog) {
                         dialog.render();
                         Espo.Ui.notify(false);
-                        dialog.once('select', function (model) {
-                            self.$elementName.val(model.get('name'));
-                            self.$elementId.val(model.get('id'));
-                            self.trigger('change');
-                        });
-                    });
+                        this.listenToOnce(dialog, 'select', function (model) {
+                            this.select(model);
+                        }, this);
+                    }, this);
                 });
                 this.addActionHandler('clearLink', function () {
                     this.$elementName.val('');
@@ -123,6 +121,12 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                     this.$elementId.val('');
                 }
             }
+        },
+
+        select: function (model) {
+            this.$elementName.val(model.get('name'));
+            this.$elementId.val(model.get('id'));
+            this.trigger('change');
         },
 
         getAutocompleteUrl: function () {
@@ -198,9 +202,10 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                             };
                         }.bind(this),
                         onSelect: function (s) {
-                            this.$elementId.val(s.id);
-                            this.$elementName.val(s.name);
-                            this.trigger('change');
+                            this.getModelFactory().create(this.foreignScope, function (model) {
+                                model.set(s);
+                                this.select(model);
+                            }, this);
                         }.bind(this)
                     });
                 }

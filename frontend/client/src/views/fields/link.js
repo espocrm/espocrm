@@ -199,9 +199,10 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
                             };
                         }.bind(this),
                         onSelect: function (s) {
-                            this.$elementId.val(s.id);
-                            this.$elementName.val(s.name);
-                            this.trigger('change');
+                            this.getModelFactory().create(this.foreignScope, function (model) {
+                                model.set(s);
+                                this.select(model);
+                            }, this);
                         }.bind(this)
                     });
                 }
