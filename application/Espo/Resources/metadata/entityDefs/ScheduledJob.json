@@ -7,17 +7,18 @@
         "job": {
             "type": "varchar",
             "required": true,
-            "view": "ScheduledJob.Fields.Job"
+            "view": "views/scheduled-job/fields/job"
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Inactive"] 
+            "options": ["Active", "Inactive"]
         },
         "scheduling": {
             "type": "varchar",
             "required": true,
-            "view": "ScheduledJob.Fields.Scheduling",
-            "default": "* * * * *"       
+            "view": "views/scheduled-job/fields/scheduling",
+            "default": "*/10 * * * *",
+            "tooltip": true
         },
         "lastRun": {
             "type": "datetime",

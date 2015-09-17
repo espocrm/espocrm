@@ -17,11 +17,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Views.ScheduledJob.Fields.Job', 'Views.Fields.Enum', function (Dep) {
+ ************************************************************************/
+Espo.define('views/scheduled-job/fields/job', 'views/fields/enum', function (Dep) {
 
-    return Dep.extend({        
-        
+    return Dep.extend({
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -31,12 +31,20 @@ Espo.define('Views.ScheduledJob.Fields.Job', 'Views.Fields.Enum', function (Dep)
                     url: 'Admin/jobs',
                     success: function (data) {
                         this.params.options = data;
+                        this.params.options.unshift('');
                         this.wait(false);
                     }.bind(this)
                 });
-            }            
-        },
-        
+            }
+
+            if (this.model.isNew()) {
+                this.on('change', function () {
+                    var label = this.getLanguage().translateOption(this.model.get('job'), 'job', 'ScheduledJob');
+                    this.model.set('name', label);
+                }, this);
+            }
+        }
+
     });
-    
+
 });

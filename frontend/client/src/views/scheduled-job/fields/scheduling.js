@@ -17,18 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
-Espo.define('Views.ScheduledJob.Fields.Scheduling', 'Views.Fields.Base', function (Dep) {
+ ************************************************************************/
+Espo.define('views/scheduled-job/fields/scheduling', 'views/fields/base', function (Dep) {
 
-    return Dep.extend({        
-        
+    return Dep.extend({
+
         setup: function () {
             Dep.prototype.setup.call(this);
+        }
 
-            if (this.mode == 'edit' || this.mode == 'detail') {
-            }            
-        },
-        
     });
-    
+
 });

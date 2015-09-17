@@ -1,9 +1,9 @@
 [
     {
         "rows": [
-            [{"name": "name"}, {"name": "status"}],
-            [{"name": "job"}],
-            [{"name": "scheduling"}]
+            [{"name": "job"}, {"name": "status"}],
+            [{"name": "name"}, false],
+            [{"name": "scheduling"}, false]
         ]
     }
 ]
