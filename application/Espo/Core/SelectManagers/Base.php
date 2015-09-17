@@ -299,27 +299,7 @@ class Base
     protected function q($params, &$result)
     {
         if (!empty($params['q'])) {
-            $fieldDefs = $this->getSeed()->getFields();
-
-            $value = $params['q'];
-
-            $fieldList = $this->getTextFilterFields();
-            $d = array();
-            foreach ($fieldList as $field) {
-                if (
-                    strlen($value) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
-                    &&
-                    !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
-                ) {
-                    $d[$field . '*'] = '%' . $value . '%';
-                } else {
-                    $d[$field . '*'] = $value . '%';
-                }
-            }
-
-            $result['whereClause'][] = array(
-                'OR' => $d
-            );
+            $this->textFilter($params['q'], $result);
         }
     }
 

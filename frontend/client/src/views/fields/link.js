@@ -25,13 +25,13 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
         type: 'link',
 
-        listTemplate: 'fields.link.list',
+        listTemplate: 'fields/link/list',
 
-        detailTemplate: 'fields.link.detail',
+        detailTemplate: 'fields/link/detail',
 
-        editTemplate: 'fields.link.edit',
+        editTemplate: 'fields/link/edit',
 
-        searchTemplate: 'fields.link.search',
+        searchTemplate: 'fields/link/search',
 
         nameName: null,
 
@@ -41,7 +41,7 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
 
         AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
 
-        selectRecordsViewName: 'Modals.SelectRecords',
+        selectRecordsViewName: 'views/modals/select-records',
 
         autocompleteDisabled: false,
 
@@ -134,14 +134,22 @@ Espo.define('Views.Fields.Link', 'Views.Fields.Base', function (Dep) {
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
             var boolList = this.getSelectBoolFilterList();
+            var where = [];
             if (boolList) {
-                boolList.forEach(function(item) {
-                    url += '&where%5B0%5D%5Btype%5D=bool&where%5B0%5D%5Bvalue%5D%5B%5D=' + item;
-                }, this);
+                where.push({
+                    type: 'bool',
+                    value: boolList
+                });
             }
             var primary = this.getSelectPrimaryFilterName();
             if (primary) {
-                url += '&where%5B0%5D%5Btype%5D=primary&where%5B0%5D%5Bvalue%5D=' + primary;
+                where.push({
+                    type: 'primary',
+                    value: primary
+                });
+            }
+            if (where.length) {
+                url += '&' + $.param({'where': where});
             }
             return url;
         },

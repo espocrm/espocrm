@@ -793,9 +793,11 @@ class Record extends \Espo\Core\Services\Base
                 $entity = $this->getEntity($id);
                 if ($this->getAcl()->check($entity, 'edit')) {
                     $entity->set(get_object_vars($attributes));
-                    if ($repository->save($entity)) {
-                        $idsUpdated[] = $id;
-                        $count++;
+                    if ($this->checkAssignment($entity)) {
+                        if ($repository->save($entity)) {
+                            $idsUpdated[] = $id;
+                            $count++;
+                        }
                     }
                 }
             }
@@ -812,9 +814,11 @@ class Record extends \Espo\Core\Services\Base
             foreach ($collection as $entity) {
                 if ($this->getAcl()->check($entity, 'edit')) {
                     $entity->set(get_object_vars($attributes));
-                    if ($repository->save($entity)) {
-                        $idsUpdated[] = $id;
-                        $count++;
+                    if ($this->checkAssignment($entity)) {
+                        if ($repository->save($entity)) {
+                            $idsUpdated[] = $id;
+                            $count++;
+                        }
                     }
                 }
             }
@@ -822,7 +826,6 @@ class Record extends \Espo\Core\Services\Base
             return array(
                 'count' => $count
             );
-
         }
 
         return array(
