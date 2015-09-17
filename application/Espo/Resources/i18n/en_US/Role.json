@@ -37,6 +37,6 @@
         "delete": "Delete"
     },
     "messages": {
-        "changesAfterClearCache": "All changes in an access control will be applied after cache will be cleared."
+        "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."
     }
 }

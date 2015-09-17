@@ -20,8 +20,32 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Services;
 
-class Role extends \Espo\Core\Controllers\Record
+use \Espo\ORM\Entity;
+
+class Role extends Record
 {
+    protected function init()
+    {
+        $this->dependencies[] = 'fileManager';
+    }
+
+    public function afterCreate(Entity $entity, array $data)
+    {
+        parent::afterCreate($entity, $data);
+        $this->clearRolesCache();
+    }
+
+    public function afterUpdate(Entity $entity, array $data)
+    {
+        parent::afterUpdate($entity, $data);
+        $this->clearRolesCache();
+    }
+
+    protected function clearRolesCache()
+    {
+        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl');
+    }
 }
+
