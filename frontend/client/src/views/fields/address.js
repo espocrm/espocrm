@@ -19,17 +19,17 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'address',
 
-        detailTemplate: 'fields.address.detail',
+        detailTemplate: 'fields/address/detail',
 
-        editTemplate: 'fields.address.edit',
+        editTemplate: 'fields/address/edit',
 
-        searchTemplate: 'fields.address.search',
+        searchTemplate: 'fields/address/search',
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -41,6 +41,10 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
             data.stateValue = this.model.get(this.stateField);
             data.countryValue = this.model.get(this.countryField);
 
+            if (this.mode == 'detail' || this.mode == 'list') {
+                data.formattedAddress = this.getFormattedAddress();
+            }
+
             data.isEmpty = !(data.postalCodeValue ||
                            data.streetValue ||
                            data.cityValue ||
@@ -49,6 +53,59 @@ Espo.define('Views.Fields.Address', 'Views.Fields.Base', function (Dep) {
 
             return data;
         },
+
+        getFormattedAddress: function () {
+            var postalCodeValue = this.model.get(this.postalCodeField);
+            var streetValue = this.model.get(this.streetField);
+            var cityValue = this.model.get(this.cityField);
+            var stateValue = this.model.get(this.stateField);
+            var countryValue = this.model.get(this.countryField);
+
+            var isEmpty = !(
+                postalCodeValue ||
+                streetValue ||
+                cityValue ||
+                stateValue ||
+                countryValue
+            );
+
+            if (isEmpty) {
+                return this.translate('None');
+            }
+            var html = '';
+            if (streetValue) {
+                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+            }
+            if (cityValue || stateValue || postalCodeValue) {
+                if (html != '') {
+                    html += '<br>'
+                }
+                if (cityValue) {
+                    html += cityValue;
+                }
+                if (stateValue) {
+                    if (cityValue) {
+                        html += ', ';
+                    }
+                    html += stateValue;
+                }
+                if (postalCodeValue) {
+                    if (cityValue || stateValue) {
+                        html += ' ';
+                    }
+                    html += postalCodeValue;
+                }
+            }
+            if (countryValue) {
+                if (html != '') {
+                    html += '<br>';
+                }
+                html += countryValue;
+            }
+            return html;
+
+        },
+
 
         afterRender: function () {
             var self = this;
