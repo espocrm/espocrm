@@ -62,6 +62,7 @@ Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function 
                                     this.getParentView().showPanel('history');
                                     this.getView('activities').actionRefresh();
                                     this.getView('history').actionRefresh();
+                                    return;
                                 }
                             }, this);
                         }, this);
@@ -83,8 +84,7 @@ Espo.define('Views.User.Record.DetailSide', 'Views.Record.DetailSide', function 
                 "view":"Crm:Record.Panels.History",
                 "hidden": !showActivities
             });
-
-        },
+        }
 
     });
 

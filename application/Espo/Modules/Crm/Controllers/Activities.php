@@ -28,7 +28,6 @@ use \Espo\Core\Exceptions\Error,
 
 class Activities extends \Espo\Core\Controllers\Base
 {
-    public static $defaultAction = 'index';
 
     public function actionListCalendarEvents($params, $data, $request)
     {
@@ -43,9 +42,14 @@ class Activities extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-
         $service = $this->getService('Activities');
-        return $service->getEvents($this->getUser()->id, $from, $to);
+
+        $userId = $request->get('userId');
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
+
+        return $service->getEvents($userId, $from, $to);
     }
 
     public function actionPopupNotifications()

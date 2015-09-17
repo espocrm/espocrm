@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.User.Detail', 'Views.Detail', function (Dep) {
+Espo.define('views/user/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -52,6 +52,46 @@ Espo.define('Views.User.Detail', 'Views.Detail', function (Dep) {
                     });
                 }
             }
+
+            var showActivities = false;
+
+            if (this.getUser().isAdmin()) {
+                showActivities = true;
+            } else {
+                if (this.getAcl().get('userPermission') === 'no') {
+                    if (this.model.id == this.getUser().id) {
+                        showActivities = true;
+                    }
+                } else if (this.getAcl().get('userPermission') === 'team') {
+                    if (this.model.has('teamsIds')) {
+                        this.model.get('teamsIds').forEach(function (id) {
+                            if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                                showActivities = true;
+                            }
+                        }, this);
+                    } else {
+                        this.listenToOnce(this.model, 'sync', function () {
+                            this.model.get('teamsIds').forEach(function (id) {
+                                if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                                    console.log(1);
+                                    this.showHeaderActionItem('calendar');
+                                    return;
+                                }
+                            }, this);
+                        }, this);
+                    }
+                } else {
+                    showActivities = true;
+                }
+            }
+
+            this.menu.buttons.push({
+                name: 'calendar',
+                html: this.translate('Calendar', 'scopeNames'),
+                style: 'default',
+                link: '#Calendar/show/userId=' + this.model.id + '&userName=' + this.model.get('name'),
+                hidden: !showActivities
+            });
         },
 
         actionPreferences: function () {

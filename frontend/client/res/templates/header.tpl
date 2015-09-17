@@ -5,16 +5,9 @@
     <div class="col-lg-5 col-sm-5">
         <div class="header-buttons btn-group pull-right">
             {{#each items.buttons}}
-                {{#if link}}
-                    <a href="{{link}}" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}}{{#if action}} action{{/if}}" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
+                    <a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}" data-action="{{name}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
                     {{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}
                     </a>
-                {{else}}
-                    <button type="button" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action"{{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
-                        {{#if icon}}<span class="{{icon}}"></span>{{/if}}
-                        {{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}
-                    </button>
-                {{/if}}
             {{/each}}
 
             {{#if items.actions}}
@@ -24,7 +17,7 @@
                 </button>
                 <ul class="dropdown-menu pull-right">
                     {{#each items.actions}}
-                    <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}</a></li>
+                    <li class="{{#if hidden}}hidden{{/if}}"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" data-action="{{name}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}</a></li>
                     {{/each}}
                 </ul>
                 </div>
@@ -37,7 +30,7 @@
                 </button>
                 <ul class="dropdown-menu pull-right">
                     {{#each items.dropdown}}
-                    <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}</a></li>
+                    <li class="{{#if hidden}}hidden{{/if}}"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" data-action="{{name}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}</a></li>
                     {{/each}}
                 </ul>
                 </div>

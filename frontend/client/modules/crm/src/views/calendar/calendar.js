@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], function (Dep, FullCalendar) {
+Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
 
     return Dep.extend({
 
-        template: 'crm:calendar.calendar',
+        template: 'crm:calendar/calendar',
 
         eventAttributes: [],
 
@@ -122,6 +122,9 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
             } else {
                 title = view.intervalStart.format(this.titleFormat[viewName]);
+            }
+            if (this.options.userId && this.options.userName) {
+                title += ' (' + this.options.userName + ')';
             }
             this.$el.find('.date-title h4 span').text(title);
         },
@@ -295,12 +298,19 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                     var dateStart = this.convertTime(start);
                     var dateEnd = this.convertTime(end);
 
+                    var attributes = {
+                        dateStart: dateStart,
+                        dateEnd: dateEnd
+                    };
+                    if (this.options.userId) {
+                        attributes.assignedUserId = this.options.userId;
+                        attributes.assignedUserName = this.options.userName || this.options.userId;
+                    }
+
+
                     this.notify('Loading...');
-                    this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
-                        attributes: {
-                            dateStart: dateStart,
-                            dateEnd: dateEnd,
-                        },
+                    this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+                        attributes: attributes
                     }, function (view) {
                         view.render();
                         view.notify(false);
@@ -309,7 +319,7 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
                 }.bind(this),
                 eventClick: function (event) {
                     this.notify('Loading...');
-                    this.createView('quickEdit', 'Crm:Calendar.Modals.Edit', {
+                    this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
                         scope: event.scope,
                         id: event.recordId
                     }, function (view) {
@@ -432,8 +442,15 @@ Espo.define('Crm:Views.Calendar.Calendar', ['View', 'lib!FullCalendar'], functio
         },
 
         fetchEvents: function (from, to, callback) {
+            var url = 'Activities?from=' + from + '&to=' + to;
+            if (this.options.userId) {
+                url += '&userId=' + this.options.userId;
+                if (this.options.userName) {
+                    url += '&userName=' + this.options.userName;
+                }
+            }
             $.ajax({
-                url: 'Activities?from=' + from + '&to=' + to,
+                url: url,
                 success: function (data) {
                     var events = this.convertToFcEvents(data);
                     callback(events);

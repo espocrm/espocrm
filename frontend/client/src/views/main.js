@@ -71,6 +71,7 @@ Espo.define('views/main', 'view', function (Dep) {
                         if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
                             menu[type].push(item);
                         }
+                        item.name = item.action || item.name;
                     }, this);
                 }, this);
             }
@@ -116,7 +117,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
             ['actions', 'dropdown', 'buttons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
-                    if (item.action == name) {
+                    if (item.name == name) {
                         index = i;
                         type = t;
                     }
@@ -139,6 +140,32 @@ Espo.define('views/main', 'view', function (Dep) {
             };
             this.getRouter().dispatch(this.scope, null, options);
             this.getRouter().navigate('#' + this.scope, {trigger: false});
+        },
+
+        hideHeaderActionItem: function (name) {
+            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
+                this.menu[t].forEach(function (item, i) {
+                    if (item.name == name) {
+                        item.hidden = true;
+                    }
+                }, this);
+            }, this);
+            if (!this.isRendered()) return;
+            this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().addClass('hidden');
+            this.$el.find('.page-header a.action[data-action="'+name+'"]').addClass('hidden');
+        },
+
+        showHeaderActionItem: function (name) {
+            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
+                this.menu[t].forEach(function (item, i) {
+                    if (item.name == name) {
+                        item.hidden = false;
+                    }
+                }, this);
+            }, this);
+            if (!this.isRendered()) return;
+            this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
+            this.$el.find('.page-header a.action[data-action="'+name+'"]').removeClass('hidden');
         }
 
     });

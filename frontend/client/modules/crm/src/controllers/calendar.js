@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
+Espo.define('crm:controllers/calendar', 'controller', function (Dep) {
 
     return Dep.extend({
 
@@ -37,9 +37,11 @@ Espo.define('Crm:Controllers.Calendar', 'Controller', function (Dep) {
         index: function (options) {
             this.handleCheckAccess();
 
-            this.main('Crm:Calendar.CalendarPage', {
+            this.main('crm:views/calendar/calendar-page', {
                 date: options.date,
                 mode: options.mode,
+                userId: options.userId,
+                userName: options.userName
             });
         },
     });

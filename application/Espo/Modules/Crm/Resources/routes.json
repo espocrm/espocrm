@@ -10,7 +10,7 @@
         "name":":name"
     }
   },
-  
+
   {
       "route":"/Activities",
     "method":"get",
@@ -18,5 +18,5 @@
         "controller":"Activities",
         "action":"listCalendarEvents"
     }
-  }  
+  }
 ]

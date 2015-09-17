@@ -541,6 +541,12 @@ class Activities extends \Espo\Core\Services\Base
 
     public function getEvents($userId, $from, $to)
     {
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+        if (!$user) {
+            throw new NotFound();
+        }
+        $this->accessCheck($user);
+
         $pdo = $this->getPDO();
 
         $sql = "
@@ -605,7 +611,6 @@ class Activities extends \Espo\Core\Services\Base
                 ) AND
                 task.assigned_user_id = ".$pdo->quote($userId)."
         ";
-
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
