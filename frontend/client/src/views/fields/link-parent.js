@@ -194,7 +194,8 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                                     id: item.id,
                                     name: item.name,
                                     data: item.id,
-                                    value: item.name
+                                    value: item.name,
+                                    attributes: item
                                 });
                             }, this);
                             return {
@@ -203,7 +204,7 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                         }.bind(this),
                         onSelect: function (s) {
                             this.getModelFactory().create(this.foreignScope, function (model) {
-                                model.set(s);
+                                model.set(s.attributes);
                                 this.select(model);
                             }, this);
                         }.bind(this)
