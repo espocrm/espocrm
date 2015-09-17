@@ -49,6 +49,11 @@ class User extends Record
         return $this->getContainer()->get('language');
     }
 
+    protected function getFileManager()
+    {
+        return $this->getContainer()->get('fileManager');
+    }
+
     protected function getContainer()
     {
         return $this->injections['container'];
@@ -352,6 +357,19 @@ class User extends Record
             throw new Forbidden();
         }
         return parent::deleteEntity($id);
+    }
+
+    public function afterUpdate(Entity $entity, array $data)
+    {
+        parent::afterUpdate($entity, $data);
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data)) {
+            $this->clearRoleCache($entity->id);
+        }
+    }
+
+    protected function clearRoleCache($id)
+    {
+        $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 }
 
