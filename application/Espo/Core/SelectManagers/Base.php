@@ -123,82 +123,69 @@ class Base
         return $this->seed;
     }
 
-    protected function textFilter($value, &$result)
+    protected function textFilter($params, &$result)
     {
-        $fieldDefs = $this->getSeed()->getFields();
-        $fieldList = $this->getTextFilterFields();
-        $d = array();
+        if (!empty($params['textFilter'])) {
+            $this->applyTextFilter($params['textFilter']);
+        }
+    }
 
-        foreach ($fieldList as $field) {
-            if (
-                strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
-                &&
-                !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
-            ) {
-                $d[$field . '*'] = '%' . $value . '%';
-            } else {
-                $d[$field . '*'] = $value . '%';
+    public function applyWhere($where, &$result)
+    {
+        $this->prepareResult($result);
+
+        $whereClause = array();
+        foreach ($where as $item) {
+            if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
+                foreach ($item['value'] as $filter) {
+                    $p = $this->getBoolFilterWhere($filter);
+                    if (!empty($p)) {
+                        $where[] = $p;
+                    }
+                    $this->applyBoolFilter($filter, $result);
+                }
+            } else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
+                if (!empty($item['value'])) {
+                    $this->applyTextFilter($item['value'], $result);
+                }
+            } else if ($item['type'] == 'primary' && !empty($item['value'])) {
+                $this->applyPrimaryFilter($item['value'], $result);
             }
         }
-        $result['whereClause'][] = array(
-            'OR' => $d
-        );
+
+        $linkedWith = array();
+        $inCategory = array();
+
+        $ignoreList = ['linkedWith', 'inCategory', 'bool', 'primary'];
+        foreach ($where as $item) {
+            if (!in_array($item['type'], $ignoreList)) {
+                $part = $this->getWherePart($item);
+                if (!empty($part)) {
+                    $whereClause[] = $part;
+                }
+            } else {
+                if ($item['type'] == 'linkedWith' && !empty($item['value'])) {
+                    $linkedWith[$item['field']] = $item['value'];
+                } else if ($item['type'] == 'inCategory' && !empty($item['value'])) {
+                    $inCategory[$item['field']] = $item['value'];
+                }
+            }
+        }
+
+        $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
+
+        if (!empty($linkedWith)) {
+            $this->handleLinkedWith($linkedWith, $result);
+        }
+        if (!empty($inCategory)) {
+            $this->handleInCategory($inCategory, $result);
+        }
     }
 
     protected function where($params, &$result)
     {
-        if (!empty($params['filter'])) {
-            $this->primaryFilter($params['filter'], $result);
-        }
-
         if (!empty($params['where']) && is_array($params['where'])) {
-            $where = array();
-
-            foreach ($params['where'] as $item) {
-                if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
-                    foreach ($item['value'] as $filter) {
-                        $p = $this->getBoolFilterWhere($filter);
-                        if (!empty($p)) {
-                            $params['where'][] = $p;
-                        }
-                        $this->boolFilter($filter, $result);
-                    }
-                } else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
-                    if (!empty($item['value'])) {
-                        $this->textFilter($item['value'], $result);
-                    }
-                } else if ($item['type'] == 'primary' && !empty($item['value'])) {
-                    $this->primaryFilter($item['value'], $result);
-                }
-            }
-
-            $linkedWith = array();
-            $inCategory = array();
-
-            $ignoreList = ['linkedWith', 'inCategory', 'bool', 'primary'];
-            foreach ($params['where'] as $item) {
-                if (!in_array($item['type'], $ignoreList)) {
-                    $part = $this->getWherePart($item);
-                    if (!empty($part)) {
-                        $where[] = $part;
-                    }
-                } else {
-                    if ($item['type'] == 'linkedWith' && !empty($item['value'])) {
-                        $linkedWith[$item['field']] = $item['value'];
-                    } else if ($item['type'] == 'inCategory' && !empty($item['value'])) {
-                        $inCategory[$item['field']] = $item['value'];
-                    }
-                }
-            }
-
-            $result['whereClause'] = array_merge($result['whereClause'], $where);
-
-            if (!empty($linkedWith)) {
-                $this->handleLinkedWith($linkedWith, $result);
-            }
-            if (!empty($inCategory)) {
-                $this->handleInCategory($inCategory, $result);
-            }
+            $this->applyWhere($params['where'], $result);
         }
     }
 
@@ -299,31 +286,23 @@ class Base
     protected function q($params, &$result)
     {
         if (!empty($params['q'])) {
-            $this->textFilter($params['q'], $result);
+            $this->applyTextFilter($params['q'], $result);
         }
     }
 
     public function manageAccess(&$result)
     {
-        if (empty($result)) {
-            $result = array();
-        }
-        if (empty($result['joins'])) {
-            $result['joins'] = [];
-        }
-        if (empty($result['leftJoins'])) {
-            $result['leftJoins'] = [];
-        }
-        if (empty($result['whereClause'])) {
-            $result['whereClause'] = array();
-        }
-        if (empty($result['customJoin'])) {
-            $result['customJoin'] = [];
-        }
+        $this->prepareResult($result);
         $this->access($result);
     }
 
     public function manageTextFilter($textFilter, &$result)
+    {
+        $this->prepareResult($result);
+        $this->q(array('q' => $textFilter), $result);
+    }
+
+    protected function prepareResult(&$result)
     {
         if (empty($result)) {
             $result = array();
@@ -338,9 +317,8 @@ class Base
             $result['whereClause'] = array();
         }
         if (empty($result['customJoin'])) {
-            $result['customJoin'] = [];
+            $result['customJoin'] = '';
         }
-        $this->q(array('q' => $textFilter), $result);
     }
 
     protected function access(&$result)
@@ -397,16 +375,17 @@ class Base
 
     public function getSelectParams(array $params, $withAcl = false)
     {
-        $result = array(
-            'joins' => [],
-            'leftJoins' => [],
-            'whereClause' => [],
-            'customJoin' => ''
-        );
+        $result = array();
+        $this->prepareResult($result);
 
         $this->order($params, $result);
         $this->limit($params, $result);
+
+        $this->primaryFilter($params, $result);
+        $this->boolFilters($params, $result);
+
         $this->where($params, $result);
+        $this->textFilter($params, $result);
         $this->q($params, $result);
 
         if ($withAcl) {
@@ -755,19 +734,69 @@ class Base
         return $part;
     }
 
-    protected function boolFilter($filterName, &$result)
+    public function applyPrimaryFilter($filterName, &$result)
     {
+        $this->prepareResult($result);
+
+        $method = 'filter' . ucfirst($filterName);
+        if (method_exists($this, $method)) {
+            $this->$method($result);
+        }
+    }
+
+    public function applyBoolFilter($filterName, &$result)
+    {
+        $this->prepareResult($result);
+
         $method = 'boolFilter' . ucfirst($filterName);
         if (method_exists($this, $method)) {
             $this->$method($result);
         }
     }
 
-    protected function primaryFilter($filterName, &$result)
+    public function applyAccess(&$result)
     {
-        $method = 'filter' . ucfirst($filterName);
-        if (method_exists($this, $method)) {
-            $this->$method($result);
+        $this->prepareResult($result);
+        $this->access($result);
+    }
+
+    public function applyTextFilter($textFilter, &$result)
+    {
+        $this->prepareResult($result);
+
+        $fieldDefs = $this->getSeed()->getFields();
+        $fieldList = $this->getTextFilterFields();
+        $d = array();
+
+        foreach ($fieldList as $field) {
+            if (
+                strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+                &&
+                !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+            ) {
+                $d[$field . '*'] = '%' . $textFilter . '%';
+            } else {
+                $d[$field . '*'] = $textFilter . '%';
+            }
+        }
+        $result['whereClause'][] = array(
+            'OR' => $d
+        );
+    }
+
+    protected function boolFilters($params, &$result)
+    {
+        if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
+            foreach ($params['boolFilterList'] as $filterName) {
+                $this->applyBoolFilter($filterName, $result);
+            }
+        }
+    }
+
+    protected function primaryFilter($params, &$result)
+    {
+        if (!empty($params['filter'])) {
+            $this->applyPrimaryFilter($params['filter'], $result);
         }
     }
 
