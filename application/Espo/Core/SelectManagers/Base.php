@@ -80,20 +80,20 @@ class Base
         return $this->entityType;
     }
 
-    protected function limit($params, &$result)
+    protected function limit($offset = null, $maxSize = null, &$result)
     {
-        if (isset($params['offset']) && !is_null($params['offset'])) {
-            $result['offset'] = $params['offset'];
+        if (!is_null($offset)) {
+            $result['offset'] = $offset;
         }
-        if (isset($params['maxSize']) && !is_null($params['maxSize'])) {
-            $result['limit'] = $params['maxSize'];
+        if (!is_null($maxSize)) {
+            $result['limit'] = $maxSize;
         }
     }
 
-    protected function order($params, &$result)
+    protected function order($sortBy, $asc, &$result)
     {
-        if (!empty($params['sortBy'])) {
-            $result['orderBy'] = $params['sortBy'];
+        if (!empty($sortBy)) {
+            $result['orderBy'] = $sortBy;
             $type = $this->metadata->get("entityDefs.{$this->entityType}.fields." . $result['orderBy'] . ".type");
             if ($type == 'link') {
                 $result['orderBy'] .= 'Name';
@@ -101,12 +101,10 @@ class Base
                 $result['orderBy'] .= 'Type';
             }
         }
-        if (isset($params['asc'])) {
-            if ($params['asc']) {
-                $result['order'] = 'ASC';
-            } else {
-                $result['order'] = 'DESC';
-            }
+        if ($asc) {
+            $result['order'] = 'ASC';
+        } else {
+            $result['order'] = 'DESC';
         }
     }
 
@@ -123,14 +121,13 @@ class Base
         return $this->seed;
     }
 
-    protected function textFilter($params, &$result)
+    public function applyWhere($where, &$result)
     {
-        if (!empty($params['textFilter'])) {
-            $this->applyTextFilter($params['textFilter']);
-        }
+        $this->prepareResult($result);
+        $this->where($where, $result);
     }
 
-    public function applyWhere($where, &$result)
+    protected function where($where, &$result)
     {
         $this->prepareResult($result);
 
@@ -146,7 +143,7 @@ class Base
                 }
             } else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
                 if (!empty($item['value'])) {
-                    $this->applyTextFilter($item['value'], $result);
+                    $this->textFilter($item['value'], $result);
                 }
             } else if ($item['type'] == 'primary' && !empty($item['value'])) {
                 $this->applyPrimaryFilter($item['value'], $result);
@@ -179,13 +176,6 @@ class Base
         }
         if (!empty($inCategory)) {
             $this->handleInCategory($inCategory, $result);
-        }
-    }
-
-    protected function where($params, &$result)
-    {
-        if (!empty($params['where']) && is_array($params['where'])) {
-            $this->applyWhere($params['where'], $result);
         }
     }
 
@@ -286,14 +276,14 @@ class Base
     protected function q($params, &$result)
     {
         if (!empty($params['q'])) {
-            $this->applyTextFilter($params['q'], $result);
+            $this->textFilter($params['q'], $result);
         }
     }
 
     public function manageAccess(&$result)
     {
         $this->prepareResult($result);
-        $this->access($result);
+        $this->applyAccess($result);
     }
 
     public function manageTextFilter($textFilter, &$result)
@@ -369,7 +359,7 @@ class Base
     public function getAclParams()
     {
         $result = array();
-        $this->access($result);
+        $this->applyAccess($result);
         return $result;
     }
 
@@ -378,14 +368,39 @@ class Base
         $result = array();
         $this->prepareResult($result);
 
-        $this->order($params, $result);
-        $this->limit($params, $result);
+        if (!empty($params['sortBy'])) {
+            if (!array_key_exists('asc', $params)) {
+                $params['asc'] = true;
+            }
+            $this->order($params['sortBy'], $params['asc'], $result);
+        }
 
-        $this->primaryFilter($params, $result);
-        $this->boolFilters($params, $result);
+        if (!isset($params['offset'])) {
+            $params['offset'] = null;
+        }
+        if (!isset($params['maxSize'])) {
+            $params['maxSize'] = null;
+        }
+        $this->limit($params['offset'], $params['maxSize'], $result);
 
-        $this->where($params, $result);
-        $this->textFilter($params, $result);
+        if (!empty($params['primaryFilter'])) {
+            $this->applyPrimaryFilter($params['primaryFilter'], $result);
+        }
+
+        if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
+            foreach ($params['boolFilterList'] as $filterName) {
+                $this->applyBoolFilter($filterName, $result);
+            }
+        }
+
+        if (!empty($params['where']) && is_array($params['where'])) {
+            $this->where($params['where'], $result);
+        }
+
+        if (!empty($params['textFilter'])) {
+            $this->textFilter($params['textFilter'], $result);
+        }
+
         $this->q($params, $result);
 
         if ($withAcl) {
@@ -734,6 +749,18 @@ class Base
         return $part;
     }
 
+    public function applyOrder($sortBy, $asc, &$result)
+    {
+        $this->prepareResult($result);
+        $this->order($sortBy, $asc, $result);
+    }
+
+    public function applyLimit($offset, $maxSize, &$result)
+    {
+        $this->prepareResult($result);
+        $this->limit($offset, $maxSize, $result);
+    }
+
     public function applyPrimaryFilter($filterName, &$result)
     {
         $this->prepareResult($result);
@@ -757,7 +784,11 @@ class Base
     public function applyTextFilter($textFilter, &$result)
     {
         $this->prepareResult($result);
+        $this->textFilter($textFilter, $result);
+    }
 
+    protected function textFilter($textFilter, &$result)
+    {
         $fieldDefs = $this->getSeed()->getFields();
         $fieldList = $this->getTextFilterFields();
         $d = array();
@@ -790,13 +821,6 @@ class Base
             foreach ($params['boolFilterList'] as $filterName) {
                 $this->applyBoolFilter($filterName, $result);
             }
-        }
-    }
-
-    protected function primaryFilter($params, &$result)
-    {
-        if (!empty($params['primaryFilter'])) {
-            $this->applyPrimaryFilter($params['primaryFilter'], $result);
         }
     }
 

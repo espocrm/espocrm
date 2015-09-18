@@ -24,7 +24,7 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class MassEmail extends \Espo\Core\SelectManagers\Base
 {
-    protected function accessOnlyOwn(&$result)
+    protected function acessOnlyOwn(&$result)
     {
         $result['whereClause'][] = array(
             'campaign.assignedUserId' => $this->getUser()->id

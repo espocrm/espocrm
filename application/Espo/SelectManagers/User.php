@@ -27,6 +27,7 @@ class User extends \Espo\Core\SelectManagers\Base
     protected function access(&$result)
     {
         parent::access($result);
+
         if (!$this->getUser()->isAdmin()) {
             $result['whereClause'][] = array(
                 'isActive' => true

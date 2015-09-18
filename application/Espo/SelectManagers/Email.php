@@ -79,17 +79,17 @@ class Email extends \Espo\Core\SelectManagers\Base
         $this->boolFilterOnlyMy($result);
     }
 
-    protected function textFilter($value, &$result)
+    protected function textFilter($textFilter, &$result)
     {
         $d = array();
 
-        $d['name*'] = '%' . $value . '%';
+        $d['name*'] = '%' . $textFilter . '%';
 
         if (strlen($value) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
-            $d['bodyPlain*'] = '%' . $value . '%';
-            $d['body*'] = '%' . $value . '%';
+            $d['bodyPlain*'] = '%' . $textFilter . '%';
+            $d['body*'] = '%' . $textFilter . '%';
 
-            $emailAddressId = $this->getEmailAddressIdByValue($value);
+            $emailAddressId = $this->getEmailAddressIdByValue($textFilter);
             if ($emailAddressId) {
                 $this->leftJoinEmailAddress($result);
                 $d['fromEmailAddressId'] = $emailAddressId;
