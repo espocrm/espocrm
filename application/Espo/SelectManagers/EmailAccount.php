@@ -24,10 +24,8 @@ namespace Espo\SelectManagers;
 
 class EmailAccount extends \Espo\Core\SelectManagers\Base
 {
-    public function applyAccess(&$result)
+    public function access(&$result)
     {
-        $this->prepareResult($result);
-
         if (!$this->user->isAdmin()) {
         	$result['whereClause'][] = array(
         		'assignedUserId' => $this->user->id
