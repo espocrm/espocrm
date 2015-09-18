@@ -34,7 +34,8 @@ class Activities extends \Espo\Core\Services\Base
         'entityManager',
         'user',
         'metadata',
-        'acl'
+        'acl',
+        'selectManagerFactory'
     );
 
     protected function getPDO()
@@ -62,6 +63,11 @@ class Activities extends \Espo\Core\Services\Base
         return $this->injections['metadata'];
     }
 
+    protected function getSelectManagerFactory()
+    {
+        return $this->getInjection('selectManagerFactory');
+    }
+
     protected function isPerson($scope)
     {
         return in_array($scope, ['Contact', 'Lead', 'User']);
@@ -76,7 +82,7 @@ class Activities extends \Espo\Core\Services\Base
                    meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status, meeting.created_at AS createdAt
             FROM `meeting`
             LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = meeting.assigned_user_id
-            JOIN `meeting_user` AS `usersMiddle` ON usersMiddle.meeting_id = meeting.id AND usersMiddle.deleted = 0
+            JOIN `meeting_user` AS `usersMiddle` ON usersMiddle.meeting_id = meeting.id AND usersMiddle.deleted = 0 AND usersMiddle.status <> 'Declined'
             WHERE meeting.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
         ";
         if (!empty($notIn)) {
@@ -96,7 +102,7 @@ class Activities extends \Espo\Core\Services\Base
                    call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status, call.created_at AS createdAt
             FROM `call`
             LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = call.assigned_user_id
-            JOIN `call_user` AS `usersMiddle` ON usersMiddle.call_id = call.id AND usersMiddle.deleted = 0
+            JOIN `call_user` AS `usersMiddle` ON usersMiddle.call_id = call.id AND usersMiddle.deleted = 0  AND usersMiddle.status <> 'Declined'
             WHERE call.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
         ";
         if (!empty($notIn)) {
@@ -428,8 +434,6 @@ class Activities extends \Espo\Core\Services\Base
             ";
         }
 
-
-
         $sth = $pdo->prepare($qu);
 
         if (!empty($params['maxSize'])) {
@@ -508,10 +512,13 @@ class Activities extends \Espo\Core\Services\Base
 
         $fetchAll = empty($params['scope']);
 
-        $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [],
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [],
-        );
+        $parts = array();
+        if ($this->getAcl()->checkScope('Meeting')) {
+            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [];
+        }
+        if ($this->getAcl()->checkScope('Call')) {
+            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [];
+        }
         return $this->getResult($parts, $scope, $id, $params);
     }
 
@@ -523,11 +530,16 @@ class Activities extends \Espo\Core\Services\Base
 
         $fetchAll = empty($params['scope']);
 
-        $parts = array(
-            'Meeting' => ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [],
-            'Call' => ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [],
-            'Email' => ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', ['Archived', 'Sent']) : [],
-        );
+        $parts = array();
+        if ($this->getAcl()->checkScope('Meeting')) {
+            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [];
+        }
+        if ($this->getAcl()->checkScope('Call')) {
+            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [];
+        }
+        if ($this->getAcl()->checkScope('Email')) {
+            $parts['Email'] = ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', ['Archived', 'Sent']) : [];
+        }
         $result = $this->getResult($parts, $scope, $id, $params);
 
         foreach ($result['list'] as &$item) {
@@ -679,6 +691,95 @@ class Activities extends \Espo\Core\Services\Base
 
         }
         return $result;
+    }
+
+    public function getUpcomingActivities($userId, $params)
+    {
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+        $this->accessCheck($user);
+
+        $entityTypeList = ['Meeting', 'Call'];
+
+        $unionPartList = [];
+        foreach ($entityTypeList as $entityType) {
+            if (!$this->getAcl()->checkScope($entityType, 'read')) {
+                continue;
+            }
+
+
+            $selectParams = array(
+                'select' => ['id', 'name', 'dateStart', ['VALUE:' . $entityType, 'entityType']],
+            );
+
+            $selectManager = $this->getSelectManagerFactory()->create($entityType);
+
+
+            $selectManager->applyAccess($selectParams);
+            $selectManager->applyTextFilter($query, $selectParams);
+            $selectManager->applyPrimaryFilter('planned', $selectParams);
+            $selectManager->applyBoolFilter('onlyMy', $selectParams);
+            $selectManager->applyWhere(array(
+                '1' =>  array(
+                    'type' => 'or',
+                    'value' => array(
+                        '1' => array(
+                            'type' => 'today',
+                            'field' => 'dateStart',
+                            'dateTime' => true
+                        ),
+                        '2' => array(
+                            'type' => 'future',
+                            'field' => 'dateEnd',
+                            'dateTime' => true
+                        )
+                    )
+                )
+            ), $selectParams);
+
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $selectParams);
+
+            $unionPartList[] = '' . $sql . '';
+        }
+        if (empty($unionPartList)) {
+            return array(
+                'total' => 0,
+                'list' => []
+            );
+        }
+
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $unionSql = implode(' UNION ', $unionPartList);
+
+        $countSql = "SELECT COUNT(*) AS 'COUNT' FROM ({$unionSql}) AS c";
+        $sth = $pdo->prepare($countSql);
+        $sth->execute();
+        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        $totalCount = $row['COUNT'];
+
+        $unionSql .= " ORDER BY dateStart ASC";
+        $unionSql .= " LIMIT :offset, :maxSize";
+
+        $sth = $pdo->prepare($unionSql);
+
+        $sth->bindParam(':offset', intval($params['offset']), \PDO::PARAM_INT);
+        $sth->bindParam(':maxSize', intval($params['maxSize']), \PDO::PARAM_INT);
+        $sth->execute();
+        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+        $entityDataList = [];
+
+        foreach ($rows as $row) {
+            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['id']);
+            $entityData = $entity->toArray();
+            $entityData['_scope'] = $entity->getEntityType();
+            $entityDataList[] = $entityData;
+        }
+
+        return array(
+            'total' => $totalCount,
+            'list' => $entityDataList
+        );
     }
 }
 

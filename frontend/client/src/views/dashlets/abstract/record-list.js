@@ -103,8 +103,8 @@ Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base
             var attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'Modals.Edit';
-            this.createView('quickCreate', 'Modals.Edit', {
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
+            this.createView('quickCreate', viewName, {
                 scope: this.scope,
                 attributes: attributes,
             }, function (view) {

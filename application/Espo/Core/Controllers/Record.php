@@ -124,6 +124,9 @@ class Record extends Base
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
+        $primaryFilter = $request->get('primaryFilter');
+        $textFilter = $request->get('textFilter');
+        $boolFilterList = $request->get('boolFilterList');
 
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
@@ -139,6 +142,9 @@ class Record extends Base
             'asc' => $asc,
             'sortBy' => $sortBy,
             'q' => $q,
+            'primaryFilter' => $primaryFilter,
+            'textFilter' => $textFilter,
+            'boolFilterList' => $boolFilterList
         );
         if ($request->get('filter')) {
             $params['filter'] = $request->get('filter');

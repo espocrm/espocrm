@@ -25,7 +25,12 @@ Espo.define('Crm:Views.Fields.Ico', 'Views.Fields.Base', function (Dep) {
         setup: function () {
             var tpl;
 
-            var icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="viewRelated" data-id="'+this.model.id+'"></span>';
+            var icoTpl;
+            if (this.params.notRelationship) {
+                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'" data-scope="'+this.model.name+'"></span>';
+            } else {
+                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="viewRelated" data-id="'+this.model.id+'"></span>';
+            }
 
             switch (this.model.name) {
                 case 'Meeting':

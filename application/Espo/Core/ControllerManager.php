@@ -99,7 +99,7 @@ class ControllerManager
         }
 
         if (!method_exists($controller, $primaryActionMethodName)) {
-            throw new NotFound("Action '$actionName' (".$request->getMethod().") does not exist in controller '$controller'");
+            throw new NotFound("Action '$actionName' (".$request->getMethod().") does not exist in controller '$controllerName'");
         }
 
         if (method_exists($controller, $beforeMethodName)) {

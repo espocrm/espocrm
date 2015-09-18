@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.List', 'View', function (Dep) {
+Espo.define('views/record/list', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.list',
+        template: 'record/list',
 
         /**
          * @param {String} Type of the list. Can be 'list', 'listSmall'.
@@ -860,12 +860,14 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
             var id = data.id;
             if (!id) return;
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.detail') || 'Modals.Detail';
+            var scope = data.scope || this.scope;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
 
             if (!this.quickDetailDisabled) {
                 this.notify('Loading...');
                 this.createView('quickDetail', viewName, {
-                    scope: this.scope,
+                    scope: scope,
                     model: this.collection.get(id),
                     id: id
                 }, function (view) {
@@ -881,27 +883,29 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
                     }, this);
                 }.bind(this));
             } else {
-                this.getRouter().navigate('#' + this.scope + '/view/' + id, {trigger: true});
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
             }
         },
 
-        actionQuickEdit: function (d) {
-            d = d || {}
-            var id = d.id;
+        actionQuickEdit: function (data) {
+            data = data || {}
+            var id = data.id;
             if (!id) return;
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'Modals.Edit';
+            var scope = data.scope || this.scope;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
 
             if (!this.quickEditDisabled) {
                 this.notify('Loading...');
                 this.createView('quickEdit', viewName, {
-                    scope: this.scope,
+                    scope: scope,
                     id: id,
                     model: this.collection.get(id),
-                    fullFormDisabled: d.noFullForm,
-                    returnUrl: '#' + this.scope,
+                    fullFormDisabled: data.noFullForm,
+                    returnUrl: '#' + scope,
                     returnDispatchParams: {
-                        controller: this.scope,
+                        controller: scope,
                         action: null,
                         options: {
                             isReturn: true
@@ -923,19 +927,19 @@ Espo.define('Views.Record.List', 'View', function (Dep) {
 
                 }.bind(this));
             } else {
-                this.getRouter().dispatch(this.scope, 'edit', {
+                this.getRouter().dispatch(scope, 'edit', {
                     id: id,
                     model: this.collection.get(id),
-                    returnUrl: '#' + this.scope,
+                    returnUrl: '#' + scope,
                     returnDispatchParams: {
-                        controller: this.scope,
+                        controller: scope,
                         action: null,
                         options: {
                             isReturn: true
                         }
                     }
                 });
-                this.getRouter().navigate('#' + this.scope + '/edit/' + id, {trigger: false});
+                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
             }
         },
 

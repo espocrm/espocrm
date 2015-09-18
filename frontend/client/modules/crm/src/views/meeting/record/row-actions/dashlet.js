@@ -24,26 +24,33 @@ Espo.define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-a
     return Dep.extend({
 
         getActionList: function () {
-            var actions = Dep.prototype.getActionList.call(this);
+            var actionList = Dep.prototype.getActionList.call(this);
+
+            actionList.forEach(function (item) {
+                item.data = item.data || {};
+                item.data.scope = this.model.name
+            }, this);
 
             if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                actions.push({
+                actionList.push({
                     action: 'setHeld',
                     label: 'Set Held',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        scope: this.model.name
                     }
                 });
-                actions.push({
+                actionList.push({
                     action: 'setNotHeld',
                     label: 'Set Not Held',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        scope: this.model.name
                     }
                 });
             }
 
-            return actions;
+            return actionList;
         }
     });
 

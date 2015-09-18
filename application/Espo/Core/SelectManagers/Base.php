@@ -754,12 +754,6 @@ class Base
         }
     }
 
-    public function applyAccess(&$result)
-    {
-        $this->prepareResult($result);
-        $this->access($result);
-    }
-
     public function applyTextFilter($textFilter, &$result)
     {
         $this->prepareResult($result);
@@ -784,6 +778,12 @@ class Base
         );
     }
 
+    public function applyAccess(&$result)
+    {
+        $this->prepareResult($result);
+        $this->access($result);
+    }
+
     protected function boolFilters($params, &$result)
     {
         if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
@@ -795,8 +795,8 @@ class Base
 
     protected function primaryFilter($params, &$result)
     {
-        if (!empty($params['filter'])) {
-            $this->applyPrimaryFilter($params['filter'], $result);
+        if (!empty($params['primaryFilter'])) {
+            $this->applyPrimaryFilter($params['primaryFilter'], $result);
         }
     }
 

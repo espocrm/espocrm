@@ -131,20 +131,11 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
             var boolList = this.getSelectBoolFilterList();
             var where = [];
             if (boolList) {
-                where.push({
-                    type: 'bool',
-                    value: boolList
-                });
+                url += '&' + $.param({'boolFilterList': boolList});
             }
             var primary = this.getSelectPrimaryFilterName();
             if (primary) {
-                where.push({
-                    type: 'primary',
-                    value: primary
-                });
-            }
-            if (where.length) {
-                url += '&' + $.param({'where': where});
+                url += '&' + $.param({'primaryFilter': primary});
             }
             return url;
         },

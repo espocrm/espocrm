@@ -52,6 +52,24 @@ class Activities extends \Espo\Core\Controllers\Base
         return $service->getEvents($userId, $from, $to);
     }
 
+    public function actionListUpcoming($params, $data, $request)
+    {
+        $service = $this->getService('Activities');
+
+        $userId = $request->get('userId');
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
+
+        $offset = intval($request->get('offset'));
+        $maxSize = intval($request->get('maxSize'));
+
+        return $service->getUpcomingActivities($userId, array(
+            'offset' => $offset,
+            'maxSize' => $maxSize
+        ));
+    }
+
     public function actionPopupNotifications()
     {
         $userId = $this->getUser()->id;
