@@ -86,7 +86,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
         bottomView: 'views/record/detail-bottom',
 
-        editModeEnabled: true,
+        editModeDisabled: false,
 
         readOnly: false,
 
@@ -116,7 +116,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         actionEdit: function () {
-            if (this.editModeEnabled) {
+            if (!this.editModeDisabled) {
                 this.setEditMode();
                 $(window).scrollTop(0);
             } else {
@@ -381,6 +381,11 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
             if (_.isUndefined(this.events)) {
                 this.events = {};
+            }
+
+            // TODO remove this in future as deprecated
+            if ('editModeEnabled' in this) {
+                this.editModeDisabled = !this.editModeEnabled;
             }
 
             if ('buttonsPosition' in this.options) {

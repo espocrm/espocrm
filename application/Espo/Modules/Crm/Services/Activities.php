@@ -559,7 +559,7 @@ class Activities extends \Espo\Core\Services\Base
                 '' AS dateStartDate,
                 '' AS dateEndDate
             FROM `meeting`
-            JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0
+            JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0 AND meeting_user.status <> 'Declined'
             WHERE
                 meeting.deleted = 0 AND
                 meeting.date_start >= ".$pdo->quote($from)." AND
@@ -576,7 +576,7 @@ class Activities extends \Espo\Core\Services\Base
                 '' AS dateStartDate,
                 '' AS dateEndDate
             FROM `call`
-            JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0
+            JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0 AND call_user.status <> 'Declined'
             WHERE
                 call.deleted = 0 AND
                 call.date_start >= ".$pdo->quote($from)." AND
