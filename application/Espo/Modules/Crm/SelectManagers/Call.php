@@ -30,7 +30,8 @@ class Call extends \Espo\Core\SelectManagers\Base
         	$result['joins'][] = 'users';
         }
         $result['whereClause'][] = array(
-        	'users.id' => $this->getUser()->id
+        	'users.id' => $this->getUser()->id,
+            'usersMiddle.status!=' => 'Declined'
         );
     }
 
