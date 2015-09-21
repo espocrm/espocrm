@@ -78,7 +78,7 @@ class Download extends \Espo\Core\EntryPoints\Base
         if ($type) {
             header('Content-Type: ' . $type);
         }
-        header('Content-Disposition: ' . $disposition . '; filename=' . $attachment->get('name'));
+        header("Content-Disposition: " . $disposition . ";filename=\"" . $attachment->get('name') . "\"");
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
