@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base', 'SearchManager'], function (Dep, SearchManager) {
+Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/base', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -27,9 +27,9 @@ Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base
 
         scope: null,
 
-        listViewColumn: 'Record.List',
+        listViewColumn: 'views/record/list',
 
-        listViewExpanded: 'Record.ListExpanded',
+        listViewExpanded: 'views/record/list-expanded',
 
         listViewName: null,
 
@@ -47,7 +47,7 @@ Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base
             }
         }),
 
-        rowActionsView: 'Record.RowActions.ViewAndEdit',
+        rowActionsView: 'views/record/row-actions/view-and-edit',
 
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {
@@ -104,7 +104,7 @@ Espo.define('Views.Dashlets.Abstract.RecordList', ['Views.Dashlets.Abstract.Base
 
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
-            this.createView('quickCreate', viewName, {
+            this.createView('modal', viewName, {
                 scope: this.scope,
                 attributes: attributes,
             }, function (view) {

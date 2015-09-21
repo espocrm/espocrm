@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
+Espo.define('views/stream/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({
 
@@ -118,7 +118,7 @@ Espo.define('Views.Stream.List', 'Views.Record.ListExpanded', function (Dep) {
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
 
             this.notify('Loading...');
-            this.createView('quickDetail', viewName, {
+            this.createView('modal', viewName, {
                 scope: scope,
                 id: id
             }, function (view) {

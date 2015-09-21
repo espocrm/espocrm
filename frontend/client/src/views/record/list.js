@@ -513,6 +513,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.listenTo(this.collection, 'sync', function () {
+                if (this.hasView('modal') && this.getView('modal').isRendered()) return;
                 if (this.noRebuild) {
                     this.noRebuild = null;
                     return;
@@ -866,7 +867,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.quickDetailDisabled) {
                 this.notify('Loading...');
-                this.createView('quickDetail', viewName, {
+                this.createView('modal', viewName, {
                     scope: scope,
                     model: this.collection.get(id),
                     id: id
@@ -898,7 +899,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.quickEditDisabled) {
                 this.notify('Loading...');
-                this.createView('quickEdit', viewName, {
+                this.createView('modal', viewName, {
                     scope: scope,
                     id: id,
                     model: this.collection.get(id),
