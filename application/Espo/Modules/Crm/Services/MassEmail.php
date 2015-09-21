@@ -62,6 +62,18 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
+    protected function afterRemove(Entity $entity, array $data = array())
+    {
+        parent::afterRemove($entity, $data);
+        $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
+            'status' => ['Pending', 'Failed'],
+            'massEmailId' => $massEmail->id
+        ))->find();
+        foreach ($existingQueueItemList as $existingQueueItem) {
+            $this->getEntityManager()->getMapper('RDB')->deleteFromDb('EmailQueueItem', $existingQueueItem->id);
+        }
+    }
+
     public function createQueue(Entity $massEmail, $isTest = false, $additionalTargetList = [])
     {
         if (!$isTest && $massEmail->get('status') !== 'Pending') {
