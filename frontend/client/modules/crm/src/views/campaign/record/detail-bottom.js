@@ -61,12 +61,12 @@ Espo.define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bott
         manageMassEmails: function () {
             var parentView = this.getParentView();
             if (!parentView) return;
-            if (this.model.get('type') == 'Email') {
+            if (~['Email', 'Newsletter'].indexOf(this.model.get('type'))) {
                 parentView.showPanel('massEmails');
                 parentView.showPanel('trackingUrls');
             } else {
                 parentView.hidePanel('massEmails');
-                parentView.showPanel('trackingUrls');
+                parentView.hidePanel('trackingUrls');
             }
         }
 
