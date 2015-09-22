@@ -11,6 +11,10 @@
     "links": {
     },
     "labels": {
-        "Create EmailTemplate": "Create Email Template"
+        "Create EmailTemplate": "Create Email Template",
+        "Info": "Info"
+    },
+    "messages": {
+        "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link};\n\n{optOutLink} &#8211; an unsubscribe link."
     }
 }

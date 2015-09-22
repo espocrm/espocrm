@@ -1,8 +1,24 @@
 {
-   "controller": "controllers/record",
-   "recordViews":{
-      "edit": "EmailTemplate.Record.Edit",
-      "detail": "EmailTemplate.Record.Detail"
-   },
-   "boolFilterList": ["onlyMy"]
+  "controller": "controllers/record",
+  "recordViews":{
+    "edit": "EmailTemplate.Record.Edit",
+    "detail": "EmailTemplate.Record.Detail"
+  },
+  "sidePanels":{
+    "detail":[
+      {
+        "name": "information",
+        "label":"Info",
+          "view":"views/email-template/record/panels/information"
+       }
+    ],
+    "edit":[
+      {
+        "name": "information",
+        "label":"Info",
+          "view":"views/email-template/record/panels/information"
+       }
+    ]
+  },
+  "boolFilterList": ["onlyMy"]
 }
