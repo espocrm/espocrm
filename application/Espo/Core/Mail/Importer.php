@@ -275,11 +275,20 @@ class Importer
         }
     }
 
+    protected function normilizeHeader($header)
+    {
+        if (is_a($header, 'ArrayIterator')) {
+            return $header->current();
+        } else {
+            return $header;
+        }
+    }
+
     protected function getAddressListFromMessage($message, $type)
     {
         $addressList = array();
         if (isset($message->$type)) {
-            $list = $message->getHeader($type)->getAddressList();
+            $list = $this->normilizeHeader($message->getHeader($type))->getAddressList();
             foreach ($list as $address) {
                 $addressList[] = $address->getEmail();
             }
@@ -369,7 +378,7 @@ class Importer
                 }
 
                 if (isset($part->contentTransferEncoding)) {
-                    $encoding = strtolower($part->getHeader('Content-Transfer-Encoding')->getTransferEncoding());
+                    $encoding = strtolower($this->normilizeHeader($part->getHeader('Content-Transfer-Encoding'))->getTransferEncoding());
                 }
 
                 $attachment = $this->getEntityManager()->getEntity('Attachment');
@@ -417,7 +426,7 @@ class Importer
             $encoding = null;
 
             if (isset($part->contentTransferEncoding)) {
-                $cteHeader = $part->getHeader('Content-Transfer-Encoding');
+                $cteHeader = $this->normilizeHeader($part->getHeader('Content-Transfer-Encoding'));
                 $encoding = strtolower($cteHeader->getTransferEncoding());
             }
 
@@ -428,7 +437,7 @@ class Importer
             $charset = 'UTF-8';
 
             if (isset($part->contentType)) {
-                $ctHeader = $part->getHeader('Content-Type');
+                $ctHeader = $this->normilizeHeader($part->getHeader('Content-Type'));
                 $charsetParamValue = $ctHeader->getParameter('charset');
                 if (!empty($charsetParamValue)) {
                     $charset = strtoupper($charsetParamValue);
@@ -436,7 +445,7 @@ class Importer
             }
 
             if (isset($part->contentTransferEncoding)) {
-                $cteHeader = $part->getHeader('Content-Transfer-Encoding');
+                $cteHeader = $this->normilizeHeader($part->getHeader('Content-Transfer-Encoding'));
                 if ($cteHeader->getTransferEncoding() == 'quoted-printable') {
                     $content = quoted_printable_decode($content);
                 }
