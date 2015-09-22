@@ -183,9 +183,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         setFilter: function (filter) {
-            this.collection.data.filter = null;
+            this.collection.data.primaryFilter = null;
             if (filter) {
-                this.collection.data.filter = filter;
+                this.collection.data.primaryFilter = filter;
             }
         },
 

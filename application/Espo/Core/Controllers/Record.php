@@ -142,12 +142,13 @@ class Record extends Base
             'asc' => $asc,
             'sortBy' => $sortBy,
             'q' => $q,
-            'primaryFilter' => $primaryFilter,
-            'textFilter' => $textFilter,
-            'boolFilterList' => $boolFilterList
+            'textFilter' => $textFilter
         );
-        if ($request->get('filter')) {
-            $params['filter'] = $request->get('filter');
+        if ($request->get('primaryFilter')) {
+            $params['primaryFilter'] = $request->get('primaryFilter');
+        }
+        if ($request->get('boolFilterList')) {
+            $params['boolFilterList'] = $request->get('boolFilterList');
         }
 
         $result = $this->getRecordService()->findEntities($params);
@@ -184,9 +185,13 @@ class Record extends Base
             'asc' => $asc,
             'sortBy' => $sortBy,
             'q' => $q,
+            'textFilter' => $textFilter
         );
-        if ($request->get('filter')) {
-            $params['filter'] = $request->get('filter');
+        if ($request->get('primaryFilter')) {
+            $params['primaryFilter'] = $request->get('primaryFilter');
+        }
+        if ($request->get('boolFilterList')) {
+            $params['boolFilterList'] = $request->get('boolFilterList');
         }
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
