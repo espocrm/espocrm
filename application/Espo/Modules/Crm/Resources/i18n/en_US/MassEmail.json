@@ -37,8 +37,5 @@
     "messages": {
         "selectAtLeastOneTarget": "Select at least one target.",
         "testSent": "Test email(s) supposed to be sent"
-    },
-    "tooltips": {
-        "emailTemplate": "Insert {optOutLink} for an unsubscribe link."
     }
 }

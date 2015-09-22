@@ -34,14 +34,14 @@
         },
         "emailTemplate": {
             "type": "link",
-            "required": true,
-            "tooltip": true
+            "required": true
         },
         "campaign": {
             "type": "link"
         },
         "targetLists": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "required": true
         },
         "inboundEmail": {
             "type": "link"
