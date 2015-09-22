@@ -287,7 +287,7 @@ class MassEmail extends \Espo\Services\Record
             $body = str_replace($trackingUrl->get('urlToUse'), $url, $body);
         }
 
-        if (stripos('?entryPoint=unsubscribe&id', $body) === false) {
+        if (stripos($body, '?entryPoint=unsubscribe&id') === false) {
             if ($emailData['isHtml']) {
                 $body .= "<br><br>" . $optOutLink;
                 if ($massEmail->get('campaignId')) {
