@@ -297,7 +297,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         actionRefresh: function () {
-            this.collection.fetchNew();
+            this.getView('list').showNewRecords();
         },
 
     });
