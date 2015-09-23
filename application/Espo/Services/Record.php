@@ -962,9 +962,7 @@ class Record extends \Espo\Core\Services\Base
 
         $fieldsToSkip = array(
             'modifiedByName',
-            'createdByName',
             'modifiedById',
-            'createdById',
             'modifiedAt',
             'deleted',
         );
