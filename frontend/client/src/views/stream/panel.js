@@ -294,7 +294,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
             }, this);
             this.collection.fetch();
-        }
+        },
+
+        actionRefresh: function () {
+            this.collection.fetchNew();
+        },
 
     });
 });
