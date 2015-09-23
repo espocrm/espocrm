@@ -227,16 +227,22 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             }
         },
 
-        selectPreset: function (presetName) {
+        selectPreset: function (presetName, forceClearAdvancedFilters) {
+            var wasPreset = !(this.primary == this.presetName);
+
             this.presetName = presetName;
 
-            this.removeFilters();
-
-            this.advanced = this.getPresetData();
+            var advanced = this.getPresetData();
             this.primary = this.getPrimaryFilterName();
 
-            this.updateSearch();
+            var isPreset = !(this.primary === this.presetName);
 
+            if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
+                this.removeFilters();
+                this.advanced = advanced;
+            }
+
+            this.updateSearch();
             this.manageLabels();
 
             this.createFilters(function () {
@@ -256,7 +262,7 @@ Espo.define('Views.Record.Search', 'View', function (Dep) {
             this.trigger('reset');
 
             this.textFilter = '';
-            this.selectPreset(this.presetName);
+            this.selectPreset(this.presetName, true);
 
             /*if (!this.searchManager.emptyOnReset) {
 	            this.textFilter = '';
