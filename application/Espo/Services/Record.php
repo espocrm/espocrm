@@ -966,7 +966,6 @@ class Record extends \Espo\Core\Services\Base
             'modifiedById',
             'createdById',
             'modifiedAt',
-            'createdAt',
             'deleted',
         );
 
