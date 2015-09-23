@@ -1,0 +1,41 @@
+{
+    "fields": {
+        "name": "Name",
+        "status": "Status",
+        "storeSentEmails": "Gesendete E-Mails speichern",
+        "startAt": "Startdatum",
+        "fromAddress": "Von Adresse",
+        "fromName": "Von Name",
+        "replyToAddress": "Antwort-an Adresse",
+        "replyToName": "Antwort-an Name",
+        "campaign": "Kampagne",
+        "emailTemplate": "E-Mail Vorlage",
+        "inboundEmail": "E-Mail Konto",
+        "targetLists": "Kontaktlisten"
+    },
+    "links": {
+        "targetLists": "Kontaktlisten",
+        "queueItems": "Warteschlangeneintr�ge",
+        "campaign": "Kampagne",
+        "emailTemplate": "E-Mail Vorlage",
+        "inboundEmail": "E-Mail Konto"
+    },
+    "options": {
+        "status": {
+            "Draft": "Entwurf",
+            "Pending": "Schwebend",
+            "In Process": "In Arbeit",
+            "Complete": "Fertig",
+            "Canceled": "Storniert",
+            "Failed": "Fehlgeschlagen"
+        }
+    },
+    "labels": {
+        "Create MassEmail": "Massen E-Mail erstellen",
+        "Send Test": "Test senden"
+    },
+    "messages": {
+        "selectAtLeastOneTarget": "Zumindest ein Ziel ausw�hlen",
+        "testSent": "Test E-Mail(s) die gesendet werden sollen"
+    }
+}

@@ -6,7 +6,7 @@
         "account": "Firma",
         "contact": "Kontakt",
         "contacts": "Kontakte",
-        "priority": "Priorität",
+        "priority": "Priorit�t",
         "type": "Typ",
         "description": "Beschreibung",
         "inboundEmail": "Eingehende E-Mails"
@@ -14,7 +14,7 @@
     "links": {
         "inboundEmail": "Eingehende E-Mails",
         "account": "Firma",
-        "contact": "Kontakt (Primär)",
+        "contact": "Kontakt (Prim�r)",
         "Contacts": "Kontakte",
         "meetings": "Meetings",
         "calls": "Anrufe",
@@ -43,7 +43,11 @@
         }
     },
     "labels": {
-        "Create Case": "Fall erstellen"
+        "Create Case": "Fall erstellen",
+        "Close": "Schlie�en",
+        "Reject": "Ablehnen",
+        "Closed": "Abgeschlossen",
+        "Rejected": "Abgelehnt"
     },
     "presetFilters": {
         "open": "Offen",

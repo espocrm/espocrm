@@ -1,7 +1,7 @@
 {
     "fields": {
         "status": "Status",
-        "executeTime": "Ausführen um",
+        "executeTime": "Ausf�hren um",
         "attempts": "Verbleibende Versuche",
         "failedAttempts": "Fehlgeschlagene Versuche",
         "serviceName": "Service",
@@ -13,7 +13,7 @@
         "status": {
             "Pending": "Schwebend",
             "Success": "Erfolg",
-            "Running": "Läuft",
+            "Running": "L�uft",
             "Failed": "Fehlgeschlagen"
         }
     }

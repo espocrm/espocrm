@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "url": "URL",
+        "urlToUse": "Code zu Einf�gen anstelle einer URL",
+        "campaign": "Kampagne"
+    },
+    "links": {
+        "campaign": "Kampagne"
+    },
+    "labels": {
+        "Create CampaignTrackingUrl": "Tracking URL erstellen"
+    }
+}

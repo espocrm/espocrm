@@ -6,10 +6,10 @@
         "redirectUri": "Redirect URI"
     },
     "messages": {
-        "selectIntegration": "Wählen Sie eine Integration aus dem Menü.",
-        "noIntegrations": "Keine Integration verfügbar."
+        "selectIntegration": "W�hlen Sie eine Integration aus dem Men�.",
+        "noIntegrations": "Keine Integration verf�gbar."
     },
     "help": {
-        "Google": "<p><b>Holen Sie die OAuth 2.0 Credentials über die Google Developers Console.</b></p><p>Visit <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> um OAuth 2.0 Credentials wie eine Client ID und Client Geheimnis zu erhalten die sowohl Google als auch EspoCRM bekannt sind.</p>"
+        "Google": "<p><b>Holen Sie die OAuth 2.0 Credentials �ber die Google Developers Console.</b></p><p>Visit <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> um OAuth 2.0 Credentials wie eine Client ID und Client Geheimnis zu erhalten die sowohl Google als auch EspoCRM bekannt sind.</p>"
     }
 }

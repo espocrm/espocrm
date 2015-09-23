@@ -11,9 +11,9 @@
         "teamRole": "Position",
         "password": "Passwort",
         "currentPassword": "Aktuelles Passwort",
-        "passwordConfirm": "Passwort bestätigen",
+        "passwordConfirm": "Passwort best�tigen",
         "newPassword": "Neues Passwort",
-        "newPasswordConfirm": "Neues Passwort bestätigen",
+        "newPasswordConfirm": "Neues Passwort best�tigen",
         "avatar": "Avatar",
         "isActive": "Ist aktiv"
     },
@@ -26,36 +26,36 @@
         "Generate": "Erzeugen",
         "Access": "Zugang",
         "Preferences": "Benutzereinstellungen",
-        "Change Password": "Passwort ändern",
+        "Change Password": "Passwort �ndern",
         "Teams and Access Control": "Teams und Zugriffsberechtigung",
         "Forgot Password?": "Passwort vergessen?",
-        "Password Change Request": "Anforderung zur Passwortänderung",
+        "Password Change Request": "Anforderung zur Passwort�nderung",
         "Email Address": "E-Mail Adresse",
         "External Accounts": "Externe Konten",
         "Email Accounts": "E-Mail Konten"
     },
     "tooltips": {
-        "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
+        "defaultTeam": "Alle Datens�tze dieses Benutzers werden standardm��ig seinem Team zugeordnet.",
         "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
         "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
         "isActive": "Wenn nicht markiert kann der Benutzer nicht einloggen",
-        "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
-        "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
+        "teams": "Das Team zu dem dieser Benutzer geh�rt. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
+        "roles": "Zus�tzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team geh�rt oder wenn Sie die Zugriffsberechtigung nur f�r diesen Benutzer erweitern wollen."
     },
     "messages": {
         "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
         "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
         "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
-        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern Diese eindeutige URL ist nur für kurze Zeit gültig.",
-        "passwordChanged": "Das Passwort wurde geändert",
+        "passwordChangeLinkEmailSubject": "Anforderung zur Passwort�nderung",
+        "passwordChangeLinkEmailBody": "Sie k�nnen Ihr Passwort �ber diesen Link {link} �ndern Diese eindeutige URL ist nur f�r kurze Zeit g�ltig.",
+        "passwordChanged": "Das Passwort wurde ge�ndert",
         "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
         "wrongUsernamePasword": "Falscher Benutzername/Passwort",
         "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
         "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
-        "forbidden": "Verboten, bitte später nochmals versuchen",
+        "forbidden": "Verboten, bitte sp�ter nochmals versuchen",
         "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
-        "passwordChangedByRequest": "Das Passwort wurde geändert"
+        "passwordChangedByRequest": "Das Passwort wurde ge�ndert"
     },
     "boolFilters": {
         "onlyMyTeam": "Nur mein Team"

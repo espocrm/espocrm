@@ -1,20 +1,24 @@
 {
     "labels": {
-        "Revert Import": "Import rückgängig machen",
-        "Return to Import": "Zurück zum Import",
-        "Run Import": "Import durchführen",
-        "Back": "Zurück",
+        "Revert Import": "Import r�ckg�ngig machen",
+        "Return to Import": "Zur�ck zum Import",
+        "Run Import": "Import durchf�hren",
+        "Back": "Zur�ck",
         "Field Mapping": "Feldzuordnung",
         "Default Values": "Standardwerte",
-        "Add Field": "Feld hinzufügen",
+        "Add Field": "Feld hinzuf�gen",
         "Created": "Erstellt",
         "Updated": "Aktualisiert",
         "Result": "Resultat",
-        "Show records": "Datensätze zeigen",
+        "Show records": "Datens�tze zeigen",
         "Remove Duplicates": "Duplikate entfernen",
         "importedCount": "Importiert (Anzahl)",
         "duplicateCount": "Duplicate (Anzahl)",
-        "updatedCount": "Aktualisiert (Anzahl)"
+        "updatedCount": "Aktualisiert (Anzahl)",
+        "Create Only": "Nur erstellen",
+        "Create and Update": "Erstellen und aktualisieren",
+        "Update Only": "Nur aktualisieren",
+        "Update by": "Aktualisieren durch"
     },
     "messages": {
         "utf8": "Sollte UTF-8 kodiert sein",
@@ -22,9 +26,9 @@
     },
     "fields": {
         "file": "Datei",
-        "entityType": "Entitätstyp",
-        "imported": "Importierte Datensätze",
-        "duplicates": "Doppelte Datensätze",
-        "updated": "Aktualisierte Datensätze"
+        "entityType": "Entit�tstyp",
+        "imported": "Importierte Datens�tze",
+        "duplicates": "Doppelte Datens�tze",
+        "updated": "Aktualisierte Datens�tze"
     }
 }

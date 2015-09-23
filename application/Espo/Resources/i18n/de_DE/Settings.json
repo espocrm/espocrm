@@ -7,10 +7,10 @@
         "weekStart": "Erster Tag der Woche",
         "thousandSeparator": "Tausender Trennzeichen",
         "decimalMark": "Dezimaltrennzeichen",
-        "defaultCurrency": "Standardwährung",
-        "baseCurrency": "Basiswährung",
+        "defaultCurrency": "Standardw�hrung",
+        "baseCurrency": "Basisw�hrung",
         "currencyRates": "Wechselkurse",
-        "currencyList": "Währungsliste",
+        "currencyList": "W�hrungsliste",
         "language": "Sprache",
         "companyLogo": "Firmenlogo",
         "smtpServer": "Server",
@@ -23,12 +23,12 @@
         "outboundEmailFromName": "Von Name",
         "outboundEmailFromAddress": "Von Adresse",
         "outboundEmailIsShared": "Kann von allen Benutzern verwendet werden",
-        "recordsPerPage": "Datensätze pro Seite",
-        "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
+        "recordsPerPage": "Datens�tze pro Seite",
+        "recordsPerPageSmall": "Datens�tze pro Seite (Klein)",
         "tabList": "Reiter Liste",
         "quickCreateList": "Liste Schnellerstellung",
         "exportDelimiter": "Export Trennzeichen",
-        "globalSearchEntityList": "Modul-/Entitätsliste globale Suche",
+        "globalSearchEntityList": "Modul-/Entit�tsliste globale Suche",
         "authenticationMethod": "Authentifizierungs Methode",
         "ldapHost": "Host",
         "ldapPort": "Port",
@@ -46,15 +46,17 @@
         "ldapAccountDomainNameShort": "Domain Name Konto kurz",
         "ldapOptReferrals": "Opt Referrals",
         "exportDisabled": "Export deaktivieren (nur Admin ist berechtigt)",
-        "assignmentNotificationsEntityList": "Entitäten über die bei Zuweisung benachrichtigt werden soll",
+        "assignmentNotificationsEntityList": "Entit�ten �ber die bei Zuweisung benachrichtigt werden soll",
         "assignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen senden",
-        "assignmentEmailNotificationsEntityList": "Entitäten über die mit E-Mail bei Zuweisung benachrichtigt werden soll",
+        "assignmentEmailNotificationsEntityList": "Entit�ten �ber die mit E-Mail bei Zuweisung benachrichtigt werden soll",
         "b2cMode": "B2C Modus",
         "avatarsDisabled": "Avatare deaktivieren",
-        "followCreatedEntities": "Erstellten Einträgen beobachten",
+        "followCreatedEntities": "Erstellten Eintr�gen beobachten",
         "displayListViewRecordCount": "Gesamtanzahl anzeigen (in Listenansicht)",
         "theme": "Design",
-        "userThemesDisabled": "Benutzerdesigns deaktivieren"
+        "userThemesDisabled": "Benutzerdesigns deaktivieren",
+        "emailMessageMaxSize": "Max. E-Mail Gr��e (Mb)",
+        "massEmailMaxPerHourCount": "Max. Anzahl E-Mails pro Stunde"
     },
     "options": {
         "weekStart": {
@@ -63,9 +65,10 @@
         }
     },
     "tooltips": {
-        "recordsPerPageSmall": "Anzahl Sätze in Beziehungssubpanels",
-        "outboundEmailIsShared": "Benutzern gestatten, E-Mails über dieses SMTP Konto zu senden",
-        "followCreatedEntities": "Benutzer folgen automatisch jenen Sätzen die sie erstellt haben"
+        "recordsPerPageSmall": "Anzahl S�tze in Beziehungssubpanels",
+        "outboundEmailIsShared": "Benutzern gestatten, E-Mails �ber dieses SMTP Konto zu senden",
+        "followCreatedEntities": "Benutzer folgen automatisch jenen S�tzen die sie erstellt haben",
+        "emailMessageMaxSize": "Alle eingehenden E-Mails die eine angegebene Gr��e �bersteigen, werden �bersprungen "
     },
     "labels": {
         "System": "System",
@@ -74,7 +77,8 @@
         "Configuration": "Konfiguration",
         "In-app Notifications": "In-App Benachrichtigungen",
         "Email Notifications": "E-Mail Benachrichtigungen",
-        "Currency Settings": "Währunsgseinstellungen",
-        "Currency Rtes": "Währungskurse"
+        "Currency Settings": "W�hrunsgseinstellungen",
+        "Currency Rates": "W�hrungskurse",
+        "Mass Email": "Massen E-Mails"
     }
 }

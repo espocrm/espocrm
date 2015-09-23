@@ -1,10 +1,7 @@
 {
-
     "options": {
         "job": {
-            "CheckInboundEmails": "Eingehende E-Mail prüfen",
-            "CheckEmailAccounts": "Persönliche E-Mail Konten prüfen",
-            "SendEmailReminders": "E-Mail Erinnerungen senden"
+            "ProcessMassEmail": "Massen E-Mails senden"
         }
     }
 }

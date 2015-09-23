@@ -13,17 +13,23 @@
     },
     "options": {
         "job": {
-            "Cleanup": "Aufräumen"
+            "Cleanup": "Aufr�umen",
+            "CheckInboundEmails": "Gruppen E-Mail Konten �berpr�fen",
+            "CheckEmailAccounts": "Pers�nliche E-Mail Konten pr�fen",
+            "SendEmailReminders": "E-Mail Erinnerungen senden"
         },
         "cronSetup": {
-            "linux": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
-            "mac": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
-            "windows": "Hinweis: Erstellen Sie eine Stapeldatei mit den folgenden Kommandos um geplante Aufgaben mit dem Windows Aufgabenplaner durchzuführen:",
-            "default": "Hinweis: fügen Sie dieses Kommando zum CronJob hinzu (Geplante Aufgaben):"
+            "linux": "Hinweis: F�gen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchf�hren zu k�nnen:",
+            "mac": "Hinweis: F�gen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchf�hren zu k�nnen:",
+            "windows": "Hinweis: Erstellen Sie eine Stapeldatei mit den folgenden Kommandos um geplante Aufgaben mit dem Windows Aufgabenplaner durchzuf�hren:",
+            "default": "Hinweis: f�gen Sie dieses Kommando zum CronJob hinzu (Geplante Aufgaben):"
         },
         "status": {
             "Active": "Aktiv",
             "Inactive": "Inaktiv"
         }
+    },
+    "tooltips": {
+        "scheduling": "Definiert wann und wie oft ein Job l�uft\n\n*/5 * * * * - alle 5 Minuten\n\n0 */2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
     }
 }

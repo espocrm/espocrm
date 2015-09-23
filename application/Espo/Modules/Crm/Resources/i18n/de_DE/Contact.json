@@ -18,13 +18,13 @@
     },
     "links": {
         "opportunities": "Verkaufschancen",
-        "cases": "Fälle",
+        "cases": "F�lle",
         "targetLists": "Kontaktlisten",
         "campaignLogRecords": "Kampagnen Log",
         "campaign": "Kampagne",
-        "account": "Firma (Primär)",
+        "account": "Firma (Prim�r)",
         "accounts": "Firmen",
-        "casesPrimary": "Fälle (Primär)"
+        "casesPrimary": "F�lle (Prim�r)"
     },
     "labels": {
         "Create Contact": "Kontakt erstellen"

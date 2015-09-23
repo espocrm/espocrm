@@ -8,7 +8,7 @@
         "endDate": "Enddatum",
         "targetLists": "Kontaktlisten",
         "sentCount": "Gesendet",
-        "openedCount": "Geöffnet",
+        "openedCount": "Ge�ffnet",
         "clickedCount": "Geklickt",
         "optedOutCount": "Keine E-Mails",
         "bouncedCount": "Nicht zustellbar",
@@ -25,7 +25,9 @@
         "contacts": "Kontakte",
         "leads": "Interessenten",
         "opportunities": "Verkaufschancen",
-        "campaignLogRecords": "Protokoll"
+        "campaignLogRecords": "Protokoll",
+        "massEmails": "Massen E-Mails",
+        "trackingUrls": "Tracking URLs"
     },
     "options": {
         "type": {
@@ -48,9 +50,13 @@
         "Target Lists": "Kontaktlisten",
         "Statistics": "Statistik",
         "hard": "hart",
-        "soft": "weich"
+        "soft": "weich",
+        "Unsubscribe": "Abmelden"
     },
     "presetFilters": {
         "active": "Aktiv"
+    },
+    "messages": {
+        "unsubscribed": "Sie wurden erfolgreich von unserem Verteiler entfernt"
     }
 }

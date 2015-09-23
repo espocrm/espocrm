@@ -18,8 +18,8 @@
     "options": {
         "status": {
             "Planned": "Geplant",
-            "Held": "Durchgeführt",
-            "Not Held": "Nicht durchgeführt"
+            "Held": "Durchgef�hrt",
+            "Not Held": "Nicht durchgef�hrt"
         },
         "acceptanceStatus": {
             "None": "Kein(e)",
@@ -38,11 +38,11 @@
         "Set Not Held": "Auf nicht gehalten setzen",
         "Send Invitations": "Einladungen versenden",
         "on time": "Aktuelle Zeit",
-        "before": "Bevor"
+        "before": "bevor"
     },
     "presetFilters": {
         "planned": "Geplant",
-        "held": "Durchgeführt",
+        "held": "Durchgef�hrt",
         "todays": "Heutige"
     }
 }

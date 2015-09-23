@@ -6,8 +6,8 @@
         "weekStart": "Erster Tag der Woche",
         "thousandSeparator": "Tausender Trennzeichen",
         "decimalMark": "Dezimaltrennzeichen",
-        "defaultCurrency": "Standardwährung",
-        "currencyList": "Währungsliste",
+        "defaultCurrency": "Standardw�hrung",
+        "currencyList": "W�hrungsliste",
         "language": "Sprache",
         "smtpServer": "Server",
         "smtpPort": "Port",
@@ -23,7 +23,9 @@
         "signature": "E-Mail Signatur",
         "dashboardTabList": "Reiter Liste",
         "defaultReminders": "Standarderinnerungen",
-        "theme": "Design"
+        "theme": "Design",
+        "useCustomTabList": "Benutzerdefinierte Reiter Liste",
+        "tabList": "Reiter Liste"
     },
     "links": {
     },
@@ -34,9 +36,13 @@
         }
     },
     "labels": {
-        "Notifications": "Benachrichtigungen"
+        "Notifications": "Benachrichtigungen",
+        "User Interface": "Benutzeroberfl�che",
+        "SMTP": "SMTP",
+        "Misc": "Verschiedenes",
+        "Locale": "Lokale Einstellungen"
     },
     "tooltips": {
-        "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Einträge der gewählten Entität, sieht Neuigkeiten in den Vorgängen und erhält Benachrichtigungen."
+        "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Eintr�ge der gew�hlten Entit�t, sieht Neuigkeiten in den Vorg�ngen und erh�lt Benachrichtigungen."
     }
 }

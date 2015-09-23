@@ -4,12 +4,12 @@
         "emailAddress": "E-Mail Adresse",
         "team": "Team",
         "status": "Status",
-        "assignToUser": "Mit Benutzer verknüpfen",
+        "assignToUser": "Mit Benutzer verkn�pfen",
         "host": "Host",
         "username": "Benutzername",
         "password": "Passwort",
         "port": "Port",
-        "monitoredFolders": "Überwachte Ordner",
+        "monitoredFolders": "�berwachte Ordner",
         "trashFolder": "Papierkorb Ordner",
         "ssl": "SSL",
         "createCase": "Fall erstellen",
@@ -22,15 +22,16 @@
         "targetUserPosition": "Position Zielbenutzer"
     },
     "tooltips": {
-        "reply": "E-Mail Absender informieren, dass die E-Mail empfangen wurde.\n\nEs wird pro Zeitabschnitt nur eine E-Mail an einen bestimmten Empfänger gesendet um Schleifen zu vermeiden.",
+        "reply": "E-Mail Absender informieren, dass die E-Mail empfangen wurde.\n\nEs wird pro Zeitabschnitt nur eine E-Mail an einen bestimmten Empf�nger gesendet um Schleifen zu vermeiden.",
         "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
         "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
-        "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
-        "assignToUser": "Benutzer E-Mails/Fälle werden zugewiesen an",
-        "team": "Team E-Mails/Fälle werden verknüpft mit",
-        "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen."
+        "caseDistribution": "Wie F�lle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
+        "assignToUser": "Benutzer E-Mails/F�lle werden zugewiesen an",
+        "team": "Team E-Mails/F�lle werden verkn�pft mit",
+        "targetUserPosition": "Bestimmen Sie die Position der Benutzer die F�lle zugewiesen bekommen."
     },
     "links": {
+        "filters": "Filter"
     },
     "options": {
         "status": {
