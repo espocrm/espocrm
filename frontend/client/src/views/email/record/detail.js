@@ -53,6 +53,15 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'sync', function () {
+                if (!this.model.get('isRead')) {
+                    this.model.set({
+                        isRead: true
+                    }, {silent: true});
+                }
+            }, this);
+
             if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
                 this.dropdownItemList.push({
                     'label': 'Show Plain Text',

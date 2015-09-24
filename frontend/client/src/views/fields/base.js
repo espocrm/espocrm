@@ -269,7 +269,7 @@ Espo.define('Views.Fields.Base', 'View', function (Dep) {
                 }
             }
 
-            if (this.mode == 'edit' || this.mode == 'detail') {
+            if (this.mode != 'search') {
                 this.attributeList = this.getAttributeList();
 
                 this.listenTo(this.model, 'change', function (model, options) {

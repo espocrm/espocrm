@@ -51,7 +51,11 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
                     }
                 }
             }, this);
-        }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+        },
 
     });
 

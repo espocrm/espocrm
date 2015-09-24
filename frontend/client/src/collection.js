@@ -54,6 +54,10 @@ Espo.define('collection', [], function () {
             Backbone.Collection.prototype.initialize.call(this);
         },
 
+        _onModelEvent: function(event, model, collection, options) {
+            if (event === 'sync' && collection !== this) return;
+            Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
+        },
 
         sort: function (field, asc) {
             this.sortBy = field;

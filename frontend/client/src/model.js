@@ -41,8 +41,13 @@ Espo.define('model', [], function () {
         },
 
         url: function () {
-            var url = Backbone.Model.prototype.url.call(this);
-            return url;
+            var base =
+            _.result(this, 'urlRoot') ||
+            _.result(this.collection, 'url') ||
+            urlError();
+            if (this.isNew()) return base;
+            var id = this.id;
+            return base.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
         },
 
         isNew: function () {
