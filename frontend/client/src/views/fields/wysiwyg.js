@@ -23,17 +23,18 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
     return Dep.extend({
 
+        type: 'wysiwyg',
+
         detailTemplate: 'fields.wysiwyg.detail',
 
         editTemplate: 'fields.wysiwyg.edit',
 
-        height: 150,
+        height: 250,
 
         rowsDefault: 10,
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
 
             this.height = this.params.height || this.height;
             this.toolbar = this.params.toolbar || [

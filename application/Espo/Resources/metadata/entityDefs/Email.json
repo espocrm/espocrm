@@ -111,9 +111,9 @@
             "seeMoreDisabled": true
         },
         "body": {
-            "type": "text",
-            "view": "Fields.Wysiwyg",
-            "seeMoreDisabled": true
+            "type": "wysiwyg",
+            "seeMoreDisabled": true,
+            "height": 150
         },
         "isHtml": {
             "type": "bool",

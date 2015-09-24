@@ -93,7 +93,8 @@
         "attachmentMultiple": "Attachment Multiple",
         "rangeInt": "Range Integer",
         "rangeFloat": "Range Float",
-        "rangeCurrency": "Range Currency"
+        "rangeCurrency": "Range Currency",
+        "wysiwyg": "Wysiwyg"
     },
     "fields": {
         "type": "Type",
@@ -117,7 +118,8 @@
         "entityList": "Entity List",
         "isSorted": "Is Sorted (alphabetically)",
         "audited": "Audited",
-        "trim": "Trim"
+        "trim": "Trim",
+        "height": "Height (px)"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
