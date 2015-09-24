@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relationship', 'MultiCollection'], function (Dep, MultiCollection) {
+Espo.define('crm:views/record/panels/activities', ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -178,6 +178,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
             this.collection.asc = this.asc;
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
+
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'Record.ListExpanded', {
                     el: this.$el.selector + ' > .list-container',
@@ -194,6 +195,19 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
 
             if (!this.defs.hidden) {
                 this.collection.fetch();
+            }
+        },
+
+        fetchHistory: function () {
+            if (this.name == 'history') return;
+            var parentView = this.getParentView();
+            if (parentView) {
+                if (parentView.hasView('history')) {
+                    var historyCollection = parentView.getView('history').collection;
+                    if (historyCollection) {
+                        historyCollection.fetch();
+                    }
+                }
             }
         },
 
@@ -248,9 +262,10 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
                     view.render();
                     view.notify(false);
                     view.once('after:save', function () {
-                        self.collection.fetch();
-                    });
-                });
+                        this.collection.fetch();
+                        this.fetchHistory();
+                    }, this);
+                }, this);
             });
 
         },
@@ -309,9 +324,10 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
                     view.render();
                     view.notify(false);
                     view.once('after:save', function () {
-                        self.collection.fetch();
-                    });
-                });
+                        this.collection.fetch();
+                        this.fetchHistory();
+                    }, this);
+                }, this);
             });
 
         },
@@ -332,6 +348,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
                 patch: true,
                 success: function () {
                     this.collection.fetch();
+                    this.fetchHistory();
                 }.bind(this)
             });
         },
@@ -348,6 +365,7 @@ Espo.define('Crm:Views.Record.Panels.Activities', ['Views.Record.Panels.Relation
                 patch: true,
                 success: function () {
                     this.collection.fetch();
+                    this.fetchHistory();
                 }.bind(this)
             });
         },
