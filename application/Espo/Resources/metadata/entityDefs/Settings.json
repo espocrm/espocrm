@@ -253,6 +253,15 @@
             "min": 0,
             "tooltip": true
         },
+        "inboundEmailMaxPortionSize": {
+            "type": "int"
+        },
+        "personalEmailMaxPortionSize": {
+            "type": "int"
+        },
+        "maxEmailAccountCount": {
+            "type": "int"
+        },
         "massEmailMaxPerHourCount": {
             "type": "int",
             "min": 0

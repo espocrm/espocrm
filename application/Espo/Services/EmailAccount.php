@@ -217,6 +217,8 @@ class EmailAccount extends Record
             throw new Error();
         }
 
+        $portionLimit = $this->getConfig()->get('personalEmailMaxPortionSize', self::PORTION_LIMIT);
+
         $monitoredFoldersArr = explode(',', $monitoredFolders);
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
@@ -306,7 +308,7 @@ class EmailAccount extends Record
                     }
                 }
 
-                if ($k == self::PORTION_LIMIT - 1) {
+                if ($k == $portionLimit - 1) {
                     $lastUID = $storage->getUniqueId($id);
                     break;
                 }

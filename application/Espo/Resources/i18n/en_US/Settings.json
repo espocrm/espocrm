@@ -56,7 +56,10 @@
         "theme": "Theme",
         "userThemesDisabled": "Disable User Themes",
         "emailMessageMaxSize": "Email Max Size (Mb)",
-        "massEmailMaxPerHourCount": "Max count of emails sent per hour"
+        "massEmailMaxPerHourCount": "Max count of emails sent per hour",
+        "personalEmailMaxPortionSize": "Max email portion size for a personal account fetching",
+        "inboundEmailMaxPortionSize": "Max email portion size for a group account fetching",
+        "maxEmailAccountCount": "Max count of personal email accounts per user"
     },
     "options": {
         "weekStart": {

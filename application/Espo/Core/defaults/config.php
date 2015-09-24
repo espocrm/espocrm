@@ -104,6 +104,8 @@ return array (
     'restrictedMode' => false,
     'theme' => 'Espo',
     'massEmailMaxPerHourCount' => 100,
+    'personalEmailMaxPortionSize' => 10,
+    'inboundEmailMaxPortionSize' => 20,
     'isInstalled' => false,
 );
 

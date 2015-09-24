@@ -117,7 +117,9 @@ return array (
         'ldapOptReferrals',
         'ldapCreateEspoUser',
         'maxEmailAccountCount',
-        'massEmailMaxPerHourCount'
+        'massEmailMaxPerHourCount',
+        'personalEmailMaxPortionSize',
+        'inboundEmailMaxPortionSize'
     ),
     'isInstalled' => false,
 );

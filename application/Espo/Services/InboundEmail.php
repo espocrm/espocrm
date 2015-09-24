@@ -205,6 +205,8 @@ class InboundEmail extends \Espo\Services\Record
             $monitoredFolders = 'INBOX';
         }
 
+        $portionLimit = $this->getConfig()->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
+
         $monitoredFoldersArr = explode(',', $monitoredFolders);
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
@@ -300,7 +302,7 @@ class InboundEmail extends \Espo\Services\Record
                     }
                 }
 
-                if ($k == self::PORTION_LIMIT - 1) {
+                if ($k == $portionLimit - 1) {
                     $lastUID = $storage->getUniqueId($id);
                     break;
                 }
@@ -559,7 +561,7 @@ class InboundEmail extends \Espo\Services\Record
         } catch (\Exception $e) {}
     }
 
-    protected function processBouncedMessage(\Zend\Mail\Message $message)
+    protected function processBouncedMessage(\Zend\Mail\Storage\Message $message)
     {
         $content = $message->getContent();
 
