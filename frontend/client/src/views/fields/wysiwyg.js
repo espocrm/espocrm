@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], function (Dep, Summernote) {
+Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function (Dep, Summernote) {
 
     return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Views.Fields.Wysiwyg', ['Views.Fields.Text', 'lib!Summernote'], fun
 
         editTemplate: 'fields.wysiwyg.edit',
 
-        height: 250,
+        height: 150,
 
         rowsDefault: 10,
 
