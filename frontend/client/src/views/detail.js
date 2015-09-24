@@ -45,44 +45,27 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         addUnfollowButtonToMenu: function () {
-            var index = -1;
-            this.menu.buttons.forEach(function (data, i) {
-                if (data.name == 'follow') {
-                    index = i;
-                    return;
-                }
-            }, this);
-            if (~index) {
-                this.menu.buttons.splice(index, 1);
-            }
+            this.removeMenuItem('follow', true);
 
-            this.menu.buttons.unshift({
+            this.addMenuItem('buttons', {
                 name: 'unfollow',
                 label: 'Followed',
                 style: 'success',
                 action: 'unfollow'
-            });
+            }, true);
         },
 
         addFollowButtonToMenu: function () {
-            var index = -1;
-            this.menu.buttons.forEach(function (data, i) {
-                if (data.name == 'unfollow') {
-                    index = i;
-                    return;
-                }
-            }, this);
-            if (~index) {
-                this.menu.buttons.splice(index, 1);
-            }
+            this.removeMenuItem('unfollow', true);
 
-            this.menu.buttons.unshift({
+            this.addMenuItem('buttons', {
                 name: 'follow',
                 label: 'Follow',
                 style: 'default',
                 icon: 'glyphicon glyphicon-share-alt',
+                html: '<span class="glyphicon glyphicon-share-alt"></span> ' + this.translate('Follow'),
                 action: 'follow'
-            });
+            }, true);
         },
 
         setup: function () {
@@ -101,34 +84,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         handleFollowButton: function () {
             if (this.model.get('isFollowed')) {
-                if (this.isRendered()) {
-                    this.addUnfollowButton();
-                }
                 this.addUnfollowButtonToMenu();
             } else {
-                if (this.isRendered()) {
-                    this.addFollowButton();
-                }
                 this.addFollowButtonToMenu();
             }
         },
 
-        addFollowButton: function () {
-            $el = $('<button>').addClass('btn btn-default action')
-                               .attr('data-action', 'follow')
-                               .html('<span class="glyphicon glyphicon-share-alt"></span> ' + this.translate('Follow'));
-            $("div.header-buttons").prepend($el);
-        },
-
-        addUnfollowButton: function () {
-            $el = $('<button>').addClass('btn btn-default action btn-success')
-                               .attr('data-action', 'unfollow')
-                               .html(this.translate('Followed'));
-            $("div.header-buttons").prepend($el);
-        },
-
         actionFollow: function () {
-            $el = this.$el.find('button[data-action="follow"]');
+            $el = this.$el.find('[data-action="follow"]');
             $el.addClass('disabled');
             $.ajax({
                 url: this.model.name + '/' + this.model.id + '/subscription',
@@ -144,7 +107,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         actionUnfollow: function () {
-            $el = this.$el.find('button[data-action="unfollow"]');
+            $el = this.$el.find('[data-action="unfollow"]');
             $el.addClass('disabled');
             $.ajax({
                 url: this.model.name + '/' + this.model.id + '/subscription',

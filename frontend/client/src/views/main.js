@@ -111,7 +111,33 @@ Espo.define('views/main', 'view', function (Dep) {
             }.bind(this));
         },
 
-        removeMenuItem: function (name) {
+        addMenuItem: function (type, item, toBeginnig, doNotReRender) {
+            item.name = item.name || item.action;
+            var name = item.name;
+
+            var index = -1;
+            this.menu[type].forEach(function (data, i) {
+                if (data.name === name) {
+                    index = i;
+                    return;
+                }
+            }, this);
+            if (~index) {
+                this.menu[type].splice(index, 1);
+            }
+
+            var method = 'push';
+            if (toBeginnig) {
+                method  = 'unshift';
+            }
+            this.menu[type][method](item);
+
+            if (!doNotReRender && this.isRendered()) {
+                this.getView('header').reRender();
+            }
+        },
+
+        removeMenuItem: function (name, doNotReRender) {
             var index = -1;
             var type = false;
 
@@ -128,8 +154,8 @@ Espo.define('views/main', 'view', function (Dep) {
                 this.menu[type].splice(index, 1);
             }
 
-            if (this.isRendered()) {
-                this.getView('header').render();
+            if (!doNotReRender && this.isRendered()) {
+                this.getView('header').reRender();
             }
         },
 
