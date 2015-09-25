@@ -30,7 +30,7 @@ class Lead extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->has('targetListId') && $entity->isNew()) {
+        if ($entity->has('targetListId')) {
         	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
         }
     }
