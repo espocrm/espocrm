@@ -42,21 +42,6 @@ Espo.define('model', [], function () {
             Dep.prototype.initialize.call(this);
         },
 
-        /*url: function () {
-            var base =
-            _.result(this, 'urlRoot') ||
-            _.result(this.collection, 'url');
-
-            if (!base) {
-                throw new Error('A "url" property or function must be specified');
-            }
-
-            if (this.isNew()) return base;
-
-            var id = this.id;
-            return base.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
-        },*/
-
         get: function (key) {
             if (key === 'id' && this.id) {
                 return this.id;
@@ -76,7 +61,6 @@ Espo.define('model', [], function () {
         getClonedAttributes: function () {
             var attributes = {};
             for (var name in this.attributes) {
-                // TODO maybe use cloneDeep method ???
                 attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
             }
             return attributes;
