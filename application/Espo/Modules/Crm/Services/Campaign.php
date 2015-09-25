@@ -179,7 +179,7 @@ class Campaign extends \Espo\Services\Record
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        if (!$queueItemId && !$this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+        if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'queueItemId' => $queueItemId,
             'action' => 'Opened',
         ))->findOne()) {
