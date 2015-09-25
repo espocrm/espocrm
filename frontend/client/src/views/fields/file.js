@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
+Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
@@ -229,8 +229,11 @@ Espo.define('Views.Fields.File', 'Views.Fields.Link', function (Dep) {
                             contentType: 'multipart/encrypted',
                             timeout: 0,
                         }).done(function (data) {
+
                             attachment.id = data.attachmentId;
+                            console.log(attachment.id);
                             attachment.set('name', fileParams.name);
+                            console.log(attachment.id);
                             attachment.set('type', fileParams.type || 'text/plain');
                             attachment.set('size', fileParams.size);
                             attachment.set('role', 'Attachment');

@@ -20,7 +20,9 @@
  ************************************************************************/
 Espo.define('model', [], function () {
 
-    var Model = Backbone.Model.extend({
+    var Dep = Backbone.Model;
+
+    var Model = Dep.extend({
 
         name: null,
 
@@ -37,17 +39,29 @@ Espo.define('model', [], function () {
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
 
-            Backbone.Model.prototype.initialize.call(this);
+            Dep.prototype.initialize.call(this);
         },
 
-        url: function () {
+        /*url: function () {
             var base =
             _.result(this, 'urlRoot') ||
-            _.result(this.collection, 'url') ||
-            urlError();
+            _.result(this.collection, 'url');
+
+            if (!base) {
+                throw new Error('A "url" property or function must be specified');
+            }
+
             if (this.isNew()) return base;
+
             var id = this.id;
             return base.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
+        },*/
+
+        get: function (key) {
+            if (key === 'id' && this.id) {
+                return this.id;
+            }
+            return Dep.prototype.get.call(this, key);
         },
 
         isNew: function () {

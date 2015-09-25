@@ -63,6 +63,7 @@ class Download extends \Espo\Core\EntryPoints\Base
 
         $fileName = "data/upload/{$attachment->id}";
 
+
         if (!file_exists($fileName)) {
             throw new NotFound();
         }
