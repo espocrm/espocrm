@@ -357,6 +357,9 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
         fetchSearch: function () {
             var value = this.$element.val() || null;
             if (value) {
+                if (typeof value.trim === 'function') {
+                    value = value.trim();
+                }
                 var data = {
                     type: 'like',
                     value: value + '%',
@@ -365,7 +368,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                 return data;
             }
             return false;
-        },
+        }
     });
 });
 

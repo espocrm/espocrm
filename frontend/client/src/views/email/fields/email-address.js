@@ -62,6 +62,22 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
                     }.bind(this)
                 });
             }
+        },
+
+
+        fetchSearch: function () {
+            var value = this.$element.val();
+            if (typeof value.trim === 'function') {
+                value = value.trim();
+            }
+            if (value) {
+                var data = {
+                    type: 'equals',
+                    value: value
+                }
+                return data;
+            }
+            return false;
         }
 
     });

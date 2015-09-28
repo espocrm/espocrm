@@ -57,7 +57,7 @@ Espo.define('Views.Fields.Varchar', 'Views.Fields.Base', function (Dep) {
                 return data;
             }
             return false;
-        },
+        }
 
     });
 });
