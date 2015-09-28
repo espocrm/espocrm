@@ -9,11 +9,11 @@
         "Create EmailFilter": "E.Mail Filter erstellen"
     },
     "tooltips": {
-        "name": "Ein Name f�r den Filter",
-        "subject": "Verwendung des Platzhalters *:\n\ntext* - beginnt mit text,\n*text* - enth�lt text,\n*text - endet mit text.",
-        "bodyContains": "Der Text der E-Mail enth�lt eines der angegebenen Worte oder Phrasen.",
-        "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht ben�tigt.",
-        "to": "Die E-Mails werden an die angegebene Adresse gesendet. Bitte leer lassen wenn nicht ben�tigt.",
-        "parent": "Leer lassen um den Filter global anzuwenden (f�r alle eingehenden E-Mails)."
+        "name": "Ein Name für den Filter",
+        "subject": "Verwendung des Platzhalters *:\n\ntext* - beginnt mit text,\n*text* - enthält text,\n*text - endet mit text.",
+        "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
+        "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht benötigt.",
+        "to": "Die E-Mails werden an die angegebene Adresse gesendet. Bitte leer lassen wenn nicht benötigt.",
+        "parent": "Leer lassen um den Filter global anzuwenden (für alle eingehenden E-Mails)."
     }
 }

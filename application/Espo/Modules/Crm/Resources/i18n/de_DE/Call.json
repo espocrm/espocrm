@@ -19,8 +19,8 @@
     "options": {
         "status": {
             "Planned": "Geplant",
-            "Held": "Durchgef�hrt",
-            "Not Held": "Nicht durchgef�hrt"
+            "Held": "Durchgeführt",
+            "Not Held": "Nicht durchgeführt"
         },
         "direction": {
             "Outbound": "Ausgehend",
@@ -45,7 +45,7 @@
     },
     "presetFilters": {
         "planned": "Geplant",
-        "held": "Durchgef�hrt",
+        "held": "Durchgeführt",
         "todays": "Heutige"
     }
 }

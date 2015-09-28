@@ -2,7 +2,7 @@
     "fields": {
         "name": "Name",
         "description": "Beschreibung",
-        "entryCount": "Eingabez�hler",
+        "entryCount": "Eingabezähler",
         "campaigns": "Kampagnen",
         "endDate": "Enddatum",
         "targetLists": "Kontaktlisten"
@@ -26,6 +26,6 @@
     "labels": {
         "Create TargetList": "Kontaktliste erstellen",
         "Opted Out": "Keine E-Mails",
-        "Cancel Opt-Out": "Opt-Out zur�cksetzen"
+        "Cancel Opt-Out": "Opt-Out zurücksetzen"
     }
 }

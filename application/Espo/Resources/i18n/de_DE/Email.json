@@ -13,8 +13,8 @@
         "isHtml": "Ist HTML",
         "body": "Inhalt",
         "subject": "Betreff",
-        "attachments": "Anh�nge",
-        "selectTemplate": "Vorlage w�hlen",
+        "attachments": "Anhänge",
+        "selectTemplate": "Vorlage wählen",
         "fromEmailAddress": "Von Adresse",
         "toEmailAddresses": "An Adresse",
         "emailAddress": "E-Mail Adresse",
@@ -46,7 +46,7 @@
         "Forward": "Weiterleiten",
         "Original message": "Originalnachricht",
         "Forwarded message": "Weitergeleitete Nachricht:",
-        "Email Accounts": "Pers�nliche E-Mail Konten",
+        "Email Accounts": "Persönliche E-Mail Konten",
         "Inbound Emails": "Gruppen E-Mail Konten",
         "Email Templates": "E-Mail Vorlagen",
         "Send Test Email": "Test E-Mail senden",
@@ -70,7 +70,7 @@
         "sent": "Gesendet",
         "archived": "Archiviert",
         "inbox": "Posteingang",
-        "drafts": "Entw�rfe"
+        "drafts": "Entwürfe"
     },
     "massActions": {
         "markAsRead": "Als gelesen markieren",

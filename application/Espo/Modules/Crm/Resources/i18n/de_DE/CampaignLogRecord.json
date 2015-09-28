@@ -12,7 +12,7 @@
     "options": {
     	"action": {
             "Sent": "Gesendet",
-            "Opened": "Ge�ffnet",
+            "Opened": "Geöffnet",
             "Opted Out": "Keine E-Mails",
             "Bounced": "Nicht zustellbar",
             "Clicked": "Geklickt",
@@ -24,7 +24,7 @@
     },
     "presetFilters": {
         "sent": "Gesendet",
-        "opened": "Ge�ffnet",
+        "opened": "Geöffnet",
         "optedOut": "Keine E-Mails",
         "bounced": "Nicht zustellbar",
         "clicked": "Geklickt",

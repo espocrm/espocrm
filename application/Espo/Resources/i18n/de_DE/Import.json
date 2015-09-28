@@ -1,16 +1,16 @@
 {
     "labels": {
-        "Revert Import": "Import r�ckg�ngig machen",
-        "Return to Import": "Zur�ck zum Import",
-        "Run Import": "Import durchf�hren",
-        "Back": "Zur�ck",
+        "Revert Import": "Import rückgängig machen",
+        "Return to Import": "Zurück zum Import",
+        "Run Import": "Import durchführen",
+        "Back": "Zurück",
         "Field Mapping": "Feldzuordnung",
         "Default Values": "Standardwerte",
-        "Add Field": "Feld hinzuf�gen",
+        "Add Field": "Feld hinzufügen",
         "Created": "Erstellt",
         "Updated": "Aktualisiert",
         "Result": "Resultat",
-        "Show records": "Datens�tze zeigen",
+        "Show records": "Datensätze zeigen",
         "Remove Duplicates": "Duplikate entfernen",
         "importedCount": "Importiert (Anzahl)",
         "duplicateCount": "Duplicate (Anzahl)",
@@ -26,9 +26,9 @@
     },
     "fields": {
         "file": "Datei",
-        "entityType": "Entit�tstyp",
-        "imported": "Importierte Datens�tze",
-        "duplicates": "Doppelte Datens�tze",
-        "updated": "Aktualisierte Datens�tze"
+        "entityType": "Entitätstyp",
+        "imported": "Importierte Datensätze",
+        "duplicates": "Doppelte Datensätze",
+        "updated": "Aktualisierte Datensätze"
     }
 }

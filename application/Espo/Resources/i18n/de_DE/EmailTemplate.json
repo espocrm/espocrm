@@ -5,7 +5,7 @@
         "isHtml": "Ist HTML",
         "body": "Inhalt",
         "subject": "Betreff",
-        "attachments": "Anh�nge",
+        "attachments": "Anhänge",
         "insertField": "Project-Id-Version: Espo de_DE\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: Robert Laussegger <info@iscongroup.net>\nLanguage-Team: iscon group <info@iscongroup.net>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=iso-8859-1\nContent-Transfer-Encoding: 8bit\nLanguage: de_DE\nX-Generator: Poedit 1.6.5\n"
     },
     "links": {
@@ -15,6 +15,6 @@
         "Info": "Info"
     },
     "messages": {
-        "infoText": "Verf�gbare Variablen:\n\n{optOutUrl} &#8211; URL f�r den Abmeldelink};\n\n{optOutLink} &#8211; ein Abmeldelink."
+        "infoText": "Verfügbare Variablen:\n\n{optOutUrl} &#8211; URL für den Abmeldelink};\n\n{optOutLink} &#8211; ein Abmeldelink."
     }
 }

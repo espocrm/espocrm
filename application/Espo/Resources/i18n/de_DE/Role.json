@@ -10,8 +10,8 @@
         "teams": "Teams"
     },
     "tooltips": {
-        "assignmentPermission": "Erm�glicht das Recht der Zuweisung von Datens�tzen an andere Benutzer zu beschr�nken\n\nAlle - Keine Einschr�nkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen\n\nNein - Kann nur sich selbst zuweisen",
-        "userPermission": "Erlaubt Benutzern die Aktivit�ten anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivit�ten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivit�ten sehen"
+        "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen\n\nNein - Kann nur sich selbst zuweisen",
+        "userPermission": "Erlaubt Benutzern die Aktivitäten anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen"
     },
     "labels": {
         "Access": "Zugang",
@@ -34,9 +34,9 @@
     "actions": {
         "read": "Lesen",
         "edit": "Bearbeiten",
-        "delete": "L�schen"
+        "delete": "Löschen"
     },
     "messages": {
-        "changesAfterClearCache": "Alle �nderungen werden erst nach Leeren des Caches wirksam."
+        "changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
     }
 }

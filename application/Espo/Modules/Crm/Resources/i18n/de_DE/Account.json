@@ -16,7 +16,7 @@
     "links": {
         "contacts": "Kontakte",
         "opportunities": "Verkaufschancen",
-        "cases": "F�lle",
+        "cases": "Fälle",
         "documents": "Dokumente",
         "meetingsPrimary": "Meetings (erweitert)",
         "callsPrimary": "Anrufe (erweitert)",
@@ -31,7 +31,7 @@
             "Customer": "Kunde",
             "Investor": "Investor",
             "Partner": "Partner",
-            "Reseller": "Wiederverk�ufer"
+            "Reseller": "Wiederverkäufer"
         },
         "industry": {
             "Agriculture": "Landwirtschaft",
@@ -47,7 +47,7 @@
             "Energy": "Energieerzeuger",
             "Entertainment & Leisure": "Freizeit- und Unterhaltungsindustrie",
             "Finance": "Finanzsektor",
-            "Food & Beverage": "Speisen und Getr�nke",
+            "Food & Beverage": "Speisen und Getränke",
             "Grocery": "Einzelhandel",
             "Healthcare": "Gesundheitswesen",
             "Insurance": "Versicherung",

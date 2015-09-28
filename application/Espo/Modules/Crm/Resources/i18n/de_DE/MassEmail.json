@@ -15,7 +15,7 @@
     },
     "links": {
         "targetLists": "Kontaktlisten",
-        "queueItems": "Warteschlangeneintr�ge",
+        "queueItems": "Warteschlangeneinträge",
         "campaign": "Kampagne",
         "emailTemplate": "E-Mail Vorlage",
         "inboundEmail": "E-Mail Konto"
@@ -35,7 +35,7 @@
         "Send Test": "Test senden"
     },
     "messages": {
-        "selectAtLeastOneTarget": "Zumindest ein Ziel ausw�hlen",
+        "selectAtLeastOneTarget": "Zumindest ein Ziel auswählen",
         "testSent": "Test E-Mail(s) die gesendet werden sollen"
     }
 }

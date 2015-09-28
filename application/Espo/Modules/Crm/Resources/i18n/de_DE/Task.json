@@ -4,18 +4,18 @@
         "parent": "Bezieht sich auf",
         "status": "Status",
         "dateStart": "Startdatum",
-        "dateEnd": "F�llig am",
-        "dateStartDate": "Startdatum (ganzt�gig)",
-        "dateEndDate": "Enddatum (ganzt�gig)",
-        "priority": "Priorit�t",
+        "dateEnd": "Fällig am",
+        "dateStartDate": "Startdatum (ganztägig)",
+        "dateEndDate": "Enddatum (ganztägig)",
+        "priority": "Priorität",
         "description": "Beschreibung",
-        "isOverdue": "Ist �berf�llig",
+        "isOverdue": "Ist überfällig",
         "account": "Firma",
         "dateCompleted": "Datum erledigt",
-        "attachments": "Anh�nge"
+        "attachments": "Anhänge"
     },
     "links": {
-        "attachments": "Anh�nge"
+        "attachments": "Anhänge"
     },
     "options": {
         "status": {
@@ -23,7 +23,7 @@
             "Started": "In Bearbeitung",
             "Completed": "Abgeschlossen",
             "Canceled": "Storniert",
-            "Deferred": "Zur�ckgestellt"
+            "Deferred": "Zurückgestellt"
         },
         "priority" : {
             "Low": "Niedrig",
@@ -37,9 +37,9 @@
         "Complete": "Fertig"
     },
     "presetFilters": {
-        "actual": "Tats�chlich",
+        "actual": "Tatsächlich",
         "completed": "Abgeschlossen",
         "todays": "Heutige",
-        "overdue": "�berf�llig"
+        "overdue": "Überfällig"
     }
 }

@@ -8,8 +8,8 @@
         "users": "Benutzer"
     },
     "tooltips": {
-        "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgew�hlten Rollen",
-        "positionList": "Verf�gbare Positionen in diesem Team Z.B. Verk�ufer, Manager etc."
+        "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen",
+        "positionList": "Verfügbare Positionen in diesem Team Z.B. Verkäufer, Manager etc."
     },
     "labels": {
         "Create Team": "Team erstellen"

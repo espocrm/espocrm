@@ -6,7 +6,7 @@
         "username": "Benutzername",
         "password": "Passwort",
         "port": "Port",
-        "monitoredFolders": "�berwachte Ordner",
+        "monitoredFolders": "Überwachte Ordner",
         "ssl": "SSL",
         "fetchSince": "Holen seit",
         "emailAddress": "E-Mail Adresse",
@@ -27,14 +27,14 @@
         "Create EmailAccount": "E-Mail Konto erstellen",
         "IMAP": "IMAP",
         "Main": "Wichtig",
-        "Test Connection": "Verbindung �berpr�fen"
+        "Test Connection": "Verbindung überprüfen"
     },
     "messages": {
         "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
         "connectionIsOk": "Verbindung ist in Ordnung"
     },
     "tooltips": {
-        "monitoredFolders": "Sie k�nnen einen 'Gesendet' Ordner hinzuf�gen um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
+        "monitoredFolders": "Sie können einen 'Gesendet' Ordner hinzufügen um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
         "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein von der die E-Mail gesendet wurde."
     }
 }

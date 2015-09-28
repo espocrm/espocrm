@@ -8,10 +8,10 @@
         "type": "Typ",
         "labelSingular": "Bezeichnung Einzahl",
         "labelPlural": "Bezeichnung Mehrzahl",
-        "stream": "Vorg�nge",
+        "stream": "Vorgänge",
         "label": "Bezeichnung",
         "linkType": "Relationstyp",
-        "entityForeign": "Fremdentit�t/-modul",
+        "entityForeign": "Fremdentität/-modul",
         "linkForeign": "Remdrelation/-modul",
         "link": "Link",
         "labelForeign": "Fremdbezeichnung",
@@ -38,7 +38,7 @@
         }
     },
     "messages": {
-        "entityCreated": "Entit�t wurde erstellt",
+        "entityCreated": "Entität wurde erstellt",
         "linkAlreadyExists": "Konflikt Name Relation"
     }
 }

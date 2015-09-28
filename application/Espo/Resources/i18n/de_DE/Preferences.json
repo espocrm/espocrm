@@ -6,8 +6,8 @@
         "weekStart": "Erster Tag der Woche",
         "thousandSeparator": "Tausender Trennzeichen",
         "decimalMark": "Dezimaltrennzeichen",
-        "defaultCurrency": "Standardw�hrung",
-        "currencyList": "W�hrungsliste",
+        "defaultCurrency": "Standardwährung",
+        "currencyList": "Währungsliste",
         "language": "Sprache",
         "smtpServer": "Server",
         "smtpPort": "Port",
@@ -37,12 +37,12 @@
     },
     "labels": {
         "Notifications": "Benachrichtigungen",
-        "User Interface": "Benutzeroberfl�che",
+        "User Interface": "Benutzeroberfläche",
         "SMTP": "SMTP",
         "Misc": "Verschiedenes",
         "Locale": "Lokale Einstellungen"
     },
     "tooltips": {
-        "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Eintr�ge der gew�hlten Entit�t, sieht Neuigkeiten in den Vorg�ngen und erh�lt Benachrichtigungen."
+        "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Einträge der gewählten Entität, sieht Neuigkeiten in den Vorgängen und erhält Benachrichtigungen."
     }
 }
