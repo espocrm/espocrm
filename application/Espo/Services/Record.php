@@ -787,7 +787,7 @@ class Record extends \Espo\Core\Services\Base
 
         $count = 0;
 
-        if (array_key_exists('ids', $params)) {
+        if (array_key_exists('ids', $params) && is_array($params['ids'])) {
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);

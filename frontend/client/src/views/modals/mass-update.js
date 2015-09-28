@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -27,7 +27,7 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
 
         header: false,
 
-        template: 'modals.mass-update',
+        template: 'modals/mass-update',
 
         data: function () {
             return {
@@ -151,7 +151,7 @@ Espo.define('Views.Modals.MassUpdate', 'Views.Modal', function (Dep) {
                     data: JSON.stringify({
                         attributes: attributes,
                         ids: self.ids || null,
-                        where: (self.ids.length == 0) ? self.options.where : null,
+                        where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
                         byWhere: this.byWhere
                     }),
                     success: function (result) {

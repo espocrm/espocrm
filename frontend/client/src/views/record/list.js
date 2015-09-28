@@ -410,9 +410,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.notify('Loading...');
-            var ids = this.checkedList;
+            var ids = false;
             var allResultIsChecked = this.allResultIsChecked;
-            this.createView('massUpdate', 'Modals.MassUpdate', {
+            if (!allResultIsChecked) {
+                ids = this.checkedList;
+            }
+
+            this.createView('massUpdate', 'views/modals/mass-update', {
                 scope: this.scope,
                 ids: ids,
                 where: this.collection.getWhere(),
