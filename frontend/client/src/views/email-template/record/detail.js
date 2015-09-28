@@ -23,6 +23,8 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
 
     return Dep.extend({
 
+        duplicateAction: true,
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             this.listenToInsertField();
