@@ -6,21 +6,17 @@
 		    	[
 			        {
 			            "name": "Stream",
-			            "id": "d0004"
-			        },
-			        {
-			            "name": "Calls",
-			            "id": "d0001"
+			            "id": "defaultStream"
 			        }
 			    ],
 			    [
 			        {
 			            "name": "Tasks",
-			            "id": "d0003"
+			            "id": "defaultTasks"
 			        },
 			        {
-			            "name": "Meetings",
-			            "id": "d0002"
+			            "name": "Activities",
+			            "id": "defailtActivities"
 			        }
 			    ]
 			]
