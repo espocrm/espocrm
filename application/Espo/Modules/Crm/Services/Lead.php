@@ -29,12 +29,13 @@ use \Espo\ORM\Entity;
 
 class Lead extends \Espo\Services\Record
 {
-    protected $mergeLinkList = array(
+    protected $mergeLinkList = [
         'tasks',
         'meetings',
         'calls',
-        'emails'
-    );
+        'emails',
+        'targetLists'
+    ];
 
     protected function getDuplicateWhereClause(Entity $entity)
     {

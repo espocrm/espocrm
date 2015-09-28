@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Services;
 
@@ -26,6 +26,10 @@ use \Espo\ORM\Entity;
 
 class Contact extends \Espo\Services\Record
 {
+    protected $mergeLinkList = [
+        'targetLists'
+    ];
+
     protected function getDuplicateWhereClause(Entity $entity)
     {
         $data = array(
