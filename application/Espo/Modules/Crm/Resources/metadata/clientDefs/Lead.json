@@ -58,6 +58,10 @@
         "rowActionsView": "Record.RowActions.Empty",
         "select": false,
         "create": false
+      },
+      "targetLists": {
+         "create": false,
+         "rowActionsView": "views/record/row-actions/relationship-unlink-only"
       }
    },
    "filterList": [

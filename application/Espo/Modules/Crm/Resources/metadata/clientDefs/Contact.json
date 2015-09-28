@@ -24,12 +24,16 @@
    },
    "relationshipPanels": {
       "campaignLogRecords": {
-        "rowActionsView": "Record.RowActions.Empty",
+        "rowActionsView": "views/record/row-actions/empty",
         "select": false,
         "create": false
       },
       "opportunities":{
          "layout":"listForAccount"
+      },
+      "targetLists": {
+         "create": false,
+         "rowActionsView": "views/record/row-actions/relationship-unlink-only"
       }
    },
    "boolFilterList": ["onlyMy"],
