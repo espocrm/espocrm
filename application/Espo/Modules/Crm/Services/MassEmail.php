@@ -273,8 +273,7 @@ class MassEmail extends \Espo\Services\Record
 
         $body = $emailData['body'];
 
-        $trackOpenedUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
-        $trackOpenedHtml = '<img width="1" height="1" src="'.$trackOpenedUrl.'">';
+
 
         $optOutUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=unsubscribe&id=' . $queueItem->id;
         $optOutLink = '<a href="'.$optOutUrl.'">'.$this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign').'</a>';
@@ -290,11 +289,19 @@ class MassEmail extends \Espo\Services\Record
         if (stripos($body, '?entryPoint=unsubscribe&id') === false) {
             if ($emailData['isHtml']) {
                 $body .= "<br><br>" . $optOutLink;
+            } else {
+                $body .= "\n\n" . $optOutUrl;
+            }
+        }
+
+        $trackOpenedUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
+        $trackOpenedHtml = '<img width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
+
+        if ($massEmail->get('campaignId')) {
+            if ($emailData['isHtml']) {
                 if ($massEmail->get('campaignId')) {
                     $body .= $trackOpenedHtml;
                 }
-            } else {
-                $body .= "\n\n" . $optOutUrl;
             }
         }
 
