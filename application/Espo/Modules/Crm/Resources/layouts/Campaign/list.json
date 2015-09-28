@@ -2,5 +2,5 @@
     {"name":"name","width":40,"link":true},
     {"name":"type","width":20},
     {"name":"status"},
-    {"name":"endDate"}
+    {"name":"createdAt"}
 ]
