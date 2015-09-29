@@ -47,7 +47,7 @@ class Email extends \Espo\Core\Notificators\Base
             return;
         }
 
-        if ($entity->get('status') === 'Sent') {
+        if ($entity->get('isJustSent')) {
             $previousUserIdList = [];
         } else {
             $previousUserIdList = $entity->getFetched('usersIds');

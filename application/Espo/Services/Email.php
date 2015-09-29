@@ -131,6 +131,8 @@ class Email extends Record
             $this->getStreamService()->noteEmailSent($parent, $entity);
         }
 
+        $entity->set('isJustSent', true);
+
         $this->getEntityManager()->saveEntity($entity);
     }
 

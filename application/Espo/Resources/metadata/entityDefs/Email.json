@@ -177,6 +177,12 @@
             "default": false,
             "readOnly": true
         },
+        "isJustSent": {
+            "type": "bool",
+            "default": false,
+            "disabled": true,
+            "notStorable": true
+        },
         "teams": {
             "type": "linkMultiple"
         },
