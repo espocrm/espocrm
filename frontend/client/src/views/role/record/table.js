@@ -50,7 +50,8 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
             'recordAllTeamOwnNo': ['all', 'team', 'own', 'no'],
             'recordAllTeamNo': ['all', 'team', 'no'],
             'recordAllOwnNo': ['all', 'own', 'no'],
-            'recordAllNo': ['all', 'no']
+            'recordAllNo': ['all', 'no'],
+            'record': ['all', 'team', 'own', 'no'],
         },
 
         data: function () {
