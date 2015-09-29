@@ -27,7 +27,7 @@ class Account extends \Espo\Core\SelectManagers\Base
     protected function filterPartners(&$result)
     {
         $result['whereClause'][] = array(
-            'type' => 'Partnter'
+            'type' => 'Partner'
         );
     }
 
