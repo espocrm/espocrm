@@ -244,13 +244,13 @@ class Base
 
                     if (!empty($defs['midKeys'])) {
                         $result['distinct'] = true;
-                        $result['leftJoins'][] = $link;
+                        $result['joins'][] = $link;
                         $key = $defs['midKeys'][1];
 
                         $middleName = $link . 'Middle';
 
                         $result['customJoin'] .= "
-                            LEFT JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
+                            JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
                         ";
                         $part[$pathName . '.ascendorId'] = $val;
                     }
