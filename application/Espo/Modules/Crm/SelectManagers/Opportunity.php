@@ -27,7 +27,7 @@ class Opportunity extends \Espo\Core\SelectManagers\Base
     protected function filterOpen(&$result)
     {
         $result['whereClause'][] = array(
-            'stage!=' => array('Closed Won', 'Closed Lost')
+            'stage!=' => ['Closed Won', 'Closed Lost']
         );
     }
 
@@ -35,6 +35,13 @@ class Opportunity extends \Espo\Core\SelectManagers\Base
     {
         $result['whereClause'][] = array(
             'stage=' => 'Closed Won'
+        );
+    }
+
+    protected function filterLost(&$result)
+    {
+        $result['whereClause'][] = array(
+            'stage=' => 'Closed Lost'
         );
     }
 
