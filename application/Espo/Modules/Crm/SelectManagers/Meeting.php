@@ -31,7 +31,10 @@ class Meeting extends \Espo\Core\SelectManagers\Base
         }
         $result['whereClause'][] = array(
         	'users.id' => $this->getUser()->id,
-            'usersMiddle.status!=' => 'Declined'
+            'OR' => array(
+                'usersMiddle.status!=' => 'Declined',
+                'usersMiddle.status=' => null
+            )
         );
     }
 
