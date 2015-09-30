@@ -38,6 +38,7 @@
     },
     "presetFilters": {
         "open": "Offen",
-        "won": "Gewonnen"
+        "won": "Gewonnen",
+        "lost": "Lost"
     }
 }
