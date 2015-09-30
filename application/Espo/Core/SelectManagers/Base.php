@@ -242,15 +242,15 @@ class Base
 
                 if ($defs['type'] == 'manyMany') {
 
-                    if (!empty($defs['relationName']) && !empty($defs['midKeys'])) {
+                    if (!empty($defs['midKeys'])) {
                         $result['distinct'] = true;
-                        $result['joins'][] = $link;
+                        $result['leftJoins'][] = $link;
                         $key = $defs['midKeys'][1];
 
-                        $relationName = lcfirst($defs['relationName']);
+                        $middleName = $link . 'Middle';
 
                         $result['customJoin'] .= "
-                            JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($relationName) . "." . $query->toDb($key) . "
+                            LEFT JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
                         ";
                         $part[$pathName . '.ascendorId'] = $val;
                     }
