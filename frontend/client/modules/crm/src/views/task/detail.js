@@ -30,7 +30,7 @@ Espo.define('Crm:Views.Task.Detail', 'Views.Detail', function (Dep) {
                     this.menu.buttons.push({
                         'label': 'Complete',
                         'action': 'setCompleted',
-                        icon: 'glyphicon glyphicon-ok',
+                        'iconHtml': '<span class="glyphicon glyphicon-ok"></span>',
                         'acl': 'edit',
                     });
                 }

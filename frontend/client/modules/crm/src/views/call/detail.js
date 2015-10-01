@@ -30,7 +30,6 @@
                     this.menu.buttons.push({
                         'label': 'Send Invitations',
                         'action': 'sendInvitations',
-                        icon: 'glyphicon glyphicon-send',
                         'acl': 'edit',
                     });
                 }
