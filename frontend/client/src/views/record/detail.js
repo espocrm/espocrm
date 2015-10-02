@@ -34,6 +34,8 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
         gridLayout: null,
 
+        detailLayout: null,
+
         /**
          * @property {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display buttons.
          */
@@ -627,10 +629,19 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 return;
             }
 
+            if (this.detailLayout) {
+                this.gridLayout = {
+                    type: 'record',
+                    layout: this.convertDetailLayout(this.detailLayout)
+                };
+                callback(this.gridLayout);
+                return;
+            }
+
             this._helper.layoutManager.get(this.model.name, this.layoutName, function (simpleLayout) {
                 this.gridLayout = {
                     type: 'record',
-                    layout: this.convertDetailLayout(simpleLayout),
+                    layout: this.convertDetailLayout(simpleLayout)
                 };
                 callback(this.gridLayout);
             }.bind(this));
