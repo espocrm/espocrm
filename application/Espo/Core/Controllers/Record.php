@@ -170,6 +170,7 @@ class Record extends Base
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
+        $textFilter = $request->get('textFilter');
 
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
