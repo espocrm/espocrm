@@ -340,6 +340,8 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
             this.layoutName = this.options.layoutName || this.layoutName;
 
+            this.detailLayout = this.options.detailLayout || this.detailLayout;
+
             this.type = this.options.type || this.type;
 
             this.buttons = this.options.buttons || this.buttons;
