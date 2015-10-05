@@ -39,6 +39,7 @@
     },
     "messages": {
         "entityCreated": "Entity has been created",
-        "linkAlreadyExists": "Link name conflict."
+        "linkAlreadyExists": "Link name conflict.",
+        "linkConflict": "Link with the same name already exists."
     }
 }
