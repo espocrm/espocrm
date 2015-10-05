@@ -290,6 +290,16 @@ class EntityManager
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
                 }
                 $dataLeft = array(
+                    'fields' => array(
+                        $link => array(
+                            "type" => "linkMultiple",
+                            "layoutDetailDisabled"  => true,
+                            "layoutListDisabled"  => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "noLoad"  => true,
+                            'isCustom' => true
+                        )
+                    ),
                     'links' => array(
                         $link => array(
                             'type' => 'hasMany',
@@ -335,6 +345,16 @@ class EntityManager
                     )
                 );
                 $dataRight = array(
+                    'fields' => array(
+                        $linkForeign => array(
+                            "type" => "linkMultiple",
+                            "layoutDetailDisabled"  => true,
+                            "layoutListDisabled"  => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "noLoad"  => true,
+                            'isCustom' => true
+                        )
+                    ),
                     'links' => array(
                         $linkForeign => array(
                             'type' => 'hasMany',
@@ -347,6 +367,16 @@ class EntityManager
                 break;
             case 'manyToMany':
                 $dataLeft = array(
+                    'fields' => array(
+                        $link => array(
+                            "type" => "linkMultiple",
+                            "layoutDetailDisabled"  => true,
+                            "layoutListDisabled"  => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "noLoad"  => true,
+                            'isCustom' => true
+                        )
+                    ),
                     'links' => array(
                         $link => array(
                             'type' => 'hasMany',
@@ -357,6 +387,16 @@ class EntityManager
                     )
                 );
                 $dataRight = array(
+                    'fields' => array(
+                        $linkForeign => array(
+                            "type" => "linkMultiple",
+                            "layoutDetailDisabled"  => true,
+                            "layoutListDisabled"  => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "noLoad"  => true,
+                            'isCustom' => true
+                        )
+                    ),
                     'links' => array(
                         $linkForeign => array(
                             'type' => 'hasMany',
