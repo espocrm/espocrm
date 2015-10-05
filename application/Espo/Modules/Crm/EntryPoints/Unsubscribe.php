@@ -64,6 +64,17 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                 if ($targetType && $targetId) {
                     $target = $this->getEntityManager()->getEntity($targetType, $targetId);
 
+                    if ($massEmail->get('optOutEntirely')) {
+                        $emailAddress = $target->get('emailAddress');
+                        if ($emailAddress) {
+                            $ea = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+                            if ($ea) {
+                                $ea->set('optOut', true);
+                                $this->getEntityManager()->saveEntity($ea);
+                            }
+                        }
+                    }
+
                     $link = null;
                     $m = array(
                         'Account' => 'accounts',

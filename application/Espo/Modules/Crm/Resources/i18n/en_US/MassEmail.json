@@ -11,7 +11,8 @@
         "campaign": "Campaign",
         "emailTemplate": "Email Template",
         "inboundEmail": "Email Account",
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "optOutEntirely": "Opt-Out Entirely"
     },
     "links": {
         "targetLists": "Target Lists",
@@ -37,5 +38,8 @@
     "messages": {
         "selectAtLeastOneTarget": "Select at least one target.",
         "testSent": "Test email(s) supposed to be sent"
+    },
+    "tooltips": {
+        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore."
     }
 }

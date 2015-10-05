@@ -13,6 +13,11 @@
             "type": "bool",
             "default": false
         },
+        "optOutEntirely": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
         "fromAddress": {
             "type": "varchar",
             "trim": true,

@@ -16,7 +16,8 @@
                 {"name": "emailTemplate", "fullWidth": true}
             ],
             [
-                {"name": "storeSentEmails"}
+                {"name": "storeSentEmails"},
+                {"name": "optOutEntirely"}
             ],
             [
                 {"name": "fromAddress"},
