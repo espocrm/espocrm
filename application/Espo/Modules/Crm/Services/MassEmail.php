@@ -93,7 +93,16 @@ class MassEmail extends \Espo\Services\Record
         $targetHash = array();
         $entityList = [];
 
+        $pdo = $this->getEntityManager()->getPDO();
+
         if (!$isTest) {
+
+            if (!$massEmail->has('excludingTargetListsIds')) {
+                $massEmail->loadLinkMultipleField('excludingTargetLists');
+            }
+
+            $excludingTargetListIdList = $massEmail->get('excludingTargetListsIds');
+
             $targetListCollection = $massEmail->get('targetLists');
             foreach ($targetListCollection as $targetList) {
                 $accountList = $targetList->get('accounts', array(
@@ -106,9 +115,29 @@ class MassEmail extends \Espo\Services\Record
                     if (!empty($targetHash[$hashId])) {
                         continue;
                     }
+                    $toExclude = false;
+                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
+                        $sql = "
+                            SELECT id FROM account_target_list
+                            WHERE
+                                account_id = ".$pdo->quote($account->id)." AND
+                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
+                                deleted = 0
+                        ";
+                        $sth = $pdo->prepare($sql);
+                        $sth->execute();
+                        if ($sth->fetch()) {
+                            $toExclude = true;
+                            break;
+                        }
+                    }
+                    if ($toExclude) {
+                        continue;
+                    }
                     $entityList[] = $account;
                     $targetHash[$hashId] = true;
                 }
+
                 $contactList = $targetList->get('contacts', array(
                     'additionalColumnsConditions' => array(
                         'optedOut' => false
@@ -119,9 +148,29 @@ class MassEmail extends \Espo\Services\Record
                     if (!empty($targetHash[$hashId])) {
                         continue;
                     }
+                    $toExclude = false;
+                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
+                        $sql = "
+                            SELECT id FROM contact_target_list
+                            WHERE
+                                contact_id = ".$pdo->quote($contact->id)." AND
+                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
+                                deleted = 0
+                        ";
+                        $sth = $pdo->prepare($sql);
+                        $sth->execute();
+                        if ($sth->fetch()) {
+                            $toExclude = true;
+                            break;
+                        }
+                    }
+                    if ($toExclude) {
+                        continue;
+                    }
                     $entityList[] = $contact;
                     $targetHash[$hashId] = true;
                 }
+
                 $leadList = $targetList->get('leads', array(
                     'additionalColumnsConditions' => array(
                         'optedOut' => false
@@ -132,9 +181,29 @@ class MassEmail extends \Espo\Services\Record
                     if (!empty($targetHash[$hashId])) {
                         continue;
                     }
+                    $toExclude = false;
+                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
+                        $sql = "
+                            SELECT id FROM lead_target_list
+                            WHERE
+                                lead_id = ".$pdo->quote($lead->id)." AND
+                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
+                                deleted = 0
+                        ";
+                        $sth = $pdo->prepare($sql);
+                        $sth->execute();
+                        if ($sth->fetch()) {
+                            $toExclude = true;
+                            break;
+                        }
+                    }
+                    if ($toExclude) {
+                        continue;
+                    }
                     $entityList[] = $lead;
                     $targetHash[$hashId] = true;
                 }
+
                 $userList = $targetList->get('users', array(
                     'additionalColumnsConditions' => array(
                         'optedOut' => false
@@ -143,6 +212,25 @@ class MassEmail extends \Espo\Services\Record
                 foreach ($userList as $user) {
                     $hashId = $user->getEntityType() . '-'. $user->id;
                     if (!empty($targetHash[$hashId])) {
+                        continue;
+                    }
+                    $toExclude = false;
+                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
+                        $sql = "
+                            SELECT id FROM target_list_user
+                            WHERE
+                                user_id = ".$pdo->quote($user->id)." AND
+                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
+                                deleted = 0
+                        ";
+                        $sth = $pdo->prepare($sql);
+                        $sth->execute();
+                        if ($sth->fetch()) {
+                            $toExclude = true;
+                            break;
+                        }
+                    }
+                    if ($toExclude) {
                         continue;
                     }
                     $entityList[] = $user;

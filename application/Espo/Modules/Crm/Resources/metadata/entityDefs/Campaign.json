@@ -48,6 +48,9 @@
         "targetLists": {
             "type": "linkMultiple"
         },
+        "excludingTargetLists": {
+            "type": "linkMultiple"
+        },
         "sentCount": {
             "type": "int",
             "notStorable": true,
@@ -129,6 +132,12 @@
             "type": "hasMany",
             "entity": "TargetList",
             "foreign": "campaigns"
+        },
+        "excludingTargetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "campaignsExcluding",
+            "relationName": "campaignTargetListExcluding"
         },
         "accounts": {
             "type": "hasMany",

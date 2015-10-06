@@ -46,26 +46,26 @@
             "Email": [
                {
                   "action": "show",
-                  "fields": ["targetLists"]
+                  "fields": ["targetLists", "excludingTargetLists"]
                }
             ],
             "Newsletter": [
                {
                   "action": "show",
-                  "fields": ["targetLists"]
+                  "fields": ["targetLists", "excludingTargetLists"]
                }
             ],
             "Mail": [
                {
                   "action": "show",
-                  "fields": ["targetLists"]
+                  "fields": ["targetLists", "excludingTargetLists"]
                }
             ]
          },
          "default": [
             {
                "action": "hide",
-               "fields": ["targetLists"]
+               "fields": ["targetLists", "excludingTargetLists"]
             }
          ]
       }

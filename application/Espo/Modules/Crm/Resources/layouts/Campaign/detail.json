@@ -4,8 +4,8 @@
         "rows":[
             [{"name":"name"}, {"name":"status"}],
             [{"name":"type"}, {"name":"startDate"}],
-            [{"name":"targetLists"}, {"name":"endDate"}],
-            [false, {"name":"budget"}],
+            [{"name":"budget"}, {"name":"endDate"}],
+            [{"name":"targetLists"}, {"name":"excludingTargetLists"}],
             [{"name":"description", "fullWidth": true}]
         ]
     }

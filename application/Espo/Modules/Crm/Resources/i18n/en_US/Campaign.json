@@ -7,6 +7,7 @@
         "startDate": "Start Date",
         "endDate": "End Date",
         "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
         "sentCount": "Sent",
         "openedCount": "Opened",
         "clickedCount": "Clicked",
@@ -21,6 +22,7 @@
     },
     "links": {
         "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
         "accounts": "Accounts",
         "contacts": "Contacts",
         "leads": "Leads",

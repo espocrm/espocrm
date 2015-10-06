@@ -12,10 +12,12 @@
         "emailTemplate": "Email Template",
         "inboundEmail": "Email Account",
         "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
         "optOutEntirely": "Opt-Out Entirely"
     },
     "links": {
         "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
         "queueItems": "Queue Items",
         "campaign": "Campaign",
         "emailTemplate": "Email Template",

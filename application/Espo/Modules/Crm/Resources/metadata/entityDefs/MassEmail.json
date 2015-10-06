@@ -48,6 +48,9 @@
             "type": "linkMultiple",
             "required": true
         },
+        "excludingTargetLists": {
+            "type": "linkMultiple"
+        },
         "inboundEmail": {
             "type": "link"
         },
@@ -90,6 +93,12 @@
             "type": "hasMany",
             "entity": "TargetList",
             "foreign": "massEmails"
+        },
+        "excludingTargetLists": {
+            "type": "hasMany",
+            "entity": "TargetList",
+            "foreign": "massEmailsExcluding",
+            "relationName": "massEmailTargetListExcluding"
         },
         "inboundEmail": {
             "type": "belongsTo",

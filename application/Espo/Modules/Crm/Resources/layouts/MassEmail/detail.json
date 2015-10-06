@@ -12,11 +12,11 @@
             ],
             [
                 {"name": "targetLists"},
-                false
+                {"name": "excludingTargetLists"}
             ],
             [
-                {"name": "optOutEntirely"},
-                false
+                false,
+                {"name": "optOutEntirely"}
             ],
             [
                 {"name": "emailTemplate"}, {"name": "storeSentEmails"}

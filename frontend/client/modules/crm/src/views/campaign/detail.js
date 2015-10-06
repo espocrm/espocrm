@@ -27,7 +27,9 @@ Espo.define('crm:views/campaign/detail', 'views/detail', function (Dep) {
         relatedAttributeMap: {
             'massEmails': {
                 'targetListsIds': 'targetListsIds',
-                'targetListsNames': 'targetListsNames'
+                'targetListsNames': 'targetListsNames',
+                'excludingTargetListsIds': 'excludingTargetListsIds',
+                'excludingTargetListsNames': 'excludingTargetListsNames'
             },
         },
 

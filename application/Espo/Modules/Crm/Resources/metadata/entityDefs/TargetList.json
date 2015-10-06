@@ -68,6 +68,16 @@
             "entity": "MassEmail",
             "foreign": "targetLists"
         },
+        "campaignsExcluding": {
+            "type": "hasMany",
+            "entity": "Campaign",
+            "foreign": "excludingTargetLists"
+        },
+        "massEmailsExcluding": {
+            "type": "hasMany",
+            "entity": "MassEmail",
+            "foreign": "excludingTargetLists"
+        },
         "accounts": {
             "type": "hasMany",
             "entity": "Account",

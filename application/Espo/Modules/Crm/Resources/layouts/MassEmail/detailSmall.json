@@ -13,6 +13,9 @@
                 {"name": "targetLists", "fullWidth": true}
             ],
             [
+                {"name": "excludingTargetLists", "fullWidth": true}
+            ],
+            [
                 {"name": "emailTemplate", "fullWidth": true}
             ],
             [
