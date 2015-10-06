@@ -75,11 +75,11 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             this.messageData = {
                 'user': 'field:createdBy',
                 'entity': 'field:parent',
-                'entityType': (this.translate(this.model.get('parentType'), 'scopeNames') || '').toLowerCase(),
+                'entityType': this.translateEntityType(this.model.get('parentType')),
             };
 
             if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
-                this.createView('right', 'Stream.RowActions.Default', {
+                this.createView('right', 'views/stream/row-actions/default', {
                     el: this.options.el + ' .right-container',
                     acl: this.options.acl,
                     model: this.model,
@@ -87,6 +87,19 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
                     isRemovable: this.isRemovable
                 });
             }
+        },
+
+        translateEntityType: function (entityType) {
+            var string = (this.translate(entityType, 'scopeNames') || '');
+
+            string = string.toLowerCase();
+
+            var language = this.getPreferences().get('language') || this.getConfig().get('language');
+
+            if (~['de_DE', 'nl_NL'].indexOf(language)) {
+                string = Espo.Utils.upperCaseFirst(string);
+            }
+            return string;
         },
 
         createField: function (name, type, params, view) {

@@ -29,7 +29,7 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
 
         data: function () {
             return _.extend({
-                relatedTypeString: this.translate(this.entityType, 'scopeNames').toLowerCase()
+                relatedTypeString: this.translateEntityType(this.entityType)
             }, Dep.prototype.data.call(this));
         },
 
@@ -47,7 +47,7 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
             this.entityId = this.model.get('relatedId') || data.entityId || null;
             this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
-            this.messageData['relatedEntityType'] = this.translate(this.entityType, 'scopeNames').toLowerCase();
+            this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
             this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
 
             this.createMessage();
