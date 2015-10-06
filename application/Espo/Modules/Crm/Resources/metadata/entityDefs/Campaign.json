@@ -58,24 +58,28 @@
             "disabled": true
         },
         "openedCount": {
+            "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
             "readOnly": true,
             "disabled": true
         },
         "clickedCount": {
+            "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
             "readOnly": true,
             "disabled": true
         },
         "optedOutCount": {
+            "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
             "readOnly": true,
             "disabled": true
         },
         "bouncedCount": {
+            "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
             "readOnly": true,
@@ -94,6 +98,30 @@
             "disabled": true
         },
         "leadCreatedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "openedPercentage": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "clickedPercentage": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "optedOutPercentage": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "bouncedPercentage": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,

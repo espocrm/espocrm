@@ -43,11 +43,23 @@ class Campaign extends \Espo\Services\Record
         ))->count();
         $entity->set('openedCount', $openedCount);
 
+        $openedPercentage = null;
+        if ($sentCount > 0) {
+            $openedPercentage = round($openedCount / $sentCount * 100, 2, \PHP_ROUND_HALF_EVEN);
+        }
+        $entity->set('openedPercentage', $openedPercentage);
+
         $clickedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
             'action' => 'Clicked'
         ))->count();
         $entity->set('clickedCount', $clickedCount);
+
+        $clickedPercentage = null;
+        if ($sentCount > 0) {
+            $clickedPercentage = round($clickedCount / $sentCount * 100, 2, \PHP_ROUND_HALF_EVEN);
+        }
+        $entity->set('clickedPercentage', $clickedPercentage);
 
         $optedOutCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
@@ -55,11 +67,23 @@ class Campaign extends \Espo\Services\Record
         ))->count();
         $entity->set('optedOutCount', $optedOutCount);
 
+        $optedOutPercentage = null;
+        if ($sentCount > 0) {
+            $optedOutPercentage = round($optedOutCount / $sentCount * 100, 2, \PHP_ROUND_HALF_EVEN);
+        }
+        $entity->set('optedOutPercentage', $optedOutPercentage);
+
         $bouncedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
             'action' => 'Bounced'
         ))->count();
         $entity->set('bouncedCount', $bouncedCount);
+
+        $bouncedPercentage = null;
+        if ($sentCount > 0) {
+            $bouncedPercentage = round($bouncedCount / $sentCount * 100, 2, \PHP_ROUND_HALF_EVEN);
+        }
+        $entity->set('bouncedPercentage', $bouncedPercentage);
 
         $leadCreatedCount = $this->getEntityManager()->getRepository('Lead')->where(array(
             'campaignId' => $entity->id
