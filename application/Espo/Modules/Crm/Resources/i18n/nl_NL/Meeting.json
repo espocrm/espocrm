@@ -22,15 +22,20 @@
             "Not Held": "Niet Vasthouden"
         },
         "acceptanceStatus": {
-            "None": "Geen",
+            "None": "None",
             "Accepted": "Geaccepteerd",
-            "Declined": "Geweigerd"
+            "Declined": "Geweigerd",
+            "Tentative": "Tentative"
         }
+    },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
     },
     "labels": {
         "Create Meeting": "Plan Vergadering",
-        "Set Held": "Vasthouden",
-        "Set Not Held": "Niet vasthouden",
+        "Set Held": "Set Held",
+        "Set Not Held": "Set Not Held",
         "Send Invitations": "Uitnodiging versturen",
         "on time": "op tijd",
         "before": "voordat"

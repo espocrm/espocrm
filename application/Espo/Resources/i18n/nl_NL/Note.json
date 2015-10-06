@@ -2,5 +2,10 @@
     "fields": {
         "post": "Post",
         "attachments": "Bijlagen"
+    },
+    "filters": {
+        "all": "Alles",
+        "posts": "Posts",
+        "updates": "Updates"
     }
 }

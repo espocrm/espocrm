@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Revert": "Terugkeren",
+        "Revert Import": "Revert Import",
         "Return to Import": "Voor Import geef Enter",
         "Run Import": "Start Importeren",
         "Back": "Terug",
@@ -10,9 +10,25 @@
         "Created": "Gemaakt",
         "Updated": "Geupdate",
         "Result": "Resultaat",
-        "Show records": "Toon Velden"
+        "Show records": "Toon Velden",
+        "Remove Duplicates": "Remove Duplicates",
+        "importedCount": "Imported (count)",
+        "duplicateCount": "Duplicates (count)",
+        "updatedCount": "Updated (count)",
+        "Create Only": "Create Only",
+        "Create and Update": "Create & Update",
+        "Update Only": "Update Only",
+        "Update by": "Update by"
     },
     "messages": {
-        "utf8": "Should be UTF-8 encoded"
+        "utf8": "Should be UTF-8 encoded",
+        "duplicatesRemoved": "Duplicates removed"
+    },
+    "fields": {
+        "file": "Bestand",
+        "entityType": "Entity Type",
+        "imported": "Imported Records",
+        "duplicates": "Duplicate Records",
+        "updated": "Updated Records"
     }
 }

@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Record Naam",
-        "emailAddress": "Email",
+        "emailAddress": "E-mail",
         "title": "Titel",
         "website": "Website",
         "accountName": "Naam Klant",

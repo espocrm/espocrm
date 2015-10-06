@@ -4,11 +4,12 @@
         "Disabled": "Uitgeschakeld",
         "System": "Systeem",
         "Users": "Gebruikers",
-        "Email": "Email",
+        "Email": "E-mail",
         "Data": "Data",
         "Customization": "Aanpassing",
         "Available Fields": "Beschikbare Velden",
         "Layout": "Layout",
+        "Entity Manager": "Entity Manager",
         "Add Panel": "Kader toevoegen",
         "Add Field": "Veld toevoegen",
         "Settings": "Instellingen",
@@ -19,11 +20,11 @@
         "Teams": "Groepen",
         "Roles": "Functies",
         "Outbound Emails": "Uitgaande Emails",
+        "Group Email Accounts": "Group Email Accounts",
         "Inbound Emails": "Inkomende Emails",
         "Email Templates": "Email Templates",
         "Import": "Importeren",
         "Layout Manager": "Layout Manager",
-        "Field Manager": "Velden Manager",
         "User Interface": "Gebruikers Interface",
         "Auth Tokens": "Auth Token",
         "Authentication": "Authenticatie",
@@ -40,7 +41,15 @@
         "Install": "Installeren",
         "Ready for installation": "Gereed voor installatie",
         "Uninstalling...": "Bezig met deinstalleren...",
-        "Uninstalled": "Gedeinstalleerd"
+        "Uninstalled": "Gedeinstalleerd",
+        "Create Entity": "Create Entity",
+        "Edit Entity": "Edit Entity",
+        "Create Link": "Create Link",
+        "Edit Link": "Edit Link",
+        "Notifications": "Meldingen",
+        "Jobs": "Jobs",
+        "Reset to Default": "Reset to Default",
+        "Email Filters": "Email Filters"
     },
     "layouts": {
         "list": "Lijst",
@@ -63,7 +72,8 @@
         "currency": "Valuta",
         "date": "Datum",
         "datetime": "Datum Tijd",
-        "email": "Email",
+        "datetimeOptional": "Date/DateTime",
+        "email": "E-mail",
         "enum": "Enum",
         "enumInt": "Enum Integer",
         "enumFloat": "Enum Float",
@@ -79,7 +89,12 @@
         "varchar": "Varchar",
         "file": "Bestand",
         "image": "Afbeelding",
-        "multiEnum": "Multi-Enum"
+        "multiEnum": "Multi-Enum",
+        "attachmentMultiple": "Attachment Multiple",
+        "rangeInt": "Range Integer",
+        "rangeFloat": "Range Float",
+        "rangeCurrency": "Range Currency",
+        "wysiwyg": "Wysiwyg"
     },
     "fields": {
         "type": "Type",
@@ -96,7 +111,15 @@
         "min": "Min",
         "max": "Max",
         "translation": "Vertaling",
-        "previewSize": "Preview Afmeting"
+        "previewSize": "Preview Afmeting",
+        "noEmptyString": "No Empty String",
+        "defaultType": "Default Type",
+        "seeMoreDisabled": "Disable Text Cut",
+        "entityList": "Entity List",
+        "isSorted": "Is Sorted (alphabetically)",
+        "audited": "Audited",
+        "trim": "Trim",
+        "height": "Height (px)"
     },
     "messages": {
         "upgradeVersion": "Uw EspoCRM wordt geupgrade naar versie <strong>{version}</strong>. Dit kan enige tijd duren.",
@@ -123,16 +146,20 @@
         "teams": "Groepen beheer.",
         "roles": "Functie beheer.",
         "outboundEmails": "SMTP instellingen voor uitgaande emails.",
-        "inboundEmails": "Groep IMAP email accounts. Email importeren en Email-naar-Casus.",
+        "groupEmailAccounts": "Group IMAP email accounts. Email import and Email-to-Case.",
         "emailTemplates": "Templates voor uitgaande emails.",
         "import": "Importeer data vanuit CSV bestand.",
         "layoutManager": "Bewerk layouts (lijst, detail, bewerk, zoeken, massa update).",
-        "fieldManager": "Nieuwe velden aanmaken of bestaande velden bewerken.",
+        "entityManager": "Create custom entities, edit existing ones. Manage field and relationships.",
         "userInterface": "Configureer UI.",
         "authTokens": "Actieve bevestigde sessie. IP adres en laatste inlogdatum.",
         "authentication": "Verificatie-instellingen",
         "currency": "Valuta instellingen en tarieven.",
-        "extensions": "Extensies (de)installeren."
+        "extensions": "Extensies (de)installeren.",
+        "integrations": "Integration with third-party services.",
+        "notifications": "In-app and email notification settings.",
+        "inboundEmails": "Groep IMAP email accounts. Email importeren en Email-naar-Casus.",
+        "emailFilters": "Emails messages that match specified filter won't be imported."
     },
     "options": {
         "previewSize": {
@@ -141,10 +168,5 @@
             "medium": "Middel",
             "large": "Groot"
         }
-    },
-    "layoutManagerDataAttributes": {
-        "width": "Breedte (%)",
-        "link": "Link",
-        "notSortable": "Ongesorteerd"
     }
 }

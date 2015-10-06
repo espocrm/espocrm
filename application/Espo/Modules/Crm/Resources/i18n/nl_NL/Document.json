@@ -11,11 +11,14 @@
         "source": "Bron",
         "publishDate": "Publicatiedatum",
         "expirationDate": "Vervaldatum",
-        "description": "Beschrijving"
+        "description": "Beschrijving",
+        "accounts": "Klanten",
+        "folder": "Folder"
     },
     "links": {
         "accounts": "Klanten",
-        "opportunities": "Kansen"
+        "opportunities": "Kansen",
+        "folder": "Folder"
     },
     "options": {
         "status": {
@@ -23,6 +26,13 @@
             "Draft": "Concept",
             "Expired": "Vervallen",
             "Canceled": "Geannuleerd"
+        },
+        "type": {
+            "": "None",
+            "Contract": "Contract",
+            "NDA": "NDA",
+            "EULA": "EULA",
+            "License Agreement": "Licentie Overeenkomst"
         }
     },
     "presetFilters": {

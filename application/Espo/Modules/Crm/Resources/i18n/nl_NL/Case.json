@@ -1,15 +1,25 @@
 {
     "fields": {
         "name": "Record Naam",
-        "number": "Nummer",
+        "number": "Number",
         "status": "Status",
         "account": "Account",
         "contact": "Contact",
+        "contacts": "Contacten",
         "priority": "Prioriteit",
         "type": "Type",
-        "description": "Beschrijving"
+        "description": "Beschrijving",
+        "inboundEmail": "Inbound Email"
     },
     "links": {
+        "inboundEmail": "Inbound Email",
+        "account": "Account",
+        "contact": "Contact (Primary)",
+        "Contacts": "Contacten",
+        "meetings": "Meetings",
+        "calls": "Calls",
+        "tasks": "Tasks",
+        "emails": "E-mails"
     },
     "options": {
         "status": {
@@ -33,7 +43,11 @@
         }
     },
     "labels": {
-        "Create Case": "Casus Aanmaken"
+        "Create Case": "Create Case",
+        "Close": "Sluit",
+        "Reject": "Reject",
+        "Closed": "Gesloten",
+        "Rejected": "Afgewezen"
     },
     "presetFilters": {
         "open": "Open",

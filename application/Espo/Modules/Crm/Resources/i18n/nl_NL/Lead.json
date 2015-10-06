@@ -6,7 +6,7 @@
     },
     "fields": {
         "name": "Record Naam",
-        "emailAddress": "Email",
+        "emailAddress": "E-mail",
         "title": "Titel",
         "website": "Website",
         "phoneNumber": "Telefoon",
@@ -20,9 +20,18 @@
         "description": "Beschrijving",
         "createdAccount": "Account",
         "createdContact": "Contact",
-        "createdOpportunity": "Kans"
+        "createdOpportunity": "Kans",
+        "campaign": "Campaign",
+        "targetLists": "Doellijsten",
+        "targetList": "Target List"
     },
     "links": {
+        "targetLists": "Doellijsten",
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign",
+        "createdAccount": "Account",
+        "createdContact": "Contact",
+        "createdOpportunity": "Kans"
     },
     "options": {
         "status": {
@@ -34,17 +43,19 @@
             "Dead": "Dood"
         },
         "source": {
+            "": "None",
             "Call": "Tel. Gesprek",
-            "Email": "Email",
+            "Email": "E-mail",
             "Existing Customer": "Bestaande Klant",
             "Partner": "Partner",
             "Public Relations": "Public Relations",
             "Web Site": "Webpagina",
-            "Campaign": "Campagne",
+            "Campaign": "Campaign",
             "Other": "Overig"
         }
     },
     "presetFilters": {
-        "active": "Actief"
+        "active": "Actief",
+        "converted": "Geconverteerd"
     }
 }

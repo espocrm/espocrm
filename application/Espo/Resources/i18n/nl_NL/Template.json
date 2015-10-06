@@ -1,0 +1,23 @@
+{
+    "fields": {
+        "name": "Record Naam",
+        "body": "Inhoud",
+        "entityType": "Entity Type",
+        "header": "Header",
+        "footer": "Footer",
+        "leftMargin": "Left Margin",
+        "topMargin": "Top Margin",
+        "rightMargin": "Right Margin",
+        "bottomMargin": "Bottom Margin",
+        "printFooter": "Print Footer",
+        "footerPosition": "Footer Position"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Template": "Create Template"
+    },
+    "tooltips": {
+        "footer": "Use {pageNumber} to print page number."
+    }
+}

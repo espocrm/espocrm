@@ -1,21 +1,26 @@
 {
     "scopeNames": {
-        "Email": "Email",
+        "Email": "E-mail",
         "User": "Gebruiker",
         "Team": "Groep",
         "Role": "Functie",
-        "EmailTemplate": "Email Template",
+        "EmailTemplate": "E-mail Template",
         "EmailAccount": "Email Account",
         "EmailAccountScope": "Email Account",
-        "OutboundEmail": "Uitgaande Email",
+        "OutboundEmail": "Uitgaande E-mail",
         "ScheduledJob": "Geplande Opdracht",
         "ExternalAccount": "Extern Account",
         "Extension": "Extensie",
         "Dashboard": "Dashboard",
-        "Stream": "Gestroomlijnd"
+        "InboundEmail": "Binnenkomende E-mail",
+        "Stream": "Stream",
+        "Import": "Importeren",
+        "Template": "Template",
+        "Job": "Job",
+        "EmailFilter": "Email Filter"
     },
     "scopeNamesPlural": {
-        "Email": "Emails",
+        "Email": "E-mails",
         "User": "Gebruikers",
         "Team": "Groepen",
         "Role": "Functies",
@@ -27,12 +32,17 @@
         "ExternalAccount": "Externe Accounts",
         "Extension": "Extensies",
         "Dashboard": "Dashboard",
-        "Stream": "Gestroomlijnd"
+        "InboundEmail": "Group Email Accounts",
+        "Stream": "Stream",
+        "Import": "Import Results",
+        "Template": "Templates",
+        "Job": "Jobs",
+        "EmailFilter": "Email Filters"
     },
     "labels": {
         "Misc": "Versch.",
         "Merge": "Samenvoegen",
-        "None": "Geen",
+        "None": "None",
         "by": "door",
         "Saved": "Opgeslagen",
         "Error": "Fout",
@@ -43,10 +53,13 @@
         "Loading...": "Laden...",
         "Uploading...": "Uploaden...",
         "Sending...": "Verzenden...",
+        "Merging...": "Merging...",
+        "Merged": "Merged",
         "Removed": "Verwijderd",
         "Posted": "Geplaatst",
         "Linked": "Linked",
         "Unlinked": "Unlinked",
+        "Done": "Done",
         "Access denied": "Toegang gweigerd",
         "Access": "Toegang",
         "Are you sure?": "Zeker?",
@@ -57,8 +70,8 @@
         "Unlinking...": "Unlinken...",
         "Posting...": "Plaatsen...",
         "Username can not be empty!": "Gebruikersnaam mag niet leeg zijn!",
-        "Cache is not enabled": "Cache is niet geactiveerd",    
-        "Cache has been cleared": "Cache is leeg gemaakt",    
+        "Cache is not enabled": "Cache is niet geactiveerd",
+        "Cache has been cleared": "Cache is leeg gemaakt",
         "Rebuild has been done": "Het reconstrueren is klaar",
         "Saving...": "Opslaan...",
         "Modified": "Aangepast",
@@ -67,16 +80,19 @@
         "create": "maak",
         "Overview": "Overzicht",
         "Details": "Details",
-        "Add Filter": "Filter toevoegen",
+        "Add Field": "Veld toevoegen",
         "Add Dashlet": "Dashlet Toevoegen",
+        "Filter": "Filter",
+        "Edit Dashboard": "Edit Dashboard",
         "Add": "Toevoegen",
+        "Add Item": "Add Item",
         "Reset": "Reset",
         "Menu": "Menu",
         "More": "Meer",
         "Search": "Zoeken",
         "Only My": "Alleen mijn",
         "Open": "Open",
-        "Admin": "Admin",
+        "Admin": "Beheerder",
         "About": "Over",
         "Refresh": "Vernieuwen",
         "Remove": "Verwijderen",
@@ -93,13 +109,16 @@
         "PostalCode": "Postcode",
         "Followed": "Gevolgd",
         "Follow": "Volgen",
+        "Followers": "Volgers",
         "Clear Local Cache": "Lokale Cache Schonen",
         "Actions": "Acties",
         "Delete": "Verwijder",
         "Update": "Update",
         "Save": "Opslaan",
         "Edit": "Bewerken",
+        "View": "View",
         "Cancel": "Annuleren",
+        "Apply": "Apply",
         "Unlink": "Unlink",
         "Mass Update": "Massa Update",
         "Export": "Exporteer",
@@ -110,21 +129,21 @@
         "Inactive": "Inactief",
         "Write your comment here": "Schrijf hier uw opmerkingen",
         "Post": "Post",
-        "Stream": "Gestroomlijnd",
+        "Stream": "Stream",
         "Show more": "Toon meer",
         "Dashlet Options": "Kader Opties",
         "Full Form": "Volledig Formulier",
         "Insert": "Voeg in",
-        "Person": "Persoon",
+        "Person": "Person",
         "First Name": "Voornaam",
         "Last Name": "Achternaam",
         "Original": "Origineel",
         "You": "U",
         "you": "u",
         "change": "Pas aan",
-        "Change": "Pas aan",
+        "Change": "Change",
         "Primary": "Primair",
-        "Save Filters": "Filters opslaan",
+        "Save Filter": "Save Filter",
         "Administration": "Administratie",
         "Run Import": "Start Importeren",
         "Duplicate": "Dupliceer",
@@ -137,9 +156,24 @@
         "Submit": "Stuur in",
         "Close": "Sluit",
         "Yes": "Ja",
-        "No": "Nee"
+        "No": "Nee",
+        "View": "View",
+        "Select All Result": "Select All Result",
+        "Value": "Value",
+        "Current version": "Current version",
+        "List View": "List View",
+        "Tree View": "Tree View",
+        "Unlink All": "Unlink All",
+        "Total": "Total",
+        "Print to PDF": "Print to PDF",
+        "Default": "Standaard",
+        "Number": "Number",
+        "From": "Van",
+        "To": "Naar"
     },
     "messages": {
+        "pleaseWait": "Even geduld...",
+        "confirmLeaveOutMessage": "Are you sure you want to leave the form?",
         "notModified": "U heeft niets gewijzigd",
         "duplicate": "Het veld dat u maakt lijkt een duplicaat",
         "fieldIsRequired": "{field} is verplicht",
@@ -158,6 +192,7 @@
         "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
         "assignmentEmailNotificationBody": "{assignerUserName} heeft {entityType} '{Entity.name}' toegewezen aan jou\n\n{recordUrl}",
         "confirmation": "Zeker?",
+        "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
         "resetPreferencesConfirmation": "Weet u zeker dat u de voorkeuren naar standaard terug wil zetten?",
         "removeRecordConfirmation": "Record verwijderen?",
         "unlinkRecordConfirmation": "Relatie ontkoppelen?",
@@ -167,12 +202,23 @@
         "noRecordsUpdated": "Geen bestanden aangepast",
         "massRemoveResult": "{count} bestanden waren verwijderd",
         "massRemoveResultSingle": "{count} bestanden zijn verwijderd",
-        "noRecordsRemoved": "Er werden geen bestanden verwijderd "
+        "noRecordsRemoved": "Er werden geen bestanden verwijderd ",
+        "clickToRefresh": "Click to refresh",
+        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]"
     },
     "boolFilters": {
         "onlyMy": "Alleen mijn",
-        "open": "Open",
-        "active": "Actief"
+        "followed": "Gevolgd"
+    },
+    "presetFilters": {
+        "followed": "Gevolgd",
+        "all": "Alles"
+    },
+    "massActions": {
+        "remove": "Verwijderen",
+        "merge": "Samenvoegen",
+        "massUpdate": "Massa Update",
+        "export": "Exporteer"
     },
     "fields": {
         "name": "Record Naam",
@@ -180,13 +226,24 @@
         "lastName": "Achternaam",
         "salutationName": "Aanhef",
         "assignedUser": "Toegewezen Gebruiker",
-        "emailAddress": "Email",
+        "emailAddress": "E-mail",
         "assignedUserName": "Toegewezen Gebruikersnaam",
         "teams": "Groepen",
         "createdAt": "Aangemaakt op",
         "modifiedAt": "Aangepast op",
         "createdBy": "Aangemaakt door",
-        "modifiedBy": "Aangepast door"
+        "modifiedBy": "Aangepast door",
+        "description": "Beschrijving",
+        "address": "Adres",
+        "phoneNumber": "Telefoon",
+        "phoneNumberMobile": "Phone (Mobile)",
+        "phoneNumberHome": "Phone (Home)",
+        "phoneNumberFax": "Phone (Fax)",
+        "phoneNumberOffice": "Phone (Office)",
+        "phoneNumberOther": "Phone (Other)",
+        "order": "Order",
+        "parent": "Behorende bij",
+        "children": "Children"
     },
     "links": {
         "assignedUser": "Toegewezen Gebruiker",
@@ -195,10 +252,17 @@
         "team": "Groep",
         "roles": "Functies",
         "teams": "Groepen",
-        "users": "Gebruikers"
+        "users": "Gebruikers",
+        "parent": "Behorende bij",
+        "children": "Children"
     },
     "dashlets": {
-        "Stream": "Gestroomlijnd"
+        "Stream": "Stream"
+    },
+    "notificationMessages": {
+        "assign": "{entityType} {entity} has been assigned to you",
+        "emailReceived": "E-mail ontvangen van",
+        "entityRemoved": "{user} removed {entityType} {entity}"
     },
     "streamMessages": {
         "create": "{user} creërde {entityType} {entity} ",
@@ -209,8 +273,7 @@
         "status": "{user} paste {field} aan op {entityType} {entity}",
         "update": "{user} paste {entityType} {entity} aan",
         "createRelated": "{user} creërde {relatedEntityType} {relatedEntity} gekoppeld aan {entityType} {entity}",
-        "emailReceived": "{entity} is ontvangen voor {entityType} {entity}",
-        "emailReceivedInitial": "Email is ontvangen en gemaakt met {entityType} {entity}",
+
         "mentionInPost": "{user} vermeldde {mentioned} op {entityType} {entity}",
 
         "createThis": "{user} creërde deze {entityType} ",
@@ -221,8 +284,22 @@
         "statusThis": "{user} paste {field} aan",
         "updateThis": "{user} paste dit {entityType} aan",
         "createRelatedThis": "{user} maakte {relatedEntityType} {relatedEntity} en koppelde dit aan {entityType}",
+
+        "emailReceivedFromThis": "E-mail ontvangen van",
+        "emailReceivedInitialFromThis": "Email received from {from}, this {entityType} created",
+
         "emailReceivedThis": "{entity} is ontvangen",
-        "emailReceivedInitialThis": "Email bericht ontvangen en maakte deze {entityType}"
+        "emailReceivedInitialThis": "Email bericht ontvangen en maakte deze {entityType}",
+
+        "emailReceivedFrom": "E-mail ontvangen van {from}, behorende bij {entityType} {entity}",
+        "emailReceivedFromInitial": "Email received from {from}, {entityType} {entity} created",
+
+        "emailReceived": "{entity} is ontvangen voor {entityType} {entity}",
+        "emailReceivedInitial": "Email is ontvangen en gemaakt met {entityType} {entity}",
+        "emailReceivedInitialFrom": "Email received from {from}, {entityType} {entity} created",
+
+        "emailSent": "{by} sent email related to {entityType} {entity}",
+        "emailSentThis": "{by} sent email"
     },
     "lists": {
         "monthNames": ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "October", "November", "December"],
@@ -235,8 +312,8 @@
         "salutationName": {
             "Mr.": "Dhr.",
             "Mrs.": "Mevr.",
-            "Dr.": "Dr.",
-            "Drs.": "Drs."
+            "Ms.": "Ms.",
+            "Dr.": "Dr."
         },
         "language":     {
             "af_ZA": "Afrikaans",
@@ -325,10 +402,23 @@
             "currentQuarter": "Dit Kwartaal",
             "lastQuarter": "Vorige Kwartaal",
             "currentYear": "Huidige Jaar",
-            "lastYear": "Vorig Jaar"
+            "lastYear": "Vorig Jaar",
+            "lastSevenDays": "Last 7 Days",
+            "lastXDays": "Last X Days",
+            "nextXDays": "Next X Days"
+        },
+        "searchRanges": {
+            "is": "Is",
+            "isEmpty": "Is Empty",
+            "isNotEmpty": "Is Not Empty"
+        },
+        "varcharSearchRanges": {
+            "equals": "Equals",
+            "startsWith": "Starts With",
+            "contains": "Contains"
         },
         "intSearchRanges": {
-            "equals": "Is gelijk aan",
+            "equals": "Equals",
             "notEquals": "Is niet gelijk aan",
             "greaterThan": "Groter dan",
             "lessThan": "Minder dan",
@@ -337,7 +427,7 @@
             "between": "Tussen"
         },
         "autorefreshInterval": {
-            "0": "Geen",
+            "0": "None",
             "0.5": "30 seconden",
             "1": "1 minuut",
             "2": "2 minuten",
@@ -454,5 +544,11 @@
                 "redo": "Opnieuw"
             }
         }
+    },
+    "themes": {
+        "Espo": "Espo",
+        "Sakura": "Sakura",
+        "EspoVertical": "Espo (Vertical)",
+        "SakuraVertical": "Sakura (Vertical)"
     }
 }

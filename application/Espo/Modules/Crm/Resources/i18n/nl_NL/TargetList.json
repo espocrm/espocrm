@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Record Naam",
+        "description": "Beschrijving",
+        "entryCount": "Entry Count",
+        "campaigns": "Campaigns",
+        "endDate": "End Date",
+        "targetLists": "Doellijsten"
+    },
+    "links": {
+        "accounts": "Klanten",
+        "contacts": "Contacten",
+        "leads": "Leads",
+        "campaigns": "Campaigns",
+        "massEmails": "Mass Emails"
+    },
+    "options": {
+        "type": {
+            "Email": "E-mail",
+            "Web": "Web",
+            "Television": "Television",
+            "Radio": "Radio",
+            "Newsletter": "Newsletter"
+        }
+    },
+    "labels": {
+        "Create TargetList": "Create Target List",
+        "Opted Out": "Opted Out",
+        "Cancel Opt-Out": "Cancel Opt-Out"
+    }
+}

@@ -8,6 +8,8 @@
         "to": "Naar",
         "cc": "CC",
         "bcc": "BCC",
+        "replyTo": "Reply To",
+        "replyToString": "Reply To (String)",
         "isHtml": "Is Html",
         "body": "Inhoud",
         "subject": "Onderwerp",
@@ -15,16 +17,25 @@
         "selectTemplate": "Selecteer Template",
         "fromEmailAddress": "Van Adres",
         "toEmailAddresses": "Naar Adres",
-        "emailAddress": "Email Adres",
-        "deliveryDate": "Afleverdatum"
+        "emailAddress": "E-mailadres",
+        "deliveryDate": "Afleverdatum",
+        "account": "Account",
+        "users": "Gebruikers",
+        "replied": "Replied",
+        "replies": "Replies",
+        "isRead": "Is Read",
+        "isImportant": "Is Important"
     },
     "links": {
+        "replied": "Replied",
+        "replies": "Replies"
     },
     "options": {
         "Draft": "Concept",
         "Sending": "Verzenden",
         "Sent": "Verstuur",
-        "Archived": "Archiveren"
+        "Archived": "Archiveren",
+        "Received": "Received"
     },
     "labels": {
         "Create Email": "Archiveer Email",
@@ -36,16 +47,35 @@
         "Original message": "Originele bericht",
         "Forwarded message": "Doorgestuurd bericht",
         "Email Accounts": "Email Accounts",
+        "Inbound Emails": "Group Email Accounts",
+        "Email Templates": "Email Templates",
         "Send Test Email": "Stuur een test Email",
         "Send": "Versturen",
-        "Email Address": "Email Adres"
+        "Email Address": "E-mailadres",
+        "Mark Read": "Mark Read",
+        "Sending...": "Verzenden...",
+        "Save Draft": "Save Draft",
+        "Mark all as read": "Mark all as read",
+        "Show Plain Text": "Show Plain Text",
+        "Mark as Important": "Mark as Important",
+        "Mark as Not Important": "Mark as Not Important"
     },
     "messages": {
         "noSmtpSetup": "Geen SMTP setup. {link}.",
-        "testEmailSent": "Test email is verzonden"
+        "testEmailSent": "Test email is verzonden",
+        "emailSent": "Email has been sent",
+        "savedAsDraft": "Saved as draft"
     },
     "presetFilters": {
         "sent": "Verstuur",
-        "archived": "Archiveren"
+        "archived": "Archiveren",
+        "inbox": "Inbox",
+        "drafts": "Drafts"
+    },
+    "massActions": {
+        "markAsRead": "Mark as Read",
+        "markAsNotRead": "Mark as Not Read",
+        "markAsImportant": "Mark as Important",
+        "markAsNotImportant": "Mark as Not Important"
     }
 }

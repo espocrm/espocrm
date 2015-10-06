@@ -11,11 +11,13 @@
         "contacts": "Contacten",
         "description": "Beschrijving",
         "amountConverted": "Bedrag (geconverteerd)",
-        "amountWeightedConverted": "Afgewogen bedrag"
+        "amountWeightedConverted": "Afgewogen bedrag",
+        "campaign": "Campaign"
     },
     "links": {
         "contacts": "Contacten",
-        "documents": "Documents"
+        "documents": "Documenten",
+        "campaign": "Campaign"
     },
     "options": {
         "stage": {
@@ -28,7 +30,7 @@
             "Proposal/Price Quote": "Voorstel/Offerte",
             "Negotiation/Review": "Onderhandeling/Beoordeling",
             "Closed Won": "Gesloten Gewonnen",
-            "Closed Lost": "Gesloten Verloren" 
+            "Closed Lost": "Gesloten Verloren"
         }
     },
     "labels": {
@@ -36,6 +38,7 @@
     },
     "presetFilters": {
         "open": "Open",
-        "won": "Gewonnen"
+        "won": "Gewonnen",
+        "lost": "Lost"
     }
 }

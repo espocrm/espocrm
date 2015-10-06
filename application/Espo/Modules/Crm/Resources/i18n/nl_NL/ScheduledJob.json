@@ -1,9 +1,7 @@
 {
-
     "options": {
         "job": {
-            "CheckInboundEmails": "Controleer Binnenkomende Emails",
-            "SendEmailReminders": "Stuur Herinnering Email"
+            "ProcessMassEmail": "Send Mass Emails"
         }
     }
 }

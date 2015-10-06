@@ -1,7 +1,7 @@
 {
 	"labels": {
 		"Main page title": "Welkom bij EspoCRM",
-		"Main page header": "",
+		"Main page header": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: EspoCRM <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: nl_NL\n",
 		"Start page title": "Licentie Overeenkomst",
 		"Step1 page title": "Licentie Overeenkomst",
 		"License Agreement": "Licentie Overeenkomst",
@@ -9,7 +9,7 @@
 		"Step2 page title": "Database configuratie",
 		"Step3 page title": "Administrator Instellingen",
 		"Step4 page title": "Systeem instellingen",
-		"Step5 page title": "SMTP instellingen voor uitgaande emails",
+		"Step5 page title": "SMTP instellingen voor uitgaande e-mails",
 		"Errors page title": "Fouten",
 		"Finish page title": "Installatie is compleet",
 		"Congratulation! Welcome to EspoCRM": "Gefeliciteerd EspoCRM is succesvol geinstalleerd.",
@@ -23,7 +23,7 @@
 		"localhost": "localhost",
 		"port": "3306",
 		"Locale": "Lokaal",
-		"Outbound Email Configuration": "Uitgaande Email Configuratie",
+		"Outbound Email Configuration": "Uitgaande E-mail Configuratie",
 		"SMTP": "SMTP",
 		"Start": "Start",
 		"Back": "Terug",
@@ -31,7 +31,7 @@
 		"Go to EspoCRM": "Ga naar EspoCRM",
 		"Re-check": "Re-check",
 		"Version": "Versie",
-		"Test settings": "Connectie Testen",
+		"Test settings": "Test verbinding",
 		"Database Settings Description": "Voer uw MySQL database gegevens (hostname, gebruikersnaam en wachtwoord) in.  U kunt de server poort opgeven voor hostname zoals localhost: 3306.",
 		"Install": "Installeren",
 		"SetupConfirmation page title": "Aanbevolen Instellingen",
@@ -49,11 +49,11 @@
 		"Choose your language": "Kies uw taal",
 		"Database Name": "Database Naam",
 		"Host Name": "Host Naam",
-		"Port": "Port",
+		"Port": "Poort",
 		"Database User Name": "Database Gebruikersnaam",
 		"Database User Password": "Database Gebruikers Wachtwoord",
 		"Database driver": "Database driver",
-		"User Name": "Gebruikesnaam",
+		"User Name": "Gebruikersnaam",
 		"Password": "Wachtwoord",
 		"Confirm Password": "Bevestig uw Wachtwoord",
 		"From Address": "Van Adres",
@@ -69,11 +69,11 @@
 		"Currency List": "Valuta Lijst",
 		"Language": "Taal",
 		"smtpServer": "Server",
-		"smtpPort": "Port",
+		"smtpPort": "Poort",
 		"smtpAuth": "Auth",
 		"smtpSecurity": "Beveiliging",
 		"smtpUsername": "Gebruikersnaam",
-		"emailAddress": "Email",
+		"emailAddress": "E-mail",
 		"smtpPassword": "Wachtwoord"
 	},
 	"messages": {
@@ -120,7 +120,7 @@
 				"windows": "<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.\n</pre>"
 			},
 			"microsoft-iis": {
-				"windows": ""
+				"windows": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: EspoCRM <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: nl_NL\n"
 			}
 		},
 		"modRewriteHelp": {

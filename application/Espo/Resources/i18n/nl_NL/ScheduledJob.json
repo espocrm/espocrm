@@ -2,7 +2,7 @@
     "fields": {
         "name": "Record Naam",
         "status": "Status",
-        "job": "Opdracht",
+        "job": "Job",
         "scheduling": "Scheduling (crontab notatie)"
     },
     "links": {
@@ -13,7 +13,10 @@
     },
     "options": {
         "job": {
-            "Cleanup": "Opschonen"
+            "Cleanup": "Opschonen",
+            "CheckInboundEmails": "Controleer Binnenkomende Emails",
+            "CheckEmailAccounts": "Check Personal Email Accounts",
+            "SendEmailReminders": "Stuur Herinnering Email"
         },
         "cronSetup": {
             "linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
@@ -25,5 +28,8 @@
             "Active": "Actief",
             "Inactive": "Inactief"
         }
+    },
+    "tooltips": {
+        "scheduling": "Defines when and how often job will be run\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
     }
 }

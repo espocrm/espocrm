@@ -1,19 +1,21 @@
 {
     "fields": {
         "name": "Record Naam",
-        "userName": "Gebruikesnaam",
+        "userName": "Gebruikersnaam",
         "title": "Titel",
-        "isAdmin": "Is Admin",
+        "isAdmin": "Is beheerder",
         "defaultTeam": "Standaardgroep",
-        "emailAddress": "Email",
+        "emailAddress": "E-mail",
         "phoneNumber": "Telefoon",
         "roles": "Functies",
         "teamRole": "Positie",
         "password": "Wachtwoord",
+        "currentPassword": "Current Password",
         "passwordConfirm": "Bevestig Wachtwoord",
         "newPassword": "Nieuw Wachtwoord",
         "newPasswordConfirm": "Nieuwe Wachtwoord Bevestigen",
-        "avatar": "Avatar"
+        "avatar": "Avatar",
+        "isActive": "Is actief"
     },
     "links": {
         "teams": "Groepen",
@@ -28,12 +30,15 @@
         "Teams and Access Control": "Groeps toegang beheer",
         "Forgot Password?": "Wachtwoord vergeten?",
         "Password Change Request": "Verzoek voor aanpassen Wachtwoord",
-        "Email Address": "Email Adres"
+        "Email Address": "E-mailadres",
+        "External Accounts": "Externe Accounts",
+        "Email Accounts": "Email Accounts"
     },
     "tooltips": {
         "defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
         "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
         "isAdmin": "Gebruiker admin heeft overal toegang",
+        "isActive": "If unchecked then user won't be able to login.",
         "teams": "Tot welke groep deze gebruiekr behoord. Toegang beheer is afhankelijk van groep regels.",
         "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden."
     },
@@ -46,10 +51,16 @@
         "passwordChanged": "Het wachtwoord is gewijzigd",
         "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
         "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",
-        "emailAddressCantBeEmpty": "Email adres kan niet leeg zijn",
-        "userNameEmailAddressNotFound": "Gebruikersnaam/Email adres niet gevonden",
+        "emailAddressCantBeEmpty": "E-mail adres kan niet leeg zijn",
+        "userNameEmailAddressNotFound": "Gebruikersnaam/E-mail adres niet gevonden",
         "forbidden": "Toegang niet juist, probeer later",
         "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
         "passwordChangedByRequest": "Het wachtwoord is aangepast"
+    },
+    "boolFilters": {
+        "onlyMyTeam": "Only My Team"
+    },
+    "presetFilters": {
+        "active": "Actief"
     }
 }

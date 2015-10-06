@@ -1,0 +1,64 @@
+{
+    "fields": {
+        "name": "Record Naam",
+        "description": "Beschrijving",
+        "status": "Status",
+        "type": "Type",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "targetLists": "Doellijsten",
+        "excludingTargetLists": "Excluding Target Lists",
+        "sentCount": "Verstuur",
+        "openedCount": "Opened",
+        "clickedCount": "Clicked",
+        "optedOutCount": "Opted Out",
+        "bouncedCount": "Bounced",
+        "hardBouncedCount": "Hard Bounced",
+        "softBouncedCount": "Soft Bounced",
+        "leadCreatedCount": "Leads Created",
+        "revenue": "Revenue",
+        "revenueConverted": "revenue (converted)",
+        "budget": "Budget"
+    },
+    "links": {
+        "targetLists": "Doellijsten",
+        "excludingTargetLists": "Excluding Target Lists",
+        "accounts": "Klanten",
+        "contacts": "Contacten",
+        "leads": "Leads",
+        "opportunities": "Kansen",
+        "campaignLogRecords": "Log",
+        "massEmails": "Mass Emails",
+        "trackingUrls": "Tracking URLs"
+    },
+    "options": {
+        "type": {
+            "Email": "E-mail",
+            "Web": "Web",
+            "Television": "Television",
+            "Radio": "Radio",
+            "Newsletter": "Newsletter",
+            "Mail": "Mail"
+        },
+        "status": {
+            "Planning": "Planning",
+            "Active": "Actief",
+            "Inactive": "Inactief",
+            "Complete": "Complete"
+        }
+    },
+    "labels": {
+        "Create Campaign": "Create Campaign",
+        "Target Lists": "Doellijsten",
+        "Statistics": "Statistics",
+        "hard": "hard",
+        "soft": "soft",
+        "Unsubscribe": "Unsubscribe"
+    },
+    "presetFilters": {
+        "active": "Actief"
+    },
+    "messages": {
+        "unsubscribed": "You have been unsubscribed from our mailing list."
+    }
+}

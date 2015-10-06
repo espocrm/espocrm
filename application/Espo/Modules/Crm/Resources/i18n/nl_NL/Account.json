@@ -1,7 +1,7 @@
 {
     "fields": {
         "name": "Record Naam",
-        "emailAddress": "Email",
+        "emailAddress": "E-mail",
         "website": "Website",
         "phoneNumber": "Telefoon",
         "billingAddress": "Factuur Adres",
@@ -10,13 +10,21 @@
         "sicCode": "Sic Code",
         "industry": "Industrie",
         "type": "Type",
-        "contactRole": "Functie"
+        "contactRole": "Titel",
+        "campaign": "Campaign"
     },
     "links": {
         "contacts": "Contacten",
         "opportunities": "Kansen",
         "cases": "Casus",
-        "documents": "Documents"
+        "documents": "Documenten",
+        "meetingsPrimary": "Meetings (expanded)",
+        "callsPrimary": "Calls (expanded)",
+        "tasksPrimary": "Tasks (expanded)",
+        "emailsPrimary": "Emails (expanded)",
+        "targetLists": "Doellijsten",
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign"
     },
     "options": {
         "type": {
@@ -26,17 +34,43 @@
             "Reseller": "Reseller"
         },
         "industry": {
-            "Apparel": "Confectie",
+            "Agriculture": "Agriculture",
+            "Advertising": "Advertising",
+            "Apparel & Accessories": "Apparel & Accessories",
+            "Automotive": "Automotive",
             "Banking": "Bankwezen",
-            "Computer Software": "Computer Software",
+            "Biotechnology": "Biotechnology",
+            "Chemical": "Chemical",
+            "Computer": "Computer",
             "Education": "Onderwijs",
             "Electronics": "Electronica",
+            "Energy": "Energy",
+            "Entertainment & Leisure": "Entertainment & Leisure",
             "Finance": "Finance",
-            "Insurance": "Verzekeringen"
+            "Food & Beverage": "Food & Beverage",
+            "Grocery": "Grocery",
+            "Healthcare": "Healthcare",
+            "Insurance": "Verzekeringen",
+            "Legal": "Legal",
+            "Manufacturing": "Manufacturing",
+            "Publishing": "Publishing",
+            "Real Estate": "Real Estate",
+            "Service": "Service",
+            "Sports": "Sports",
+            "Software": "Software",
+            "Technology": "Technology",
+            "Telecommunications": "Telecommunications",
+            "Television": "Television",
+            "Transportation": "Transportation",
+            "Venture Capital": "Venture Capital"
         }
     },
     "labels": {
         "Create Account": "Klant Aanmaken",
         "Copy Billing": "Kopieer van Factuur"
+    },
+    "presetFilters": {
+        "customers": "Customers",
+        "partners": "Partners"
     }
 }

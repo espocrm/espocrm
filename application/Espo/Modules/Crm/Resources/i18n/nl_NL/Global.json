@@ -10,8 +10,13 @@
         "Call": "Tel. Gesprek",
         "Task": "Taak",
         "Case": "Kwestie",
-        "InboundEmail": "Binnenkomende Email",
-        "Document": "Document"
+        "Document": "Document",
+        "DocumentFolder": "Document Folder",
+        "Campaign": "Campaign",
+        "TargetList": "Target List",
+        "MassEmail": "Mass Email",
+        "EmailQueueItem": "Email Queue Item",
+        "CampaignTrackingUrl": "Tracking URL"
     },
     "scopeNamesPlural": {
         "Account": "Klanten",
@@ -19,13 +24,18 @@
         "Lead": "Leads",
         "Target": "Targets",
         "Opportunity": "Kansen",
-        "Meeting": "Afspraken",
+        "Meeting": "Meetings",
         "Calendar": "Kalender",
-        "Call": "Tel.gesprekken",
-        "Task": "Taken",
+        "Call": "Calls",
+        "Task": "Tasks",
         "Case": "Casus",
-        "InboundEmail": "Inkomende Emails",
-        "Document": "Documents"
+        "Document": "Documenten",
+        "DocumentFolder": "Document Folders",
+        "Campaign": "Campaigns",
+        "TargetList": "Doellijsten",
+        "MassEmail": "Mass Emails",
+        "EmailQueueItem": "Email Queue Items",
+        "CampaignTrackingUrl": "Tracking URLs"
     },
     "dashlets": {
         "Leads": "Mijn Leads",
@@ -38,21 +48,22 @@
         "OpportunitiesByStage": "Status van Kansen",
         "OpportunitiesByLeadSource": "Kansen per Leadbron",
         "SalesByMonth": "Verkopen per maand",
-        "SalesPipeline": "Verkoop mogelijkheden"    
+        "SalesPipeline": "Verkoop mogelijkheden",
+        "Activities": "My Activities"
     },
     "labels": {
-        "Create InboundEmail": "Email Gebruiker Instellen",
+        "Create InboundEmail": "E-mail Gebruiker Instellen",
         "Activities": "Activiteiten",
         "History": "Historie",
         "Attendees": "Genodigden",
         "Schedule Meeting": "Afspraak Plannen",
         "Schedule Call": "Geplande Oproep",
-        "Compose Email": "Email aanmaken",
+        "Compose Email": "E-mail aanmaken",
         "Log Meeting": "Afspraak vastleggen",
         "Log Call": "Tel. Gesprek Vastleggen",
         "Archive Email": "Archiveer Email",
         "Create Task": "Taak Aanmaken",
-        "Tasks": "Taken"        
+        "Tasks": "Tasks"
     },
     "fields": {
         "billingAddressCity": "Plaats",
@@ -64,7 +75,7 @@
         "addressStreet": "Straat",
         "addressCountry": "Land",
         "addressState": "Provincie",
-        "addressPostalCode": "Postcode",        
+        "addressPostalCode": "Postcode",
         "shippingAddressCity": "Plaats (Verzending)",
         "shippingAddressStreet": "Straat (Verzending)",
         "shippingAddressCountry": "Land (Verzending)",
@@ -74,23 +85,23 @@
     "links": {
         "contacts": "Contacten",
         "opportunities": "Kansen",
-        "leads": "Leads",        
-        "meetings": "Afspraken",
-        "calls": "Tel.gesprekken",
-        "tasks": "Taken",
-        "emails": "Emails",
+        "leads": "Leads",
+        "meetings": "Meetings",
+        "calls": "Calls",
+        "tasks": "Tasks",
+        "emails": "E-mails",
         "accounts": "Klanten",
         "cases": "Casus",
-        "documents": "Documents",
+        "documents": "Documenten",
         "account": "Account",
-        "opportunity": "Kans",        
+        "opportunity": "Kans",
         "contact": "Contact",
         "parent": "Behorende bij"
     },
     "options": {
         "reminderTypes": {
             "Popup": "Popup",
-            "Email": "Email"
+            "Email": "E-mail"
         }
     }
 }

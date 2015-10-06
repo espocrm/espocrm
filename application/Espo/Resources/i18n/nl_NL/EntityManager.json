@@ -1,0 +1,44 @@
+{
+    "labels": {
+        "Fields": "Fields",
+        "Relationships": "Relaties"
+    },
+    "fields": {
+        "name": "Record Naam",
+        "type": "Type",
+        "labelSingular": "Label Singular",
+        "labelPlural": "Label Plural",
+        "stream": "Stream",
+        "label": "Label",
+        "linkType": "Link Type",
+        "entityForeign": "Foreign Entity",
+        "linkForeign": "Foreign Link",
+        "link": "Link",
+        "labelForeign": "Foreign Label",
+        "sortBy": "Default Order (field)",
+        "sortDirection": "Default Order (direction)"
+    },
+    "options": {
+        "type": {
+            "": "None",
+            "Base": "Base",
+            "Person": "Person",
+            "CategoryTree": "Category Tree"
+        },
+        "linkType": {
+            "manyToMany": "Many-to-Many",
+            "oneToMany": "One-to-Many",
+            "manyToOne": "Many-to-One",
+            "parentToChildren": "Parent-to-Children",
+            "childrenToParent": "Children-to-Parent"
+        },
+        "sortDirection": {
+            "asc": "Ascending",
+            "desc": "Descending"
+        }
+    },
+    "messages": {
+        "entityCreated": "Entity has been created",
+        "linkAlreadyExists": "Link name conflict."
+    }
+}

@@ -27,15 +27,20 @@
             "Inbound": "Binnenkomende"
         },
         "acceptanceStatus": {
-            "None": "Geen",
+            "None": "None",
             "Accepted": "Geaccepteerd",
-            "Declined": "Geweigerd"
+            "Declined": "Geweigerd",
+            "Tentative": "Tentative"
         }
+    },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
     },
     "labels": {
         "Create Call": "Tel. Gesprek Aanmaken",
-        "Set Held": "Vasthouden",
-        "Set Not Held": "Niet vasthouden",
+        "Set Held": "Set Held",
+        "Set Not Held": "Set Not Held",
         "Send Invitations": "Uitnodiging versturen"
     },
     "presetFilters": {
