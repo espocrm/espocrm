@@ -150,7 +150,17 @@ class Config
 
         $removeData = empty($this->removeData) ? null : $this->removeData;
 
-        $result = $this->getFileManager()->mergePhpContents($this->configPath, $values, $removeData);
+        $data = include($this->configPath);
+
+        foreach ($values as $key => $value) {
+            $data[$key] = $value;
+        }
+
+        foreach ($removeData as $key) {
+            unset($data[$key]);
+        }
+
+        $result = $this->getFileManager()->putPhpContents($this->configPath, $data);
 
         if ($result) {
             $this->changedData = array();
@@ -220,7 +230,7 @@ class Config
         $restrictItems = $this->getRestrictItems($isAdmin);
 
         $values = array();
-        foreach($data as $key => $item) {
+        foreach ($data as $key => $item) {
             if (!in_array($key, $restrictItems)) {
                 $values[$key]= $item;
             }
