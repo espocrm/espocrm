@@ -113,6 +113,12 @@ abstract class Base
                 }
             }
 
+            if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
+                foreach ($params['additionalSelectColumns'] as $column => $field) {
+                    $selectPart .= ", " . $column . " AS `{$field}`";
+                }
+            }
+
         } else {
             $aggDist = false;
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
