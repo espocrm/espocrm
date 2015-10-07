@@ -188,14 +188,24 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
         },
 
+        getCreateAttributes: function (model) {
+            return {};
+        },
+
         actionCreate: function (data, e) {
             e.stopPropagation();
 
-            var parentId = null;
-            var parentName = null;
+            var attributes = this.getCreateAttributes(this.model);
+
+            attributes.order = this.collection.length + 1;
+
+
+            attributes.parentId = null;
+            attributes.parentName = null;
+
             if (this.model) {
-                parentId = this.model.id;
-                parentName = this.model.get('name');
+                attributes.parentId = this.model.id;
+                attributes.parentName = this.model.get('name');
             }
 
             var scope = this.collection.name;
@@ -203,11 +213,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
             this.createView('quickCreate', viewName, {
                 scope: scope,
-                attributes: {
-                    parentId: parentId,
-                    parentName: parentName,
-                    order: this.collection.length + 1
-                }
+                attributes: attributes
             }, function (view) {
                 view.render();
                 this.listenToOnce(view, 'after:save', function (model) {
