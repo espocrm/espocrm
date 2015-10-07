@@ -19,14 +19,27 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Lead.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {
+Espo.define('crm:views/lead/record/panels/converted-to', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
 
-        setupPanels: function () {
+        setup: function () {
+            this.fieldList = [];
 
+            if (this.getAcl().check('Account')) {
+                this.fieldList.push('createdAccount');
+            }
+
+            if (this.getAcl().check('Contact')) {
+                this.fieldList.push('createdContact');
+            }
+            if (this.getAcl().check('Opportunity')) {
+                this.fieldList.push('createdOpportunity');
+            }
+
+            Dep.prototype.setup.call(this);
         }
 
     });
-});
 
+});

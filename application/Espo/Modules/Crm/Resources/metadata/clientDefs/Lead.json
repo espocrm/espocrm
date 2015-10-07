@@ -29,12 +29,9 @@
          {
             "name":"convertedTo",
             "label":"Converted To",
-            "view": "Record.Panels.Side",
+            "view": "crm:views/lead/record/panels/converted-to",
             "notRefreshable": true,
-            "hidden": true,
-            "options": {
-               "fieldList": ["createdAccount", "createdContact", "createdOpportunity"]
-            }
+            "hidden": true
          },
          {
             "name":"activities",
@@ -50,6 +47,33 @@
             "name":"tasks",
             "label":"Tasks",
             "view":"Crm:Record.Panels.Tasks"
+         }
+      ],
+      "edit": [
+         {
+            "name":"convertedTo",
+            "label":"Converted To",
+            "view": "crm:views/lead/record/panels/converted-to",
+            "notRefreshable": true,
+            "hidden": true
+         }
+      ],
+      "detailSmall": [
+         {
+            "name":"convertedTo",
+            "label":"Converted To",
+            "view": "crm:views/lead/record/panels/converted-to",
+            "notRefreshable": true,
+            "hidden": true
+         }
+      ],
+      "editSmall": [
+         {
+            "name":"convertedTo",
+            "label":"Converted To",
+            "view": "crm:views/lead/record/panels/converted-to",
+            "notRefreshable": true,
+            "hidden": true
          }
       ]
    },

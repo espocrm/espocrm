@@ -24,7 +24,8 @@
          {
             "name":"statistics",
             "label":"Statistics",
-            "view":"Crm:Campaign.Record.Panels.Statistics"
+            "view":"Crm:Campaign.Record.Panels.Statistics",
+            "hidden": true
          }
       ]
     },
