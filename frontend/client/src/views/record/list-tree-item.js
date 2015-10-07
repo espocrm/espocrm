@@ -29,6 +29,8 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
 
         level: 0,
 
+        listViewName: 'views/record/list-tree',
+
         data: function () {
             return {
                 name: this.model.get('name'),
@@ -120,7 +122,7 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
                     view.render();
                 };
             }
-            this.createView('children', 'Record.ListTree', {
+            this.createView('children', this.listViewName, {
                 collection: childCollection,
                 el: this.options.el + ' > .children',
                 createDisabled: this.options.createDisabled,
