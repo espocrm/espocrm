@@ -111,7 +111,9 @@ Espo.define('views/stream/list', 'views/record/list-expanded', function (Dep) {
             });
         },
 
-        actionViewRecord: function (data) {
+        actionViewRecord: function (data, e) {
+            e.stopPropagation();
+
             var id = data.id;
             var scope = data.scope;
 

@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.ListTreeItem', 'View', function (Dep) {
+Espo.define('views/record/list-tree-item', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.list-tree-item',
+        template: 'record/list-tree-item',
 
         isEnd: false,
 

@@ -194,6 +194,28 @@ class Importer
                 $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
                 if ($n == 4 && $emailSent < time()) {
                     if (!empty($parentType) && !empty($parentId)) {
+                        if ($parentType == 'Lead') {
+                            $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
+                            if ($parent && $parent->get('status') == 'Converted') {
+                                if ($parent->get('createdAccountId')) {
+                                    $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
+                                    if ($account) {
+                                        $parentType = 'Account';
+                                        $parentId = $account->id;
+                                    }
+                                } else {
+                                    if ($this->getConfig()->get('b2cMode')) {
+                                        if ($parent->get('createdContactId')) {
+                                            $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
+                                            if ($contact) {
+                                                $parentType = 'Contact';
+                                                $parentId = $contact->id;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         $email->set('parentType', $parentType);
                         $email->set('parentId', $parentId);
                         $parentFound = true;

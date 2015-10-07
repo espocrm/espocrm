@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
+Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.list-tree',
+        template: 'record/list-tree',
 
         showMore: false,
 
@@ -52,6 +52,8 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
         selectedData: null,
 
         level: 0,
+
+        itemViewName: 'views/record/list-tree-item',
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -151,7 +153,7 @@ Espo.define('Views.Record.ListTree', 'Views.Record.List', function (Dep) {
                 var built = 0;
                 modelList.forEach(function (model, i) {
                     this.rows.push('row-' + i);
-                    this.createView('row-' + i, 'Record.ListTreeItem', {
+                    this.createView('row-' + i, this.itemViewName, {
                         model: model,
                         collection: this.collection,
                         el: this.options.el + ' ' + this.getRowSelector(model.id),
