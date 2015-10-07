@@ -188,18 +188,16 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
             return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
         },
 
-        getCreateAttributes: function (model) {
+        getCreateAttributes: function () {
             return {};
         },
 
         actionCreate: function (data, e) {
             e.stopPropagation();
 
-            var attributes = this.getCreateAttributes(this.model);
+            var attributes = this.getCreateAttributes();
 
             attributes.order = this.collection.length + 1;
-
-
             attributes.parentId = null;
             attributes.parentName = null;
 
