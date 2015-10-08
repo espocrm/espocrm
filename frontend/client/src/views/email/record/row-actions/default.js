@@ -45,7 +45,7 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
             } else {
                 list.push({
                     action: 'markAsNotImportant',
-                    label: 'Mark as Not Important',
+                    label: 'Unmark Importance',
                     data: {
                         id: this.model.id
                     }

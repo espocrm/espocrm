@@ -58,7 +58,7 @@
         "Mark all as read": "Mark all as read",
         "Show Plain Text": "Show Plain Text",
         "Mark as Important": "Mark as Important",
-        "Mark as Not Important": "Mark as Not Important"
+        "Unmark Importance": "Unmark Importance"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
@@ -76,6 +76,6 @@
         "markAsRead": "Mark as Read",
         "markAsNotRead": "Mark as Not Read",
         "markAsImportant": "Mark as Important",
-        "markAsNotImportant": "Mark as Not Important"
+        "markAsNotImportant": "Unmark Importance"
     }
 }
