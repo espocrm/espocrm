@@ -45,7 +45,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
         $result = parent::afterSave($entity, $options);
         $this->handleAfterSaveAccounts($entity, $options);
 
-        if ($entity->has('targetListId') && $entity->isNew()) {
+        if ($entity->has('targetListId')) {
             $this->relate($entity, 'targetLists', $entity->get('targetListId'));
         }
 
