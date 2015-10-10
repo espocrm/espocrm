@@ -1,0 +1,33 @@
+{
+    "fields": {
+        "action": "Acción",
+        "actionDate": "Fecha",
+        "data": "Datos",
+        "campaign": "Campaign",
+        "parent": "Target",
+        "object": "Object",
+        "application": "Application",
+        "queueItem": "Queue Item"
+    },
+    "options": {
+    	"action": {
+            "Sent": "Enviado",
+            "Opened": "Opened",
+            "Opted Out": "optado por no",
+            "Bounced": "Bounced",
+            "Clicked": "Clicked",
+            "Lead Created": "Lead Created"
+    	}
+    },
+    "labels": {
+        "All": "Todos"
+    },
+    "presetFilters": {
+        "sent": "Enviado",
+        "opened": "Opened",
+        "optedOut": "optado por no",
+        "bounced": "Bounced",
+        "clicked": "Clicked",
+        "leadCreated": "Lead Created"
+    }
+}

@@ -2,30 +2,40 @@
     "scopeNames": {
         "Account": "Cuenta",
         "Contact": "Contacto",
-        "Lead": "Potenciales",
-        "Target": "Objetivo",
+        "Lead": "Lead",
+        "Target": "Target",
         "Opportunity": "Oportunidad",
         "Meeting": "Reunión",
         "Calendar": "Calendario",
         "Call": "Llamada",
         "Task": "Tarea",
         "Case": "Caso",
-        "InboundEmail": "Correo Entrante",
-        "Document": "Documento"
+        "Document": "Documento",
+        "DocumentFolder": "Document Folder",
+        "Campaign": "Campaign",
+        "TargetList": "Target List",
+        "MassEmail": "Mass Email",
+        "EmailQueueItem": "Email Queue Item",
+        "CampaignTrackingUrl": "Tracking URL"
     },
     "scopeNamesPlural": {
-        "Account": "Cuentas",
+        "Account": "Accounts",
         "Contact": "Contactos",
         "Lead": "Potenciales",
         "Target": "Objetivos",
         "Opportunity": "Oportunidades",
-        "Meeting": "Reuniones",
+        "Meeting": "Meetings",
         "Calendar": "Calendario",
-        "Call": "Llamadas",
-        "Task": "Tareas",
+        "Call": "Calls",
+        "Task": "Tasks",
         "Case": "Casos",
-        "InboundEmail": "Correos Entrantes",
-        "Document": "Documentos"
+        "Document": "Documentos",
+        "DocumentFolder": "Document Folders",
+        "Campaign": "Campaigns",
+        "TargetList": "Target Lists",
+        "MassEmail": "Mass Emails",
+        "EmailQueueItem": "Email Queue Items",
+        "CampaignTrackingUrl": "Tracking URLs"
     },
     "dashlets": {
         "Leads": "Mis potenciales",
@@ -33,12 +43,13 @@
         "Tasks": "Mis Tareas",
         "Cases": "Mis Casos",
         "Calendar": "Calendario",
-        "Calls": "",
-        "Meetings": "",
+        "Calls": "My Calls",
+        "Meetings": "My Meetings",
         "OpportunitiesByStage": "Oportunidades por Etapa",
         "OpportunitiesByLeadSource": "Oportunidades de origen de cliente potencial",
         "SalesByMonth": "Ventas por Mes",
-        "SalesPipeline": "Canalización de ventas"    
+        "SalesPipeline": "Canalización de ventas",
+        "Activities": "My Activities"
     },
     "labels": {
         "Create InboundEmail": "Crear Correo Entrante",
@@ -52,7 +63,7 @@
         "Log Call": "Log de Llamada",
         "Archive Email": "Archivar Correo",
         "Create Task": "Crear Tarea",
-        "Tasks": "Tareas"        
+        "Tasks": "Tasks"
     },
     "fields": {
         "billingAddressCity": "Ciudad",
@@ -64,7 +75,7 @@
         "addressStreet": "Calle",
         "addressCountry": "país",
         "addressState": "Estado/Distrito",
-        "addressPostalCode": "Código Postal",        
+        "addressPostalCode": "Código Postal",
         "shippingAddressCity": "Ciudad (Envío)",
         "shippingAddressStreet": "Calle (Envío)",
         "shippingAddressCountry": "País (Envío)",
@@ -74,17 +85,23 @@
     "links": {
         "contacts": "Contactos",
         "opportunities": "Oportunidades",
-        "leads": "Potenciales",        
-        "meetings": "Reuniones",
-        "calls": "Llamadas",
-        "tasks": "Tareas",
+        "leads": "Potenciales",
+        "meetings": "Meetings",
+        "calls": "Calls",
+        "tasks": "Tasks",
         "emails": "Correos",
-        "accounts": "Cuentas",
+        "accounts": "Accounts",
         "cases": "Casos",
         "documents": "Documentos",
         "account": "Cuenta",
-        "opportunity": "Oportunidad",        
+        "opportunity": "Oportunidad",
         "contact": "Contacto",
         "parent": "Padre"
+    },
+    "options": {
+        "reminderTypes": {
+            "Popup": "Popup",
+            "Email": "Correo electrónico"
+        }
     }
 }

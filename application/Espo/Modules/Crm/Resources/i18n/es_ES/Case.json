@@ -5,19 +5,29 @@
         "status": "Estado",
         "account": "Cuenta",
         "contact": "Contacto",
+        "contacts": "Contactos",
         "priority": "Prioridad",
         "type": "Tipo",
-        "description": "Descripción"
+        "description": "Descripción",
+        "inboundEmail": "Inbound Email"
     },
     "links": {
+        "inboundEmail": "Inbound Email",
+        "account": "Cuenta",
+        "contact": "Contact (Primary)",
+        "Contacts": "Contactos",
+        "meetings": "Meetings",
+        "calls": "Calls",
+        "tasks": "Tasks",
+        "emails": "Correos"
     },
     "options": {
         "status": {
-            "New": "Nuevo",
+            "New": "New",
             "Assigned": "Asignado",
             "Pending": "Pendiente",
             "Closed": "Cerrado",
-            "Rejected": "Rechazado",
+            "Rejected": "Rejected",
             "Duplicate": "Duplicar"
         },
         "priority" : {
@@ -33,7 +43,11 @@
         }
     },
     "labels": {
-        "Create Case": "Crear Caso"
+        "Create Case": "Create Case",
+        "Close": "Cerrar",
+        "Reject": "Reject",
+        "Closed": "Cerrado",
+        "Rejected": "Rejected"
     },
     "presetFilters": {
         "open": "Abrir",

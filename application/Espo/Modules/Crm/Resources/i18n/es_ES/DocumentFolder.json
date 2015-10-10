@@ -1,0 +1,9 @@
+{
+    "labels": {
+        "Create DocumentFolder": "Create Document Folder",
+        "Manage Categories": "Manage Folders"
+    },
+    "links": {
+        "documents": "Documentos"
+    }
+}

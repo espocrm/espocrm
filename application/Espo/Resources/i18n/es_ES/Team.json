@@ -1,13 +1,15 @@
 {
     "fields": {
         "name": "Asunto",
-        "roles": "Roles"
+        "roles": "Roles",
+        "positionList": "Position List"
     },
     "links": {
         "users": "Usuarios"
     },
     "tooltips": {
-        "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados"
+        "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados",
+        "positionList": "Available positions in this team. E.g. Salesperson, Manager."
     },
     "labels": {
         "Create Team": "Crear Equipo"

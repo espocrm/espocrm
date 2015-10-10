@@ -10,15 +10,12 @@
         "defaultCurrency": "Moneda por Defecto",
         "baseCurrency": "Moneda Base",
         "currencyRates": "Valores Tarifa",
-
         "currencyList": "Lista de Moneda",
         "language": "Idioma",
-
         "companyLogo": "Logo Compañia",
-
         "smtpServer": "Servidor",
         "smtpPort": "Puerto",
-        "smtpAuth": "Autenticación",
+        "smtpAuth": "Auth",
         "smtpSecurity": "Seguridad",
         "smtpUsername": "Nombre de Usuario",
         "emailAddress": "Correo electrónico",
@@ -26,18 +23,16 @@
         "outboundEmailFromName": "De Nombre",
         "outboundEmailFromAddress": "De la dirección",
         "outboundEmailIsShared": "Es Compartido",
-
         "recordsPerPage": "Registros por Página",
         "recordsPerPageSmall": "Registros Por Página (Pequeño)",
-        "tabList": "Lista Pestaña",
+        "tabList": "Tab List",
         "quickCreateList": "Crear Lista Rápida",
-
         "exportDelimiter": "Exportar Delimitador",
-
+        "globalSearchEntityList": "Global Search Entity List",
         "authenticationMethod": "Método de Autentificación",
         "ldapHost": "Host",
         "ldapPort": "Puerto",
-        "ldapAuth": "Autenticación",
+        "ldapAuth": "Auth",
         "ldapUsername": "Nombre de Usuario",
         "ldapPassword": "Contraseña",
         "ldapBindRequiresDn": "Bind Necesita Nd (Nombre Dominio)",
@@ -51,8 +46,20 @@
         "ldapAccountDomainNameShort": "Nombre Dominio Corto para la Cuenta",
         "ldapOptReferrals": "Referencias Opt",
         "exportDisabled": "Desactivar Exportar (Solo admin está permitido)",
+        "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
         "assignmentEmailNotifications": "Enviar Correos Electrónicos de notificación sobre Asignación",
-        "assignmentEmailNotificationsEntityList": "Entidades a Notificar"
+        "assignmentEmailNotificationsEntityList": "Entidades a Notificar",
+        "b2cMode": "B2C Mode",
+        "avatarsDisabled": "Disable Avatars",
+        "followCreatedEntities": "Follow Created Entities",
+        "displayListViewRecordCount": "Display Total Count (on List View)",
+        "theme": "Theme",
+        "userThemesDisabled": "Disable User Themes",
+        "emailMessageMaxSize": "Email Max Size (Mb)",
+        "massEmailMaxPerHourCount": "Max count of emails sent per hour",
+        "personalEmailMaxPortionSize": "Max email portion size for a personal account fetching",
+        "inboundEmailMaxPortionSize": "Max email portion size for a group account fetching",
+        "maxEmailAccountCount": "Max count of personal email accounts per user"
     },
     "options": {
         "weekStart": {
@@ -61,15 +68,20 @@
         }
     },
     "tooltips": {
-        "recordsPerPageSmall": "Contador de registros en los paneles de relación"
+        "recordsPerPageSmall": "Contador de registros en los paneles de relación",
+        "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
+        "followCreatedEntities": "Users will automatically follow records they created.",
+        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped."
     },
     "labels": {
         "System": "Sistema",
         "Locale": "Localización",
         "SMTP": "SMTP",
         "Configuration": "Configuración",
-        "Notifications": "Notificaciones",
+        "In-app Notifications": "In-app Notifications",
+        "Email Notifications": "Email Notifications",
         "Currency Settings": "Configuración Moneda",
-        "Currency Rtes": "Tarifa Moneda"
+        "Currency Rates": "Currency Rates",
+        "Mass Email": "Mass Email"
     }
 }

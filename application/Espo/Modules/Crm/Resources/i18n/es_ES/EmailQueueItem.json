@@ -1,0 +1,28 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "status": "Estado",
+        "target": "Target",
+        "sentAt": "Enviado",
+        "attemptCount": "Attempts",
+        "emailAddress": "Correo Electrónico",
+        "massEmail": "Mass Email",
+        "isTest": "Is Test"
+    },
+    "links": {
+        "target": "Target",
+        "massEmail": "Mass Email"
+    },
+    "options": {
+        "status": {
+            "Pending": "Pendiente",
+            "Sent": "Enviado",
+            "Failed": "Failed"
+        }
+    },
+    "presetFilters": {
+        "pending": "Pendiente",
+        "sent": "Enviado",
+        "failed": "Failed"
+    }
+}

@@ -1,11 +1,17 @@
 {
     "fields": {
         "name": "Asunto",
-        "roles": "Roles"
+        "roles": "Roles",
+        "assignmentPermission": "Assignment Permission",
+        "userPermission": "User Permission"
     },
     "links": {
         "users": "Usuarios",
         "teams": "Equipos"
+    },
+    "tooltips": {
+        "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
+        "userPermission": "Allows users to view activities of other users.\n\nall - can view all\n\nteam - can view user's activities from own teams\n\nno - can't view"
     },
     "labels": {
         "Access": "Acceso",
@@ -21,7 +27,8 @@
             "all": "todos",
             "team": "equipo",
             "own": "propio",
-            "no": "no"
+            "no": "no",
+            "not-set": "sin establecer"
         }
     },
     "actions": {

@@ -1,0 +1,64 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "description": "Descripción",
+        "status": "Estado",
+        "type": "Tipo",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "sentCount": "Enviado",
+        "openedCount": "Opened",
+        "clickedCount": "Clicked",
+        "optedOutCount": "optado por no",
+        "bouncedCount": "Bounced",
+        "hardBouncedCount": "Hard Bounced",
+        "softBouncedCount": "Soft Bounced",
+        "leadCreatedCount": "Leads Created",
+        "revenue": "Revenue",
+        "revenueConverted": "revenue (converted)",
+        "budget": "Budget"
+    },
+    "links": {
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "accounts": "Accounts",
+        "contacts": "Contactos",
+        "leads": "Potenciales",
+        "opportunities": "Oportunidades",
+        "campaignLogRecords": "Registro de Log",
+        "massEmails": "Mass Emails",
+        "trackingUrls": "Tracking URLs"
+    },
+    "options": {
+        "type": {
+            "Email": "Correo electrónico",
+            "Web": "Web",
+            "Television": "Television",
+            "Radio": "Radio",
+            "Newsletter": "Newsletter",
+            "Mail": "Mail"
+        },
+        "status": {
+            "Planning": "Planning",
+            "Active": "Activo",
+            "Inactive": "Inactivo",
+            "Complete": "Complete"
+        }
+    },
+    "labels": {
+        "Create Campaign": "Create Campaign",
+        "Target Lists": "Target Lists",
+        "Statistics": "Statistics",
+        "hard": "hard",
+        "soft": "soft",
+        "Unsubscribe": "Unsubscribe"
+    },
+    "presetFilters": {
+        "active": "Activo"
+    },
+    "messages": {
+        "unsubscribed": "You have been unsubscribed from our mailing list."
+    }
+}

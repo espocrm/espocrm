@@ -1,0 +1,47 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "status": "Estado",
+        "storeSentEmails": "Almacenar Correos Enviados",
+        "startAt": "Fecha de Comienzo",
+        "fromAddress": "De la dirección",
+        "fromName": "De Nombre",
+        "replyToAddress": "Reply-to Address",
+        "replyToName": "Reply-to Name",
+        "campaign": "Campaign",
+        "emailTemplate": "Plantilla de Correo",
+        "inboundEmail": "Email Account",
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "optOutEntirely": "Opt-Out Entirely"
+    },
+    "links": {
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "queueItems": "Queue Items",
+        "campaign": "Campaign",
+        "emailTemplate": "Plantilla de Correo",
+        "inboundEmail": "Email Account"
+    },
+    "options": {
+        "status": {
+            "Draft": "Borrador",
+            "Pending": "Pendiente",
+            "In Process": "En Proceso",
+            "Complete": "Complete",
+            "Canceled": "Cancelado",
+            "Failed": "Failed"
+        }
+    },
+    "labels": {
+        "Create MassEmail": "Create Mass Email",
+        "Send Test": "Send Test"
+    },
+    "messages": {
+        "selectAtLeastOneTarget": "Select at least one target.",
+        "testSent": "Test email(s) supposed to be sent"
+    },
+    "tooltips": {
+        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore."
+    }
+}

@@ -4,18 +4,27 @@
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "account": "Cuenta",
-        "accounts": "Cuentas",
+        "accounts": "Accounts",
         "phoneNumber": "Teléfono",
         "accountType": "Tipo de Cuenta",
         "doNotCall": "No Llamar",
         "address": "Dirección",
         "opportunityRole": "Rol de Oportunidad",
-        "accountRole": "Rol",
-        "description": "Descripción"
+        "accountRole": "Título",
+        "description": "Descripción",
+        "campaign": "Campaign",
+        "targetLists": "Target Lists",
+        "targetList": "Target List"
     },
     "links": {
         "opportunities": "Oportunidades",
-        "cases": "Casos"
+        "cases": "Casos",
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign",
+        "account": "Account (Primary)",
+        "accounts": "Accounts",
+        "casesPrimary": "Cases (Primary)"
     },
     "labels": {
         "Create Contact": "Crear Contacto"

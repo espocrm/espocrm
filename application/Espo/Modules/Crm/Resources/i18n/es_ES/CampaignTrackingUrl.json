@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "url": "URL",
+        "urlToUse": "Code to insert instead of URL",
+        "campaign": "Campaign"
+    },
+    "links": {
+        "campaign": "Campaign"
+    },
+    "labels": {
+        "Create CampaignTrackingUrl": "Create Tracking URL"
+    }
+}

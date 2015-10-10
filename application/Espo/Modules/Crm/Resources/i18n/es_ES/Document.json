@@ -12,12 +12,12 @@
         "publishDate": "Publicar Fecha",
         "expirationDate": "Fecha de Expiración",
         "description": "Descripción",
+        "accounts": "Accounts",
         "folder": "Carpeta"
     },
     "links": {
-        "accounts": "Cuentas",
+        "accounts": "Accounts",
         "opportunities": "Oportunidades",
-        "accounts": "Cuentas",
         "folder": "Carpeta"
     },
     "options": {
@@ -26,6 +26,13 @@
             "Draft": "Borrador",
             "Expired": "Expirado",
             "Canceled": "Cancelado"
+        },
+        "type": {
+            "": "Ninguno",
+            "Contract": "Contract",
+            "NDA": "NDA",
+            "EULA": "EULA",
+            "License Agreement": "Contrato de licencia"
         }
     },
     "presetFilters": {

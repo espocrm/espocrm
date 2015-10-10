@@ -6,11 +6,15 @@
         "body": "Cuerpo",
         "subject": "Sujeto",
         "attachments": "Adjuntos",
-        "insertField": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: EspoCRM <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\n"
+        "insertField": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-10-09 22:22-0300\nLast-Translator: Mauricio Panuncio <m@panuweb.com>\nLanguage-Team: Español; Castellano <>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\nX-Generator: Gtranslator 2.91.6\n"
     },
     "links": {
     },
     "labels": {
-        "Create EmailTemplate": "Crear Plantilla de Correo"
+        "Create EmailTemplate": "Crear Plantilla de Correo",
+        "Info": "Información"
+    },
+    "messages": {
+        "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link};\n\n{optOutLink} &#8211; an unsubscribe link."
     }
 }

@@ -5,12 +5,14 @@
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",
         "dateEnd": "Fecha de Finalización",
-        "direction": "Dirección",
+        "direction": "Direction",
         "duration": "Duración",
         "description": "Descripción",
         "users": "Usuarios",
         "contacts": "Contactos",
-        "leads": "Potenciales"
+        "leads": "Potenciales",
+        "reminders": "Reminders",
+        "account": "Cuenta"
     },
     "links": {
     },
@@ -27,14 +29,19 @@
         "acceptanceStatus": {
             "None": "Ninguno",
             "Accepted": "Aceptado",
-            "Declined": "Rechazado"
+            "Declined": "Rechazado",
+            "Tentative": "Tentativa"
         }
+    },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
     },
     "labels": {
         "Create Call": "Crear Llamada",
-        "Set Held": "Establecer Celebrada",
-        "Set Not Held": "Establecer no Celebrada",
-        "Send Invitations": "Enviar Invitaciones"        
+        "Set Held": "Set Held",
+        "Set Not Held": "Set Not Held",
+        "Send Invitations": "Enviar Invitaciones"
     },
     "presetFilters": {
         "planned": "Planeada",
