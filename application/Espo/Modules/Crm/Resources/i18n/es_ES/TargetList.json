@@ -12,13 +12,13 @@
         "contacts": "Contactos",
         "leads": "Potenciales",
         "campaigns": "Campañas",
-        "massEmails": "Mass Emails"
+        "massEmails": "Emails Masivos"
     },
     "options": {
         "type": {
             "Email": "Correo electrónico",
             "Web": "Web",
-            "Television": "Television",
+            "Television": "Televisión",
             "Radio": "Radio",
             "Newsletter": "Newsletter"
         }

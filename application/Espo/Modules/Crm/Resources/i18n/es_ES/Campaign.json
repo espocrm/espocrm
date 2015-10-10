@@ -15,10 +15,10 @@
         "bouncedCount": "Rebotados",
         "hardBouncedCount": "Rebotados Duro",
         "softBouncedCount": "Rebotado Suave",
-        "leadCreatedCount": "Leads Created",
-        "revenue": "Revenue",
-        "revenueConverted": "revenue (converted)",
-        "budget": "Budget"
+        "leadCreatedCount": "Potenciales Creados",
+        "revenue": "Ingresos",
+        "revenueConverted": "ingresos (convertido)",
+        "budget": "Presupuesto"
     },
     "links": {
         "targetLists": "Lista de Objetivos",
@@ -28,23 +28,23 @@
         "leads": "Potenciales",
         "opportunities": "Oportunidades",
         "campaignLogRecords": "Registro de Log",
-        "massEmails": "Mass Emails",
+        "massEmails": "Emails Masivos",
         "trackingUrls": "URLs de Seguimiento"
     },
     "options": {
         "type": {
             "Email": "Correo electrónico",
             "Web": "Web",
-            "Television": "Television",
+            "Television": "Televisión",
             "Radio": "Radio",
             "Newsletter": "Newsletter",
-            "Mail": "Mail"
+            "Mail": "Correo"
         },
         "status": {
-            "Planning": "Planning",
+            "Planning": "Planificación",
             "Active": "Activo",
             "Inactive": "Inactivo",
-            "Complete": "Complete"
+            "Complete": "Completo"
         }
     },
     "labels": {
@@ -59,6 +59,6 @@
         "active": "Activo"
     },
     "messages": {
-        "unsubscribed": "You have been unsubscribed from our mailing list."
+        "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo."
     }
 }

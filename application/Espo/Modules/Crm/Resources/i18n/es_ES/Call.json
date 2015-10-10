@@ -11,7 +11,7 @@
         "users": "Usuarios",
         "contacts": "Contactos",
         "leads": "Potenciales",
-        "reminders": "Reminders",
+        "reminders": "Recordatorios",
         "account": "Cuenta"
     },
     "links": {
@@ -34,13 +34,13 @@
         }
     },
     "massActions": {
-        "setHeld": "Set Held",
-        "setNotHeld": "Set Not Held"
+        "setHeld": "Establecer Celebrada",
+        "setNotHeld": "Establecer No Celebrada"
     },
     "labels": {
         "Create Call": "Crear Llamada",
-        "Set Held": "Set Held",
-        "Set Not Held": "Set Not Held",
+        "Set Held": "Establecer Celebrada",
+        "Set Not Held": "Establecer No Celebrada",
         "Send Invitations": "Enviar Invitaciones"
     },
     "presetFilters": {

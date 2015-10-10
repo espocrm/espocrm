@@ -3,14 +3,14 @@
         "name": "Asunto",
         "body": "Cuerpo",
         "entityType": "Tipo de Entidad",
-        "header": "Header",
-        "footer": "Footer",
-        "leftMargin": "Left Margin",
-        "topMargin": "Top Margin",
-        "rightMargin": "Right Margin",
-        "bottomMargin": "Bottom Margin",
-        "printFooter": "Print Footer",
-        "footerPosition": "Footer Position"
+        "header": "Cabecera",
+        "footer": "Pié",
+        "leftMargin": "Margen Izquierdo",
+        "topMargin": "Margen Superior",
+        "rightMargin": "Margen Derecho",
+        "bottomMargin": "Margen Inferior",
+        "printFooter": "Imprimir Pié",
+        "footerPosition": "Posición del Pié"
     },
     "links": {
     },
@@ -18,6 +18,6 @@
         "Create Template": "Crear Plantilla"
     },
     "tooltips": {
-        "footer": "Use {pageNumber} to print page number."
+        "footer": "Use {pageNumber} para imprimir el número de página."
     }
 }

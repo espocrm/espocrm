@@ -18,10 +18,10 @@
         "opportunities": "Oportunidades",
         "cases": "Casos",
         "documents": "Documentos",
-        "meetingsPrimary": "Meetings (expanded)",
-        "callsPrimary": "Calls (expanded)",
-        "tasksPrimary": "Tasks (expanded)",
-        "emailsPrimary": "Emails (expanded)",
+        "meetingsPrimary": "Reuniones (ampliado)",
+        "callsPrimary": "Llamadas (ampliado)",
+        "tasksPrimary": "Tareas (ampliado)",
+        "emailsPrimary": "Correos (ampliado)",
         "targetLists": "Lista de Objetivos",
         "campaignLogRecords": "Registro de Campaña",
         "campaign": "Campaña"
@@ -35,9 +35,9 @@
         },
         "industry": {
             "Agriculture": "Agricultura",
-            "Advertising": "Advertising",
-            "Apparel & Accessories": "Apparel & Accessories",
-            "Automotive": "Automotive",
+            "Advertising": "Publicidad",
+            "Apparel & Accessories": "Ropa y Accesorios",
+            "Automotive": "Automotriz",
             "Banking": "Banca",
             "Biotechnology": "Biotecnolodía",
             "Chemical": "Química",
@@ -45,24 +45,24 @@
             "Education": "Educación",
             "Electronics": "Electrónicos",
             "Energy": "Energía",
-            "Entertainment & Leisure": "Entertainment & Leisure",
+            "Entertainment & Leisure": "Entretenimiento y Ocio",
             "Finance": "Finanzas",
-            "Food & Beverage": "Food & Beverage",
-            "Grocery": "Grocery",
-            "Healthcare": "Healthcare",
+            "Food & Beverage": "Alimentación y bebidas",
+            "Grocery": "Comestibles",
+            "Healthcare": "Cuidado de la Salud",
             "Insurance": "Seguros",
-            "Legal": "Legal",
-            "Manufacturing": "Manufacturing",
-            "Publishing": "Publishing",
-            "Real Estate": "Real Estate",
-            "Service": "Service",
-            "Sports": "Sports",
+            "Legal": "Jurídico",
+            "Manufacturing": "Fabricación",
+            "Publishing": "Publicaciones",
+            "Real Estate": "Bienes Raices",
+            "Service": "Servicio",
+            "Sports": "Deportes",
             "Software": "Software",
-            "Technology": "Technology",
-            "Telecommunications": "Telecommunications",
-            "Television": "Television",
-            "Transportation": "Transportation",
-            "Venture Capital": "Venture Capital"
+            "Technology": "Tecnología",
+            "Telecommunications": "Telecomunicaciones",
+            "Television": "Televisión",
+            "Transportation": "Transporte",
+            "Venture Capital": "Capital de Riesgo"
         }
     },
     "labels": {
@@ -71,6 +71,6 @@
     },
     "presetFilters": {
         "customers": "Clientes",
-        "partners": "Partners"
+        "partners": "Socios"
     }
 }

@@ -6,23 +6,23 @@
         "sentAt": "Enviado",
         "attemptCount": "Intentos",
         "emailAddress": "Correo Electrónico",
-        "massEmail": "Mass Email",
+        "massEmail": "Email Masivo",
         "isTest": "Es una prueba"
     },
     "links": {
         "target": "Objetivo",
-        "massEmail": "Mass Email"
+        "massEmail": "Email Masivo"
     },
     "options": {
         "status": {
             "Pending": "Pendiente",
             "Sent": "Enviado",
-            "Failed": "Failed"
+            "Failed": "Falló"
         }
     },
     "presetFilters": {
         "pending": "Pendiente",
         "sent": "Enviado",
-        "failed": "Failed"
+        "failed": "Falló"
     }
 }

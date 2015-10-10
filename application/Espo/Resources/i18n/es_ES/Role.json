@@ -2,8 +2,8 @@
     "fields": {
         "name": "Asunto",
         "roles": "Roles",
-        "assignmentPermission": "Assignment Permission",
-        "userPermission": "User Permission"
+        "assignmentPermission": "Asignación de permisos",
+        "userPermission": "Permisos de Usuario"
     },
     "links": {
         "users": "Usuarios",

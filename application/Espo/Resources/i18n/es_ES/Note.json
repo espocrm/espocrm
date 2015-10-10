@@ -5,7 +5,7 @@
     },
     "filters": {
         "all": "Todos",
-        "posts": "Posts",
-        "updates": "Updates"
+        "posts": "Entradas",
+        "updates": "Actualizaciones"
     }
 }

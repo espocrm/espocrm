@@ -11,7 +11,7 @@
         "language": "Idioma",
         "smtpServer": "Servidor",
         "smtpPort": "Puerto",
-        "smtpAuth": "Auth",
+        "smtpAuth": "Autenticar",
         "smtpSecurity": "Seguridad",
         "smtpUsername": "Nombre de Usuario",
         "emailAddress": "Correo electrónico",
@@ -19,13 +19,13 @@
         "smtpEmailAddress": "Correo Electrónico",
         "exportDelimiter": "Exportar Delimitador",
         "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
-        "autoFollowEntityTypeList": "Auto-Follow",
-        "signature": "Email Signature",
-        "dashboardTabList": "Tab List",
-        "defaultReminders": "Default Reminders",
+        "autoFollowEntityTypeList": "Seguir automaticamente",
+        "signature": "Firma de correo",
+        "dashboardTabList": "Lista de Pestañas",
+        "defaultReminders": "Recordatorios por defecto",
         "theme": "Tema",
-        "useCustomTabList": "Custom Tab List",
-        "tabList": "Tab List"
+        "useCustomTabList": "Lista de Pestañas Personalizada",
+        "tabList": "Lista de Pestañas"
     },
     "links": {
     },
@@ -43,6 +43,6 @@
         "Locale": "Localización"
     },
     "tooltips": {
-        "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications."
+        "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en el stream y recibirá notificaciones."
     }
 }

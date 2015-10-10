@@ -14,7 +14,7 @@
         "DocumentFolder": "Carpeta de Documento",
         "Campaign": "Campaña",
         "TargetList": "Lista de Objetivos",
-        "MassEmail": "Mass Email",
+        "MassEmail": "Email Masivo",
         "EmailQueueItem": "Item en Cola de Correo",
         "CampaignTrackingUrl": "URL de seguimiento"
     },
@@ -33,7 +33,7 @@
         "DocumentFolder": "Carpetas de Documentos",
         "Campaign": "Campañas",
         "TargetList": "Lista de Objetivos",
-        "MassEmail": "Mass Emails",
+        "MassEmail": "Emails Masivos",
         "EmailQueueItem": "Items en Cola de Correo",
         "CampaignTrackingUrl": "URLs de Seguimiento"
     },

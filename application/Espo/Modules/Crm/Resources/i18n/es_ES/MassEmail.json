@@ -28,9 +28,9 @@
             "Draft": "Borrador",
             "Pending": "Pendiente",
             "In Process": "En Proceso",
-            "Complete": "Complete",
+            "Complete": "Completo",
             "Canceled": "Cancelado",
-            "Failed": "Failed"
+            "Failed": "Falló"
         }
     },
     "labels": {

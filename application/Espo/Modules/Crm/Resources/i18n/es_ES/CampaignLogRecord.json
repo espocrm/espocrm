@@ -5,9 +5,9 @@
         "data": "Datos",
         "campaign": "Campaña",
         "parent": "Objetivo",
-        "object": "Object",
-        "application": "Application",
-        "queueItem": "Queue Item"
+        "object": "Objeto",
+        "application": "Aplicacion",
+        "queueItem": "Item de Cola"
     },
     "options": {
     	"action": {

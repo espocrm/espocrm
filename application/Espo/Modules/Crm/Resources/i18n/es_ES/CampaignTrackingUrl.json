@@ -1,7 +1,7 @@
 {
     "fields": {
         "url": "URL",
-        "urlToUse": "Code to insert instead of URL",
+        "urlToUse": "Código para insertar en lugar de la URL",
         "campaign": "Campaña"
     },
     "links": {

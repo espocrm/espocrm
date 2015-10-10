@@ -15,7 +15,7 @@
         "job": {
             "Cleanup": "Limpiar",
             "CheckInboundEmails": "Comprobar Correos Entrantes",
-            "CheckEmailAccounts": "Check Personal Email Accounts",
+            "CheckEmailAccounts": "Compruebe cuentas de correo personales",
             "SendEmailReminders": "Enviar Recordatorios por Email"
         },
         "cronSetup": {

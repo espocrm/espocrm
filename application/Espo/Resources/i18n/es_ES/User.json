@@ -8,14 +8,14 @@
         "emailAddress": "Correo electrónico",
         "phoneNumber": "Teléfono",
         "roles": "Roles",
-        "teamRole": "Position",
+        "teamRole": "Posición",
         "password": "Contraseña",
         "currentPassword": "Contraseña Actual",
         "passwordConfirm": "Confirmar Contraseña",
         "newPassword": "Nueva Contraseña",
         "newPasswordConfirm": "Confirmar Contraseña Nueva",
         "avatar": "Avatar",
-        "isActive": "Is Active"
+        "isActive": "Está Activo"
     },
     "links": {
         "teams": "Equipos",
@@ -27,34 +27,34 @@
         "Access": "Acceso",
         "Preferences": "Preferencias",
         "Change Password": "Cambiar Contraseña",
-        "Teams and Access Control": "Teams and Access Control",
-        "Forgot Password?": "Forgot Password?",
-        "Password Change Request": "Password Change Request",
+        "Teams and Access Control": "Equipos y Control de Acceso",
+        "Forgot Password?": "¿Olvidó la Contraseña?",
+        "Password Change Request": "Solicitar Cambio de Contraseña",
         "Email Address": "Correo Electrónico",
         "External Accounts": "Cuentas Externas",
-        "Email Accounts": "Email Accounts"
+        "Email Accounts": "Cuentas de Email"
     },
     "tooltips": {
         "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
         "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos",
-        "isAdmin": "Admin user can access everything.",
-        "isActive": "If unchecked then user won't be able to login.",
-        "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
-        "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level only for this user."
+        "isAdmin": "El usuario administrador puede tener acceso a todo.",
+        "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
+        "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
+        "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso sólo para este usuario."
     },
     "messages": {
         "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
         "accountInfoEmailSubject": "Información Cuenta",
         "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Change Password Request",
-        "passwordChangeLinkEmailBody": "You can change your password by this link {link}. This unique url will be exprired soon.",
+        "passwordChangeLinkEmailSubject": "Solicitar Cambio de Contraseña",
+        "passwordChangeLinkEmailBody": "Usted puede cambiar su contraseña a través este enlace {link}. Esta url única expirará pronto.",
         "passwordChanged": "La Contraseña ha sido cambiada",
-        "userCantBeEmpty": "Username can not be empty",
+        "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
         "wrongUsernamePasword": "Nombre de usuario/contraseña incorrectos",
-        "emailAddressCantBeEmpty": "Email Address can not be empty",
-        "userNameEmailAddressNotFound": "Username/Email Address not found",
-        "forbidden": "Forbidden, please try later",
-        "uniqueLinkHasBeenSent": "The unique link has been sent to the specified email address.",
+        "emailAddressCantBeEmpty": "La dirección de correo no puede estar vacía",
+        "userNameEmailAddressNotFound": "Nombre de Usuario/Correo no encontrado",
+        "forbidden": "Prohibido, por favor intente después",
+        "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
         "passwordChangedByRequest": "La contraseña ha sido cambiada."
     },
     "boolFilters": {

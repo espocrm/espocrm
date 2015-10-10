@@ -34,7 +34,7 @@
     },
     "labels": {
         "Create Task": "Crear Tarea",
-        "Complete": "Complete"
+        "Complete": "Completo"
     },
     "presetFilters": {
         "actual": "Actual",
