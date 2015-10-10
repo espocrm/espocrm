@@ -10,10 +10,10 @@
         "roles": "Roles",
         "teamRole": "Position",
         "password": "Contraseña",
-        "currentPassword": "Current Password",
+        "currentPassword": "Contraseña Actual",
         "passwordConfirm": "Confirmar Contraseña",
         "newPassword": "Nueva Contraseña",
-        "newPasswordConfirm": "Confirm New Password",
+        "newPasswordConfirm": "Confirmar Contraseña Nueva",
         "avatar": "Avatar",
         "isActive": "Is Active"
     },
@@ -55,10 +55,10 @@
         "userNameEmailAddressNotFound": "Username/Email Address not found",
         "forbidden": "Forbidden, please try later",
         "uniqueLinkHasBeenSent": "The unique link has been sent to the specified email address.",
-        "passwordChangedByRequest": "Password has been changed."
+        "passwordChangedByRequest": "La contraseña ha sido cambiada."
     },
     "boolFilters": {
-        "onlyMyTeam": "Only My Team"
+        "onlyMyTeam": "Sólo mi equipo"
     },
     "presetFilters": {
         "active": "Activo"

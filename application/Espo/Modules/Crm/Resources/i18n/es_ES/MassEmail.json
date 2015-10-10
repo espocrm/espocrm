@@ -6,22 +6,22 @@
         "startAt": "Fecha de Comienzo",
         "fromAddress": "De la dirección",
         "fromName": "De Nombre",
-        "replyToAddress": "Reply-to Address",
-        "replyToName": "Reply-to Name",
-        "campaign": "Campaign",
+        "replyToAddress": "Responder a la dirección",
+        "replyToName": "Responder al Nombre",
+        "campaign": "Campaña",
         "emailTemplate": "Plantilla de Correo",
-        "inboundEmail": "Email Account",
-        "targetLists": "Target Lists",
-        "excludingTargetLists": "Excluding Target Lists",
+        "inboundEmail": "Cuenta de Correo",
+        "targetLists": "Lista de Objetivos",
+        "excludingTargetLists": "Lista de Objetivos Excluídos",
         "optOutEntirely": "Opt-Out Entirely"
     },
     "links": {
-        "targetLists": "Target Lists",
-        "excludingTargetLists": "Excluding Target Lists",
-        "queueItems": "Queue Items",
-        "campaign": "Campaign",
+        "targetLists": "Lista de Objetivos",
+        "excludingTargetLists": "Lista de Objetivos Excluídos",
+        "queueItems": "Items en cola",
+        "campaign": "Campaña",
         "emailTemplate": "Plantilla de Correo",
-        "inboundEmail": "Email Account"
+        "inboundEmail": "Cuenta de Correo"
     },
     "options": {
         "status": {
@@ -34,14 +34,14 @@
         }
     },
     "labels": {
-        "Create MassEmail": "Create Mass Email",
-        "Send Test": "Send Test"
+        "Create MassEmail": "Crear correo masivo",
+        "Send Test": "Enviar prueba"
     },
     "messages": {
-        "selectAtLeastOneTarget": "Select at least one target.",
-        "testSent": "Test email(s) supposed to be sent"
+        "selectAtLeastOneTarget": "Seleccione al menos un objetivo.",
+        "testSent": "Se supone que el/los email/s de preuebas fueron enviados"
     },
     "tooltips": {
-        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore."
+        "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por salir y no van a recibir ningún correo masivo."
     }
 }

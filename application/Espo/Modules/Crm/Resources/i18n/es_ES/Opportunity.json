@@ -12,12 +12,12 @@
         "description": "Descripción",
         "amountConverted": "Cantidad (convertido)",
         "amountWeightedConverted": "Cantidad Ponderada",
-        "campaign": "Campaign"
+        "campaign": "Campaña"
     },
     "links": {
         "contacts": "Contactos",
         "documents": "Documentos",
-        "campaign": "Campaign"
+        "campaign": "Campaña"
     },
     "options": {
         "stage": {
@@ -39,6 +39,6 @@
     "presetFilters": {
         "open": "Abrir",
         "won": "Ganado",
-        "lost": "Lost"
+        "lost": "Perdido"
     }
 }

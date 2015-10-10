@@ -5,13 +5,13 @@
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",
         "dateEnd": "Fecha de vencimiento",
-        "dateStartDate": "Date Start (all day)",
-        "dateEndDate": "Date End (all day)",
+        "dateStartDate": "Fecha de Inicio (todo el día)",
+        "dateEndDate": "Fecha de fin (todo el día)",
         "priority": "Prioridad",
         "description": "Descripción",
         "isOverdue": "Atrasado",
         "account": "Cuenta",
-        "dateCompleted": "Date Completed",
+        "dateCompleted": "Fecha de completado",
         "attachments": "Adjuntos"
     },
     "links": {
@@ -23,7 +23,7 @@
             "Started": "Comenzado",
             "Completed": "Completado",
             "Canceled": "Cancelado",
-            "Deferred": "Deferred"
+            "Deferred": "Diferido"
         },
         "priority" : {
             "Low": "Baja",

@@ -53,7 +53,7 @@
         "avatarsDisabled": "Disable Avatars",
         "followCreatedEntities": "Follow Created Entities",
         "displayListViewRecordCount": "Display Total Count (on List View)",
-        "theme": "Theme",
+        "theme": "Tema",
         "userThemesDisabled": "Disable User Themes",
         "emailMessageMaxSize": "Email Max Size (Mb)",
         "massEmailMaxPerHourCount": "Max count of emails sent per hour",
@@ -79,7 +79,7 @@
         "SMTP": "SMTP",
         "Configuration": "Configuración",
         "In-app Notifications": "In-app Notifications",
-        "Email Notifications": "Email Notifications",
+        "Email Notifications": "Notificaciones de Email",
         "Currency Settings": "Configuración Moneda",
         "Currency Rates": "Currency Rates",
         "Mass Email": "Mass Email"

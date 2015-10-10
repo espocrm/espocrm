@@ -21,21 +21,21 @@
         "createdAccount": "Cuenta",
         "createdContact": "Contacto",
         "createdOpportunity": "Oportunidad",
-        "campaign": "Campaign",
-        "targetLists": "Target Lists",
-        "targetList": "Target List"
+        "campaign": "Campaña",
+        "targetLists": "Lista de Objetivos",
+        "targetList": "Lista de Objetivos"
     },
     "links": {
-        "targetLists": "Target Lists",
-        "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign",
+        "targetLists": "Lista de Objetivos",
+        "campaignLogRecords": "Registro de Campaña",
+        "campaign": "Campaña",
         "createdAccount": "Cuenta",
         "createdContact": "Contacto",
         "createdOpportunity": "Oportunidad"
     },
     "options": {
         "status": {
-            "New": "New",
+            "New": "Nuevo",
             "Assigned": "Asignado",
             "In Process": "En Proceso",
             "Converted": "Convertido",
@@ -50,7 +50,7 @@
             "Partner": "Socio",
             "Public Relations": "Relaciones Públicas",
             "Web Site": "Sitio Web",
-            "Campaign": "Campaign",
+            "Campaign": "Campaña",
             "Other": "Otro"
         }
     },

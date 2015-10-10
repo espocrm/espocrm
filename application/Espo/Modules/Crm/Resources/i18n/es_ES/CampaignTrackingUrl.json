@@ -2,12 +2,12 @@
     "fields": {
         "url": "URL",
         "urlToUse": "Code to insert instead of URL",
-        "campaign": "Campaign"
+        "campaign": "Campaña"
     },
     "links": {
-        "campaign": "Campaign"
+        "campaign": "Campaña"
     },
     "labels": {
-        "Create CampaignTrackingUrl": "Create Tracking URL"
+        "Create CampaignTrackingUrl": "Crear URL de Seguimiento"
     }
 }

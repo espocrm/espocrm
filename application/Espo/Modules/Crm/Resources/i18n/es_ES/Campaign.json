@@ -4,32 +4,32 @@
         "description": "Descripción",
         "status": "Estado",
         "type": "Tipo",
-        "startDate": "Start Date",
-        "endDate": "End Date",
-        "targetLists": "Target Lists",
-        "excludingTargetLists": "Excluding Target Lists",
+        "startDate": "Fecha de Inicio",
+        "endDate": "Fecha de Fin",
+        "targetLists": "Lista de Objetivos",
+        "excludingTargetLists": "Lista de Objetivos Excluídos",
         "sentCount": "Enviado",
-        "openedCount": "Opened",
-        "clickedCount": "Clicked",
+        "openedCount": "Abiertos",
+        "clickedCount": "Cliqueados",
         "optedOutCount": "optado por no",
-        "bouncedCount": "Bounced",
-        "hardBouncedCount": "Hard Bounced",
-        "softBouncedCount": "Soft Bounced",
+        "bouncedCount": "Rebotados",
+        "hardBouncedCount": "Rebotados Duro",
+        "softBouncedCount": "Rebotado Suave",
         "leadCreatedCount": "Leads Created",
         "revenue": "Revenue",
         "revenueConverted": "revenue (converted)",
         "budget": "Budget"
     },
     "links": {
-        "targetLists": "Target Lists",
-        "excludingTargetLists": "Excluding Target Lists",
-        "accounts": "Accounts",
+        "targetLists": "Lista de Objetivos",
+        "excludingTargetLists": "Lista de Objetivos Excluídos",
+        "accounts": "Cuentas",
         "contacts": "Contactos",
         "leads": "Potenciales",
         "opportunities": "Oportunidades",
         "campaignLogRecords": "Registro de Log",
         "massEmails": "Mass Emails",
-        "trackingUrls": "Tracking URLs"
+        "trackingUrls": "URLs de Seguimiento"
     },
     "options": {
         "type": {
@@ -48,12 +48,12 @@
         }
     },
     "labels": {
-        "Create Campaign": "Create Campaign",
-        "Target Lists": "Target Lists",
-        "Statistics": "Statistics",
-        "hard": "hard",
-        "soft": "soft",
-        "Unsubscribe": "Unsubscribe"
+        "Create Campaign": "Crear Campaña",
+        "Target Lists": "Lista de Objetivos",
+        "Statistics": "Estadísticas",
+        "hard": "duro",
+        "soft": "suave",
+        "Unsubscribe": "Desuscribirse"
     },
     "presetFilters": {
         "active": "Activo"

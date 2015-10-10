@@ -2,15 +2,15 @@
     "fields": {
         "name": "Asunto",
         "status": "Estado",
-        "target": "Target",
+        "target": "Objetivo",
         "sentAt": "Enviado",
-        "attemptCount": "Attempts",
+        "attemptCount": "Intentos",
         "emailAddress": "Correo Electrónico",
         "massEmail": "Mass Email",
-        "isTest": "Is Test"
+        "isTest": "Es una prueba"
     },
     "links": {
-        "target": "Target",
+        "target": "Objetivo",
         "massEmail": "Mass Email"
     },
     "options": {

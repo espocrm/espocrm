@@ -16,7 +16,7 @@
             "Cleanup": "Limpiar",
             "CheckInboundEmails": "Comprobar Correos Entrantes",
             "CheckEmailAccounts": "Check Personal Email Accounts",
-            "SendEmailReminders": "Send Email Reminders"
+            "SendEmailReminders": "Enviar Recordatorios por Email"
         },
         "cronSetup": {
             "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",

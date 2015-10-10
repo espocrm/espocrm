@@ -3,8 +3,8 @@
         "action": "Acción",
         "actionDate": "Fecha",
         "data": "Datos",
-        "campaign": "Campaign",
-        "parent": "Target",
+        "campaign": "Campaña",
+        "parent": "Objetivo",
         "object": "Object",
         "application": "Application",
         "queueItem": "Queue Item"
@@ -12,11 +12,11 @@
     "options": {
     	"action": {
             "Sent": "Enviado",
-            "Opened": "Opened",
+            "Opened": "Abiertos",
             "Opted Out": "optado por no",
-            "Bounced": "Bounced",
-            "Clicked": "Clicked",
-            "Lead Created": "Lead Created"
+            "Bounced": "Rebotados",
+            "Clicked": "Cliqueados",
+            "Lead Created": "Potencial Creado"
     	}
     },
     "labels": {
@@ -24,10 +24,10 @@
     },
     "presetFilters": {
         "sent": "Enviado",
-        "opened": "Opened",
+        "opened": "Abiertos",
         "optedOut": "optado por no",
-        "bounced": "Bounced",
-        "clicked": "Clicked",
-        "leadCreated": "Lead Created"
+        "bounced": "Rebotados",
+        "clicked": "Cliqueados",
+        "leadCreated": "Potencial Creado"
     }
 }

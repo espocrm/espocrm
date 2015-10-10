@@ -9,25 +9,25 @@
         "priority": "Prioridad",
         "type": "Tipo",
         "description": "Descripción",
-        "inboundEmail": "Inbound Email"
+        "inboundEmail": "Correos Entrantes"
     },
     "links": {
-        "inboundEmail": "Inbound Email",
+        "inboundEmail": "Correos Entrantes",
         "account": "Cuenta",
-        "contact": "Contact (Primary)",
+        "contact": "Contratos (Primaria)",
         "Contacts": "Contactos",
-        "meetings": "Meetings",
-        "calls": "Calls",
-        "tasks": "Tasks",
+        "meetings": "reuniones",
+        "calls": "Llamadas",
+        "tasks": "Tareas",
         "emails": "Correos"
     },
     "options": {
         "status": {
-            "New": "New",
+            "New": "Nuevo",
             "Assigned": "Asignado",
             "Pending": "Pendiente",
             "Closed": "Cerrado",
-            "Rejected": "Rejected",
+            "Rejected": "Rechazado",
             "Duplicate": "Duplicar"
         },
         "priority" : {
@@ -43,11 +43,11 @@
         }
     },
     "labels": {
-        "Create Case": "Create Case",
+        "Create Case": "Crear Caso",
         "Close": "Cerrar",
-        "Reject": "Reject",
+        "Reject": "Rechazar",
         "Closed": "Cerrado",
-        "Rejected": "Rejected"
+        "Rejected": "Rechazado"
     },
     "presetFilters": {
         "open": "Abrir",

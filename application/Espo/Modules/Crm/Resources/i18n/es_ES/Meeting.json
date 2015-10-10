@@ -37,8 +37,8 @@
         "Set Held": "Set Held",
         "Set Not Held": "Set Not Held",
         "Send Invitations": "Enviar Invitaciones",
-        "on time": "on time",
-        "before": "before"
+        "on time": "a tiempo",
+        "before": "antes"
     },
     "presetFilters": {
         "planned": "Planeada",

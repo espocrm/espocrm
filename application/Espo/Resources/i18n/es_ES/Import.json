@@ -12,23 +12,23 @@
         "Result": "Resultado",
         "Show records": "Mostrar registros",
         "Remove Duplicates": "Eliminar Duplicados\t",
-        "importedCount": "Imported (count)",
-        "duplicateCount": "Duplicates (count)",
-        "updatedCount": "Updated (count)",
-        "Create Only": "Create Only",
-        "Create and Update": "Create & Update",
-        "Update Only": "Update Only",
-        "Update by": "Update by"
+        "importedCount": "Importado (recuento)",
+        "duplicateCount": "Duplicados (recuento)",
+        "updatedCount": "Actualizado (recuento)",
+        "Create Only": "Sólo crear",
+        "Create and Update": "Crear y Actualizar",
+        "Update Only": "Sólo actualizar",
+        "Update by": "Actualizado por"
     },
     "messages": {
-        "utf8": "Should be UTF-8 encoded",
-        "duplicatesRemoved": "Duplicates removed"
+        "utf8": "Debe ser codificado en UTF-8",
+        "duplicatesRemoved": "Duplicados removidos"
     },
     "fields": {
         "file": "Archivo",
-        "entityType": "Entity Type",
-        "imported": "Imported Records",
-        "duplicates": "Duplicate Records",
-        "updated": "Updated Records"
+        "entityType": "Tipo de Entidad",
+        "imported": "Registros Importados",
+        "duplicates": "registros Duplicados",
+        "updated": "registros Actualizados"
     }
 }

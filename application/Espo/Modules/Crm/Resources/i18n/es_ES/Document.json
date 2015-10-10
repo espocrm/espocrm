@@ -12,11 +12,11 @@
         "publishDate": "Publicar Fecha",
         "expirationDate": "Fecha de Expiración",
         "description": "Descripción",
-        "accounts": "Accounts",
+        "accounts": "Cuentas",
         "folder": "Carpeta"
     },
     "links": {
-        "accounts": "Accounts",
+        "accounts": "Cuentas",
         "opportunities": "Oportunidades",
         "folder": "Carpeta"
     },
@@ -29,7 +29,7 @@
         },
         "type": {
             "": "Ninguno",
-            "Contract": "Contract",
+            "Contract": "Contrato",
             "NDA": "NDA",
             "EULA": "EULA",
             "License Agreement": "Contrato de licencia"

@@ -2,16 +2,16 @@
     "fields": {
         "name": "Asunto",
         "description": "Descripción",
-        "entryCount": "Entry Count",
-        "campaigns": "Campaigns",
-        "endDate": "End Date",
-        "targetLists": "Target Lists"
+        "entryCount": "Contador de entrada",
+        "campaigns": "Campañas",
+        "endDate": "Fecha de Fin",
+        "targetLists": "Lista de Objetivos"
     },
     "links": {
-        "accounts": "Accounts",
+        "accounts": "Cuentas",
         "contacts": "Contactos",
         "leads": "Potenciales",
-        "campaigns": "Campaigns",
+        "campaigns": "Campañas",
         "massEmails": "Mass Emails"
     },
     "options": {
@@ -24,8 +24,8 @@
         }
     },
     "labels": {
-        "Create TargetList": "Create Target List",
+        "Create TargetList": "Crear un objetivo de lista",
         "Opted Out": "optado por no",
-        "Cancel Opt-Out": "Cancel Opt-Out"
+        "Cancel Opt-Out": "Cancelar Opt-Out"
     }
 }

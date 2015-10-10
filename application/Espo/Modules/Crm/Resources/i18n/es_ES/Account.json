@@ -11,7 +11,7 @@
         "industry": "Industria",
         "type": "Tipo",
         "contactRole": "Título",
-        "campaign": "Campaign"
+        "campaign": "Campaña"
     },
     "links": {
         "contacts": "Contactos",
@@ -22,9 +22,9 @@
         "callsPrimary": "Calls (expanded)",
         "tasksPrimary": "Tasks (expanded)",
         "emailsPrimary": "Emails (expanded)",
-        "targetLists": "Target Lists",
-        "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign"
+        "targetLists": "Lista de Objetivos",
+        "campaignLogRecords": "Registro de Campaña",
+        "campaign": "Campaña"
     },
     "options": {
         "type": {
@@ -34,17 +34,17 @@
             "Reseller": "Revendedor"
         },
         "industry": {
-            "Agriculture": "Agriculture",
+            "Agriculture": "Agricultura",
             "Advertising": "Advertising",
             "Apparel & Accessories": "Apparel & Accessories",
             "Automotive": "Automotive",
             "Banking": "Banca",
-            "Biotechnology": "Biotechnology",
-            "Chemical": "Chemical",
-            "Computer": "Computer",
+            "Biotechnology": "Biotecnolodía",
+            "Chemical": "Química",
+            "Computer": "Computación",
             "Education": "Educación",
             "Electronics": "Electrónicos",
-            "Energy": "Energy",
+            "Energy": "Energía",
             "Entertainment & Leisure": "Entertainment & Leisure",
             "Finance": "Finanzas",
             "Food & Beverage": "Food & Beverage",
@@ -70,7 +70,7 @@
         "Copy Billing": "Copia Facturación"
     },
     "presetFilters": {
-        "customers": "Customers",
+        "customers": "Clientes",
         "partners": "Partners"
     }
 }

@@ -1,7 +1,7 @@
 {
     "labels": {
-        "Create DocumentFolder": "Create Document Folder",
-        "Manage Categories": "Manage Folders"
+        "Create DocumentFolder": "Crear Carpeta de Documentos",
+        "Manage Categories": "Administrar Carpetas"
     },
     "links": {
         "documents": "Documentos"
