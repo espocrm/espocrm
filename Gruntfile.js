@@ -75,6 +75,14 @@ module.exports = function (grunt) {
                     'frontend/client/css/sakura.css': 'frontend/less/sakura/main.less',
                 },
             },
+            greencoffee: {
+                options: {
+                    yuicompress: true,
+                },
+                files: {
+                    'frontend/client/css/greencoffee.css': 'frontend/less/greencoffee/main.less',
+                },
+            },
             espoVertical: {
                 options: {
                     yuicompress: true,
@@ -89,6 +97,14 @@ module.exports = function (grunt) {
                 },
                 files: {
                     'frontend/client/css/sakura-vertical.css': 'frontend/less/sakura-vertical/main.less',
+                },
+            },
+            greencoffeeVertical: {
+                options: {
+                    yuicompress: true,
+                },
+                files: {
+                    'frontend/client/css/greencoffee-vertical.css': 'frontend/less/greencoffee-vertical/main.less',
                 },
             }
         },
