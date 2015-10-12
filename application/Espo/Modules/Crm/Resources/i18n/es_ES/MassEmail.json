@@ -1,0 +1,47 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "status": "Estado",
+        "storeSentEmails": "Almacenar Correos Enviados",
+        "startAt": "Fecha de Comienzo",
+        "fromAddress": "De la dirección",
+        "fromName": "De Nombre",
+        "replyToAddress": "Responder a la dirección",
+        "replyToName": "Responder al Nombre",
+        "campaign": "Campaña",
+        "emailTemplate": "Plantilla de Correo",
+        "inboundEmail": "Cuenta de Correo",
+        "targetLists": "Lista de Objetivos",
+        "excludingTargetLists": "Lista de Objetivos Excluídos",
+        "optOutEntirely": "Opt-Out Entirely"
+    },
+    "links": {
+        "targetLists": "Lista de Objetivos",
+        "excludingTargetLists": "Lista de Objetivos Excluídos",
+        "queueItems": "Items en cola",
+        "campaign": "Campaña",
+        "emailTemplate": "Plantilla de Correo",
+        "inboundEmail": "Cuenta de Correo"
+    },
+    "options": {
+        "status": {
+            "Draft": "Borrador",
+            "Pending": "Pendiente",
+            "In Process": "En Proceso",
+            "Complete": "Completo",
+            "Canceled": "Cancelado",
+            "Failed": "Falló"
+        }
+    },
+    "labels": {
+        "Create MassEmail": "Crear correo masivo",
+        "Send Test": "Enviar prueba"
+    },
+    "messages": {
+        "selectAtLeastOneTarget": "Seleccione al menos un objetivo.",
+        "testSent": "Se supone que el/los email/s de preuebas fueron enviados"
+    },
+    "tooltips": {
+        "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por salir y no van a recibir ningún correo masivo."
+    }
+}

@@ -5,11 +5,21 @@
         "status": "Estado",
         "account": "Cuenta",
         "contact": "Contacto",
+        "contacts": "Contactos",
         "priority": "Prioridad",
         "type": "Tipo",
-        "description": "Descripción"
+        "description": "Descripción",
+        "inboundEmail": "Correos Entrantes"
     },
     "links": {
+        "inboundEmail": "Correos Entrantes",
+        "account": "Cuenta",
+        "contact": "Contratos (Primaria)",
+        "Contacts": "Contactos",
+        "meetings": "reuniones",
+        "calls": "Llamadas",
+        "tasks": "Tareas",
+        "emails": "Correos"
     },
     "options": {
         "status": {
@@ -33,7 +43,11 @@
         }
     },
     "labels": {
-        "Create Case": "Crear Caso"
+        "Create Case": "Crear Caso",
+        "Close": "Cerrar",
+        "Reject": "Rechazar",
+        "Closed": "Cerrado",
+        "Rejected": "Rechazado"
     },
     "presetFilters": {
         "open": "Abrir",

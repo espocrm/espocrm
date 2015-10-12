@@ -10,12 +10,21 @@
         "doNotCall": "No Llamar",
         "address": "Dirección",
         "opportunityRole": "Rol de Oportunidad",
-        "accountRole": "Rol",
-        "description": "Descripción"
+        "accountRole": "Título",
+        "description": "Descripción",
+        "campaign": "Campaña",
+        "targetLists": "Lista de Objetivos",
+        "targetList": "Lista de Objetivos"
     },
     "links": {
         "opportunities": "Oportunidades",
-        "cases": "Casos"
+        "cases": "Casos",
+        "targetLists": "Lista de Objetivos",
+        "campaignLogRecords": "Registro de Campaña",
+        "campaign": "Campaña",
+        "account": "Cuentas (Primaria)",
+        "accounts": "Cuentas",
+        "casesPrimary": "Casos (Primaria)"
     },
     "labels": {
         "Create Contact": "Crear Contacto"

@@ -9,19 +9,23 @@
         "defaultCurrency": "Moneda por Defecto",
         "currencyList": "Lista de Moneda",
         "language": "Idioma",
-        
         "smtpServer": "Servidor",
         "smtpPort": "Puerto",
-        "smtpAuth": "Autenticación",
+        "smtpAuth": "Autenticar",
         "smtpSecurity": "Seguridad",
         "smtpUsername": "Nombre de Usuario",
         "emailAddress": "Correo electrónico",
         "smtpPassword": "Contraseña",
         "smtpEmailAddress": "Correo Electrónico",
-        
         "exportDelimiter": "Exportar Delimitador",
-        
-        "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado"
+        "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
+        "autoFollowEntityTypeList": "Seguir automaticamente",
+        "signature": "Firma de correo",
+        "dashboardTabList": "Lista de Pestañas",
+        "defaultReminders": "Recordatorios por defecto",
+        "theme": "Tema",
+        "useCustomTabList": "Lista de Pestañas Personalizada",
+        "tabList": "Lista de Pestañas"
     },
     "links": {
     },
@@ -32,6 +36,13 @@
         }
     },
     "labels": {
-        "Notifications": "Notificaciones"
+        "Notifications": "Notificaciones",
+        "User Interface": "Interfaz de Usuario",
+        "SMTP": "SMTP",
+        "Misc": "Misceláneos",
+        "Locale": "Localización"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en el stream y recibirá notificaciones."
     }
 }

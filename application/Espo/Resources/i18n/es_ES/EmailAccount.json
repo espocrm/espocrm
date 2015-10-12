@@ -8,9 +8,14 @@
         "port": "Puerto",
         "monitoredFolders": "Carpetas supervisadas",
         "ssl": "SSL",
-        "fetchSince": "Traer Desde"
+        "fetchSince": "Traer Desde",
+        "emailAddress": "Correo Electrónico",
+        "sentFolder": "Carpeta de Enviados",
+        "storeSentEmails": "Almacenar Correos Enviados",
+        "keepFetchedEmailsUnread": "Mantener los correo que se han obtenido sin leer"
     },
     "links": {
+        "filters": "Filtros"
     },
     "options": {
         "status": {
@@ -21,9 +26,15 @@
     "labels": {
         "Create EmailAccount": "Crear Cuenta de Correo Electrónico",
         "IMAP": "IMAP",
-        "Main": "Principal"        
+        "Main": "Principal",
+        "Test Connection": "Probar conexión"
     },
     "messages": {
-        "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP"
+        "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP",
+        "connectionIsOk": "Conexión correcta"
+    },
+    "tooltips": {
+        "monitoredFolders": "Usted puede agregar la carpeta 'Enviado' para sincronizar los correos enviados desde el cliente externo.",
+        "storeSentEmails": "Mensajes enviados se almacenan en el servidor IMAP. Email Address should much address an email is being sent from."
     }
 }

@@ -11,11 +11,13 @@
         "contacts": "Contactos",
         "description": "Descripción",
         "amountConverted": "Cantidad (convertido)",
-        "amountWeightedConverted": "Cantidad Ponderada"
+        "amountWeightedConverted": "Cantidad Ponderada",
+        "campaign": "Campaña"
     },
     "links": {
         "contacts": "Contactos",
-        "documents": "Documentos"
+        "documents": "Documentos",
+        "campaign": "Campaña"
     },
     "options": {
         "stage": {
@@ -28,7 +30,7 @@
             "Proposal/Price Quote": "Propuesta/precio Presupuesto",
             "Negotiation/Review": "Negociación/Revisión",
             "Closed Won": "Cerrado Ganado",
-            "Closed Lost": "Cerrado Perdido" 
+            "Closed Lost": "Cerrado Perdido"
         }
     },
     "labels": {
@@ -36,6 +38,7 @@
     },
     "presetFilters": {
         "open": "Abrir",
-        "won": "Ganado"
+        "won": "Ganado",
+        "lost": "Perdido"
     }
 }

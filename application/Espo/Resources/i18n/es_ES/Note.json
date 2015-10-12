@@ -2,5 +2,10 @@
     "fields": {
         "post": "Entrada",
         "attachments": "Adjuntos"
+    },
+    "filters": {
+        "all": "Todos",
+        "posts": "Entradas",
+        "updates": "Actualizaciones"
     }
 }

@@ -20,9 +20,18 @@
         "description": "Descripción",
         "createdAccount": "Cuenta",
         "createdContact": "Contacto",
-        "createdOpportunity": "Oportunidad"
+        "createdOpportunity": "Oportunidad",
+        "campaign": "Campaña",
+        "targetLists": "Lista de Objetivos",
+        "targetList": "Lista de Objetivos"
     },
     "links": {
+        "targetLists": "Lista de Objetivos",
+        "campaignLogRecords": "Registro de Campaña",
+        "campaign": "Campaña",
+        "createdAccount": "Cuenta",
+        "createdContact": "Contacto",
+        "createdOpportunity": "Oportunidad"
     },
     "options": {
         "status": {
@@ -34,6 +43,7 @@
             "Dead": "Muerto"
         },
         "source": {
+            "": "Ninguno",
             "Call": "Llamada",
             "Email": "Correo electrónico",
             "Existing Customer": "Cliente Existente",
@@ -45,6 +55,7 @@
         }
     },
     "presetFilters": {
-        "active": "Activo"
+        "active": "Activo",
+        "converted": "Convertido"
     }
 }

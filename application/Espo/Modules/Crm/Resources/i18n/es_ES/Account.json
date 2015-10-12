@@ -10,13 +10,21 @@
         "sicCode": "Sic Code",
         "industry": "Industria",
         "type": "Tipo",
-        "contactRole": "Rol"
+        "contactRole": "Título",
+        "campaign": "Campaña"
     },
     "links": {
         "contacts": "Contactos",
         "opportunities": "Oportunidades",
         "cases": "Casos",
-        "documents": "Documentos"
+        "documents": "Documentos",
+        "meetingsPrimary": "Reuniones (ampliado)",
+        "callsPrimary": "Llamadas (ampliado)",
+        "tasksPrimary": "Tareas (ampliado)",
+        "emailsPrimary": "Correos (ampliado)",
+        "targetLists": "Lista de Objetivos",
+        "campaignLogRecords": "Registro de Campaña",
+        "campaign": "Campaña"
     },
     "options": {
         "type": {
@@ -26,17 +34,43 @@
             "Reseller": "Revendedor"
         },
         "industry": {
-            "Apparel": "Vestuario",
+            "Agriculture": "Agricultura",
+            "Advertising": "Publicidad",
+            "Apparel & Accessories": "Ropa y Accesorios",
+            "Automotive": "Automotriz",
             "Banking": "Banca",
-            "Computer Software": "Software",
+            "Biotechnology": "Biotecnolodía",
+            "Chemical": "Química",
+            "Computer": "Computación",
             "Education": "Educación",
             "Electronics": "Electrónicos",
+            "Energy": "Energía",
+            "Entertainment & Leisure": "Entretenimiento y Ocio",
             "Finance": "Finanzas",
-            "Insurance": "Seguros"
+            "Food & Beverage": "Alimentación y bebidas",
+            "Grocery": "Comestibles",
+            "Healthcare": "Cuidado de la Salud",
+            "Insurance": "Seguros",
+            "Legal": "Jurídico",
+            "Manufacturing": "Fabricación",
+            "Publishing": "Publicaciones",
+            "Real Estate": "Bienes Raices",
+            "Service": "Servicio",
+            "Sports": "Deportes",
+            "Software": "Software",
+            "Technology": "Tecnología",
+            "Telecommunications": "Telecomunicaciones",
+            "Television": "Televisión",
+            "Transportation": "Transporte",
+            "Venture Capital": "Capital de Riesgo"
         }
     },
     "labels": {
         "Create Account": "Crear Cuenta",
         "Copy Billing": "Copia Facturación"
+    },
+    "presetFilters": {
+        "customers": "Clientes",
+        "partners": "Socios"
     }
 }
