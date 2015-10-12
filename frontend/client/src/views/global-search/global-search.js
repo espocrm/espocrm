@@ -19,11 +19,11 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
+Espo.define('views/global-search/global-search', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'global-search.global-search',
+        template: 'global-search/global-search',
 
         events: {
             'keypress #global-search-input': function (e) {
@@ -63,7 +63,7 @@ Espo.define('Views.GlobalSearch.GlobalSearch', 'View', function (Dep) {
         },
 
         search: function (text) {
-            this.collection.url = this.collection.urlRoot =  'GlobalSearch/' + text;
+            this.collection.url = this.collection.urlRoot =  'GlobalSearch?q=' + encodeURIComponent(text);
 
             this.showPanel();
         },
