@@ -5,18 +5,25 @@
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",
         "dateEnd": "Fecha de vencimiento",
+        "dateStartDate": "Fecha de Inicio (todo el día)",
+        "dateEndDate": "Fecha de fin (todo el día)",
         "priority": "Prioridad",
         "description": "Descripción",
-        "isOverdue": "Atrasado"
+        "isOverdue": "Atrasado",
+        "account": "Cuenta",
+        "dateCompleted": "Fecha de completado",
+        "attachments": "Adjuntos"
     },
     "links": {
+        "attachments": "Adjuntos"
     },
     "options": {
         "status": {
             "Not Started": "Sin Empezar",
             "Started": "Comenzado",
             "Completed": "Completado",
-            "Canceled": "Cancelado"
+            "Canceled": "Cancelado",
+            "Deferred": "Diferido"
         },
         "priority" : {
             "Low": "Baja",
@@ -27,7 +34,7 @@
     },
     "labels": {
         "Create Task": "Crear Tarea",
-        "Complete": "Complete"
+        "Complete": "Completo"
     },
     "presetFilters": {
         "actual": "Actual",

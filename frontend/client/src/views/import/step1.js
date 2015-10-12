@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
-Espo.define('Views.Import.Step1', 'View', function (Dep) {
+
+Espo.define('views/import/step1', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'import.step-1',
+        template: 'import/step-1',
 
         events: {
             'change #import-file': function (e) {

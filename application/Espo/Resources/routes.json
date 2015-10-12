@@ -87,12 +87,11 @@
   },
 
   {
-    "route":"/GlobalSearch/:query",
+    "route":"/GlobalSearch",
     "method":"get",
     "params":{
         "controller":"GlobalSearch",
-        "action":"search",
-        "query": ":query"
+        "action":"search"
     }
   },
 

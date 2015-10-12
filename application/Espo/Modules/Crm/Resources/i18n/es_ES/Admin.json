@@ -1,5 +1,6 @@
 {
     "layouts": {
-        "detailConvert": "Convert Lead"
+        "detailConvert": "Convertir Potencial",
+        "listForAccount": "Listado (por Cuentas)"
     }
 }

@@ -1,8 +1,8 @@
 {
     "labels": {
-        "Revert": "Revertir",
+        "Revert Import": "Revertir Importación",
         "Return to Import": "Regreso a Importar",
-        "Run Import": "Importar",
+        "Run Import": "Ejecutar Importación",
         "Back": "Anterior",
         "Field Mapping": "Mapeo de Campo",
         "Default Values": "Valores por Defecto",
@@ -10,6 +10,25 @@
         "Created": "Creado",
         "Updated": "Actualizado",
         "Result": "Resultado",
-        "Show records": "Mostrar Registros"
+        "Show records": "Mostrar registros",
+        "Remove Duplicates": "Eliminar Duplicados\t",
+        "importedCount": "Importado (recuento)",
+        "duplicateCount": "Duplicados (recuento)",
+        "updatedCount": "Actualizado (recuento)",
+        "Create Only": "Sólo crear",
+        "Create and Update": "Crear y Actualizar",
+        "Update Only": "Sólo actualizar",
+        "Update by": "Actualizado por"
+    },
+    "messages": {
+        "utf8": "Debe ser codificado en UTF-8",
+        "duplicatesRemoved": "Duplicados removidos"
+    },
+    "fields": {
+        "file": "Archivo",
+        "entityType": "Tipo de Entidad",
+        "imported": "Registros Importados",
+        "duplicates": "registros Duplicados",
+        "updated": "registros Actualizados"
     }
 }

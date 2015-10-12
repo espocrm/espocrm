@@ -1,0 +1,7 @@
+{
+    "options": {
+        "job": {
+            "ProcessMassEmail": "Enviar Correo Masivo"
+        }
+    }
+}

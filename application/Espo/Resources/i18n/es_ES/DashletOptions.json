@@ -5,6 +5,14 @@
         "dateTo": "Fecha Para",
         "autorefreshInterval": "Intervalo de Auto-Refrescar",
         "displayRecords": "Mostrar Registros",
-        "isDoubleHeight": "Altitud 2x"
+        "isDoubleHeight": "Altitud 2x",
+        "mode": "Modo"
+    },
+    "options": {
+    	"mode": {
+    		"agendaWeek": "Semana (orden del día)",
+    		"basicWeek": "Semana",
+    		"month": "Mes"
+    	}
     }
 }

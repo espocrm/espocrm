@@ -29,7 +29,7 @@ class GlobalSearch extends \Espo\Core\Controllers\Base
 {
     public function actionSearch($params, $data, $request)
     {
-        $query = $params['query'];
+        $query = $request->get('q');
 
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
