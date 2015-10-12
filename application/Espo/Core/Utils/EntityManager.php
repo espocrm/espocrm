@@ -297,6 +297,7 @@ class EntityManager
                             "layoutListDisabled"  => true,
                             "layoutMassUpdateDisabled"  => true,
                             "noLoad"  => true,
+                            "importDisabled" => true,
                             'isCustom' => true
                         )
                     ),
@@ -352,6 +353,7 @@ class EntityManager
                             "layoutListDisabled"  => true,
                             "layoutMassUpdateDisabled"  => true,
                             "noLoad"  => true,
+                            "importDisabled" => true,
                             'isCustom' => true
                         )
                     ),
@@ -373,6 +375,7 @@ class EntityManager
                             "layoutDetailDisabled"  => true,
                             "layoutListDisabled"  => true,
                             "layoutMassUpdateDisabled"  => true,
+                            "importDisabled" => true,
                             "noLoad"  => true,
                             'isCustom' => true
                         )
@@ -393,6 +396,7 @@ class EntityManager
                             "layoutDetailDisabled"  => true,
                             "layoutListDisabled"  => true,
                             "layoutMassUpdateDisabled"  => true,
+                            "importDisabled" => true,
                             "noLoad"  => true,
                             'isCustom' => true
                         )
