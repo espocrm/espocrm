@@ -18,7 +18,8 @@
         "Create Only": "Create Only",
         "Create and Update": "Create & Update",
         "Update Only": "Update Only",
-        "Update by": "Update by"
+        "Update by": "Update by",
+        "Set as Not Duplicate": "Set as Not Duplicate"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",

@@ -165,6 +165,54 @@ Espo.define('view', [], function () {
         translate: function (label, category, scope) {
             return this.getLanguage().translate(label, category, scope);
         },
+
+        ajaxRequest: function (url, type, data, options) {
+            var options = options || {};
+            options.type = type;
+            options.url = url;
+            options.context = this;
+
+            if (data) {
+                options.data = data;
+            }
+
+            var xhr = $.ajax(options);
+
+            return xhr;
+
+            var obj = {
+                then: xhr.then,
+                fail: xhr.fail,
+                catch: xhr.fail
+            };
+
+            return obj;
+        },
+
+        ajaxPostRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return this.ajaxRequest(url, 'POST', data, options);
+        },
+
+        ajaxPatchRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return this.ajaxRequest(url, 'PATCH', data, options);
+        },
+
+        ajaxPutRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return this.ajaxRequest(url, 'PUT', data, options);
+        },
+
+        ajaxGetRequest: function (url, data, options) {
+            return this.ajaxRequest(url, 'GET', data, options);
+        }
     });
 
 });

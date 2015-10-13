@@ -597,5 +597,23 @@ class Import extends \Espo\Services\Record
         }
         return $this->services[$scope];
     }
+
+    public function unmarkAsDuplicate($id, $entityType, $entityId)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $sql = "
+            UPDATE import_entity
+            SET is_duplicate = 0
+            WHERE
+                import_id = ".$pdo->quote($id)." AND
+                entity_type = ".$pdo->quote($entityType)." AND
+                entity_id = ".$pdo->quote($entityId)."
+        ";
+
+        if ($pdo->query($sql)) {
+            return true;
+        }
+    }
 }
 

@@ -145,5 +145,14 @@ class Import extends \Espo\Core\Controllers\Record
 
         return $this->getService('Import')->import($data['entityType'], $data['fields'], $attachmentId, $importParams);
     }
+
+    public function postActionUnmarkAsDuplicate($params, $data)
+    {
+        if (empty($data['id']) || empty($data['entityType']) || empty($data['entityId'])) {
+            throw new BadRequest();
+        }
+        $this->getService('Import')->unmarkAsDuplicate($data['id'], $data['entityType'], $data['entityId']);
+        return true;
+    }
 }
 

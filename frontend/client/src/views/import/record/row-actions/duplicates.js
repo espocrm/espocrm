@@ -19,27 +19,27 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('views/import/record/panels/duplicates', 'views/import/record/panels/imported', function (Dep) {
+Espo.define('views/import/record/row-actions/duplicates', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
-        link: 'duplicates',
+        getActionList: function () {
+            var list = Dep.prototype.getActionList.call(this);
 
-        actionUnmarkAsDuplicate: function (data) {
-            var id = data.id;
-            var type = data.type;
-
-            if (confirm(this.translate('confirmation', 'messages'))) {
-                this.ajaxPostRequest('Import/action/unmarkAsDuplicate', {
+            list.push({
+                action: 'unmarkAsDuplicate',
+                label: 'Set as Not Duplicate',
+                data: {
                     id: this.model.id,
-                    entityId: id,
-                    entityType: type
-                }).then(function () {
-                    this.collection.fetch();
-                });
-            }
+                    type: this.model.name
+                }
+            });
+
+            return list;
         }
 
     });
+
 });
+
 

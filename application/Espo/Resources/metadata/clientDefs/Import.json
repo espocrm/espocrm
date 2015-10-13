@@ -13,17 +13,18 @@
 	    	{
 	    		"name": "imported",
 	    		"label": "Imported",
-	    		"view": "Import.Record.Panels.Imported"
+	    		"view": "views/import/record/panels/imported"
 	    	},
 	    	{
 	    		"name": "duplicates",
 	    		"label": "Duplicates",
-	    		"view": "Import.Record.Panels.Duplicates"
+	    		"view": "views/import/record/panels/duplicates",
+                "rowActionsView": "views/import/record/row-actions/duplicates"
 	    	},
 	    	{
 	    		"name": "updated",
 	    		"label": "Updated",
-	    		"view": "Import.Record.Panels.Updated"
+	    		"view": "views/import/record/panels/updated"
 	    	}
 	    ]
     },
