@@ -8,6 +8,8 @@
         "to": "a",
         "cc": "CC",
         "bcc": "BCC",
+        "replyTo": "Responder a",
+        "replyToString": "Responder a (String)",
         "isHtml": "Es Html",
         "body": "Cuerpo",
         "subject": "Sujeto",
@@ -16,15 +18,24 @@
         "fromEmailAddress": "De la dirección",
         "toEmailAddresses": "a la Dirección",
         "emailAddress": "Correo Electrónico",
-        "deliveryDate": "Fecha Entrega"
+        "deliveryDate": "Fecha Entrega",
+        "account": "Cuenta",
+        "users": "Usuarios",
+        "replied": "Respondió",
+        "replies": "Respuestas",
+        "isRead": "Es leído",
+        "isImportant": "Es Importante"
     },
     "links": {
+        "replied": "Respondió",
+        "replies": "Respuestas"
     },
     "options": {
         "Draft": "Borrador",
         "Sending": "Enviando",
         "Sent": "Enviado",
-        "Archived": "Archivado"
+        "Archived": "Archivado",
+        "Received": "Recibido"
     },
     "labels": {
         "Create Email": "Archivar Correo",
@@ -32,20 +43,39 @@
         "Compose": "Nuevo",
         "Reply": "Responder",
         "Reply to All": "Responder a Todos",
-        "Forward": "Adelante",
+        "Forward": "Reenviar",
         "Original message": "Mensaje Original",
         "Forwarded message": "Mensaje reenviado",
         "Email Accounts": "Cuentas de Correo Electrónico",
+        "Inbound Emails": "Grupo de Cuentas de Correo",
+        "Email Templates": "Plantillas de Correo",
         "Send Test Email": "Send Test Email",
         "Send": "Send",
-        "Email Address": "Correo Electrónico"
+        "Email Address": "Correo Electrónico",
+        "Mark Read": "Marcar como Leído",
+        "Sending...": "Enviando...",
+        "Save Draft": "Guardar Borrador",
+        "Mark all as read": "Marcar todos como leídos",
+        "Show Plain Text": "Ver en texto plano",
+        "Mark as Important": "Marcar como importante",
+        "Unmark Importance": "Descarcar como importante"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
-        "testEmailSent": "Test email has been sent"
+        "testEmailSent": "Test email has been sent",
+        "emailSent": "El correo ha sido enviado",
+        "savedAsDraft": "Guardado como borrador"
     },
     "presetFilters": {
         "sent": "Enviado",
-        "archived": "Archivado"
+        "archived": "Archivado",
+        "inbox": "Bandeja de Entrada",
+        "drafts": "Borradores"
+    },
+    "massActions": {
+        "markAsRead": "Marcar como Leído",
+        "markAsNotRead": "Marcar como No Leído",
+        "markAsImportant": "Marcar como importante",
+        "markAsNotImportant": "Descarcar como importante"
     }
 }

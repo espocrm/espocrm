@@ -10,7 +10,14 @@
         "OutboundEmail": "Correo Saliente",
         "ScheduledJob": "Tarea Programada",
         "ExternalAccount": "Cuenta Externa",
-        "Extension": "Extension"
+        "Extension": "Extension",
+        "Dashboard": "Dashboard",
+        "InboundEmail": "Correo Entrante",
+        "Stream": "Stream",
+        "Import": "Importar",
+        "Template": "Plantilla",
+        "Job": "Trabajo",
+        "EmailFilter": "Filtro de correo"
     },
     "scopeNamesPlural": {
         "Email": "Correos",
@@ -23,7 +30,14 @@
         "OutboundEmail": "Correos Salientes",
         "ScheduledJob": "Tareas Programadas",
         "ExternalAccount": "Cuentas Externas",
-        "Extension": "Extensiones"
+        "Extension": "Extensiones",
+        "Dashboard": "Dashboard",
+        "InboundEmail": "Grupo de Cuentas de Correo",
+        "Stream": "Stream",
+        "Import": "Importar Resultados",
+        "Template": "Plantilla",
+        "Job": "Trabajos",
+        "EmailFilter": "Filtros de Correo"
     },
     "labels": {
         "Misc": "Misceláneos",
@@ -33,16 +47,19 @@
         "Saved": "Guardado",
         "Error": "Error",
         "Select": "Seleccionar",
-        "Not valid": "Inválido",
+        "Not valid": "No válido",
         "Please wait...": "Por favor espere...",
         "Please wait": "Por favor espere",
         "Loading...": "Cargando...",
         "Uploading...": "Subiendo...",
         "Sending...": "Enviando...",
+        "Merging...": "Fusionando...",
+        "Merged": "Fusionado\t",
         "Removed": "Eliminado",
         "Posted": "Publicado",
-        "Linked": "Enlazado",    
+        "Linked": "Enlazado",
         "Unlinked": "Desenlazado",
+        "Done": "Hecho",
         "Access denied": "Acceso denegado",
         "Access": "Acceso",
         "Are you sure?": "¿Está seguro?",
@@ -53,8 +70,8 @@
         "Unlinking...": "Desenlazando...",
         "Posting...": "Publicando...",
         "Username can not be empty!": "¡Nombre de usuario no puede estar vacío!",
-        "Cache is not enabled": "Cache no está habilitado",    
-        "Cache has been cleared": "Cache Limpiado Correctamente",    
+        "Cache is not enabled": "Cache no está habilitado",
+        "Cache has been cleared": "Cache Limpiado Correctamente",
         "Rebuild has been done": "Se ha reconstruido",
         "Saving...": "Guardando...",
         "Modified": "Modificado",
@@ -63,9 +80,12 @@
         "create": "crear",
         "Overview": "Vista",
         "Details": "Detalles",
-        "Add Filter": "Añadir Filtro",
+        "Add Field": "Añadir Campo",
         "Add Dashlet": "Añadir Dashlet",
+        "Filter": "Filtro",
+        "Edit Dashboard": "Editar Dashboard",
         "Add": "Añadir",
+        "Add Item": "Agregar item",
         "Reset": "Resetear",
         "Menu": "Menú",
         "More": "Más",
@@ -89,13 +109,16 @@
         "PostalCode": "Código Postal",
         "Followed": "Seguido",
         "Follow": "Seguir",
+        "Followers": "Seguidores",
         "Clear Local Cache": "Borrar Cache Local",
         "Actions": "Acciones",
         "Delete": "Borrar",
-        "Update": "Actualizar",
+        "Update": "Actualización",
         "Save": "Guardar",
         "Edit": "Editar",
+        "View": "Vista",
         "Cancel": "Cancelar",
+        "Apply": "Aplicar",
         "Unlink": "Desenlazar",
         "Mass Update": "Actualización Masiva",
         "Export": "Exportar",
@@ -120,18 +143,37 @@
         "change": "cambiar",
         "Change": "Change",
         "Primary": "Primario",
-        "Save Filters": "Salvar Filtros",
+        "Save Filter": "Guardar Filtro",
         "Administration": "Administración",
-        "Run Import": "Importar",
+        "Run Import": "Ejecutar Importación",
         "Duplicate": "Duplicar",
         "Notifications": "Notificaciones",
         "Mark all read": "Marcar todos como leído",
         "See more": "Ver más",
         "Today": "Hoy",
         "Tomorrow": "Mañana",
-        "Yesterday": "Ayer"
+        "Yesterday": "Ayer",
+        "Submit": "Enviar",
+        "Close": "Cerrar",
+        "Yes": "Si",
+        "No": "No",
+        "View": "Vista",
+        "Select All Result": "Seleccionar todos los resultados",
+        "Value": "Valor",
+        "Current version": "Version Actual",
+        "List View": "Vista de Lista",
+        "Tree View": "Vista de árbol",
+        "Unlink All": "Desenlazar todo",
+        "Total": "Total",
+        "Print to PDF": "Imprimir PDF",
+        "Default": "Por Defecto",
+        "Number": "Número",
+        "From": "De",
+        "To": "a"
     },
     "messages": {
+        "pleaseWait": "Por favor espere...",
+        "confirmLeaveOutMessage": "¿Seguro que quieres salir del formulario?",
         "notModified": "Usted no ha modificado el registro",
         "duplicate": "El registro que está creando parece ser un duplicado",
         "fieldIsRequired": "{field} es requerido",
@@ -150,6 +192,7 @@
         "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
         "assignmentEmailNotificationBody": "{assignerUserName} ha asignado {entityType} '{Entity.name}' a tu\n\n{recordUrl}",
         "confirmation": "¿Está seguro?",
+        "unlinkAllConfirmation": "¿Seguro que deseas desvincular todos los registros relacionados?",
         "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
         "removeRecordConfirmation": "¿Está seguro que quiere eliminar registros?",
         "unlinkRecordConfirmation": "¿Está seguro que quiere desenlazar relación?",
@@ -159,12 +202,23 @@
         "noRecordsUpdated": "No records were updated",
         "massRemoveResult": "{count} records have been removed",
         "massRemoveResultSingle": "{count} record has been removed",
-        "noRecordsRemoved": "No records were removed"
+        "noRecordsRemoved": "No records were removed",
+        "clickToRefresh": "Clic para actualizar",
+        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]"
     },
     "boolFilters": {
         "onlyMy": "Solo Yo",
-        "open": "Abrir",
-        "active": "Activo"
+        "followed": "Seguido"
+    },
+    "presetFilters": {
+        "followed": "Seguido",
+        "all": "Todos"
+    },
+    "massActions": {
+        "remove": "Remover",
+        "merge": "Fundir",
+        "massUpdate": "Actualización Masiva",
+        "export": "Exportar"
     },
     "fields": {
         "name": "Asunto",
@@ -178,7 +232,18 @@
         "createdAt": "Creado en",
         "modifiedAt": "Modificado el",
         "createdBy": "Creado Por",
-        "modifiedBy": "Modificado Por"
+        "modifiedBy": "Modificado Por",
+        "description": "Descripción",
+        "address": "Dirección",
+        "phoneNumber": "Teléfono",
+        "phoneNumberMobile": "Teléfono (Móvil)",
+        "phoneNumberHome": "Teléfono (Casa)",
+        "phoneNumberFax": "Teléfono (Fax)",
+        "phoneNumberOffice": "Teléfono (Oficina)",
+        "phoneNumberOther": "Teléfono (Otro)",
+        "order": "Orden",
+        "parent": "Padre",
+        "children": "Hijos"
     },
     "links": {
         "assignedUser": "Usuario Asignado",
@@ -187,13 +252,20 @@
         "team": "Equipo",
         "roles": "Roles",
         "teams": "Equipos",
-        "users": "Usuarios"
+        "users": "Usuarios",
+        "parent": "Padre",
+        "children": "Hijos"
     },
     "dashlets": {
-        "Stream": "Stream"        
+        "Stream": "Stream"
+    },
+    "notificationMessages": {
+        "assign": "{entityType} {entity} ha sido asignado a usted",
+        "emailReceived": "Correo recibido de {from}",
+        "entityRemoved": "{user} eliminado {entityType} {entity}"
     },
     "streamMessages": {
-        "create": "{user} creado {entityType} {entity}",        
+        "create": "{user} creado {entityType} {entity}",
         "createAssigned": "{user} creado {entityType} {entity} asignado a {assignee}",
         "assign": "{user} asignado {entityType} {entity} a {assignee}",
         "post": "{user} publicado en {entityType} {entity}",
@@ -201,11 +273,10 @@
         "status": "{user} actualizado {field} en {entityType} {entity}",
         "update": "{user} actualizado {entityType} {entity}",
         "createRelated": "{user} creado {relatedEntityType} {relatedEntity} enlazado a {entityType} {entity}",
-        "emailReceived": "Email {email} has been received for {entityType} {entity}",
-        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
+
         "mentionInPost": "{user} mencionado {mentioned} en {entityType} {entity}",
-        
-        "createThis": "{user} crear este {entityType}",        
+
+        "createThis": "{user} crear este {entityType}",
         "createAssignedThis": "{user} crear este {entityType} asignado a {assignee}",
         "assignThis": "{user} asignar este {entityType} a {assignee}",
         "postThis": "{user} publicado",
@@ -213,8 +284,22 @@
         "statusThis": "{user} actualizado {field}",
         "updateThis": "{user} actualizado a este {entityType}",
         "createRelatedThis": "{user} creado {relatedEntityType} {relatedEntity} enlazado a este {entityType}",
+
+        "emailReceivedFromThis": "Correo recibido de {from}",
+        "emailReceivedInitialFromThis": "Correo recibido de {from}, esta {entityType} creada",
+
         "emailReceivedThis": "Email {email} has been received",
-        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}"
+        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}",
+
+        "emailReceivedFrom": "Correo recibido de {from}, relacionado a {entityType} {entity}",
+        "emailReceivedFromInitial": "Correo recibido de {from}, {entityType} {entity} creada",
+
+        "emailReceived": "Email {email} has been received for {entityType} {entity}",
+        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
+        "emailReceivedInitialFrom": "Correo recibido de {from}, {entityType} {entity} creada",
+
+        "emailSent": "{by} envió un correo relacionado a {entityType} {entity}",
+        "emailSentThis": "{by} envió un correo"
     },
     "lists": {
         "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -227,8 +312,8 @@
         "salutationName": {
             "Mr.": "Sr.",
             "Mrs.": "Sra.",
-            "Dr.": "Dr.",
-            "Drs.": "Dres."
+            "Ms.": "Sra.",
+            "Dr.": "Dr."
         },
         "language":     {
             "af_ZA": "Afrikáans",
@@ -317,10 +402,23 @@
             "currentQuarter": "Trimestre Actual",
             "lastQuarter": "Trimestre Pasado",
             "currentYear": "Año Actual",
-            "lastYear": "Año Pasado"
+            "lastYear": "Año Pasado",
+            "lastSevenDays": "Últimos 7 Días",
+            "lastXDays": "Últimos X Días",
+            "nextXDays": "Próximos X Días"
+        },
+        "searchRanges": {
+            "is": "Es",
+            "isEmpty": "Está vacío",
+            "isNotEmpty": "No Está Vacío"
+        },
+        "varcharSearchRanges": {
+            "equals": "Equivale",
+            "startsWith": "Comienza con",
+            "contains": "Contiene"
         },
         "intSearchRanges": {
-            "equals": "Iguales",
+            "equals": "Equivale",
             "notEquals": "Diferentes",
             "greaterThan": "Mayor que",
             "lessThan": "Menor que",
@@ -446,5 +544,11 @@
                 "redo": "Rehacer"
             }
         }
+    },
+    "themes": {
+        "Espo": "Espo",
+        "Sakura": "Sakura",
+        "EspoVertical": "Espo (Vertical)",
+        "SakuraVertical": "Sakura (Vertical)"
     }
 }

@@ -13,8 +13,10 @@
     },
     "options": {
         "job": {
+            "Cleanup": "Limpiar",
             "CheckInboundEmails": "Comprobar Correos Entrantes",
-            "Cleanup": "Limpiar"
+            "CheckEmailAccounts": "Compruebe cuentas de correo personales",
+            "SendEmailReminders": "Enviar Recordatorios por Email"
         },
         "cronSetup": {
             "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
@@ -26,5 +28,8 @@
             "Active": "Activo",
             "Inactive": "Inactivo"
         }
+    },
+    "tooltips": {
+        "scheduling": "Defines when and how often job will be run\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
     }
 }

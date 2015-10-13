@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "width": "Ancho (%)",
+        "link": "Enlace",
+        "notSortable": "No ordenable",
+        "align": "Alinear"
+    },
+    "options": {
+        "align": {
+            "left": "Izquierda",
+            "right": "Derecha"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "fields": {
+        "name": "Asunto",
+        "body": "Cuerpo",
+        "entityType": "Tipo de Entidad",
+        "header": "Cabecera",
+        "footer": "Pié",
+        "leftMargin": "Margen Izquierdo",
+        "topMargin": "Margen Superior",
+        "rightMargin": "Margen Derecho",
+        "bottomMargin": "Margen Inferior",
+        "printFooter": "Imprimir Pié",
+        "footerPosition": "Posición del Pié"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Template": "Crear Plantilla"
+    },
+    "tooltips": {
+        "footer": "Use {pageNumber} para imprimir el número de página."
+    }
+}
