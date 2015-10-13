@@ -443,7 +443,7 @@ Espo.define(
             $.ajaxSetup({
                 beforeSend: function (xhr, options) {
                     if (!options.local && self.url) {
-                        this.url = Espo.Utils.trimSlash(self.url) + '/' + this.url;
+                        options.url = Espo.Utils.trimSlash(self.url) + '/' + options.url;
                     }
                     if (self.auth !== null) {
                         xhr.setRequestHeader('Authorization', 'Basic ' + self.auth);
