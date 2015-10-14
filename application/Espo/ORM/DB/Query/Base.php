@@ -433,7 +433,7 @@ abstract class Base
     {
         if (strpos($orderBy, '.') !== false) {
             list($alias, $field) = explode('.', $orderBy);
-            $fieldPath = $this->toDb($alias) . '.' . $this->toDb($this->sanitize($field));
+            $fieldPath = $this->sanitize($alias) . '.' . $this->toDb($this->sanitize($field));
         } else {
             $fieldPath = $this->getFieldPath($entity, $orderBy);
         }
