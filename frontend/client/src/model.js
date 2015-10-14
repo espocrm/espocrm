@@ -42,6 +42,18 @@ Espo.define('model', [], function () {
             Dep.prototype.initialize.call(this);
         },
 
+        set: function (key, val, options) {
+            if (typeof key === 'object') {
+                var o = key;
+                if (this.idAttribute in o) {
+                    this.id = o[this.idAttribute];
+                }
+            } else if (key === 'id') {
+                this.id = val;
+            }
+            return Dep.prototype.set.call(this, key, val, options);
+        },
+
         get: function (key) {
             if (key === 'id' && this.id) {
                 return this.id;
