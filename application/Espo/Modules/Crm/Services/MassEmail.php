@@ -399,7 +399,6 @@ class MassEmail extends \Espo\Services\Record
 
         } catch (\Exception $e) {
             if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
-                $this->setQueueItemFailed($queueItem);
                 $queueItem->set('status', 'Failed');
             }
             $this->getEntityManager()->saveEntity($queueItem);
