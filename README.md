@@ -40,6 +40,10 @@ You need to have nodejs and Grunt CLI installed.
 
 The build will be created in the `build` directory.
 
+### How to contribute
+
+Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). This is very simple to do.
+
 ### How to make a translation
 
 Build po file with command:
