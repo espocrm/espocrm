@@ -67,7 +67,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                 if (this.options.noHeaderLinks) {
                     arr.push(name);
                 } else {
-                    arr.push('<a href="#' + this.model.name + '/view/' + this.model.id + '" class="action" data-action="navigateToRoot">' + name + '</a>');
+                    arr.push('<a href="#' + this.model.name + '/view/' + this.model.id + '" class="action">' + name + '</a>');
                 }
             }
             return this.buildHeaderHtml(arr);
