@@ -795,7 +795,7 @@ class Base
 
         foreach ($fieldList as $field) {
             if (
-                strlen($item['value']) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+                strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
                 &&
                 !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
             ) {

@@ -58,7 +58,7 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 if (!this.model.get('isRead')) {
                     this.model.set({
                         isRead: true
-                    }, {silent: true});
+                    });
                 }
             }, this);
 
