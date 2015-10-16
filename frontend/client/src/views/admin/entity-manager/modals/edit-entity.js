@@ -142,7 +142,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         return false;
                     }
                     return true;
-                }, this);
+                }, this).sort(function (v1, v2) {
+                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                }.bind(this));
 
                 var translatedOptions = {};
                 orderableFieldList.forEach(function (item) {
