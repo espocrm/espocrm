@@ -152,7 +152,7 @@ Espo.define('controller', [], function () {
 
         handleAccessGlobal: function () {
             if (!this.checkAccessGlobal()) {
-                throw new Espo.Exceptions.AccessDenied("Denied access to action '" + this.name + "#" + action + "'");
+                throw new Espo.Exceptions.AccessDenied("Denied access to '" + this.name + "'");
             }
         },
 
