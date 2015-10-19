@@ -89,11 +89,29 @@ class FiltersMatcherTest extends \PHPUnit_Framework_TestCase
         $filterList = [$filter];
         $this->assertTrue($this->object->match($email, $filterList));
 
+        $email = new \Espo\Entities\Email($this->emailDefs);
+        $email->set('from', 'test@tester');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'from' => '*@tester'
+        ));
+        $filterList = [$filter];
+        $this->assertTrue($this->object->match($email, $filterList));
+
         $email->set('from', 'test@tester');
         $email->set('to', 'test@tester;baraka@tester');
         $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
         $filter->set(array(
             'to' => 'baraka@tester'
+        ));
+        $filterList = [$filter];
+        $this->assertTrue($this->object->match($email, $filterList));
+
+        $email->set('from', 'test@tester');
+        $email->set('to', 'test@tester;baraka@man');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'to' => '*@tester'
         ));
         $filterList = [$filter];
         $this->assertTrue($this->object->match($email, $filterList));

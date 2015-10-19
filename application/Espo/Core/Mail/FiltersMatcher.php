@@ -36,7 +36,7 @@ class FiltersMatcher
     {
         foreach ($filterList as $filter) {
             if ($filter->get('from')) {
-                if (strtolower($filter->get('from')) === strtolower($email->get('from'))) {
+                if ($this->matchString(strtolower($filter->get('from')), strtolower($email->get('from')))) {
                     return true;
                 }
             }
@@ -44,7 +44,7 @@ class FiltersMatcher
                 if ($email->get('to')) {
                     $toArr = explode(';', $email->get('to'));
                     foreach ($toArr as $to) {
-                        if (strtolower($to) === strtolower($filter->get('to'))) {
+                        if ($this->matchString(strtolower($filter->get('to')), strtolower($to))) {
                             return true;
                         }
                     }
