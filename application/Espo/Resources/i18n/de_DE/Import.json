@@ -18,7 +18,8 @@
         "Create Only": "Nur erstellen",
         "Create and Update": "Erstellen und aktualisieren",
         "Update Only": "Nur aktualisieren",
-        "Update by": "Aktualisieren durch"
+        "Update by": "Aktualisieren durch",
+        "File (CSV)": "Datei (CSV)"
     },
     "messages": {
         "utf8": "Sollte UTF-8 kodiert sein",

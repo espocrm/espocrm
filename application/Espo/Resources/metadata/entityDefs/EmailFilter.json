@@ -9,12 +9,14 @@
         "from": {
             "type": "varchar",
             "maxLength": 255,
-            "tooltip": true
+            "tooltip": true,
+            "trim": true
         },
         "to": {
             "type": "varchar",
             "maxLength": 255,
-            "tooltip": true
+            "tooltip": true,
+            "trim": true
         },
         "subject": {
             "type": "varchar",

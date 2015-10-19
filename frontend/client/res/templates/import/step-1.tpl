@@ -13,7 +13,7 @@
                         </select>
                     </div>
                     <div class="col-sm-4 form-group">
-                        <label class="control-label">{{translate 'File' scope='Import'}}</label>
+                        <label class="control-label">{{translate 'File (CSV)' scope='Import'}}</label>
                         <div>
                             <input type="file" id="import-file">
                         </div>

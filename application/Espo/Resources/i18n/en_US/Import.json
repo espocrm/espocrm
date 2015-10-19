@@ -19,7 +19,8 @@
         "Create and Update": "Create & Update",
         "Update Only": "Update Only",
         "Update by": "Update by",
-        "Set as Not Duplicate": "Set as Not Duplicate"
+        "Set as Not Duplicate": "Set as Not Duplicate",
+        "File (CSV)": "File (CSV)"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",
