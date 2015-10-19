@@ -57,7 +57,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
         runSearch: function (text) {
             var text = this.$input.val();
             if (text != '' && text.length > 2) {
-                text = encodeURI(text);
+                text = text;
                 this.search(text);
             }
         },
