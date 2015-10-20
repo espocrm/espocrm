@@ -29,7 +29,7 @@ Espo.define('crm:views/mass-email/record/row-actions/for-campaign', 'views/recor
             if (this.options.acl.edit && !~['Complete'].indexOf(this.model.get('status'))) {
                 actionList.unshift({
                     action: 'sendTest',
-                    label: 'Sent Test',
+                    label: 'Send Test',
                     data: {
                         id: this.model.id
                     }
