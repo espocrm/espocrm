@@ -30,8 +30,8 @@
         "Complete": "Завершить"
     },
     "presetFilters": {
-        "actual": "Actual",
-        "completed": "Завершена",
+        "actual": "Актуальные",
+        "completed": "Завершенные",
         "todays": "На сегодня",
         "overdue": "Просроченные"
     }

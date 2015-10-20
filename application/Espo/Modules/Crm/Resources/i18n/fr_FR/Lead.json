@@ -50,6 +50,7 @@
         }
     },
     "presetFilters": {
-        "active": "Actif"
+        "active": "Actif",
+        "actual": "En cours"
     }
 }

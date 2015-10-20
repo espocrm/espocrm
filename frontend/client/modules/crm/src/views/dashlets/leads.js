@@ -56,7 +56,7 @@ Espo.define('Crm:Views.Dashlets.Leads', 'Views.Dashlets.Abstract.RecordList', fu
                 bool: {
                     onlyMy: true,
                 },
-                primary: 'active'
+                primary: 'actual'
             },
         },
 

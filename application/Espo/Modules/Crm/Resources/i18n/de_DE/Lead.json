@@ -56,6 +56,7 @@
     },
     "presetFilters": {
         "active": "Aktiv",
+        "actual": "Tatsächlich",
         "converted": "Umgewandelt"
     }
 }

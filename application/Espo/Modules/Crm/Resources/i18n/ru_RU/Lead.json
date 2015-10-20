@@ -45,6 +45,7 @@
         }
     },
     "presetFilters": {
-        "active": "Активный"
+        "actual": "Актуальные",
+        "active": "Активные"
     }
 }

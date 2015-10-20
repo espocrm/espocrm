@@ -48,6 +48,7 @@
         }
     },
 	"presetFilters": {
+        "actual": "Atual",
 		"active": "Ativo"
 	}
 }

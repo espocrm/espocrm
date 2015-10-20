@@ -45,6 +45,7 @@
         }
     },
     "presetFilters": {
+        "actual": "Werkelijke",
         "active": "Actief"
     }
 }
