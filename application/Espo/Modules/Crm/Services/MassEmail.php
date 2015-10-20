@@ -243,10 +243,10 @@ class MassEmail extends \Espo\Services\Record
             $this->setFailed($massEmail);
             return;
         }
-        $attachmetList = $emailTemplate->get('attachmets');
+        $attachmentList = $emailTemplate->get('attachments');
 
         foreach ($queueItemList as $queueItem) {
-            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmetList, $campaign, $isTest);
+            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmentList, $campaign, $isTest);
         }
 
         if (!$isTest) {
@@ -328,7 +328,7 @@ class MassEmail extends \Espo\Services\Record
         return $email;
     }
 
-    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmetList = [], $campaign = null, $isTest = false)
+    protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmentList = [], $campaign = null, $isTest = false)
     {
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
         if (!$target || !$target->id || !$target->get('emailAddress')) {
@@ -379,7 +379,7 @@ class MassEmail extends \Espo\Services\Record
             $header->setId($queueItem->id);
             $message->getHeaders()->addHeader($header);
 
-            $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmetList);
+            $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmentList);
 
             $emailObject = $emailTemplate;
             if ($massEmail->get('storeSentEmails')) {
