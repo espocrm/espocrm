@@ -71,6 +71,15 @@ class Task extends \Espo\Core\SelectManagers\Base
         ];
     }
 
+    protected function filterTodays(&$result)
+    {
+        $result['whereClause'][] = $this->convertDateTimeWhere(array(
+            'type' => 'today',
+            'field' => 'dateEnd',
+            'timeZone' => $this->getUserTimeZone()
+        ));
+    }
+
     protected function convertDateTimeWhere($item)
     {
         $result = parent::convertDateTimeWhere($item);

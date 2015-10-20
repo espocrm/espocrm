@@ -255,6 +255,19 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 this.model.set('status', 'Sent');
                 $send.remove();
                 this.menu = this.backedMenu;
+
+                if (record.mode !== 'detail') {
+                    record.setDetailMode();
+                    record.setFieldReadOnly('dateSent');
+                    record.setFieldReadOnly('name');
+                    record.setFieldReadOnly('attachments');
+                    record.setFieldReadOnly('isHtml');
+                    record.setFieldReadOnly('from');
+                    record.setFieldReadOnly('to');
+                    record.setFieldReadOnly('cc');
+                    record.setFieldReadOnly('bcc');
+                }
+
             }, this);
 
             this.listenToOnce(record, 'cancel:save', function () {

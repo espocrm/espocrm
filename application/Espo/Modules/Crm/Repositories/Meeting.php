@@ -35,10 +35,17 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
         if (!empty($parentId) || !empty($parentType)) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!empty($parent)) {
+                $accountId = null;
                 if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
-                } else if ($parent->has('accountId')) {
+                } else if ($parent->get('accountId')) {
                     $accountId = $parent->get('accountId');
+                } else if ($parent->getEntityType() == 'Lead') {
+                    if ($parent->get('status') == 'Converted') {
+                        if ($parent->get('createdAccountId')) {
+                            $accountId = $parent->get('createdAccountId');
+                        }
+                    }
                 }
                 if (!empty($accountId)) {
                     $entity->set('accountId', $accountId);
