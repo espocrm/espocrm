@@ -31,6 +31,13 @@ class Lead extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function filterActual(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status!=' => ['Converted', 'Recycled', 'Dead']
+        );
+    }
+
     protected function filterConverted(&$result)
     {
         $result['whereClause'][] = array(

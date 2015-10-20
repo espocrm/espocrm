@@ -56,6 +56,7 @@
     },
     "presetFilters": {
         "active": "Actief",
-        "converted": "Geconverteerd"
+        "converted": "Geconverteerd",
+        "actual": "Werkelijke"
     }
 }

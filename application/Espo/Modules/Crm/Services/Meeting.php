@@ -81,19 +81,30 @@ class Meeting extends \Espo\Services\Record
     {
         $invitationManager = $this->getInvitationManager();
 
+        $emailHash = array();
+
         $users = $entity->get('users');
         foreach ($users as $user) {
-            $invitationManager->sendInvitation($entity, $user, 'users');
+            if ($user->get('emailAddress') && !array_key_exists($user->get('emailAddress'), $emailHash)) {
+                $invitationManager->sendInvitation($entity, $user, 'users');
+                $emailHash[$user->get('emailAddress')] = true;
+            }
         }
 
         $contacts = $entity->get('contacts');
         foreach ($contacts as $contact) {
-            $invitationManager->sendInvitation($entity, $contact, 'contacts');
+            if ($contact->get('emailAddress') && !array_key_exists($contact->get('emailAddress'), $emailHash)) {
+                $invitationManager->sendInvitation($entity, $contact, 'contacts');
+                $emailHash[$user->get('emailAddress')] = true;
+            }
         }
 
         $leads = $entity->get('leads');
         foreach ($leads as $lead) {
-            $invitationManager->sendInvitation($entity, $lead, 'leads');
+            if ($lead->get('emailAddress') && !array_key_exists($lead->get('emailAddress'), $emailHash)) {
+                $invitationManager->sendInvitation($entity, $lead, 'leads');
+                $emailHash[$user->get('emailAddress')] = true;
+            }
         }
 
         return true;

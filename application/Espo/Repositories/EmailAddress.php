@@ -65,7 +65,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
-            SELECT email_address.name, email_address.invalid, email_address.opt_out AS optOut, entity_email_address.primary
+            SELECT email_address.name, email_address.lower, email_address.invalid, email_address.opt_out AS optOut, entity_email_address.primary
             FROM entity_email_address
             JOIN email_address ON email_address.id = entity_email_address.email_address_id AND email_address.deleted = 0
             WHERE
@@ -80,6 +80,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             foreach ($rows as $row) {
                 $obj = new \StdClass();
                 $obj->emailAddress = $row['name'];
+                $obj->lower = $row['lower'];
                 $obj->primary = ($row['primary'] == '1') ? true : false;
                 $obj->optOut = ($row['optOut'] == '1') ? true : false;
                 $obj->invalid = ($row['invalid'] == '1') ? true : false;
@@ -180,22 +181,25 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                 foreach ($emailAddressData as $row) {
                     $key = $row->emailAddress;
                     if (!empty($key)) {
+                        $key = strtolower($key);
                         $hash[$key] = array(
                             'primary' => $row->primary ? true : false,
                             'optOut' => $row->optOut ? true : false,
                             'invalid' => $row->invalid ? true : false,
+                            'emailAddress' => $row->emailAddress
                         );
                     }
                 }
 
                 $hashPrev = array();
                 foreach ($previousEmailAddressData as $row) {
-                    $key = $row->emailAddress;
+                    $key = $row->lower;
                     if (!empty($key)) {
                         $hashPrev[$key] = array(
                             'primary' => $row->primary ? true : false,
                             'optOut' => $row->optOut ? true : false,
                             'invalid' => $row->invalid ? true : false,
+                            'emailAddress' => $row->emailAddress
                         );
                     }
                 }
@@ -216,7 +220,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
                     if (array_key_exists($key, $hashPrev)) {
                         $new = false;
-                        $changed = $hash[$key]['optOut'] != $hashPrev[$key]['optOut'] || $hash[$key]['invalid'] != $hashPrev[$key]['invalid'];                        
+                        $changed =
+                                    $hash[$key]['optOut'] != $hashPrev[$key]['optOut'] ||
+                                    $hash[$key]['invalid'] != $hashPrev[$key]['invalid'] ||
+                                    $hash[$key]['emailAddress'] !== $hashPrev[$key]['emailAddress'];
                         if ($hash[$key]['primary']) {
                             if ($hash[$key]['primary'] == $hashPrev[$key]['primary']) {
                                 $primary = false;
@@ -259,6 +266,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $emailAddress->set(array(
                             'optOut' => $hash[$address]['optOut'],
                             'invalid' => $hash[$address]['invalid'],
+                            'name' => $hash[$address]['emailAddress']
                         ));
                         $this->save($emailAddress);
                     }
@@ -270,16 +278,21 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $emailAddress = $this->get();
 
                         $emailAddress->set(array(
-                            'name' => $address,
+                            'name' => $hash[$address]['emailAddress'],
                             'optOut' => $hash[$address]['optOut'],
                             'invalid' => $hash[$address]['invalid'],
                         ));
                         $this->save($emailAddress);
                     } else {
-                        if ($emailAddress->get('optOut') != $hash[$address]['optOut'] || $emailAddress->get('invalid') != $hash[$address]['invalid']) {
+                        if (
+                            $emailAddress->get('optOut') != $hash[$address]['optOut'] ||
+                            $emailAddress->get('invalid') != $hash[$address]['invalid'] ||
+                            $emailAddress->get('emailAddress') != $hash[$address]['emailAddress']
+                        ) {
                             $emailAddress->set(array(
                                 'optOut' => $hash[$address]['optOut'],
                                 'invalid' => $hash[$address]['invalid'],
+                                'name' => $hash[$address]['emailAddress']
                             ));
                             $this->save($emailAddress);
                         }

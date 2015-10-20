@@ -36,6 +36,7 @@ class EmailTemplate extends Record
     {
         $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'dateTime';
+        $this->dependencies[] = 'language';
     }
 
     protected function getFileManager()
@@ -46,6 +47,11 @@ class EmailTemplate extends Record
     protected function getDateTime()
     {
         return $this->injections['dateTime'];
+    }
+
+    protected function getLanguage()
+    {
+        return $this->getInjection('language');
     }
 
     public function parseTemplate(Entity $emailTemplate, array $params = array(), $copyAttachments = false)
@@ -160,10 +166,16 @@ class EmailTemplate extends Record
                 continue;
             }
 
-            if ($entity->fields[$field]['type'] == 'date') {
-                $value = $this->getDateTime()->convertSystemDateToGlobal($value);
-            } else if ($entity->fields[$field]['type'] == 'datetime') {
-                $value = $this->getDateTime()->convertSystemDateTimeToGlobal($value);
+            $fieldType = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() .'.fields.' . $field . '.type');
+
+            if ($fieldType === 'enum') {
+                $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
+            } else {
+                if ($entity->fields[$field]['type'] == 'date') {
+                    $value = $this->getDateTime()->convertSystemDateToGlobal($value);
+                } else if ($entity->fields[$field]['type'] == 'datetime') {
+                    $value = $this->getDateTime()->convertSystemDateTimeToGlobal($value);
+                }
             }
             $text = str_replace('{' . $type . '.' . $field . '}', $value, $text);
         }
