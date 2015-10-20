@@ -331,7 +331,7 @@ class MassEmail extends \Espo\Services\Record
             $this->setFailed($massEmail);
             return;
         }
-        $attachmetList = $emailTemplate->get('attachmets');
+        $attachmetList = $emailTemplate->get('attachments');
 
         foreach ($queueItemList as $queueItem) {
             $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmetList, $campaign, $isTest);
