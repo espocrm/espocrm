@@ -266,7 +266,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $emailAddress->set(array(
                             'optOut' => $hash[$address]['optOut'],
                             'invalid' => $hash[$address]['invalid'],
-                                'name' => $hash[$address]['emailAddress']
+                            'name' => $hash[$address]['emailAddress']
                         ));
                         $this->save($emailAddress);
                     }
@@ -284,7 +284,11 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         ));
                         $this->save($emailAddress);
                     } else {
-                        if ($emailAddress->get('optOut') != $hash[$address]['optOut'] || $emailAddress->get('invalid') != $hash[$address]['invalid']) {
+                        if (
+                            $emailAddress->get('optOut') != $hash[$address]['optOut'] ||
+                            $emailAddress->get('invalid') != $hash[$address]['invalid'] ||
+                            $emailAddress->get('emailAddress') != $hash[$address]['emailAddress']
+                        ) {
                             $emailAddress->set(array(
                                 'optOut' => $hash[$address]['optOut'],
                                 'invalid' => $hash[$address]['invalid'],
