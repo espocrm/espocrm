@@ -11,7 +11,8 @@
         },
         "type": {
             "type": "enum",
-            "options": ["Email", "Newsletter", "Web", "Television", "Radio", "Mail"]
+            "options": ["Email", "Newsletter", "Web", "Television", "Radio", "Mail"],
+            "default": "Email"
         },
         "startDate": {
             "type": "date"
