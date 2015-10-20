@@ -257,7 +257,7 @@ class Import extends \Espo\Services\Record
         return true;
     }
 
-    public function import($scope, array $fields, $attachmentId, array $params = array())
+    public function import($scope, array $importFieldList, $attachmentId, array $params = array())
     {
         $delimiter = ',';
         if (!empty($params['fieldDelimiter'])) {
@@ -297,7 +297,7 @@ class Import extends \Espo\Services\Record
             if (count($arr) == 1 && empty($arr[0])) {
                 continue;
             }
-            $r = $this->importRow($scope, $fields, $arr, $params);
+            $r = $this->importRow($scope, $importFieldList, $arr, $params);
             if (empty($r)) {
                 continue;
             }
@@ -334,12 +334,16 @@ class Import extends \Espo\Services\Record
         );
     }
 
-    public function importRow($scope, array $fields, array $row, array $params = array())
+    public function importRow($scope, array $importFieldList, array $row, array $params = array())
     {
         $id = null;
         $action = 'create';
         if (!empty($params['action'])) {
             $action = $params['action'];
+        }
+
+        if (empty($importFieldList)) {
+            return;
         }
 
 
@@ -348,9 +352,9 @@ class Import extends \Espo\Services\Record
                 $updateByFieldList = [];
                 $whereClause = array();
                 foreach ($params['updateBy'] as $i) {
-                    if (array_key_exists($i, $fields)) {
-                        $updateByFieldList[] = $fields[$i];
-                        $whereClause[$fields[$i]] = $row[$i];
+                    if (array_key_exists($i, $importFieldList)) {
+                        $updateByFieldList[] = $importFieldList[$i];
+                        $whereClause[$importFieldList[$i]] = $row[$i];
                     }
                 }
             }
@@ -399,7 +403,7 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        foreach ($fields as $i => $field) {
+        foreach ($importFieldList as $i => $field) {
             if (!empty($field)) {
                 $value = $row[$i];
                 if ($field == 'id') {
@@ -457,7 +461,7 @@ class Import extends \Espo\Services\Record
                         $isPrimary = false;
                         if (empty($phoneNumberData)) {
                             $phoneNumberData = [];
-                            if (!in_array('phoneNumber', $fields)) {
+                            if (!in_array('phoneNumber', $importFieldList)) {
                                 $isPrimary = true;
                             }
                         }
@@ -475,7 +479,7 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        foreach ($fields as $i => $field) {
+        foreach ($importFieldList as $i => $field) {
             if (array_key_exists($field, $fieldsDefs) && $fieldsDefs[$field]['type'] == Entity::FOREIGN) {
                 if ($entity->has($field)) {
                     $relation = $fieldsDefs[$field]['relation'];
