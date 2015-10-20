@@ -55,6 +55,10 @@ Espo.define('views/email/record/edit', ['views/record/edit', 'views/email/record
         afterRender: function () {
         	Dep.prototype.afterRender.call(this);
 
+            if (this.model.get('status') === 'Draft') {
+                this.setFieldReadOnly('dateSent');
+            }
+
             this.handleAttachmentField();
             this.listenTo(this.model, 'change:attachmentsIds', function () {
                 this.handleAttachmentField();
