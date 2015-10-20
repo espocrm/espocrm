@@ -95,7 +95,15 @@ class GlobalSearch extends \Espo\Core\Services\Base
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
         $totalCount = $row['COUNT'];
 
-        $unionSql .= " ORDER BY name";
+        if (count($entityTypeList)) {
+            $entityListQuoted = [];
+            foreach ($entityTypeList as $entityType) {
+                $entityListQuoted[] = $pdo->quote($entityType);
+            }
+            $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
+        } else {
+            $unionSql .= " ORDER BY name";
+        }
         $unionSql .= " LIMIT :offset, :maxSize";
 
         $sth = $pdo->prepare($unionSql);
