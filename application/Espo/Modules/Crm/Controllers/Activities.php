@@ -49,7 +49,12 @@ class Activities extends \Espo\Core\Controllers\Base
             $userId = $this->getUser()->id;
         }
 
-        return $service->getEvents($userId, $from, $to);
+        $scopeList = null;
+        if ($request->get('scopeList') !== null) {
+            $scopeList = explode(',', $request->get('scopeList'));
+        }
+
+        return $service->getEvents($userId, $from, $to, $scopeList);
     }
 
     public function actionListUpcoming($params, $data, $request)

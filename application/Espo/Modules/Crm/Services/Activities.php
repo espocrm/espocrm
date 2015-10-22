@@ -551,7 +551,7 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    public function getEvents($userId, $from, $to)
+    public function getEvents($userId, $from, $to, $scopeList = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -561,68 +561,88 @@ class Activities extends \Espo\Core\Services\Base
 
         $pdo = $this->getPDO();
 
-        $sql = "
-            SELECT
-                'Meeting' AS scope,
-                meeting.id AS id, meeting.name AS name,
-                meeting.date_start AS dateStart,
-                meeting.date_end AS dateEnd,
-                meeting.status AS status,
-                '' AS dateStartDate,
-                '' AS dateEndDate
-            FROM `meeting`
-            JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0 AND meeting_user.status <> 'Declined'
-            WHERE
-                meeting.deleted = 0 AND
-                meeting.date_start >= ".$pdo->quote($from)." AND
-                meeting.date_start < ".$pdo->quote($to)." AND
-                meeting_user.user_id =".$pdo->quote($userId)."
-            UNION
-            SELECT
-                'Call' AS scope,
-                call.id AS id,
-                call.name AS name,
-                call.date_start AS dateStart,
-                call.date_end AS dateEnd,
-                call.status AS status,
-                '' AS dateStartDate,
-                '' AS dateEndDate
-            FROM `call`
-            JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0 AND call_user.status <> 'Declined'
-            WHERE
-                call.deleted = 0 AND
-                call.date_start >= ".$pdo->quote($from)." AND
-                call.date_start < ".$pdo->quote($to)." AND
-                call_user.user_id = ".$pdo->quote($userId)."
-            UNION
-            SELECT
-                'Task' AS scope,
-                task.id AS id,
-                task.name AS name,
-                task.date_start AS dateStart,
-                task.date_end AS dateEnd,
-                task.status AS status,
-                task.date_start_date AS dateStartDate,
-                task.date_end_date AS dateEndDate
-            FROM `task`
-            WHERE
-                task.deleted = 0 AND
-                (
+        if (is_null($scopeList)) {
+            $scopeList = ['Meeting', 'Call', 'Task'];
+        }
+
+        $sqlPartList = [];
+
+        if (in_array('Meeting', $scopeList) && $this->getAcl()->checkScope('Meeting')) {
+            $sqlPartList[] = "
+                SELECT
+                    'Meeting' AS scope,
+                    meeting.id AS id, meeting.name AS name,
+                    meeting.date_start AS dateStart,
+                    meeting.date_end AS dateEnd,
+                    meeting.status AS status,
+                    '' AS dateStartDate,
+                    '' AS dateEndDate
+                FROM `meeting`
+                JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0 AND meeting_user.status <> 'Declined'
+                WHERE
+                    meeting.deleted = 0 AND
+                    meeting.date_start >= ".$pdo->quote($from)." AND
+                    meeting.date_start < ".$pdo->quote($to)." AND
+                    meeting_user.user_id =".$pdo->quote($userId)."
+            ";
+        };
+        if (in_array('Call', $scopeList) && $this->getAcl()->checkScope('Call')) {
+            $sqlPartList[] = "
+                SELECT
+                    'Call' AS scope,
+                    call.id AS id,
+                    call.name AS name,
+                    call.date_start AS dateStart,
+                    call.date_end AS dateEnd,
+                    call.status AS status,
+                    '' AS dateStartDate,
+                    '' AS dateEndDate
+                FROM `call`
+                JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0 AND call_user.status <> 'Declined'
+                WHERE
+                    call.deleted = 0 AND
+                    call.date_start >= ".$pdo->quote($from)." AND
+                    call.date_start < ".$pdo->quote($to)." AND
+                    call_user.user_id = ".$pdo->quote($userId)."
+            ";
+        }
+        if (in_array('Task', $scopeList) && $this->getAcl()->checkScope('Task')) {
+            $sqlPartList[] = "
+                SELECT
+                    'Task' AS scope,
+                    task.id AS id,
+                    task.name AS name,
+                    task.date_start AS dateStart,
+                    task.date_end AS dateEnd,
+                    task.status AS status,
+                    task.date_start_date AS dateStartDate,
+                    task.date_end_date AS dateEndDate
+                FROM `task`
+                WHERE
+                    task.deleted = 0 AND
                     (
-                        task.date_end IS NULL AND
-                        task.date_start >= ".$pdo->quote($from)." AND
-                        task.date_start < ".$pdo->quote($to)."
-                    ) OR (
-                        task.date_end >= ".$pdo->quote($from)." AND
-                        task.date_end < ".$pdo->quote($to)."
-                    ) OR (
-                        task.date_end_date IS NOT NULL AND
-                        task.date_end_date >= ".$pdo->quote($from)." AND
-                        task.date_end_date < ".$pdo->quote($to)."
-                    )
-                ) AND
-                task.assigned_user_id = ".$pdo->quote($userId)."
-        ";
+                        (
+                            task.date_end IS NULL AND
+                            task.date_start >= ".$pdo->quote($from)." AND
+                            task.date_start < ".$pdo->quote($to)."
+                        ) OR (
+                            task.date_end >= ".$pdo->quote($from)." AND
+                            task.date_end < ".$pdo->quote($to)."
+                        ) OR (
+                            task.date_end_date IS NOT NULL AND
+                            task.date_end_date >= ".$pdo->quote($from)." AND
+                            task.date_end_date < ".$pdo->quote($to)."
+                        )
+                    ) AND
+                    task.assigned_user_id = ".$pdo->quote($userId)."
+            ";
+        }
+
+        if (empty($sqlPartList)) {
+            return [];
+        }
+
+        $sql = implode(" UNION ", $sqlPartList);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();

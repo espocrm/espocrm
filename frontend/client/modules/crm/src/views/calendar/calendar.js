@@ -54,10 +54,23 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         data: function () {
+            var scopeFilterList = Espo.Utils.clone(this.scopeList);
+            scopeFilterList.unshift('all');
+
+            var scopeFilterDataList = [];
+            this.scopeList.forEach(function (scope) {
+                var o = {scope: scope};
+                if (!~this.enabledScopeList.indexOf(scope)) {
+                    o.disabled = true;
+                }
+                scopeFilterDataList.push(o);
+            }, this);
+
             return {
                 mode: this.mode,
                 modeList: this.modeList,
                 header: this.header,
+                scopeFilterDataList: scopeFilterDataList
             };
         },
 
@@ -84,6 +97,21 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             },
             'click [data-action="refresh"]': function (e) {
             	this.$calendar.fullCalendar('refetchEvents');
+            },
+            'click [data-action="toggleScopeFilter"]': function (e) {
+                var $target = $(e.currentTarget);
+                var filterName = $target.data('name');
+
+                var $check = $target.find('.filter-check-icon');
+                if ($check.hasClass('hidden')) {
+                    $check.removeClass('hidden');
+                } else {
+                    $check.addClass('hidden');
+                }
+
+                e.stopPropagation(e);
+
+                this.toggleScopeFilter(filterName);
             }
         },
 
@@ -92,6 +120,49 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.mode = this.options.mode || this.defaultMode;
             this.header = ('header' in this.options) ? this.options.header : this.header;
             this.slotDuration = this.options.slotDuration || this.slotDuration;
+
+            this.scopeFilter = false;
+            this.scopeList = ['Meeting', 'Call', 'Task'];
+            var scopeList = [];
+            this.scopeList.forEach(function (scope) {
+                if (this.getAcl().check(scope)) {
+                    scopeList.push(scope);
+                }
+            }, this);
+            this.scopeList = scopeList;
+
+            if (this.header) {
+                this.enabledScopeList = this.getStoredEnabledScopeList() || Espo.Utils.clone(this.scopeList);
+            } else {
+                this.enabledScopeList = this.options.enabledScopeList || Espo.Utils.clone(this.scopeList);
+            }
+
+            if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
+                this.enabledScopeList = [];
+            }
+        },
+
+        toggleScopeFilter: function (name) {
+            var index = this.enabledScopeList.indexOf(name);
+            if (!~index) {
+                this.enabledScopeList.push(name);
+            } else {
+                this.enabledScopeList.splice(index, 1);
+            }
+
+            this.storeEnabledScopeList(this.enabledScopeList);
+
+            this.$calendar.fullCalendar('refetchEvents');
+        },
+
+        getStoredEnabledScopeList: function () {
+            var key = 'calendarEnabledScopeList';
+            return this.getStorage().get('state', key) || null;
+        },
+
+        storeEnabledScopeList: function (enabledScopeList) {
+            var key = 'calendarEnabledScopeList';
+            this.getStorage().set('state', key, enabledScopeList);
         },
 
         updateDate: function () {
@@ -449,6 +520,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     url += '&userName=' + this.options.userName;
                 }
             }
+
+            url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
+
             $.ajax({
                 url: url,
                 success: function (data) {

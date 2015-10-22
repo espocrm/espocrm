@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.Calendar', 'Views.Dashlets.Abstract.Base', function (Dep) {
+Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', function (Dep) {
 
     return Dep.extend({
 
@@ -29,13 +29,20 @@ Espo.define('Crm:Views.Dashlets.Calendar', 'Views.Dashlets.Abstract.Base', funct
 
         defaultOptions: {
             mode: 'basicWeek',
-            isDoubleHeight: false
+            isDoubleHeight: false,
+            enabledScopeList: ['Meeting', 'Call', 'Task']
         },
 
         setup: function () {
             this.optionsFields['mode'] = {
                 type: 'enum',
                 options: ['basicWeek', 'agendaWeek', 'month'],
+            };
+            this.optionsFields['enabledScopeList'] = {
+                type: 'multiEnum',
+                options: ['Meeting', 'Call', 'Task'],
+                translation: 'Global.scopeNamesPlural',
+                required: true
             };
             this.optionsFields['isDoubleHeight'] = {
                 type: 'bool',
@@ -47,11 +54,13 @@ Espo.define('Crm:Views.Dashlets.Calendar', 'Views.Dashlets.Abstract.Base', funct
             if (this.getOption('isDoubleHeight')) {
                 height = 643;
             }
-            this.createView('calendar', 'Crm:Calendar.Calendar', {
+
+            this.createView('calendar', 'crm:views/calendar/calendar', {
                 mode: this.getOption('mode'),
                 el: this.$el.selector + ' > .calendar-container',
                 header: false,
-                height: height ,
+                height: height,
+                enabledScopeList: this.getOption('enabledScopeList')
             }, function (view) {
                 view.render();
             });

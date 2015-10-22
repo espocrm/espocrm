@@ -6,7 +6,8 @@
         "autorefreshInterval": "Auto-refresh Interval",
         "displayRecords": "Display Records",
         "isDoubleHeight": "Height 2x",
-        "mode": "Mode"
+        "mode": "Mode",
+        "enabledScopeList": "What to display"
     },
     "options": {
     	"mode": {

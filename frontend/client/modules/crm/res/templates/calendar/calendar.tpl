@@ -19,6 +19,18 @@
             {{#each ../modeList}}
             <button class="btn btn-default{{#ifEqual this ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{./this}}">{{translate this scope='Calendar' category='modes'}}</button>
             {{/each}}
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    {{#each scopeFilterDataList}}
+                        <li>
+                            <a href="javascript:" data-action="toggleScopeFilter" data-name="{{scope}}">
+                                <span class="glyphicon glyphicon-ok filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{translate scope category='scopeNamePlural'}}
+                            </a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
         </div>
     </div>
 </div>
