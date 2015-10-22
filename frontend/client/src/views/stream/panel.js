@@ -248,7 +248,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
                 list.push({
                     action: 'selectFilter',
-                    html: this.translate(item, 'filters', 'Note')  + '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>',
+                    html: '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'filters', 'Note'),
                     data: {
                         name: item
                     }
