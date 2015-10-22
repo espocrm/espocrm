@@ -255,7 +255,7 @@
     "collection": {
         "sortBy": "createdAt",
         "asc": false,
-        "textFilterFields": ["name", "accountName"]
+        "textFilterFields": ["name", "accountName", "emailAddress"]
     },
     "indexes": {
         "firstName": {

@@ -86,11 +86,8 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                         $link = $m[$target->getEntityType()];
                     }
                     if ($link) {
-                        if ($campaign) {
-                            $targetListList = $campaign->get('targetLists');
-                        } else {
-                            $targetListList = $massEmail->get('targetLists');
-                        }
+                        $targetListList = $massEmail->get('targetLists');
+
                         foreach ($targetListList as $targetList) {
                             $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
                                 'optedOut' => true
