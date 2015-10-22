@@ -60,5 +60,9 @@
     },
     "messages": {
         "unsubscribed": "You have been unsubscribed from our mailing list."
+    },
+    "tooltips": {
+        "targetLists": "Targets that should receive messages.",
+        "excludingTargetLists": "Targets that should not receive messages."
     }
 }

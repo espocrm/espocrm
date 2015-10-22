@@ -47,10 +47,12 @@
             "type": "linkMultiple"
         },
         "targetLists": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         },
         "excludingTargetLists": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         },
         "sentCount": {
             "type": "int",
