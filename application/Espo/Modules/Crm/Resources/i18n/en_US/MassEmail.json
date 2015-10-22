@@ -42,6 +42,8 @@
         "testSent": "Test email(s) supposed to be sent"
     },
     "tooltips": {
-        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore."
+        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
+        "targetLists": "Targets that should receive messages.",
+        "excludingTargetLists": "Targets that should not receive messages."
     }
 }

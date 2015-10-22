@@ -46,10 +46,12 @@
         },
         "targetLists": {
             "type": "linkMultiple",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "excludingTargetLists": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         },
         "inboundEmail": {
             "type": "link"
