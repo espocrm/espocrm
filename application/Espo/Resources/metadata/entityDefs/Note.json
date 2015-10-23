@@ -36,6 +36,9 @@
             "type": "linkMultiple",
             "noLoad": true
         },
+        "isGlobal": {
+            "type": "bool"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
