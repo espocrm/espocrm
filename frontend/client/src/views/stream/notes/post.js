@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
+Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
@@ -33,16 +33,60 @@ Espo.define('Views.Stream.Notes.Post', 'Views.Stream.Note', function (Dep) {
 
         setup: function () {
             if (this.model.get('post')) {
-                this.createField('post', null, null, 'Stream.Fields.Post');
+                this.createField('post', null, null, 'views/stream/fields/post');
             }
             if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
 
-                if (!this.model.get('post')) {
+                if (!this.model.get('post') && this.model.get('parentId')) {
                     this.messageName = 'attach';
                     if (this.isThis) {
                         this.messageName += 'This';
                     }
+                }
+            }
+
+            if (!this.model.get('parentId')) {
+                if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
+                    var teamIdList = this.model.get('teamsIds');
+                    var teamNameHash = this.model.get('teamsNames') || {};
+                    this.messageName = 'postTarget';
+                    this.messageData['targetType'] = this.translateEntityType('Team', teamIdList.length > 1);
+
+                    var targetHtml = '';
+                    var teamHtmlList = [];
+                    teamIdList.forEach(function (teamId) {
+                        var teamName = teamNameHash[teamId];
+                        if (teamName) {
+                            teamHtmlList.push('<a href="#Team/view/' + teamId + '">' + teamName + '</a>');
+                        }
+                    }, this);
+
+                    this.messageData['target'] = teamHtmlList.join(', ');
+                } else if (this.model.has('usersIds') && this.model.get('usersIds').length) {
+                    var userIdList = this.model.get('usersIds');
+                    var userNameHash = this.model.get('usersNames') || {};
+
+                    this.messageName = 'postTarget';
+
+                    this.messageData['targetType'] = this.translateEntityType('User', userIdList.length > 1);
+
+                    var userHtml = '';
+                    var userHtmlList = [];
+                    userIdList.forEach(function (userId) {
+                        if (userId === this.getUser().id) {
+                            this.messageName = 'postTargetYou';
+                            if (userIdList.length > 1) {
+                                this.messageName = 'postTargetYouAndOthers';
+                            }
+                        } else {
+                            var userName = userNameHash[userId];
+                            if (userName) {
+                                userHtmlList.push('<a href="#User/view/' + userId + '">' + userName + '</a>');
+                            }
+                        }
+                    }, this);
+                    this.messageData['target'] = userHtmlList.join(', ');
                 }
             }
 

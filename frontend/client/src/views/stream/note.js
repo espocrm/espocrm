@@ -89,8 +89,14 @@ Espo.define('Views.Stream.Note', 'View', function (Dep) {
             }
         },
 
-        translateEntityType: function (entityType) {
-            var string = (this.translate(entityType, 'scopeNames') || '');
+        translateEntityType: function (entityType, isPlural) {
+            var string;
+
+            if (!isPlural) {
+                string = (this.translate(entityType, 'scopeNames') || '');
+            } else {
+                string = (this.translate(entityType, 'scopeNamesPlural') || '');
+            }
 
             string = string.toLowerCase();
 

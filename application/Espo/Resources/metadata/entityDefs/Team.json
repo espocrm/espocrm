@@ -32,6 +32,11 @@
             "type": "hasMany",
             "entity": "Role",
             "foreign": "teams"
+        },
+        "notes": {
+            "type": "hasMany",
+            "entity": "Note",
+            "foreign": "teams"
         }
     },
     "collection": {

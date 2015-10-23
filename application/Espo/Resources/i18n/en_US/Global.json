@@ -273,6 +273,9 @@
         "status": "{user} updated {field} of {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
         "createRelated": "{user} created {relatedEntityType} {relatedEntity} related to {entityType} {entity}",
+        "postTarget": "{user} posted to {targetType} {target}",
+        "postTargetYou": "{user} posted to you",
+        "postTargetYouAndOthers": "{user} posted to {target} and you",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
 

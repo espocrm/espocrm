@@ -141,6 +141,11 @@
             "type": "hasMany",
             "entity": "Email",
             "foreign": "users"
+        },
+        "notes": {
+            "type": "hasMany",
+            "entity": "Note",
+            "foreign": "users"
         }
     },
     "collection": {

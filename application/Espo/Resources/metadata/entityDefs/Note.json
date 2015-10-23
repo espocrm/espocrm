@@ -28,6 +28,14 @@
             "index": true,
             "readOnly": true
         },
+        "teams": {
+            "type": "linkMultiple",
+            "noLoad": true
+        },
+        "users": {
+            "type": "linkMultiple",
+            "noLoad": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -69,6 +77,16 @@
         },
         "related": {
             "type": "belongsToParent"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "notes"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "notes"
         }
     },
     "collection": {

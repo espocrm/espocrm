@@ -5,7 +5,9 @@
         "positionList": "Position List"
     },
     "links": {
-        "users": "Users"
+        "users": "Users",
+        "notes": "Notes",
+        "roles": "Roles"
     },
     "tooltips": {
         "roles": "Access Roles. Users of this team obtain access control level from selected roles.",

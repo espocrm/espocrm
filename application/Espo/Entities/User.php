@@ -33,4 +33,12 @@ class User extends \Espo\Core\Entities\Person
     {
         return $this->get('isActive');
     }
+
+    public function getTeamIdList()
+    {
+        if (!$this->has('teamsIds')) {
+            $this->loadLinkMultipleField('teams');
+        }
+        return $this->get('teamsIds');
+    }
 }

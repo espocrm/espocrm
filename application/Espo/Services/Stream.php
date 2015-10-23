@@ -274,71 +274,175 @@ class Stream extends \Espo\Core\Services\Base
 
         $pdo = $this->getEntityManager()->getPDO();
 
+        $sqlPartList = [];
 
-        $sql = "
-	        	(
-	        		SELECT
-		        		note.id AS 'id',
-		        		note.number AS 'number',
-		        		note.type AS 'type',
-		        		note.post AS 'post',
-		        		note.data AS 'data',
-		        		note.parent_type AS 'parentType',
-		        		note.parent_id AS 'parentId',
+        $sqlPartList[] = "
+            (
+                SELECT
+                    note.id AS 'id',
+                    note.number AS 'number',
+                    note.type AS 'type',
+                    note.post AS 'post',
+                    note.data AS 'data',
+                    note.parent_type AS 'parentType',
+                    note.parent_id AS 'parentId',
+                    note.related_type AS 'relatedType',
+                    note.related_id AS 'relatedId',
+                    note.created_at AS 'createdAt',
+                    note.created_by_id AS 'createdById',
+                    TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+                FROM `note` AS `note`
+                JOIN subscription AS `subscription` ON
+                    (
+                        (
+                            note.parent_type = subscription.entity_type AND
+                            note.parent_id = subscription.entity_id
+                        )
+                    ) AND
+                    subscription.user_id = ".$pdo->quote($this->getUser()->id)."
+                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                WHERE note.deleted = 0 {where}
+                ORDER BY number DESC
+            )
+        ";
+
+        $sqlPartList[] = "
+                (
+                    SELECT
+                        note.id AS 'id',
+                        note.number AS 'number',
+                        note.type AS 'type',
+                        note.post AS 'post',
+                        note.data AS 'data',
+                        note.parent_type AS 'parentType',
+                        note.parent_id AS 'parentId',
                         note.related_type AS 'relatedType',
                         note.related_id AS 'relatedId',
-		        		note.created_at AS 'createdAt',
-		        		note.created_by_id AS 'createdById',
-		        		TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
-		        	FROM `note` AS `note`
-		            JOIN subscription AS `subscription` ON
-		                (
-		                    (
-		                        note.parent_type = subscription.entity_type AND
-		                        note.parent_id = subscription.entity_id
-		                    )
-		                ) AND
-						subscription.user_id = ".$pdo->quote($this->getUser()->id)."
-					LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-					WHERE note.deleted = 0 {where}
-					ORDER BY number DESC
-				)
-				UNION
-	        	(
-	        		SELECT
-		        		note.id AS 'id',
-		        		note.number AS 'number',
-		        		note.type AS 'type',
-		        		note.post AS 'post',
-		        		note.data AS 'data',
-		        		note.parent_type AS 'parentType',
-		        		note.parent_id AS 'parentId',
-                        note.related_type AS 'relatedType',
-                        note.related_id AS 'relatedId',
-		        		note.created_at AS 'createdAt',
-		        		note.created_by_id AS 'createdById',
-		        		TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
-		        	FROM `note` AS `note`
-		            JOIN subscription AS `subscription` ON
-		                (
-		                    (
-	                            note.super_parent_type = subscription.entity_type AND
-	                            note.super_parent_id = subscription.entity_id
-		                    )
-		                ) AND
-						subscription.user_id = ".$pdo->quote($this->getUser()->id)."
-					LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-					WHERE note.deleted = 0 AND
+                        note.created_at AS 'createdAt',
+                        note.created_by_id AS 'createdById',
+                        TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+                    FROM `note` AS `note`
+                    JOIN subscription AS `subscription` ON
+                        (
+                            (
+                                note.super_parent_type = subscription.entity_type AND
+                                note.super_parent_id = subscription.entity_id
+                            )
+                        ) AND
+                        subscription.user_id = ".$pdo->quote($this->getUser()->id)."
+                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                    WHERE note.deleted = 0 AND
                     (
                         note.parent_id <> note.super_parent_id
                         OR
                         note.parent_type <> note.super_parent_type
                     )
-					{where}
-					ORDER BY number DESC
-				)
-			ORDER BY number DESC
+                    {where}
+                    ORDER BY number DESC
+                )
         ";
+
+        $sqlPartList[] = "
+            (
+                SELECT
+                    note.id AS 'id',
+                    note.number AS 'number',
+                    note.type AS 'type',
+                    note.post AS 'post',
+                    note.data AS 'data',
+                    note.parent_type AS 'parentType',
+                    note.parent_id AS 'parentId',
+                    note.related_type AS 'relatedType',
+                    note.related_id AS 'relatedId',
+                    note.created_at AS 'createdAt',
+                    note.created_by_id AS 'createdById',
+                    TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+                FROM `note` AS `note`
+                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                WHERE note.deleted = 0 AND
+                (
+                    note.created_by_id = ".$pdo->quote($this->getUser()->id)." AND
+                    note.parent_id IS NULL AND
+                    note.type = 'Post'
+                )
+                {where}
+                ORDER BY number DESC
+            )
+        ";
+
+        $sqlPartList[] = "
+            (
+                SELECT DISTINCT
+                    note.id AS 'id',
+                    note.number AS 'number',
+                    note.type AS 'type',
+                    note.post AS 'post',
+                    note.data AS 'data',
+                    note.parent_type AS 'parentType',
+                    note.parent_id AS 'parentId',
+                    note.related_type AS 'relatedType',
+                    note.related_id AS 'relatedId',
+                    note.created_at AS 'createdAt',
+                    note.created_by_id AS 'createdById',
+                    TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+                FROM `note` AS `note`
+                LEFT JOIN `note_user` AS usersMiddle ON usersMiddle.note_id = note.id AND usersMiddle.deleted = 0
+                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                WHERE note.deleted = 0 AND
+                (
+                    note.created_by_id <> ".$pdo->quote($this->getUser()->id)." AND
+                    usersMiddle.user_id = ".$pdo->quote($this->getUser()->id)." AND
+                    note.parent_id IS NULL AND
+                    note.type = 'Post'
+                )
+                {where}
+                ORDER BY number DESC
+            )
+        ";
+
+        $teamIdList = $this->getUser()->getTeamIdList();
+        $teamIdQuotedList = [];
+        foreach ($teamIdList as $teamId) {
+            $teamIdQuotedList[] = $pdo->quote($teamId);
+        }
+
+        if (!empty($teamIdList)) {
+            $sqlPartList[] = "
+               (
+                    SELECT DISTINCT
+                        note.id AS 'id',
+                        note.number AS 'number',
+                        note.type AS 'type',
+                        note.post AS 'post',
+                        note.data AS 'data',
+                        note.parent_type AS 'parentType',
+                        note.parent_id AS 'parentId',
+                        note.related_type AS 'relatedType',
+                        note.related_id AS 'relatedId',
+                        note.created_at AS 'createdAt',
+                        note.created_by_id AS 'createdById',
+                        TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`
+                    FROM `note` AS `note`
+                    LEFT JOIN `note_team` AS teamsMiddle ON teamsMiddle.note_id = note.id AND teamsMiddle.deleted = 0
+                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                    WHERE note.deleted = 0 AND
+                    (
+                        note.created_by_id <> ".$pdo->quote($this->getUser()->id)." AND
+                        teamsMiddle.team_id IN (".implode(',', $teamIdQuotedList).") AND
+                        note.parent_id IS NULL AND
+                        note.type = 'Post'
+                    )
+                    {where}
+                    ORDER BY number DESC
+                )
+            ";
+        }
+
+
+        $sql = implode(' UNION ', $sqlPartList) . "
+            ORDER BY number DESC
+        ";
+
 
         if (!empty($params['after'])) {
             $where = array();
@@ -371,6 +475,12 @@ class Stream extends \Espo\Core\Services\Base
                 $entity = $this->getEntityManager()->getEntity($e->get('relatedType'), $e->get('relatedId'));
                 if ($entity) {
                     $e->set('relatedName', $entity->get('name'));
+                }
+            }
+            if ($e->get('type') == 'Post' && $e->get('parentId') === null) {
+                $e->loadLinkMultipleField('users');
+                if (count($e->get('usersIds')) == 0) {
+                    $e->loadLinkMultipleField('teams');
                 }
             }
         }

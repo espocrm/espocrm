@@ -19,7 +19,8 @@
     },
     "links": {
         "teams": "Teams",
-        "roles": "Roles"
+        "roles": "Roles",
+        "notes": "Notes"
     },
     "labels": {
         "Create User": "Create User",
