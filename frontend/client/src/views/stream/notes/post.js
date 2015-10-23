@@ -74,22 +74,34 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
                         this.messageData['targetType'] = this.translateEntityType('User', userIdList.length > 1);
 
-                        var userHtml = '';
-                        var userHtmlList = [];
-                        userIdList.forEach(function (userId) {
-                            if (userId === this.getUser().id) {
-                                this.messageName = 'postTargetYou';
-                                if (userIdList.length > 1) {
-                                    this.messageName = 'postTargetYouAndOthers';
+                        if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
+                            this.messageName = 'postTargetSelf';
+                        } else {
+                            var userHtml = '';
+                            var userHtmlList = [];
+                            userIdList.forEach(function (userId) {
+                                if (userId === this.getUser().id) {
+                                    this.messageName = 'postTargetYou';
+                                    if (userIdList.length > 1) {
+                                        if (userId === this.model.get('createdById')) {
+                                            this.messageName = 'postTargetSelfAndOthers';
+                                        } else {
+                                            this.messageName = 'postTargetYouAndOthers';
+                                        }
+                                    }
+                                } else {
+                                    if (userId === this.model.get('createdById')) {
+                                        this.messageName = 'postTargetSelfAndOthers';
+                                    } else {
+                                        var userName = userNameHash[userId];
+                                        if (userName) {
+                                            userHtmlList.push('<a href="#User/view/' + userId + '">' + userName + '</a>');
+                                        }
+                                    }
                                 }
-                            } else {
-                                var userName = userNameHash[userId];
-                                if (userName) {
-                                    userHtmlList.push('<a href="#User/view/' + userId + '">' + userName + '</a>');
-                                }
-                            }
-                        }, this);
-                        this.messageData['target'] = userHtmlList.join(', ');
+                            }, this);
+                            this.messageData['target'] = userHtmlList.join(', ');
+                        }
                     }
                 }
             }

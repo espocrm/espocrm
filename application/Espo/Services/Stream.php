@@ -449,7 +449,7 @@ class Stream extends \Espo\Core\Services\Base
                     $e->set('relatedName', $entity->get('name'));
                 }
             }
-            if ($e->get('type') == 'Post' && $e->get('parentId') === null) {
+            if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
                 $e->loadLinkMultipleField('users');
                 if (count($e->get('usersIds')) == 0) {
                     $e->loadLinkMultipleField('teams');
