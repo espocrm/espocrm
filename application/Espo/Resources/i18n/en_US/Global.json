@@ -170,7 +170,8 @@
         "Default": "Default",
         "Number": "Number",
         "From": "From",
-        "To": "To"
+        "To": "To",
+        "Create Post": "Create Post"
     },
     "messages": {
         "pleaseWait": "Please wait...",

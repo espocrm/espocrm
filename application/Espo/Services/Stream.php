@@ -353,7 +353,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $sqlPartList[] = "
             (
-                SELECT DISTINCT {$selectSqlPart}
+                SELECT {$selectSqlPart}
                 FROM `note` AS `note`
                 LEFT JOIN `note_user` AS usersMiddle ON usersMiddle.note_id = note.id AND usersMiddle.deleted = 0
                 LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id

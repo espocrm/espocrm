@@ -1,11 +1,22 @@
 {
     "fields": {
         "post": "Post",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "targetType": "Target",
+        "teams": "Teams",
+        "users": "Users"
     },
     "filters": {
         "all": "All",
         "posts": "Posts",
         "updates": "Updates"
+    },
+    "options": {
+        "targetType": {
+            "self": "Self",
+            "users": "Particular User(s)",
+            "teams": "Particular Team(s)",
+            "all": "All Users"
+        }
     }
 }

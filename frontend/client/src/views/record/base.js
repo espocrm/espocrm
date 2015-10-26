@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Record.Base', 'View', function (Dep) {
+Espo.define('views/record/base', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -36,12 +36,14 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
         fieldList: null,
 
         hideField: function (name) {
-            var $field = this.$el.find('div.field-' + name);
-            var $label = this.$el.find('label.field-label-' + name);
+            if (this.isRendered()) {
+                var $field = this.$el.find('div.field-' + name);
+                var $label = this.$el.find('label.field-label-' + name);
 
-            $field.addClass('hidden');
-            $label.addClass('hidden');
-            $field.closest('.cell-' + name).addClass('hidden-cell');
+                $field.addClass('hidden');
+                $label.addClass('hidden');
+                $field.closest('.cell-' + name).addClass('hidden-cell');
+            }
 
             var view = this.getFieldView(name);
             if (view) {
@@ -50,12 +52,15 @@ Espo.define('Views.Record.Base', 'View', function (Dep) {
         },
 
         showField: function (name) {
-            var $field = this.$el.find('div.field-' + name);
-            var $label = this.$el.find('label.field-label-' + name);
+            if (this.isRendered()) {
+                var $field = this.$el.find('div.field-' + name);
+                var $label = this.$el.find('label.field-label-' + name);
 
-            $field.removeClass('hidden');
-            $label.removeClass('hidden');
-            $field.closest('.cell-' + name).removeClass('hidden-cell');
+                $field.removeClass('hidden');
+                $label.removeClass('hidden');
+                $field.closest('.cell-' + name).removeClass('hidden-cell');
+            }
+
             var view = this.getFieldView(name);
             if (view) {
                 view.enabled = true;

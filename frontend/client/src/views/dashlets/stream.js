@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (Dep) {
+Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
 
     return Dep.extend({
 
@@ -70,6 +70,19 @@ Espo.define('Views.Dashlets.Stream', 'Views.Dashlets.Abstract.Base', function (D
             }, this);
         },
 
+        setupActionList: function () {
+            this.actionList.unshift({
+                name: 'create',
+                html: this.translate('Create Post', 'labels'),
+                iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+            });
+        },
+
+        actionCreate: function () {
+            this.createView('dialog', 'views/stream/modals/create-post', {}, function (view) {
+                view.render();
+            }, this)
+        }
 
     });
 });
