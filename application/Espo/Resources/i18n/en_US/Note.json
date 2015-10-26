@@ -18,5 +18,8 @@
             "teams": "Particular Team(s)",
             "all": "All Users"
         }
+    },
+    "messages": {
+        "writeMessage": "Write your message here"
     }
 }

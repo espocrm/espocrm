@@ -463,7 +463,6 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             }
         },
 
-
         afterSave: function () {
             if (this.isNew) {
                 this.notify('Created', 'success');
@@ -476,6 +475,10 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
         beforeSave: function () {
             this.notify('Saving...');
+        },
+
+        beforeBeforeSave: function () {
+            this.disableButtons();
         },
 
         afterSaveError: function () {

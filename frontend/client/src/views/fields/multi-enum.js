@@ -117,7 +117,7 @@ Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Selectize'], f
         },
 
         validateRequired: function () {
-            if (this.params.required || this.model.isRequired(this.name)) {
+            if (this.isRequired()) {
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));

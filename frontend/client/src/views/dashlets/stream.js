@@ -81,6 +81,10 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
         actionCreate: function () {
             this.createView('dialog', 'views/stream/modals/create-post', {}, function (view) {
                 view.render();
+                this.listenToOnce(view, 'after:save', function () {
+                    view.close();
+                    this.actionRefresh();
+                }, this);
             }, this)
         }
 

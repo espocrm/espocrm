@@ -143,7 +143,7 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], functio
         },
 
         validateRequired: function () {
-            if (this.params.required || this.model.isRequired(this.name)) {
+            if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
                     this.showValidationMessage(msg);

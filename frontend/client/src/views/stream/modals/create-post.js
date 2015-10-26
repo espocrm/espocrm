@@ -32,11 +32,7 @@ Espo.define('views/stream/modals/create-post', 'views/modal', function (Dep) {
                 {
                     name: 'post',
                     label: 'Post',
-                    style: 'primary',
-                    onClick: function (dialog) {
-                        this.trigger('save');
-                        dialog.close();
-                    }.bind(this),
+                    style: 'primary'
                 },
                 {
                     name: 'cancel',
@@ -53,10 +49,18 @@ Espo.define('views/stream/modals/create-post', 'views/modal', function (Dep) {
                 this.createView('record', 'views/stream/record/edit', {
                     model: model,
                     el: this.options.el + ' .record'
-                });
+                }, function (view) {
+                    this.listenTo(view, 'after:save', function () {
+                        this.trigger('after:save');
+                    }, this);
+                }, this);
 
                 this.wait(false);
             }, this);
+        },
+
+        actionPost: function () {
+            this.getView('record').save();
         }
 
     });

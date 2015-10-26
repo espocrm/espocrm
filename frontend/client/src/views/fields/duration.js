@@ -133,29 +133,29 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
                     this.$duration.find('option.custom').remove();
                 }.bind(this));
             }
-            
+
             this.stopListening(this.model, 'change:' + this.endField);
             this.stopListening(this.model, 'change:' + this.endField);
-            
+
             this.listenTo(this.model, 'change:' + this.endField, function () {
                 var start = this.model.get(this.startField);
                 var end = this.model.get(this.endField);
-                
+
                 if (!end || !start) {
                     return;
                 }
-                    
+
                 this.seconds = moment(end).unix() - moment(start).unix();
                 this.updateDuration();
             }.bind(this));
-            
+
             this.listenTo(this.model, 'change:' + this.startField, this.updateDateEnd);
 
             if (this.mode == 'edit') {
                 var start = this.model.get(this.startField);
                 var end = this.model.get(this.endField);
                 var seconds = this.$duration.val();
-                
+
                 if (!end && start && seconds) {
                     if (this.endFieldView) {
                         if (this.endFieldView.isRendered()) {

@@ -102,6 +102,17 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
+            this.createField('post', 'views/note/fields/post', {required: true});
+            this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
+        },
+
+        validate: function () {
+            var notValid = Dep.prototype.validate.call(this);
+
+            if (this.model.get('post') === '' && !(this.model.get('attachmentsIds') || []).length) {
+                notValid = true;
+            }
+            return notValid;
         }
 
     });

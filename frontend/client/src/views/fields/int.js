@@ -121,7 +121,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         validateRequired: function () {
-            if (this.params.required || this.model.isRequired(this.name)) {
+            if (this.isRequired()) {
                 var value = this.model.get(this.name);
                 if (value === null || value === false) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));

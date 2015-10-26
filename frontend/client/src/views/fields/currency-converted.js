@@ -17,16 +17,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- ************************************************************************/ 
+ ************************************************************************/
 
 Espo.define('Views.Fields.CurrencyConverted', 'Views.Fields.Float', function (Dep) {
 
     return Dep.extend({
-    
+
         detailTemplate: 'fields.currency.detail',
 
         listTemplate: 'fields.currency.detail',
-    
+
         data: function () {
             return _.extend({
                 currencyValue: this.getConfig().get('baseCurrency'),

@@ -91,7 +91,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         validateRequired: function () {
-            if (this.params.required || this.model.isRequired(this.name)) {
+            if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
                     this.showValidationMessage(msg, '.attachment-button label');

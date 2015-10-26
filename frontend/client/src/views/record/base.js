@@ -176,6 +176,10 @@ Espo.define('views/record/base', 'view', function (Dep) {
             }
         },
 
+        beforeBeforeSave: function () {
+
+        },
+
         beforeSave: function () {
             this.notify('Saving...');
         },
@@ -193,7 +197,8 @@ Espo.define('views/record/base', 'view', function (Dep) {
         },
 
         save: function (callback) {
-            this.disableButtons();
+            this.beforeBeforeSave();
+
             var data = this.fetch();
 
             var self = this;
@@ -366,7 +371,7 @@ Espo.define('views/record/base', 'view', function (Dep) {
                     fields.forEach(function (field) {
                         var fieldView = this.getFieldView(field);
                         if (fieldView) {
-                            fieldView.setRequired();
+                            fieldView.setNotRequired();
                         }
                     }, this);
                     break;
@@ -401,7 +406,9 @@ Espo.define('views/record/base', 'view', function (Dep) {
             if (!~this.fieldList.indexOf(name)) {
                 this.fieldList.push(name);
             }
-        }
+        },
+
+        exit: function () {}
 
     });
 

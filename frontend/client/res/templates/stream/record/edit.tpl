@@ -14,3 +14,14 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="cell cell-post col-sm-12 form-group">
+        <label class="field-label-post control-label">{{translate 'post' category='fields' scope='Note'}}</label>
+        <div class="field field-post">{{{post}}}</div>
+    </div>
+</div>
+<div class="row">
+    <div class="cell cell-attachments col-sm-12 form-group">
+        <div class="field field-attachments">{{{attachments}}}</div>
+    </div>
+</div>
