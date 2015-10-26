@@ -484,9 +484,7 @@ Espo.define(
                             self.baseController.error403();
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
-                            if (statusReason) {
-                                msg += ': ' + statusReason;
-                            }
+                            msg += ': ' + this.translate('Access denied');
                             Espo.Ui.error(msg);
                         }
                         break;
@@ -495,14 +493,16 @@ Espo.define(
                             self.baseController.error404();
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
-                            if (statusReason) {
-                                msg += ': ' + statusReason;
-                            }
+                            msg += ': ' + this.translate('Not found');
                             Espo.Ui.error(msg);
                         }
                         break;
                     default:
-                        Espo.Ui.error(self.language.translate('Error') + ' ' + xhr.status);
+                        var msg = self.language.translate('Error') + ' ' + xhr.status;
+                        if (statusReason) {
+                            msg += ': ' + statusReason;
+                        }
+                        Espo.Ui.error(msg);
                 }
 
                 if (statusReason) {
