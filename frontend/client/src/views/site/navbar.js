@@ -254,10 +254,11 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
                 var $body = $('body');
                 $body.addClass('minimized');
             }
+            this.$navbar = this.$el.find('> .navbar');
 
             if (this.getThemeManager().getParam('navbarIsVertical')) {
                 var process = function () {
-                    if (this.$el.height() < $(window).height() / 2) {
+                    if (this.$navbar.height() < $(window).height() / 2) {
                         setTimeout(function () {
                             process();
                         }.bind(this), 50);
