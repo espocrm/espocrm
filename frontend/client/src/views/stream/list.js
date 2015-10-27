@@ -35,13 +35,12 @@ Espo.define('views/stream/list', 'views/record/list-expanded', function (Dep) {
             this.rows.push(key);
 
             var type = model.get('type');
-            var viewName = this.itemViews[type] || 'Stream.Notes.' + type;
-
+            var viewName = this.itemViews[type] || 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(type);
             this.createView(key, viewName, {
                 model: model,
                 parentModel: this.model,
                 acl: {
-                    edit: this.getAcl().checkModel(model)
+                    edit: this.getAcl().checkModel(model, 'edit')
                 },
                 isUserStream: this.options.isUserStream,
                 noEdit: this.options.noEdit,
