@@ -10,7 +10,7 @@
 			<script type="text/javascript" src="../client/espo.min.js"></script>
 			<link href="../client/css/espo.css" rel="stylesheet">
 		{else}
-			<script type="text/javascript" src="../frontend/client/lib/jquery-2.0.2.min.js"></script>
+			<script type="text/javascript" src="../frontend/client/lib/jquery-2.1.4.min.js"></script>
 			<link href="../frontend/client/css/espo.css" rel="stylesheet">
 		{/if}
 
