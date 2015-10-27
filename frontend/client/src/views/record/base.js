@@ -103,6 +103,10 @@ Espo.define('views/record/base', 'view', function (Dep) {
             this.$el.find('.panel[data-panel-name="'+name+'"]').addClass('hidden');
         },
 
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
         getFields: function () {
             var fields = {};
             this.fieldList.forEach(function (item) {
@@ -126,6 +130,10 @@ Espo.define('views/record/base', 'view', function (Dep) {
             if (typeof this.model === 'undefined') {
                 throw new Error('Model has not been injected into record view.');
             }
+
+            this.on('remove', function () {
+                this.setConfirmLeaveOut(false);
+            }, this);
 
             this.events = this.events || {};
 

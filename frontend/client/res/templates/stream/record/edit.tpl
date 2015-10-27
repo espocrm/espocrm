@@ -4,8 +4,14 @@
     </div>
 </div>
 <div class="row post-control{{#if interactiveMode}} hidden{{/if}}">
-    <div class="cell cell-attachments col-sm-6 form-group">
-        <div class="field field-attachments">{{{attachments}}}</div>
+
+    <div class="col-sm-6 form-group">
+        <div>
+
+                <button type="button" class="btn btn-primary post pull-left">{{translate 'Post'}}</button>
+                <div class="field field-attachments" style="display: inline-block;">{{{attachments}}}</div>
+
+        </div>
     </div>
     <div class="col-sm-6">
         <div class="cell cell-targetType form-group">

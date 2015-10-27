@@ -89,6 +89,8 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.seed = this.model.clone();
+
             if (this.options.interactiveMode) {
                 this.events['focus textarea[name="post"]'] = function (e) {
                     this.enablePostingMode();
@@ -97,7 +99,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                         this.post();
                     } else if (e.keyCode == 9) {
-                        $text = $(e.currentTarget)
+                        $text = $(e.currentTarget);
                         if ($text.val() == '') {
                             this.disablePostingMode();
                         }
@@ -131,22 +133,29 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.createField('teams', 'views/fields/teams', {});
             this.createField('post', 'views/note/fields/post', {required: true});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
+
+            this.listenTo(this.model, 'change', function () {
+                if (this.postingMode) {
+                    this.setConfirmLeaveOut(true);
+                }
+            }, this);
         },
 
         disablePostingMode: function () {
             this.postingMode = false;
             this.$el.find('.post-control').addClass('hidden');
+            this.setConfirmLeaveOut(false);
+            $('body').off('click.stream-create-post');
         },
 
         enablePostingMode: function () {
             this.$el.find('.post-control').removeClass('hidden');
-
             if (!this.postingMode) {
+                $('body').off('click.stream-create-post');
                 $('body').on('click.stream-create-post', function (e) {
                     if ($.contains(window.document.body, e.target) && !$.contains(this.$el.get(0), e.target) && !$(e.target).closest('.modal-dialog').size()) {
-                        if (this.$textarea.val() == '') {
+                        if (this.getView('post').$element.val() == '') {
                             if (!(this.model.get('attachmentsIds') || []).length) {
-                                $('body').off('click.stream-create-post');
                                 this.disablePostingMode();
                             }
                         }
@@ -158,7 +167,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
         },
 
         afterRender: function () {
-            this.$textarea = this.$el.find('textarea[name="post"]');
+            this.$post = this.$el.find('button.post');
         },
 
         validate: function () {
@@ -168,6 +177,32 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 notValid = true;
             }
             return notValid;
+        },
+
+        post: function () {
+            this.save();
+        },
+
+        beforeSave: function () {
+            Espo.Ui.notify(this.translate('posting', 'messages'));
+            this.$post.addClass('disabled');
+        },
+
+        afterSave: function () {
+            Espo.Ui.success(this.translate('Posted'));
+            if (this.options.interactiveMode) {
+                this.model.clear();
+                this.model.set('targetType', 'self');
+                this.model.set('type', 'Post');
+
+                this.disablePostingMode();
+                this.$post.removeClass('disabled');
+                this.getView('post').$element.prop('rows', 1);
+            }
+        },
+
+        afterNotValid: function () {
+            this.$post.removeClass('disabled');
         }
 
     });

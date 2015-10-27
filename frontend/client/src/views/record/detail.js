@@ -113,10 +113,6 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             }
         },
 
-        setConfirmLeaveOut: function (value) {
-            this.getRouter().confirmLeaveOut = value;
-        },
-
         actionEdit: function () {
             if (!this.editModeDisabled) {
                 this.setEditMode();

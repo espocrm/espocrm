@@ -66,7 +66,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         if (this.$textarea.val() == '') {
                             var attachmentsIds = this.seed.get('attachmentsIds');
                             if (!attachmentsIds.length) {
-                                $('body').off('click.stream-panel');
                                 this.disablePostingMode();
                             }
                         }
@@ -83,6 +82,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$textarea.val('');
             this.getView('attachments').empty();
             this.$el.find('.buttons-panel').addClass('hide');
+
+            $('body').off('click.stream-panel');
         },
 
         setup: function () {

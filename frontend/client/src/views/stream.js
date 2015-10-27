@@ -45,6 +45,10 @@ Espo.define('views/stream', 'view', function (Dep) {
                     el: this.options.el + ' .create-post-container',
                     model: model,
                     interactiveMode: true
+                }, function (view) {
+                    this.listenTo(view, 'after:save', function () {
+                        this.getView('list').showNewRecords();
+                    }, this);
                 }, this);
                 this.wait(false);
             }, this);
