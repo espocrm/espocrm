@@ -484,7 +484,7 @@ Espo.define(
                             self.baseController.error403();
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
-                            msg += ': ' + this.translate('Access denied');
+                            msg += ': ' + self.language.translate('Access denied');
                             Espo.Ui.error(msg);
                         }
                         break;
@@ -493,7 +493,7 @@ Espo.define(
                             self.baseController.error404();
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
-                            msg += ': ' + this.translate('Not found');
+                            msg += ': ' + self.language.translate('Not found');
                             Espo.Ui.error(msg);
                         }
                         break;

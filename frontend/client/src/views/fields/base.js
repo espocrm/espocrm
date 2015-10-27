@@ -19,21 +19,21 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.Fields.Base', 'View', function (Dep) {
+Espo.define('views/fields/base', 'view', function (Dep) {
 
     return Dep.extend({
 
         type: 'base',
 
-        listTemplate: 'fields.base.list',
+        listTemplate: 'fields/base/list',
 
-        listLinkTemplate: 'fields.base.list-link',
+        listLinkTemplate: 'fields/base/list-link',
 
-        detailTemplate: 'fields.base.detail',
+        detailTemplate: 'fields/base/detail',
 
-        editTemplate: 'fields.base.edit',
+        editTemplate: 'fields/base/edit',
 
-        searchTemplate: 'fields.base.search',
+        searchTemplate: 'fields/base/search',
 
         validations: ['required'],
 

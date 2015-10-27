@@ -11,6 +11,10 @@
             "type": "varchar",
             "readOnly": true
         },
+        "targetType": {
+            "type": "varchar",
+            "notStorable": true
+        },
         "parent": {
             "type": "linkParent",
             "readOnly": true
@@ -21,7 +25,7 @@
         },
         "attachments": {
             "type": "linkMultiple",
-            "view": "Stream.Fields.AttachmentMultiple"
+            "view": "views/stream/fields/attachment-multiple"
         },
         "number": {
             "type": "autoincrement",

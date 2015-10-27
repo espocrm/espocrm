@@ -46,6 +46,8 @@ Espo.define('views/stream/modals/create-post', 'views/modal', function (Dep) {
             this.wait(true);
 
             this.getModelFactory().create('Note', function (model) {
+                model.set('type', 'Post');
+
                 this.createView('record', 'views/stream/record/edit', {
                     model: model,
                     el: this.options.el + ' .record'

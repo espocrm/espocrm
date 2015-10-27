@@ -87,7 +87,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
 
-            if (assignmentPermission === true || assignmentPermission === 'team') {
+            if (assignmentPermission === true || assignmentPermission === 'team' || assignmentPermission === 'all') {
                 optionList.push('users');
                 optionList.push('teams');
             }

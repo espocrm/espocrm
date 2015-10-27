@@ -11,7 +11,7 @@
             "delete": "no"
         },
         "Note": {
-            "read": "all",
+            "read": "own",
             "edit": "own",
             "delete": "own"
         },

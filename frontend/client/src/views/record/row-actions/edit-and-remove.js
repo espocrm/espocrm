@@ -19,32 +19,35 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('views/stream/row-actions/default', 'views/record/row-actions/edit-and-remove', function (Dep) {
+Espo.define('views/record/row-actions/edit-and-remove', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
-        /*template: 'stream/row-actions/default',
-
-        afterRender: function () {
-            var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
-
-            $dd.on('show.bs.dropdown', function () {
-                this.$el.closest('.list-row').addClass('active');
-            }.bind(this));
-            $dd.on('hide.bs.dropdown', function () {
-                this.$el.closest('.list-row').removeClass('active');
-            }.bind(this));
-        },
-
-        data: function () {
-            return {
-                acl: this.options.acl,
-                isEditable: this.options.isEditable,
-                isRemovable: this.options.isRemovable,
-                isEnabled: this.options.isEditable || this.options.isRemovable
+        getActionList: function () {
+            var list = [];
+            if (this.options.acl.edit) {
+                list = list.concat([
+                    {
+                        action: 'quickEdit',
+                        label: 'Edit',
+                        data: {
+                            id: this.model.id
+                        }
+                    },
+                    {
+                        action: 'quickRemove',
+                        label: 'Remove',
+                        data: {
+                            id: this.model.id
+                        }
+                    }
+                ]);
             }
-        }*/
+            return list;
+        }
 
     });
+
 });
+
 
