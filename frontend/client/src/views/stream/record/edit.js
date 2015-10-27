@@ -25,6 +25,8 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         template: 'stream/record/edit',
 
+        postingMode: false,
+
         dependencyDefs: {
             'targetType': {
                 map: {
@@ -78,11 +80,37 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             }
         },
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.interactiveMode = this.options.interactiveMode;
+            return data;
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if (this.options.interactiveMode) {
+                this.events['focus textarea[name="post"]'] = function (e) {
+                    this.enablePostingMode();
+                };
+                this.events['keypress textarea[name="post"]'] = function (e) {
+                    if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+                        this.post();
+                    } else if (e.keyCode == 9) {
+                        $text = $(e.currentTarget)
+                        if ($text.val() == '') {
+                            this.disablePostingMode();
+                        }
+                    }
+                };
+                this.events['click button.post'] = function (e) {
+                    this.post();
+                };
+            }
+
             var optionList = ['self'];
 
+            this.model.set('type', 'Post');
             this.model.set('targetType', 'self');
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
@@ -96,7 +124,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             }
 
             this.createField('targetType', 'views/fields/enum', {
-                required: true,
                 options: optionList
             });
 
@@ -104,6 +131,34 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.createField('teams', 'views/fields/teams', {});
             this.createField('post', 'views/note/fields/post', {required: true});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
+        },
+
+        disablePostingMode: function () {
+            this.postingMode = false;
+            this.$el.find('.post-control').addClass('hidden');
+        },
+
+        enablePostingMode: function () {
+            this.$el.find('.post-control').removeClass('hidden');
+
+            if (!this.postingMode) {
+                $('body').on('click.stream-create-post', function (e) {
+                    if ($.contains(window.document.body, e.target) && !$.contains(this.$el.get(0), e.target) && !$(e.target).closest('.modal-dialog').size()) {
+                        if (this.$textarea.val() == '') {
+                            if (!(this.model.get('attachmentsIds') || []).length) {
+                                $('body').off('click.stream-create-post');
+                                this.disablePostingMode();
+                            }
+                        }
+                    }
+                }.bind(this));
+            }
+
+            this.postingMode = true;
+        },
+
+        afterRender: function () {
+            this.$textarea = this.$el.find('textarea[name="post"]');
         },
 
         validate: function () {

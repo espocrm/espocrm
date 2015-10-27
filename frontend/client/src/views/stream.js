@@ -39,7 +39,15 @@ Espo.define('views/stream', 'view', function (Dep) {
         },
 
         setup: function () {
-
+            this.wait(true);
+            this.getModelFactory().create('Note', function (model) {
+                this.createView('createPost', 'views/stream/record/edit', {
+                    el: this.options.el + ' .create-post-container',
+                    model: model,
+                    interactiveMode: true
+                }, this);
+                this.wait(false);
+            }, this);
         },
 
         afterRender: function () {
@@ -49,7 +57,7 @@ Espo.define('views/stream', 'view', function (Dep) {
                 collection.url = 'Stream';
 
                 this.listenToOnce(collection, 'sync', function () {
-                    this.createView('list', 'Stream.List', {
+                    this.createView('list', 'views/stream/record/list', {
                         el: this.options.el + ' .list-container',
                         collection: collection,
                         isUserStream: true,
@@ -57,9 +65,8 @@ Espo.define('views/stream', 'view', function (Dep) {
                         view.notify(false);
                         view.render();
                     });
-                }.bind(this));
+                }, this);
                 collection.fetch();
-
             }, this);
         },
 

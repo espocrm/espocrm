@@ -48,7 +48,6 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
         },
 
         afterRender: function () {
-
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
 
@@ -56,7 +55,7 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
                 collection.maxSize = this.getOption('displayRecords');
 
                 this.listenToOnce(collection, 'sync', function () {
-                    this.createView('list', 'Stream.List', {
+                    this.createView('list', 'views/stream/record/list', {
                         el: this.options.el + ' > .list-container',
                         collection: collection,
                         isUserStream: true,

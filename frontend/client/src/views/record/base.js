@@ -118,11 +118,16 @@ Espo.define('views/record/base', 'view', function (Dep) {
             return this.getView(name) || null;
         },
 
+        data: function () {
+            return {};
+        },
 
         setup: function () {
             if (typeof this.model === 'undefined') {
                 throw new Error('Model has not been injected into record view.');
             }
+
+            this.events = this.events || {};
 
             this.scope = this.model.name;
             this.fieldList = this.options.fieldList || this.fieldList || [];
@@ -141,6 +146,10 @@ Espo.define('views/record/base', 'view', function (Dep) {
             }
 
             this._initDependancy();
+        },
+
+        applyDependancy: function () {
+            this._handleDependencyAttributes();
         },
 
         _initDependancy: function () {

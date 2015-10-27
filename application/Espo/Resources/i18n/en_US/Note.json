@@ -13,10 +13,10 @@
     },
     "options": {
         "targetType": {
-            "self": "Self",
-            "users": "Particular User(s)",
-            "teams": "Particular Team(s)",
-            "all": "All Users"
+            "self": "To self",
+            "users": "To particular user(s)",
+            "teams": "To particular team(s)",
+            "all": "To all users"
         }
     },
     "messages": {

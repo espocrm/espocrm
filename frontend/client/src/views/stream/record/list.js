@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('views/stream/list', 'views/record/list-expanded', function (Dep) {
+Espo.define('views/stream/record/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({
 
