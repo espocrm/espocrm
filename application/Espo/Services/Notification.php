@@ -75,6 +75,7 @@ class Notification extends \Espo\Core\Services\Base
         $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`) VALUES ";
         $arr = [];
         foreach ($userIds as $userId) {
+            if (empty($userId)) continue;
             $id = uniqid();
             $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).")";
         }
@@ -141,6 +142,13 @@ class Notification extends \Espo\Core\Services\Base
                             $parent = $this->getEntityManager()->getEntity($note->get('parentType'), $note->get('parentId'));
                             if ($parent) {
                                 $note->set('parentName', $parent->get('name'));
+                            }
+                        } else {
+                            if (!$note->get('isGlobal')) {
+                                $note->loadLinkMultipleField('users');
+                                if (count($note->get('usersIds')) == 0) {
+                                    $note->loadLinkMultipleField('teams');
+                                }
                             }
                         }
                         if ($note->get('relatedId') && $note->get('relatedType')) {

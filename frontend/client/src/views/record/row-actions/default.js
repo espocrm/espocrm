@@ -25,6 +25,10 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
         template: 'record/row-actions/default',
 
+        setup: function () {
+            this.options.acl = this.options.acl || {};
+        },
+
         afterRender: function () {
             var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 

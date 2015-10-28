@@ -91,8 +91,23 @@ class Notifications extends \Espo\Core\Hooks\Base
                 if ($targetType === 'users') {
                     $targetUserIdList = $entity->get('usersIds');
                     foreach ($targetUserIdList as $userId) {
-                        if ($userId == $this->getUser()->id) continue;
+                        if ($userId === $this->getUser()->id) continue;
                         $userIdList[] = $userId;
+                    }
+                } else if ($targetType === 'teams') {
+                    $targetTeamIdList = $entity->get('teamsIds');
+                    foreach ($targetTeamIdList as $teamId) {
+                        $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                        if (!$team) continue;
+                        $targetUserList = $this->getEntityManager()->getRepository('Team')->findRelated($team, 'users', array(
+                            'whereClause' => array(
+                                'isActive' => true
+                            )
+                        ));
+                        foreach ($targetUserList as $user) {
+                            if ($user->id === $this->getUser()->id) continue;
+                            $userIdList[] = $user->id;
+                        }
                     }
                 }
             }
