@@ -76,7 +76,6 @@ class Notifications extends \Espo\Core\Hooks\Base
         if ($entity->isNew()) {
             $parentType = $entity->get('parentType');
             $parentId = $entity->get('parentId');
-
             $superParentType = $entity->get('superParentType');
             $superParentTypeId = $entity->get('superParentTypeId');
 
@@ -84,13 +83,19 @@ class Notifications extends \Espo\Core\Hooks\Base
 
             if ($parentType && $parentId) {
 				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($parentType, $parentId));
+                if ($superParentType && $superParentTypeId) {
+                    $userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentTypeId));
+                }
+            } else {
+                $targetType = $entity->get('targetType');
+                if ($targetType === 'users') {
+                    $targetUserIdList = $entity->get('usersIds');
+                    foreach ($targetUserIdList as $userId) {
+                        if ($userId == $this->getUser()->id) continue;
+                        $userIdList[] = $userId;
+                    }
+                }
             }
-
-            if ($superParentType && $superParentTypeId) {
-				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentTypeId));
-            }
-
-            //$userIdList = array_merge($userIdList, $this->getMentionedUserIdList($entity));
 
             $userIdList = array_unique($userIdList);
 
