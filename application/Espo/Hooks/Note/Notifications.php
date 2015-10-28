@@ -109,6 +109,16 @@ class Notifications extends \Espo\Core\Hooks\Base
                             $userIdList[] = $user->id;
                         }
                     }
+                } else if ($targetType === 'all') {
+                    $targetUserList = $this->getEntityManager()->getRepository('User')->find(array(
+                        'whereClause' => array(
+                            'isActive' => true
+                        )
+                    ));
+                    foreach ($targetUserList as $user) {
+                        if ($user->id === $this->getUser()->id) continue;
+                        $userIdList[] = $user->id;
+                    }
                 }
             }
 
