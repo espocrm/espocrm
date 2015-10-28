@@ -235,9 +235,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
                 model.set('post', message);
                 model.set('attachmentsIds', _.clone(this.seed.get('attachmentsIds')));
-                model.set('parentId', this.model.id);
-                model.set('parentType', this.model.name);
                 model.set('type', 'Post');
+
+                this.prepareNoteForPost(model);
+
 
                 this.notify('Posting...');
                 model.save(null, {
@@ -246,6 +247,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     }.bind(this)
                 });
             }.bind(this));
+        },
+
+        prepareNoteForPost: function (model) {
+            model.set('parentId', this.model.id);
+            model.set('parentType', this.model.name);
         },
 
         getButtonList: function () {

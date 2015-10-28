@@ -28,7 +28,11 @@ Espo.define('views/user/record/panels/stream', 'views/stream/panel', function (D
 
             var assignmentPermission = this.getAcl().checkAssignmentPermission(this.model);
 
-            this.placeholderText = this.translate('writeMessageToUser', 'messages').replace('{user}', this.model.get('name'));
+            if (this.model.id == this.getUser().id) {
+                this.placeholderText = this.translate('writeMessageToSelf', 'messages');
+            } else {
+                this.placeholderText = this.translate('writeMessageToUser', 'messages').replace('{user}', this.model.get('name'));
+            }
 
             if (!assignmentPermission) {
                 this.postDisabled = true;
@@ -45,8 +49,17 @@ Espo.define('views/user/record/panels/stream', 'views/stream/panel', function (D
                     }
                 }
             }
-
         },
+
+        prepareNoteForPost: function (model) {
+            var userIdList = [this.model.id];
+            var userNames = {};
+            userNames[userIdList] = this.model.get('name');
+
+            model.set('usersIds', userIdList);
+            model.set('usersNames', userNames);
+            model.set('targetType', 'users');
+        }
 
     });
 
