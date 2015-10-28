@@ -19,11 +19,13 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'User.Record.DetailSide',
+        sideView: 'views/user/record/detail-side',
+
+        bottomView: 'views/user/record/detail-bottom',
 
         editModeEnabled: false,
 
@@ -46,7 +48,6 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                         style: 'default'
                     });
                 }
-
             }
 
             if (this.model.id == this.getUser().id) {
@@ -59,7 +60,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
         actionChangePassword: function () {
             this.notify('Loading...');
 
-            this.createView('changePassword', 'Modals.ChangePassword', {
+            this.createView('changePassword', 'views/modals/change-password', {
                 userId: this.model.id
             }, function (view) {
                 view.render();
@@ -96,7 +97,7 @@ Espo.define('Views.User.Record.Detail', 'Views.Record.Detail', function (Dep) {
                     id: this.model.id,
                 }
             }).done(function (aclData) {
-                this.createView('access', 'User.Modals.Access', {
+                this.createView('access', 'views/user/modals/access', {
                     aclData: aclData,
                     model: this.model,
                 }, function (view) {

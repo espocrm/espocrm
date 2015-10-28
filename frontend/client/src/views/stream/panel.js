@@ -27,6 +27,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         postingMode: false,
 
+        postDisabled: false,
+
         events: _.extend({
             'focus textarea.note': function (e) {
                 this.enablePostingMode();
@@ -57,12 +59,19 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             },
         }, Dep.prototype.events),
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.postDisabled = this.postDisabled;
+            data.placeholderText = this.placeholderText;
+            return data;
+        },
+
         enablePostingMode: function () {
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
                 $('body').on('click.stream-panel', function (e) {
-                    if (!$.contains(this.$el.get(0), e.target)) {
+                    if (!$.contains(this.$postContainer.get(0), e.target)) {
                         if (this.$textarea.val() == '') {
                             var attachmentsIds = this.seed.get('attachmentsIds');
                             if (!attachmentsIds.length) {
@@ -80,7 +89,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.postingMode = false;
 
             this.$textarea.val('');
-            this.getView('attachments').empty();
+            if (this.hasView('attachments')) {
+                this.getView('attachments').empty();
+            }
             this.$el.find('.buttons-panel').addClass('hide');
 
             $('body').off('click.stream-panel');
@@ -93,29 +104,32 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.filter = this.getStoredFilter();
 
+            this.placeholderText = this.translate('writeYourCommentHere', 'messages');
+
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
                 this.createCollection(function () {
                     this.wait(false);
-                }.bind(this));
-            }.bind(this));
+                }, this);
+            }, this);
         },
 
-        createCollection: function (callback) {
+        createCollection: function (callback, context) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
                 collection.url = this.model.name + '/' + this.model.id + '/stream';
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.setFilter(this.filter);
 
-                callback();
+                callback.call(context);
             }, this);
         },
 
         afterRender: function () {
             this.$textarea = this.$el.find('textarea.note');
             this.$attachments = this.$el.find('div.attachments');
+            this.$postContainer = this.$el.find('.post-container');
 
             var collection = this.collection;
 
@@ -298,7 +312,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         actionRefresh: function () {
-            this.getView('list').showNewRecords();
+            if (this.hasView('list')) {
+                this.getView('list').showNewRecords();
+            }
         },
 
     });

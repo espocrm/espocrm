@@ -130,7 +130,8 @@
         "fieldShouldBeBetween": "{field} trebuie sa fie intre {min} si  {max}",
         "fieldShouldBeLess": "{field} trebuie sa fie mai putin de {value}",
         "fieldShouldBeGreater": "{field} trebuie sa fie mai mare de {value}",
-        "fieldBadPasswordConfirm": "{field} confirmat in mod necorespunzator"
+        "fieldBadPasswordConfirm": "{field} confirmat in mod necorespunzator",
+        "writeYourCommentHere": "Scrie comentariul aici"
     },
     "boolFilters": {
         "onlyMy": "Doar eu",

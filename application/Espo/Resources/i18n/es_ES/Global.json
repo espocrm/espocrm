@@ -204,7 +204,8 @@
         "massRemoveResultSingle": "{count} record has been removed",
         "noRecordsRemoved": "No records were removed",
         "clickToRefresh": "Clic para actualizar",
-        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]"
+        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]",
+        "writeYourCommentHere": "Escriba su comentario aquí"
     },
     "boolFilters": {
         "onlyMy": "Solo Yo",

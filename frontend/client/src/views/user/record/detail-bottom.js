@@ -19,21 +19,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-Espo.define('views/user/record/detail-side', 'views/record/detail-side', function (Dep) {
+Espo.define('views/user/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
 
     return Dep.extend({
-
-        panelList: [
-            {
-                name: 'default',
-                label: false,
-                view: 'Record.Panels.Side',
-                options: {
-                    fieldList: ['avatar'],
-                    mode: 'detail',
-                }
-            }
-        ],
 
         setupPanels: function () {
             Dep.prototype.setupPanels.call(this);
@@ -44,10 +32,8 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                     if (!this.model.has('teamsIds')) {
                         this.listenToOnce(this.model, 'sync', function () {
                             if (this.getAcl().checkUserPermission(this.model)) {
-                                this.getParentView().showPanel('activities');
-                                this.getParentView().showPanel('history');
-                                this.getView('activities').actionRefresh();
-                                this.getView('history').actionRefresh();
+                                this.getParentView().showPanel('stream');
+                                this.getView('stream').actionRefresh();
                             }
                         }, this);
                     }
@@ -55,15 +41,10 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
             }
 
             this.panelList.push({
-                "name":"activities",
-                "label":"Activities",
-                "view":"crm:views/record/panels/activities",
-                "hidden": !showActivities
-            });
-            this.panelList.push({
-                "name":"history",
-                "label":"History",
-                "view":"crm:views/record/panels/history",
+                "name":"stream",
+                "label":"Stream",
+                "view":"views/user/record/panels/stream",
+                "sticked": true,
                 "hidden": !showActivities
             });
         }

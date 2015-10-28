@@ -172,6 +172,40 @@ Espo.define('acl', [], function () {
             this.data = {
                 table: {}
             };
+        },
+
+        checkAssignmentPermission: function (user) {
+            return this.checkPermission('assignmentPermission', user);
+        },
+
+        checkUserPermission: function (user) {
+            return this.checkPermission('userPermission', user);
+        },
+
+        checkPermission: function (permission, user) {
+            var result = false;
+
+            if (this.user.isAdmin()) {
+                result = true;
+            } else {
+                if (this.get(permission) === 'no') {
+                    if (user.id == this.user.id) {
+                        result = true;
+                    }
+                } else if (this.get(permission) === 'team') {
+                    if (user.has('teamsIds')) {
+                        user.get('teamsIds').forEach(function (id) {
+                            if (~(this.user.get('teamsIds') || []).indexOf(id)) {
+                                result = true;
+                            }
+                        }, this);
+                    }
+                } else {
+                    result = true;
+                }
+            }
+            return result;
+
         }
     });
 

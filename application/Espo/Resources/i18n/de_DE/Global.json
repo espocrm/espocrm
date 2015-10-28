@@ -204,7 +204,8 @@
         "massRemoveResultSingle": "{count} Eintrag wurde gelöscht",
         "noRecordsRemoved": "Es wurden keine Einträge gelöscht",
         "clickToRefresh": "Klicken um zu aktualisieren",
-        "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n(url)[link]"
+        "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n(url)[link]",
+        "writeYourCommentHere": "Notiz hier einfügen"
     },
     "boolFilters": {
         "onlyMy": "Nur Meine",

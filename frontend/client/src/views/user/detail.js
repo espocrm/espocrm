@@ -53,35 +53,16 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                 }
             }
 
-            var showActivities = false;
-
-            if (this.getUser().isAdmin()) {
-                showActivities = true;
-            } else {
-                if (this.getAcl().get('userPermission') === 'no') {
-                    if (this.model.id == this.getUser().id) {
-                        showActivities = true;
-                    }
-                } else if (this.getAcl().get('userPermission') === 'team') {
-                    if (this.model.has('teamsIds')) {
-                        this.model.get('teamsIds').forEach(function (id) {
-                            if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
-                                showActivities = true;
+            var showActivities = this.getAcl().checkUserPermission(this.model);
+            if (!showActivities) {
+                if (this.getAcl().get('userPermission') === 'team') {
+                    if (!this.model.has('teamsIds')) {
+                        this.listenToOnce(this.model, 'sync', function () {
+                            if (this.getAcl().checkUserPermission(this.model)) {
+                                this.showHeaderActionItem('calendar');
                             }
                         }, this);
-                    } else {
-                        this.listenToOnce(this.model, 'sync', function () {
-                            this.model.get('teamsIds').forEach(function (id) {
-                                if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
-                                    console.log(1);
-                                    this.showHeaderActionItem('calendar');
-                                    return;
-                                }
-                            }, this);
-                        }, this);
                     }
-                } else {
-                    showActivities = true;
                 }
             }
 

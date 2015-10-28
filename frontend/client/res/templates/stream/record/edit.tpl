@@ -7,8 +7,9 @@
 
     <div class="col-sm-6 form-group">
         <div>
-
+                {{#if interactiveMode}}
                 <button type="button" class="btn btn-primary post pull-left">{{translate 'Post'}}</button>
+                {{/if}}
                 <div class="field field-attachments" style="display: inline-block;">{{{attachments}}}</div>
 
         </div>

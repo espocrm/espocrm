@@ -160,7 +160,8 @@
         "noRecordsUpdated": "No records were updated",
         "massRemoveResult": "{count} records have been removed",
         "massRemoveResultSingle": "{count} record has been removed",
-        "noRecordsRemoved": "No records were removed"
+        "noRecordsRemoved": "No records were removed",
+        "writeYourCommentHere": "Оставте свою заметку"
     },
     "boolFilters": {
         "onlyMy": "Тлько мои",

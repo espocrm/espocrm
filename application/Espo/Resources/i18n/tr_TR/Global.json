@@ -123,7 +123,8 @@
         "fieldShouldBeBetween": "{field} şu iki değer arasında olmalı: {min} ve {max}",
         "fieldShouldBeLess": "{field} şu değerden daha az olmalı: {value}",
         "fieldShouldBeGreater": "{field} şu değerden daha büyük olmalı: {value}",
-        "fieldBadPasswordConfirm": "{field} hatalı olarak onaylandı"
+        "fieldBadPasswordConfirm": "{field} hatalı olarak onaylandı",
+        "writeYourCommentHere": "Yorumlarınızı buraya yazın"
     },
     "boolFilters": {
         "onlyMy": "Sadece Ben",

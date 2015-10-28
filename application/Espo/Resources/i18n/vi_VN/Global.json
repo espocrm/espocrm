@@ -130,7 +130,8 @@
         "fieldShouldBeBetween": "{field} cần đặt giữa {min} và {max}",
         "fieldShouldBeLess": "{field} cần nhỏ hơn {value}",
         "fieldShouldBeGreater": "{field} cần lớn hơn {value}",
-        "fieldBadPasswordConfirm": "{field} không hợp lệ"
+        "fieldBadPasswordConfirm": "{field} không hợp lệ",
+        "writeYourCommentHere": "Viết lời nhắn tại đây"
     },
     "boolFilters": {
         "onlyMy": "Chỉ",
