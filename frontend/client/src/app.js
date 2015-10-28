@@ -177,10 +177,10 @@ Espo.define(
             this.trigger('action', params);
 
             this.getController(params.controller, function (controller) {
-                //try {
+                try {
                     controller.doAction(params.action, params.options);
                     this.trigger('action:done');
-                /*} catch (e) {
+                } catch (e) {
                     switch (e.name) {
                         case 'AccessDenied':
                             this.baseController.error403();
@@ -191,7 +191,7 @@ Espo.define(
                         default:
                             throw e;
                     }
-                }*/
+                }
             }.bind(this));
         },
 
