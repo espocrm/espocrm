@@ -177,5 +177,34 @@ class AclManager
         $data = $this->getTable($user)->getScopeData($scope);
         return $this->getImplementation($scope)->checkScope($user, $data, $scope, $action, $isOwner, $inTeam, $entity);
     }
+
+    public function checkPermission(User $user, $permission, User $entity)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+        if ($this->get($user, $permission) === 'no') {
+            if ($entity->id !== $user->id) {
+                return false;
+            }
+        } else if ($this->get($user, $permission) === 'team') {
+            if ($entity->id != $user->id) {
+                $teamIdList1 = $user->getTeamIdList();
+                $teamIdList2 = $entity->getTeamIdList();
+
+                $inTeam = false;
+                foreach ($teamIdList1 as $id) {
+                    if (in_array($id, $teamIdList2)) {
+                        $inTeam = true;
+                        break;
+                    }
+                }
+                if (!$inTeam) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 

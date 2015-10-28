@@ -22,13 +22,16 @@
 
 namespace Espo\Core;
 
+use \Espo\ORM\Entity;
+use \Espo\Entities\User;
+
 class Acl
 {
     private $user;
 
     private $aclManager;
 
-    public function __construct(AclManager $aclManager, \Espo\Entities\User $user)
+    public function __construct(AclManager $aclManager, User $user)
     {
         $this->aclManager = $aclManager;
         $this->user = $user;
@@ -77,6 +80,11 @@ class Acl
     public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
     {
         return $this->getAclManager()->checkScope($this->getUser(), $scope, $action, $isOwner, $inTeam, $entity) ;
+    }
+
+    public function checkPermission($permission, User $entity)
+    {
+        return $this->getAclManager()->checkPermission($this->getUser(), $permission, $entity);
     }
 }
 

@@ -26,7 +26,7 @@ use \Espo\Core\Exceptions\Error;
 
 class Stream extends \Espo\Core\Controllers\Base
 {
-    const MAX_SIZE_LIMIT = 400;
+    const MAX_SIZE_LIMIT = 200;
 
     public static $defaultAction = 'list';
 

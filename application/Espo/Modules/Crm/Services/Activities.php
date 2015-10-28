@@ -464,36 +464,10 @@ class Activities extends \Espo\Core\Services\Base
     protected function accessCheck($entity)
     {
         if ($entity->getEntityType() == 'User') {
-            if ($this->getUser()->isAdmin()) {
-                return;
+            if (!$this->getAcl()->checkPermission('userPermission', $entity)) {
+                throw new Forbidden();
             }
-            $e = $this->getAcl()->get('userPermission');
 
-            if ($this->getAcl()->get('userPermission') === 'no') {
-                if ($entity->id != $this->getUser()->id) {
-                    throw new Forbidden();
-                }
-            } else if ($this->getAcl()->get('userPermission') === 'team') {
-                if ($entity->id != $this->getUser()->id) {
-                    if (!$this->getUser()->has('teamsIds')) {
-                        $this->getUser()->loadLinkMultipleField('teams');
-                    }
-                    $entity->loadLinkMultipleField('teams');
-                    $teamIdList1 = $this->getUser()->get('teamsIds');
-                    $teamIdList2 = $entity->get('teamsIds');
-
-                    $inTeam = false;
-                    foreach ($teamIdList1 as $id) {
-                        if (in_array($id, $teamIdList2)) {
-                            $inTeam = true;
-                            break;
-                        }
-                    }
-                    if (!$inTeam) {
-                        throw new Forbidden();
-                    }
-                }
-            }
         } else {
             if (!$this->getAcl()->check($entity, 'read')) {
                 throw new Forbidden();

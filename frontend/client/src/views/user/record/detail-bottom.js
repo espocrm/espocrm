@@ -33,7 +33,7 @@ Espo.define('views/user/record/detail-bottom', 'views/record/detail-bottom', fun
                         this.listenToOnce(this.model, 'sync', function () {
                             if (this.getAcl().checkUserPermission(this.model)) {
                                 this.getParentView().showPanel('stream');
-                                this.getView('stream').actionRefresh();
+                                this.getView('stream').collection.fetch();
                             }
                         }, this);
                     }

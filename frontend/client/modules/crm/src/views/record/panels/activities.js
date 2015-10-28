@@ -25,7 +25,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         name: 'activities',
 
-        template: 'crm:record.panels.activities',
+        template: 'crm:record/panels/activities',
 
         scopeList: ['Meeting', 'Call'],
 

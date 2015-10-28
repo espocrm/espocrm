@@ -149,7 +149,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }.bind(this), 500);
 
             }, this);
-            collection.fetch();
+            if (!this.defs.hidden) {
+                collection.fetch();
+            }
 
             this.$textarea.textcomplete([{
                 match: /(^|\s)@(\w*)$/,

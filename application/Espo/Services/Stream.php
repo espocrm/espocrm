@@ -267,10 +267,22 @@ class Stream extends \Espo\Core\Services\Base
         $sth = $pdo->prepare($sql)->execute();
     }
 
-    public function findUserStream($params = array())
+    public function findUserStream($userId, $params = array())
     {
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
+
+        if ($userId === $this->getUser()->id) {
+            $user = $this->getUser();
+        } else {
+            $user = $this->getEntityManager()->getEntity('User', $userId);
+            if (!$user) {
+                throw new NotFound();
+            }
+            if (!$this->getAcl()->checkPermission('userPermission', $user)) {
+                throw new Forbidden();
+            }
+        }
 
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -303,7 +315,7 @@ class Stream extends \Espo\Core\Services\Base
                             note.parent_id = subscription.entity_id
                         )
                     ) AND
-                    subscription.user_id = ".$pdo->quote($this->getUser()->id)."
+                    subscription.user_id = ".$pdo->quote($user->id)."
                 LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
                 WHERE note.deleted = 0 {where}
                 ORDER BY number DESC
@@ -321,7 +333,7 @@ class Stream extends \Espo\Core\Services\Base
                                 note.super_parent_id = subscription.entity_id
                             )
                         ) AND
-                        subscription.user_id = ".$pdo->quote($this->getUser()->id)."
+                        subscription.user_id = ".$pdo->quote($user->id)."
                     LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
                     WHERE note.deleted = 0 AND
                     (
@@ -341,7 +353,7 @@ class Stream extends \Espo\Core\Services\Base
                 LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
                 WHERE note.deleted = 0 AND
                 (
-                    note.created_by_id = ".$pdo->quote($this->getUser()->id)." AND
+                    note.created_by_id = ".$pdo->quote($user->id)." AND
                     note.parent_id IS NULL AND
                     note.type = 'Post' AND
                     note.is_global = 0
@@ -359,8 +371,8 @@ class Stream extends \Espo\Core\Services\Base
                 LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
                 WHERE note.deleted = 0 AND
                 (
-                    note.created_by_id <> ".$pdo->quote($this->getUser()->id)." AND
-                    usersMiddle.user_id = ".$pdo->quote($this->getUser()->id)." AND
+                    note.created_by_id <> ".$pdo->quote($user->id)." AND
+                    usersMiddle.user_id = ".$pdo->quote($user->id)." AND
                     note.parent_id IS NULL AND
                     note.is_global = 0
                 )
@@ -384,7 +396,7 @@ class Stream extends \Espo\Core\Services\Base
             )
         ";
 
-        $teamIdList = $this->getUser()->getTeamIdList();
+        $teamIdList = $user->getTeamIdList();
         $teamIdQuotedList = [];
         foreach ($teamIdList as $teamId) {
             $teamIdQuotedList[] = $pdo->quote($teamId);
@@ -399,7 +411,7 @@ class Stream extends \Espo\Core\Services\Base
                     LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
                     WHERE note.deleted = 0 AND
                     (
-                        note.created_by_id <> ".$pdo->quote($this->getUser()->id)." AND
+                        note.created_by_id <> ".$pdo->quote($user->id)." AND
                         teamsMiddle.team_id IN (".implode(',', $teamIdQuotedList).") AND
                         note.parent_id IS NULL AND
                         note.is_global = 0
@@ -416,15 +428,22 @@ class Stream extends \Espo\Core\Services\Base
         ";
 
 
+        $where = '';
         if (!empty($params['after'])) {
-            $where = array();
-            $where['createdAt>'] = $params['after'];
-            $selectParams['whereClause'] = $where;
-            $sql = str_replace('{where}', "AND note.created_at > ".$pdo->quote($params['after']), $sql);
-        } else {
-        	$sql = str_replace('{where}', '', $sql);
+            $where .= " AND note.created_at > ".$pdo->quote($params['after']);
+        }
+        if (!empty($params['filter'])) {
+            switch ($params['filter']) {
+                case 'posts':
+                    $where .= " AND note.type = 'Post'";
+                    break;
+                  case 'updates':
+                    $where .= " AND note.type IN ('Update', 'Status')";
+                    break;
+            }
         }
 
+        $sql = str_replace('{where}', $where, $sql);
         $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
 
 
@@ -472,8 +491,11 @@ class Stream extends \Espo\Core\Services\Base
 
     public function find($scope, $id, $params = array())
     {
-        if ($scope == 'User') {
-            return $this->findUserStream($params);
+        if ($scope === 'User') {
+            if (empty($id)) {
+                $id = $this->getUser()->id;
+            }
+            return $this->findUserStream($id, $params);
         }
         $entity = $this->getEntityManager()->getEntity($scope, $id);
 
