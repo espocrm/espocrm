@@ -49,35 +49,46 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
             Dep.prototype.afterRender.call(this);
             this.$element.attr('placeholder', this.translate('writeMessage', 'messages', 'Note'));
 
-            this.$element.textcomplete([{
-                match: /(^|\s)@(\w*)$/,
-                search: function (term, callback) {
-                    if (term.length == 0) {
-                        callback([]);
-                        return;
+            var assignmentPermission = this.getAcl().get('assignmentPermission');
+
+            var buildUserListUrl = function (term) {
+                var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+                if (assignmentPermission == 'team') {
+                    url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
+                }
+                return url;
+            }.bind(this);
+
+            if (assignmentPermission !== 'no') {
+                this.$element.textcomplete([{
+                    match: /(^|\s)@(\w*)$/,
+                    search: function (term, callback) {
+                        if (term.length == 0) {
+                            callback([]);
+                            return;
+                        }
+                        $.ajax({
+                            url: buildUserListUrl(term)
+                        }).done(function (data) {
+                            callback(data.list)
+                        });
+                    },
+                    template: function (mention) {
+                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
+                    },
+                    replace: function (o) {
+                        return '$1@' + o.userName + '';
                     }
-                    $.ajax({
-                        url: 'User?orderBy=name&limit=7&q=' + term,
+                }],{
+                    zIndex: 1100
+                });
 
-                    }).done(function (data) {
-                        callback(data.list)
-                    });
-                },
-                template: function (mention) {
-                    return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                },
-                replace: function (o) {
-                    return '$1@' + o.userName + '';
-                }
-            }],{
-                zIndex: 1100
-            });
-
-            this.once('remove', function () {
-                if (this.$element.size()) {
-                    this.$element.textcomplete('destroy');
-                }
-            }, this);
+                this.once('remove', function () {
+                    if (this.$element.size()) {
+                        this.$element.textcomplete('destroy');
+                    }
+                }, this);
+            }
         },
 
         validateRequired: function () {

@@ -153,34 +153,45 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 collection.fetch();
             }
 
-            this.$textarea.textcomplete([{
-                match: /(^|\s)@(\w*)$/,
-                index: 2,
-                search: function (term, callback) {
-                    if (term.length == 0) {
-                        callback([]);
-                        return;
+            var assignmentPermission = this.getAcl().get('assignmentPermission');
+
+            var buildUserListUrl = function (term) {
+                var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+                if (assignmentPermission == 'team') {
+                    url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
+                }
+                return url;
+            }.bind(this);
+
+            if (assignmentPermission !== 'no') {
+                this.$textarea.textcomplete([{
+                    match: /(^|\s)@(\w*)$/,
+                    index: 2,
+                    search: function (term, callback) {
+                        if (term.length == 0) {
+                            callback([]);
+                            return;
+                        }
+                        $.ajax({
+                            url: buildUserListUrl(term),
+                        }).done(function (data) {
+                            callback(data.list)
+                        });
+                    },
+                    template: function (mention) {
+                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
+                    },
+                    replace: function (o) {
+                        return '$1@' + o.userName + '';
                     }
-                    $.ajax({
-                        url: 'User?orderBy=name&limit=7&q=' + term,
+                }]);
 
-                    }).done(function (data) {
-                        callback(data.list)
-                    });
-                },
-                template: function (mention) {
-                    return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                },
-                replace: function (o) {
-                    return '$1@' + o.userName + '';
-                }
-            }]);
-
-            this.once('remove', function () {
-                if (this.$textarea.size()) {
-                    this.$textarea.textcomplete('destroy');
-                }
-            }, this);
+                this.once('remove', function () {
+                    if (this.$textarea.size()) {
+                        this.$textarea.textcomplete('destroy');
+                    }
+                }, this);
+            }
 
             $a = this.$el.find('.buttons-panel a.stream-post-info');
 
