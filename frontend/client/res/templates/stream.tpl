@@ -7,7 +7,7 @@
         </div>
         <div class="col-sm-5">
             <div class="pull-right">
-                <button class="btn btn-default" data-action="refresh">&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;</button>
+                <button class="btn btn-default" data-action="refresh" title="{{translate 'Refresh'}}">&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>
