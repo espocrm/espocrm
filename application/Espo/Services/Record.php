@@ -65,6 +65,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $mergeLinkList = array();
 
+    protected $exportSkipFieldList = array();
+
     const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
@@ -960,19 +962,23 @@ class Record extends \Espo\Core\Services\Base
 
         $collection->toArray();
 
-        $fieldsToSkip = array(
+        $fieldListToSkip = array(
             'modifiedByName',
             'modifiedById',
             'modifiedAt',
             'deleted',
         );
 
+        foreach ($this->exportSkipFieldList as $field) {
+            $fieldListToSkip[] = $field;
+        }
+
         $fields = null;
         foreach ($collection as $entity) {
             if (empty($fields)) {
                 $fields = array();
                 foreach ($entity->getFields() as $field => $defs) {
-                    if (in_array($field, $fieldsToSkip)) {
+                    if (in_array($field, $fieldListToSkip)) {
                         continue;
                     }
 

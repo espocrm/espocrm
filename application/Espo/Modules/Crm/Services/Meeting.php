@@ -39,6 +39,8 @@ class Meeting extends \Espo\Services\Record
         $this->dependencies[] = 'crypt';
     }
 
+    protected $exportSkipFieldList = ['duration'];
+
     protected function getMailSender()
     {
         return $this->injections['mailSender'];
