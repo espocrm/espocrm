@@ -63,6 +63,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (scope) {
                 this.hasStreamField = this.getMetadata().get('scopes.' + scope + '.customizable') || false;
             }
+            if (scope === 'User') {
+                this.hasStreamField = false;
+            }
 
             if (scope) {
                 this.model.set('name', scope);
