@@ -53,8 +53,10 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                     if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
                         var teamIdList = this.model.get('teamsIds');
                         var teamNameHash = this.model.get('teamsNames') || {};
-                        this.messageName = 'postTarget';
-                        this.messageData['targetType'] = this.translateEntityType('Team', teamIdList.length > 1);
+                        this.messageName = 'postTargetTeam';
+                        if (teamIdList.length > 1) {
+                            this.messageName = 'postTargetTeams';
+                        }
 
                         var targetHtml = '';
                         var teamHtmlList = [];
@@ -71,8 +73,6 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                         var userNameHash = this.model.get('usersNames') || {};
 
                         this.messageName = 'postTarget';
-
-                        this.messageData['targetType'] = this.translateEntityType('User', userIdList.length > 1);
 
                         if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
                             this.messageName = 'postTargetSelf';

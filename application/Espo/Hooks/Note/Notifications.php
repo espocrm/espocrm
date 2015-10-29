@@ -124,6 +124,13 @@ class Notifications extends \Espo\Core\Hooks\Base
 
             $userIdList = array_unique($userIdList);
 
+            foreach ($userIdList as $i => $userId) {
+                if ($entity->isUserIdNotified($userId)) {
+                    unset($userIdList[$i]);
+                }
+            }
+            $userIdList = array_values($userIdList);
+
             if (!empty($userIdList)) {
             	$this->getNotificationService()->notifyAboutNote($userIdList, $entity);
             }

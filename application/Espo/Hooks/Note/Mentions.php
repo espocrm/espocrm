@@ -76,6 +76,7 @@ class Mentions extends \Espo\Core\Hooks\Base
                             continue;
                         }
                         $this->notifyAboutMention($entity, $user);
+                        $entity->addNotifiedUserId($user->id);
                     }
                 }
             }

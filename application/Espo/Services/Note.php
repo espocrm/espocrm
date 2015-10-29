@@ -75,6 +75,7 @@ class Note extends Record
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 $entity->set('usersIds', [$this->getUser()->id]);
+                $entity->set('isForSelf', true);
                 break;
             case 'users':
                 $entity->clear('teamsIds');

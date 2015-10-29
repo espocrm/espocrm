@@ -43,6 +43,13 @@
         "isGlobal": {
             "type": "bool"
         },
+        "notifiedUserIdList": {
+            "type": "jsonArray",
+            "notStorable": true
+        },
+        "isToSelf": {
+            "type": "bool"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

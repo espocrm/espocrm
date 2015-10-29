@@ -39,7 +39,7 @@ class Note extends \Espo\Core\ORM\Entity
         } else {
             $collection = $this->get('attachments');
         }
-        
+
         $ids = array();
         $names = new \stdClass();
         $types = new \stdClass();
@@ -52,6 +52,27 @@ class Note extends \Espo\Core\ORM\Entity
         $this->set('attachmentsIds', $ids);
         $this->set('attachmentsNames', $names);
         $this->set('attachmentsTypes', $types);
+    }
+
+    public function addNotifiedUserId($userId)
+    {
+        $userIdList = $this->get('notifiedUserIdList');
+        if (!is_array($userIdList)) {
+            $userIdList = [];
+        }
+        if (!in_array($userId, $userIdList)) {
+            $userIdList[] = $userId;
+        }
+        $this->set('notifiedUserIdList', $userIdList);
+    }
+
+    public function isUserIdNotified($userId)
+    {
+        $userIdList = $this->get('notifiedUserIdList');
+        if (!is_array($userIdList)) {
+            $userIdList = [];
+        }
+        return in_array($userId, $userIdList);
     }
 }
 
