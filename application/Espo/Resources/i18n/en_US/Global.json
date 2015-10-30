@@ -286,7 +286,7 @@
         "postTargetYou": "{user} posted to you",
         "postTargetYouAndOthers": "{user} posted to {target} and you",
         "postTargetAll": "{user} posted to all",
-        "postTargetSelf": "{user} posted",
+        "postTargetSelf": "{user} posted to self",
         "postTargetSelfAndOthers": "{user} posted to {target} and self",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
