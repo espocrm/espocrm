@@ -327,6 +327,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     $el.addClass('hidden');
                 }
             }, this);
+            this.collection.reset();
             this.collection.fetch();
         },
 

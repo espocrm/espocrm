@@ -27,7 +27,7 @@ Espo.define('views/stream', 'view', function (Dep) {
 
         filterList: ['all', 'posts', 'updates'],
 
-        filter: 'all',
+        filter: false,
 
         events: {
             'click button[data-action="refresh"]': function () {
@@ -41,14 +41,20 @@ Espo.define('views/stream', 'view', function (Dep) {
         },
 
         data: function () {
+            var filter = this.filter;
+            if (filter === false) {
+                filter = 'all';
+            }
             return {
                 displayTitle: this.options.displayTitle,
                 filterList: this.filterList,
-                filter: this.filter
+                filter: filter
             };
         },
 
         setup: function () {
+            this.filter = this.options.filter || this.filter;
+
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.createView('createPost', 'views/stream/record/edit', {
@@ -70,6 +76,8 @@ Espo.define('views/stream', 'view', function (Dep) {
                 this.collection = collection;
                 collection.url = 'Stream';
 
+                this.setFilter(this.filter);
+
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', 'views/stream/record/list', {
                         el: this.options.el + ' .list-container',
@@ -86,23 +94,31 @@ Espo.define('views/stream', 'view', function (Dep) {
 
         actionSelectFilter: function (data) {
             var name = data.name;
-
             var filter = name;
 
-            if (name == 'all') {
-                filter = false;
+            var internalFilter = name;
+
+            if (filter == 'all') {
+                internalFilter = false;
             }
 
-            this.setFilter(filter);
+            this.filter = internalFilter;
+            this.setFilter(this.filter);
 
             this.filterList.forEach(function (item) {
                 var $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="'+item+'"]');
-                if (item === name) {
+                if (item === filter) {
                     $el.addClass('active');
                 } else {
                     $el.removeClass('active');
                 }
             }, this);
+
+            var url = '#Stream';
+            if (this.filter) {
+                url += '/' + filter;
+            }
+            this.getRouter().navigate(url);
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
@@ -110,6 +126,7 @@ Espo.define('views/stream', 'view', function (Dep) {
                 Espo.Ui.notify(false);
             }, this);
 
+            this.collection.reset();
             this.collection.fetch();
         },
 
@@ -118,6 +135,8 @@ Espo.define('views/stream', 'view', function (Dep) {
             if (filter) {
                 this.collection.data.filter = filter;
             }
+            this.collection.offset = 0;
+            this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
         },
 
     });

@@ -206,6 +206,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     $el.addClass('hidden');
                 }
             }, this);
+            this.collection.reset();
             this.collection.fetch();
         },
 
