@@ -316,6 +316,29 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         data: function () {
+
+            var nextPreviousButtonsEnabled = !!this.model.collection;
+
+            var previousButtonEnabled = false;
+            var nextButtonEnabled = false;
+            if (nextPreviousButtonsEnabled) {
+                if (this.indexOfRecord > 0) {
+                    previousButtonEnabled = true;
+                }
+
+                if (this.indexOfRecord < this.model.collection.total - 1) {
+                    nextButtonEnabled = true;
+                } else {
+                    if (this.model.collection.total === -1) {
+                        nextButtonEnabled = true;
+                    } else if (this.model.collection.total === -2) {
+                        if (this.indexOfRecord < this.model.collection.length - 1) {
+                            nextButtonEnabled = true;
+                        }
+                    }
+                }
+            }
+
             return {
                 scope: this.scope,
                 buttonList: this.buttonList,
@@ -327,7 +350,10 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.type == 'editSmall' || this.type == 'detailSmall'
+                isSmall: this.type == 'editSmall' || this.type == 'detailSmall',
+                nextPreviousButtonsEnabled: nextPreviousButtonsEnabled,
+                previousButtonEnabled: previousButtonEnabled,
+                nextButtonEnabled: nextButtonEnabled
             }
         },
 
@@ -369,8 +395,13 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                     collection.remove(this.model.id);
                     collection.trigger('sync');
                 }, this);
-            }
 
+                if ('indexOfRecord' in this.options) {
+                    this.indexOfRecord = this.options.indexOfRecord;
+                } else {
+                    this.indexOfRecord = collection.indexOf(this.model);
+                }
+            }
 
             this.on('remove', function () {
                 this.setConfirmLeaveOut(false);
@@ -456,6 +487,63 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                         'name': 'Duplicate'
                     });
                 }
+            }
+        },
+
+        switchToModelByIndex: function (indexOfRecord) {
+            if (!this.model.collection) return;
+            var model = this.model.collection.at(indexOfRecord);
+            if (!model) {
+                throw new Error("Model is not found in collection by index.");
+            }
+            var id = model.id;
+
+            var url;
+            if (this.mode === 'edit') {
+                url = '#' + this.scope + '/edit/' + id;
+            } else {
+                url = '#' + this.scope + '/view/' + id;
+            }
+
+            this.getRouter().navigate('#' + this.scope + '/view/' + id, {trigger: false});
+            this.getRouter().dispatch(this.scope, 'view', {
+                id: id,
+                model: model,
+                indexOfRecord: indexOfRecord
+            });
+        },
+
+        actionPrevious: function () {
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord > 0)) return;
+
+            var indexOfRecord = this.indexOfRecord - 1;
+            this.switchToModelByIndex(indexOfRecord);
+        },
+
+        actionNext: function () {
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
+            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
+                return;
+            }
+
+            var collection = this.model.collection;
+
+            var indexOfRecord = this.indexOfRecord + 1;
+            if (indexOfRecord <= collection.length - 1) {
+                this.switchToModelByIndex(indexOfRecord);
+            } else {
+                var initialCount = collection.length;
+
+                this.listenToOnce(collection, 'sync', function () {
+                    var model = collection.at(indexOfRecord);
+                    this.switchToModelByIndex(indexOfRecord);
+                }, this);
+                collection.fetch({
+                    more: true,
+                    remove: false,
+                });
             }
         },
 

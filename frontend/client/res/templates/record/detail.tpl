@@ -14,6 +14,18 @@
         </ul>
         {{/if}}
         </div>
+        {{#if nextPreviousButtonsEnabled}}
+        <div class="pull-right">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </button>
+                <button type="button" class="btn btn-default action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+            </div>
+        </div>
+        {{/if}}
     </div>
     <div class="detail-button-container button-container edit-buttons hidden">
         <div class="btn-group" role="group">
