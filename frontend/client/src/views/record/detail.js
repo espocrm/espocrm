@@ -338,6 +338,10 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                         }
                     }
                 }
+
+                if (!previousButtonEnabled && !nextButtonEnabled) {
+                    navigateButtonsEnabled = false;
+                }
             }
 
             return {
