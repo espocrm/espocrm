@@ -17,11 +17,13 @@
 @grid-gutter-width: 16px;
 @container-lg: @container-large-desktop;
 
+@container-padding: 15px;
+
 .container-fixed() {
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: @container-padding;
+  padding-right: @container-padding;
   .clearfix();
 }
 

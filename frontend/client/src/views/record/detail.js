@@ -90,6 +90,8 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
         editModeDisabled: false,
 
+        navigateButtonsDisabled: false,
+
         readOnly: false,
 
         isWide: false,
@@ -316,12 +318,11 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         data: function () {
-
-            var nextPreviousButtonsEnabled = !!this.model.collection;
+            var navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
 
             var previousButtonEnabled = false;
             var nextButtonEnabled = false;
-            if (nextPreviousButtonsEnabled) {
+            if (navigateButtonsEnabled) {
                 if (this.indexOfRecord > 0) {
                     previousButtonEnabled = true;
                 }
@@ -351,7 +352,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 id: this.id,
                 isWide: this.isWide,
                 isSmall: this.type == 'editSmall' || this.type == 'detailSmall',
-                nextPreviousButtonsEnabled: nextPreviousButtonsEnabled,
+                navigateButtonsEnabled: navigateButtonsEnabled,
                 previousButtonEnabled: previousButtonEnabled,
                 nextButtonEnabled: nextButtonEnabled
             }
@@ -444,6 +445,12 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             if (!this.inlineEditDisabled) {
                 if ('inlineEditDisabled' in this.options) {
                     this.inlineEditDisabled = this.options.inlineEditDisabled;
+                }
+            }
+
+            if (!this.navigateButtonsDisabled) {
+                if ('navigateButtonsDisabled' in this.options) {
+                    this.navigateButtonsDisabled = this.options.navigateButtonsDisabled;
                 }
             }
 

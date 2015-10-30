@@ -14,7 +14,7 @@
         </ul>
         {{/if}}
         </div>
-        {{#if nextPreviousButtonsEnabled}}
+        {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous">
