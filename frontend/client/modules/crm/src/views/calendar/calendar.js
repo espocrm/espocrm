@@ -332,7 +332,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         getCalculatedHeight: function () {
             var height = $(window).height();
             var width = $(window).width();
-            var spaceHeight = 140;
+            var spaceHeight = 150;
             if (width < 768) {
                 spaceHeight = 164;
             }
