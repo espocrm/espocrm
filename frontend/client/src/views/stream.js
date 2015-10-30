@@ -25,16 +25,26 @@ Espo.define('views/stream', 'view', function (Dep) {
 
         template: 'stream',
 
+        filterList: ['all', 'posts', 'updates'],
+
+        filter: 'all',
+
         events: {
             'click button[data-action="refresh"]': function () {
                 if (!this.hasView('list')) return;
                 this.getView('list').showNewRecords();
             },
+            'click button[data-action="selectFilter"]': function (e) {
+                var data = $(e.currentTarget).data();
+                this.actionSelectFilter(data);
+            },
         },
 
         data: function () {
             return {
-                displayTitle: this.options.displayTitle
+                displayTitle: this.options.displayTitle,
+                filterList: this.filterList,
+                filter: this.filter
             };
         },
 
@@ -72,6 +82,42 @@ Espo.define('views/stream', 'view', function (Dep) {
                 }, this);
                 collection.fetch();
             }, this);
+        },
+
+        actionSelectFilter: function (data) {
+            var name = data.name;
+
+            var filter = name;
+
+            if (name == 'all') {
+                filter = false;
+            }
+
+            this.setFilter(filter);
+
+            this.filterList.forEach(function (item) {
+                var $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="'+item+'"]');
+                if (item === name) {
+                    $el.addClass('active');
+                } else {
+                    $el.removeClass('active');
+                }
+            }, this);
+
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            this.listenToOnce(this.collection, 'sync', function () {
+                Espo.Ui.notify(false);
+            }, this);
+
+            this.collection.fetch();
+        },
+
+        setFilter: function (filter) {
+            this.collection.data.filter = null;
+            if (filter) {
+                this.collection.data.filter = filter;
+            }
         },
 
     });
