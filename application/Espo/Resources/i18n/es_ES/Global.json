@@ -35,13 +35,13 @@
         "InboundEmail": "Grupo de Cuentas de Correo",
         "Stream": "Stream",
         "Import": "Importar Resultados",
-        "Template": "Plantilla",
+        "Template": "Templates",
         "Job": "Trabajos",
         "EmailFilter": "Filtros de Correo"
     },
     "labels": {
         "Misc": "Misceláneos",
-        "Merge": "Fundir",
+        "Merge": "Unir",
         "None": "Ninguno",
         "by": "por",
         "Saved": "Guardado",
@@ -61,6 +61,7 @@
         "Unlinked": "Desenlazado",
         "Done": "Hecho",
         "Access denied": "Acceso denegado",
+        "Not found": "Not found",
         "Access": "Acceso",
         "Are you sure?": "¿Está seguro?",
         "Record has been removed": "Registro Eliminado",
@@ -90,8 +91,8 @@
         "Menu": "Menú",
         "More": "Más",
         "Search": "Buscar",
-        "Only My": "Solo Yo",
-        "Open": "Abrir",
+        "Only My": "Sólo míos",
+        "Open": "Abiertos",
         "Admin": "Administrador",
         "About": "Acerca",
         "Refresh": "Refrescar",
@@ -104,19 +105,19 @@
         "Preferences": "Preferencias",
         "State": "Estado/Distrito",
         "Street": "Calle",
-        "Country": "país",
+        "Country": "País",
         "City": "Ciudad",
         "PostalCode": "Código Postal",
-        "Followed": "Seguido",
+        "Followed": "Siguiendo",
         "Follow": "Seguir",
         "Followers": "Seguidores",
         "Clear Local Cache": "Borrar Cache Local",
         "Actions": "Acciones",
         "Delete": "Borrar",
-        "Update": "Actualización",
+        "Update": "Guardar",
         "Save": "Guardar",
         "Edit": "Editar",
-        "View": "Vista",
+        "View": "Ver",
         "Cancel": "Cancelar",
         "Apply": "Aplicar",
         "Unlink": "Desenlazar",
@@ -157,7 +158,7 @@
         "Close": "Cerrar",
         "Yes": "Si",
         "No": "No",
-        "View": "Vista",
+        "View": "Ver",
         "Select All Result": "Seleccionar todos los resultados",
         "Value": "Valor",
         "Current version": "Version Actual",
@@ -169,10 +170,12 @@
         "Default": "Por Defecto",
         "Number": "Número",
         "From": "De",
-        "To": "a"
+        "To": "Para",
+        "Create Post": "Crear entrada"
     },
     "messages": {
         "pleaseWait": "Por favor espere...",
+        "posting": "Publicando...",
         "confirmLeaveOutMessage": "¿Seguro que quieres salir del formulario?",
         "notModified": "Usted no ha modificado el registro",
         "duplicate": "El registro que está creando parece ser un duplicado",
@@ -205,24 +208,26 @@
         "noRecordsRemoved": "No records were removed",
         "clickToRefresh": "Clic para actualizar",
         "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]",
-        "writeYourCommentHere": "Escriba su comentario aquí"
+        "writeYourCommentHere": "Escriba su comentario aquí",
+        "writeMessageToUser": "Escribir un mensaje a {user}",
+        "writeMessageToSelf": "Escribir un mensaje a uno mismo"
     },
     "boolFilters": {
-        "onlyMy": "Solo Yo",
-        "followed": "Seguido"
+        "onlyMy": "Sólo míos",
+        "followed": "Siguiendo"
     },
     "presetFilters": {
-        "followed": "Seguido",
+        "followed": "Siguiendo",
         "all": "Todos"
     },
     "massActions": {
         "remove": "Remover",
-        "merge": "Fundir",
+        "merge": "Unir",
         "massUpdate": "Actualización Masiva",
         "export": "Exportar"
     },
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "firstName": "Primer Nombre",
         "lastName": "Apellidos",
         "salutationName": "Saludo",
@@ -232,7 +237,7 @@
         "teams": "Equipos",
         "createdAt": "Creado en",
         "modifiedAt": "Modificado el",
-        "createdBy": "Creado Por",
+        "createdBy": "Creado por",
         "modifiedBy": "Modificado Por",
         "description": "Descripción",
         "address": "Dirección",
@@ -248,7 +253,7 @@
     },
     "links": {
         "assignedUser": "Usuario Asignado",
-        "createdBy": "Creado Por",
+        "createdBy": "Creado por",
         "modifiedBy": "Modificado Por",
         "team": "Equipo",
         "roles": "Roles",
@@ -274,8 +279,22 @@
         "status": "{user} actualizado {field} en {entityType} {entity}",
         "update": "{user} actualizado {entityType} {entity}",
         "createRelated": "{user} creado {relatedEntityType} {relatedEntity} enlazado a {entityType} {entity}",
+        "postTargetTeam": "{user} publicó en equipo {target}",
+        "postTargetTeams": "{user} publicó en equipos {target}",
+        "postTarget": "{user} publicó en {target}",
+
+        "postTargetYou": "{user} publicado por usted",
+        "postTargetYouAndOthers": "{user} posted to {target} and you",
+        "postTargetAll": "{user} posted to all",
+        "postTargetSelf": "{user} posted to self",
+        "postTargetSelfAndOthers": "{user} posted to {target} and self",
 
         "mentionInPost": "{user} mencionado {mentioned} en {entityType} {entity}",
+        "mentionYouInPost": "{user} mentioned you in {entityType} {entity}",
+        "mentionInPostTarget": "{user} mentioned {mentioned} in post",
+        "mentionYouInPostTarget": "{user} mentioned you in post to {target}",
+        "mentionYouInPostTargetAll": "{user} mentioned you in post to all",
+        "mentionYouInPostTargetNoTarget": "{user} mentioned you in post",
 
         "createThis": "{user} crear este {entityType}",
         "createAssignedThis": "{user} crear este {entityType} asignado a {assignee}",
@@ -303,17 +322,17 @@
         "emailSentThis": "{by} envió un correo"
     },
     "lists": {
-        "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        "dayNamesMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+        "monthNames": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        "monthNamesShort": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        "dayNames": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+        "dayNamesShort": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+        "dayNamesMin": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
     },
     "options": {
         "salutationName": {
             "Mr.": "Sr.",
             "Mrs.": "Sra.",
-            "Ms.": "Sra.",
+            "Ms.": "Sta.",
             "Dr.": "Dr."
         },
         "language":     {

@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "account": "Cuenta",
@@ -14,7 +14,7 @@
         "description": "Descripción",
         "campaign": "Campaña",
         "targetLists": "Lista de Objetivos",
-        "targetList": "Lista de Objetivos"
+        "targetList": "Target List"
     },
     "links": {
         "opportunities": "Oportunidades",

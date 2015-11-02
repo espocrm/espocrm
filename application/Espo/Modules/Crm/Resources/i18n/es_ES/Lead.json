@@ -1,11 +1,11 @@
 {
     "labels": {
         "Converted To": "Convertido a",
-        "Create Lead": "Crear Principal",
+        "Create Lead": "Crear Potencial",
         "Convert": "Convertir"
     },
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "website": "Sito Web",
@@ -23,7 +23,7 @@
         "createdOpportunity": "Oportunidad",
         "campaign": "Campaña",
         "targetLists": "Lista de Objetivos",
-        "targetList": "Lista de Objetivos"
+        "targetList": "Target List"
     },
     "links": {
         "targetLists": "Lista de Objetivos",
@@ -38,7 +38,7 @@
             "New": "Nuevo",
             "Assigned": "Asignado",
             "In Process": "En Proceso",
-            "Converted": "Convertido",
+            "Converted": "Convertidos",
             "Recycled": "Reciclado",
             "Dead": "Muerto"
         },
@@ -56,6 +56,7 @@
     },
     "presetFilters": {
         "active": "Activo",
-        "converted": "Convertido"
+        "actual": "Actuales",
+        "converted": "Convertidos"
     }
 }

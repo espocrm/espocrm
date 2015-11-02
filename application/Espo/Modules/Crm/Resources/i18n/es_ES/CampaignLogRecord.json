@@ -4,14 +4,14 @@
         "actionDate": "Fecha",
         "data": "Datos",
         "campaign": "Campaña",
-        "parent": "Objetivo",
+        "parent": "Target",
         "object": "Objeto",
         "application": "Aplicacion",
         "queueItem": "Item de Cola"
     },
     "options": {
     	"action": {
-            "Sent": "Enviado",
+            "Sent": "Enviados",
             "Opened": "Abiertos",
             "Opted Out": "optado por no",
             "Bounced": "Rebotados",
@@ -23,7 +23,7 @@
         "All": "Todos"
     },
     "presetFilters": {
-        "sent": "Enviado",
+        "sent": "Enviados",
         "opened": "Abiertos",
         "optedOut": "optado por no",
         "bounced": "Rebotados",

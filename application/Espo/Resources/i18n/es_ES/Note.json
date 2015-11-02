@@ -1,11 +1,25 @@
 {
     "fields": {
         "post": "Entrada",
-        "attachments": "Adjuntos"
+        "attachments": "Adjuntos",
+        "targetType": "Target",
+        "teams": "Equipos",
+        "users": "Usuarios"
     },
     "filters": {
         "all": "Todos",
         "posts": "Entradas",
         "updates": "Actualizaciones"
+    },
+    "options": {
+        "targetType": {
+            "self": "To self",
+            "users": "To particular user(s)",
+            "teams": "To particular team(s)",
+            "all": "A todos los usuarios"
+        }
+    },
+    "messages": {
+        "writeMessage": "Write your message here"
     }
 }

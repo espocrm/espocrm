@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "number": "Número",
         "status": "Estado",
         "account": "Cuenta",
@@ -9,14 +9,14 @@
         "priority": "Prioridad",
         "type": "Tipo",
         "description": "Descripción",
-        "inboundEmail": "Correos Entrantes"
+        "inboundEmail": "Cuenta de Correo"
     },
     "links": {
-        "inboundEmail": "Correos Entrantes",
+        "inboundEmail": "Cuenta de Correo",
         "account": "Cuenta",
         "contact": "Contratos (Primaria)",
         "Contacts": "Contactos",
-        "meetings": "reuniones",
+        "meetings": "Reuniones",
         "calls": "Llamadas",
         "tasks": "Tareas",
         "emails": "Correos"
@@ -26,7 +26,7 @@
             "New": "Nuevo",
             "Assigned": "Asignado",
             "Pending": "Pendiente",
-            "Closed": "Cerrado",
+            "Closed": "Cerrados",
             "Rejected": "Rechazado",
             "Duplicate": "Duplicar"
         },
@@ -46,11 +46,11 @@
         "Create Case": "Crear Caso",
         "Close": "Cerrar",
         "Reject": "Rechazar",
-        "Closed": "Cerrado",
+        "Closed": "Cerrados",
         "Rejected": "Rechazado"
     },
     "presetFilters": {
-        "open": "Abrir",
-        "closed": "Cerrado"
+        "open": "Abiertos",
+        "closed": "Cerrados"
     }
 }

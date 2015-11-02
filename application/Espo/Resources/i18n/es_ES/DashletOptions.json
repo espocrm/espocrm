@@ -1,12 +1,13 @@
 {
     "fields": {
         "title": "Título",
-        "dateFrom": "Fecha de",
-        "dateTo": "Fecha Para",
-        "autorefreshInterval": "Intervalo de Auto-Refrescar",
+        "dateFrom": "Fecha desde",
+        "dateTo": "Fecha hasta",
+        "autorefreshInterval": "Actualizar cada:",
         "displayRecords": "Mostrar Registros",
         "isDoubleHeight": "Altitud 2x",
-        "mode": "Modo"
+        "mode": "Modo",
+        "enabledScopeList": "Qué mostrar"
     },
     "options": {
     	"mode": {

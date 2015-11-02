@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "description": "Descripción",
         "status": "Estado",
         "type": "Tipo",
@@ -8,7 +8,7 @@
         "endDate": "Fecha de Fin",
         "targetLists": "Lista de Objetivos",
         "excludingTargetLists": "Lista de Objetivos Excluídos",
-        "sentCount": "Enviado",
+        "sentCount": "Enviados",
         "openedCount": "Abiertos",
         "clickedCount": "Cliqueados",
         "optedOutCount": "optado por no",
@@ -44,7 +44,7 @@
             "Planning": "Planificación",
             "Active": "Activo",
             "Inactive": "Inactivo",
-            "Complete": "Completo"
+            "Complete": "Completada"
         }
     },
     "labels": {
@@ -60,5 +60,9 @@
     },
     "messages": {
         "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo."
+    },
+    "tooltips": {
+        "targetLists": "Targets that should receive messages.",
+        "excludingTargetLists": "Targets that should not receive messages."
     }
 }

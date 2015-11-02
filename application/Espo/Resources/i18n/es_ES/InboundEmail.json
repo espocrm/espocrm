@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "emailAddress": "Correo Electrónico",
         "team": "Equipo",
         "status": "Estado",
