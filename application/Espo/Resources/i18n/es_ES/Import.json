@@ -19,8 +19,8 @@
         "Create and Update": "Crear y Actualizar",
         "Update Only": "Sólo actualizar",
         "Update by": "Actualizado por",
-        "Set as Not Duplicate": "Set as Not Duplicate",
-        "File (CSV)": "File (CSV)"
+        "Set as Not Duplicate": "Establecer como No Duplicado",
+        "File (CSV)": "Archivo (CSV)"
     },
     "messages": {
         "utf8": "Debe ser codificado en UTF-8",

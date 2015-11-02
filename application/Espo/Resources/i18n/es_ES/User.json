@@ -20,7 +20,7 @@
     "links": {
         "teams": "Equipos",
         "roles": "Roles",
-        "notes": "Notes"
+        "notes": "Notas"
     },
     "labels": {
         "Create User": "Crear Usuario",
@@ -47,7 +47,7 @@
         "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
         "accountInfoEmailSubject": "Información Cuenta",
         "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Change Password Request",
+        "passwordChangeLinkEmailSubject": "Solicitud de Cambio de Contraseña",
         "passwordChangeLinkEmailBody": "Usted puede cambiar su contraseña a través este enlace {link}. Esta url única expirará pronto.",
         "passwordChanged": "La Contraseña ha sido cambiada",
         "userCantBeEmpty": "El nombre de usuario no puede estar vacío",

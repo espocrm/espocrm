@@ -3,7 +3,7 @@
         "Account": "Cuenta",
         "Contact": "Contacto",
         "Lead": "Potencial",
-        "Target": "Target",
+        "Target": "Objetivo",
         "Opportunity": "Oportunidad",
         "Meeting": "Reunión",
         "Calendar": "Calendario",
@@ -13,7 +13,7 @@
         "Document": "Documento",
         "DocumentFolder": "Carpeta de Documento",
         "Campaign": "Campaña",
-        "TargetList": "Target List",
+        "TargetList": "Lista de Objetivos",
         "MassEmail": "Email Masivo",
         "EmailQueueItem": "Item en Cola de Correo",
         "CampaignTrackingUrl": "URL de seguimiento"

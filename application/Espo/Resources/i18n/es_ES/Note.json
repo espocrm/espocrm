@@ -2,7 +2,7 @@
     "fields": {
         "post": "Entrada",
         "attachments": "Adjuntos",
-        "targetType": "Target",
+        "targetType": "Objetivo",
         "teams": "Equipos",
         "users": "Usuarios"
     },
@@ -13,13 +13,13 @@
     },
     "options": {
         "targetType": {
-            "self": "To self",
-            "users": "To particular user(s)",
-            "teams": "To particular team(s)",
+            "self": "Para mí",
+            "users": "Para determinado/s usuario/s",
+            "teams": "Para determinado/s equipo/s",
             "all": "A todos los usuarios"
         }
     },
     "messages": {
-        "writeMessage": "Write your message here"
+        "writeMessage": "Escriba su mensaje aquí"
     }
 }

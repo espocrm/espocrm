@@ -4,7 +4,7 @@
         "actionDate": "Fecha",
         "data": "Datos",
         "campaign": "Campaña",
-        "parent": "Target",
+        "parent": "Objetivo",
         "object": "Objeto",
         "application": "Aplicacion",
         "queueItem": "Item de Cola"

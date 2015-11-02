@@ -62,7 +62,7 @@
         "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo."
     },
     "tooltips": {
-        "targetLists": "Targets that should receive messages.",
-        "excludingTargetLists": "Targets that should not receive messages."
+        "targetLists": "Los objetivos que deben recibir los mensajes.",
+        "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
     }
 }
