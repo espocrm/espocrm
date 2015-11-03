@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "emailAddress": "Correo electrónico",
         "website": "Sito Web",
         "phoneNumber": "Teléfono",
@@ -40,6 +40,7 @@
             "Automotive": "Automotriz",
             "Banking": "Banca",
             "Biotechnology": "Biotecnolodía",
+            "Building Materials & Equipment": "Materiales de construcción y equipamiento",
             "Chemical": "Química",
             "Computer": "Computación",
             "Education": "Educación",
