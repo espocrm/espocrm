@@ -95,7 +95,7 @@ class Notifications extends \Espo\Core\Hooks\Base
 
     public function afterSave(Entity $entity, array $options = array())
     {
-        if (!empty($options['silent']) && !empty($options['noNotifications'])) {
+        if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
         }
 
@@ -111,7 +111,7 @@ class Notifications extends \Espo\Core\Hooks\Base
 
     public function beforeRemove(Entity $entity, array $options = array())
     {
-        if (!empty($options['silent']) && !empty($options['noNotifications'])) {
+        if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
         }
 

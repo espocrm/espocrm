@@ -180,7 +180,7 @@ class Stream extends \Espo\Core\Hooks\Base
                     $this->getStreamService()->followEntityMass($entity, $userIdList);
                 }
 
-                if (empty($options['noStream'])) {
+                if (empty($options['noStream']) && empty($options['silent'])) {
                     $this->getStreamService()->noteCreate($entity);
                 }
 
@@ -211,7 +211,7 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
 
             } else {
-                if (empty($options['noStream'])) {
+                if (empty($options['noStream']) && empty($options['silent'])) {
                     if ($entity->isFieldChanged('assignedUserId')) {
                         $assignedUserId = $entity->get('assignedUserId');
                         if (!empty($assignedUserId)) {
@@ -239,7 +239,7 @@ class Stream extends \Espo\Core\Hooks\Base
 
         }
 
-        if ($entity->isNew() && empty($options['noStream']) && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
+        if ($entity->isNew() && empty($options['noStream']) && empty($options['silent']) && $this->getMetadata()->get("scopes.{$entityName}.tab")) {
             $this->handleCreateRelated($entity);
         }
     }
