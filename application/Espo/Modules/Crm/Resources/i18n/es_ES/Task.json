@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "parent": "Padre",
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",
@@ -34,12 +34,12 @@
     },
     "labels": {
         "Create Task": "Crear Tarea",
-        "Complete": "Completo"
+        "Complete": "Completada"
     },
     "presetFilters": {
-        "actual": "Actual",
+        "actual": "Actuales",
         "completed": "Completado",
         "todays": "De Hoy",
-        "overdue": "Con Atraso"
+        "overdue": "Atrazadas"
     }
 }

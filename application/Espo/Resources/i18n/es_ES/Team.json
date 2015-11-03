@@ -1,11 +1,13 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "roles": "Roles",
         "positionList": "Lista de Posiciones"
     },
     "links": {
-        "users": "Usuarios"
+        "users": "Usuarios",
+        "notes": "Notas",
+        "roles": "Roles"
     },
     "tooltips": {
         "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados",

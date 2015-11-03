@@ -1,8 +1,8 @@
 {
     "fields": {
         "from": "De",
-        "to": "a",
-        "subject": "Sujeto",
+        "to": "Para",
+        "subject": "Asunto",
         "bodyContains": "Contenido del Cuerpo"
     },
     "labels": {

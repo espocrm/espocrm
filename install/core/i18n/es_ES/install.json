@@ -1,7 +1,7 @@
 {
 	"labels": {
 		"Main page title": "Bienvenido a EspoCRM(Español)",
-		"Main page header": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-10-10 14:36-0300\nLast-Translator: Mauricio Panuncio <m@panuweb.com>\nLanguage-Team: Español; Castellano <>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\nX-Generator: Gtranslator 2.91.6\n",
+		"Main page header": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-11-02 18:46-0300\nLast-Translator: Mauricio Panuncio <m@panuweb.com>\nLanguage-Team: es_ES <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nX-Generator: Gtranslator 2.91.7\n",
 		"Start page title": "Contrato de licencia",
 		"Step1 page title": "Contrato de licencia",
 		"License Agreement": "Contrato de licencia",
@@ -120,7 +120,7 @@
 				"windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas dis líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea LoadModule rewrite_module modules/mod_rewrite.so (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>"
 			},
 			"microsoft-iis": {
-				"windows": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-10-10 14:36-0300\nLast-Translator: Mauricio Panuncio <m@panuweb.com>\nLanguage-Team: Español; Castellano <>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\nX-Generator: Gtranslator 2.91.6\n"
+				"windows": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-11-02 18:46-0300\nLast-Translator: Mauricio Panuncio <m@panuweb.com>\nLanguage-Team: es_ES <infobox@espocrm.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nX-Generator: Gtranslator 2.91.7\n"
 			}
 		},
 		"modRewriteHelp": {

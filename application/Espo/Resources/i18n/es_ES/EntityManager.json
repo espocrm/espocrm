@@ -4,7 +4,7 @@
         "Relationships": "Relaciones"
     },
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "type": "Tipo",
         "labelSingular": "Etiqueta en Singular",
         "labelPlural": "Etiqueta en Plural",

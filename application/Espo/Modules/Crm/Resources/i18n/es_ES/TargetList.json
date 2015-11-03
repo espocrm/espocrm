@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "description": "Descripción",
         "entryCount": "Contador de entrada",
         "campaigns": "Campañas",

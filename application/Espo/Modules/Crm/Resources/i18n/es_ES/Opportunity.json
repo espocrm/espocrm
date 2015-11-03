@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "account": "Cuenta",
         "stage": "Etapa",
         "amount": "Cantidad",
@@ -37,8 +37,8 @@
         "Create Opportunity": "Crear Oportunidad"
     },
     "presetFilters": {
-        "open": "Abrir",
-        "won": "Ganado",
+        "open": "Abiertos",
+        "won": "Ganados",
         "lost": "Perdido"
     }
 }

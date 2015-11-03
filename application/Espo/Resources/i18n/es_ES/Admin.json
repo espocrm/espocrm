@@ -98,7 +98,7 @@
     },
     "fields": {
         "type": "Tipo",
-        "name": "Asunto",
+        "name": "Nombre",
         "label": "Etiqueta",
         "required": "Requerido",
         "default": "Por Defecto",
