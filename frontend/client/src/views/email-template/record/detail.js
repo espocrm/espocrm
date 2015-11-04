@@ -46,9 +46,7 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
                     $body = this.$el.find('[name="body"]');
 
                     if (this.model.get('isHtml')) {
-                        var code = $body.summernote().code();
-                        code += tag;
-                        $body.summernote().code(code);
+                        $body.summernote('insertText', tag);
                     } else {
                         var text = $body.val();
                         text += tag;
