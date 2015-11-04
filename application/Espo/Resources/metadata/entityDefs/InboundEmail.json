@@ -40,6 +40,10 @@
             "default": "INBOX",
             "view": "InboundEmail.Fields.Folders"
         },
+        "fetchSince": {
+            "type": "date",
+            "required": true
+        },
         "fetchData": {
             "type": "text",
             "readOnly": true

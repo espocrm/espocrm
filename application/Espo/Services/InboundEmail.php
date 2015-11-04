@@ -235,7 +235,16 @@ class InboundEmail extends \Espo\Services\Record
                 $lastDate = $fetchData['lastDate'][$folder];
             }
 
-            $ids = $storage->getIdsFromUID($lastUID);
+            if (!empty($lastUID)) {
+                $ids = $storage->getIdsFromUID($lastUID);
+            } else {
+                $dt = new \DateTime($emailAccount->get('fetchSince'));
+                if ($dt) {
+                    $ids = $storage->getIdsFromDate($dt->format('d-M-Y'));
+                } else {
+                    return false;
+                }
+            }
 
             if ((count($ids) == 1) && !empty($lastUID)) {
                 if ($storage->getUniqueId($ids[0]) == $lastUID) {

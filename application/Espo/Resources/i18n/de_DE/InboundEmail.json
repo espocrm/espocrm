@@ -19,7 +19,8 @@
         "replyFromAddress": "Von Adresse antworten",
         "replyToAddress": "Antwort an Adresse",
         "replyFromName": "Von Name antworten",
-        "targetUserPosition": "Position Zielbenutzer"
+        "targetUserPosition": "Position Zielbenutzer",
+        "fetchSince": "Holen seit"
     },
     "tooltips": {
         "reply": "E-Mail Absender informieren, dass die E-Mail empfangen wurde.\n\nEs wird pro Zeitabschnitt nur eine E-Mail an einen bestimmten Empfänger gesendet um Schleifen zu vermeiden.",

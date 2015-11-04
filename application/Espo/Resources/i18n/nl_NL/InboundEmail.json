@@ -19,7 +19,8 @@
         "replyFromAddress": "Reply From Address",
         "replyToAddress": "Reply To Address",
         "replyFromName": "Reply From Name",
-        "targetUserPosition": "Target User Position"
+        "targetUserPosition": "Target User Position",
+        "fetchSince": "Opgehaald Vanaf"
     },
     "tooltips": {
         "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",

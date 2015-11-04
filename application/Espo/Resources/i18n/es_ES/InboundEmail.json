@@ -19,7 +19,8 @@
         "replyFromAddress": "Respuesta de la Dirección",
         "replyToAddress": "Responder a la Dirección",
         "replyFromName": "Respuesta de Nombre",
-        "targetUserPosition": "Objetivo Posición Usuario"
+        "targetUserPosition": "Objetivo Posición Usuario",
+        "fetchSince": "Traer Desde"
     },
     "tooltips": {
         "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",

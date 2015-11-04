@@ -18,7 +18,8 @@
         "replyFromAddress": "Répondre depuis l'adresse",
         "replyToAddress": "Répondre à l'adresse",
         "replyFromName": "Répondre au nom de",
-        "targetUserPosition": "Position de l'utilisateur cible"
+        "targetUserPosition": "Position de l'utilisateur cible",
+        "fetchSince": "Apporté depuis"
     },
     "tooltips": {
         "reply": "Avertissez les expéditeurs par courrier électronique que leurs e-mails ont été reçus.",
