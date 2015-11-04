@@ -17,7 +17,8 @@
         },
         "host": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "port": {
             "type": "varchar",
@@ -29,7 +30,8 @@
         },
         "username": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "password": {
             "type": "password"
