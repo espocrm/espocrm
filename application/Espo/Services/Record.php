@@ -74,6 +74,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $exportSkipFieldList = array();
 
+    protected $exportAdditionalFieldList = array();
+
     const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
@@ -270,6 +272,10 @@ class Record extends \Espo\Core\Services\Base
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
+    }
+
+    public function loadAdditionalFieldsForExport(Entity $entity)
+    {
     }
 
     protected function loadEmailAddressField(Entity $entity)
@@ -980,29 +986,33 @@ class Record extends \Espo\Core\Services\Base
             $fieldListToSkip[] = $field;
         }
 
-        $fields = null;
+        $fieldList = null;
         foreach ($collection as $entity) {
-            if (empty($fields)) {
-                $fields = array();
+            if (empty($fieldList)) {
+                $fieldList = [];
                 foreach ($entity->getFields() as $field => $defs) {
                     if (in_array($field, $fieldListToSkip)) {
                         continue;
                     }
 
                     if (empty($defs['notStorable'])) {
-                        $fields[] = $field;
+                        $fieldList[] = $field;
                     } else {
-                        if (in_array($defs['type'], array('email', 'phone'))) {
-                            $fields[] = $field;
+                        if (in_array($defs['type'], ['email', 'phone'])) {
+                            $fieldList[] = $field;
                         } else if ($defs['name'] == 'name') {
-                            $fields[] = $field;
+                            $fieldList[] = $field;
                         }
                     }
+                }
+                foreach ($this->exportAdditionalFieldList as $field) {
+                    $fieldList[] = $field;
                 }
             }
 
             $row = array();
-            foreach ($fields as $field) {
+            foreach ($fieldList as $field) {
+                $this->loadAdditionalFieldsForExport($entity);
                 $value = $this->getFieldFromEntityForExport($entity, $field);
                 $row[$field] = $value;
             }
@@ -1042,6 +1052,11 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getFieldFromEntityForExport(Entity $entity, $field)
     {
+        $methodName = 'getField' . ucfirst($field). 'FromEntityForExport';
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($entity);
+        }
+
         $defs = $entity->getFields();
         if (!empty($defs[$field]) && !empty($defs[$field]['type'])) {
             $type = $defs[$field]['type'];
