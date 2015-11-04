@@ -34,14 +34,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         /**
          * @param {String} Type of the list. Can be 'list', 'listSmall'.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         type: 'list',
 
         name: 'list',
@@ -50,26 +43,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         /**
          * @param {Bool} If true checkboxes will be shown.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         checkboxes: true,
 
         /**
          * @param {Bool} If true clicking on the record link will trigger 'select' event with model passed.
-        *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         selectable: false,
 
         rowActionsView: 'views/record/row-actions/default',
@@ -190,26 +169,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         /**
          * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         pagination: false,
 
         /**
          * @param {bool} To dispaly table header with column names.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         header: true,
 
         showMore: true,
@@ -233,13 +198,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         /**
          * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
          *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         listLayout: null,
 
         _internalLayout: null,
