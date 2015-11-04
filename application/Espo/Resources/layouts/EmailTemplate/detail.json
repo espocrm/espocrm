@@ -12,7 +12,8 @@
             [
                 {
                     "name":"insertField",
-                    "view": "EmailTemplate.Fields.InsertField",
+                    "view": "views/email-template/fields/insert-field",
+                    "customLabel": "",
                     "fullWidth":true
                 }
             ],
