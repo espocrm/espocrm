@@ -1010,9 +1010,9 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
+            $this->loadAdditionalFieldsForExport($entity);
             $row = array();
             foreach ($fieldList as $field) {
-                $this->loadAdditionalFieldsForExport($entity);
                 $value = $this->getFieldFromEntityForExport($entity, $field);
                 $row[$field] = $value;
             }
