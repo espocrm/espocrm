@@ -17,6 +17,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 /**
@@ -101,7 +108,14 @@ Espo.define('controller', [], function () {
          * Get parameter of all controllers.
          * @param key
          * @return null if doesn't exist.
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         get: function (key) {
             if (key in this.params) {
                 return this.params[key];
@@ -113,7 +127,14 @@ Espo.define('controller', [], function () {
          * Set paramer for all controllers.
          * @param key Name of view.
          * @param value.
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         set: function (key, value) {
             this.params[key] = value;
         },
@@ -196,7 +217,14 @@ Espo.define('controller', [], function () {
         /**
          * Create master view, render it if not rendered and return it.
          * @param {Function} callback Master view will be argument for this.
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         master: function (callback) {
             var entire = this.get('entire');
             if (entire) {
@@ -226,7 +254,14 @@ Espo.define('controller', [], function () {
          * @param {String} view Name of view.
          * @param {Object} options Options for view.
          * @return {view}
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         main: function (view, options, callback, useStored, storedKey) {
             var view = view || 'Base';
             var master = this.master(function (master) {
@@ -297,7 +332,14 @@ Espo.define('controller', [], function () {
          * @param {String} view Name of view.
          * @param {Object} options Options for view.
          * @return {Espo.View}
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         entire: function (view, options, callback) {
             var master = this.get('master');
             if (master) {

@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication;
@@ -37,7 +44,14 @@ class LDAP extends Base
      * Espo => LDAP name
      *
      * @var array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     private $fields = array(
         'userName' => 'cn',
         'firstName' => 'givenname',
@@ -73,7 +87,14 @@ class LDAP extends Base
      * @param  string $password
      * @param  \Espo\Entities\AuthToken $authToken
      * @return \Espo\Entities\User | null
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
     {
         if ($authToken) {
@@ -112,7 +133,14 @@ class LDAP extends Base
 
         $isCreateUser = $this->getUtils()->getOption('createEspoUser');
         if (!isset($user) && $isCreateUser) {
-            $this->getAuth()->useNoAuth(); /** Required to fix Acl "isFetched()" error */
+            $this->getAuth()->useNoAuth(); /** Required to fix Acl "isFetched()" error *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
             $user = $this->createUser($userData);
         }
 
@@ -125,7 +153,14 @@ class LDAP extends Base
      * @param  string $username
      * @param  \Espo\Entities\AuthToken $authToken
      * @return \Espo\Entities\User | null
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function loginByToken($username, \Espo\Entities\AuthToken $authToken = null)
     {
         if (!isset($authToken)) {
@@ -156,7 +191,14 @@ class LDAP extends Base
      * @param  string $username
      * @param  string $password
      * @return \Espo\Entities\User | null
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function adminLogin($username, $password)
     {
         $hash = $this->getPasswordHash()->hash($password);
@@ -177,7 +219,14 @@ class LDAP extends Base
      *
      * @param  array $userData LDAP entity data
      * @return \Espo\Entities\User
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function createUser(array $userData)
     {
         $data = array();

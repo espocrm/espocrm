@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils;
@@ -32,7 +39,14 @@ class Layout
 
     /**
      * @var string - uses for loading default values
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     private $name = 'layout';
 
     protected $params = array(
@@ -42,7 +56,14 @@ class Layout
 
     /**
      * @var array - path to layout files
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     private $paths = array(
         'corePath' => 'application/Espo/Resources/layouts',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',
@@ -78,7 +99,14 @@ class Layout
      * @param $name
      *
      * @return json
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function get($scope, $name)
     {
         $scope = $this->sanitizeInput($scope);
@@ -116,7 +144,14 @@ class Layout
      * @param string $name - detail
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function set($data, $scope, $name)
     {
         $scope = $this->sanitizeInput($scope);
@@ -148,7 +183,14 @@ class Layout
      * Save changes
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function save()
     {
         $result = true;
@@ -180,7 +222,14 @@ class Layout
      * Clear unsaved changes
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function clearChanges()
     {
         $this->changedData = array();
@@ -195,7 +244,14 @@ class Layout
      * @param string $name - detail
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function merge($data, $scope, $name)
     {
         $scope = $this->sanitizeInput($scope);
@@ -219,7 +275,14 @@ class Layout
      * @param bool $isCustom - if need to check custom folder
      *
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getLayoutPath($entityName, $isCustom = false)
     {
         $path = $this->paths['customPath'];

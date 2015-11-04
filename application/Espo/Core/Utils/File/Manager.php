@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
@@ -59,7 +66,14 @@ class Manager
      * @param bool $isReturnSingleArray - if need to return a single array of file list
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getFileList($path, $recursively = false, $filter = '', $onlyFileType = null, $isReturnSingleArray = false)
     {
         $path = $this->concatPaths($path);
@@ -118,7 +132,14 @@ class Manager
      * @param string $parentDirName
      *
      * @return aray
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getSingeFileList(array $fileList, $onlyFileType = null, $parentDirName = '')
     {
         $singleFileList = array();
@@ -154,7 +175,14 @@ class Manager
      * @param  integer $offset
      * @param  integer $maxlen
      * @return mixed
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getContents($path, $useIncludePath = false, $context = null, $offset = -1, $maxlen = null)
     {
         $fullPath = $this->concatPaths($path);
@@ -175,7 +203,14 @@ class Manager
      *
      * @param  string | array $path
      * @return array | bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getPhpContents($path)
     {
         $fullPath = $this->concatPaths($path);
@@ -199,7 +234,14 @@ class Manager
      * @param  resource  $context
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function putContents($path, $data, $flags = 0, $context = null)
     {
         $fullPath = $this->concatPaths($path); //todo remove after changing the params
@@ -223,7 +265,14 @@ class Manager
      * @param string $data
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function putPhpContents($path, $data)
     {
         return $this->putContents($path, $this->getPHPFormat($data), LOCK_EX);
@@ -238,7 +287,14 @@ class Manager
      * @param  resource  $context
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function putContentsJson($path, $data)
     {
         if (!Utils\Json::isJSON($data)) {
@@ -258,7 +314,14 @@ class Manager
      * @param bool $isPhp - Is merge php files
      *
      * @return bool | array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function mergeContents($path, $content, $isReturnJson = false, $removeOptions = null, $isPhp = false)
     {
         if ($isPhp) {
@@ -300,7 +363,14 @@ class Manager
      * @param string $content JSON string
      * @param string | array $removeOptions - List of unset keys from content
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function mergePhpContents($path, $content, $removeOptions = null)
     {
         return $this->mergeContents($path, $content, false, $removeOptions, true);
@@ -313,7 +383,14 @@ class Manager
      * @param mixed $data
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function appendContents($path, $data)
     {
         return $this->putContents($path, $data, FILE_APPEND | LOCK_EX);
@@ -325,7 +402,14 @@ class Manager
      * @param  string | array $path
      * @param  array | string $unsets
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function unsetContents($path, $unsets, $isJSON = true)
     {
         $currentData = $this->getContents($path);
@@ -355,7 +439,14 @@ class Manager
      * Concat paths
      * @param  string | array  $paths Ex. array('pathPart1', 'pathPart2', 'pathPart3')
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function concatPaths($paths)
     {
         if (is_string($paths)) {
@@ -378,7 +469,14 @@ class Manager
      * @param  bool $recursive
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function mkdir($path, $permission = null, $recursive = false)
     {
         $fullPath = $this->concatPaths($path);
@@ -421,7 +519,14 @@ class Manager
      * @param  array $fileList - list of files that should be copied
      * @param  boolean $copyOnlyFiles - copy only files, instead of full path with directories, Ex. $sourcePath = 'data/uploads/extensions/file.json', $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'
      * @return boolen
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function copy($sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false)
     {
         $sourcePath = $this->concatPaths($sourcePath);
@@ -437,7 +542,14 @@ class Manager
             $fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', true, true);
         }
 
-        /** Check permission before copying */
+        /** Check permission before copying *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         $permissionDeniedList = array();
         foreach ($fileList as $file) {
 
@@ -455,7 +567,14 @@ class Manager
                 $this->removeFile($destFile);
             }
         }
-        /** END */
+        /** END *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
 
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
@@ -485,7 +604,14 @@ class Manager
      *
      * @param string $filePath
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function checkCreateFile($filePath)
     {
         $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
@@ -520,7 +646,14 @@ class Manager
      *
      * @param array $filePaths - File paths list
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function unlink($filePaths)
     {
         return $this->removeFile($filePaths);
@@ -548,7 +681,14 @@ class Manager
      * @param array $filePaths - File paths list
      * @param string $dirPath - directory path
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function removeFile($filePaths, $dirPath = null)
     {
         if (!is_array($filePaths)) {
@@ -576,7 +716,14 @@ class Manager
      * @param bool $removeWithDir - if remove with directory
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function removeInDir($dirPath, $removeWithDir = false)
     {
         $fileList = $this->getFileList($dirPath, false);
@@ -606,7 +753,14 @@ class Manager
      * @param  string | array $items
      * @param  string $dirPath
      * @return boolean
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function remove($items, $dirPath = null, $removeEmptyDirs = false)
     {
         if (!is_array($items)) {
@@ -655,7 +809,14 @@ class Manager
      * Remove empty parent directories if they are empty
      * @param  string $path
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function removeEmptyDirs($path)
     {
         $parentDirName = $this->getParentDirName($path);
@@ -674,7 +835,14 @@ class Manager
      *
      * @param  string  $dirname
      * @return boolean
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function isDir($dirname)
     {
         return is_dir($dirname);
@@ -685,7 +853,14 @@ class Manager
      *
      * @param  string  $filename
      * @return boolean
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function isFile($filename)
     {
         if (file_exists($filename)) {
@@ -704,7 +879,14 @@ class Manager
      * Check if directory is empty
      * @param  string  $path
      * @return boolean
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function isDirEmpty($path)
     {
         if (is_dir($path)) {
@@ -725,7 +907,14 @@ class Manager
      * @param string $ext - extension, ex. '.json'
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getFileName($fileName, $ext='')
     {
         if (empty($ext)) {
@@ -753,7 +942,14 @@ class Manager
      * @param bool $isFullPath
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getDirName($path, $isFullPath = true, $useIsDir = true)
     {
         $dirName = preg_replace('/\/$/i', '', $path);
@@ -773,7 +969,14 @@ class Manager
      * @param  string  $path
      * @param  boolean $isFullPath
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getParentDirName($path, $isFullPath = true)
     {
         return $this->getDirName($path, $isFullPath, false);
@@ -786,7 +989,14 @@ class Manager
      * @param array $content
      *
      * @return string | false
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getPHPFormat($content)
     {
         if (!isset($content)) {
@@ -806,7 +1016,14 @@ return '.var_export($content, true).';
      * @param  array   $paths
      *
      * @return boolean
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function isWritableList(array $paths)
     {
         $permissionDeniedList = array();
@@ -831,7 +1048,14 @@ return '.var_export($content, true).';
      * Get last permission denied list
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getLastPermissionDeniedList()
     {
         return $this->permissionDeniedList;
@@ -843,7 +1067,14 @@ return '.var_export($content, true).';
      * @param  string | array  $path
      *
      * @return boolean
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function isWritable($path)
     {
         $existFile = $this->getExistsPath($path);
@@ -857,7 +1088,14 @@ return '.var_export($content, true).';
      * @param  string | array $path
      *
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getExistsPath($path)
     {
         $fullPath = $this->concatPaths($path);

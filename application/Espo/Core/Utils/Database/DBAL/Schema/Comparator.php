@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
@@ -60,14 +67,28 @@ class Comparator extends \Doctrine\DBAL\Schema\Comparator
             $length1 = $column1->getLength() ?: 255;
             $length2 = $column2->getLength() ?: 255;
 
-            /** Espo: column length can be increased only */
+            /** Espo: column length can be increased only *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
             /*if ($length1 != $length2) {
                 $changedProperties[] = 'length';
             }*/
             if ($length2 > $length1) {
                 $changedProperties[] = 'length';
             }
-            /** Espo: end */
+            /** Espo: end *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
 
             if ($column1->getFixed() != $column2->getFixed()) {
                 $changedProperties[] = 'fixed';

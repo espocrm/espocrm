@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema;
@@ -81,7 +88,14 @@ class Converter
      * @param  boolean $reload
      *
      * @return \Doctrine\DBAL\Schema\Schema
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getSchema($reload = false)
     {
         if (!isset($this->dbalSchema) || $reload) {
@@ -98,7 +112,14 @@ class Converter
      * @param  array|null $entityList
      *
      * @return \Doctrine\DBAL\Schema\Schema
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function process(array $ormMeta, $entityList = null)
     {
         $GLOBALS['log']->debug('Schema\Converter - Start: building schema');
@@ -154,7 +175,14 @@ class Converter
                 }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
-                $fieldType = strtolower($fieldType); /** doctrine uses strtolower for all field types */
+                $fieldType = strtolower($fieldType); /** doctrine uses strtolower for all field types *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
                 if (!in_array($fieldType, $this->typeList)) {
                     $GLOBALS['log']->debug('Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
                     continue;
@@ -242,7 +270,14 @@ class Converter
      * @param array $tables
      *
      * @return \Doctrine\DBAL\Schema\Table
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function prepareManyMany($entityName, $relationParams, $tables)
     {
         $tableName = Util::toUnderScore($relationParams['relationName']);
@@ -338,7 +373,14 @@ class Converter
      * @param  string $columnName Column name (underscore field name)
      * @param  bool | string $keyValue
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getKeyList($columnName, $keyValue, array $keyList)
     {
         if ($keyValue === true) {
@@ -356,7 +398,14 @@ class Converter
      * @param  array  $ormMeta
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getCustomTables(array $ormMeta)
     {
         $customTables = array();
@@ -414,7 +463,14 @@ class Converter
      * Generate index name
      *
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function generateIndexName($name, $entityName)
     {
         $names = array(

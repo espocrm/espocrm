@@ -17,6 +17,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
@@ -38,7 +45,14 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
         /**
          * @property {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display buttons.
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         buttonsPosition: 'top',
 
         columnCount: 2,
@@ -798,7 +812,14 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
          * Called after save or cancel.
          * By default redirects page. Can be orverriden in options.
          * @param {String} after Name of action (save, cancel, etc.) after which #exit is invoked.
-         */
+         *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         exit: function (after) {
             var url;
             if (this.returnUrl) {

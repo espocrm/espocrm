@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Extension;
@@ -32,7 +39,14 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
      * Get entity of this extension
      *
      * @return \Espo\Entities\Extension
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getExtensionEntity()
     {
         if (!isset($this->extensionEntity)) {
@@ -48,7 +62,14 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
 
     protected function afterRunAction()
     {
-        /** Delete extension entity */
+        /** Delete extension entity *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         $extensionEntity = $this->getExtensionEntity();
         $this->getEntityManager()->removeEntity($extensionEntity);
     }

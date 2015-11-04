@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema;
@@ -56,7 +63,14 @@ class Schema
     /**
      * Paths of rebuild action folders
      * @var array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected $rebuildActionsPath = array(
         'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
         'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',
@@ -69,7 +83,14 @@ class Schema
      *      'afterRebuild' => array(...),
      *  )
      * @var array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected $rebuildActionClasses = null;
 
 
@@ -180,7 +201,14 @@ class Schema
 
     /*
      * Rebuild database schema
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function rebuild($entityList = null)
     {
         if ($this->getConverter()->process() === false) {
@@ -217,7 +245,14 @@ class Schema
     * Get current database schema
     *
     * @return \Doctrine\DBAL\Schema\Schema
-    */
+    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getCurrentSchema()
     {
         return $this->getConnection()->getSchemaManager()->createSchema();
@@ -229,7 +264,14 @@ class Schema
     * @params \Doctrine\DBAL\Schema\Schema $schema
     *
     * @return array - array of SQL queries
-    */
+    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function toSql(\Doctrine\DBAL\Schema\SchemaDiff $schema)   //Doctrine\DBAL\Schema\SchemaDiff | \Doctrine\DBAL\Schema\Schema
     {
         return $schema->toSaveSql($this->getPlatform());
@@ -241,7 +283,14 @@ class Schema
     * Get SQL queries to get from one to another schema
     *
     * @return array - array of SQL queries
-    */
+    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getDiffSql(\Doctrine\DBAL\Schema\Schema $fromSchema, \Doctrine\DBAL\Schema\Schema $toSchema)
     {
         $schemaDiff = $this->getComparator()->compare($fromSchema, $toSchema);
@@ -254,7 +303,14 @@ class Schema
     /**
      * Init Rebuild Actions, get all classes and create them
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function initRebuildActions($currentSchema = null, $metadataSchema = null)
     {
         $methods = array('beforeRebuild', 'afterRebuild');
@@ -286,7 +342,14 @@ class Schema
      * Execute actions for RebuildAction classes
      * @param  string $action action name, possible values 'beforeRebuild' | 'afterRebuild'
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function executeRebuildActions($action = 'beforeRebuild')
     {
         if (!isset($this->rebuildActionClasses)) {

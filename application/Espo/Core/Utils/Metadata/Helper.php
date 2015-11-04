@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Metadata;
@@ -32,7 +39,14 @@ class Helper
 
     /**
      * List of copied params for metadata -> 'fields' from parent items
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected $copiedDefParams = array(
         'readOnly',
         'notStorable',
@@ -57,7 +71,14 @@ class Helper
      *
      * @param  array | string $fieldDef - It can be a string or field defenition from entityDefs
      * @return array | null
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getFieldDefsByType($fieldDef)
     {
         if (is_string($fieldDef)) {
@@ -90,7 +111,14 @@ class Helper
      * @param  array  $fieldDef
      * @param  array  $linkFieldDefsByType
      * @return array | null
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
     {
         if (!isset($fieldDefsByType)) {
@@ -126,7 +154,14 @@ class Helper
      * @param  array|null $definitionList
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList = null)
     {
         if (empty($fieldParams['type'])) {

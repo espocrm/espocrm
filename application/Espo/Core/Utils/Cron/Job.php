@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Cron;
@@ -62,10 +69,24 @@ class Job
      * Get Pending Jobs
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getPendingJobs()
     {
-        /** Mark Failed old jobs and remove pending duplicates */
+        /** Mark Failed old jobs and remove pending duplicates *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         $this->markFailedJobs();
         $this->markJobAttempts();
         $this->removePendingJobDuplicates();
@@ -91,7 +112,14 @@ class Job
      * @param  string $status
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getActiveJobs($displayColumns = '*', $status = CronManager::PENDING, $fetchMode = PDO::FETCH_ASSOC)
     {
         $jobConfigs = $this->getConfig()->get('cron');
@@ -121,7 +149,14 @@ class Job
      * @param  string $time
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getJobByScheduledJob($scheduledJobId, $time)
     {
         $dateObj = new \DateTime($time);
@@ -146,7 +181,14 @@ class Job
      * Mark pending jobs (all jobs that exceeded jobPeriod)
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function markFailedJobs()
     {
         $jobConfigs = $this->getConfig()->get('cron');
@@ -184,7 +226,14 @@ class Job
      * Remove pending duplicate jobs, no need to run twice the same job
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function removePendingJobDuplicates()
     {
         $pdo = $this->getEntityManager()->getPDO();
@@ -206,7 +255,14 @@ class Job
         foreach ($duplicateJobs as $row) {
             if (!empty($row['scheduled_job_id'])) {
 
-                /* no possibility to use limit in update or subqueries */
+                /* no possibility to use limit in update or subqueries *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
                 $query = "SELECT id FROM `job` WHERE scheduled_job_id = '" . $row['scheduled_job_id'] . "'
                             AND `status` = '" . CronManager::PENDING ."'
                             ORDER BY execute_time
@@ -228,7 +284,14 @@ class Job
      * Mark job attempts
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function markJobAttempts()
     {
         $query = "SELECT * FROM job WHERE

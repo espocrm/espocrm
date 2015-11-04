@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils;
@@ -31,7 +38,14 @@ class Json
      * @param int $options Default 0
      * @param int $depth Default 512
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public static function encode($value, $options = 0, $depth = 512)
     {
         if (version_compare(phpversion(), '5.5.0', '>=')) {
@@ -66,7 +80,14 @@ class Json
      * @param int $depth Default 512
      * @param int $options Default 0
      * @return object
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public static function decode($json, $assoc = false, $depth = 512, $options = 0)
     {
         if (is_null($json) || $json === false) {
@@ -101,7 +122,14 @@ class Json
      *
      * @param string $json
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public static function isJSON($json)
     {
         if ($json === '[]' || $json === '{}') {
@@ -119,7 +147,14 @@ class Json
     * @param mixed $data - can be JSON, array
     *
     * @return array
-    */
+    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public static function getArrayData($data, $returns = array())
     {
         if (is_array($data)) {
@@ -173,7 +208,14 @@ class Json
             case JSON_ERROR_UNSUPPORTED_TYPE:
                 return 'A value of a type that cannot be encoded was given';
             break;
-            */
+            *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
 
             default:
                 return 'Unknown error';

@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 class Language
@@ -72,7 +79,14 @@ class Language
 	 *
 	 * @param  array $data
 	 * @return array
-	 */
+	 *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
 	protected function mergeWithDefaults($data)
 	{
 		$defaultLangFile = 'install/core/i18n/'.$this->defaultLanguage.'/install.json';
@@ -104,10 +118,24 @@ class Language
 	 *
 	 * @param  array $i18n
 	 * @return array $i18n
-	 */
+	 *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
 	protected function afterRetrieve(array &$i18n)
 	{
-		/** Get rewrite rules */
+		/** Get rewrite rules *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
 		$serverType = $this->getSystemHelper()->getServerType();
 		$rewriteRules = $this->getSystemHelper()->getRewriteRules();
 		$i18n['options']['modRewriteHelp'][$serverType] = str_replace('{0}', $rewriteRules, $i18n['options']['modRewriteHelp'][$serverType]);

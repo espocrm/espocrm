@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Base;
@@ -46,7 +53,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->beforeRunAction();
 
-        /* run before install script */
+        /* run before install script *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if (!isset($data['isNotRunScriptBefore']) || !$data['isNotRunScriptBefore']) {
             $this->runScript('beforeUninstall');
         }
@@ -54,12 +68,26 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $backupPath = $this->getPath('backupPath');
         if (file_exists($backupPath)) {
 
-            /* copy core files */
+            /* copy core files *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
             if (!$this->copyFiles()) {
                 $this->throwErrorAndRemovePackage('Cannot copy files.');
             }
 
-            /* remove extension files, saved in fileList */
+            /* remove extension files, saved in fileList *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
             if (!$this->deleteFiles(true)) {
                 $this->throwErrorAndRemovePackage('Permission denied to delete files.');
             }
@@ -69,7 +97,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
         }
 
-        /* run after uninstall script */
+        /* run after uninstall script *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if (!isset($data['isNotRunScriptAfter']) || !$data['isNotRunScriptAfter']) {
             $this->runScript('afterUninstall');
         }
@@ -78,7 +113,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->clearCache();
 
-        /* delete backup files */
+        /* delete backup files *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         $this->deletePackageFiles();
 
         $this->finalize();
@@ -121,7 +163,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
      *
      * @param  string $processId
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getPackagePath($isPackage = false)
     {
         if ($isPackage) {

@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
@@ -49,7 +56,14 @@ class Converter
 
     /*
     * //pair Espo => ORM
-    */
+    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected $fieldAccordances = array(
         'type' => 'type',
         'dbType' => 'dbType',
@@ -64,7 +78,14 @@ class Converter
         'unique' => 'unique',
         'index' => 'index',
         /*'conditions' => 'conditions',
-        'additionalColumns' => 'additionalColumns',    */
+        'additionalColumns' => 'additionalColumns',    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         'default' => array(
            'condition' => '^javascript:',
            'conditionEquals' => false,
@@ -86,7 +107,14 @@ class Converter
      * Permitted Entity options which will be moved to ormMetadata
      *
      * @var array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected $permittedEntityOptions = array(
         'indexes',
         'additionalTables',
@@ -135,7 +163,14 @@ class Converter
      * Orm metadata convertation process
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function process()
     {
         $entityDefs = $this->getEntityDefs(true);
@@ -223,7 +258,14 @@ class Converter
      * @param array $entityMeta
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function convertFields($entityName, &$entityMeta)
     {
         //List of unmerged fields with default field defenitions in $outputMeta
@@ -248,7 +290,14 @@ class Converter
 
         foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
 
-            /** check if "fields" option exists in $fieldMeta */
+            /** check if "fields" option exists in $fieldMeta *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
             $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
             $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
@@ -262,7 +311,14 @@ class Converter
                 }
             }
 
-            /** check and set the linkDefs from 'fields' metadata */
+            /** check and set the linkDefs from 'fields' metadata *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
             if (isset($fieldTypeMeta['linkDefs'])) {
                 $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMeta['linkDefs']);
                 if (isset($linkDefs)) {
@@ -283,7 +339,14 @@ class Converter
      * @param  array  $ormMeta
      *
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function correctFields($entityName, array $ormMeta)
     {
         $entityDefs = $this->getEntityDefs();
@@ -338,7 +401,14 @@ class Converter
 
     protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta = null)
     {
-        /** merge fieldDefs option from field definition */
+        /** merge fieldDefs option from field definition *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if (!isset($fieldTypeMeta)) {
             $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
         }
@@ -347,24 +417,52 @@ class Converter
             $fieldParams = Util::merge($fieldParams, $fieldTypeMeta['fieldDefs']);
         }
 
-        /** check if need to skipOrmDefs this field in ORM metadata */
+        /** check if need to skipOrmDefs this field in ORM metadata *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if (isset($fieldParams['skipOrmDefs']) && $fieldParams['skipOrmDefs'] === true) {
             return false;
         }
 
-        /** if defined 'notNull => false' and 'required => true', then remove 'notNull' */
+        /** if defined 'notNull => false' and 'required => true', then remove 'notNull' *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if (isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) && $fieldParams['required']) {
             unset($fieldParams['notNull']);
         }
 
         $fieldDefs = $this->getInitValues($fieldParams);
 
-        /** check if the field need to be saved in database    */
+        /** check if the field need to be saved in database    *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) ) {
             $fieldDefs['notStorable'] = true;
         }
 
-        /** check and set the field length */
+        /** check and set the field length *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         if (!isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
             $fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
         }

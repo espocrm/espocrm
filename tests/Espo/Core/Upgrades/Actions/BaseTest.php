@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace tests\Espo\Core\Upgrades\Actions;
@@ -82,14 +89,28 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
         $this->reflection->setProperty('processId', 'ngkdf54n566n45');
 
-        /* create a package durectory with manifest.json file */
+        /* create a package durectory with manifest.json file *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         $packagePath = $this->reflection->invokeMethod('getPath');
         $manifestName = $this->reflection->getProperty('manifestName');
         $filename = $packagePath . '/' .$manifestName;
 
         $this->fileManager = new \Espo\Core\Utils\File\Manager();
         $this->fileManager->putContents($filename, '');
-        /* END */
+        /* END *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     }
 
     protected function tearDown()
@@ -183,7 +204,14 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider acceptableVersions
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function testCheckVersions($versions, $currentVersion = null)
     {
         if (!isset($currentVersion)) {
@@ -206,7 +234,14 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider unacceptableVersions
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function testCheckVersionsException($versions, $currentVersion = null)
     {
         if (!isset($currentVersion)) {

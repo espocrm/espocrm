@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Extension;
@@ -48,14 +55,28 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Copy Existing files to backup directory
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function backupExistingFiles()
     {
         parent::backupExistingFiles();
 
         $backupPath = $this->getPath('backupPath');
 
-        /** copy scripts files */
+        /** copy scripts files *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
         $packagePath = $this->getPackagePath();
         $res &= $this->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
 
@@ -77,7 +98,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Get extension ID. It's an ID of existing entity (if available) or Installation ID
      *
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getExtensionId()
     {
         $extensionEntity = $this->getExtensionEntity();
@@ -96,7 +124,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Get entity of this extension
      *
      * @return \Espo\Entities\Extension
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getExtensionEntity()
     {
         return $this->extensionEntity;
@@ -106,7 +141,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Find Extension entity
      *
      * @return \Espo\Entities\Extension
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function findExtension()
     {
         $manifest = $this->getManifest();
@@ -123,7 +165,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Create a record of Extension Entity
      *
      * @return bool
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function storeExtension()
     {
         $entityManager = $this->getEntityManager();
@@ -153,7 +202,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Compare version between installed and a new extensions
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function compareVersion()
     {
         $manifest = $this->getManifest();
@@ -173,7 +229,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      *
      * @param  string $errorMessage
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function throwErrorAndRemovePackage($errorMessage = '')
     {
         if (!$this->isNew()) {
@@ -187,7 +250,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * If extension already installed, uninstall an old version
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function uninstallExtension()
     {
         $extensionEntity = $this->getExtensionEntity();
@@ -203,7 +273,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Delete extension package
      *
      * @return void
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function deleteExtension()
     {
         $extensionEntity = $this->getExtensionEntity();

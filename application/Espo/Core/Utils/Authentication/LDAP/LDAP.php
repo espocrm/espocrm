@@ -18,6 +18,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication\LDAP;
@@ -31,7 +38,14 @@ class LDAP extends \Zend\Ldap\Ldap
      * Get DN depends on options, ex. "cn=test,ou=People,dc=maxcrc,dc=com"
      *
      * @return string DN format
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function getDn($acctname)
     {
         return $this->getAccountDn($acctname, \Zend\Ldap\Ldap::ACCTNAME_FORM_DN);
@@ -42,7 +56,14 @@ class LDAP extends \Zend\Ldap\Ldap
      *
      * @param  string $acctname
      * @return string - Account DN
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getAccountDn($acctname)
     {
         $baseDn = $this->getBaseDn();
@@ -70,7 +91,14 @@ class LDAP extends \Zend\Ldap\Ldap
      * @param  int $scope
      * @param  array  $attributes
      * @return array
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     public function searchByLoginFilter($filter, $basedn = null, $scope = self::SEARCH_SCOPE_SUB, array $attributes = array())
     {
         $filter = $this->getLoginFilter($filter);
@@ -89,7 +117,14 @@ class LDAP extends \Zend\Ldap\Ldap
      *
      * @param  string $filter
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function getLoginFilter($filter)
     {
         $baseFilter = '(objectClass=*)';
@@ -106,7 +141,14 @@ class LDAP extends \Zend\Ldap\Ldap
      *
      * @param  string $filter [description]
      * @return string
-     */
+     *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
     protected function convertToFilterFormat($filter)
     {
         $filter = trim($filter);
