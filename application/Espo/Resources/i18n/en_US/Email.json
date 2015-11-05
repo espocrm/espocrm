@@ -24,7 +24,8 @@
         "replied": "Replied",
         "replies": "Replies",
         "isRead": "Is Read",
-        "isImportant": "Is Important"
+        "isImportant": "Is Important",
+        "isUsers": "Is User's"
     },
     "links": {
         "replied": "Replied",

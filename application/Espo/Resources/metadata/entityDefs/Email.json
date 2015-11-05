@@ -61,33 +61,38 @@
             "notStorable": true,
             "default": false
         },
+        "isUsers": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false
+        },
         "nameHash": {
             "type": "text",
             "notStorable": true,
-            "readOlny": true,
+            "readOnly": true,
             "disabled": true
         },
         "typeHash": {
             "type": "text",
             "notStorable": true,
-            "readOlny": true,
+            "readOnly": true,
             "disabled": true
         },
         "idHash": {
             "type": "text",
             "notStorable": true,
-            "readOlny": true,
+            "readOnly": true,
             "disabled": true
         },
         "messageId": {
             "type": "varchar",
             "maxLength": 255,
-            "readOlny": true
+            "readOnly": true
         },
         "messageIdInternal": {
             "type": "varchar",
             "maxLength": 300,
-            "readOlny": true,
+            "readOnly": true,
             "index": true
         },
         "emailAddress": {

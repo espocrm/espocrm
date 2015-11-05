@@ -41,22 +41,24 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
 
         getActionList: function () {
             var list = Dep.prototype.getActionList.call(this);
-            if (!this.model.get('isImportant')) {
-                list.push({
-                    action: 'markAsImportant',
-                    label: 'Mark as Important',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            } else {
-                list.push({
-                    action: 'markAsNotImportant',
-                    label: 'Unmark Importance',
-                    data: {
-                        id: this.model.id
-                    }
-                });
+            if (this.model.get('isUsers')) {
+                if (!this.model.get('isImportant')) {
+                    list.push({
+                        action: 'markAsImportant',
+                        label: 'Mark as Important',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                } else {
+                    list.push({
+                        action: 'markAsNotImportant',
+                        label: 'Unmark Importance',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
             return list;
         }

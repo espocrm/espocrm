@@ -44,6 +44,11 @@ class Email extends \Espo\Core\ORM\Entity
     protected function _setIsRead($value)
     {
         $this->setValue('isRead', $value !== false);
+        if ($value === true || $value === false) {
+            $this->setValue('isUsers', true);
+        } else {
+            $this->setValue('isUsers', false);
+        }
     }
 
     public function addAttachment(\Espo\Entities\Attachment $attachment)

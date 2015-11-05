@@ -427,12 +427,13 @@ class Email extends Record
         if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $isRead = !empty($row['isRead']) ? true : false;
             $isImportant = !empty($row['isImportant']) ? true : false;
+
+            $entity->set('isRead', $isRead);
+            $entity->set('isImportant', $isImportant);
         } else {
-            $isRead = true;
-            $isImportant = false;
+            $entity->set('isRead', null);
+            $entity->clear('isImportant');
         }
-        $entity->set('isRead', $isRead);
-        $entity->set('isImportant', $isImportant);
     }
 
     public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])
